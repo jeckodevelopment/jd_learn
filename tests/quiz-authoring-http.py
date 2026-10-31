@@ -71,7 +71,7 @@ try:
  request(admin,urljoin(u,form['action']),fields=fields,expected=409)
  _,outline,_=request(admin,'/administrator/index.php?option=com_jlms&view=curriculum&id='+str(f['course_id'])+'&version_id='+str(f['version_id']))
  expect('view=quiz'in outline.decode()and'Quiz HTTP edit'in outline.decode(),'curriculum links to dedicated quiz editor')
- request(guest,'/index.php?option=com_jlms&view=quiz',expected=404)
+ request(guest,'/index.php?option=com_jlms&view=quiz',expected=401) # Student view now exists, but requires native identity.
  print(json.dumps({'quiz_authoring_http_checks':checks,'status':'passed','native_forms':'passed','answer_key_boundary':'passed'}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-8000:],file=sys.stderr);raise

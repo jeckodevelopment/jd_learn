@@ -100,10 +100,14 @@ if(!$model->save(['id'=>0,'revision'=>1,'title'=>'Quiz runtime fixture','alias'=
 $course=(int)$model->getState('course.id');$version=$authoring->createDraft($actor,$course,1);
 $scope=static fn():array=>['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult()];
 $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Quiz runtime chapter']);
-$base=['lesson_id'=>0,'revision'=>1,'module_id'=>$module,'title'=>'Graded quiz','required'=>'1','assessment'=>'graded','threshold'=>'70.01','max_attempts'=>'3','time_minutes'=>'1','retry_minutes'=>'1','selection_mode'=>'random','draw_count'=>'2','shuffle_questions'=>'1','shuffle_options'=>'1','feedback_policy'=>'pass_or_exhausted','questions'=>[['revision_id'=>$bank['first_revision'],'points'=>'3'],['revision_id'=>$bank['other_revision'],'points'=>'2']]];
+$base=['lesson_id'=>0,'revision'=>1,'module_id'=>$module,'title'=>'Graded quiz','required'=>'1','assessment'=>'graded','threshold'=>'60.01','max_attempts'=>'3','time_minutes'=>'1','retry_minutes'=>'1','selection_mode'=>'random','draw_count'=>'2','shuffle_questions'=>'1','shuffle_options'=>'1','feedback_policy'=>'pass_or_exhausted','questions'=>[['revision_id'=>$bank['first_revision'],'points'=>'3'],['revision_id'=>$bank['other_revision'],'points'=>'2']]];
 $lesson=$quizzes->save($actor,$scope()+$base);
 $practice=$quizzes->save($actor,$scope()+array_replace($base,['title'=>'Practice quiz','required'=>'0','assessment'=>'practice','threshold'=>'0','feedback_policy'=>'after_submit','max_attempts'=>'1','retry_minutes'=>'0']));
 $never=$quizzes->save($actor,$scope()+array_replace($base,['title'=>'Hidden feedback quiz','required'=>'0','feedback_policy'=>'never','max_attempts'=>'1','retry_minutes'=>'0']));
+$tfQuestion=$component->getQuestionBankService()->save($actor,['id'=>0,'revision'=>1,'catid'=>$bank['category_id'],'language'=>'*','state'=>'1','kind'=>'true_false','prompt'=>'True or false?','options'=>[['option_id'=>'first','label'=>'True','correct'=>'1'],['option_id'=>'second','label'=>'False','correct'=>'0']],'default_points'=>'7','explanation'=>'True.']);
+$tfRevision=(int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id='.$tfQuestion)->loadResult();
+$tfLesson=$quizzes->save($actor,$scope()+array_replace($base,['title'=>'True false exercise','required'=>'0','assessment'=>'practice','feedback_policy'=>'after_submit','max_attempts'=>'1','retry_minutes'=>'0','selection_mode'=>'fixed','questions'=>[['revision_id'=>$tfRevision,'points'=>'7']]]));
+$subset=$quizzes->save($actor,$scope()+array_replace($base,['title'=>'Subset quiz','required'=>'0','max_attempts'=>'0','retry_minutes'=>'0','questions'=>[...$base['questions'],['revision_id'=>$tfRevision,'points'=>'7']]]));
 $publication->transition($actor,$course,$version,(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult(),$scope()['expected_version_revision'],(int)$publication->transitions($actor,$course)[0]->id);
 attemptExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id='.$version)->loadResult()==='published','valid quiz publishes through native workflow');
 attemptReject(fn()=>$quizzes->save($actor,$scope()+array_replace($base,['lesson_id'=>$lesson])),409,'published quiz immutable');
@@ -118,7 +122,7 @@ attemptExpect(!str_contains(json_encode($a,JSON_THROW_ON_ERROR),'"correct"')&&!s
 attemptExpect($service->start($student,'en-GB',$enrollment,$lesson,$key)['attempt']['id']===$aid&&$service->start($student,'en-GB',$enrollment,$lesson,attemptKey())['used_attempts']===1,'key replay and new tab share one active attempt');
 attemptExpect($service->state($student,'en-GB',$enrollment,$lesson)['questions']===$a['questions'],'draw and order stable on resume');
 $mut=attemptKey();$answers=attemptAnswers($a);$save=$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,$mut,$answers,false);
-attemptExpect($save['attempt']['revision']===2&&$save['questions'][0]['selected']!==[],'answers saved with CAS revision');
+attemptExpect($save['attempt']['revision']===2&&$save['questions']===[]&&$service->state($student,'en-GB',$enrollment,$lesson)['questions'][0]['selected']!==[],'answers saved with CAS revision');
 attemptExpect($service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,$mut,$answers,false)['replay'],'identical save replay');
 attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,$mut,'{}',false),409,'same mutation key different body rejected');
 attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,attemptKey(),'{}',false),409,'stale tab cannot overwrite answers');
@@ -128,8 +132,9 @@ $student->getAuthorisedViewLevels();\Joomla\CMS\User\UserHelper::removeUserFromG
 attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,$mut,$answers,false),403,'current access checked even on save replay');
 attemptReject(fn()=>$service->start($student,'en-GB',$enrollment,$lesson,$key),403,'current access checked on start replay');
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id,$group);
-$failed=$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,2,attemptKey(),attemptAnswers($a,false),true);
-attemptExpect($failed['attempt']['score_points']===0&&!$failed['attempt']['passed']&&!$failed['feedback_available']&&!$failed['course_completed'],'failed result has no credit or feedback before exhaustion');
+$partial=[];foreach($a['questions']as$q)$partial[$q['id']]=['first'];
+$failed=$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,2,attemptKey(),json_encode($partial,JSON_THROW_ON_ERROR),true);
+attemptExpect($failed['attempt']['score_points']===3&&!$failed['attempt']['passed']&&!$failed['feedback_available']&&!$failed['course_completed'],'60 percent fails exact 60.01 threshold; partial multiple selection earns zero and feedback stays closed');
 attemptReject(fn()=>$service->start($student,'en-GB',$enrollment,$lesson,attemptKey()),409,'retry interval enforced');
 $now+=61;$a=$service->start($student,'en-GB',$enrollment,$lesson,attemptKey());$submit=attemptKey();$body=attemptAnswers($a);
 $passed=$service->mutate($student,'en-GB',$enrollment,$lesson,$a['attempt']['id'],1,$submit,$body,true);
@@ -148,6 +153,13 @@ $a=$service->start($student,'en-GB',$enrollment,$practice,attemptKey());$p=$serv
 attemptExpect($p['feedback_available']&&$p['attempt']['score_points']===0,'practice immediate feedback without requiring correct answers');
 $a=$service->start($student,'en-GB',$enrollment,$never,attemptKey());$p=$service->mutate($student,'en-GB',$enrollment,$never,$a['attempt']['id'],1,attemptKey(),attemptAnswers($a),true);
 attemptExpect(!$p['feedback_available']&&$p['attempt']['passed'],'never policy withholds feedback even after pass/exhaustion');
+$a=$service->start($student,'en-GB',$enrollment,$tfLesson,attemptKey());
+$p=$service->mutate($student,'en-GB',$enrollment,$tfLesson,$a['attempt']['id'],1,attemptKey(),attemptAnswers($a),true);
+attemptExpect($p['attempt']['score_points']===7&&$p['attempt']['passed'],'true false is graded through immutable runtime snapshot');
+$a=$service->start($student,'en-GB',$enrollment,$subset,attemptKey());
+attemptExpect(count($a['questions'])===2&&$service->state($student,'en-GB',$enrollment,$subset)['questions']===$a['questions'],'proper subset extraction is stable on resume');
+$p=$service->mutate($student,'en-GB',$enrollment,$subset,$a['attempt']['id'],1,attemptKey(),'{}',true);
+attemptExpect(!$p['feedback_available']&&$p['remaining_attempts']===null,'unlimited failed attempts never exhaust into feedback');
 // Separate user for timer grace and native scheduler execution; no test mutates a customer's site.
 $otherEnrollment=$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16)));$a=$service->start($other,'en-GB',$otherEnrollment,$lesson,attemptKey());
 $r=$service->mutate($other,'en-GB',$otherEnrollment,$lesson,$a['attempt']['id'],1,attemptKey(),attemptAnswers($a),false);

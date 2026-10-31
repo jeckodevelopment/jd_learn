@@ -112,18 +112,26 @@ final class QuizAttemptService
             ->leftJoin('#__jlms_attempt_answers AS a ON a.attempt_question_id=q.id')->where('q.attempt_id = :attempt')->bind(':attempt',$attempt,ParameterType::INTEGER)->order('q.display_order');
         $rows=$this->db->setQuery($q,0,201)->loadObjectList();if(!$rows||count($rows)>200)throw new \RuntimeException('COM_JLMS_QUIZ_INVALID',422);return $rows;
     }
+    /** Autosaves read only option identifiers, never multi-megabyte prompts or private grading documents. */
+    private function answerQuestions(int $attempt):array
+    {
+        $q=$this->db->createQuery()->select("id, JSON_UNQUOTE(JSON_EXTRACT(public_snapshot_json, '$.kind')) AS kind, JSON_EXTRACT(public_snapshot_json, '$.options[*].id') AS option_ids")
+            ->from('#__jlms_attempt_questions')->where('attempt_id = :attempt')->bind(':attempt',$attempt,ParameterType::INTEGER)->order('display_order');
+        $rows=$this->db->setQuery($q,0,201)->loadObjectList();
+        if(!$rows||count($rows)>200)throw new \RuntimeException('COM_JLMS_QUIZ_INVALID',422);return $rows;
+    }
     private function patch(array $questions,string $json):array
     {
         if(strlen($json)>524288)throw new \RuntimeException('COM_JLMS_QUIZ_ANSWERS_INVALID',413);
         try{$answers=json_decode($json,true,16,JSON_THROW_ON_ERROR);}catch(\JsonException $e){throw new \RuntimeException('COM_JLMS_QUIZ_ANSWERS_INVALID',422);}
         if(!is_array($answers)||count($answers)>200)throw new \RuntimeException('COM_JLMS_QUIZ_ANSWERS_INVALID',422);
-        $allowed=[];foreach($questions as$q)$allowed[(int)$q->id]=json_decode($q->public_snapshot_json,true,16,JSON_THROW_ON_ERROR);
+        $allowed=[];foreach($questions as$q)$allowed[(int)$q->id]=['kind'=>$q->kind,'ids'=>json_decode($q->option_ids,true,16,JSON_THROW_ON_ERROR)];
         $patch=[];
         foreach($answers as$id=>$selected){
             try{$id=CurriculumService::id($id);}catch(\InvalidArgumentException $error){throw new \RuntimeException('COM_JLMS_QUIZ_ANSWERS_INVALID',422);}
             if(!isset($allowed[$id])||!is_array($selected)||!array_is_list($selected)||count($selected)>20
                 ||($allowed[$id]['kind']!=='multiple'&&count($selected)>1))throw new \RuntimeException('COM_JLMS_QUIZ_ANSWERS_INVALID',422);
-            $ids=array_column($allowed[$id]['options'],'id');
+            $ids=$allowed[$id]['ids'];
             foreach($selected as$value)if(!is_string($value)||!in_array($value,$ids,true))throw new \RuntimeException('COM_JLMS_QUIZ_ANSWERS_INVALID',422);
             if(count($selected)!==count(array_unique($selected,SORT_STRING)))throw new \RuntimeException('COM_JLMS_QUIZ_ANSWERS_INVALID',422);
             sort($selected,SORT_STRING);$patch[$id]=$selected;
@@ -134,11 +142,11 @@ final class QuizAttemptService
         self::key($key);
         return $this->transaction(function()use($identity,$language,$enrollment,$lesson,$attempt,$revision,$key,$json,$submit):array{
             [, $e,$l,$quiz]=$this->context($identity,$language,$enrollment,$lesson);$a=$this->attempt($attempt,$enrollment,(int)$quiz->id);
-            $rows=$this->questions($attempt);$patch=$this->patch($rows,$json);$hash=hash('sha256',QuestionDefinition::canonical(['operation'=>$submit?'submit':'save','revision'=>$revision,'answers'=>$patch]));
+            $rows=$this->answerQuestions($attempt);$patch=$this->patch($rows,$json);$hash=hash('sha256',QuestionDefinition::canonical(['operation'=>$submit?'submit':'save','revision'=>$revision,'answers'=>$patch]));
             $q=$this->db->createQuery()->select('*')->from('#__jlms_quiz_mutations')->where('attempt_id = :attempt')->where('mutation_id = :mutation')
                 ->bind(':attempt',$attempt,ParameterType::INTEGER)->bind(':mutation',$key);$mutation=$this->db->setQuery($q)->loadObject();
             $now=($this->clock)();
-            if($mutation){if(!hash_equals($mutation->request_hash,$hash))throw new \RuntimeException('COM_JLMS_QUIZ_CONFLICT',409);$this->expireIfDue($a,$e,$l,$now);$dto=$this->dto($a,$e,$l,$quiz,$identity,$language);$dto['replay']=true;return $dto;}
+            if($mutation){if(!hash_equals($mutation->request_hash,$hash))throw new \RuntimeException('COM_JLMS_QUIZ_CONFLICT',409);$this->expireIfDue($a,$e,$l,$now);$dto=$this->dto($a,$e,$l,$quiz,$identity,$language,$submit||$a->status!=='open');$dto['replay']=true;return $dto;}
             $q=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quiz_mutations')->where('attempt_id = :attempt')->bind(':attempt',$attempt,ParameterType::INTEGER);
             if((int)$this->db->setQuery($q)->loadResult()>=50000)throw new \RuntimeException('COM_JLMS_QUIZ_LIMIT',429);
             $expired=$this->expireIfDue($a,$e,$l,$now);
@@ -159,7 +167,7 @@ final class QuizAttemptService
                 }
             }
             $mutation=(object)['attempt_id'=>$attempt,'mutation_id'=>$key,'request_hash'=>$hash,'result_revision'=>(int)$a->revision,'created_at'=>self::date($now)];$this->db->insertObject('#__jlms_quiz_mutations',$mutation);
-            $dto=$this->dto($a,$e,$l,$quiz,$identity,$language);$dto['replay']=false;return $dto;
+            $dto=$this->dto($a,$e,$l,$quiz,$identity,$language,$submit||$a->status!=='open');$dto['replay']=false;return $dto;
         });
     }
     private function expireIfDue(object $a,object $enrollment,object $lesson,int $now):bool
@@ -214,16 +222,16 @@ final class QuizAttemptService
             return $this->dto($a,$e,$l,$quiz,$identity,$language);
         });
     }
-    private function dto(?object $a,object $e,object $l,object $quiz,User $identity,string $language):array
+    private function dto(?object $a,object $e,object $l,object $quiz,User $identity,string $language,bool $includeQuestions=true):array
     {
         $enrollment=(int)$e->id;$quizId=(int)$quiz->id;$history=$this->history($enrollment,$quizId);$active=$this->active($enrollment,$quizId);
         $selection=json_decode($quiz->selection_json,true,16,JSON_THROW_ON_ERROR);
         $rules=$a?json_decode($a->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR):['max_attempts'=>(int)$quiz->max_attempts,'retry_seconds'=>$selection['retry_delay_seconds'],'threshold'=>(int)$quiz->pass_basis_points,'time_seconds'=>(int)$quiz->time_limit_seconds,'assessment'=>$selection['assessment'],'feedback'=>$quiz->feedback_policy,'draw_count'=>$selection['draw_count']];
-        $now=($this->clock)();$next=$history['last_closed']===null?$now:$history['last_closed']+$rules['retry_seconds'];$eligible=true;
-        try{$this->learning->quizContext($identity,$language,$enrollment,(int)$l->id,false,false);}catch(\RuntimeException $error){if($error->getMessage()!=='COM_JLMS_LEARNING_WINDOW')throw $error;$eligible=false;}
+        $now=($this->clock)();$next=$history['last_closed']===null?$now:$history['last_closed']+$rules['retry_seconds'];$eligible=!$active;
+        try{if(!$active)$this->learning->quizContext($identity,$language,$enrollment,(int)$l->id,false,false);}catch(\RuntimeException $error){if($error->getMessage()!=='COM_JLMS_LEARNING_WINDOW')throw $error;$eligible=false;}
         $remaining=$rules['max_attempts']===0?null:max(0,$rules['max_attempts']-$history['used']);
         $dto=['enrollment_id'=>$enrollment,'lesson_id'=>(int)$l->id,'title'=>$l->title,'server_now'=>$now,'assessment'=>$rules['assessment'],
-            'question_count'=>$rules['draw_count'],'threshold'=>$rules['threshold'],'time_seconds'=>$rules['time_seconds'],'used_attempts'=>$history['used'],'remaining_attempts'=>$remaining,
+            'feedback_policy'=>$rules['feedback'],'question_count'=>$rules['draw_count'],'threshold'=>$rules['threshold'],'time_seconds'=>$rules['time_seconds'],'used_attempts'=>$history['used'],'remaining_attempts'=>$remaining,
             'next_attempt_at'=>$next,'can_start'=>!$active&&$eligible&&($remaining===null||$remaining>0)&&$next<=$now,
             'active_attempt_id'=>$active?(int)$active->id:null,'attempt'=>null,'questions'=>[],'feedback_available'=>false,
             'course_completed'=>$e->completed_at!==null,'course_percent'=>(int)$e->required_total?min($e->completed_at?100:99,(int)floor(100*(int)$e->completed_total/(int)$e->required_total)):0];
@@ -232,7 +240,7 @@ final class QuizAttemptService
             $dto['feedback_available']=$feedback;$dto['attempt']=['id'=>(int)$a->id,'number'=>(int)$a->attempt_no,'state'=>$a->status,'revision'=>(int)$a->revision,
                 'deadline'=>self::timestamp($a->deadline_at),'started_at'=>self::timestamp($a->started_at),'submitted_at'=>self::timestamp($a->submitted_at),
                 'score_points'=>$closed?(int)$a->score_points:null,'max_points'=>(int)$a->max_points,'passed'=>$closed?(bool)$a->passed:null];
-            foreach($this->questions((int)$a->id)as$row){$public=json_decode($row->public_snapshot_json,true,16,JSON_THROW_ON_ERROR);
+            foreach(($includeQuestions?$this->questions((int)$a->id):[])as$row){$public=json_decode($row->public_snapshot_json,true,16,JSON_THROW_ON_ERROR);
                 $public['id']=(int)$row->id;$public['max_points']=(int)$row->max_points;$public['selected']=$row->answer_json===null?[]:json_decode($row->answer_json,true,16,JSON_THROW_ON_ERROR);
                 if($feedback){$grading=json_decode($row->grading_snapshot_json,true,16,JSON_THROW_ON_ERROR);$public['correct']=$grading['correct'];$public['explanation']=$grading['explanation'];$public['awarded_points']=(int)$row->awarded_points;}
                 $dto['questions'][]=$public;

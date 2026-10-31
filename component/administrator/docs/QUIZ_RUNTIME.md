@@ -41,7 +41,7 @@ Servizi DI: `QuizSnapshotService` valida/congela il pool; `QuizAttemptService` i
 
 `answers_json` è una mappa ID domanda snapshot → array ID opzioni; array vuoto cancella una selezione, chiavi omesse lasciano le risposte salvate. Identificativi di domanda della banca non sostituiscono quelli dello snapshot. La lettura può materializzare la chiusura di un tentativo scaduto. Errori controllati400/401/403/404/405/409/413/422/429; errori imprevisti generici con correlazione, senza SQL, risposte o dati privati nei log. Questi sono task del sito autenticati con sessione: non sono ancora il plugin Joomla Web Services previsto dalla specifica.
 
-Limiti: pool1–200, somma definizioni4MiB controllata con aggregazione SQL prima del caricamento; singola definizione256KiB; risposte512KiB, corpo HTTP1MiB,50.000 mutazioni per tentativo, storico20voci, worker massimo100tentativi. Il runtime non interroga l'intera banca per estrarre. Questi limiti riducono il lavoro di una richiesta, non costituiscono certificazione di carico300/500studenti.
+Limiti: pool1–200, somma definizioni4MiB controllata con aggregazione SQL prima del caricamento; singola definizione256KiB; risposte512KiB, corpo HTTP1MiB,50.000 mutazioni per tentativo, storico20voci, worker massimo100tentativi. Il runtime non interroga l'intera banca per estrarre. I salvataggi aperti leggono soltanto gli identificatori delle opzioni tramite proiezioni JSON SQL e restituiscono una conferma senza ritrasmettere prompt/opzioni o chiavi di correzione. Questi limiti riducono il lavoro di una richiesta, non costituiscono certificazione di carico300/500studenti.
 
 ## Plugin base `task/jlms`
 

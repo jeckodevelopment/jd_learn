@@ -9,10 +9,11 @@ $i=$this->item;$attempt=$i['attempt'];$open=$attempt&&$attempt['state']==='open'
 <section id="jlms-quiz" class="jlms-quiz" data-enrollment-id="<?= (int)$i['enrollment_id'] ?>">
  <header id="jlms-quiz-header"><h1><?= $this->escape($i['title']) ?></h1></header>
  <section id="jlms-quiz-rules">
-  <p><?= Text::_('COM_JLMS_QUIZ_RULES') ?>: <?= (int)$i['question_count'] ?> · <?= Text::_('COM_JLMS_QUIZ_THRESHOLD') ?> <?= $this->escape((string)($i['threshold']/100)) ?>% · <?= Text::_('COM_JLMS_QUIZ_TIME') ?> <?= (int)$i['time_seconds'] ?> s</p>
+  <p><?= Text::_('COM_JLMS_QUIZ_RULES') ?>: <?= (int)$i['question_count'] ?> · <?= Text::_('COM_JLMS_QUIZ_THRESHOLD') ?> <?= $this->escape((string)($i['threshold']/100)) ?>% · <?= Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?> <?= (int)$i['time_seconds'] ?> s</p>
   <p><?= Text::_('COM_JLMS_QUIZ_ATTEMPTS') ?>: <?= (int)$i['used_attempts'] ?> / <?= $i['remaining_attempts']===null?Text::_('COM_JLMS_QUIZ_UNLIMITED'):(int)($i['used_attempts']+$i['remaining_attempts']) ?></p>
   <p><?= Text::_('COM_JLMS_QUIZ_SAVE_NOTICE') ?></p>
  </section>
+ <p id="jlms-quiz-availability"><?= Text::_('COM_JLMS_QUIZ_NEXT') ?>: <?= $this->escape(gmdate('Y-m-d H:i:s',$i['next_attempt_at'])) ?> UTC · <?= Text::_('COM_JLMS_QUIZ_FEEDBACK') ?>: <?= Text::_(match($i['feedback_policy']){'never'=>'COM_JLMS_QUIZ_FEEDBACK_NEVER','after_submit'=>'COM_JLMS_QUIZ_FEEDBACK_PRACTICE',default=>'COM_JLMS_QUIZ_FEEDBACK_DEFAULT'}) ?></p>
  <p id="jlms-quiz-status" role="status" aria-live="polite"></p>
  <p id="jlms-quiz-timer" role="timer" aria-live="off"></p>
  <noscript><p><?= Text::_('COM_JLMS_QUIZ_JS_REQUIRED') ?></p></noscript>
@@ -22,9 +23,9 @@ $i=$this->item;$attempt=$i['attempt'];$open=$attempt&&$attempt['state']==='open'
  <?php endif; ?>
  <form id="jlms-quiz-form">
  <div id="jlms-quiz-questions">
- <?php foreach($i['questions']as$q): ?>
+ <?php foreach($i['questions']as$index=>$q): ?>
  <fieldset id="jlms-quiz-question-<?= (int)$q['id'] ?>" class="jlms-quiz-question" data-question-id="<?= (int)$q['id'] ?>"<?= $open?'':' disabled' ?>>
-  <legend><?= Text::_('COM_JLMS_QUIZ_QUESTION') ?> <?= (int)($q['id']) ?> (<?= (int)$q['max_points'] ?>)</legend>
+  <legend><?= Text::_('COM_JLMS_QUIZ_QUESTION') ?> <?= (int)($index+1) ?> (<?= (int)$q['max_points'] ?>)</legend>
   <div class="jlms-quiz-question__prompt"><?= $q['prompt'] /* Sanitised core HTML at attempt creation. */ ?></div>
   <?php foreach($q['options']as$o): $control='jlms-quiz-option-'.(int)$q['id'].'-'.$o['id']; ?>
   <div class="jlms-quiz-question__option"><input id="<?= $this->escape($control) ?>" type="<?= $q['kind']==='multiple'?'checkbox':'radio' ?>" name="answer_<?= (int)$q['id'] ?>[]" value="<?= $this->escape($o['id']) ?>"<?= in_array($o['id'],$q['selected'],true)?' checked':'' ?>><label for="<?= $this->escape($control) ?>"><?= $this->escape($o['label']) ?></label></div>
