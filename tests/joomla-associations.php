@@ -60,6 +60,7 @@ if (!$userId) {
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($userId));
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
+\Joomla\CMS\Log\Log::addLogger(['logger'=>'callback','callback'=>static function ($entry): void { fwrite(STDERR, 'Model diagnostic: '.$entry->message.PHP_EOL); }],\Joomla\CMS\Log\Log::ALL,['com_jlms']);
 
 $checks = 0;
 function assocExpect(bool $condition, string $message): void {
