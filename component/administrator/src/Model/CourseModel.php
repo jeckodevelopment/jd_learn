@@ -37,7 +37,10 @@ final class CourseModel extends AdminModel
         try {
             if ($id > 0) {
                 $q = $db->createQuery()->select('*')->from($db->quoteName('#__jlms_courses'))
-                    ->where($db->quoteName('id') . ' = :id')->bind(':id', $id, ParameterType::INTEGER)->forUpdate();
+                    ->where($db->quoteName('id') . ' = :id')->bind(':id', $id, ParameterType::INTEGER);
+                // Joomla's query object keeps the bound parameters when setting a raw SQL suffix.
+                // DatabaseQuery does not expose a forUpdate() builder method.
+                $q->setQuery((string) $q . ' FOR UPDATE');
                 $record = $db->setQuery($q)->loadObject();
                 if (!$record) {
                     throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');

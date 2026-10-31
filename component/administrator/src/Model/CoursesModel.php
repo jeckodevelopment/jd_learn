@@ -9,6 +9,12 @@ use Joomla\CMS\MVC\Model\ListModel;
 
 final class CoursesModel extends ListModel
 {
+    protected function populateState($ordering = 'id', $direction = 'DESC')
+    {
+        parent::populateState($ordering, $direction);
+        $this->setState('list.limit', max(1, min(100, (int) $this->getState('list.limit', 20))));
+    }
+
     protected function getListQuery()
     {
         $db = $this->getDatabase();
