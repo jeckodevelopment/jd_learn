@@ -84,4 +84,26 @@ expect($registry->get('example') === $registry->get('example') && $created === 1
 rejects(fn () => $registry->register($descriptor, fn () => null), 'duplicate provider rejected');
 rejects(fn () => $registry->register(new ProviderDescriptor('newprovider', 'NEW', 2, true), fn () => null), 'contract major mismatch rejected');
 rejects(fn () => $registry->get('missing'), 'missing provider never falls back to public source');
+
+$state = ['issued_ms' => 100000, 'spent_wall_ms' => 0, 'last_event_id' => 0, 'playing' => false];
+$event = static fn (int $id, string $type, int $position, int $time, bool $playing = true, int $rate = 1000): array =>
+    ['id' => $id, 'type' => $type, 'position_ms' => $position, 'client_ms' => $time, 'playing' => $playing, 'rate_milli' => $rate];
+$consume = static fn (array $events, int $now = 110000): array => \Jlms\Component\Jlms\Administrator\Domain\VideoTelemetry::consume($state, $events, 10000, $now);
+expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 9000)])['intervals'] === [[0,9000]], 'continuous 90 percent coverage');
+expect($consume([$event(1, 'ended', 10000, 0, false)])['intervals'] === [], 'ended alone awards no coverage');
+expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 1000)])['intervals'] === [], 'seek jump does not count');
+expect($consume([$event(1, 'play', 0, 0), $event(2, 'seeked', 9000, 9000)])['intervals'] === [], 'explicit seek discards interval');
+expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 9000)], 100000)['intervals'] === [], 'server time prevents instantaneous fabricated coverage');
+expect($consume([$event(1, 'play', 0, 0, true, 2000), $event(2, 'position', 10000, 5000, true, 2000)], 105000)['intervals'] === [[0,10000]], 'two times speed costs actual wall time');
+rejects(fn () => $consume([$event(1,'play',0,0),$event(1,'position',1000,1000)]), 'duplicate event id rejected');
+rejects(fn () => $consume([$event(1,'position',10001,0)]), 'out of duration sample rejected');
+rejects(fn () => $consume([$event(1,'play',0,0,true,3000)]), 'unsupported playback rate rejected');
+rejects(fn () => $consume(array_fill(0,101,$event(1,'play',0,0))), 'bounded event count');
+require_once __DIR__ . '/../plugins/jlmsvideo/youtube/src/Provider/Provider.php';
+$enabled = new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true);
+$source = $enabled->normaliseSource(new SourceInput('https://youtu.be/dQw4w9WgXcQ'));
+expect($enabled->getDescriptor()->configured && $enabled->getCapabilities($source)->position, 'explicitly enabled embed advertises actual position capability');
+$playback = $enabled->createPlaybackDescriptor($source, new \Jlms\Contracts\Video\PlaybackContext(1,2,3,'it-IT',0,'grant',new \DateTimeImmutable()));
+expect($playback->playerOptions['reference'] === 'dQw4w9WgXcQ' && $playback->playerOptions['autoplay'] === false, 'canonical whitelisted playback options');
+expect(!(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getDescriptor()->configured, 'embed disabled by default');
 echo json_encode(['unit_assertions' => $passed, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

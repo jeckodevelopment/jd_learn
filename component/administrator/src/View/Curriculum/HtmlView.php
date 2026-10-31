@@ -63,7 +63,9 @@ final class HtmlView extends BaseHtmlView
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
-                        'source_reference' => $source['reference'] ?? '', 'privacy_hash' => $source['options']['privacy_hash'] ?? '']);
+                        'source_reference' => $source['reference'] ?? '', 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
+                        'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
+                        'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0']);
                     $foundLesson = true;
                 }
             }

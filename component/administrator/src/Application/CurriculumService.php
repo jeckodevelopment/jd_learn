@@ -256,6 +256,23 @@ final class CurriculumService
         return ($this->registryFactory)()->descriptors();
     }
 
+    public function videoProvider(string $key): \Jlms\Contracts\Video\VideoProviderInterface
+    {
+        return ($this->registryFactory)()->get($key);
+    }
+
+    public static function duration(mixed $value): ?int
+    {
+        if ($value === '' || $value === null) { return null; }
+        if (!is_string($value) && !is_int($value)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        if (!preg_match('/\A([0-9]{1,5})(?:\.([0-9]{1,3}))?\z/D', (string) $value, $parts)) {
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+        }
+        $ms = (int) $parts[1] * 1000 + (int) str_pad($parts[2] ?? '', 3, '0');
+        if ($ms < 1000 || $ms > 28800000) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        return $ms;
+    }
+
     public function saveLesson(User $actor, array $input): int
     {
         $courseId = self::id($input['course_id'] ?? null);
@@ -281,6 +298,8 @@ final class CurriculumService
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null];
         if ($kind === 'video') {
+            $fields['duration_ms'] = self::duration($input['duration_seconds'] ?? null);
+            $fields['params_json'] = json_encode(['video_duration_confirmed' => ($input['duration_confirmed'] ?? '') === '1'], JSON_THROW_ON_ERROR);
             if (!is_string($input['provider_key'] ?? null) || !is_string($input['source_reference'] ?? null)
                 || !is_string($input['privacy_hash'] ?? '')) {
                 throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
@@ -316,7 +335,7 @@ final class CurriculumService
                     throw new \DomainException('COM_JLMS_MOVE_MODULE_NOT_AVAILABLE');
                 }
                 $changedSource = $lesson->kind !== $fields['kind'] || $lesson->provider_key !== $fields['provider_key']
-                    || $lesson->source_json !== $fields['source_json'];
+                    || $lesson->source_json !== $fields['source_json'] || $lesson->duration_ms != $fields['duration_ms'];
                 $fields['source_revision'] = (int) $lesson->source_revision + (int) $changedSource;
                 $this->update('lessons', $lesson, $fields, $actor);
             } else {

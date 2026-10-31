@@ -1,0 +1,73 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const source = await readFile(new URL('../component/media/js/video.js', import.meta.url), 'utf8');
+const {VideoLesson} = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
+const listeners = new Map();
+globalThis.window = {addEventListener: (k,v) => listeners.set(k,v), removeEventListener: k => listeners.delete(k)};
+globalThis.document = {hidden:false, addEventListener(){},removeEventListener(){},getElementById(){return null;}};
+const elements = Object.fromEntries(['#jlms-player-status','#jlms-video-load','#jlms-video-stop','#jlms-player']
+  .map(k => [k, {textContent:'',addEventListener(){},replaceChildren(){}}]));
+const root = {querySelector:k=>elements[k]};
+let calls = 0;
+const config = {policy:'site_consent',provider:'youtube',enrollment:1,lesson:2,token:'csrf',
+  urls:{save:'/save',playback:'/playback',close:'/close'},labels:{consent:'consent',offline:'offline',error:'error'}};
+const lesson = new VideoLesson(config,root,async () => { calls++; throw Error('unexpected remote load'); });
+await lesson.start(); assert.equal(calls,0); assert.equal(elements['#jlms-player-status'].textContent,'consent');
+window.JlmsConsent = {isAllowed:()=>false}; await lesson.start();assert.equal(calls,0);
+lesson.config.policy='click'; lesson.session={session_id:'session',source_revision:1,duration_ms:10000};
+lesson.duration=10000; lesson.stopped=false;
+lesson.queue=[{id:1,type:'play',position_ms:0,client_ms:0,rate_milli:1000,playing:true}];
+const bodies=[]; let attempt=0;
+lesson.transport=async (_url,options)=>{
+  bodies.push(options.body.toString());
+  if (++attempt===1) throw Error('network');
+  return {ok:true,json:async()=>({success:true,data:{next_sequence:2,lesson_completed:false,course_percent:0}})};
+};
+await lesson.flush();assert.ok(lesson.pending);assert.equal(lesson.sequence,1);
+lesson.queue.push({id:2,type:'pause',position_ms:1000,client_ms:1000,rate_milli:1000,playing:false});
+await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue.length,1);assert.equal(lesson.sequence,2);
+lesson.transport=async()=>({ok:false,status:403,json:async()=>({success:false})});
+let destroyed=0;lesson.player={destroy:async()=>destroyed++};
+await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1);
+await lesson.destroy();assert.equal(listeners.size,0);
+console.log(JSON.stringify({video_player_checks:12,status:'passed',environment:'mock DOM/SDK transport; no live provider playback'}));
+// Exercise the local provider adapters against SDK doubles, including privacy parameters and cleanup.
+const moduleFromFile = async path => import('data:text/javascript;base64,' + Buffer.from(await readFile(path,'utf8')).toString('base64'));
+const youtube = await moduleFromFile(new URL('../plugins/jlmsvideo/youtube/media/js/player.js',import.meta.url));
+let ytOptions, ytDestroyed=0;
+globalThis.location={origin:'https://school.example'};
+globalThis.YT={Player:class {
+  constructor(_slot,options){ytOptions=options;queueMicrotask(()=>options.events.onReady());}
+  getCurrentTime(){return 1.5;} getDuration(){return 10;}getPlaybackRate(){return 1;}getPlayerState(){return 1;}
+  pauseVideo(){}seekTo(){}destroy(){ytDestroyed++;}
+}};
+const frames=[];
+document.createElement=tag=>({tag,dataset:{},remove(){},set src(value){this.url=value;},get src(){return this.url;}});
+const box={dataset:{title:'Lesson'},append:frame=>frames.push(frame)};
+const yt=await youtube.create(box,{options:{reference:'dQw4w9WgXcQ',locale:'it-IT'}},()=>{},new AbortController().signal);
+assert.equal(ytOptions.host,'https://www.youtube-nocookie.com');assert.equal(ytOptions.playerVars.autoplay,0);
+assert.equal((await yt.sample()).position_ms,1500);yt.destroy();assert.equal(ytDestroyed,1);
+const aborted=new AbortController();aborted.abort();await assert.rejects(youtube.create(box,{options:{}},()=>{},aborted.signal));
+const vimeo=await moduleFromFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url));
+let vmHandlers=0,vmDestroyed=0;
+globalThis.Vimeo={Player:class{
+  ready(){return Promise.resolve();}on(){vmHandlers++;}off(){vmHandlers--;}
+  getCurrentTime(){return Promise.resolve(2);}getDuration(){return Promise.resolve(10);}
+  getPlaybackRate(){return Promise.resolve(1);}getPaused(){return Promise.resolve(false);}getEnded(){return Promise.resolve(false);}
+  destroy(){vmDestroyed++;return Promise.resolve();}
+}};
+const vm=await vimeo.create(box,{options:{reference:'12345',privacy_hash:'abc123'}},()=>{},new AbortController().signal);
+const frameUrl=new URL(frames.at(-1).src);assert.equal(frameUrl.searchParams.get('dnt'),'1');assert.equal(frameUrl.searchParams.get('h'),'abc123');
+assert.equal((await vm.sample()).duration_ms,10000);await vm.destroy();assert.equal(vmHandlers,0);assert.equal(vmDestroyed,1);
+console.log(JSON.stringify({provider_adapter_checks:10,status:'passed',environment:'SDK doubles; no live remote video'}));
+
+// A revoked consent must also settle an SDK instance that never reaches ready.
+for (const [name,adapter] of [['YT',youtube],['Vimeo',vimeo]]) {
+ const signal=new AbortController(); let made;
+ if (name==='YT') globalThis.YT={Player:class{constructor(){made=true;}destroy(){}}};
+ else globalThis.Vimeo={Player:class{constructor(){made=true;}ready(){return new Promise(()=>{});}destroy(){return Promise.resolve();}on(){}}};
+ const result=adapter.create(box,{options:{reference:'12345',locale:'it-IT'}},()=>{},signal.signal);
+ await new Promise(resolve=>setTimeout(resolve,0));assert.ok(made);signal.abort();
+ await assert.rejects(result,{name:'AbortError'});
+}
+console.log(JSON.stringify({provider_pending_abort_checks:4,status:'passed'}));

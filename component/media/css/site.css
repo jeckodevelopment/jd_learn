@@ -6,3 +6,9 @@
 #jlms-classroom{max-width:var(--jlms-content-width);margin-inline:auto;color:var(--jlms-color-text)}.jlms-classroom-layout{display:grid;grid-template-columns:minmax(13rem,1fr) minmax(0,3fr);gap:calc(3 * var(--jlms-space-unit))}.jlms-lesson-content{min-width:0;overflow-wrap:anywhere}#jlms-lesson-body img{max-width:100%;height:auto}#jlms-classroom-outline a[aria-current]{font-weight:700}#jlms-learning-progress{margin-block:calc(2 * var(--jlms-space-unit))}#jlms-progress-meter{display:block;width:100%}.jlms-classroom-lesson{padding-block:var(--jlms-space-unit)}#jlms-classroom a:focus-visible,#jlms-classroom button:focus-visible{outline:3px solid var(--jlms-color-primary);outline-offset:3px}@media(max-width:48rem){.jlms-classroom-layout{grid-template-columns:1fr}}
 
 .jlms-material-list{margin-block:calc(3 * var(--jlms-space-unit))}.jlms-material{padding:calc(2 * var(--jlms-space-unit));margin-block:var(--jlms-space-unit);border:1px solid currentColor;border-radius:var(--jlms-radius)}.jlms-material__title{margin-block:0 var(--jlms-space-unit)}.jlms-material__meta{font-size:.875em;overflow-wrap:anywhere}.jlms-material__action{display:inline-block;padding-block:var(--jlms-space-unit)}
+
+/* The player region is empty until explicit consent. */
+#jlms-player:not(:empty) { aspect-ratio:16/9; width:100%; background:#000; }
+#jlms-player iframe { width:100%; height:100%; border:0; }
+#jlms-player-status { min-height:1.5em; }
+#jlms-video-region button { margin-block:0.5rem; }
