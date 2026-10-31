@@ -3,11 +3,11 @@ CAT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale
 CAT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CAT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CAT-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-AUT-01,Rilascio 1,In corso,"Prima bozza versionata e CRUD/riordino di moduli e lezioni testo/video. Pubblicazione, cloning completo e altri tipi da implementare.",No
-AUT-02,Rilascio 1,In corso,"Prima bozza versionata e CRUD/riordino di moduli e lezioni testo/video. Pubblicazione, cloning completo e altri tipi da implementare.",No
-AUT-03,Rilascio 1,In corso,"Prima bozza versionata e CRUD/riordino di moduli e lezioni testo/video. Pubblicazione, cloning completo e altri tipi da implementare.",No
-AUT-04,Rilascio 1,In corso,"Prima bozza versionata e CRUD/riordino di moduli e lezioni testo/video. Pubblicazione, cloning completo e altri tipi da implementare.",No
-AUT-05,Rilascio 1,In corso,"Prima bozza versionata e CRUD/riordino di moduli e lezioni testo/video. Pubblicazione, cloning completo e altri tipi da implementare.",No
+AUT-01,Rilascio 1,In corso,"Bozza/versione, moduli e lezioni testo/video; pubblicazione testo con workflow nativo e snapshot. Cloning, altri tipi e casi avanzati da completare.",No
+AUT-02,Rilascio 1,In corso,"Bozza/versione, moduli e lezioni testo/video; pubblicazione testo con workflow nativo e snapshot. Cloning, altri tipi e casi avanzati da completare.",No
+AUT-03,Rilascio 1,In corso,"Bozza/versione, moduli e lezioni testo/video; pubblicazione testo con workflow nativo e snapshot. Cloning, altri tipi e casi avanzati da completare.",No
+AUT-04,Rilascio 1,In corso,"Bozza/versione, moduli e lezioni testo/video; pubblicazione testo con workflow nativo e snapshot. Cloning, altri tipi e casi avanzati da completare.",No
+AUT-05,Rilascio 1,In corso,"Bozza/versione, moduli e lezioni testo/video; pubblicazione testo con workflow nativo e snapshot. Cloning, altri tipi e casi avanzati da completare.",No
 LES-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 LES-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 LES-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
@@ -76,7 +76,7 @@ CORE-01,Rilascio 1,In corso,"Categorie native, servizi di sezione e asset; lifec
 CORE-02,Rilascio 1,In corso,Identità e login core riutilizzati; percorso studenti e collaudo MFA da completare.,No
 CORE-03,Rilascio 1,In corso,Campi viewlevels nativi; entitlement studente corrente da integrare.,No
 CORE-04,Rilascio 1,In corso,ACL e asset del corso in bozza; policy degli altri oggetti da implementare.,No
-CORE-05,Rilascio 1,In corso,View catalogo e guida override; tutte le altre view ancora da implementare.,No
+CORE-05,Rilascio 1,In corso,"Catalogo/scheda con WAM, RouterView, ID CSS e override; altre viste pianificate.",No
 CORE-06,Rilascio 1,In corso,it-IT/en-GB per funzioni presenti; copertura completa solo con le altre funzionalità.,No
 CORE-07,Rilascio 1,In corso,Campo lingua del corso; associazioni e filtri multilingua da implementare.,No
 CORE-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No

@@ -43,7 +43,12 @@ try:
    if server.poll() is not None:raise RuntimeError('Test HTTP server exited')
    time.sleep(.2)
  else:raise RuntimeError('Test HTTP server did not become ready')
- if 'id="jlms-courses"' not in html:raise RuntimeError('Public course view did not render')
+ if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
+ course_links=[x for x in Page(html).links if 'view=course' in x or '/course/' in x]
+ if not course_links:raise RuntimeError('Public course link missing')
+ _,detail=get(course_links[0])
+ if 'id="jlms-course-outline"' not in detail or 'Published lesson' not in detail or 'SECRET_LESSON_BODY' in detail:
+  raise RuntimeError('Public sheet must show outline without protected lesson body')
  url,html=get('/administrator/index.php')
  page=Page(html)
  form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)

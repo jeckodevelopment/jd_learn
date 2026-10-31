@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0-dev
+
+- Pubblicazione validata dei corsi di testo tramite workflow e plugin Publishing Joomla; transazione unica, versione immutabile, hash ed edizione iniziale.
+- Catalogo paginato e scheda pubblica con programma, filtro categoria/discendenti, autorizzazioni correnti e nuovi ID CSS.
+- Test integrativi workflow/veto/immutabilità/visibilità e rendering HTTP; risultati effettivi nella PR.
+- Video, materiali, iscrizioni e fruizione studenti ancora in sviluppo.
+
 ## 0.2.0-dev — 31 ottobre 2026
 
 - Aggiunti servizio applicativo DI, prima bozza didattica, editor del programma e comandi MVC nativi.

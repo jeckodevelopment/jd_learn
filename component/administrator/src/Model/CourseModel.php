@@ -88,7 +88,10 @@ final class CourseModel extends AdminModel
 
     public function publish(&$pks, $value = 1)
     {
-        $this->setError(Text::_('COM_JLMS_PUBLICATION_NOT_AVAILABLE'));
-        return false;
+        if (!Factory::getApplication()->bootComponent('com_jlms')->getPublicationService()->permitsStateChange($pks, (int) $value)) {
+            $this->setError(Text::_('COM_JLMS_PUBLICATION_NOT_AVAILABLE'));
+            return false;
+        }
+        return parent::publish($pks, $value);
     }
 }

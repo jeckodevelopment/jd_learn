@@ -10,9 +10,64 @@ use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Joomla\CMS\Categories\CategoryServiceInterface;
 use Joomla\CMS\Categories\CategoryServiceTrait;
 
-final class JlmsComponent extends MVCComponent implements CategoryServiceInterface
+final class JlmsComponent extends MVCComponent implements CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
 {
     use CategoryServiceTrait;
+    use \Joomla\CMS\Component\Router\RouterServiceTrait;
+
+    private \Jlms\Component\Jlms\Administrator\Application\CatalogService $catalogService;
+
+    public function setCatalogService(\Jlms\Component\Jlms\Administrator\Application\CatalogService $service): void
+    {
+        $this->catalogService = $service;
+    }
+
+    public function getCatalogService(): \Jlms\Component\Jlms\Administrator\Application\CatalogService
+    {
+        return $this->catalogService;
+    }
+
+    use \Joomla\CMS\Workflow\WorkflowServiceTrait;
+
+    protected $supportedFunctionality = ['core.state' => ['com_jlms.course']];
+    private \Jlms\Component\Jlms\Administrator\Application\PublicationService $publicationService;
+
+    public function setPublicationService(\Jlms\Component\Jlms\Administrator\Application\PublicationService $service): void
+    {
+        $this->publicationService = $service;
+    }
+
+    public function getPublicationService(): \Jlms\Component\Jlms\Administrator\Application\PublicationService
+    {
+        return $this->publicationService;
+    }
+
+    public function isWorkflowActive($context): bool
+    {
+        return $context === 'com_jlms.course';
+    }
+
+    public function getWorkflowContexts(): array
+    {
+        return ['com_jlms.course' => 'JD Learn'];
+    }
+
+    public function getCategoryWorkflowContext(?string $section = null): ?string
+    {
+        return $section === 'course' ? 'com_jlms.course' : null;
+    }
+
+    public function getWorkflowTableBySection(?string $section = null): string
+    {
+        return '#__jlms_courses';
+    }
+
+    public function filterTransitions(array $transitions, int $pk): array
+    {
+        $allowed = array_column($this->publicationService->transitions(\Joomla\CMS\Factory::getApplication()->getIdentity(), $pk), 'id');
+        return array_values(array_filter($transitions, static fn ($t): bool => in_array($t->id, $allowed)));
+    }
+
 
     private CurriculumService $curriculumService;
 

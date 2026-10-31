@@ -19,6 +19,7 @@ use Joomla\Database\DatabaseInterface;
 use Jlms\Contracts\Video\VideoProviderRegistry;
 use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+use Jlms\Component\Jlms\Administrator\Application\PublicationService;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Jlms\Component\Jlms\Administrator\Extension\JlmsComponent;
@@ -30,6 +31,7 @@ return new class () implements ServiceProviderInterface {
     {
         $container->registerServiceProvider(new MVCFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Jlms\\Component\\Jlms'));
+        $container->registerServiceProvider(new \Joomla\CMS\Extension\Service\Provider\RouterFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new CategoryFactory('\\Jlms\\Component\\Jlms'));
         $container->set(CurriculumService::class, static function (Container $container): CurriculumService {
             $registry = null;
@@ -47,10 +49,15 @@ return new class () implements ServiceProviderInterface {
                 },
             );
         });
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\CatalogService($c->get(DatabaseInterface::class)));
+        $container->set(PublicationService::class, static fn (Container $c): PublicationService => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
         $container->set(ComponentInterface::class, static function (Container $container): JlmsComponent {
             $component = new JlmsComponent($container->get(ComponentDispatcherFactoryInterface::class));
             $component->setMVCFactory($container->get(MVCFactoryInterface::class));
             $component->setCurriculumService($container->get(CurriculumService::class));
+            $component->setPublicationService($container->get(PublicationService::class));
+            $component->setCatalogService($container->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class));
+            $component->setRouterFactory($container->get(\Joomla\CMS\Component\Router\RouterFactoryInterface::class));
             $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
             return $component;
         });

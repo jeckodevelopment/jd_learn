@@ -18,6 +18,7 @@ final class HtmlView extends BaseHtmlView
     public array $lessonsByModule = [];
     public bool $editable = false;
     public bool $canDelete = false;
+    public array $transitions = [];
 
     public function display($tpl = null)
     {
@@ -30,6 +31,9 @@ final class HtmlView extends BaseHtmlView
         $app = Factory::getApplication();
         $this->editable = $version && $version->status === 'draft';
         $this->canDelete = $app->getIdentity()->authorise('core.delete', 'com_jlms.course.' . (int) $course->id);
+        if ($version && $app->getIdentity()->authorise('core.edit.state', 'com_jlms.course.' . (int) $course->id)) {
+            $this->transitions = $app->bootComponent('com_jlms')->getPublicationService()->transitions($app->getIdentity(), (int) $course->id);
+        }
         if ($this->editable) {
             $this->moduleForm = $this->get('Form');
             $this->lessonForm = $this->get('LessonForm');
