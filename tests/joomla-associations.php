@@ -8,13 +8,16 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
 }
-$fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-$plugin = $fixtureDb->query("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetch(\PDO::FETCH_ASSOC);
-$fixtureDb->exec("UPDATE joomla_extensions SET enabled=1, params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'");
-register_shutdown_function(static function () use ($fixtureDb, $plugin): void {
-    $statement = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=?, params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
-    $statement->execute([$plugin['enabled'], $plugin['params']]);
-});
+// Only the parent configures the fixture; workers must not mutate shared plugin settings.
+if (($argv[2] ?? '') !== 'worker') {
+    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $plugin = $fixtureDb->query("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetch(\PDO::FETCH_ASSOC);
+    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1, params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+    register_shutdown_function(static function () use ($fixtureDb, $plugin): void {
+        $statement = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=?, params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+        $statement->execute([$plugin['enabled'], $plugin['params']]);
+    });
+}
 
 // Simulate the web request context required by AdministratorApplication in a CLI smoke test.
 $_SERVER['HTTP_HOST'] = 'localhost';
