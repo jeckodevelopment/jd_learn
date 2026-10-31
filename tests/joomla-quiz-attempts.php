@@ -81,6 +81,7 @@ $other=new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHE
 $now=time();$service=new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db,$learning,$component->getQuizSnapshotService(),static function()use(&$now):int{return $now;});
 $fixturePath=dirname($root).'/quiz-attempts-fixture.json';
 if(($argv[2]??'')==='worker'){
+    echo "ready\n";fflush(STDOUT);fgets(STDIN);
     $f=json_decode(file_get_contents($fixturePath),true,16,JSON_THROW_ON_ERROR);
     $workerUser=new \Joomla\CMS\User\User($f['concurrent_user']);$r=$service->start($workerUser,'en-GB',$f['concurrent_enrollment'],$f['lesson_id'],attemptKey());echo $r['attempt']['id'].PHP_EOL;exit(0);
 }
@@ -120,6 +121,7 @@ $key=attemptKey();$a=$service->start($student,'en-GB',$enrollment,$lesson,$key);
 attemptExpect(count($a['questions'])===2&&$a['attempt']['max_points']===5&&$a['attempt']['deadline']===$now+60,'server snapshot and timer');
 attemptExpect(!str_contains(json_encode($a,JSON_THROW_ON_ERROR),'"correct"')&&!str_contains(json_encode($a,JSON_THROW_ON_ERROR),'PRIVATE_CORRECT_EXPLANATION'),'open DTO never leaks grading or explanations');
 attemptExpect($service->start($student,'en-GB',$enrollment,$lesson,$key)['attempt']['id']===$aid&&$service->start($student,'en-GB',$enrollment,$lesson,attemptKey())['used_attempts']===1,'key replay and new tab share one active attempt');
+attemptReject(fn()=>$service->start($student,'en-GB',$enrollment,$practice,$key),409,'start key is bound to its lesson and enrollment');
 attemptExpect($service->state($student,'en-GB',$enrollment,$lesson)['questions']===$a['questions'],'draw and order stable on resume');
 $mut=attemptKey();$answers=attemptAnswers($a);$save=$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,$mut,$answers,false);
 attemptExpect($save['attempt']['revision']===2&&$save['questions']===[]&&$service->state($student,'en-GB',$enrollment,$lesson)['questions'][0]['selected']!==[],'answers saved with CAS revision');
@@ -160,6 +162,14 @@ $a=$service->start($student,'en-GB',$enrollment,$subset,attemptKey());
 attemptExpect(count($a['questions'])===2&&$service->state($student,'en-GB',$enrollment,$subset)['questions']===$a['questions'],'proper subset extraction is stable on resume');
 $p=$service->mutate($student,'en-GB',$enrollment,$subset,$a['attempt']['id'],1,attemptKey(),'{}',true);
 attemptExpect(!$p['feedback_available']&&$p['remaining_attempts']===null,'unlimited failed attempts never exhaust into feedback');
+// Validation is scoped to this attempt's immutable public option identifiers.
+$validation=$service->start($student,'en-GB',$enrollment,$subset,attemptKey());$validationId=$validation['attempt']['id'];
+$firstQ=$validation['questions'][0];
+attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$subset,$validationId,1,attemptKey(),json_encode([$firstQ['id']=>['first','first']],JSON_THROW_ON_ERROR),false),422,'duplicate option identifiers rejected');
+attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$subset,$validationId,1,attemptKey(),'null',false),422,'non-map answer document rejected');
+attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$subset,$validationId,1,attemptKey(),str_repeat('x',524289),false),413,'answer payload bound enforced before decoding');
+attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$practice,$validationId,1,attemptKey(),'{}',true),404,'attempt from another quiz cannot be submitted through this lesson');
+$service->mutate($student,'en-GB',$enrollment,$subset,$validationId,1,attemptKey(),'{}',true);
 // Separate user for timer grace and native scheduler execution; no test mutates a customer's site.
 $otherEnrollment=$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16)));$a=$service->start($other,'en-GB',$otherEnrollment,$lesson,attemptKey());
 $r=$service->mutate($other,'en-GB',$otherEnrollment,$lesson,$a['attempt']['id'],1,attemptKey(),attemptAnswers($a),false);
@@ -190,12 +200,17 @@ $httpEnrollment=$learning->start($httpUser,'en-GB',$course,bin2hex(random_bytes(
 $concurrentUser=new \Joomla\CMS\User\User();
 $userData=['name'=>'CI Concurrent quiz','username'=>'ciquizconcurrent','email'=>'ciquizconcurrent@example.invalid','password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2,$group],'block'=>0,'activation'=>''];
 if(!$concurrentUser->bind($userData)||!$concurrentUser->save())throw new \RuntimeException($concurrentUser->getError());
+$concurrentUser=new \Joomla\CMS\User\User((int)$concurrentUser->id);
 $concurrentEnrollment=$learning->start($concurrentUser,'en-GB',$course,bin2hex(random_bytes(16)));
 $f=['course_id'=>$course,'lesson_id'=>$lesson,'practice_id'=>$practice,'never_id'=>$never,'enrollment_id'=>$enrollment,'http_enrollment'=>$httpEnrollment,'passed_attempt'=>$passedAttempt,'concurrent_user'=>(int)$concurrentUser->id,'concurrent_enrollment'=>$concurrentEnrollment];
 $snapshotHash=hash('sha256',json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id='.$passedAttempt.' ORDER BY id')->loadAssocList(),JSON_THROW_ON_ERROR));$f['snapshot_hash']=$snapshotHash;
 file_put_contents($fixturePath,json_encode($f,JSON_THROW_ON_ERROR));
 $workers=[];
-for($i=0;$i<2;$i++){$pipes=[];$process=proc_open([PHP_BINARY,__FILE__,$root,'worker'],[0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);if(!is_resource($process))throw new \RuntimeException('Worker not started');fclose($pipes[0]);$workers[]=[$process,$pipes];}
+for($i=0;$i<2;$i++){$pipes=[];$process=proc_open([PHP_BINARY,__FILE__,$root,'worker'],[0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);if(!is_resource($process))throw new \RuntimeException('Worker not started');$workers[]=[$process,$pipes];}
+foreach($workers as[$process,$pipes])if(trim((string)fgets($pipes[1]))!=='ready')throw new \RuntimeException('Worker barrier failed');
+$db->transactionStart();$db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id='.$concurrentEnrollment.' FOR UPDATE')->loadResult();
+foreach($workers as[$process,$pipes]){fwrite($pipes[0],"go\n");fclose($pipes[0]);}
+usleep(200000);$db->transactionCommit();
 $ids=[];foreach($workers as[$process,$pipes]){$out=trim(stream_get_contents($pipes[1]));$err=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);if(proc_close($process)!==0)throw new \RuntimeException('Worker failure '.$err.$out);$ids[]=$out;}
 attemptExpect($ids[0]===$ids[1]&&(int)$ids[0]>0,'concurrent starts allocate one attempt');
 attemptExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id='.$concurrentEnrollment)->loadResult()===1,'one unique active slot after concurrent starts');

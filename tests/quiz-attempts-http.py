@@ -53,7 +53,13 @@ try:
  student=client();login(student,'cilearnerhttp')
  _,html=request(student,path)
  expect('id="jlms-quiz"' in html and 'PRIVATE_QUIZ_PROMPT_V1' not in html,'Prestart view has no questions or grading')
- config=json.loads(re.search(r'<script type="application/json" class="joomla-script-options new">(.*?)</script>',html,re.S).group(1))['com_jlms.quiz']
+ config=None
+ for script in re.findall(r'<script[^>]*>(.*?)</script>',html,re.S):
+  try:
+   data=json.loads(script)
+   if isinstance(data,dict) and 'com_jlms.quiz' in data:config=data['com_jlms.quiz'];break
+  except json.JSONDecodeError:pass
+ expect(config is not None,'Native script options are present')
  common={'enrollment_id':fixture['http_enrollment'],'lesson_id':fixture['lesson_id'],config['token']:1}
  endpoint=lambda task:'/index.php?option=com_jlms&task=quiz.'+task+'&format=json'
  start={**common,'mutation_id':str(uuid.uuid4())}
@@ -70,9 +76,10 @@ try:
  _,done=request(student,endpoint('submit'),submit);done=json.loads(done)['data'];expect(done['attempt']['passed'] and done['course_completed'] and done['feedback_available'],'HTTP submit grades and completes')
  _,again=request(student,endpoint('submit'),submit);expect(json.loads(again)['data']['replay'],'HTTP submit replay idempotent')
  _,html=request(student,path);expect('id="jlms-quiz-result"' in html and 'PRIVATE_CORRECT_EXPLANATION' in html,'Closed result releases permitted feedback')
- subprocess.run(['php','tests/joomla-learning.php',str(root),'revoke'],check=True,capture_output=True)
+ access=json.loads((root.parent/'learning-fixture.json').read_text())
+ subprocess.run(['php','tests/joomla-learning.php',str(root),'revoke',str(access['http_user_id']),str(access['group_id'])],check=True,capture_output=True)
  try:request(student,endpoint('submit'),submit,expected=403)
- finally:subprocess.run(['php','tests/joomla-learning.php',str(root),'restore'],check=True,capture_output=True)
+ finally:subprocess.run(['php','tests/joomla-learning.php',str(root),'grant',str(access['http_user_id']),str(access['group_id'])],check=True,capture_output=True)
  expect(True,'Native HTTP replay rechecks current Joomla level')
  print(json.dumps({'quiz_http_checks':checks,'status':'passed'}))
 finally:
