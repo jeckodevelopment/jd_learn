@@ -20,25 +20,25 @@ VID-05,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presen
 VID-06,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
 VID-07,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
 VID-08,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-ISC-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-ISC-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-ISC-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-ISC-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-ISC-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-ISC-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-ISC-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-01,Rilascio 1,In corso,Avvio automatico idempotente senza gruppi e ripresa; manuale/import/approvazione da completare.,No
+ISC-02,Rilascio 1,In corso,Stato accesso separato da completed_at; letture rispettano sospensione/scadenza. Gestione amministrativa ancora da implementare.,No
+ISC-03,Rilascio 1,In corso,Finestre edizione/iscrizione ricontrollate; UI calendario e proroghe da completare.,No
+ISC-04,Rilascio 1,In corso,"Aula testo con ownership, parent e accesso correnti; preview e altri tipi da completare.",No
+ISC-05,Rilascio 1,In corso,Ripristino accesso conserva frequenza/progressi; nuove edizioni e UI da completare.,No
+ISC-06,Rilascio 1,In corso,Nessun gruppo commerciale o pagamento scritto dal LMS; integrazione completa estensione esterna da collaudare.,No
+ISC-07,Rilascio 1,In corso,Identità e cache core aggiornate anche con sessione aperta; revoca/ripristino testati su aula testo. Quiz/media da completare.,No
 ISC-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 STU-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 STU-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 STU-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 STU-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 STU-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PRO-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PRO-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PRO-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-01,Rilascio 1,In corso,Conferma manuale persistente per testo; semplice GET non attribuisce credito. Altri stati/tipi da completare.,No
+PRO-02,Rilascio 1,In corso,"Contatori obbligatori, opzionali esclusi, floor e 100% solo al completamento verificato.",No
+PRO-03,Rilascio 1,In corso,Completamento testo atomico con data server separata dallo stato di accesso; altri requisiti da integrare.,No
 PRO-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 PRO-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PRO-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-06,Rilascio 1,In corso,Completamenti duplicati/distinti testati con processi concorrenti e ledger; video/tentativi da integrare.,No
 PRO-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 QUI-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 QUI-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No

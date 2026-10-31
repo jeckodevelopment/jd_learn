@@ -56,10 +56,10 @@ jobs:
           cp dist/SHA256SUMS.txt /tmp/first-build.sha256
           python3 tools/build.py
           diff /tmp/first-build.sha256 dist/SHA256SUMS.txt
-      - name: Check out the previous released foundation for an actual upgrade test
+      - name: Check out the previous increment for an actual upgrade test
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 584bab76fe97bbd1cf551861abc2e6d4e2610078
+          ref: 11a628839ca538513e24f58e86eab3f327de4ec6
           path: .runtime/previous-source
           persist-credentials: false
       - name: Install minimum Joomla and the complete JD Learn package
@@ -69,9 +69,9 @@ jobs:
           unzip -q /tmp/joomla.zip -d .runtime/joomla
           php .runtime/joomla/installation/joomla.php install --site-name="JD Learn CI" --admin-user="CI Operator" --admin-username=cioperator --admin-password="Ci-only-Long-Password-2026" --admin-email=ci@example.invalid --db-type=mysqli --db-host=db --db-user=jlms_ci --db-pass=ci-disposable-password --db-name=jlms_test --db-prefix=joomla_ --db-encryption=0 --public-folder="" --no-interaction
           python3 .runtime/previous-source/tools/build.py
-          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.1.0-dev.zip" --no-interaction
+          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.3.0-dev.zip" --no-interaction
           php .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.3.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.4.0-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
@@ -80,15 +80,21 @@ jobs:
         run: php tests/joomla-publication.php .runtime/joomla
       - name: Render public and authenticated admin pages over HTTP
         run: python3 tests/http-smoke.py .runtime/joomla
+      - name: Text learning, current access and concurrent completion tests
+        run: php tests/joomla-learning.php .runtime/joomla
+      - name: Real student login, classroom and completion over HTTP
+        run: python3 tests/learning-http.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.3.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.4.0-dev.zip"
           php tests/joomla-smoke.php .runtime/joomla retained
+      - name: Verify completed student history survives package update
+        run: php tests/joomla-learning.php .runtime/joomla retained
       - name: Make the verified development package downloadable
         if: matrix.php == '8.4' && matrix.database == 'mysql:8.4'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: JD-Learn-0.3.0-dev
+          name: JD-Learn-0.4.0-dev
           path: dist/
           if-no-files-found: error
           retention-days: 14

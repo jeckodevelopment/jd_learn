@@ -1,0 +1,2 @@
+-- Uses existing enrollments, subjects, lesson_progress and idempotency tables.
+-- No destructive migration.

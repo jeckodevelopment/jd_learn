@@ -5,6 +5,7 @@ declare(strict_types=1);
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
 $course = $this->item['course'];
 ?>
 <article id="jlms-course" class="jlms-course" data-course-id="<?= (int) $course->id ?>">
@@ -12,7 +13,16 @@ $course = $this->item['course'];
   <a id="jlms-course-category" href="<?= Route::_('index.php?option=com_jlms&view=courses&catid=' . (int) $course->catid) ?>"><?= $this->escape($course->category_title) ?></a>
  </header>
  <section id="jlms-course-summary"><h2><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?= nl2br($this->escape((string) $course->summary)) ?></p></section>
- <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><p><?= Text::_('COM_JLMS_CLASSROOM_PENDING') ?></p></aside>
+ <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
+  <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' . base64_encode('index.php?option=com_jlms&view=course&id=' . (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
+ <?php elseif ($this->hasContentAccess && $course->enrollment_mode === 'auto') : ?>
+  <form id="jlms-start-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+   <input type="hidden" name="task" value="enrollment.start">
+   <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
+   <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
+   <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_START_RESUME') ?></button>
+  </form>
+ <?php elseif ($this->hasContentAccess) : ?><p><?= Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php endif; ?></aside>
  <section id="jlms-course-outline"><h2><?= Text::_('COM_JLMS_CURRICULUM') ?></h2>
  <?php foreach ($this->item['modules'] as $module) : ?>
   <section id="jlms-module-<?= (int) $module->id ?>" class="jlms-module"><h3 class="jlms-module__title"><?= $this->escape($module->title) ?></h3>
