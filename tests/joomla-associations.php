@@ -85,6 +85,8 @@ function assocRows(): string {
 }
 if (($argv[2] ?? '') === 'worker') {
     $command = json_decode($argv[3], true, 16, JSON_THROW_ON_ERROR);
+    // A native CMS model may start its session lazily; do it before barrier output.
+    $app->getSession()->start();
     echo "ready\n"; flush();
     if (trim((string) fgets(STDIN)) !== 'go') { throw new \RuntimeException('Association worker barrier missing'); }
     echo json_encode(['saved'=>assocSave(assocData($command['source']) + ['associations'=>['it-IT'=>$command['target']]])], JSON_THROW_ON_ERROR);
