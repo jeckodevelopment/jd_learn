@@ -90,9 +90,9 @@ function fixtureUpdate(string $table,object $record,bool $nulls=false): void {
 }
 function fixtureStudent(string $username): \Joomla\CMS\User\User {
     $user=new \Joomla\CMS\User\User();
-    if (!$user->bind(['name'=>'CI Learner','username'=>$username,'email'=>$username.'@example.invalid',
-        'password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2],'block'=>0,'activation'=>''])
-        || !$user->save()) {throw new \RuntimeException('Learner fixture failed: '.$user->getError());}
+    $data=['name'=>'CI Learner','username'=>$username,'email'=>$username.'@example.invalid',
+        'password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2],'block'=>0,'activation'=>''];
+    if (!$user->bind($data) || !$user->save()) {throw new \RuntimeException('Learner fixture failed: '.$user->getError());}
     return new \Joomla\CMS\User\User((int)$user->id);
 }
 $student=fixtureStudent('cilearner');$other=fixtureStudent('cilearnerother');$httpStudent=fixtureStudent('cilearnerhttp');
