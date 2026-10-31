@@ -207,7 +207,16 @@ $snapshotHash=hash('sha256',json_encode($db->setQuery('SELECT * FROM #__jlms_att
 file_put_contents($fixturePath,json_encode($f,JSON_THROW_ON_ERROR));
 $workers=[];
 for($i=0;$i<2;$i++){$pipes=[];$process=proc_open([PHP_BINARY,__FILE__,$root,'worker'],[0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);if(!is_resource($process))throw new \RuntimeException('Worker not started');$workers[]=[$process,$pipes];}
-foreach($workers as[$process,$pipes])if(trim((string)fgets($pipes[1]))!=='ready')throw new \RuntimeException('Worker barrier failed');
+foreach($workers as[$process,$pipes]) {
+    stream_set_timeout($pipes[1],30);
+    $ready=trim((string)fgets($pipes[1]));
+    if($ready!=='ready') {
+        stream_set_blocking($pipes[1],false); stream_set_blocking($pipes[2],false);
+        $detail=$ready.' '.stream_get_contents($pipes[1]).' '.stream_get_contents($pipes[2]);
+        foreach($workers as[$child,$channels]) { proc_terminate($child); }
+        throw new \RuntimeException('Worker barrier failed: '.$detail);
+    }
+}
 $db->transactionStart();$db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id='.$concurrentEnrollment.' FOR UPDATE')->loadResult();
 foreach($workers as[$process,$pipes]){fwrite($pipes[0],"go\n");fclose($pipes[0]);}
 usleep(200000);$db->transactionCommit();

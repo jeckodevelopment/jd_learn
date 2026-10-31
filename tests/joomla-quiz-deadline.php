@@ -153,7 +153,16 @@ $runRace=static function(string $name,bool $expiry)use($db,$root,$group,$learnin
  $now=time();$user=deadlineUser($name,$group);$e=$learning->start($user,'en-GB',$course,bin2hex(random_bytes(16)));$a=$runtime->start($user,'en-GB',$e,$lesson,deadlineKey());$cmd=deadlineCommand($deadline->editor($actor,$course,$lesson,$e,$a['attempt']['id'],1));
  $race=['command'=>$cmd,'clock'=>$expiry?$a['attempt']['deadline']:$now];file_put_contents(dirname($root).'/quiz-deadline-race.json',json_encode($race,JSON_THROW_ON_ERROR));$workers=[];
  foreach($expiry?['extend','expire']:['extend','extend2']as$mode){$pipes=[];$process=proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode],[0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);if(!is_resource($process))throw new \RuntimeException('Worker failed');$workers[]=[$process,$pipes];}
- foreach($workers as[$process,$pipes])if(trim((string)fgets($pipes[1]))!=='ready')throw new \RuntimeException('Worker barrier failed');
+ foreach($workers as[$process,$pipes]) {
+    stream_set_timeout($pipes[1],30);
+    $ready=trim((string)fgets($pipes[1]));
+    if($ready!=='ready') {
+        stream_set_blocking($pipes[1],false); stream_set_blocking($pipes[2],false);
+        $detail=$ready.' '.stream_get_contents($pipes[1]).' '.stream_get_contents($pipes[2]);
+        foreach($workers as[$child,$channels]) { proc_terminate($child); }
+        throw new \RuntimeException('Worker barrier failed: '.$detail);
+    }
+}
  $db->transactionStart();$db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id='.$e.' FOR UPDATE')->loadResult();foreach($workers as[$process,$pipes]){fwrite($pipes[0],"go\n");fclose($pipes[0]);}usleep(200000);$db->transactionCommit();$results=[];
  foreach($workers as[$process,$pipes]){$out=trim(stream_get_contents($pipes[1]));$err=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);if(proc_close($process)!==0)throw new \RuntimeException($err.$out);$results[]=$out;}sort($results);
  deadlineExpect($results===($expiry?['conflict','expired']:['conflict','ok']),$expiry?'expiry and extension cannot reopen an elapsed attempt':'two concurrent extensions from one preview add time once');
