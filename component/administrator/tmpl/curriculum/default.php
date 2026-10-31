@@ -48,6 +48,7 @@ $hidden = static function (array $fields): void {
  <?php if (\Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id)) : ?>
  <p><a id="jlms-manage-materials" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p>
  <?php endif; ?>
+ <?php if ($this->editable && $this->outline['modules']) : ?><p><a class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=quiz&id='.(int)$course->id.'&version_id='.(int)$version->id) ?>"><?= Text::_('COM_JLMS_QUIZ_NEW') ?></a></p><?php endif; ?>
  <div id="jlms-admin-course-outline">
  <?php foreach ($this->outline['modules'] as $module) : ?>
   <section class="jlms-admin-module" data-module-id="<?= (int) $module->id ?>"><h2><?= $this->escape($module->title) ?></h2>
@@ -65,15 +66,15 @@ $hidden = static function (array $fields): void {
    </form><?php endif; ?>
   <?php endif; ?>
   <ol><?php foreach ($this->lessonsByModule[(int) $module->id] ?? [] as $lesson) : ?>
-   <li><strong><?= $this->escape($lesson->title) ?></strong> · <?= Text::_($lesson->kind === 'text' ? 'COM_JLMS_LESSON_TEXT' : ($lesson->kind === 'video' ? 'COM_JLMS_LESSON_VIDEO' : $lesson->kind)) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?>
+   <li><strong><?= $this->escape($lesson->title) ?></strong> · <?= Text::_($lesson->kind === 'text' ? 'COM_JLMS_LESSON_TEXT' : ($lesson->kind === 'video' ? 'COM_JLMS_LESSON_VIDEO' : 'COM_JLMS_LESSON_QUIZ')) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?>
    <?php if ($this->editable) : ?>
-    <a href="<?= $link($base . '&version_id=' . (int) $version->id . '&edit_lesson=' . (int) $lesson->id) ?>#jlms-lesson-form"><?= Text::_('JGLOBAL_EDIT') ?></a>
+    <a href="<?= $lesson->kind === 'quiz' ? $link('index.php?option=com_jlms&view=quiz&id='.(int)$course->id.'&version_id='.(int)$version->id.'&lesson_id='.(int)$lesson->id) : $link($base . '&version_id=' . (int) $version->id . '&edit_lesson=' . (int) $lesson->id) . '#jlms-lesson-form' ?>"><?= Text::_('JGLOBAL_EDIT') ?></a>
     <?php foreach (['up','down'] as $direction) : ?>
     <form method="post" class="d-inline" action="<?= $link('index.php?option=com_jlms') ?>">
      <?php $hidden($scope + ['id' => $lesson->id, 'direction' => $direction]); ?><input type="hidden" name="task" value="lesson.reorder">
      <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-sm btn-secondary"><?= Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></button>
     </form><?php endforeach; ?>
-    <?php if ($this->canDelete) : ?>
+    <?php if ($this->canDelete && $lesson->kind !== 'quiz') : ?>
     <form method="post" class="d-inline" action="<?= $link('index.php?option=com_jlms') ?>">
      <?php $hidden($scope + ['id' => $lesson->id, 'revision' => $lesson->revision]); ?><input type="hidden" name="task" value="lesson.delete">
      <label><input type="checkbox" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_CONFIRM_DELETE_LESSON') ?></label>

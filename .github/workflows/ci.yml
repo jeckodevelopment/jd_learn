@@ -46,7 +46,9 @@ jobs:
       - name: Lint every PHP source
         run: python3 -c "import pathlib,subprocess; [subprocess.run(['php','-l',str(p)],check=True) for p in pathlib.Path('.').rglob('*.php')]"
       - name: Domain, source validation and plugin registry tests
-        run: php tests/run.php
+        run: |
+          php tests/run.php
+          php tests/question-definition.php
       - name: Cloudflare configuration, secrets, remote privacy and token tests
         run: php tests/cloudflare.php
       - name: Material format and bounded archive policy tests
@@ -63,7 +65,7 @@ jobs:
       - name: Check out the previous increment for an actual upgrade test
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: af823e873216c6b198060d149daa52ef695d6d43
+          ref: 875af49cf720ddfab2dd77b15382da77f4f7217c
           path: .runtime/previous-source
           persist-credentials: false
       - name: Install minimum Joomla and the complete JD Learn package
@@ -73,17 +75,21 @@ jobs:
           unzip -q /tmp/joomla.zip -d .runtime/joomla
           php .runtime/joomla/installation/joomla.php install --site-name="JD Learn CI" --admin-user="CI Operator" --admin-username=cioperator --admin-password="Ci-only-Long-Password-2026" --admin-email=ci@example.invalid --db-type=mysqli --db-host=db --db-user=jlms_ci --db-pass=ci-disposable-password --db-name=jlms_test --db-prefix=joomla_ --db-encryption=0 --public-folder="" --no-interaction
           python3 .runtime/previous-source/tools/build.py
-          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.7.0-dev.zip" --no-interaction
+          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.8.0-dev.zip" --no-interaction
           php .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.8.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.9.0-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
         run: php tests/joomla-curriculum.php .runtime/joomla
+      - name: Native question bank, immutable revisions and scoped quiz drafts
+        run: php tests/joomla-quiz-authoring.php .runtime/joomla
       - name: Native workflow publication and catalog access tests
         run: php tests/joomla-publication.php .runtime/joomla
       - name: Render public and authenticated admin pages over HTTP
         run: python3 tests/http-smoke.py .runtime/joomla
+      - name: Native question and quiz forms over HTTP
+        run: python3 tests/quiz-authoring-http.py .runtime/joomla
       - name: Text learning, current access and concurrent completion tests
         run: php tests/joomla-learning.php .runtime/joomla
       - name: Real student login, classroom and completion over HTTP
@@ -106,7 +112,7 @@ jobs:
         run: python3 tests/html5-http.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.8.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.9.0-dev.zip"
           php tests/joomla-smoke.php .runtime/joomla retained
       - name: Verify completed student history survives package update
         run: php tests/joomla-learning.php .runtime/joomla retained
@@ -116,11 +122,13 @@ jobs:
         run: php tests/joomla-video.php .runtime/joomla retained
       - name: Verify local video history survives package update
         run: php tests/html5-fixture.php .runtime/joomla retained
+      - name: Verify question revisions and quiz drafts survive package upgrade
+        run: php tests/joomla-quiz-authoring.php .runtime/joomla retained
       - name: Make the verified development package downloadable
         if: matrix.php == '8.4' && matrix.database == 'mysql:8.4'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: JD-Learn-0.8.0-dev
+          name: JD-Learn-0.9.0-dev
           path: dist/
           if-no-files-found: error
           retention-days: 14
