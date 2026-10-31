@@ -78,6 +78,7 @@ try:
  expect(first['lesson']['duration_ms']==10000 and asset['mime_type']=='video/mp4','real ffprobe detected the duration and media type')
  expect(asset['status']=='ready' and json.loads(asset['scan_json'])['result']=='not_configured','scanner absence is explicit')
  expect(asset['sha256']==hashlib.sha256(source.read_bytes()).hexdigest(),'stored video hash verified')
+ command('edit');edited=state();expect(edited['lesson']['media_asset_id']==first['lesson']['media_asset_id']and edited['lesson']['duration_ms']==10000 and edited['lesson']['source_revision']==first['lesson']['source_revision'],'ordinary edits ignore forged asset/duration fields and preserve the server source')
  upload('lesson-v2.mp4',replacement.read_bytes());current=state();new_key=current['asset']['storage_key'];movie=replacement.read_bytes()
  expect(new_key!=old_key and (Path(fixture['video_root'])/old_key).read_bytes()==source.read_bytes(),'replacement retains the original immutable blob')
  expect(current['lesson']['source_revision']>first['lesson']['source_revision'],'replacement increments the source revision')

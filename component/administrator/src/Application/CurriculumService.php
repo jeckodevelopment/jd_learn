@@ -298,7 +298,7 @@ final class CurriculumService
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null];
         if ($kind === 'video' && ($input['provider_key'] ?? '') === 'html5') {
-            if (($input['source_reference'] ?? '') !== '') { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+            // HTML5 source/duration are assigned only by LocalVideoService; ignore stale or forged form values.
             $fields['provider_key'] = 'html5';
         } elseif ($kind === 'video') {
             $fields['duration_ms'] = self::duration($input['duration_seconds'] ?? null);

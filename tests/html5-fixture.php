@@ -86,6 +86,11 @@ if($mode!==''){
   $publication=$component->getPublicationService();
   $publication->transition($app->getIdentity(),$course,$version,(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult(),
    (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult(),(int)$publication->transitions($app->getIdentity(),$course)[0]->id);
+ }elseif($mode==='edit'){
+  $component->getCurriculumService()->saveLesson($app->getIdentity(),['id'=>$lesson,'course_id'=>$course,'version_id'=>$version,
+   'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult(),
+   'revision'=>(int)$row->revision,'module_id'=>(int)$row->module_id,'title'=>'Local lesson edited','kind'=>'video','required'=>'1','body'=>'',
+   'provider_key'=>'html5','source_reference'=>'untrusted-other-asset-id','duration_seconds'=>'1','duration_confirmed'=>'0']);
  }elseif($mode==='configure'){
   $changes=json_decode($argv[3]??'{}',true,16,JSON_THROW_ON_ERROR);
   if(array_diff(array_keys($changes),['material_scan_required','material_clamd_socket']))throw new \RuntimeException('Unapproved fixture option');
