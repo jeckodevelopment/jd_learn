@@ -130,7 +130,7 @@ if(!$g->save(['id'=>0,'parent_id'=>2,'title'=>'CI assessment time manager']))thr
 $asset=new \Joomla\CMS\Table\Asset($db);$asset->loadByName('com_jlms');$permissions=json_decode($asset->rules,true);
 foreach(['core.manage','jlms.enrollments.manage','jlms.assessment.correct']as$action)$permissions[$action][(string)$managerGroup]=true;
 $asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
-$manager=new \Joomla\CMS\User\User();$data=array_replace($data,['name'=>'CI Time Manager','username'=>'ciquiztimemanager','email'=>'ciquiztimemanager@example.invalid','groups'=>[2,$managerGroup]]);
+$manager=new \Joomla\CMS\User\User();$data=array_replace($data,['name'=>'CI Time Manager','username'=>'ciquiztimemanager','email'=>'ciquiztimemanager@example.invalid','password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2,$managerGroup]]);
 if(!$manager->bind($data)||!$manager->save())throw new \RuntimeException($manager->getError());$manager=new \Joomla\CMS\User\User((int)$manager->id);
 timeExpect($time->editor($manager,$course,$lesson,$enrollment)['enrollment']->id==$enrollment,'dedicated native permissions allow management without author role');
 $courseAsset=(int)$db->setQuery('SELECT asset_id FROM #__jlms_courses WHERE id='.$course)->loadResult();$asset->load($courseAsset);$oldRules=$asset->rules;
