@@ -51,6 +51,8 @@ return new class () implements ServiceProviderInterface {
         });
         $container->set(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\CatalogService($c->get(DatabaseInterface::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\LearningService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\LearningService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class)));
+        $container->set(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class, static fn () => new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn () => ComponentHelper::getParams('com_jlms')));
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\MaterialService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\MaterialService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class)));
         $container->set(PublicationService::class, static fn (Container $c): PublicationService => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
         $container->set(ComponentInterface::class, static function (Container $container): JlmsComponent {
             $component = new JlmsComponent($container->get(ComponentDispatcherFactoryInterface::class));
@@ -59,6 +61,7 @@ return new class () implements ServiceProviderInterface {
             $component->setPublicationService($container->get(PublicationService::class));
             $component->setCatalogService($container->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class));
             $component->setLearningService($container->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class));
+            $component->setMaterialService($container->get(\Jlms\Component\Jlms\Administrator\Application\MaterialService::class));
             $component->setRouterFactory($container->get(\Joomla\CMS\Component\Router\RouterFactoryInterface::class));
             $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
             return $component;

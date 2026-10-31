@@ -40,6 +40,23 @@ $currentModule = 0;
    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
   </form>
+ <div id="jlms-material-groups">
+ <?php foreach (['course' => 'jlms-classroom-course-materials', 'lesson' => 'jlms-lesson-resources'] as $scope => $region) : $files = $this->materials[$scope]; ?>
+ <section id="<?= $region ?>" class="jlms-material-list"><h3><?= Text::_($scope === 'course' ? 'COM_JLMS_COURSE_MATERIALS' : 'COM_JLMS_LESSON_MATERIALS') ?></h3>
+ <?php foreach ($files['items'] as $file) : ?>
+  <article id="jlms-material-<?= (int) $file->id ?>" class="jlms-material">
+   <h4 class="jlms-material__title"><?= $this->escape($file->title) ?></h4><p><?= $this->escape($file->description ?? '') ?></p>
+   <p class="jlms-material__meta"><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
+   <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.download&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
+  </article>
+ <?php endforeach; ?>
+ <?php if (!$files['items']) : ?><p><?= Text::_('COM_JLMS_NO_MATERIALS') ?></p><?php endif; ?>
+ <?php $materialsBase = 'index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->id . '&' . $scope . '_material_page='; ?>
+ <nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
+ <?php if ($files['page'] > 0) : ?><a href="<?= Route::_($materialsBase . ($files['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php endif; ?>
+ <?php if (($files['page'] + 1) * 20 < $files['total']) : ?><a href="<?= Route::_($materialsBase . ($files['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?>
+ </nav></section>
+ <?php endforeach; ?></div>
  </article></div>
  <a id="jlms-classroom-back" href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item['course_id']) ?>"><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></a>
 </section>

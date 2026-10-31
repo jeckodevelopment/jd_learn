@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><fieldset name="details">
+ <field name="course_id" type="hidden" filter="integer" /><field name="version_id" type="hidden" filter="integer" /><field name="expected_version_revision" type="hidden" filter="integer" />
+ <field name="title" type="text" label="JGLOBAL_TITLE" maxlength="255" required="true" filter="string" />
+ <field name="description" type="textarea" label="JGLOBAL_DESCRIPTION" maxlength="4096" filter="string" />
+ <field name="lesson_id" type="list" label="COM_JLMS_MATERIAL_SCOPE" filter="integer"><option value="0">COM_JLMS_COURSE_MATERIALS</option></field>
+ <field name="replace_id" type="number" label="COM_JLMS_REPLACE_ID" default="0" min="0" filter="integer" />
+ <field name="upload" type="file" label="COM_JLMS_MATERIAL_FILE" required="true" accept=".pdf,.docx,.xlsx,.pptx,.odt,.ods,.odp,.txt,.csv,.jpg,.jpeg,.png,.webp,.zip" />
+ </fieldset></form>

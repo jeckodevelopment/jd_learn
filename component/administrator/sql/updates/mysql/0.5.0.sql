@@ -1,0 +1,1 @@
+-- Uses existing immutable assets and attachment tables. No destructive migration.

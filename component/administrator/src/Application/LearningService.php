@@ -226,6 +226,15 @@ final class LearningService
         return $lesson;
     }
 
+    /** Reused by attachment policy: no lesson body, progress read or credit is produced. */
+    public function resourceContext(User $identity, string $language, int $enrollmentId, int $lessonId = 0): array
+    {
+        $actor = $this->freshActor($identity);
+        [$course, $version] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
+        if ($lessonId) { $this->lesson((int) $version->id, $lessonId); }
+        return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
+    }
+
     public function classroom(User $identity, string $language, int $enrollmentId, int $lessonId = 0): array
     {
         $actor = $this->freshActor($identity);
