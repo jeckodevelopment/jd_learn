@@ -74,7 +74,9 @@ if (in_array($argv[2] ?? '',['revoke','grant'],true)) {
     $id=(int)$argv[3];
     $name=$db->setQuery('SELECT username FROM #__users WHERE id='.$id)->loadResult();
     if ($name!=='cilearnerhttp') { throw new \RuntimeException('Not an HTTP test account'); }
-    ($argv[2]==='revoke') ? \Joomla\CMS\User\UserHelper::removeUserFromGroup($id,2) : \Joomla\CMS\User\UserHelper::addUserToGroup($id,2);
+    $groupId=(int)$argv[4];
+    if ($db->setQuery('SELECT title FROM #__usergroups WHERE id='.$groupId)->loadResult()!=='CI learning entitlement') {throw new \RuntimeException('Not a fixture group');}
+    ($argv[2]==='revoke') ? \Joomla\CMS\User\UserHelper::removeUserFromGroup($id,$groupId) : \Joomla\CMS\User\UserHelper::addUserToGroup($id,$groupId);
     echo "fixture access changed\n";exit(0);
 }
 $checks=0;
@@ -91,18 +93,24 @@ function fixtureUpdate(string $table,object $record,bool $nulls=false): void {
     global $db;$db->updateObject('#__'.$table,$record,'id',$nulls);
 }
 function fixtureStudent(string $username): \Joomla\CMS\User\User {
+    global $learningGroup;
     $user=new \Joomla\CMS\User\User();
     $data=['name'=>'CI Learner','username'=>$username,'email'=>$username.'@example.invalid',
-        'password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2],'block'=>0,'activation'=>''];
+        'password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2,$learningGroup],'block'=>0,'activation'=>''];
     if (!$user->bind($data) || !$user->save()) {throw new \RuntimeException('Learner fixture failed: '.$user->getError());}
     return new \Joomla\CMS\User\User((int)$user->id);
 }
+$groupModel=$app->bootComponent('com_users')->getMVCFactory()->createModel('Group','Administrator',['ignore_request'=>true]);
+if (!$groupModel->save(['id'=>0,'parent_id'=>2,'title'=>'CI learning entitlement'])) {throw new \RuntimeException('Core group fixture failed: '.$groupModel->getError());}
+$learningGroup=(int)$groupModel->getState('group.id');
+$level=(object)['title'=>'CI learning access','ordering'=>0,'rules'=>json_encode([$learningGroup],JSON_THROW_ON_ERROR)];
+$db->insertObject('#__viewlevels',$level,'id');$learningLevel=(int)$level->id;
 $student=fixtureStudent('cilearner');$other=fixtureStudent('cilearnerother');$httpStudent=fixtureStudent('cilearnerhttp');
 $actor=$app->getIdentity();$authoring=$component->getCurriculumService();$publication=$component->getPublicationService();
 $catid=(int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
 if (!$model->save(['id'=>0,'revision'=>1,'title'=>'Learning fixture','alias'=>'learning-fixture','catid'=>$catid,
-    'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Text learning fixture'])) {throw new \RuntimeException($model->getError());}
+    'language'=>'*','catalog_access'=>1,'content_access'=>$learningLevel,'enrollment_mode'=>'auto','summary'=>'Text learning fixture'])) {throw new \RuntimeException($model->getError());}
 $course=(int)$model->getState('course.id');$version=$authoring->createDraft($actor,$course,1);
 $scope=static function()use($db,$course,$version):array{return ['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult()];};
 $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Learning chapter']);
@@ -158,11 +166,11 @@ learningDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lessons[1
 $learning->complete($student,'en-GB',$enrollment,$lessons[3],bin2hex(random_bytes(16)));
 learningExpect($learning->classroom($student,'en-GB',$enrollment)['percent']===33,'optional lesson gives no required credit');
 // Revoke a core group while keeping the same User object with its old cached access levels.
-$student->getAuthorisedViewLevels();\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id,2);
+$student->getAuthorisedViewLevels();\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id,$learningGroup);
 learningDenied(fn()=>$learning->classroom($student,'en-GB',$enrollment),403,'current group revocation overrides cached identity');
 learningDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lessons[0],$completeKey),403,'idempotent replay still checks current entitlement');
 learningDenied(fn()=>$learning->start($student,'en-GB',$course,$key),403,'start replay cannot restore revoked access');
-\Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id,2);
+\Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id,$learningGroup);
 learningExpect($learning->classroom($student,'en-GB',$enrollment)['percent']===33,'restoring group retains history');
 fixtureUpdate('users',(object)['id'=>(int)$student->id,'block'=>1]);
 learningDenied(fn()=>$learning->classroom($student,'en-GB',$enrollment),403,'fresh account block overrides session state');
@@ -189,5 +197,5 @@ learningExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__user_usergroup_map WH
 fixtureUpdate('jlms_courses',(object)['id'=>$course,'enrollment_mode'=>'approval']);
 learningDenied(fn()=>$learning->start($httpStudent,'en-GB',$course,bin2hex(random_bytes(16))),409,'approval mode cannot bypass request workflow');
 fixtureUpdate('jlms_courses',(object)['id'=>$course,'enrollment_mode'=>'auto']);
-file_put_contents(dirname($root).'/learning-fixture.json',json_encode(['course_id'=>$course,'lessons'=>$lessons,'http_user_id'=>(int)$httpStudent->id],JSON_THROW_ON_ERROR));
+file_put_contents(dirname($root).'/learning-fixture.json',json_encode(['course_id'=>$course,'lessons'=>$lessons,'http_user_id'=>(int)$httpStudent->id,'group_id'=>$learningGroup],JSON_THROW_ON_ERROR));
 echo json_encode(['learning_checks'=>$checks,'status'=>'passed','concurrent_workers'=>4],JSON_THROW_ON_ERROR).PHP_EOL;

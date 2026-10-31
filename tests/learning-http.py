@@ -74,10 +74,10 @@ try:
  _,done=request(student,urljoin(classroom_url,completion['action']),done_fields)
  expect('value="33"' in done,'Repeated completion does not double count')
  # Change group membership outside the web process, keeping the same authenticated cookie/session.
- subprocess.run(['php',str(Path(__file__).with_name('joomla-learning.php')),str(root),'revoke',str(fixture['http_user_id'])],check=True,capture_output=True)
+ subprocess.run(['php',str(Path(__file__).with_name('joomla-learning.php')),str(root),'revoke',str(fixture['http_user_id']),str(fixture['group_id'])],check=True,capture_output=True)
  request(student,direct,expected=403)
  request(student,urljoin(classroom_url,completion['action']),done_fields,expected=403)
- subprocess.run(['php',str(Path(__file__).with_name('joomla-learning.php')),str(root),'grant',str(fixture['http_user_id'])],check=True,capture_output=True)
+ subprocess.run(['php',str(Path(__file__).with_name('joomla-learning.php')),str(root),'grant',str(fixture['http_user_id']),str(fixture['group_id'])],check=True,capture_output=True)
  _,resumed=request(student,direct)
  expect('value="33"' in resumed,'Restored group resumes existing progress with same session')
  other=client();login(other,'cilearnerother');request(other,direct,expected=404)
