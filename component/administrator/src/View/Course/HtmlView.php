@@ -14,6 +14,7 @@ final class HtmlView extends BaseHtmlView
 {
     public $form;
     public $item;
+    public bool $readOnly = false;
 
     public function display($tpl = null)
     {
@@ -32,8 +33,15 @@ final class HtmlView extends BaseHtmlView
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
         ToolbarHelper::title(Text::_('COM_JLMS_COURSE'), 'graduation-cap');
-        ToolbarHelper::apply('course.apply');
-        ToolbarHelper::save('course.save');
+        $this->readOnly = $id > 0 && ($this->item->current_version_id !== null || (int) $this->item->state !== 0);
+        if ($this->readOnly) {
+            foreach (['title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary'] as $field) {
+                $this->form->setFieldAttribute($field, 'disabled', 'true');
+            }
+        } else {
+            ToolbarHelper::apply('course.apply');
+            ToolbarHelper::save('course.save');
+        }
         ToolbarHelper::cancel('course.cancel');
         parent::display($tpl);
     }

@@ -15,7 +15,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         <tbody><?php foreach ($this->items as $item) : ?><tr>
             <td><a href="<?= Route::_('index.php?option=com_jlms&task=course.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
                 <a class="btn btn-sm btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a></td>
-            <td><?= Text::_('COM_JLMS_DRAFT') ?></td><td><?= (int) $item->revision ?></td>
+            <td><?= Text::_((int) $item->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></td><td><?= (int) $item->revision ?></td>
         </tr><?php endforeach; ?></tbody>
     </table>
     <?= $this->pagination->getListFooter() ?>
