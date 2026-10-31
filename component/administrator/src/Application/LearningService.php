@@ -208,7 +208,7 @@ final class LearningService
     private function lesson(int $versionId, int $lessonId, bool $includeBody = false): object
     {
         $columns = ['id', 'course_version_id', 'title', 'kind', 'required', 'completion_rule',
-            'publish_up', 'publish_down', 'release_after_days', 'source_revision'];
+            'publish_up', 'publish_down', 'release_after_days', 'source_revision', 'provider_key', 'duration_ms'];
         if ($includeBody) {
             $columns[] = 'body';
         }
@@ -219,11 +219,26 @@ final class LearningService
         if ((int) $lesson->course_version_id !== $versionId) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
-        if ($lesson->kind !== 'text' || $lesson->completion_rule !== 'manual' || $lesson->publish_up !== null
+        $supported = ($lesson->kind === 'text' && $lesson->completion_rule === 'manual')
+            || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
+                && in_array($lesson->provider_key, ['youtube', 'vimeo'], true) && (int) $lesson->duration_ms >= 1000);
+        if (!$supported || $lesson->publish_up !== null
             || $lesson->publish_down !== null || $lesson->release_after_days !== null) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         return $lesson;
+    }
+
+    /** Internal video service context; controllers never serialise these database records. */
+    public function videoContext(User $identity, string $language, int $enrollmentId, int $lessonId, bool $lock = false): array
+    {
+        $actor = $this->freshActor($identity);
+        [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
+        $lesson = $this->lesson((int) $version->id, $lessonId);
+        if ($lesson->kind !== 'video') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        $q = $this->db->createQuery()->select('source_json')->from('#__jlms_lessons')->where('id = :lesson')->bind(':lesson', $lessonId, ParameterType::INTEGER);
+        $lesson->source_json = $this->db->setQuery($q)->loadResult();
+        return [$actor, $version, $enrollment, $lesson];
     }
 
     /** Reused by attachment policy: no lesson body, progress read or credit is produced. */
@@ -254,7 +269,8 @@ final class LearningService
         $percent = (int) $enrollment->required_total > 0
             ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
-            'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title,
+            'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
+                'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
                 'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) $lesson->body, 'HTML')],
             'outline' => $outline, 'percent' => $percent, 'completed_at' => $enrollment->completed_at];
     }
@@ -266,6 +282,7 @@ final class LearningService
         $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $key): void {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
             $lesson = $this->lesson((int) $version->id, $lessonId);
+            if ($lesson->kind !== 'text' || $lesson->completion_rule !== 'manual') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
             $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
             $q = $this->db->createQuery()->select('state')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')

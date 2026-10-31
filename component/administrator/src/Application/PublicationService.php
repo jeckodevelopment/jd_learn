@@ -114,22 +114,37 @@ final class PublicationService
                 if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
-                if ($lesson->kind !== 'text' || $lesson->completion_rule !== 'manual' || $lesson->source_json !== null
-                    || $lesson->provider_key !== null || $lesson->media_asset_id !== null || (int) $lesson->preview !== 0
-                    || $lesson->publish_up !== null || $lesson->publish_down !== null || $lesson->release_after_days !== null) {
+                if ($lesson->media_asset_id !== null || (int) $lesson->preview !== 0 || $lesson->publish_up !== null
+                    || $lesson->publish_down !== null || $lesson->release_after_days !== null || strlen((string) $lesson->body) > 1048576) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
-                if (strlen((string) $lesson->body) > 1048576) {
-                    throw new \DomainException('COM_JLMS_INVALID_INPUT');
-                }
-                if (trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === '') {
-                    throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
-                }
+                if ($lesson->kind === 'text') {
+                    if ($lesson->completion_rule !== 'manual' || $lesson->source_json !== null || $lesson->provider_key !== null
+                        || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === '') {
+                        throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
+                    }
+                } elseif ($lesson->kind === 'video') {
+                    $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
+                    $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
+                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo'], true) || $lesson->completion_rule !== 'video_coverage'
+                        || !in_array($policy, ['click', 'site_consent'], true) || (int) $lesson->duration_ms < 1000
+                        || (int) $lesson->duration_ms > 28800000 || ($params['video_duration_confirmed'] ?? false) !== true) {
+                        throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                    }
+                    $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider($lesson->provider_key);
+                    $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
+                    $normal = $provider->normaliseSource(new \Jlms\Contracts\Video\SourceInput($source['reference'], $source['options'] ?? []));
+                    if (!$provider->getDescriptor()->configured || !$provider->getCapabilities($normal)->position) {
+                        throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                    }
+                } else { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
                 $moduleIds[$lesson->module_id]++;
                 $required += (int) $lesson->required;
                 $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
                     'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
-                    'required' => (int) $lesson->required, 'body_sha256' => hash('sha256', (string) $lesson->body)];
+                    'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'duration_ms' => $lesson->duration_ms,
+                    'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
+                    'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' => hash('sha256', (string) $lesson->body)];
                 $lastId = (int) $lesson->id;
             }
         } while (count($batch) === 16);

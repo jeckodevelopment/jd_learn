@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="jlmsvideo" method="upgrade">
- <name>PLG_JLMSVIDEO_VIMEO</name><author>Jecko Development</author><version>0.1.0</version>
+ <name>PLG_JLMSVIDEO_VIMEO</name><author>Jecko Development</author><version>0.6.0</version>
  <description>PLG_JLMSVIDEO_FOUNDATION_DESCRIPTION</description><namespace path="src">Jlms\Plugin\Jlmsvideo\Vimeo</namespace>
  <files><folder plugin="vimeo">services</folder><folder>src</folder><folder>language</folder><folder>docs</folder></files>
- <config><fields name="params"><fieldset name="basic" label="JGLOBAL_FIELDSET_BASIC"><field name="language_mode" type="list" label="PLG_JLMSVIDEO_LANGUAGE_MODE" default="user"><option value="user">JUSER</option><option value="site">JSITE</option></field>
+ <media destination="plg_jlmsvideo_vimeo" folder="media"><folder>js</folder></media>
+ <config><fields name="params"><fieldset name="basic" label="JGLOBAL_FIELDSET_BASIC"><field name="playback_enabled" type="radio" layout="joomla.form.field.radio.switcher" label="PLG_JLMSVIDEO_PLAYBACK_ENABLED" default="0" filter="integer"><option value="0">JNO</option><option value="1">JYES</option></field><field name="language_mode" type="list" label="PLG_JLMSVIDEO_LANGUAGE_MODE" default="user"><option value="user">JUSER</option><option value="site">JSITE</option></field>
 <field name="autoplay" type="radio" layout="joomla.form.field.radio.switcher" label="PLG_JLMSVIDEO_AUTOPLAY" default="0"><option value="0">JNO</option><option value="1">JYES</option></field>
 <field name="metadata_cache_ttl" type="number" label="PLG_JLMSVIDEO_METADATA_TTL" default="3600" min="0" max="86400" filter="integer" />
 <field name="remote_timeout" type="number" label="PLG_JLMSVIDEO_TIMEOUT" default="5" min="1" max="15" filter="integer" /></fieldset></fields></config>

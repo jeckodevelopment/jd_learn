@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" method="upgrade">
- <name>COM_JLMS</name><author>Jecko Development</author><version>0.5.0</version>
+ <name>COM_JLMS</name><author>Jecko Development</author><version>0.6.0</version>
  <description>COM_JLMS_XML_DESCRIPTION</description><namespace path="src">Jlms\Component\Jlms</namespace>
  <scriptfile>script.php</scriptfile>
  <files folder="site"><folder>src</folder><folder>tmpl</folder><folder>language</folder></files>
- <media destination="com_jlms" folder="media"><folder>css</folder><filename>joomla.asset.json</filename></media>
+ <media destination="com_jlms" folder="media"><folder>css</folder><folder>js</folder><filename>joomla.asset.json</filename></media>
 <languages folder="site/language"><language tag="it-IT">it-IT/com_jlms.ini</language><language tag="it-IT">it-IT/com_jlms.sys.ini</language><language tag="en-GB">en-GB/com_jlms.ini</language><language tag="en-GB">en-GB/com_jlms.sys.ini</language></languages>
  <administration><menu img="class:graduation-cap">COM_JLMS</menu>
   <files folder="administrator"><folder>services</folder><folder>src</folder><folder>tmpl</folder><folder>forms</folder><folder>sql</folder><folder>docs</folder><folder>language</folder><filename>access.xml</filename><filename>config.xml</filename></files>

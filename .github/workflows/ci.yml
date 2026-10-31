@@ -41,7 +41,7 @@ jobs:
       - name: Install test runtime extensions
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends python3 unzip libpng-dev libonig-dev libxml2-dev libzip-dev
+          apt-get install -y --no-install-recommends python3 nodejs unzip libpng-dev libonig-dev libxml2-dev libzip-dev
           docker-php-ext-install -j2 pdo_mysql mysqli gd mbstring dom simplexml zip
       - name: Lint every PHP source
         run: python3 -c "import pathlib,subprocess; [subprocess.run(['php','-l',str(p)],check=True) for p in pathlib.Path('.').rglob('*.php')]"
@@ -61,7 +61,7 @@ jobs:
       - name: Check out the previous increment for an actual upgrade test
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: ca3fe1192d3713e243c470ba39b14ad2790cad03
+          ref: 4e54befd7952d2ef2d69c01997bc74f8eb3a32d9
           path: .runtime/previous-source
           persist-credentials: false
       - name: Install minimum Joomla and the complete JD Learn package
@@ -71,9 +71,9 @@ jobs:
           unzip -q /tmp/joomla.zip -d .runtime/joomla
           php .runtime/joomla/installation/joomla.php install --site-name="JD Learn CI" --admin-user="CI Operator" --admin-username=cioperator --admin-password="Ci-only-Long-Password-2026" --admin-email=ci@example.invalid --db-type=mysqli --db-host=db --db-user=jlms_ci --db-pass=ci-disposable-password --db-name=jlms_test --db-prefix=joomla_ --db-encryption=0 --public-folder="" --no-interaction
           python3 .runtime/previous-source/tools/build.py
-          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.4.0-dev.zip" --no-interaction
+          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.5.0-dev.zip" --no-interaction
           php .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.5.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.6.0-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
@@ -86,23 +86,29 @@ jobs:
         run: php tests/joomla-learning.php .runtime/joomla
       - name: Real student login, classroom and completion over HTTP
         run: python3 tests/learning-http.py .runtime/joomla
+      - name: Video telemetry, idempotence and current access integration
+        run: php tests/joomla-video.php .runtime/joomla
+      - name: Player consent, retry and teardown with a mock browser transport
+        run: node tests/video-player.mjs
       - name: Prepare disposable material course drafts
         run: php tests/materials-fixture.php .runtime/joomla
       - name: Protected material uploads, scanner, immutable files and HTTP ranges
         run: python3 tests/materials-http.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.5.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.6.0-dev.zip"
           php tests/joomla-smoke.php .runtime/joomla retained
       - name: Verify completed student history survives package update
         run: php tests/joomla-learning.php .runtime/joomla retained
       - name: Verify material associations survive package update
         run: php tests/materials-fixture.php .runtime/joomla retained
+      - name: Verify video coverage survives package update
+        run: php tests/joomla-video.php .runtime/joomla retained
       - name: Make the verified development package downloadable
         if: matrix.php == '8.4' && matrix.database == 'mysql:8.4'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: JD-Learn-0.5.0-dev
+          name: JD-Learn-0.6.0-dev
           path: dist/
           if-no-files-found: error
           retention-days: 14

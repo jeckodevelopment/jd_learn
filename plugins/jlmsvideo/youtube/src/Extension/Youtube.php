@@ -21,7 +21,8 @@ final class Youtube extends CMSPlugin implements SubscriberInterface
 
     public function registerProviders(RegisterVideoProvidersEvent $event): void
     {
-        $descriptor = new ProviderDescriptor('youtube', 'PLG_JLMSVIDEO_YOUTUBE', 1, false);
-        $event->getRegistry()->register($descriptor, static fn (): Provider => new Provider());
+        $enabled = (bool) $this->params->get('playback_enabled', false);
+        $descriptor = new ProviderDescriptor('youtube', 'PLG_JLMSVIDEO_YOUTUBE', 1, $enabled);
+        $event->getRegistry()->register($descriptor, static fn (): Provider => new Provider($enabled));
     }
 }

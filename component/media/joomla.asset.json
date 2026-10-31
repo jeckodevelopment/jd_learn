@@ -1,12 +1,23 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
   "name": "com_jlms",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "assets": [
     {
       "name": "com_jlms.site",
       "type": "style",
       "uri": "com_jlms/site.css"
+    },
+    {
+      "name": "com_jlms.video",
+      "type": "script",
+      "uri": "com_jlms/video.js",
+      "attributes": {
+        "type": "module"
+      },
+      "dependencies": [
+        "core"
+      ]
     }
   ]
 }

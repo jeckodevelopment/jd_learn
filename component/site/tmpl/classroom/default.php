@@ -33,6 +33,15 @@ $currentModule = 0;
  </nav>
  <article id="jlms-lesson-content" class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
   <div id="jlms-lesson-body"><?= $selected->body /* HTML cleaned by the server-side core InputFilter. */ ?></div>
+  <?php if ($selected->kind === 'video') : ?>
+  <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
+   <p id="jlms-video-consent"><?= Text::_('COM_JLMS_VIDEO_CONSENT') ?></p>
+   <button id="jlms-video-load" class="btn btn-primary" type="button"><?= Text::_('COM_JLMS_VIDEO_LOAD') ?></button>
+   <button id="jlms-video-stop" class="btn btn-secondary" type="button" hidden><?= Text::_('COM_JLMS_VIDEO_STOP') ?></button>
+   <p id="jlms-player-status" role="status" aria-live="polite"></p>
+   <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
+  </section>
+  <?php else : ?>
   <form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
    <input type="hidden" name="task" value="lesson.complete">
    <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">
@@ -40,6 +49,7 @@ $currentModule = 0;
    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
   </form>
+  <?php endif; ?>
  <div id="jlms-material-groups">
  <?php foreach (['course' => 'jlms-classroom-course-materials', 'lesson' => 'jlms-lesson-resources'] as $scope => $region) : $files = $this->materials[$scope]; ?>
  <section id="<?= $region ?>" class="jlms-material-list"><h3><?= Text::_($scope === 'course' ? 'COM_JLMS_COURSE_MATERIALS' : 'COM_JLMS_LESSON_MATERIALS') ?></h3>

@@ -14,6 +14,18 @@ final class JlmsComponent extends MVCComponent implements CategoryServiceInterfa
 {
     use CategoryServiceTrait;
 
+    private \Jlms\Component\Jlms\Administrator\Application\VideoProgressService $videoProgressService;
+
+    public function setVideoProgressService(\Jlms\Component\Jlms\Administrator\Application\VideoProgressService $service): void
+    {
+        $this->videoProgressService = $service;
+    }
+
+    public function getVideoProgressService(): \Jlms\Component\Jlms\Administrator\Application\VideoProgressService
+    {
+        return $this->videoProgressService;
+    }
+
     private \Jlms\Component\Jlms\Administrator\Application\MaterialService $materialService;
 
     public function setMaterialService(\Jlms\Component\Jlms\Administrator\Application\MaterialService $service): void
