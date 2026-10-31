@@ -87,13 +87,17 @@ final class PublicationService
     {
         $versionId = (int) $version->id;
         // Types/features not yet served by the learner application cannot be published accidentally.
-        foreach (['prerequisites', 'quizzes'] as $table) {
+        foreach (['prerequisites'] as $table) {
             $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_' . $table))
                 ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
             if ((int) $this->db->setQuery($q)->loadResult()) {
                 throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
             }
         }
+        $orphan=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
+            ->leftJoin('#__jlms_lessons AS l ON l.id=q.lesson_id AND l.course_version_id=q.course_version_id')
+            ->where('q.course_version_id = :version')->where("(l.id IS NULL OR l.kind <> 'quiz')")->bind(':version',$versionId,ParameterType::INTEGER);
+        if((int)$this->db->setQuery($orphan)->loadResult())throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         $q = $this->db->createQuery()->select('id, logical_key, title, ordering, params_json')->from('#__jlms_modules')
             ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1001)->loadAssocList();
@@ -118,7 +122,10 @@ final class PublicationService
                     || $lesson->publish_down !== null || $lesson->release_after_days !== null || strlen((string) $lesson->body) > 1048576) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
-                if ($lesson->kind === 'text') {
+                $quizHash = null;
+                if ($lesson->kind === 'quiz') {
+                    $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze($actor, $course, $lesson);
+                } elseif ($lesson->kind === 'text') {
                     if ($lesson->completion_rule !== 'manual' || $lesson->source_json !== null || $lesson->provider_key !== null
                         || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === '') {
                         throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
@@ -151,7 +158,7 @@ final class PublicationService
                 $required += (int) $lesson->required;
                 $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
                     'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
-                    'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'duration_ms' => $lesson->duration_ms,
+                    'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'quiz_sha256' => $quizHash, 'duration_ms' => $lesson->duration_ms,
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
                     'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' => hash('sha256', (string) $lesson->body)];
                 $lastId = (int) $lesson->id;

@@ -69,7 +69,7 @@ final class LearningService
         return $course;
     }
 
-    private function authorisedEnrollment(User $actor, string $language, int $id, bool $lock = false): array
+    private function authorisedEnrollment(User $actor, string $language, int $id, bool $lock = false, bool $allowExpiredWindow = false): array
     {
         $enrollment = $this->row('enrollments', $id, $lock);
         if ((int) $enrollment->user_id !== (int) $actor->id) {
@@ -89,8 +89,13 @@ final class LearningService
             || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
-        self::window($edition);
-        self::window($enrollment);
+        if (!$allowExpiredWindow) { self::window($edition); self::window($enrollment); }
+        else {
+            $now = gmdate('Y-m-d H:i:s');
+            if (($edition->starts_at !== null && $edition->starts_at > $now) || ($enrollment->starts_at !== null && $enrollment->starts_at > $now)) {
+                throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
+            }
+        }
         return [$course, $version, $edition, $enrollment];
     }
 
@@ -219,7 +224,8 @@ final class LearningService
         if ((int) $lesson->course_version_id !== $versionId) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
-        $supported = ($lesson->kind === 'text' && $lesson->completion_rule === 'manual')
+        $supported = ($lesson->kind === 'quiz' && $lesson->completion_rule === 'quiz_pass')
+            || ($lesson->kind === 'text' && $lesson->completion_rule === 'manual')
             || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
                 && in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream', 'html5'], true) && (int) $lesson->duration_ms >= 1000);
         if (!$supported || $lesson->publish_up !== null
@@ -227,6 +233,15 @@ final class LearningService
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         return $lesson;
+    }
+
+    public function quizContext(User $identity, string $language, int $enrollmentId, int $lessonId, bool $lock = false, bool $allowExpiredWindow = false): array
+    {
+        $actor = $this->freshActor($identity);
+        [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock, $allowExpiredWindow);
+        $lesson = $this->lesson((int) $version->id, $lessonId);
+        if ($lesson->kind !== 'quiz') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        return [$actor, $enrollment, $lesson];
     }
 
     /** Internal video service context; controllers never serialise these database records. */

@@ -60,6 +60,8 @@ return new class () implements ServiceProviderInterface {
         }));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\QuestionBankService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\QuestionBankService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), static fn (string $html): string => ComponentHelper::filterText($html), static fn () => Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()->createTable('Question', 'Administrator')));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class)));
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService($c->get(DatabaseInterface::class)));
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\QuizAttemptService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService::class), static fn (): int => time()));
         $container->set(PublicationService::class, static fn (Container $c): PublicationService => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
         $container->set(ComponentInterface::class, static function (Container $container): JlmsComponent {
             $component = new JlmsComponent($container->get(ComponentDispatcherFactoryInterface::class));
@@ -73,6 +75,8 @@ return new class () implements ServiceProviderInterface {
             $component->setLocalVideoService($container->get(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService::class));
             $component->setQuestionBankService($container->get(\Jlms\Component\Jlms\Administrator\Application\QuestionBankService::class));
             $component->setQuizAuthoringService($container->get(\Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService::class));
+            $component->setQuizSnapshotService($container->get(\Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService::class));
+            $component->setQuizAttemptService($container->get(\Jlms\Component\Jlms\Administrator\Application\QuizAttemptService::class));
             $component->setRouterFactory($container->get(\Joomla\CMS\Component\Router\RouterFactoryInterface::class));
             $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
             return $component;

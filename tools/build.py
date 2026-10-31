@@ -16,7 +16,8 @@ def tree(folder):return [(p.relative_to(folder).as_posix(),p.read_bytes()) for p
 parts=[('constituents/lib_jlms.zip',archive(tree(ROOT/'libraries/jlms'))),('constituents/com_jlms.zip',archive(tree(ROOT/'component')))]
 for provider in ['youtube','vimeo','cloudflarestream','html5']:
     parts.append(('constituents/plg_jlmsvideo_'+provider+'.zip',archive(tree(ROOT/'plugins/jlmsvideo'/provider))))
+parts.append(('constituents/plg_task_jlms.zip',archive(tree(ROOT/'plugins/task/jlms'))))
 parts.append(('pkg_jlms.xml',(ROOT/'packages/pkg_jlms.xml').read_bytes()))
 data=archive(parts);out=DIST/f'pkg_jlms-{VERSION}-dev.zip';out.write_bytes(data)
 digest=hashlib.sha256(data).hexdigest();(DIST/'SHA256SUMS.txt').write_text(digest+'  '+out.name+'\n')
-print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':6}))
+print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':7}))

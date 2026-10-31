@@ -1,5 +1,7 @@
 # Banca domande e quiz in bozza — incremento 0.9
 
+> Nota di versione: questa guida descrive l’authoring introdotto nella0.9. Dalla0.10 sono disponibili pubblicazione e tentativi descritti in [QUIZ_RUNTIME.md](QUIZ_RUNTIME.md); i riferimenti ai blocchi della0.9 qui sotto sono storici.
+
 Questo incremento implementa l'authoring amministrativo. I tentativi dello studente, la valutazione persistente, il timer runtime, il feedback pubblico e la pubblicazione dei corsi contenenti quiz **restano chiusi**. Salvare la configurazione non significa avere una funzione di esame pronta. La specifica completa QUI-01–08 rimane la baseline del prodotto.
 
 ## Banca domande

@@ -40,13 +40,13 @@ PRO-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale
 PRO-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 PRO-06,Rilascio 1,In corso,Completamenti duplicati/distinti testati con processi concorrenti e ledger; video/tentativi da integrare.,No
 PRO-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-QUI-01,Rilascio 1,In corso,"0.9: banca con tre formati/revisioni immutabili, categorie/ACL e composizione quiz in bozza. Pubblicazione, tentativi e criteri runtime ancora da implementare.",No
-QUI-02,Rilascio 1,In corso,"0.9: banca con tre formati/revisioni immutabili, categorie/ACL e composizione quiz in bozza. Pubblicazione, tentativi e criteri runtime ancora da implementare.",No
-QUI-03,Rilascio 1,In corso,"0.9: banca con tre formati/revisioni immutabili, categorie/ACL e composizione quiz in bozza. Pubblicazione, tentativi e criteri runtime ancora da implementare.",No
-QUI-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-QUI-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-QUI-06,Rilascio 1,In corso,"0.9: banca con tre formati/revisioni immutabili, categorie/ACL e composizione quiz in bozza. Pubblicazione, tentativi e criteri runtime ancora da implementare.",No
-QUI-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-01,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
+QUI-02,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
+QUI-03,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
+QUI-04,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
+QUI-05,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
+QUI-06,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
+QUI-07,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
 QUI-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 ATT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 ATT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
