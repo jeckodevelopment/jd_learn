@@ -27,7 +27,8 @@ for folder in ['component','plugins']:
   if p.suffix in ['.php','.xml']:used.update(re.findall(r'\b(?:COM_JLMS|PLG_JLMSVIDEO)_[A-Z0-9_]+\b',p.read_text()))
 # Installer error codes are caught explicitly and listed in the implementation status; still translate them.
 assert used<=keys,sorted(used-keys)
-package=ROOT/'dist/pkg_jlms-0.1.0-dev.zip'
+version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
+package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
  with zipfile.ZipFile(package) as z:
   assert z.testzip() is None

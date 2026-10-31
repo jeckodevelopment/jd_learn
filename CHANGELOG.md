@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0-dev — 31 ottobre 2026
+
+- Aggiunti servizio applicativo DI, prima bozza didattica, editor del programma e comandi MVC nativi.
+- Implementati moduli e lezioni testo/video, obbligatorietà, modifica, riordino e rimozione con controlli delle dipendenze.
+- Controlli centralizzati di ACL, parent, revisione aggregata/elemento e immutabilità delle versioni pubblicate; query e transazioni brevi.
+- Integrazione editor/filtro HTML core, provider dal registro estensibile e normalizzazione delle sorgenti.
+- Nuovi test integrativi e HTTP del flusso completo. Nessuna pubblicazione o fruizione studenti ancora attiva.
+
 ## 0.1.0-dev — 31 ottobre 2026
 
 Primo incremento di sviluppo, non release del sistema e-learning completo.

@@ -12,6 +12,13 @@ use Joomla\CMS\Extension\Service\Provider\MVCFactory;
 use Joomla\CMS\Extension\Service\Provider\CategoryFactory;
 use Joomla\CMS\Categories\CategoryFactoryInterface;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Database\DatabaseInterface;
+use Jlms\Contracts\Video\VideoProviderRegistry;
+use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
+use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Jlms\Component\Jlms\Administrator\Extension\JlmsComponent;
@@ -24,9 +31,26 @@ return new class () implements ServiceProviderInterface {
         $container->registerServiceProvider(new MVCFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new CategoryFactory('\\Jlms\\Component\\Jlms'));
+        $container->set(CurriculumService::class, static function (Container $container): CurriculumService {
+            $registry = null;
+            return new CurriculumService(
+                $container->get(DatabaseInterface::class),
+                static fn (string $body): string => ComponentHelper::filterText($body),
+                static function () use (&$registry): VideoProviderRegistry {
+                    if ($registry === null) {
+                        $registry = new VideoProviderRegistry();
+                        $dispatcher = Factory::getApplication()->getDispatcher();
+                        PluginHelper::importPlugin('jlmsvideo', null, true, $dispatcher);
+                        $dispatcher->dispatch(RegisterVideoProvidersEvent::NAME, new RegisterVideoProvidersEvent($registry));
+                    }
+                    return $registry;
+                },
+            );
+        });
         $container->set(ComponentInterface::class, static function (Container $container): JlmsComponent {
             $component = new JlmsComponent($container->get(ComponentDispatcherFactoryInterface::class));
             $component->setMVCFactory($container->get(MVCFactoryInterface::class));
+            $component->setCurriculumService($container->get(CurriculumService::class));
             $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
             return $component;
         });

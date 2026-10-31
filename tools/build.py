@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Build a Joomla package, without dependencies or credentials."""
 from pathlib import Path
-import hashlib,io,zipfile,json
+import hashlib,io,zipfile,json,xml.etree.ElementTree as E
 ROOT=Path(__file__).resolve().parents[1]
 DIST=ROOT/'dist'; DIST.mkdir(exist_ok=True)
+VERSION=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 def archive(entries):
     out=io.BytesIO()
     with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
@@ -16,6 +17,6 @@ parts=[('constituents/lib_jlms.zip',archive(tree(ROOT/'libraries/jlms'))),('cons
 for provider in ['youtube','vimeo','cloudflarestream','html5']:
     parts.append(('constituents/plg_jlmsvideo_'+provider+'.zip',archive(tree(ROOT/'plugins/jlmsvideo'/provider))))
 parts.append(('pkg_jlms.xml',(ROOT/'packages/pkg_jlms.xml').read_bytes()))
-data=archive(parts);out=DIST/'pkg_jlms-0.1.0-dev.zip';out.write_bytes(data)
+data=archive(parts);out=DIST/f'pkg_jlms-{VERSION}-dev.zip';out.write_bytes(data)
 digest=hashlib.sha256(data).hexdigest();(DIST/'SHA256SUMS.txt').write_text(digest+'  '+out.name+'\n')
 print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':6}))
