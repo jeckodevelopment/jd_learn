@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" method="upgrade">
+ <name>JD Learn</name><packagename>jlms</packagename><author>Jecko Development</author><version>0.1.0</version>
+ <description>JD Learn — development foundation</description><blockChildUninstall>true</blockChildUninstall>
+ <files folder="constituents">
+  <file type="library" id="jlms">lib_jlms.zip</file>
+  <file type="component" id="com_jlms">com_jlms.zip</file>
+  <file type="plugin" id="youtube" group="jlmsvideo">plg_jlmsvideo_youtube.zip</file>
+  <file type="plugin" id="vimeo" group="jlmsvideo">plg_jlmsvideo_vimeo.zip</file>
+  <file type="plugin" id="cloudflarestream" group="jlmsvideo">plg_jlmsvideo_cloudflarestream.zip</file>
+  <file type="plugin" id="html5" group="jlmsvideo">plg_jlmsvideo_html5.zip</file>
+ </files>
+</extension>

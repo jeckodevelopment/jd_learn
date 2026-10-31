@@ -1,0 +1,1052 @@
+[
+  {
+    "name": "enroll-valid",
+    "definition": "enrollment.start",
+    "valid": true,
+    "payload": {
+      "course_id": "123",
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "enroll-reject-user-impersonation",
+    "definition": "enrollment.start",
+    "valid": false,
+    "payload": {
+      "course_id": "123",
+      "user_id": "4",
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "enroll-reject-numeric-id",
+    "definition": "enrollment.start",
+    "valid": false,
+    "payload": {
+      "course_id": 123,
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "submit-valid",
+    "definition": "quiz.submit",
+    "valid": true,
+    "payload": {
+      "attempt_id": "15",
+      "expected_revision": 4,
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "submit-reject-unsaved-answers",
+    "definition": "quiz.submit",
+    "valid": false,
+    "payload": {
+      "attempt_id": "15",
+      "expected_revision": 4,
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+      "answers_delta": []
+    }
+  },
+  {
+    "name": "submit-reject-missing-revision",
+    "definition": "quiz.submit",
+    "valid": false,
+    "payload": {
+      "attempt_id": "15",
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "save-valid",
+    "definition": "quiz.save",
+    "valid": true,
+    "payload": {
+      "attempt_id": "15",
+      "expected_revision": 4,
+      "answers_delta": [
+        {
+          "attempt_question_id": "65",
+          "selected_option_ids": [
+            "a",
+            "b"
+          ]
+        }
+      ],
+      "mutation_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "save-explicit-clear",
+    "definition": "quiz.save",
+    "valid": true,
+    "payload": {
+      "attempt_id": "15",
+      "expected_revision": 4,
+      "answers_delta": [
+        {
+          "attempt_question_id": "65",
+          "selected_option_ids": []
+        }
+      ],
+      "mutation_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "save-reject-duplicate-option",
+    "definition": "quiz.save",
+    "valid": false,
+    "payload": {
+      "attempt_id": "15",
+      "expected_revision": 4,
+      "answers_delta": [
+        {
+          "attempt_question_id": "65",
+          "selected_option_ids": [
+            "a",
+            "a"
+          ]
+        }
+      ],
+      "mutation_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "progress-valid",
+    "definition": "progress.save",
+    "valid": true,
+    "payload": {
+      "enrollment_id": "10",
+      "lesson_id": "20",
+      "source_revision": 1,
+      "session_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+      "sequence": 2,
+      "events": [
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "progress-reject-sequence-zero",
+    "definition": "progress.save",
+    "valid": false,
+    "payload": {
+      "enrollment_id": "10",
+      "lesson_id": "20",
+      "source_revision": 1,
+      "session_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+      "sequence": 0,
+      "events": [
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "progress-reject-negative-position",
+    "definition": "progress.save",
+    "valid": false,
+    "payload": {
+      "enrollment_id": "10",
+      "lesson_id": "20",
+      "source_revision": 1,
+      "session_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+      "sequence": 2,
+      "events": [
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": -1,
+          "monotonic_ms": 100000,
+          "rate": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "progress-reject-oversized-batch",
+    "definition": "progress.save",
+    "valid": false,
+    "payload": {
+      "enrollment_id": "10",
+      "lesson_id": "20",
+      "source_revision": 1,
+      "session_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+      "sequence": 2,
+      "events": [
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        },
+        {
+          "event_id": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47",
+          "type": "position",
+          "position_ms": 22000,
+          "monotonic_ms": 100000,
+          "rate": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "playback-reject-client-source",
+    "definition": "video.playback",
+    "valid": false,
+    "payload": {
+      "lesson_id": "10",
+      "enrollment_id": "20",
+      "source_reference": "https://127.0.0.1"
+    }
+  },
+  {
+    "name": "descriptor-valid",
+    "definition": "PlaybackDescriptor",
+    "valid": true,
+    "payload": {
+      "provider": "cloudflarestream",
+      "source_revision": 1,
+      "player_asset": "plg_jlmsvideo_cloudflarestream.player",
+      "player_options": {
+        "uid": "example"
+      },
+      "capabilities": {
+        "position": true,
+        "duration": true,
+        "seek": true,
+        "speed": true,
+        "captions": true,
+        "transcript": true,
+        "expiringPlayback": true,
+        "download": true
+      },
+      "expires_at": "2026-10-30T10:15:00Z",
+      "playback_token": "temporary-token-placeholder"
+    }
+  },
+  {
+    "name": "descriptor-future-plugin",
+    "definition": "PlaybackDescriptor",
+    "valid": true,
+    "payload": {
+      "provider": "future_provider",
+      "source_revision": 1,
+      "player_asset": "plg_jlmsvideo_cloudflarestream.player",
+      "player_options": {
+        "uid": "example"
+      },
+      "capabilities": {
+        "position": true,
+        "duration": true,
+        "seek": true,
+        "speed": true,
+        "captions": true,
+        "transcript": true,
+        "expiringPlayback": true,
+        "download": true
+      },
+      "expires_at": "2026-10-30T10:15:00Z",
+      "playback_token": "temporary-token-placeholder"
+    }
+  },
+  {
+    "name": "descriptor-reject-admin-secret",
+    "definition": "PlaybackDescriptor",
+    "valid": false,
+    "payload": {
+      "provider": "cloudflarestream",
+      "source_revision": 1,
+      "player_asset": "plg_jlmsvideo_cloudflarestream.player",
+      "player_options": {
+        "uid": "example"
+      },
+      "capabilities": {
+        "position": true,
+        "duration": true,
+        "seek": true,
+        "speed": true,
+        "captions": true,
+        "transcript": true,
+        "expiringPlayback": true,
+        "download": true
+      },
+      "expires_at": "2026-10-30T10:15:00Z",
+      "playback_token": "temporary-token-placeholder",
+      "api_token": "forbidden"
+    }
+  },
+  {
+    "name": "revoke-reject-empty-reason",
+    "definition": "certificate.revoke",
+    "valid": false,
+    "payload": {
+      "certificate_id": "3",
+      "reason": "",
+      "notify": false,
+      "expected_revision": 1,
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    }
+  },
+  {
+    "name": "attachment-create",
+    "definition": "attachment.save",
+    "payload": {
+      "asset_id": "4",
+      "scope_type": "lesson",
+      "owner_id": "6",
+      "metadata": {
+        "title": "Dispensa"
+      },
+      "idempotency_key": "2695d269-c45d-4ef9-8f3c-1b29cd02ff47"
+    },
+    "valid": true
+  },
+  {
+    "name": "attachment-create-missing-idempotency",
+    "definition": "attachment.save",
+    "payload": {
+      "asset_id": "4",
+      "scope_type": "lesson",
+      "owner_id": "6",
+      "metadata": {
+        "title": "Dispensa"
+      }
+    },
+    "valid": false
+  },
+  {
+    "name": "attachment-update",
+    "definition": "attachment.save",
+    "payload": {
+      "asset_id": "4",
+      "scope_type": "lesson",
+      "owner_id": "6",
+      "metadata": {
+        "title": "Dispensa"
+      },
+      "attachment_id": "8",
+      "expected_revision": 3
+    },
+    "valid": true
+  },
+  {
+    "name": "attachment-update-missing-revision",
+    "definition": "attachment.save",
+    "payload": {
+      "asset_id": "4",
+      "scope_type": "lesson",
+      "owner_id": "6",
+      "metadata": {
+        "title": "Dispensa"
+      },
+      "attachment_id": "8"
+    },
+    "valid": false
+  }
+]

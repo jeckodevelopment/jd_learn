@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-30",
+  "tag": "6.0.0",
+  "type": "documentary_source_inspection_not_runtime_test",
+  "files": [
+    {
+      "path": "administrator/components/com_content/src/Extension/ContentComponent.php",
+      "sha": "bd2861e1fa467a2358e67c69e1645b02b244cf9a",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/administrator/components/com_content/src/Extension/ContentComponent.php"
+    },
+    {
+      "path": "administrator/components/com_content/src/Model/ArticleModel.php",
+      "sha": "f4f94e90c643e6696ebe8e6a0ab520fea848a963",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/administrator/components/com_content/src/Model/ArticleModel.php",
+      "ok": true
+    },
+    {
+      "path": "administrator/components/com_content/src/Table/ArticleTable.php",
+      "sha": "8ae718974f2596ea03ccee9f332b9c1b4fc613e2",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/administrator/components/com_content/src/Table/ArticleTable.php",
+      "ok": true
+    },
+    {
+      "path": "plugins/privacy/content/src/Extension/Content.php",
+      "sha": "31fa18cc182d370876d98957ccb905e1ea5d4598",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/plugins/privacy/content/src/Extension/Content.php",
+      "ok": true
+    },
+    {
+      "path": "plugins/finder/content/src/Extension/Content.php",
+      "sha": "703a5f73e82e26a51da36c3ba91cdea6e8b80356",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/plugins/finder/content/src/Extension/Content.php",
+      "ok": true
+    },
+    {
+      "path": "plugins/task/requests/src/Extension/Requests.php",
+      "sha": "01509f63bc8fdd0427be23ff19592038c392dc8f",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/plugins/task/requests/src/Extension/Requests.php",
+      "ok": true
+    },
+    {
+      "path": "administrator/components/com_actionlogs/src/Plugin/ActionLogPlugin.php",
+      "sha": "946ec21d2a1568e6714a7dd97243e21b51df2ccc",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/administrator/components/com_actionlogs/src/Plugin/ActionLogPlugin.php",
+      "ok": true
+    },
+    {
+      "path": "administrator/components/com_content/src/Helper/AssociationsHelper.php",
+      "sha": "3580bf942559fa8e38d1d098e69d434cc3e4f117",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/administrator/components/com_content/src/Helper/AssociationsHelper.php",
+      "ok": true
+    },
+    {
+      "path": "components/com_content/src/Service/Router.php",
+      "sha": "177f1d4ff091ac77eea318c9e98c27365fb58c7f",
+      "url": "https://github.com/joomla/joomla-cms/blob/6.0.0/components/com_content/src/Service/Router.php",
+      "ok": true
+    }
+  ]
+}

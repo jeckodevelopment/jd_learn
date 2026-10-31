@@ -1,0 +1,41 @@
+# Avanzamento di JD Learn
+
+Aggiornamento: 31 ottobre 2026. Incremento iniziale 0.1.0-dev.
+
+Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
+
+| Area | Stato di questo incremento | Da completare |
+|---|---|---|
+| Package, libreria, MVC, SQL, build | Implementazione iniziale e CI predisposte | Tutte le matrici install/upgrade/recovery, patch corrente Joomla, release signing |
+| Core utenti e ACL | Identità/permessi core per editor; policy dominio testata | Entitlement fresco runtime studente, revoca e tutte le policy per oggetto |
+| Categorie | Contesti core, servizi, asset di sezione e form corso | Lifecycle completo di rimozione/ripristino con dati storici |
+| Corsi | Creazione/modifica della scheda in bozza e revisioni concorrenti | Versioni didattiche, lezioni, workflow, pubblicazione, equivalenze/migrazioni |
+| Editor Joomla | Form e check-in/out nativi, livelli, lingua | Tags, fields/snapshot, Content History e associazioni multilingua |
+| Frontend | View catalogo vuota con WAM/override e prime regioni CSS | Catalogo pubblicato, scheda, aula, dashboard personale e accessibilità completa |
+| Plugin video | Tutti e quattro installati, contratto/registro/validazione input | SDK player, capabilities reali, consenso, metadati, firma/rinnovo e Range |
+| Materiali e storage | Schema e contratti | Upload/quarantena, scanner, accesso parent, download e cleanup |
+| Iscrizioni e progressi | Schema e funzioni dominio iniziali | Servizi transazionali, idempotenza, telemetria, UI e calendario |
+| Quiz | Schema e scoring dominio iniziale | Banca domande/revisioni, snapshot, start/save/submit/timer e feedback |
+| Attestati | Schema emissione/documenti/sostituzione | PDF, verifica pubblica, anomalie, revoca e notifica |
+| Job e outbox | Schema | Worker Scheduler/CLI, lease, retry, mail templates e delivery_unknown |
+| Privacy, Action Logs, Finder | Specifiche conservate | Plugin funzionanti e collaudo lifecycle/export/erasure |
+| Report/import/export | Specifiche e schema | Servizi, CSV, job, scope e protezione formule |
+| Prestazioni e sicurezza | Controlli iniziali e test negativi limitati | Static analysis/scan dipendenze e segreti, E2E completi e carico300/500 |
+
+## Ordine dei prossimi incrementi
+
+1. Completare T1/T2: installazione e lifecycle riproducibili, servizi authoring/DI, strumenti core e tracciabilità.
+2. Versioni/moduli/lezioni/prerequisiti e pubblicazione validata; materiali protetti.
+3. Iscrizioni, aula, accesso corrente e persistenza concorrente dei progressi.
+4. Player dei quattro provider e relativi scenari di sicurezza/consenso.
+5. Quiz persistenti, timer/snapshot e revisione valutazioni.
+6. Attestati, job/outbox, report/import e integrazioni privacy/Finder/actionlog complete.
+7. Test E2E, install/upgrade/recovery, audit e carico con dataset e infrastruttura dichiarati.
+
+Nessun requisito completo del prodotto è considerato soddisfatto dal solo schema o da un’interfaccia. I118scenari funzionali e40provider restano pianificati finché non vengono eseguiti sul flusso completo. I test runtime iniziali verificano soltanto il comportamento realmente presente in questo incremento.
+
+## Differenze attuative rispetto allo schema progettuale
+
+L’installer applica la DDL tramite uno script controllato anziché ripetere gli ALTER al semplice reinstall con dati conservati. Ogni passo è ricontrollato e interrompe l’installazione in errore; non si pretende una transazione DDL globale. Il primo incremento non esegue backfill o migrazioni di versioni già pubblicate.
+
+Nessun plugin di integrazione privacy/Finder/task viene distribuito come involucro vuoto: saranno aggiunti quando avranno un comportamento verificabile. I quattro provider richiesti sono già costituenti del pacchetto, ma non dichiarano capacità di riproduzione non implementate.

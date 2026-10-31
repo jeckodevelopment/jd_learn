@@ -1,0 +1,21 @@
+{
+  "name": "jeckodevelopment/jd-learn",
+  "description": "JD Learn for Joomla 6",
+  "type": "joomla-package",
+  "require": {
+    "php": ">=8.3",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jlms\\Contracts\\": "libraries/jlms/src/",
+      "Jlms\\Component\\Jlms\\Administrator\\": "component/administrator/src/",
+      "Jlms\\Component\\Jlms\\Site\\": "component/site/src/"
+    }
+  },
+  "scripts": {
+    "test": "php tests/run.php",
+    "check": "python3 tools/check.py",
+    "build": "python3 tools/build.py"
+  }
+}

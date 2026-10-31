@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+
+\defined('_JEXEC') or die;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
+?>
+<form action="<?= Route::_('index.php?option=com_jlms&view=courses') ?>" method="post" id="adminForm" name="adminForm">
+    <p class="alert alert-info"><?= Text::_('COM_JLMS_FOUNDATION_NOTICE') ?></p>
+    <table class="table"><caption class="visually-hidden"><?= Text::_('COM_JLMS_COURSES') ?></caption>
+        <thead><tr><th scope="col"><?= Text::_('JGLOBAL_TITLE') ?></th><th scope="col"><?= Text::_('JSTATUS') ?></th><th scope="col"><?= Text::_('COM_JLMS_REVISION') ?></th></tr></thead>
+        <tbody><?php foreach ($this->items as $item) : ?><tr>
+            <td><a href="<?= Route::_('index.php?option=com_jlms&task=course.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></td>
+            <td><?= Text::_('COM_JLMS_DRAFT') ?></td><td><?= (int) $item->revision ?></td>
+        </tr><?php endforeach; ?></tbody>
+    </table>
+    <?= $this->pagination->getListFooter() ?>
+    <input type="hidden" name="task" value="">
+    <?= HTMLHelper::_('form.token') ?>
+</form>

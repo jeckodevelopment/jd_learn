@@ -1,0 +1,211 @@
+﻿Requisito,Perimetro baseline,Stato implementazione,Evidenza e limiti,Criteri completi superati
+CAT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CAT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CAT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CAT-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+AUT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+AUT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+AUT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+AUT-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+AUT-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LES-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LES-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LES-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LES-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+VID-01,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-02,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-03,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-04,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-05,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-06,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-07,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-08,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+ISC-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ISC-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STU-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STU-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STU-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STU-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STU-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRO-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ATT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ATT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ATT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ATT-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ATT-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REP-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REP-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REP-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REP-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REP-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+NOT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+NOT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+NOT-03,Differito,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SIC-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SIC-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRI-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRI-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PRI-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ACC-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+JOO-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+JOO-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+JOO-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+JOO-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+JOO-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-01,Rilascio 1,In corso,"Categorie native, servizi di sezione e asset; lifecycle completo da completare.",No
+CORE-02,Rilascio 1,In corso,Identità e login core riutilizzati; percorso studenti e collaudo MFA da completare.,No
+CORE-03,Rilascio 1,In corso,Campi viewlevels nativi; entitlement studente corrente da integrare.,No
+CORE-04,Rilascio 1,In corso,ACL e asset del corso in bozza; policy degli altri oggetti da implementare.,No
+CORE-05,Rilascio 1,In corso,View catalogo e guida override; tutte le altre view ancora da implementare.,No
+CORE-06,Rilascio 1,In corso,it-IT/en-GB per funzioni presenti; copertura completa solo con le altre funzionalità.,No
+CORE-07,Rilascio 1,In corso,Campo lingua del corso; associazioni e filtri multilingua da implementare.,No
+CORE-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-10,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-11,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-12,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-13,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-14,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-15,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-16,Rilascio 1,In corso,Check-in/out e revisioni concorrenti; Content History ancora da integrare.,No
+CORE-17,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-18,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-19,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CORE-20,Rilascio 1,In corso,"Form, toolbar e paginazione dei corsi in bozza; altre azioni restano chiuse.",No
+CORE-21,Rilascio 1,In corso,"WAM, token/sessione core; no percorsi personali attivi in questa versione.",No
+CORE-22,Rilascio 1,In corso,Package/installer/build e CI iniziali; matrice completa upgrade/recovery/update-server ancora da completare.,No
+CORE-23,Rilascio 1,In corso,Evento registrazione provider video; altri eventi applicativi da implementare.,No
+UI-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+UI-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+UI-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+UI-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+UI-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+UI-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+UI-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-10,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PERF-11,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ACL-DET-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ACL-DET-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ACL-DET-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+ACL-DET-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STA-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STA-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STA-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-10,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-11,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-12,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-13,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-14,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-15,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SCR-16,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+LIFE-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CFG-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CFG-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CFG-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CFG-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CFG-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CFG-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-10,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-11,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-12,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-13,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+EDGE-14,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+DAT-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REL-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REL-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REL-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+REL-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PVD-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PVD-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PVD-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PVD-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PVD-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PVD-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+MAT-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+HTTP-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+HTTP-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+HTTP-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+HTTP-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+HTTP-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+HTTP-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+SECDEV-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PBASE-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PBASE-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PBASE-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PBASE-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No

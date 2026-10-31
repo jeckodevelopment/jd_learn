@@ -1,0 +1,7 @@
+/dist/
+/vendor/
+/.env
+/.phpunit.cache/
+__pycache__/
+*.log
+/.runtime/
