@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0-dev
+
+- Iscrizione automatica/ripresa e aula per lezioni di testo, con login nativo Joomla.
+- Completamento idempotente e transazioni per iscrizione, contatori obbligatori e data di conclusione separata dallo stato di accesso.
+- Identità e livelli aggiornati dal core a ogni richiesta, anche dopo revoca con sessione aperta.
+- Test con processi concorrenti, revoca/ripristino, ownership, CSRF e flusso HTTP studente.
+- Modalità approvazione, player/materiali, quiz, attestati e integrazioni restanti ancora in sviluppo.
+
 ## 0.3.0-dev
 
 - Pubblicazione validata dei corsi di testo tramite workflow e plugin Publishing Joomla; transazione unica, versione immutabile, hash ed edizione iniziale.

@@ -21,10 +21,23 @@ final class Router extends RouterView
         $course = new RouterViewConfiguration('course');
         $course->setKey('id')->setParent($courses);
         $this->registerView($course);
+        $classroom = new RouterViewConfiguration('classroom');
+        $classroom->setKey('id');
+        $this->registerView($classroom);
         parent::__construct($app, $menu);
         $this->attachRule(new MenuRules($this));
         $this->attachRule(new StandardRules($this));
         $this->attachRule(new NomenuRules($this));
+    }
+
+    public function getClassroomSegment($id, $query): array
+    {
+        return [(int) $id => (string) (int) $id];
+    }
+
+    public function getClassroomId($segment, $query): int
+    {
+        return ctype_digit((string) $segment) ? (int) $segment : 0;
     }
 
     public function getCourseSegment($id, $query): array

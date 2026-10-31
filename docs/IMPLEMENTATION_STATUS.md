@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento0.3.0-dev: pubblicazione testo e catalogo pubblico.
+Aggiornamento: 31 ottobre 2026. Incremento0.4.0-dev: iscrizione automatica, aula testo e completamento persistente.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -11,10 +11,10 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Categorie | Contesti core, servizi, asset di sezione e form corso | Lifecycle completo di rimozione/ripristino con dati storici |
 | Corsi | Scheda, prima versione in bozza, moduli e lezioni testo/video, revisioni; pubblicazione testo con workflow nativo | Workflow con transizioni avanzate, clonazione completa, altri tipi lezione, equivalenze/migrazioni |
 | Editor Joomla | Form e check-in/out nativi, livelli, lingua | Tags, fields/snapshot, Content History e associazioni multilingua |
-| Frontend | Catalogo paginato, filtro categorie/sottocategorie, scheda pubblica e programma con WAM/override e ID CSS | Albero categorie dedicato, ricerca/ordinamento avanzati, aula, dashboard personale e accessibilità completa |
+| Frontend | Catalogo paginato, filtro categorie/sottocategorie, scheda pubblica e programma con WAM/override e ID CSS | Albero categorie dedicato, ricerca/ordinamento avanzati, dashboard personale e accessibilità completa |
 | Plugin video | Tutti e quattro installati, contratto/registro/validazione input | SDK player, capabilities reali, consenso, metadati, firma/rinnovo e Range |
 | Materiali e storage | Schema e contratti | Upload/quarantena, scanner, accesso parent, download e cleanup |
-| Iscrizioni e progressi | Schema e funzioni dominio iniziali | Servizi transazionali, idempotenza, telemetria, UI e calendario |
+| Iscrizioni e progressi | Avvio automatico, aula testo e completamento manuale con idempotenza/lock per iscrizione e accesso corrente | Approvazioni/manuale/import, dashboard, telemetria video, UI avanzata e gestione calendario |
 | Quiz | Schema e scoring dominio iniziale | Banca domande/revisioni, snapshot, start/save/submit/timer e feedback |
 | Attestati | Schema emissione/documenti/sostituzione | PDF, verifica pubblica, anomalie, revoca e notifica |
 | Job e outbox | Schema | Worker Scheduler/CLI, lease, retry, mail templates e delivery_unknown |
@@ -43,3 +43,5 @@ Nessun plugin di integrazione privacy/Finder/task viene distribuito come involuc
 La gestione del programma è descritta in AUTHORING.md. Il nuovo servizio applicativo centralizza autorizzazioni/transazioni; i test integrativi includono versioni immutabili, ID fuori dal parent, dati concorrenti, ordinamento e rimozione. Gli esiti effettivi restano nelle Actions.
 
 Pubblicazione e catalogo: vedere PUBLICATION.md. Le transizioni sono native Joomla e il plugin Workflow - Publishing deve essere attivo. Non sono ancora implementati transizioni editoriali senza cambio stato, clonazione di versioni, snapshot dei campi personalizzati e altri tipi di contenuto. La pubblicazione di questi casi è rifiutata. I test di carico restano da eseguire.
+
+Incremento aula testo: vedere LEARNING.md. I task HTML enrollment.start e lesson.complete non costituiscono ancora le API JSON pianificate. Il completamento manuale non prova tempo di lettura/presenza. Nessun attestato o email viene generato. Collaudo su sito effimero e concorrenza reale; carico 300/500 ancora da eseguire.

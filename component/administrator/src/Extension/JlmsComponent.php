@@ -13,6 +13,19 @@ use Joomla\CMS\Categories\CategoryServiceTrait;
 final class JlmsComponent extends MVCComponent implements CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
 {
     use CategoryServiceTrait;
+
+    private \Jlms\Component\Jlms\Administrator\Application\LearningService $learningService;
+
+    public function setLearningService(\Jlms\Component\Jlms\Administrator\Application\LearningService $service): void
+    {
+        $this->learningService = $service;
+    }
+
+    public function getLearningService(): \Jlms\Component\Jlms\Administrator\Application\LearningService
+    {
+        return $this->learningService;
+    }
+
     use \Joomla\CMS\Component\Router\RouterServiceTrait;
 
     private \Jlms\Component\Jlms\Administrator\Application\CatalogService $catalogService;
