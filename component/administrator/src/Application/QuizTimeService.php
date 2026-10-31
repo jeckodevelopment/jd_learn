@@ -68,10 +68,10 @@ final class QuizTimeService
         if($e){
             $q=$this->db->createQuery()->select('id,revision_no,extra_seconds,reason,actor_user_id,created_at')->from('#__jlms_quiz_time_adjustments')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
                 ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quizId,ParameterType::INTEGER)->order('revision_no DESC');$history=$this->db->setQuery($q,0,20)->loadObjectList();
-            $q=$this->db->createQuery()->select('a.id,a.deadline_at,a.rules_snapshot_json')->from('#__jlms_active_attempts AS s')->innerJoin('#__jlms_attempts AS a ON a.id=s.attempt_id')
+            $q=$this->db->createQuery()->select('a.id,a.deadline_at,a.started_at,a.rules_snapshot_json')->from('#__jlms_active_attempts AS s')->innerJoin('#__jlms_attempts AS a ON a.id=s.attempt_id')
                 ->where('s.enrollment_id = :enrollment')->where('s.quiz_id = :quiz')->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quizId,ParameterType::INTEGER);
             $active=$this->db->setQuery($q)->loadObject();
-            if($active){$rules=json_decode($active->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR);$active=(object)['id'=>(int)$active->id,'deadline_at'=>$active->deadline_at,'time_seconds'=>(int)$rules['time_seconds']];}
+            if($active){$rules=json_decode($active->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR);$active=(object)['id'=>(int)$active->id,'deadline_at'=>$active->deadline_at,'time_seconds'=>$active->deadline_at===null?0:(new \DateTimeImmutable($active->deadline_at,new \DateTimeZone('UTC')))->getTimestamp()-(new \DateTimeImmutable($active->started_at,new \DateTimeZone('UTC')))->getTimestamp()];}
         }
         return ['course_id'=>$course,'lesson_id'=>$lesson,'quiz'=>$quiz,'enrollment'=>$e,'candidates'=>$candidates,'more'=>$more,'current'=>$current,'history'=>$history,'active'=>$active];
     }

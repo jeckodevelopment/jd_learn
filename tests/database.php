@@ -18,11 +18,11 @@ foreach (explode(';', $sql) as $query) {
     }
 }
 $tables = $db->query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE 'ci_jlms_%'")->fetchColumn();
-if ((int) $tables !== 38) {
+if ((int) $tables !== 39) {
     throw new \RuntimeException('Schema table count mismatch');
 }
 $constraints = $db->query("SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_TYPE='FOREIGN KEY'")->fetchColumn();
-if ((int) $constraints !== 55) {
+if ((int) $constraints !== 56) {
     throw new \RuntimeException('Schema foreign key count mismatch');
 }
 $db->beginTransaction();

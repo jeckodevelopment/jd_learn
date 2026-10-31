@@ -14,8 +14,8 @@ for base in ['component','libraries','plugins','packages']:
 for p in ROOT.rglob('*.json'):
  if 'dist' not in p.parts:json.loads(p.read_text())
 sql=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
-assert len(re.findall(r'^CREATE TABLE',sql,re.M))==38
-assert len(re.findall(r'ADD CONSTRAINT',sql))==55
+assert len(re.findall(r'^CREATE TABLE',sql,re.M))==39
+assert len(re.findall(r'ADD CONSTRAINT',sql))==56
 assert not re.search(r'\b(?:DROP TABLE|TRUNCATE TABLE)\b',sql,re.I)
 # Catch undefined component/plugin translation keys, including INI keys assembled in ACL metadata.
 keys=set()
@@ -45,4 +45,4 @@ if package.exists():
       source='/'.join(x for x in [prefix,f.text] if x)
       assert source in names or any(n.startswith(source+'/') for n in names),(manifest,source)
  print('ZIP manifests and all 7 child archives verified')
-print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':38,'foreign_keys':55,'structural_checks':'passed'}))
+print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':39,'foreign_keys':56,'structural_checks':'passed'}))

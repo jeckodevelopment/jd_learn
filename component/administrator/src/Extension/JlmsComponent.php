@@ -14,6 +14,9 @@ final class JlmsComponent extends MVCComponent implements CategoryServiceInterfa
 {
     use CategoryServiceTrait;
 
+    private \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $quizDeadlineService;
+    public function setQuizDeadlineService(\Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $service): void { $this->quizDeadlineService = $service; }
+    public function getQuizDeadlineService(): \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService { return $this->quizDeadlineService; }
     private \Jlms\Component\Jlms\Administrator\Application\QuizReviewService $quizReviewService;
     public function setQuizReviewService(\Jlms\Component\Jlms\Administrator\Application\QuizReviewService $service): void { $this->quizReviewService = $service; }
     public function getQuizReviewService(): \Jlms\Component\Jlms\Administrator\Application\QuizReviewService { return $this->quizReviewService; }

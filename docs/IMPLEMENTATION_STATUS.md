@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento0.12.0-dev: annullamento tracciato dei tentativi e risultati validi ricalcolati.
+Aggiornamento: 31 ottobre 2026. Incremento0.13.0-dev: proroghe dei tentativi aperti e sincronizzazione autorevole del timer.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -15,7 +15,7 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Plugin video | Quattro plugin installati; YouTube/Vimeo, Cloudflare API e HTML5 opt-in; progressi comuni, upload locale e Nginx | Firma locale Cloudflare, cache/diagnostica, altri codec/storage, collaudo browser/provider e rinnovo senza interruzione |
 | Materiali e storage | Upload validato, storage locale privato, quarantena, protocollo ClamAV opzionale, collegamenti in bozza e download autorizzato/Range | Offload server/object storage, job cleanup, riuso asset, preview e ulteriori strumenti di gestione |
 | Iscrizioni e progressi | Avvio automatico, aula testo/video e completamento manuale/copertura con idempotenza/lock per iscrizione e accesso corrente | Approvazioni/manuale/import, dashboard, UI avanzata e gestione calendario |
-| Quiz | Banca/bozze native, pubblicazione con pool congelato, tentativi atomici, snapshot/estrazione, start/save/submit/CAS/timer, scoring, risultati, feedback protetto e tempi individuali preventivi | Proroghe in corso, rivalutazioni, disponibilità specifica, audit/privacy generali, UI/accessibilità e carico |
+| Quiz | Banca/bozze native, pubblicazione con pool congelato, tentativi atomici, snapshot/estrazione, start/save/submit/CAS/timer, scoring, risultati, feedback protetto e tempi individuali preventivi | Rivalutazioni, disponibilità specifica, audit/privacy generali, UI/accessibilità e carico |
 | Attestati | Schema emissione/documenti/sostituzione | PDF, verifica pubblica, anomalie, revoca e notifica |
 | Job e outbox | Schema e plugin Scheduler limitato alla scadenza quiz | Worker generali/CLI, lease, retry, mail templates e delivery_unknown |
 | Privacy, Action Logs, Finder | Specifiche conservate | Plugin funzionanti e collaudo lifecycle/export/erasure |
@@ -75,3 +75,7 @@ Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor conf
 ## Incremento0.12
 
 [QUIZ_CANCELLATION.md](QUIZ_CANCELLATION.md): annullamento con anteprima e conferma, consumo/resto, proiezioni valide, permessi e audit core. Non è rivalutazione: presenza di attestati o correzioni amministrative blocca l’applicazione. Nessuna migrazione schema; aggiornamento dalla0.11 e conservazione verificati nella PR #12. Carico, browser/accessibilità completi e patch corrente restano da certificare.
+
+## Incremento0.13
+
+[QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md): proroga preventiva della deadline corrente di un tentativo ancora aperto, con anteprima, autorizzazione, storia e audit nativo; snapshot originari conservati e sincronizzazione compatta. Nuova tabella additiva,39tabelle/56FK. Test effettivi nella PR #13, senza certificazione implicita di carico/browser/accessibilità o patch corrente.

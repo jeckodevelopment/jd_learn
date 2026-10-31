@@ -55,3 +55,5 @@ La pipeline crea tentativi con il pacchetto0.10 prima dell'aggiornamento, quindi
 Restano proroghe dei tentativi già aperti, rivalutazioni dei punteggi, politiche privacy complete, reporting, paginazione completa dello storico e collaudo di carico e accessibilità su browser reali. Il LMS completo e la compatibilità con la patch Joomla corrente non sono ancora certificati per la produzione.
 
 Dalla0.12 è disponibile l’annullamento tracciato dei tentativi, documentato in [QUIZ_CANCELLATION.md](QUIZ_CANCELLATION.md); non modifica retroattivamente le autorizzazioni al tempo.
+
+Dalla0.13 le proroghe autorizzate dei tentativi ancora aperti e non scaduti sono disponibili nel flusso distinto [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md). Non modificano lo snapshot originario né riaprono tentativi. I riferimenti sopra a funzioni di proroga successive descrivono il perimetro dell’incremento originario.

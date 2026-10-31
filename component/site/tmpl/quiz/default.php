@@ -9,12 +9,13 @@ $i=$this->item;$attempt=$i['attempt'];$open=$attempt&&$attempt['state']==='open'
 <section id="jlms-quiz" class="jlms-quiz" data-enrollment-id="<?= (int)$i['enrollment_id'] ?>">
  <header id="jlms-quiz-header"><h1><?= $this->escape($i['title']) ?></h1></header>
  <section id="jlms-quiz-rules">
-  <p><?= Text::_('COM_JLMS_QUIZ_RULES') ?>: <?= (int)$i['question_count'] ?> · <?= Text::_('COM_JLMS_QUIZ_THRESHOLD') ?> <?= $this->escape((string)($i['threshold']/100)) ?>% · <?= Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?> <?= (int)$i['time_seconds'] ?> s</p>
+  <p><?= Text::_('COM_JLMS_QUIZ_RULES') ?>: <?= (int)$i['question_count'] ?> · <?= Text::_('COM_JLMS_QUIZ_THRESHOLD') ?> <?= $this->escape((string)($i['threshold']/100)) ?>% · <?= Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?> <span id="jlms-quiz-duration"><?= (int)$i['time_seconds'] ?></span> s</p>
   <p><?= Text::_('COM_JLMS_QUIZ_ATTEMPTS') ?>: <?= (int)$i['used_attempts'] ?> / <?= $i['remaining_attempts']===null?Text::_('COM_JLMS_QUIZ_UNLIMITED'):(int)($i['used_attempts']+$i['remaining_attempts']) ?></p>
   <p><?= Text::_('COM_JLMS_QUIZ_SAVE_NOTICE') ?></p>
  </section>
  <p id="jlms-quiz-availability"><?= Text::_('COM_JLMS_QUIZ_NEXT') ?>: <?= $this->escape(gmdate('Y-m-d H:i:s',$i['next_attempt_at'])) ?> UTC · <?= Text::_('COM_JLMS_QUIZ_FEEDBACK') ?>: <?= Text::_(match($i['feedback_policy']){'never'=>'COM_JLMS_QUIZ_FEEDBACK_NEVER','after_submit'=>'COM_JLMS_QUIZ_FEEDBACK_PRACTICE',default=>'COM_JLMS_QUIZ_FEEDBACK_DEFAULT'}) ?></p>
  <p id="jlms-quiz-time-allowance"><?= Text::_('COM_JLMS_QUIZ_TIME_EXTRA') ?>: <?= (int)$i['extra_time_seconds'] ?> s · <?= Text::_('COM_JLMS_QUIZ_TIME_NEXT') ?>: <?= (int)$i['next_time_seconds'] ?> s</p>
+ <p id="jlms-quiz-extension" role="status" aria-live="polite"><?= Text::_('COM_JLMS_QUIZ_EXTEND_NOTICE') ?>: <?= (int)$i['extension_seconds'] ?></p>
  <p id="jlms-quiz-warning" role="alert" aria-live="assertive"></p>
  <p id="jlms-quiz-status" role="status" aria-live="polite"></p>
  <p id="jlms-quiz-timer" role="timer" aria-live="off"></p>
