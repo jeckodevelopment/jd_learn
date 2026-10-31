@@ -18,7 +18,7 @@ export class VideoLesson {
     document.addEventListener('visibilitychange', this.onVisibility);
   }
   allowed() {
-    return this.config.policy === 'click' || (this.config.policy === 'site_consent'
+    return this.config.provider === 'html5' || this.config.policy === 'click' || (this.config.policy === 'site_consent'
       && window.JlmsConsent?.isAllowed(this.config.provider) === true);
   }
   message(key) { this.status.textContent = this.config.labels[key] || this.config.labels.error; }
@@ -40,7 +40,7 @@ export class VideoLesson {
     try {
       const grant = await this.request('playback', {consent: '1'});
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
-      const paths = {youtube: '../../plg_jlmsvideo_youtube/js/player.js', vimeo: '../../plg_jlmsvideo_vimeo/js/player.js', cloudflarestream: '../../plg_jlmsvideo_cloudflarestream/js/player.js'};
+      const paths = {youtube: '../../plg_jlmsvideo_youtube/js/player.js', vimeo: '../../plg_jlmsvideo_vimeo/js/player.js', cloudflarestream: '../../plg_jlmsvideo_cloudflarestream/js/player.js', html5: '../../plg_jlmsvideo_html5/js/player.js'};
       if (grant.provider !== this.config.provider || !paths[grant.provider]) throw new Error('provider');
       this.session = grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
       this.started = performance.now(); this.previous = null; this.aborter = new AbortController();

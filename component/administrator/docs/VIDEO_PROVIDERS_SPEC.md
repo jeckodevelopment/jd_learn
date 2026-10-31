@@ -1,4 +1,4 @@
-> Stato implementazione0.7: YouTube/Vimeo embed e Cloudflare Stream tramite API sono opt-in con consenso e progressi. Firma locale Cloudflare, HTML5 e criteri completi rimangono da realizzare. Configurazione effettiva Cloudflare e limiti in CLOUDFLARE_STREAM.md incluso in questa cartella. Le sezioni seguenti sono la specifica completa del prodotto, non una dichiarazione di collaudo live.
+> Stato implementazione0.8: YouTube/Vimeo, Cloudflare API e HTML5 dispongono di percorsi opt-in. Configurazione e limiti effettivi sono documentati in CLOUDFLARE_STREAM.md e HTML5_VIDEO.md inclusi in questa cartella. Firma locale Cloudflare, funzioni avanzate e criteri completi restano da implementare/collaudare. Le sezioni seguenti sono la specifica completa del prodotto, non una certificazione di completezza.
 
 # LMS Joomla — Sviluppo sicuro e specifiche dei plugin video
 

@@ -12,3 +12,5 @@
 #jlms-player iframe { width:100%; height:100%; border:0; }
 #jlms-player-status { min-height:1.5em; }
 #jlms-video-region button { margin-block:0.5rem; }
+
+#jlms-player video { width:100%; height:100%; object-fit:contain; }

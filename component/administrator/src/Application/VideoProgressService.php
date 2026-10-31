@@ -16,7 +16,7 @@ use Jlms\Contracts\Video\VideoSource;
 final class VideoProgressService
 {
     public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
-        private readonly CurriculumService $curriculum, private readonly \Closure $clock)
+        private readonly CurriculumService $curriculum, private readonly \Closure $clock, private readonly ?LocalVideoService $localVideos = null)
     {
     }
 
@@ -36,10 +36,14 @@ final class VideoProgressService
     {
         $context = $this->learning->videoContext($identity, $language, $enrollmentId, $lessonId, $lock);
         $policy = ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
-        if (!in_array($policy, ['click', 'site_consent'], true)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403); }
+        if ($context[3]->provider_key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403); }
         try { $provider = $this->curriculum->videoProvider($context[3]->provider_key); }
         catch (\DomainException $error) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }
         if (!$provider->getDescriptor()->configured) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }
+        if ($context[3]->provider_key === 'html5') {
+            if (!$this->localVideos) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }
+            $this->localVideos->assertReady($context[3]);
+        }
         return [...$context, $provider];
     }
 

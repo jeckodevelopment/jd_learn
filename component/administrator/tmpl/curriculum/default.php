@@ -79,6 +79,23 @@ $hidden = static function (array $fields): void {
      <label><input type="checkbox" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_CONFIRM_DELETE_LESSON') ?></label>
      <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-sm btn-outline-danger"><?= Text::_('JACTION_DELETE') ?></button>
     </form><?php endif; ?>
+   <?php endif; ?>
+   <?php if ($lesson->provider_key === 'html5' && \Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id)) : ?>
+    <section id="jlms-video-file-<?= (int) $lesson->id ?>" class="jlms-video-file">
+     <p><?= Text::_('COM_JLMS_VIDEO_FILE_NOTICE') ?> <?= $lesson->media_asset_id ? Text::_('COM_JLMS_VIDEO_FILE_ATTACHED') : Text::_('COM_JLMS_VIDEO_FILE_MISSING') ?></p>
+     <?php if ($this->editable) : ?>
+     <form id="jlms-video-upload-<?= (int) $lesson->id ?>" method="post" enctype="multipart/form-data" action="<?= $link('index.php?option=com_jlms') ?>">
+      <?php $hidden($scope + ['lesson_id' => $lesson->id]); ?><input type="hidden" name="task" value="videofile.upload">
+      <label for="jlms-video-input-<?= (int) $lesson->id ?>"><?= Text::_('COM_JLMS_VIDEO_FILE_UPLOAD') ?></label>
+      <input id="jlms-video-input-<?= (int) $lesson->id ?>" name="jform[upload]" type="file" accept="video/mp4,.mp4" required>
+      <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('JUPLOAD') ?></button>
+     </form><?php endif; ?>
+     <?php if ($lesson->media_asset_id) : ?>
+     <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+      <?php $hidden($scope + ['lesson_id' => $lesson->id]); ?><input type="hidden" name="task" value="videofile.scan">
+      <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_VIDEO_FILE_SCAN') ?></button>
+     </form><?php endif; ?>
+    </section>
    <?php endif; ?></li>
   <?php endforeach; ?></ol></section>
  <?php endforeach; ?></div>

@@ -39,7 +39,7 @@ final class MaterialDownload
             $ascii = preg_replace('/[^A-Za-z0-9._-]/', '_', (string) iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $file['name'])) ?: 'download';
             $app->setHeader('status', $status === 206 ? '206 Partial Content' : '200 OK', true);
             $app->setHeader('Content-Type', $file['mime'], true);
-            $app->setHeader('Content-Disposition', 'attachment; filename="' . $ascii . '"; filename*=UTF-8\'\'' . rawurlencode($file['name']), true);
+            $app->setHeader('Content-Disposition', (($file['inline'] ?? false) === true ? 'inline' : 'attachment') . '; filename="' . $ascii . '"; filename*=UTF-8\'\'' . rawurlencode($file['name']), true);
             $app->setHeader('Content-Length', (string) ($end - $start + 1), true);
             $app->setHeader('Accept-Ranges', 'bytes', true);
             $app->setHeader('ETag', $file['etag'], true);

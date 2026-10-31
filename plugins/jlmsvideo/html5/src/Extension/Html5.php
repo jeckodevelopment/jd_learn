@@ -21,7 +21,13 @@ final class Html5 extends CMSPlugin implements SubscriberInterface
 
     public function registerProviders(RegisterVideoProvidersEvent $event): void
     {
-        $descriptor = new ProviderDescriptor('html5', 'PLG_JLMSVIDEO_HTML5', 1, false);
-        $event->getRegistry()->register($descriptor, static fn (): Provider => new Provider());
+        $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+        $mode = $settings->get('video_delivery_mode', 'disabled');
+        $enabled = (int) $this->params->get('playback_enabled', 0) === 1
+            && (string) $settings->get('video_storage_root', '') !== ''
+            && ($mode === 'php_bounded' || ($mode === 'x_accel' && (bool) $settings->get('video_internal_confirmed', false)
+                && preg_match('~\A/(?:[A-Za-z0-9_-]+/)+\z~D', (string) $settings->get('video_internal_prefix', '')) === 1));
+        $descriptor = new ProviderDescriptor('html5', 'PLG_JLMSVIDEO_HTML5', 1, $enabled);
+        $event->getRegistry()->register($descriptor, static fn (): Provider => new Provider($enabled));
     }
 }

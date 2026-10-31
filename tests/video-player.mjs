@@ -106,3 +106,22 @@ await renewal.renew();assert.equal(oldDestroyed,1);assert.equal(created,1);asser
 assert.equal(renewal.session.session_id,'same-session');assert.equal(renewal.session.options.token,'new.token.signature');
 assert.equal(elements['#jlms-player-status'].textContent,'renewed');await renewal.destroy();
 console.log(JSON.stringify({cloudflare_client_renew_checks:8,status:'passed'}));
+const html5=await moduleFromFile(new URL('../plugins/jlmsvideo/html5/media/js/player.js',import.meta.url));
+location.href='https://school.example/index.php?option=com_jlms';
+let videoNode, removed=0, pauses=0;
+document.createElement=tag=>{
+ assert.equal(tag,'video');const handlers=new Map();
+ const element={currentTime:2,duration:10,playbackRate:1,paused:false,ended:false,
+  setAttribute(){},removeAttribute(){},load(){},pause(){pauses++;},remove(){removed++;},
+  addEventListener:(event,handler)=>handlers.set(event,handler),removeEventListener:event=>handlers.delete(event),
+  set src(value){this.url=value;queueMicrotask(()=>handlers.get('loadedmetadata')?.());},get src(){return this.url;},handlers};
+ videoNode=element;return element;
+};
+const native=await html5.create(box,{options:{url:'/index.php?option=com_jlms&task=media.stream&enrollment_id=1&lesson_id=2&source_revision=3'}},()=>{},new AbortController().signal);
+assert.equal(videoNode.preload,'metadata');assert.equal(videoNode.autoplay,false);assert.equal(videoNode.controls,true);
+assert.equal((await native.sample()).position_ms,2000);native.seek(5000);assert.equal(videoNode.currentTime,5);
+native.destroy();native.destroy();assert.equal(removed,1);assert.equal(videoNode.handlers.size,0);
+await assert.rejects(html5.create(box,{options:{url:'https://elsewhere.example/private.mp4'}},()=>{},new AbortController().signal));
+const localConsent=new VideoLesson({...config,provider:'html5',policy:'blocked'},root);
+assert.equal(localConsent.allowed(),true);await localConsent.destroy();
+console.log(JSON.stringify({html5_adapter_checks:9,status:'passed',environment:'native media-element double; no browser decoder'}));

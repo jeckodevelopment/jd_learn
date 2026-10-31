@@ -40,3 +40,9 @@ L'override `classroom/default.php` distingue testo e video: solo il testo includ
 ## Cloudflare Stream (0.7)
 
 Riutilizza le regioni del player0.6 senza introdurre ID duplicati o stili globali. `jlms-player-status` annuncia anche il rinnovo; dopo la ricreazione dell'iframe la posizione viene ripristinata e la riproduzione rimane in pausa. Gli override mantengono WAM, script options, controlli di consenso e stato aria-live. Non inserire token o credenziali nei layout: il descrittore temporaneo arriva da POST autorizzato.
+
+## HTML5 e form video (0.8)
+
+Il player locale riutilizza tutte le regioni aula0.6: `jlms-player` contiene un elemento video nativo con controlli, playsinline e preload metadata dopo caricamento esplicito. CSS `.jlms-player` e `#jlms-player video` mantengono il rapporto16/9 senza selettori globali. Gli override non inseriscono URL filesystem o video pubblici.
+
+Nel backend `curriculum/default.php`: `jlms-video-file-{lessonId}`, `jlms-video-upload-{lessonId}`, `jlms-video-input-{lessonId}`, classe `.jlms-video-file`. Il form upload esiste solo in bozza; quello di rescan può essere disponibile su una lezione pubblicata per lo stato di sicurezza. Conservare enctype, nomi campo, parent, revisione e token Joomla; nessun ID è duplicato. Non rendere modificabili durata e asset del video locale nel form lezione: sono server-owned.
