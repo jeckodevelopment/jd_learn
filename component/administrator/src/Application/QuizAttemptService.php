@@ -27,6 +27,12 @@ final class QuizAttemptService
     }
     private function context(User $identity,string $language,int $enrollment,int $lesson):array
     {
+        // Acquire the serialisation lock before core user/category reads establish an InnoDB read view.
+        // A request waiting for another tab must authorise and read answers after that tab commits.
+        $owner=(int)$identity->id;
+        $lock=$this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id = :id')->where('user_id = :owner')
+            ->bind(':id',$enrollment,ParameterType::INTEGER)->bind(':owner',$owner,ParameterType::INTEGER);
+        $lock->setQuery((string)$lock.' FOR UPDATE');$this->db->setQuery($lock)->loadResult();
         [$actor,$e,$l]=$this->learning->quizContext($identity,$language,$enrollment,$lesson,true,true);
         $q=$this->db->createQuery()->select('*')->from('#__jlms_quizzes')->where('lesson_id = :lesson')->where('course_version_id = :version');$version=(int)$l->course_version_id;
         $q->bind(':lesson',$lesson,ParameterType::INTEGER)->bind(':version',$version,ParameterType::INTEGER);
@@ -45,20 +51,20 @@ final class QuizAttemptService
     {
         $q=$this->db->createQuery()->select('attempt_id')->from('#__jlms_active_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
             ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quiz,ParameterType::INTEGER);
-        $id=(int)$this->db->setQuery($q)->loadResult();return $id?$this->attempt($id,$enrollment,$quiz):null;
+        $q->setQuery((string)$q.' FOR UPDATE');$id=(int)$this->db->setQuery($q)->loadResult();return $id?$this->attempt($id,$enrollment,$quiz):null;
     }
     private function history(int $enrollment,int $quiz):array
     {
         $q=$this->db->createQuery()->select('COUNT(*) AS used, MAX(attempt_no) AS last_no, MAX(submitted_at) AS last_closed, MAX(passed) AS any_passed')
             ->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')->where('counted_for_limit = 1')
             ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quiz,ParameterType::INTEGER);
-        $r=$this->db->setQuery($q)->loadObject();return ['used'=>(int)$r->used,'last_no'=>(int)$r->last_no,'last_closed'=>self::timestamp($r->last_closed),'passed'=>(bool)$r->any_passed];
+        $q->setQuery((string)$q.' FOR UPDATE');$r=$this->db->setQuery($q)->loadObject();return ['used'=>(int)$r->used,'last_no'=>(int)$r->last_no,'last_closed'=>self::timestamp($r->last_closed),'passed'=>(bool)$r->any_passed];
     }
     private function startLedger(int $actor,string $key,int $enrollment,int $lesson,?int $result=null):?int
     {
         $scope=hash('sha256',$actor.':quiz.start:'.$key);$hash=hash('sha256',$enrollment.':'.$lesson);
         $q=$this->db->createQuery()->select('request_hash,result_id')->from('#__jlms_idempotency')->where('scope_hash = :scope')->bind(':scope',$scope);
-        $r=$this->db->setQuery($q)->loadObject();
+        $q->setQuery((string)$q.' FOR UPDATE');$r=$this->db->setQuery($q)->loadObject();
         if($r){if(!hash_equals($r->request_hash,$hash))throw new \RuntimeException('COM_JLMS_QUIZ_CONFLICT',409);return(int)$r->result_id;}
         if($result!==null){
             $now=self::date(($this->clock)());$expires=self::date(($this->clock)()+604800);
@@ -88,7 +94,7 @@ final class QuizAttemptService
             $rules['lesson_required']=(int)$l->required;$rules['source_revision']=(int)$l->source_revision;
             $max=array_sum(array_map(static fn($row):int=>(int)$row->points,$pool));
             $a=(object)['enrollment_id'=>$enrollment,'course_version_id'=>(int)$l->course_version_id,'quiz_id'=>$quizId,'attempt_no'=>$history['last_no']+1,
-                'status'=>'open','rules_snapshot_json'=>QuestionDefinition::canonical($rules),'max_points'=>$max,'started_at'=>self::date($now),
+                'status'=>'open','score_points'=>null,'passed'=>null,'submitted_at'=>null,'rules_snapshot_json'=>QuestionDefinition::canonical($rules),'max_points'=>$max,'started_at'=>self::date($now),
                 'deadline_at'=>$rules['time_seconds']?self::date($now+$rules['time_seconds']):null,'counted_for_limit'=>1,'revision'=>1];
             $this->db->insertObject('#__jlms_attempts',$a,'id');
             $filter=\Joomla\CMS\Filter\InputFilter::getInstance([],[],1,1);$order=0;
@@ -110,7 +116,7 @@ final class QuizAttemptService
     {
         $q=$this->db->createQuery()->select('q.*, a.answer_json')->from('#__jlms_attempt_questions AS q')
             ->leftJoin('#__jlms_attempt_answers AS a ON a.attempt_question_id=q.id')->where('q.attempt_id = :attempt')->bind(':attempt',$attempt,ParameterType::INTEGER)->order('q.display_order');
-        $rows=$this->db->setQuery($q,0,201)->loadObjectList();if(!$rows||count($rows)>200)throw new \RuntimeException('COM_JLMS_QUIZ_INVALID',422);return $rows;
+        $q->setQuery((string)$q.' LIMIT 201 FOR UPDATE');$rows=$this->db->setQuery($q)->loadObjectList();if(!$rows||count($rows)>200)throw new \RuntimeException('COM_JLMS_QUIZ_INVALID',422);return $rows;
     }
     /** Autosaves read only option identifiers, never multi-megabyte prompts or private grading documents. */
     private function answerQuestions(int $attempt):array
@@ -144,11 +150,11 @@ final class QuizAttemptService
             [, $e,$l,$quiz]=$this->context($identity,$language,$enrollment,$lesson);$a=$this->attempt($attempt,$enrollment,(int)$quiz->id);
             $rows=$this->answerQuestions($attempt);$patch=$this->patch($rows,$json);$hash=hash('sha256',QuestionDefinition::canonical(['operation'=>$submit?'submit':'save','revision'=>$revision,'answers'=>$patch]));
             $q=$this->db->createQuery()->select('*')->from('#__jlms_quiz_mutations')->where('attempt_id = :attempt')->where('mutation_id = :mutation')
-                ->bind(':attempt',$attempt,ParameterType::INTEGER)->bind(':mutation',$key);$mutation=$this->db->setQuery($q)->loadObject();
+                ->bind(':attempt',$attempt,ParameterType::INTEGER)->bind(':mutation',$key);$q->setQuery((string)$q.' FOR UPDATE');$mutation=$this->db->setQuery($q)->loadObject();
             $now=($this->clock)();
             if($mutation){if(!hash_equals($mutation->request_hash,$hash))throw new \RuntimeException('COM_JLMS_QUIZ_CONFLICT',409);$this->expireIfDue($a,$e,$l,$now);$dto=$this->dto($a,$e,$l,$quiz,$identity,$language,$submit||$a->status!=='open');$dto['replay']=true;return $dto;}
             $q=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quiz_mutations')->where('attempt_id = :attempt')->bind(':attempt',$attempt,ParameterType::INTEGER);
-            if((int)$this->db->setQuery($q)->loadResult()>=50000)throw new \RuntimeException('COM_JLMS_QUIZ_LIMIT',429);
+            $q->setQuery((string)$q.' FOR UPDATE');if((int)$this->db->setQuery($q)->loadResult()>=50000)throw new \RuntimeException('COM_JLMS_QUIZ_LIMIT',429);
             $expired=$this->expireIfDue($a,$e,$l,$now);
             if($a->status!=='open'){
                 if(!$submit&&!$expired)throw new \RuntimeException('COM_JLMS_QUIZ_CLOSED',409);
@@ -218,7 +224,7 @@ final class QuizAttemptService
             if($attempt)$a=$this->attempt($attempt,$enrollment,$quizId);
             elseif($active)$a=$active;
             else{$q=$this->db->createQuery()->select('id')->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-                    ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quizId,ParameterType::INTEGER)->order('attempt_no DESC');$id=(int)$this->db->setQuery($q,0,1)->loadResult();$a=$id?$this->attempt($id,$enrollment,$quizId):null;}
+                    ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quizId,ParameterType::INTEGER)->order('attempt_no DESC');$q->setQuery((string)$q.' LIMIT 1 FOR UPDATE');$id=(int)$this->db->setQuery($q)->loadResult();$a=$id?$this->attempt($id,$enrollment,$quizId):null;}
             return $this->dto($a,$e,$l,$quiz,$identity,$language);
         });
     }
@@ -247,9 +253,9 @@ final class QuizAttemptService
             }
         }
         $q=$this->db->createQuery()->select('id,attempt_no,status,score_points,max_points,passed,submitted_at')->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-            ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quizId,ParameterType::INTEGER)->order('attempt_no DESC');$dto['history']=$this->db->setQuery($q,0,20)->loadAssocList();
+            ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quizId,ParameterType::INTEGER)->order('attempt_no DESC');$q->setQuery((string)$q.' LIMIT 20 FOR UPDATE');$dto['history']=$this->db->setQuery($q)->loadAssocList();
         $q=$this->db->createQuery()->select('coverage_json')->from('#__jlms_lesson_progress')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson');$lesson=(int)$l->id;
-        $q->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':lesson',$lesson,ParameterType::INTEGER);$best=$this->db->setQuery($q)->loadResult();$dto['best']=$best?json_decode($best,true,16,JSON_THROW_ON_ERROR):null;
+        $q->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':lesson',$lesson,ParameterType::INTEGER);$q->setQuery((string)$q.' FOR UPDATE');$best=$this->db->setQuery($q)->loadResult();$dto['best']=$best?json_decode($best,true,16,JSON_THROW_ON_ERROR):null;
         return $dto;
     }
     public function expireDue(int $limit=100):array

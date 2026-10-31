@@ -23,7 +23,7 @@ export function initialiseQuiz(options, document = globalThis.document, location
     const transport = new QuizTransport(options.urls, {enrollment_id: options.enrollment, lesson_id: options.lesson, [options.token]: 1});
     const uuid = () => globalThis.crypto.randomUUID();
     let attempt = options.attempt, busy = false, halted = false, pending = null, submitted = false;
-    let baseline = '', clockStart = performance.now();
+    let baseline = '', clockStart = performance.now(), savedAt = new Date(options.server_now * 1000);
     const labels = options.labels, clockNow = () => options.server_now + (performance.now() - clockStart) / 1000;
     const read = () => {
         const answers = {};
@@ -31,7 +31,7 @@ export function initialiseQuiz(options, document = globalThis.document, location
         return JSON.stringify(answers);
     };
     baseline = read();
-    const message = key => { status.textContent = labels[key] + (key === 'saved' ? ' ' + new Date().toLocaleTimeString() : ''); };
+    const message = key => { status.textContent = labels[key] + (key === 'saved' ? ' ' + savedAt.toLocaleTimeString() : ''); };
     const fail = error => {
         // An uncertain mutation stays immutable until retried; a confirmed rejection stops this tab.
         if ([400,401,403,404,409,413,422,429].includes(error.status)) { halted = true; pending = null; }
@@ -44,14 +44,14 @@ export function initialiseQuiz(options, document = globalThis.document, location
         try {
             if (pending) {
                 const data = await transport.send(pending.operation, pending.payload); baseline = pending.payload.answers_json; pending = null;
-                attempt = data.attempt;
+                attempt = data.attempt; savedAt = new Date(data.server_now * 1000);
                 if (attempt.state !== 'open') { reload(); return true; }
             }
             const answers = read();
             if (!submit && answers === baseline) { message('saved'); return true; }
             const payload = {attempt_id: attempt.id, revision: attempt.revision, mutation_id: uuid(), answers_json: answers};
             pending = {operation: submit ? 'submit' : 'save', payload};
-            const data = await transport.send(pending.operation, pending.payload); pending = null; baseline = answers; attempt = data.attempt;
+            const data = await transport.send(pending.operation, pending.payload); pending = null; baseline = answers; attempt = data.attempt; savedAt = new Date(data.server_now * 1000);
             message('saved');
             if (submit || attempt.state !== 'open') reload();
             return true;
@@ -75,21 +75,22 @@ export function initialiseQuiz(options, document = globalThis.document, location
         } catch (error) { fail(error); event.currentTarget.disabled = halted; }
         finally { busy = false; }
     });
-    let pollBusy = false;
+    if (attempt?.state === 'open') message('saved');
+    let pollBusy = false, pollAfter = 0, pollBackoff = 1;
     const tick = globalThis.setInterval(async () => {
         if (halted || !attempt || attempt.state !== 'open') return;
         const left = attempt.deadline === null ? null : Math.max(0, Math.ceil(attempt.deadline - clockNow()));
         document.getElementById('jlms-quiz-timer').textContent = left === null ? '' : `${Math.floor(left / 60)}:${String(left % 60).padStart(2,'0')}`;
-        if (left === 0 && !busy && !pollBusy) {
+        if (left === 0 && !busy && !pollBusy && clockNow() >= pollAfter) {
             // Submit no new answers at expiry. The server grades only previously saved answers.
             pollBusy = true;
             try {
                 const url = new URL(options.urls.state, location.href); url.searchParams.set('enrollment_id', options.enrollment); url.searchParams.set('lesson_id', options.lesson);
                 const response = await globalThis.fetch(url, {credentials:'same-origin', cache:'no-store'}); const result = await response.json();
                 if (!response.ok || result.error) { const error = new Error('Quiz expired'); error.status = response.status; throw error; }
-                if (result.data.attempt?.state !== 'open') reload();
-            } catch (error) { fail(error); }
-            finally { pollBusy = false; }
+                pollBackoff = 1; if (result.data.attempt?.state !== 'open') reload();
+            } catch (error) { fail(error); pollBackoff = Math.min(30, pollBackoff * 2); }
+            finally { pollAfter = clockNow() + pollBackoff; pollBusy = false; }
         }
     }, 1000);
     const autosave = globalThis.setInterval(() => { if (attempt?.state === 'open' && (attempt.deadline === null || clockNow() < attempt.deadline)) save(); }, 20000);

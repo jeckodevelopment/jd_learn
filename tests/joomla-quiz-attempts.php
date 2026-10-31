@@ -82,7 +82,7 @@ $now=time();$service=new \Jlms\Component\Jlms\Administrator\Application\QuizAtte
 $fixturePath=dirname($root).'/quiz-attempts-fixture.json';
 if(($argv[2]??'')==='worker'){
     $f=json_decode(file_get_contents($fixturePath),true,16,JSON_THROW_ON_ERROR);
-    $r=$service->start($actor,'en-GB',$f['concurrent_enrollment'],$f['lesson_id'],attemptKey());echo $r['attempt']['id'].PHP_EOL;exit(0);
+    $workerUser=new \Joomla\CMS\User\User($f['concurrent_user']);$r=$service->start($workerUser,'en-GB',$f['concurrent_enrollment'],$f['lesson_id'],attemptKey());echo $r['attempt']['id'].PHP_EOL;exit(0);
 }
 if(($argv[2]??'')==='retained'){
     $f=json_decode(file_get_contents($fixturePath),true,16,JSON_THROW_ON_ERROR);$r=$service->state($student,'en-GB',$f['enrollment_id'],$f['lesson_id']);
@@ -187,8 +187,11 @@ attemptExpect($db->setQuery('SELECT status FROM #__jlms_attempts WHERE id='.(int
 $httpUser=new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());
 $httpEnrollment=$learning->start($httpUser,'en-GB',$course,bin2hex(random_bytes(16)));
 // Concurrency uses one enrollment and two independent database connections/processes.
-$concurrentEnrollment=$learning->start($actor,'en-GB',$course,bin2hex(random_bytes(16)));
-$f=['course_id'=>$course,'lesson_id'=>$lesson,'practice_id'=>$practice,'never_id'=>$never,'enrollment_id'=>$enrollment,'http_enrollment'=>$httpEnrollment,'passed_attempt'=>$passedAttempt,'concurrent_enrollment'=>$concurrentEnrollment];
+$concurrentUser=new \Joomla\CMS\User\User();
+$userData=['name'=>'CI Concurrent quiz','username'=>'ciquizconcurrent','email'=>'ciquizconcurrent@example.invalid','password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2,$group],'block'=>0,'activation'=>''];
+if(!$concurrentUser->bind($userData)||!$concurrentUser->save())throw new \RuntimeException($concurrentUser->getError());
+$concurrentEnrollment=$learning->start($concurrentUser,'en-GB',$course,bin2hex(random_bytes(16)));
+$f=['course_id'=>$course,'lesson_id'=>$lesson,'practice_id'=>$practice,'never_id'=>$never,'enrollment_id'=>$enrollment,'http_enrollment'=>$httpEnrollment,'passed_attempt'=>$passedAttempt,'concurrent_user'=>(int)$concurrentUser->id,'concurrent_enrollment'=>$concurrentEnrollment];
 $snapshotHash=hash('sha256',json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id='.$passedAttempt.' ORDER BY id')->loadAssocList(),JSON_THROW_ON_ERROR));$f['snapshot_hash']=$snapshotHash;
 file_put_contents($fixturePath,json_encode($f,JSON_THROW_ON_ERROR));
 $workers=[];
