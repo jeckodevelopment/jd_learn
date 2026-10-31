@@ -1,0 +1,1 @@
+-- Authoring uses the unchanged baseline schema. No DDL or data rewrite is required.

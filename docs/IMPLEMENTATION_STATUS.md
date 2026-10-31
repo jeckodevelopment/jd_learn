@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento iniziale 0.1.0-dev.
+Aggiornamento: 31 ottobre 2026. Incremento0.2.0-dev: aggiunta gestione del programma in bozza.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -9,7 +9,7 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Package, libreria, MVC, SQL, build | Implementazione iniziale e CI predisposte | Tutte le matrici install/upgrade/recovery, patch corrente Joomla, release signing |
 | Core utenti e ACL | Identità/permessi core per editor; policy dominio testata | Entitlement fresco runtime studente, revoca e tutte le policy per oggetto |
 | Categorie | Contesti core, servizi, asset di sezione e form corso | Lifecycle completo di rimozione/ripristino con dati storici |
-| Corsi | Creazione/modifica della scheda in bozza e revisioni concorrenti | Versioni didattiche, lezioni, workflow, pubblicazione, equivalenze/migrazioni |
+| Corsi | Scheda, prima versione in bozza, moduli e lezioni testo/video, riordino/rimozione e revisioni concorrenti | Workflow, pubblicazione, clonazione completa, altri tipi lezione, equivalenze/migrazioni |
 | Editor Joomla | Form e check-in/out nativi, livelli, lingua | Tags, fields/snapshot, Content History e associazioni multilingua |
 | Frontend | View catalogo vuota con WAM/override e prime regioni CSS | Catalogo pubblicato, scheda, aula, dashboard personale e accessibilità completa |
 | Plugin video | Tutti e quattro installati, contratto/registro/validazione input | SDK player, capabilities reali, consenso, metadati, firma/rinnovo e Range |
@@ -39,3 +39,5 @@ Nessun requisito completo del prodotto è considerato soddisfatto dal solo schem
 L’installer applica la DDL tramite uno script controllato anziché ripetere gli ALTER al semplice reinstall con dati conservati. Ogni passo è ricontrollato e interrompe l’installazione in errore; non si pretende una transazione DDL globale. Il primo incremento non esegue backfill o migrazioni di versioni già pubblicate.
 
 Nessun plugin di integrazione privacy/Finder/task viene distribuito come involucro vuoto: saranno aggiunti quando avranno un comportamento verificabile. I quattro provider richiesti sono già costituenti del pacchetto, ma non dichiarano capacità di riproduzione non implementate.
+
+La gestione del programma è descritta in AUTHORING.md. Il nuovo servizio applicativo centralizza autorizzazioni/transazioni; i test integrativi includono versioni immutabili, ID fuori dal parent, dati concorrenti, ordinamento e rimozione. Gli esiti effettivi restano nelle Actions.
