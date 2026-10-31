@@ -695,3 +695,22 @@ CREATE TABLE IF NOT EXISTS `#__jlms_quiz_time_adjustments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ALTER TABLE `#__jlms_quiz_time_adjustments` ADD CONSTRAINT `#__jlms_fk_time_enrollment` FOREIGN KEY (`enrollment_id`, `course_version_id`) REFERENCES `#__jlms_enrollments` (`id`, `course_version_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `#__jlms_quiz_time_adjustments` ADD CONSTRAINT `#__jlms_fk_time_quiz` FOREIGN KEY (`quiz_id`) REFERENCES `#__jlms_quizzes` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `#__jlms_quiz_deadline_extensions` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `attempt_id` BIGINT UNSIGNED NOT NULL,
+  `revision_no` INT UNSIGNED NOT NULL,
+  `previous_deadline` DATETIME(6) NOT NULL,
+  `new_deadline` DATETIME(6) NOT NULL,
+  `added_seconds` INT UNSIGNED NOT NULL,
+  `rules_hash` CHAR(64) NOT NULL,
+  `reason` VARCHAR(500) NOT NULL,
+  `actor_user_id` INT UNSIGNED NULL,
+  `mutation_id` CHAR(36) NOT NULL,
+  `request_hash` CHAR(64) NOT NULL,
+  `created_at` DATETIME(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_deadline_revision` (`attempt_id`,`revision_no`),
+  UNIQUE KEY `uq_deadline_mutation` (`attempt_id`,`mutation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `#__jlms_quiz_deadline_extensions` ADD CONSTRAINT `#__jlms_fk_deadline_attempt` FOREIGN KEY (`attempt_id`) REFERENCES `#__jlms_attempts` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

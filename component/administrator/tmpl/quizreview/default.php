@@ -17,6 +17,7 @@ $base='index.php?option=com_jlms&view=quizreview&id='.(int)$i['course_id'].'&les
  <?php foreach($i['attempts']as$a): ?><tr><td><a href="<?= Route::_($enr.'&attempt_id='.(int)$a->id) ?>">#<?= (int)$a->attempt_no ?></a></td><td><?= Text::_(match($a->status){'open'=>'COM_JLMS_QUIZ_STATUS_OPEN','submitted'=>'COM_JLMS_QUIZ_STATUS_SUBMITTED','expired'=>'COM_JLMS_QUIZ_STATUS_EXPIRED',default=>'COM_JLMS_QUIZ_CANCELLED'}) ?></td><td><?= $a->score_points===null?'—':(int)$a->score_points ?>/<?= (int)$a->max_points ?></td><td><?= Text::_((int)$a->counted_for_limit?'JYES':'JNO') ?></td></tr><?php endforeach; ?></tbody></table>
  <?php if($i['more_attempts']): $last=end($i['attempts']); ?><a href="<?= Route::_($enr.'&before='.(int)$last->id) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?>
  <?php if($i['selected']): $a=$i['selected']; ?>
+ <?php if($a->status==='open'): ?><p><a id="jlms-quiz-extend-link" href="<?= Route::_('index.php?option=com_jlms&view=quizextend&id='.(int)$i['course_id'].'&lesson_id='.(int)$i['lesson_id'].'&enrollment_id='.(int)$i['enrollment']->id.'&attempt_id='.(int)$a->id) ?>"><?= Text::_('COM_JLMS_QUIZ_EXTEND_TITLE') ?></a></p><?php endif; ?>
  <?php if($a->status==='invalidated'): ?>
  <section id="jlms-quiz-review-record"><h3><?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?></h3><p><?= $this->escape($a->invalidation_reason) ?></p><p><?= (int)$a->invalidated_by ?> · <?= $this->escape($a->invalidated_at) ?> UTC</p></section>
  <?php else: $p=$i['impact']; ?>

@@ -68,3 +68,9 @@ Backend: override `quiztime/default.php`, ID `jlms-quiz-time-editor`, `jlms-quiz
 Frontend: `jlms-quiz-invalidated` spiega che il tentativo è annullato e il punteggio eventualmente mostrato è storico. Preservare il controllo sul campo `valid`/stato del DTO: non presentare un superamento annullato come efficace né mostrare correzioni non rilasciate.
 
 Backend: override `quizreview/default.php`; ID `jlms-quiz-review`, `jlms-quiz-review-policy`, `jlms-quiz-review-enrollments`, `jlms-quiz-review-attempts`, `jlms-quiz-review-preview`, `jlms-quiz-review-blocked`, `jlms-quiz-review-form`, `jlms-quiz-review-record`. `jlms-quiz-review-link` collega dalla gestione tempo. Conservare parent, revisioni, scelta di restituzione, hash, UUID, conferma e token. I link di anteprima non eseguono mutazioni; non trasformarli in annullamenti automatici. Nessuna nuova classe CSS globale.
+
+## Proroga del tentativo (0.13)
+
+Frontend: `jlms-quiz-duration` contiene i secondi effettivi e viene aggiornato dalla sincronizzazione; `jlms-quiz-extension` annuncia la proroga con `role=status`, distinto da salvataggio e avvisi. Conservare ID e regioni live negli override o sostituire anche l’adattatore client. La sincronizzazione non deve sostituire le risposte locali né allentare i controlli server.
+
+Backend: override `quizextend/default.php`, ID `jlms-quiz-extend`, `jlms-quiz-extend-policy`, `jlms-quiz-extend-preview-form`, `jlms-quiz-extend-minutes`, `jlms-quiz-extend-impact`, `jlms-quiz-extend-blocked`, `jlms-quiz-extend-form`, `jlms-quiz-extend-history`; collegamento `jlms-quiz-extend-link` dalla revisione del tentativo. Conservare parent, revisioni, minuti, hash, UUID, conferma e CSRF. L’anteprima GET non esegue proroghe. Nessuna nuova classe CSS globale.

@@ -35,7 +35,7 @@ final class QuizController extends BaseController
             $answers=$input->get('answers_json','{}','RAW');if(!is_string($answers))throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400);
             $data=match($operation){
                 'start'=>$service->start(...[...$args,$input->getString('mutation_id','')]),
-                'state'=>$service->state(...[...$args,$input->getInt('attempt_id',0)]),
+                'state'=>$service->state(...[...$args,$input->getInt('attempt_id',0),$input->getInt('compact',0)===1]),
                 default=>$service->mutate(...[...$args,$integer('attempt_id'),$integer('revision'),$input->getString('mutation_id',''),$answers,$operation==='submit']),
             };
             echo new JsonResponse($data,null,false,true);

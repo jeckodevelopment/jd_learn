@@ -12,7 +12,7 @@ final class AssessmentAudit
     public function __construct(private readonly DatabaseInterface $db){}
     public function record(User $actor,array $message,string $kind = 'quiztime'):void
     {
-        $key=match($kind){'quiztime'=>'COM_JLMS_LOG_QUIZ_TIME','quizcancel'=>'COM_JLMS_LOG_QUIZ_CANCEL',default=>throw new \InvalidArgumentException('Invalid assessment audit context')};
+        $key=match($kind){'quiztime'=>'COM_JLMS_LOG_QUIZ_TIME','quizcancel'=>'COM_JLMS_LOG_QUIZ_CANCEL','quizextend'=>'COM_JLMS_LOG_QUIZ_EXTEND',default=>throw new \InvalidArgumentException('Invalid assessment audit context')};
         $context='com_jlms.'.$kind;
         Factory::getApplication()->bootComponent('com_actionlogs');
         $model=new AssessmentActionlogModel(['ignore_request'=>true]);$model->setDatabase($this->db);
@@ -24,6 +24,6 @@ final class AssessmentAudit
         $q=$this->db->createQuery()->select('COUNT(*)')->from('#__action_logs')->where('id = :log')->where('extension = :context')->where('item_id = :id')->where('user_id = :actor')
             ->where("JSON_UNQUOTE(JSON_EXTRACT(message, '$.correlation_id')) = :correlation")
             ->bind(':log',$logId,ParameterType::INTEGER)->bind(':context',$context)->bind(':id',$id,ParameterType::INTEGER)->bind(':actor',$user,ParameterType::INTEGER)->bind(':correlation',$correlation);
-        if((int)$this->db->setQuery($q)->loadResult()!==1)throw new \RuntimeException($kind==='quiztime'?'COM_JLMS_QUIZ_TIME_AUDIT_FAILED':'COM_JLMS_QUIZ_REVIEW_AUDIT_FAILED',503);
+        if((int)$this->db->setQuery($q)->loadResult()!==1)throw new \RuntimeException(match($kind){'quiztime'=>'COM_JLMS_QUIZ_TIME_AUDIT_FAILED','quizextend'=>'COM_JLMS_QUIZ_EXTEND_AUDIT_FAILED',default=>'COM_JLMS_QUIZ_REVIEW_AUDIT_FAILED'},503);
     }
 }

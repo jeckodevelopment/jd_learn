@@ -44,10 +44,10 @@ QUI-01,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/r
 QUI-02,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
 QUI-03,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
 QUI-04,Rilascio 1,In corso,"0.12: annullamento motivato con anteprima/conferma, restituzione esplicita, evidenze conservate e risultato/completamento sui soli tentativi validi. Attestati e revisioni esistenti bloccano la rettifica; rivalutazione e flussi completi restano da implementare.",No
-QUI-05,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
+QUI-05,Rilascio 1,In corso,"0.13: proroghe prima della scadenza con anteprima, permessi per corso, audit e storia; snapshot conservati, timer effettivo sincronizzato senza perdere risposte locali. Restano collaudi completi e gli altri criteri del requisito.",No
 QUI-06,Rilascio 1,In corso,"0.12: annullamento motivato con anteprima/conferma, restituzione esplicita, evidenze conservate e risultato/completamento sui soli tentativi validi. Attestati e revisioni esistenti bloccano la rettifica; rivalutazione e flussi completi restano da implementare.",No
 QUI-07,Rilascio 1,In corso,"0.12: annullamento motivato con anteprima/conferma, restituzione esplicita, evidenze conservate e risultato/completamento sui soli tentativi validi. Attestati e revisioni esistenti bloccano la rettifica; rivalutazione e flussi completi restano da implementare.",No
-QUI-08,Rilascio 1,In corso,"0.11: tempo individuale preventivo con permessi per corso, motivazione, storico e Action Logs; avvisi 5/1 minuti. Restano collaudi accessibilità completi e proroghe in corso.",No
+QUI-08,Rilascio 1,In corso,"0.13: proroghe prima della scadenza con anteprima, permessi per corso, audit e storia; snapshot conservati, timer effettivo sincronizzato senza perdere risposte locali. Restano collaudi completi e gli altri criteri del requisito.",No
 ATT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 ATT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 ATT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
@@ -145,7 +145,7 @@ LIFE-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equival
 LIFE-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 LIFE-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 LIFE-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-CFG-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+CFG-01,Rilascio 1,In corso,"0.13: proroghe prima della scadenza con anteprima, permessi per corso, audit e storia; snapshot conservati, timer effettivo sincronizzato senza perdere risposte locali. Restano collaudi completi e gli altri criteri del requisito.",No
 CFG-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CFG-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CFG-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
