@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento0.8.0-dev: video HTML5 locali e consegna privata.
+Aggiornamento: 31 ottobre 2026. Incremento0.9.0-dev: banca domande e quiz in bozza.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -15,7 +15,7 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Plugin video | Quattro plugin installati; YouTube/Vimeo, Cloudflare API e HTML5 opt-in; progressi comuni, upload locale e Nginx | Firma locale Cloudflare, cache/diagnostica, altri codec/storage, collaudo browser/provider e rinnovo senza interruzione |
 | Materiali e storage | Upload validato, storage locale privato, quarantena, protocollo ClamAV opzionale, collegamenti in bozza e download autorizzato/Range | Offload server/object storage, job cleanup, riuso asset, preview e ulteriori strumenti di gestione |
 | Iscrizioni e progressi | Avvio automatico, aula testo/video e completamento manuale/copertura con idempotenza/lock per iscrizione e accesso corrente | Approvazioni/manuale/import, dashboard, UI avanzata e gestione calendario |
-| Quiz | Schema e scoring dominio iniziale | Banca domande/revisioni, snapshot, start/save/submit/timer e feedback |
+| Quiz | Banca domande, asset/categorie/check-in nativi, revisioni immutabili e composizione configurata nelle bozze | Pubblicazione/snapshot pool, tentativi, estrazione runtime, start/save/submit/timer, feedback e rivalutazioni |
 | Attestati | Schema emissione/documenti/sostituzione | PDF, verifica pubblica, anomalie, revoca e notifica |
 | Job e outbox | Schema | Worker Scheduler/CLI, lease, retry, mail templates e delivery_unknown |
 | Privacy, Action Logs, Finder | Specifiche conservate | Plugin funzionanti e collaudo lifecycle/export/erasure |
@@ -59,3 +59,7 @@ Configurazione e perimetro effettivo in [CLOUDFLARE_STREAM.md](CLOUDFLARE_STREAM
 ## Incremento0.8
 
 Guida operativa inclusa nel pacchetto: [HTML5_VIDEO.md](HTML5_VIDEO.md). MP4 privati per lezione, metadata server, rescan e immutabilità; consegna PHP esplicitamente limitata oppure Nginx interno. Risultati effettivi nella PR #8; test con ffprobe/Nginx reali non equivalgono al collaudo del decoder browser o al benchmark di centinaia di studenti. L’intero LMS resta in sviluppo.
+
+## Incremento0.9
+
+Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor configura quiz in bozza ma non attiva tentativi o pubblicazione. Le revisioni della banca sono immutabili; il pool usa revisioni esplicite e controlla ACL su ogni oggetto. Risultati effettivi e limiti nella PR #9. L’intero LMS resta in sviluppo.

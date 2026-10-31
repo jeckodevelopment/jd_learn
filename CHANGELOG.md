@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.0-dev
+
+- Banca domande con categorie e asset Joomla, lingua, stato, editor/subform e checkout/checkin nativi.
+- Scelta singola, vero/falso e multipla: validazione, chiavi di correzione separate e nuove revisioni immutabili a ogni salvataggio.
+- Quiz nelle bozze: composizione per revisioni esplicite, punti, selezione/estrazione configurata, soglia esatta, timer/tentativi/intervallo/feedback e cancellazione con dipendenze.
+- ACL su corso e banca, revisione aggregata, confini delle risposte corrette e guide/override aggiornati.
+- Tentativi, estrazione runtime, autosave, valutazione, feedback studente e pubblicazione dei quiz restano chiusi fino all'incremento successivo.
+
 ## 0.8.0-dev
 
 - HTML5 con upload MP4/H.264/AAC per lezione, durata/codec rilevati da ffprobe e asset privati immutabili.
