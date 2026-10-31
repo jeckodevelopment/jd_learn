@@ -1,1 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><config><fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"><field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" component="com_jlms" section="component" /></fieldset></config>
+<?xml version="1.0" encoding="utf-8"?><config><fieldset name="materials" label="COM_JLMS_MATERIALS">
+ <field name="material_storage_root" type="text" label="COM_JLMS_STORAGE_ROOT" description="COM_JLMS_STORAGE_ROOT_DESC" filter="string" />
+ <field name="material_max_mib" type="number" label="COM_JLMS_UPLOAD_MIB" default="20" min="1" max="20" filter="integer" />
+ <field name="material_php_delivery" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_PHP_DELIVERY" default="0" filter="integer"><option value="0">JNO</option><option value="1">JYES</option></field>
+ <field name="material_scan_required" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_SCAN_REQUIRED" default="0" filter="integer"><option value="0">JNO</option><option value="1">JYES</option></field>
+ <field name="material_clamd_socket" type="text" label="COM_JLMS_CLAMD_SOCKET" description="COM_JLMS_CLAMD_SOCKET_DESC" showon="material_scan_required:1" filter="string" />
+ </fieldset><fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"><field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" component="com_jlms" section="component" /></fieldset></config>

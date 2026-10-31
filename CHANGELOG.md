@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0-dev
+
+- Materiali di corso/versione e lezione: upload, metadati, ordine, sostituzione immutabile e rimozione del collegamento in bozza.
+- Storage fuori webroot, allowlist e controlli MIME/firme/archivi bounded, quarantena e scansione ClamAV opzionale via socket locale.
+- Download con accesso corrente, ownership/parent, SHA256, attachment/nosniff/no-store e Range/HEAD; materiali facoltativi senza credito didattico.
+- Pubblicazione include hash dei materiali e richiede asset pronti; nuove regioni CSS e override documentati.
+- Offload, cleanup, preview e riuso asset ancora da completare.
+
 ## 0.4.0-dev
 
 - Iscrizione automatica/ripresa e aula per lezioni di testo, con login nativo Joomla.

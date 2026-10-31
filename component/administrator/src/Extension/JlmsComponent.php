@@ -14,6 +14,19 @@ final class JlmsComponent extends MVCComponent implements CategoryServiceInterfa
 {
     use CategoryServiceTrait;
 
+    private \Jlms\Component\Jlms\Administrator\Application\MaterialService $materialService;
+
+    public function setMaterialService(\Jlms\Component\Jlms\Administrator\Application\MaterialService $service): void
+    {
+        $this->materialService = $service;
+    }
+
+    public function getMaterialService(): \Jlms\Component\Jlms\Administrator\Application\MaterialService
+    {
+        return $this->materialService;
+    }
+
+
     private \Jlms\Component\Jlms\Administrator\Application\LearningService $learningService;
 
     public function setLearningService(\Jlms\Component\Jlms\Administrator\Application\LearningService $service): void

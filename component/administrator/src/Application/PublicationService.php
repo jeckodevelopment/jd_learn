@@ -87,7 +87,7 @@ final class PublicationService
     {
         $versionId = (int) $version->id;
         // Types/features not yet served by the learner application cannot be published accidentally.
-        foreach (['prerequisites', 'attachments', 'quizzes'] as $table) {
+        foreach (['prerequisites', 'quizzes'] as $table) {
             $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_' . $table))
                 ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
             if ((int) $this->db->setQuery($q)->loadResult()) {
@@ -142,9 +142,23 @@ final class PublicationService
             || $version->fields_snapshot_json !== '{}') {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
+        $q = $this->db->createQuery()->select('a.id, a.lesson_id, a.title, a.description, a.ordering, a.state, a.preview, a.publish_up, a.publish_down, f.id AS asset_id, f.sha256, f.byte_size, f.mime_type, f.status, f.scan_json')
+            ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
+            ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('a.ordering, a.id');
+        $attachments = $this->db->setQuery($q, 0, 1001)->loadAssocList();
+        if (count($attachments) > 1000) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+        foreach ($attachments as $attachment) {
+            $scan = json_decode($attachment['scan_json'] ?? '{}', true);
+            $scanRequired = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false);
+            if (($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
+                || $attachment['status'] !== 'ready' || (int) $attachment['preview'] !== 0
+                || $attachment['publish_up'] !== null || $attachment['publish_down'] !== null) {
+                throw new \DomainException('COM_JLMS_MATERIAL_NOT_READY');
+            }
+        }
         $presentation = json_encode(['_schema' => 1, 'summary' => $course->summary], JSON_THROW_ON_ERROR);
         $hash = hash('sha256', json_encode(['_schema' => 1, 'title' => $course->title, 'rules' => $rules,
-            'presentation' => $presentation, 'modules' => $modules, 'lessons' => $lessons], JSON_THROW_ON_ERROR));
+            'presentation' => $presentation, 'modules' => $modules, 'lessons' => $lessons, 'attachments' => $attachments], JSON_THROW_ON_ERROR));
         $now = gmdate('Y-m-d H:i:s');
         $update = (object) ['id' => $versionId, 'status' => 'published', 'title_snapshot' => $course->title,
             'presentation_json' => $presentation, 'structure_hash' => $hash, 'published_at' => $now,

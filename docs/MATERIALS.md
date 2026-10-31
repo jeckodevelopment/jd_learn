@@ -1,0 +1,45 @@
+# Materiali extra protetti — incremento 0.5
+
+## Configurazione e utilizzo
+
+Nelle opzioni native di **JD Learn**, sezione **Materiali extra**, indicare una directory privata già esistente, assoluta, scrivibile dal processo PHP e fuori sia dalla document root del server sia dall’installazione Joomla. Il gestore deve predisporre permessi OS minimi: directory 0700, file 0600. Il componente non crea cartelle pubbliche di ripiego e rifiuta percorsi interni a Joomla/document root o symlink diretti. Il percorso non viene mostrato agli studenti. La directory va mantenuta stabile: per cambiarla occorre migrare i blob preservando le chiavi e verificarne gli hash. Il backup deve comprendere insieme database e directory privata; il solo backup del componente non contiene i file didattici.
+
+La consegna PHP è disabilitata per default: abilitarla esplicitamente per il collaudo dei download di questo incremento. Il limite configurabile è 1–20 MiB; il limite effettivo considera anche upload_max_filesize e post_max_size (con margine multipart). Non usare questa consegna per video o grandi raccolte. X-Accel-Redirect/X-Sendfile/object storage sono ancora da implementare; il carico 300/500 va collaudato sull’infrastruttura reale.
+
+Aprire **Programma → Materiali extra** della versione. In bozza si possono caricare file generali o scegliere una lezione, modificare titolo/descrizione/ordine/stato, sostituire un file con l’azione **Sostituisci file** del materiale, mantenendo lo stesso ambito oppure rimuovere il collegamento. Massimo tecnico corrente 1.000 collegamenti per versione; liste da 20 elementi. Il riferimento alla lezione è validato contro la stessa versione dal server e dalla FK composita.
+
+Dopo la pubblicazione i collegamenti, metadati e blob didattici sono immutabili. È consentita soltanto una nuova verifica antivirus, che modifica lo stato di sicurezza dell’asset senza cambiare hash/revisione didattica della versione. Non si può sostituire un file storico; la clonazione completa di nuove versioni rimane nella roadmap. Rimozione/sostituzione in bozza non cancella il vecchio blob o asset: cleanup con reference scanner e conservazione è ancora da implementare. Anche un salvataggio concorrente fallito può lasciare un blob privato non collegato: nessuna eliminazione speculativa di file referenziati.
+
+## Formati e validazione
+
+Allowlist: pdf/docx/xlsx/pptx/odt/ods/odp/txt/csv/jpg/jpeg/png/webp/zip. Il server controlla nome UTF-8, traversal/NUL/caratteri di controllo, estensioni eseguibili dissimulate, dimensione, MIME reale tramite fileinfo e firme/struttura pertinenti. PDF: intestazione e marcatore finale; immagini: formato/dimensioni senza decodifica completa; testi UTF-8 senza NUL. Non è un validatore semantico completo di PDF o documenti Office.
+
+Container ZIP: controllo preliminare EOCD prima di aprire ZipArchive, massimo 2.000 elementi e directory centrale 2 MiB, niente multi-disk/ZIP64, nomi senza traversal, limiti di espansione aggregata 100 MiB e rapporto 200 per elementi grandi. Mai estratti sul server. OpenXML richiede parti fondamentali e Content_Types bounded senza DTD/entità o macro; niente vbaProject/activeX/embeddings. ODF richiede mimetype e content.xml. ZIP generico è soltanto scaricabile come attachment. Macro formati, HTML/SVG e file eseguibili non ammessi.
+
+Blob con nome casuale, SHA256 e copia streaming; mai percorsi o nomi client come chiave fisica. All’apertura del file si verificano file regolare, dimensione e SHA256 prima di restituire dati. Questa verifica legge il file prima della consegna: è un limite dichiarato del fallback PHP, da considerare nel collaudo prestazionale.
+
+## Quarantena e antivirus
+
+Senza antivirus configurato: controlli di formato attivi, `scan_json` indica engine=none/result=not_configured. Non si dichiara una scansione riuscita. Con scansione obbligatoria: socket Unix locale di clamd configurato dal gestore, protocollo INSTREAM, timeout di connessione/lettura/scrittura e deadline complessiva bounded. Nessun comando shell e nessun host/URL fornito dal browser.
+
+Esito clean → ready; infezione → rejected; indisponibilità/errore → quarantine. Pubblicazione rifiutata se un collegamento ha asset non pronto o manca una scansione obbligatoria; anche un materiale nascosto va risolto/rimosso prima di pubblicare. Attivare la scansione obbligatoria blocca il download dei file precedentemente non scansionati finché una verifica ClamAV clean non viene registrata. Il pulsante di verifica funziona anche sullo storico pubblicato: nessun cambiamento del blob o della struttura del corso. Nessuna scansione remota lenta avviene sotto lock del corso/versione.
+
+I test usano un simulatore locale del protocollo per clean/infected/unavailable: verificano l’integrazione e le politiche di errore, non l’efficacia di un antivirus reale. Configurazione/aggiornamento delle firme clamd sono responsabilità operative del gestore e vanno collaudati prima della produzione.
+
+## Consegna e accesso
+
+Frontend: GET/HEAD `task=attachment.download&format=raw&id=ATTACHMENT_ID&enrollment_id=ENROLLMENT_ID`. Autorizzazione sempre sul collegamento, mai su asset_id, storage_key o path. Il servizio riusa la policy dell’aula: identità corrente, account abilitato, proprietario, livelli/gruppi Joomla aggiornati, corso/versione/edizione disponibili, finestre e iscrizione attiva. Materiali di lezione richiedono la stessa lezione disponibile nella versione assegnata. Prerequisiti/release avanzate non sono ancora pubblicabili.
+
+Risposta: MIME validato, Content-Disposition attachment con nome ASCII e filename* UTF-8, nosniff, private/no-store, noindex/nofollow, Content-Length, Accept-Ranges ed ETag del blob. Supportati Range singolo prefisso/aperto/suffisso, 206 con Content-Range e 416 con bytes */size; range multipli non supportati. If-Range non corrispondente restituisce il file intero. Ogni nuova richiesta/Range rivalida l’accesso. La sessione Joomla viene chiusa soltanto dopo controllo e apertura/verifica file; streaming a blocchi da 64 KiB. Copie già scaricate o byte già inviati non sono revocabili.
+
+Backend: POST con token per `material.upload`, `material.save`, `material.delete`, `material.scan`; GET/HEAD `material.download` con course_id/version_id/id per revisione da parte del gestore. Tutte le azioni richiedono core.manage e jlms.materials.manage sull’asset del corso, parent corretti e revisione della versione. Mutazioni didattiche soltanto in bozza, lock corso→versione; scan/copia/validazione fuori transazione. Si tratta di task HTML/raw, non delle API JSON ancora pianificate.
+
+Nella scheda pubblica #jlms-course-materials informa dell’esistenza dell’area riservata senza leggere titoli o URL dei file. L’aula mostra liste distinte, paginate, di materiali del corso e della lezione corrente. File in staging/quarantena/rifiutati non sono scaricabili. Nessuna preview pubblica o inline in questo incremento. Download e file facoltativi non attribuiscono progresso, non generano attestati/email e non creano un registro permanente dei download.
+
+## Collaudo e limiti
+
+`tests/material-policy.php` verifica formati, nomi, MIME/firme, struttura Office, macro, traversal e limiti degli archivi. `tests/materials-http.py` usa upload multipart reali, core login, sostituzioni, quarantena e simulatore ClamAV, pubblicazione, download/range/HEAD, revoca con sessione aperta, integrità del blob e nessun credito per i download. `tests/materials-fixture.php retained` controlla che i collegamenti restino dopo l’aggiornamento del pacchetto. Consultare le Actions effettive della PR per gli esiti.
+
+Restano: offload/server storage, worker cleanup/reference scanner, riuso libreria asset, preview esplicite, date/release nell’editor, clonazione/versioni complete, Action Logs/Privacy/Finder e collaudo di carico/accessibilità. Build di sviluppo, soltanto siti effimeri di prova senza dati reali.
+
+Riferimento primario per framing, INSTREAM e risposte del daemon: [ClamD Protocol](https://docs.clamav.net/manual/Usage/ClamdProtocol.html).

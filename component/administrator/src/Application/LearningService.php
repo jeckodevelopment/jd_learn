@@ -21,7 +21,7 @@ final class LearningService
             throw new \RuntimeException('COM_JLMS_LOGIN_REQUIRED', 401);
         }
         $actor = new User((int) $identity->id);
-        if (!(int) $actor->id || $actor->block || $actor->activation !== '') {
+        if (!(int) $actor->id || $actor->block) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $actor->clearAccessRights();
@@ -224,6 +224,15 @@ final class LearningService
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         return $lesson;
+    }
+
+    /** Reused by attachment policy: no lesson body, progress read or credit is produced. */
+    public function resourceContext(User $identity, string $language, int $enrollmentId, int $lessonId = 0): array
+    {
+        $actor = $this->freshActor($identity);
+        [$course, $version] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
+        if ($lessonId) { $this->lesson((int) $version->id, $lessonId); }
+        return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
     }
 
     public function classroom(User $identity, string $language, int $enrollmentId, int $lessonId = 0): array

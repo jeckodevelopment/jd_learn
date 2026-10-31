@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Jlms\Component\Jlms\Administrator\View\Materials;
+
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
+
+final class HtmlView extends BaseHtmlView
+{
+    public array $item;
+    public $form;
+    public int $replacement = 0;
+    public int $replacementLesson = 0;
+
+    public function display($tpl = null)
+    {
+        $this->item = $this->get('Item');
+        $this->form = $this->get('Form');
+        $field = new \SimpleXMLElement('<field name="lesson_id" type="list" label="COM_JLMS_MATERIAL_SCOPE" filter="integer" />');
+        $field->addChild('option', Text::_('COM_JLMS_COURSE_MATERIALS'))->addAttribute('value', '0');
+        foreach ($this->item['lessons'] as $lesson) {
+            $field->addChild('option', htmlspecialchars($lesson->title, ENT_XML1))->addAttribute('value', (string) $lesson->id);
+        }
+        $this->form->setField($field);
+        $data = ['course_id' => $this->item['course']->id, 'version_id' => $this->item['version']->id,
+            'expected_version_revision' => $this->item['version']->revision, 'replace_id' => 0];
+        $replaceId = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('replace_id', 0);
+        if ($replaceId) {
+            foreach ($this->item['files']['items'] as $file) {
+                if ((int) $file->id === $replaceId && $this->item['version']->status === 'draft') {
+                    $data += ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id];
+                    $data['replace_id'] = $replaceId;
+                    $this->replacement = $replaceId;
+                    $this->replacementLesson = (int) $file->lesson_id;
+                    $this->form->setFieldAttribute('lesson_id', 'disabled', 'true');
+                }
+            }
+            if (!$this->replacement) {throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);}
+        }
+        $this->form->bind($data);
+        ToolbarHelper::title(Text::_('COM_JLMS_MATERIALS'), 'file');
+        parent::display($tpl);
+    }
+}

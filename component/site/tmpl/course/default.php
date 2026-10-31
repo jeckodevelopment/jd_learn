@@ -31,5 +31,6 @@ $course = $this->item['course'];
    <?php endforeach; ?></ol>
   </section>
  <?php endforeach; ?></section>
+<section id="jlms-course-materials"><h2><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h2><p><?= Text::_('COM_JLMS_MATERIALS_PRIVATE') ?></p></section>
  <a id="jlms-course-back" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
 </article>
