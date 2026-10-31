@@ -221,7 +221,7 @@ final class LearningService
         }
         $supported = ($lesson->kind === 'text' && $lesson->completion_rule === 'manual')
             || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
-                && in_array($lesson->provider_key, ['youtube', 'vimeo'], true) && (int) $lesson->duration_ms >= 1000);
+                && in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream'], true) && (int) $lesson->duration_ms >= 1000);
         if (!$supported || $lesson->publish_up !== null
             || $lesson->publish_down !== null || $lesson->release_after_days !== null) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
@@ -233,11 +233,14 @@ final class LearningService
     public function videoContext(User $identity, string $language, int $enrollmentId, int $lessonId, bool $lock = false): array
     {
         $actor = $this->freshActor($identity);
-        [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
+        [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
         $lesson = $this->lesson((int) $version->id, $lessonId);
         if ($lesson->kind !== 'video') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         $q = $this->db->createQuery()->select('source_json')->from('#__jlms_lessons')->where('id = :lesson')->bind(':lesson', $lessonId, ParameterType::INTEGER);
         $lesson->source_json = $this->db->setQuery($q)->loadResult();
+        $deadlines = array_filter([$course->publish_down, $edition->ends_at, $enrollment->ends_at], static fn ($v): bool => $v !== null && $v !== '');
+        sort($deadlines);
+        $lesson->access_expires_at = $deadlines[0] ?? null;
         return [$actor, $version, $enrollment, $lesson];
     }
 

@@ -83,7 +83,7 @@ final class PublicationService
         }));
     }
 
-    private function validateAndFreeze(object $course, object $version, User $actor): void
+    private function validateAndFreeze(object $course, object $version, User $actor, array $remoteChecks = []): void
     {
         $versionId = (int) $version->id;
         // Types/features not yet served by the learner application cannot be published accidentally.
@@ -126,10 +126,18 @@ final class PublicationService
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
-                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo'], true) || $lesson->completion_rule !== 'video_coverage'
+                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream'], true) || $lesson->completion_rule !== 'video_coverage'
                         || !in_array($policy, ['click', 'site_consent'], true) || (int) $lesson->duration_ms < 1000
                         || (int) $lesson->duration_ms > 28800000 || ($params['video_duration_confirmed'] ?? false) !== true) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                    }
+                    if ($lesson->provider_key === 'cloudflarestream') {
+                        $proof = $remoteChecks[(int) $lesson->id] ?? null;
+                        if (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
+                            || $proof['source_revision'] !== (int) $lesson->source_revision
+                            || abs($proof['duration_ms'] - (int) $lesson->duration_ms) > max(1000, (int) $lesson->duration_ms / 200)) {
+                            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                        }
                     }
                     $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider($lesson->provider_key);
                     $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
@@ -188,6 +196,27 @@ final class PublicationService
 
     public function transition(User $actor, int $courseId, int $versionId, int $courseRevision, int $versionRevision, int $transitionId): void
     {
+        $remoteChecks = [];
+        $course = $this->row('courses', $courseId);
+        $this->authorise($actor, $course);
+        $version = $this->row('course_versions', $versionId);
+        if ((int) $version->course_id !== $courseId || (int) $version->revision !== $versionRevision
+            || (int) $course->revision !== $courseRevision) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+        if ($version->status === 'draft') {
+            $q = $this->db->createQuery()->select('id, source_json, source_revision')->from('#__jlms_lessons')
+                ->where('course_version_id = :version')->where($this->db->quoteName('provider_key') . ' = ' . $this->db->quote('cloudflarestream'))
+                ->bind(':version', $versionId, ParameterType::INTEGER)->order('id');
+            $remoteLessons = $this->db->setQuery($q, 0, 101)->loadObjectList();
+            if (count($remoteLessons) > 100) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+            foreach ($remoteLessons as $lesson) {
+                $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
+                $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider('cloudflarestream');
+                $metadata = $provider->fetchMetadata(new \Jlms\Contracts\Video\VideoSource('cloudflarestream', $source['reference'], (int) $lesson->source_revision),
+                    new \Jlms\Contracts\Video\MetadataContext((int) $actor->id, $this->app->getLanguage()->getTag(), true));
+                $remoteChecks[(int) $lesson->id] = ['hash' => hash('sha256', $lesson->source_json),
+                    'source_revision' => (int) $lesson->source_revision, 'duration_ms' => $metadata->durationMs];
+            }
+        }
         $this->db->transactionStart();
         try {
             $course = $this->row('courses', $courseId, true);
@@ -211,7 +240,7 @@ final class PublicationService
             }
             $state = (int) (new Registry($selected->options))->get('publishing');
             if ($version->status === 'draft' && $state === 1 && $course->current_version_id === null) {
-                $this->validateAndFreeze($course, $version, $actor);
+                $this->validateAndFreeze($course, $version, $actor, $remoteChecks);
             } elseif ($version->status !== 'published' || (int) $course->current_version_id !== $versionId) {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
             }

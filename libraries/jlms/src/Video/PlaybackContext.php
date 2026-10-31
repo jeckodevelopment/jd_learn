@@ -15,6 +15,7 @@ final readonly class PlaybackContext
         public int $resumeMs,
         public string $authorisationGrant,
         public \DateTimeImmutable $now,
+        public ?\DateTimeImmutable $accessExpiresAt = null,
     ) {
     }
 }

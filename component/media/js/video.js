@@ -40,13 +40,13 @@ export class VideoLesson {
     try {
       const grant = await this.request('playback', {consent: '1'});
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
-      const paths = {youtube: '../../plg_jlmsvideo_youtube/js/player.js', vimeo: '../../plg_jlmsvideo_vimeo/js/player.js'};
+      const paths = {youtube: '../../plg_jlmsvideo_youtube/js/player.js', vimeo: '../../plg_jlmsvideo_vimeo/js/player.js', cloudflarestream: '../../plg_jlmsvideo_cloudflarestream/js/player.js'};
       if (grant.provider !== this.config.provider || !paths[grant.provider]) throw new Error('provider');
       this.session = grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
       this.started = performance.now(); this.previous = null; this.aborter = new AbortController();
       const adapter = await this.importer(new URL(paths[grant.provider], import.meta.url).href);
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
-      this.stopped = false;
+      this.adapter = adapter; this.stopped = false;
       const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, event => {
         if (event === 'error') { this.message('error'); this.stop(false); }
         else this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
@@ -56,13 +56,13 @@ export class VideoLesson {
       if (grant.resume_ms) await player.seek(grant.resume_ms);
       await this.record('seeked');
       this.sampler = setInterval(() => this.record('position'), 1000);
-      this.schedule(); this.stopButton.hidden = false; this.message('ready');
+      this.schedule(); this.scheduleRenew(); this.stopButton.hidden = false; this.message('ready');
     } catch { this.message('error'); await this.stop(false); }
     finally { this.starting = false; this.load.disabled = !this.stopped; }
   }
   record(type) {
     this.chain = this.chain.then(async () => {
-      if (this.stopped || !this.player) return;
+      if (this.stopped || this.replacing || !this.player) return;
       const sample = await this.player.sample();
       if (this.stopped) return;
       if (!Number.isInteger(sample.duration_ms) || sample.duration_ms < 1000
@@ -102,9 +102,39 @@ export class VideoLesson {
       } else { this.player?.pause(); this.message('offline'); }
     } finally { this.saving = false; this.schedule(); }
   }
+  scheduleRenew(delay) {
+    clearTimeout(this.renewTimer);
+    const seconds = delay ?? this.session?.options?.renew_after_seconds;
+    if (!this.stopped && Number.isFinite(seconds) && seconds > 0) this.renewTimer = setTimeout(() => this.renew(), seconds * 1000);
+  }
+  async renew() {
+    if (this.stopped || this.renewing) return;
+    if (!this.allowed()) { await this.stop(true); return; }
+    this.renewing = true; const generation = this.generation;
+    try {
+      this.player?.pause(); await this.record('pause'); await this.flush();
+      if (this.pending || this.saving) { this.scheduleRenew(5); return; }
+      const grant = await this.request('renew', {session_id:this.session.session_id,
+        source_revision:this.session.source_revision,consent:'1'});
+      if (this.stopped || generation !== this.generation || !this.allowed()) return;
+      const sample = await this.player.sample(); this.replacing = true;
+      await this.player.destroy(); this.player = null;
+      const player = await this.adapter.create(this.root.querySelector('#jlms-player'), grant, event => {
+        if (event === 'error') { this.message('error'); this.stop(false); }
+        else this.record(event);
+      },this.aborter.signal);
+      if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
+      this.player = player; this.previous = null; this.session.options = grant.options;
+      await player.seek(sample.position_ms); this.replacing = false;
+      await this.record('seeked'); this.message('renewed'); this.scheduleRenew();
+    } catch (error) {
+      if (error.status && error.status < 500 && error.status !== 429) { this.message('denied'); await this.stop(false); }
+      else { this.message('offline'); this.scheduleRenew(5); }
+    } finally { this.renewing = false; this.replacing = false; }
+  }
   async stop(save) {
     ++this.generation; this.stopped = true; this.aborter?.abort();
-    clearInterval(this.sampler); clearTimeout(this.timer);
+    clearInterval(this.sampler); clearTimeout(this.timer); clearTimeout(this.renewTimer);
     const player = this.player; this.player = null;
     try { await player?.destroy(); } catch { /* Teardown must continue. */ }
     this.root.querySelector('#jlms-player').replaceChildren();
