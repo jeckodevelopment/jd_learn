@@ -23,6 +23,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene
 - [Stato dei 210 requisiti](docs/REQUIREMENTS_STATUS.csv)
 - [Servizi ed endpoint](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
 - [Personalizzazione frontend e override](docs/FRONTEND_CSS.md)
+- [Mockup funzionali concordati](docs/specifications/Mockup_LMS_Joomla_1.0.pdf)
 - [Changelog](CHANGELOG.md)
 
 La denominazione di prodotto è **JD Learn**. Gli identificativi tecnici restano `com_jlms`, `pkg_jlms`, `lib_jlms` e gruppo `jlmsvideo`, coerenti con la baseline; non rinominare estensioni già installate senza migrazione. Non sono inclusi pagamenti o abbonamenti: un’estensione esterna attribuirà i gruppi Joomla.
