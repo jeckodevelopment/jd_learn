@@ -73,6 +73,9 @@ if (!$model->save($data)) { throw new \RuntimeException('Publication fixture fai
 $course = (int) $model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
 $checks = 0;
+$writeFixture = static function (string $table, object $record, string $key = 'id', bool $nulls = false) use ($db): void {
+    $db->updateObject($table, $record, $key, $nulls);
+};
 function pubExpect(bool $ok, string $message): void {
     global $checks;
     if (!$ok) { throw new \RuntimeException($message); }
@@ -132,22 +135,22 @@ pubDenied(fn()=>$authoring->saveModule($actor,pubScope()+['id'=>0,'title'=>'Chan
 $ids=[$course];pubExpect(!$model->publish($ids,0),'direct state change bypass rejected');
 // Current category/access/language/date must be rechecked without a stale shared cache.
 foreach ([['catalog_access',2],['language','it-IT'],['publish_up','2099-01-01 00:00:00'],['publish_down','2000-01-01 00:00:00']] as [$field,$value]) {
-    $db->updateObject('#__jlms_courses',(object)['id'=>$course,$field=>$value],'id',true);
+    $writeFixture('#__jlms_courses',(object)['id'=>$course,$field=>$value],'id',true);
     pubExpect($hidden(),'current '.$field.' hides direct lookup');
-    $db->updateObject('#__jlms_courses',(object)['id'=>$course,$field=>match($field){'catalog_access'=>1,'language'=>'*',default=>null}],'id',true);
+    $writeFixture('#__jlms_courses',(object)['id'=>$course,$field=>match($field){'catalog_access'=>1,'language'=>'*',default=>null}],'id',true);
 }
-$db->updateObject('#__categories',(object)['id'=>$catid,'published'=>0],'id');
+$writeFixture('#__categories',(object)['id'=>$catid,'published'=>0],'id');
 pubExpect($hidden(),'unpublished category hides course');
-$db->updateObject('#__categories',(object)['id'=>$catid,'published'=>1],'id');
+$writeFixture('#__categories',(object)['id'=>$catid,'published'=>1],'id');
 // Test a restricted ancestor through a real nested category.
 $child=new \Joomla\CMS\Table\Category($db);
 $child->setLocation($catid,'last-child');
 $child->bind(['title'=>'Child category','description'=>'','alias'=>'publication-child','extension'=>'com_jlms.course','published'=>1,'access'=>1,'language'=>'*','params'=>'{}','metadata'=>'{}']);
 if (!$child->check() || !$child->store()) { throw new \RuntimeException('Child category fixture failed'); }
-$db->updateObject('#__jlms_courses',(object)['id'=>$course,'catid'=>(int)$child->id],'id');
-$db->updateObject('#__categories',(object)['id'=>$catid,'access'=>2],'id');
+$writeFixture('#__jlms_courses',(object)['id'=>$course,'catid'=>(int)$child->id],'id');
+$writeFixture('#__categories',(object)['id'=>$catid,'access'=>2],'id');
 pubExpect($hidden(),'restricted ancestor hides direct course URL');
-$db->updateObject('#__categories',(object)['id'=>$catid,'access'=>1],'id');
+$writeFixture('#__categories',(object)['id'=>$catid,'access'=>1],'id');
 pubExpect((bool)$catalog->course($guest,'en-GB',$course),'restored ancestor visibility is current');
 $filtered=$db->setQuery($catalog->query($guest,'en-GB',$catid))->loadObjectList();
 pubExpect(in_array($course,array_map(static fn($c)=>(int)$c->id,$filtered),true),'category filter includes descendants');
