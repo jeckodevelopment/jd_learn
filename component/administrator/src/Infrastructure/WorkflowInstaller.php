@@ -20,6 +20,7 @@ final class WorkflowInstaller
         }
         $factory = $app->bootComponent('com_workflow')->getMVCFactory();
         $save = static function (string $name, array $data) use ($factory): int {
+            $data += ['description' => ''];
             $table = $factory->createTable($name, 'Administrator');
             if (!$table->bind($data) || !$table->check() || !$table->store()) {
                 throw new \RuntimeException('JD Learn native workflow setup failed.');
