@@ -98,7 +98,7 @@ if (($argv[2] ?? '') === 'worker') {
 $actor = $app->getIdentity();
 $helper = $component->getAssociationsExtension();
 assocExpect($component instanceof \Joomla\CMS\Association\AssociationServiceInterface && $helper->hasAssociationsSupport(), 'native association service registered');
-assocExpect($helper->getItemTypes() === ['course'] && !$helper->getTypeSupport('course')['save2copy'], 'only implemented native association types advertised');
+assocExpect($helper->getItemTypes() === ['course', 'course.category'] && !$helper->getTypeSupport('course')['save2copy'], 'only implemented native association types advertised');
 $fixturePath = dirname($root) . '/associations-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);

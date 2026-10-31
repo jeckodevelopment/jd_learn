@@ -53,6 +53,44 @@ final class CatalogService
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
+    /** Native taxonomy only; never expose child counts or teaching records. */
+    public function categoryQuery(User $actor, string $language)
+    {
+        if ((int) $actor->id) { $actor = new User((int) $actor->id); }
+        $actor->clearAccessRights();
+        $levels = $actor->block ? [0] : array_map('intval', $actor->getAuthorisedViewLevels());
+        $levels = $levels ?: [0];
+        $extension = 'com_jlms.course'; $all = '*';
+        $q = $this->db->createQuery()->select('cat.id, cat.parent_id, cat.title, cat.alias, cat.description, cat.language, cat.lft, cat.rgt')
+            ->from('#__categories AS cat')->where('cat.id > 1')->where('cat.extension = :categoryExtension')
+            ->where('cat.published = 1')->whereIn('cat.access', $levels)
+            ->where('(cat.language = :categoryAll OR cat.language = :categoryLanguage)')
+            ->bind(':categoryExtension', $extension)->bind(':categoryAll', $all)->bind(':categoryLanguage', $language);
+        $ancestor = $this->db->createQuery()->select('1')->from('#__categories AS ancestor')
+            ->where('ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.id <> 1')
+            ->where('(ancestor.extension <> :ancestorExtension OR ancestor.published <> 1 OR ancestor.access NOT IN (' . implode(',', $levels) . ')'
+                . ' OR (ancestor.language <> :categoryAncestorAll AND ancestor.language <> :categoryAncestorLanguage))');
+        return $q->where('NOT EXISTS (' . $ancestor . ')')->bind(':ancestorExtension', $extension)
+            ->bind(':categoryAncestorAll', $all)->bind(':categoryAncestorLanguage', $language);
+    }
+
+    public function category(User $actor, string $language, int $id): object
+    {
+        $q = $this->categoryQuery($actor, $language)->where('cat.id = :categoryId')->bind(':categoryId', $id, ParameterType::INTEGER);
+        return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+    }
+
+    public function categoryPath(User $actor, string $language, int $id): array
+    {
+        $category = $this->category($actor, $language, $id);
+        $left = (int) $category->lft; $right = (int) $category->rgt;
+        $q = $this->categoryQuery($actor, $language)->where('cat.lft <= :pathLeft')->where('cat.rgt >= :pathRight')
+            ->bind(':pathLeft', $left, ParameterType::INTEGER)->bind(':pathRight', $right, ParameterType::INTEGER)->order('cat.lft');
+        $items = $this->db->setQuery($q, 0, 101)->loadObjectList();
+        if (count($items) > 100) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        return $items;
+    }
+
     public function outline(User $actor, string $language, int $id): array
     {
         $course = $this->course($actor, $language, $id);

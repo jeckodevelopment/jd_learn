@@ -65,7 +65,7 @@ jobs:
       - name: Check out the previous increment for an actual upgrade test
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 38a1f382cf66686e8cd534bb36e0969ea7d25784
+          ref: 80ed22a1a6295f9682d8ab8a09ba6a9e308f85f1
           path: .runtime/previous-source
           persist-credentials: false
       - name: Install minimum Joomla and the complete JD Learn package
@@ -75,10 +75,10 @@ jobs:
           unzip -q /tmp/joomla.zip -d .runtime/joomla
           php .runtime/joomla/installation/joomla.php install --site-name="JD Learn CI" --admin-user="CI Operator" --admin-username=cioperator --admin-password="Ci-only-Long-Password-2026" --admin-email=ci@example.invalid --db-type=mysqli --db-host=db --db-user=jlms_ci --db-pass=ci-disposable-password --db-name=jlms_test --db-prefix=joomla_ --db-encryption=0 --public-folder="" --no-interaction
           python3 .runtime/previous-source/tools/build.py
-          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.13.0-dev.zip" --no-interaction
+          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.14.0-dev.zip" --no-interaction
           php .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
           php tests/legacy-time-fixture.php .runtime/joomla
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.14.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.15.0-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
@@ -140,9 +140,13 @@ jobs:
         run: php tests/joomla-associations.php .runtime/joomla
       - name: Native language switcher, association manager and SEF routing over HTTP
         run: python3 tests/associations-http.py .runtime/joomla
+      - name: Native categories, scoped translations, current access and hierarchy lifecycle
+        run: php tests/joomla-categories.php .runtime/joomla
+      - name: Category public views, pagination, native forms and multilingual SEF navigation
+        run: python3 tests/categories-http.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.14.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.15.0-dev.zip"
           php tests/joomla-smoke.php .runtime/joomla retained
       - name: Verify completed student history survives package update
         run: php tests/joomla-learning.php .runtime/joomla retained
@@ -164,11 +168,13 @@ jobs:
         run: php tests/joomla-quiz-deadline.php .runtime/joomla retained
       - name: Verify native translations survive package upgrade
         run: php tests/joomla-associations.php .runtime/joomla retained
+      - name: Verify native taxonomy and course relationships survive package upgrade
+        run: php tests/joomla-categories.php .runtime/joomla retained
       - name: Make the verified development package downloadable
         if: matrix.php == '8.4' && matrix.database == 'mysql:8.4'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: JD-Learn-0.14.0-dev
+          name: JD-Learn-0.15.0-dev
           path: dist/
           if-no-files-found: error
           retention-days: 14

@@ -19,3 +19,5 @@
 #jlms-quiz .jlms-quiz-question__option { display: flex; gap: .5rem; align-items: baseline; }
 #jlms-quiz-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
 #jlms-quiz-timer { font-variant-numeric: tabular-nums; }
+
+.jlms-categories,.jlms-category{max-width:var(--jlms-content-width);margin-inline:auto;color:var(--jlms-color-text)}.jlms-category-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:calc(2 * var(--jlms-space-unit))}.jlms-category-card{padding:calc(2 * var(--jlms-space-unit));border-radius:var(--jlms-radius);background:var(--jlms-color-surface);overflow-wrap:anywhere}.jlms-category-card__title{margin-block-start:0}#jlms-category-description,#jlms-subcategories,#jlms-category-courses{margin-block:calc(3 * var(--jlms-space-unit))}.jlms-category a:focus-visible,.jlms-categories a:focus-visible{outline:3px solid var(--jlms-color-primary);outline-offset:3px}

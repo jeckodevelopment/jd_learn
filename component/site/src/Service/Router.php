@@ -16,6 +16,11 @@ final class Router extends RouterView
 {
     public function __construct(SiteApplication $app, AbstractMenu $menu)
     {
+        $categories = new RouterViewConfiguration('categories');
+        $this->registerView($categories);
+        $category = new RouterViewConfiguration('category');
+        $category->setKey('id')->setParent($categories);
+        $this->registerView($category);
         $courses = new RouterViewConfiguration('courses');
         $this->registerView($courses);
         $course = new RouterViewConfiguration('course');
@@ -32,6 +37,9 @@ final class Router extends RouterView
         $this->attachRule(new StandardRules($this));
         $this->attachRule(new NomenuRules($this));
     }
+
+    public function getCategorySegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
+    public function getCategoryId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
 
     public function getQuizSegment($id, $query): array { return [(int)$id => (string)(int)$id]; }
     public function getQuizId($segment, $query): int { return ctype_digit((string)$segment) ? (int)$segment : 0; }

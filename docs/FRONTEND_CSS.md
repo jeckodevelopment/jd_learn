@@ -78,3 +78,14 @@ Backend: override `quizextend/default.php`, ID `jlms-quiz-extend`, `jlms-quiz-ex
 ## Incremento0.14 — lingua
 
 Il cambio lingua dei corsi usa il modulo core `mod_languages`: stile e override seguono il contratto del modulo Joomla. I contenitori pubblici `jlms-course` e `jlms-courses` restano gli stessi nelle traduzioni. Nel backend `jlms-course-associations` contiene i campi nativi delle traduzioni. Vedere MULTILINGUAL.md per fallback e perimetro.
+
+## Categorie (0.15)
+
+Override nativi `categories/default.php` e `category/default.php`. Nuove regioni:
+
+| Vista | ID stabili | Ripetizioni |
+|---|---|---|
+| Elenco | `jlms-categories`, `jlms-categories-header`, `jlms-categories-description`, `jlms-categories-list`, `jlms-categories-pagination`, `jlms-categories-empty`, `jlms-categories-parent`, `jlms-categories-catalog` | `jlms-category-card-{id}`, classi `jlms-category-card`, `jlms-category-card__title`, `jlms-category-card__description` |
+| Scheda | `jlms-category`, `jlms-category-header`, `jlms-category-title`, `jlms-category-description`, `jlms-subcategories`, `jlms-subcategories-list`, `jlms-subcategories-empty`, `jlms-subcategories-pagination`, `jlms-category-courses`, `jlms-category-course-grid`, `jlms-category-courses-empty`, `jlms-category-courses-pagination`, `jlms-category-back` | `jlms-subcategory-{id}`, `jlms-course-card-{id}` |
+
+Le regioni vuote/di ritorno sono condizionali. Il catalogo aggiunge `jlms-catalog-categories`; i precedenti link categoria mantengono ID/classi e aprono la nuova scheda. Griglia responsive `.jlms-category-grid` con variabili CSS esistenti e focus visibile. Nessun ID dipende dal titolo o dalla lingua; nessun ID è duplicato nella stessa pagina. Le paginazioni corsi e figli devono conservare parametri distinti. Pathway e selettore lingua sono resi dai moduli core, personalizzabili tramite i loro override Joomla.
