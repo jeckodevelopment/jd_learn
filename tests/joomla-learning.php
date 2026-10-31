@@ -116,6 +116,13 @@ learningExpect($learning->start($student,'en-GB',$course,$key)===$enrollment,'sa
 learningExpect($learning->start($student,'en-GB',$course,bin2hex(random_bytes(16)))===$enrollment,'natural enrollment uniqueness across keys');
 learningExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id='.(int)$student->id)->loadResult()===1,'one enrollment persisted');
 learningExpect($db->setQuery('SELECT started_at FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult()===null,'enrollment alone grants no learning credit');
+$editionForCapacity=(int)$db->setQuery('SELECT edition_id FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult();
+fixtureUpdate('jlms_editions',(object)['id'=>$editionForCapacity,'capacity'=>1]);
+learningDenied(fn()=>$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16))),409,'edition capacity excludes additional enrollment');
+fixtureUpdate('jlms_editions',(object)['id'=>$editionForCapacity,'capacity'=>null],true);
+$otherCourse=(int)$db->setQuery('SELECT id FROM #__jlms_courses WHERE state=1 AND id<>'.$course.' LIMIT 1')->loadResult();
+learningDenied(fn()=>$learning->start($student,'en-GB',$otherCourse,$key),409,'start key cannot be reused for another course');
+learningExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id='.(int)$student->id)->loadResult()===1,'conflicting start rolls back new enrollment');
 $view=$learning->classroom($student,'en-GB',$enrollment);
 learningExpect($view['percent']===0 && str_contains($view['lesson']->body,'LEARNING_PRIVATE_BODY_1'),'authorised student reads first text');
 learningExpect(!str_contains($view['lesson']->body,'<script') && !str_contains($view['lesson']->body,'onerror'),'delivery strips active markup');
