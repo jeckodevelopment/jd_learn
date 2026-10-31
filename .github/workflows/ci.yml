@@ -71,22 +71,24 @@ jobs:
           python3 .runtime/previous-source/tools/build.py
           php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.1.0-dev.zip" --no-interaction
           php .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
-          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/dist/pkg_jlms-0.2.0-dev.zip" --no-interaction
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.3.0-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
         run: php tests/joomla-curriculum.php .runtime/joomla
+      - name: Native workflow publication and catalog access tests
+        run: php tests/joomla-publication.php .runtime/joomla
       - name: Render public and authenticated admin pages over HTTP
         run: python3 tests/http-smoke.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
-          php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/dist/pkg_jlms-0.2.0-dev.zip" --no-interaction
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.3.0-dev.zip"
           php tests/joomla-smoke.php .runtime/joomla retained
       - name: Make the verified development package downloadable
         if: matrix.php == '8.4' && matrix.database == 'mysql:8.4'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: JD-Learn-0.2.0-dev
+          name: JD-Learn-0.3.0-dev
           path: dist/
           if-no-files-found: error
           retention-days: 14

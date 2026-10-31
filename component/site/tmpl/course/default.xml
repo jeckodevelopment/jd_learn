@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata><layout title="COM_JLMS_MENU_COURSE_TITLE"><message>COM_JLMS_MENU_COURSE_DESC</message></layout><fields name="request"><fieldset name="request"><field name="id" type="number" label="COM_JLMS_COURSE_ID" required="true" min="1" filter="integer" /></fieldset></fields></metadata>

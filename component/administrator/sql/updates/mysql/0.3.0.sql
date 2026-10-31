@@ -1,0 +1,2 @@
+-- Core workflows and native ACL assets are installed idempotently in postflight.
+-- Teaching data schema remains unchanged.

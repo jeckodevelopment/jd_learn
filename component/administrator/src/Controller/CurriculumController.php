@@ -28,6 +28,12 @@ class CurriculumController extends BaseController
             $service = $this->app->bootComponent('com_jlms')->getCurriculumService();
             $actor = $this->app->getIdentity();
             switch ($operation) {
+                case 'transition':
+                    $this->app->bootComponent('com_jlms')->getPublicationService()->transition(
+                        $actor, $courseId, $versionId, CurriculumService::id($input['revision'] ?? null),
+                        CurriculumService::id($input['expected_version_revision'] ?? null), CurriculumService::id($input['transition_id'] ?? null),
+                    );
+                    break;
                 case 'version':
                     $versionId = $service->createDraft($actor, $courseId, CurriculumService::id($input['revision'] ?? null));
                     break;
@@ -49,7 +55,7 @@ class CurriculumController extends BaseController
             $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
                 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_INVALID_COURSE',
                 'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_VERSION_COPY_NOT_AVAILABLE', 'COM_JLMS_SOURCE_INVALID',
-                'COM_JLMS_LESSON_KIND_NOT_AVAILABLE', 'COM_JLMS_MOVE_MODULE_NOT_AVAILABLE', 'COM_JLMS_ITEM_HAS_DEPENDENCIES'];
+                'COM_JLMS_LESSON_KIND_NOT_AVAILABLE', 'COM_JLMS_MOVE_MODULE_NOT_AVAILABLE', 'COM_JLMS_ITEM_HAS_DEPENDENCIES', 'COM_JLMS_PUBLICATION_EMPTY', 'COM_JLMS_PUBLICATION_UNSUPPORTED', 'COM_JLMS_WORKFLOW_REJECTED'];
             $this->setMessage(Text::_(in_array($key, $known, true) ? $key : 'COM_JLMS_INVALID_INPUT'), 'error');
         } catch (\Throwable $error) {
             Log::add('Curriculum mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
@@ -62,10 +68,15 @@ class CurriculumController extends BaseController
 
     public function execute($task)
     {
-        if (static::class === self::class && strtolower($task) !== 'createversion') {
+        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'transition'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
+    }
+
+    public function transition(): void
+    {
+        $this->perform('transition');
     }
 
     public function createVersion(): void

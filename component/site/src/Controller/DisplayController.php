@@ -12,9 +12,10 @@ final class DisplayController extends BaseController
 
     public function display($cachable = false, $urlparams = [])
     {
-        if ($this->input->getCmd('view', 'courses') !== 'courses') {
+        if (!in_array($this->input->getCmd('view', 'courses'), ['courses', 'course'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         return parent::display(false, $urlparams);
     }
 }

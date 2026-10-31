@@ -80,6 +80,8 @@ final class Com_JlmsInstallerScript
                 }
             }
         }
+        require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/WorkflowInstaller.php';
+        \Jlms\Component\Jlms\Administrator\Infrastructure\WorkflowInstaller::install(Factory::getApplication(), $db);
         return true;
     }
 

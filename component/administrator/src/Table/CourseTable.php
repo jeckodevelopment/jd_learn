@@ -18,6 +18,7 @@ final class CourseTable extends Table
     public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__jlms_courses', 'id', $db);
+        $this->setColumnAlias('published', 'state');
     }
 
     public function check()

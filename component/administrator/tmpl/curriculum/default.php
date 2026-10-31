@@ -35,6 +35,16 @@ $hidden = static function (array $fields): void {
  <?php foreach ($this->outline['versions'] as $entry) : ?>
   <a href="<?= $link($base . '&version_id=' . (int) $entry->id) ?>">v<?= (int) $entry->version_no ?></a>
  <?php endforeach; ?></nav>
+ <?php if ($this->transitions) : ?>
+ <form method="post" id="jlms-publication-form" action="<?= $link('index.php?option=com_jlms') ?>">
+  <?php $hidden($scope + ['revision' => $course->revision]); ?>
+  <input type="hidden" name="task" value="curriculum.transition">
+  <label for="jlms-transition"><?= Text::_('COM_JLMS_WORKFLOW_TRANSITION') ?></label>
+  <select id="jlms-transition" name="jform[transition_id]" class="form-select">
+  <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape(Text::_($transition->title)) ?></option><?php endforeach; ?>
+  </select>
+  <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?></button>
+ </form><?php endif; ?>
  <div id="jlms-admin-course-outline">
  <?php foreach ($this->outline['modules'] as $module) : ?>
   <section class="jlms-admin-module" data-module-id="<?= (int) $module->id ?>"><h2><?= $this->escape($module->title) ?></h2>

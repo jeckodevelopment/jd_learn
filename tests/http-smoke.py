@@ -43,7 +43,13 @@ try:
    if server.poll() is not None:raise RuntimeError('Test HTTP server exited')
    time.sleep(.2)
  else:raise RuntimeError('Test HTTP server did not become ready')
- if 'id="jlms-courses"' not in html:raise RuntimeError('Public course view did not render')
+ if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
+ course_links=[x for x in Page(html).links if 'view=course' in x or '/course/' in x]
+ if not course_links:raise RuntimeError('Public course link missing')
+ public_course_url=course_links[0]
+ _,detail=get(public_course_url)
+ if 'id="jlms-course-outline"' not in detail or 'Published lesson' not in detail or 'SECRET_LESSON_BODY' in detail:
+  raise RuntimeError('Public sheet must show outline without protected lesson body')
  url,html=get('/administrator/index.php')
  page=Page(html)
  form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)
@@ -85,7 +91,24 @@ try:
   result=response.read().decode('utf-8')
  if 'HTTP text lesson' not in result:raise RuntimeError('Lesson was not saved through the authenticated MVC form')
 
- print(json.dumps({'http_smoke':'passed','pages':['public catalogue','native admin login','dashboard','draft list','draft editor']}))
+ # Exercise the native publication controller, CSRF token, redirect and current course revision.
+ for link in curriculum_links:
+  u,h=get(link)
+  if 'Publication fixture' in h:break
+ else:raise RuntimeError('Publication fixture admin screen absent')
+ for operation in ['unpublish','republish']:
+  form=next((f for f in Page(h).forms if f['id']=='jlms-publication-form'),None)
+  if not form:raise RuntimeError('Native transition form missing')
+  fields=dict(form['fields'])
+  fields['jform[transition_id]']=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+  with http.open(urljoin(u,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+   h=response.read().decode('utf-8')
+  try:
+   with http.open(urljoin(base,public_course_url),timeout=15) as response:status=response.status;response.read()
+  except HTTPError as error:status=error.code
+  if status!=(404 if operation=='unpublish' else 200):raise RuntimeError('HTTP '+operation+' did not update public visibility')
+
+ print(json.dumps({'http_smoke':'passed' ,'pages':['public catalogue','native admin login','dashboard','draft list','draft editor']}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-8000:],file=sys.stderr);raise
 finally:

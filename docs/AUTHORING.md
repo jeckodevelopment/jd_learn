@@ -19,3 +19,7 @@ La lettura del programma esegue query aggregate per moduli e lezioni e raggruppa
 ## Confini dello sviluppo
 
 Pubblicazione e workflow, nuovi tipi audio/documento/quiz, materiali protetti, prerequisiti, assegnazione agli studenti, clonazione storica, Content History e associazioni multilingua restano da completare. La struttura fisica è già versionata e non autorizza a modificare lo storico pubblicato.
+
+## Pubblicazione del corso di testo (0.3)
+
+Nel programma scegliere la transizione Joomla e premere **Esegui transizione**. Il server ricontrolla permessi, revisioni e struttura; vedere [PUBBLICAZIONE](PUBLICATION.md). Dopo la pubblicazione la versione è di sola lettura. Per nascondere o ripristinare il catalogo usare le transizioni successive; lo storico non cambia.
