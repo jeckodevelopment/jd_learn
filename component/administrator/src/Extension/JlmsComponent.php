@@ -52,9 +52,9 @@ final class JlmsComponent extends MVCComponent implements CategoryServiceInterfa
         return ['com_jlms.course' => 'JD Learn'];
     }
 
-    public function getCategoryWorkflowContext(?string $section = null): ?string
+    public function getCategoryWorkflowContext(?string $section = null): string
     {
-        return $section === 'course' ? 'com_jlms.course' : null;
+        return $section === 'course' ? 'com_jlms.course' : '';
     }
 
     public function getWorkflowTableBySection(?string $section = null): string

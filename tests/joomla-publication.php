@@ -142,7 +142,7 @@ $db->updateObject('#__categories',(object)['id'=>$catid,'published'=>1],'id');
 // Test a restricted ancestor through a real nested category.
 $child=new \Joomla\CMS\Table\Category($db);
 $child->setLocation($catid,'last-child');
-$child->bind(['title'=>'Child category','alias'=>'publication-child','extension'=>'com_jlms.course','published'=>1,'access'=>1,'language'=>'*','params'=>'{}','metadata'=>'{}']);
+$child->bind(['title'=>'Child category','description'=>'','alias'=>'publication-child','extension'=>'com_jlms.course','published'=>1,'access'=>1,'language'=>'*','params'=>'{}','metadata'=>'{}']);
 if (!$child->check() || !$child->store()) { throw new \RuntimeException('Child category fixture failed'); }
 $db->updateObject('#__jlms_courses',(object)['id'=>$course,'catid'=>(int)$child->id],'id');
 $db->updateObject('#__categories',(object)['id'=>$catid,'access'=>2],'id');

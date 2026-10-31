@@ -93,30 +93,38 @@ final class PublicationService
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
         }
         $moduleIds = array_fill_keys(array_column($modules, 'id'), 0);
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_lessons')
-            ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('module_id, ordering, id');
-        // Hash bodies one at a time: never accumulate up to 5,000 MEDIUMTEXT values in memory.
-        $iterator = $this->db->setQuery($q)->getIterator();
+        // Keyset batches bound memory even on drivers which buffer complete query results.
         $lessons = [];
         $required = 0;
-        foreach ($iterator as $lesson) {
-            if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
-                throw new \DomainException('COM_JLMS_INVALID_INPUT');
+        $lastId = 0;
+        do {
+            $q = $this->db->createQuery()->select('*')->from('#__jlms_lessons')
+                ->where('course_version_id = :version')->where('id > :after')
+                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':after', $lastId, ParameterType::INTEGER)->order('id');
+            $batch = $this->db->setQuery($q, 0, 16)->loadObjectList();
+            foreach ($batch as $lesson) {
+                if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
+                    throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                }
+                if ($lesson->kind !== 'text' || $lesson->completion_rule !== 'manual' || $lesson->source_json !== null
+                    || $lesson->provider_key !== null || $lesson->media_asset_id !== null || (int) $lesson->preview !== 0
+                    || $lesson->publish_up !== null || $lesson->publish_down !== null || $lesson->release_after_days !== null) {
+                    throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                }
+                if (strlen((string) $lesson->body) > 1048576) {
+                    throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                }
+                if (trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === '') {
+                    throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
+                }
+                $moduleIds[$lesson->module_id]++;
+                $required += (int) $lesson->required;
+                $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
+                    'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
+                    'required' => (int) $lesson->required, 'body_sha256' => hash('sha256', (string) $lesson->body)];
+                $lastId = (int) $lesson->id;
             }
-            if ($lesson->kind !== 'text' || $lesson->completion_rule !== 'manual' || $lesson->source_json !== null
-                || $lesson->provider_key !== null || $lesson->media_asset_id !== null || (int) $lesson->preview !== 0
-                || $lesson->publish_up !== null || $lesson->publish_down !== null || $lesson->release_after_days !== null) {
-                throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
-            }
-            if (trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === '') {
-                throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
-            }
-            $moduleIds[$lesson->module_id]++;
-            $required += (int) $lesson->required;
-            $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
-                'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
-                'required' => (int) $lesson->required, 'body_sha256' => hash('sha256', (string) $lesson->body)];
-        }
+        } while (count($batch) === 16);
         if (!$required || in_array(0, array_values($moduleIds), true)) {
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
         }
