@@ -49,4 +49,10 @@ Nel backend `curriculum/default.php`: `jlms-video-file-{lessonId}`, `jlms-video-
 
 ## Authoring quiz (0.9)
 
-Override backend nativi `questionbank/default.php` e `quiz/default.php`. Regioni: `jlms-question-bank`, `jlms-question-list`, `jlms-question-form`, `jlms-question-lock-status`, `jlms-quiz-editor`, `jlms-quiz-form`, `jlms-quiz-delete-form`. Sono ID unici; righe/opzioni ripetute usano il layout subform Joomla. Non aggiungere risposte corrette ai layout pubblici né spostare logica di permesso nei template. Preservare token, nomi dei campi, revisioni e parent; gli override non devono abilitare quiz pubblici o tentativi non implementati. Nessun nuovo CSS globale.
+Override backend nativi `questionbank/default.php` e `quiz/default.php`. Regioni: `jlms-question-bank`, `jlms-question-list`, `jlms-question-form`, `jlms-question-lock-status`, `jlms-quiz-editor`, `jlms-quiz-form`, `jlms-quiz-delete-form`. Sono ID unici; righe/opzioni ripetute usano il layout subform Joomla. Non aggiungere risposte corrette ai layout pubblici né spostare logica di permesso nei template. Preservare token, nomi dei campi, revisioni e parent; gli override devono conservare i controlli del flusso e non pubblicare chiavi o spiegazioni protette. Nessun nuovo CSS globale.
+
+## Quiz studenti (0.10)
+
+Override nativo `com_jlms/quiz/default.php`. ID unici `jlms-quiz`, `jlms-quiz-header`, `jlms-quiz-rules`, `jlms-quiz-availability`, `jlms-quiz-status`, `jlms-quiz-timer`, `jlms-quiz-result`, `jlms-quiz-form`, `jlms-quiz-questions`, `jlms-quiz-actions`, `jlms-quiz-save`, `jlms-quiz-submit`, `jlms-quiz-start`, `jlms-quiz-history`, `jlms-quiz-back`. Regioni condizionali possono mancare. Righe `jlms-quiz-question-{snapshotId}`, opzioni `jlms-quiz-option-{snapshotId}-{optionId}`; classi `.jlms-quiz-question`, `__prompt`, `__option`, `__feedback`, `.jlms-quiz-clear`. Nell’aula `jlms-lesson-quiz` collega la pagina dedicata.
+
+Gli script dipendono da ID form/status/timer/azioni e da `data-question-id`, input/valori, fieldset e `.jlms-quiz-clear`: conservarli o sostituire anche l’adattatore client. Le regole e gli snapshot sono verificati sul server; non derivare autorizzazioni dallo stato DOM. Il DTO rilascia correzioni solo quando ammesse; un override non deve leggere la banca direttamente. CSS limitato alla regione quiz.

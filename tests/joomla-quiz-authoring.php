@@ -135,8 +135,12 @@ quizReject(fn()=>$quizzes->save($editor,array_replace($input,$scope(),['lesson_i
 $asset->rules='{}';$asset->store();
 $bank->lock($actor,$id,false);quizReject(fn()=>$bank->save($editor,array_replace($question,['revision'=>2])),409,'another native checkout blocks save');$bank->lock($actor,$id,true);
 $publication=$component->getPublicationService();$blocked=false;
-try{$publication->transition($actor,$course,$version,(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult(),$scope()['expected_version_revision'],(int)$publication->transitions($actor,$course)[0]->id);}catch(\DomainException $error){$blocked=$error->getMessage()==='COM_JLMS_PUBLICATION_UNSUPPORTED';}
-quizExpect($blocked&&$db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id='.$version)->loadResult()==='draft','quiz publication remains closed until attempts are implemented');
+$quizId=(int)$db->setQuery('SELECT id FROM #__jlms_quizzes WHERE lesson_id='.$lesson)->loadResult();
+$selectionBefore=$db->setQuery('SELECT selection_json FROM #__jlms_quizzes WHERE id='.$quizId)->loadResult();
+$db->setQuery("UPDATE #__jlms_quizzes SET selection_json=JSON_SET(selection_json,'$._schema',99) WHERE id=".$quizId)->execute();
+try{$publication->transition($actor,$course,$version,(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult(),$scope()['expected_version_revision'],(int)$publication->transitions($actor,$course)[0]->id);}catch(\RuntimeException $error){$blocked=$error->getMessage()==='COM_JLMS_QUIZ_INVALID';}
+$db->setQuery('UPDATE #__jlms_quizzes SET selection_json='.$db->quote($selectionBefore).' WHERE id='.$quizId)->execute();
+quizExpect($blocked&&$db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id='.$version)->loadResult()==='draft','invalid quiz publication fails atomically');
 // Dedicated draft removal removes configuration and links, preserving immutable bank revisions.
 $temporary=$quizzes->save($actor,array_replace($input,$scope(),['title'=>'Temporary quiz']));$quizzes->delete($actor,$course,$version,$temporary,$scope()['expected_version_revision']);
 quizExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lessons WHERE id='.$temporary)->loadResult(),'dedicated draft quiz removal');

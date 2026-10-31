@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><fields name="params"><fieldset name="basic"><field name="limit" type="number" label="PLG_TASK_JLMS_LIMIT" default="100" min="1" max="100" filter="integer" /></fieldset></fields></form>

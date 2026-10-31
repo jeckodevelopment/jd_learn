@@ -44,5 +44,5 @@ if package.exists():
      for f in list(files):
       source='/'.join(x for x in [prefix,f.text] if x)
       assert source in names or any(n.startswith(source+'/') for n in names),(manifest,source)
- print('ZIP manifests and all 6 child archives verified')
+ print('ZIP manifests and all 7 child archives verified')
 print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':37,'foreign_keys':53,'structural_checks':'passed'}))

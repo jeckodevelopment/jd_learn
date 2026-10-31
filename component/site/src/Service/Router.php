@@ -24,11 +24,17 @@ final class Router extends RouterView
         $classroom = new RouterViewConfiguration('classroom');
         $classroom->setKey('id');
         $this->registerView($classroom);
+        $quiz = new RouterViewConfiguration('quiz');
+        $quiz->setKey('id');
+        $this->registerView($quiz);
         parent::__construct($app, $menu);
         $this->attachRule(new MenuRules($this));
         $this->attachRule(new StandardRules($this));
         $this->attachRule(new NomenuRules($this));
     }
+
+    public function getQuizSegment($id, $query): array { return [(int)$id => (string)(int)$id]; }
+    public function getQuizId($segment, $query): int { return ctype_digit((string)$segment) ? (int)$segment : 0; }
 
     public function getClassroomSegment($id, $query): array
     {
