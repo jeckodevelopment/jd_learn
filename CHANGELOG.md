@@ -1,6 +1,6 @@
 # Changelog
 
-##0.2.0-dev —31ottobre2026
+## 0.2.0-dev — 31 ottobre 2026
 
 - Aggiunti servizio applicativo DI, prima bozza didattica, editor del programma e comandi MVC nativi.
 - Implementati moduli e lezioni testo/video, obbligatorietà, modifica, riordino e rimozione con controlli delle dipendenze.
