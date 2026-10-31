@@ -38,6 +38,8 @@ try:
  with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
  url,html=get('/administrator/index.php?option=com_jlms')
  if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('Authenticated JD Learn dashboard did not render')
+ url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
+ if 'CI Courses' not in html:raise RuntimeError('Native Joomla category manager did not render the saved category')
  url,html=get('/administrator/index.php?option=com_jlms&view=courses')
  links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('task')==['course.edit']]
  if not links:raise RuntimeError('Saved draft is absent from the native course list')
