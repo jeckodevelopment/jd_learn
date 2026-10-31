@@ -114,7 +114,7 @@ final class PublicationService
                 if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
-                if ($lesson->media_asset_id !== null || (int) $lesson->preview !== 0 || $lesson->publish_up !== null
+                if (($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5') || (int) $lesson->preview !== 0 || $lesson->publish_up !== null
                     || $lesson->publish_down !== null || $lesson->release_after_days !== null || strlen((string) $lesson->body) > 1048576) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
@@ -126,11 +126,12 @@ final class PublicationService
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
-                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream'], true) || $lesson->completion_rule !== 'video_coverage'
-                        || !in_array($policy, ['click', 'site_consent'], true) || (int) $lesson->duration_ms < 1000
+                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream', 'html5'], true) || $lesson->completion_rule !== 'video_coverage'
+                        || ($lesson->provider_key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) || (int) $lesson->duration_ms < 1000
                         || (int) $lesson->duration_ms > 28800000 || ($params['video_duration_confirmed'] ?? false) !== true) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
+                    if ($lesson->provider_key === 'html5') { $this->app->bootComponent('com_jlms')->getLocalVideoService()->assertReady($lesson); }
                     if ($lesson->provider_key === 'cloudflarestream') {
                         $proof = $remoteChecks[(int) $lesson->id] ?? null;
                         if (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))

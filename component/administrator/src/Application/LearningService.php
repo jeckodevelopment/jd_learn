@@ -208,7 +208,7 @@ final class LearningService
     private function lesson(int $versionId, int $lessonId, bool $includeBody = false): object
     {
         $columns = ['id', 'course_version_id', 'title', 'kind', 'required', 'completion_rule',
-            'publish_up', 'publish_down', 'release_after_days', 'source_revision', 'provider_key', 'duration_ms'];
+            'publish_up', 'publish_down', 'release_after_days', 'source_revision', 'provider_key', 'duration_ms', 'media_asset_id', 'params_json'];
         if ($includeBody) {
             $columns[] = 'body';
         }
@@ -221,7 +221,7 @@ final class LearningService
         }
         $supported = ($lesson->kind === 'text' && $lesson->completion_rule === 'manual')
             || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
-                && in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream'], true) && (int) $lesson->duration_ms >= 1000);
+                && in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream', 'html5'], true) && (int) $lesson->duration_ms >= 1000);
         if (!$supported || $lesson->publish_up !== null
             || $lesson->publish_down !== null || $lesson->release_after_days !== null) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);

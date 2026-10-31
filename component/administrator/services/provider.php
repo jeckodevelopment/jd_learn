@@ -53,7 +53,11 @@ return new class () implements ServiceProviderInterface {
         $container->set(\Jlms\Component\Jlms\Administrator\Application\LearningService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\LearningService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class, static fn () => new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn () => ComponentHelper::getParams('com_jlms')));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\MaterialService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\MaterialService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class)));
-        $container->set(\Jlms\Component\Jlms\Administrator\Application\VideoProgressService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(CurriculumService::class), static fn (): int => (int) floor(microtime(true) * 1000)));
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\VideoProgressService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(CurriculumService::class), static fn (): int => (int) floor(microtime(true) * 1000), $c->get(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService::class)));
+        $container->set(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage::class, static fn () => new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage(static fn () => ComponentHelper::getParams('com_jlms')));
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\LocalVideoService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage::class), static function (): bool {
+            return PluginHelper::isEnabled('jlmsvideo', 'html5') && (int) (new \Joomla\Registry\Registry(PluginHelper::getPlugin('jlmsvideo', 'html5')->params ?? '{}'))->get('playback_enabled', 0) === 1;
+        }));
         $container->set(PublicationService::class, static fn (Container $c): PublicationService => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
         $container->set(ComponentInterface::class, static function (Container $container): JlmsComponent {
             $component = new JlmsComponent($container->get(ComponentDispatcherFactoryInterface::class));
@@ -64,6 +68,7 @@ return new class () implements ServiceProviderInterface {
             $component->setLearningService($container->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class));
             $component->setMaterialService($container->get(\Jlms\Component\Jlms\Administrator\Application\MaterialService::class));
             $component->setVideoProgressService($container->get(\Jlms\Component\Jlms\Administrator\Application\VideoProgressService::class));
+            $component->setLocalVideoService($container->get(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService::class));
             $component->setRouterFactory($container->get(\Joomla\CMS\Component\Router\RouterFactoryInterface::class));
             $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
             return $component;

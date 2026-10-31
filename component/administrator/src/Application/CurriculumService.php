@@ -297,7 +297,10 @@ final class CurriculumService
             'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null];
-        if ($kind === 'video') {
+        if ($kind === 'video' && ($input['provider_key'] ?? '') === 'html5') {
+            if (($input['source_reference'] ?? '') !== '') { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+            $fields['provider_key'] = 'html5';
+        } elseif ($kind === 'video') {
             $fields['duration_ms'] = self::duration($input['duration_seconds'] ?? null);
             $fields['params_json'] = json_encode(['video_duration_confirmed' => ($input['duration_confirmed'] ?? '') === '1'], JSON_THROW_ON_ERROR);
             if (!is_string($input['provider_key'] ?? null) || !is_string($input['source_reference'] ?? null)
@@ -333,6 +336,9 @@ final class CurriculumService
                 }
                 if ((int) $lesson->module_id !== $moduleId) {
                     throw new \DomainException('COM_JLMS_MOVE_MODULE_NOT_AVAILABLE');
+                }
+                if ($fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key === 'html5') {
+                    foreach (['source_json', 'media_asset_id', 'duration_ms', 'params_json'] as $field) { $fields[$field] = $lesson->$field; }
                 }
                 $changedSource = $lesson->kind !== $fields['kind'] || $lesson->provider_key !== $fields['provider_key']
                     || $lesson->source_json !== $fields['source_json'] || $lesson->duration_ms != $fields['duration_ms'];
