@@ -37,7 +37,8 @@ try:
  form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)
  if not form:raise RuntimeError('Native Joomla admin login form was not found')
  fields=form['fields'];fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
- with http.open(urljoin(urljoin(url,page.base or ''),form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
+ # Authenticate against Joomla's native administrator endpoint. Routed form actions can be installation-relative.
+ with http.open(base+'/administrator/index.php',data=urlencode(fields).encode(),timeout=20) as r:r.read()
  url,html=get('/administrator/index.php?option=com_jlms')
  if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('Authenticated JD Learn dashboard did not render')
  url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
