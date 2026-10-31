@@ -30,7 +30,9 @@ final class VideoProviderRegistry implements VideoProviderRegistryInterface
         }
         if (!isset($this->instances[$providerKey])) {
             $adapter = ($this->factories[$providerKey])();
-            if (!$adapter instanceof VideoProviderInterface || $adapter->getDescriptor()->key !== $providerKey) {
+            if (!$adapter instanceof VideoProviderInterface
+                || $adapter->getDescriptor()->key !== $providerKey
+                || $adapter->getDescriptor()->contractMajor !== $this->descriptors[$providerKey]->contractMajor) {
                 throw new \DomainException('PROVIDER_CONTRACT_MISMATCH');
             }
             $this->instances[$providerKey] = $adapter;

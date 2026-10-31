@@ -24,7 +24,7 @@ final class CourseTable extends Table
     {
         $this->title = trim((string) $this->title);
         $this->alias = ApplicationHelper::stringURLSafe((string) ($this->alias ?: $this->title));
-        if ($this->title === '' || strlen($this->title) > 1020 || $this->alias === '' || strlen($this->alias) > 180) {
+        if ($this->title === '' || \Joomla\String\StringHelper::strlen($this->title) > 255 || $this->alias === '' || strlen($this->alias) > 180) {
             $this->setError('COM_JLMS_INVALID_COURSE');
             return false;
         }
@@ -34,6 +34,19 @@ final class CourseTable extends Table
         }
         $db = $this->getDatabase();
         $catid = (int) $this->catid;
+        if (strlen((string) $this->summary) > 65535) {
+            $this->setError('COM_JLMS_INVALID_COURSE');
+            return false;
+        }
+        if ($this->language !== '*') {
+            $language = (string) $this->language;
+            $languageQuery = $db->createQuery()->select('COUNT(*)')->from($db->quoteName('#__languages'))
+                ->where($db->quoteName('lang_code') . ' = :language')->bind(':language', $language);
+            if (!(int) $db->setQuery($languageQuery)->loadResult()) {
+                $this->setError('COM_JLMS_INVALID_COURSE');
+                return false;
+            }
+        }
         $extension = 'com_jlms.course';
         $q = $db->createQuery()->select($db->quoteName('id'))->from($db->quoteName('#__categories'))
             ->where($db->quoteName('id') . ' = :catid')->where($db->quoteName('extension') . ' = :extension')

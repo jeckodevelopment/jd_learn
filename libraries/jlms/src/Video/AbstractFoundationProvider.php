@@ -23,7 +23,7 @@ abstract class AbstractFoundationProvider implements VideoProviderInterface
     public function validateSource(VideoSource $source, AuthorContext $context): ValidationResult
     {
         try {
-            if ($source->providerKey !== $this->key()) {
+            if ($source->providerKey !== $this->key() || $source->revision < 1) {
                 throw new \InvalidArgumentException('SOURCE_INVALID');
             }
             $this->normaliseSource(new SourceInput($source->reference, $source->options));

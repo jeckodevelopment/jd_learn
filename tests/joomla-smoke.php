@@ -8,6 +8,15 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
 }
+// Simulate the web request context required by AdministratorApplication in a CLI smoke test.
+$_SERVER['HTTP_HOST'] = 'localhost';
+$_SERVER['SERVER_NAME'] = 'localhost';
+$_SERVER['SERVER_PORT'] = '80';
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
+$_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
+$_SERVER['PHP_SELF'] = '/administrator/index.php';
+$_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
 \define('_JEXEC', 1);
 \define('JPATH_BASE', $root);
 require $root . '/includes/defines.php';
@@ -39,6 +48,16 @@ if (!$userId) {
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($userId));
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
+if (($argv[2] ?? '') === 'retained') {
+    $record = $db->setQuery("SELECT title, revision FROM #__jlms_courses WHERE alias='test-course'")->loadObject();
+    $enabled = (int) $db->setQuery("SELECT COUNT(*) FROM #__extensions WHERE type='plugin' AND folder='jlmsvideo' AND enabled=1")->loadResult();
+    if (!$record || $record->title !== 'Updated course' || (int) $record->revision !== 2 || $enabled !== 4) {
+        throw new \RuntimeException('Package update lost draft data or plugin state.');
+    }
+    echo json_encode(['package_upgrade' => 'passed', 'draft_revision' => 2, 'enabled_providers' => $enabled], JSON_THROW_ON_ERROR) . PHP_EOL;
+    exit(0);
+}
+
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request'=>true]);
 if (!$categoryModel->save(['id'=>0,'parent_id'=>1,'extension'=>'com_jlms.course','title'=>'CI Courses','alias'=>'ci-courses','published'=>1,'language'=>'*','access'=>1])) {
     throw new \RuntimeException('Native Joomla category save failed: ' . $categoryModel->getError());
