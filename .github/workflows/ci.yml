@@ -88,6 +88,8 @@ jobs:
         run: python3 tests/learning-http.py .runtime/joomla
       - name: Video telemetry, idempotence and current access integration
         run: php tests/joomla-video.php .runtime/joomla
+      - name: Native video classroom, CSRF and progress endpoints over HTTP
+        run: python3 tests/video-http.py .runtime/joomla
       - name: Player consent, retry and teardown with a mock browser transport
         run: node tests/video-player.mjs
       - name: Prepare disposable material course drafts

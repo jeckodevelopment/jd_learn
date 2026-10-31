@@ -32,3 +32,7 @@ Scheda pubblica: `jlms-course-login` per ospiti, `jlms-start-form` per accesso a
 ## Materiali protetti (0.5)
 
 Regioni: `jlms-course-materials` nella scheda (nessun metadato protetto); `jlms-classroom-course-materials` e `jlms-lesson-resources` nell’aula, raggruppate da `jlms-material-groups`. Ripetizioni `jlms-material-{attachmentId}` e classi `.jlms-material`, `.jlms-material__title`, `.jlms-material__meta`, `.jlms-material__action`, `.jlms-material-list`. Ogni ambito ha paginazione distinta (`course_material_page`, `lesson_material_page`). Override `course/default.php` e `classroom/default.php` nativi; mantenere i link del componente con enrollment_id, mai un URL filesystem/storage diretto. Le classi e variabili WAM rimangono compatibili con 0.4.
+
+## Player video (0.6)
+
+L'override `classroom/default.php` distingue testo e video: solo il testo include `jlms-complete-form`. Il video usa `jlms-video-region`, `jlms-video-consent`, `jlms-video-load`, `jlms-video-stop`, `jlms-player-status` e `jlms-player`; classe `.jlms-player`. Preservare questi ID unici, pulsanti type=button, stato aria-live e le script options/WAM `com_jlms.video`. Il contenitore player ha aspect ratio16/9 soltanto quando non è vuoto. Gli stili possono cambiare senza inserire iframe remoti nel markup o esporre sorgenti. Vedere `VIDEO.md` per consenso/CMP e lifecycle.

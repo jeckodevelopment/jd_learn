@@ -3,18 +3,23 @@ function loadSdk() {
   if (globalThis.YT?.Player) return Promise.resolve();
   if (!sdk) sdk = new Promise((resolve, reject) => {
     const script = document.createElement('script');
+    const timeout = setTimeout(() => { script.remove(); reject(new Error('sdk timeout')); }, 30000);
+    const fail = () => { clearTimeout(timeout); reject(new Error('sdk')); };
     script.src = 'https://www.youtube.com/iframe_api';
-    script.onerror = () => reject(new Error('sdk'));
+    script.onerror = fail;
     const previous = globalThis.onYouTubeIframeAPIReady;
-    globalThis.onYouTubeIframeAPIReady = () => { previous?.(); resolve(); };
+    globalThis.onYouTubeIframeAPIReady = () => { clearTimeout(timeout); previous?.(); resolve(); };
     document.head.append(script);
   });
   return sdk;
 }
-export async function create(container, descriptor, emit) {
+export async function create(container, descriptor, emit, signal) {
   await loadSdk();
+  signal?.throwIfAborted();
   const slot = document.createElement('div'); container.append(slot);
   let player;
+  const abort = () => { player?.destroy(); slot.remove(); };
+  signal?.addEventListener('abort', abort, {once: true});
   await new Promise((resolve, reject) => {
     player = new YT.Player(slot, {
       host: 'https://www.youtube-nocookie.com', videoId: descriptor.options.reference,
@@ -31,6 +36,6 @@ export async function create(container, descriptor, emit) {
       playing: player.getPlayerState() === 1}),
     pause: () => player.pauseVideo(),
     seek: ms => { emit('seeking'); player.seekTo(ms / 1000, true); emit('seeked'); },
-    destroy: () => player.destroy()
+    destroy: () => { signal?.removeEventListener('abort', abort); player.destroy(); }
   };
 }

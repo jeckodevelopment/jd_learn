@@ -12,14 +12,14 @@ LES-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale
 LES-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 LES-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 LES-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-VID-01,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-VID-02,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-VID-03,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-VID-04,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-VID-05,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-VID-06,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-VID-07,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
-VID-08,Rilascio 1,In corso,"Contratti, plugin base e validazione sorgenti presenti; playback/SDK/tracking non implementati.",No
+VID-01,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+VID-02,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+VID-03,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+VID-04,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+VID-05,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+VID-06,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+VID-07,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+VID-08,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
 ISC-01,Rilascio 1,In corso,Avvio automatico idempotente senza gruppi e ripresa; manuale/import/approvazione da completare.,No
 ISC-02,Rilascio 1,In corso,Stato accesso separato da completed_at; letture rispettano sospensione/scadenza. Gestione amministrativa ancora da implementare.,No
 ISC-03,Rilascio 1,In corso,Finestre edizione/iscrizione ricontrollate; UI calendario e proroghe da completare.,No
@@ -205,7 +205,7 @@ SECDEV-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equiv
 SECDEV-06,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 SECDEV-07,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 SECDEV-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PBASE-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PBASE-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PBASE-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-PBASE-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+PBASE-01,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+PBASE-02,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+PBASE-03,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No
+PBASE-04,Rilascio 1,In corso,"0.6: embed YouTube/Vimeo opt-in, consenso e copertura server/idempotenza; Cloudflare/HTML5, prove SDK reali e criteri completi da completare.",No

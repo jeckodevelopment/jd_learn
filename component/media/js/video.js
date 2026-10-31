@@ -43,14 +43,14 @@ export class VideoLesson {
       const paths = {youtube: '../../plg_jlmsvideo_youtube/js/player.js', vimeo: '../../plg_jlmsvideo_vimeo/js/player.js'};
       if (grant.provider !== this.config.provider || !paths[grant.provider]) throw new Error('provider');
       this.session = grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
-      this.started = performance.now(); this.previous = null;
+      this.started = performance.now(); this.previous = null; this.aborter = new AbortController();
       const adapter = await this.importer(new URL(paths[grant.provider], import.meta.url).href);
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
       this.stopped = false;
       const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, event => {
         if (event === 'error') { this.message('error'); this.stop(false); }
         else this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
-      });
+      }, this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player;
       if (grant.resume_ms) await player.seek(grant.resume_ms);
@@ -103,7 +103,7 @@ export class VideoLesson {
     } finally { this.saving = false; this.schedule(); }
   }
   async stop(save) {
-    ++this.generation; this.stopped = true;
+    ++this.generation; this.stopped = true; this.aborter?.abort();
     clearInterval(this.sampler); clearTimeout(this.timer);
     const player = this.player; this.player = null;
     try { await player?.destroy(); } catch { /* Teardown must continue. */ }

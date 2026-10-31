@@ -20,6 +20,12 @@ final class VideoController extends BaseController
         return parent::execute($task);
     }
 
+    private function integer(string $name): int
+    {
+        try { return \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($this->input->post->get($name, null, 'RAW')); }
+        catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+    }
+
     private function respond(string $operation): void
     {
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
@@ -31,12 +37,14 @@ final class VideoController extends BaseController
             if (!$this->checkToken('post', false)) { throw new \RuntimeException('JINVALID_TOKEN', 403); }
             $service = $this->app->bootComponent('com_jlms')->getVideoProgressService();
             $args = [$this->app->getIdentity(), $this->app->getLanguage()->getTag(),
-                $this->input->post->getInt('enrollment_id', 0), $this->input->post->getInt('lesson_id', 0)];
+                $this->integer('enrollment_id'), $this->integer('lesson_id')];
+            $events = $this->input->post->get('events_json', '', 'RAW');
+            if (!is_string($events)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
             $data = match ($operation) {
                 'playback' => $service->playback(...[...$args, $this->input->post->getString('consent', '') === '1']),
                 'save' => $service->save(...[...$args, $this->input->post->getString('session_id', ''),
-                    $this->input->post->getInt('source_revision', 0), $this->input->post->getInt('sequence', 0),
-                    $this->input->post->getInt('duration_ms', 0), $this->input->post->get('events_json', '', 'RAW')]),
+                    $this->integer('source_revision'), $this->integer('sequence'),
+                    $this->integer('duration_ms'), $events]),
                 'close' => $this->closeSession($service, $args),
             };
             echo new JsonResponse($data, null, false, true);

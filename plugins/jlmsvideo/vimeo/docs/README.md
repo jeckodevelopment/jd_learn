@@ -2,9 +2,9 @@
 
 Plugin `plg_jlmsvideo_vimeo`, gruppo `jlmsvideo`, contratto1. Incluso nel pacchetto base.
 
-## Stato0.1.0-dev
+## Stato0.6.0-dev
 
-Registrazione via evento Joomla e factory lazy, validazione locale e normalizzazione della sorgente. Nessuna chiamata remota o riproduzione attiva; capabilities=false e richieste playback/metadati chiuse esplicitamente. Il plugin viene installato disabilitato. I parametri del manifest sono predisposti per gli incrementi successivi e non attivano un player in questa versione.
+Embed con SDK ufficiale, opt-in `playback_enabled`, registrazione lazy e normalizzazione locale. Posizione/durata/seek disponibili solo quando abilitato. Il componente gestisce consenso, grant, progressi e completamento; il plugin non attribuisce crediti. Default disabilitato. Metadati automatici e configurazioni avanzate ancora da completare. Vedere `docs/VIDEO.md` nel repository per comportamento effettivo, endpoint e limiti. Nessuna promessa di riservatezza di URL condivisibili o di certificazione della visione.
 
 ## Specifica completa
 

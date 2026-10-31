@@ -31,3 +31,32 @@ let destroyed=0;lesson.player={destroy:async()=>destroyed++};
 await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1);
 await lesson.destroy();assert.equal(listeners.size,0);
 console.log(JSON.stringify({video_player_checks:12,status:'passed',environment:'mock DOM/SDK transport; no live provider playback'}));
+// Exercise the local provider adapters against SDK doubles, including privacy parameters and cleanup.
+const moduleFromFile = async path => import('data:text/javascript;base64,' + Buffer.from(await readFile(path,'utf8')).toString('base64'));
+const youtube = await moduleFromFile(new URL('../plugins/jlmsvideo/youtube/media/js/player.js',import.meta.url));
+let ytOptions, ytDestroyed=0;
+globalThis.location={origin:'https://school.example'};
+globalThis.YT={Player:class {
+  constructor(_slot,options){ytOptions=options;queueMicrotask(()=>options.events.onReady());}
+  getCurrentTime(){return 1.5;} getDuration(){return 10;}getPlaybackRate(){return 1;}getPlayerState(){return 1;}
+  pauseVideo(){}seekTo(){}destroy(){ytDestroyed++;}
+}};
+const frames=[];
+document.createElement=tag=>({tag,dataset:{},remove(){},set src(value){this.url=value;},get src(){return this.url;}});
+const box={dataset:{title:'Lesson'},append:frame=>frames.push(frame)};
+const yt=await youtube.create(box,{options:{reference:'dQw4w9WgXcQ',locale:'it-IT'}},()=>{},new AbortController().signal);
+assert.equal(ytOptions.host,'https://www.youtube-nocookie.com');assert.equal(ytOptions.playerVars.autoplay,0);
+assert.equal((await yt.sample()).position_ms,1500);yt.destroy();assert.equal(ytDestroyed,1);
+const aborted=new AbortController();aborted.abort();await assert.rejects(youtube.create(box,{options:{}},()=>{},aborted.signal));
+const vimeo=await moduleFromFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url));
+let vmHandlers=0,vmDestroyed=0;
+globalThis.Vimeo={Player:class{
+  ready(){return Promise.resolve();}on(){vmHandlers++;}off(){vmHandlers--;}
+  getCurrentTime(){return Promise.resolve(2);}getDuration(){return Promise.resolve(10);}
+  getPlaybackRate(){return Promise.resolve(1);}getPaused(){return Promise.resolve(false);}getEnded(){return Promise.resolve(false);}
+  destroy(){vmDestroyed++;return Promise.resolve();}
+}};
+const vm=await vimeo.create(box,{options:{reference:'12345',privacy_hash:'abc123'}},()=>{},new AbortController().signal);
+const frameUrl=new URL(frames.at(-1).src);assert.equal(frameUrl.searchParams.get('dnt'),'1');assert.equal(frameUrl.searchParams.get('h'),'abc123');
+assert.equal((await vm.sample()).duration_ms,10000);await vm.destroy();assert.equal(vmHandlers,0);assert.equal(vmDestroyed,1);
+console.log(JSON.stringify({provider_adapter_checks:10,status:'passed',environment:'SDK doubles; no live remote video'}));
