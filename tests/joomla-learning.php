@@ -65,6 +65,15 @@ $factory = $component->getMVCFactory();
 
 
 $learning=$component->getLearningService();
+if (($argv[2] ?? '') === 'retained') {
+    $owner=(int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult();
+    $saved=$db->setQuery('SELECT id, required_total, completed_total, completed_at FROM #__jlms_enrollments WHERE user_id='.$owner)->loadObject();
+    if (!$saved || (int)$saved->required_total!==3 || (int)$saved->completed_total!==3 || !$saved->completed_at
+        || $learning->classroom(new \Joomla\CMS\User\User($owner),'en-GB',(int)$saved->id)['percent']!==100) {
+        throw new \RuntimeException('Package update lost learning history');
+    }
+    echo json_encode(['learning_upgrade'=>'passed','required_completed'=>3],JSON_THROW_ON_ERROR).PHP_EOL;exit(0);
+}
 if (($argv[2] ?? '') === 'worker') {
     echo "ready\n";fflush(STDOUT);fgets(STDIN);
     $learning->complete(new \Joomla\CMS\User\User((int)$argv[3]),'en-GB',(int)$argv[4],(int)$argv[5],$argv[6]);
@@ -193,7 +202,7 @@ learningExpect($done['percent']===100 && $done['completed_at']!==null,'concurren
 $stamp=$done['completed_at'];$learning->complete($student,'en-GB',$enrollment,$lessons[1],bin2hex(random_bytes(16)));
 learningExpect($learning->classroom($student,'en-GB',$enrollment)['completed_at']===$stamp,'completion date is immutable on replay');
 learningExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult()===3,'required counter is exact');
-learningExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__user_usergroup_map WHERE user_id='.(int)$student->id.' AND group_id=2')->loadResult()===1,'LMS has assigned no additional groups');
+learningExpect(array_map('intval',$db->setQuery('SELECT group_id FROM #__user_usergroup_map WHERE user_id='.(int)$student->id.' ORDER BY group_id')->loadColumn())===[2,$learningGroup],'LMS has assigned no additional groups');
 fixtureUpdate('jlms_courses',(object)['id'=>$course,'enrollment_mode'=>'approval']);
 learningDenied(fn()=>$learning->start($httpStudent,'en-GB',$course,bin2hex(random_bytes(16))),409,'approval mode cannot bypass request workflow');
 fixtureUpdate('jlms_courses',(object)['id'=>$course,'enrollment_mode'=>'auto']);
