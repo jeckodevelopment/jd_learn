@@ -79,6 +79,13 @@ function assocRows(): string {
     global $db;
     return json_encode($db->setQuery("SELECT * FROM #__associations WHERE context='com_jlms.item' ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR);
 }
+if (($argv[2] ?? '') === 'worker') {
+    $command = json_decode($argv[3], true, 16, JSON_THROW_ON_ERROR);
+    echo "ready\n"; flush();
+    if (trim((string) fgets(STDIN)) !== 'go') { throw new \RuntimeException('Association worker barrier missing'); }
+    echo json_encode(['saved'=>assocSave(assocData($command['source']) + ['associations'=>['it-IT'=>$command['target']]])], JSON_THROW_ON_ERROR);
+    exit;
+}
 $actor = $app->getIdentity();
 $helper = $component->getAssociationsExtension();
 assocExpect($component instanceof \Joomla\CMS\Association\AssociationServiceInterface && $helper->hasAssociationsSupport(), 'native association service registered');
@@ -156,6 +163,37 @@ try {
 } finally { $asset->rules=$oldRules; $db->updateObject('#__assets',$asset,'id'); $app->loadIdentity($actor); }
 assocExpect(assocSave(assocData($otherEn) + ['associations'=>['it-IT'=>0]]), 'native zero selection clears whole old group');
 assocExpect(!$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($otherEn,$otherIt)")->loadResult(), 'no dangling old group after clear');
+// Two independent native model requests compete for the same unassociated target.
+$raceEn1 = $create('association-race-en1', 'en-GB');
+$raceEn2 = $create('association-race-en2', 'en-GB');
+$raceIt = $create('association-race-it', 'it-IT');
+$workers = [];
+foreach ([$raceEn1,$raceEn2] as $source) {
+    $pipes = [];
+    $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',json_encode(['source'=>$source,'target'=>$raceIt],JSON_THROW_ON_ERROR)],
+        [0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);
+    if (!is_resource($process)) { throw new \RuntimeException('Association worker failed to start'); }
+    $workers[] = [$process,$pipes];
+}
+foreach ($workers as [$process,$pipes]) {
+    stream_set_timeout($pipes[1],30);
+    $ready = trim((string) fgets($pipes[1]));
+    if ($ready !== 'ready') { throw new \RuntimeException('Association worker bootstrap: '.$ready.' '.stream_get_contents($pipes[2])); }
+}
+$db->transactionStart();
+$db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult();
+foreach ($workers as [$process,$pipes]) { fwrite($pipes[0],"go\n"); fclose($pipes[0]); }
+usleep(150000); $db->transactionCommit();
+$outcomes = [];
+foreach ($workers as [$process,$pipes]) {
+    $out = stream_get_contents($pipes[1]); $err = stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    if (proc_close($process) !== 0) { throw new \RuntimeException('Association worker failed: '.$err.$out); }
+    $outcomes[] = json_decode($out,true,16,JSON_THROW_ON_ERROR)['saved'];
+}
+assocExpect(count(array_filter($outcomes)) === 1, 'concurrent groups cannot both claim one target');
+$raceMembers = $db->setQuery("SELECT b.id FROM #__associations a JOIN #__associations b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=$raceIt AND a.context='com_jlms.item'")->loadColumn();
+assocExpect(count($raceMembers) === 2 && count(array_intersect([$raceEn1,$raceEn2],array_map('intval',$raceMembers))) === 1, 'race leaves exactly one coherent native translation pair');
 // Freeze and publish both courses through the actual native workflow.
 $versions = [];
 foreach ([$en,$it,$all] as $course) {
@@ -191,5 +229,5 @@ $app->loadIdentity($actor);
 $baseline = assocRows();
 assocExpect(!assocSave(assocData($en)+['associations'=>['it-IT'=>0]]) && assocRows() === $baseline, 'published translation group immutable in draft editor');
 file_put_contents($fixturePath,json_encode(['en'=>$en,'it'=>$it,'other_en'=>$otherEn,'other_it'=>$otherIt,'all'=>$all,
-    'version'=>$versions[$en],'rows'=>$baseline],JSON_THROW_ON_ERROR));
+    'version'=>$versions[$en],'catid'=>$catid,'rows'=>$baseline],JSON_THROW_ON_ERROR));
 echo json_encode(['native_association_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;

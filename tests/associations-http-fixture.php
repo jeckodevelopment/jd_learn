@@ -6,7 +6,17 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') { throw new \RuntimeException('Disposable Joomla site required'); }
 $pdo = new \PDO(getenv('JLMS_TEST_DSN'),getenv('JLMS_TEST_USER'),getenv('JLMS_TEST_PASSWORD'),[\PDO::ATTR_ERRMODE=>\PDO::ERRMODE_EXCEPTION]);
 $state = dirname($root).'/association-http-plugin.json';
-if (($argv[2] ?? '') === 'disable') {
+if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
+    if ($argv[2] === 'verify') {
+        $fixturePath=dirname($root).'/associations-fixture.json';
+        $f=json_decode(file_get_contents($fixturePath),true,16,JSON_THROW_ON_ERROR);
+        $q=$pdo->prepare("SELECT b.id FROM joomla_associations AS a JOIN joomla_associations AS b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=? AND b.id=? AND a.context='com_jlms.item'");
+        $q->execute([$f['other_en'],$f['other_it']]);
+        if (!$q->fetchColumn()) { throw new \RuntimeException('Native HTTP translation save did not persist'); }
+        $f['rows']=json_encode($pdo->query("SELECT * FROM joomla_associations WHERE context='com_jlms.item' ORDER BY id")->fetchAll(\PDO::FETCH_OBJ),JSON_THROW_ON_ERROR);
+        file_put_contents($fixturePath,json_encode($f,JSON_THROW_ON_ERROR));
+        exit;
+    }
     $saved = json_decode(file_get_contents($state),true,16,JSON_THROW_ON_ERROR);
     $query = $pdo->prepare("UPDATE joomla_extensions SET enabled=?,params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
     $query->execute([$saved['enabled'],$saved['params']]);

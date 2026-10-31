@@ -38,6 +38,17 @@ final class AssociationsHelper extends AssociationExtensionHelper
         return $table->load((int) $id) ? $table : null;
     }
 
+    public function allowEdit($typeName, $id)
+    {
+        $item = $this->getItem($typeName, $id);
+        $actor = new \Joomla\CMS\User\User((int) Factory::getApplication()->getIdentity()->id);
+        $actor->clearAccessRights();
+        $asset = 'com_jlms.course.' . (int) $id;
+        return $item && !$actor->guest && !$actor->block && (int) $item->state === 0 && $item->current_version_id === null
+            && (!$item->checked_out || (int) $item->checked_out === (int) $actor->id)
+            && ($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset)));
+    }
+
     public function getType($typeName = '')
     {
         $fields = $this->getFieldsTemplate();
