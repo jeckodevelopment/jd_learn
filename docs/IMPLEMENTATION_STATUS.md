@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento0.6.0-dev: player YouTube/Vimeo e progressi video.
+Aggiornamento: 31 ottobre 2026. Incremento0.7.0-dev: Cloudflare Stream API, protezione remota e rinnovo.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -12,7 +12,7 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Corsi | Scheda, prima versione in bozza, moduli e lezioni testo/video, revisioni; pubblicazione testo con workflow nativo | Workflow con transizioni avanzate, clonazione completa, altri tipi lezione, equivalenze/migrazioni |
 | Editor Joomla | Form e check-in/out nativi, livelli, lingua | Tags, fields/snapshot, Content History e associazioni multilingua |
 | Frontend | Catalogo paginato, filtro categorie/sottocategorie, scheda pubblica e programma con WAM/override e ID CSS | Albero categorie dedicato, ricerca/ordinamento avanzati, dashboard personale e accessibilità completa |
-| Plugin video | Quattro plugin installati; YouTube/Vimeo opt-in con SDK, consenso e durata verificata | Cloudflare/HTML5, metadati, firma/rinnovo, delivery privata e collaudo SDK reale |
+| Plugin video | Quattro plugin installati; YouTube/Vimeo e Cloudflare API opt-in con SDK, consenso e progressi | HTML5, firma locale, cache/diagnostica, collaudo provider reale e rinnovo senza interruzione |
 | Materiali e storage | Upload validato, storage locale privato, quarantena, protocollo ClamAV opzionale, collegamenti in bozza e download autorizzato/Range | Offload server/object storage, job cleanup, riuso asset, preview e ulteriori strumenti di gestione |
 | Iscrizioni e progressi | Avvio automatico, aula testo/video e completamento manuale/copertura con idempotenza/lock per iscrizione e accesso corrente | Approvazioni/manuale/import, dashboard, UI avanzata e gestione calendario |
 | Quiz | Schema e scoring dominio iniziale | Banca domande/revisioni, snapshot, start/save/submit/timer e feedback |
@@ -51,3 +51,7 @@ Materiali: vedere MATERIALS.md. Il gestore deve configurare storage fuori webroo
 ## Incremento0.6
 
 Protocollo, configurazione e limiti in [VIDEO.md](VIDEO.md). Test e risultati effettivi nella PR #6. Prove provider reali/browser, carico e patch corrente Joomla ancora da completare. Nessuna dichiarazione di completezza dell’intero LMS.
+
+## Incremento0.7
+
+Configurazione e perimetro effettivo in [CLOUDFLARE_STREAM.md](CLOUDFLARE_STREAM.md). Verifiche remote fuori dalle transazioni, accesso nuovamente controllato dopo la rete; nessuna chiamata Cloudflare sul salvataggio progresso. Test API/SDK con fixture, non collaudo live. Risultati effettivi nella PR #7. L’intero LMS rimane incompleto.

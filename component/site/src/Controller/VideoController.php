@@ -14,7 +14,7 @@ final class VideoController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['playback', 'save', 'close'], true)) {
+        if (!in_array(strtolower($task), ['playback', 'save', 'renew', 'close'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -42,6 +42,8 @@ final class VideoController extends BaseController
             if (!is_string($events)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
             $data = match ($operation) {
                 'playback' => $service->playback(...[...$args, $this->input->post->getString('consent', '') === '1']),
+                'renew' => $service->renew(...[...$args, $this->input->post->getString('session_id', ''),
+                    $this->integer('source_revision'), $this->input->post->getString('consent', '') === '1']),
                 'save' => $service->save(...[...$args, $this->input->post->getString('session_id', ''),
                     $this->integer('source_revision'), $this->integer('sequence'),
                     $this->integer('duration_ms'), $events]),
@@ -68,6 +70,7 @@ final class VideoController extends BaseController
     }
 
     public function playback(): void { $this->respond('playback'); }
+    public function renew(): void { $this->respond('renew'); }
     public function save(): void { $this->respond('save'); }
     public function close(): void { $this->respond('close'); }
 }

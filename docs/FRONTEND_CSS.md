@@ -36,3 +36,7 @@ Regioni: `jlms-course-materials` nella scheda (nessun metadato protetto); `jlms-
 ## Player video (0.6)
 
 L'override `classroom/default.php` distingue testo e video: solo il testo include `jlms-complete-form`. Il video usa `jlms-video-region`, `jlms-video-consent`, `jlms-video-load`, `jlms-video-stop`, `jlms-player-status` e `jlms-player`; classe `.jlms-player`. Preservare questi ID unici, pulsanti type=button, stato aria-live e le script options/WAM `com_jlms.video`. Il contenitore player ha aspect ratio16/9 soltanto quando non è vuoto. Gli stili possono cambiare senza inserire iframe remoti nel markup o esporre sorgenti. Vedere `VIDEO.md` per consenso/CMP e lifecycle.
+
+## Cloudflare Stream (0.7)
+
+Riutilizza le regioni del player0.6 senza introdurre ID duplicati o stili globali. `jlms-player-status` annuncia anche il rinnovo; dopo la ricreazione dell'iframe la posizione viene ripristinata e la riproduzione rimane in pausa. Gli override mantengono WAM, script options, controlli di consenso e stato aria-live. Non inserire token o credenziali nei layout: il descrittore temporaneo arriva da POST autorizzato.

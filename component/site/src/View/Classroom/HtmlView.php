@@ -25,11 +25,11 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         if ($this->item['lesson']->kind === 'video') {
             $labels = [];
-            foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration'] as $key) {
+            foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed'] as $key) {
                 $labels[$key] = \Joomla\CMS\Language\Text::_(implode('_', ['COM', 'JLMS', 'VIDEO', strtoupper($key)]));
             }
             $urls = [];
-            foreach (['playback', 'save', 'close'] as $task) {
+            foreach (['playback', 'save', 'renew', 'close'] as $task) {
                 $urls[$task] = \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=video.' . $task . '&format=json', false);
             }
             $this->getDocument()->addScriptOptions('com_jlms.video', ['enrollment' => $this->item['enrollment_id'],

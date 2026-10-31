@@ -71,3 +71,38 @@ for (const [name,adapter] of [['YT',youtube],['Vimeo',vimeo]]) {
  await assert.rejects(result,{name:'AbortError'});
 }
 console.log(JSON.stringify({provider_pending_abort_checks:4,status:'passed'}));
+const cf=await moduleFromFile(new URL('../plugins/jlmsvideo/cloudflarestream/media/js/player.js',import.meta.url));
+let cfHandlers=0, cfPaused=0;
+globalThis.Stream=()=>({currentTime:3,duration:10,playbackRate:1,paused:false,ended:false,
+ addEventListener(){cfHandlers++;},removeEventListener(){cfHandlers--;},pause(){cfPaused++;}});
+const cfPlayer=await cf.create(box,{options:{domain:'customer-ci.cloudflarestream.com',token:'a.b.c'}},()=>{},new AbortController().signal);
+assert.match(frames.at(-1).src,/^https:\/\/customer-ci\.cloudflarestream\.com\/a\.b\.c\/iframe\?/);
+assert.equal((await cfPlayer.sample()).position_ms,3000);cfPlayer.pause();assert.equal(cfPaused,1);
+cfPlayer.destroy();assert.equal(cfHandlers,0);
+await assert.rejects(cf.create(box,{options:{domain:'evil.example',token:'a.b.c'}},()=>{},new AbortController().signal));
+const cfAbort=new AbortController();
+globalThis.Stream=()=>({duration:0,addEventListener(){},removeEventListener(){}});
+const pendingCf=cf.create(box,{options:{domain:'customer-ci.cloudflarestream.com',token:'a.b.c'}},()=>{},cfAbort.signal);
+await new Promise(resolve=>setTimeout(resolve,0));cfAbort.abort();await assert.rejects(pendingCf,{name:'AbortError'});
+console.log(JSON.stringify({cloudflare_adapter_checks:6,status:'passed',environment:'Stream SDK double'}));
+// Renewal keeps the telemetry session and monotone event IDs while recreating only the remote iframe.
+const renewalConfig={...config,policy:'click',provider:'cloudflarestream',urls:{save:'/save',renew:'/renew',close:'/close'},labels:{...config.labels,renewed:'renewed'}};
+const renewal=new VideoLesson(renewalConfig,root);
+renewal.session={session_id:'same-session',source_revision:1,duration_ms:10000,options:{renew_after_seconds:40}};
+renewal.stopped=false;renewal.started=performance.now();renewal.aborter=new AbortController();
+let oldDestroyed=0, created=0, seekPosition;
+const sample=async()=>({position_ms:4000,duration_ms:10000,rate_milli:1000,playing:false});
+renewal.player={sample,pause(){},destroy:async()=>oldDestroyed++};
+renewal.adapter={create:async()=>{created++;return{sample,pause(){},destroy(){},seek:ms=>{seekPosition=ms;}};}};
+renewal.transport=async(url,options)=>{
+ const fields=Object.fromEntries(options.body);
+ if(url==='/renew'){
+  assert.equal(fields.session_id,'same-session');assert.equal(fields.consent,'1');
+  return{ok:true,json:async()=>({success:true,data:{provider:'cloudflarestream',source_revision:1,options:{token:'new.token.signature',renew_after_seconds:40}}})};
+ }
+ return{ok:true,json:async()=>({success:true,data:{next_sequence:renewal.sequence+1,course_percent:0}})};
+};
+await renewal.renew();assert.equal(oldDestroyed,1);assert.equal(created,1);assert.equal(seekPosition,4000);
+assert.equal(renewal.session.session_id,'same-session');assert.equal(renewal.session.options.token,'new.token.signature');
+assert.equal(elements['#jlms-player-status'].textContent,'renewed');await renewal.destroy();
+console.log(JSON.stringify({cloudflare_client_renew_checks:8,status:'passed'}));

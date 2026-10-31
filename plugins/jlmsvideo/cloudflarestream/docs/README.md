@@ -1,13 +1,5 @@
 # JD Learn — Cloudflare Stream
 
-Plugin `plg_jlmsvideo_cloudflarestream`, gruppo `jlmsvideo`, contratto1. Incluso nel pacchetto base.
+Plugin `plg_jlmsvideo_cloudflarestream`, gruppo `jlmsvideo`, contratto1, incluso nel pacchetto base. Versione0.7: riproduzione protetta opt-in con token tramite API, verifica di requireSignedURLs/origini/dominio, riferimenti a segreti ambiente e rinnovo autorizzato Joomla. Firma locale disabilitata; nessuna configurazione remota viene modificata automaticamente.
 
-## Stato0.1.0-dev
-
-Registrazione via evento Joomla e factory lazy, validazione locale e normalizzazione della sorgente. Nessuna chiamata remota o riproduzione attiva; capabilities=false e richieste playback/metadati chiuse esplicitamente. Il plugin viene installato disabilitato. I parametri del manifest sono predisposti per gli incrementi successivi e non attivano un player in questa versione.
-
-## Specifica completa
-
-La documentazione di configurazione, campi, input, capacità, sicurezza, consenso, limiti, errori, aggiornamento/disattivazione e test è nel documento condiviso installato con il componente: `administrator/components/com_jlms/docs/VIDEO_PROVIDERS_SPEC.md`. Consultare la sezione Cloudflare Stream e il dizionario dei parametri. La specifica è il contratto del prodotto da completare, non una dichiarazione che tutte le funzioni siano già presenti.
-
-Nessuna credenziale amministrativa nella lezione o nel browser. Non usare il plugin con studenti o segreti reali in questa versione di sviluppo. Disabilitare un plugin non deve cancellare le sorgenti delle lezioni.
+Guida operativa inclusa in `administrator/components/com_jlms/docs/CLOUDFLARE_STREAM.md`. La specifica completa del prodotto, compresi gli aspetti ancora da sviluppare, è in `VIDEO_PROVIDERS_SPEC.md` nello stesso percorso. Test automatizzati con risposte API/SDK simulate; collaudo con account reale e carico ancora da eseguire.
