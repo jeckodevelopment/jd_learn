@@ -205,9 +205,17 @@ final class LearningService
         });
     }
 
-    private function lesson(int $versionId, int $lessonId): object
+    private function lesson(int $versionId, int $lessonId, bool $includeBody = false): object
     {
-        $lesson = $this->row('lessons', $lessonId);
+        $columns = ['id', 'course_version_id', 'title', 'kind', 'required', 'completion_rule',
+            'publish_up', 'publish_down', 'release_after_days', 'source_revision'];
+        if ($includeBody) {
+            $columns[] = 'body';
+        }
+        $q = $this->db->createQuery()->select($this->db->quoteName($columns))->from('#__jlms_lessons')
+            ->where('id = :lesson')->where('course_version_id = :version')
+            ->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER);
+        $lesson = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         if ((int) $lesson->course_version_id !== $versionId) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
@@ -233,7 +241,7 @@ final class LearningService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $lessonId = $lessonId ?: (int) ($enrollment->last_lesson_id ?: $outline[0]->id);
-        $lesson = $this->lesson($versionId, $lessonId);
+        $lesson = $this->lesson($versionId, $lessonId, true);
         $percent = (int) $enrollment->required_total > 0
             ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
