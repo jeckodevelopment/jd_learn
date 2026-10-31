@@ -41,7 +41,7 @@ def request(http,path,fields=None,expected=200,headers=None,method=None,data=Non
 
 log=open(root.parent/'html5-http.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
-nginx=None
+nginx=None;scanner=None
 admin=client();student=client();guest=client()
 source=root.parent/'html5-source.mp4';replacement=root.parent/'html5-replacement.mp4';unsupported=root.parent/'html5-unsupported.mp4'
 for path,color,codec in [(source,'black','libx264'),(replacement,'blue','libx264'),(unsupported,'red','mpeg4')]:
@@ -81,6 +81,23 @@ try:
  upload('lesson-v2.mp4',replacement.read_bytes());current=state();new_key=current['asset']['storage_key'];movie=replacement.read_bytes()
  expect(new_key!=old_key and (Path(fixture['video_root'])/old_key).read_bytes()==source.read_bytes(),'replacement retains the original immutable blob')
  expect(current['lesson']['source_revision']>first['lesson']['source_revision'],'replacement increments the source revision')
+ # Mandatory unavailable scanning must block publication; a later clean scan can promote the same immutable file.
+ command('configure',json.dumps({'material_scan_required':1,'material_clamd_socket':str(root.parent/'missing-html5-clamd.sock')}))
+ _,scan_page,_=admin_page();scan_form=next(f for f in Page(scan_page.decode()).forms if f['fields'].get('task')=='videofile.scan')
+ request(admin,urljoin(base,scan_form['action']),fields=scan_form['fields'])
+ expect(state()['asset']['status']=='quarantine','required scanner unavailability quarantines local video')
+ failed_publish=subprocess.run(['php',str(script),str(root),'publish'],capture_output=True,text=True)
+ expect(failed_publish.returncode!=0 and state()['version']['status']=='draft','quarantined video cannot publish')
+ socket=root.parent/'html5-clamd.sock'
+ scanner=subprocess.Popen(['python3',str(Path(__file__).with_name('clamd-fixture.py')),str(socket)],stdout=log,stderr=log)
+ for _ in range(40):
+  if socket.exists():break
+  if scanner.poll() is not None:raise RuntimeError('Scanner fixture exited')
+  time.sleep(.1)
+ command('configure',json.dumps({'material_scan_required':1,'material_clamd_socket':str(socket)}))
+ _,scan_page,_=admin_page();scan_form=next(f for f in Page(scan_page.decode()).forms if f['fields'].get('task')=='videofile.scan')
+ request(admin,urljoin(base,scan_form['action']),fields=scan_form['fields'])
+ expect(state()['asset']['status']=='ready' and json.loads(state()['asset']['scan_json'])['result']=='clean','clean protocol scan promotes the private video')
  command('publish');published=state();stamp=published['version']['structure_hash'];version_revision=published['version']['revision']
  # Published replacements must not be accepted even with a real upload and a valid native token.
  _,admin_html,_=admin_page();expect('id="jlms-video-upload-' not in admin_html.decode(),'published lesson exposes no upload form')
@@ -141,7 +158,7 @@ try:
 except Exception:
  log.flush();log.seek(0);print(log.read()[-8000:],file=sys.stderr);raise
 finally:
- for process in [nginx,server]:
+ for process in [nginx,server,scanner]:
   if process is None:continue
   process.terminate()
   try:process.wait(timeout=5)

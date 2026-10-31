@@ -20,7 +20,7 @@ if (($argv[2] ?? '') !== 'retained') {
     $params=$fixtureDb->query("SELECT params FROM joomla_extensions WHERE type='component' AND element='com_jlms'")->fetchColumn();
     $params=json_decode($params?:'{}',true,32,JSON_THROW_ON_ERROR);
     $params+=['video_storage_root'=>$videoRoot,'video_ffprobe_path'=>'/usr/bin/ffprobe','video_delivery_mode'=>'php_bounded','video_max_mib'=>250];
-    $params['material_scan_required']=0;$params['video_external_policy']='blocked';
+    if (($argv[2]??'')==='') { $params['material_scan_required']=0; } $params['video_external_policy']='blocked';
     $statement=$fixtureDb->prepare("UPDATE joomla_extensions SET params=? WHERE type='component' AND element='com_jlms'");$statement->execute([json_encode($params,JSON_THROW_ON_ERROR)]);
     $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element='html5'");
     unset($fixtureDb);
@@ -86,6 +86,12 @@ if($mode!==''){
   $publication=$component->getPublicationService();
   $publication->transition($app->getIdentity(),$course,$version,(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult(),
    (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult(),(int)$publication->transitions($app->getIdentity(),$course)[0]->id);
+ }elseif($mode==='configure'){
+  $changes=json_decode($argv[3]??'{}',true,16,JSON_THROW_ON_ERROR);
+  if(array_diff(array_keys($changes),['material_scan_required','material_clamd_socket']))throw new \RuntimeException('Unapproved fixture option');
+  $params=json_decode($db->setQuery("SELECT params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult(),true,32,JSON_THROW_ON_ERROR);
+  $params=array_replace($params,$changes);
+  $ext=(object)['extension_id'=>(int)$db->setQuery("SELECT extension_id FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult(),'params'=>json_encode($params,JSON_THROW_ON_ERROR)];$db->updateObject('#__extensions',$ext,'extension_id');
  }elseif($mode==='delivery'){
   if(!in_array($argv[3]??'', ['disabled','php_bounded','x_accel'],true))throw new \RuntimeException('Bad fixture mode');
   $params=json_decode($db->setQuery("SELECT params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult(),true,32,JSON_THROW_ON_ERROR);

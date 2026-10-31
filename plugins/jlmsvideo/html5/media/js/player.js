@@ -6,8 +6,9 @@ export async function create(container, descriptor, emit, signal) {
   const video = document.createElement('video'); video.controls = true; video.autoplay = false;
   video.preload = 'metadata'; video.playsInline = true; video.setAttribute('aria-label', container.dataset.title);
   video.setAttribute('controlsList', 'nodownload');
-  const handlers = new Map(); let rejectReady, timer;
+  const handlers = new Map(); let rejectReady, timer, destroyed = false;
   const destroy = () => {
+    if (destroyed) return; destroyed = true;
     clearTimeout(timer); signal?.removeEventListener('abort', abort);
     for (const [event, handler] of handlers) video.removeEventListener(event, handler);
     video.pause(); video.removeAttribute('src'); video.load(); video.remove();
@@ -15,7 +16,10 @@ export async function create(container, descriptor, emit, signal) {
   const abort = () => { destroy(); rejectReady?.(new DOMException('Playback cancelled', 'AbortError')); };
   signal?.addEventListener('abort', abort, {once:true});
   for (const event of ['play','pause','ended','seeking','seeked','waiting','stalled','ratechange','error']) {
-    const handler = () => emit(['waiting','stalled'].includes(event) ? 'buffering' : event);
+    const handler = () => {
+      emit(['waiting','stalled'].includes(event) ? 'buffering' : event);
+      if (event === 'error') { destroy(); rejectReady?.(new Error('media unavailable')); }
+    };
     handlers.set(event,handler); video.addEventListener(event,handler);
   }
   const ready = new Promise((resolve,reject) => {

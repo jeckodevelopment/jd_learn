@@ -128,7 +128,7 @@ final class CurriculumService
     {
         $columns = $table === 'modules'
             ? ['id', 'course_version_id', 'title', 'ordering', 'revision']
-            : ['id', 'course_version_id', 'module_id', 'title', 'kind', 'required', 'ordering', 'revision'];
+            : ['id', 'course_version_id', 'module_id', 'title', 'kind', 'provider_key', 'media_asset_id', 'required', 'ordering', 'revision'];
         $q = $this->db->createQuery()->select($this->db->quoteName($columns))->from($this->db->quoteName('#__jlms_' . $table))
             ->where($this->db->quoteName($field) . ' = :owner')->bind(':owner', $id, ParameterType::INTEGER)
             ->order($this->db->quoteName('ordering') . ', ' . $this->db->quoteName('id'));

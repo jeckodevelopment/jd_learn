@@ -20,6 +20,10 @@ final class VideofileController extends BaseController
     private function perform(bool $scan): void
     {
         if (strtoupper($this->input->getMethod()) !== 'POST') { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405); }
+        $postLimit = trim((string) ini_get('post_max_size'));
+        $factor = match (strtolower(substr($postLimit, -1))) { 'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1 };
+        $postBytes = (int) ((float) $postLimit * $factor);
+        if ($postBytes > 0 && $this->input->server->getInt('CONTENT_LENGTH', 0) > $postBytes) { throw new \RuntimeException(Text::_('COM_JLMS_FILE_SIZE'), 413); }
         if (!$this->checkToken('post', false)) { throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403); }
         try {
             $data = $this->input->post->get('jform', [], 'array');
