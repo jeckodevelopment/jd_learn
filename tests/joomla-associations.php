@@ -73,7 +73,10 @@ function assocData(int $id): array {
 }
 function assocSave(array $data): bool {
     global $factory;
-    return $factory->createModel('Course', 'Administrator', ['ignore_request' => true])->save($data);
+    $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
+    $saved = $model->save($data);
+    if (!$saved) { fwrite(STDERR, 'Association save rejected: ' . $model->getError() . PHP_EOL); }
+    return $saved;
 }
 function assocRows(): string {
     global $db;
@@ -104,6 +107,8 @@ if (!$language->load(['lang_code' => 'it-IT'])) {
     $language->bind(['lang_code' => 'it-IT', 'title' => 'Italiano', 'title_native' => 'Italiano', 'sef' => 'it', 'image' => 'it_it', 'description' => '', 'published' => 1, 'access' => 1, 'ordering' => 2]);
     if (!$language->check() || !$language->store()) { throw new \RuntimeException('Content language fixture failed'); }
 }
+$language->published=1; $language->access=1;
+if (!$language->store()) { throw new \RuntimeException('Content language publication failed'); }
 $catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $create = static function (string $name, string $tag) use ($catid, $factory): int {
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);

@@ -28,7 +28,7 @@ final class CourseassociationField extends ListField
         $query->bind(':selected', $selected, \Joomla\Database\ParameterType::INTEGER);
         $items = $db->setQuery($query, 0, 2001)->loadObjectList();
         if (count($items) > 2000) {
-            throw new \RuntimeException('COM_JLMS_ASSOCIATION_SELECTION_LIMIT');
+            throw new \RuntimeException(\Joomla\CMS\Language\Text::_('COM_JLMS_ASSOCIATION_SELECTION_LIMIT'));
         }
         $options = [HTMLHelper::_('select.option', 0, 'JNONE')];
         foreach ($items as $item) {

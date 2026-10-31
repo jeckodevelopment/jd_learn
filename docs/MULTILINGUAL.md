@@ -29,6 +29,6 @@ Le viste `classroom`, `quiz` e gli altri contesti non espongono associazioni a i
 
 ## Verifiche e perimetro residuo
 
-La CI predispone corsi e lingue con le API native e installa il pacchetto italiano ufficiale 6.0.0v1 (pagina di provenienza: https://downloads.joomla.org/cms/joomla6-italian/6-0-0-1). Verifica associazioni tramite core, form, input manomessi, account bloccato, ACL target, checkout, gruppi separati, rimozione, pubblicazione, visibilità corrente, modulo lingua, gestore Associazioni, navigazione SEF attiva/disattiva e conservazione al reinstall. Gli esiti effettivi sono quelli delle Actions.
+La CI predispone corsi e lingue con le API native e installa il pacchetto italiano ufficiale 6.0.0v1 (pagina di provenienza: https://downloads.joomla.org/cms/joomla6-italian/6-0-0-1). Verifica associazioni tramite core, form, input manomessi, account bloccato, ACL target, checkout, gruppi separati, concorrenza fra richieste native, rimozione, pubblicazione, visibilità corrente, modulo lingua, gestore Associazioni, navigazione SEF attiva/disattiva e conservazione al reinstall. Gli esiti effettivi sono quelli delle Actions.
 
 Restano da completare associazioni delle categorie nelle viste dedicate, editing dei gruppi pubblicati, selettore ricercabile, traduzioni di altri oggetti, routing completo con alias/breadcrumbs, override lingua end-to-end e collaudo browser/accessibilità. CORE-07 e CORE-13 rimangono parziali. Nessuna equivalenza didattica automatica, benchmark di carico o certificazione della patch Joomla corrente.
