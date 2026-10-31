@@ -75,7 +75,7 @@ function assocSave(array $data): bool {
     global $factory;
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
     $saved = $model->save($data);
-    if (!$saved) { fwrite(STDERR, 'Association save rejected: ' . $model->getError() . PHP_EOL); }
+    if (!$saved) { fwrite(STDERR, 'Association save rejected: ' . json_encode($model->getErrors(),JSON_THROW_ON_ERROR) . PHP_EOL); }
     return $saved;
 }
 function assocRows(): string {
