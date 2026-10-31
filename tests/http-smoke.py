@@ -2,6 +2,7 @@
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.request import build_opener,HTTPCookieProcessor
+from urllib.error import HTTPError
 from urllib.parse import urlencode,urljoin,urlparse,parse_qs
 from http.cookiejar import CookieJar
 import subprocess,sys,time,json,os,re
@@ -29,7 +30,12 @@ log=open(root.parent/'http-smoke.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
 http=build_opener(HTTPCookieProcessor(CookieJar()))
 def get(path):
- with http.open(urljoin(base,path),timeout=15) as r:return r.geturl(),r.read().decode('utf-8')
+ try:
+  with http.open(urljoin(base,path),timeout=15) as r:return r.geturl(),r.read().decode('utf-8')
+ except HTTPError as error:
+  detail=re.sub(r'<[^>]+>',' ',error.read().decode('utf-8',errors='replace'))
+  print('Disposable HTTP fixture error: '+re.sub(r'\s+',' ',detail)[-10000:],file=sys.stderr)
+  raise
 try:
  for i in range(40):
   try:url,html=get('/index.php?option=com_jlms&view=courses');break

@@ -126,7 +126,10 @@ final class CurriculumService
 
     private function listRows(string $table, string $field, int $id, int $limit = 1001): array
     {
-        $q = $this->db->createQuery()->select('*')->from($this->db->quoteName('#__jlms_' . $table))
+        $columns = $table === 'modules'
+            ? ['id', 'course_version_id', 'title', 'ordering', 'revision']
+            : ['id', 'course_version_id', 'module_id', 'title', 'kind', 'required', 'ordering', 'revision'];
+        $q = $this->db->createQuery()->select($this->db->quoteName($columns))->from($this->db->quoteName('#__jlms_' . $table))
             ->where($this->db->quoteName($field) . ' = :owner')->bind(':owner', $id, ParameterType::INTEGER)
             ->order($this->db->quoteName('ordering') . ', ' . $this->db->quoteName('id'));
         $rows = $this->db->setQuery($q, 0, $limit)->loadObjectList();
@@ -165,6 +168,18 @@ final class CurriculumService
         return ['course' => $course, 'versions' => $versions, 'version' => $version,
             'modules' => $version ? $this->listRows('modules', 'course_version_id', $versionId) : [],
             'lessons' => $version ? $this->listRows('lessons', 'course_version_id', $versionId, 5001) : []];
+    }
+
+    public function lessonForEdit(User $actor, int $courseId, int $versionId, int $lessonId): object
+    {
+        $course = $this->row('courses', $courseId);
+        $this->authorise($actor, $course);
+        $version = $this->row('course_versions', $versionId);
+        $lesson = $this->row('lessons', $lessonId);
+        if ((int) $version->course_id !== $courseId || (int) $lesson->course_version_id !== $versionId) {
+            throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+        }
+        return $lesson;
     }
 
     public function createDraft(User $actor, int $courseId, int $expectedRevision): int
@@ -224,6 +239,9 @@ final class CurriculumService
                 $this->update('modules', $module, ['title' => $title], $actor);
             } else {
                 $modules = $this->listRows('modules', 'course_version_id', $versionId);
+                if (count($modules) >= 1000) {
+                    throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+                }
                 $order = $modules ? max(array_map(static fn ($m): int => (int) $m->ordering, $modules)) + 1 : 0;
                 $id = $this->insert('modules', ['course_version_id' => $versionId, 'logical_key' => self::uuid(),
                     'title' => $title, 'ordering' => $order, 'params_json' => '{}'], $actor);
@@ -302,6 +320,11 @@ final class CurriculumService
                 $fields['source_revision'] = (int) $lesson->source_revision + (int) $changedSource;
                 $this->update('lessons', $lesson, $fields, $actor);
             } else {
+                $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_lessons'))
+                    ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
+                if ((int) $this->db->setQuery($q)->loadResult() >= 5000) {
+                    throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+                }
                 $lessons = $this->listRows('lessons', 'module_id', $moduleId, 5001);
                 $order = $lessons ? max(array_map(static fn ($l): int => (int) $l->ordering, $lessons)) + 1 : 0;
                 $id = $this->insert('lessons', $fields + ['course_version_id' => $versionId, 'logical_key' => self::uuid(),

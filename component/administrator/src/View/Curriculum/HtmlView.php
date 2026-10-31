@@ -52,6 +52,9 @@ final class HtmlView extends BaseHtmlView
             $this->lessonForm->setField($field);
             foreach ($this->outline['lessons'] as $lesson) {
                 if ((int) $lesson->id === $editLesson) {
+                    $lesson = $app->bootComponent('com_jlms')->getCurriculumService()->lessonForEdit(
+                        $app->getIdentity(), (int) $course->id, (int) $version->id, $editLesson,
+                    );
                     $source = $lesson->source_json ? json_decode($lesson->source_json, true, 32, JSON_THROW_ON_ERROR) : [];
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
