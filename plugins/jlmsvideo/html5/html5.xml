@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="jlmsvideo" method="upgrade">
+ <name>PLG_JLMSVIDEO_HTML5</name><author>Jecko Development</author><version>0.1.0</version>
+ <description>PLG_JLMSVIDEO_FOUNDATION_DESCRIPTION</description><namespace path="src">Jlms\Plugin\Jlmsvideo\Html5</namespace>
+ <files><folder plugin="html5">services</folder><folder>src</folder><folder>language</folder></files>
+ <config><fields name="params"><fieldset name="basic" label="JGLOBAL_FIELDSET_BASIC"><field name="language_mode" type="list" label="PLG_JLMSVIDEO_LANGUAGE_MODE" default="user"><option value="user">JUSER</option><option value="site">JSITE</option></field>
+<field name="autoplay" type="radio" layout="joomla.form.field.radio.switcher" label="PLG_JLMSVIDEO_AUTOPLAY" default="0"><option value="0">JNO</option><option value="1">JYES</option></field>
+<field name="metadata_cache_ttl" type="number" label="PLG_JLMSVIDEO_METADATA_TTL" default="3600" min="0" max="86400" filter="integer" />
+<field name="remote_timeout" type="number" label="PLG_JLMSVIDEO_TIMEOUT" default="5" min="1" max="15" filter="integer" /><field name="storage_profile_id" type="text" label="PLG_JLMSVIDEO_STORAGE_PROFILE" filter="string" />
+<field name="delivery_mode" type="list" label="PLG_JLMSVIDEO_DELIVERY_MODE" default="webserver"><option value="webserver">Web server</option><option value="storage">Storage</option><option value="php_bounded">PHP</option></field>
+<field name="video_upload_max_bytes" type="number" label="PLG_JLMSVIDEO_VIDEO_UPLOAD_MAX" min="1" filter="integer" />
+<field name="preload" type="list" label="PLG_JLMSVIDEO_PRELOAD" default="metadata"><option value="none">JNONE</option><option value="metadata">PLG_JLMSVIDEO_METADATA</option></field></fieldset></fields></config>
+</extension>

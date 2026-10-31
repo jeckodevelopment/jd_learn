@@ -1,0 +1,1 @@
+-- Baseline 0.1.0: schema created by initial installer. No duplicate ALTER statements.

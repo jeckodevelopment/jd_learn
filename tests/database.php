@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+
+/** Disposable CI database only. Never run against a live site. */
+$dsn = getenv('JLMS_TEST_DSN');
+if (!$dsn || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
+    throw new \RuntimeException('Explicit disposable database opt-in required.');
+}
+$db = new \PDO($dsn, getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+$prefix = 'ci_';
+$sql = file_get_contents(dirname(__DIR__) . '/component/administrator/sql/install.mysql.utf8mb4.sql');
+$sql = str_replace('#__', $prefix, preg_replace('/--[^\n]*/', '', $sql));
+foreach (explode(';', $sql) as $query) {
+    if (trim($query) !== '') {
+        $db->exec($query);
+    }
+}
+$tables = $db->query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE 'ci_jlms_%'")->fetchColumn();
+if ((int) $tables !== 37) {
+    throw new \RuntimeException('Schema table count mismatch');
+}
+$constraints = $db->query("SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_TYPE='FOREIGN KEY'")->fetchColumn();
+if ((int) $constraints !== 53) {
+    throw new \RuntimeException('Schema foreign key count mismatch');
+}
+$db->beginTransaction();
+$now = gmdate('Y-m-d H:i:s');
+function insertRow(\PDO $db, string $table, array $data): int
+{
+    $columns = implode(',', array_map(static fn (string $name): string => '`' . $name . '`', array_keys($data)));
+    $q = $db->prepare('INSERT INTO `ci_jlms_' . $table . '` (' . $columns . ') VALUES (' . implode(',', array_fill(0, count($data), '?')) . ')');
+    $q->execute(array_values($data));
+    return (int) $db->lastInsertId();
+}
+function constraintRejects(callable $work): void
+{
+    try {
+        $work();
+    } catch (\PDOException $expected) {
+        if ($expected->getCode() === '23000') {
+            return;
+        }
+        throw $expected;
+    }
+    throw new \RuntimeException('Expected database integrity violation');
+}
+$audit = ['created_at' => $now, 'modified_at' => $now];
+$course = insertRow($db, 'courses', $audit + ['catid'=>1,'alias'=>'test','title'=>'Test','catalog_access'=>1,'content_access'=>2,'params_json'=>'{}']);
+$version = insertRow($db, 'course_versions', $audit + ['course_id'=>$course,'version_no'=>1,'title_snapshot'=>'Test','rules_json'=>'{}','presentation_json'=>'{}','fields_snapshot_json'=>'{}']);
+$other = insertRow($db, 'course_versions', $audit + ['course_id'=>$course,'version_no'=>2,'title_snapshot'=>'Other','rules_json'=>'{}','presentation_json'=>'{}','fields_snapshot_json'=>'{}']);
+$module = insertRow($db, 'modules', $audit + ['course_version_id'=>$version,'logical_key'=>'11111111-1111-4111-8111-111111111111','title'=>'Module','ordering'=>0,'params_json'=>'{}']);
+$lessonData = $audit + ['course_version_id'=>$version,'module_id'=>$module,'logical_key'=>'22222222-2222-4222-8222-222222222222','title'=>'Lesson','alias'=>'lesson','kind'=>'text','ordering'=>0,'completion_rule'=>'manual','params_json'=>'{}','fields_snapshot_json'=>'{}'];
+$lesson = insertRow($db, 'lessons', $lessonData);
+$wrong = $lessonData;$wrong['course_version_id']=$other;
+constraintRejects(fn () => insertRow($db, 'lessons', $wrong));
+$edition = insertRow($db, 'editions', $audit + ['course_id'=>$course,'course_version_id'=>$version,'title'=>'Default','code'=>'default-v1']);
+$subject='33333333-3333-4333-8333-333333333333';
+insertRow($db, 'subjects', ['subject_key'=>$subject,'user_id'=>42,'created_at'=>$now]);
+$enrolData=$audit+['user_id'=>42,'subject_key'=>$subject,'course_id'=>$course,'course_version_id'=>$version,'edition_id'=>$edition,'origin'=>'auto','required_total'=>1];
+$enrollment=insertRow($db,'enrollments',$enrolData);
+constraintRejects(fn () => insertRow($db,'enrollments',$enrolData));
+$wrong=$enrolData;$wrong['course_version_id']=$other;
+constraintRejects(fn () => insertRow($db,'enrollments',$wrong));
+$db->rollBack();
+echo json_encode(['database'=>$db->getAttribute(\PDO::ATTR_SERVER_VERSION),'tables'=>(int)$tables,'foreign_keys'=>(int)$constraints,'integrity_cases'=>3,'status'=>'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

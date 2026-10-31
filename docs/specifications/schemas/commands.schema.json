@@ -1,0 +1,630 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jlms:contracts:1",
+  "title": "JLMS critical command and playback contracts v1",
+  "$comment": "Validate against the selected $defs schema by task. This root is a definitions container; it does not select or authorise an endpoint.",
+  "type": "object",
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]{0,19}$",
+      "maxLength": 20
+    },
+    "Uuid": {
+      "type": "string",
+      "format": "uuid",
+      "maxLength": 36
+    },
+    "Revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "ProgressEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        },
+        "type": {
+          "enum": [
+            "play",
+            "pause",
+            "position",
+            "seeking",
+            "seeked",
+            "ended"
+          ]
+        },
+        "position_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 28800000
+        },
+        "monotonic_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "rate": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 2
+        }
+      },
+      "required": [
+        "event_id",
+        "type",
+        "position_ms",
+        "monotonic_ms",
+        "rate"
+      ]
+    },
+    "Answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "attempt_question_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "selected_option_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+          },
+          "minItems": 0,
+          "maxItems": 20,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "attempt_question_id",
+        "selected_option_ids"
+      ]
+    },
+    "enrollment.start": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "course_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "course_id",
+        "idempotency_key"
+      ]
+    },
+    "enrollment.request": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "course_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "course_id",
+        "idempotency_key"
+      ]
+    },
+    "video.playback": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lesson_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "enrollment_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        }
+      },
+      "required": [
+        "lesson_id",
+        "enrollment_id"
+      ]
+    },
+    "progress.save": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enrollment_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "lesson_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "source_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProgressEvent"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "enrollment_id",
+        "lesson_id",
+        "source_revision",
+        "session_id",
+        "sequence",
+        "events"
+      ]
+    },
+    "lesson.complete": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enrollment_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "lesson_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "enrollment_id",
+        "lesson_id",
+        "idempotency_key"
+      ]
+    },
+    "quiz.start": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "quiz_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "enrollment_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "quiz_id",
+        "enrollment_id",
+        "idempotency_key"
+      ]
+    },
+    "quiz.save": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "answers_delta": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Answer"
+          },
+          "minItems": 1,
+          "maxItems": 200
+        },
+        "mutation_id": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "attempt_id",
+        "expected_revision",
+        "answers_delta",
+        "mutation_id"
+      ]
+    },
+    "quiz.submit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "attempt_id",
+        "expected_revision",
+        "idempotency_key"
+      ]
+    },
+    "report.export": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "report_type": {
+          "enum": [
+            "course_progress",
+            "quiz_results",
+            "certificates"
+          ]
+        },
+        "filters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "course_id": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,19}$",
+              "maxLength": 20
+            },
+            "version_id": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,19}$",
+              "maxLength": 20
+            },
+            "status": {
+              "enum": [
+                "active",
+                "completed",
+                "suspended",
+                "withdrawn",
+                "migrated"
+              ]
+            },
+            "from": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "to": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "course_id"
+          ]
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "user_id",
+              "student_name",
+              "email",
+              "course_id",
+              "version_id",
+              "edition",
+              "status",
+              "progress_percent",
+              "score_percent",
+              "completed_at",
+              "certificate_serial"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "report_type",
+        "filters",
+        "columns",
+        "idempotency_key"
+      ]
+    },
+    "certificate.revoke": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "certificate_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 500
+        },
+        "notify": {
+          "type": "boolean"
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "certificate_id",
+        "reason",
+        "notify",
+        "expected_revision",
+        "idempotency_key"
+      ]
+    },
+    "attachment.save": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "scope_type": {
+          "enum": [
+            "course_version",
+            "lesson"
+          ]
+        },
+        "owner_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "preview": {
+              "type": "boolean"
+            },
+            "state": {
+              "enum": [
+                0,
+                1,
+                -2
+              ]
+            },
+            "ordering": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            }
+          },
+          "required": [
+            "title"
+          ]
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "attachment_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "asset_id",
+        "scope_type",
+        "owner_id",
+        "metadata"
+      ],
+      "oneOf": [
+        {
+          "required": [
+            "attachment_id",
+            "expected_revision"
+          ]
+        },
+        {
+          "required": [
+            "idempotency_key"
+          ],
+          "not": {
+            "required": [
+              "attachment_id"
+            ]
+          }
+        }
+      ]
+    },
+    "jobs.get": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "maxLength": 20
+        }
+      },
+      "required": [
+        "job_id"
+      ]
+    },
+    "PlaybackDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "maxLength": 64
+        },
+        "source_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "player_asset": {
+          "type": "string",
+          "pattern": "^plg_jlmsvideo_[a-z0-9_]+\\.[a-z0-9_.-]+$",
+          "maxLength": 128
+        },
+        "player_options": {
+          "type": "object",
+          "maxProperties": 20,
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "position": {
+              "type": "boolean"
+            },
+            "duration": {
+              "type": "boolean"
+            },
+            "seek": {
+              "type": "boolean"
+            },
+            "speed": {
+              "type": "boolean"
+            },
+            "captions": {
+              "type": "boolean"
+            },
+            "transcript": {
+              "type": "boolean"
+            },
+            "expiringPlayback": {
+              "type": "boolean"
+            },
+            "download": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "position",
+            "duration",
+            "seek",
+            "speed",
+            "captions",
+            "transcript",
+            "expiringPlayback",
+            "download"
+          ]
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "playback_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        }
+      },
+      "required": [
+        "provider",
+        "source_revision",
+        "player_asset",
+        "player_options",
+        "capabilities",
+        "expires_at"
+      ]
+    }
+  }
+}

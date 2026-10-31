@@ -1,0 +1,2 @@
+:root{--jlms-color-primary:#23636c;--jlms-color-text:#22343c;--jlms-color-surface:#fff;--jlms-space-unit:.5rem;--jlms-radius:.5rem;--jlms-content-width:75rem}
+#jlms-courses{color:var(--jlms-color-text);max-width:var(--jlms-content-width);margin-inline:auto}.jlms-course-grid{display:grid;gap:calc(2 * var(--jlms-space-unit));grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}

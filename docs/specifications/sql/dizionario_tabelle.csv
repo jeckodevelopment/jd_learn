@@ -1,0 +1,422 @@
+Tabella,Colonna,Tipo e default,Nota
+#__jlms_courses,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_courses,asset_id,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_courses,catid,INT UNSIGNED NOT NULL,
+#__jlms_courses,alias,VARCHAR(180) NOT NULL,
+#__jlms_courses,title,VARCHAR(255) NOT NULL,
+#__jlms_courses,language,VARCHAR(7) NOT NULL DEFAULT '*',
+#__jlms_courses,catalog_access,INT UNSIGNED NOT NULL,
+#__jlms_courses,content_access,INT UNSIGNED NOT NULL,
+#__jlms_courses,state,SMALLINT NOT NULL DEFAULT 0,
+#__jlms_courses,enrollment_mode,VARCHAR(16) NOT NULL DEFAULT 'auto',
+#__jlms_courses,current_version_id,BIGINT UNSIGNED NULL,
+#__jlms_courses,summary,MEDIUMTEXT NULL,
+#__jlms_courses,image,VARCHAR(1024) NULL,
+#__jlms_courses,metadata_json,LONGTEXT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_courses,params_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_courses,publish_up,DATETIME(6) NULL,UTC
+#__jlms_courses,publish_down,DATETIME(6) NULL,UTC
+#__jlms_courses,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_courses,created_by,INT UNSIGNED NULL,
+#__jlms_courses,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_courses,modified_by,INT UNSIGNED NULL,
+#__jlms_courses,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_courses,checked_out,INT UNSIGNED NULL,
+#__jlms_courses,checked_out_time,DATETIME NULL,UTC
+#__jlms_course_versions,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_course_versions,course_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_course_versions,version_no,INT UNSIGNED NOT NULL,
+#__jlms_course_versions,status,VARCHAR(16) NOT NULL DEFAULT 'draft',
+#__jlms_course_versions,title_snapshot,VARCHAR(255) NOT NULL,
+#__jlms_course_versions,rules_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_course_versions,presentation_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_course_versions,fields_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_course_versions,structure_hash,CHAR(64) NULL,
+#__jlms_course_versions,published_at,DATETIME(6) NULL,UTC
+#__jlms_course_versions,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_course_versions,created_by,INT UNSIGNED NULL,
+#__jlms_course_versions,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_course_versions,modified_by,INT UNSIGNED NULL,
+#__jlms_course_versions,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_course_versions,checked_out,INT UNSIGNED NULL,
+#__jlms_course_versions,checked_out_time,DATETIME NULL,UTC
+#__jlms_modules,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_modules,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_modules,logical_key,CHAR(36) NOT NULL,
+#__jlms_modules,title,VARCHAR(255) NOT NULL,
+#__jlms_modules,ordering,INT UNSIGNED NOT NULL,
+#__jlms_modules,params_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_modules,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_modules,created_by,INT UNSIGNED NULL,
+#__jlms_modules,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_modules,modified_by,INT UNSIGNED NULL,
+#__jlms_modules,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_lessons,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_lessons,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_lessons,module_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_lessons,logical_key,CHAR(36) NOT NULL,
+#__jlms_lessons,title,VARCHAR(255) NOT NULL,
+#__jlms_lessons,alias,VARCHAR(180) NOT NULL,
+#__jlms_lessons,kind,VARCHAR(16) NOT NULL,
+#__jlms_lessons,body,MEDIUMTEXT NULL,
+#__jlms_lessons,ordering,INT UNSIGNED NOT NULL,
+#__jlms_lessons,required,TINYINT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_lessons,preview,TINYINT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_lessons,completion_rule,VARCHAR(24) NOT NULL,
+#__jlms_lessons,duration_ms,BIGINT UNSIGNED NULL,
+#__jlms_lessons,provider_key,VARCHAR(64) NULL,
+#__jlms_lessons,source_revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_lessons,source_json,LONGTEXT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_lessons,media_asset_id,BIGINT UNSIGNED NULL,
+#__jlms_lessons,params_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_lessons,fields_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_lessons,publish_up,DATETIME(6) NULL,UTC
+#__jlms_lessons,publish_down,DATETIME(6) NULL,UTC
+#__jlms_lessons,release_after_days,INT UNSIGNED NULL,
+#__jlms_lessons,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_lessons,created_by,INT UNSIGNED NULL,
+#__jlms_lessons,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_lessons,modified_by,INT UNSIGNED NULL,
+#__jlms_lessons,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_lessons,checked_out,INT UNSIGNED NULL,
+#__jlms_lessons,checked_out_time,DATETIME NULL,UTC
+#__jlms_prerequisites,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_prerequisites,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_prerequisites,lesson_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_prerequisites,required_lesson_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_editions,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_editions,course_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_editions,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_editions,title,VARCHAR(255) NOT NULL,
+#__jlms_editions,code,VARCHAR(64) NOT NULL,
+#__jlms_editions,starts_at,DATETIME(6) NULL,UTC
+#__jlms_editions,ends_at,DATETIME(6) NULL,UTC
+#__jlms_editions,status,VARCHAR(16) NOT NULL DEFAULT 'open',
+#__jlms_editions,capacity,INT UNSIGNED NULL,
+#__jlms_editions,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_editions,created_by,INT UNSIGNED NULL,
+#__jlms_editions,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_editions,modified_by,INT UNSIGNED NULL,
+#__jlms_editions,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_teachers,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_teachers,user_id,INT UNSIGNED NULL,
+#__jlms_teachers,catid,INT UNSIGNED NOT NULL,
+#__jlms_teachers,asset_id,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_teachers,title,VARCHAR(255) NOT NULL,
+#__jlms_teachers,alias,VARCHAR(180) NOT NULL,
+#__jlms_teachers,bio,MEDIUMTEXT NULL,
+#__jlms_teachers,image,VARCHAR(1024) NULL,
+#__jlms_teachers,language,VARCHAR(7) NOT NULL DEFAULT '*',
+#__jlms_teachers,access,INT UNSIGNED NOT NULL,
+#__jlms_teachers,state,SMALLINT NOT NULL DEFAULT 0,
+#__jlms_teachers,params_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_teachers,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_teachers,created_by,INT UNSIGNED NULL,
+#__jlms_teachers,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_teachers,modified_by,INT UNSIGNED NULL,
+#__jlms_teachers,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_teachers,checked_out,INT UNSIGNED NULL,
+#__jlms_teachers,checked_out_time,DATETIME NULL,UTC
+#__jlms_course_teachers,course_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_course_teachers,teacher_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_course_teachers,ordering,INT UNSIGNED NOT NULL,
+#__jlms_pathways,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_pathways,asset_id,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_pathways,catid,INT UNSIGNED NOT NULL,
+#__jlms_pathways,title,VARCHAR(255) NOT NULL,
+#__jlms_pathways,alias,VARCHAR(180) NOT NULL,
+#__jlms_pathways,description,MEDIUMTEXT NULL,
+#__jlms_pathways,language,VARCHAR(7) NOT NULL DEFAULT '*',
+#__jlms_pathways,access,INT UNSIGNED NOT NULL,
+#__jlms_pathways,state,SMALLINT NOT NULL DEFAULT 0,
+#__jlms_pathways,params_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_pathways,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_pathways,created_by,INT UNSIGNED NULL,
+#__jlms_pathways,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_pathways,modified_by,INT UNSIGNED NULL,
+#__jlms_pathways,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_pathways,checked_out,INT UNSIGNED NULL,
+#__jlms_pathways,checked_out_time,DATETIME NULL,UTC
+#__jlms_pathway_courses,pathway_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_pathway_courses,course_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_pathway_courses,ordering,INT UNSIGNED NOT NULL,
+#__jlms_assets,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_assets,storage,VARCHAR(32) NOT NULL,
+#__jlms_assets,storage_key,VARCHAR(255) NOT NULL,
+#__jlms_assets,sha256,CHAR(64) NOT NULL,
+#__jlms_assets,byte_size,BIGINT UNSIGNED NOT NULL,
+#__jlms_assets,mime_type,VARCHAR(127) NOT NULL,
+#__jlms_assets,original_name,VARCHAR(255) NOT NULL,
+#__jlms_assets,asset_revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_assets,status,VARCHAR(16) NOT NULL DEFAULT 'quarantine',
+#__jlms_assets,scan_json,LONGTEXT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_assets,created_by,INT UNSIGNED NULL,
+#__jlms_assets,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_assets,modified_by,INT UNSIGNED NULL,
+#__jlms_assets,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_attachments,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_attachments,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attachments,lesson_id,BIGINT UNSIGNED NULL,
+#__jlms_attachments,asset_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attachments,title,VARCHAR(255) NOT NULL,
+#__jlms_attachments,description,TEXT NULL,
+#__jlms_attachments,ordering,INT UNSIGNED NOT NULL,
+#__jlms_attachments,state,SMALLINT NOT NULL DEFAULT 0,
+#__jlms_attachments,preview,TINYINT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_attachments,publish_up,DATETIME(6) NULL,UTC
+#__jlms_attachments,publish_down,DATETIME(6) NULL,UTC
+#__jlms_attachments,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_attachments,created_by,INT UNSIGNED NULL,
+#__jlms_attachments,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_attachments,modified_by,INT UNSIGNED NULL,
+#__jlms_attachments,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_quizzes,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_quizzes,lesson_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_quizzes,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_quizzes,pass_basis_points,INT UNSIGNED NOT NULL DEFAULT 7000,
+#__jlms_quizzes,max_attempts,INT UNSIGNED NOT NULL DEFAULT 3,
+#__jlms_quizzes,time_limit_seconds,INT UNSIGNED NULL,
+#__jlms_quizzes,feedback_policy,VARCHAR(24) NOT NULL DEFAULT 'pass_or_exhausted',
+#__jlms_quizzes,selection_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_quizzes,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_quizzes,created_by,INT UNSIGNED NULL,
+#__jlms_quizzes,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_quizzes,modified_by,INT UNSIGNED NULL,
+#__jlms_quizzes,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_questions,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_questions,asset_id,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_questions,catid,INT UNSIGNED NOT NULL,
+#__jlms_questions,language,VARCHAR(7) NOT NULL DEFAULT '*',
+#__jlms_questions,current_revision_id,BIGINT UNSIGNED NULL,
+#__jlms_questions,state,SMALLINT NOT NULL DEFAULT 0,
+#__jlms_questions,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_questions,created_by,INT UNSIGNED NULL,
+#__jlms_questions,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_questions,modified_by,INT UNSIGNED NULL,
+#__jlms_questions,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_questions,checked_out,INT UNSIGNED NULL,
+#__jlms_questions,checked_out_time,DATETIME NULL,UTC
+#__jlms_question_revisions,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_question_revisions,question_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_question_revisions,version_no,INT UNSIGNED NOT NULL,
+#__jlms_question_revisions,kind,VARCHAR(16) NOT NULL,
+#__jlms_question_revisions,prompt,MEDIUMTEXT NOT NULL,
+#__jlms_question_revisions,options_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_question_revisions,grading_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_question_revisions,feedback_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_question_revisions,content_hash,CHAR(64) NOT NULL,
+#__jlms_question_revisions,created_by,INT UNSIGNED NULL,
+#__jlms_question_revisions,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_question_revisions,modified_by,INT UNSIGNED NULL,
+#__jlms_question_revisions,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_quiz_questions,quiz_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_quiz_questions,question_revision_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_quiz_questions,ordering,INT UNSIGNED NOT NULL,
+#__jlms_quiz_questions,points,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_enrollments,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_enrollments,user_id,INT UNSIGNED NULL,
+#__jlms_enrollments,subject_key,CHAR(36) NOT NULL,
+#__jlms_enrollments,course_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_enrollments,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_enrollments,edition_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_enrollments,status,VARCHAR(16) NOT NULL DEFAULT 'active',
+#__jlms_enrollments,origin,VARCHAR(16) NOT NULL,
+#__jlms_enrollments,required_total,INT UNSIGNED NOT NULL,
+#__jlms_enrollments,completed_total,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_enrollments,started_at,DATETIME(6) NULL,UTC
+#__jlms_enrollments,completed_at,DATETIME(6) NULL,UTC
+#__jlms_enrollments,last_activity_at,DATETIME(6) NULL,UTC
+#__jlms_enrollments,last_lesson_id,BIGINT UNSIGNED NULL,
+#__jlms_enrollments,starts_at,DATETIME(6) NULL,UTC
+#__jlms_enrollments,ends_at,DATETIME(6) NULL,UTC
+#__jlms_enrollments,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_enrollments,created_by,INT UNSIGNED NULL,
+#__jlms_enrollments,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_enrollments,modified_by,INT UNSIGNED NULL,
+#__jlms_enrollments,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_enrollment_requests,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_enrollment_requests,user_id,INT UNSIGNED NULL,
+#__jlms_enrollment_requests,subject_key,CHAR(36) NOT NULL,
+#__jlms_enrollment_requests,edition_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_enrollment_requests,status,VARCHAR(16) NOT NULL DEFAULT 'pending',
+#__jlms_enrollment_requests,reason,TEXT NULL,
+#__jlms_enrollment_requests,decided_by,INT UNSIGNED NULL,
+#__jlms_enrollment_requests,decided_at,DATETIME(6) NULL,UTC
+#__jlms_enrollment_requests,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_enrollment_requests,created_by,INT UNSIGNED NULL,
+#__jlms_enrollment_requests,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_enrollment_requests,modified_by,INT UNSIGNED NULL,
+#__jlms_enrollment_requests,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_lesson_progress,enrollment_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_lesson_progress,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_lesson_progress,lesson_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_lesson_progress,source_revision,INT UNSIGNED NOT NULL,
+#__jlms_lesson_progress,coverage_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_lesson_progress,covered_ms,BIGINT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_lesson_progress,resume_ms,BIGINT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_lesson_progress,state,VARCHAR(16) NOT NULL DEFAULT 'started',
+#__jlms_lesson_progress,completed_at,DATETIME(6) NULL,UTC
+#__jlms_lesson_progress,last_activity_at,DATETIME(6) NOT NULL,UTC
+#__jlms_lesson_progress,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_progress_sessions,id,CHAR(36) NOT NULL,
+#__jlms_progress_sessions,enrollment_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_progress_sessions,lesson_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_progress_sessions,source_revision,INT UNSIGNED NOT NULL,
+#__jlms_progress_sessions,sequence_no,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_progress_sessions,last_batch_hash,CHAR(64) NULL,
+#__jlms_progress_sessions,anchor_media_ms,BIGINT UNSIGNED NULL,
+#__jlms_progress_sessions,anchor_at,DATETIME(6) NULL,UTC
+#__jlms_progress_sessions,player_state_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_progress_sessions,expires_at,DATETIME(6) NOT NULL,UTC
+#__jlms_attempts,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_attempts,enrollment_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attempts,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attempts,quiz_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attempts,attempt_no,INT UNSIGNED NOT NULL,
+#__jlms_attempts,status,VARCHAR(16) NOT NULL DEFAULT 'open',
+#__jlms_attempts,rules_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_attempts,max_points,INT UNSIGNED NOT NULL,
+#__jlms_attempts,score_points,INT UNSIGNED NULL,
+#__jlms_attempts,passed,TINYINT UNSIGNED NULL,
+#__jlms_attempts,started_at,DATETIME(6) NOT NULL,UTC
+#__jlms_attempts,deadline_at,DATETIME(6) NULL,UTC
+#__jlms_attempts,submitted_at,DATETIME(6) NULL,UTC
+#__jlms_attempts,counted_for_limit,TINYINT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_attempts,invalidation_reason,VARCHAR(500) NULL,
+#__jlms_attempts,invalidated_by,INT UNSIGNED NULL,
+#__jlms_attempts,invalidated_at,DATETIME(6) NULL,UTC
+#__jlms_attempts,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_active_attempts,enrollment_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_active_attempts,quiz_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_active_attempts,attempt_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attempt_questions,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_attempt_questions,attempt_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attempt_questions,question_revision_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attempt_questions,display_order,INT UNSIGNED NOT NULL,
+#__jlms_attempt_questions,public_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_attempt_questions,grading_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_attempt_questions,max_points,INT UNSIGNED NOT NULL,
+#__jlms_attempt_questions,awarded_points,INT UNSIGNED NULL,
+#__jlms_attempt_answers,attempt_question_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_attempt_answers,answer_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_attempt_answers,saved_at,DATETIME(6) NOT NULL,UTC
+#__jlms_certificate_templates,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_certificate_templates,title,VARCHAR(255) NOT NULL,
+#__jlms_certificate_templates,version_no,INT UNSIGNED NOT NULL,
+#__jlms_certificate_templates,template_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_certificate_templates,background_asset_id,BIGINT UNSIGNED NULL,
+#__jlms_certificate_templates,hash,CHAR(64) NOT NULL,
+#__jlms_certificate_templates,state,SMALLINT NOT NULL DEFAULT 0,
+#__jlms_certificate_templates,created_by,INT UNSIGNED NULL,
+#__jlms_certificate_templates,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_certificate_templates,modified_by,INT UNSIGNED NULL,
+#__jlms_certificate_templates,modified_at,DATETIME(6) NOT NULL,UTC
+#__jlms_certificates,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_certificates,enrollment_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_certificates,course_version_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_certificates,template_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_certificates,current_document_id,BIGINT UNSIGNED NULL,
+#__jlms_certificates,issued_at,DATETIME(6) NOT NULL,UTC
+#__jlms_certificates,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_certificate_documents,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_certificate_documents,certificate_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_certificate_documents,document_no,INT UNSIGNED NOT NULL,
+#__jlms_certificate_documents,replaces_document_id,BIGINT UNSIGNED NULL,
+#__jlms_certificate_documents,serial,VARCHAR(64) NOT NULL,
+#__jlms_certificate_documents,verification_hash,CHAR(64) NULL,
+#__jlms_certificate_documents,verify_enabled,TINYINT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_certificate_documents,identity_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_certificate_documents,template_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_certificate_documents,status,VARCHAR(24) NOT NULL DEFAULT 'pending_render',
+#__jlms_certificate_documents,pdf_asset_id,BIGINT UNSIGNED NULL,
+#__jlms_certificate_documents,issued_at,DATETIME(6) NOT NULL,UTC
+#__jlms_certificate_documents,revoked_at,DATETIME(6) NULL,UTC
+#__jlms_certificate_documents,revocation_reason,VARCHAR(500) NULL,
+#__jlms_certificate_documents,revision,INT UNSIGNED NOT NULL DEFAULT 1,
+#__jlms_version_equivalences,source_lesson_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_version_equivalences,target_lesson_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_version_equivalences,policy_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_version_equivalences,approved_by,INT UNSIGNED NOT NULL,
+#__jlms_version_equivalences,approved_at,DATETIME(6) NOT NULL,UTC
+#__jlms_enrollment_migrations,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_enrollment_migrations,source_enrollment_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_enrollment_migrations,target_enrollment_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_enrollment_migrations,job_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_enrollment_migrations,mapping_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_enrollment_migrations,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_idempotency,scope_hash,CHAR(64) NOT NULL,
+#__jlms_idempotency,request_hash,CHAR(64) NOT NULL,
+#__jlms_idempotency,state,VARCHAR(16) NOT NULL,
+#__jlms_idempotency,result_type,VARCHAR(64) NULL,
+#__jlms_idempotency,result_id,BIGINT UNSIGNED NULL,
+#__jlms_idempotency,result_json,LONGTEXT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_idempotency,http_status,SMALLINT UNSIGNED NULL,
+#__jlms_idempotency,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_idempotency,expires_at,DATETIME(6) NOT NULL,UTC
+#__jlms_quiz_mutations,attempt_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_quiz_mutations,mutation_id,CHAR(36) NOT NULL,
+#__jlms_quiz_mutations,request_hash,CHAR(64) NOT NULL,
+#__jlms_quiz_mutations,result_revision,INT UNSIGNED NOT NULL,
+#__jlms_quiz_mutations,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_jobs,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_jobs,kind,VARCHAR(64) NOT NULL,
+#__jlms_jobs,owner_user_id,INT UNSIGNED NULL,
+#__jlms_jobs,scope_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_jobs,payload_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_jobs,status,VARCHAR(24) NOT NULL DEFAULT 'queued',
+#__jlms_jobs,cursor_json,LONGTEXT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_jobs,progress_done,BIGINT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_jobs,progress_total,BIGINT UNSIGNED NULL,
+#__jlms_jobs,attempts,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_jobs,available_at,DATETIME(6) NOT NULL,UTC
+#__jlms_jobs,lease_token,CHAR(64) NULL,
+#__jlms_jobs,lease_until,DATETIME(6) NULL,UTC
+#__jlms_jobs,result_asset_id,BIGINT UNSIGNED NULL,
+#__jlms_jobs,error_code,VARCHAR(64) NULL,
+#__jlms_jobs,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_jobs,expires_at,DATETIME(6) NULL,UTC
+#__jlms_jobs,finished_at,DATETIME(6) NULL,UTC
+#__jlms_outbox,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_outbox,event_key,CHAR(64) NOT NULL,
+#__jlms_outbox,event_type,VARCHAR(64) NOT NULL,
+#__jlms_outbox,aggregate_type,VARCHAR(32) NOT NULL,
+#__jlms_outbox,aggregate_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_outbox,payload_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_outbox,status,VARCHAR(24) NOT NULL DEFAULT 'pending',
+#__jlms_outbox,attempts,INT UNSIGNED NOT NULL DEFAULT 0,
+#__jlms_outbox,available_at,DATETIME(6) NOT NULL,UTC
+#__jlms_outbox,lease_token,CHAR(64) NULL,
+#__jlms_outbox,lease_until,DATETIME(6) NULL,UTC
+#__jlms_outbox,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_outbox,processed_at,DATETIME(6) NULL,UTC
+#__jlms_delivery_receipts,event_key,CHAR(64) NOT NULL,
+#__jlms_delivery_receipts,channel,VARCHAR(32) NOT NULL,
+#__jlms_delivery_receipts,status,VARCHAR(24) NOT NULL,
+#__jlms_delivery_receipts,provider_reference,VARCHAR(255) NULL,
+#__jlms_delivery_receipts,last_attempt_at,DATETIME(6) NOT NULL,UTC
+#__jlms_delivery_receipts,error_code,VARCHAR(64) NULL,
+#__jlms_anomalies,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_anomalies,kind,VARCHAR(64) NOT NULL,
+#__jlms_anomalies,enrollment_id,BIGINT UNSIGNED NULL,
+#__jlms_anomalies,certificate_id,BIGINT UNSIGNED NULL,
+#__jlms_anomalies,status,VARCHAR(16) NOT NULL DEFAULT 'open',
+#__jlms_anomalies,details_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_anomalies,resolved_by,INT UNSIGNED NULL,
+#__jlms_anomalies,resolved_at,DATETIME(6) NULL,UTC
+#__jlms_anomalies,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_assessment_revisions,id,BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+#__jlms_assessment_revisions,attempt_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_assessment_revisions,revision_no,INT UNSIGNED NOT NULL,
+#__jlms_assessment_revisions,job_id,BIGINT UNSIGNED NOT NULL,
+#__jlms_assessment_revisions,actor_user_id,INT UNSIGNED NULL,
+#__jlms_assessment_revisions,reason,VARCHAR(500) NOT NULL,
+#__jlms_assessment_revisions,rules_snapshot_json,LONGTEXT NOT NULL,JSON validato PHP; non inviare documenti interni al browser
+#__jlms_assessment_revisions,previous_score_points,INT UNSIGNED NULL,
+#__jlms_assessment_revisions,previous_passed,TINYINT UNSIGNED NULL,
+#__jlms_assessment_revisions,result_score_points,INT UNSIGNED NOT NULL,
+#__jlms_assessment_revisions,result_passed,TINYINT UNSIGNED NOT NULL,
+#__jlms_assessment_revisions,created_at,DATETIME(6) NOT NULL,UTC
+#__jlms_subjects,subject_key,CHAR(36) NOT NULL,Mappatura identità Joomla; user_id univoco nullable
+#__jlms_subjects,user_id,INT UNSIGNED NULL,Mappatura identità Joomla; user_id univoco nullable
+#__jlms_subjects,created_at,DATETIME(6) NOT NULL,Mappatura identità Joomla; user_id univoco nullable
+#__jlms_subjects,anonymised_at,DATETIME(6) NULL,Mappatura identità Joomla; user_id univoco nullable

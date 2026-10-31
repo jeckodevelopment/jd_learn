@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+
+namespace Jlms\Component\Jlms\Site\Controller;
+use Joomla\CMS\MVC\Controller\BaseController;
+
+final class DisplayController extends BaseController
+{
+    protected $default_view = 'courses';
+
+    public function display($cachable = false, $urlparams = [])
+    {
+        if ($this->input->getCmd('view', 'courses') !== 'courses') {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
+        return parent::display(false, $urlparams);
+    }
+}
