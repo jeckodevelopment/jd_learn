@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento0.13.0-dev: proroghe dei tentativi aperti e sincronizzazione autorevole del timer.
+Aggiornamento: 31 ottobre 2026. Incremento0.14.0-dev: associazioni native dei corsi multilingua.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -10,7 +10,7 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Core utenti e ACL | Identità/permessi core per editor; policy dominio testata | Entitlement fresco runtime studente, revoca e tutte le policy per oggetto |
 | Categorie | Contesti core, servizi, asset di sezione e form corso | Lifecycle completo di rimozione/ripristino con dati storici |
 | Corsi | Scheda, prima versione in bozza, moduli e lezioni testo/video, revisioni; pubblicazione testo con workflow nativo | Workflow con transizioni avanzate, clonazione completa, altri tipi lezione, equivalenze/migrazioni |
-| Editor Joomla | Form e check-in/out nativi, livelli, lingua | Tags, fields/snapshot, Content History e associazioni multilingua |
+| Editor Joomla | Form e check-in/out nativi, livelli, lingua | Tags, fields/snapshot, Content History e copertura multilingua completa |
 | Frontend | Catalogo paginato, filtro categorie/sottocategorie, scheda pubblica e programma con WAM/override e ID CSS | Albero categorie dedicato, ricerca/ordinamento avanzati, dashboard personale e accessibilità completa |
 | Plugin video | Quattro plugin installati; YouTube/Vimeo, Cloudflare API e HTML5 opt-in; progressi comuni, upload locale e Nginx | Firma locale Cloudflare, cache/diagnostica, altri codec/storage, collaudo browser/provider e rinnovo senza interruzione |
 | Materiali e storage | Upload validato, storage locale privato, quarantena, protocollo ClamAV opzionale, collegamenti in bozza e download autorizzato/Range | Offload server/object storage, job cleanup, riuso asset, preview e ulteriori strumenti di gestione |
@@ -79,3 +79,7 @@ Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor conf
 ## Incremento0.13
 
 [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md): proroga preventiva della deadline corrente di un tentativo ancora aperto, con anteprima, autorizzazione, storia e audit nativo; snapshot originari conservati e sincronizzazione compatta. Nuova tabella additiva,39tabelle/56FK. Test effettivi nella PR #13, senza certificazione implicita di carico/browser/accessibilità o patch corrente.
+
+## Incremento0.14
+
+[MULTILINGUAL.md](MULTILINGUAL.md): associazioni native dei corsi in bozza, lettura tramite selettore lingua Joomla e visibilità corrente. Gruppi pubblicati in sola lettura; nessun trasferimento dei progressi. Nessuna nuova tabella,39tabelle/56FK. Categorie, editor pubblicato, selettore ricercabile e copertura completa restano da completare. Esiti effettivi nella PR #14.

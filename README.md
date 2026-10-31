@@ -2,7 +2,7 @@
 
 Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene lo sviluppo e le specifiche concordate.
 
-**Stato: incremento 0.13.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza, pubblicazione dei corsi di testo, catalogo pubblico e primo flusso studente con iscrizione automatica/aula/completamento e materiali extra protetti. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
+**Stato: incremento 0.14.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza, pubblicazione dei corsi di testo, catalogo pubblico e primo flusso studente con iscrizione automatica/aula/completamento e materiali extra protetti. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
 
 ## Funzionalità attuali
 
@@ -61,7 +61,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.13.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+Lo ZIP generato è `dist/pkg_jlms-0.14.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
 
 `tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
 
@@ -72,3 +72,5 @@ Generare lo ZIP e installarlo intero su un Joomla di prova mediante il gestore e
 La disinstallazione conserva le tabelle e non cancella file del gestore; non equivale alla cancellazione privacy. La revisione dello schema e la ricostruzione delle dipendenze core al reinstall sono ancora oggetto del collaudo previsto. Nessuna procedura distruttiva automatica è presente.
 
 Lo ZIP include iscrizione automatica, testo, player video opt-in, materiali protetti e primo flusso quiz. Approvazioni, attestati, rivalutazioni e integrazioni restanti sono ancora in sviluppo. Non usarlo con studenti o dati personali reali finché le integrazioni e il collaudo non saranno completi.
+
+Associazioni dei corsi multilingua: [guida e limiti](docs/MULTILINGUAL.md). Configurare i collegamenti fra bozze prima della pubblicazione; selettore lingua e fallback sono nativi Joomla.

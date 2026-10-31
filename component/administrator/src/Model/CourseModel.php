@@ -13,6 +13,7 @@ use Joomla\Database\ParameterType;
 final class CourseModel extends AdminModel
 {
     public $typeAlias = 'com_jlms.course';
+    protected $associationsContext = 'com_jlms.item';
 
     public function getForm($data = [], $loadData = true)
     {
@@ -24,17 +25,125 @@ final class CourseModel extends AdminModel
         return Factory::getApplication()->getUserState('com_jlms.edit.course.data', []) ?: $this->getItem();
     }
 
+    public function getItem($pk = null)
+    {
+        $item = parent::getItem($pk);
+        if ($item && !empty($item->id)) {
+            $item->associations = [];
+            foreach ($this->associationMembers((int) $item->id) as $member) {
+                if ((int) $member->id !== (int) $item->id) {
+                    $item->associations[$member->language] = (int) $member->id;
+                }
+            }
+        }
+        return $item;
+    }
+
+    protected function preprocessForm(\Joomla\CMS\Form\Form $form, $data, $group = 'content')
+    {
+        if (\Joomla\CMS\Language\Associations::isEnabled()) {
+            $xml = new \SimpleXMLElement('<form><fields name="associations"><fieldset name="item_associations" label="COM_JLMS_ASSOCIATIONS" /></fields></form>');
+            foreach (\Joomla\CMS\Language\LanguageHelper::getContentLanguages(false, false) as $language) {
+                $field = $xml->fields->fieldset->addChild('field');
+                foreach (['name' => $language->lang_code, 'type' => 'Courseassociation',
+                    'addfieldprefix' => 'Jlms\\Component\\Jlms\\Administrator\\Field',
+                    'language' => $language->lang_code, 'label' => $language->title, 'translate_label' => 'false',
+                    'filter' => 'integer', 'default' => '0'] as $name => $value) {
+                    $field->addAttribute($name, $value);
+                }
+            }
+            $form->load($xml, false);
+        }
+        parent::preprocessForm($form, $data, $group);
+    }
+
+    private function associationMembers(int $id): array
+    {
+        $db = $this->getDatabase();
+        $context = $this->associationsContext;
+        $query = $db->createQuery()->select('c.*, a.' . $db->quoteName('key') . ' AS association_key')->from('#__associations AS a')
+            ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.' . $db->quoteName('key') . ' AND b.context = a.context')
+            ->innerJoin('#__jlms_courses AS c ON c.id = b.id')
+            ->where('a.id = :id')->where('a.context = :context')
+            ->bind(':id', $id, ParameterType::INTEGER)->bind(':context', $context);
+        return $db->setQuery($query)->loadObjectList();
+    }
+
+    /** Called under the component asset lock and the source course lock. Core performs persistence. */
+    private function validateAssociations(array &$data, \Joomla\CMS\User\User $actor, int $id, ?object $record): void
+    {
+        $members = $id ? $this->associationMembers($id) : [];
+        $language = (string) ($data['language'] ?? $record->language ?? '*');
+        if ($members && $language !== (string) $record->language) {
+            throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
+        }
+        if (!array_key_exists('associations', $data)) { return; }
+        if (!\Joomla\CMS\Language\Associations::isEnabled() || !is_array($data['associations'])) {
+            throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
+        }
+        $languages = \Joomla\CMS\Language\LanguageHelper::getLanguages('lang_code');
+        $targets = [];
+        foreach ($data['associations'] as $tag => $target) {
+            if (filter_var($target, FILTER_VALIDATE_INT) === false || (int) $target < 0) {
+                throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
+            }
+            $target = (int) $target;
+            if (!$target) { continue; }
+            if (!isset($languages[$tag]) || $tag === $language || $language === '*' || $target === $id || in_array($target, $targets, true)) {
+                throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
+            }
+            $targets[$tag] = $target;
+        }
+        $db = $this->getDatabase();
+        $ids = array_unique(array_merge(array_values($targets), array_map(static fn ($m): int => (int) $m->id, $members)));
+        sort($ids, SORT_NUMERIC);
+        foreach ($ids as $target) {
+            $query = $db->createQuery()->select('*')->from('#__jlms_courses')->where('id = :id')->bind(':id', $target, ParameterType::INTEGER);
+            $query->setQuery((string) $query . ' FOR UPDATE');
+            $item = $db->setQuery($query)->loadObject();
+            $asset = 'com_jlms.course.' . $target;
+            if (!$item || $actor->guest || $actor->block
+                || !($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset)))
+                || ($item->checked_out && (int) $item->checked_out !== (int) $actor->id)) {
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
+            if ((int) $item->state !== 0 || $item->current_version_id !== null) {
+                throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
+            }
+            $tag = array_search($target, $targets, true);
+            if ($tag !== false && $item->language !== $tag) {
+                throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
+            }
+            // Do not steal a member of another translation group. Detach it there first.
+            foreach ($this->associationMembers($target) as $peer) {
+                if (!$members || $peer->association_key !== $members[0]->association_key) {
+                    throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
+                }
+            }
+        }
+        // A nonempty zero field instructs native AdminModel to clear the old group too.
+        $data['associations'] = $targets ?: [$language => 0];
+    }
+
     public function save($data)
     {
         $db = $this->getDatabase();
-        $user = $this->getCurrentUser();
-        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision'];
+        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations'];
         $data = array_intersect_key($data, array_flip($allowed));
         $id = (int) ($data['id'] ?? 0);
         $expected = (int) ($data['revision'] ?? 0);
         unset($data['revision']);
         $db->transactionStart();
         try {
+            // Serialize translation graph edits only in this short authoring transaction.
+            // The row exists in native Joomla; no parallel association table or global site lock.
+            $db->setQuery("SELECT id FROM #__assets WHERE name = 'com_jlms' FOR UPDATE")->loadResult()
+                ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            $user = new \Joomla\CMS\User\User((int) $this->getCurrentUser()->id);
+            $user->clearAccessRights();
+            if ($user->guest || $user->block) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            $this->setCurrentUser($user);
+            $record = null;
             if ($id > 0) {
                 $q = $db->createQuery()->select('*')->from($db->quoteName('#__jlms_courses'))
                     ->where($db->quoteName('id') . ' = :id')->bind(':id', $id, ParameterType::INTEGER);
@@ -48,7 +157,7 @@ final class CourseModel extends AdminModel
                 $asset = 'com_jlms.course.' . $id;
                 $canEdit = $user->authorise('core.edit', $asset)
                     || ((int) $record->created_by === (int) $user->id && $user->authorise('core.edit.own', $asset));
-                if (!$canEdit) {
+                if (!$canEdit || ($record->checked_out && (int) $record->checked_out !== (int) $user->id)) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 if ((int) $record->revision !== $expected) {
@@ -65,6 +174,7 @@ final class CourseModel extends AdminModel
             } elseif (!$user->authorise('core.create', 'com_jlms.course.category.' . (int) ($data['catid'] ?? 0))) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
+            $this->validateAssociations($data, $user, $id, $record);
             if (!parent::save($data)) {
                 $db->transactionRollback();
                 $this->setError(Text::_('COM_JLMS_SAVE_FAILED'));
@@ -74,7 +184,7 @@ final class CourseModel extends AdminModel
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE'];
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION'];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             return false;
         }

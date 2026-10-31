@@ -68,6 +68,7 @@ return new class () implements ServiceProviderInterface {
         $container->set(PublicationService::class, static fn (Container $c): PublicationService => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
         $container->set(ComponentInterface::class, static function (Container $container): JlmsComponent {
             $component = new JlmsComponent($container->get(ComponentDispatcherFactoryInterface::class));
+            $component->setAssociationExtension(new \Jlms\Component\Jlms\Administrator\Helper\AssociationsHelper());
             $component->setMVCFactory($container->get(MVCFactoryInterface::class));
             $component->setCurriculumService($container->get(CurriculumService::class));
             $component->setPublicationService($container->get(PublicationService::class));

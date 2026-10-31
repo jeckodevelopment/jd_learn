@@ -78,7 +78,7 @@ CORE-03,Rilascio 1,In corso,Campi viewlevels nativi; entitlement studente corren
 CORE-04,Rilascio 1,In corso,ACL e asset del corso in bozza; policy degli altri oggetti da implementare.,No
 CORE-05,Rilascio 1,In corso,"Catalogo/scheda con WAM, RouterView, ID CSS e override; altre viste pianificate.",No
 CORE-06,Rilascio 1,In corso,it-IT/en-GB per funzioni presenti; copertura completa solo con le altre funzionalità.,No
-CORE-07,Rilascio 1,In corso,Lingua corso e filtri correnti su corso/categorie/antenati; associazioni e copertura multilingua completa da implementare.,No
+CORE-07,Rilascio 1,In corso,Lingua e filtri correnti; associazioni native corsi in bozza e selettore lingua con ACL; categorie e copertura multilingua completa da implementare.,No
 CORE-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CORE-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CORE-10,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
