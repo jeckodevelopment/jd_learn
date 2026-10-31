@@ -13,7 +13,7 @@ use Jlms\Component\Jlms\Administrator\Domain\QuizScorer;
 final class QuizAttemptService
 {
     public function __construct(private readonly DatabaseInterface $db,private readonly LearningService $learning,
-        private readonly QuizSnapshotService $snapshots,private readonly \Closure $clock){}
+        private readonly QuizSnapshotService $snapshots,private readonly \Closure $clock,private readonly QuizTimeService $time){}
     private function transaction(\Closure $work):mixed
     {
         $this->db->transactionStart();try{$result=$work();$this->db->transactionCommit();return $result;}
@@ -88,6 +88,7 @@ final class QuizAttemptService
             if($a){$this->expireIfDue($a,$e,$l,$now);$this->startLedger((int)$actor->id,$key,$enrollment,$lesson,(int)$a->id);return $this->dto($a,$e,$l,$quiz,$identity,$language);}
             $this->learning->quizContext($identity,$language,$enrollment,$lesson,false,false);
             [$quiz,$rules,$pool]=$this->snapshots->published($lesson,(int)$l->course_version_id);$history=$this->history($enrollment,$quizId);
+            $rules=$this->time->rules($rules,$enrollment,$quizId);
             if(($rules['max_attempts']>0&&$history['used']>=$rules['max_attempts'])||($history['last_closed']!==null&&$history['last_closed']+$rules['retry_seconds']>$now))throw new \RuntimeException('COM_JLMS_QUIZ_LIMIT',409);
             if($rules['mode']==='random')$pool=array_slice(self::shuffle($pool),0,$rules['draw_count']);
             if($rules['shuffle_questions'])$pool=self::shuffle($pool);
@@ -233,11 +234,13 @@ final class QuizAttemptService
         $enrollment=(int)$e->id;$quizId=(int)$quiz->id;$history=$this->history($enrollment,$quizId);$active=$this->active($enrollment,$quizId);
         $selection=json_decode($quiz->selection_json,true,16,JSON_THROW_ON_ERROR);
         $rules=$a?json_decode($a->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR):['max_attempts'=>(int)$quiz->max_attempts,'retry_seconds'=>$selection['retry_delay_seconds'],'threshold'=>(int)$quiz->pass_basis_points,'time_seconds'=>(int)$quiz->time_limit_seconds,'assessment'=>$selection['assessment'],'feedback'=>$quiz->feedback_policy,'draw_count'=>$selection['draw_count']];
+        $nextRules=$this->time->rules(['time_seconds'=>(int)$quiz->time_limit_seconds],$enrollment,$quizId);
+        if(!$a)$rules=array_replace($rules,$nextRules);
         $now=($this->clock)();$next=$history['last_closed']===null?$now:$history['last_closed']+$rules['retry_seconds'];$eligible=!$active;
         try{if(!$active)$this->learning->quizContext($identity,$language,$enrollment,(int)$l->id,false,false);}catch(\RuntimeException $error){if($error->getMessage()!=='COM_JLMS_LEARNING_WINDOW')throw $error;$eligible=false;}
         $remaining=$rules['max_attempts']===0?null:max(0,$rules['max_attempts']-$history['used']);
         $dto=['enrollment_id'=>$enrollment,'lesson_id'=>(int)$l->id,'title'=>$l->title,'server_now'=>$now,'assessment'=>$rules['assessment'],
-            'feedback_policy'=>$rules['feedback'],'question_count'=>$rules['draw_count'],'threshold'=>$rules['threshold'],'time_seconds'=>$rules['time_seconds'],'used_attempts'=>$history['used'],'remaining_attempts'=>$remaining,
+            'base_time_seconds'=>$rules['base_time_seconds']??$rules['time_seconds'],'extra_time_seconds'=>$rules['extra_time_seconds']??0,'next_time_seconds'=>$nextRules['time_seconds'],'next_extra_time_seconds'=>$nextRules['extra_time_seconds'],'feedback_policy'=>$rules['feedback'],'question_count'=>$rules['draw_count'],'threshold'=>$rules['threshold'],'time_seconds'=>$rules['time_seconds'],'used_attempts'=>$history['used'],'remaining_attempts'=>$remaining,
             'next_attempt_at'=>$next,'can_start'=>!$active&&$eligible&&($remaining===null||$remaining>0)&&$next<=$now,
             'active_attempt_id'=>$active?(int)$active->id:null,'attempt'=>null,'questions'=>[],'feedback_available'=>false,
             'course_completed'=>$e->completed_at!==null,'course_percent'=>(int)$e->required_total?min($e->completed_at?100:99,(int)floor(100*(int)$e->completed_total/(int)$e->required_total)):0];

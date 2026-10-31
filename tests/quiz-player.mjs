@@ -52,3 +52,13 @@ try {
 } finally {
  for(const [key,descriptor] of Object.entries(originals)){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}
 }
+
+const {quizWarning} = await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+assert.equal(quizWarning(300,301,600),'five_minutes');
+assert.equal(quizWarning(299,300,600),null);
+assert.equal(quizWarning(60,61,600),'one_minute');
+assert.equal(quizWarning(40,Infinity,600),'one_minute');
+assert.equal(quizWarning(null,Infinity,0),null);
+assert.equal(quizWarning(0,1,600),null);
+assert.equal(quizWarning(120,121,180),null);
+console.log(JSON.stringify({quiz_warning_checks:7,status:'passed'}));

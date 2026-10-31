@@ -2,12 +2,12 @@
 
 Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene lo sviluppo e le specifiche concordate.
 
-**Stato: incremento 0.10.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza, pubblicazione dei corsi di testo, catalogo pubblico e primo flusso studente con iscrizione automatica/aula/completamento e materiali extra protetti. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
+**Stato: incremento 0.11.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza, pubblicazione dei corsi di testo, catalogo pubblico e primo flusso studente con iscrizione automatica/aula/completamento e materiali extra protetti. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
 
 ## Funzionalità attuali
 
 - Pacchetto Joomla composto da libreria contratti, componente MVC e quattro plugin video dedicati, più un plugin Joomla Scheduler.
-- Schema InnoDB di 37 tabelle con 53 vincoli referenziali; installer a passi riprendibili e conservazione dei dati alla disinstallazione.
+- Schema InnoDB di 38 tabelle con 55 vincoli referenziali; installer a passi riprendibili e conservazione dei dati alla disinstallazione.
 - Backend con dashboard, creazione/modifica di corsi in bozza, categorie native, livelli Joomla separati per catalogo e contenuto, lingua, asset ACL e check-in/out.
 - Controllo della revisione durante il salvataggio e allowlist dei campi; azioni generiche non implementate restano chiuse.
 - Prima versione didattica in bozza, moduli e lezioni: creazione/modifica, obbligatorietà, riordino e rimozione controllata; editor Joomla e filtro HTML nativi.
@@ -17,6 +17,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene
 - Materiali del corso e della lezione: upload validato, quarantena/scansione opzionale, versioni immutabili e download protetto con Range. Storage privato e consegna PHP richiedono configurazione esplicita.
 - Contratto video v1, registro lazy e normalizzazione sicura di sorgenti YouTube, Vimeo, Cloudflare Stream e asset HTML5 locali. Riproduzione YouTube/Vimeo opt-in, consenso e salvataggio della copertura video; Cloudflare Stream tramite API con verifica remota e rinnovo; HTML5 con upload MP4 e consegna privata PHP limitata/Nginx. Vedere [limiti e protocollo](docs/VIDEO.md).
 - Banca domande con categorie/asset/check-in nativi, tre formati e revisioni immutabili; composizione quiz in bozza, pubblicazione, tentativi con snapshot, autosave/CAS, timer server, risultati e feedback protetto.
+- Tempo aggiuntivo individuale per tentativi futuri, con storico, permessi per corso e Action Logs Joomla; avvisi accessibili del timer.
 - Regole dominio iniziali per accesso corrente, unione intervalli video e scoring esatto dei quiz, con test runtime.
 - Traduzioni it-IT/en-GB, prime regioni CSS pubbliche e generazione riproducibile dello ZIP.
 
@@ -37,6 +38,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene
 - [Video HTML5 locali: configurazione e limiti](docs/HTML5_VIDEO.md)
 - [Banca domande e quiz in bozza](docs/QUIZ_AUTHORING.md)
 - [Tentativi quiz e attività pianificata](docs/QUIZ_RUNTIME.md)
+- [Tempi individuali e audit nativo](docs/QUIZ_EXTRA_TIME.md)
 - [Changelog](CHANGELOG.md)
 
 La denominazione di prodotto è **JD Learn**. Gli identificativi tecnici restano `com_jlms`, `pkg_jlms`, `lib_jlms` e gruppo `jlmsvideo`, coerenti con la baseline; non rinominare estensioni già installate senza migrazione. Non sono inclusi pagamenti o abbonamenti: un’estensione esterna attribuirà i gruppi Joomla.
@@ -55,7 +57,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.10.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+Lo ZIP generato è `dist/pkg_jlms-0.11.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
 
 `tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
 

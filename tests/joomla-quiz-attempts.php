@@ -78,7 +78,7 @@ function attemptAnswers(array $dto,bool $correct=true):string{
 $learning=$component->getLearningService();$authoring=$component->getCurriculumService();$publication=$component->getPublicationService();$quizzes=$component->getQuizAuthoringService();
 $actor=$app->getIdentity();$student=new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult());
 $other=new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerother'")->loadResult());
-$now=time();$service=new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db,$learning,$component->getQuizSnapshotService(),static function()use(&$now):int{return $now;});
+$now=time();$service=new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db,$learning,$component->getQuizSnapshotService(),static function()use(&$now):int{return $now;},$component->getQuizTimeService());
 $fixturePath=dirname($root).'/quiz-attempts-fixture.json';
 if(($argv[2]??'')==='worker'){
     echo "ready\n";fflush(STDOUT);fgets(STDIN);

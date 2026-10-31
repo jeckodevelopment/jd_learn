@@ -47,7 +47,7 @@ QUI-04,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/r
 QUI-05,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
 QUI-06,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
 QUI-07,Rilascio 1,In corso,"0.10: pubblicazione/pool, snapshot, tentativi, CAS/replay, timer/worker, scoring/migliore/completamento e feedback. Restano rivalutazioni, tempi aggiuntivi, disponibilità specifica, integrazioni e collaudo completo.",No
-QUI-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+QUI-08,Rilascio 1,In corso,"0.11: tempo individuale preventivo con permessi per corso, motivazione, storico e Action Logs; avvisi 5/1 minuti. Restano collaudi accessibilità completi e proroghe in corso.",No
 ATT-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 ATT-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 ATT-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No

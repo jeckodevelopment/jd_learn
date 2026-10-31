@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><fieldset name="details">
+ <field name="course_id" type="hidden" filter="integer" required="true" />
+ <field name="lesson_id" type="hidden" filter="integer" required="true" />
+ <field name="enrollment_id" type="hidden" filter="integer" required="true" />
+ <field name="revision" type="hidden" filter="integer" required="true" />
+ <field name="mutation_id" type="hidden" filter="string" required="true" />
+ <field name="extra_minutes" type="number" label="COM_JLMS_QUIZ_TIME_MINUTES" description="COM_JLMS_QUIZ_TIME_MINUTES_DESC" min="0" max="1440" step="1" default="0" filter="integer" required="true" />
+ <field name="reason" type="text" label="COM_JLMS_QUIZ_TIME_REASON_LABEL" description="COM_JLMS_QUIZ_TIME_REASON_DESC" maxlength="500" filter="string" required="true" />
+</fieldset></form>
