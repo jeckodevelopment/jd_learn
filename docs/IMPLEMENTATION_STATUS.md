@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento0.10.0-dev: pubblicazione e primo flusso tentativi quiz.
+Aggiornamento: 31 ottobre 2026. Incremento0.11.0-dev: tempi individuali preventivi e audit nativo.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -15,7 +15,7 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Plugin video | Quattro plugin installati; YouTube/Vimeo, Cloudflare API e HTML5 opt-in; progressi comuni, upload locale e Nginx | Firma locale Cloudflare, cache/diagnostica, altri codec/storage, collaudo browser/provider e rinnovo senza interruzione |
 | Materiali e storage | Upload validato, storage locale privato, quarantena, protocollo ClamAV opzionale, collegamenti in bozza e download autorizzato/Range | Offload server/object storage, job cleanup, riuso asset, preview e ulteriori strumenti di gestione |
 | Iscrizioni e progressi | Avvio automatico, aula testo/video e completamento manuale/copertura con idempotenza/lock per iscrizione e accesso corrente | Approvazioni/manuale/import, dashboard, UI avanzata e gestione calendario |
-| Quiz | Banca/bozze native, pubblicazione con pool congelato, tentativi atomici, snapshot/estrazione, start/save/submit/CAS/timer, scoring, risultati e feedback protetto | Tempi aggiuntivi, rivalutazioni, disponibilità specifica, audit/privacy, UI/accessibilità e carico |
+| Quiz | Banca/bozze native, pubblicazione con pool congelato, tentativi atomici, snapshot/estrazione, start/save/submit/CAS/timer, scoring, risultati, feedback protetto e tempi individuali preventivi | Proroghe in corso, rivalutazioni, disponibilità specifica, audit/privacy generali, UI/accessibilità e carico |
 | Attestati | Schema emissione/documenti/sostituzione | PDF, verifica pubblica, anomalie, revoca e notifica |
 | Job e outbox | Schema e plugin Scheduler limitato alla scadenza quiz | Worker generali/CLI, lease, retry, mail templates e delivery_unknown |
 | Privacy, Action Logs, Finder | Specifiche conservate | Plugin funzionanti e collaudo lifecycle/export/erasure |
@@ -67,3 +67,7 @@ Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor conf
 ## Incremento0.10
 
 [QUIZ_RUNTIME.md](QUIZ_RUNTIME.md) documenta servizi, task, stato/limiti, criteri di accesso, scadenza e configurazione dell’attività pianificata. Il pacchetto ha sette costituenti; quattro provider video più task/jlms. Nessun nuovo schema necessario: usate le tabelle preesistenti. Risultati effettivi nella PR #10; non è una certificazione del LMS completo, del carico o della patch Joomla corrente.
+
+## Incremento0.11
+
+[QUIZ_EXTRA_TIME.md](QUIZ_EXTRA_TIME.md): autorizzazione preventiva individuale, ritiri futuri, storico e primo audit tramite modello Action Logs Joomla. Nuova tabella additiva:38tabelle/55FK. Nessun cambiamento agli snapshot precedenti. I controlli effettivi sono nelle Actions della PR #11; QUI-08 rimane parziale in attesa del collaudo completo di accessibilità.

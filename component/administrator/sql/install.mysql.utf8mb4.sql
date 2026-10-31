@@ -676,3 +676,22 @@ CREATE TABLE IF NOT EXISTS `#__jlms_subjects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ALTER TABLE `#__jlms_enrollments` ADD CONSTRAINT `#__jlms_fk_subject_enrollment` FOREIGN KEY (`subject_key`) REFERENCES `#__jlms_subjects` (`subject_key`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `#__jlms_enrollment_requests` ADD CONSTRAINT `#__jlms_fk_subject_request` FOREIGN KEY (`subject_key`) REFERENCES `#__jlms_subjects` (`subject_key`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `#__jlms_quiz_time_adjustments` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `enrollment_id` BIGINT UNSIGNED NOT NULL,
+  `course_version_id` BIGINT UNSIGNED NOT NULL,
+  `quiz_id` BIGINT UNSIGNED NOT NULL,
+  `revision_no` INT UNSIGNED NOT NULL,
+  `extra_seconds` INT UNSIGNED NOT NULL,
+  `reason` VARCHAR(500) NOT NULL,
+  `actor_user_id` INT UNSIGNED NULL,
+  `mutation_id` CHAR(36) NOT NULL,
+  `request_hash` CHAR(64) NOT NULL,
+  `created_at` DATETIME(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_quiz_time_revision` (`enrollment_id`,`quiz_id`,`revision_no`),
+  UNIQUE KEY `uq_quiz_time_mutation` (`enrollment_id`,`quiz_id`,`mutation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `#__jlms_quiz_time_adjustments` ADD CONSTRAINT `#__jlms_fk_time_enrollment` FOREIGN KEY (`enrollment_id`, `course_version_id`) REFERENCES `#__jlms_enrollments` (`id`, `course_version_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `#__jlms_quiz_time_adjustments` ADD CONSTRAINT `#__jlms_fk_time_quiz` FOREIGN KEY (`quiz_id`) REFERENCES `#__jlms_quizzes` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

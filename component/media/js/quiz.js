@@ -17,6 +17,14 @@ export class QuizTransport {
     }
 }
 
+/** Accessible hints only; server deadlines remain authoritative. */
+export function quizWarning(left, previous, total) {
+    if (left === null || left <= 0) return null;
+    if (left <= 60 && previous > 60) return 'one_minute';
+    if (total >= 300 && left <= 300 && previous > 300) return 'five_minutes';
+    return null;
+}
+
 export function initialiseQuiz(options, document = globalThis.document, location = globalThis.location) {
     const root = document.getElementById('jlms-quiz'); if (!root) return;
     const form = document.getElementById('jlms-quiz-form'), status = document.getElementById('jlms-quiz-status');
@@ -76,10 +84,13 @@ export function initialiseQuiz(options, document = globalThis.document, location
         finally { busy = false; }
     });
     if (attempt?.state === 'open') message('saved');
-    let pollBusy = false, pollAfter = 0, pollBackoff = 1;
+    let pollBusy = false, pollAfter = 0, pollBackoff = 1, previousLeft = Infinity;
     const tick = globalThis.setInterval(async () => {
         if (halted || !attempt || attempt.state !== 'open') return;
         const left = attempt.deadline === null ? null : Math.max(0, Math.ceil(attempt.deadline - clockNow()));
+        const warning = quizWarning(left, previousLeft, (attempt.deadline ?? 0) - (attempt.started_at ?? 0));
+        if (warning && document.getElementById('jlms-quiz-warning')) document.getElementById('jlms-quiz-warning').textContent = labels[warning];
+        if (left !== null) previousLeft = left;
         document.getElementById('jlms-quiz-timer').textContent = left === null ? '' : `${Math.floor(left / 60)}:${String(left % 60).padStart(2,'0')}`;
         if (left === 0 && !busy && !pollBusy && clockNow() >= pollAfter) {
             // Submit no new answers at expiry. The server grades only previously saved answers.

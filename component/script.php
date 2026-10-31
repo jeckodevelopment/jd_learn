@@ -80,6 +80,8 @@ final class Com_JlmsInstallerScript
                 }
             }
         }
+        $query=$db->createQuery()->select('COUNT(*)')->from('#__action_logs_extensions')->where("extension = 'com_jlms'");
+        if(!(int)$db->setQuery($query)->loadResult()){$entry=(object)['extension'=>'com_jlms'];$db->insertObject('#__action_logs_extensions',$entry);}
         require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/WorkflowInstaller.php';
         \Jlms\Component\Jlms\Administrator\Infrastructure\WorkflowInstaller::install(Factory::getApplication(), $db);
         return true;
