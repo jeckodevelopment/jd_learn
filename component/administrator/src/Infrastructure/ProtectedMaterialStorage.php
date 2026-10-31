@@ -72,7 +72,9 @@ final class ProtectedMaterialStorage
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         try {
-            chmod($path, 0600);
+            if (!@chmod($path, 0600)) {
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
             $copied = stream_copy_to_stream($input, $output, $metadata['byte_size'] + 1);
             if ($copied !== $metadata['byte_size']) {
                 throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);

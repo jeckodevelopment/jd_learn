@@ -2,7 +2,7 @@
 
 ## Configurazione e utilizzo
 
-Nelle opzioni native di **JD Learn**, sezione **Materiali extra**, indicare una directory privata già esistente, assoluta, scrivibile dal processo PHP e fuori sia dalla document root del server sia dall’installazione Joomla. Il gestore deve predisporre permessi OS minimi: directory 0700, file 0600. Il componente non crea cartelle pubbliche di ripiego e rifiuta percorsi interni a Joomla/document root o symlink diretti. Il percorso non viene mostrato agli studenti.
+Nelle opzioni native di **JD Learn**, sezione **Materiali extra**, indicare una directory privata già esistente, assoluta, scrivibile dal processo PHP e fuori sia dalla document root del server sia dall’installazione Joomla. Il gestore deve predisporre permessi OS minimi: directory 0700, file 0600. Il componente non crea cartelle pubbliche di ripiego e rifiuta percorsi interni a Joomla/document root o symlink diretti. Il percorso non viene mostrato agli studenti. La directory va mantenuta stabile: per cambiarla occorre migrare i blob preservando le chiavi e verificarne gli hash. Il backup deve comprendere insieme database e directory privata; il solo backup del componente non contiene i file didattici.
 
 La consegna PHP è disabilitata per default: abilitarla esplicitamente per il collaudo dei download di questo incremento. Il limite configurabile è 1–20 MiB; il limite effettivo considera anche upload_max_filesize e post_max_size (con margine multipart). Non usare questa consegna per video o grandi raccolte. X-Accel-Redirect/X-Sendfile/object storage sono ancora da implementare; il carico 300/500 va collaudato sull’infrastruttura reale.
 
