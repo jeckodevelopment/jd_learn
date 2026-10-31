@@ -21,7 +21,7 @@ final class LearningService
             throw new \RuntimeException('COM_JLMS_LOGIN_REQUIRED', 401);
         }
         $actor = new User((int) $identity->id);
-        if (!(int) $actor->id || $actor->block || $actor->activation !== '') {
+        if (!(int) $actor->id || $actor->block) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $actor->clearAccessRights();

@@ -48,9 +48,11 @@ admin=client();student=client();guest=client()
 def admin_page(course=None,version=None):
  course=fixture['course_id'] if course is None else course;version=fixture['version_id'] if version is None else version
  return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version))
-def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None):
+def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False):
  url,body,_=admin_page(course,version);page=Page(body.decode());form=next(f for f in page.forms if f['id']=='jlms-material-upload')
  fields=dict(form['fields']);fields.update({'jform[title]':title,'jform[description]':'Extra facoltativo','jform[lesson_id]':str(lesson),'jform[replace_id]':str(replace)})
+ if invalid_token:
+  fields={k:v for k,v in fields.items() if not re.fullmatch('[a-f0-9]{32}',k)}
  boundary='JDMaterial'+uuid.uuid4().hex;parts=[]
  for key,value in fields.items():parts.append(('--'+boundary+'\r\nContent-Disposition: form-data; name="'+key+'"\r\n\r\n'+str(value)+'\r\n').encode())
  parts.append(('--'+boundary+'\r\nContent-Disposition: form-data; name="jform[upload]"; filename="'+name+'"\r\nContent-Type: application/octet-stream\r\n\r\n').encode()+content+b'\r\n')
@@ -74,11 +76,14 @@ try:
  page=Page(body.decode());form=next(f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']);fields=dict(form['fields']);fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
  request(admin,urljoin(urljoin(url,page.base or ''),form['action']),fields=fields)
  # No public fallback and no uploads with executable disguises.
+ upload('notes.txt',b'CSRF must fail\n',expected=403,invalid_token=True)
  upload('evil.php.pdf',b'%PDF-1.4\n%%EOF\n',expected=422)
  upload('fake.pdf',b'not a PDF document',expected=422)
  configure(material_storage_root=str(root/'images'))
  upload('notes.txt',b'Course notes\n',expected=503)
- configure(material_storage_root=str(private))
+ configure(material_storage_root=str(private),material_max_mib=1)
+ upload('too-large.txt',b'x'*(1048576+1),expected=413)
+ configure(material_max_mib=20)
  upload('notes.txt',b'OLD_PRIVATE_NOTES\n','Course handout')
  first=files()[0];old_key=first['storage_key'];old_hash=first['sha256']
  upload('notes-v2.txt',b'NEW_PRIVATE_NOTES\n','Course handout',replace=first['id'])
@@ -87,6 +92,7 @@ try:
  upload('lesson.txt',b'LESSON_PRIVATE_NOTES\n','Lesson handout',lesson=fixture['lesson_id'])
  upload('foreign.txt',b'FOREIGN_PRIVATE_NOTES\n','Foreign handout',course=fixture['foreign_course_id'],version=fixture['foreign_version_id'])
  expect(len(files())==2,'Two attachment scopes persisted')
+ expect(command('denied')=='material ACL passed','Material authoring requires its specific permission')
  expect(json.loads(first['scan_json'])['result']=='not_configured','Absent scanner is explicit, never reported clean')
  # Mandatory scanner unavailable: quarantine, admin download blocked and publication refused.
  configure(material_scan_required=1,material_clamd_socket=str(root.parent/'missing-clamd.sock'))

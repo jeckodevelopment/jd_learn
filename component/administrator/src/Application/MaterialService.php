@@ -172,6 +172,11 @@ final class MaterialService
             } elseif ($operation === 'save') {
                 $title = $input['title'] ?? null;
                 $description = $input['description'] ?? '';
+                foreach (['state', 'ordering'] as $field) {
+                    if (isset($input[$field]) && !is_int($input[$field]) && !is_string($input[$field])) {
+                        throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                    }
+                }
                 $state = (string) ($input['state'] ?? '1');
                 $order = (string) ($input['ordering'] ?? '0');
                 if (!is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1

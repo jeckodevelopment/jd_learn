@@ -117,6 +117,9 @@ final class ProtectedMaterialStorage
     {
         $config = $this->config();
         if (!(bool) $config->get('material_scan_required', false)) {
+            if (($asset->status ?? '') === 'rejected') {
+                return ['status' => 'rejected', 'scan_json' => $asset->scan_json];
+            }
             return ['status' => 'ready', 'scan_json' => '{"engine":"none","result":"not_configured"}'];
         }
         $socket = (string) $config->get('material_clamd_socket', '');

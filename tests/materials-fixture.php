@@ -74,6 +74,16 @@ if ($mode === 'configure') {
     $db->updateObject('#__extensions', $row, 'extension_id');echo "configured\n";exit(0);
 }
 $fixturePath = dirname($root) . '/materials-fixture.json';
+if ($mode === 'denied') {
+    $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
+    try {
+        $component->getMaterialService()->administration(new \Joomla\CMS\User\User((int)$fixture['http_user_id']), (int)$fixture['course_id'], (int)$fixture['version_id']);
+    } catch (\RuntimeException $error) {
+        if ($error->getCode()===403) {echo 'material ACL passed';exit(0);}
+        throw $error;
+    }
+    throw new \RuntimeException('Material-specific ACL bypassed');
+}
 if ($mode === 'retained') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     $course = $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . (int) $fixture['course_id'])->loadObject();
@@ -99,6 +109,7 @@ foreach (['materials-fixture','materials-foreign'] as $alias) {
     $module=$author->saveModule($actor,['course_id'=>$courseId,'version_id'=>$versionId,'expected_version_revision'=>1,'id'=>0,'title'=>'Materials chapter']);
     $lesson=$author->saveLesson($actor,['course_id'=>$courseId,'version_id'=>$versionId,'expected_version_revision'=>2,'id'=>0,'module_id'=>$module,
         'title'=>'Materials text','kind'=>'text','required'=>'1','body'=>'<p>PROTECTED_MATERIAL_LESSON</p>']);
+    $component->getMaterialService()->administration($actor,$courseId,$versionId);
     if ($alias==='materials-fixture') {$fixture=['course_id'=>$courseId,'version_id'=>$versionId,'lesson_id'=>$lesson];}
     else {$fixture['foreign_course_id']=$courseId;$fixture['foreign_version_id']=$versionId;}
 }
