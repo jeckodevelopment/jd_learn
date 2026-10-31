@@ -7,7 +7,7 @@
  <media destination="com_jlms" folder="media"><folder>css</folder><filename>joomla.asset.json</filename></media>
 <languages folder="site/language"><language tag="it-IT">it-IT/com_jlms.ini</language><language tag="it-IT">it-IT/com_jlms.sys.ini</language><language tag="en-GB">en-GB/com_jlms.ini</language><language tag="en-GB">en-GB/com_jlms.sys.ini</language></languages>
  <administration><menu img="class:graduation-cap">COM_JLMS</menu>
-  <files folder="administrator"><folder>services</folder><folder>src</folder><folder>tmpl</folder><folder>forms</folder><folder>sql</folder><folder>language</folder><filename>access.xml</filename><filename>config.xml</filename></files>
+  <files folder="administrator"><folder>services</folder><folder>src</folder><folder>tmpl</folder><folder>forms</folder><folder>sql</folder><folder>docs</folder><folder>language</folder><filename>access.xml</filename><filename>config.xml</filename></files>
 <languages folder="administrator/language"><language tag="it-IT">it-IT/com_jlms.ini</language><language tag="it-IT">it-IT/com_jlms.sys.ini</language><language tag="en-GB">en-GB/com_jlms.ini</language><language tag="en-GB">en-GB/com_jlms.sys.ini</language></languages>
  </administration>
  <update><schemas><schemapath type="mysql">sql/updates/mysql</schemapath></schemas></update>

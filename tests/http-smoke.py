@@ -9,9 +9,10 @@ root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.links=[];self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.links=[];self.base=None;self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if tag=='base' and a.get('href'):self.base=a['href']
   if tag=='form':self.current={'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
   if tag=='input' and self.current is not None and 'name' in a:self.current['fields'][a['name']]=a.get('value','')
   if tag=='a' and a.get('href'):self.links.append(a['href'])
@@ -32,10 +33,11 @@ try:
  else:raise RuntimeError('Test HTTP server did not become ready')
  if 'id="jlms-courses"' not in html:raise RuntimeError('Public course view did not render')
  url,html=get('/administrator/index.php')
- form=next((f for f in Page(html).forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)
+ page=Page(html)
+ form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)
  if not form:raise RuntimeError('Native Joomla admin login form was not found')
  fields=form['fields'];fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
- with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
+ with http.open(urljoin(urljoin(url,page.base or ''),form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
  url,html=get('/administrator/index.php?option=com_jlms')
  if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('Authenticated JD Learn dashboard did not render')
  url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
