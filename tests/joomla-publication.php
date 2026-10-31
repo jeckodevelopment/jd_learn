@@ -123,6 +123,12 @@ pubDenied(fn()=>pubTransition(),'workflow veto aborts publication');
 $app->getDispatcher()->removeListener('onWorkflowBeforeTransition',$veto);
 pubExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id='.$version)->loadResult()==='draft'
     && !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id='.$course)->loadResult(),'veto rolls back teaching snapshot and default edition');
+// The core Workflow helper does not propagate a false model result; the service must.
+$afterVeto = static function ($event): void { if ($event->getContext()==='com_jlms.course') { $event->addResult(false); } };
+$app->getDispatcher()->addListener('onContentAfterChangeState',$afterVeto);
+pubDenied(fn()=>pubTransition(),'failed native state callback rolls back publication');
+$app->getDispatcher()->removeListener('onContentAfterChangeState',$afterVeto);
+pubExpect($hidden(),'failed state callback leaves public course hidden');
 pubTransition();
 $frozen=$db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id='.$version)->loadObject();
 pubExpect($frozen->status==='published' && strlen($frozen->structure_hash)===64 && $frozen->published_at!==null,'publication freezes hash and timestamp');

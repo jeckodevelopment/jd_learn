@@ -15,6 +15,7 @@ use Joomla\Registry\Registry;
 final class PublicationService
 {
     private ?array $permittedChange = null;
+    private ?bool $stateChangeResult = null;
 
     public function __construct(private readonly DatabaseInterface $db, private readonly CMSApplicationInterface $app)
     {
@@ -50,6 +51,13 @@ final class PublicationService
         return $this->permittedChange !== null
             && array_map('intval', array_values($ids)) === [$this->permittedChange[0]]
             && $value === $this->permittedChange[1];
+    }
+
+    public function recordStateChangeResult(bool $success): void
+    {
+        if ($this->permittedChange !== null) {
+            $this->stateChangeResult = ($this->stateChangeResult ?? true) && $success;
+        }
     }
 
     public function transitions(User $actor, int $courseId): array
@@ -189,7 +197,8 @@ final class PublicationService
                 'revision' => (int) $course->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
             $this->db->updateObject('#__jlms_courses', $update, 'id');
             $this->permittedChange = [$courseId, $state];
-            if (!$workflow->executeTransition([$courseId], $transitionId) || (int) $this->row('courses', $courseId)->state !== $state) {
+            if (!$workflow->executeTransition([$courseId], $transitionId) || $this->stateChangeResult !== true
+                || (int) $this->row('courses', $courseId)->state !== $state) {
                 throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
             }
             $this->db->transactionCommit();
@@ -198,6 +207,7 @@ final class PublicationService
             throw $error;
         } finally {
             $this->permittedChange = null;
+            $this->stateChangeResult = null;
         }
     }
 }
