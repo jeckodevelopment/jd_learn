@@ -14,6 +14,12 @@ use Joomla\CMS\Factory;
 final class CourseTable extends Table
 {
     protected $_supportNullValue = true;
+    protected bool $stableAssetRequired = false;
+
+    public function requireStableAsset(bool $required): void
+    {
+        $this->stableAssetRequired = $required;
+    }
 
     public function __construct(DatabaseInterface $db)
     {
@@ -70,6 +76,18 @@ final class CourseTable extends Table
 
     public function store($updateNulls = true)
     {
+        // Native Asset/Nested::store uses LOCK TABLES, which implicitly commits in MySQL.
+        // When the existing asset needs no change, retain it and avoid that operation.
+        // Association writes require this path so AdminModel's graph writes stay atomic.
+        $asset = new \Joomla\CMS\Table\Asset($this->getDatabase());
+        $stable = $this->id && $asset->loadByName($this->_getAssetName())
+            && (int) $asset->id === (int) $this->asset_id
+            && (int) $asset->parent_id === (int) $this->_getAssetParentId()
+            && $asset->title === \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)
+            && $this->_rules === null;
+        if ($this->stableAssetRequired && !$stable) {
+            throw new \DomainException('COM_JLMS_ASSOCIATION_SAVE_SEPARATELY');
+        }
         $now = Factory::getDate()->toSql();
         $userId = (int) Factory::getApplication()->getIdentity()->id;
         if (!$this->id) {
@@ -84,7 +102,13 @@ final class CourseTable extends Table
         }
         $this->modified_at = $now;
         $this->modified_by = $userId;
-        return parent::store($updateNulls);
+        $tracking = $this->_trackAssets;
+        if ($stable) { $this->_trackAssets = false; }
+        try {
+            return parent::store($updateNulls);
+        } finally {
+            $this->_trackAssets = $tracking;
+        }
     }
 
     protected function _getAssetName()

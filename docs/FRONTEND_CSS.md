@@ -74,3 +74,7 @@ Backend: override `quizreview/default.php`; ID `jlms-quiz-review`, `jlms-quiz-re
 Frontend: `jlms-quiz-duration` contiene i secondi effettivi e viene aggiornato dalla sincronizzazione; `jlms-quiz-extension` annuncia la proroga con `role=status`, distinto da salvataggio e avvisi. Conservare ID e regioni live negli override o sostituire anche l’adattatore client. La sincronizzazione non deve sostituire le risposte locali né allentare i controlli server.
 
 Backend: override `quizextend/default.php`, ID `jlms-quiz-extend`, `jlms-quiz-extend-policy`, `jlms-quiz-extend-preview-form`, `jlms-quiz-extend-minutes`, `jlms-quiz-extend-impact`, `jlms-quiz-extend-blocked`, `jlms-quiz-extend-form`, `jlms-quiz-extend-history`; collegamento `jlms-quiz-extend-link` dalla revisione del tentativo. Conservare parent, revisioni, minuti, hash, UUID, conferma e CSRF. L’anteprima GET non esegue proroghe. Nessuna nuova classe CSS globale.
+
+## Incremento0.14 — lingua
+
+Il cambio lingua dei corsi usa il modulo core `mod_languages`: stile e override seguono il contratto del modulo Joomla. I contenitori pubblici `jlms-course` e `jlms-courses` restano gli stessi nelle traduzioni. Nel backend `jlms-course-associations` contiene i campi nativi delle traduzioni. Vedere MULTILINGUAL.md per fallback e perimetro.

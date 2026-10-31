@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="library" method="upgrade">
  <name>JD Learn Contracts</name><libraryname>jlms</libraryname><author>Jecko Development</author>
- <version>0.13.0</version><description>JLMS_CONTRACTS_DESCRIPTION</description>
+ <version>0.14.0</version><description>JLMS_CONTRACTS_DESCRIPTION</description>
  <files><filename>bootstrap.php</filename><folder>src</folder></files>
 </extension>

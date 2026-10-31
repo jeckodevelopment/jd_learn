@@ -10,9 +10,10 @@ use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Joomla\CMS\Categories\CategoryServiceInterface;
 use Joomla\CMS\Categories\CategoryServiceTrait;
 
-final class JlmsComponent extends MVCComponent implements CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
+final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Association\AssociationServiceInterface, CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
 {
     use CategoryServiceTrait;
+    use \Joomla\CMS\Association\AssociationServiceTrait;
 
     private \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $quizDeadlineService;
     public function setQuizDeadlineService(\Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $service): void { $this->quizDeadlineService = $service; }

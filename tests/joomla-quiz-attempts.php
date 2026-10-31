@@ -9,8 +9,9 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
 }
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
-// The retained-data mode must not alter state, so it can detect upgrade regressions.
-if (($argv[2] ?? '') !== 'retained') {
+// Retained checks must not alter state. Workers inherit the parent's committed setup;
+// rewriting extension settings concurrently can deadlock before the test barrier.
+if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='task' AND element='jlms'))");
     $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
@@ -207,7 +208,16 @@ $snapshotHash=hash('sha256',json_encode($db->setQuery('SELECT * FROM #__jlms_att
 file_put_contents($fixturePath,json_encode($f,JSON_THROW_ON_ERROR));
 $workers=[];
 for($i=0;$i<2;$i++){$pipes=[];$process=proc_open([PHP_BINARY,__FILE__,$root,'worker'],[0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],$pipes);if(!is_resource($process))throw new \RuntimeException('Worker not started');$workers[]=[$process,$pipes];}
-foreach($workers as[$process,$pipes])if(trim((string)fgets($pipes[1]))!=='ready')throw new \RuntimeException('Worker barrier failed');
+foreach($workers as[$process,$pipes]) {
+    stream_set_timeout($pipes[1],30);
+    $ready=trim((string)fgets($pipes[1]));
+    if($ready!=='ready') {
+        stream_set_blocking($pipes[1],false); stream_set_blocking($pipes[2],false);
+        $detail=$ready.' '.stream_get_contents($pipes[1]).' '.stream_get_contents($pipes[2]);
+        foreach($workers as[$child,$channels]) { proc_terminate($child); }
+        throw new \RuntimeException('Worker barrier failed: '.$detail);
+    }
+}
 $db->transactionStart();$db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id='.$concurrentEnrollment.' FOR UPDATE')->loadResult();
 foreach($workers as[$process,$pipes]){fwrite($pipes[0],"go\n");fclose($pipes[0]);}
 usleep(200000);$db->transactionCommit();
