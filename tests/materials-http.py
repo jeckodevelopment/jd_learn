@@ -45,11 +45,11 @@ log=open(root.parent/'materials-http.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
 scanner=None
 admin=client();student=client();guest=client()
-def admin_page(course=None,version=None):
+def admin_page(course=None,version=None,replace=0):
  course=fixture['course_id'] if course is None else course;version=fixture['version_id'] if version is None else version
- return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version))
+ return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version)+'&replace_id='+str(replace))
 def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False):
- url,body,_=admin_page(course,version);page=Page(body.decode());form=next(f for f in page.forms if f['id']=='jlms-material-upload')
+ url,body,_=admin_page(course,version,replace);page=Page(body.decode());form=next(f for f in page.forms if f['id']=='jlms-material-upload')
  fields=dict(form['fields']);fields.update({'jform[title]':title,'jform[description]':'Extra facoltativo','jform[lesson_id]':str(lesson),'jform[replace_id]':str(replace)})
  if invalid_token:
   fields={k:v for k,v in fields.items() if not re.fullmatch('[a-f0-9]{32}',k)}
@@ -90,8 +90,13 @@ try:
  first=files()[0]
  expect(first['storage_key']!=old_key and (private/old_key).exists() and hashlib.sha256((private/old_key).read_bytes()).hexdigest()==old_hash,'Replacement preserves immutable old blob')
  upload('lesson.txt',b'LESSON_PRIVATE_NOTES\n','Lesson handout',lesson=fixture['lesson_id'])
+ objects=[b'<</Type/Catalog/Pages 2 0 R>>',b'<</Type/Pages/Kids[3 0 R]/Count 1>>',b'<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 200]/Contents 4 0 R>>',b'<</Length 0>>stream\n\nendstream']
+ pdf=b'%PDF-1.4\n';offsets=[0]
+ for i,obj in enumerate(objects,1):offsets.append(len(pdf));pdf+=str(i).encode()+b' 0 obj\n'+obj+b'\nendobj\n'
+ xref=len(pdf);pdf+=b'xref\n0 5\n0000000000 65535 f \n'+b''.join(('%010d 00000 n \n'%o).encode() for o in offsets[1:])+b'trailer<</Size 5/Root 1 0 R>>\nstartxref\n'+str(xref).encode()+b'\n%%EOF\n'
+ upload('guida-à.pdf',pdf,'PDF handout',lesson=fixture['lesson_id'])
  upload('foreign.txt',b'FOREIGN_PRIVATE_NOTES\n','Foreign handout',course=fixture['foreign_course_id'],version=fixture['foreign_version_id'])
- expect(len(files())==2,'Two attachment scopes persisted')
+ expect(len(files())==3,'Course and lesson attachment scopes persisted')
  expect(command('denied')=='material ACL passed','Material authoring requires its specific permission')
  expect(json.loads(first['scan_json'])['result']=='not_configured','Absent scanner is explicit, never reported clean')
  # Mandatory scanner unavailable: quarantine, admin download blocked and publication refused.
@@ -114,6 +119,12 @@ try:
  act_material('delete',infected['id'])
  publish()
  _,published,_=admin_page();expect('id="jlms-material-upload"' not in published.decode(),'Published material associations are immutable')
+ frozen=json.loads(command('inspect'))['version']
+ act_material('scan',first['id'])
+ expect(json.loads(command('inspect'))['version']==frozen,'Published security rescan preserves teaching hash and revision')
+ u,b,_=admin_page();scan_form=next(f for f in Page(b.decode()).forms if f['fields'].get('task')=='material.scan')
+ forged=dict(scan_form['fields']);forged.update({'task':'material.save','jform[title]':'Forbidden edit','jform[state]':'1','jform[ordering]':'0'})
+ request(admin,urljoin(u,scan_form['action']),fields=forged,expected=409)
  # Student access uses native frontend login.
  url,body,_=request(student,'/index.php?option=com_users&view=login');page=Page(body.decode());form=next(f for f in page.forms if 'username' in f['fields'] and 'password' in f['fields'])
  fields=dict(form['fields']);fields.update(username='cilearnerhttp',password='Ci-only-Learner-Password-2026');request(student,urljoin(urljoin(url,page.base or ''),form['action']),fields=fields)
@@ -124,11 +135,20 @@ try:
  expect(b'id="jlms-classroom-course-materials"' in body and b'id="jlms-lesson-resources"' in body and b'Course handout' in body and b'Lesson handout' in body,'Classroom separates course and lesson resources')
  download='/index.php?option=com_jlms&task=attachment.download&format=raw&enrollment_id='+str(enrollment)+'&id='+str(first['id'])
  _,binary,headers=request(student,download);expect(binary==b'NEW_PRIVATE_NOTES\n','Authorised download is exact')
+ pdf_id=next(f['id'] for f in files() if f['title']=='PDF handout')
+ _,pdf_download,pdf_headers=request(student,download.rsplit('&id=',1)[0]+'&id='+str(pdf_id))
+ expect(pdf_download==pdf and pdf_headers.get('Content-Type')=='application/pdf' and "filename*=UTF-8''" in pdf_headers.get('Content-Disposition',''),'PDF and UTF-8 filename delivered exactly')
  expect(headers.get('X-Content-Type-Options')=='nosniff' and 'attachment;' in headers.get('Content-Disposition','') and 'no-store' in headers.get('Cache-Control',''),'Protected response headers applied')
  _,part,headers=request(student,download,headers={'Range':'bytes=0-2'},expected=206);expect(part==b'NEW' and headers.get('Content-Range','').startswith('bytes 0-2/'),'Partial download is correct')
  _,suffix,_=request(student,download,headers={'Range':'bytes=-6'},expected=206);expect(suffix==b'NOTES\n','Suffix range is correct')
  request(student,download,headers={'Range':'bytes=999999-1000000'},expected=416)
  _,head,headers=request(student,download,method='HEAD');expect(head==b'' and int(headers.get('Content-Length'))==len(binary),'HEAD carries correct metadata and no body')
+ foreign_id=json.loads(command('inspect'))['foreign_files'][0]['id']
+ request(student,download.rsplit('&id=',1)[0]+'&id='+str(foreign_id),expected=404)
+ other=client();u,b,_=request(other,'/index.php?option=com_users&view=login');pg=Page(b.decode());login_form=next(f for f in pg.forms if 'username' in f['fields'] and 'password' in f['fields'])
+ credentials=dict(login_form['fields']);credentials.update(username='cilearnerother',password='Ci-only-Learner-Password-2026')
+ request(other,urljoin(urljoin(u,pg.base or ''),login_form['action']),fields=credentials)
+ request(other,download,expected=404)
  request(guest,download,expected=401)
  request(guest,'/private-materials/'+first['storage_key'],expected=404)
  # Revoke the dedicated entitlement outside the web process, preserving the same session.

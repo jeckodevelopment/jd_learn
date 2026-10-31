@@ -18,7 +18,7 @@ final class MaterialDownload
             $size = $file['size']; $start = 0; $end = $size - 1; $status = 200;
             $range = $app->getInput()->server->getString('HTTP_RANGE', '');
             $ifRange = $app->getInput()->server->getString('HTTP_IF_RANGE', '');
-            if ($range !== '' && ($ifRange === '' || $ifRange === $file['etag'])) {
+            if ($method === 'GET' && $range !== '' && ($ifRange === '' || $ifRange === $file['etag'])) {
                 if (!preg_match('/\Abytes=([0-9]{0,16})-([0-9]{0,16})\z/D', $range, $parts) || ($parts[1] === '' && $parts[2] === '')) {
                     $app->setHeader('Content-Range', 'bytes */' . $size, true);
                     throw new \RuntimeException('COM_JLMS_RANGE_INVALID', 416);

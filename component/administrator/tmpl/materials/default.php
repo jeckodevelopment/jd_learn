@@ -21,8 +21,10 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
  <p><?= Text::_($item['scan_required'] ? 'COM_JLMS_SCAN_REQUIRED' : 'COM_JLMS_SCAN_NOT_CONFIGURED') ?></p>
  <?php if ($editable) : ?>
  <form id="jlms-material-upload" enctype="multipart/form-data" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+  <?php if ($this->replacement) : ?><h2><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></h2><input type="hidden" name="jform[lesson_id]" value="<?= $this->replacementLesson ?>"><?php endif; ?>
   <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="material.upload">
-  <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_UPLOAD_MATERIAL') ?></button>
+  <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_($this->replacement ? 'COM_JLMS_REPLACE_MATERIAL' : 'COM_JLMS_UPLOAD_MATERIAL') ?></button>
+  <?php if ($this->replacement) : ?><a href="<?= $link($base) ?>"><?= Text::_('JCANCEL') ?></a><?php endif; ?>
  </form>
  <?php else : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
  <div id="jlms-admin-material-list">
@@ -32,6 +34,7 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <p><?= $this->escape($file->original_name) ?> · <?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B · <?= $this->escape($file->status) ?> · ID <?= (int) $file->id ?> · <?= $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
   <?php if ($file->status === 'ready') : ?><a href="<?= $link('index.php?option=com_jlms&task=material.download&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&id=' . (int) $file->id) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a><?php endif; ?>
   <?php if ($editable) : ?>
+  <a class="btn btn-secondary" href="<?= $link($base . '&page=' . (int) $item['files']['page'] . '&replace_id=' . (int) $file->id) ?>#jlms-material-upload"><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></a>
   <form method="post" class="jlms-material-edit" action="<?= $link('index.php?option=com_jlms') ?>">
    <?php $hidden($scope + ['id' => $file->id]); ?><input type="hidden" name="task" value="material.save">
    <label><?= Text::_('JGLOBAL_TITLE') ?><input type="text" name="jform[title]" value="<?= $this->escape($file->title) ?>" maxlength="255" required></label>
