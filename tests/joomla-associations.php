@@ -132,7 +132,10 @@ $model->setState('course.id', $en);
 $form = $model->getForm();
 assocExpect((bool) $form->getField('it-IT', 'associations'), 'native language-specific association form field loaded');
 assocExpect(str_contains($form->getInput('it-IT', 'associations'), 'association-it'), 'native field renders editable language-filtered course title');
+
 $baseline = assocRows();
+$titleChange = assocData($en); $titleChange['title'] = 'Changed with graph';
+assocExpect(!assocSave($titleChange + ['associations'=>['it-IT'=>$otherIt]]) && assocRows() === $baseline && assocData($en)['title'] !== 'Changed with graph', 'metadata and translation changes must not enter native implicit asset commit');
 foreach ([['it-IT'=>$otherEn], ['en-GB'=>$otherEn], ['not-a-language'=>$it], ['it-IT'=>-1], ['it-IT'=>'1 OR 1=1'], ['it-IT'=>999999999], ['it-IT'=>$en]] as $invalid) {
     assocExpect(!assocSave(assocData($en) + ['associations'=>$invalid]) && assocRows() === $baseline, 'invalid target/language rejected atomically');
 }
@@ -189,14 +192,15 @@ $db->transactionStart();
 $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult();
 foreach ($workers as [$process,$pipes]) { fwrite($pipes[0],"go\n"); fclose($pipes[0]); }
 usleep(150000); $db->transactionCommit();
-$outcomes = [];
+$outcomes = []; $workerDetails = [];
 foreach ($workers as [$process,$pipes]) {
     $out = stream_get_contents($pipes[1]); $err = stream_get_contents($pipes[2]);
     fclose($pipes[1]); fclose($pipes[2]);
     if (proc_close($process) !== 0) { throw new \RuntimeException('Association worker failed: '.$err.$out); }
+    $workerDetails[] = ['out'=>$out,'err'=>$err];
     $outcomes[] = json_decode($out,true,16,JSON_THROW_ON_ERROR)['saved'];
 }
-assocExpect(count(array_filter($outcomes)) === 1, 'concurrent groups cannot both claim one target');
+assocExpect(count(array_filter($outcomes)) === 1, 'concurrent groups cannot both claim one target: '.json_encode($workerDetails,JSON_THROW_ON_ERROR));
 $raceMembers = $db->setQuery("SELECT b.id FROM #__associations a JOIN #__associations b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=$raceIt AND a.context='com_jlms.item'")->loadColumn();
 assocExpect(count($raceMembers) === 2 && count(array_intersect([$raceEn1,$raceEn2],array_map('intval',$raceMembers))) === 1, 'race leaves exactly one coherent native translation pair');
 // Freeze and publish both courses through the actual native workflow.
@@ -218,6 +222,12 @@ foreach ([$en,$it,$all] as $course) {
 $app->loadIdentity(new \Joomla\CMS\User\User());
 $links = $helper->getAssociationsForItem($en, 'course');
 assocExpect(($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id='.$it.'&lang=it', 'native language switch resolves published course sheet');
+// Joomla treats language access=0 as unrestricted; access=2 must still hide it from guests.
+$language->access=2; $language->store();
+assocExpect($helper->getAssociationsForItem($en,'course') === [], 'restricted content language omitted for guest');
+$language->access=0; $language->store();
+assocExpect(isset($helper->getAssociationsForItem($en,'course')['it-IT']), 'native unrestricted language access honored');
+$language->access=1; $language->store();
 assocExpect($helper->getAssociationsForItem($en,'classroom') === [] && $helper->getAssociationsForItem($en,'quiz') === [], 'no attempt/enrollment or learning progress translation');
 $update($it,['catalog_access'=>2]);
 assocExpect($helper->getAssociationsForItem($en,'course') === [], 'target visibility rechecked without stale association cache');

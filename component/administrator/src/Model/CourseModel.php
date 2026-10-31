@@ -14,6 +14,16 @@ final class CourseModel extends AdminModel
 {
     public $typeAlias = 'com_jlms.course';
     protected $associationsContext = 'com_jlms.item';
+    private bool $associationWrite = false;
+
+    public function getTable($name = '', $prefix = '', $options = [])
+    {
+        $table = parent::getTable($name, $prefix, $options);
+        if ($table instanceof \Jlms\Component\Jlms\Administrator\Table\CourseTable) {
+            $table->requireStableAsset($this->associationWrite);
+        }
+        return $table;
+    }
 
     public function getForm($data = [], $loadData = true)
     {
@@ -94,6 +104,16 @@ final class CourseModel extends AdminModel
             }
             $targets[$tag] = $target;
         }
+        $currentTargets = [];
+        foreach ($members as $member) {
+            if ((int) $member->id !== $id) { $currentTargets[$member->language] = (int) $member->id; }
+        }
+        ksort($targets); ksort($currentTargets);
+        if ($targets === $currentTargets) {
+            // Metadata-only save: leave the shared graph entirely untouched.
+            unset($data['associations']);
+            return;
+        }
         $db = $this->getDatabase();
         $ids = array_unique(array_merge(array_values($targets), array_map(static fn ($m): int => (int) $m->id, $members)));
         sort($ids, SORT_NUMERIC);
@@ -123,11 +143,19 @@ final class CourseModel extends AdminModel
         }
         // A nonempty zero field instructs native AdminModel to clear the old group too.
         $data['associations'] = $targets ?: [$language => 0];
+        if (($targets || $members) && (!$record
+            || (string) ($data['title'] ?? $record->title) !== (string) $record->title
+            || (int) ($data['catid'] ?? $record->catid) !== (int) $record->catid)) {
+            throw new \DomainException('COM_JLMS_ASSOCIATION_SAVE_SEPARATELY');
+        }
+        // Even an all-zero request on an existing course must retain its native asset.
+        $this->associationWrite = $record !== null;
     }
 
     public function save($data)
     {
         $db = $this->getDatabase();
+        $this->associationWrite = false;
         $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations'];
         $data = array_intersect_key($data, array_flip($allowed));
         $id = (int) ($data['id'] ?? 0);
@@ -184,9 +212,11 @@ final class CourseModel extends AdminModel
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION'];
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY'];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             return false;
+        } finally {
+            $this->associationWrite = false;
         }
     }
 

@@ -41,8 +41,9 @@ final class AssociationHelper
             ->where('a.context = :context')->where('a.id = :id')->where('c.id <> :source')
             ->bind(':context', $context)->bind(':id', $id, ParameterType::INTEGER)->bind(':source', $id, ParameterType::INTEGER);
         $items = $db->setQuery($query)->loadObjectList();
-        $languageQuery = $db->createQuery()->select('lang_code, sef')->from('#__languages')->where('published = 1')->whereIn('access', $levels ?: [0]);
+        $languageQuery = $db->createQuery()->select('lang_code, sef')->from('#__languages')->where('published = 1')->whereIn('access', array_values(array_unique(array_merge([0], $levels))));
         $languages = $db->setQuery($languageQuery)->loadObjectList('lang_code');
+        if (!isset($languages[$source->language])) { return []; }
         $links = [];
         foreach ($items as $item) {
             $tag = (string) $item->language;
