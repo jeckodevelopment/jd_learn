@@ -31,7 +31,7 @@ final class CurriculumModel extends FormModel
         $app = Factory::getApplication();
         try {
             return $app->bootComponent('com_jlms')->getCurriculumService()->outline(
-            $app->getIdentity(), $app->getInput()->getInt('id'), $app->getInput()->getInt('version_id'),
+            $app->getIdentity(), $app->getInput()->getInt('id', 0), $app->getInput()->getInt('version_id', 0),
             );
         } catch (\DomainException $error) {
             $code = $error->getMessage() === 'JERROR_ALERTNOAUTHOR' ? 403 : 404;

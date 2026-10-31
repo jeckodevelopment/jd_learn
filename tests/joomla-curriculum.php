@@ -143,8 +143,9 @@ curriculumExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lessons WHERE
 $service->deleteItem($actor,'module',scopeInput()+['id'=>$second,'revision'=>recordRevision('modules',$second),'confirmation'=>'1']);
 curriculumExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_modules WHERE id='.$second)->loadResult(),'empty draft module deleted');
 $app->getInput()->set('id',$course);
-$app->getInput()->set('version_id',$version);
+$app->getInput()->set('version_id',null);
 $curriculumModel=$factory->createModel('Curriculum','Administrator',['ignore_request'=>true]);
+curriculumExpect((int)$curriculumModel->getOutline()['version']->id===$version,'latest draft resolves when version_id is omitted');
 curriculumExpect((bool)$curriculumModel->getForm([],false) && (bool)$curriculumModel->getLessonForm(),'native curriculum forms load');
 $outline=$service->outline($actor,$course,$version);
 curriculumExpect(count($outline['modules'])===1 && count($outline['lessons'])===1,'final outline remains coherent');
