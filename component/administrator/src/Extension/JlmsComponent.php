@@ -14,6 +14,13 @@ final class JlmsComponent extends MVCComponent implements CategoryServiceInterfa
 {
     use CategoryServiceTrait;
 
+    private \Jlms\Component\Jlms\Administrator\Application\QuestionBankService $questionBankService;
+    public function setQuestionBankService(\Jlms\Component\Jlms\Administrator\Application\QuestionBankService $service): void { $this->questionBankService = $service; }
+    public function getQuestionBankService(): \Jlms\Component\Jlms\Administrator\Application\QuestionBankService { return $this->questionBankService; }
+    private \Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService $quizAuthoringService;
+    public function setQuizAuthoringService(\Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService $service): void { $this->quizAuthoringService = $service; }
+    public function getQuizAuthoringService(): \Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService { return $this->quizAuthoringService; }
+
     private \Jlms\Component\Jlms\Administrator\Application\LocalVideoService $localVideoService;
     public function setLocalVideoService(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService $service): void { $this->localVideoService = $service; }
     public function getLocalVideoService(): \Jlms\Component\Jlms\Administrator\Application\LocalVideoService { return $this->localVideoService; }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldprefix="Jlms\Component\Jlms\Administrator\Field"><fieldset name="details">
+ <field name="course_id" type="hidden" filter="integer" /><field name="version_id" type="hidden" filter="integer" /><field name="expected_version_revision" type="hidden" filter="integer" /><field name="lesson_id" type="hidden" default="0" filter="integer" /><field name="revision" type="hidden" default="1" filter="integer" />
+ <field name="title" type="text" label="JGLOBAL_TITLE" maxlength="255" required="true" filter="string" />
+ <field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" filter="integer" />
+ <field name="required" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_LESSON_REQUIRED" default="1" filter="string"><option value="0">JNO</option><option value="1">JYES</option></field>
+ <field name="assessment" type="list" label="COM_JLMS_QUIZ_ASSESSMENT" default="graded" filter="cmd"><option value="graded">COM_JLMS_QUIZ_GRADED</option><option value="practice">COM_JLMS_QUIZ_PRACTICE</option></field>
+ <field name="threshold" type="number" label="COM_JLMS_QUIZ_THRESHOLD" default="70" min="0" max="100" step="0.01" filter="string" />
+ <field name="max_attempts" type="number" label="COM_JLMS_QUIZ_ATTEMPTS" default="3" min="0" max="100" filter="string" />
+ <field name="time_minutes" type="number" label="COM_JLMS_QUIZ_TIME" default="0" min="0" max="1440" filter="string" />
+ <field name="retry_minutes" type="number" label="COM_JLMS_QUIZ_RETRY" default="0" min="0" max="10080" filter="string" />
+ <field name="selection_mode" type="list" label="COM_JLMS_QUIZ_SELECTION" default="fixed" filter="cmd"><option value="fixed">COM_JLMS_QUIZ_FIXED</option><option value="random">COM_JLMS_QUIZ_RANDOM</option></field>
+ <field name="draw_count" type="number" label="COM_JLMS_QUIZ_DRAW" default="1" min="1" max="200" showon="selection_mode:random" filter="string" />
+ <field name="shuffle_questions" type="checkbox" label="COM_JLMS_QUIZ_SHUFFLE_QUESTIONS" default="0" value="1" filter="integer" />
+ <field name="shuffle_options" type="checkbox" label="COM_JLMS_QUIZ_SHUFFLE_OPTIONS" default="0" value="1" filter="integer" />
+ <field name="feedback_policy" type="list" label="COM_JLMS_QUIZ_FEEDBACK" default="pass_or_exhausted" filter="cmd"><option value="pass_or_exhausted">COM_JLMS_QUIZ_FEEDBACK_DEFAULT</option><option value="never">COM_JLMS_QUIZ_FEEDBACK_NEVER</option><option value="after_submit">COM_JLMS_QUIZ_FEEDBACK_PRACTICE</option></field>
+ <field name="questions" type="subform" label="COM_JLMS_QUIZ_POOL" description="COM_JLMS_QUIZ_POOL_DESC" multiple="true" min="1" max="200" layout="joomla.form.field.subform.repeatable-table" filter="Subform" validate="Subform"><form addfieldprefix="Jlms\Component\Jlms\Administrator\Field">
+  <field name="revision_id" type="questionrevision" label="COM_JLMS_QUESTION_REVISION_ID" min="1" required="true" filter="string" />
+  <field name="points" type="number" label="COM_JLMS_QUESTION_POINTS" min="1" max="10000" default="1" required="true" filter="string" />
+ </form></field>
+</fieldset></form>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><fieldset name="details">
+ <field name="id" type="hidden" default="0" filter="integer" /><field name="revision" type="hidden" default="1" filter="integer" />
+ <field name="catid" type="category" extension="com_jlms.question" label="JCATEGORY" required="true" filter="integer" />
+ <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" default="*"><option value="*">JALL</option></field>
+ <field name="state" type="list" label="JSTATUS" default="0" filter="integer"><option value="0">JUNPUBLISHED</option><option value="1">JPUBLISHED</option></field>
+ <field name="kind" type="list" label="COM_JLMS_QUESTION_KIND" default="single" filter="cmd"><option value="single">COM_JLMS_QUESTION_SINGLE</option><option value="true_false">COM_JLMS_QUESTION_TRUE_FALSE</option><option value="multiple">COM_JLMS_QUESTION_MULTIPLE</option></field>
+ <field name="prompt" type="editor" label="COM_JLMS_QUESTION_PROMPT" required="true" filter="\Joomla\CMS\Component\ComponentHelper::filterText" />
+ <field name="default_points" type="number" label="COM_JLMS_QUESTION_POINTS" default="1" min="1" max="10000" filter="string" />
+ <field name="options" type="subform" label="COM_JLMS_QUESTION_OPTIONS" description="COM_JLMS_QUESTION_OPTIONS_DESC" multiple="true" min="2" max="20" layout="joomla.form.field.subform.repeatable-table" filter="Subform" validate="Subform">
+  <form><field name="option_id" type="hidden" default="" filter="string" /><field name="label" type="textarea" label="COM_JLMS_OPTION_LABEL" required="true" maxlength="4096" rows="2" filter="string" /><field name="correct" type="checkbox" label="COM_JLMS_OPTION_CORRECT" value="1" default="0" filter="integer" /></form>
+ </field>
+ <field name="explanation" type="editor" label="COM_JLMS_QUESTION_EXPLANATION" filter="\Joomla\CMS\Component\ComponentHelper::filterText" />
+</fieldset></form>
