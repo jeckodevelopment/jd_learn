@@ -125,9 +125,9 @@ pubExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id='.$
     && !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id='.$course)->loadResult(),'veto rolls back teaching snapshot and default edition');
 // The core Workflow helper does not propagate a false model result; the service must.
 $afterVeto = static function ($event): void { if ($event->getContext()==='com_jlms.course') { $event->addResult(false); } };
-$app->getDispatcher()->addListener('onContentAfterChangeState',$afterVeto);
+$app->getDispatcher()->addListener('onContentChangeState',$afterVeto);
 pubDenied(fn()=>pubTransition(),'failed native state callback rolls back publication');
-$app->getDispatcher()->removeListener('onContentAfterChangeState',$afterVeto);
+$app->getDispatcher()->removeListener('onContentChangeState',$afterVeto);
 pubExpect($hidden(),'failed state callback leaves public course hidden');
 pubTransition();
 $frozen=$db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id='.$version)->loadObject();
