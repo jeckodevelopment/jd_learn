@@ -149,10 +149,5 @@ curriculumExpect((int)$curriculumModel->getOutline()['version']->id===$version,'
 curriculumExpect((bool)$curriculumModel->getForm([],false) && (bool)$curriculumModel->getLessonForm(),'native curriculum forms load');
 $outline=$service->outline($actor,$course,$version);
 curriculumExpect(count($outline['modules'])===1 && count($outline['lessons'])===1,'final outline remains coherent');
-$view=$factory->createView('Curriculum','Administrator','Html');
-$view->setModel($curriculumModel,true);
-ob_start();
-$view->display();
-$html=ob_get_clean();
-curriculumExpect(str_contains($html,'jlms-module-form') && str_contains($html,'jlms-lesson-form'),'native curriculum view renders both forms');
+// Rendering is tested over HTTP, where Joomla initialises its document and toolbar.
 echo json_encode(['curriculum_checks'=>$checks,'status'=>'passed','course_id'=>$course,'version_id'=>$version],JSON_THROW_ON_ERROR).PHP_EOL;

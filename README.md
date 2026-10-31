@@ -4,7 +4,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene
 
 **Stato: incremento 0.2.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
 
-## Funzionalità del primo incremento
+## Funzionalità attuali
 
 - Pacchetto Joomla composto da libreria contratti, componente MVC e quattro plugin video dedicati.
 - Schema InnoDB di 37 tabelle con 53 vincoli referenziali; installer a passi riprendibili e conservazione dei dati alla disinstallazione.
