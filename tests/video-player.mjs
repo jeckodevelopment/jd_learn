@@ -60,3 +60,14 @@ const vm=await vimeo.create(box,{options:{reference:'12345',privacy_hash:'abc123
 const frameUrl=new URL(frames.at(-1).src);assert.equal(frameUrl.searchParams.get('dnt'),'1');assert.equal(frameUrl.searchParams.get('h'),'abc123');
 assert.equal((await vm.sample()).duration_ms,10000);await vm.destroy();assert.equal(vmHandlers,0);assert.equal(vmDestroyed,1);
 console.log(JSON.stringify({provider_adapter_checks:10,status:'passed',environment:'SDK doubles; no live remote video'}));
+
+// A revoked consent must also settle an SDK instance that never reaches ready.
+for (const [name,adapter] of [['YT',youtube],['Vimeo',vimeo]]) {
+ const signal=new AbortController(); let made;
+ if (name==='YT') globalThis.YT={Player:class{constructor(){made=true;}destroy(){}}};
+ else globalThis.Vimeo={Player:class{constructor(){made=true;}ready(){return new Promise(()=>{});}destroy(){return Promise.resolve();}on(){}}};
+ const result=adapter.create(box,{options:{reference:'12345',locale:'it-IT'}},()=>{},signal.signal);
+ await new Promise(resolve=>setTimeout(resolve,0));assert.ok(made);signal.abort();
+ await assert.rejects(result,{name:'AbortError'});
+}
+console.log(JSON.stringify({provider_pending_abort_checks:4,status:'passed'}));

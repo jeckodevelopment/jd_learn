@@ -21,14 +21,22 @@ export async function create(container, descriptor, emit, signal) {
   frame.title = container.dataset.title; frame.allow = 'fullscreen; picture-in-picture';
   frame.allowFullscreen = true; container.append(frame);
   const player = new Vimeo.Player(frame);
-  const abort = () => { player.destroy().catch(() => {}); frame.remove(); };
+  let rejectReady, readyTimer;
+  const abort = () => {
+    clearTimeout(readyTimer); player.destroy().catch(() => {}); frame.remove();
+    rejectReady?.(new DOMException('Playback cancelled', 'AbortError'));
+  };
   signal?.addEventListener('abort', abort, {once: true});
   const handlers = new Map();
   for (const event of ['play', 'pause', 'ended', 'seeking', 'seeked', 'bufferstart', 'bufferend', 'playbackratechange', 'error']) {
     const handler = () => emit(({bufferstart: 'buffering', bufferend: 'position', playbackratechange: 'ratechange'})[event] || event);
     handlers.set(event, handler); player.on(event, handler);
   }
-  await player.ready();
+  await Promise.race([player.ready(), new Promise((_, reject) => {
+    rejectReady = reject;
+    readyTimer = setTimeout(() => { abort(); reject(new Error('player timeout')); }, 30000);
+  })]);
+  clearTimeout(readyTimer);
   return {
     sample: async () => {
       const [position, duration, rate, paused, ended] = await Promise.all([

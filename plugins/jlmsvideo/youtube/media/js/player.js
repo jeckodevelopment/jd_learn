@@ -17,15 +17,20 @@ export async function create(container, descriptor, emit, signal) {
   await loadSdk();
   signal?.throwIfAborted();
   const slot = document.createElement('div'); container.append(slot);
-  let player;
-  const abort = () => { player?.destroy(); slot.remove(); };
+  let player, rejectReady, readyTimer;
+  const abort = () => {
+    clearTimeout(readyTimer); player?.destroy(); slot.remove();
+    rejectReady?.(new DOMException('Playback cancelled', 'AbortError'));
+  };
   signal?.addEventListener('abort', abort, {once: true});
   await new Promise((resolve, reject) => {
+    rejectReady = reject;
+    readyTimer = setTimeout(() => { abort(); reject(new Error('player timeout')); }, 30000);
     player = new YT.Player(slot, {
       host: 'https://www.youtube-nocookie.com', videoId: descriptor.options.reference,
       playerVars: {autoplay: 0, controls: 1, playsinline: 1, origin: location.origin,
         hl: descriptor.options.locale.split('-')[0]},
-      events: {onReady: resolve, onError: () => { emit('error'); reject(new Error('provider')); },
+      events: {onReady: () => { clearTimeout(readyTimer); resolve(); }, onError: () => { clearTimeout(readyTimer); emit('error'); reject(new Error('provider')); },
         onStateChange: ({data}) => emit(({1: 'play', 2: 'pause', 0: 'ended', 3: 'buffering'})[data] || 'position'),
         onPlaybackRateChange: () => emit('ratechange')}
     });
