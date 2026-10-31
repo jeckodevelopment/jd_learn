@@ -236,9 +236,13 @@ final class LearningService
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
         $lesson = $this->lesson((int) $version->id, $lessonId);
         if ($lesson->kind !== 'video') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
-        $q = $this->db->createQuery()->select('source_json')->from('#__jlms_lessons')->where('id = :lesson')->bind(':lesson', $lessonId, ParameterType::INTEGER);
-        $lesson->source_json = $this->db->setQuery($q)->loadResult();
-        $deadlines = array_filter([$course->publish_down, $edition->ends_at, $enrollment->ends_at], static fn ($v): bool => $v !== null && $v !== '');
+        $courseId = (int) $course->id;
+        $q = $this->db->createQuery()->select('l.source_json, c.publish_down')->from('#__jlms_lessons AS l')
+            ->innerJoin('#__jlms_courses AS c ON c.id = :course')->where('l.id = :lesson')
+            ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
+        $source = $this->db->setQuery($q)->loadObject();
+        $lesson->source_json = $source->source_json;
+        $deadlines = array_filter([$source->publish_down, $edition->ends_at, $enrollment->ends_at], static fn ($v): bool => $v !== null && $v !== '');
         sort($deadlines);
         $lesson->access_expires_at = $deadlines[0] ?? null;
         return [$actor, $version, $enrollment, $lesson];
