@@ -20,7 +20,8 @@ $i=$this->item;$attempt=$i['attempt'];$open=$attempt&&$attempt['state']==='open'
  <p id="jlms-quiz-timer" role="timer" aria-live="off"></p>
  <noscript><p><?= Text::_('COM_JLMS_QUIZ_JS_REQUIRED') ?></p></noscript>
  <?php if($attempt&&!$open): ?>
- <section id="jlms-quiz-result"><h2><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></h2><p><?= Text::_($attempt['passed']?'COM_JLMS_QUIZ_PASSED':'COM_JLMS_QUIZ_FAILED') ?>: <?= (int)$attempt['score_points'] ?>/<?= (int)$attempt['max_points'] ?></p>
+ <section id="jlms-quiz-result"><h2><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></h2><p><?= Text::_($attempt['state']==='invalidated'?'COM_JLMS_QUIZ_CANCELLED':($attempt['passed']?'COM_JLMS_QUIZ_PASSED':'COM_JLMS_QUIZ_FAILED')) ?>: <?= $attempt['score_points']===null?'—':(int)$attempt['score_points'] ?>/<?= (int)$attempt['max_points'] ?></p>
+ <?php if($attempt['state']==='invalidated'): ?><p id="jlms-quiz-invalidated"><?= Text::_('COM_JLMS_QUIZ_CANCELLED_NOTICE') ?></p><?php endif; ?>
  <?php if(!$i['feedback_available']): ?><p><?= Text::_('COM_JLMS_QUIZ_FEEDBACK_LOCKED') ?></p><?php endif; ?></section>
  <?php endif; ?>
  <form id="jlms-quiz-form">
@@ -45,6 +46,6 @@ $i=$this->item;$attempt=$i['attempt'];$open=$attempt&&$attempt['state']==='open'
  </div></form>
  <section id="jlms-quiz-history"><h2><?= Text::_('COM_JLMS_QUIZ_HISTORY') ?></h2>
  <?php if($i['best']): ?><p><?= Text::_('COM_JLMS_QUIZ_BEST') ?>: <?= (int)$i['best']['score_points'] ?>/<?= (int)$i['best']['max_points'] ?></p><?php endif; ?>
- <ol><?php foreach($i['history']as$entry): ?><li><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id='.(int)$i['enrollment_id'].'&lesson_id='.(int)$i['lesson_id'].'&attempt_id='.(int)$entry['id']) ?>"><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?> <?= (int)$entry['attempt_no'] ?></a></li><?php endforeach; ?></ol></section>
+ <ol><?php foreach($i['history']as$entry): ?><li><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id='.(int)$i['enrollment_id'].'&lesson_id='.(int)$i['lesson_id'].'&attempt_id='.(int)$entry['id']) ?>"><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?> <?= (int)$entry['attempt_no'] ?></a><?php if($entry['status']==='invalidated'): ?> · <?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?><?php endif; ?></li><?php endforeach; ?></ol></section>
  <a id="jlms-quiz-back" href="<?= Route::_('index.php?option=com_jlms&view=classroom&id='.(int)$i['enrollment_id'].'&lesson_id='.(int)$i['lesson_id']) ?>"><?= Text::_('COM_JLMS_QUIZ_CLASSROOM') ?></a>
 </section>

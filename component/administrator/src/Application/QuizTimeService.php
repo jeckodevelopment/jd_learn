@@ -34,6 +34,12 @@ final class QuizTimeService
         return [$actor,$quiz,$e];
     }
 
+    /** Shared course-scoped authorization and parent validation for assessment administration. */
+    public function managementContext(User $identity,int $course,int $lesson,int $enrollment):array
+    {
+        return $this->scope($identity,$course,$lesson,$enrollment);
+    }
+
     /** Read under the caller's enrollment lock when preparing an attempt. No reason/actor enters the learner DTO. */
     public function allowance(int $enrollment,int $quiz):?object
     {

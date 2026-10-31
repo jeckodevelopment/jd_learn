@@ -55,8 +55,8 @@ final class QuizAttemptService
     }
     private function history(int $enrollment,int $quiz):array
     {
-        $q=$this->db->createQuery()->select('COUNT(*) AS used, MAX(attempt_no) AS last_no, MAX(submitted_at) AS last_closed, MAX(passed) AS any_passed')
-            ->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')->where('counted_for_limit = 1')
+        $q=$this->db->createQuery()->select("SUM(counted_for_limit) AS used, MAX(attempt_no) AS last_no, MAX(CASE WHEN status IN ('submitted','expired') THEN submitted_at END) AS last_closed, MAX(CASE WHEN status IN ('submitted','expired') THEN passed ELSE 0 END) AS any_passed")
+            ->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
             ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quiz,ParameterType::INTEGER);
         $q->setQuery((string)$q.' FOR UPDATE');$r=$this->db->setQuery($q)->loadObject();return ['used'=>(int)$r->used,'last_no'=>(int)$r->last_no,'last_closed'=>self::timestamp($r->last_closed),'passed'=>(bool)$r->any_passed];
     }
@@ -149,6 +149,7 @@ final class QuizAttemptService
         self::key($key);
         return $this->transaction(function()use($identity,$language,$enrollment,$lesson,$attempt,$revision,$key,$json,$submit):array{
             [, $e,$l,$quiz]=$this->context($identity,$language,$enrollment,$lesson);$a=$this->attempt($attempt,$enrollment,(int)$quiz->id);
+            if($a->status==='invalidated')throw new \RuntimeException('COM_JLMS_QUIZ_CANCELLED',409);
             $rows=$this->answerQuestions($attempt);$patch=$this->patch($rows,$json);$hash=hash('sha256',QuestionDefinition::canonical(['operation'=>$submit?'submit':'save','revision'=>$revision,'answers'=>$patch]));
             $q=$this->db->createQuery()->select('*')->from('#__jlms_quiz_mutations')->where('attempt_id = :attempt')->where('mutation_id = :mutation')
                 ->bind(':attempt',$attempt,ParameterType::INTEGER)->bind(':mutation',$key);$q->setQuery((string)$q.' FOR UPDATE');$mutation=$this->db->setQuery($q)->loadObject();
@@ -245,20 +246,20 @@ final class QuizAttemptService
             'active_attempt_id'=>$active?(int)$active->id:null,'attempt'=>null,'questions'=>[],'feedback_available'=>false,
             'course_completed'=>$e->completed_at!==null,'course_percent'=>(int)$e->required_total?min($e->completed_at?100:99,(int)floor(100*(int)$e->completed_total/(int)$e->required_total)):0];
         if($a){
-            $closed=$a->status!=='open';$feedback=$closed&&!$active&&($rules['feedback']==='after_submit'||($rules['feedback']==='pass_or_exhausted'&&($history['passed']||($remaining!==null&&$remaining===0))));
+            $closed=$a->status!=='open';$graded=in_array($a->status,['submitted','expired'],true);$feedback=$graded&&!$active&&($rules['feedback']==='after_submit'||($rules['feedback']==='pass_or_exhausted'&&($history['passed']||($remaining!==null&&$remaining===0))));
             $dto['feedback_available']=$feedback;$dto['attempt']=['id'=>(int)$a->id,'number'=>(int)$a->attempt_no,'state'=>$a->status,'revision'=>(int)$a->revision,
                 'deadline'=>self::timestamp($a->deadline_at),'started_at'=>self::timestamp($a->started_at),'submitted_at'=>self::timestamp($a->submitted_at),
-                'score_points'=>$closed?(int)$a->score_points:null,'max_points'=>(int)$a->max_points,'passed'=>$closed?(bool)$a->passed:null];
+                'valid'=>$a->status!=='invalidated','counted_for_limit'=>(bool)($a->counted_for_limit??1),'score_points'=>$a->score_points===null?null:(int)$a->score_points,'max_points'=>(int)$a->max_points,'passed'=>$a->passed===null?null:(bool)$a->passed];
             foreach(($includeQuestions?$this->questions((int)$a->id):[])as$row){$public=json_decode($row->public_snapshot_json,true,16,JSON_THROW_ON_ERROR);
                 $public['id']=(int)$row->id;$public['max_points']=(int)$row->max_points;$public['selected']=$row->answer_json===null?[]:json_decode($row->answer_json,true,16,JSON_THROW_ON_ERROR);
                 if($feedback){$grading=json_decode($row->grading_snapshot_json,true,16,JSON_THROW_ON_ERROR);$public['correct']=$grading['correct'];$public['explanation']=$grading['explanation'];$public['awarded_points']=(int)$row->awarded_points;}
                 $dto['questions'][]=$public;
             }
         }
-        $q=$this->db->createQuery()->select('id,attempt_no,status,score_points,max_points,passed,submitted_at')->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+        $q=$this->db->createQuery()->select('id,attempt_no,status,score_points,max_points,passed,submitted_at,counted_for_limit')->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
             ->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':quiz',$quizId,ParameterType::INTEGER)->order('attempt_no DESC');$q->setQuery((string)$q.' LIMIT 20 FOR UPDATE');$dto['history']=$this->db->setQuery($q)->loadAssocList();
         $q=$this->db->createQuery()->select('coverage_json')->from('#__jlms_lesson_progress')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson');$lesson=(int)$l->id;
-        $q->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':lesson',$lesson,ParameterType::INTEGER);$q->setQuery((string)$q.' FOR UPDATE');$best=$this->db->setQuery($q)->loadResult();$dto['best']=$best?json_decode($best,true,16,JSON_THROW_ON_ERROR):null;
+        $q->bind(':enrollment',$enrollment,ParameterType::INTEGER)->bind(':lesson',$lesson,ParameterType::INTEGER);$q->setQuery((string)$q.' FOR UPDATE');$best=$this->db->setQuery($q)->loadResult();$dto['best']=$best?(json_decode($best,true,16,JSON_THROW_ON_ERROR)?:null):null;
         return $dto;
     }
     public function expireDue(int $limit=100):array

@@ -1,4 +1,4 @@
-# Quiz per gli studenti — incrementi 0.10–0.11
+# Quiz per gli studenti — incrementi 0.10–0.12
 
 La pubblicazione tramite workflow Joomla include ora quiz valutativi ed esercitazioni. Il programma deve avere almeno una lezione obbligatoria. Un quiz obbligatorio deve essere valutativo, con soglia positiva; un'esercitazione è facoltativa. I controlli su corso, lingua, categorie della banca, permessi e revisioni precedono la pubblicazione. La configurazione e il manifest del pool entrano nell'hash della versione pubblicata. Modificare una domanda della banca crea una nuova revisione: non cambia il pool già pubblicato.
 
@@ -53,6 +53,6 @@ Anche con attività inattiva la prima richiesta successiva applica la scadenza, 
 
 ## Limiti e verifica
 
-Il tempo aggiuntivo preventivo e gli avvisi sono descritti in [QUIZ_EXTRA_TIME.md](QUIZ_EXTRA_TIME.md). Restano proroghe durante il tentativo, rivalutazioni e invalidazioni tracciate, audit/actionlog/privacy, storico senza entitlement, reporting, paginazione completa dello storico, disponibilità specifica del quiz distinta dalla finestra iscrizione/edizione, plugin Web Services, navigazione/accessibilità approfondita, collaudo browser reale e carico. Nessun proctoring.
+Il tempo aggiuntivo preventivo e gli avvisi sono descritti in [QUIZ_EXTRA_TIME.md](QUIZ_EXTRA_TIME.md). L’annullamento tracciato è descritto in [QUIZ_CANCELLATION.md](QUIZ_CANCELLATION.md). Restano proroghe durante il tentativo e rivalutazioni, audit/actionlog/privacy, storico senza entitlement, reporting, paginazione completa dello storico, disponibilità specifica del quiz distinta dalla finestra iscrizione/edizione, plugin Web Services, navigazione/accessibilità approfondita, collaudo browser reale e carico. Nessun proctoring.
 
 La pipeline verifica dominio, database e installazione Joomla6.0.0 con PHP8.3/8.4 e MySQL8.4/MariaDB10.6; esercita avvio/ripresa, CAS/replay, scadenza con orologio controllato, feedback, revoca corrente, due processi concorrenti, dispatch nativo Scheduler, HTTP con login Joomla e upgrade con snapshot/risultati conservati. I test del trasporto JavaScript usano doubles di rete: non equivalgono a collaudo browser o test di carico. I risultati effettivi sono quelli delle Actions della PR, non l'esistenza dei test. La patch Joomla corrente resta da certificare prima della produzione.

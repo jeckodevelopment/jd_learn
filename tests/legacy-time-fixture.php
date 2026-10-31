@@ -67,7 +67,7 @@ $factory = $component->getMVCFactory();
 
 
 
-// Executed against the installed 0.10 package before installing the current package.
+// Executed against the installed previous package before installing the current package.
 $actor=$app->getIdentity();$bank=$component->getQuestionBankService();$author=$component->getCurriculumService();$quizzes=$component->getQuizAuthoringService();
 $categories=$app->bootComponent('com_categories')->getMVCFactory()->createModel('Category','Administrator',['ignore_request'=>true]);
 if(!$categories->save(['id'=>0,'parent_id'=>1,'extension'=>'com_jlms.question','title'=>'Legacy quiz bank','alias'=>'legacy-time-bank','published'=>1,'language'=>'*','access'=>1]))throw new \RuntimeException($categories->getError());
@@ -88,6 +88,6 @@ $key=static function():string{$s=bin2hex(random_bytes(16));return substr($s,0,8)
 $runtime=$component->getQuizAttemptService();$a=$runtime->start($user,'en-GB',$enrollment,$lesson,$key());
 $runtime->mutate($user,'en-GB',$enrollment,$lesson,$a['attempt']['id'],1,$key(),json_encode([$a['questions'][0]['id']=>['first']],JSON_THROW_ON_ERROR),true);
 $a=$runtime->start($user,'en-GB',$enrollment,$lesson,$key());$snapshot=$db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id='.(int)$a['attempt']['id'])->loadObject();
-if(isset(json_decode($snapshot->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR)['extra_time_seconds']))throw new \RuntimeException('Fixture must run on the pre-0.11 runtime');
+if((json_decode($snapshot->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR)['extra_time_seconds']??0)!==0)throw new \RuntimeException('Unexpected allowance in legacy fixture');
 file_put_contents(dirname($root).'/legacy-time-fixture.json',json_encode(['user_id'=>(int)$user->id,'enrollment_id'=>$enrollment,'lesson_id'=>$lesson,'attempt_id'=>$a['attempt']['id'],'snapshot_hash'=>hash('sha256',json_encode($snapshot,JSON_THROW_ON_ERROR))],JSON_THROW_ON_ERROR));
-echo json_encode(['pre_upgrade_quiz_snapshots'=>'created_on_0.10']).PHP_EOL;
+echo json_encode(['pre_upgrade_quiz_snapshots'=>'created_before_upgrade']).PHP_EOL;

@@ -15,6 +15,7 @@ $base='index.php?option=com_jlms&view=quiztime&id='.(int)$i['course_id'].'&lesso
  </tbody></table>
  <nav><?php if($i['more']): $last=end($i['candidates']); ?><a href="<?= Route::_($base.'&after='.(int)$last->id) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?><a href="<?= Route::_($base) ?>"><?= Text::_('COM_JLMS_QUIZ_TIME_FIRST') ?></a></nav>
  <?php if($i['enrollment']): ?>
+ <p><a id="jlms-quiz-review-link" href="<?= Route::_('index.php?option=com_jlms&view=quizreview&id='.(int)$i['course_id'].'&lesson_id='.(int)$i['lesson_id'].'&enrollment_id='.(int)$i['enrollment']->id) ?>"><?= Text::_('COM_JLMS_QUIZ_REVIEW_TITLE') ?></a></p>
  <h2><?= $this->escape($i['enrollment']->learner_name) ?> · #<?= (int)$i['enrollment']->id ?></h2>
  <?php if($i['active']): ?><p id="jlms-quiz-time-active" class="alert alert-warning"><?= Text::_('COM_JLMS_QUIZ_TIME_ACTIVE') ?> #<?= (int)$i['active']->id ?> · <?= (int)$i['active']->time_seconds ?> s · <?= $this->escape($i['active']->deadline_at??Text::_('COM_JLMS_QUIZ_UNLIMITED')) ?> UTC</p><?php endif; ?>
  <form id="jlms-quiz-time-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
