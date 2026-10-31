@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 31 ottobre 2026. Incremento0.11.0-dev: tempi individuali preventivi e audit nativo.
+Aggiornamento: 31 ottobre 2026. Incremento0.12.0-dev: annullamento tracciato dei tentativi e risultati validi ricalcolati.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -71,3 +71,7 @@ Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor conf
 ## Incremento0.11
 
 [QUIZ_EXTRA_TIME.md](QUIZ_EXTRA_TIME.md): autorizzazione preventiva individuale, ritiri futuri, storico e primo audit tramite modello Action Logs Joomla. Nuova tabella additiva:38tabelle/55FK. Nessun cambiamento agli snapshot precedenti. I controlli effettivi sono nelle Actions della PR #11; QUI-08 rimane parziale in attesa del collaudo completo di accessibilità.
+
+## Incremento0.12
+
+[QUIZ_CANCELLATION.md](QUIZ_CANCELLATION.md): annullamento con anteprima e conferma, consumo/resto, proiezioni valide, permessi e audit core. Non è rivalutazione: presenza di attestati o correzioni amministrative blocca l’applicazione. Nessuna migrazione schema; aggiornamento dalla0.11 e conservazione verificati nella PR #12. Carico, browser/accessibilità completi e patch corrente restano da certificare.

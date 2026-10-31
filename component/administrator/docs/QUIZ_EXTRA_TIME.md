@@ -52,4 +52,6 @@ I log si consultano e si gestiscono con Action Logs Joomla e le sue politiche. L
 
 La pipeline crea tentativi con il pacchetto0.10 prima dell'aggiornamento, quindi verifica lettura e conservazione di snapshot/deadline nella0.11. Esegue i test esistenti e controlli su autorizzazione/ritiro, conflitti/replay, separazione dei motivi, revoca ACL e livelli, deadline effettiva, scadenza, log nativo, rollback in caso di audit fallito, form/CSRF HTTP e reinstallazione con storico conservato. Gli avvisi sono verificati con test JavaScript; non equivalgono a certificazione con tecnologie assistive reali.
 
-Restano proroghe dei tentativi già aperti, rivalutazioni/invalidazioni tracciate, politiche privacy complete, reporting, paginazione completa dello storico e collaudo di carico e accessibilità su browser reali. Il LMS completo e la compatibilità con la patch Joomla corrente non sono ancora certificati per la produzione.
+Restano proroghe dei tentativi già aperti, rivalutazioni dei punteggi, politiche privacy complete, reporting, paginazione completa dello storico e collaudo di carico e accessibilità su browser reali. Il LMS completo e la compatibilità con la patch Joomla corrente non sono ancora certificati per la produzione.
+
+Dalla0.12 è disponibile l’annullamento tracciato dei tentativi, documentato in [QUIZ_CANCELLATION.md](QUIZ_CANCELLATION.md); non modifica retroattivamente le autorizzazioni al tempo.

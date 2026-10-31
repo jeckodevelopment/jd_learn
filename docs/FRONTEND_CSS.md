@@ -62,3 +62,9 @@ Gli script dipendono da ID form/status/timer/azioni e da `data-question-id`, inp
 Frontend: `jlms-quiz-time-allowance` mostra tempo individuale del tentativo e durata del prossimo; `jlms-quiz-warning` è la regione `role=alert` per avvisi a cinque/un minuto. Conservare ruolo e `aria-live`, senza unire questa regione alla conferma del salvataggio. La durata visualizzata non autorizza una deadline differente sul server.
 
 Backend: override `quiztime/default.php`, ID `jlms-quiz-time-editor`, `jlms-quiz-time-policy`, `jlms-quiz-time-enrollments`, `jlms-quiz-time-active`, `jlms-quiz-time-form`, `jlms-quiz-time-history`; nell’editor quiz `jlms-quiz-time-link`. Non pubblicare motivazioni operative nei template del sito. Preservare parent, revisione, UUID e token del form. Nessuna nuova classe CSS globale.
+
+## Annullamento tentativi (0.12)
+
+Frontend: `jlms-quiz-invalidated` spiega che il tentativo è annullato e il punteggio eventualmente mostrato è storico. Preservare il controllo sul campo `valid`/stato del DTO: non presentare un superamento annullato come efficace né mostrare correzioni non rilasciate.
+
+Backend: override `quizreview/default.php`; ID `jlms-quiz-review`, `jlms-quiz-review-policy`, `jlms-quiz-review-enrollments`, `jlms-quiz-review-attempts`, `jlms-quiz-review-preview`, `jlms-quiz-review-blocked`, `jlms-quiz-review-form`, `jlms-quiz-review-record`. `jlms-quiz-review-link` collega dalla gestione tempo. Conservare parent, revisioni, scelta di restituzione, hash, UUID, conferma e token. I link di anteprima non eseguono mutazioni; non trasformarli in annullamenti automatici. Nessuna nuova classe CSS globale.

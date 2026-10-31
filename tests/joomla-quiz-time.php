@@ -86,7 +86,7 @@ if(($argv[2]??'')==='retained'){
 $old=json_decode(file_get_contents(dirname($root).'/legacy-time-fixture.json'),true,16,JSON_THROW_ON_ERROR);
 $oldUser=new \Joomla\CMS\User\User($old['user_id']);$oldState=$runtime->state($oldUser,'en-GB',$old['enrollment_id'],$old['lesson_id']);
 $oldSnapshot=$db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id='.(int)$old['attempt_id'])->loadObject();
-timeExpect($oldState['extra_time_seconds']===0&&$oldState['base_time_seconds']===600,'actual 0.10 snapshot reads with zero individual allowance');
+timeExpect($oldState['extra_time_seconds']===0&&$oldState['base_time_seconds']===600,'actual pre-upgrade snapshot reads with zero individual allowance');
 timeExpect(hash('sha256',json_encode($oldSnapshot,JSON_THROW_ON_ERROR))===$old['snapshot_hash'],'upgrade preserves actual pre-0.11 snapshot and deadline');
 $group=(int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learning entitlement'")->loadResult();
 $user=new \Joomla\CMS\User\User();$data=['name'=>'CI extra time learner','username'=>'ciquiztimelearner','email'=>'ciquiztimelearner@example.invalid','password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026','groups'=>[2,$group],'block'=>0,'activation'=>''];
