@@ -65,6 +65,8 @@ jobs:
           php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/dist/pkg_jlms-0.1.0-dev.zip" --no-interaction
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla
+      - name: Render public and authenticated admin pages over HTTP
+        run: python3 tests/http-smoke.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
           php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/dist/pkg_jlms-0.1.0-dev.zip" --no-interaction

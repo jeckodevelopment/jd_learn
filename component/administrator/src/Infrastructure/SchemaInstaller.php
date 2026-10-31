@@ -44,8 +44,10 @@ final class SchemaInstaller
                     }
                 }
                 $keys = [];
+                $nonUnique = [];
                 foreach ($this->db->getTableKeys($match[1]) as $key) {
                     $keys[$key->Key_name][(int) $key->Seq_in_index] = $key->Column_name;
+                    $nonUnique[$key->Key_name] = (int) $key->Non_unique;
                 }
                 preg_match_all('/(PRIMARY KEY|UNIQUE KEY `([^`]+)`|KEY `([^`]+)`) \(([^)]+)\)/', $statement, $indexes, PREG_SET_ORDER);
                 foreach ($indexes as $index) {
@@ -53,7 +55,8 @@ final class SchemaInstaller
                     preg_match_all('/`([^`]+)`/', $index[4], $fields);
                     $actual = $keys[$name] ?? [];
                     ksort($actual);
-                    if (array_values($actual) !== $fields[1]) {
+                    $expectedNonUnique = $index[1] === 'PRIMARY KEY' || str_starts_with($index[1], 'UNIQUE KEY') ? 0 : 1;
+                    if (array_values($actual) !== $fields[1] || ($nonUnique[$name] ?? null) !== $expectedNonUnique) {
                         throw new \RuntimeException('COM_JLMS_SCHEMA_MISMATCH');
                     }
                 }

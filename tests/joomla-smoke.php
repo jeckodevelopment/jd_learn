@@ -8,6 +8,14 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
 }
+// Set fixture plugin state before Joomla caches its enabled-plugin list.
+// The retained-data mode must not alter state, so it can detect upgrade regressions.
+if (($argv[2] ?? '') !== 'retained') {
+    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
+    unset($fixtureDb);
+}
+
 // Simulate the web request context required by AdministratorApplication in a CLI smoke test.
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['SERVER_NAME'] = 'localhost';
@@ -21,6 +29,9 @@ $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
 \define('JPATH_BASE', $root);
 require $root . '/includes/defines.php';
 require $root . '/includes/framework.php';
+\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
+\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
+\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -90,7 +101,6 @@ if ($model->save($data)) {
     throw new \RuntimeException('Obsolete revision overwrote a newer draft.');
 }
 // Enable providers only inside the disposable fixture to exercise Joomla's real plugin boot/dispatcher.
-$db->setQuery("UPDATE #__extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'")->execute();
 PluginHelper::importPlugin('jlmsvideo');
 $registry = new VideoProviderRegistry();
 $app->getDispatcher()->dispatch(RegisterVideoProvidersEvent::NAME,new RegisterVideoProvidersEvent($registry));
