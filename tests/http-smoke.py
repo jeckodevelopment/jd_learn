@@ -4,7 +4,7 @@ from html.parser import HTMLParser
 from urllib.request import build_opener,HTTPCookieProcessor
 from urllib.parse import urlencode,urljoin,urlparse,parse_qs
 from http.cookiejar import CookieJar
-import subprocess,sys,time,json,os
+import subprocess,sys,time,json,os,re
 root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
 class Page(HTMLParser):
@@ -19,6 +19,12 @@ class Page(HTMLParser):
  def handle_endtag(self,tag):
   if tag=='form':self.current=None
 base='http://127.0.0.1:8093'
+# Joomla treats the cli-server SAPI as CLI for URI discovery. Configure the isolated
+# site's known URL so its native router emits the same paths as a web-server deployment.
+config=root/'configuration.php'
+text,count=re.subn(r"public\s+\$live_site\s*=\s*[^;]+;", "public $live_site = '"+base+"';", config.read_text())
+if count!=1:raise RuntimeError('Disposable site URL could not be configured')
+config.write_text(text)
 log=open(root.parent/'http-smoke.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
 http=build_opener(HTTPCookieProcessor(CookieJar()))
@@ -37,8 +43,7 @@ try:
  form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)
  if not form:raise RuntimeError('Native Joomla admin login form was not found')
  fields=form['fields'];fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
- # Authenticate against Joomla's native administrator endpoint. Routed form actions can be installation-relative.
- with http.open(base+'/administrator/index.php',data=urlencode(fields).encode(),timeout=20) as r:r.read()
+ with http.open(urljoin(urljoin(url,page.base or ''),form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
  url,html=get('/administrator/index.php?option=com_jlms')
  if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('Authenticated JD Learn dashboard did not render')
  url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
