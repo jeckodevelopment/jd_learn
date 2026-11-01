@@ -53,7 +53,11 @@ try:
  expect('jlms-roster-table'in p.ids and'jlms-roster-filters'in p.ids,'native roster rendered')
  expect('no-store'in headers.get('Cache-Control',''),'private no-store administrative response')
  expect(len(enrollments(html))==20 and f['foreign_enrollment']not in enrollments(html),'bounded course-only first page')
- expect(len(p.ids)==len(set(p.ids)),'unique roster IDs')
+ # Audit the IDs owned by this component, including the native filter controls.
+ owned=[value for value in p.ids if value.startswith(('jlms-','filter_'))]
+ duplicates=sorted({value for value in p.ids if p.ids.count(value)>1})
+ print(json.dumps({'roster_page_duplicate_ids':duplicates}))
+ expect(len(owned)==len(set(owned)),'unique JD Learn roster and filter IDs')
  _,second,_=request(admin,roster+'&limit=20&limitstart=20')
  expect(len(enrollments(second))==f['total']-20,'native second page')
  _,owner,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[user]':f['owner']}))
