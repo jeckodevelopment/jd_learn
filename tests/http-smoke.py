@@ -108,8 +108,13 @@ try:
   checks+=1
  def submit(url,form,updates=None):
   fields=dict(form['fields']);fields.update(updates or {})
-  with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
-   return response.geturl(),response.read().decode('utf-8')
+  try:
+   with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+    return response.geturl(),response.read().decode('utf-8')
+  except HTTPError as error:
+   detail=re.sub(r'<[^>]+>',' ',error.read().decode('utf-8',errors='replace'))
+   print('Disposable form error: '+re.sub(r'\s+',' ',detail)[-10000:],file=sys.stderr)
+   raise
  def fixture(operation='snapshot',value=None):
   args=['php',str(Path(__file__).with_name('publication-http-fixture.php')),operation]
   if value is not None:args.append(str(value))
