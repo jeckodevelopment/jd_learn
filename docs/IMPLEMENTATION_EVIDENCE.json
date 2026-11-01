@@ -1,50 +1,55 @@
 {
   "audited_at": "2026-11-01",
   "product": "JD Learn",
-  "version": "0.19.0-dev",
+  "version": "0.20.0-dev",
   "code_baseline": {
-    "main_commit": "d53ea7d64fdbe37b3b91f11cb7cb6c2bdbe80cf1",
-    "tree": "f4af52d6650e4b8d88db3d784c053c6b479d70e3",
-    "tested_head": "7999c2cfc3103da7c2e9dfe5587dd63d6663e07e"
+    "tested_head": "1a932a2de12a136b664cd2890c48438e5edf4803",
+    "tree": "97683bf861c750f5fd738da8246591f5d27d2601",
+    "parent_main_commit": "86bd4b02b2f102773a5f91cf2fae1041632cacb4"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 41308203822,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41308203822",
+    "run_id": 41319974680,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41319974680",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 124852881319,
-        "name": "PHP 8.4 / mysql:8.4",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 124852881514,
+        "id": 124887881905,
         "name": "PHP 8.3 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 124852881593,
-        "name": "PHP 8.3 / mysql:8.4",
+        "id": 124887882101,
+        "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 124852881606,
-        "name": "PHP 8.4 / mariadb:10.6",
+        "id": 124887882147,
+        "name": "PHP 8.4 / mysql:8.4",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124887882190,
+        "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "Esito della suite implementata. Non attesta tutti gli scenari AC, provider live, patch corrente, WCAG o carico."
+    "note": "Suite implementata e verifiche specifiche della preassegnazione. Non attesta tutti gli scenari AC/provider, patch corrente, WCAG o carico.",
+    "preassignment": {
+      "service_checks": 37,
+      "http_assertions": 18,
+      "retention_checks": 4
+    }
   },
   "package": {
-    "name": "pkg_jlms-0.19.0-dev.zip",
-    "bytes": 333245,
-    "sha256": "a657e792295f3a2b75b6eaaf727fd7d4752106fd415cfa9f16f6cb86e1241204",
+    "name": "pkg_jlms-0.20.0-dev.zip",
+    "bytes": 337809,
+    "sha256": "b5ca0415a33c90d753ac672cde0cda180c8861f87c7d32d5503f82bb32033f88",
     "constituents": 7,
     "tables": 41,
     "foreign_keys": 58
@@ -59,9 +64,68 @@
     "Recovery/backup completo non verificato"
   ],
   "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
-  "current_increment": {
-    "version": "0.20.0-dev",
-    "status": "Implementazione in collaudo; nessun risultato di test0.20 attribuito a questo snapshot0.19",
-    "guide": "docs/PREASSIGNMENT.md"
-  }
+  "prior_evidence": [
+    {
+      "audited_at": "2026-11-01",
+      "product": "JD Learn",
+      "version": "0.19.0-dev",
+      "code_baseline": {
+        "main_commit": "d53ea7d64fdbe37b3b91f11cb7cb6c2bdbe80cf1",
+        "tree": "f4af52d6650e4b8d88db3d784c053c6b479d70e3",
+        "tested_head": "7999c2cfc3103da7c2e9dfe5587dd63d6663e07e"
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 41308203822,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41308203822",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 124852881319,
+            "name": "PHP 8.4 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 124852881514,
+            "name": "PHP 8.3 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 124852881593,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 124852881606,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "Esito della suite implementata. Non attesta tutti gli scenari AC, provider live, patch corrente, WCAG o carico."
+      },
+      "package": {
+        "name": "pkg_jlms-0.19.0-dev.zip",
+        "bytes": 333245,
+        "sha256": "a657e792295f3a2b75b6eaaf727fd7d4752106fd415cfa9f16f6cb86e1241204",
+        "constituents": 7,
+        "tables": 41,
+        "foreign_keys": 58
+      },
+      "full_requirement_acceptance": {},
+      "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
+      "excluded_evidence": [
+        "Nessun benchmark300/500",
+        "Nessun audit completo WCAG/ASVS",
+        "Nessun collaudo completo dei provider reali",
+        "Patch corrente Joomla non verificata",
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati."
+    }
+  ]
 }

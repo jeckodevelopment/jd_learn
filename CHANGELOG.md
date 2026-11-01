@@ -5,7 +5,7 @@
 - Preassegnazione manuale esplicita senza livelli correnti, con avviso e conferma; default di ammissione invariato.
 - Assegnazione distinta dalla fruizione: nessun gruppo aggiunto, stessi controlli runtime, disponibilità editoriale obbligatoria.
 - Opt-in vincolato all’anteprima/hash e registrato nel log Joomla; compatibilità degli hash standard0.19 preservata.
-- Nessuna modifica allo schema41tabelle/58FK; prove negative, concorrenza, grant/revoca e conservazione predisposte, esiti effettivi nelle Actions. CSV e accettazione completa ancora pendenti.
+- Nessuna modifica allo schema41tabelle/58FK; prove negative, concorrenza, grant/revoca e conservazione superate nella CI41319974680 (37servizio/18HTTP/4conservazione per ambiente). CSV e accettazione completa ancora pendenti.
 
 ## Riallineamento documentale della baseline0.19
 

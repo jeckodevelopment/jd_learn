@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento verificato: 1 novembre 2026. Versione di sviluppo **0.20.0-dev**, incremento in collaudo dopo il riallineamento della0.19; il prodotto non è ancora pronto per la produzione.
+Aggiornamento verificato: 1 novembre 2026. Versione di sviluppo **0.20.0-dev**, verificata nella suite implementata dopo il riallineamento della0.19; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
@@ -27,7 +27,7 @@ Nessun requisito è stato promosso ad accettazione completa in questo riallineam
 | Area personale | Storico del proprietario con filtri/pagine, apprendimento distinto dall’accesso, Riprendi/Rivedi e lingua originale | Attestati e attività dettagliate; fallback di ripresa R-05 |
 | Video | Quattro plugin base, consenso, copertura unica/ripresa, Stream API/token, MP4 privati PHP limitato/Nginx | Provider aggiuntivi senza patch R-02, sottotitoli/trascrizioni/velocità/configurazioni complete, firma locale/cache Stream, collaudo SDK/provider/browser reale |
 | Materiali | Allegati distinti corso/lezione, upload con limiti/allowlist/quarantena, scanner opzionale e download autorizzato/Range | Riuso/preview/metadati e ciclo versioni completi, offload/pulizia/conservazione e scanner reale |
-| Iscrizioni | Avvio automatico; elenco amministrativo per corso; sospensione/riattivazione; ammissione manuale singola auto/explicit con anteprima, motivo, conferma, capienza e audit | Preassegnazione esplicita0.20 in collaudo; CSV, richieste/approvazioni/rifiuti, annullamenti, edizioni aggiuntive, finestre/proroghe e selettori ricercabili |
+| Iscrizioni | Avvio automatico; elenco amministrativo per corso; sospensione/riattivazione; ammissione manuale singola auto/explicit con anteprima, motivo, conferma, capienza/audit e preassegnazione esplicita senza livelli | CSV, richieste/approvazioni/rifiuti, annullamenti, edizioni aggiuntive, finestre/proroghe e selettori ricercabili |
 | Quiz | Banca/revisioni, composizione/pubblicazione, pool/snapshot, tentativi/autosave/CAS, grading/feedback, scadenza server; tempi individuali, annullamenti e proroghe con audit | Rivalutazioni, disponibilità specifiche, anomalie/attestati, UI/accessibilità e collaudo completo |
 | Attestati | Solo schema e specifica | Modelli/PDF, idoneità/emissione, download, verifica pubblica opzionale, revoca/sostituzione e anomalie |
 | Audit e task | Writer com_actionlogs su quiz/iscrizioni; plugin Scheduler per scadenze quiz | Plugin/coverage Action Logs generali, job/outbox/lease/retry, notifiche, Mail Templates e purghe |
@@ -39,20 +39,20 @@ I limiti specifici e le differenze rispetto alla specifica sono nel [registro ap
 
 ## Verifiche effettive
 
-La [CI del build0.19](https://github.com/jeckodevelopment/jd_learn/actions/runs/41308203822) è risultata verde su PHP8.3/8.4 × MySQL8.4/MariaDB10.6, con Joomla6.0.0 e pacchetto italiano nativo. Comprende la suite esistente, l’upgrade dalla0.18 e il reinstall con dati conservati. Il minimo Joomla6.0.0 usato nella CI non è una raccomandazione di patch per la produzione.
+La [CI del build0.20](https://github.com/jeckodevelopment/jd_learn/actions/runs/41319974680) è risultata verde su PHP8.3/8.4 × MySQL8.4/MariaDB10.6, con Joomla6.0.0 e pacchetto italiano nativo. Comprende la suite esistente, l’upgrade dalla0.19 e il reinstall con dati conservati. Il minimo Joomla6.0.0 usato nella CI non è una raccomandazione di patch per la produzione.
 
-Per il blocco manuale sono verificati41controlli del servizio,23asserzioni HTTP oltre alle richieste negative e4controlli di conservazione per ambiente; non sono41requisiti di prodotto accettati. Il [registro delle evidenze](IMPLEMENTATION_EVIDENCE.json) fissa commit/albero, job e hash del pacchetto, distinguendo la prova storica dalla documentazione aggiornata.
+Per la preassegnazione sono verificati37controlli del servizio,18asserzioni HTTP oltre alle richieste negative e4controlli di conservazione per ambiente, insieme ai controlli manuali standard già esistenti; non sono37requisiti di prodotto accettati. Il [registro delle evidenze](IMPLEMENTATION_EVIDENCE.json) fissa commit/albero, job e hash del pacchetto, distinguendo la prova storica dalla documentazione aggiornata.
 
 Non sono eseguiti i benchmark300studenti/60min e500/10min, né una verifica completa di ASVS/WCAG, provider reali, patch corrente e recovery. I test concorrenti su pochi processi provano specifici invarianti, non la capacità su centinaia di studenti.
 
 ## Prossimi passaggi
 
-Il [piano esecutivo residuo](NEXT_STEPS.md) specifica dipendenze e condizioni di accettazione. Priorità successiva: concludere le verifiche della preassegnazione e poi import CSV, mantenendo scope, dati esistenti e gruppi invariati; job amministrati per i volumi previsti. Privacy e sicurezza accompagnano ogni incremento e non sono rinviate alla sola verifica finale.
+Il [piano esecutivo residuo](NEXT_STEPS.md) specifica dipendenze e condizioni di accettazione. Priorità successiva: import CSV, mantenendo scope, dati esistenti e gruppi invariati; job amministrati per i volumi previsti. Privacy e sicurezza accompagnano ogni incremento e non sono rinviate alla sola verifica finale.
 
 ## Cronologia e guide
 
 La [cronologia originale](IMPLEMENTATION_HISTORY.md) conserva le note dei singoli incrementi; i vecchi «da completare» vanno letti nel loro contesto temporale. Per configurare e usare i percorsi operativi consultare le guide elencate nel [README](../README.md). La vendita/gestione abbonamenti rimane fuori perimetro; compiti, live, gruppi/classi e interoperabilità mantengono le fasi differite della baseline.
 
-## Incremento0.20 in collaudo
+## Incremento0.20 verificato nella CI
 
-[PREASSIGNMENT.md](PREASSIGNMENT.md): opzione esplicita disattivata per default, avviso di accesso mancante, assegnazione senza gruppi e successiva fruizione soltanto dopo diritti correnti. Test di incremento predisposti; l’evidenza storica0.19 resta distinta fino alla verifica delle Actions. Nessuna nuova tabella.
+[PREASSIGNMENT.md](PREASSIGNMENT.md): opzione esplicita disattivata per default, avviso di accesso mancante, assegnazione senza gruppi e successiva fruizione soltanto dopo diritti correnti. Prove di incremento eseguite nei quattro ambienti CI; l’evidenza storica0.19 è conservata separatamente nel registro. Nessuna nuova tabella.
