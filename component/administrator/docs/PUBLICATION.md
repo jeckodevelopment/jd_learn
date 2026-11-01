@@ -9,7 +9,7 @@ Il collaudo utente segnala corsi che rimangono in bozza. L’utente precisa che 
 1. In **Corsi → Nuovo**, compilare titolo, categoria, lingua e livelli di catalogo/contenuto. Salvare e chiudere. Il campo Stato è intenzionalmente disabilitato: il salvataggio non pubblica un programma non validato.
 2. Aprire **Programma** dall'elenco, oppure **Apri programma e pubblicazione** dal corso salvato dopo aver salvato/chiuso eventuali modifiche. Creare la versione in bozza se assente.
 3. Aggiungere almeno un modulo e una lezione valida per ciascun modulo. Almeno una lezione del corso deve essere obbligatoria. Salvare ogni operazione.
-4. Nella sezione Pubblicazione selezionare **Pubblica** ed eseguire la transizione Joomla. Verificare sia lo Stato del corso sia quello della versione. Una validazione fallita conserva la bozza e mostra un errore; un salvataggio riuscito delle lezioni non equivale alla pubblicazione.
+4. Nella sezione Pubblicazione premere **Pubblica**. Se il workflow configurato offre più transizioni, selezionare quella desiderata ed eseguirla. Il workflow standard mostra direttamente il nome dell’azione sul pulsante. Verificare sia lo Stato del corso sia quello della versione. Una validazione fallita conserva la bozza e mostra un errore; un salvataggio riuscito delle lezioni non equivale alla pubblicazione.
 5. Verificare catalogo e scheda con categoria, lingua e livello richiesti, poi la fruizione con un account studente avente il livello contenuto. La preassegnazione non concede tale livello.
 
 La gestione è ancora parziale: mancano editor completo a schede, anteprima studente, revisione/archivio completi, clonazione e nuove versioni pubblicate. Non modificare lo stato tramite SQL o task generici per aggirare la validazione.

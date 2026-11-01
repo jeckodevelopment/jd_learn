@@ -48,7 +48,7 @@ $hidden = static function (array $fields): void {
   <select id="jlms-transition" name="jform[transition_id]" class="form-select">
   <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape(Text::_($transition->title)) ?></option><?php endforeach; ?>
   </select>
-  <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?></button>
+  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= count($this->transitions) === 1 ? $this->escape(Text::_($this->transitions[0]->title)) : Text::_('COM_JLMS_EXECUTE_TRANSITION') ?></button>
  </form><?php endif; ?>
  <?php if (\Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id)) : ?>
  <p><a id="jlms-manage-materials" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p>

@@ -123,7 +123,7 @@ try:
  u,h=get(programme)
  expect('id="jlms-publication-notice"' in h and 'id="jlms-version-form"' in h,'Course without version explains the next step')
  form=next(f for f in Page(h).forms if f['id']=='jlms-version-form');u,h=submit(u,form)
- expect('id="jlms-publication-form"' in h,'First draft exposes the native publication transition')
+ expect('id="jlms-publication-form"' in h and re.search(r'id="jlms-publication-submit"[^>]*>\s*Publish\s*</button>',h),'First draft exposes an explicit Publish command')
  before=fixture()
  form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
  transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
