@@ -30,18 +30,33 @@ final class DashboardModel extends ListModel
         $app = Factory::getApplication();
         try {
             return $app->bootComponent('com_jlms')->getDashboardService()->query($app->getIdentity(), (string) $this->getState('filter.progress', 'all'));
-        } catch (\RuntimeException $error) { $this->fail($error); }
+        } catch (\Throwable $error) { $this->fail($error); }
     }
 
     public function getItems()
     {
         $app = Factory::getApplication();
         try {
-            return $app->bootComponent('com_jlms')->getDashboardService()->cards($app->getIdentity(), $app->getLanguage()->getTag(), parent::getItems());
-        } catch (\RuntimeException $error) { $this->fail($error); }
+            $component = $app->bootComponent('com_jlms');
+            $actor = $component->getLearningService()->freshActor($app->getIdentity());
+            $rows = parent::getItems();
+            if (!is_array($rows)) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500); }
+            return $component->getDashboardService()->cards($actor, $app->getLanguage()->getTag(), $rows);
+        } catch (\Throwable $error) { $this->fail($error); }
     }
 
-    private function fail(\RuntimeException $error): never
+    public function getTotal()
+    {
+        $app = Factory::getApplication();
+        try {
+            $app->bootComponent('com_jlms')->getLearningService()->freshActor($app->getIdentity());
+            $total = parent::getTotal();
+            if ($total === false) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500); }
+            return $total;
+        } catch (\Throwable $error) { $this->fail($error); }
+    }
+
+    private function fail(\Throwable $error): never
     {
         if (in_array($error->getMessage(), ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT'], true)) {
             throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());

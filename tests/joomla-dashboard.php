@@ -99,6 +99,11 @@ $snapshot=static fn()=>$db->setQuery('SELECT revision,started_at,completed_total
 $before=$snapshot();
 dashExpect($read($empty)===[],'empty owner has no accidental enrollments');
 dashDenied(fn()=>$service->query(new \Joomla\CMS\User\User()),401,'guest history denied');
+$app->loadIdentity(new \Joomla\CMS\User\User());
+$guestModel=$factory->createModel('Dashboard','Site',['ignore_request'=>true]);
+dashDenied(fn()=>$guestModel->getItems(),401,'native list wrapper preserves guest rejection');
+dashDenied(fn()=>$guestModel->getTotal(),401,'native totals require authentication too');
+$app->loadIdentity($operator);
 dashDenied(fn()=>$learning->resumeTarget($other,'en-GB',$active),404,'other owner cannot resolve resume target');
 $rows=$db->setQuery($service->query($owner))->loadObjectList();
 dashExpect(count($rows)===25,'query selects only owner history');
