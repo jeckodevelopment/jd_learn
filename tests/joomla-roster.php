@@ -89,10 +89,12 @@ rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User(),$course),401,'ano
 rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User($f['owner']),$course),403,'learner roster denied');
 $g=$app->bootComponent('com_users')->getMVCFactory()->createModel('Group','Administrator',['ignore_request'=>true]);
 if(!$g->save(['id'=>0,'parent_id'=>2,'title'=>'CI scoped enrollment reader']))throw new \RuntimeException($g->getError());$group=(int)$g->getState('group.id');
-$asset=new \Joomla\CMS\Table\Asset($db);$asset->loadByName('root.1');$permissions=json_decode($asset->rules,true);$permissions['core.login.admin'][(string)$group]=true;$asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
-$asset->loadByName('com_jlms');$permissions=json_decode($asset->rules,true);$permissions['core.manage'][(string)$group]=true;$asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
+// Keep backend entry separate from the course permission so revoking the latter exercises our model, not Joomla's login wall.
+if(!$g->save(['id'=>0,'parent_id'=>2,'title'=>'CI roster backend entry']))throw new \RuntimeException($g->getError());$backendGroup=(int)$g->getState('group.id');
+$asset=new \Joomla\CMS\Table\Asset($db);$asset->loadByName('root.1');$permissions=json_decode($asset->rules,true);$permissions['core.login.admin'][(string)$backendGroup]=true;$asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
+$asset->loadByName('com_jlms');$permissions=json_decode($asset->rules,true);$permissions['core.manage'][(string)$backendGroup]=true;$asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
 $asset->loadByName('com_jlms.course.'.$course);$oldRules=$asset->rules;$permissions=json_decode($oldRules,true);$permissions['jlms.enrollments.manage'][(string)$group]=true;$asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
-$user=new \Joomla\CMS\User\User();$data=['name'=>'CI Roster Reader','username'=>'cirosterreader','email'=>'cirosterreader@example.invalid','password'=>'Ci-only-Roster-Password-2026','password2'=>'Ci-only-Roster-Password-2026','groups'=>[2,$group],'block'=>0,'sendEmail'=>0];
+$user=new \Joomla\CMS\User\User();$data=['name'=>'CI Roster Reader','username'=>'cirosterreader','email'=>'cirosterreader@example.invalid','password'=>'Ci-only-Roster-Password-2026','password2'=>'Ci-only-Roster-Password-2026','groups'=>[2,$group,$backendGroup],'block'=>0,'sendEmail'=>0];
 if(!$user->bind($data)||!$user->save())throw new \RuntimeException($user->getError());$user=new \Joomla\CMS\User\User((int)$user->id);
 rosterExpect(count($read($user))===count($rows),'dedicated course ACL grants roster without author permission');
 rosterDenied(fn()=>$service->query($user,$otherCourse),403,'direct course ID cannot bypass scope');
