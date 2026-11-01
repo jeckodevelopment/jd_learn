@@ -99,3 +99,7 @@ Ripetizioni `jlms-my-course-{enrollmentId}`, `jlms-my-course-progress-{enrollmen
 ## Backend iscritti 0.17
 
 La vista amministrativa usa ID e override descritti in [ENROLLMENT_ROSTER.md](ENROLLMENT_ROSTER.md). Tabella responsive e form adottano gli stili core del template amministrativo. Nessun nuovo stile frontend.
+
+## Backend stato iscrizione0.18
+
+Gli ID/override del flusso anteprima/conferma sono documentati in [ENROLLMENT_STATE.md](ENROLLMENT_STATE.md). Form, alert e tabella responsive usano gli stili core del template amministrativo; nessun CSS pubblico aggiunto.

@@ -25,3 +25,7 @@ Override `html/com_jlms/enrollments/default.php` del template amministrativo. ID
 Test su sito effimero: operatori con scope diverso, account studente/anonimo, revoca gruppo e diniego per corso su identità già caricata, totale/pagine native, filtri e input ostili, nomi HTML escapati, nessuna mutazione dello storico e conservazione al reinstall. Esiti effettivi nelle Actions della PR di questo incremento, non implicita attestazione di completamento dei requisiti REP-01/02 o ISC-02.
 
 Restano da implementare ricerca per nome, selettori versione/utente ricercabili, risultati quiz/attestati nel riepilogo, dashboard aggregata, export, dettaglio studente e operazioni di gestione con motivo/anteprima/audit. Nessuna nuova tabella o migrazione; pacchetto di sviluppo, browser/accessibilità completi, patch corrente Joomla e carico300/500 ancora da collaudare.
+
+## Gestione stato dalla0.18
+
+Il collegamento per iscrizione apre il flusso separato [Sospensione e riattivazione](ENROLLMENT_STATE.md), con anteprima/conferma/motivo/audit. La pagina elenco rimane in sola lettura; le operazioni si applicano esclusivamente attraverso il task POST autorizzato.

@@ -68,6 +68,7 @@ return new class () implements ServiceProviderInterface {
         $container->set(\Jlms\Component\Jlms\Administrator\Application\DashboardService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\DashboardService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class)));
         $container->set(PublicationService::class, static fn (Container $c): PublicationService => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class)));
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService::class), static function (\Joomla\CMS\User\User $actor, array $message) use ($c): void { (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($c->get(DatabaseInterface::class)))->record($actor, $message, 'enrollmentstate'); }));
         $container->set(ComponentInterface::class, static function (Container $container): JlmsComponent {
             $component = new JlmsComponent($container->get(ComponentDispatcherFactoryInterface::class));
             $component->setAssociationExtension(new \Jlms\Component\Jlms\Administrator\Helper\AssociationsHelper());
@@ -76,6 +77,7 @@ return new class () implements ServiceProviderInterface {
             $component->setPublicationService($container->get(PublicationService::class));
             $component->setCatalogService($container->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class));
             $component->setDashboardService($container->get(\Jlms\Component\Jlms\Administrator\Application\DashboardService::class));
+            $component->setEnrollmentStateService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService::class));
             $component->setEnrollmentRosterService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService::class));
             $component->setLearningService($container->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class));
             $component->setMaterialService($container->get(\Jlms\Component\Jlms\Administrator\Application\MaterialService::class));

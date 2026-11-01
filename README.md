@@ -2,7 +2,7 @@
 
 Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene lo sviluppo e le specifiche concordate.
 
-**Stato: incremento 0.17.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza, pubblicazione dei corsi di testo, catalogo pubblico e primo flusso studente con iscrizione automatica/aula/completamento e materiali extra protetti. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
+**Stato: incremento 0.18.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza, pubblicazione dei corsi di testo, catalogo pubblico e primo flusso studente con iscrizione automatica/aula/completamento e materiali extra protetti. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
 
 ## Funzionalità attuali
 
@@ -61,7 +61,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.17.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+Lo ZIP generato è `dist/pkg_jlms-0.18.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
 
 `tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
 
@@ -80,3 +80,5 @@ Categorie native e navigazione pubblica: [guida](docs/CATEGORIES.md), con access
 Area personale I miei corsi: [guida](docs/LEARNER_DASHBOARD.md), con storico privato, avanzamento e disponibilità separati e ripresa nuovamente autorizzata.
 
 - [Elenco amministrativo iscritti](docs/ENROLLMENT_ROSTER.md): filtri e permessi per corso, in sola lettura.
+
+- [Sospensione e riattivazione](docs/ENROLLMENT_STATE.md): anteprima, conferma e audit nativo senza cancellare i progressi.

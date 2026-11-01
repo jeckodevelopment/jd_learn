@@ -21,12 +21,12 @@ VID-06,Rilascio 1,In corso,"0.8: quattro provider con percorsi opt-in; HTML5 MP4
 VID-07,Rilascio 1,In corso,"0.8: quattro provider con percorsi opt-in; HTML5 MP4 privati e Nginx, progressi comuni. Firma locale, funzioni avanzate e collaudo completo ancora pendenti.",No
 VID-08,Rilascio 1,In corso,"0.8: quattro provider con percorsi opt-in; HTML5 MP4 privati e Nginx, progressi comuni. Firma locale, funzioni avanzate e collaudo completo ancora pendenti.",No
 ISC-01,Rilascio 1,In corso,Avvio automatico idempotente senza gruppi e ripresa; manuale/import/approvazione da completare.,No
-ISC-02,Rilascio 1,In corso,"0.17: elenco amministrativo per corso con ACL dedicate, filtri versione/utente/stato/avanzamento e paginazione; stato distinto dal completamento. Gestione, risultati/attestati e report completi da completare.",No
+ISC-02,Rilascio 1,In corso,"0.18: sospensione/riattivazione con anteprima, motivo, conferma, CAS/idempotenza e audit core atomico; accesso corrente, progressi e timer conservati. Stati restanti e criteri completi da completare.",No
 ISC-03,Rilascio 1,In corso,Finestre edizione/iscrizione ricontrollate; UI calendario e proroghe da completare.,No
 ISC-04,Rilascio 1,In corso,"Aula testo con ownership, parent e accesso correnti; preview e altri tipi da completare.",No
-ISC-05,Rilascio 1,In corso,Ripristino accesso conserva frequenza/progressi; nuove edizioni e UI da completare.,No
+ISC-05,Rilascio 1,In corso,"0.18: sospensione/riattivazione con anteprima, motivo, conferma, CAS/idempotenza e audit core atomico; accesso corrente, progressi e timer conservati. Stati restanti e criteri completi da completare.",No
 ISC-06,Rilascio 1,In corso,Nessun gruppo commerciale o pagamento scritto dal LMS; integrazione completa estensione esterna da collaudare.,No
-ISC-07,Rilascio 1,In corso,Identità e cache core aggiornate anche con sessione aperta; revoca/ripristino testati su aula testo. Quiz/media da completare.,No
+ISC-07,Rilascio 1,In corso,"0.18: sospensione/riattivazione con anteprima, motivo, conferma, CAS/idempotenza e audit core atomico; accesso corrente, progressi e timer conservati. Stati restanti e criteri completi da completare.",No
 ISC-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 STU-01,Rilascio 1,In corso,Area personale del proprietario con filtri/paginazione e avanzamento separato dalla disponibilità; ripresa autorizzata; attestati e attività dettagliate da completare.,No
 STU-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
