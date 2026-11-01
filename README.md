@@ -1,51 +1,47 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. Questo repository contiene lo sviluppo e le specifiche concordate.
+Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.19.0-dev: sviluppo in corso, non pronta per la produzione.**
 
-**Stato: incremento 0.19.0-dev, non adatto alla produzione.** Sono implementate le fondamenta, i corsi in bozza e il programma con moduli e lezioni di testo/video in bozza, pubblicazione dei corsi di testo, catalogo pubblico e primo flusso studente con iscrizione automatica/aula/completamento e materiali extra protetti. Il sistema e-learning completo descritto nelle specifiche è ancora in sviluppo.
+Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC, libreria, quattro plugin video e plugin Scheduler. Né lo schema né il numero degli incrementi indicano completezza del prodotto.
 
-## Funzionalità attuali
+## Funzioni operative e limiti
 
-- Pacchetto Joomla composto da libreria contratti, componente MVC e quattro plugin video dedicati, più un plugin Joomla Scheduler.
-- Schema InnoDB di 39 tabelle con 56 vincoli referenziali; installer a passi riprendibili e conservazione dei dati alla disinstallazione.
-- Backend con dashboard, creazione/modifica di corsi in bozza, categorie native, livelli Joomla separati per catalogo e contenuto, lingua, asset ACL e check-in/out.
-- Controllo della revisione durante il salvataggio e allowlist dei campi; azioni generiche non implementate restano chiuse.
-- Prima versione didattica in bozza, moduli e lezioni: creazione/modifica, obbligatorietà, riordino e rimozione controllata; editor Joomla e filtro HTML nativi.
-- Pubblicazione validata tramite workflow e plugin Publishing nativi Joomla; versione immutabile, hash del programma, edizione iniziale, rimozione/ripubblicazione nel catalogo senza alterare lo storico.
-- Catalogo paginato e scheda pubblica con programma, filtri categoria/sottocategorie, livelli correnti e controlli sugli antenati; nessun testo delle lezioni esposto.
-- Iscrizione automatica e ripresa, aula testo responsive, completamento manuale persistente e idempotente; accesso riletto dal core anche dopo revoca dei gruppi con sessione aperta.
-- Materiali del corso e della lezione: upload validato, quarantena/scansione opzionale, versioni immutabili e download protetto con Range. Storage privato e consegna PHP richiedono configurazione esplicita.
-- Contratto video v1, registro lazy e normalizzazione sicura di sorgenti YouTube, Vimeo, Cloudflare Stream e asset HTML5 locali. Riproduzione YouTube/Vimeo opt-in, consenso e salvataggio della copertura video; Cloudflare Stream tramite API con verifica remota e rinnovo; HTML5 con upload MP4 e consegna privata PHP limitata/Nginx. Vedere [limiti e protocollo](docs/VIDEO.md).
-- Banca domande con categorie/asset/check-in nativi, tre formati e revisioni immutabili; composizione quiz in bozza, pubblicazione, tentativi con snapshot, autosave/CAS, timer server, risultati e feedback protetto.
-- Tempo aggiuntivo individuale per tentativi futuri, con storico, permessi per corso e Action Logs Joomla; avvisi accessibili del timer.
-- Annullamento motivato dei tentativi con anteprima, conferma, scelta di restituzione, proiezioni ricalcolate e audit Joomla.
-- Proroghe motivate dei tentativi aperti con anteprima, storia e audit; sincronizzazione compatta del timer senza riscrivere regole o risposte.
-- Regole dominio iniziali per accesso corrente, unione intervalli video e scoring esatto dei quiz, con test runtime.
-- Traduzioni it-IT/en-GB, prime regioni CSS pubbliche e generazione riproducibile dello ZIP.
+- Authoring di corsi/moduli/lezioni testo, video e quiz; pubblicazione validata tramite workflow Joomla e versioni/snapshot immutabili. Clonazione/versionamento avanzato, audio/documenti autonomi, prerequisiti e migrazioni restano da completare.
+- Catalogo e categorie paginati, controllo degli antenati, menu/Pathway/SEF e prime associazioni multilingua native. Ricerca/SEO/metadati e lifecycle completi rimangono parziali.
+- Aula, progressi persistenti e area personale con storico del proprietario, filtri e ripresa autorizzata. Fallback di ripresa e tutte le viste/attività della baseline non sono ancora completi.
+- Quattro provider base YouTube, Vimeo, Cloudflare Stream e HTML5: opt-in/consenso, copertura video, token API Stream e MP4 privati con consegna PHP limitata/Nginx. Firma locale/cache/configurazioni complete e provider/browser reali da collaudare. **Un quinto plugin non è ancora integrabile senza patch al componente.**
+- Materiali extra di corso/lezione con upload validato, quarantena/scanner opzionale, storage privato e download autorizzato/Range. Riuso, pulizia/offload e lifecycle completi pendenti.
+- Avvio automatico, elenco iscritti per corso, sospensione/riattivazione e ammissione manuale singola con anteprima/conferma/motivo/audit. CSV, approvazioni, annullamenti, edizioni aggiuntive e preassegnazione senza livello ancora pendenti.
+- Banca domande a revisioni, tentativi/snapshot, autosave/CAS, grading, feedback e scadenza server; tempo individuale, annullamento e proroga motivati. Rivalutazioni e integrazione attestati da implementare.
+- Utenti, ACL/livelli, categorie, form, sessioni/CSRF, WAM, override e lingue Joomla nei flussi presenti. Audit nativo su quiz/iscrizioni e task scadenze quiz; **Privacy, Finder, Tags, Custom Fields, Content History, Mail Templates e copertura core completa ancora pendenti**.
 
-## Specifiche e avanzamento
+Attestati PDF, notifiche/outbox e report/export completi non sono disponibili. I test CI positivi riguardano i flussi implementati, non il collaudo integrale di tutti i requisiti, la patch Joomla corrente, WCAG/ASVS o il carico300/500.
 
-- [Specifica funzionale consolidata](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+## Stato verificato e prossimi passaggi
+
+- [Riepilogo corrente](docs/IMPLEMENTATION_STATUS.md)
+- [Matrice dei210requisiti con sorgenti, prove parziali e residui](docs/REQUIREMENTS_STATUS.csv)
+- [Build e prove effettive](docs/IMPLEMENTATION_EVIDENCE.json)
+- [Differenze aperte rispetto alla specifica](docs/IMPLEMENTATION_GAPS.md)
+- [Piano esecutivo residuo](docs/NEXT_STEPS.md)
+- [Cronologia degli incrementi](docs/IMPLEMENTATION_HISTORY.md) e [changelog](CHANGELOG.md)
+
+La matrice baseline dei test resta il piano di accettazione. I test di singoli incrementi non ne promuovono automaticamente gli scenari ad accettati, e non si ricava una percentuale dalle righe «In corso».
+
+## Specifiche e guide
+
+- [Specifica funzionale consolidata1.2](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
 - [Progettazione tecnica esecutiva](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
-- [Sicurezza e specifiche complete dei quattro provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
-- [Stato di implementazione e roadmap](docs/IMPLEMENTATION_STATUS.md)
-- [Stato dei 210 requisiti](docs/REQUIREMENTS_STATUS.csv)
-- [Servizi ed endpoint](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+- [Sicurezza e specifiche dei quattro provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
+- [Servizi/endpoint progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
 - [Personalizzazione frontend e override](docs/FRONTEND_CSS.md)
-- [Mockup funzionali concordati](docs/specifications/Mockup_LMS_Joomla_1.0.pdf)
-- [Gestione del programma didattico](docs/AUTHORING.md)
-- [Aula e iscrizione automatica](docs/LEARNING.md)
-- [Materiali e storage protetto](docs/MATERIALS.md)
-- [Cloudflare Stream: configurazione e limiti](docs/CLOUDFLARE_STREAM.md)
-- [Video HTML5 locali: configurazione e limiti](docs/HTML5_VIDEO.md)
-- [Banca domande e quiz in bozza](docs/QUIZ_AUTHORING.md)
-- [Tentativi quiz e attività pianificata](docs/QUIZ_RUNTIME.md)
-- [Tempi individuali e audit nativo](docs/QUIZ_EXTRA_TIME.md)
-- [Annullamento dei tentativi](docs/QUIZ_CANCELLATION.md)
-- [Proroga dei tentativi aperti](docs/QUIZ_DEADLINE_EXTENSION.md)
-- [Changelog](CHANGELOG.md)
+- [Authoring](docs/AUTHORING.md), [pubblicazione](docs/PUBLICATION.md), [categorie](docs/CATEGORIES.md), [multilingua](docs/MULTILINGUAL.md)
+- [Aula e iscrizione automatica](docs/LEARNING.md), [area personale](docs/LEARNER_DASHBOARD.md)
+- [Elenco amministrativo iscritti](docs/ENROLLMENT_ROSTER.md), [sospensione/riattivazione](docs/ENROLLMENT_STATE.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md)
+- [Materiali](docs/MATERIALS.md), [video/contratto e limiti](docs/VIDEO.md), [Cloudflare Stream](docs/CLOUDFLARE_STREAM.md), [HTML5 privato](docs/HTML5_VIDEO.md)
+- [Banca e composizione quiz](docs/QUIZ_AUTHORING.md), [tentativi e task](docs/QUIZ_RUNTIME.md), [tempi individuali](docs/QUIZ_EXTRA_TIME.md), [annullamenti](docs/QUIZ_CANCELLATION.md), [proroghe](docs/QUIZ_DEADLINE_EXTENSION.md)
 
-La denominazione di prodotto è **JD Learn**. Gli identificativi tecnici restano `com_jlms`, `pkg_jlms`, `lib_jlms` e gruppo `jlmsvideo`, coerenti con la baseline; non rinominare estensioni già installate senza migrazione. Non sono inclusi pagamenti o abbonamenti: un’estensione esterna attribuirà i gruppi Joomla.
+Gli identificativi restano `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo`. Vendita/abbonamenti e aggiornamento dei gruppi commerciali sono esterni; nessun gateway o autenticazione parallela. Compiti, live e interoperabilità mantengono le fasi successive della baseline.
 
 ## Requisiti
 
@@ -78,9 +74,3 @@ Associazioni dei corsi multilingua: [guida e limiti](docs/MULTILINGUAL.md). Conf
 Categorie native e navigazione pubblica: [guida](docs/CATEGORIES.md), con accesso degli antenati, paginazione e traduzioni per la sezione corsi.
 
 Area personale I miei corsi: [guida](docs/LEARNER_DASHBOARD.md), con storico privato, avanzamento e disponibilità separati e ripresa nuovamente autorizzata.
-
-- [Elenco amministrativo iscritti](docs/ENROLLMENT_ROSTER.md): filtri e permessi per corso, in sola lettura.
-
-- [Sospensione e riattivazione](docs/ENROLLMENT_STATE.md): anteprima, conferma e audit nativo senza cancellare i progressi.
-
-- [Iscrizione manuale singola](docs/MANUAL_ENROLLMENT.md): anteprima, conferma e audit senza assegnare gruppi.

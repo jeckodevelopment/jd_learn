@@ -45,4 +45,7 @@ if package.exists():
       source='/'.join(x for x in [prefix,f.text] if x)
       assert source in names or any(n.startswith(source+'/') for n in names),(manifest,source)
  print('ZIP manifests and all 7 child archives verified')
+# Keep implementation claims separate from planned acceptance and verify their source references.
+import runpy
+runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
 print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':41,'foreign_keys':58,'structural_checks':'passed'}))
