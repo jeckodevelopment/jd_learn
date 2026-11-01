@@ -74,8 +74,13 @@ try:
  url,html=get('/administrator/index.php?option=com_jlms&view=courses')
  links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('task')==['course.edit']]
  if not links:raise RuntimeError('Saved draft is absent from the native course list')
- url,html=get(links[0]);forms=Page(html).forms
- edit=next((f for f in forms if 'jform[title]' in f['fields']),None)
+ # The latest course may already be published: find an actually editable draft.
+ # Disabled published controls are not browser-successful fields.
+ edit=None
+ for link in links:
+  url,html=get(link)
+  edit=next((f for f in Page(html).forms if 'jform[title]' in f['fields']),None)
+  if edit:break
  if not edit or 'jform[revision]' not in edit['fields'] or 'jform[alias]' not in edit['fields']:
   raise RuntimeError('Native draft editor/form controls did not render')
  url,html=get('/administrator/index.php?option=com_jlms&view=courses')
