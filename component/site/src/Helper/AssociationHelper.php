@@ -64,7 +64,7 @@ final class AssociationHelper
                 continue;
             }
             // Never carry a source Itemid, enrollment, lesson or attempt into another language.
-            $links[$tag] = 'index.php?option=com_jlms&view=' . $view . ($view === 'categories' ? '&parent_id=' : '&id=') . (int) $item->id . '&lang=' . rawurlencode($languages[$tag]->sef);
+            $links[$tag] = 'index.php?option=com_jlms&view=' . $view . ($view === 'categories' ? '&parent_id=' : '&id=') . (int) $item->id . '&lang=' . rawurlencode($tag);
         }
         return $links;
     }

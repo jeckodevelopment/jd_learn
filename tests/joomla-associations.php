@@ -227,7 +227,7 @@ foreach ([$en,$it,$all] as $course) {
 }
 $app->loadIdentity(new \Joomla\CMS\User\User());
 $links = $helper->getAssociationsForItem($en, 'course');
-assocExpect(($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id='.$it.'&lang=it', 'native language switch resolves published course sheet');
+assocExpect(($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id='.$it.'&lang=it-IT', 'native language switch resolves published course sheet');
 // Joomla treats language access=0 as unrestricted; access=2 must still hide it from guests.
 $language->access=2; $language->store();
 assocExpect($helper->getAssociationsForItem($en,'course') === [], 'restricted content language omitted for guest');
