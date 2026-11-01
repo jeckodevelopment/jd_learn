@@ -15,10 +15,12 @@ class Page(HTMLParser):
   a=dict(attrs)
   if tag=='base' and a.get('href'):self.base=a['href']
   if tag=='form':self.current={'id':a.get('id',''),'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
-  if tag=='input' and self.current is not None and 'name' in a:self.current['fields'][a['name']]=a.get('value','')
-  if tag=='textarea' and self.current is not None and 'name' in a:
-   self.textarea=a['name'];self.current['fields'][self.textarea]=''
-  if tag=='select' and self.current is not None and 'name' in a:self.select=a['name']
+  if tag=='input' and self.current is not None and 'name' in a and 'disabled' not in a:
+   if a.get('type') not in ['checkbox','radio'] or 'checked' in a:self.current['fields'][a['name']]=a.get('value','')
+  if tag=='textarea':
+   self.textarea=a.get('name') if self.current is not None and 'disabled' not in a else None
+   if self.textarea:self.current['fields'][self.textarea]=''
+  if tag=='select':self.select=a.get('name') if self.current is not None and 'disabled' not in a else None
   if tag=='option' and self.select and self.current is not None:
    if self.select not in self.current['fields'] or 'selected' in a:self.current['fields'][self.select]=a.get('value','')
   if tag=='a' and a.get('href'):self.links.append(a['href'])
