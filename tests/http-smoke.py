@@ -55,10 +55,12 @@ try:
    time.sleep(.2)
  else:raise RuntimeError('Test HTTP server did not become ready')
  if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
- course_links=[x for x in Page(html).links if 'view=course' in x or '/course/' in x]
+ course_links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('view')==['course'] or '/course/' in x]
  if not course_links:raise RuntimeError('Public course link missing')
- public_course_url=course_links[0]
- _,detail=get(public_course_url)
+ for public_course_url in course_links:
+  _,detail=get(public_course_url)
+  if 'id=\"jlms-course-outline\"' in detail and 'Publication fixture' in detail:break
+ else:raise RuntimeError('Publication fixture sheet missing')
  if 'id="jlms-course-outline"' not in detail or 'Published lesson' not in detail or 'SECRET_LESSON_BODY' in detail:
   raise RuntimeError('Public sheet must show outline without protected lesson body')
  url,html=get('/administrator/index.php')
