@@ -7,7 +7,7 @@ namespace Jlms\Component\Jlms\Site\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
-final class CoursesModel extends ListModel
+class CoursesModel extends ListModel
 {
     protected function populateState($ordering = 'c.id', $direction = 'DESC')
     {

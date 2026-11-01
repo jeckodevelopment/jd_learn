@@ -10,7 +10,7 @@ $course = $this->item['course'];
 ?>
 <article id="jlms-course" class="jlms-course" data-course-id="<?= (int) $course->id ?>">
  <header id="jlms-course-header"><h1 id="jlms-course-title"><?= $this->escape($course->title) ?></h1>
-  <a id="jlms-course-category" href="<?= Route::_('index.php?option=com_jlms&view=courses&catid=' . (int) $course->catid) ?>"><?= $this->escape($course->category_title) ?></a>
+  <a id="jlms-course-category" href="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $course->catid) ?>"><?= $this->escape($course->category_title) ?></a>
  </header>
  <section id="jlms-course-summary"><h2><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?= nl2br($this->escape((string) $course->summary)) ?></p></section>
  <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>

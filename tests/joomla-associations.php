@@ -98,7 +98,7 @@ if (($argv[2] ?? '') === 'worker') {
 $actor = $app->getIdentity();
 $helper = $component->getAssociationsExtension();
 assocExpect($component instanceof \Joomla\CMS\Association\AssociationServiceInterface && $helper->hasAssociationsSupport(), 'native association service registered');
-assocExpect($helper->getItemTypes() === ['course'] && !$helper->getTypeSupport('course')['save2copy'], 'only implemented native association types advertised');
+assocExpect($helper->getItemTypes() === ['course', 'course.category'] && !$helper->getTypeSupport('course')['save2copy'], 'only implemented native association types advertised');
 $fixturePath = dirname($root) . '/associations-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
@@ -227,7 +227,7 @@ foreach ([$en,$it,$all] as $course) {
 }
 $app->loadIdentity(new \Joomla\CMS\User\User());
 $links = $helper->getAssociationsForItem($en, 'course');
-assocExpect(($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id='.$it.'&lang=it', 'native language switch resolves published course sheet');
+assocExpect(($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id='.$it.'&lang=it-IT', 'native language switch resolves published course sheet');
 // Joomla treats language access=0 as unrestricted; access=2 must still hide it from guests.
 $language->access=2; $language->store();
 assocExpect($helper->getAssociationsForItem($en,'course') === [], 'restricted content language omitted for guest');

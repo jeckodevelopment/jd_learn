@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.0-dev
+
+- Viste pubbliche categorie e categoria con figli/corsi paginati e ID CSS stabili per override nativi.
+- Filtro corrente di stato/lingua/accesso su ogni antenato e sezione; nessun conteggio di rami nascosti.
+- Tipo nativo course.category nel gestore Associazioni e collegamenti lingua pubblici, menu/Pathway e SEF.
+- Nessuna nuova tabella; test lifecycle/HTTP/upgrade predisposti, esiti effettivi nelle Actions. Rimozione con dipendenze e SEO completo restano da implementare.
+
 ## 0.14.0-dev
 
 - Associazioni dei corsi in bozza tramite AdminModel, tabella e contratto nativi Joomla; campi per lingua con ACL e checkout dei target.

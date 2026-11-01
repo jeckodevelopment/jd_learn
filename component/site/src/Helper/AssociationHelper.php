@@ -16,8 +16,9 @@ final class AssociationHelper
     {
         $app = Factory::getApplication();
         $view ??= $app->getInput()->getCmd('view', '');
-        $id = $id ?: $app->getInput()->getInt('id', 0);
-        if ($view !== 'course' || $id < 1 || !Associations::isEnabled()) {
+        $id = $id ?: $app->getInput()->getInt($view === 'categories' ? 'parent_id' : 'id', 0);
+        $categoryView = in_array($view, ['category', 'categories'], true);
+        if (($view !== 'course' && !$categoryView) || $id < 1 || !Associations::isEnabled()) {
             return [];
         }
         $actor = $app->getIdentity();
@@ -26,7 +27,9 @@ final class AssociationHelper
         $levels = $actor->block ? [0] : array_map('intval', $actor->getAuthorisedViewLevels());
         $catalog = $app->bootComponent('com_jlms')->getCatalogService();
         try {
-            $source = $catalog->course($actor, $app->getLanguage()->getTag(), $id);
+            $source = $categoryView
+                ? $catalog->category($actor, $app->getLanguage()->getTag(), $id)
+                : $catalog->course($actor, $app->getLanguage()->getTag(), $id);
         } catch (\RuntimeException $error) {
             if ($error->getCode() !== 404) { throw $error; }
             return [];
@@ -34,12 +37,17 @@ final class AssociationHelper
         if ($source->language === '*') { return []; }
         // Do not use the core static association cache here: changes/revocations must be current.
         $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $context = 'com_jlms.item';
+        $context = $categoryView ? 'com_categories.item' : 'com_jlms.item';
+        $table = $categoryView ? '#__categories' : '#__jlms_courses';
         $query = $db->createQuery()->select('c.id, c.language')->from('#__associations AS a')
             ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.' . $db->quoteName('key') . ' AND b.context = a.context')
-            ->innerJoin('#__jlms_courses AS c ON c.id = b.id')
+            ->innerJoin($table . ' AS c ON c.id = b.id')
             ->where('a.context = :context')->where('a.id = :id')->where('c.id <> :source')
             ->bind(':context', $context)->bind(':id', $id, ParameterType::INTEGER)->bind(':source', $id, ParameterType::INTEGER);
+        if ($categoryView) {
+            $extension = 'com_jlms.course';
+            $query->where('c.extension = :associationExtension')->bind(':associationExtension', $extension);
+        }
         $items = $db->setQuery($query)->loadObjectList();
         $languageQuery = $db->createQuery()->select('lang_code, sef')->from('#__languages')->where('published = 1')->whereIn('access', array_values(array_unique(array_merge([0], $levels))));
         $languages = $db->setQuery($languageQuery)->loadObjectList('lang_code');
@@ -49,13 +57,14 @@ final class AssociationHelper
             $tag = (string) $item->language;
             if ($tag === '*' || $tag === $source->language || !isset($languages[$tag])) { continue; }
             try {
-                $catalog->course($actor, $tag, (int) $item->id);
+                if ($categoryView) { $catalog->category($actor, $tag, (int) $item->id); }
+                else { $catalog->course($actor, $tag, (int) $item->id); }
             } catch (\RuntimeException $error) {
                 if ($error->getCode() !== 404) { throw $error; }
                 continue;
             }
             // Never carry a source Itemid, enrollment, lesson or attempt into another language.
-            $links[$tag] = 'index.php?option=com_jlms&view=course&id=' . (int) $item->id . '&lang=' . rawurlencode($languages[$tag]->sef);
+            $links[$tag] = 'index.php?option=com_jlms&view=' . $view . ($view === 'categories' ? '&parent_id=' : '&id=') . (int) $item->id . '&lang=' . rawurlencode($tag);
         }
         return $links;
     }

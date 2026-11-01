@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata><layout title="COM_JLMS_MENU_CATEGORIES_TITLE"><message>COM_JLMS_MENU_CATEGORIES_DESC</message></layout><fields name="request"><fieldset name="request"><field name="parent_id" type="category" extension="com_jlms.course" label="COM_JLMS_CATEGORY_PARENT" default="0" filter="integer"><option value="0">COM_JLMS_CATEGORIES</option></field></fieldset></fields></metadata>
