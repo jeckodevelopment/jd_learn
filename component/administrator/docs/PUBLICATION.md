@@ -2,7 +2,7 @@
 
 ## Segnalazione aperta e priorità
 
-Il collaudo utente segnala corsi che rimangono in bozza. La causa sull'installazione segnalante non è ancora riprodotta. Questa guida spiega il percorso presente e la diagnostica0.20.1; non certifica la risoluzione sul sito. La stabilizzazione del flusso precede l'import CSV, come indicato in NEXT_STEPS.md (punto0 nella repository).
+Il collaudo utente segnala corsi che rimangono in bozza. L’utente precisa che non trova il comando di pubblicazione nell’interfaccia. Il nuovo accesso esplicito deve essere verificato anche sul sito. Questa guida spiega il percorso presente e la diagnostica0.20.1; non certifica la risoluzione sul sito. La stabilizzazione del flusso precede l'import CSV, come indicato in NEXT_STEPS.md (punto0 nella repository).
 
 ## Procedura amministrativa attuale
 

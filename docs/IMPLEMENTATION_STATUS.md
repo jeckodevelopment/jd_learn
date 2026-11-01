@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento verificato: 1 novembre 2026. Versione di sviluppo **0.20.1-dev**, con verifica della nuova stabilizzazione ancora da registrare; il prodotto non è ancora pronto per la produzione.
+Aggiornamento verificato: 1 novembre 2026. Versione di sviluppo **0.20.1-dev**, con prima pubblicazione verificata nelle form native della CI; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
@@ -8,9 +8,9 @@ La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1
 
 ## Blocco segnalato nel collaudo utente
 
-**Priorità0: gestione corsi / prima pubblicazione, prima dell'import CSV.** L'utente segnala corsi che restano in bozza. La causa nell'installazione segnalante non è ancora identificata. La CI0.20 verificava la pubblicazione via servizio e il ritiro/ripubblicazione HTTP, senza creare e pubblicare inizialmente un nuovo corso interamente dalle form native. Non dichiarare pertanto la gestione corsi completa o il difetto risolto.
+**Priorità0: gestione corsi / prima pubblicazione, prima dell'import CSV.** L'utente segnala corsi che restano in bozza. L’utente precisa che manca proprio il comando di pubblicazione nell’interfaccia, anziché una transizione eseguita che fallisce. La CI0.20 verificava la pubblicazione via servizio e il ritiro/ripubblicazione HTTP, senza creare e pubblicare inizialmente un nuovo corso interamente dalle form native. Non dichiarare pertanto la gestione corsi completa o il difetto risolto.
 
-La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. Il registro delle evidenze resta riferito al build0.20 finché le nuove prove non sono eseguite e registrate. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
+La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
 ## Come leggere lo stato
 
