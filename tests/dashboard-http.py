@@ -66,6 +66,9 @@ try:
   expect('jlms-my-course-resume-'+str(f['completed'])not in Page(filtered).ids,'expired completed history does not expose review action')
   _,second,_=request(student,dashboard+'&limit=20&limitstart=20')
   expect(len(enrollments(second))==6,'pagination counts owner history across course languages')
+  # Native ListModel retains limitstart in the session; return to the page containing the active enrollment.
+  _,first_again,_=request(student,dashboard+'&limitstart=0')
+  expect(f['active']in enrollments(first_again),'return from retained pagination to active enrollment')
   form=next(x for x in page.forms if x['id']=='jlms-dashboard-filters')
   expect('filter[progress]'in html and'completed'in html,'native filter form rendered')
   target=next(a['href']for a in page.links if a.get('id')=='jlms-my-course-resume-'+str(f['active']))
