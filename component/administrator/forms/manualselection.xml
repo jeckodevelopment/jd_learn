@@ -2,4 +2,5 @@
 <form><fieldset name="selection">
  <field name="user_id" type="number" min="1" step="1" required="true" label="COM_JLMS_MANUAL_USER" description="COM_JLMS_MANUAL_USER_HINT" />
  <field name="language" type="language" client="site" required="true" label="COM_JLMS_MANUAL_LANGUAGE" />
+ <field name="preassignment" type="checkbox" value="1" default="0" label="COM_JLMS_PREASSIGN_OPTION" description="COM_JLMS_PREASSIGN_OPTION_HINT" filter="integer" />
 </fieldset></form>

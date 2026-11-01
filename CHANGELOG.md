@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.20.0-dev
+
+- Preassegnazione manuale esplicita senza livelli correnti, con avviso e conferma; default di ammissione invariato.
+- Assegnazione distinta dalla fruizione: nessun gruppo aggiunto, stessi controlli runtime, disponibilità editoriale obbligatoria.
+- Opt-in vincolato all’anteprima/hash e registrato nel log Joomla; compatibilità degli hash standard0.19 preservata.
+- Nessuna modifica allo schema41tabelle/58FK; prove negative, concorrenza, grant/revoca e conservazione superate nella CI41319974680 (37servizio/18HTTP/4conservazione per ambiente). CSV e accettazione completa ancora pendenti.
+
 ## Riallineamento documentale della baseline0.19
 
 - Riepilogo/README aggiornati ai flussi realmente presenti, schema41tabelle/58FK e integrazioni core ancora mancanti.
