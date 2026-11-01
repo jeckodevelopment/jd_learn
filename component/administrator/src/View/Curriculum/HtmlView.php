@@ -19,6 +19,7 @@ final class HtmlView extends BaseHtmlView
     public bool $editable = false;
     public bool $canDelete = false;
     public array $transitions = [];
+    public string $publicationNotice = '';
 
     public function display($tpl = null)
     {
@@ -31,8 +32,17 @@ final class HtmlView extends BaseHtmlView
         $app = Factory::getApplication();
         $this->editable = $version && $version->status === 'draft';
         $this->canDelete = $app->getIdentity()->authorise('core.delete', 'com_jlms.course.' . (int) $course->id);
-        if ($version && $app->getIdentity()->authorise('core.edit.state', 'com_jlms.course.' . (int) $course->id)) {
+        if (!$version) {
+            $this->publicationNotice = 'COM_JLMS_PUBLICATION_NEEDS_VERSION';
+        } elseif (!$app->getIdentity()->authorise('core.edit.state', 'com_jlms.course.' . (int) $course->id)) {
+            $this->publicationNotice = 'COM_JLMS_PUBLICATION_PERMISSION_REQUIRED';
+        } elseif (!\Joomla\CMS\Plugin\PluginHelper::isEnabled('workflow', 'publishing')) {
+            $this->publicationNotice = 'COM_JLMS_PUBLICATION_PLUGIN_REQUIRED';
+        } else {
             $this->transitions = $app->bootComponent('com_jlms')->getPublicationService()->transitions($app->getIdentity(), (int) $course->id);
+            if (!$this->transitions) {
+                $this->publicationNotice = 'COM_JLMS_PUBLICATION_NO_TRANSITIONS';
+            }
         }
         if ($this->editable) {
             $this->moduleForm = $this->get('Form');

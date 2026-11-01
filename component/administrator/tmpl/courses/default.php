@@ -14,7 +14,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         <thead><tr><th scope="col"><?= Text::_('JGLOBAL_TITLE') ?></th><th scope="col"><?= Text::_('JSTATUS') ?></th><th scope="col"><?= Text::_('COM_JLMS_REVISION') ?></th></tr></thead>
         <tbody><?php foreach ($this->items as $item) : ?><tr>
             <td><a href="<?= Route::_('index.php?option=com_jlms&task=course.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
-                <a class="btn btn-sm btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
+                <a class="btn btn-sm btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_PUBLICATION_OPEN_PROGRAMME') ?></a>
                 <?php if (\Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.enrollments.manage', 'com_jlms.course.' . (int) $item->id)) : ?><a class="btn btn-sm btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a><?php endif; ?></td>
             <td><?= Text::_((int) $item->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></td><td><?= (int) $item->revision ?></td>
         </tr><?php endforeach; ?></tbody>

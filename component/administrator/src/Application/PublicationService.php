@@ -207,6 +207,9 @@ final class PublicationService
         $remoteChecks = [];
         $course = $this->row('courses', $courseId);
         $this->authorise($actor, $course);
+        if (!\Joomla\CMS\Plugin\PluginHelper::isEnabled('workflow', 'publishing')) {
+            throw new \DomainException('COM_JLMS_PUBLICATION_PLUGIN_REQUIRED');
+        }
         $version = $this->row('course_versions', $versionId);
         if ((int) $version->course_id !== $courseId || (int) $version->revision !== $versionRevision
             || (int) $course->revision !== $courseRevision) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }

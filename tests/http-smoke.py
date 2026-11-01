@@ -91,6 +91,76 @@ try:
   result=response.read().decode('utf-8')
  if 'HTTP text lesson' not in result:raise RuntimeError('Lesson was not saved through the authenticated MVC form')
 
+ # Start from the same native New Course UI as an administrator, not a service-created published fixture.
+ checks=0
+ def expect(ok,message):
+  global checks
+  if not ok:raise RuntimeError(message)
+  checks+=1
+ def submit(url,form,updates=None):
+  fields=dict(form['fields']);fields.update(updates or {})
+  with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+   return response.geturl(),response.read().decode('utf-8')
+ def fixture(operation='snapshot',value=None):
+  args=['php',str(Path(__file__).with_name('publication-http-fixture.php')),operation]
+  if value is not None:args.append(str(value))
+  return json.loads(subprocess.check_output(args,text=True))
+ u,h=get('/administrator/index.php?option=com_jlms&task=course.add')
+ expect('id="jlms-course-publication-help"' in h and 'id="jlms-course-programme-link"' not in h,'New course explains save-before-publication')
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ # Read the category from the native category selector, not a guessed database ID.
+ category=re.search(r'<select[^>]*name="jform\[catid\]"[^>]*>(.*?)</select>',h,re.S).group(1)
+ catid=re.search(r'<option[^>]*value="([1-9][0-9]*)"[^>]*>[^<]*CI Courses',category).group(1)
+ u,h=submit(u,form,{'task':'course.apply','jform[title]':'HTTP first publication','jform[alias]':'http-first-publication',
+  'jform[catid]':catid,'jform[language]':'*','jform[catalog_access]':'1','jform[content_access]':'2',
+  'jform[enrollment_mode]':'auto','jform[summary]':'Created and first published through native HTTP forms'})
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ course_id=int(form['fields']['jform[id]'])
+ expect(course_id>0 and 'id="jlms-course-programme-link"' in h,'Saved draft offers curriculum/publication navigation')
+ programme=next(x for x in Page(h).links if parse_qs(urlparse(x).query).get('view')==['curriculum'])
+ # Close through the native controller before leaving the editor.
+ submit(u,form,{'task':'course.save'})
+ u,h=get(programme)
+ expect('id="jlms-publication-notice"' in h and 'id="jlms-version-form"' in h,'Course without version explains the next step')
+ form=next(f for f in Page(h).forms if f['id']=='jlms-version-form');u,h=submit(u,form)
+ expect('id="jlms-publication-form"' in h and re.search(r'id="jlms-publication-submit"[^>]*>\s*Publish\s*</button>',h),'First draft exposes an explicit Publish command')
+ before=fixture()
+ form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
+ transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+ u,h=submit(u,form,{'jform[transition_id]':transition})
+ expect(fixture()==before,'Empty initial programme cannot publish or create an edition')
+ form=next(f for f in Page(h).forms if f['id']=='jlms-module-form');u,h=submit(u,form,{'jform[title]':'HTTP first module'})
+ form=next(f for f in Page(h).forms if f['id']=='jlms-lesson-form')
+ u,h=submit(u,form,{'jform[title]':'HTTP first required lesson','jform[kind]':'text','jform[required]':'1',
+  'jform[module_id]':re.search(r'data-module-id="([1-9][0-9]*)"',h).group(1),
+  'jform[body]':'<p>FIRST_PUBLICATION_PRIVATE_BODY</p>'})
+ expect('HTTP first required lesson' in h,'Module and required text lesson saved through HTTP')
+ form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
+ transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+ # A disabled native plugin must be diagnosed without changing course/version data.
+ original_plugin=fixture()['plugin']
+ try:
+  fixture('plugin',0);u,h=get(u)
+  expect('id="jlms-publication-notice"' in h and 'id="jlms-publication-form"' not in h,'Disabled Publishing plugin has visible diagnostic and no action')
+  before=fixture();u,h=submit(u,form,{'jform[transition_id]':transition})
+  expect(fixture()==before,'Stale form cannot publish with disabled plugin')
+ finally:fixture('plugin',original_plugin)
+ u,h=get(u);form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
+ stale_form=dict(form);stale_form['fields']=dict(form['fields'])
+ transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+ u,h=submit(u,form,{'jform[transition_id]':transition})
+ published=fixture()['course']
+ expect(int(published['state'])==1 and published['status']=='published' and int(published['editions'])==1 and int(published['associations'])==1,'First HTTP publication freezes version and creates one edition and native association')
+ expect(bool(published['structure_hash']) and bool(published['published_at']),'Initial publication records immutable hash and timestamp')
+ u,h=submit(u,stale_form,{'jform[transition_id]':transition})
+ expect(fixture()['course']==published,'Repeated stale publication does not duplicate edition or change history')
+ public_http=build_opener(HTTPCookieProcessor(CookieJar()))
+ with public_http.open(base+'/index.php?option=com_jlms&view=course&id='+str(course_id),timeout=15) as response:
+  sheet=response.read().decode('utf-8')
+ expect('HTTP first required lesson' in sheet and 'FIRST_PUBLICATION_PRIVATE_BODY' not in sheet,'First published course is public with no lesson body leak')
+ expect('id="jlms-publication-status"' in h,'Administrator sees course publication status')
+ print(json.dumps({'first_publication_http_checks':checks,'status':'passed'}))
+
  # Exercise the native publication controller, CSRF token, redirect and current course revision.
  for link in curriculum_links:
   u,h=get(link)

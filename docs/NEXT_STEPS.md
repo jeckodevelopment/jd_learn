@@ -1,6 +1,16 @@
-# Piano esecutivo residuo dopo0.20
+# Piano esecutivo residuo — stabilizzazione prima delle nuove funzioni
 
 Data:1novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
+
+## 0. Bloccante: gestione corsi e prima pubblicazione
+
+Priorità emersa dai test utente del1novembre2026: i corsi restano in bozza. Chiarimento del collaudo: manca un comando di pubblicazione riconoscibile nell’interfaccia. La0.20.1 espone il percorso nell’elenco e nell’editor; il riscontro sul sito è ancora da acquisire. Sospendere l'import CSV come prossimo incremento e verificare anzitutto la catena completa creazione → salvataggio → programma → prima pubblicazione → catalogo → aula. Il salvataggio dei dati generali non pubblica: il comando attuale è nel Programma tramite workflow Joomla, ma questo percorso deve essere evidente e utilizzabile.
+
+La0.20.1 aggiunge collegamento e istruzioni nell'editor, stato del corso nel programma, diagnostica per versione/permesso/plugin/transizioni mancanti, messaggi coerenti con testo/video/quiz e un test HTTP di creazione e prima pubblicazione. Le verifiche preesistenti di ritiro/ripubblicazione non coprivano questo intero percorso. La CI41349160121 ha verificato la prima pubblicazione con13asserzioni HTTP per ambiente; il chiarimento dell’elenco corsi è nella PR22. Finché manca il riscontro sul sito, non dichiarare il blocco complessivamente risolto.
+
+**Accettazione del blocco:** riprodurre e registrare l'esito con versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione e messaggio mostrato; nessun dato personale o segreto. Provare corso minimo testuale, video e quiz supportati, errori comprensibili, permessi e token, prima pubblicazione e accesso studente con il livello richiesto. Nessuna modifica diretta dello stato o del database come workaround; nessuna perdita dello storico. La risoluzione di questo difetto non completa AUT-01/02/03/04 o SCR-13: editor completo, revisione, anteprima, archivio e versionamento restano nel piano.
+
+Dopo il blocco, riesaminare i residui della gestione corsi con la matrice e definire il successivo incremento coerente. Riprendere il punto1 solo quando il flusso essenziale è verificato. Privacy e sicurezza restano trasversali.
 
 ## 1. Iscrizioni: ammissione e import
 
