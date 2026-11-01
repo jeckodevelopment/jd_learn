@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 1 novembre 2026. Incremento0.17.0-dev: elenco amministrativo degli iscritti per corso.
+Aggiornamento: 1 novembre 2026. Incremento0.18.0-dev: sospensione e riattivazione con anteprima e audit.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -95,3 +95,7 @@ Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor conf
 ## Incremento0.17
 
 [ENROLLMENT_ROSTER.md](ENROLLMENT_ROSTER.md): elenco amministrativo in sola lettura, con ACL dedicate al corso, filtri e paginazione Joomla. Stato iscrizione/completamento distinti, dati minimi e date UTC. Nessuna modifica allo schema39tabelle/56FK; operazioni di gestione, risultati/attestati, aggregati ed export ancora pendenti. Esiti effettivi nella PR di incremento.
+
+## Incremento0.18
+
+[ENROLLMENT_STATE.md](ENROLLMENT_STATE.md): transizioni esplicite active/completed→suspended→active, anteprima/CAS, motivo/conferma, replay con nuova autorizzazione e audit core atomico. Storico e deadline conservati, nessun gruppo o proroga. Schema additivo40tabelle/57FK; creazione manuale, approvazioni, annullamenti, proroghe formative e privacy generale restano pendenti. Esiti effettivi nella PR di incremento.

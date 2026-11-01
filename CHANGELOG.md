@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.18.0-dev
+
+- Sospensione e riattivazione delle iscrizioni con anteprima aggiornata, motivo/conferma e permessi correnti per corso.
+- Eventi append-only e Action Logs atomici; replay idempotenti e lock/CAS condivisi con i writer didattici.
+- Progressi, completamenti, risposte e timer conservati; nessuna assegnazione di gruppi o proroga delle finestre.
+- Schema additivo40tabelle/57FK; test runtime/HTTP/concorrenza/audit/upgrade predisposti, esiti effettivi nelle Actions. Creazione manuale, annullamenti e gestione completa ancora pendenti.
+
 ## 0.17.0-dev
 
 - Elenco amministrativo degli iscritti per corso con permessi nativi dedicati e aggiornati su ogni lettura.

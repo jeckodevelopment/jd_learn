@@ -18,11 +18,11 @@ foreach (explode(';', $sql) as $query) {
     }
 }
 $tables = $db->query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE 'ci_jlms_%'")->fetchColumn();
-if ((int) $tables !== 39) {
+if ((int) $tables !== 40) {
     throw new \RuntimeException('Schema table count mismatch');
 }
 $constraints = $db->query("SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_TYPE='FOREIGN KEY'")->fetchColumn();
-if ((int) $constraints !== 56) {
+if ((int) $constraints !== 57) {
     throw new \RuntimeException('Schema foreign key count mismatch');
 }
 $db->beginTransaction();
@@ -63,5 +63,9 @@ $enrollment=insertRow($db,'enrollments',$enrolData);
 constraintRejects(fn () => insertRow($db,'enrollments',$enrolData));
 $wrong=$enrolData;$wrong['course_version_id']=$other;
 constraintRejects(fn () => insertRow($db,'enrollments',$wrong));
+$change=['enrollment_id'=>$enrollment,'course_version_id'=>$other,'revision_no'=>1,'enrollment_revision'=>1,'previous_status'=>'active','target_status'=>'suspended','impact_hash'=>str_repeat('a',64),'reason'=>'Test','mutation_id'=>'44444444-4444-4444-a444-444444444444','request_hash'=>str_repeat('b',64),'created_at'=>$now];
+constraintRejects(fn () => insertRow($db,'enrollment_state_changes',$change));
+$change['course_version_id']=$version;insertRow($db,'enrollment_state_changes',$change);$change['revision_no']=2;
+constraintRejects(fn () => insertRow($db,'enrollment_state_changes',$change));
 $db->rollBack();
-echo json_encode(['database'=>$db->getAttribute(\PDO::ATTR_SERVER_VERSION),'tables'=>(int)$tables,'foreign_keys'=>(int)$constraints,'integrity_cases'=>3,'status'=>'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode(['database'=>$db->getAttribute(\PDO::ATTR_SERVER_VERSION),'tables'=>(int)$tables,'foreign_keys'=>(int)$constraints,'integrity_cases'=>5,'status'=>'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
