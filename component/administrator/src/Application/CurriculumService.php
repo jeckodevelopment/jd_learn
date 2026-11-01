@@ -212,7 +212,7 @@ final class CurriculumService
             $id = $this->insert('course_versions', ['course_id' => $courseId, 'version_no' => $number,
                 'status' => 'draft', 'title_snapshot' => $course->title,
                 'rules_json' => '{"_schema":1,"mode":"learning","sequence_mode":"free","video_threshold_basis_points":9000,"certificate_enabled":false,"completion_policy":"all_required"}',
-                'presentation_json' => json_encode(['_schema' => 1, 'summary' => $course->summary], JSON_THROW_ON_ERROR),
+                'presentation_json' => CoursePresentation::snapshot($course),
                 'fields_snapshot_json' => '{}'], $actor);
             $this->update('courses', $course, [], $actor);
             return $id;

@@ -187,7 +187,7 @@ final class PublicationService
                 throw new \DomainException('COM_JLMS_MATERIAL_NOT_READY');
             }
         }
-        $presentation = json_encode(['_schema' => 1, 'summary' => $course->summary], JSON_THROW_ON_ERROR);
+        $presentation = CoursePresentation::snapshot($course);
         $hash = hash('sha256', json_encode(['_schema' => 1, 'title' => $course->title, 'rules' => $rules,
             'presentation' => $presentation, 'modules' => $modules, 'lessons' => $lessons, 'attachments' => $attachments], JSON_THROW_ON_ERROR));
         $now = gmdate('Y-m-d H:i:s');

@@ -105,6 +105,12 @@ final class CatalogService
         foreach ($lessons as $lesson) {
             $grouped[(int) $lesson->module_id][] = $lesson;
         }
-        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped];
+        // Read the frozen promotional snapshot only on an authorised detail request.
+        // Catalog lists and enrolment checks never load large presentation bodies or draft params.
+        $q = $this->db->createQuery()->select('presentation_json')->from('#__jlms_course_versions')
+            ->where('id = :presentationVersion')->where('course_id = :presentationCourse')
+            ->bind(':presentationVersion', $version, ParameterType::INTEGER)->bind(':presentationCourse', $id, ParameterType::INTEGER);
+        $presentation = CoursePresentation::fromSnapshot((string) $this->db->setQuery($q)->loadResult());
+        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'presentation' => $presentation];
     }
 }

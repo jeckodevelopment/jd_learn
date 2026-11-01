@@ -38,6 +38,9 @@ final class HtmlView extends BaseHtmlView
             foreach (['title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary'] as $field) {
                 $this->form->setFieldAttribute($field, 'disabled', 'true');
             }
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) {
+                $this->form->setFieldAttribute('presentation_' . $field, 'disabled', 'true');
+            }
             foreach ($this->form->getFieldset('item_associations') as $field) {
                 $this->form->setFieldAttribute($field->fieldname, 'disabled', 'true', 'associations');
             }

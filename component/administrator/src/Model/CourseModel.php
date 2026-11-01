@@ -39,6 +39,9 @@ final class CourseModel extends AdminModel
     {
         $item = parent::getItem($pk);
         if ($item && !empty($item->id)) {
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($item->params_json) ?? [] as $field => $value) {
+                if ($field !== '_schema') { $item->{'presentation_' . $field} = $value; }
+            }
             $item->associations = [];
             foreach ($this->associationMembers((int) $item->id) as $member) {
                 if ((int) $member->id !== (int) $item->id) {
@@ -157,6 +160,7 @@ final class CourseModel extends AdminModel
         $db = $this->getDatabase();
         $this->associationWrite = false;
         $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations'];
+        foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
         $data = array_intersect_key($data, array_flip($allowed));
         $id = (int) ($data['id'] ?? 0);
         $expected = (int) ($data['revision'] ?? 0);
@@ -203,6 +207,11 @@ final class CourseModel extends AdminModel
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $this->validateAssociations($data, $user, $id, $record);
+            $presentation = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::merge(
+                $data, $record->params_json ?? '{}', static fn (string $html): string => \Joomla\CMS\Component\ComponentHelper::filterText($html),
+            );
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { unset($data['presentation_' . $field]); }
+            if ($presentation !== null) { $data['params_json'] = $presentation; }
             if (!parent::save($data)) {
                 $db->transactionRollback();
                 $this->setError(Text::_('COM_JLMS_SAVE_FAILED'));
@@ -212,7 +221,7 @@ final class CourseModel extends AdminModel
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY'];
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID'];
             if (!in_array($error->getMessage(), $known, true)) {
                 // Private diagnostics omit SQL, values and exception messages.
                 try { \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms'); } catch (\Throwable) {}

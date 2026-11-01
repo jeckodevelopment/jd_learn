@@ -94,7 +94,7 @@ final class CourseTable extends Table
             $this->created_at = $now;
             $this->created_by = $userId;
             $this->revision = 1;
-            $this->params_json = '{}';
+            $this->params_json = $this->params_json ?: '{}';
             $this->metadata_json = '{}';
             $this->state = 0;
         } else {

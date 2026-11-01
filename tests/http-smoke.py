@@ -10,15 +10,24 @@ root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.links=[];self.base=None;self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.links=[];self.base=None;self.textarea=None;self.select=None;self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
   if tag=='base' and a.get('href'):self.base=a['href']
   if tag=='form':self.current={'id':a.get('id',''),'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
   if tag=='input' and self.current is not None and 'name' in a:self.current['fields'][a['name']]=a.get('value','')
+  if tag=='textarea' and self.current is not None and 'name' in a:
+   self.textarea=a['name'];self.current['fields'][self.textarea]=''
+  if tag=='select' and self.current is not None and 'name' in a:self.select=a['name']
+  if tag=='option' and self.select and self.current is not None:
+   if self.select not in self.current['fields'] or 'selected' in a:self.current['fields'][self.select]=a.get('value','')
   if tag=='a' and a.get('href'):self.links.append(a['href'])
  def handle_endtag(self,tag):
-  if tag=='form':self.current=None
+  if tag=='form':self.current=None;self.textarea=None;self.select=None
+  if tag=='textarea':self.textarea=None
+  if tag=='select':self.select=None
+ def handle_data(self,data):
+  if self.textarea and self.current is not None:self.current['fields'][self.textarea]+=data
 base='http://127.0.0.1:8093'
 # Joomla treats the cli-server SAPI as CLI for URI discovery. Configure the isolated
 # site's known URL so its native router emits the same paths as a web-server deployment.
@@ -117,9 +126,16 @@ try:
  form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
  course_id=int(form['fields']['jform[id]'])
  expect(course_id>0 and 'id="jlms-course-programme-link"' in h,'Saved draft offers curriculum/publication navigation')
+ expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-publishing']),'Native course editor exposes general, presentation, access and publication tabs')
+ u,h=submit(u,form,{'task':'course.apply','jform[presentation_description]':'<p>HTTP extended <strong>description</strong></p><img src="https://example.invalid/pixel" onerror="alert(1)"><script>alert(2)</script>',
+  'jform[presentation_objectives]':'HTTP objectives <script>plain text</script>','jform[presentation_audience]':'HTTP audience',
+  'jform[presentation_prerequisite_text]':'HTTP prior knowledge','jform[presentation_difficulty]':'intermediate','jform[presentation_estimated_minutes]':'75'})
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ expect(form['fields']['jform[presentation_estimated_minutes]']=='75' and 'HTTP extended' in form['fields']['jform[presentation_description]'],'Presentation saved and reopened in native editor')
  programme=next(x for x in Page(h).links if parse_qs(urlparse(x).query).get('view')==['curriculum'])
  # Close through the native controller before leaving the editor.
- submit(u,form,{'task':'course.save'})
+ close_url,close_html=submit(u,form,{'task':'course.save'})
+ expect(parse_qs(urlparse(close_url).query).get('view')==['courses'],'Native save and close succeeds with all rendered controls')
  u,h=get(programme)
  expect('id="jlms-publication-notice"' in h and 'id="jlms-version-form"' in h,'Course without version explains the next step')
  form=next(f for f in Page(h).forms if f['id']=='jlms-version-form');u,h=submit(u,form)
@@ -158,6 +174,9 @@ try:
  with public_http.open(base+'/index.php?option=com_jlms&view=course&id='+str(course_id),timeout=15) as response:
   sheet=response.read().decode('utf-8')
  expect('HTTP first required lesson' in sheet and 'FIRST_PUBLICATION_PRIVATE_BODY' not in sheet,'First published course is public with no lesson body leak')
+ expect(all('id="'+x+'"' in sheet for x in ['jlms-course-description','jlms-course-objectives','jlms-course-audience','jlms-course-prerequisite-text','jlms-course-facts','jlms-course-difficulty','jlms-course-estimated-duration']),'Public presentation exposes documented unique regions')
+ expect('<strong>description</strong>' in sheet and 'HTTP audience' in sheet and '75 minutes' in sheet,'Frozen presentation is visible on public course sheet')
+ expect('example.invalid/pixel' not in sheet and '<script>plain text</script>' not in sheet and '&lt;script&gt;plain text&lt;/script&gt;' in sheet,'Unsafe HTML removed and informational text escaped')
  expect('id="jlms-publication-status"' in h,'Administrator sees course publication status')
  print(json.dumps({'first_publication_http_checks':checks,'status':'passed'}))
 
