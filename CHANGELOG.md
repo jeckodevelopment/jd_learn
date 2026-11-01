@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.17.0-dev
+
+- Elenco amministrativo degli iscritti per corso con permessi nativi dedicati e aggiornati su ogni lettura.
+- Filtri versione/utente/stato/avanzamento, paginazione nativa e date UTC; nessuna mutazione o assegnazione di gruppi.
+- Stato iscrizione distinto dal completamento; dati minimizzati e nomi escapati, viste native e override documentati.
+- Nessuna modifica allo schema; prove ACL/runtime/HTTP/conservazione predisposte, esiti effettivi nelle Actions. Gestione con audit, report completi ed export restano da implementare.
+
 ## 0.16.0-dev
 
 - Area personale del solo utente autenticato con storico paginato, filtri nativi e gruppi didattici separati dalla disponibilità corrente.

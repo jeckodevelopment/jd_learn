@@ -16,6 +16,10 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Associatio
     public function setDashboardService(\Jlms\Component\Jlms\Administrator\Application\DashboardService $service): void { $this->dashboardService = $service; }
     public function getDashboardService(): \Jlms\Component\Jlms\Administrator\Application\DashboardService { return $this->dashboardService; }
 
+    private \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $enrollmentRosterService;
+    public function setEnrollmentRosterService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $service): void { $this->enrollmentRosterService = $service; }
+    public function getEnrollmentRosterService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService { return $this->enrollmentRosterService; }
+
     use CategoryServiceTrait;
     use \Joomla\CMS\Association\AssociationServiceTrait;
 
