@@ -28,9 +28,9 @@ ISC-05,Rilascio 1,In corso,Ripristino accesso conserva frequenza/progressi; nuov
 ISC-06,Rilascio 1,In corso,Nessun gruppo commerciale o pagamento scritto dal LMS; integrazione completa estensione esterna da collaudare.,No
 ISC-07,Rilascio 1,In corso,Identità e cache core aggiornate anche con sessione aperta; revoca/ripristino testati su aula testo. Quiz/media da completare.,No
 ISC-08,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-STU-01,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STU-01,Rilascio 1,In corso,Area personale del proprietario con filtri/paginazione e avanzamento separato dalla disponibilità; ripresa autorizzata; attestati e attività dettagliate da completare.,No
 STU-02,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-STU-03,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
+STU-03,Rilascio 1,In corso,Progressi persistenti e ripresa dell’ultima attività valida su account nativo; UI completa e browser multipli da collaudare.,No
 STU-04,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 STU-05,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 PRO-01,Rilascio 1,In corso,Conferma manuale persistente per testo; semplice GET non attribuisce credito. Altri stati/tipi da completare.,No
@@ -84,7 +84,7 @@ CORE-09,Rilascio 1,Da implementare,La presenza nello schema/progetto non equival
 CORE-10,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CORE-11,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CORE-12,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
-CORE-13,Rilascio 1,In corso,Menu e RouterView catalogo/corso/categorie; Pathway categorie e selettore lingua; alias e contesti restanti da completare.,No
+CORE-13,Rilascio 1,In corso,Menu e RouterView catalogo/corso/categorie/area personale; Pathway categorie e selettore lingua; alias e contesti restanti da completare.,No
 CORE-14,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CORE-15,Rilascio 1,Da implementare,La presenza nello schema/progetto non equivale a implementazione.,No
 CORE-16,Rilascio 1,In corso,Check-in/out e revisioni concorrenti; Content History ancora da integrare.,No

@@ -297,6 +297,39 @@ final class LearningService
             'outline' => $outline, 'percent' => $percent, 'completed_at' => $enrollment->completed_at];
     }
 
+    /** Read-only, freshly authorized resume target. Does not start an attempt or change progress. */
+    public function resumeTarget(User $identity, string $uiLanguage, int $enrollmentId): array
+    {
+        $actor = $this->freshActor($identity); $owner = (int) $actor->id;
+        $q = $this->db->createQuery()->select('c.language')->from('#__jlms_enrollments AS e')
+            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->where('e.id = :enrollment')->where('e.user_id = :owner')
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':owner', $owner, ParameterType::INTEGER);
+        $language = $this->db->setQuery($q)->loadResult();
+        if ($language === null) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        $language = $language === '*' ? $uiLanguage : (string) $language;
+        if (!isset(LearningLanguages::available($actor, $uiLanguage)[$language])) {
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+        }
+        [$course, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
+        $lessonId = (int) $enrollment->last_lesson_id;
+        if ($lessonId) {
+            try { $this->lesson((int) $version->id, $lessonId); }
+            catch (\RuntimeException $error) {
+                if (!in_array($error->getMessage(), ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED'], true)) { throw $error; }
+                $lessonId = 0;
+            }
+        }
+        if (!$lessonId) {
+            $versionId = (int) $version->id;
+            $q = $this->db->createQuery()->select('l.id')->from('#__jlms_lessons AS l')
+                ->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
+                ->where('l.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('m.ordering, m.id, l.ordering, l.id');
+            $lessonId = (int) $this->db->setQuery($q, 0, 1)->loadResult();
+            $this->lesson($versionId, $lessonId);
+        }
+        return ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId, 'language' => $language];
+    }
+
     public function complete(User $identity, string $language, int $enrollmentId, int $lessonId, string $key): void
     {
         self::key($key);

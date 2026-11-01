@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0-dev
+
+- Area personale del solo utente autenticato con storico paginato, filtri nativi e gruppi didattici separati dalla disponibilità corrente.
+- Storico e titolo congelato conservati dopo revoca o scadenza; nessuna lezione/risorsa/risposta nel riepilogo.
+- Riprendi/Rivedi in lettura con nuova autorizzazione, ultima attività valida e lingua originale, senza iscrizioni o tentativi automatici.
+- MVC/menu/form/override e ID CSS nativi; intestazioni private e noindex. Nessuna nuova tabella; test runtime/HTTP/upgrade predisposti, esiti effettivi nelle Actions.
+- Attestati, attività dettagliate e gestione amministrativa delle iscrizioni restano da implementare.
+
 ## 0.15.0-dev
 
 - Viste pubbliche categorie e categoria con figli/corsi paginati e ID CSS stabili per override nativi.

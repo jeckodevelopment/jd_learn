@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><fieldset name="filters"><field name="progress" type="list" label="COM_JLMS_DASHBOARD_PROGRESS_FILTER" default="all" filter="cmd">
+ <option value="all">COM_JLMS_DASHBOARD_ALL</option><option value="not_started">COM_JLMS_DASHBOARD_NOT_STARTED</option><option value="in_progress">COM_JLMS_DASHBOARD_IN_PROGRESS</option><option value="completed">COM_JLMS_DASHBOARD_COMPLETED</option>
+</field></fieldset></form>

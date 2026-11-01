@@ -14,7 +14,7 @@ class EnrollmentController extends BaseController
 {
     public function execute($task)
     {
-        $allowed = static::class === self::class ? ['start'] : ['complete'];
+        $allowed = static::class === self::class ? ['start', 'resume'] : ['complete'];
         if (!in_array(strtolower($task), $allowed, true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
@@ -63,5 +63,24 @@ class EnrollmentController extends BaseController
     public function start(): void
     {
         $this->mutate(false);
+    }
+
+    public function resume(): void
+    {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+        if (strtoupper($this->input->getMethod()) !== 'GET') { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405); }
+        try {
+            $id = CurriculumService::id($this->input->get('id', 0, 'raw'));
+            $target = $this->app->bootComponent('com_jlms')->getLearningService()->resumeTarget($this->app->getIdentity(), $this->app->getLanguage()->getTag(), $id);
+            $this->setRedirect(Route::_('index.php?option=com_jlms&view=classroom&id=' . $target['enrollment_id'] . '&lesson_id=' . $target['lesson_id'] . '&lang=' . rawurlencode($target['language']), false));
+        } catch (\Throwable $error) {
+            $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];
+            if (in_array($error->getMessage(), $known, true)) {
+                throw new \RuntimeException(Text::_($error->getMessage()), in_array($error->getCode(), [400, 401, 403, 404], true) ? $error->getCode() : 400);
+            }
+            Log::add('Resume target failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
+        }
     }
 }

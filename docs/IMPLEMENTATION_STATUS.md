@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 1 novembre 2026. Incremento0.15.0-dev: categorie pubbliche e associazioni di sezione native.
+Aggiornamento: 1 novembre 2026. Incremento0.16.0-dev: area personale e ripresa autorizzata.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -11,10 +11,10 @@ Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suf
 | Categorie | Contesti core, servizi, asset di sezione e form corso | Lifecycle completo di rimozione/ripristino con dati storici |
 | Corsi | Scheda, prima versione in bozza, moduli e lezioni testo/video, revisioni; pubblicazione testo con workflow nativo | Workflow con transizioni avanzate, clonazione completa, altri tipi lezione, equivalenze/migrazioni |
 | Editor Joomla | Form e check-in/out nativi, livelli, lingua | Tags, fields/snapshot, Content History e copertura multilingua completa |
-| Frontend | Catalogo paginato, filtro categorie/sottocategorie, scheda pubblica e programma con WAM/override e ID CSS | Ricerca/ordinamento avanzati, dashboard personale e accessibilità completa |
+| Frontend | Catalogo paginato, filtro categorie/sottocategorie, scheda pubblica e programma con WAM/override e ID CSS | Ricerca/ordinamento avanzati e accessibilità completa |
 | Plugin video | Quattro plugin installati; YouTube/Vimeo, Cloudflare API e HTML5 opt-in; progressi comuni, upload locale e Nginx | Firma locale Cloudflare, cache/diagnostica, altri codec/storage, collaudo browser/provider e rinnovo senza interruzione |
 | Materiali e storage | Upload validato, storage locale privato, quarantena, protocollo ClamAV opzionale, collegamenti in bozza e download autorizzato/Range | Offload server/object storage, job cleanup, riuso asset, preview e ulteriori strumenti di gestione |
-| Iscrizioni e progressi | Avvio automatico, aula testo/video e completamento manuale/copertura con idempotenza/lock per iscrizione e accesso corrente | Approvazioni/manuale/import, dashboard, UI avanzata e gestione calendario |
+| Iscrizioni e progressi | Avvio automatico, aula testo/video e completamento manuale/copertura con idempotenza/lock per iscrizione e accesso corrente | Approvazioni/manuale/import, dashboard amministrativa, UI avanzata e gestione calendario |
 | Quiz | Banca/bozze native, pubblicazione con pool congelato, tentativi atomici, snapshot/estrazione, start/save/submit/CAS/timer, scoring, risultati, feedback protetto e tempi individuali preventivi | Rivalutazioni, disponibilità specifica, audit/privacy generali, UI/accessibilità e carico |
 | Attestati | Schema emissione/documenti/sostituzione | PDF, verifica pubblica, anomalie, revoca e notifica |
 | Job e outbox | Schema e plugin Scheduler limitato alla scadenza quiz | Worker generali/CLI, lease, retry, mail templates e delivery_unknown |
@@ -87,3 +87,7 @@ Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor conf
 ## Incremento0.15
 
 [CATEGORIES.md](CATEGORIES.md): viste elenco/categoria, sottocategorie e corsi paginati, verifica corrente degli antenati, Pathway e associazioni native della sezione corsi. Nessuna modifica allo schema39tabelle/56FK. Test effettivi nella PR #15. Eliminazione con dipendenze, alias/SEO completi, browser/accessibilità e carico restano da completare.
+
+## Incremento0.16
+
+[LEARNER_DASHBOARD.md](LEARNER_DASHBOARD.md): storico del solo proprietario con filtri/paginazione, stato didattico distinto dalla disponibilità e ripresa in lettura nuovamente autorizzata. Lingua originale e storico conservati dopo revoca/scadenza, nessun corpo lezione o tentativo nel riepilogo. Nessuna modifica allo schema39tabelle/56FK. Attestati e attività da correggere/ripetere restano da completare; esiti effettivi nella PR #16.
