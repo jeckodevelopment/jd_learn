@@ -151,5 +151,19 @@ $app->loadIdentity($guest);
 $listed=$factory->createModel('Categories','Site',['ignore_request'=>true]);$listed->setState('filter.parent_id',$en);$listed->setState('list.start',20);$listed->setState('list.limit',20);
 catExpect(count($listed->getItems())===2 && (int)$listed->getTotal()===22,'bounded second page counts visible children only');
 $description=static fn($id)=>(string)$db->setQuery('SELECT description FROM #__categories WHERE id='.(int)$id)->loadResult();
-file_put_contents($fixturePath,json_encode(compact('en','it','child','hidden','unpublished','wrongLanguage','grandchild','otherSection','course','italianCourse','hiddenCourse')+['description'=>$description($en)],JSON_THROW_ON_ERROR));
+$app->loadIdentity($actor);
+$componentId=(int)$db->setQuery("SELECT extension_id FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult();
+$menus=[];
+foreach(['en-GB'=>$en,'it-IT'=>$it] as $tag=>$categoryId){
+    foreach(['categories','category'] as $view){
+        $alias='taxonomy-menu-'.$view.'-'.substr($tag,0,2);
+        $table=new \Joomla\CMS\Table\Menu($db);$table->setLocation(1,'last-child');
+        $table->bind(['title'=>$alias,'alias'=>$alias,'menutype'=>'mainmenu','type'=>'component','link'=>'index.php?option=com_jlms&view='.$view.($view==='category'?'&id='.$categoryId:''),
+            'component_id'=>$componentId,'published'=>1,'access'=>1,'language'=>$tag,'home'=>0,'params'=>'{}','browserNav'=>0]);
+        if(!$table->check()||!$table->store())throw new \RuntimeException('Native category menu failed: '.$table->getError());
+        $menus[$alias]=(int)$table->id;
+    }
+}
+catExpect(count($menus)===4,'native category and category-index menus in both languages');
+file_put_contents($fixturePath,json_encode(compact('en','it','child','hidden','unpublished','wrongLanguage','grandchild','otherSection','course','italianCourse','hiddenCourse','menus')+['description'=>$description($en)],JSON_THROW_ON_ERROR));
 echo json_encode(['native_category_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
