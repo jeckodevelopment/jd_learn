@@ -23,6 +23,11 @@ $hidden = static function (array $fields): void {
  <h1><?= $this->escape($course->title) ?></h1>
  <p><a href="<?= $link('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_BACK_TO_COURSES') ?></a></p>
  <p class="alert alert-info"><?= Text::_('COM_JLMS_AUTHORING_NOTICE') ?></p>
+ <section id="jlms-publication-status" aria-labelledby="jlms-publication-heading">
+  <h2 id="jlms-publication-heading" class="h4"><?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?></h2>
+  <p><?= Text::_('JSTATUS') ?>: <strong><?= Text::_((int) $course->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></strong></p>
+  <?php if ($this->publicationNotice !== '') : ?><p id="jlms-publication-notice" class="alert alert-warning" role="status"><?= Text::_($this->publicationNotice) ?></p><?php endif; ?>
+ </section>
  <?php if (!$version) : ?>
   <form method="post" id="jlms-version-form" action="<?= $link('index.php?option=com_jlms') ?>">
    <?php $hidden(['course_id' => $course->id, 'revision' => $course->revision]); ?>

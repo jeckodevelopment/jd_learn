@@ -1,10 +1,16 @@
 # Avanzamento di JD Learn
 
-Aggiornamento verificato: 1 novembre 2026. Versione di sviluppo **0.20.0-dev**, verificata nella suite implementata dopo il riallineamento della0.19; il prodotto non è ancora pronto per la produzione.
+Aggiornamento verificato: 1 novembre 2026. Versione di sviluppo **0.20.1-dev**, con verifica della nuova stabilizzazione ancora da registrare; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
 La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1.0 nei loro nomi è storico. La [matrice corrente](REQUIREMENTS_STATUS.csv) riporta tutti i210requisiti della [matrice baseline](specifications/Matrice_requisiti_test_LMS_1.0.csv), senza modificarne descrizione, perimetro o scenari previsti.
+
+## Blocco segnalato nel collaudo utente
+
+**Priorità0: gestione corsi / prima pubblicazione, prima dell'import CSV.** L'utente segnala corsi che restano in bozza. La causa nell'installazione segnalante non è ancora identificata. La CI0.20 verificava la pubblicazione via servizio e il ritiro/ripubblicazione HTTP, senza creare e pubblicare inizialmente un nuovo corso interamente dalle form native. Non dichiarare pertanto la gestione corsi completa o il difetto risolto.
+
+La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. Il registro delle evidenze resta riferito al build0.20 finché le nuove prove non sono eseguite e registrate. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
 ## Come leggere lo stato
 
@@ -17,12 +23,12 @@ Nessun requisito è stato promosso ad accettazione completa in questo riallineam
 
 ## Funzioni disponibili e residui
 
-| Area | Percorsi operativi verificati fino alla0.19 | Residui per il primo rilascio |
+| Area | Sottoinsiemi presenti (non accettazione completa) | Residui per il primo rilascio |
 |---|---|---|
 | Pacchetto e installazione | Manifest/DI/MVC, preflight, build riproducibile, installazione/upgrade e conservazione dati sui flussi CI | Update server, backup/ripristino, matrice completa sulla patch corrente e manutenzione di rilascio |
 | Utenti e accessi | Identità/sessioni/CSRF, livelli e asset Joomla; ricaricamento dei diritti, blocchi/revoche e controllo diretto per oggetto | MFA/provider reali e copertura di tutte le nuove azioni; integrazione reale con estensione abbonamenti |
 | Categorie e lingue | Categorie native, gerarchia/antenati, Pathway e associazioni; corsi associati in bozza, Language Filter e menu SEF | Lifecycle con dipendenze, associazioni dei gruppi pubblicati e selettori completi |
-| Authoring e pubblicazione | Bozze, moduli/lezioni testo/video/quiz, ordinamento/parent, editor filtrato, workflow Publishing e snapshot immutabili | Audio/documenti come lezioni autonome, clonazione/nuove versioni complete, equivalenze/migrazioni, prerequisiti e rilascio progressivo |
+| Authoring e pubblicazione | Bozze, moduli/lezioni testo/video/quiz, ordinamento/parent, editor filtrato; workflow/snapshot verificati nella CI, prima pubblicazione segnalata bloccata nel collaudo utente | Audio/documenti come lezioni autonome, clonazione/nuove versioni complete, equivalenze/migrazioni, prerequisiti e rilascio progressivo |
 | Catalogo e aula | Schede/programma pubblici autorizzati, filtri categorie, aula protetta, materiali e completamenti persistenti | Ricerca/ordinamenti/SEO e metadati completi, percorsi aggregati, navigazione/UX/accessibilità complete |
 | Area personale | Storico del proprietario con filtri/pagine, apprendimento distinto dall’accesso, Riprendi/Rivedi e lingua originale | Attestati e attività dettagliate; fallback di ripresa R-05 |
 | Video | Quattro plugin base, consenso, copertura unica/ripresa, Stream API/token, MP4 privati PHP limitato/Nginx | Provider aggiuntivi senza patch R-02, sottotitoli/trascrizioni/velocità/configurazioni complete, firma locale/cache Stream, collaudo SDK/provider/browser reale |
@@ -47,7 +53,7 @@ Non sono eseguiti i benchmark300studenti/60min e500/10min, né una verifica comp
 
 ## Prossimi passaggi
 
-Il [piano esecutivo residuo](NEXT_STEPS.md) specifica dipendenze e condizioni di accettazione. Priorità successiva: import CSV, mantenendo scope, dati esistenti e gruppi invariati; job amministrati per i volumi previsti. Privacy e sicurezza accompagnano ogni incremento e non sono rinviate alla sola verifica finale.
+Il [piano esecutivo residuo](NEXT_STEPS.md) specifica dipendenze e condizioni di accettazione. Priorità successiva: stabilizzare e collaudare la gestione corsi e la prima pubblicazione (punto0). Import CSV e job amministrati seguono dopo la verifica del flusso essenziale. Privacy e sicurezza accompagnano ogni incremento e non sono rinviate alla sola verifica finale.
 
 ## Cronologia e guide
 

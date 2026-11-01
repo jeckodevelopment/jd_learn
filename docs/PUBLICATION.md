@@ -1,31 +1,46 @@
-# Pubblicazione e catalogo — incremento 0.3
+# Pubblicazione e catalogo — stato0.20.1
 
-Il corso viene pubblicato dalla pagina **Programma** tramite un POST `curriculum.transition`, token Joomla e campi `course_id`, `version_id`, `revision` del corso, `expected_version_revision`, `transition_id`. Sono task HTML interni, distinti dagli endpoint JSON pianificati.
+## Segnalazione aperta e priorità
 
-## Workflow Joomla
+Il collaudo utente segnala corsi che rimangono in bozza. La causa sull'installazione segnalante non è ancora riprodotta. Questa guida spiega il percorso presente e la diagnostica0.20.1; non certifica la risoluzione sul sito. La stabilizzazione del flusso precede l'import CSV, come indicato in NEXT_STEPS.md (punto0 nella repository).
 
-L’installer crea un workflow nativo per `com_jlms.course`, due fasi e transizioni di pubblicazione/rimozione con relativi asset ACL. Non modifica workflow preesistenti. Si gestiscono nel core: `administrator/index.php?option=com_workflow&extension=com_jlms.course`. Per funzionare richiede il plugin core **Workflow - Publishing**, disponibile nel Joomla standard. Se disabilitato o se un plugin annulla la transizione, l’operazione fallisce e i dati vengono ripristinati. Non viene abilitato automaticamente un plugin disattivato dall’amministratore.
+## Procedura amministrativa attuale
 
-Permessi necessari: identità attiva, `core.manage`, `core.edit.state` sull’asset corso e `core.execute.transition` sull’asset della transizione. Le transizioni offerte devono appartenere al workflow/fase corrente, essere pubblicate e avere opzione `publishing` 0/1. Il componente usa `Workflow::executeTransition`, eventi e plugin core. Il cambiamento di stato del modello è ammesso soltanto durante la transizione validata dal servizio, per impedire bypass tramite task generici. La scelta del workflow iniziale rispetta i parametri di categoria e il default core.
+1. In **Corsi → Nuovo**, compilare titolo, categoria, lingua e livelli di catalogo/contenuto. Salvare e chiudere. Il campo Stato è intenzionalmente disabilitato: il salvataggio non pubblica un programma non validato.
+2. Aprire **Programma** dall'elenco, oppure **Apri programma e pubblicazione** dal corso salvato dopo aver salvato/chiuso eventuali modifiche. Creare la versione in bozza se assente.
+3. Aggiungere almeno un modulo e una lezione valida per ciascun modulo. Almeno una lezione del corso deve essere obbligatoria. Salvare ogni operazione.
+4. Nella sezione Pubblicazione selezionare **Pubblica** ed eseguire la transizione Joomla. Verificare sia lo Stato del corso sia quello della versione. Una validazione fallita conserva la bozza e mostra un errore; un salvataggio riuscito delle lezioni non equivale alla pubblicazione.
+5. Verificare catalogo e scheda con categoria, lingua e livello richiesti, poi la fruizione con un account studente avente il livello contenuto. La preassegnazione non concede tale livello.
 
-## Validazione e transazione
+La gestione è ancora parziale: mancano editor completo a schede, anteprima studente, revisione/archivio completi, clonazione e nuove versioni pubblicate. Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
 
-Ordine lock: corso, versione, come nell’authoring. Controlli: proprietà del parent, revisioni, check-out del corso; almeno un modulo, ogni modulo non vuoto, almeno una lezione obbligatoria, corpi testo non vuoti, massimo 1.000 moduli e 5.000 lezioni. Attualmente sono ammessi solo testo/completamento manuale, sequenza libera e completamento di tutte le lezioni obbligatorie, senza attestati, release di lezione, preview, prerequisiti, quiz o allegati. Lezioni video sono salvabili in bozza ma impediscono la pubblicazione dell’intera versione. Sono limitazioni dichiarate dell’incremento, non modifiche allo scope finale.
+## Diagnostica
 
-Il servizio congela titolo, presentazione, regole e un hash SHA256 del programma con hash dei corpi, imposta `published_at` e crea una sola edizione `default-vN`. Il calcolo legge i corpi in lotti di massimo 16 lezioni con paginazione keyset e limite di 1 MiB per corpo, anche con driver che bufferizzano i risultati. Puntatore corrente, versione, edizione e associazione/stato del workflow sono nella stessa transazione InnoDB; una transizione rifiutata non lascia una versione parzialmente pubblicata. Gli eventi di plugin terzi devono evitare effetti esterni non transazionali; outbox e Action Logs sono ancora pianificati.
+Il Programma mostra lo stato del corso e un motivo se il comando non è disponibile:
 
-Le versioni pubblicate non sono editabili. Rimozione e ripubblicazione cambiano la visibilità del corso senza ricreare edizioni o cambiare hash/timestamp della versione. Clonazione/equivalenze non disponibili. Restano da completare i workflow editoriali con fasi senza cambio di stato e l’integrazione Content History/campi/tag.
+- Nessuna versione: crearla con il pulsante dedicato.
+- Permesso di modifica stato assente: serve `core.edit.state` sull'asset del corso, oltre ai permessi di accesso/authoring.
+- Plugin Joomla **Workflow - Pubblicazione** non attivo: un amministratore lo verifica in Sistema → Plugin. Non viene abilitato automaticamente.
+- Nessuna transizione: verificare workflow assegnato alla categoria/default, fasi/transizioni pubblicate, opzione `publishing` 0/1 e `core.execute.transition` sull'asset della transizione. Gestione nativa: `administrator/index.php?option=com_workflow&extension=com_jlms.course`.
 
-## Pagine pubbliche
+Se il comando esiste ma fallisce, leggere il messaggio: programma vuoto, configurazione non supportata, materiale non pronto, revisione obsoleta o transizione annullata. Ricaricare prima di riprovare una revisione obsoleta. Per riprodurre la segnalazione registrare versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione, azione e messaggio esatto, senza dati personali o segreti. Un override amministrativo precedente può nascondere nuovi avvisi: confrontarlo con i layout distribuiti.
 
-- Catalogo: `index.php?option=com_jlms&view=courses`, paginazione Joomla (limite 1–100), ordine ID decrescente.
-- Filtro categoria e discendenti: `&catid=ID` dai link di categoria delle schede.
-- Scheda: `index.php?option=com_jlms&view=course&id=ID`, anche configurabile come voce di menu Joomla. RouterView e regole menu/standard/no-menu native; segmenti numerici senza lookup di alias riservati.
+## Contenuti pubblicabili e limiti
 
-Ogni query richiede corso pubblicato, versione corrente pubblicata dello stesso corso, livello catalogo corrente, lingua `*`/corrente, finestra date UTC e categoria valida. Categoria e tutti gli antenati devono essere pubblicati, accessibili e compatibili con la lingua. Lookup diretto non autorizzato: 404. Nessuna cache condivisa, header `private, no-store`; eventuali plugin Page Cache/CDN esterni devono rispettare queste pagine personalizzate. Il livello contenuto viene soltanto indicato, non concede iscrizioni o gruppi.
+Sono supportate lezioni testo con corpo non vuoto e completamento manuale, video validi e quiz con snapshot valido. Sequenza libera, completamento di tutte le attività obbligatorie e attestati disattivati. Non ancora supportati prerequisiti, rilascio differito, preview di lezione, audio/documenti come lezioni autonome e regole avanzate. Gli allegati a corso/lezione sono supportati se pronti e conformi alla politica di scansione; non vanno confusi con lezioni documento.
 
-La scheda mostra titolo, descrizione e titoli di moduli/lezioni obbligatorie/opzionali. Non legge corpi, sorgenti media, allegati o dati personali. L’aula e le iscrizioni non sono ancora disponibili. L’albero categorie dedicato, ricerca, filtri avanzati, cache mirata e test di carico 300/500 restano nella roadmap.
+Per video esterni serve la politica consenso configurata (`click`/`site_consent`); il default bloccato impedisce la pubblicazione. Durata dichiarata/confermata fra1secondo e8ore, provider configurato e tracciamento posizione disponibile. Cloudflare richiede metadati remoti coerenti prima dei lock; HTML5 richiede un file pronto. Il quiz deve superare la validazione di QuizSnapshotService. Non tutte le capacità dei provider sono ancora implementate; vedere le rispettive guide.
 
-## Collaudo
+## Contratto e integrità
 
-`tests/joomla-publication.php` sul sito effimero prova rifiuti, rollback su veto workflow, congelamento, ACL, immutabilità, visibilità corrente, antenati, filtro discendenti, rimozione e ripubblicazione. `tests/http-smoke.py` verifica catalogo e scheda realmente renderizzati e assenza dei corpi protetti. La CI esegue inoltre lint/test base e upgrade da 0.1 con dati conservati su quattro combinazioni PHP/database. Consultare i risultati Actions effettivi della PR: predisporre i test non equivale a superarli.
+POST HTML interno `curriculum.transition`, con token Joomla, `jform[course_id]`, `version_id`, `revision` del corso, `expected_version_revision` e `transition_id`. Non è un endpoint JSON pubblico.
+
+Il servizio autorizza e valida parent, revisioni e check-out; acquisisce lock corso → versione. Limiti:1000moduli,5000lezioni, corpo testo massimo1MiB letto in lotti di16. Congela titolo, presentazione, regole, struttura e hash dei contenuti; crea una sola edizione default. Versione, puntatore corrente, edizione, associazione e stato workflow cambiano nella stessa transazione. Veto/errori ripristinano i dati. Nessun bypass del plugin Publishing o modifica delle versioni pubblicate.
+
+Ritiro e ripubblicazione della versione corrente non ricreano edizioni né hash/timestamp. Il ritiro attuale può bloccare anche la fruizione: chiusura nuove iscrizioni e sospensione erogazione restano da separare (R-03). Gli eventi di terze parti devono evitare effetti esterni non transazionali.
+
+## Catalogo e verifiche
+
+Catalogo: `index.php?option=com_jlms&view=courses`; scheda: `index.php?option=com_jlms&view=course&id=ID`. Router/menu/SEF nativi. Richiesti corso e versione corrente pubblicati, disponibilità temporale, livello catalogo, lingua e categoria/antenati pubblicati, accessibili e coerenti. Lookup non autorizzato404. Scheda e programma pubblico non espongono corpi, sorgenti o risposte. Dati personalizzati `private, no-store`.
+
+`tests/joomla-publication.php` verifica servizio, rifiuti, congelamento e rollback; `tests/http-smoke.py` aggiunge nella0.20.1 creazione iniziale dalle form native, editor → programma → versione → modulo → lezione → prima pubblicazione → scheda, oltre a programma vuoto, plugin disabilitato e POST ripetuto. Conserva le precedenti verifiche di ritiro/ripubblicazione. Le prove devono risultare verdi nella CI del build effettivo; non sostituiscono il riscontro sul sito segnalante, tutte le configurazioni/ruoli/provider o l'accettazione completa.

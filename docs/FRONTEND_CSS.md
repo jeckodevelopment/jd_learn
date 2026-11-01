@@ -111,3 +111,7 @@ ID, form e override descritti in [MANUAL_ENROLLMENT.md](MANUAL_ENROLLMENT.md). S
 ## Avviso preassegnazione0.20
 
 Il layout amministrativo manualenrollment aggiunge `#jlms-manual-access-warning` (`alert alert-warning`, `role=status`) quando manca l’accesso corrente. [PREASSIGNMENT.md](PREASSIGNMENT.md) descrive campo opzionale e override da aggiornare; nessun nuovo CSS pubblico.
+
+## Backend pubblicazione0.20.1
+
+Override amministrativi `course/edit.php` e `curriculum/default.php`. Nuovi ID: `jlms-course-publication-help`, `jlms-course-publication-heading`, `jlms-course-programme-link` (solo corso salvato), `jlms-publication-status`, `jlms-publication-heading`, `jlms-publication-notice` (solo impedimento). Preservare avvisi, token, ACL e transizione nativa. Stili alert/btn del template amministrativo, nessun CSS pubblico aggiunto. Gli override esistenti vanno confrontati per ricevere navigazione e diagnostica.
