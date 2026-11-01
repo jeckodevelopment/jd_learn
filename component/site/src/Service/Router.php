@@ -16,13 +16,13 @@ final class Router extends RouterView
 {
     public function __construct(SiteApplication $app, AbstractMenu $menu)
     {
+        $courses = new RouterViewConfiguration('courses');
+        $this->registerView($courses);
         $categories = new RouterViewConfiguration('categories');
         $this->registerView($categories);
         $category = new RouterViewConfiguration('category');
         $category->setKey('id')->setParent($categories);
         $this->registerView($category);
-        $courses = new RouterViewConfiguration('courses');
-        $this->registerView($courses);
         $course = new RouterViewConfiguration('course');
         $course->setKey('id')->setParent($courses);
         $this->registerView($course);

@@ -140,6 +140,7 @@ catExpect(str_contains($helper->getAssociationsForItem($en,'category')['it-IT']?
 $update($it,['access'=>2]);catExpect($helper->getAssociationsForItem($en,'category')===[],'target category access checked live');$update($it,['access'=>1]);
 $update($it,['published'=>0]);catExpect($helper->getAssociationsForItem($en,'category')===[],'unpublished category translation omitted');$update($it,['published'=>1]);
 $app->loadIdentity($actor);
+\Joomla\CMS\Form\Form::addFormPath(JPATH_ADMINISTRATOR . '/components/com_categories/forms');
 // Native category form must own the association fields; no replacement editor.
 $native=$app->bootComponent('com_categories')->getMVCFactory()->createModel('Category','Administrator',['ignore_request'=>true]);
 $native->setState('category.id',$en);$native->setState('category.extension','com_jlms.course');$native->setState('category.component','com_jlms');$native->setState('category.section','course');
