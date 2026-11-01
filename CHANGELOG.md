@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.19.0-dev
+
+- Iscrizione manuale singola alla versione pubblicata corrente e all’edizione predefinita, con controlli freschi su operatore e destinatario.
+- Anteprima/conferma/motivo, CSRF, receipt idempotente e audit core atomico; nessuna assegnazione di gruppi o duplicazione/riattivazione implicita.
+- Lock dell’edizione condiviso con Inizia, capienza e subject risolti in transazione; nessuna email automatica.
+- Schema additivo41tabelle/58FK; prove runtime/HTTP/concorrenza/audit/upgrade predisposte, esiti effettivi nelle Actions. Import CSV, approvazioni e gestione completa restano pendenti.
+
 ## 0.18.0-dev
 
 - Sospensione e riattivazione delle iscrizioni con anteprima aggiornata, motivo/conferma e permessi correnti per corso.

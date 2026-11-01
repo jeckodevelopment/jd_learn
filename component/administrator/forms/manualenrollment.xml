@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><fieldset name="details">
+ <field name="course_id" type="hidden" filter="integer" required="true" />
+ <field name="user_id" type="hidden" filter="integer" required="true" />
+ <field name="language" type="hidden" filter="string" required="true" />
+ <field name="mutation_id" type="hidden" filter="string" required="true" />
+ <field name="impact_hash" type="hidden" filter="string" required="true" />
+ <field name="reason" type="text" label="COM_JLMS_ENROLLMENT_STATE_REASON_LABEL" description="COM_JLMS_ENROLLMENT_STATE_REASON_HINT" maxlength="500" filter="string" required="true" />
+ <field name="confirmation" type="checkbox" label="COM_JLMS_MANUAL_CONFIRM" value="1" filter="integer" required="true" />
+</fieldset></form>

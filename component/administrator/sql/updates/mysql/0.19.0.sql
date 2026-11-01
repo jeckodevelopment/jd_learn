@@ -1,0 +1,1 @@
+-- The resumable installer applies and validates the full additive schema.

@@ -20,7 +20,7 @@ VID-05,Rilascio 1,In corso,"0.8: quattro provider con percorsi opt-in; HTML5 MP4
 VID-06,Rilascio 1,In corso,"0.8: quattro provider con percorsi opt-in; HTML5 MP4 privati e Nginx, progressi comuni. Firma locale, funzioni avanzate e collaudo completo ancora pendenti.",No
 VID-07,Rilascio 1,In corso,"0.8: quattro provider con percorsi opt-in; HTML5 MP4 privati e Nginx, progressi comuni. Firma locale, funzioni avanzate e collaudo completo ancora pendenti.",No
 VID-08,Rilascio 1,In corso,"0.8: quattro provider con percorsi opt-in; HTML5 MP4 privati e Nginx, progressi comuni. Firma locale, funzioni avanzate e collaudo completo ancora pendenti.",No
-ISC-01,Rilascio 1,In corso,Avvio automatico idempotente senza gruppi e ripresa; manuale/import/approvazione da completare.,No
+ISC-01,Rilascio 1,In corso,"0.19: iscrizione manuale singola con anteprima, CSRF/conferma, diritti correnti del destinatario, capienza/duplicati e audit atomico, senza gruppi. Auto già disponibile; import CSV e approvazioni pendenti.",No
 ISC-02,Rilascio 1,In corso,"0.18: sospensione/riattivazione con anteprima, motivo, conferma, CAS/idempotenza e audit core atomico; accesso corrente, progressi e timer conservati. Stati restanti e criteri completi da completare.",No
 ISC-03,Rilascio 1,In corso,Finestre edizione/iscrizione ricontrollate; UI calendario e proroghe da completare.,No
 ISC-04,Rilascio 1,In corso,"Aula testo con ownership, parent e accesso correnti; preview e altri tipi da completare.",No
