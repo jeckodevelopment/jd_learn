@@ -12,6 +12,13 @@ $course = $this->outline['course'];
 $version = $this->outline['version'];
 $base = 'index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id;
 $link = static fn (string $url): string => Route::link('administrator', $url);
+// Legacy installed workflows use action keys absent from Joomla's global language file.
+// Preserve administrator-defined titles and translate only our two original default titles.
+$transitionLabel = static fn (object $transition): string => Text::_(match ($transition->title) {
+    'JPUBLISH' => 'COM_JLMS_PUBLISH_ACTION',
+    'JUNPUBLISH' => 'COM_JLMS_UNPUBLISH_ACTION',
+    default => $transition->title,
+});
 $scope = $version ? ['course_id' => $course->id, 'version_id' => $version->id, 'expected_version_revision' => $version->revision] : [];
 $hidden = static function (array $fields): void {
     foreach ($fields as $name => $value) {
@@ -46,9 +53,9 @@ $hidden = static function (array $fields): void {
   <input type="hidden" name="task" value="curriculum.transition">
   <label for="jlms-transition"><?= Text::_('COM_JLMS_WORKFLOW_TRANSITION') ?></label>
   <select id="jlms-transition" name="jform[transition_id]" class="form-select">
-  <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape(Text::_($transition->title)) ?></option><?php endforeach; ?>
+  <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape($transitionLabel($transition)) ?></option><?php endforeach; ?>
   </select>
-  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= count($this->transitions) === 1 ? $this->escape(Text::_($this->transitions[0]->title)) : Text::_('COM_JLMS_EXECUTE_TRANSITION') ?></button>
+  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= count($this->transitions) === 1 ? $this->escape($transitionLabel($this->transitions[0])) : Text::_('COM_JLMS_EXECUTE_TRANSITION') ?></button>
  </form><?php endif; ?>
  <?php if (\Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id)) : ?>
  <p><a id="jlms-manage-materials" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p>
