@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 1 novembre 2026. Incremento0.18.0-dev: sospensione e riattivazione con anteprima e audit.
+Aggiornamento: 1 novembre 2026. Incremento0.19.0-dev: iscrizione manuale singola con anteprima e audit.
 
 Le specifiche funzionali 1.2 e tecniche 1.0 sono la baseline dello scope. Il suffisso 1.0 nei nomi di alcuni file è storico: la versione riportata nel loro contenuto è autorevole. Le regole di sviluppo sicuro valgono dall’inizio, non soltanto al rilascio.
 
@@ -99,3 +99,7 @@ Guida operativa inclusa: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md). L’editor conf
 ## Incremento0.18
 
 [ENROLLMENT_STATE.md](ENROLLMENT_STATE.md): transizioni esplicite active/completed→suspended→active, anteprima/CAS, motivo/conferma, replay con nuova autorizzazione e audit core atomico. Storico e deadline conservati, nessun gruppo o proroga. Schema additivo40tabelle/57FK; creazione manuale, approvazioni, annullamenti, proroghe formative e privacy generale restano pendenti. Esiti effettivi nella PR di incremento.
+
+## Incremento0.19
+
+[MANUAL_ENROLLMENT.md](MANUAL_ENROLLMENT.md): ammissione singola in modalità auto/explicit alla versione/edizione predefinite, previa autorizzazione corrente di operatore e destinatario. Anteprima/CSRF/conferma, capienza e lock condiviso con Inizia; subject/iscrizione/receipt/audit atomici, nessun gruppo o reset implicito. Schema additivo41tabelle/58FK. CSV, approvazioni, edizioni aggiuntive, selettori ricercabili e notifiche restano pendenti; esiti effettivi nella PR di incremento.

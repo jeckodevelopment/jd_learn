@@ -18,11 +18,11 @@ foreach (explode(';', $sql) as $query) {
     }
 }
 $tables = $db->query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE 'ci_jlms_%'")->fetchColumn();
-if ((int) $tables !== 40) {
+if ((int) $tables !== 41) {
     throw new \RuntimeException('Schema table count mismatch');
 }
 $constraints = $db->query("SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_TYPE='FOREIGN KEY'")->fetchColumn();
-if ((int) $constraints !== 57) {
+if ((int) $constraints !== 58) {
     throw new \RuntimeException('Schema foreign key count mismatch');
 }
 $db->beginTransaction();
@@ -67,5 +67,9 @@ $change=['enrollment_id'=>$enrollment,'course_version_id'=>$other,'revision_no'=
 constraintRejects(fn () => insertRow($db,'enrollment_state_changes',$change));
 $change['course_version_id']=$version;insertRow($db,'enrollment_state_changes',$change);$change['revision_no']=2;
 constraintRejects(fn () => insertRow($db,'enrollment_state_changes',$change));
+$manual=['enrollment_id'=>$enrollment,'course_version_id'=>$other,'mutation_id'=>'55555555-5555-4555-a555-555555555555','request_hash'=>str_repeat('a',64),'claim_token'=>str_repeat('b',32),'impact_hash'=>str_repeat('c',64),'reason'=>'Test','created_at'=>$now];
+constraintRejects(fn () => insertRow($db,'manual_enrollments',$manual));
+$manual['course_version_id']=$version;insertRow($db,'manual_enrollments',$manual);$manual['enrollment_id']=null;$manual['course_version_id']=null;
+constraintRejects(fn () => insertRow($db,'manual_enrollments',$manual));
 $db->rollBack();
-echo json_encode(['database'=>$db->getAttribute(\PDO::ATTR_SERVER_VERSION),'tables'=>(int)$tables,'foreign_keys'=>(int)$constraints,'integrity_cases'=>5,'status'=>'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode(['database'=>$db->getAttribute(\PDO::ATTR_SERVER_VERSION),'tables'=>(int)$tables,'foreign_keys'=>(int)$constraints,'integrity_cases'=>7,'status'=>'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

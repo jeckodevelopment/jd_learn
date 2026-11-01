@@ -29,3 +29,7 @@ Restano da implementare ricerca per nome, selettori versione/utente ricercabili,
 ## Gestione stato dalla0.18
 
 Il collegamento per iscrizione apre il flusso separato [Sospensione e riattivazione](ENROLLMENT_STATE.md), con anteprima/conferma/motivo/audit. La pagina elenco rimane in sola lettura; le operazioni si applicano esclusivamente attraverso il task POST autorizzato.
+
+## Iscrizione manuale dalla0.19
+
+Il link [Iscrizione manuale singola](MANUAL_ENROLLMENT.md) apre un flusso separato di selezione/anteprima/conferma con audit. L’elenco rimane in sola lettura e non assegna automaticamente utenti o gruppi.

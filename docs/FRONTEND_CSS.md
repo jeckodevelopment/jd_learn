@@ -103,3 +103,7 @@ La vista amministrativa usa ID e override descritti in [ENROLLMENT_ROSTER.md](EN
 ## Backend stato iscrizione0.18
 
 Gli ID/override del flusso anteprima/conferma sono documentati in [ENROLLMENT_STATE.md](ENROLLMENT_STATE.md). Form, alert e tabella responsive usano gli stili core del template amministrativo; nessun CSS pubblico aggiunto.
+
+## Backend iscrizione manuale0.19
+
+ID, form e override descritti in [MANUAL_ENROLLMENT.md](MANUAL_ENROLLMENT.md). Stili del template amministrativo nativi; nessun CSS globale frontend aggiunto.
