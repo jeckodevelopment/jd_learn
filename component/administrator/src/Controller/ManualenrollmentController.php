@@ -22,13 +22,15 @@ final class ManualenrollmentController extends BaseController
             if ((int) $this->input->server->get('CONTENT_LENGTH', 0, 'UINT') > 16384) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413); }
             $raw = $this->input->post->get('jform', [], 'array');
             foreach (['course_id','user_id','language','reason','mutation_id','impact_hash','confirmation'] as $key) { if (!is_string($raw[$key] ?? null)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); } }
+            $preassignment = $raw['preassignment'] ?? '0';
+            if (!is_string($preassignment) || !in_array($preassignment, ['0','1'], true)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
             if ($raw['confirmation'] !== '1') { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
             $form = $this->getModel('Manualenrollment', 'Administrator', ['ignore_request' => true])->getForm();
             if (!$form->validate($form->filter($raw))) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 422); }
             $course = CurriculumService::id($raw['course_id']); $user = CurriculumService::id($raw['user_id']);
-            $this->app->bootComponent('com_jlms')->getManualEnrollmentService()->apply($this->app->getIdentity(), $course, $user, $raw['language'], $raw['reason'], $raw['mutation_id'], $raw['impact_hash'], true);
+            $this->app->bootComponent('com_jlms')->getManualEnrollmentService()->apply($this->app->getIdentity(), $course, $user, $raw['language'], $raw['reason'], $raw['mutation_id'], $raw['impact_hash'], true, $preassignment === '1');
             $this->setMessage(Text::_('COM_JLMS_MANUAL_SAVED'));
-            $query = http_build_query(['option'=>'com_jlms','view'=>'manualenrollment','id'=>$course,'filter'=>['user_id'=>$user,'language'=>$raw['language']]]);
+            $query = http_build_query(['option'=>'com_jlms','view'=>'manualenrollment','id'=>$course,'filter'=>['user_id'=>$user,'language'=>$raw['language'],'preassignment'=>$preassignment]]);
             $this->setRedirect(Route::link('administrator', 'index.php?'.$query, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage(); $code = (int) $error->getCode();

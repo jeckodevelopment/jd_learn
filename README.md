@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.19.0-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.20.0-dev: sviluppo in corso, non pronta per la produzione.**
 
 Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC, libreria, quattro plugin video e plugin Scheduler. Né lo schema né il numero degli incrementi indicano completezza del prodotto.
 
@@ -11,7 +11,7 @@ Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC
 - Aula, progressi persistenti e area personale con storico del proprietario, filtri e ripresa autorizzata. Fallback di ripresa e tutte le viste/attività della baseline non sono ancora completi.
 - Quattro provider base YouTube, Vimeo, Cloudflare Stream e HTML5: opt-in/consenso, copertura video, token API Stream e MP4 privati con consegna PHP limitata/Nginx. Firma locale/cache/configurazioni complete e provider/browser reali da collaudare. **Un quinto plugin non è ancora integrabile senza patch al componente.**
 - Materiali extra di corso/lezione con upload validato, quarantena/scanner opzionale, storage privato e download autorizzato/Range. Riuso, pulizia/offload e lifecycle completi pendenti.
-- Avvio automatico, elenco iscritti per corso, sospensione/riattivazione e ammissione manuale singola con anteprima/conferma/motivo/audit. CSV, approvazioni, annullamenti, edizioni aggiuntive e preassegnazione senza livello ancora pendenti.
+- Avvio automatico, elenco iscritti per corso, sospensione/riattivazione e ammissione manuale singola con anteprima/conferma/motivo/audit. Preassegnazione senza livello con opt-in/avviso disponibile dalla0.20; CSV, approvazioni, annullamenti ed edizioni aggiuntive restano pendenti.
 - Banca domande a revisioni, tentativi/snapshot, autosave/CAS, grading, feedback e scadenza server; tempo individuale, annullamento e proroga motivati. Rivalutazioni e integrazione attestati da implementare.
 - Utenti, ACL/livelli, categorie, form, sessioni/CSRF, WAM, override e lingue Joomla nei flussi presenti. Audit nativo su quiz/iscrizioni e task scadenze quiz; **Privacy, Finder, Tags, Custom Fields, Content History, Mail Templates e copertura core completa ancora pendenti**.
 
@@ -57,7 +57,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.19.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+Lo ZIP generato è `dist/pkg_jlms-0.20.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
 
 `tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
 
@@ -74,3 +74,5 @@ Associazioni dei corsi multilingua: [guida e limiti](docs/MULTILINGUAL.md). Conf
 Categorie native e navigazione pubblica: [guida](docs/CATEGORIES.md), con accesso degli antenati, paginazione e traduzioni per la sezione corsi.
 
 Area personale I miei corsi: [guida](docs/LEARNER_DASHBOARD.md), con storico privato, avanzamento e disponibilità separati e ripresa nuovamente autorizzata.
+
+- [Preassegnazione0.20](docs/PREASSIGNMENT.md): assegnazione senza livelli correnti, nessun gruppo o diritto di fruizione aggiunto.

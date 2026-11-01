@@ -13,7 +13,31 @@ final class ManualEnrollmentService
     public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
         private readonly CatalogService $catalog, private readonly EnrollmentRosterService $roster, private readonly \Closure $audit) {}
 
-    private function context(User $identity, int $courseId, int $userId, string $language): array
+    /** Administrative assignment does not grant viewing rights. Editorial availability is still mandatory. */
+    private function assignmentCourse(int $courseId, string $language): object
+    {
+        $q = $this->db->createQuery()->select('c.id, c.title, c.catid, c.language, c.content_access, c.current_version_id, c.enrollment_mode')
+            ->from('#__jlms_courses AS c')
+            ->innerJoin('#__jlms_course_versions AS v ON v.id = c.current_version_id AND v.course_id = c.id')
+            ->innerJoin('#__categories AS cat ON cat.id = c.catid')
+            ->innerJoin('#__viewlevels AS cv ON cv.id = c.catalog_access')
+            ->innerJoin('#__viewlevels AS lv ON lv.id = c.content_access')
+            ->where('c.id = :course')->where('c.state = 1')->where("v.status = 'published'")
+            ->where("cat.extension = 'com_jlms.course' AND cat.published = 1")
+            ->where("(c.language = '*' OR c.language = :language)")
+            ->where('(c.publish_up IS NULL OR c.publish_up <= :nowUp)')->where('(c.publish_down IS NULL OR c.publish_down > :nowDown)')
+            ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':language', $language);
+        $now = gmdate('Y-m-d H:i:s'); $q->bind(':nowUp', $now)->bind(':nowDown', $now);
+        // Unlike catalog access, lack of a viewing level is permitted only by the explicit command flag.
+        // Missing levels, unpublished ancestors or language mismatches are invalid editorial configuration.
+        $ancestor = $this->db->createQuery()->select('1')->from('#__categories AS ancestor')
+            ->where('ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.id <> 1')
+            ->where("(ancestor.published <> 1 OR (ancestor.language <> '*' AND ancestor.language <> :ancestorLanguage) OR NOT EXISTS (SELECT 1 FROM #__viewlevels AS av WHERE av.id = ancestor.access))");
+        $q->where('NOT EXISTS (' . $ancestor . ')')->bind(':ancestorLanguage', $language);
+        return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+    }
+
+    private function context(User $identity, int $courseId, int $userId, string $language, bool $preassignment = false): array
     {
         $actor = $this->learning->freshActor($identity);
         $this->roster->course($actor, $courseId);
@@ -22,9 +46,29 @@ final class ManualEnrollmentService
         $learner = new User($userId);
         if (!(int) $learner->id) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
         $learner = $this->learning->freshActor($learner);
-        if (!isset(LearningLanguages::available($learner, $language)[$language])) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
-        $course = $this->catalog->course($learner, $language, $courseId);
-        if (!in_array((int) $course->content_access, array_map('intval', $learner->getAuthorisedViewLevels()), true)) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        $languageAllowed = isset(LearningLanguages::available($learner, $language)[$language]);
+        if (!$preassignment) {
+            // Preserve the default admission policy and legacy command/hash format.
+            if (!$languageAllowed) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+            $course = $this->catalog->course($learner, $language, $courseId);
+            $hasAccess = in_array((int) $course->content_access, array_map('intval', $learner->getAuthorisedViewLevels()), true);
+            if (!$hasAccess) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        } else {
+            $course = $this->assignmentCourse($courseId, $language);
+            if (\Joomla\CMS\Language\Multilanguage::isEnabled()) {
+                $q = $this->db->createQuery()->select('lang.access')->from('#__languages AS lang')
+                    ->where('lang.lang_code = :language')->where('lang.published = 1')->bind(':language', $language)
+                    ->where('(lang.access = 0 OR EXISTS (SELECT 1 FROM #__viewlevels AS validLevel WHERE validLevel.id = lang.access))');
+                if ($this->db->setQuery($q)->loadResult() === null) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+            }
+            $hasAccess = false;
+            try {
+                $visible = $this->catalog->course($learner, $language, $courseId);
+                $hasAccess = $languageAllowed && in_array((int) $visible->content_access, array_map('intval', $learner->getAuthorisedViewLevels()), true);
+            } catch (\RuntimeException $error) {
+                if ($error->getCode() !== 404 || $error->getMessage() !== 'JERROR_LAYOUT_PAGE_NOT_FOUND') { throw $error; }
+            }
+        }
         // Approval is a distinct workflow; this increment does not bypass pending requests.
         if (!in_array($course->enrollment_mode, ['auto', 'explicit'], true)) { throw new \RuntimeException('COM_JLMS_MANUAL_MODE_PENDING', 409); }
         $versionId = (int) $course->current_version_id;
@@ -56,13 +100,17 @@ final class ManualEnrollmentService
             'capacity' => $edition->capacity === null ? null : (int) $edition->capacity, 'used' => $used, 'required_total' => $total,
             'existing_id' => $existing ? (int) $existing->id : null, 'existing_status' => $existing->status ?? null,
             'blocked' => $existing ? 'COM_JLMS_MANUAL_EXISTS' : ($edition->capacity !== null && $used >= (int) $edition->capacity ? 'COM_JLMS_EDITION_FULL' : null)];
-        $p['hash'] = hash('sha256', QuestionDefinition::canonical($p));
+        $hashPlan = $p;
+        if ($preassignment) { $hashPlan['preassignment'] = ['requested' => true, 'has_current_access' => $hasAccess]; }
+        $p['hash'] = hash('sha256', QuestionDefinition::canonical($hashPlan));
+        $p['preassignment'] = $preassignment;
+        $p['has_current_access'] = $hasAccess;
         return [$actor, $learner, $course, $p];
     }
 
-    public function editor(User $identity, int $course, int $user, string $language): array
+    public function editor(User $identity, int $course, int $user, string $language, bool $preassignment = false): array
     {
-        [, $learner, $c, $p] = $this->context($identity, $course, $user, $language);
+        [, $learner, $c, $p] = $this->context($identity, $course, $user, $language, $preassignment);
         $receipt = null;
         if ($p['existing_id']) {
             $id = $p['existing_id'];
@@ -73,21 +121,23 @@ final class ManualEnrollmentService
             'username' => $learner->username, 'impact' => $p, 'receipt' => $receipt];
     }
 
-    public function apply(User $identity, int $course, int $user, string $language, string $reason, string $key, string $impact, bool $confirmed): int
+    public function apply(User $identity, int $course, int $user, string $language, string $reason, string $key, string $impact, bool $confirmed, bool $preassignment = false): int
     {
         $reason = trim($reason);
         if (!$confirmed || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key) || !preg_match('/\A[a-f0-9]{64}\z/D', $impact)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
         if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)) { throw new \RuntimeException('COM_JLMS_MANUAL_REASON', 422); }
-        [, , , $pre] = $this->context($identity, $course, $user, $language);
+        [, , , $pre] = $this->context($identity, $course, $user, $language, $preassignment);
         $edition = $pre['edition_id'];
         $this->db->transactionStart();
         try {
             // Same serialization point as automatic start, before fresh authorization establishes a read view.
             $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('id = :id')->bind(':id', $edition, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE'); $this->db->setQuery($q)->loadResult();
-            [$actor, , , $p] = $this->context($identity, $course, $user, $language);
+            [$actor, , , $p] = $this->context($identity, $course, $user, $language, $preassignment);
             if ($p['edition_id'] !== $edition) { throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409); }
-            $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int) $actor->id, 'course' => $course, 'user' => $user, 'language' => $language, 'reason' => $reason, 'impact' => $impact]));
+            $payload = ['actor' => (int) $actor->id, 'course' => $course, 'user' => $user, 'language' => $language, 'reason' => $reason, 'impact' => $impact];
+            if ($preassignment) { $payload['preassignment'] = true; }
+            $hash = hash('sha256', QuestionDefinition::canonical($payload));
             $nonce = bin2hex(random_bytes(16)); $now = gmdate('Y-m-d H:i:s'); $actorId = (int) $actor->id;
             // Claim the UUID in the same transaction. No committed receipt may remain without a result.
             $q = $this->db->createQuery();
@@ -111,7 +161,7 @@ final class ManualEnrollmentService
             $this->db->insertObject('#__jlms_enrollments', $record, 'id'); $id = (int) $record->id;
             $update = (object) ['id' => (int) $receipt->id, 'enrollment_id' => $id, 'course_version_id' => $p['version_id']]; $this->db->updateObject('#__jlms_manual_enrollments', $update, 'id');
             ($this->audit)($actor, ['id' => (int) $receipt->id, 'actor_id' => $actorId, 'enrollment_id' => $id, 'reason_reference' => (int) $receipt->id,
-                'reason_code' => 'manual_enrollment_created', 'correlation_id' => bin2hex(random_bytes(16))]);
+                'reason_code' => 'manual_enrollment_created', 'preassignment_requested' => $preassignment, 'access_at_assignment' => $p['has_current_access'], 'correlation_id' => bin2hex(random_bytes(16))]);
             $this->db->transactionCommit(); return $id;
         } catch (\Throwable $error) { $this->db->transactionRollback(); throw $error; }
     }

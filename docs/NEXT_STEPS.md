@@ -4,7 +4,7 @@ Data:1novembre2026. Questo è un backlog ordinato, non una stima di calendario n
 
 ## 1. Iscrizioni: ammissione e import
 
-Prima del CSV chiudere R-01: distinguere assegnazione didattica e diritto corrente di fruizione, con preassegnazione esplicita/avviso se manca il livello e controlli runtime sempre obbligatori. Nessun gruppo commerciale o account creato. Conservare sospensioni/progressi e identità native; stessa email non deve trasferire storico.
+La0.20 implementa R-01 con opt-in/avviso; completarne il collaudo prima del CSV: distinguere assegnazione didattica e diritto corrente di fruizione, con preassegnazione esplicita/avviso se manca il livello e controlli runtime sempre obbligatori. Nessun gruppo commerciale o account creato. Conservare sospensioni/progressi e identità native; stessa email non deve trasferire storico.
 
 Quindi implementare upload/simulazione CSV secondo DAT-06/LIFE-04/05: UTF-8, delimitatore dichiarato, intestazioni `user_id,course_id,course_version_id,edition,starts_at,ends_at`, solo account esistenti, date ISO8601 con fuso, default10MiB/10000righe entro limiti configurati. Non trattare come già disponibili versione/edizione/date solo perché sono colonne: la0.19 ammette soltanto corrente/default e richiede un’estensione verificata del contratto.
 

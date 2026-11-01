@@ -58,5 +58,10 @@
     "Patch corrente Joomla non verificata",
     "Recovery/backup completo non verificato"
   ],
-  "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati."
+  "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+  "current_increment": {
+    "version": "0.20.0-dev",
+    "status": "Implementazione in collaudo; nessun risultato di test0.20 attribuito a questo snapshot0.19",
+    "guide": "docs/PREASSIGNMENT.md"
+  }
 }

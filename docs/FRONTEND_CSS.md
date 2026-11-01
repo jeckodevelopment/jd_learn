@@ -107,3 +107,7 @@ Gli ID/override del flusso anteprima/conferma sono documentati in [ENROLLMENT_ST
 ## Backend iscrizione manuale0.19
 
 ID, form e override descritti in [MANUAL_ENROLLMENT.md](MANUAL_ENROLLMENT.md). Stili del template amministrativo nativi; nessun CSS globale frontend aggiunto.
+
+## Avviso preassegnazione0.20
+
+Il layout amministrativo manualenrollment aggiunge `#jlms-manual-access-warning` (`alert alert-warning`, `role=status`) quando manca l’accesso corrente. [PREASSIGNMENT.md](PREASSIGNMENT.md) descrive campo opzionale e override da aggiornare; nessun nuovo CSS pubblico.

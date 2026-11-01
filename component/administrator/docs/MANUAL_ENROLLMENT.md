@@ -4,7 +4,7 @@ Dal backend **Corsi → Iscritti → Iscrizione manuale** si apre `view=manualen
 
 ## Ammissione e perimetro
 
-Servono account operatore attivo, `core.manage` sul componente e `jlms.enrollments.manage` sul singolo corso, ricontrollati anche sui reinvii. Il destinatario viene ricaricato dai conti Joomla: deve esistere, essere attivo e già autorizzato per catalogo, categoria/antenati, lingua e contenuti. Il form non espone un elenco globale di account, email o gruppi: in questa prima versione l’operatore indica l’ID nativo. Il selettore ricercabile resta da completare.
+Servono account operatore attivo, `core.manage` sul componente e `jlms.enrollments.manage` sul singolo corso, ricontrollati anche sui reinvii. Il destinatario viene ricaricato dai conti Joomla: deve esistere ed essere attivo. Nel percorso standard deve già essere autorizzato per catalogo, categoria/antenati, lingua e contenuti. Dalla0.20 la [preassegnazione esplicita](PREASSIGNMENT.md) consente l’assegnazione senza i livelli correnti, con avviso e fruizione ancora protetta. Il form non espone un elenco globale di account, email o gruppi: in questa prima versione l’operatore indica l’ID nativo. Il selettore ricercabile resta da completare.
 
 La destinazione è esclusivamente la versione pubblicata corrente con regole già supportate e la sua edizione `default-vN`, aperta e nella finestra valida. Non sono ammessi ID arbitrari di versione/edizione. Sono supportati corsi in modalità auto o explicit; approval rimane chiusa finché il flusso richieste/approvazioni non sarà implementato. La lingua selezionata deve consentire la consultazione del corso e rispettare le disponibilità native quando il filtro lingua è attivo; non traduce il corso né trasferisce progressi.
 
@@ -35,3 +35,7 @@ Override amministrativo `html/com_jlms/manualenrollment/default.php`. ID stabili
 ## Collaudo e limiti
 
 Prove su sito effimero: diritti per corso, destinatario senza livello/bloccato, lingua e disponibilità, nessuna scrittura nell’anteprima, rollback completo senza audit, replay e revoche, iscrizione già sospesa, richieste simultanee, capienza, corsa con Inizia, accesso studente e conservazione di origine/registrazione/audit all’aggiornamento. Esiti effettivi nelle Actions della PR di incremento. ISC-01 e gestione completa iscrizioni restano parziali: import CSV, selettori ricercabili, approvazioni, edizioni/coorti aggiuntive e notifiche sono ancora pendenti, come collaudi browser/accessibilità completi, patch corrente Joomla e carico300/500.
+
+## Opzione0.20
+
+Vedere [PREASSIGNMENT.md](PREASSIGNMENT.md) per `filter[preassignment]`/`jform[preassignment]`, l’avviso e le regole di replay. Default0/assente mantiene la politica e gli hash precedenti; nessun nuovo campo obbligatorio per i chiamanti standard.
