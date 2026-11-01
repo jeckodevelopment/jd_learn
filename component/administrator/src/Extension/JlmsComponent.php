@@ -12,6 +12,10 @@ use Joomla\CMS\Categories\CategoryServiceTrait;
 
 final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Association\AssociationServiceInterface, CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
 {
+    private \Jlms\Component\Jlms\Administrator\Application\DashboardService $dashboardService;
+    public function setDashboardService(\Jlms\Component\Jlms\Administrator\Application\DashboardService $service): void { $this->dashboardService = $service; }
+    public function getDashboardService(): \Jlms\Component\Jlms\Administrator\Application\DashboardService { return $this->dashboardService; }
+
     use CategoryServiceTrait;
     use \Joomla\CMS\Association\AssociationServiceTrait;
 
