@@ -95,3 +95,7 @@ Le regioni vuote/di ritorno sono condizionali. Il catalogo aggiunge `jlms-catalo
 Override `templates/NOME/html/com_jlms/dashboard/default.php`. Regioni: `jlms-dashboard`, `jlms-dashboard-header`, `jlms-dashboard-filters`, `jlms-my-courses`, `jlms-dashboard-not-started`, `jlms-dashboard-in-progress`, `jlms-dashboard-completed`, `jlms-dashboard-empty`, `jlms-dashboard-pagination`, `jlms-dashboard-catalog`. Gruppi e stato vuoto sono condizionali.
 
 Ripetizioni `jlms-my-course-{enrollmentId}`, `jlms-my-course-progress-{enrollmentId}`, `jlms-my-course-resume-{enrollmentId}`; classi `.jlms-my-course-grid`, `.jlms-my-course`, `.jlms-my-course__title`, `.jlms-my-course__access`, `.jlms-my-course__progress`, `.jlms-my-course__action`. Nessun ID dipende dal titolo o dalla lingua. Griglia responsive e focus con le variabili esistenti. Il form filtra tramite `filter[progress]`; conservare menu/router, intestazioni private, escaping e distinzione fra avanzamento e disponibilità. Il link di ritorno nell'aula è `jlms-classroom-dashboard`.
+
+## Backend iscritti 0.17
+
+La vista amministrativa usa ID e override descritti in [ENROLLMENT_ROSTER.md](ENROLLMENT_ROSTER.md). Tabella responsive e form adottano gli stili core del template amministrativo. Nessun nuovo stile frontend.
