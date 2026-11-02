@@ -47,3 +47,7 @@ La scheda Docenti del corso salvato usa una selezione multipla nativa. [Gestione
 ## Calendario0.24
 
 Date facoltative di pubblicazione e fruizione, con fuso esplicito, UTC e snapshot. [Guida, intervalli, ora legale e limiti](CALENDAR.md). Salvataggio disponibile soltanto in bozza; l’edizione viene inizializzata alla prima pubblicazione.
+
+## Permessi effettivi e stato0.25
+
+[Guida al nuovo riepilogo, alle deleghe categoriali e ai blocchi](EDITOR_PERMISSIONS.md). Il riepilogo non sostituisce il workflow e non modifica i livelli degli studenti; le opzioni sono quelle native Joomla.

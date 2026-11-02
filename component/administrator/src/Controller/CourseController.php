@@ -22,15 +22,15 @@ final class CourseController extends FormController
 
     protected function allowAdd($data = [])
     {
-        return $this->app->getIdentity()->authorise('core.create', 'com_jlms');
+        $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app->getIdentity());
+        return \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(\Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor);
     }
 
     protected function allowEdit($data = [], $key = 'id')
     {
         $id = (int) ($data[$key] ?? 0);
         $item = $this->getModel()->getItem($id);
-        $actor = $this->app->getIdentity();
-        return $id > 0 && $item && ($actor->authorise('core.edit', 'com_jlms.course.' . $id)
-            || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', 'com_jlms.course.' . $id)));
+        $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app->getIdentity());
+        return $id>0 && $item && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor,$item);
     }
 }

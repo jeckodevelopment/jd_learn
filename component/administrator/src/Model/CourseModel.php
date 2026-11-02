@@ -178,7 +178,7 @@ final class CourseModel extends AdminModel
                 ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
             $user = new \Joomla\CMS\User\User((int) $this->getCurrentUser()->id);
             $user->clearAccessRights();
-            if ($user->guest || $user->block) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            if ($user->guest || $user->block || !$user->authorise('core.manage','com_jlms')) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
             $this->setCurrentUser($user);
             $record = null;
             if ($id > 0) {
@@ -194,9 +194,10 @@ final class CourseModel extends AdminModel
                 $asset = 'com_jlms.course.' . $id;
                 $canEdit = $user->authorise('core.edit', $asset)
                     || ((int) $record->created_by === (int) $user->id && $user->authorise('core.edit.own', $asset));
-                if (!$canEdit || ($record->checked_out && (int) $record->checked_out !== (int) $user->id)) {
+                if (!$canEdit) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
+                if ($record->checked_out && (int)$record->checked_out!==(int)$user->id) { throw new \DomainException('COM_JLMS_COURSE_CHECKED_OUT'); }
                 if ((int) $record->revision !== $expected) {
                     throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                 }
@@ -243,7 +244,7 @@ final class CourseModel extends AdminModel
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST','COM_JLMS_COURSE_CHECKED_OUT','COM_JLMS_COURSE_IMAGE_INVALID','COM_JLMS_COURSE_IMAGE_ALT_REQUIRED'];
             if (!in_array($error->getMessage(), $known, true)) {
                 // Private diagnostics omit SQL, values and exception messages.
                 try { \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms'); } catch (\Throwable) {}

@@ -18,7 +18,7 @@ HTMLHelper::_('behavior.formvalidator');
         <a id="jlms-course-programme-link" class="btn btn-secondary" href="<?= Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int) $this->item->id) ?>"><?= Text::_('COM_JLMS_PUBLICATION_OPEN_PROGRAMME') ?></a>
         <?php else : ?><p><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
     </section>
-    <?php if ($this->readOnly) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
+    <?php if ($this->readOnly) : ?><p class="alert alert-warning"><?= Text::_($this->checkedOutByOther ? 'COM_JLMS_COURSE_CHECKED_OUT' : 'COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
     <?= HTMLHelper::_('uitab.startTabSet', 'jlms-course-tabs', ['active' => 'jlms-course-general']) ?>
     <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-general', Text::_('COM_JLMS_COURSE_GENERAL')) ?>
     <?= $this->form->renderFieldset('details') ?>
@@ -48,6 +48,11 @@ HTMLHelper::_('behavior.formvalidator');
     <section id="jlms-course-associations"><h2><?= Text::_('COM_JLMS_ASSOCIATIONS') ?></h2><p><?= Text::_('COM_JLMS_ASSOCIATIONS_HELP') ?></p><?= $this->form->renderFieldset('item_associations') ?></section>
     <?= HTMLHelper::_('uitab.endTab') ?>
     <?php endif; ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-permissions', Text::_('COM_JLMS_EDITOR_PERMISSIONS')) ?>
+    <section id="jlms-course-effective-rights"><p><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS_HELP') ?></p><dl>
+    <?php foreach ($this->editorRights as $label=>$allowed) : ?><dt><?= Text::_($label) ?></dt><dd><?= Text::_($allowed ? 'JYES' : 'JNO') ?></dd><?php endforeach; ?></dl>
+    <?php if ($this->canConfigure) : ?><a id="jlms-course-options-link" href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('JOPTIONS') ?></a><?php endif; ?></section>
+    <?= HTMLHelper::_('uitab.endTab') ?>
     <?= HTMLHelper::_('uitab.endTabSet') ?>
     <input type="hidden" name="task" value="">
     <?= HTMLHelper::_('form.token') ?>
