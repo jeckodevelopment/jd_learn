@@ -43,3 +43,7 @@ Prove aggiunte a `tests/joomla-course-presentation.php` e `tests/http-smoke.py`:
 ## Docenti0.23
 
 La scheda Docenti del corso salvato usa una selezione multipla nativa. [Gestione, disponibilità e limiti](TEACHERS.md). Il collegamento conserva lo storico e non attribuisce permessi. Calendario e altri blocchi M01 ancora da completare.
+
+## Calendario0.24
+
+Date facoltative di pubblicazione e fruizione, con fuso esplicito, UTC e snapshot. [Guida, intervalli, ora legale e limiti](CALENDAR.md). Salvataggio disponibile soltanto in bozza; l’edizione viene inizializzata alla prima pubblicazione.

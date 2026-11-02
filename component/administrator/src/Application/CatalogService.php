@@ -112,7 +112,14 @@ final class CatalogService
             ->bind(':presentationVersion', $version, ParameterType::INTEGER)->bind(':presentationCourse', $id, ParameterType::INTEGER);
         $snapshot = (string) $this->db->setQuery($q)->loadResult();
         $presentation = CoursePresentation::fromSnapshot($snapshot);
+        $calendar=CourseSchedule::fromSnapshot($snapshot);
         $teachers = TeacherProfiles::visible($this->db,$actor,$language,$snapshot);
-        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'presentation' => $presentation, 'teachers' => $teachers];
+        $q=$this->db->createQuery()->select('e.status,e.starts_at,e.ends_at')->from('#__jlms_editions AS e')
+            ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
+            ->where('e.course_id=:windowCourse')->where('e.course_version_id=:windowVersion')->where("e.code=CONCAT('default-v',v.version_no)")
+            ->bind(':windowCourse',$id,ParameterType::INTEGER)->bind(':windowVersion',$version,ParameterType::INTEGER);
+        $edition=$this->db->setQuery($q)->loadObject();
+        $startWindow=$edition && $edition->status==='open' && CourseSchedule::within($edition->starts_at,$edition->ends_at);
+        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'presentation' => $presentation, 'teachers' => $teachers, 'calendar'=>$calendar, 'start_window_open'=>$startWindow];
     }
 }

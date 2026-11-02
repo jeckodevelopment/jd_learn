@@ -35,6 +35,7 @@ final class HtmlView extends BaseHtmlView
         ToolbarHelper::title(Text::_('COM_JLMS_COURSE'), 'graduation-cap');
         $this->readOnly = $id > 0 && ($this->item->current_version_id !== null || (int) $this->item->state !== 0);
         if ($this->readOnly) {
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { $this->form->setFieldAttribute($field,'disabled','true'); }
             $this->form->setFieldAttribute('teacher_ids','disabled','true');
             foreach (['title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary'] as $field) {
                 $this->form->setFieldAttribute($field, 'disabled', 'true');
