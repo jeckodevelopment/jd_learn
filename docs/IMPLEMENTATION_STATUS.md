@@ -12,9 +12,9 @@ La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1
 
 La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
-## Incremento corrente0.22 — M01/b1
+## Incremento corrente0.22 — M01/b1 e stabilizzazione iscrizioni
 
-Copertina pubblica locale tramite Media Manager, alt/decorazione e metadati SEO tipizzati. Snapshot, autorizzazioni e compatibilità storica come nella guida COURSE_EDITOR; non completa docenti/calendario o M01. Prove nuove nella CI del build, da consultare nella PR prima di attribuire risultati. CORE-12 ora ha il primo percorso implementato, non la copertura completa: il collaudo interattivo del selettore e gli adapter remoti sono ancora pendenti.
+Copertina pubblica locale tramite Media Manager, alt/decorazione e metadati SEO tipizzati. La regressione concorrente ha rilevato uno snapshot transazionale obsoleto nell’avvio automatico: risoluzione edizione spostata prima della transazione, lock come prima lettura e identità nuovamente verificata; test deterministico della lettura dopo l’attesa, oltre alla gara manuale/automatica. Snapshot, autorizzazioni e compatibilità storica come nella guida COURSE_EDITOR; non completa docenti/calendario o M01. Prove nuove nella CI del build, da consultare nella PR prima di attribuire risultati. CORE-12 ora ha il primo percorso implementato, non la copertura completa: il collaudo interattivo del selettore e gli adapter remoti sono ancora pendenti.
 
 ## Incremento precedente0.21 — M01/a
 
