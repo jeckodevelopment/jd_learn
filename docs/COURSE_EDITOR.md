@@ -39,3 +39,7 @@ Salvataggio e prima pubblicazione verificano il file; la scheda pubblica usa sol
 Campo interno: `jform[presentation_image]`, `presentation_image_alt`, `presentation_image_decorative`, `presentation_seo_title`, `presentation_seo_description`. Stesso percorso `course.apply/save`, token, revisione e ACL dell’editor; nessun nuovo endpoint. Campo media e switcher radio nativi, tab `jlms-course-metadata`; nessun permesso amministrativo o gruppo attribuito.
 
 Prove aggiunte a `tests/joomla-course-presentation.php` e `tests/http-smoke.py`: MIME/path/alt/SEO, escaping e head nativo, round-trip, decorazione, controlli alla pubblicazione, upgrade reale da0.21 e regressioni. Gli esiti sono registrati nella PR del build; non certificano ancora il collaudo manuale della finestra Media Manager, i provider remoti o l’intera M01. Docenti, calendario e altre opzioni restano nei blocchi successivi.
+
+## Docenti0.23
+
+La scheda Docenti del corso salvato usa una selezione multipla nativa. [Gestione, disponibilità e limiti](TEACHERS.md). Il collegamento conserva lo storico e non attribuisce permessi. Calendario e altri blocchi M01 ancora da completare.

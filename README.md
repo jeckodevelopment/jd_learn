@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.22.0-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.23.0-dev: sviluppo in corso, non pronta per la produzione.**
 
 Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC, libreria, quattro plugin video e plugin Scheduler. Né lo schema né il numero degli incrementi indicano completezza del prodotto.
 
@@ -8,7 +8,11 @@ Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC
 
 Segnalato nel collaudo utente: corsi che restano in bozza. La pubblicazione è una priorità bloccante prima dell’import CSV. La 0.20.1 rende esplicito il percorso editor → Programma → transizione e aggiunge diagnostica e una prova HTTP di prima pubblicazione; non dimostra ancora la risoluzione sul sito segnalante. Consultare [stato](docs/IMPLEMENTATION_STATUS.md) e [piano](docs/NEXT_STEPS.md).
 
-## Incremento0.22 — M01/b1
+## Incremento0.23 — M01/b2
+
+Profili docente nell’amministrazione Joomla, categorie/asset/ACL nativi, biografia testuale, foto/alt, link e account facoltativo. Associazione ordinata ai corsi in bozza e dati congelati alla pubblicazione, con accesso corrente e storico verificati. Nessun gruppo o permesso attribuito dall’associazione. [Guida docenti](docs/TEACHERS.md). Test del nuovo incremento nella PR del build; calendario e resto M01 ancora pendenti.
+
+## Incremento precedente0.22 — M01/b1
 
 Copertina dal Media Manager locale Joomla, testo alternativo/decorazione e titolo/descrizione SEO nella head nativa. Dati congelati alla pubblicazione; percorsi pubblici e file verificati, nessun URL remoto accettato. Compatibilità0.21 e limiti degli asset documentati nella [guida editor](docs/COURSE_EDITOR.md). Docenti/calendario e resto M01 ancora da completare. Esiti della nuova CI riportati nella PR del build. La0.21 è stata verificata nei quattro ambienti della [CI41417124499](https://github.com/jeckodevelopment/jd_learn/actions/runs/41417124499) e integrata con PR23.
 
@@ -69,7 +73,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.22.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+Lo ZIP generato è `dist/pkg_jlms-0.23.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
 
 `tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
 

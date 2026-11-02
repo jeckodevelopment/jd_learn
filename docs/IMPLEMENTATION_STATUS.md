@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 2 novembre 2026. Versione di sviluppo **0.22.0-dev**, con nuovo incremento copertina/SEO M01/b1 in verifica; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
+Aggiornamento: 2 novembre 2026. Versione di sviluppo **0.23.0-dev**, con nuovo incremento docenti M01/b2 in verifica; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
@@ -12,7 +12,11 @@ La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1
 
 La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
-## Incremento corrente0.22 — M01/b1 e stabilizzazione iscrizioni
+## Incremento corrente0.23 — M01/b2
+
+Profili docente e associazioni ordinate ai corsi tramite form/asset/ACL/categorie nativi; snapshot storico e doppio controllo livelli/lingue congelati e disponibilità corrente. Nessun account/email nella proiezione docente e nessun gruppo concesso. Guida TEACHERS e prove servizio/HTTP/upgrade predisposte; esiti nella PR del build. Calendario, directory docente standalone e altri criteri rimangono pendenti.
+
+## Incremento precedente0.22 — M01/b1 e stabilizzazione iscrizioni
 
 Copertina pubblica locale tramite Media Manager, alt/decorazione e metadati SEO tipizzati. La regressione concorrente ha rilevato uno snapshot transazionale obsoleto nell’avvio automatico: risoluzione edizione spostata prima della transazione, lock come prima lettura e identità nuovamente verificata; test deterministico della lettura dopo l’attesa, oltre alla gara manuale/automatica. Snapshot, autorizzazioni e compatibilità storica come nella guida COURSE_EDITOR; non completa docenti/calendario o M01. Prove nuove nella CI del build, da consultare nella PR prima di attribuire risultati. CORE-12 ora ha il primo percorso implementato, non la copertura completa: il collaudo interattivo del selettore e gli adapter remoti sono ancora pendenti.
 

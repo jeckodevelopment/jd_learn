@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><fieldset name="details" label="COM_JLMS_TEACHER">
+ <field name="id" type="hidden" filter="integer" default="0" /><field name="revision" type="hidden" filter="integer" default="1" />
+ <field name="title" type="text" label="JGLOBAL_TITLE" required="true" maxlength="255" filter="string" />
+ <field name="alias" type="text" label="JFIELD_ALIAS_LABEL" maxlength="180" filter="string" />
+ <field name="catid" type="category" extension="com_jlms.teacher" label="JCATEGORY" required="true" filter="integer" />
+ <field name="bio" type="textarea" label="COM_JLMS_TEACHER_BIO" rows="6" filter="raw" />
+ <field name="image" type="media" label="COM_JLMS_COURSE_IMAGE" description="COM_JLMS_COURSE_IMAGE_HELP" types="images" filter="raw" />
+ <field name="image_alt" type="text" label="COM_JLMS_COURSE_IMAGE_ALT" maxlength="500" filter="raw" />
+ <field name="image_decorative" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_COURSE_IMAGE_DECORATIVE" default="0" filter="raw"><option value="0">JNO</option><option value="1">JYES</option></field>
+ <field name="website" type="text" label="COM_JLMS_TEACHER_WEBSITE" maxlength="2048" filter="raw" />
+ <field name="user_id" type="user" label="COM_JLMS_TEACHER_USER" filter="integer" />
+ <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" default="*"><option value="*">JALL</option></field>
+ <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" default="1" filter="integer" required="true" />
+ <field name="state" type="list" label="JSTATUS" default="0" filter="integer"><option value="0">JUNPUBLISHED</option><option value="1">JPUBLISHED</option></field>
+</fieldset></form>
