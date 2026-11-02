@@ -143,12 +143,13 @@ $edit['revision']=4;$edit['access']=1;teacherExpect($teacherModel->save($edit),'
 $privateEdit=array_replace($teacherBase,['id'=>$private,'title'=>'PRIVATE_TEACHER_NAME','alias'=>'private-teacher','access'=>1,'bio'=>'PRIVATE_TEACHER_BIO','user_id'=>'']);
 teacherExpect($teacherModel->save($privateEdit),'Restricted profile can become public for future versions');
 teacherExpect(count($catalog->outline($guest,'en-GB',$course)['teachers'])===1,'Looser current access never exposes a previously restricted snapshot');
-$learner=new \Joomla\CMS\User\User();$learnerData=['name'=>'CI teacher viewer','username'=>'citeacherviewer','email'=>'citeacherviewer@example.invalid','password'=>'Ci-only-Teacher-Viewer-2026','password2'=>'Ci-only-Teacher-Viewer-2026','groups'=>[2],'block'=>0,'activation'=>''];
+$learner=new \Joomla\CMS\User\User();$learnerData=['name'=>'CI teacher viewer','username'=>'citeacherviewer','email'=>'citeacherviewer@example.invalid','password'=>'Ci-only-Teacher-Viewer-2026','password2'=>'Ci-only-Teacher-Viewer-2026','groups'=>[1,2],'block'=>0,'activation'=>''];
 if (!$learner->bind($learnerData)||!$learner->save()) { throw new RuntimeException('Viewer fixture failed'); }
 $learner=new \Joomla\CMS\User\User((int)$learner->id);$learner->getAuthorisedViewLevels();
 teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===2,'Registered viewer sees originally registered snapshot');
 $teacherModel->setCurrentUser($learner);teacherExpect(!$teacherModel->save(array_replace($edit,['revision'=>5])),'Authenticated viewer lacks teacher management permission');$teacherModel->setCurrentUser($actor);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$learner->id,2);
+teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__user_usergroup_map WHERE user_id='.(int)$learner->id.' AND group_id=2')->loadResult()===0,'Native group revocation actually persisted before checking cached identity');
 teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===1,'Revocation checked with the same cached viewer object');
 $categoryLanguage=(object)['id'=>$teacherCategory,'language'=>'en-GB'];$db->updateObject('#__categories',$categoryLanguage,'id');
 teacherExpect(TeacherProfiles::visible($db,$guest,'it-IT',$snapshot['presentation_json'])===[],'Current ancestor category language gates historical profile');
