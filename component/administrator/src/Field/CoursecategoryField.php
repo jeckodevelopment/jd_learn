@@ -11,7 +11,7 @@ use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 /** Extend the native category field, retaining the real record's current category. */
 final class CoursecategoryField extends \Joomla\CMS\Form\Field\CategoryField
 {
-    protected $type='Coursecategory';
+    public $type='Coursecategory';
     protected function getOptions()
     {
         $db=Factory::getContainer()->get(DatabaseInterface::class);
