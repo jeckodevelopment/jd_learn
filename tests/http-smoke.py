@@ -109,6 +109,26 @@ try:
   result=response.read().decode('utf-8')
  if 'HTTP text lesson' not in result:raise RuntimeError('Lesson was not saved through the authenticated MVC form')
 
+ # Exercise teacher creation through the native administrator form.
+ u,h=get('/administrator/index.php?option=com_jlms&view=teachers')
+ if 'id="jlms-admin-teachers"' not in h:raise RuntimeError('Native teacher list missing')
+ u,h=get('/administrator/index.php?option=com_jlms&task=teacher.add')
+ teacher_form=next(f for f in Page(h).forms if 'jform[bio]' in f['fields'])
+ category=re.search(r'<select[^>]*name="jform\[catid\]"[^>]*>(.*?)</select>',h,re.S).group(1)
+ teacher_catid=re.search(r'<option[^>]*value="([1-9][0-9]*)"[^>]*>[^<]*CI Teachers',category).group(1)
+ teacher_fields=dict(teacher_form['fields']);teacher_fields.update({'task':'teacher.apply','jform[title]':'HTTP teacher','jform[alias]':'http-teacher',
+  'jform[catid]':teacher_catid,'jform[state]':'1','jform[access]':'1','jform[language]':'*','jform[bio]':'HTTP teacher biography <script>plain text</script>',
+  'jform[image]':'','jform[image_alt]':'','jform[image_decorative]':'0','jform[website]':'https://example.invalid/http-teacher','jform[user_id]':'0'})
+ with http.open(urljoin(u,teacher_form['action']),data=urlencode(teacher_fields).encode(),timeout=20) as response:
+  u=response.geturl();h=response.read().decode('utf-8')
+ teacher_form=next(f for f in Page(h).forms if 'jform[bio]' in f['fields'])
+ http_teacher_id=int(teacher_form['fields']['jform[id]'])
+ if http_teacher_id<1 or teacher_form['fields']['jform[title]']!='HTTP teacher':raise RuntimeError('Native teacher save/reopen failed')
+ teacher_fields=dict(teacher_form['fields']);teacher_fields['task']='teacher.save'
+ with http.open(urljoin(u,teacher_form['action']),data=urlencode(teacher_fields).encode(),timeout=20) as response:
+  h=response.read().decode('utf-8')
+ if 'HTTP teacher' not in h or 'id="jlms-admin-teachers"' not in h:raise RuntimeError('Native teacher save/close failed')
+
  # Start from the same native New Course UI as an administrator, not a service-created published fixture.
  checks=0
  def expect(ok,message):
@@ -145,7 +165,7 @@ try:
  u,h=submit(u,form,{'task':'course.apply','jform[presentation_description]':'<p>HTTP extended <strong>description</strong></p><img src="https://example.invalid/pixel" onerror="alert(1)"><script>alert(2)</script>',
   'jform[presentation_objectives]':'HTTP objectives <script>plain text</script>','jform[presentation_audience]':'HTTP audience',
   'jform[presentation_image]':'images/jlms-ci-cover.png#joomlaImage://local-images/jlms-ci-cover.png?width=1&height=1','jform[presentation_image_alt]':'HTTP cover "quoted" <plain text>','jform[presentation_image_decorative]':'0',
-  'jform[presentation_seo_title]':'HTTP published SEO title','jform[presentation_seo_description]':'HTTP SEO description & public sheet',
+  'jform[teacher_ids][]':str(http_teacher_id),'jform[presentation_seo_title]':'HTTP published SEO title','jform[presentation_seo_description]':'HTTP SEO description & public sheet',
   'jform[presentation_prerequisite_text]':'HTTP prior knowledge','jform[presentation_difficulty]':'intermediate','jform[presentation_estimated_minutes]':'75'})
  form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
  expect(form['fields']['jform[presentation_estimated_minutes]']=='75' and 'HTTP extended' in form['fields']['jform[presentation_description]'],'Presentation saved and reopened in native editor')
@@ -198,6 +218,7 @@ try:
  expect(bool(cover) and 'images/jlms-ci-cover.png' in cover.group(0) and 'alt="HTTP cover &quot;quoted&quot; &lt;plain text&gt;"' in cover.group(0),'Public cover uses safe URL and escaped alternative text')
  expect('<title>HTTP published SEO title</title>' in sheet and 'HTTP SEO description &amp; public sheet' in sheet,'Native document head uses the published SEO values')
  expect('#joomlaImage' not in cover.group(0),'Native adapter metadata not emitted in public image URL')
+ expect('id="jlms-course-teachers"' in sheet and 'HTTP teacher biography &lt;script&gt;plain text&lt;/script&gt;' in sheet,'Assigned native teacher appears as escaped frozen public profile')
  expect('id="jlms-publication-status"' in h,'Administrator sees course publication status')
  print(json.dumps({'first_publication_http_checks':checks,'status':'passed'}))
 

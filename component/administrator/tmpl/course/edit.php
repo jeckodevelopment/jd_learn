@@ -30,6 +30,9 @@ HTMLHelper::_('behavior.formvalidator');
     <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-access-settings', Text::_('COM_JLMS_COURSE_ACCESS_SETTINGS')) ?>
     <?= $this->form->renderFieldset('access') ?>
     <?= HTMLHelper::_('uitab.endTab') ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-teachers-settings', Text::_('COM_JLMS_TEACHERS')) ?>
+    <?php if ((int) $this->item->id > 0) : ?><?= $this->form->renderFieldset('teachers') ?><?php else : ?><p><?= Text::_('COM_JLMS_TEACHER_SAVE_FIRST') ?></p><?php endif; ?>
+    <?= HTMLHelper::_('uitab.endTab') ?>
     <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-metadata', Text::_('COM_JLMS_COURSE_METADATA')) ?>
     <?= $this->form->renderFieldset('metadata') ?>
     <?= HTMLHelper::_('uitab.endTab') ?>

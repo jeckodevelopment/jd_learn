@@ -42,6 +42,7 @@ final class CourseModel extends AdminModel
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($item->params_json) ?? [] as $field => $value) {
                 if ($field !== '_schema') { $item->{'presentation_' . $field} = $value; }
             }
+            $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(),(int) $item->id);
             $item->associations = [];
             foreach ($this->associationMembers((int) $item->id) as $member) {
                 if ((int) $member->id !== (int) $item->id) {
@@ -159,7 +160,7 @@ final class CourseModel extends AdminModel
     {
         $db = $this->getDatabase();
         $this->associationWrite = false;
-        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations'];
+        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
         $data = array_intersect_key($data, array_flip($allowed));
         $id = (int) ($data['id'] ?? 0);
@@ -207,6 +208,14 @@ final class CourseModel extends AdminModel
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $this->validateAssociations($data, $user, $id, $record);
+            $teachers = null;
+            if (array_key_exists('teacher_ids', $data)) {
+                $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db,$user,(string) ($data['language'] ?? $record->language ?? '*'),$data['teacher_ids']);
+                if (!$id && $teachers) { throw new \DomainException('COM_JLMS_TEACHER_SAVE_FIRST'); }
+                if ($teachers === \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db,$id)) { $teachers = null; }
+                elseif ($id) { $this->associationWrite = true; } // Native asset must stay stable for atomic relation writes.
+                unset($data['teacher_ids']);
+            }
             $presentation = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::merge(
                 $data, $record->params_json ?? '{}', static fn (string $html): string => \Joomla\CMS\Component\ComponentHelper::filterText($html),
             );
@@ -217,11 +226,17 @@ final class CourseModel extends AdminModel
                 $this->setError(Text::_('COM_JLMS_SAVE_FAILED'));
                 return false;
             }
+            if ($teachers !== null) {
+                $q = $db->createQuery()->delete('#__jlms_course_teachers')->where('course_id=:course')->bind(':course',$id,ParameterType::INTEGER); $db->setQuery($q)->execute();
+                foreach ($teachers as $ordering => $teacher) {
+                    $relation = (object) ['course_id'=>$id,'teacher_id'=>$teacher,'ordering'=>$ordering]; $db->insertObject('#__jlms_course_teachers',$relation);
+                }
+            }
             $db->transactionCommit();
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID'];
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST'];
             if (!in_array($error->getMessage(), $known, true)) {
                 // Private diagnostics omit SQL, values and exception messages.
                 try { \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms'); } catch (\Throwable) {}

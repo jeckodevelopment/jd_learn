@@ -65,7 +65,7 @@ jobs:
       - name: Check out the previous increment for an actual upgrade test
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: bc0015175cc2f8b7d8a70a96ed848018dc73dd65
+          ref: 801f80d8cb5ca6feffc52d03dab44bd335505d8d
           path: .runtime/previous-source
           persist-credentials: false
       - name: Install minimum Joomla and the complete JD Learn package
@@ -78,7 +78,7 @@ jobs:
           php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.21.0-dev.zip" --no-interaction
           php .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
           php tests/legacy-time-fixture.php .runtime/joomla
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.22.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.23.0-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
@@ -89,6 +89,8 @@ jobs:
         run: php tests/joomla-publication.php .runtime/joomla
       - name: Typed course presentation, frozen public snapshot and legacy clients
         run: php tests/joomla-course-presentation.php .runtime/joomla
+      - name: Native teacher profiles, assignments and frozen access-gated history
+        run: php tests/joomla-teachers.php .runtime/joomla
       - name: Render public and authenticated admin pages over HTTP
         run: python3 tests/http-smoke.py .runtime/joomla
       - name: Native question and quiz forms over HTTP
@@ -168,7 +170,7 @@ jobs:
         run: python3 tests/preassignment-http.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.22.0-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.23.0-dev.zip"
           php tests/joomla-smoke.php .runtime/joomla retained
       - name: Verify completed student history survives package update
         run: php tests/joomla-learning.php .runtime/joomla retained
@@ -204,11 +206,13 @@ jobs:
         run: php tests/joomla-preassignment.php .runtime/joomla retained
       - name: Verify frozen course presentation after package upgrade
         run: php tests/joomla-course-presentation.php .runtime/joomla retained
+      - name: Verify teacher profile snapshots and assignments survive upgrade
+        run: php tests/joomla-teachers.php .runtime/joomla retained
       - name: Make the verified development package downloadable
         if: matrix.php == '8.4' && matrix.database == 'mysql:8.4'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: JD-Learn-0.22.0-dev
+          name: JD-Learn-0.23.0-dev
           path: dist/
           if-no-files-found: error
           retention-days: 14

@@ -110,7 +110,9 @@ final class CatalogService
         $q = $this->db->createQuery()->select('presentation_json')->from('#__jlms_course_versions')
             ->where('id = :presentationVersion')->where('course_id = :presentationCourse')
             ->bind(':presentationVersion', $version, ParameterType::INTEGER)->bind(':presentationCourse', $id, ParameterType::INTEGER);
-        $presentation = CoursePresentation::fromSnapshot((string) $this->db->setQuery($q)->loadResult());
-        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'presentation' => $presentation];
+        $snapshot = (string) $this->db->setQuery($q)->loadResult();
+        $presentation = CoursePresentation::fromSnapshot($snapshot);
+        $teachers = TeacherProfiles::visible($this->db,$actor,$language,$snapshot);
+        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'presentation' => $presentation, 'teachers' => $teachers];
     }
 }

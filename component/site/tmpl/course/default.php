@@ -31,6 +31,10 @@ $presentation = $this->item['presentation'] ?? [];
  <?php if (!empty($presentation['estimated_minutes'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_ESTIMATED_MINUTES') ?></dt><dd id="jlms-course-estimated-duration"><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', (int) $presentation['estimated_minutes']) ?></dd><?php endif; ?>
  </dl></section>
  <?php endif; ?>
+ <?php if (!empty($this->item['teachers'])) : ?><section id="jlms-course-teachers"><h2><?= Text::_('COM_JLMS_TEACHERS') ?></h2>
+ <?php foreach ($this->item['teachers'] as $teacher) : ?><article id="jlms-course-teacher-<?= (int) $teacher['id'] ?>" class="jlms-course-teacher"><h3><?= $this->escape($teacher['title']) ?></h3>
+ <?php if ($teacher['image'] !== '') : ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/',array_map('rawurlencode',explode('/',$teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php endif; ?>
+ <p><?= nl2br($this->escape($teacher['bio'])) ?></p><?php if ($teacher['website'] !== '') : ?><a href="<?= $this->escape($teacher['website']) ?>" rel="noopener noreferrer"><?= Text::_('COM_JLMS_TEACHER_WEBSITE') ?></a><?php endif; ?></article><?php endforeach; ?></section><?php endif; ?>
  <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
   <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' . base64_encode('index.php?option=com_jlms&view=course&id=' . (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
  <?php elseif ($this->hasContentAccess && $course->enrollment_mode === 'auto') : ?>

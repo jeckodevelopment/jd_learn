@@ -29,6 +29,9 @@
    <option value="auto">COM_JLMS_ENROLLMENT_AUTO</option><option value="explicit">COM_JLMS_ENROLLMENT_EXPLICIT</option><option value="approval">COM_JLMS_ENROLLMENT_APPROVAL</option>
   </field>
  </fieldset>
+ <fieldset name="teachers" label="COM_JLMS_TEACHERS">
+  <field name="teacher_ids" type="Courseteachers" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" label="COM_JLMS_TEACHERS" description="COM_JLMS_TEACHER_ASSIGN_HELP" multiple="true" filter="raw" />
+ </fieldset>
  <fieldset name="metadata" label="COM_JLMS_COURSE_METADATA">
   <field name="presentation_seo_title" type="text" label="COM_JLMS_COURSE_SEO_TITLE" maxlength="255" filter="raw" />
   <field name="presentation_seo_description" type="textarea" label="COM_JLMS_COURSE_SEO_DESCRIPTION" rows="3" maxlength="500" filter="raw" />
