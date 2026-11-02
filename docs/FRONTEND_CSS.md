@@ -115,3 +115,9 @@ Il layout amministrativo manualenrollment aggiunge `#jlms-manual-access-warning`
 ## Backend pubblicazione0.20.1
 
 Override amministrativi `course/edit.php` e `curriculum/default.php`. Nuovi ID: `jlms-course-publication-help`, `jlms-course-publication-heading`, `jlms-course-programme-link` (solo corso salvato), `jlms-publication-status`, `jlms-publication-heading`, `jlms-publication-notice` (solo impedimento), `jlms-publication-submit` (azione disponibile). Preservare avvisi, token, ACL e transizione nativa. Stili alert/btn del template amministrativo, nessun CSS pubblico aggiunto. Gli override esistenti vanno confrontati per ricevere navigazione e diagnostica.
+
+## Presentazione corso0.21
+
+Editor nativo: ID e pannelli documentati in COURSE_EDITOR.md. Nuove regioni nella scheda pubblica (override `templates/NOME/html/com_jlms/course/default.php`): `jlms-course-description`, `jlms-course-objectives`, `jlms-course-audience`, `jlms-course-prerequisite-text`, `jlms-course-facts`, `jlms-course-difficulty`, `jlms-course-estimated-duration`. Sono condizionali, presenti una sola volta e indipendenti da lingua/titolo. Classi `.jlms-course-description`, `.jlms-course-presentation-section`; nessuna nuova regola CSS globale. Usare le variabili esistenti e il CSS del template per margini/tipografia.
+
+La descrizione è HTML con allowlist già applicata; gli altri testi sono escapati. Conservare entrambi i comportamenti nell'override. Non leggere params_json del corso o bozze per popolare queste regioni: la sorgente è lo snapshot autorizzato in `$this->item['presentation']`.

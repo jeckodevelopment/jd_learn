@@ -7,12 +7,27 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 $course = $this->item['course'];
+$presentation = $this->item['presentation'] ?? [];
 ?>
 <article id="jlms-course" class="jlms-course" data-course-id="<?= (int) $course->id ?>">
  <header id="jlms-course-header"><h1 id="jlms-course-title"><?= $this->escape($course->title) ?></h1>
   <a id="jlms-course-category" href="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $course->catid) ?>"><?= $this->escape($course->category_title) ?></a>
  </header>
  <section id="jlms-course-summary"><h2><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?= nl2br($this->escape((string) $course->summary)) ?></p></section>
+ <?php if (!empty($presentation['description'])) : ?>
+ <section id="jlms-course-description" class="jlms-course-description"><h2><?= Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?= $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
+ <?php endif; ?>
+ <?php foreach (['objectives' => 'COM_JLMS_COURSE_OBJECTIVES', 'audience' => 'COM_JLMS_COURSE_AUDIENCE', 'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT'] as $field => $label) : ?>
+ <?php if (!empty($presentation[$field])) : ?>
+ <section id="jlms-course-<?= str_replace('_', '-', $field) ?>" class="jlms-course-presentation-section"><h2><?= Text::_($label) ?></h2><p><?= nl2br($this->escape($presentation[$field])) ?></p></section>
+ <?php endif; ?>
+ <?php endforeach; ?>
+ <?php if (!empty($presentation['difficulty']) || !empty($presentation['estimated_minutes'])) : ?>
+ <section id="jlms-course-facts"><h2><?= Text::_('COM_JLMS_COURSE_FACTS') ?></h2><dl>
+ <?php if (!empty($presentation['difficulty'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_DIFFICULTY') ?></dt><dd id="jlms-course-difficulty"><?= Text::_(['beginner' => 'COM_JLMS_COURSE_BEGINNER', 'intermediate' => 'COM_JLMS_COURSE_INTERMEDIATE', 'advanced' => 'COM_JLMS_COURSE_ADVANCED'][$presentation['difficulty']]) ?></dd><?php endif; ?>
+ <?php if (!empty($presentation['estimated_minutes'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_ESTIMATED_MINUTES') ?></dt><dd id="jlms-course-estimated-duration"><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', (int) $presentation['estimated_minutes']) ?></dd><?php endif; ?>
+ </dl></section>
+ <?php endif; ?>
  <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
   <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' . base64_encode('index.php?option=com_jlms&view=course&id=' . (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
  <?php elseif ($this->hasContentAccess && $course->enrollment_mode === 'auto') : ?>

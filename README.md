@@ -1,12 +1,16 @@
 # JD Learn
 
-Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.20.1-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.21.0-dev: sviluppo in corso, non pronta per la produzione.**
 
 Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC, libreria, quattro plugin video e plugin Scheduler. Né lo schema né il numero degli incrementi indicano completezza del prodotto.
 
 ## Priorità di stabilizzazione
 
 Segnalato nel collaudo utente: corsi che restano in bozza. La pubblicazione è una priorità bloccante prima dell’import CSV. La 0.20.1 rende esplicito il percorso editor → Programma → transizione e aggiunge diagnostica e una prova HTTP di prima pubblicazione; non dimostra ancora la risoluzione sul sito segnalante. Consultare [stato](docs/IMPLEMENTATION_STATUS.md) e [piano](docs/NEXT_STEPS.md).
+
+## Incremento attivo e percorso stabile
+
+La0.21 aggiunge schede native nell’editor e presentazione del corso persistente/congelata: descrizione estesa, obiettivi, destinatari, prerequisiti dichiarativi, difficoltà e minuti stimati, visibili nella scheda autorizzata. Non completa l’editor o i requisiti AUT/SCR. [Roadmap per fasi](docs/ROADMAP_TO_STABLE.md), [mappatura dei210ID](docs/RELEASE_PLAN.json) e [guida editor](docs/COURSE_EDITOR.md). Verifiche del nuovo incremento da registrare nella PR.
 
 ## Funzioni operative e limiti
 
@@ -61,7 +65,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.20.1-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+Lo ZIP generato è `dist/pkg_jlms-0.21.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
 
 `tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
 

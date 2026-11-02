@@ -32,6 +32,15 @@ def check_status():
   if row['Criteri completi superati']=='Sì':
    assert key in accepted and(ROOT/accepted[key]['report']).is_file(),(key,'No complete acceptance report')
   if row['Stato implementazione']=='Completato':assert row['Criteri completi superati']=='Sì',key
+ plan=json.loads((ROOT/'docs/RELEASE_PLAN.json').read_text())
+ phases=plan['milestones']
+ assert len({p['id']for p in phases})==len(phases),'Duplicate release phase'
+ planned=[key for phase in phases for key in phase['requirements']]
+ assert len(planned)==len(set(planned))and set(planned)==set(expected),'Release plan must assign every baseline ID exactly once'
+ for phase in phases:
+  assert phase['title']and phase['acceptance']=='Non accettata','A roadmap is not an acceptance report'
+  for key in phase['requirements']:
+   assert (phase['id']=='M13')==(expected[key]['Perimetro']=='Differito'),(key,'Deferred scope drift')
  schema=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
  counts=(len(re.findall(r'^CREATE TABLE',schema,re.M)),len(re.findall(r'ADD CONSTRAINT',schema)))
  for name,label in [('README.md','Schema InnoDB'),('docs/IMPLEMENTATION_STATUS.md','Schema attuale')]:

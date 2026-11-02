@@ -2,6 +2,10 @@
 
 Data:1novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
 
+## Piano per incrementi fino alla versione stabile
+
+La [roadmap](ROADMAP_TO_STABLE.md) suddivide il perimetro in12fasi di rilascio e una fase differita. [RELEASE_PLAN.json](RELEASE_PLAN.json) assegna tutti i210requisiti alla fase primaria senza promuoverli a completati. M01/a0.21 è l'incremento corrente: schede dell'editor e presentazione persistente/pubblicata. Seguono M01/b immagine/alt/docenti/metadati/calendario e configurazione, poi M02 ciclo editoriale/anteprima/versioni e le altre fasi secondo le dipendenze. Il lavoro utile indipendente continua, mantenendo aperto il riscontro utente R-00. CSV non è il prossimo incremento.
+
 ## 0. Bloccante: gestione corsi e prima pubblicazione
 
 Priorità emersa dai test utente del1novembre2026: i corsi restano in bozza. Chiarimento del collaudo: manca un comando di pubblicazione riconoscibile nell’interfaccia. La0.20.1 espone il percorso nell’elenco e nell’editor; il riscontro sul sito è ancora da acquisire. Sospendere l'import CSV come prossimo incremento e verificare anzitutto la catena completa creazione → salvataggio → programma → prima pubblicazione → catalogo → aula. Il salvataggio dei dati generali non pubblica: il comando attuale è nel Programma tramite workflow Joomla, ma questo percorso deve essere evidente e utilizzabile.

@@ -19,10 +19,27 @@ HTMLHelper::_('behavior.formvalidator');
         <?php else : ?><p><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
     </section>
     <?php if ($this->readOnly) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
+    <?= HTMLHelper::_('uitab.startTabSet', 'jlms-course-tabs', ['active' => 'jlms-course-general']) ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-general', Text::_('COM_JLMS_COURSE_GENERAL')) ?>
     <?= $this->form->renderFieldset('details') ?>
+    <?= HTMLHelper::_('uitab.endTab') ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-presentation', Text::_('COM_JLMS_COURSE_PRESENTATION')) ?>
+    <p class="alert alert-info"><?= Text::_('COM_JLMS_COURSE_PROMOTIONAL_NOTICE') ?></p>
+    <?= $this->form->renderFieldset('presentation') ?>
+    <?= HTMLHelper::_('uitab.endTab') ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-access-settings', Text::_('COM_JLMS_COURSE_ACCESS_SETTINGS')) ?>
+    <?= $this->form->renderFieldset('access') ?>
+    <?= HTMLHelper::_('uitab.endTab') ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-publishing', Text::_('COM_JLMS_PUBLICATION_HEADING')) ?>
+    <?= $this->form->renderFieldset('publication') ?>
+    <p><?= Text::_('COM_JLMS_PUBLICATION_EDITOR_HELP') ?></p>
+    <?= HTMLHelper::_('uitab.endTab') ?>
     <?php if ($this->form->getFieldset('item_associations')) : ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-translations', Text::_('COM_JLMS_ASSOCIATIONS')) ?>
     <section id="jlms-course-associations"><h2><?= Text::_('COM_JLMS_ASSOCIATIONS') ?></h2><p><?= Text::_('COM_JLMS_ASSOCIATIONS_HELP') ?></p><?= $this->form->renderFieldset('item_associations') ?></section>
+    <?= HTMLHelper::_('uitab.endTab') ?>
     <?php endif; ?>
+    <?= HTMLHelper::_('uitab.endTabSet') ?>
     <input type="hidden" name="task" value="">
     <?= HTMLHelper::_('form.token') ?>
 </form>
