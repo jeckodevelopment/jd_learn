@@ -105,7 +105,8 @@ presentationExpect($details['audience'] === "Learners\nNewcomers" && $item->pres
 presentationExpect(str_contains($details['description'], '<strong>presentation</strong>'), 'Safe HTML formatting retained');
 presentationExpect(!preg_match('/<script|<iframe|<img|javascript:|onclick=/i', $details['description']), 'Active markup, tracking images and unsafe attributes removed even for super user');
 $data['unrelated_setting'] = 'retain-me';
-$db->updateObject('#__jlms_courses', (object) ['id' => $course, 'params_json' => json_encode($data, JSON_THROW_ON_ERROR)], 'id');
+$settingsFixture = (object) ['id' => $course, 'params_json' => json_encode($data, JSON_THROW_ON_ERROR)];
+$db->updateObject('#__jlms_courses', $settingsFixture, 'id');
 $update = array_replace($base, ['id' => $course, 'title' => 'Presentation fixture updated', 'revision' => 1]);
 presentationExpect($model->save($update), 'Legacy client can save without new fields');
 $item = $model->getItem($course);
