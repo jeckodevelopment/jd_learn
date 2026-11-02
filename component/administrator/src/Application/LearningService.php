@@ -159,15 +159,24 @@ final class LearningService
         }
         // Upsert before didactic transaction; unique user_id serialises identity resolution only.
         $subject = $this->subject($actor);
-        return $this->transaction(function () use ($actor, $language, $courseId, $course, $subject, $key): int {
-            $versionId = (int) $course->current_version_id;
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('course_id = :course')
-                ->where('course_version_id = :version')->where('code = :code')
-                ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER);
-            $code = 'default-v' . (int) $this->row('course_versions', $versionId)->version_no;
-            $q->bind(':code', $code);
-            $edition = $this->row('editions', (int) $this->db->setQuery($q)->loadResult(), true);
-            // Recheck availability after waiting for the edition lock.
+        // Resolve the candidate outside the transaction. A plain SELECT inside it
+        // would establish a REPEATABLE READ view before waiting for the edition
+        // lock, hiding admissions committed by the previous lock owner.
+        $versionId = (int) $course->current_version_id;
+        $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('course_id = :course')
+            ->where('course_version_id = :version')->where('code = :code')
+            ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER);
+        $code = 'default-v' . (int) $this->row('course_versions', $versionId)->version_no;
+        $q->bind(':code', $code);
+        $editionId = (int) $this->db->setQuery($q)->loadResult();
+        return $this->transaction(function () use ($actor, $language, $courseId, $versionId, $editionId, $subject, $key): int {
+            // First transactional read: same serialization point as manual admission.
+            $edition = $this->row('editions', $editionId, true);
+            if ((int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId) {
+                throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
+            }
+            // Refresh core identity and availability after waiting, before any mutation.
+            $actor = $this->freshActor($actor);
             $this->course($actor, $language, $courseId);
             $current = $this->row('courses', $courseId);
             if ((int) $current->current_version_id !== $versionId || $current->enrollment_mode !== 'auto') {

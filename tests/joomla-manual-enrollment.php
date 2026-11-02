@@ -78,7 +78,7 @@ $course=(int)$model->getState('course.id');$authoring=$component->getCurriculumS
 $scope=static fn():array=>['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult()];
 $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Manual admission chapter']);$lesson=$authoring->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$module,'title'=>'Manual admission lesson','kind'=>'text','required'=>'1','body'=>'<p>MANUAL_PRIVATE_BODY</p>']);
 $pub=$component->getPublicationService();$pub->transition($actor,$course,$version,(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult(),$scope()['expected_version_revision'],(int)$pub->transitions($actor,$course)[0]->id);
-$users=[];foreach(['one','failure','race','capacity1','capacity2','automatic','http','denied']as$name){$u=new \Joomla\CMS\User\User();$data=['name'=>'CI Manual '.$name,'username'=>'cimanual'.$name,'email'=>'cimanual'.$name.'@example.invalid','password'=>'Ci-only-Manual-Password-2026','password2'=>'Ci-only-Manual-Password-2026','groups'=>$name==='denied'?[2]:[2,$group],'block'=>0,'activation'=>''];if(!$u->bind($data)||!$u->save())throw new \RuntimeException($u->getError());$users[$name]=new \Joomla\CMS\User\User((int)$u->id);}
+$users=[];foreach(['one','failure','race','capacity1','capacity2','automatic','snapshot','http','denied']as$name){$u=new \Joomla\CMS\User\User();$data=['name'=>'CI Manual '.$name,'username'=>'cimanual'.$name,'email'=>'cimanual'.$name.'@example.invalid','password'=>'Ci-only-Manual-Password-2026','password2'=>'Ci-only-Manual-Password-2026','groups'=>$name==='denied'?[2]:[2,$group],'block'=>0,'activation'=>''];if(!$u->bind($data)||!$u->save())throw new \RuntimeException($u->getError());$users[$name]=new \Joomla\CMS\User\User((int)$u->id);}
 $manager=new \Joomla\CMS\User\User((int)$rf['manager']);$asset=new \Joomla\CMS\Table\Asset($db);$asset->loadByName('com_jlms.course.'.$course);$rules=json_decode($asset->rules,true);$rules['jlms.enrollments.manage'][(string)$rf['group']]=true;$asset->rules=json_encode($rules,JSON_THROW_ON_ERROR);$asset->store();
 $groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
 $counts=static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.$course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments')->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects')->loadResult()];
@@ -123,6 +123,49 @@ manualExpect(count(array_filter($result,static fn($v)=>$v==='conflict'))===1&&(i
 manualExpect($service->editor($actor,$course,(int)$users['failure']->id,'en-GB')['impact']['blocked']==='COM_JLMS_EDITION_FULL','full edition has no admission action');$update('jlms_editions',$edition,['capacity'=>null]);
 $update('jlms_courses',$course,['enrollment_mode'=>'auto']);$auto=manualCommand($service->editor($actor,$course,(int)$users['automatic']->id,'en-GB'));$result=$runRace([$auto,$auto],['manual','auto']);
 manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.$course.' AND user_id='.(int)$users['automatic']->id)->loadResult()===1,'automatic start racing manual admission yields one enrollment');
+// Deterministic reproduction: the automatic worker must wait for this edition.
+// Commit a competing admission while it waits, then require it to reuse that row.
+// SHOW FULL PROCESSLIST exposes only this disposable database user's connections;
+// no timing-only assertion or privileged server instrumentation is required.
+$snapshotUser = (int) $users['snapshot']->id;
+$subject = manualKey();
+$subjectRecord = (object) ['subject_key' => $subject, 'user_id' => $snapshotUser, 'created_at' => gmdate('Y-m-d H:i:s')];
+$db->insertObject('#__jlms_subjects', $subjectRecord);
+file_put_contents(dirname($root) . '/manual-enrollment-race.json', json_encode(['commands' => [[$course, $snapshotUser]]], JSON_THROW_ON_ERROR));
+$pipes = [];
+$worker = proc_open([PHP_BINARY, __FILE__, $root, 'worker', 'auto', '0'], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+if (!is_resource($worker)) { throw new RuntimeException('Snapshot worker failed'); }
+stream_set_timeout($pipes[1], 30);
+if (trim((string) fgets($pipes[1])) !== 'ready') { throw new RuntimeException('Snapshot worker bootstrap failed'); }
+$db->transactionStart();
+try {
+    $db->setQuery('SELECT id FROM #__jlms_editions WHERE id=' . $edition . ' FOR UPDATE')->loadResult();
+    fwrite($pipes[0], "go\n"); fclose($pipes[0]);
+    $waiting = false;
+    for ($poll = 0; $poll < 100; $poll++) {
+        foreach ($db->setQuery('SHOW FULL PROCESSLIST')->loadAssocList() as $process) {
+            if (str_contains((string) $process['Info'], 'jlms_editions') && str_contains((string) $process['Info'], 'FOR UPDATE')) { $waiting = true; break; }
+        }
+        if ($waiting) { break; }
+        usleep(50000);
+    }
+    manualExpect($waiting, 'Automatic worker reached the blocked edition lock');
+    $winner = (object) ['user_id' => $snapshotUser, 'subject_key' => $subject, 'course_id' => $course,
+        'course_version_id' => $version, 'edition_id' => $edition, 'status' => 'active', 'origin' => 'start',
+        'required_total' => 1, 'completed_total' => 0, 'revision' => 1, 'created_by' => $snapshotUser,
+        'modified_by' => $snapshotUser, 'created_at' => gmdate('Y-m-d H:i:s'), 'modified_at' => gmdate('Y-m-d H:i:s')];
+    $db->insertObject('#__jlms_enrollments', $winner, 'id');
+    $db->transactionCommit();
+} catch (Throwable $error) {
+    $db->transactionRollback(); proc_terminate($worker);
+    throw $error;
+}
+$result = trim(stream_get_contents($pipes[1])); $error = stream_get_contents($pipes[2]);
+fclose($pipes[1]); fclose($pipes[2]);
+if (proc_close($worker) !== 0) { throw new RuntimeException($error . $result); }
+manualExpect($result === 'ok:' . $winner->id, 'Automatic start sees the admission committed while its edition lock was blocked');
+manualExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $snapshotUser . ' AND edition_id=' . $edition)->loadResult() === 1, 'Blocked automatic retry retains one enrollment');
+
 manualExpect($learning->start($users['one'],'en-GB',$course,bin2hex(random_bytes(16)))===$id,'automatic start reuses manual assignment');$update('jlms_courses',$course,['enrollment_mode'=>'explicit']);
 manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id IS NULL OR course_version_id IS NULL')->loadResult()===0,'no incomplete receipt committed');
 manualExpect($groups===$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(),'admission never changes native group assignments');

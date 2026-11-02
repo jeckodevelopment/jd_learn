@@ -39,3 +39,7 @@ Prove su sito effimero: diritti per corso, destinatario senza livello/bloccato, 
 ## Opzione0.20
 
 Vedere [PREASSIGNMENT.md](PREASSIGNMENT.md) per `filter[preassignment]`/`jform[preassignment]`, l’avviso e le regole di replay. Default0/assente mantiene la politica e gli hash precedenti; nessun nuovo campo obbligatorio per i chiamanti standard.
+
+## Stabilizzazione concorrenza0.22
+
+Avvio automatico e ammissione manuale acquisiscono il lock dell’edizione prima che una lettura consistente crei lo snapshot transazionale. I candidati versione/edizione sono risolti fuori dalla transazione e ricontrollati dopo l’attesa, insieme all’identità/accessi correnti. In questo modo un’ammissione appena confermata dal precedente titolare del lock viene vista e riutilizzata; non si tenta un secondo inserimento. Test deterministico `tests/joomla-manual-enrollment.php` con worker bloccato e commit concorrente; restano tutte le prove di capienza, UUID, autorizzazioni e rollback/audit.

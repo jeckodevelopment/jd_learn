@@ -88,9 +88,22 @@ if (($argv[2] ?? '') === 'retained') {
     echo json_encode(['presentation_retention_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
+$legacyUpgrade = json_decode(file_get_contents(dirname($root) . '/legacy-time-fixture.json'), true, 32, JSON_THROW_ON_ERROR);
+$legacyVersion = (int) $legacyUpgrade['version_id'];
+$preserved = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $legacyVersion)->loadAssoc();
+presentationExpect($preserved === $legacyUpgrade['presentation_before_upgrade'], 'Actual upgrade from 0.21 preserves stored presentation bytes, hash and timestamp');
+$legacyDetails = $catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int) $legacyUpgrade['course_id'])['presentation'];
+presentationExpect($legacyDetails['description'] === '<p>Pre-upgrade 0.21 presentation</p>' && $legacyDetails['image'] === '', 'Existing published presentation renders with optional image absent after upgrade');
 $base = ['id' => 0, 'title' => 'Presentation fixture', 'alias' => 'presentation-fixture', 'catid' => $catid,
     'language' => '*', 'catalog_access' => 1, 'content_access' => 2, 'enrollment_mode' => 'auto', 'summary' => 'Public summary', 'revision' => 1];
-$input = $base + ['presentation_description' => '<p>Extended <strong>presentation</strong></p><script>alert(1)</script><iframe src="https://example.invalid"></iframe><img src="https://example.invalid/pixel"><a href="javascript:alert(2)" onclick="alert(3)">Safe link text</a>',
+// Public fixture owned by this disposable site; never copy private lesson media.
+$coverPath = 'images/jlms-ci-cover.png';
+$coverBytes = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=', true);
+file_put_contents($root . '/' . $coverPath, $coverBytes);
+$input = $base + ['presentation_image' => $coverPath . '#joomlaImage://local-images/jlms-ci-cover.png?width=1&height=1',
+    'presentation_image_alt' => 'Course cover "example" <plain text>', 'presentation_image_decorative' => '0',
+    'presentation_seo_title' => 'Published course SEO title', 'presentation_seo_description' => 'SEO description & public presentation',
+    'presentation_description' => '<p>Extended <strong>presentation</strong></p><script>alert(1)</script><iframe src="https://example.invalid"></iframe><img src="https://example.invalid/pixel"><a href="javascript:alert(2)" onclick="alert(3)">Safe link text</a>',
     'presentation_objectives' => 'Learn <em>as plain text</em>', 'presentation_audience' => "Learners\nNewcomers", 'presentation_prerequisite_text' => 'Read the introduction',
     'presentation_difficulty' => 'beginner', 'presentation_estimated_minutes' => '45', 'params_json' => '{"injected":true}', 'current_version_id' => 999999, 'state' => 1];
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
@@ -104,6 +117,11 @@ presentationExpect($details['estimated_minutes'] === 45 && $details['difficulty'
 presentationExpect($details['audience'] === "Learners\nNewcomers" && $item->presentation_objectives === $input['presentation_objectives'], 'Plain fields round-trip without HTML execution');
 presentationExpect(str_contains($details['description'], '<strong>presentation</strong>'), 'Safe HTML formatting retained');
 presentationExpect(!preg_match('/<script|<iframe|<img|javascript:|onclick=/i', $details['description']), 'Active markup, tracking images and unsafe attributes removed even for super user');
+presentationExpect($details['image'] === $coverPath && $details['image_decorative'] === false, 'Native media adapter suffix normalised to public relative path');
+presentationExpect($details['image_alt'] === $input['presentation_image_alt'] && $details['seo_title'] === $input['presentation_seo_title'], 'Alternative text and SEO values persist');
+$decorative = CoursePresentation::merge(['presentation_image_decorative' => '1'], $item->params_json, static fn (string $html): string => $html);
+presentationExpect(CoursePresentation::details($decorative)['image_alt'] === '' && CoursePresentation::details($decorative)['image_decorative'], 'Explicit decorative image has empty alternative text');
+
 $data['unrelated_setting'] = 'retain-me';
 $settingsFixture = (object) ['id' => $course, 'params_json' => json_encode($data, JSON_THROW_ON_ERROR)];
 $db->updateObject('#__jlms_courses', $settingsFixture, 'id');
@@ -121,6 +139,15 @@ $invalid = [
     ['presentation_estimated_minutes' => '1e3'], ['presentation_estimated_minutes' => (string) PHP_INT_MAX . '0'],
     ['presentation_estimated_minutes' => ['45']], ['presentation_difficulty' => 'expert'], ['presentation_difficulty' => ['beginner']],
     ['presentation_description' => ['<p>array</p>']], ['presentation_description' => str_repeat('a', 1048577)],
+    ['presentation_image_alt' => ''], ['presentation_image_alt' => str_repeat('a', 501)],
+    ['presentation_image' => '../configuration.php'], ['presentation_image' => '/images/jlms-ci-cover.png'],
+    ['presentation_image' => 'https://example.invalid/cover.png'], ['presentation_image' => '//example.invalid/cover.png'],
+    ['presentation_image' => 'data:image/png;base64,AAAA'], ['presentation_image' => 'images/%2e%2e/configuration.png'],
+    ['presentation_image' => 'images/../configuration.png'], ['presentation_image' => 'images/cover.svg'],
+    ['presentation_image' => 'images/missing.png'], ['presentation_image' => ['images/cover.png']],
+    ['presentation_image_decorative' => 'yes'], ['presentation_image_decorative' => ['1']],
+    ['presentation_seo_title' => str_repeat('a', 256)], ['presentation_seo_description' => str_repeat('a', 501)],
+    ['presentation_seo_title' => '<script>title</script>'], ['presentation_seo_description' => "line\nheader"],
     ['presentation_objectives' => str_repeat('a', 65536)], ['presentation_audience' => "\xC3\x28"],
 ];
 foreach ($invalid as $values) {
@@ -133,6 +160,17 @@ $model->setCurrentUser($guest);
 presentationExpect(!$model->save(array_replace($update, ['revision' => 3, 'presentation_description' => '<p>Unauthorised change</p>'])), 'Guest cannot edit presentation');
 $model->setCurrentUser($actor);
 presentationExpect(!$model->save($update + ['presentation_description' => '<p>Stale change</p>']), 'Stale revision cannot overwrite presentation');
+// Public image validation must not treat a symlink as access to private storage.
+$outside = dirname($root) . '/private-presentation.png';
+file_put_contents($outside, $coverBytes);
+$link = $root . '/images/jlms-ci-symlink.png';
+symlink($outside, $link);
+presentationExpect(!$model->save(array_replace($update, ['revision' => 3, 'presentation_image' => 'images/jlms-ci-symlink.png'])), 'Symlink escaping the public media root rejected');
+unlink($link); unlink($outside);
+$fake = $root . '/images/jlms-ci-fake.png';
+file_put_contents($fake, '<html>not an image</html>');
+presentationExpect(!$model->save(array_replace($update, ['revision' => 3, 'presentation_image' => 'images/jlms-ci-fake.png'])), 'Extension alone cannot qualify an image');
+unlink($fake);
 $version = $authoring->createDraft($actor, $course, 3);
 $q = $db->createQuery()->select('revision')->from('#__jlms_course_versions')->where('id = :id')->bind(':id', $version, \Joomla\Database\ParameterType::INTEGER);
 $revision = static fn (): int => (int) $db->setQuery($q)->loadResult();
@@ -142,6 +180,10 @@ $authoring->saveLesson($actor, ['course_id' => $course, 'version_id' => $version
 $item = $model->getItem($course);
 presentationExpect($model->save(array_replace($update, ['revision' => (int) $item->revision, 'presentation_objectives' => 'Latest objectives before publication'])), 'Presentation remains editable while programme is a draft');
 $item = $model->getItem($course);
+unlink($root . '/' . $coverPath);
+try { CoursePresentation::snapshot($item); throw new RuntimeException('Missing cover accepted at publication'); }
+catch (InvalidArgumentException) { $checks++; }
+file_put_contents($root . '/' . $coverPath, $coverBytes);
 $choices = $publication->transitions($actor, $course);
 $publication->transition($actor, $course, $version, (int) $item->revision, $revision(), (int) $choices[0]->id);
 $outline = $catalog->outline($guest, 'en-GB', $course);
@@ -155,6 +197,8 @@ foreach ([0, 1] as $expectedState) {
     $publication->transition($actor, $course, $version, (int) $model->getItem($course)->revision, $revision(), (int) $choices[0]->id);
     presentationExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $baseline, 'Withdrawal/republication retains presentation and hash');
 }
+$oldPresentation = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy","details":{"_schema":1,"description":"<p>Existing 0.21 presentation</p>"}}');
+presentationExpect($oldPresentation['image'] === '' && !$oldPresentation['image_decorative'] && $oldPresentation['seo_title'] === '', '0.21 snapshots gain only empty optional defaults without database mutation');
 $legacy = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy public summary"}');
 presentationExpect($legacy === [], 'Legacy published snapshots do not require backfilling');
 file_put_contents($fixture, json_encode(['course' => $course, 'version' => $version, 'details' => $outline['presentation'], 'snapshot' => $baseline], JSON_THROW_ON_ERROR));

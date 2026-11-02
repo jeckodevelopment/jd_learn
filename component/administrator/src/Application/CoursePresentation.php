@@ -10,7 +10,7 @@ use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 /** Promotional data only. Never receives lesson bodies, provider configuration or learner data. */
 final class CoursePresentation
 {
-    public const FIELDS = ['description', 'objectives', 'audience', 'prerequisite_text', 'difficulty', 'estimated_minutes'];
+    public const FIELDS = ['description', 'objectives', 'audience', 'prerequisite_text', 'difficulty', 'estimated_minutes', 'image', 'image_alt', 'image_decorative', 'seo_title', 'seo_description'];
 
     public static function html(string $html): string
     {
@@ -25,6 +25,13 @@ final class CoursePresentation
         $result = ['_schema' => 1];
         foreach (self::FIELDS as $field) {
             $value = $values[$field] ?? '';
+            if ($field === 'image_decorative') {
+                if (!in_array($value, ['', '0', '1', 0, 1, false, true], true)) {
+                    throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+                }
+                $result[$field] = in_array($value, ['1', 1, true], true);
+                continue;
+            }
             if ($field === 'estimated_minutes') {
                 if ($value === '' || $value === null) { $result[$field] = null; continue; }
                 if (!is_int($value) && !is_string($value)) { throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID'); }
@@ -39,8 +46,19 @@ final class CoursePresentation
             if ($field === 'difficulty' && !in_array($value, ['', 'beginner', 'intermediate', 'advanced'], true)) {
                 throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
             }
+            if (in_array($field, ['image_alt', 'seo_title', 'seo_description'], true)
+                && (mb_strlen($value, 'UTF-8') > ($field === 'seo_title' ? 255 : 500)
+                    || preg_match('/[\x00-\x1f\x7f]/', $value)
+                    || ($field !== 'image_alt' && preg_match('/[<>]/', $value)))) {
+                throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+            }
             $result[$field] = $field === 'description' ? self::html($value) : trim($value);
+            if ($field === 'image') { $result[$field] = CourseArtwork::path($value); }
         }
+        if ($result['image'] !== '' && !$result['image_decorative'] && $result['image_alt'] === '') {
+            throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_ALT_REQUIRED');
+        }
+        if ($result['image_decorative']) { $result['image_alt'] = ''; }
         return $result;
     }
 
@@ -68,6 +86,7 @@ final class CoursePresentation
         // Validate types and lengths before invoking Joomla's actor-specific HTML policy.
         $values = self::normalise($values);
         $values['description'] = self::html($filterHtml($values['description']));
+        CourseArtwork::validateLocal($values['image']);
         $data = json_decode($params ?: '{}', true, 32, JSON_THROW_ON_ERROR);
         $data['presentation'] = $values;
         return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
@@ -77,7 +96,10 @@ final class CoursePresentation
     {
         $snapshot = ['_schema' => 1, 'summary' => $course->summary];
         $details = self::details($course->params_json);
-        if ($details !== null) { $snapshot['details'] = $details; }
+        if ($details !== null) {
+            CourseArtwork::validateLocal($details['image']);
+            $snapshot['details'] = $details;
+        }
         return json_encode($snapshot, JSON_THROW_ON_ERROR);
     }
 

@@ -28,7 +28,11 @@ final class HtmlView extends BaseHtmlView
             }
         }
         $this->hasContentAccess = (bool) $actor->id && !$actor->block && in_array((int) $this->item['course']->content_access, array_map('intval', $actor->getAuthorisedViewLevels()), true);
-        $this->getDocument()->setTitle($this->item['course']->title);
+        $presentation = $this->item['presentation'] ?? [];
+        $this->getDocument()->setTitle(($presentation['seo_title'] ?? '') ?: $this->item['course']->title);
+        if (($presentation['seo_description'] ?? '') !== '') {
+            $this->getDocument()->setDescription($presentation['seo_description']);
+        }
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
     }
