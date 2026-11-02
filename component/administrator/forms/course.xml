@@ -5,7 +5,7 @@
   <field name="revision" type="hidden" filter="integer" default="1" />
   <field name="title" type="text" label="JGLOBAL_TITLE" required="true" maxlength="255" filter="string" />
   <field name="alias" type="text" label="JFIELD_ALIAS_LABEL" maxlength="180" filter="string" />
-  <field name="catid" type="category" extension="com_jlms.course" label="JCATEGORY" required="true" filter="integer" />
+  <field name="catid" type="Coursecategory" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" published="0,1,2" extension="com_jlms.course" label="JCATEGORY" required="true" filter="integer" />
   <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" default="*"><option value="*">JALL</option></field>
   <field name="summary" type="textarea" label="COM_JLMS_COURSE_SUMMARY" filter="string" rows="4" />
  </fieldset>
@@ -25,7 +25,7 @@
  <fieldset name="access" label="COM_JLMS_COURSE_ACCESS_SETTINGS">
   <field name="catalog_access" type="accesslevel" label="COM_JLMS_CATALOG_ACCESS" default="1" filter="integer" required="true" />
   <field name="content_access" type="accesslevel" label="COM_JLMS_CONTENT_ACCESS" default="2" filter="integer" required="true" />
-  <field name="enrollment_mode" type="list" label="COM_JLMS_ENROLLMENT_MODE" default="auto" required="true">
+  <field name="enrollment_mode" type="list" description="COM_JLMS_EDITOR_MODE_HELP" label="COM_JLMS_ENROLLMENT_MODE" default="auto" required="true">
    <option value="auto">COM_JLMS_ENROLLMENT_AUTO</option><option value="explicit">COM_JLMS_ENROLLMENT_EXPLICIT</option><option value="approval">COM_JLMS_ENROLLMENT_APPROVAL</option>
   </field>
  </fieldset>

@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 2 novembre 2026. Versione di sviluppo **0.24.0-dev**, con nuovo incremento calendario M01/b3 in verifica; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
+Aggiornamento: 2 novembre 2026. Versione di sviluppo **0.25.0-dev**, con nuovo incremento permessi editor M01/c1 in verifica; calendario0.24 verificato nella CI41432090964 e integrato con PR26; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
@@ -12,7 +12,11 @@ La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1
 
 La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
-## Incremento corrente0.24 — M01/b3
+## Incremento corrente0.25 — M01/c1
+
+Elenco/totali/cache secondo ACL per-record, deleghe di creazione categoriali, selettore nativo esteso, riepilogo dei diritti e checkout altrui in sola lettura. Nessuna regola o gruppo aggiunto dal prodotto e nessun writer ACL parallelo. Opzioni/permessi ereditati rimangono nativi Joomla. Guida EDITOR_PERMISSIONS e prove nuove nella PR; Fields/History/per-record editor, collaudo completo e M01 rimangono parziali.
+
+## Incremento precedente0.24 — M01/b3
 
 Calendario pubblicazione/fruizione con form native, fuso esplicito, UTC rigoroso, DST e intervalli. Snapshot delle ultime date e prima edizione coerenti; disponibilità corrente del pulsante con controlli server esistenti. Policy dei quiz già aperti e dipendenza dalla visibilità editoriale restano documentate, senza cambi di timer. Guida CALENDAR e test dominio/Joomla/HTTP/reinstall predisposti; esiti del build nella PR. Non completa M01 o R-03.
 

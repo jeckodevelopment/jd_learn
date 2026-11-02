@@ -133,3 +133,7 @@ La descrizione è HTML con allowlist già applicata; gli altri testi sono escapa
 ## Calendario0.24
 
 Editor: tab `#jlms-course-calendar`, fieldset calendar con controlli nativi. Frontend: sezione opzionale `#jlms-course-calendar`, elenco definizioni con date congelate, fuso e offset. `#jlms-course-window-closed` comunica la finestra corrente non aperta per chi possiede il livello. Conservare `$this->canStartWindow` insieme ai controlli di identità/accesso nei rami del pulsante; gli endpoint ricontrollano sempre la disponibilità. Esempio stile: `#jlms-course-calendar dl { display: grid; gap: .5rem; }`. Nessun valore di bozza, data dal browser o clock client deve autorizzare l’avvio.
+
+## Editor e permessi0.25
+
+Tab amministrativo `#jlms-course-permissions`, regione `#jlms-course-effective-rights`, link condizionale `#jlms-course-options-link` alle opzioni native. Il riepilogo usa un elenco di definizioni; esempio `#jlms-course-effective-rights dl { display: grid; gap: .5rem; }`. Negli override mantenere readOnly/checkedOutByOther, disabilitazione dei campi e toolbar coerente. Il selettore Coursecategory estende il campo Category nativo; non rimpiazzarlo con un elenco privo di controllo ACL. Nessuna modifica del contratto frontend studente.

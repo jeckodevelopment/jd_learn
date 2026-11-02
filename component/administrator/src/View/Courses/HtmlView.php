@@ -16,12 +16,14 @@ final class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
+        $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         ToolbarHelper::title('JD Learn', 'graduation-cap');
-        if (Factory::getApplication()->getIdentity()->authorise('core.create', 'com_jlms')) {
+        if (\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor)) {
             ToolbarHelper::addNew('course.add');
         }
+        if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
         parent::display($tpl);
     }
 }

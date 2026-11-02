@@ -56,7 +56,7 @@ final class CourseTable extends Table
         }
         $extension = 'com_jlms.course';
         $q = $db->createQuery()->select($db->quoteName('id'))->from($db->quoteName('#__categories'))
-            ->where($db->quoteName('id') . ' = :catid')->where($db->quoteName('extension') . ' = :extension')
+            ->where($db->quoteName('id') . ' = :catid')->where($db->quoteName('extension') . ' = :extension')->where('published<>-2')
             ->bind(':catid', $catid, ParameterType::INTEGER)->bind(':extension', $extension);
         if (!$db->setQuery($q)->loadResult()) {
             $this->setError('JLIB_DATABASE_ERROR_CATEGORY_REQUIRED');

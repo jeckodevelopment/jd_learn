@@ -109,6 +109,43 @@ try:
   result=response.read().decode('utf-8')
  if 'HTTP text lesson' not in result:raise RuntimeError('Lesson was not saved through the authenticated MVC form')
 
+ # Editor diagnostics and delegated-category navigation over real HTTP.
+ editor_fixture=json.loads((root.parent/'editor-access-fixture.json').read_text())
+ u,h=get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['locked']))
+ locked_form=next(f for f in Page(h).forms if f['id']=='adminForm')
+ if 'jform[title]' in locked_form['fields'] or 'id="jlms-course-effective-rights"' not in h:
+  raise RuntimeError('Other-operator checkout must render a read-only editor and permission diagnostic')
+ if 'id="jlms-course-options-link"' not in h:raise RuntimeError('Authorised native options link missing')
+ delegated_http=build_opener(HTTPCookieProcessor(CookieJar()))
+ def delegated_get(path):
+  with delegated_http.open(urljoin(base,path),timeout=20) as response:return response.geturl(),response.read().decode('utf-8')
+ du,dh=delegated_get('/administrator/index.php')
+ login_form=next(f for f in Page(dh).forms if 'username' in f['fields'] and 'passwd' in f['fields'])
+ fields=dict(login_form['fields']);fields.update(username='cieditor',passwd='Ci-only-Editor-Password-2026')
+ with delegated_http.open(urljoin(du,login_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor allowed1' not in dh or 'Editor denied' in dh or 'Editor foreign' in dh or 'Editor other_owner' in dh:
+  raise RuntimeError('Administrative course list leaked or omitted native delegated scope')
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&task=course.add')
+ delegate_form=next(f for f in Page(dh).forms if 'jform[title]' in f['fields'])
+ selector=re.search(r'<select[^>]*name="jform\[catid\]"[^>]*>(.*?)</select>',dh,re.S).group(1)
+ if 'Editor allowed' not in selector or 'Editor other' in selector or 'Editor trash' in selector or 'id="jlms-course-options-link"' in dh:
+  raise RuntimeError('Category-only creation selector or options permissions incorrect')
+ fields=dict(delegate_form['fields']);fields.update({'task':'course.apply','jform[title]':'Editor HTTP delegated','jform[alias]':'editor-http-delegated',
+  'jform[catid]':str(editor_fixture['allowed_category']),'jform[language]':'*','jform[catalog_access]':'1','jform[content_access]':'2','jform[enrollment_mode]':'auto'})
+ with delegated_http.open(urljoin(du,delegate_form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+  du=response.geturl();dh=response.read().decode('utf-8')
+ delegate_form=next(f for f in Page(dh).forms if 'jform[title]' in f['fields'])
+ if int(delegate_form['fields']['jform[id]'])<1 or 'id="jlms-course-effective-rights"' not in dh:
+  raise RuntimeError('Delegate could not create through the native controller/form')
+ # Submit a forged destination not offered by the native category selector.
+ fields=dict(delegate_form['fields']);fields.update({'task':'course.apply','jform[catid]':str(editor_fixture['other_category'])})
+ with delegated_http.open(urljoin(du,delegate_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ stored=json.loads(subprocess.check_output(['php',str(Path(__file__).with_name('editor-http-fixture.php'))],text=True))
+ if int(stored['catid'])!=editor_fixture['allowed_category'] or int(stored['revision'])!=1:
+  raise RuntimeError('Forged category mutation changed the saved course')
+ print(json.dumps({'editor_access_http_checks':6,'status':'passed'}))
+
  # Exercise teacher creation through the native administrator form.
  u,h=get('/administrator/index.php?option=com_jlms&view=teachers')
  if 'id="jlms-admin-teachers"' not in h:raise RuntimeError('Native teacher list missing')
@@ -161,7 +198,7 @@ try:
  course_id=int(form['fields']['jform[id]'])
  expect(course_id>0 and 'id="jlms-course-programme-link"' in h,'Saved draft offers curriculum/publication navigation')
  expect('joomla-field-media' in h and 'jform[presentation_image]' in h,'Native Media Manager field is available in course editor')
- expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-metadata','jlms-course-calendar','jlms-course-publishing']),'Native course editor exposes general, presentation, access and publication tabs')
+ expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-metadata','jlms-course-calendar','jlms-course-publishing','jlms-course-permissions']),'Native course editor exposes general, presentation, access and publication tabs')
  before=fixture()
  u,h=submit(u,form,{'task':'course.apply','jform[calendar_timezone]':'Europe/Rome','jform[calendar_starts_at]':'2027-03-28 02:30:00'})
  expect(fixture()==before,'Native form rejects nonexistent DST time without saving')

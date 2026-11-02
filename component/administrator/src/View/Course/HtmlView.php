@@ -15,16 +15,17 @@ final class HtmlView extends BaseHtmlView
     public $form;
     public $item;
     public bool $readOnly = false;
+    public bool $checkedOutByOther = false;
+    public array $editorRights = [];
+    public bool $canConfigure = false;
 
     public function display($tpl = null)
     {
         $this->item = $this->get('Item');
-        $actor = Factory::getApplication()->getIdentity();
-        $id = (int) ($this->item->id ?? 0);
-        $allowed = $id > 0
-            ? ($actor->authorise('core.edit', 'com_jlms.course.' . $id)
-                || ((int) $this->item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', 'com_jlms.course.' . $id)))
-            : $actor->authorise('core.create', 'com_jlms');
+        $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
+        $id=(int)($this->item->id ?? 0);
+        $allowed=$id>0 ? \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor,$this->item)
+            : \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor);
         if (!$allowed) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
@@ -33,7 +34,11 @@ final class HtmlView extends BaseHtmlView
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
         ToolbarHelper::title(Text::_('COM_JLMS_COURSE'), 'graduation-cap');
-        $this->readOnly = $id > 0 && ($this->item->current_version_id !== null || (int) $this->item->state !== 0);
+        $this->checkedOutByOther=$id>0 && $this->item->checked_out && (int)$this->item->checked_out!==(int)$actor->id;
+        $asset=$id>0?'com_jlms.course.'.$id:'com_jlms';
+        $this->canConfigure=$actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms');
+        $this->editorRights=['COM_JLMS_EDITOR_RIGHT_CREATE'=>\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor),'COM_JLMS_EDITOR_RIGHT_EDIT'=>$allowed,'COM_JLMS_EDITOR_RIGHT_PUBLISH'=>$actor->authorise('core.edit.state',$asset),'COM_JLMS_EDITOR_RIGHT_OPTIONS'=>$this->canConfigure];
+        $this->readOnly = $this->checkedOutByOther || $id > 0 && ($this->item->current_version_id !== null || (int) $this->item->state !== 0);
         if ($this->readOnly) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { $this->form->setFieldAttribute($field,'disabled','true'); }
             $this->form->setFieldAttribute('teacher_ids','disabled','true');
