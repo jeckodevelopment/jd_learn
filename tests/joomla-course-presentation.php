@@ -48,7 +48,15 @@ $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'ciopera
 if (!$userId) {
     throw new \RuntimeException('Test Joomla operator missing.');
 }
-$app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($userId));
+$operator = $container->get(UserFactoryInterface::class)->loadUserById($userId);
+$app->loadIdentity($operator);
+// ComponentHelper::filterText reads the native session user via Factory::getUser().
+// A CLI fixture must establish both parts of a web login, otherwise the HTML
+// policy is evaluated for Public while MVC authorisation uses the operator.
+$app->getSession()->set('user', $operator);
+if ((int) Factory::getUser()->id !== (int) $app->getIdentity()->id) {
+    throw new \RuntimeException('Fixture session and application identities must match.');
+}
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 
