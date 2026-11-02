@@ -11,13 +11,13 @@ use Joomla\Database\ParameterType;
 /** Public profile projection. Linked native accounts never confer rights or expose email. */
 final class TeacherProfiles
 {
-    public static function available(DatabaseInterface $db, User $actor, string $language = '*', ?array $only = null): array
+    public static function available(DatabaseInterface $db, User $actor, string $language = '*', ?array $only = null, bool $details = false): array
     {
         if ($only === []) { return []; }
         if ($actor->id) { $actor = new User((int) $actor->id); $actor->clearAccessRights(); if (!$actor->id || $actor->block) { return []; } }
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
         if (!$levels) { return []; }
-        $q = $db->createQuery()->select('t.id,t.title,t.bio,t.image,t.params_json,t.access,t.language,t.catid')
+        $q = $db->createQuery()->select($details ? 't.id,t.title,t.bio,t.image,t.params_json,t.access,t.language,t.catid' : 't.id,t.title,t.access,t.language,t.catid')
             ->from('#__jlms_teachers AS t')->innerJoin('#__categories AS cat ON cat.id=t.catid')
             ->where('t.state=1')->where('cat.published=1')->where("cat.extension='com_jlms.teacher'")
             ->where('t.access IN (' . implode(',', $levels) . ')')
@@ -59,7 +59,7 @@ final class TeacherProfiles
         $ids = self::selected($db, (int) $course->id);
         if (!$ids) { return $presentation; }
         $ids = self::assignment($db, $actor, (string) $course->language, $ids);
-        $available = self::available($db, $actor, (string) $course->language, $ids);
+        $available = self::available($db, $actor, (string) $course->language, $ids, true);
         $profiles = [];
         foreach ($ids as $id) {
             $row = $available[$id];

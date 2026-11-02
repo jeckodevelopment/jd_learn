@@ -121,6 +121,10 @@ $version=$authoring->createDraft($actor,$course,3);
 $rev=static fn():int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult();
 $module=$authoring->saveModule($actor,['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>$rev(),'title'=>'Teacher chapter']);
 $authoring->saveLesson($actor,['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>$rev(),'module_id'=>$module,'title'=>'Teacher lesson','kind'=>'text','required'=>'1','body'=>'<p>TEACHER_PRIVATE_LESSON</p>']);
+$withdrawn=(object)['id'=>$public,'state'=>0];$db->updateObject('#__jlms_teachers',$withdrawn,'id');
+try { $publication->transition($actor,$course,$version,(int)$courseModel->getItem($course)->revision,$rev(),(int)$publication->transitions($actor,$course)[0]->id); throw new RuntimeException('Withdrawn teacher accepted for publication'); }
+catch (InvalidArgumentException) { $checks++; }
+$withdrawn->state=1;$db->updateObject('#__jlms_teachers',$withdrawn,'id');
 $publication->transition($actor,$course,$version,(int)$courseModel->getItem($course)->revision,$rev(),(int)$publication->transitions($actor,$course)[0]->id);
 $snapshot=$db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='.$version)->loadAssoc();
 $guest=new \Joomla\CMS\User\User();$outline=$catalog->outline($guest,'en-GB',$course);
@@ -139,6 +143,16 @@ $edit['revision']=4;$edit['access']=1;teacherExpect($teacherModel->save($edit),'
 $privateEdit=array_replace($teacherBase,['id'=>$private,'title'=>'PRIVATE_TEACHER_NAME','alias'=>'private-teacher','access'=>1,'bio'=>'PRIVATE_TEACHER_BIO','user_id'=>'']);
 teacherExpect($teacherModel->save($privateEdit),'Restricted profile can become public for future versions');
 teacherExpect(count($catalog->outline($guest,'en-GB',$course)['teachers'])===1,'Looser current access never exposes a previously restricted snapshot');
+$learner=new \Joomla\CMS\User\User();$learnerData=['name'=>'CI teacher viewer','username'=>'citeacherviewer','email'=>'citeacherviewer@example.invalid','password'=>'Ci-only-Teacher-Viewer-2026','password2'=>'Ci-only-Teacher-Viewer-2026','groups'=>[2],'block'=>0,'activation'=>''];
+if (!$learner->bind($learnerData)||!$learner->save()) { throw new RuntimeException('Viewer fixture failed'); }
+$learner=new \Joomla\CMS\User\User((int)$learner->id);$learner->getAuthorisedViewLevels();
+teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===2,'Registered viewer sees originally registered snapshot');
+$teacherModel->setCurrentUser($learner);teacherExpect(!$teacherModel->save(array_replace($edit,['revision'=>5])),'Authenticated viewer lacks teacher management permission');$teacherModel->setCurrentUser($actor);
+\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$learner->id,2);
+teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===1,'Revocation checked with the same cached viewer object');
+$categoryLanguage=(object)['id'=>$teacherCategory,'language'=>'en-GB'];$db->updateObject('#__categories',$categoryLanguage,'id');
+teacherExpect(TeacherProfiles::visible($db,$guest,'it-IT',$snapshot['presentation_json'])===[],'Current ancestor category language gates historical profile');
+$categoryLanguage->language='*';$db->updateObject('#__categories',$categoryLanguage,'id');
 $update=(object)['id'=>$teacherCategory,'published'=>0];$db->updateObject('#__categories',$update,'id');
 teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers']===[],'Native category withdrawal gates teacher history');
 $update->published=1;$db->updateObject('#__categories',$update,'id');
