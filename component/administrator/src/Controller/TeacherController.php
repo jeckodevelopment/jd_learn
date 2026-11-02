@@ -22,15 +22,16 @@ final class TeacherController extends FormController
 
     protected function allowAdd($data = [])
     {
-        return $this->app->getIdentity()->authorise('jlms.teachers.manage', 'com_jlms') && $this->app->getIdentity()->authorise('core.create', 'com_jlms');
+        $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id); $actor->clearAccessRights();
+        return $actor->id && !$actor->block && $actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor->authorise('core.create', 'com_jlms');
     }
 
     protected function allowEdit($data = [], $key = 'id')
     {
         $id = (int) ($data[$key] ?? 0);
         $item = $this->getModel()->getItem($id);
-        $actor = $this->app->getIdentity();
-        return $actor->authorise('jlms.teachers.manage', 'com_jlms') && $id > 0 && $item && ($actor->authorise('core.edit', 'com_jlms.teacher.' . $id)
+        $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id); $actor->clearAccessRights();
+        return $actor->id && !$actor->block && $actor->authorise('jlms.teachers.manage', 'com_jlms') && $id > 0 && $item && ($actor->authorise('core.edit', 'com_jlms.teacher.' . $id)
             || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', 'com_jlms.teacher.' . $id)));
     }
 }

@@ -147,6 +147,8 @@ $learner=new \Joomla\CMS\User\User();$learnerData=['name'=>'CI teacher viewer','
 if (!$learner->bind($learnerData)||!$learner->save()) { throw new RuntimeException('Viewer fixture failed'); }
 $learner=new \Joomla\CMS\User\User((int)$learner->id);$learner->getAuthorisedViewLevels();
 teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===2,'Registered viewer sees originally registered snapshot');
+$directory=$factory->createModel('Teachers','Administrator',['ignore_request'=>true]);$directory->setCurrentUser($learner);
+try { $items=$directory->getItems(); teacherExpect($items===false && $directory->getError()!==null,'Native list model rejects unauthorised directory reads'); } catch (RuntimeException $denied) { teacherExpect($denied->getCode()===403,'Authenticated viewer cannot read administrative teacher directory'); }
 $teacherModel->setCurrentUser($learner);teacherExpect(!$teacherModel->save(array_replace($edit,['revision'=>5])),'Authenticated viewer lacks teacher management permission');$teacherModel->setCurrentUser($actor);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$learner->id,2);
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__user_usergroup_map WHERE user_id='.(int)$learner->id.' AND group_id=2')->loadResult()===0,'Native group revocation actually persisted before checking cached identity');

@@ -17,7 +17,8 @@ final class TeachersModel extends ListModel
 
     protected function getListQuery()
     {
-        if (!$this->getCurrentUser()->authorise('jlms.teachers.manage', 'com_jlms')) { throw new \RuntimeException('JERROR_ALERTNOAUTHOR',403); }
+        $fresh = new \Joomla\CMS\User\User((int) $this->getCurrentUser()->id); $fresh->clearAccessRights(); $this->setCurrentUser($fresh);
+        if (!$fresh->id || $fresh->block || !$fresh->authorise('jlms.teachers.manage', 'com_jlms')) { throw new \RuntimeException('JERROR_ALERTNOAUTHOR',403); }
         $db = $this->getDatabase();
         // All administration reads require core.manage via Joomla's component dispatcher.
         // Record visibility is narrowed below instead of listing another author's drafts.
