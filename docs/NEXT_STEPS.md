@@ -4,7 +4,7 @@ Data:1novembre2026. Questo è un backlog ordinato, non una stima di calendario n
 
 ## Piano per incrementi fino alla versione stabile
 
-La [roadmap](ROADMAP_TO_STABLE.md) suddivide il perimetro in12fasi di rilascio e una fase differita. [RELEASE_PLAN.json](RELEASE_PLAN.json) assegna tutti i210requisiti alla fase primaria senza promuoverli a completati. M01/a0.21 è l'incremento corrente: schede dell'editor e presentazione persistente/pubblicata. Seguono M01/b immagine/alt/docenti/metadati/calendario e configurazione, poi M02 ciclo editoriale/anteprima/versioni e le altre fasi secondo le dipendenze. Il lavoro utile indipendente continua, mantenendo aperto il riscontro utente R-00. CSV non è il prossimo incremento.
+La [roadmap](ROADMAP_TO_STABLE.md) suddivide il perimetro in12fasi di rilascio e una fase differita. [RELEASE_PLAN.json](RELEASE_PLAN.json) assegna tutti i210requisiti alla fase primaria senza promuoverli a completati. M01/a0.21 è integrato e verificato; M01/b1–0.22 aggiunge copertina/alt e SEO, con esiti nella PR del build. Il blocco precedente include: schede dell'editor e presentazione persistente/pubblicata. Seguono M01/b2 docenti, M01/b3 calendario e configurazione, poi M02 ciclo editoriale/anteprima/versioni e le altre fasi secondo le dipendenze. Il lavoro utile indipendente continua, mantenendo aperto il riscontro utente R-00. CSV non è il prossimo incremento.
 
 ## 0. Bloccante: gestione corsi e prima pubblicazione
 

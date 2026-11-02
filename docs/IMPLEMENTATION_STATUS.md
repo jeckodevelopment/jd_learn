@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento verificato: 1 novembre 2026. Versione di sviluppo **0.21.0-dev**, con nuovo incremento editor/presentazione in verifica; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
+Aggiornamento: 2 novembre 2026. Versione di sviluppo **0.22.0-dev**, con nuovo incremento copertina/SEO M01/b1 in verifica; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
@@ -12,9 +12,13 @@ La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1
 
 La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
-## Incremento corrente0.21 — M01/a
+## Incremento corrente0.22 — M01/b1
 
-Schede native editor (dati generali, presentazione, accessi e pubblicazione; associazioni se abilitate), campi promozionali tipizzati e HTML filtrato. La pubblicazione congela gli ultimi dati salvati e la scheda pubblica li legge dalla versione autorizzata. Nessun dato di bozza o corpo delle lezioni viene esposto. Compatibilità dei vecchi client e versioni precedenti, schema invariato. Nuove verifiche servizio/HTTP/upgrade predisposte: esito da registrare nella PR, non dedotto dalla loro presenza. L'evidenza JSON storica continua a identificare soltanto i build già eseguiti.
+Copertina pubblica locale tramite Media Manager, alt/decorazione e metadati SEO tipizzati. Snapshot, autorizzazioni e compatibilità storica come nella guida COURSE_EDITOR; non completa docenti/calendario o M01. Prove nuove nella CI del build, da consultare nella PR prima di attribuire risultati. CORE-12 ora ha il primo percorso implementato, non la copertura completa: il collaudo interattivo del selettore e gli adapter remoti sono ancora pendenti.
+
+## Incremento precedente0.21 — M01/a
+
+Schede native editor (dati generali, presentazione, accessi e pubblicazione; associazioni se abilitate), campi promozionali tipizzati e HTML filtrato. La pubblicazione congela gli ultimi dati salvati e la scheda pubblica li legge dalla versione autorizzata. Nessun dato di bozza o corpo delle lezioni viene esposto. Compatibilità dei vecchi client e versioni precedenti, schema invariato. La CI41417124499 ha superato44verifiche presentazione,19asserzioni di prima pubblicazione HTTP e3controlli di conservazione per ambiente, oltre alle regressioni. PR23 integrata; l’esito non completa M01. L'evidenza JSON storica continua a identificare soltanto i build già eseguiti.
 
 La [roadmap verso il rilascio stabile](ROADMAP_TO_STABLE.md) articola le fasi M01–M12 e il differito M13. Tutti i210ID sono assegnati in RELEASE_PLAN.json e controllati automaticamente; nessuna fase è dichiarata accettata. Immagini/docenti/calendario, editor completo, anteprima, workflow revisione/archivio e versionamento restano incompleti.
 

@@ -68,14 +68,14 @@ $factory = $component->getMVCFactory();
 
 
 // Executed against the installed previous package before installing the current package.
-$actor=$app->getIdentity();$bank=$component->getQuestionBankService();$author=$component->getCurriculumService();$quizzes=$component->getQuizAuthoringService();
+$actor=$app->getIdentity();$app->getSession()->set('user',$actor);$bank=$component->getQuestionBankService();$author=$component->getCurriculumService();$quizzes=$component->getQuizAuthoringService();
 $categories=$app->bootComponent('com_categories')->getMVCFactory()->createModel('Category','Administrator',['ignore_request'=>true]);
 if(!$categories->save(['id'=>0,'parent_id'=>1,'extension'=>'com_jlms.question','title'=>'Legacy quiz bank','alias'=>'legacy-time-bank','published'=>1,'language'=>'*','access'=>1]))throw new \RuntimeException($categories->getError());
 $question=$bank->save($actor,['id'=>0,'revision'=>1,'catid'=>(int)$categories->getState('category.id'),'language'=>'*','state'=>'1','kind'=>'single','prompt'=>'Legacy question','options'=>[['option_id'=>'first','label'=>'Correct','correct'=>'1'],['option_id'=>'second','label'=>'Other','correct'=>'0']],'default_points'=>'1','explanation'=>'Legacy feedback']);
 $qr=(int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id='.$question)->loadResult();
 $catid=(int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
-if(!$model->save(['id'=>0,'revision'=>1,'title'=>'Legacy time course','alias'=>'legacy-time-course','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Pre-upgrade fixture']))throw new \RuntimeException($model->getError());
+if(!$model->save(['id'=>0,'revision'=>1,'title'=>'Legacy time course','alias'=>'legacy-time-course','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Pre-upgrade fixture','presentation_description'=>'<p>Pre-upgrade 0.21 presentation</p>','presentation_objectives'=>'Existing objective']))throw new \RuntimeException($model->getError());
 $course=(int)$model->getState('course.id');$version=$author->createDraft($actor,$course,1);
 $scope=static fn():array=>['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult()];
 $module=$author->saveModule($actor,$scope()+['id'=>0,'title'=>'Legacy module']);
@@ -89,5 +89,5 @@ $runtime=$component->getQuizAttemptService();$a=$runtime->start($user,'en-GB',$e
 $runtime->mutate($user,'en-GB',$enrollment,$lesson,$a['attempt']['id'],1,$key(),json_encode([$a['questions'][0]['id']=>['first']],JSON_THROW_ON_ERROR),true);
 $a=$runtime->start($user,'en-GB',$enrollment,$lesson,$key());$snapshot=$db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id='.(int)$a['attempt']['id'])->loadObject();
 if((json_decode($snapshot->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR)['extra_time_seconds']??0)!==0)throw new \RuntimeException('Unexpected allowance in legacy fixture');
-file_put_contents(dirname($root).'/legacy-time-fixture.json',json_encode(['user_id'=>(int)$user->id,'enrollment_id'=>$enrollment,'lesson_id'=>$lesson,'attempt_id'=>$a['attempt']['id'],'snapshot_hash'=>hash('sha256',json_encode($snapshot,JSON_THROW_ON_ERROR))],JSON_THROW_ON_ERROR));
+file_put_contents(dirname($root).'/legacy-time-fixture.json',json_encode(['user_id'=>(int)$user->id,'enrollment_id'=>$enrollment,'lesson_id'=>$lesson,'attempt_id'=>$a['attempt']['id'],'snapshot_hash'=>hash('sha256',json_encode($snapshot,JSON_THROW_ON_ERROR)), 'course_id'=>$course, 'version_id'=>$version, 'presentation_before_upgrade'=>$db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='.$version)->loadAssoc()],JSON_THROW_ON_ERROR));
 echo json_encode(['pre_upgrade_quiz_snapshots'=>'created_before_upgrade']).PHP_EOL;
