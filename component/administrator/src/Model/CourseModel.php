@@ -38,6 +38,9 @@ final class CourseModel extends AdminModel
     public function getItem($pk = null)
     {
         $item = parent::getItem($pk);
+        if ($item) {
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item,Factory::getApplication()->getIdentity()->getTimezone()->getName()) as $key=>$value) { $item->$key=$value; }
+        }
         if ($item && !empty($item->id)) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($item->params_json) ?? [] as $field => $value) {
                 if ($field !== '_schema') { $item->{'presentation_' . $field} = $value; }
@@ -162,6 +165,7 @@ final class CourseModel extends AdminModel
         $this->associationWrite = false;
         $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
+        $allowed=array_merge($allowed,\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
         $data = array_intersect_key($data, array_flip($allowed));
         $id = (int) ($data['id'] ?? 0);
         $expected = (int) ($data['revision'] ?? 0);
@@ -221,6 +225,9 @@ final class CourseModel extends AdminModel
             );
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { unset($data['presentation_' . $field]); }
             if ($presentation !== null) { $data['params_json'] = $presentation; }
+            $calendar=\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data,$record ?? (object) [],$data['params_json'] ?? $record->params_json ?? '{}',Factory::getApplication()->getIdentity()->getTimezone()->getName());
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { unset($data[$field]); }
+            $data=array_replace($data,$calendar);
             if (!parent::save($data)) {
                 $db->transactionRollback();
                 $this->setError(Text::_('COM_JLMS_SAVE_FAILED'));
@@ -236,7 +243,7 @@ final class CourseModel extends AdminModel
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST'];
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
             if (!in_array($error->getMessage(), $known, true)) {
                 // Private diagnostics omit SQL, values and exception messages.
                 try { \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms'); } catch (\Throwable) {}

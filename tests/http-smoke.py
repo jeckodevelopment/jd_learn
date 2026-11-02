@@ -161,8 +161,14 @@ try:
  course_id=int(form['fields']['jform[id]'])
  expect(course_id>0 and 'id="jlms-course-programme-link"' in h,'Saved draft offers curriculum/publication navigation')
  expect('joomla-field-media' in h and 'jform[presentation_image]' in h,'Native Media Manager field is available in course editor')
- expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-metadata','jlms-course-publishing']),'Native course editor exposes general, presentation, access and publication tabs')
- u,h=submit(u,form,{'task':'course.apply','jform[presentation_description]':'<p>HTTP extended <strong>description</strong></p><img src="https://example.invalid/pixel" onerror="alert(1)"><script>alert(2)</script>',
+ expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-metadata','jlms-course-calendar','jlms-course-publishing']),'Native course editor exposes general, presentation, access and publication tabs')
+ before=fixture()
+ u,h=submit(u,form,{'task':'course.apply','jform[calendar_timezone]':'Europe/Rome','jform[calendar_starts_at]':'2027-03-28 02:30:00'})
+ expect(fixture()==before,'Native form rejects nonexistent DST time without saving')
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ u,h=submit(u,form,{'task':'course.apply','jform[calendar_timezone]':'Europe/Rome',
+  'jform[calendar_publish_up]':'2000-01-01 01:00:00','jform[calendar_publish_down]':'2099-01-01 01:00:00',
+  'jform[calendar_starts_at]':'2000-01-01 01:00:00','jform[calendar_ends_at]':'2098-01-01 01:00:00','jform[presentation_description]':'<p>HTTP extended <strong>description</strong></p><img src="https://example.invalid/pixel" onerror="alert(1)"><script>alert(2)</script>',
   'jform[presentation_objectives]':'HTTP objectives <script>plain text</script>','jform[presentation_audience]':'HTTP audience',
   'jform[presentation_image]':'images/jlms-ci-cover.png#joomlaImage://local-images/jlms-ci-cover.png?width=1&height=1','jform[presentation_image_alt]':'HTTP cover "quoted" <plain text>','jform[presentation_image_decorative]':'0',
   'jform[teacher_ids][]':str(http_teacher_id),'jform[presentation_seo_title]':'HTTP published SEO title','jform[presentation_seo_description]':'HTTP SEO description & public sheet',
@@ -219,6 +225,8 @@ try:
  expect('<title>HTTP published SEO title</title>' in sheet and 'HTTP SEO description &amp; public sheet' in sheet,'Native document head uses the published SEO values')
  expect('#joomlaImage' not in cover.group(0),'Native adapter metadata not emitted in public image URL')
  expect('id="jlms-course-teachers"' in sheet and 'HTTP teacher biography &lt;script&gt;plain text&lt;/script&gt;' in sheet,'Assigned native teacher appears as escaped frozen public profile')
+ expect('id="jlms-course-calendar"' in sheet and 'Europe/Rome' in sheet and '2000-01-01 01:00:00 +01:00' in sheet,'Public frozen calendar shows its explicit zone and offset')
+ expect(published['calendar_timezone']=='Europe/Rome' and published['calendar_start'].startswith('2000-01-01 00:00:00') and published['edition_end'].startswith('2098-01-01 00:00:00'),'Native calendar form persists UTC and initial edition dates')
  expect('id="jlms-publication-status"' in h,'Administrator sees course publication status')
  print(json.dumps({'first_publication_http_checks':checks,'status':'passed'}))
 

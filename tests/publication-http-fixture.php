@@ -16,7 +16,10 @@ if ($operation === 'plugin') {
     throw new InvalidArgumentException('Unknown fixture operation');
 }
 $plugin = $db->query("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND folder='workflow' AND element='publishing'")->fetchColumn();
-$q = $db->query("SELECT c.id,c.state,c.current_version_id,c.revision,v.status,v.structure_hash,v.published_at,
+$q = $db->query("SELECT c.id,c.state,c.current_version_id,c.revision,v.status,v.structure_hash,v.published_at,c.publish_up,c.publish_down,
+    JSON_UNQUOTE(JSON_EXTRACT(v.presentation_json,'$.calendar.timezone')) AS calendar_timezone,
+    JSON_UNQUOTE(JSON_EXTRACT(v.presentation_json,'$.calendar.starts_at')) AS calendar_start,
+    (SELECT ends_at FROM joomla_jlms_editions e WHERE e.course_id=c.id LIMIT 1) AS edition_end,
     (SELECT COUNT(*) FROM joomla_jlms_editions e WHERE e.course_id=c.id) AS editions,
     (SELECT COUNT(*) FROM joomla_workflow_associations a WHERE a.item_id=c.id AND a.extension='com_jlms.course') AS associations
     FROM joomla_jlms_courses c LEFT JOIN joomla_jlms_course_versions v ON v.id=c.current_version_id

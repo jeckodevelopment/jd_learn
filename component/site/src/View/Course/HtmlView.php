@@ -12,11 +12,13 @@ final class HtmlView extends BaseHtmlView
     public array $item;
     public bool $hasContentAccess = false;
     public bool $isGuest = true;
+    public bool $canStartWindow = false;
     public string $mutationKey;
 
     public function display($tpl = null)
     {
         $this->item = $this->get('Item');
+        $this->canStartWindow=(bool) ($this->item['start_window_open'] ?? false);
         $actor = Factory::getApplication()->getIdentity();
         $this->isGuest = !(int) $actor->id;
         $this->mutationKey = bin2hex(random_bytes(16));

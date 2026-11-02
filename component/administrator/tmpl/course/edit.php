@@ -36,6 +36,9 @@ HTMLHelper::_('behavior.formvalidator');
     <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-metadata', Text::_('COM_JLMS_COURSE_METADATA')) ?>
     <?= $this->form->renderFieldset('metadata') ?>
     <?= HTMLHelper::_('uitab.endTab') ?>
+    <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-calendar', Text::_('COM_JLMS_CALENDAR')) ?>
+    <p><?= Text::_('COM_JLMS_CALENDAR_POLICY') ?></p><?= $this->form->renderFieldset('calendar') ?>
+    <?= HTMLHelper::_('uitab.endTab') ?>
     <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-publishing', Text::_('COM_JLMS_PUBLICATION_HEADING')) ?>
     <?= $this->form->renderFieldset('publication') ?>
     <p><?= Text::_('COM_JLMS_PUBLICATION_EDITOR_HELP') ?></p>

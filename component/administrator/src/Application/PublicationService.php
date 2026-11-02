@@ -195,7 +195,8 @@ final class PublicationService
             'presentation_json' => $presentation, 'structure_hash' => $hash, 'published_at' => $now,
             'revision' => (int) $version->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
         $this->db->updateObject('#__jlms_course_versions', $update, 'id');
-        $edition = (object) ['course_id' => (int) $course->id, 'course_version_id' => $versionId,
+        $calendar=CourseSchedule::read($course);
+        $edition = (object) ['starts_at'=>$calendar['starts_at'],'ends_at'=>$calendar['ends_at'],'course_id' => (int) $course->id, 'course_version_id' => $versionId,
             'title' => $course->title, 'code' => 'default-v' . (int) $version->version_no, 'status' => 'open',
             'revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
             'created_at' => $now, 'modified_at' => $now];

@@ -35,15 +35,21 @@ $presentation = $this->item['presentation'] ?? [];
  <?php foreach ($this->item['teachers'] as $teacher) : ?><article id="jlms-course-teacher-<?= (int) $teacher['id'] ?>" class="jlms-course-teacher"><h3><?= $this->escape($teacher['title']) ?></h3>
  <?php if ($teacher['image'] !== '') : ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/',array_map('rawurlencode',explode('/',$teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php endif; ?>
  <p><?= nl2br($this->escape($teacher['bio'])) ?></p><?php if ($teacher['website'] !== '') : ?><a href="<?= $this->escape($teacher['website']) ?>" rel="noopener noreferrer"><?= Text::_('COM_JLMS_TEACHER_WEBSITE') ?></a><?php endif; ?></article><?php endforeach; ?></section><?php endif; ?>
+ <?php if (!empty($this->item['calendar'])) : $calendar=$this->item['calendar']; ?>
+ <section id="jlms-course-calendar"><h2><?= Text::_('COM_JLMS_CALENDAR') ?></h2><p><?= Text::_('COM_JLMS_CALENDAR_ZONE') ?>: <?= $this->escape($calendar['timezone']) ?></p><dl>
+ <?php foreach (['publish_up'=>'COM_JLMS_CALENDAR_PUBLISH_UP','publish_down'=>'COM_JLMS_CALENDAR_PUBLISH_DOWN','starts_at'=>'COM_JLMS_CALENDAR_START','ends_at'=>'COM_JLMS_CALENDAR_END'] as $key=>$label) : if ($calendar[$key]===null) { continue; } ?>
+ <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::display($calendar[$key],$calendar['timezone'],true)) ?></dd><?php endforeach; ?></dl>
+ <p><?= Text::_('COM_JLMS_CALENDAR_POLICY') ?></p></section><?php endif; ?>
  <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
   <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' . base64_encode('index.php?option=com_jlms&view=course&id=' . (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
- <?php elseif ($this->hasContentAccess && $course->enrollment_mode === 'auto') : ?>
+ <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'auto') : ?>
   <form id="jlms-start-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
    <input type="hidden" name="task" value="enrollment.start">
    <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
    <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_START_RESUME') ?></button>
   </form>
+ <?php elseif ($this->hasContentAccess && !$this->canStartWindow) : ?><p id="jlms-course-window-closed"><?= Text::_('COM_JLMS_CALENDAR_CLOSED') ?></p>
  <?php elseif ($this->hasContentAccess) : ?><p><?= Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php endif; ?></aside>
  <section id="jlms-course-outline"><h2><?= Text::_('COM_JLMS_CURRICULUM') ?></h2>
  <?php foreach ($this->item['modules'] as $module) : ?>
