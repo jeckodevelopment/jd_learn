@@ -55,3 +55,5 @@ Date facoltative di pubblicazione e fruizione, con fuso esplicito, UTC e snapsho
 La descrizione breve accetta fino a 500 caratteri. Un testo più lungo già salvato può essere mantenuto quando si aggiornano gli altri campi oppure abbreviato. In caso di alias duplicato, scegliere un alias diverso per la stessa categoria e lingua.
 
 Per pubblicare servono il permesso di cambiare stato sul corso (anche ereditato dalla categoria) e il permesso di eseguire la transizione Joomla assegnata.
+
+In Programma, Anteprima editoriale apre la versione selezionata. Gli editor possono sfogliare il programma e leggere il testo salvato. Video, quiz e materiali rimangono nell’aula, con i controlli di fruizione.
