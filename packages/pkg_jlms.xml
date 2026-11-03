@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="package" method="upgrade">
- <name>JD Learn</name><packagename>jlms</packagename><author>Jecko Development</author><version>0.26.2</version>
+ <name>JD Learn</name><packagename>jlms</packagename><author>Jecko Development</author><version>0.26.3</version>
  <description>JD Learn — development foundation</description><blockChildUninstall>true</blockChildUninstall>
  <files folder="constituents">
   <file type="library" id="jlms">lib_jlms.zip</file>
