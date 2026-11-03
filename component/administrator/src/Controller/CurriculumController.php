@@ -51,15 +51,29 @@ class CurriculumController extends BaseController
             }
             $this->setMessage(Text::_('COM_JLMS_CURRICULUM_SAVED'));
         } catch (\DomainException | \InvalidArgumentException $error) {
-            $key = $error->getMessage();
+            $key = match ($error->getMessage()) {
+                'SOURCE_INVALID' => 'COM_JLMS_SOURCE_INVALID',
+                'PROVIDER_UNAVAILABLE' => 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING',
+                default => $error->getMessage(),
+            };
             $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
                 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_INVALID_COURSE',
-                'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_VERSION_COPY_NOT_AVAILABLE', 'COM_JLMS_SOURCE_INVALID',
+                'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING', 'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_VERSION_COPY_NOT_AVAILABLE', 'COM_JLMS_SOURCE_INVALID',
                 'COM_JLMS_LESSON_KIND_NOT_AVAILABLE', 'COM_JLMS_MOVE_MODULE_NOT_AVAILABLE', 'COM_JLMS_ITEM_HAS_DEPENDENCIES', 'COM_JLMS_PUBLICATION_EMPTY', 'COM_JLMS_PUBLICATION_UNSUPPORTED', 'COM_JLMS_PUBLICATION_PLUGIN_REQUIRED', 'COM_JLMS_WORKFLOW_REJECTED', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_COURSE_IMAGE_INVALID', 'COM_JLMS_COURSE_IMAGE_ALT_REQUIRED', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
             $this->setMessage(Text::_(in_array($key, $known, true) ? $key : 'COM_JLMS_INVALID_INPUT'), 'error');
         } catch (\Throwable $error) {
-            Log::add('Curriculum mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
-            $this->setMessage(Text::_('COM_JLMS_SAVE_FAILED'), 'error');
+            $videoErrors = [
+                'COM_JLMS_VIDEO_CONFIGURATION', 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE',
+                'COM_JLMS_VIDEO_CREDENTIAL_REJECTED', 'COM_JLMS_VIDEO_REMOTE_NOT_FOUND',
+                'COM_JLMS_VIDEO_PROVIDER_BUSY', 'COM_JLMS_VIDEO_REMOTE_UNPROTECTED',
+                'COM_JLMS_VIDEO_REMOTE_NOT_READY', 'COM_JLMS_VIDEO_ORIGIN_REJECTED',
+            ];
+            if ($operation === 'transition' && $error instanceof \RuntimeException && in_array($error->getMessage(), $videoErrors, true)) {
+                $this->setMessage(Text::_($error->getMessage()), 'error');
+            } else {
+                Log::add('Curriculum mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+                $this->setMessage(Text::_('COM_JLMS_SAVE_FAILED'), 'error');
+            }
         }
         $target = $courseId ? 'index.php?option=com_jlms&view=curriculum&id=' . $courseId . '&version_id=' . $versionId
             : 'index.php?option=com_jlms&view=courses';

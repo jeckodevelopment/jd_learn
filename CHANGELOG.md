@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.2-dev — diagnostica video nel programma
+
+- Stato di configurazione dei quattro provider nel form lezione e accesso alle impostazioni native per operatori autorizzati.
+- Messaggi specifici per sorgenti non valide, provider non registrati e rifiuti del servizio Cloudflare Stream.
+
 ## 0.26.1-dev — pubblicazione delegata
 
 - Il workflow verifica il permesso di cambio stato sul singolo corso, con ereditarietà dalla categoria. Prova di prima pubblicazione HTTP con un operatore senza permesso globale.

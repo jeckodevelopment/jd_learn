@@ -1,5 +1,7 @@
 # Piano esecutivo residuo — stabilizzazione prima delle nuove funzioni
 
+Priorità attuale: gestione corsi e diagnosi dei provider video. Dopo la pubblicazione riuscita nel collaudo utente, verificare per ciascun provider il passaggio da configurazione e salvataggio della lezione alla riproduzione in aula. Riprodurre e correggere il blocco segnalato sul provider interessato prima degli incrementi di gestione non essenziali.
+
 Data:1novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
 
 ## Piano per incrementi fino alla versione stabile

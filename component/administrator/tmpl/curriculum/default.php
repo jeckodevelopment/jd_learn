@@ -120,6 +120,21 @@ $hidden = static function (array $fields): void {
   </form></section>
  <section class="col-lg-8"><h2><?= Text::_('COM_JLMS_LESSON_EDITOR') ?></h2>
  <?php if ($this->outline['modules']) : ?>
+  <details id="jlms-video-setup">
+   <summary><?= Text::_('COM_JLMS_VIDEO_EDITOR_SETUP') ?></summary>
+   <ul>
+   <?php foreach ($this->videoProviders as $label => $status) : ?>
+    <li><strong><?= $this->escape($label) ?></strong> — <?= Text::_($status) ?></li>
+   <?php endforeach; ?>
+   </ul>
+   <p><?= Text::_('COM_JLMS_VIDEO_EDITOR_INSTRUCTIONS') ?></p>
+   <?php if ($this->canManagePlugins) : ?>
+    <p><a href="<?= $link('index.php?option=com_plugins&filter[folder]=jlmsvideo') ?>"><?= Text::_('COM_JLMS_VIDEO_EDITOR_PLUGINS') ?></a></p>
+   <?php endif; ?>
+   <?php if ($this->canConfigureVideo) : ?>
+    <p><a href="<?= $link('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('COM_JLMS_VIDEO_EDITOR_OPTIONS') ?></a></p>
+   <?php endif; ?>
+  </details>
   <form id="jlms-lesson-form" class="form-validate" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
    <?= $this->lessonForm->renderFieldset('details') ?><input type="hidden" name="task" value="lesson.save">
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button>

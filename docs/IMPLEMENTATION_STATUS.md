@@ -1,12 +1,16 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 3 novembre 2026. Versione di sviluppo **0.26.1-dev**, con correzione del controllo ACL di pubblicazione; validazione editoriale 0.26 verificata nella CI41718537724 e integrata con PR28; permessi editor0.25 verificati nella CI41437667314 e integrati con PR27; calendario0.24 verificato nella CI41432090964 e integrato con PR26; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
+Aggiornamento: 3 novembre 2026. Versione di sviluppo **0.26.2-dev**, con diagnostica video nell’editor e correzione ACL di pubblicazione nella 0.26.1; validazione editoriale 0.26 verificata nella CI41718537724 e integrata con PR28; permessi editor0.25 verificati nella CI41437667314 e integrati con PR27; calendario0.24 verificato nella CI41432090964 e integrato con PR26; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
 La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1.0 nei loro nomi è storico. La [matrice corrente](REQUIREMENTS_STATUS.csv) riporta tutti i210requisiti della [matrice baseline](specifications/Matrice_requisiti_test_LMS_1.0.csv), senza modificarne descrizione, perimetro o scenari previsti.
 
-## Blocco segnalato nel collaudo utente
+## Priorità dal collaudo utente
+
+Il 3 novembre l’utente ha confermato di avere pubblicato il corso e ha segnalato un blocco nell’uso dei provider video. Il percorso di gestione dei corsi e la verifica dei video sul sito di collaudo hanno precedenza sugli incrementi non essenziali. La 0.26.2 mostra i prerequisiti locali nel Programma e messaggi video specifici. Restano da identificare il provider e l’errore sul sito.
+
+## Blocco di pubblicazione segnalato in precedenza
 
 **Priorità0: gestione corsi / prima pubblicazione, prima dell'import CSV.** L'utente segnala corsi che restano in bozza. L’utente precisa che manca proprio il comando di pubblicazione nell’interfaccia, anziché una transizione eseguita che fallisce. La CI0.20 verificava la pubblicazione via servizio e il ritiro/ripubblicazione HTTP, senza creare e pubblicare inizialmente un nuovo corso interamente dalle form native. Non dichiarare pertanto la gestione corsi completa o il difetto risolto.
 

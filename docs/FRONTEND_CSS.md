@@ -137,3 +137,5 @@ Editor: tab `#jlms-course-calendar`, fieldset calendar con controlli nativi. Fro
 ## Editor e permessi0.25
 
 Tab amministrativo `#jlms-course-permissions`, regione `#jlms-course-effective-rights`, link condizionale `#jlms-course-options-link` alle opzioni native. Il riepilogo usa un elenco di definizioni; esempio `#jlms-course-effective-rights dl { display: grid; gap: .5rem; }`. Negli override mantenere readOnly/checkedOutByOther, disabilitazione dei campi e toolbar coerente. Il selettore Coursecategory estende il campo Category nativo; non rimpiazzarlo con un elenco privo di controllo ACL. Nessuna modifica del contratto frontend studente.
+
+Nel layout amministrativo Programma, `#jlms-video-setup` identifica il riepilogo dei prerequisiti video vicino al form della lezione.
