@@ -133,10 +133,16 @@ final class PublicationService
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
-                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream', 'html5'], true) || $lesson->completion_rule !== 'video_coverage'
-                        || ($lesson->provider_key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) || (int) $lesson->duration_ms < 1000
-                        || (int) $lesson->duration_ms > 28800000 || ($params['video_duration_confirmed'] ?? false) !== true) {
+                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream', 'html5'], true)
+                        || $lesson->completion_rule !== 'video_coverage') {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                    }
+                    if ($lesson->provider_key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) {
+                        throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
+                    }
+                    if ((int) $lesson->duration_ms < 1000 || (int) $lesson->duration_ms > 28800000
+                        || ($params['video_duration_confirmed'] ?? false) !== true) {
+                        throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
                     }
                     if ($lesson->provider_key === 'html5') { $this->app->bootComponent('com_jlms')->getLocalVideoService()->assertReady($lesson); }
                     if ($lesson->provider_key === 'cloudflarestream') {
@@ -150,7 +156,10 @@ final class PublicationService
                     $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider($lesson->provider_key);
                     $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
                     $normal = $provider->normaliseSource(new \Jlms\Contracts\Video\SourceInput($source['reference'], $source['options'] ?? []));
-                    if (!$provider->getDescriptor()->configured || !$provider->getCapabilities($normal)->position) {
+                    if (!$provider->getDescriptor()->configured) {
+                        throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
+                    }
+                    if (!$provider->getCapabilities($normal)->position) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                 } else { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }

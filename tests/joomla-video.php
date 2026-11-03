@@ -95,6 +95,16 @@ $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Video chapter'
 $lesson=$authoring->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$module,'title'=>'Video lesson','kind'=>'video',
  'required'=>'1','provider_key'=>'youtube','source_reference'=>'dQw4w9WgXcQ','duration_seconds'=>'10','duration_confirmed'=>'1','body'=>'<p>Video description</p>']);
 $cr=(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult();
+$settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+$settings->set('video_external_policy', 'blocked');
+try {
+    $publication->transition($actor, $course, $version, $cr, $scope()['expected_version_revision'], (int) $publication->transitions($actor, $course)[0]->id);
+    throw new \RuntimeException('Blocked YouTube policy permitted publication');
+} catch (\DomainException $error) {
+    videoExpect($error->getMessage() === 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED', 'Blocked YouTube policy returns its own actionable error');
+} finally {
+    $settings->set('video_external_policy', 'click');
+}
 $publication->transition($actor,$course,$version,$cr,$scope()['expected_version_revision'],(int)$publication->transitions($actor,$course)[0]->id);
 $enrollment=$learning->start($student,'en-GB',$course,bin2hex(random_bytes(16)));
 $now=(int)floor(microtime(true)*1000);

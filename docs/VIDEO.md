@@ -2,6 +2,8 @@
 
 ## Configurazione e limiti attuali
 
+Nel Programma del corso, sotto Configurazione video, sono visibili lo stato di registrazione dei quattro provider, la configurazione della riproduzione e l’eventuale blocco per la politica dei video esterni. Gli operatori autorizzati possono aprire direttamente le opzioni Joomla. Lo stato configurato indica i controlli locali: la sorgente e la riproduzione vanno provate nell’aula.
+
 Il pacchetto base contiene i quattro plugin Joomla del gruppo `jlmsvideo`. YouTube e Vimeo includono adapter JavaScript per gli SDK ufficiali. Abilitare il plugin nel gestore Joomla e attivare `playback_enabled`; entrambi sono chiusi per impostazione iniziale. Dalla0.7 Cloudflare Stream supporta token temporanei in modalità API e rinnovo: vedere [CLOUDFLARE_STREAM.md](CLOUDFLARE_STREAM.md) per prerequisiti e limiti. Dalla0.8 HTML5 supporta MP4 privati con PHP limitato/Nginx: vedere [HTML5_VIDEO.md](HTML5_VIDEO.md). La firma locale Cloudflare resta chiusa. La presenza nel pacchetto non ne dichiara il completamento.
 
 Nelle opzioni del componente scegliere `video_external_policy`: `blocked` (predefinito), `click` oppure `site_consent`. Il player non viene avviato automaticamente. `click` richiede l'azione esplicita «Carica video»; non sostituisce la valutazione privacy del sito. `site_consent` richiede anche `window.JlmsConsent.isAllowed(providerKey) === true`. Il CMP del sito deve aggiornare questa funzione e inviare `window.dispatchEvent(new Event('jlms:consent-changed'))` a ogni cambiamento. La revoca ferma e distrugge il player. La dichiarazione di consenso inviata al server non costituisce una registrazione legale del consenso; l'eventuale registro rimane al sistema privacy del sito.

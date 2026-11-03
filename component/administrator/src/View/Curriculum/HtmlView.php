@@ -20,6 +20,9 @@ final class HtmlView extends BaseHtmlView
     public bool $canDelete = false;
     public array $transitions = [];
     public string $publicationNotice = '';
+    public array $videoProviders = [];
+    public bool $canConfigureVideo = false;
+    public bool $canManagePlugins = false;
 
     public function display($tpl = null)
     {
@@ -45,6 +48,26 @@ final class HtmlView extends BaseHtmlView
             }
         }
         if ($this->editable) {
+            $actor = $app->getIdentity();
+            $this->canConfigureVideo = $actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms');
+            $this->canManagePlugins = $actor->authorise('core.manage', 'com_plugins');
+            $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
+            $registered = [];
+            foreach ($app->bootComponent('com_jlms')->getCurriculumService()->providers() as $provider) {
+                $registered[$provider->key] = $provider->configured;
+            }
+            foreach (['youtube' => 'YouTube', 'vimeo' => 'Vimeo', 'cloudflarestream' => 'Cloudflare Stream', 'html5' => 'MP4'] as $key => $label) {
+                if (!array_key_exists($key, $registered)) {
+                    $status = 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING';
+                } elseif (!$registered[$key]) {
+                    $status = 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED';
+                } elseif ($key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) {
+                    $status = 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED';
+                } else {
+                    $status = 'COM_JLMS_VIDEO_EDITOR_CONFIGURED';
+                }
+                $this->videoProviders[$label] = $status;
+            }
             $this->moduleForm = $this->get('Form');
             $this->lessonForm = $this->get('LessonForm');
             $common = ['course_id' => $course->id, 'version_id' => $version->id,

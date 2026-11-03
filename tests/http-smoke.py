@@ -117,6 +117,10 @@ try:
  with http.open(urljoin(url,lesson_form['action']),data=urlencode(fields).encode(),timeout=20) as response:
   result=response.read().decode('utf-8')
  if 'HTTP text lesson' not in result:raise RuntimeError('Lesson was not saved through the authenticated MVC form')
+ setup=re.search(r'<details id="jlms-video-setup">(.*?)</details>',result,re.S)
+ if not setup or not all(f'<strong>{name}</strong>' in setup[1] for name in ['YouTube','Vimeo','Cloudflare Stream','MP4']):
+  raise RuntimeError('Draft editor must show configuration status for all shipped providers')
+ print(json.dumps({'video_editor_setup_http_checks':1,'status':'passed'}))
 
  # Editor diagnostics and delegated-category navigation over real HTTP.
  editor_fixture=json.loads((root.parent/'editor-access-fixture.json').read_text())
