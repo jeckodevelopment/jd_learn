@@ -126,6 +126,30 @@ $model->setCurrentUser($actor);
 editorExpect(!$model->save(array_replace($base,['title'=>'Trash category','alias'=>'trash-category','catid'=>$categories['trash']])),'Trashed category cannot accept course creation');
 $imageEdit=array_replace($base,['id'=>$courses['allowed1'],'revision'=>1,'title'=>'Editor allowed1','alias'=>'editor-allowed1','catid'=>$categories['allowed'],'presentation_image'=>'https://example.invalid/image.png','presentation_image_alt'=>'Cover']);
 editorExpect(!$model->save($imageEdit)&&$model->getError()===\Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_IMAGE_INVALID'),'Image validation retains actionable error');
+$validation = array_replace($base, [
+    'title' => 'Editorial validation fixture',
+    'alias' => 'editorial-validation-fixture',
+    'catid' => $categories['allowed'],
+    'summary' => str_repeat('è', 500),
+]);
+editorExpect($model->save($validation), '500 Unicode characters accepted without truncation');
+$validationId = (int) $model->getState('course.id');
+$validation['id'] = $validationId;
+editorExpect($model->getItem($validationId)->summary === $validation['summary'], 'Unicode summary stored verbatim');
+$tooLong = array_replace($validation, ['summary' => $validation['summary'] . 'è']);
+editorExpect(!$model->save($tooLong) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_SUMMARY_TOO_LONG'), '501 characters rejected with actionable message');
+editorExpect((int) $model->getItem($validationId)->revision === 1, 'Invalid summary does not increment revision');
+$duplicate = array_replace($validation, ['id' => 0, 'alias' => 'Editorial Validation Fixture']);
+editorExpect(!$model->save($duplicate) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_ALIAS_DUPLICATE'), 'Duplicate normalized alias rejected in the same category and language');
+editorExpect($model->save(array_replace($duplicate, ['catid' => $categories['other']])), 'Alias can be reused in another category');
+$legacy = str_repeat('è', 501) . "\nLegacy";
+$legacyRecord = (object) ['id' => $validationId, 'summary' => $legacy];
+$db->updateObject('#__jlms_courses', $legacyRecord, 'id');
+$validation['summary'] = str_replace("\n", "\r\n", $legacy);
+editorExpect($model->save($validation) && $model->getItem($validationId)->summary === $legacy, 'An unchanged legacy summary survives a normal browser round-trip');
+$validation['revision'] = 2;
+$validation['summary'] = 'Shortened description';
+editorExpect($model->save($validation) && $model->getItem($validationId)->summary === $validation['summary'], 'Legacy summary can be shortened');
 // Preserve one record grant after the category is no longer a creation destination.
 $asset->loadByName('com_jlms.course.'.$courses['own']);$rules=json_decode($asset->rules,true);$rules['core.edit'][(string)$group]=true;$asset->rules=json_encode($rules,JSON_THROW_ON_ERROR);$asset->store();
 $list->setCurrentUser(new \Joomla\CMS\User\User());
