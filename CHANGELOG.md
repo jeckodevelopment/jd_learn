@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.1-dev — caricamento SDK YouTube
+
+- Ripulisce il caricamento SDK fallito, consente un nuovo tentativo e distingue blocchi CSP, script indisponibile, video non incorporabile e identificazione del sito mancante.
+
 ## 0.27.0-dev — player integrato nell’aula
 
 - Il player appare all’apertura della lezione secondo la politica configurata dal gestore. Rimangono i controlli di riproduzione del player.
