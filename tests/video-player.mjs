@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-const source = await readFile(new URL('../component/media/js/video.js', import.meta.url), 'utf8');
+const source = (await readFile(new URL('../component/media/js/video.js', import.meta.url), 'utf8'))
+  .replace('import.meta.url', JSON.stringify('https://school.example/media/com_jlms/js/video.js'));
 const {VideoLesson} = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
 const listeners = new Map();
 globalThis.window = {addEventListener: (k,v) => listeners.set(k,v), removeEventListener: k => listeners.delete(k)};
 globalThis.document = {hidden:false, addEventListener(){},removeEventListener(){},getElementById(){return null;}};
-const elements = Object.fromEntries(['#jlms-player-status','#jlms-video-load','#jlms-video-stop','#jlms-player']
+const elements = Object.fromEntries(['#jlms-player-status','#jlms-player']
   .map(k => [k, {textContent:'',addEventListener(){},replaceChildren(){}}]));
 const root = {querySelector:k=>elements[k]};
 let calls = 0;
@@ -14,7 +15,7 @@ const config = {policy:'site_consent',provider:'youtube',enrollment:1,lesson:2,t
 const lesson = new VideoLesson(config,root,async () => { calls++; throw Error('unexpected remote load'); });
 await lesson.start(); assert.equal(calls,0); assert.equal(elements['#jlms-player-status'].textContent,'consent');
 window.JlmsConsent = {isAllowed:()=>false}; await lesson.start();assert.equal(calls,0);
-lesson.config.policy='click'; lesson.session={session_id:'session',source_revision:1,duration_ms:10000};
+lesson.config.policy='embed'; lesson.session={session_id:'session',source_revision:1,duration_ms:10000};
 lesson.duration=10000; lesson.stopped=false;
 lesson.queue=[{id:1,type:'play',position_ms:0,client_ms:0,rate_milli:1000,playing:true}];
 const bodies=[]; let attempt=0;
@@ -47,6 +48,28 @@ assert.equal(lesson.stopped, true);
 lesson.session = null;
 lesson.queue = [];
 await lesson.destroy();assert.equal(listeners.size,0);
+// The default browser transport keeps the global fetch receiver and loads the adapter after authorization.
+const originalFetch = globalThis.fetch;
+const startup = [];
+globalThis.fetch = async function (url) {
+  assert.equal(this, globalThis);
+  startup.push(url);
+  return {ok:true,json:async()=>({success:true,data:{provider:'youtube', session_id:'auto', duration_ms:10000, options:{}}})};
+};
+const automatic = new VideoLesson({...config, policy:'site_consent'}, root, undefined, async url => {
+  startup.push(url);
+  return {create:async()=>({sample:async()=>({position_ms:0,duration_ms:10000,rate_milli:1000,playing:false}),destroy(){}})};
+});
+await automatic.start();
+assert.deepEqual(startup, []);
+automatic.config.policy = 'embed';
+await automatic.start();
+assert.deepEqual(startup, ['/playback','https://school.example/media/plg_jlmsvideo_youtube/js/player.js']);
+assert.equal(automatic.stopped, false);
+await automatic.stop(false);
+automatic.session = null;
+await automatic.destroy();
+globalThis.fetch = originalFetch;
 console.log(JSON.stringify({video_player_checks:12,status:'passed',environment:'mock DOM/SDK transport; no live provider playback'}));
 // Exercise the local provider adapters against SDK doubles, including privacy parameters and cleanup.
 const moduleFromFile = async path => import('data:text/javascript;base64,' + Buffer.from(await readFile(path,'utf8')).toString('base64'));
@@ -103,7 +126,7 @@ const pendingCf=cf.create(box,{options:{domain:'customer-ci.cloudflarestream.com
 await new Promise(resolve=>setTimeout(resolve,0));cfAbort.abort();await assert.rejects(pendingCf,{name:'AbortError'});
 console.log(JSON.stringify({cloudflare_adapter_checks:6,status:'passed',environment:'Stream SDK double'}));
 // Renewal keeps the telemetry session and monotone event IDs while recreating only the remote iframe.
-const renewalConfig={...config,policy:'click',provider:'cloudflarestream',urls:{save:'/save',renew:'/renew',close:'/close'},labels:{...config.labels,renewed:'renewed'}};
+const renewalConfig={...config,policy:'embed',provider:'cloudflarestream',urls:{save:'/save',renew:'/renew',close:'/close'},labels:{...config.labels,renewed:'renewed'}};
 const renewal=new VideoLesson(renewalConfig,root);
 renewal.session={session_id:'same-session',source_revision:1,duration_ms:10000,options:{renew_after_seconds:40}};
 renewal.stopped=false;renewal.started=performance.now();renewal.aborter=new AbortController();

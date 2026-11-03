@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.0-dev — player integrato nell’aula
+
+- Il player appare all’apertura della lezione secondo la politica configurata dal gestore. Rimangono i controlli di riproduzione del player.
+- La precedente modalità esplicita richiede una scelta nelle opzioni. Sessione, modulo e provider hanno errori distinti.
+
 ## 0.26.3-dev — avvio player YouTube
 
 - Attende i metadati di YouTube prima di valutare la durata e registrare progressi. Mostra un messaggio distinto se il server rifiuta l’accesso al player.

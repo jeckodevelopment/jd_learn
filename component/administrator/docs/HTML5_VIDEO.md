@@ -44,7 +44,7 @@ Il controller autentica e autorizza, chiude la sessione Joomla ed emette un redi
 
 ## Accesso, Range e progresso
 
-Il descrittore viene richiesto dopo l'azione «Carica video» e contiene soltanto un URL del controller same-origin. Non espone percorso fisico o storage key; la lezione pubblica e il GET iniziale dell'aula non contengono l'URL media. I video locali non contattano provider esterni e funzionano anche con `video_external_policy=blocked`; restano necessari login/entitlement Joomla e caricamento esplicito.
+Il descrittore viene richiesto all’apertura della lezione autorizzata e contiene soltanto un URL del controller same-origin. Non espone percorso fisico o storage key; la lezione pubblica e il GET iniziale dell'aula non contengono l'URL media. I video locali non contattano provider esterni e funzionano anche con `video_external_policy=blocked`; restano necessari login/entitlement Joomla e caricamento esplicito.
 
 Endpoint: `GET/HEAD index.php?option=com_jlms&task=media.stream&format=raw&enrollment_id=...&lesson_id=...&source_revision=...`. L'identità deriva dalla sessione, non da ID utente o token URL. A ogni richiesta vengono verificati account, livelli/gruppi correnti, ownership, corso/versione/edizione, finestre, parent, plugin attivo, revisione, metadata/hash registrato, stato dell'asset e configurazione della consegna. Nessun credito viene attribuito dalla consegna del file.
 

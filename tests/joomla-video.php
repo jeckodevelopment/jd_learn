@@ -15,7 +15,7 @@ if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
     $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','click') WHERE type='component' AND element='com_jlms'");
+    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'");
     unset($fixtureDb);
 }
 
@@ -103,7 +103,7 @@ try {
 } catch (\DomainException $error) {
     videoExpect($error->getMessage() === 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED', 'Blocked YouTube policy returns its own actionable error');
 } finally {
-    $settings->set('video_external_policy', 'click');
+    $settings->set('video_external_policy', 'embed');
 }
 $publication->transition($actor,$course,$version,$cr,$scope()['expected_version_revision'],(int)$publication->transitions($actor,$course)[0]->id);
 $enrollment=$learning->start($student,'en-GB',$course,bin2hex(random_bytes(16)));

@@ -35,9 +35,6 @@ $currentModule = 0;
   <div id="jlms-lesson-body"><?= $selected->body /* HTML cleaned by the server-side core InputFilter. */ ?></div>
   <?php if ($selected->kind === 'video') : ?>
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
-   <p id="jlms-video-consent"><?= Text::_($selected->provider_key === 'html5' ? 'COM_JLMS_VIDEO_LOCAL_NOTICE' : 'COM_JLMS_VIDEO_CONSENT') ?></p>
-   <button id="jlms-video-load" class="btn btn-primary" type="button"><?= Text::_('COM_JLMS_VIDEO_LOAD') ?></button>
-   <button id="jlms-video-stop" class="btn btn-secondary" type="button" hidden><?= Text::_('COM_JLMS_VIDEO_STOP') ?></button>
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
   </section>

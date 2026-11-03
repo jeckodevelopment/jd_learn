@@ -137,7 +137,7 @@ final class PublicationService
                         || $lesson->completion_rule !== 'video_coverage') {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
-                    if ($lesson->provider_key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) {
+                    if ($lesson->provider_key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
                     }
                     if ((int) $lesson->duration_ms < 1000 || (int) $lesson->duration_ms > 28800000
