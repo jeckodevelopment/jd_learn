@@ -45,3 +45,5 @@ Il task `video.renew` e la verifica remota Cloudflare sono documentati in CLOUDF
 HTML5 usa la stessa sessione/protocollo dei progressi; consegna e policy locale sono documentate in HTML5_VIDEO.md. Il consenso ai provider esterni non blocca il video same-origin.
 
 YouTube può restituire durata zero prima di caricare i metadati. L’aula aspetta un campione valido prima di registrare progressi e applica il controllo di durata al primo campione disponibile.
+
+Per YouTube l’aula distingue il blocco CSP dello script, il mancato caricamento dell’SDK, il rifiuto dell’incorporamento e l’assenza dell’identificazione del sito. Il controllo avviene dopo l’autorizzazione al player; una risposta positiva della sessione non certifica la raggiungibilità del provider.

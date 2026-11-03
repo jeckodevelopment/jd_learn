@@ -1,4 +1,6 @@
 /** Local adapter modules contain no remote requests until create() after consent + server grant. */
+const providerErrors = new Set(['youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed']);
+
 export class VideoLesson {
   constructor(config, root, transport = (...args) => globalThis.fetch(...args), importer = path => import(path)) {
     this.config = config; this.root = root; this.transport = transport; this.importer = importer;
@@ -49,12 +51,14 @@ export class VideoLesson {
       this.session = grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
       this.started = performance.now(); this.previous = null; this.aborter = new AbortController();
       failure = 'startup_module';
-      const adapter = await this.importer(new URL(paths[grant.provider], import.meta.url).href);
+      const moduleUrl = new URL(paths[grant.provider], import.meta.url);
+      moduleUrl.search = new URL(import.meta.url).search;
+      const adapter = await this.importer(moduleUrl.href);
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
       this.adapter = adapter; this.stopped = false;
       failure = 'startup_provider';
-      const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, event => {
-        if (event === 'error') { this.message('startup_provider'); this.stop(false); }
+      const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => {
+        if (event === 'error') { this.message(providerErrors.has(reason) ? reason : 'startup_provider'); this.stop(false); }
         else this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
       }, this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
@@ -66,7 +70,7 @@ export class VideoLesson {
       this.schedule(); this.scheduleRenew(); this.message('ready');
     } catch (error) {
       if (generation === this.generation) {
-        this.message(error.status === 401 || error.status === 403 || error.status === 404 ? 'denied' : failure);
+        this.message(error.status === 401 || error.status === 403 || error.status === 404 ? 'denied' : providerErrors.has(error.message) ? error.message : failure);
         await this.stop(false);
       }
     }

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const source = (await readFile(new URL('../component/media/js/video.js', import.meta.url), 'utf8'))
-  .replace('import.meta.url', JSON.stringify('https://school.example/media/com_jlms/js/video.js'));
+  .replaceAll('import.meta.url', JSON.stringify('https://school.example/media/com_jlms/js/video.js'));
 const {VideoLesson} = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
 const listeners = new Map();
 globalThis.window = {addEventListener: (k,v) => listeners.set(k,v), removeEventListener: k => listeners.delete(k)};
@@ -74,6 +74,32 @@ console.log(JSON.stringify({video_player_checks:12,status:'passed',environment:'
 // Exercise the local provider adapters against SDK doubles, including privacy parameters and cleanup.
 const moduleFromFile = async path => import('data:text/javascript;base64,' + Buffer.from(await readFile(path,'utf8')).toString('base64'));
 const youtube = await moduleFromFile(new URL('../plugins/jlmsvideo/youtube/media/js/player.js',import.meta.url));
+// A browser can deny the external SDK before issuing a request.
+const securityListeners = new Map();
+const originalDocument = globalThis.document;
+const originalReady = globalThis.onYouTubeIframeAPIReady;
+let sdkAttempts = 0;
+delete globalThis.YT;
+globalThis.document = {
+  createElement: () => ({remove(){}}),
+  addEventListener: (type, callback) => securityListeners.set(type, callback),
+  removeEventListener: type => securityListeners.delete(type),
+  head: {append: script => {
+    sdkAttempts++;
+    queueMicrotask(() => {
+      if (sdkAttempts === 1) securityListeners.get('securitypolicyviolation')({
+        disposition:'enforce', blockedURI:'https://www.youtube.com',
+      });
+      else script.onerror();
+    });
+  }},
+};
+await assert.rejects(youtube.create({}, {}, () => {}), {message:'youtube_csp'});
+await assert.rejects(youtube.create({}, {}, () => {}), {message:'youtube_sdk'});
+assert.equal(sdkAttempts, 2);
+assert.equal(securityListeners.size, 0);
+assert.equal(globalThis.onYouTubeIframeAPIReady, originalReady);
+globalThis.document = originalDocument;
 let ytOptions, ytDestroyed=0;
 globalThis.location={origin:'https://school.example'};
 globalThis.YT={Player:class {
