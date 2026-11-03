@@ -47,3 +47,5 @@ HTML5 usa la stessa sessione/protocollo dei progressi; consegna e policy locale 
 YouTube può restituire durata zero prima di caricare i metadati. L’aula aspetta un campione valido prima di registrare progressi e applica il controllo di durata al primo campione disponibile.
 
 Per YouTube l’aula distingue il blocco CSP dello script, il mancato caricamento dell’SDK, il rifiuto dell’incorporamento e l’assenza dell’identificazione del sito. Il controllo avviene dopo l’autorizzazione al player; una risposta positiva della sessione non certifica la raggiungibilità del provider.
+
+L’adapter YouTube crea l’iframe con origine del sito e API abilitate, poi attende il caricamento prima di collegare l’SDK. L’iframe usa un referrer limitato all’origine del sito.

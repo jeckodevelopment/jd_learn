@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.2-dev — inizializzazione iframe YouTube
+
+- Crea l’iframe con URL e origine espliciti e attende la navigazione prima di collegare l’SDK. Il referrer dell’iframe contiene solo l’origine del sito.
+
 ## 0.27.1-dev — caricamento SDK YouTube
 
 - Ripulisce il caricamento SDK fallito, consente un nuovo tentativo e distingue blocchi CSP, script indisponibile, video non incorporabile e identificazione del sito mancante.

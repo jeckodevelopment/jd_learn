@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="jlmsvideo" method="upgrade">
- <name>PLG_JLMSVIDEO_YOUTUBE</name><author>Jecko Development</author><version>0.6.1</version>
+ <name>PLG_JLMSVIDEO_YOUTUBE</name><author>Jecko Development</author><version>0.6.2</version>
  <description>PLG_JLMSVIDEO_YOUTUBE_DESCRIPTION</description><namespace path="src">Jlms\Plugin\Jlmsvideo\Youtube</namespace>
  <files><folder plugin="youtube">services</folder><folder>src</folder><folder>language</folder><folder>docs</folder></files>
  <media destination="plg_jlmsvideo_youtube" folder="media"><folder>js</folder></media>
