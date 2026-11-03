@@ -278,6 +278,11 @@ final class CourseModel extends AdminModel
         return false;
     }
 
+    protected function canEditState($record)
+    {
+        return $this->getCurrentUser()->authorise('core.edit.state', 'com_jlms.course.' . (int) $record->id);
+    }
+
     public function publish(&$pks, $value = 1)
     {
         $service = Factory::getApplication()->bootComponent('com_jlms')->getPublicationService();

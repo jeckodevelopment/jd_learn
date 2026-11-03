@@ -153,6 +153,14 @@ try:
  stored=json.loads(subprocess.check_output(['php',str(Path(__file__).with_name('editor-http-fixture.php'))],text=True))
  if int(stored['catid'])!=editor_fixture['allowed_category'] or int(stored['revision'])!=1:
   raise RuntimeError('Forged category mutation changed the saved course')
+ # Publish through Joomla using the category grant, with no component-wide state permission.
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=curriculum&id='+str(editor_fixture['delegated']))
+ publication_form=next(f for f in Page(dh).forms if f['id']=='jlms-publication-form')
+ with delegated_http.open(urljoin(du,publication_form['action']),data=urlencode(publication_form['fields']).encode(),timeout=20) as response:
+  published_html=response.read().decode('utf-8')
+ if not re.search(r'<strong>Published</strong>',published_html):
+  raise RuntimeError('First publication failed for the category-scoped publisher')
+ print(json.dumps({'scoped_publication_http_checks':1,'status':'passed'}))
  print(json.dumps({'editor_access_http_checks':6,'status':'passed'}))
 
  # Exercise teacher creation through the native administrator form.
