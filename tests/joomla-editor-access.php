@@ -143,7 +143,8 @@ $duplicate = array_replace($validation, ['id' => 0, 'alias' => 'Editorial Valida
 editorExpect(!$model->save($duplicate) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_ALIAS_DUPLICATE'), 'Duplicate normalized alias rejected in the same category and language');
 editorExpect($model->save(array_replace($duplicate, ['catid' => $categories['other']])), 'Alias can be reused in another category');
 $legacy = str_repeat('è', 501) . "\nLegacy";
-$db->updateObject('#__jlms_courses', (object) ['id' => $validationId, 'summary' => $legacy], 'id');
+$legacyRecord = (object) ['id' => $validationId, 'summary' => $legacy];
+$db->updateObject('#__jlms_courses', $legacyRecord, 'id');
 $validation['summary'] = str_replace("\n", "\r\n", $legacy);
 editorExpect($model->save($validation) && $model->getItem($validationId)->summary === $legacy, 'An unchanged legacy summary survives a normal browser round-trip');
 $validation['revision'] = 2;
