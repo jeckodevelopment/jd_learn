@@ -117,6 +117,23 @@ try:
  with http.open(urljoin(url,lesson_form['action']),data=urlencode(fields).encode(),timeout=20) as response:
   result=response.read().decode('utf-8')
  if 'HTTP text lesson' not in result:raise RuntimeError('Lesson was not saved through the authenticated MVC form')
+ preview_link=next(link for link in Page(result).links if parse_qs(urlparse(link).query).get('view')==['coursepreview'])
+ preview_url,preview=get(preview_link)
+ if 'id="jlms-course-preview"' not in preview or 'HTTP text lesson' not in preview:
+  raise RuntimeError('Program link must open the correct editorial preview')
+ for link in Page(preview).links:
+  if parse_qs(urlparse(link).query).get('lesson_id'):
+   _,preview_lesson=get(link)
+   if 'Content saved through the native form' in preview_lesson:
+    break
+ else:raise RuntimeError('Preview must render the saved lesson content')
+ if 'id="jlms-course-preview-lesson"' not in preview_lesson or 'id="jlms-complete-form"' in preview_lesson or 'com_jlms.video' in preview_lesson:
+  raise RuntimeError('Editorial preview must not expose student actions or a player session')
+ try:
+  http.open(preview_url+'&lesson_id=2147483647',timeout=15)
+ except HTTPError as error:
+  if error.code!=404:raise
+ else:raise RuntimeError('An unknown lesson must not render a preview')
  setup=re.search(r'<details id="jlms-video-setup">(.*?)</details>',result,re.S)
  if not setup or not all(f'<strong>{name}</strong>' in setup[1] for name in ['YouTube','Vimeo','Cloudflare Stream','MP4']):
   raise RuntimeError('Draft editor must show configuration status for all shipped providers')
@@ -136,6 +153,12 @@ try:
  login_form=next(f for f in Page(dh).forms if 'username' in f['fields'] and 'passwd' in f['fields'])
  fields=dict(login_form['fields']);fields.update(username='cieditor',passwd='Ci-only-Editor-Password-2026')
  with delegated_http.open(urljoin(du,login_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ try:
+  delegated_get(preview_url)
+ except HTTPError as error:
+  if error.code!=403:raise
+ else:raise RuntimeError('An editor delegated elsewhere cannot preview the course')
+ print(json.dumps({'editorial_preview_http_checks':4,'status':'passed'}))
  du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
  if 'Editor allowed1' not in dh or 'Editor denied' in dh or 'Editor foreign' in dh or 'Editor other_owner' in dh:
   raise RuntimeError('Administrative course list leaked or omitted native delegated scope')

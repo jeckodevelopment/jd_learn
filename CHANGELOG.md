@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.28.0-dev — anteprima editoriale
+
+- Il Programma apre l’anteprima della versione selezionata. L’editor può consultare moduli e testo delle lezioni senza iscrizioni, riproduzione video, tentativi o progressi.
+
 ## 0.27.2-dev — inizializzazione iframe YouTube
 
 - Crea l’iframe con URL e origine espliciti e attende la navigazione prima di collegare l’SDK. Il referrer dell’iframe contiene solo l’origine del sito.

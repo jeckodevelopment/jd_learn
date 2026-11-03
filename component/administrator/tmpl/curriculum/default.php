@@ -42,6 +42,7 @@ $hidden = static function (array $fields): void {
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_CREATE_DRAFT_VERSION') ?></button>
   </form>
  <?php else : ?>
+ <p><a id="jlms-course-preview-link" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_COURSE_PREVIEW') ?></a></p>
  <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?> · <?= Text::_('COM_JLMS_REVISION') ?> <?= (int) $version->revision ?></p>
  <nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>">
  <?php foreach ($this->outline['versions'] as $entry) : ?>
