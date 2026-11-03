@@ -55,9 +55,15 @@ export class VideoLesson {
       this.player = player;
       if (grant.resume_ms) await player.seek(grant.resume_ms);
       await this.record('seeked');
+      if (this.stopped || generation !== this.generation) return;
       this.sampler = setInterval(() => this.record('position'), 1000);
       this.schedule(); this.scheduleRenew(); this.stopButton.hidden = false; this.message('ready');
-    } catch { this.message('error'); await this.stop(false); }
+    } catch (error) {
+      if (generation === this.generation) {
+        this.message(error.status === 401 || error.status === 403 || error.status === 404 ? 'denied' : 'error');
+        await this.stop(false);
+      }
+    }
     finally { this.starting = false; this.load.disabled = !this.stopped; }
   }
   record(type) {
@@ -65,6 +71,8 @@ export class VideoLesson {
       if (this.stopped || this.replacing || !this.player) return;
       const sample = await this.player.sample();
       if (this.stopped) return;
+      // YouTube returns zero until metadata loads, which can require the first play.
+      if (this.config.provider === 'youtube' && sample.duration_ms === 0) return;
       if (!Number.isInteger(sample.duration_ms) || sample.duration_ms < 1000
         || Math.abs(sample.duration_ms - this.session.duration_ms) > Math.max(1000, this.session.duration_ms / 200)) {
         this.message('duration'); await this.stop(false); return;

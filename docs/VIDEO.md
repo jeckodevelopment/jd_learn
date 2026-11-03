@@ -43,3 +43,5 @@ Documentazione primaria SDK: [YouTube IFrame API](https://developers.google.com/
 Il task `video.renew` e la verifica remota Cloudflare sono documentati in CLOUDFLARE_STREAM.md. Le sezioni0.6 descrivono il primo protocollo degli embed; TTL, doppio controllo di accesso e flusso di rinnovo introdotti nella0.7 si applicano ai descrittori a scadenza. Nessuna chiamata remota viene effettuata mentre sono detenuti lock di scrittura.
 
 HTML5 usa la stessa sessione/protocollo dei progressi; consegna e policy locale sono documentate in HTML5_VIDEO.md. Il consenso ai provider esterni non blocca il video same-origin.
+
+YouTube può restituire durata zero prima di caricare i metadati. L’aula aspetta un campione valido prima di registrare progressi e applica il controllo di durata al primo campione disponibile.

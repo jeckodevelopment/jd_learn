@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.3-dev — avvio player YouTube
+
+- Attende i metadati di YouTube prima di valutare la durata e registrare progressi. Mostra un messaggio distinto se il server rifiuta l’accesso al player.
+
 ## 0.26.2-dev — diagnostica video nel programma
 
 - Stato di configurazione dei quattro provider nel form lezione e accesso alle impostazioni native per operatori autorizzati.

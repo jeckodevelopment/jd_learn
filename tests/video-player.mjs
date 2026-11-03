@@ -29,6 +29,23 @@ await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue
 lesson.transport=async()=>({ok:false,status:403,json:async()=>({success:false})});
 let destroyed=0;lesson.player={destroy:async()=>destroyed++};
 await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1);
+// YouTube can be ready for commands before it knows the duration.
+lesson.session = {session_id:'youtube-test', source_revision:1, duration_ms:10000};
+lesson.stopped = false;
+lesson.queue = [];
+let duration = 0;
+lesson.player = {sample: async () => ({position_ms:0, duration_ms:duration, rate_milli:1000, playing:false})};
+await lesson.record('seeked');
+assert.equal(lesson.stopped, false);
+assert.equal(lesson.queue.length, 0);
+duration = 10000;
+await lesson.record('play');
+assert.equal(lesson.queue.length, 1);
+duration = 20000;
+await lesson.record('position');
+assert.equal(lesson.stopped, true);
+lesson.session = null;
+lesson.queue = [];
 await lesson.destroy();assert.equal(listeners.size,0);
 console.log(JSON.stringify({video_player_checks:12,status:'passed',environment:'mock DOM/SDK transport; no live provider playback'}));
 // Exercise the local provider adapters against SDK doubles, including privacy parameters and cleanup.
