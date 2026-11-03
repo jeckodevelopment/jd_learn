@@ -205,12 +205,23 @@ final class CourseModel extends AdminModel
                 if ((int) $record->state !== 0 || $record->current_version_id !== null) {
                     throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
                 }
-                if ((int) $record->catid !== (int) ($data['catid'] ?? 0)
+                if ((int) $record->catid !== (int) ($data['catid'] ?? $record->catid)
                     && !$user->authorise('core.create', 'com_jlms.course.category.' . (int) $data['catid'])) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
             } elseif (!$user->authorise('core.create', 'com_jlms.course.category.' . (int) ($data['catid'] ?? 0))) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
+            if (array_key_exists('summary', $data)) {
+                $summary = $data['summary'];
+                $previous = $record->summary ?? null;
+                if (is_string($summary) && is_string($previous)
+                    && str_replace(["\r\n", "\r"], "\n", $summary) === str_replace(["\r\n", "\r"], "\n", $previous)) {
+                    // Preserve the original bytes when the browser only changed line endings.
+                    unset($data['summary']);
+                } elseif (!is_string($summary) || \Joomla\String\StringHelper::strlen($summary) > 500) {
+                    throw new \DomainException('COM_JLMS_COURSE_SUMMARY_TOO_LONG');
+                }
             }
             $this->validateAssociations($data, $user, $id, $record);
             $teachers = null;
@@ -230,9 +241,12 @@ final class CourseModel extends AdminModel
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { unset($data[$field]); }
             $data=array_replace($data,$calendar);
             if (!parent::save($data)) {
-                $db->transactionRollback();
-                $this->setError(Text::_('COM_JLMS_SAVE_FAILED'));
-                return false;
+                $error = $this->getError();
+                $validationErrors = [
+                    'COM_JLMS_INVALID_COURSE', 'COM_JLMS_INVALID_ACCESS', 'COM_JLMS_COURSE_ALIAS_DUPLICATE',
+                    'JLIB_DATABASE_ERROR_CATEGORY_REQUIRED', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY',
+                ];
+                throw new \DomainException(in_array($error, $validationErrors, true) ? $error : 'COM_JLMS_SAVE_FAILED');
             }
             if ($teachers !== null) {
                 $q = $db->createQuery()->delete('#__jlms_course_teachers')->where('course_id=:course')->bind(':course',$id,ParameterType::INTEGER); $db->setQuery($q)->execute();
@@ -244,7 +258,9 @@ final class CourseModel extends AdminModel
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST','COM_JLMS_COURSE_CHECKED_OUT','COM_JLMS_COURSE_IMAGE_INVALID','COM_JLMS_COURSE_IMAGE_ALT_REQUIRED'];
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST','COM_JLMS_COURSE_CHECKED_OUT','COM_JLMS_COURSE_IMAGE_INVALID','COM_JLMS_COURSE_IMAGE_ALT_REQUIRED',
+                'COM_JLMS_COURSE_SUMMARY_TOO_LONG', 'COM_JLMS_COURSE_ALIAS_DUPLICATE', 'COM_JLMS_INVALID_COURSE',
+                'COM_JLMS_INVALID_ACCESS', 'JLIB_DATABASE_ERROR_CATEGORY_REQUIRED', 'COM_JLMS_SAVE_FAILED'];
             if (!in_array($error->getMessage(), $known, true)) {
                 // Private diagnostics omit SQL, values and exception messages.
                 try { \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms'); } catch (\Throwable) {}

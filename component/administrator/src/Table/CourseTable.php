@@ -71,6 +71,17 @@ final class CourseTable extends Table
                 return false;
             }
         }
+        $id = (int) $this->id;
+        $alias = (string) $this->alias;
+        $language = (string) $this->language;
+        $query = $db->createQuery()->select('id')->from($db->quoteName('#__jlms_courses'))
+            ->where('catid = :category AND language = :language AND alias = :alias AND id <> :id')
+            ->bind(':category', $catid, ParameterType::INTEGER)->bind(':language', $language)
+            ->bind(':alias', $alias)->bind(':id', $id, ParameterType::INTEGER);
+        if ($db->setQuery($query, 0, 1)->loadResult()) {
+            $this->setError('COM_JLMS_COURSE_ALIAS_DUPLICATE');
+            return false;
+        }
         return parent::check();
     }
 

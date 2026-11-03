@@ -51,3 +51,5 @@ Date facoltative di pubblicazione e fruizione, con fuso esplicito, UTC e snapsho
 ## Permessi effettivi e stato0.25
 
 [Guida al nuovo riepilogo, alle deleghe categoriali e ai blocchi](EDITOR_PERMISSIONS.md). Il riepilogo non sostituisce il workflow e non modifica i livelli degli studenti; le opzioni sono quelle native Joomla.
+
+La descrizione breve accetta fino a 500 caratteri. Un testo più lungo già salvato può essere mantenuto quando si aggiornano gli altri campi oppure abbreviato. In caso di alias duplicato, scegliere un alias diverso per la stessa categoria e lingua.

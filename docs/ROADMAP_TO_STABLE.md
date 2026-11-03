@@ -20,7 +20,11 @@ Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi ind
 | M12 — rilascio stabile | Pacchetto accettato e manutenibile | Tutti gli scenari obbligatori del rilascio1 collegati al build, nessun blocco aperto; patch corrente Joomla, installazione/upgrade, backup/ripristino, integrazione reale con estensione commerciale, guide, checksum, update server e procedura di supporto. |
 | M13 — differito | Conservare il perimetro successivo già concordato | NOT-03: promemoria inattività/comunicazioni di gruppo dopo rilascio1. Compiti/live/SCORM/xAPI/LTI e altre evoluzioni mantengono le fasi della specifica, non sono implicitamente incluse nel primo rilascio stabile. |
 
-## Incremento attivo: M01/c1 —0.25
+## Incremento attivo: M01/c2 —0.26
+
+Validazione della descrizione breve e diagnosi per alias duplicato. Restano la descrizione estesa obbligatoria alla pubblicazione e la gestione delle regole per corso. Fields e History sono tracciati in M10.
+
+## Incremento precedente: M01/c1 —0.25
 
 ACL e navigazione editor, deleghe categoriali, paginazione/cache, riepilogo/opzioni native e checkout. Nuove prove nella PR del build. Riesame dei residui M01 e successivo ciclo editoriale M02, senza promuovere automaticamente la fase ad accettata.
 

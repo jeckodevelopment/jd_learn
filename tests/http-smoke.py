@@ -85,6 +85,15 @@ try:
   if edit:break
  if not edit or 'jform[revision]' not in edit['fields'] or 'jform[alias]' not in edit['fields']:
   raise RuntimeError('Native draft editor/form controls did not render')
+ fields=dict(edit['fields']);fields.update({'task':'course.apply','jform[summary]':'è'*501})
+ with http.open(urljoin(url,edit['action']),data=urlencode(fields).encode(),timeout=20) as response:
+  invalid_html=response.read().decode('utf-8')
+ invalid=next(f for f in Page(invalid_html).forms if 'jform[summary]' in f['fields'])
+ if ('The short description must contain no more than 500 characters.' not in invalid_html
+     or invalid['fields']['jform[summary]']!='è'*501
+     or invalid['fields']['jform[revision]']!=edit['fields']['jform[revision]']):
+  raise RuntimeError('The editor must reject an overlong description and preserve the unsaved input')
+ print(json.dumps({'editor_summary_http_checks':1,'status':'passed'}))
  url,html=get('/administrator/index.php?option=com_jlms&view=courses')
  curriculum_links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('view')==['curriculum']]
  if not curriculum_links:raise RuntimeError('Curriculum navigation link missing')

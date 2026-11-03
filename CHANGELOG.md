@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.26.0-dev — validazione editoriale M01/c2
+
+- Limite di 500 caratteri per descrizioni brevi nuove o modificate, senza troncamento dei testi preesistenti.
+- Alias duplicati rilevati dopo normalizzazione, con messaggio specifico per categoria e lingua.
+- Prove native e HTTP per i limiti, la conservazione dei dati e i messaggi del modulo.
+
 ## 0.25.0-dev — permessi editor M01/c1
 
 - Elenco corsi con scope ACL nativo per-record prima di paginazione/totali, cache coerente dopo revoca e nessun filtro basato sul solo autore.
