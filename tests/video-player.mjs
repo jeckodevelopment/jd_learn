@@ -100,18 +100,29 @@ assert.equal(sdkAttempts, 2);
 assert.equal(securityListeners.size, 0);
 assert.equal(globalThis.onYouTubeIframeAPIReady, originalReady);
 globalThis.document = originalDocument;
-let ytOptions, ytDestroyed=0;
+let ytFrame, ytDestroyed=0;
 globalThis.location={origin:'https://school.example'};
 globalThis.YT={Player:class {
-  constructor(_slot,options){ytOptions=options;queueMicrotask(()=>options.events.onReady());}
+  constructor(frame,options){ytFrame=frame;queueMicrotask(()=>options.events.onReady());}
   getCurrentTime(){return 1.5;} getDuration(){return 10;}getPlaybackRate(){return 1;}getPlayerState(){return 1;}
   pauseVideo(){}seekTo(){}destroy(){ytDestroyed++;}
 }};
 const frames=[];
 document.createElement=tag=>({tag,dataset:{},remove(){},set src(value){this.url=value;},get src(){return this.url;}});
-const box={dataset:{title:'Lesson'},append:frame=>frames.push(frame)};
-const yt=await youtube.create(box,{options:{reference:'dQw4w9WgXcQ',locale:'it-IT'}},()=>{},new AbortController().signal);
-assert.equal(ytOptions.host,'https://www.youtube-nocookie.com');assert.equal(ytOptions.playerVars.autoplay,0);
+const box={dataset:{title:'Lesson'},append:frame=>{frames.push(frame);}};
+const youtubeBox = {...box, append: frame => {
+  box.append(frame);
+  assert.equal(ytFrame, undefined, 'SDK waits for iframe navigation');
+  queueMicrotask(() => frame.onload?.());
+}};
+const yt=await youtube.create(youtubeBox,{options:{reference:'dQw4w9WgXcQ',locale:'it-IT'}},()=>{},new AbortController().signal);
+const ytUrl = new URL(ytFrame.src);
+assert.equal(ytUrl.origin,'https://www.youtube-nocookie.com');
+assert.equal(ytUrl.pathname,'/embed/dQw4w9WgXcQ');
+assert.equal(ytUrl.searchParams.get('enablejsapi'),'1');
+assert.equal(ytUrl.searchParams.get('origin'),location.origin);
+assert.equal(ytUrl.searchParams.get('autoplay'),'0');
+assert.equal(ytFrame.referrerPolicy,'strict-origin');
 assert.equal((await yt.sample()).position_ms,1500);yt.destroy();assert.equal(ytDestroyed,1);
 const aborted=new AbortController();aborted.abort();await assert.rejects(youtube.create(box,{options:{}},()=>{},aborted.signal));
 const vimeo=await moduleFromFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url));
@@ -132,7 +143,7 @@ for (const [name,adapter] of [['YT',youtube],['Vimeo',vimeo]]) {
  const signal=new AbortController(); let made;
  if (name==='YT') globalThis.YT={Player:class{constructor(){made=true;}destroy(){}}};
  else globalThis.Vimeo={Player:class{constructor(){made=true;}ready(){return new Promise(()=>{});}destroy(){return Promise.resolve();}on(){}}};
- const result=adapter.create(box,{options:{reference:'12345',locale:'it-IT'}},()=>{},signal.signal);
+ const result=adapter.create({...box, append: frame => {box.append(frame); queueMicrotask(() => frame.onload?.());}}, {options:{reference:'12345',locale:'it-IT'}},()=>{},signal.signal);
  await new Promise(resolve=>setTimeout(resolve,0));assert.ok(made);signal.abort();
  await assert.rejects(result,{name:'AbortError'});
 }
