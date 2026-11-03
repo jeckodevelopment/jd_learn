@@ -36,7 +36,7 @@ final class VideoProgressService
     {
         $context = $this->learning->videoContext($identity, $language, $enrollmentId, $lessonId, $lock);
         $policy = ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
-        if ($context[3]->provider_key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403); }
+        if ($context[3]->provider_key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403); }
         try { $provider = $this->curriculum->videoProvider($context[3]->provider_key); }
         catch (\DomainException $error) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }
         if (!$provider->getDescriptor()->configured) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }

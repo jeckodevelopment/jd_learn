@@ -1,24 +1,26 @@
 /** Local adapter modules contain no remote requests until create() after consent + server grant. */
 export class VideoLesson {
-  constructor(config, root, transport = fetch, importer = path => import(path)) {
+  constructor(config, root, transport = (...args) => globalThis.fetch(...args), importer = path => import(path)) {
     this.config = config; this.root = root; this.transport = transport; this.importer = importer;
     this.queue = []; this.pending = null; this.id = 0; this.sequence = 1; this.stopped = true;
     this.chain = Promise.resolve(); this.generation = 0;
     this.status = root.querySelector('#jlms-player-status');
-    this.load = root.querySelector('#jlms-video-load'); this.stopButton = root.querySelector('#jlms-video-stop');
-    this.load.addEventListener('click', () => this.start());
-    this.stopButton.addEventListener('click', () => this.stop(true));
-    this.onConsent = () => { if (!this.allowed()) this.stop(true); };
+    this.onConsent = () => {
+      if (this.allowed()) this.start();
+      else { this.stop(true); this.message(this.config.policy === 'click' ? 'policy' : 'consent'); }
+    };
+    this.onPageShow = event => { if (event.persisted) this.start(); };
     this.onVisibility = () => { if (document.hidden) { this.player?.pause(); this.record('pause').then(() => this.flush()); } };
     this.onPageHide = () => { this.player?.pause(); this.flush(true); this.stop(false); };
     this.onOffline = () => { this.player?.pause(); this.message('offline'); };
     window.addEventListener('jlms:consent-changed', this.onConsent);
     window.addEventListener('pagehide', this.onPageHide);
+    window.addEventListener('pageshow', this.onPageShow);
     window.addEventListener('offline', this.onOffline);
     document.addEventListener('visibilitychange', this.onVisibility);
   }
   allowed() {
-    return this.config.provider === 'html5' || this.config.policy === 'click' || (this.config.policy === 'site_consent'
+    return this.config.provider === 'html5' || this.config.policy === 'embed' || (this.config.policy === 'site_consent'
       && window.JlmsConsent?.isAllowed(this.config.provider) === true);
   }
   message(key) { this.status.textContent = this.config.labels[key] || this.config.labels.error; }
@@ -35,8 +37,10 @@ export class VideoLesson {
   }
   async start() {
     if (!this.stopped || this.starting) return;
-    if (!this.allowed()) { this.message('consent'); return; }
-    const generation = ++this.generation; this.starting = true; this.load.disabled = true;
+    if (!this.allowed()) { this.message(this.config.policy === 'click' ? 'policy' : 'consent'); return; }
+    const generation = ++this.generation; this.starting = true;
+    let failure = 'startup_request';
+    this.message('loading');
     try {
       const grant = await this.request('playback', {consent: '1'});
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
@@ -44,11 +48,13 @@ export class VideoLesson {
       if (grant.provider !== this.config.provider || !paths[grant.provider]) throw new Error('provider');
       this.session = grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
       this.started = performance.now(); this.previous = null; this.aborter = new AbortController();
+      failure = 'startup_module';
       const adapter = await this.importer(new URL(paths[grant.provider], import.meta.url).href);
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
       this.adapter = adapter; this.stopped = false;
+      failure = 'startup_provider';
       const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, event => {
-        if (event === 'error') { this.message('error'); this.stop(false); }
+        if (event === 'error') { this.message('startup_provider'); this.stop(false); }
         else this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
       }, this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
@@ -57,14 +63,14 @@ export class VideoLesson {
       await this.record('seeked');
       if (this.stopped || generation !== this.generation) return;
       this.sampler = setInterval(() => this.record('position'), 1000);
-      this.schedule(); this.scheduleRenew(); this.stopButton.hidden = false; this.message('ready');
+      this.schedule(); this.scheduleRenew(); this.message('ready');
     } catch (error) {
       if (generation === this.generation) {
-        this.message(error.status === 401 || error.status === 403 || error.status === 404 ? 'denied' : 'error');
+        this.message(error.status === 401 || error.status === 403 || error.status === 404 ? 'denied' : failure);
         await this.stop(false);
       }
     }
-    finally { this.starting = false; this.load.disabled = !this.stopped; }
+    finally { this.starting = false; }
   }
   record(type) {
     this.chain = this.chain.then(async () => {
@@ -146,7 +152,6 @@ export class VideoLesson {
     const player = this.player; this.player = null;
     try { await player?.destroy(); } catch { /* Teardown must continue. */ }
     this.root.querySelector('#jlms-player').replaceChildren();
-    this.stopButton.hidden = true; this.load.disabled = false;
     // On explicit stop save already observed samples, then expire the server session.
     if (save && !this.saving && this.session) {
       await this.flush();
@@ -157,6 +162,7 @@ export class VideoLesson {
     await this.stop(true);
     window.removeEventListener('jlms:consent-changed', this.onConsent);
     window.removeEventListener('pagehide', this.onPageHide);
+    window.removeEventListener('pageshow', this.onPageShow);
     window.removeEventListener('offline', this.onOffline);
     document.removeEventListener('visibilitychange', this.onVisibility);
   }
@@ -164,5 +170,5 @@ export class VideoLesson {
 if (typeof document !== 'undefined') {
   const config = globalThis.Joomla?.getOptions('com_jlms.video');
   const root = document.getElementById('jlms-video-region');
-  if (config && root) new VideoLesson(config, root);
+  if (config && root) new VideoLesson(config, root).start();
 }

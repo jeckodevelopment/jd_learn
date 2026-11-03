@@ -61,7 +61,7 @@ final class HtmlView extends BaseHtmlView
                     $status = 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING';
                 } elseif (!$registered[$key]) {
                     $status = 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED';
-                } elseif ($key !== 'html5' && !in_array($policy, ['click', 'site_consent'], true)) {
+                } elseif ($key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) {
                     $status = 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED';
                 } else {
                     $status = 'COM_JLMS_VIDEO_EDITOR_CONFIGURED';

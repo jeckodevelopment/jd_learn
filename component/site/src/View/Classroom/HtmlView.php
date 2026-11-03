@@ -25,8 +25,8 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         if ($this->item['lesson']->kind === 'video') {
             $labels = [];
-            foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed'] as $key) {
-                $labels[$key] = \Joomla\CMS\Language\Text::_(implode('_', ['COM', 'JLMS', 'VIDEO', strtoupper($key)]));
+            foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider'] as $key) {
+                $labels[$key] = \Joomla\CMS\Language\Text::_(implode('_', ['COM', 'JLMS', 'VIDEO', strtoupper($key === 'consent' ? 'consent_required' : $key)]));
             }
             $urls = [];
             foreach (['playback', 'save', 'renew', 'close'] as $task) {

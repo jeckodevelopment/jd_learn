@@ -52,6 +52,7 @@ try:
  direct='/index.php?option=com_jlms&view=classroom&id='+str(fixture['enrollment_id'])+'&lesson_id='+str(fixture['lesson_id'])
  _,html=request(student,direct)
  expect('id="jlms-video-region"' in html and 'id="jlms-complete-form"' not in html,'Video classroom has player region and no manual completion')
+ expect('id="jlms-video-load"' not in html and 'id="jlms-video-stop"' not in html,'Classroom renders native player controls without JD Learn load or stop buttons')
  expect('dQw4w9WgXcQ' not in html and 'youtube.com/iframe_api' not in html,'Classroom HTML contains no media reference or remote SDK')
  options=None
  for script in re.findall(r'<script[^>]*>(.*?)</script>',html,re.S):
