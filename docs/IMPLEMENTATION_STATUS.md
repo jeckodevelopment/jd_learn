@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 3 novembre 2026. Versione di sviluppo **0.26.0-dev**, con validazione editoriale M01/c2; permessi editor0.25 verificati nella CI41437667314 e integrati con PR27; calendario0.24 verificato nella CI41432090964 e integrato con PR26; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
+Aggiornamento: 3 novembre 2026. Versione di sviluppo **0.26.1-dev**, con correzione del controllo ACL di pubblicazione; validazione editoriale 0.26 verificata nella CI41718537724 e integrata con PR28; permessi editor0.25 verificati nella CI41437667314 e integrati con PR27; calendario0.24 verificato nella CI41432090964 e integrato con PR26; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 

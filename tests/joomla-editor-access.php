@@ -152,6 +152,31 @@ $validation['summary'] = 'Shortened description';
 editorExpect($model->save($validation) && $model->getItem($validationId)->summary === $validation['summary'], 'Legacy summary can be shortened');
 // Preserve one record grant after the category is no longer a creation destination.
 $asset->loadByName('com_jlms.course.'.$courses['own']);$rules=json_decode($asset->rules,true);$rules['core.edit'][(string)$group]=true;$asset->rules=json_encode($rules,JSON_THROW_ON_ERROR);$asset->store();
+// Build a first-publication fixture whose editor has only category-level state rights.
+$asset->loadByName('com_jlms.course.category.' . $categories['allowed']);
+$rules = json_decode($asset->rules, true);
+$rules['core.edit.state'][(string) $group] = true;
+$asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
+$asset->store();
+$versionId = $authoring->createDraft($actor, $delegated, 1);
+$scope = ['course_id' => $delegated, 'version_id' => $versionId, 'expected_version_revision' => 1];
+$moduleId = $authoring->saveModule($actor, $scope + ['id' => 0, 'title' => 'Delegated chapter']);
+$scope['expected_version_revision']++;
+$authoring->saveLesson($actor, $scope + [
+    'id' => 0, 'module_id' => $moduleId, 'title' => 'Delegated lesson',
+    'kind' => 'text', 'required' => '1', 'body' => '<p>Lesson content</p>',
+]);
+$transitionId = (int) $publication->transitions($actor, $delegated)[0]->id;
+$asset->loadByName('com_jlms.transition.' . $transitionId);
+$rules = json_decode($asset->rules, true);
+$rules['core.execute.transition'][(string) $group] = true;
+$asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
+$asset->store();
+$user = EditorAccess::fresh($user);
+editorExpect(!$user->authorise('core.edit.state', 'com_jlms')
+    && $user->authorise('core.edit.state', 'com_jlms.course.' . $delegated)
+    && $user->authorise('core.execute.transition', 'com_jlms.transition.' . $transitionId),
+    'Publisher fixture has scoped rights only');
 $list->setCurrentUser(new \Joomla\CMS\User\User());
 try{$items=$list->getItems();editorExpect($items===false,'Anonymous administration does not return course metadata');}catch(RuntimeException $error){editorExpect($error->getCode()===403,'Anonymous administration denied');}
 file_put_contents($fixture,json_encode(['user'=>(int)$user->id,'group'=>$group,'backend'=>$backend,'allowed'=>$courses['allowed1'],'denied'=>$courses['denied'],'owned'=>$courses['own'],'locked'=>$courses['locked'],'allowed_category'=>$categories['allowed'],'other_category'=>$categories['other'],'delegated'=>$delegated],JSON_THROW_ON_ERROR));

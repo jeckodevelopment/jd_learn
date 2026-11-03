@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.1-dev — pubblicazione delegata
+
+- Il workflow verifica il permesso di cambio stato sul singolo corso, con ereditarietà dalla categoria. Prova di prima pubblicazione HTTP con un operatore senza permesso globale.
+
 ## 0.26.0-dev — validazione editoriale M01/c2
 
 - Limite di 500 caratteri per descrizioni brevi nuove o modificate, senza troncamento dei testi preesistenti.
