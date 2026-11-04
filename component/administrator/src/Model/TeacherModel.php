@@ -18,7 +18,19 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
     { return (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('save_history', 1); }
 
     public $typeAlias = 'com_jlms.teacher';
-    public function getForm($data = [], $loadData = true) { return $this->loadForm('com_jlms.teacher', 'teacher', ['control' => 'jform', 'load_data' => $loadData]); }
+    public function getForm($data = [], $loadData = true)
+    {
+        $form = $this->loadForm('com_jlms.teacher', JPATH_ADMINISTRATOR . '/components/com_jlms/forms/teacher.xml',
+            ['control' => 'jform', 'load_data' => $loadData]);
+        if ($form && !$this->getCurrentUser()->authorise('jlms.teachers.manage', 'com_jlms')) {
+            foreach (['user_id', 'state', 'access', 'language'] as $field) {
+                $form->setFieldAttribute($field, 'disabled', 'true');
+                $form->setFieldAttribute($field, 'required', 'false');
+                $form->setFieldAttribute($field, 'filter', 'unset');
+            }
+        }
+        return $form;
+    }
     protected function loadFormData() { return Factory::getApplication()->getUserState(Factory::getApplication()->isClient('site') ? 'com_jlms.edit.teacheredit.data' : 'com_jlms.edit.teacher.data', []) ?: $this->getItem(); }
     public function getItem($pk = null)
     {

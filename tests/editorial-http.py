@@ -5,7 +5,7 @@ from urllib.request import build_opener,HTTPCookieProcessor
 from urllib.error import HTTPError
 from urllib.parse import urljoin,urlencode,urlparse,parse_qs
 from http.cookiejar import CookieJar
-import json,subprocess,sys,os,time
+import json,subprocess,sys,os,time,re
 root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable site required')
 fixture=json.loads((root.parent/'editorial-fixture.json').read_text())
@@ -64,6 +64,6 @@ try:
  expect('jform[catid]' not in form['fields'] and 'jform[user_id]' not in form['fields'],'Own profile editor hides category and protected account binding')
  fields=dict(form['fields']);fields.update({'task':'teacher.save','jform[bio]':'Profile edited from the public page','jform[com_fields][teaching-contact]':'frontend@example.invalid'})
  _,html=request(urljoin(url,form['action']),fields)
- expect('Profile edited from the public page' in html and 'frontend@example.invalid' in html,'Linked teacher saves their profile and native field from the frontend')
+ expect('Profile edited from the public page' in html and 'frontend@example.invalid' in html,'Linked teacher saves their profile and native field from the frontend: '+re.sub(r'\s+',' ',re.sub(r'<[^>]*>',' ',html))[:10000])
  print(json.dumps({'editorial_http_checks':checks,'status':'passed'}))
 finally:server.terminate();server.wait(timeout=5)
