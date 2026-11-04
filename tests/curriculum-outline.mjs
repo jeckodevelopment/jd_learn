@@ -28,7 +28,7 @@ for (const success of [false,true]) {
  const list={dataset:{sortKind:'module',moduleId:'0'},children:[],append(item){this.children=this.children.filter(x=>x!==item);this.children.push(item);}};
  const row=id=>({dataset:{itemId:id},parentElement:list,hasAttribute:name=>name==='data-item-id',classList:{add(){},remove(){}},getBoundingClientRect:()=>({top:0,height:100}),closest(){return this;}});
  const a=row('1'),b=row('2');list.children=[a,b];
- const root={querySelector:s=>s==='#jlms-reorder-form'?form:status,addEventListener:(type,callback)=>{listeners[type]=callback;},setAttribute(){},removeAttribute(){}};
+ const root={dataset:{editorMode:''},classList:{add(){}},querySelector:s=>s==='#jlms-reorder-form'?form:status,addEventListener:(type,callback)=>{listeners[type]=callback;},setAttribute(){},removeAttribute(){}};
  globalThis.document={createElement:()=>({})};globalThis.location={href:'https://example.invalid/programme'};
  let reloaded=0;
  initOutline(root,()=>{reloaded++;},async()=>({ok:success,json:async()=>({success,data:{revision:5}})}));
@@ -42,4 +42,7 @@ for (const success of [false,true]) {
  listeners.dragstart({target:{closest:()=>handle},dataTransfer:{setData(){}},preventDefault(){}});
  const before=list.children.slice();await listeners.drop({target:{closest:()=>outsider},clientY:99,preventDefault(){throw Error('foreign drop intercepted');}});equal(list.children,before);
 }
+let boundWhileEditing=false;
+initOutline({dataset:{editorMode:'lesson'},querySelector:()=>form,addEventListener(){boundWhileEditing=true;}});
+equal(boundWhileEditing,false);
 console.log(JSON.stringify({curriculum_outline_checks:checks,status:'passed'}));

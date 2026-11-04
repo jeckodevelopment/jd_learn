@@ -41,7 +41,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     </ul></details><?php
 };
 ?>
-<section id="jlms-admin-curriculum" data-revision="<?= $version ? (int) $version->revision : 0 ?>">
+<section id="jlms-admin-curriculum" data-editor-mode="<?= $this->escape($this->editorMode) ?>" data-revision="<?= $version ? (int) $version->revision : 0 ?>">
  <header class="jlms-programme-header">
   <a href="<?= $link('index.php?option=com_jlms&task=course.edit&id=' . (int) $course->id) ?>"><?= Text::_('COM_JLMS_PROGRAMME_BACK_COURSE') ?></a>
   <h1><?= $this->escape($course->title) ?></h1>

@@ -13,7 +13,7 @@
 #jlms-admin-curriculum .jlms-programme-lessons > li { display: flex; align-items: center; gap: .75rem; padding: .8rem .25rem; border-bottom: 1px solid var(--border-color, #dee2e6); }
 #jlms-admin-curriculum .jlms-lesson-label { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 #jlms-admin-curriculum .jlms-lesson-title { font-weight: 600; }
-#jlms-admin-curriculum .jlms-drag-handle { cursor: grab; flex-shrink: 0; min-width: 2.75rem; min-height: 2.75rem; }
+#jlms-admin-curriculum .jlms-drag-handle { display: none; cursor: grab; flex-shrink: 0; min-width: 2.75rem; min-height: 2.75rem; }
 #jlms-admin-curriculum .jlms-dragging { opacity: .5; }
 #jlms-admin-curriculum .jlms-item-menu { position: relative; flex-shrink: 0; }
 #jlms-admin-curriculum .jlms-item-menu > summary { padding: .6rem; cursor: pointer; }
@@ -31,3 +31,5 @@
  #jlms-admin-curriculum .jlms-lesson-label { min-width: 10rem; }
  #jlms-admin-curriculum .jlms-item-menu ul { max-width: 85vw; }
 }
+
+#jlms-admin-curriculum.jlms-sort-enabled .jlms-drag-handle { display: inline-block; }

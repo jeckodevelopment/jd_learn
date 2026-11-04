@@ -22,7 +22,9 @@ export async function persistOrder(form, group, order, transport = fetch) {
 
 export function initOutline(root, reload = () => location.reload(), transport = fetch) {
     const form = root.querySelector('#jlms-reorder-form');
-    if (!form) return;
+    if (!form || root.dataset.editorMode) return;
+    // Reordering reloads record revisions; keep it out of a form with unsaved input.
+    root.classList.add('jlms-sort-enabled');
     const status = root.querySelector('#jlms-order-status');
     let source = null, busy = false;
     const items = group => Array.from(group.children).filter(item => item.hasAttribute('data-item-id'));
