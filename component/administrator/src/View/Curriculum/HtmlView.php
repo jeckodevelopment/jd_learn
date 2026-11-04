@@ -148,6 +148,7 @@ final class HtmlView extends BaseHtmlView
                 $app->setUserState($stateKey, null);
                 $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0) : (int) ($lessonData['id'] ?? 0);
                 if (is_array($saved) && (int) ($saved['id'] ?? -1) === $expectedId) {
+                    $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value));
                     $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_seconds','duration_confirmed','required','kind']));
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }

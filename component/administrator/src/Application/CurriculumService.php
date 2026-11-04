@@ -426,6 +426,11 @@ final class CurriculumService
     public function saveOrder(User $identity, array $input): int
     {
         $actor = CourseEditorAccess::fresh($identity);
+        if (array_key_exists('order_json', $input)) {
+            if (!is_string($input['order_json']) || strlen($input['order_json']) > 65536) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+            try { $input['order'] = json_decode($input['order_json'], true, 16, JSON_THROW_ON_ERROR); }
+            catch (\JsonException) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        }
         $kind = $input['kind'] ?? '';
         if (!in_array($kind, ['module', 'lesson'], true) || !is_array($input['order'] ?? null)
             || !array_is_list($input['order']) || count($input['order']) > ($kind === 'module' ? 1000 : 5000)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }

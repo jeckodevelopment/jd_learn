@@ -107,6 +107,8 @@ builderExpect($revision===(int)$stale['expected_version_revision']+1,'One versio
 builderExpect(array_map(static fn($m): int => (int)$m->id,$service->outline($actor,$course,$version)['modules'])===$order,'Persisted module order matches the submitted exact permutation');
 builderDenied(fn()=>$service->saveOrder($actor,$stale),'COM_JLMS_REVISION_CONFLICT');
 $stable=builderSnapshot($course,$version);
+builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order_json'=>'{invalid']),'COM_JLMS_INVALID_INPUT');
+builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order_json'=>'null']),'COM_JLMS_INVALID_INPUT');
 builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>[$m1,$m1]]),'COM_JLMS_INVALID_INPUT');
 builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>[$m1]]),'COM_JLMS_REVISION_CONFLICT');
 builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>array_merge($ids,[2147483647])]),'COM_JLMS_REVISION_CONFLICT');

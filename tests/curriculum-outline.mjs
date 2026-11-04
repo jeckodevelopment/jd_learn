@@ -16,7 +16,7 @@ const group={dataset:{sortKind:'lesson',moduleId:'10'}};
 const transport=async (url, options) => {
  equal(url,form.action);equal(options.credentials,'same-origin');
  equal(options.body.get('nativeToken'),'1');equal(options.body.get('jform[expected_version_revision]'),'4');
- equal(options.body.getAll('jform[order][]'),['2','1']);equal(options.body.get('jform[module_id]'),'10');equal(options.body.get('task'),'curriculum.saveOrder');
+ equal(JSON.parse(options.body.get('jform[order_json]')),['2','1']);equal(options.body.get('jform[module_id]'),'10');equal(options.body.get('task'),'curriculum.saveOrder');
  return {ok:true,json:async()=>({success:true,data:{revision:5}})};
 };
 equal(await persistOrder(form,group,['2','1'],transport),5);

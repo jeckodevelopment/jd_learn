@@ -79,7 +79,7 @@ try:
   request('/administrator/index.php?option=com_jlms',{'task':task,'format':'json'},expected=403)
  # Exact full permutation uses CAS; replay and forged membership cannot change data.
  orderform=form(html,'module.reorder');ids=modules(html);fields=orderform['fields']|{'task':'curriculum.saveOrder','format':'json','jform[kind]':'module'}
- fields.update({'jform[order]['+str(i)+']':id for i,id in enumerate(reversed(ids))})
+ fields['jform[order_json]']=json.dumps(list(reversed(ids)))
  _,body=request(orderform['action'],fields);result=json.loads(body)
  expect(result['success'] is True and result['data']['revision']>int(fields['jform[expected_version_revision]']),'JSON order saves with a fresh version revision')
  _,html=request(path);expect(modules(html)==list(reversed(ids)),'Reordered outline is persisted in server output')

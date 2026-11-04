@@ -12,10 +12,11 @@ export async function persistOrder(form, group, order, transport = fetch) {
     fields.set('format', 'json');
     fields.set('jform[kind]', group.dataset.sortKind);
     fields.set('jform[module_id]', group.dataset.moduleId);
-    order.forEach(id => fields.append('jform[order][]', id));
+    // One bounded JSON value avoids PHP max_input_vars truncating large sibling lists.
+    fields.set('jform[order_json]', JSON.stringify(order));
     const response = await transport(form.action, {method: 'POST', body: fields, credentials: 'same-origin', headers: {Accept: 'application/json'}});
     const result = await response.json();
-    if (!response.ok || result.success !== true || !Number.isSafeInteger(Number(result.data?.revision))) throw new Error('ORDER_NOT_SAVED');
+    if (!response.ok || result.success !== true || (!Number.isSafeInteger(result.data?.revision) || result.data.revision < 1)) throw new Error('ORDER_NOT_SAVED');
     return result.data.revision;
 }
 
