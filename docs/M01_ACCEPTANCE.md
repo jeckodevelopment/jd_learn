@@ -1,6 +1,6 @@
 # M01 — criteri di chiusura e prossimo incremento
 
-Aggiornato il4novembre2026. Fonte: specifica funzionale1.4 e RF-2026-11-04. Requisiti primari M01: AUT-01, AUT-05, SCR-13. Le dipendenze M02, M03, M08 e M10 non eliminano i criteri da soddisfare. M01 **non è chiuso**: mancano ancora funzioni e collaudi, non soltanto la conferma dell’utente.
+Aggiornato il4novembre2026. Fonte: specifica funzionale1.5 e RF-2026-11-04. Requisiti primari M01: AUT-01, AUT-05, SCR-13. Le dipendenze M02, M03, M08 e M10 non eliminano i criteri da soddisfare. M01 **non è chiuso**: mancano ancora funzioni e collaudi, non soltanto la conferma dell’utente.
 
 Il build0.31 è integrato con PR38 e verificato nei4ambienti della [CI41819674307](https://github.com/jeckodevelopment/jd_learn/actions/runs/41819674307). La tabella distingue le prove di quel sottoinsieme dalla copertura completa dei criteri.
 
@@ -32,3 +32,7 @@ Completare ordinamento con trascinamento e alternativa tastiera e verificare per
 ## Priorità M01/h0.33 — revisione amministrativa richiesta
 
 L’utente chiede una vista simile alla gestione articoli. Elenco nativo con filtri/toolbar e form compatto, più Salva e apri programma, sono implementati nel sottoinsieme0.33. Verifiche effettive nella CI della PR; completare AC-126 su browser, mobile e tastiera. Il riordino del programma resta nel passaggio M01/i e non è sostituito da questo intervento.
+
+## Incremento M01/i0.34 — ricostruzione del programma
+
+RF-2026-11-04-C/AC-127: scaletta contestuale, moduli espandibili, lezioni cliccabili ed editor singolo; aggiunta nel modulo e materiali della lezione selezionata. Riordino drag con permutazione atomica/CAS, rollback visivo su errore, Su/Giù con POST nativo anche senza JS; spostamento tra moduli della bozza conservando riferimenti. Le nuove suite coprono servizio nativo, navigazione/form/JSON HTTP, handler JS con trasporto controllato e conservazione dopo upgrade. Esiti effettivi nella PR del build. Restano collaudo browser/mobile/tastiera reale, accessibilità e combinazioni complete AC-96/127; proseguire sulle altre righe residue. Nessuna chiusura automatica di M01.

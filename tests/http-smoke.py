@@ -104,14 +104,17 @@ try:
   u,h=get(link)
   if 'Curriculum fixture' in h:chosen=(u,h);break
  if not chosen:raise RuntimeError('Curriculum fixture screen absent')
- url,html=chosen
+ module_link=next(x for x in Page(chosen[1]).links if parse_qs(urlparse(x).query).get('new_module')==['1'])
+ url,html=get(module_link)
  form=next((f for f in Page(html).forms if f['id']=='jlms-module-form'),None)
  if not form:raise RuntimeError('Native module editor missing')
  fields=dict(form['fields']);fields['jform[title]']='HTTP chapter'
  with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
   result=response.read().decode('utf-8')
  if 'HTTP chapter' not in result:raise RuntimeError('Module was not saved through the authenticated MVC form')
- if 'id="jlms-lesson-form"' not in result:raise RuntimeError('Native lesson editor missing')
+ lesson_link=next(x for x in Page(result).links if parse_qs(urlparse(x).query).get('new_lesson')==['1'])
+ url,result=get(lesson_link)
+ if 'id="jlms-lesson-form"' not in result:raise RuntimeError('Contextual native lesson editor missing')
  lesson_form=next(f for f in Page(result).forms if f['id']=='jlms-lesson-form')
  fields=dict(lesson_form['fields']);fields.update({'jform[title]':'HTTP text lesson','jform[kind]':'text','jform[required]':'1',
   'jform[module_id]':re.search(r'data-module-id="([1-9][0-9]*)"',result).group(1),'jform[body]':'<p>Content saved through the native form</p>'})
@@ -334,6 +337,8 @@ try:
  u,h=submit(u,form,{'jform[transition_id]':transition})
  expect(fixture()==before,'Empty initial programme cannot publish or create an edition')
  form=next(f for f in Page(h).forms if f['id']=='jlms-module-form');u,h=submit(u,form,{'jform[title]':'HTTP first module'})
+ lesson_link=next(x for x in Page(h).links if parse_qs(urlparse(x).query).get('new_lesson')==['1'])
+ u,h=get(lesson_link)
  form=next(f for f in Page(h).forms if f['id']=='jlms-lesson-form')
  u,h=submit(u,form,{'jform[title]':'HTTP first required lesson','jform[kind]':'text','jform[required]':'1',
   'jform[module_id]':re.search(r'data-module-id="([1-9][0-9]*)"',h).group(1),

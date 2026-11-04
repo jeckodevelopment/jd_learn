@@ -11,9 +11,10 @@ if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable si
 f=json.loads((root.parent/'duplication-fixture.json').read_text());base='http://127.0.0.1:8093'
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.links=[];self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if tag=='a' and a.get('href'):self.links.append(a['href'])
   if tag=='base':self.base=a.get('href')
   if tag=='form':self.current={'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
   if tag=='input' and self.current is not None and 'name' in a and 'disabled' not in a:
@@ -36,6 +37,7 @@ def expect(ok,message):
  global checks
  if not ok:raise RuntimeError(message)
  checks+=1
+def action(html,name):return next(link for link in Page(html).links if parse_qs(urlparse(link).query).get('item_action')==[name])
 def form(html,task):return next(x for x in Page(html).forms if x['fields'].get('task')==task)
 log=open(root.parent/'duplication-http.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
@@ -46,7 +48,8 @@ try:
  page=Page(html);login=next(x for x in page.forms if 'username' in x['fields'] and 'passwd' in x['fields'])
  request(urljoin(urljoin(url,page.base or ''),login['action']),login['fields']|{'username':'cioperator','passwd':'Ci-only-Long-Password-2026'})
  path='/administrator/index.php?option=com_jlms&view=curriculum&id='+str(f['course'])+'&version_id='+str(f['version'])
- url,html=request(path);module=form(html,'module.duplicate');lesson=form(html,'lesson.duplicate')
+ url,html=request(path);_,module_html=request(action(html,'copy_module'));_,lesson_html=request(action(html,'copy_lesson'))
+ module=form(module_html,'module.duplicate');lesson=form(lesson_html,'lesson.duplicate')
  expect('jform[title]' in module['fields'] and 'jform[module_id]' in lesson['fields'],'Module and lesson duplication have explicit title and destination controls')
  for task in ['module.duplicate','lesson.duplicate','curriculum.duplicateCourse']:
   request('/administrator/index.php?option=com_jlms&task='+task,expected=405)
@@ -56,8 +59,8 @@ try:
  expect('Module duplicated over HTTP' in html,'Module command creates its independent copy through MVC')
  # Replaying the stale revision must not add another module.
  _,html=request(urljoin(url,module['action']),fields)
- expect(html.count('<h2>Module duplicated over HTTP</h2>')==1,'Stale duplicate request creates no additional module')
- lesson=form(html,'lesson.duplicate');fields=lesson['fields']|{'jform[title]':'Lesson duplicated over HTTP'}
+ expect(html.count('<span class="jlms-module-title">Module duplicated over HTTP</span>')==1,'Stale duplicate request creates no additional module')
+ _,lesson_html=request(action(html,'copy_lesson'));lesson=form(lesson_html,'lesson.duplicate');fields=lesson['fields']|{'jform[title]':'Lesson duplicated over HTTP'}
  _,html=request(urljoin(url,lesson['action']),fields)
  expect('Lesson duplicated over HTTP' in html,'Lesson command creates its independent copy through MVC')
  source='/administrator/index.php?option=com_jlms&view=curriculum&id='+str(f['source'])+'&version_id='+str(f['source_version'])
@@ -67,7 +70,7 @@ try:
  result,html=request(urljoin(url,course['action']),fields)
  copied=int(parse_qs(urlparse(result).query)['id'][0])
  expect(copied not in [f['source'],f['course']] and 'Course duplicated over HTTP' in html,'Course command redirects to a new course identity')
- expect(any(x['fields'].get('task')=='module.duplicate' for x in Page(html).forms),'New copied programme is editable immediately')
+ expect(any(parse_qs(urlparse(x).query).get('item_action')==['copy_module'] for x in Page(html).links),'New copied programme is editable immediately')
  _,public=request('/index.php?option=com_jlms&view=courses')
  expect('Course duplicated over HTTP' not in public,'Duplicated course remains unpublished')
  request('/index.php?option=com_jlms&view=course&id='+str(copied),expected=404)

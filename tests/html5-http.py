@@ -46,7 +46,7 @@ admin=client();student=client();guest=client()
 source=root.parent/'html5-source.mp4';replacement=root.parent/'html5-replacement.mp4';unsupported=root.parent/'html5-unsupported.mp4'
 for path,color,codec in [(source,'black','libx264'),(replacement,'blue','libx264'),(unsupported,'red','mpeg4')]:
  subprocess.run(['ffmpeg','-v','error','-y','-f','lavfi','-i','color=c='+color+':s=160x90:r=10','-t','10','-c:v',codec,'-pix_fmt','yuv420p','-movflags','+faststart',str(path)],check=True)
-def admin_page():return request(admin,'/administrator/index.php?option=com_jlms&view=curriculum&id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id']))
+def admin_page():return request(admin,'/administrator/index.php?option=com_jlms&view=curriculum&id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&edit_lesson='+str(fixture['lesson_id']))
 def upload(name,content,expected=200,no_token=False):
  url,body,_=admin_page();form=next(f for f in Page(body.decode()).forms if f['id']=='jlms-video-upload-'+str(fixture['lesson_id']))
  fields=dict(form['fields'])

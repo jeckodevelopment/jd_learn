@@ -1,25 +1,17 @@
-# Programma didattico — incremento0.2
+# Programma didattico —0.34
 
-Dal backend aprire **Componenti → JD Learn → Corsi → Programma didattico**. Il primo pulsante crea la versione1 in bozza; ripetere la richiesta restituisce la stessa bozza dopo aver rivalidato i permessi. Non vengono ancora pubblicati contenuti.
+Dal backend aprire **JD Learn → Corsi → Programma**, oppure **Salva e apri programma** nell’editor corso. La scaletta mostra moduli espandibili e lezioni con tipo e obbligatorietà. Selezionare il titolo di una lezione per modificarla; usare **Modifica modulo** per il titolo del modulo. L’editor si apre solo su richiesta, uno alla volta; in un programma vuoto si apre il primo modulo. Salva riporta alla scaletta; Annulla chiude l’editor. Un errore di validazione conserva gli input della sessione nello stesso corso/versione/elemento.
 
-La schermata consente di creare/modificare moduli, aggiungere lezioni di testo con l’editor Joomla o riferimenti video normalizzati, scegliere l’obbligatorietà e riordinare gli elementi. Per i video abilitare il plugin corrispondente: il registro è estensibile anche con altri plugin compatibili. Le capacità player restano disattivate e il salvataggio di una sorgente non equivale a una riproduzione autorizzata.
+Ogni modulo offre **Aggiungi lezione**, **Video** e, con permesso, **Nuovo quiz** con il modulo preselezionato. L’editor della lezione collega ai suoi materiali; upload e scansione MP4 compaiono solo per la lezione locale selezionata. Le configurazioni dei provider sono in una sezione secondaria; il programma non carica player o richieste remote.
 
-La modifica si apre dai collegamenti Modifica accanto a modulo/lezione; un accesso al Programma senza edit_module/edit_lesson prepara i form per nuovi elementi. La rimozione di una lezione richiede conferma; un modulo non può essere rimosso finché contiene lezioni. Risorse con riferimenti a quiz, allegati o prerequisiti non vengono cancellate implicitamente.
+**Azioni** raccoglie duplica, sposta in un altro modulo, Su/Giù e, con permesso, elimina. Le azioni GET aprono soltanto il relativo form. Eliminare richiede conferma: il modulo deve essere vuoto e non si rimuovono implicitamente quiz, allegati o prerequisiti. Il quiz mantiene il proprio editor e i propri controlli. Lo spostamento è limitato alla stessa bozza e mantiene ID, sorgente, quiz e materiali, con nuova revisione dell’elemento.
 
-## Sicurezza e concorrenza
+Il trascinamento è disponibile nella scaletta chiusa, senza editor aperto: il ricaricamento non deve perdere input non salvati. Le maniglie si attivano solo con JS; senza JS restano i comandi nativi. Per riordinare trascinare la maniglia con le frecce sul fratello desiderato, sopra o sotto la metà della riga. Per le lezioni il trascinamento resta nel modulo; per cambiare modulo usare Sposta. Da tastiera scegliere Su/Giù in Azioni. Senza JS lo stesso collegamento apre un form di conferma POST. Il drag salva l’intera permutazione di fratelli con controllo di revisione; su successo ricarica tutte le revisioni server. Su errore ripristina l’ordine visivo precedente e invita a ricaricare, senza ritentare o sovrascrivere automaticamente.
 
-I comandi HTML MVC sono `curriculum.createVersion`, `module.save`, `module.delete`, `module.reorder`, `lesson.save`, `lesson.delete`, `lesson.reorder`. Richiedono POST, sessione amministrativa, token Joomla e permessi sul corso. Non sono ancora le API JSON del catalogo70task: il trasporto API sarà implementato separatamente, senza cambiare le regole applicative.
+Pubblicazione/stato e conteggi sono nel riepilogo laterale; versioni e duplicazione corso sono sezioni secondarie. Modifica programma prepara o riapre una bozza completa del programma pubblicato. Le modifiche restano nella bozza fino a Pubblica aggiornamento; gli iscritti già assegnati conservano lo storico. Vedere [pubblicazione](PUBLICATION.md), [editor](COURSE_EDITOR.md), [materiali](MATERIALS.md) e [video](VIDEO.md).
 
-L’Application Service viene registrato nel container DI e passato al componente. Controller/model sono adattatori della UI; le transazioni e i controlli sono nel servizio. I contenuti dell’editor usano il filtro del core Joomla. Ordinamento, identificativi logici, tipo di completamento, anteprima e revisione della sorgente sono controllati dal server.
+## Sicurezza e limiti
 
-Ogni mutazione blocca corso e versione nello stesso ordine; verifica expected_version_revision e, per gli aggiornamenti, la revisione dell’elemento. Le modifiche concorrenti obsolete vengono rifiutate. Tutti gli ID figli sono ricontrollati nel parent. Le versioni published/retired sono di sola lettura; la copia storica completa e il passaggio di lezioni fra moduli rimangono chiusi fino all’implementazione delle relative migrazioni.
+I comandi MVC richiedono POST, sessione/token Joomla, ACL correnti per corso, scope, checkout e revisioni. `curriculum.saveOrder` restituisce JSON: insieme esatto dei fratelli, transazione atomica, 409 su conflitto/storico immutabile, 403 su token/ACL, 404 fuori scope, 422 input invalido. `lesson.move` è un comando HTML con gli stessi controlli; i quiz richiedono anche jlms.quiz.manage. Le mutazioni bloccano corso e versione nello stesso ordine. Nessuna nuova API pubblica del catalogo e nessuna modifica dei gruppi o dei dati di apprendimento.
 
-La lettura del programma esegue query aggregate per moduli e lezioni e raggruppa i figli una sola volta. L’editor iniziale ammette fino a1000moduli e5000lezioni per versione; programmi più grandi richiederanno una vista paginata. Non vengono caricati player o API remote nel form.
-
-## Confini dello sviluppo
-
-Pubblicazione e workflow, nuovi tipi audio/documento/quiz, materiali protetti, prerequisiti, assegnazione agli studenti, clonazione storica, Content History e associazioni multilingua restano da completare. La struttura fisica è già versionata e non autorizza a modificare lo storico pubblicato.
-
-## Pubblicazione del corso di testo (0.3)
-
-Nel programma scegliere la transizione Joomla e premere **Esegui transizione**. Il server ricontrolla permessi, revisioni e struttura; vedere [PUBBLICAZIONE](PUBLICATION.md). Dopo la pubblicazione la versione è di sola lettura. Per nascondere o ripristinare il catalogo usare le transizioni successive; lo storico non cambia.
+Limiti della scaletta:1000moduli e5000lezioni per versione. Il riordino non modifica prerequisiti, regole didattiche, timer o attestati. La0.34 non chiude M01/AC-127: browser, mobile, accessibilità reale e i residui dell’editor restano nella [checklist](M01_ACCEPTANCE.md). Le prove JS con DOM/trasporto controllati non sono un collaudo visivo.
