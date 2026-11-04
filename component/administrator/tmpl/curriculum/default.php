@@ -57,7 +57,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_CREATE_DRAFT_VERSION') ?></button>
  </form>
  <?php else : ?>
- <div class="jlms-programme-layout"><main class="jlms-programme-main">
+ <div class="jlms-programme-layout"><div class="jlms-programme-main">
  <?php if ($this->editable && $course->current_version_id !== null) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_WORKING_REVISION_NOTICE') ?></p><?php endif; ?>
  <?php if (!$this->editable) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
  <p id="jlms-order-status" role="status" aria-live="polite" data-reload="<?= Text::_('COM_JLMS_PROGRAMME_RELOAD') ?>" data-saving="<?= Text::_('COM_JLMS_PROGRAMME_SAVING') ?>" data-error="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_FAILED') ?>"></p>
@@ -148,7 +148,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <div class="jlms-programme-buttons"><?= HTMLHelper::_('form.token') ?><button class="btn <?= $operation === 'delete' ? 'btn-danger' : 'btn-primary' ?>" type="submit"><?= Text::_($heading) ?></button><a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a></div>
  </form></section>
  <?php endif; ?>
- </main><aside class="jlms-programme-sidebar" aria-label="<?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?>">
+ </div><aside class="jlms-programme-sidebar" aria-label="<?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?>">
  <section id="jlms-publication-status"><h2 class="h4"><?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?></h2>
  <p><?= Text::_('JSTATUS') ?>: <strong><?= Text::_((int) $course->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></strong></p>
  <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?></p>

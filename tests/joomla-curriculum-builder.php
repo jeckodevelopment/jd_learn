@@ -134,6 +134,9 @@ builderExpect($other>0,'Disposable learner exists for checkout guard');
 $db->updateObject('#__jlms_courses',(object)['id'=>$course,'checked_out'=>$other],'id');
 try { builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>$order]),'JERROR_ALERTNOAUTHOR'); }
 finally { $db->updateObject('#__jlms_courses',(object)['id'=>$course,'checked_out'=>null],'id',true); }
+$db->updateObject('#__jlms_lessons',(object)['id'=>$l1,'checked_out'=>$other],'id');
+try { builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR'); }
+finally { $db->updateObject('#__jlms_lessons',(object)['id'=>$l1,'checked_out'=>null],'id',true); }
 $db->updateObject('#__jlms_course_versions',(object)['id'=>$version,'checked_out'=>$other],'id');
 try { builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR'); }
 finally { $db->updateObject('#__jlms_course_versions',(object)['id'=>$version,'checked_out'=>null],'id',true); }
