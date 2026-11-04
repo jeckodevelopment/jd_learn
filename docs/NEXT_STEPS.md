@@ -1,12 +1,12 @@
 # Piano esecutivo residuo — stabilizzazione prima delle nuove funzioni
 
-Priorità attuale: semplificazione M01 richiesta il4novembre, con storico Joomla e aggiornamento dei corsi, lezioni/materiali e docenti. Le dipendenze M02/AUT-04 e M10/CORE-13/16 sono anticipate per rendere coerente il flusso richiesto. Il collaudo utente ha confermato prima pubblicazione e YouTube. La 0.29 completa il vincolo della descrizione estesa e la 0.30 integra le ACL per corso. Il collaudo M01, l’anteprima completa, la revisione e le nuove versioni rimangono nel piano.
+Priorità attuale: semplificazione M01 richiesta il4novembre, con storico Joomla e aggiornamento dei corsi, lezioni/materiali e docenti. Le dipendenze M02/AUT-04 e M10/CORE-10/13/16 sono anticipate per rendere coerente il flusso richiesto. Il collaudo utente ha confermato prima pubblicazione e YouTube. La 0.29 completa il vincolo della descrizione estesa e la 0.30 integra le ACL per corso. La0.31 integra salvataggio pubblicato/storico, copia completa per aggiornamenti e profili docente. La specifica1.3 e AC-119–125 recepiscono esplicitamente la richiesta. I residui M01 sono puntuali in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md); anteprima completa, revisione e migrazioni restano nel piano.
 
 Aggiornamento:4novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
 
 ## Piano per incrementi fino alla versione stabile
 
-La [roadmap](ROADMAP_TO_STABLE.md) suddivide il perimetro in12fasi di rilascio e una fase differita. [RELEASE_PLAN.json](RELEASE_PLAN.json) assegna tutti i210requisiti alla fase primaria. Gli incrementi M01 comprendono presentazione, copertina/SEO, docenti, calendario, ACL di navigazione e validazioni. La 0.28 aggiunge l’anteprima editoriale iniziale M02. La 0.29 completa il requisito di descrizione prima della pubblicazione. La 0.30 integra la gestione delle regole per corso. M01 richiede ancora collaudo complessivo; M02 richiede anteprima interattiva, revisione, archivio e versionamento. L’import CSV segue le dipendenze M06/M07 e non precede questi residui della gestione corsi.
+La [roadmap](ROADMAP_TO_STABLE.md) suddivide il perimetro in12fasi di rilascio e una fase differita. [RELEASE_PLAN.json](RELEASE_PLAN.json) assegna tutti i210requisiti alla fase primaria. Gli incrementi M01 comprendono presentazione, copertina/SEO, docenti, calendario, ACL di navigazione e validazioni. La 0.28 aggiunge l’anteprima editoriale iniziale M02. La 0.29 completa il requisito di descrizione prima della pubblicazione. La 0.30 integra la gestione delle regole per corso. M01 richiede ancora implementazione dei criteri mancanti e collaudo complessivo, non soltanto una conferma utente. La copia/versione di aggiornamento0.31 è operativa; M02 richiede ancora anteprima interattiva, revisione, archivio, impatto e migrazioni. L’import CSV segue le dipendenze M06/M07 e non precede questi residui della gestione corsi.
 
 ## 0. Riscontro acquisito: prima pubblicazione e YouTube
 
@@ -14,7 +14,7 @@ Il collaudo del1novembre aveva rilevato il percorso di pubblicazione assente o p
 
 **Accettazione del blocco:** riprodurre e registrare l'esito con versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione e messaggio mostrato; nessun dato personale o segreto. Provare corso minimo testuale, video e quiz supportati, errori comprensibili, permessi e token, prima pubblicazione e accesso studente con il livello richiesto. Nessuna modifica diretta dello stato o del database come workaround; nessuna perdita dello storico. La risoluzione di questo difetto non completa AUT-01/02/03/04 o SCR-13: editor completo, revisione, anteprima, archivio e versionamento restano nel piano.
 
-Seguire i residui M01/M02 indicati sopra, con controlli di privacy e sicurezza trasversali.
+Seguire la checklist M01: prima duplicazioni autonome di corso/modulo/lezione e ordinamento mouse/tastiera con ID nuovi e nessuna copia dei risultati; poi parti mancanti dell’editor e relativi collegamenti M02/M08/M10. I comandi di aggiornamento0.31 non sono duplicazioni autonome. Conservare storico, ACL, token e controlli negativi. Non anticipare il CSV prima di questo lavoro.
 
 ## 1. Iscrizioni: ammissione e import
 

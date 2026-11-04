@@ -1,12 +1,12 @@
 # Percorso di sviluppo verso JD Learn stabile
 
-Aggiornato il4novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.2, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
+Aggiornato il4novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.3, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
 
 Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi indicano l'ordine principale e la responsabilità del requisito; dipendenze tecniche possono richiedere interventi trasversali. Sicurezza, privacy, ACL, lingua, override e upgrade accompagnano tutte le fasi. Il file RELEASE_PLAN.json assegna tutti i210ID una sola volta a una fase primaria; questa assegnazione non rappresenta avanzamento o accettazione.
 
 | Fase | Risultato atteso | Passaggi e condizioni per chiuderla |
 |---|---|---|
-| M01 — editor corsi | Corso configurabile con tutti i dati previsti e interfaccia comprensibile | a) schede e presentazione (incremento0.21); b) immagini/alt, docenti, dati/metadati, calendario e opzioni pertinenti; c) permessi e associazioni native, errori e salvataggi coerenti. Non esporre comandi fittizi per funzioni ancora assenti. |
+| M01 — editor corsi | Corso configurabile con tutti i dati previsti e interfaccia comprensibile | a) schede e presentazione (incremento0.21); b) immagini/alt, docenti, dati/metadati, calendario e opzioni pertinenti; c) permessi e associazioni native, errori e salvataggi coerenti; d) salvataggio pubblicato/storico e docenti secondo la1.3; e) duplicazione autonoma corso/modulo/lezione, ordine mouse/tastiera e parti dell’editor previste dalla checklist M01. Le dipendenze M02/M08/M10 non eliminano i criteri di M01. Non esporre comandi fittizi. |
 | M02 — ciclo editoriale | Bozza, revisione, pubblicazione, archivio e nuove versioni | Anteprima autorizzata senza iscrizioni/statistiche; workflow nativo e transizioni; clonazione completa con riferimenti a quiz/media/materiali corretti; versioni esistenti immutabili e migrazioni solo esplicite con anteprima/equivalenze. |
 | M03 — didattica | Programma e regole di completamento completi | Duplicazione/ordinamento con mouse e tastiera; lezioni audio/documento, prerequisiti senza cicli, sequenze/rilascio progressivo, corso consultabile distinto; progresso coerente e fallback Riprendi R-05. |
 | M04 — media | Quattro provider base completi e provider aggiuntivi installabili senza patch | Registro capacità/asset estensibile e quinto plugin di collaudo; sottotitoli/trascrizioni, sostituzione delle risorse e consenso; materiali con riuso/lifecycle/scansione/offload; test SDK/provider e browser reali. |
@@ -22,7 +22,7 @@ Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi ind
 
 ## Incremento attivo: M01/f —0.31
 
-Richiesta del4novembre: flusso editoriale ordinario per aggiornare corsi pubblicati, storico Joomla, programma aggiornabile con copia completa, profili docente senza categoria nel form, custom fields e voci di menu. Sono anticipati i collegamenti M02/AUT-04 e M10/CORE-13/16 necessari al flusso richiesto. I criteri generali della matrice restano invariati; la presentazione della gestione docente segue l’indicazione esplicita dell’utente.
+Richiesta del4novembre: flusso editoriale ordinario per aggiornare corsi pubblicati, storico Joomla, programma aggiornabile con copia completa, profili docente senza categoria nel form, custom fields e voci di menu. Sono anticipati i collegamenti M02/AUT-04 e M10/CORE-10/13/16 necessari al flusso richiesto. La specifica1.3 aggiorna esplicitamente i requisiti e aggiunge AC-119–125, mantenendo tutti gli ID e i criteri preesistenti. PR38/CI41819674307 verificano sottoinsiemi operativi; [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) distingue quanto già riscontrato da implementazione e collaudo mancanti.
 
 ## Incremento precedente: M01/e —0.30
 

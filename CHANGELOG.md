@@ -1,5 +1,11 @@
 # Changelog
 
+## Requisiti funzionali1.3 —4novembre2026
+
+- Recepita esplicitamente la richiesta di aggiornamento dei corsi pubblicati con storico Joomla e gestione semplificata dei docenti, campi nativi e viste di menu.
+- Aggiornate specifica funzionale/tecnica, matrice e catalogo con AC-119–125, registro della modifica e criteri residui M01; nessun requisito dichiarato completo per effetto dell’aggiornamento documentale.
+- Pacchetto runtime invariato0.31.0-dev; verifiche della PR38 registrate separatamente dai nuovi criteri di accettazione.
+
 ## 0.31.0-dev — revisione del flusso editoriale
 
 - Corsi pubblicati aggiornabili dal normale editor, con Content History di Joomla e ripristino editoriale protetto.
