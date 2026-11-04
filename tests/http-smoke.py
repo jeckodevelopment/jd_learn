@@ -104,7 +104,8 @@ try:
   u,h=get(link)
   if 'Curriculum fixture' in h:chosen=(u,h);break
  if not chosen:raise RuntimeError('Curriculum fixture screen absent')
- url,html=get(chosen[0]+'&new_module=1')
+ module_link=next(x for x in Page(chosen[1]).links if parse_qs(urlparse(x).query).get('new_module')==['1'])
+ url,html=get(module_link)
  form=next((f for f in Page(html).forms if f['id']=='jlms-module-form'),None)
  if not form:raise RuntimeError('Native module editor missing')
  fields=dict(form['fields']);fields['jform[title]']='HTTP chapter'
