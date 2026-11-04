@@ -71,6 +71,7 @@ function builderDenied(callable $work, string $key): void {
     throw new RuntimeException('Expected rejection: ' . $key);
 }
 function builderRow(string $table, int $id): object { global $db; return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject(); }
+function builderCheckout(string $table, int $id, ?int $user): void { global $db; $row=(object)['id'=>$id,'checked_out'=>$user]; $db->updateObject('#__jlms_'.$table,$row,'id',true); }
 function builderSnapshot(int $course, int $version): array {
     global $db;
     return [$db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadAssoc(),
@@ -131,15 +132,15 @@ builderDenied(fn()=>$service->saveOrder($guest,$scope()+['kind'=>'module','order
 builderDenied(fn()=>$service->moveLesson($guest,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR');
 $other=(int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult();
 builderExpect($other>0,'Disposable learner exists for checkout guard');
-$db->updateObject('#__jlms_courses',(object)['id'=>$course,'checked_out'=>$other],'id');
+builderCheckout('courses',$course,$other);
 try { builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>$order]),'JERROR_ALERTNOAUTHOR'); }
-finally { $db->updateObject('#__jlms_courses',(object)['id'=>$course,'checked_out'=>null],'id',true); }
-$db->updateObject('#__jlms_lessons',(object)['id'=>$l1,'checked_out'=>$other],'id');
+finally { builderCheckout('courses',$course,null); }
+builderCheckout('lessons',$l1,$other);
 try { builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR'); }
-finally { $db->updateObject('#__jlms_lessons',(object)['id'=>$l1,'checked_out'=>null],'id',true); }
-$db->updateObject('#__jlms_course_versions',(object)['id'=>$version,'checked_out'=>$other],'id');
+finally { builderCheckout('lessons',$l1,null); }
+builderCheckout('course_versions',$version,$other);
 try { builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR'); }
-finally { $db->updateObject('#__jlms_course_versions',(object)['id'=>$version,'checked_out'=>null],'id',true); }
+finally { builderCheckout('course_versions',$version,null); }
 builderDenied(fn()=>$service->saveOrder($actor,['course_id'=>$source,'version_id'=>$published->id,'expected_version_revision'=>$published->revision,'kind'=>'module','order'=>array_column($sourceBefore[2],'id')]),'COM_JLMS_VERSION_IMMUTABLE');
 builderExpect($sourceBefore===builderSnapshot($source,(int)$published->id),'Published source untouched by every draft operation');
 builderExpect($learningBefore===$learning(),'No enrollment, attempt or progress mutation');
