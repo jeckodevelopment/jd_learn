@@ -16,11 +16,15 @@ Il 3 novembre l’utente ha confermato di avere pubblicato il corso e ha segnala
 
 ## Blocco di pubblicazione segnalato in precedenza
 
-**Priorità0: gestione corsi / prima pubblicazione, prima dell'import CSV.** L'utente segnala corsi che restano in bozza. L’utente precisa che manca proprio il comando di pubblicazione nell’interfaccia, anziché una transizione eseguita che fallisce. La CI0.20 verificava la pubblicazione via servizio e il ritiro/ripubblicazione HTTP, senza creare e pubblicare inizialmente un nuovo corso interamente dalle form native. Non dichiarare pertanto la gestione corsi completa o il difetto risolto.
+**Priorità0: gestione corsi / prima pubblicazione, prima dell'import CSV.** L'utente segnala corsi che restano in bozza. L’utente precisa che manca proprio il comando di pubblicazione nell’interfaccia, anziché una transizione eseguita che fallisce. La CI0.20 verificava la pubblicazione via servizio e il ritiro/ripubblicazione HTTP, senza creare e pubblicare inizialmente un nuovo corso interamente dalle form native. Questo era il limite delle prove precedenti; il successivo riscontro utente sul percorso di prima pubblicazione è registrato sopra.
 
-La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Serve inoltre riscontro sul sito segnalante. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
+La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Il riscontro successivo sul sito segnalante è stato acquisito. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
-## Incremento corrente0.26 — M01/c2
+## Incremento corrente0.29 — M01/d
+
+La prima pubblicazione richiede la descrizione estesa, con testo significativo, come previsto dalla tabella dei campi corso. Le bozze incomplete restano salvabili. Il vincolo si applica anche a bozze preesistenti; le versioni già pubblicate mantengono i dati congelati. Nuove prove native e HTTP nella PR del build. M01 rimane parziale.
+
+## Incremento precedente0.26 — M01/c2
 
 Descrizione breve limitata a 500 caratteri per nuovi valori, conservazione dei testi precedenti e messaggio per alias duplicati per categoria e lingua. Prove native e HTTP nella PR. La 0.29 applica il vincolo di descrizione estesa alla prima pubblicazione.
 

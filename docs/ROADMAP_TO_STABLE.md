@@ -1,6 +1,6 @@
 # Percorso di sviluppo verso JD Learn stabile
 
-Aggiornato il1novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.2, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
+Aggiornato il4novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.2, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
 
 Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi indicano l'ordine principale e la responsabilità del requisito; dipendenze tecniche possono richiedere interventi trasversali. Sicurezza, privacy, ACL, lingua, override e upgrade accompagnano tutte le fasi. Il file RELEASE_PLAN.json assegna tutti i210ID una sola volta a una fase primaria; questa assegnazione non rappresenta avanzamento o accettazione.
 
