@@ -1,4 +1,4 @@
-# Materiali extra protetti — incremento 0.5
+# Materiali extra protetti
 
 ## Configurazione e utilizzo
 
@@ -8,7 +8,7 @@ La consegna PHP è disabilitata per default: abilitarla esplicitamente per il co
 
 Aprire **Programma → Materiali extra** della versione. In bozza si possono caricare file generali o scegliere una lezione, modificare titolo/descrizione/ordine/stato, sostituire un file con l’azione **Sostituisci file** del materiale, mantenendo lo stesso ambito oppure rimuovere il collegamento. Massimo tecnico corrente 1.000 collegamenti per versione; liste da 20 elementi. Il riferimento alla lezione è validato contro la stessa versione dal server e dalla FK composita.
 
-Dopo la pubblicazione i collegamenti, metadati e blob didattici sono immutabili. È consentita soltanto una nuova verifica antivirus, che modifica lo stato di sicurezza dell’asset senza cambiare hash/revisione didattica della versione. Non si può sostituire un file storico; la clonazione completa di nuove versioni rimane nella roadmap. Rimozione/sostituzione in bozza non cancella il vecchio blob o asset: cleanup con reference scanner e conservazione è ancora da implementare. Anche un salvataggio concorrente fallito può lasciare un blob privato non collegato: nessuna eliminazione speculativa di file referenziati.
+Dopo la pubblicazione i collegamenti, metadati e blob didattici sono immutabili. È consentita soltanto una nuova verifica antivirus, che modifica lo stato di sicurezza dell’asset senza cambiare hash/revisione didattica della versione. Non si può sostituire un file storico; per aggiornare i materiali usare la copia di lavoro completa del programma e pubblicare un aggiornamento, conservando i collegamenti storici degli iscritti. Rimozione/sostituzione in bozza non cancella il vecchio blob o asset: cleanup con reference scanner e conservazione è ancora da implementare. Anche un salvataggio concorrente fallito può lasciare un blob privato non collegato: nessuna eliminazione speculativa di file referenziati.
 
 ## Formati e validazione
 

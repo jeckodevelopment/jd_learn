@@ -1,20 +1,21 @@
-# Differenze e accettazioni aperte — baseline0.20
+# Problemi specifici e differenze aperte
 
-Rilevazione:1novembre2026, codice0.20 identificato in [IMPLEMENTATION_EVIDENCE.json](IMPLEMENTATION_EVIDENCE.json). Questo registro non modifica la specifica né introduce nuove funzionalità. Le righe restano **aperte**, salvo lo stato specifico indicato; i test della soluzione attuale non le chiudono automaticamente.
+Stato al **5 novembre 2026**, build **0.34.1-dev**. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
 
-| ID | Requisiti | Riscontro nel codice/prove | Differenza e prossimo criterio di verifica |
+## Casi aperti
+
+| ID | Requisiti | Differenza attuale | Condizione di chiusura |
 |---|---|---|---|
-| R-00 — bloccante segnalato | AUT-01/02/03, SCR-13 | Test utente: corso resta in bozza. Il salvataggio mantiene intenzionalmente la bozza; prima pubblicazione disponibile solo dal Programma, con prerequisiti/workflow. I test HTTP0.20 coprivano solo ritiro/ripubblicazione | Prima riprodurre il caso sul sito segnalante. Nella0.20.1: navigazione, diagnostica e nuovo test HTTP prima pubblicazione; prima CI41349160121 verde con13asserzioni HTTP per ambiente; chiarimento finale voce elenco nella PR22. Non dichiarare risoluzione sul sito né completezza gestione corsi. Priorità0 prima del CSV |
-| R-01 — risolta per assegnazione singola0.20 | ISC-01, EDGE-13; import ancora pendente | La0.19 rifiutava i destinatari senza livelli. La0.20 aggiunge opt-in/avviso, hash compatibili e audit;37controlli servizio,18asserzioni HTTP e4verifiche di conservazione per ambiente CI | Preassegnazione senza gruppi e accesso inizialmente negato verificati; successivo grant/revoca core usa la stessa iscrizione e conserva progressi. Non è accettazione completa di ISC-01/EDGE-13 né implementazione di LIFE-04/05: CSV, altri criteri e collaudi complessivi restano aperti |
-| R-02 | PVD-01/06, CORE-23, VID-01, PBASE-03 | Registry/evento PHP presenti; `PublicationService` ammette quattro chiavi e `component/media/js/video.js` usa una mappa di quattro adapter | Installare un quinto plugin non basta ancora. Definire registro di asset/capacità e caricamento estensibile, con validazione/WAM/allowlist di sicurezza. Collaudare un quinto provider di prova senza patch al componente e senza aggirare l’autorizzazione/completamento centrale |
-| R-03 | EDGE-09, AUT-05, ISC-04 | Stato/catalogo e disponibilità letti correntemente; ritiro della scheda può rendere non disponibile anche l’aula | Mancano «chiudi nuove iscrizioni» e «sospendi erogazione» come comandi distinti con motivo/anteprima. Provare la continuità degli iscritti nel primo caso e il blocco nel secondo, inclusi quiz aperti |
-| R-04 | UI-02, ACC-01, REL-02 | Test frontend/ID propri; `tests/roster-http.py` riporta il duplicato nativo `guidedtours-popup-content109` nella pagina backend della CI | L’assert sui prefissi del componente non verifica tutta la pagina. Registrare il contesto/core/template e verificare l’intero documento su patch corrente e installazione target, senza modificare il core. Non dichiarare accettazione globale o WCAG sulla base di questi test |
-| R-05 | SCR-06, STU-03 | `LearningService::resumeTarget` usa ultima attività valida, altrimenti prima lezione per ordinamento, senza filtro required/progress | La specifica preferisce la prima attività obbligatoria non completata. Implementare il fallback preservando versione, lingua e accessi; provare prima attività opzionale, obbligatoria già completata e programma concluso/incoerente |
+| R-02 | PVD-01/06, CORE-23, VID-01, PBASE-03 | Il registry PHP esiste, ma pubblicazione e client sono ancora limitati ai quattro adapter base | Quinto provider di prova installabile senza patch, con asset/capacità/validazione/WAM autorizzati e completamento centrale invariato |
+| R-03 | EDGE-09, ISC-04 | Ritiro dal catalogo e disponibilità dell'aula non sono ancora due comandi indipendenti | Chiudi nuove iscrizioni mantiene la fruizione degli iscritti; Sospendi erogazione la blocca, inclusi quiz aperti; motivo/anteprima/audit |
+| R-04 | UI-02, ACC-01, REL-02 | Le prove sugli ID del componente non certificano l'intera pagina Joomla; rilevato in CI un duplicato nativo `guidedtours-popup-content109` | Verifica dell'intero documento nel contesto core/template target e sulla patch corrente, senza modificare il core; collaudo accessibilità completo |
+| R-05 | SCR-06, STU-03 | Il fallback di Riprendi usa la prima lezione per ordine, senza preferire l'obbligatoria non completata | Correggere il fallback preservando versione/lingua/accessi; provare attività opzionale, obbligatoria già completata e corso concluso/incoerente |
 
-## Residui maggiori già noti
+## Segnalazioni risolte nel percorso indicato
 
-Attestati, notifiche/outbox, Privacy, Finder, Tags/Fields/Content History, import/export, prerequisiti/sequenze, audio/documenti come lezioni, versionamento/migrazioni avanzate, report completi e collaudo di rilascio sono ancora incompleti o assenti. La [matrice](REQUIREMENTS_STATUS.csv) distingue l’assenza del percorso dall’esistenza di un sottoinsieme: nessuna tabella/schema o test di una funzione vicina ne dimostra il completamento.
+| ID | Risoluzione riscontrata | Cosa rimane separatamente aperto |
+|---|---|---|
+| R-00 — prima pubblicazione | Comando e diagnostica disponibili; prima pubblicazione confermata dall'utente e coperta dalle regressioni HTTP | Accettazione completa della gestione corsi e del ciclo editoriale; non riaprire il blocco specifico senza una nuova regressione |
+| R-01 — preassegnazione singola | Opt-in e avviso consentono l'assegnazione senza concedere gruppi o diritto di fruizione; grant/revoca conserva lo storico | Estendere gli invarianti al CSV e agli altri flussi di iscrizione |
 
-## Regola di chiusura
-
-Per chiudere una riga occorrono comportamento conforme, guida/contratti aggiornati, test positivi e negativi e riferimento al build e al risultato. Se coinvolge sicurezza, privacy, browser o provider, includere il relativo collaudo effettivo. Una scelta più restrittiva o una limitazione del primo incremento non riscrive implicitamente la baseline: rimane residuo finché il requisito è soddisfatto o il perimetro viene modificato esplicitamente dall’utente.
+Per chiudere un caso servono comportamento conforme, guida, prove positive/negative e riferimento al build. Una correzione puntuale non accetta automaticamente l'intero requisito. Le evidenze storiche sono conservate nel [registro](IMPLEMENTATION_EVIDENCE.json) e nella cronologia Git.

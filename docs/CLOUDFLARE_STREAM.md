@@ -1,4 +1,4 @@
-# Cloudflare Stream — incremento 0.7
+# Cloudflare Stream
 
 Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token temporanei tramite API. È disabilitato inizialmente, richiede `playback_enabled=1` e la policy di consenso del componente. La modalità `local_key` resta chiusa: nessuna firma locale o libreria JWT viene presentata come implementata. HTML5 resta da realizzare. Il pacchetto è di sviluppo.
 

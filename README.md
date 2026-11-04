@@ -1,107 +1,42 @@
 # JD Learn
 
-Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.34.1-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.34.1-dev: sviluppo in corso, non pronta per la produzione.**
 
-Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC, libreria, quattro plugin video e plugin Scheduler. Né lo schema né il numero degli incrementi indicano completezza del prodotto.
+**Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
-## Priorità di stabilizzazione
+## Orientarsi nella documentazione
 
-Segnalato nel collaudo utente: corsi che restano in bozza. La pubblicazione è una priorità bloccante prima dell’import CSV. La 0.20.1 rende esplicito il percorso editor → Programma → transizione e aggiunge diagnostica e una prova HTTP di prima pubblicazione; non dimostra ancora la risoluzione sul sito segnalante. Consultare [stato](docs/IMPLEMENTATION_STATUS.md) e [piano](docs/NEXT_STEPS.md).
+| Documento | A cosa serve |
+|---|---|
+| [Stato attuale](docs/IMPLEMENTATION_STATUS.md) | Cosa funziona, cosa manca e quali prove abbiamo |
+| [Prossime attività](docs/NEXT_STEPS.md) | Ordine del lavoro residuo e condizioni per chiuderlo |
+| [Checklist gestione corsi](docs/M01_ACCEPTANCE.md) | Funzioni presenti, implementazioni mancanti e collaudi M01 |
+| [Roadmap](docs/ROADMAP_TO_STABLE.md) | Perimetro delle fasi fino al rilascio stabile |
+| [Matrice requisiti](docs/REQUIREMENTS_STATUS.csv) | Tracciabilità dettagliata dei 210 requisiti |
+| [Problemi specifici](docs/IMPLEMENTATION_GAPS.md) | Differenze aperte e segnalazioni risolte |
+| [Prove del build](docs/IMPLEMENTATION_EVIDENCE.json) | Commit, CI e pacchetto effettivamente verificati |
+| [Cronologia](docs/IMPLEMENTATION_HISTORY.md) e [changelog](CHANGELOG.md) | Come siamo arrivati allo stato attuale |
 
-## Requisiti aggiornati —4novembre2026
+## Usare e configurare JD Learn
 
-La [specifica funzionale1.3](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md) formalizza la modifica dei corsi pubblicati, lo storico Joomla e i profili docente senza categorie, con campi e voci di menu nativi. [Registro della richiesta](docs/REQUIREMENTS_CHANGES.md) e [criteri residui M01](docs/M01_ACCEPTANCE.md). Documentazione di requisiti aggiornata; pacchetto runtime invariato0.31.0-dev.
+- Corsi: [editor](docs/COURSE_EDITOR.md), [programma](docs/AUTHORING.md), [pubblicazione](docs/PUBLICATION.md), [permessi](docs/EDITOR_PERMISSIONS.md), [docenti](docs/TEACHERS.md), [calendario](docs/CALENDAR.md).
+- Studenti: [aula](docs/LEARNING.md), [area personale](docs/LEARNER_DASHBOARD.md), [categorie](docs/CATEGORIES.md), [multilingua](docs/MULTILINGUAL.md).
+- Media: [video](docs/VIDEO.md), [Cloudflare Stream](docs/CLOUDFLARE_STREAM.md), [HTML5 privato](docs/HTML5_VIDEO.md), [materiali](docs/MATERIALS.md).
+- Iscrizioni: [elenco iscritti](docs/ENROLLMENT_ROSTER.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md), [preassegnazione](docs/PREASSIGNMENT.md), [sospensione e riattivazione](docs/ENROLLMENT_STATE.md).
+- Quiz: [composizione](docs/QUIZ_AUTHORING.md), [tentativi](docs/QUIZ_RUNTIME.md), [tempi individuali](docs/QUIZ_EXTRA_TIME.md), [annullamenti](docs/QUIZ_CANCELLATION.md), [proroghe](docs/QUIZ_DEADLINE_EXTENSION.md).
+- Personalizzazioni: [contratto CSS e override](docs/FRONTEND_CSS.md).
 
-## Incremento0.33 — gestione corsi secondo le convenzioni articoli Joomla
+## Specifiche e perimetro
 
-Elenco con Search Tools, filtri, ordinamenti, selezione e toolbar nativi; titolo, stato, categoria, accesso, autore, lingua e ultima modifica leggibili. Editor con contenuto e sidebar essenziale, Programma/Docenti/Immagine/Pubblicazione/Opzioni. Salva e apri programma salva il form con il controller Joomla e apre direttamente lezioni/materiali. [Guida](docs/COURSE_EDITOR.md).
+La [specifica funzionale 1.5](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md), il [progetto tecnico](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md), le [specifiche di sicurezza e provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md) e i [servizi progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md) definiscono il risultato da raggiungere. Il suffisso `1.0` nei nomi è storico: la versione interna è autorevole. Le specifiche descrivono anche funzioni non ancora implementate; il loro aggiornamento è registrato in [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md).
 
-## Incremento0.32 — duplicazioni autonome M01/g
+Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo`. Account, gruppi e livelli sono quelli Joomla. Vendita e gestione degli abbonamenti sono esterne; l'iscrizione non assegna gruppi. Compiti, live e interoperabilità seguono le fasi differite della specifica.
 
-Nel Programma: Duplica corso crea una nuova identità in bozza nella stessa categoria; Duplica modulo copia il modulo con le lezioni; Duplica lezione permette di scegliere il modulo di destinazione nel programma di lavoro. Quiz e materiali seguono la copia; iscrizioni e risultati restano separati. [Guida](docs/COURSE_EDITOR.md).
+## Ambiente, build e installazione
 
-## Incremento0.31 — gestione editoriale e docenti
+Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Dati dei corsi pubblicati modificabili con storico Joomla. Modifica programma prepara una versione di lavoro completa e Pubblica aggiornamento la attiva per nuove iscrizioni. I profili docente usano campi personalizzati Joomla, supportano la modifica dal frontend da parte dell’account collegato e hanno viste di menu dedicate. [Guida](docs/COURSE_EDITOR.md).
-
-## Incremento0.30 — permessi nativi per corso M01
-
-La scheda Permessi dei corsi salvati rende disponibile il campo Rules Joomla agli amministratori autorizzati sul corso. Le modifiche vengono salvate subito dal core. [Guida](docs/EDITOR_PERMISSIONS.md).
-
-## Incremento precedente0.29 — vincolo editoriale M01
-
-La prima pubblicazione richiede una descrizione estesa con testo significativo. Le bozze incomplete possono essere salvate. Il controllo si applica anche alle bozze preesistenti, con istruzioni per completarle. Le versioni già pubblicate conservano lo snapshot.
-
-## Incremento precedente0.26 — M01/c2
-
-Validazione delle descrizioni brevi fino a 500 caratteri e messaggio per gli alias duplicati per categoria e lingua. I testi preesistenti più lunghi si conservano quando si modificano altri campi.
-
-## Incremento precedente0.25 — M01/c1
-
-Editor e navigazione coerenti con ACL native per-record, deleghe categoriali, edit-own e negazioni; paginazione e cache ristrette all’ambito corrente. Nuovo riepilogo dei permessi, accesso alle opzioni native autorizzate e sola lettura per checkout altrui/versioni pubblicate. [Guida e limiti](docs/EDITOR_PERMISSIONS.md). Nuove prove nella PR del build; nessuna dichiarazione di M01 accettato.
-
-## Incremento precedente0.24 — M01/b3
-
-Calendario nativo con fuso selezionabile: pubblicazione e fruizione, conversione UTC rigorosa, controlli DST e intervalli. Snapshot e prima edizione conservano le ultime date salvate; la scheda pubblica mostra fuso/offset e disabilita l’avvio fuori finestra. [Guida e politica quiz](docs/CALENDAR.md). Esiti della nuova CI nella PR del build; M01 non è ancora completamente accettato.
-
-## Incremento precedente0.23 — M01/b2
-
-Profili docente nell’amministrazione Joomla, categorie/asset/ACL nativi, biografia testuale, foto/alt, link e account facoltativo. Associazione ordinata ai corsi in bozza e dati congelati alla pubblicazione, con accesso corrente e storico verificati. Nessun gruppo o permesso attribuito dall’associazione. [Guida docenti](docs/TEACHERS.md). Test del nuovo incremento nella PR del build; calendario e resto M01 ancora pendenti.
-
-## Incremento precedente0.22 — M01/b1
-
-Copertina dal Media Manager locale Joomla, testo alternativo/decorazione e titolo/descrizione SEO nella head nativa. Dati congelati alla pubblicazione; percorsi pubblici e file verificati, nessun URL remoto accettato. Compatibilità0.21 e limiti degli asset documentati nella [guida editor](docs/COURSE_EDITOR.md). Docenti/calendario e resto M01 ancora da completare. Esiti della nuova CI riportati nella PR del build. La0.21 è stata verificata nei quattro ambienti della [CI41417124499](https://github.com/jeckodevelopment/jd_learn/actions/runs/41417124499) e integrata con PR23.
-
-## Incremento precedente e percorso stabile
-
-La0.21 aggiunge schede native nell’editor e presentazione del corso persistente/congelata: descrizione estesa, obiettivi, destinatari, prerequisiti dichiarativi, difficoltà e minuti stimati, visibili nella scheda autorizzata. Non completa l’editor o i requisiti AUT/SCR. [Roadmap per fasi](docs/ROADMAP_TO_STABLE.md), [mappatura dei210ID](docs/RELEASE_PLAN.json) e [guida editor](docs/COURSE_EDITOR.md). Verifiche del nuovo incremento da registrare nella PR.
-
-## Funzioni operative e limiti
-
-- Authoring di corsi/moduli/lezioni testo, video e quiz; pubblicazione validata tramite workflow Joomla e versioni/snapshot immutabili. Clonazione/versionamento avanzato, audio/documenti autonomi, prerequisiti e migrazioni restano da completare.
-- Catalogo e categorie paginati, controllo degli antenati, menu/Pathway/SEF e prime associazioni multilingua native. Ricerca/SEO/metadati e lifecycle completi rimangono parziali.
-- Aula, progressi persistenti e area personale con storico del proprietario, filtri e ripresa autorizzata. Fallback di ripresa e tutte le viste/attività della baseline non sono ancora completi.
-- Quattro provider base YouTube, Vimeo, Cloudflare Stream e HTML5: opt-in/consenso, copertura video, token API Stream e MP4 privati con consegna PHP limitata/Nginx. Firma locale/cache/configurazioni complete e provider/browser reali da collaudare. **Un quinto plugin non è ancora integrabile senza patch al componente.**
-- Materiali extra di corso/lezione con upload validato, quarantena/scanner opzionale, storage privato e download autorizzato/Range. Riuso, pulizia/offload e lifecycle completi pendenti.
-- Avvio automatico, elenco iscritti per corso, sospensione/riattivazione e ammissione manuale singola con anteprima/conferma/motivo/audit. Preassegnazione senza livello con opt-in/avviso disponibile dalla0.20; CSV, approvazioni, annullamenti ed edizioni aggiuntive restano pendenti.
-- Banca domande a revisioni, tentativi/snapshot, autosave/CAS, grading, feedback e scadenza server; tempo individuale, annullamento e proroga motivati. Rivalutazioni e integrazione attestati da implementare.
-- Utenti, ACL/livelli, categorie, form, sessioni/CSRF, WAM, override e lingue Joomla nei flussi presenti. Audit nativo su quiz/iscrizioni e task scadenze quiz; **Privacy, Finder, Tags, Custom Fields, Content History, Mail Templates e copertura core completa ancora pendenti**.
-
-Attestati PDF, notifiche/outbox e report/export completi non sono disponibili. I test CI positivi riguardano i flussi implementati, non il collaudo integrale di tutti i requisiti, la patch Joomla corrente, WCAG/ASVS o il carico300/500.
-
-## Stato verificato e prossimi passaggi
-
-- [Riepilogo corrente](docs/IMPLEMENTATION_STATUS.md)
-- [Matrice dei210requisiti con sorgenti, prove parziali e residui](docs/REQUIREMENTS_STATUS.csv)
-- [Build e prove effettive](docs/IMPLEMENTATION_EVIDENCE.json)
-- [Differenze aperte rispetto alla specifica](docs/IMPLEMENTATION_GAPS.md)
-- [Piano esecutivo residuo](docs/NEXT_STEPS.md)
-- [Cronologia degli incrementi](docs/IMPLEMENTATION_HISTORY.md) e [changelog](CHANGELOG.md)
-
-La matrice baseline dei test resta il piano di accettazione. I test di singoli incrementi non ne promuovono automaticamente gli scenari ad accettati, e non si ricava una percentuale dalle righe «In corso».
-
-## Specifiche e guide
-
-- [Specifica funzionale consolidata1.5](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
-- [Progettazione tecnica esecutiva](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
-- [Sicurezza e specifiche dei quattro provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
-- [Servizi/endpoint progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
-- [Personalizzazione frontend e override](docs/FRONTEND_CSS.md)
-- [Authoring](docs/AUTHORING.md), [pubblicazione](docs/PUBLICATION.md), [categorie](docs/CATEGORIES.md), [multilingua](docs/MULTILINGUAL.md)
-- [Aula e iscrizione automatica](docs/LEARNING.md), [area personale](docs/LEARNER_DASHBOARD.md)
-- [Elenco amministrativo iscritti](docs/ENROLLMENT_ROSTER.md), [sospensione/riattivazione](docs/ENROLLMENT_STATE.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md)
-- [Materiali](docs/MATERIALS.md), [video/contratto e limiti](docs/VIDEO.md), [Cloudflare Stream](docs/CLOUDFLARE_STREAM.md), [HTML5 privato](docs/HTML5_VIDEO.md)
-- [Banca e composizione quiz](docs/QUIZ_AUTHORING.md), [tentativi e task](docs/QUIZ_RUNTIME.md), [tempi individuali](docs/QUIZ_EXTRA_TIME.md), [annullamenti](docs/QUIZ_CANCELLATION.md), [proroghe](docs/QUIZ_DEADLINE_EXTENSION.md)
-
-Gli identificativi restano `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo`. Vendita/abbonamenti e aggiornamento dei gruppi commerciali sono esterni; nessun gateway o autenticazione parallela. Compiti, live e interoperabilità mantengono le fasi successive della baseline.
-
-## Requisiti
-
-Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ o MariaDB 10.6+, InnoDB e utf8mb4. Le patch esatte e la minor corrente saranno aggiunte alla matrice prima della release. Il tag Joomla 6.0.0 nella CI verifica esclusivamente il minimo di compatibilità; non è una raccomandazione a usare quella patch in produzione.
-
-## Build e verifiche
-
-Con Python 3 e PHP 8.3+:
+Schema InnoDB: **41 tabelle / 58 FK**. Il pacchetto contiene 7 estensioni: componente, libreria, quattro provider video e plugin Scheduler.
 
 ```sh
 python3 tools/build.py
@@ -109,26 +44,8 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.34.1-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+La build genera `dist/pkg_jlms-0.34.1-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
-`tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
+I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
-## Installazione di sviluppo
-
-Generare lo ZIP e installarlo intero su un Joomla di prova mediante il gestore estensioni. Non installare separatamente il componente: dipende dalla libreria. Aprire Componenti → JD Learn, creare una categoria e quindi un corso in bozza. I provider vengono installati disabilitati; YouTube/Vimeo richiedono anche playback_enabled e policy consenso nelle opzioni del componente (vedere docs/VIDEO.md); Cloudflare richiede anche configurazione server e verifica remota (docs/CLOUDFLARE_STREAM.md); HTML5 richiede ffprobe e storage/consegna privata (docs/HTML5_VIDEO.md). Non inserire credenziali API nei parametri: i campi predisposti accettano riferimenti, non segreti.
-
-La disinstallazione conserva le tabelle e non cancella file del gestore; non equivale alla cancellazione privacy. La revisione dello schema e la ricostruzione delle dipendenze core al reinstall sono ancora oggetto del collaudo previsto. Nessuna procedura distruttiva automatica è presente.
-
-Lo ZIP include iscrizione automatica, testo, player video opt-in, materiali protetti e primo flusso quiz. Approvazioni, attestati, rivalutazioni e integrazioni restanti sono ancora in sviluppo. Non usarlo con studenti o dati personali reali finché le integrazioni e il collaudo non saranno completi.
-
-Associazioni dei corsi multilingua: [guida e limiti](docs/MULTILINGUAL.md). Configurare i collegamenti fra bozze prima della pubblicazione; selettore lingua e fallback sono nativi Joomla.
-
-Categorie native e navigazione pubblica: [guida](docs/CATEGORIES.md), con accesso degli antenati, paginazione e traduzioni per la sezione corsi.
-
-Area personale I miei corsi: [guida](docs/LEARNER_DASHBOARD.md), con storico privato, avanzamento e disponibilità separati e ripresa nuovamente autorizzata.
-
-- [Preassegnazione0.20](docs/PREASSIGNMENT.md): assegnazione senza livelli correnti, nessun gruppo o diritto di fruizione aggiunto.
-
-Programma0.34: scaletta contestuale, un solo editor, aggiunta nel modulo, spostamento delle lezioni e riordino drag/tastiera. Vedere [guida del programma](docs/AUTHORING.md).
-
-Programma0.34.1: avviso browser per modifiche non salvate nel modulo/lezione. Verifiche effettive nella [PR43](https://github.com/jeckodevelopment/jd_learn/pull/43); non chiude M01.
+[Pacchetto verificato 0.34.1](https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537/artifacts/13344494972): estrarre e installare lo ZIP `pkg_jlms-0.34.1-dev.zip` contenuto nell'artefatto. Usare dati di prova finché integrazioni e collaudo di rilascio non saranno completati.

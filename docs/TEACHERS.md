@@ -1,4 +1,4 @@
-# Profili e associazioni docente —0.31
+# Profili e associazioni docente
 
 Creare un profilo, collegare facoltativamente l’account Joomla e associarlo ai corsi dalla scheda Docenti. Il form non richiede una categoria. Il link Campi personalizzati dei docenti apre il gestore core com_fields nel contesto com_jlms.teacher.
 

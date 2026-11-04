@@ -1,4 +1,4 @@
-# Gestione dei corsi —0.33
+# Gestione dei corsi
 
 ## Modificare i dati del corso
 
@@ -26,7 +26,7 @@ Le categorie dei profili preesistenti restano conservate per mantenere ACL e dis
 
 Le versioni didattiche già assegnate rimangono consultabili dall’amministrazione. Il corso mantiene il proprio storico editoriale Joomla separato dalle assegnazioni didattiche. Revisione editoriale, versione del programma e tentativo di quiz hanno funzioni distinte. Workflow avanzato, migrazioni, lezioni audio/documento e completamento di tutte le integrazioni M10 seguono la roadmap.
 
-## Duplicare corso, modulo e lezione —0.32
+## Duplicare corso, modulo e lezione
 
 Nel Programma, Duplica corso apre titolo e riepilogo: viene copiata la versione selezionata in una nuova identità in bozza, nella stessa categoria e lingua. Il titolo è modificabile prima di confermare, l’alias è nuovo e i permessi si ereditano dalla categoria. Non si copiano ACL specifiche del record, associazioni di traduzione, workflow storico, iscrizioni, progressi, tentativi o attestati. La copia include impostazioni/promozione, docenti, valori dei campi Joomla autorizzati e un programma completo con moduli, lezioni, quiz e materiali. Gli asset immutabili e le revisioni domanda restano riutilizzati tramite nuove associazioni; nessuna pubblicazione automatica.
 
@@ -34,9 +34,9 @@ Nel programma di lavoro, ogni modulo e lezione espone Duplica modulo/Duplica lez
 
 Serve poter modificare la sorgente e creare nella categoria del nuovo corso. Si applicano anche i permessi sui quiz, sui materiali e sui valori dei campi coinvolti; un diniego impedisce la copia completa, senza omettere silenziosamente quelle parti. Le copie di moduli/lezioni richiedono un programma in bozza; checkout altrui e revisioni obsolete impediscono la scrittura. La destinazione di una lezione deve appartenere alla stessa versione. Per copiare un elemento pubblicato in un corso attivo, aprire prima Modifica programma e usare i comandi sulla copia di lavoro.
 
-Questi comandi sono distinti dalla nuova versione dello stesso corso. Duplicazione e rollback sono verificati dalle suite joomla-duplication.php e duplication-http.py nella CI del build; l’esistenza delle suite non attesta l’esito. Restano riordino con trascinamento/accessibilità, altre parti dell’editor e criteri M01 da completare.
+Questi comandi sono distinti dalla nuova versione dello stesso corso. Duplicazioni, rollback e riordino sono coperti dalle regressioni della CI corrente. Per usare la scaletta e il riordino vedere [programma](AUTHORING.md); per implementazioni e collaudi residui vedere [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md).
 
-## Elenco ed editor0.33 — convenzioni articoli Joomla
+## Elenco ed editor — convenzioni articoli Joomla
 
 Corsi usa la toolbar nativa Nuovo/Modifica/Programma/Opzioni, checkbox di selezione, titolo cliccabile, Search Tools e paginazione. Ricerca per titolo/alias o id:123; filtri stato, categoria con discendenti, livello di accesso ai contenuti, autore Joomla, lingua e blocco modifica. Sono ordinabili titolo, stato, categoria, accesso, autore, lingua, ultima modifica e ID. I filtri persistono tornando dall’editor; un cambio filtro torna alla prima pagina, con massimo100righe. L’autore è il creatore del record Joomla, distinto dai profili docente associati.
 

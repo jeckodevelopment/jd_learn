@@ -1,4 +1,4 @@
-# Preassegnazione senza accesso corrente — incremento0.20
+# Preassegnazione senza accesso corrente
 
 Dal backend **Corsi → Iscritti → Iscrizione manuale**, selezionare utente/lingua e, soltanto se voluto, **Consenti preassegnazione senza accesso corrente**. L’opzione è disattivata per default. Senza opzione resta la regola della0.19: il destinatario deve poter accedere, anche sui replay. Il percorso approvazioni rimane chiuso.
 

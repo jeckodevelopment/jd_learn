@@ -1,10 +1,10 @@
-# Sospensione e riattivazione — incremento 0.18
+# Sospensione e riattivazione
 
 Dal backend **Corsi → Iscritti → Sospensione e riattivazione** si apre `view=enrollmentstate&id=ID_CORSO&enrollment_id=ID_ISCRIZIONE`. L’anteprima GET propone il target opposto per iscrizioni attive/sospese; `target_status=active|suspended` consente di richiedere esplicitamente una delle due anteprime. Il comando POST contiene sempre un target esplicito: non è un toggle dipendente dal momento del reinvio.
 
 ## Effetti e limiti
 
-Sono ammesse attiva→sospesa, stato storico completed→sospesa e sospesa→attiva. Il completamento è sempre quello separato in `completed_at`, non viene ricalcolato o cancellato. Richieste, iscrizioni annullate/rifiutate/scadute non vengono approvate o riattivate da questo flusso. Non sono implementati annullamento dell’iscrizione, creazione manuale, reset o proroghe formative.
+Sono ammesse attiva→sospesa, stato storico completed→sospesa e sospesa→attiva. Il completamento è sempre quello separato in `completed_at`, non viene ricalcolato o cancellato. Richieste, iscrizioni annullate/rifiutate/scadute non vengono approvate o riattivate da questo flusso. Annullamento, reset e proroghe formative restano da implementare. La creazione manuale è disponibile nel flusso distinto [MANUAL_ENROLLMENT.md](MANUAL_ENROLLMENT.md).
 
 La sospensione blocca aula, nuove attività, salvataggi/consegne quiz, download e rilascio/rinnovo dei token attraverso i controlli runtime già esistenti. Una risorsa già trasferita al browser non viene recuperata e un token video già emesso rimane soggetto alla sua scadenza: nessuna revoca retroattiva garantita presso i provider. Risposte salvate e snapshot restano intatti; il timer continua. La scadenza server chiude i quiz temporizzati sulle risposte già confermate tramite il job esistente; un quiz senza timer resta aperto ma inutilizzabile fino a ripristino o annullamento autorizzato. La riattivazione non riapre tentativi conclusi né azzera o estende deadline.
 

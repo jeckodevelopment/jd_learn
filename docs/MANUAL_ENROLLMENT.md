@@ -1,4 +1,4 @@
-# Iscrizione manuale singola — incremento 0.19
+# Iscrizione manuale singola
 
 Dal backend **Corsi → Iscritti → Iscrizione manuale** si apre `view=manualenrollment&id=ID_CORSO`. Il form Joomla seleziona l’ID di un account esistente e una lingua sito installata, poi prepara un’anteprima. Non crea account/password, non assegna gruppi, non invia messaggi e non importa CSV.
 

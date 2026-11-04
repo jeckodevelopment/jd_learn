@@ -1,4 +1,4 @@
-# Elenco amministrativo iscritti — incremento 0.17
+# Elenco amministrativo iscritti
 
 Dal backend **Corsi → Iscritti al corso** si apre `administrator/index.php?option=com_jlms&view=enrollments&id=ID_CORSO`. È consultazione in sola lettura: nessuna sospensione, riattivazione, proroga, iscrizione manuale o assegnazione di gruppi viene eseguita.
 
@@ -24,7 +24,7 @@ Override `html/com_jlms/enrollments/default.php` del template amministrativo. ID
 
 Test su sito effimero: operatori con scope diverso, account studente/anonimo, revoca gruppo e diniego per corso su identità già caricata, totale/pagine native, filtri e input ostili, nomi HTML escapati, nessuna mutazione dello storico e conservazione al reinstall. Esiti effettivi nelle Actions della PR di questo incremento, non implicita attestazione di completamento dei requisiti REP-01/02 o ISC-02.
 
-Restano da implementare ricerca per nome, selettori versione/utente ricercabili, risultati quiz/attestati nel riepilogo, dashboard aggregata, export, dettaglio studente e operazioni di gestione con motivo/anteprima/audit. Nessuna nuova tabella o migrazione; pacchetto di sviluppo, browser/accessibilità completi, patch corrente Joomla e carico300/500 ancora da collaudare.
+Restano da implementare ricerca per nome, selettori versione/utente ricercabili, risultati quiz/attestati nel riepilogo, dashboard aggregata, export e dettaglio studente. Ammissione singola e sospensione/riattivazione con motivo/anteprima/audit sono disponibili nei flussi collegati, non nella sola tabella in lettura. Nessuna nuova tabella o migrazione; pacchetto di sviluppo, browser/accessibilità completi, patch corrente Joomla e carico300/500 ancora da collaudare.
 
 ## Gestione stato dalla0.18
 

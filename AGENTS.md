@@ -13,3 +13,5 @@
 - Run `python3 tools/build.py`, `python3 tools/check.py`, relevant PHP tests and lint for code changes. Use the existing GitHub CI when the local environment lacks PHP/database; inspect actual job results. Never weaken a test just to hide a product defect.
 - Database and Joomla smoke tests must run only with the explicit disposable-site opt-in. Do not execute them on a customer site.
 - Update implementation status, requirement mapping, changelog and CSS/override documentation when changing the corresponding behaviour. Test release install/upgrade and current Joomla patch before production distribution.
+
+- Documentation ownership: IMPLEMENTATION_STATUS.md is the current feature snapshot; NEXT_STEPS.md owns ordered remaining work; ROADMAP_TO_STABLE.md defines phase scope; M01_ACCEPTANCE.md separates missing implementation from pending validation. Put release-by-release notes only in CHANGELOG.md/IMPLEMENTATION_HISTORY.md, not appended to current summaries or guides. Replace superseded statements, update current evidence, and keep requirement descriptions/IDs/acceptance separate from implementation status.

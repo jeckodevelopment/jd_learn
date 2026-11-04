@@ -1,4 +1,4 @@
-# Iscrizione automatica e aula testo — incremento 0.4
+# Iscrizione automatica e aula testo
 
 Per provare il flusso: pubblicare un corso contenente solo lezioni di testo, modalità di iscrizione **automatica**, con almeno una lezione obbligatoria. Un utente Joomla con il livello contenuto corretto apre la scheda e preme **Inizia / Riprendi**. Il login usa com_users e la sessione nativa; il LMS non gestisce password, gruppi commerciali o pagamenti. Su una copia di prova il risultato è verificabile ricaricando e riprendendo con lo stesso account.
 

@@ -1,4 +1,4 @@
-# Annullamento tracciato dei tentativi — incremento 0.12
+# Annullamento tracciato dei tentativi
 
 Il gestore può annullare un tentativo aperto, consegnato o scaduto, conservando domande, risposte, regole e punteggio originario. L'annullamento è distinto dalla rivalutazione: esclude il tentativo dal risultato valido, senza riscrivere la correzione originale. Non è una cancellazione fisica né una riapertura.
 
@@ -66,4 +66,4 @@ La CI verifica rimborso/consumo, numerazione monotona, snapshot e risposte intat
 
 Il componente completo resta in sviluppo: questa funzione non completa la rivalutazione, il lifecycle degli attestati, l'integrazione privacy generale, il collaudo della patch Joomla corrente o i benchmark con centinaia di studenti.
 
-Dalla0.13 le proroghe autorizzate dei tentativi ancora aperti e non scaduti sono disponibili nel flusso distinto [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md). Non modificano lo snapshot originario né riaprono tentativi. I riferimenti sopra a funzioni di proroga successive descrivono il perimetro dell’incremento originario.
+Le proroghe autorizzate dei tentativi ancora aperti e non scaduti sono disponibili nel flusso distinto [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md). Non modificano lo snapshot originario né riaprono tentativi.

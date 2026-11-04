@@ -1,4 +1,4 @@
-# Categorie pubbliche e multilingua — incremento 0.15
+# Categorie pubbliche e multilingua
 
 Le categorie dei corsi rimangono record nativi `com_categories`, estensione `com_jlms.course`. Il pacchetto registra il tipo `com_jlms.course.category` nel gestore Associazioni multilingua. Il form e il salvataggio delle traduzioni sono quelli del modello categorie Joomla; i legami usano il contesto core `com_categories.item`. Non vengono introdotte tassonomie, tabelle o editor paralleli.
 

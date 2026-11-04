@@ -1,4 +1,4 @@
-# Proroga dei tentativi aperti — incremento 0.13
+# Proroga dei tentativi aperti
 
 Il gestore può aggiungere tempo a un singolo tentativo con timer, soltanto mentre è aperto e prima della sua scadenza effettiva. È un'operazione distinta dal tempo aggiuntivo preventivo della0.11: non modifica i tentativi futuri, le regole pubblicate o lo snapshot originario.
 
