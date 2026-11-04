@@ -1,6 +1,6 @@
 # Preassegnazione senza accesso corrente
 
-Dal backend **Corsi → Iscritti → Iscrizione manuale**, selezionare utente/lingua e, soltanto se voluto, **Consenti preassegnazione senza accesso corrente**. L’opzione è disattivata per default. Senza opzione resta la regola della0.19: il destinatario deve poter accedere, anche sui replay. Il percorso approvazioni rimane chiuso.
+Dal backend **Corsi → Iscritti → Iscrizione manuale**, selezionare utente/lingua e, soltanto se voluto, **Consenti preassegnazione senza accesso corrente**. L’opzione è disattivata per default. Senza opzione resta la regola standard: il destinatario deve poter accedere, anche sui replay. Il percorso approvazioni rimane chiuso.
 
 ## Assegnazione e diritto di fruizione
 
@@ -22,7 +22,7 @@ La selezione GET aggiunge `filter[preassignment]=0|1`. Il POST nativo `manualenr
 
 Un replay identico esplicito restituisce la stessa iscrizione anche dopo attribuzione o perdita del livello, purché operatore/account e disponibilità editoriale siano ancora validi. Non effettua nuove ammissioni, non riattiva iscrizioni e non concede diritti. Cambiare l’opzione non può riusare lo stesso UUID: quando il percorso di default è ora autorizzato restituisce conflitto409, altrimenti viene negato prima dalle normali regole403/404. I replay di comandi standard continuano a richiedere l’accesso del destinatario.
 
-Lock edizione, capienza, duplicati, subject/receipt e audit sono gli stessi dell’ammissione manuale. Tutte le scritture sono atomiche; nessuna email automatica e nessuna modifica allo schema41tabelle/58FK. La verifica editoriale privata è raggiunta solo dopo lo scope amministrativo: non è un endpoint pubblico o un modo per saltare i controlli di fruizione.
+Lock edizione, capienza, duplicati, subject/receipt e audit sono gli stessi dell’ammissione manuale. Tutte le scritture sono atomiche; nessuna email automatica e nessuna modifica dei dati didattici storici. La verifica editoriale privata è raggiunta solo dopo lo scope amministrativo: non è un endpoint pubblico o un modo per saltare i controlli di fruizione.
 
 ## Audit, override e verifiche
 
@@ -30,4 +30,4 @@ I nuovi Action Logs `com_jlms.manualenrollment` includono `preassignment_request
 
 Il form, checkbox, sessione e token sono nativi Joomla. Aggiornare gli override amministrativi del layout manualenrollment per conservare selezione, campo nascosto, avviso, conferma e token. ID nuovo `jlms-manual-access-warning`, classe core `alert alert-warning`, stato accessibile `role=status`; nessun CSS globale aggiunto. Il runtime non si affida alla presenza del checkbox o dell’avviso HTML per decidere l’accesso.
 
-Le prove dell’incremento verificano default invariato, avviso/opt-in, hash compatibili, rifiuto di account/contenuti/lingue indisponibili, capienza/retry simultanei, rollback senza audit, ammissione senza gruppi, accesso negato, successiva attribuzione/revoca esterna e conservazione dei progressi/audit. Esiti effettivi nelle Actions della PR0.20. Non equivale a completamento dell’import CSV, di ISC-01 o del collaudo completo del prodotto.
+Le prove della suite verificano default invariato, avviso/opt-in, hash compatibili, rifiuto di account/contenuti/lingue indisponibili, capienza/retry simultanei, rollback senza audit, ammissione senza gruppi, accesso negato, successiva attribuzione/revoca esterna e conservazione dei progressi/audit. Esiti della suite corrente nel [registro delle prove](IMPLEMENTATION_EVIDENCE.json). Non equivale a completamento dell’import CSV, di ISC-01 o del collaudo completo del prodotto.
