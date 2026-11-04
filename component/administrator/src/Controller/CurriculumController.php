@@ -134,6 +134,7 @@ class CurriculumController extends BaseController
             $message = Text::_($code === 500 ? 'COM_JLMS_SAVE_FAILED' : $key);
         }
         $this->app->setHeader('status', (string) $code, true);
+        http_response_code($code);
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         echo new \Joomla\CMS\Response\JsonResponse($data, $message, $error, true);

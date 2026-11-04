@@ -132,6 +132,9 @@ builderExpect($other>0,'Disposable learner exists for checkout guard');
 $db->updateObject('#__jlms_courses',(object)['id'=>$course,'checked_out'=>$other],'id');
 try { builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>$order]),'JERROR_ALERTNOAUTHOR'); }
 finally { $db->updateObject('#__jlms_courses',(object)['id'=>$course,'checked_out'=>null],'id',true); }
+$db->updateObject('#__jlms_course_versions',(object)['id'=>$version,'checked_out'=>$other],'id');
+try { builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR'); }
+finally { $db->updateObject('#__jlms_course_versions',(object)['id'=>$version,'checked_out'=>null],'id',true); }
 builderDenied(fn()=>$service->saveOrder($actor,['course_id'=>$source,'version_id'=>$published->id,'expected_version_revision'=>$published->revision,'kind'=>'module','order'=>array_column($sourceBefore[2],'id')]),'COM_JLMS_VERSION_IMMUTABLE');
 builderExpect($sourceBefore===builderSnapshot($source,(int)$published->id),'Published source untouched by every draft operation');
 builderExpect($learningBefore===$learning(),'No enrollment, attempt or progress mutation');

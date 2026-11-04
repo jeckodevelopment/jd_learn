@@ -1,4 +1,4 @@
-"""Native duplication controls, CSRF, immutable source and independently editable results."""
+"""Contextual curriculum navigation, native editors, moves, ordering and denial paths."""
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.request import build_opener,HTTPCookieProcessor,Request
@@ -60,7 +60,9 @@ try:
  expect('curriculum.js' in html and 'curriculum.css' in html,'Native WAM loads curriculum assets')
  _,editor=request(link(html,'edit_lesson',f['l1']));edit=form(editor,'lesson.save')
  expect(edit['fields']['jform[id]']==str(f['l1']) and edit['fields']['jform[module_id]']==str(f['m2']),'Lesson title opens its native scoped editor')
- expect('view=materials' in editor and 'lesson_id='+str(f['l1']) in editor,'Lesson editor links to its contextual materials')
+ materials=next(x for x in Page(editor).links if parse_qs(urlparse(x).query).get('view')==['materials'] and parse_qs(urlparse(x).query).get('lesson_id')==[str(f['l1'])])
+ _,materials_html=request(materials)
+ expect(form(materials_html,'material.upload')['fields']['jform[lesson_id]']==str(f['l1']),'Materials form selects the clicked lesson')
  _,failed=request(edit['action'],edit['fields']|{'jform[title]':'','jform[body]':'<p>UNSAVED_BUILDER_BODY</p>'})
  expect('UNSAVED_BUILDER_BODY' in failed and form(failed,'lesson.save')['fields']['jform[title]']=='','Validation failure preserves editor input')
  saved=form(failed,'lesson.save');_,html=request(saved['action'],saved['fields']|{'jform[title]':'Builder lesson updated via HTTP','jform[body]':'<p>Saved programme content</p>'})
