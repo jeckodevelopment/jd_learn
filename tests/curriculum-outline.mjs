@@ -69,9 +69,12 @@ console.log(JSON.stringify({curriculum_outline_checks:checks,status:'passed'}));
  registry={body:{getType:()=> 'tinymce',getRawInstance:()=>({isDirty:()=>editorDirty})}};
  equal(unload(),false); editorDirty=true; equal(unload(),true);
  const saved={defaultPrevented:false};events.submit(saved);equal(unload(),false);
+ equal(unload(),true); // A save intent permits only its own first navigation.
+ events.submit(saved);
  // Late Joomla validation cancellation must leave the warning enabled.
  saved.defaultPrevented=true;equal(unload(),true);
- pending.splice(0).forEach(fn=>fn());equal(unload(),true);
+ events.submit({defaultPrevented:false});listeners.pointerdown();equal(unload(),true);
+ events.submit({defaultPrevented:false});listeners.keydown();equal(unload(),true);
  editorDirty=false; body.value='<p>Saved to textarea by editor, validation rejected</p>';equal(unload(),true);
  body.value='<p>Original</p>';equal(unload(),false);
  // Non-iframe editors expose current text through the Joomla decorator API.
@@ -81,5 +84,5 @@ console.log(JSON.stringify({curriculum_outline_checks:checks,status:'passed'}));
  let registered=false;
  equal(initUnsavedEditor({querySelector:()=>null},{addEventListener(){registered=true;}}),undefined);
  equal(registered,false);
- console.log(JSON.stringify({unsaved_editor_checks:18,status:'passed'}));
+ console.log(JSON.stringify({unsaved_editor_checks:20,status:'passed'}));
 }

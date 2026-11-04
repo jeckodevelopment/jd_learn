@@ -49,11 +49,17 @@ export function initUnsavedEditor(root, host = window, editors = () => globalThi
     form.addEventListener('submit', event => {
         submission = event;
         // Honour Joomla validators that cancel later in the same event dispatch.
-        // A blocked navigation must not disable protection on subsequent navigation.
-        host.setTimeout(() => { submission = null; }, 0);
+        // Native form navigation is queued after submit dispatch, so a zero-delay
+        // timer can expire before beforeunload. Consume this intent once there.
+        // Any later interaction also clears an abandoned submission intent.
     });
+    for (const type of ['pointerdown', 'keydown', 'input', 'change']) {
+        host.addEventListener(type, () => { submission = null; }, true);
+    }
     host.addEventListener('beforeunload', event => {
-        if ((submission && !submission.defaultPrevented) || !dirty()) return;
+        const saving = submission && !submission.defaultPrevented;
+        submission = null;
+        if (saving || !dirty()) return;
         event.preventDefault();
         event.returnValue = ''; // Browser supplies its own translated confirmation.
     });
