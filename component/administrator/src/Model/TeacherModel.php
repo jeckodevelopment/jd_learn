@@ -31,7 +31,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         }
         return $form;
     }
-    protected function loadFormData() { return Factory::getApplication()->getUserState(Factory::getApplication()->isClient('site') ? 'com_jlms.edit.teacheredit.data' : 'com_jlms.edit.teacher.data', []) ?: $this->getItem(); }
+    protected function loadFormData() { return Factory::getApplication()->getUserState('com_jlms.edit.teacher.data', []) ?: $this->getItem(); }
     public function getItem($pk = null)
     {
         $item = parent::getItem($pk);
