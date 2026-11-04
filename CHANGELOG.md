@@ -1,5 +1,11 @@
 # Changelog
 
+## Documentazione — 5 novembre 2026
+
+- Consolidato lo stato attuale per funzionalità; separati piano residuo, perimetro delle fasi e cronologia.
+- Allineati matrice, problemi aperti, prove del build e guide alla 0.34.1; distinte funzioni assenti e collaudi pendenti.
+- Nessuna modifica del runtime, della versione o dei criteri di accettazione.
+
 ## 0.34.1-dev — protezione delle modifiche nel programma
 
 - Avviso nativo del browser quando si abbandona il modulo o la lezione con modifiche non salvate, incluse modifiche TinyMCE non sincronizzate nella textarea.

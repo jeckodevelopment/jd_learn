@@ -1,4 +1,4 @@
-# Associazioni multilingua dei corsi — incremento 0.14
+# Associazioni multilingua dei corsi
 
 JD Learn implementa `AssociationServiceInterface`/`AssociationServiceTrait` e un `AssociationExtensionHelper` per il tipo `com_jlms.course`. I collegamenti sono salvati dal `AdminModel` nativo nella tabella Joomla `#__associations`, contesto `com_jlms.item`. Nessuna tabella parallela o modifica al core. Il gestore Associazioni multilingua può elencare i corsi; l'editor di destinazione rimane il form MVC del componente, con i suoi vincoli di bozza.
 

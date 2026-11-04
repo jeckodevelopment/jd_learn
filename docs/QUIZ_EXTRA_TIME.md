@@ -1,6 +1,6 @@
-# Tempo aggiuntivo individuale — incremento 0.11
+# Tempo aggiuntivo individuale
 
-Il gestore può autorizzare un numero di minuti aggiuntivi per una specifica iscrizione e uno specifico quiz pubblicato. Non è un'estensione di abbonamenti, livelli di accesso o finestre didattiche. Le specifiche QUI-08 e CFG-01 restano la baseline; questo incremento attua l'autorizzazione preventiva individuale e i primi avvisi del timer, senza certificare l'accessibilità completa.
+Il gestore può autorizzare un numero di minuti aggiuntivi per una specifica iscrizione e uno specifico quiz pubblicato. Non è un'estensione di abbonamenti, livelli di accesso o finestre didattiche. Le specifiche QUI-08 e CFG-01 restano la baseline; il flusso descritto attua l'autorizzazione preventiva individuale e i primi avvisi del timer, senza certificare l'accessibilità completa.
 
 ## Gestione nel backend
 
@@ -10,7 +10,7 @@ La vista `quiztime` elenca le iscrizioni della stessa versione del quiz: pagine 
 
 Minuti aggiuntivi interi0–1440. Zero ripristina il tempo ordinario per i tentativi successivi e conserva lo storico. Un quiz senza limite non accetta minuti aggiuntivi positivi. Durata base massima24ore, tempo aggiuntivo massimo24ore, durata effettiva massima48ore. Non esiste un diritto trasferibile ad altri quiz, versioni, edizioni o iscrizioni.
 
-La modifica vale **solo per i tentativi avviati dopo il salvataggio**. Se esiste un tentativo attivo, il backend mostra la sua durata e deadline UTC e spiega che rimarranno invariate. Non cambia nemmeno un tentativo concluso o scaduto, non lo riapre e non restituisce un tentativo consumato. Per modifiche urgenti durante un esame occorre una futura funzionalità esplicita e tracciata: non modificare righe SQL o snapshot.
+La modifica vale **solo per i tentativi avviati dopo il salvataggio**. Se esiste un tentativo attivo, il backend mostra la sua durata e deadline UTC e spiega che rimarranno invariate. Non cambia nemmeno un tentativo concluso o scaduto, non lo riapre e non restituisce un tentativo consumato. Per un tentativo ancora aperto e non scaduto usare il flusso distinto [Proroga](QUIZ_DEADLINE_EXTENSION.md), che conserva lo snapshot originario. Non modificare righe SQL o snapshot.
 
 ## Snapshot e timer
 
@@ -36,7 +36,7 @@ Nel browser gli avvisi a cinque minuti (per tentativi di almeno cinque minuti) e
 
 Corpi HTTP limitati a16KiB. Revisione obsoleta o UUID riutilizzato con contenuto diverso:409. Ripetere lo stesso UUID/corpo restituisce la stessa autorizzazione senza duplicare storia o log. Il replay ricontrolla i permessi. Fino a10.000 revisioni per coppia; al limite l'operazione è rifiutata, senza troncamento. Il backend mostra le ultime20revisioni; ricerca/esportazione e navigazione completa dello storico sono successive.
 
-Nuova tabella `#__jlms_quiz_time_adjustments`: ID, iscrizione/versione, quiz, revisione, secondi aggiuntivi, motivo, autore, UUID, hash della richiesta e data UTC. I valori sono append-only tramite questo servizio; unicità per iscrizione/quiz/revisione e iscrizione/quiz/UUID, FK iscrizione/versione e quiz. Le relazioni fra quiz e versione sono verificate anche dal servizio. Il database passa a38tabelle e55FK senza alterare le37tabelle precedenti. L'installer riprendibile crea/valida la nuova tabella e i due vincoli e conserva tutto a reinstallazione/disinstallazione. Lo schema tecnico1.0 resta un documento di progetto storico; questo addendum registra l'estensione effettivamente implementata.
+Tabella `#__jlms_quiz_time_adjustments`: ID, iscrizione/versione, quiz, revisione, secondi aggiuntivi, motivo, autore, UUID, hash della richiesta e data UTC. I valori sono append-only tramite questo servizio; unicità per iscrizione/quiz/revisione e iscrizione/quiz/UUID, FK iscrizione/versione e quiz. Le relazioni fra quiz e versione sono verificate anche dal servizio. L'installer riprendibile crea/valida la nuova tabella e i due vincoli e conserva tutto a reinstallazione/disinstallazione. La definizione SQL distribuita contiene il vincolo effettivo; per i conteggi dello schema corrente vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 Le scritture bloccano l'iscrizione prima di ricaricare identità e permessi core; avvio e autorizzazione vedono uno stato coerente anche quando attendono un'altra transazione. I valori e i parent sono bindati, il testo è validato e i layout fanno escape contestuale. Le pagine amministrative e studente sono `private, no-store`.
 
@@ -46,14 +46,14 @@ Le scritture bloccano l'iscrizione prima di ricaricare identità e permessi core
 
 Il log nativo conserva autore, oggetto, secondi precedenti/successivi, codice motivo, riferimento alla riga di autorizzazione e correlazione casuale. Non duplica il testo libero del motivo, il nome dello studente o le risposte. Il modello core può ignorare errori d'inserimento: l'adattatore verifica quindi che la registrazione sia presente; se manca, l'intera autorizzazione viene annullata. Non esiste una tabella di audit parallela. La tabella delle autorizzazioni è lo storico della regola didattica necessaria a ricostruire la decisione, distinto dal log operativo.
 
-I log si consultano e si gestiscono con Action Logs Joomla e le sue politiche. La motivazione completa è visibile solo nella vista del corso autorizzata. La configurazione del core può eliminare log secondo la retention del sito; questo incremento non aggiunge cancellazione/privacy/export automatici né il plugin Action Logs generale per tutte le operazioni LMS. Nessuna email viene inviata da questa operazione; eventuali notifiche future richiederanno un outbox transazionale separato.
+I log si consultano e si gestiscono con Action Logs Joomla e le sue politiche. La motivazione completa è visibile solo nella vista del corso autorizzata. La configurazione del core può eliminare log secondo la retention del sito; il flusso descritto non aggiunge cancellazione/privacy/export automatici né il plugin Action Logs generale per tutte le operazioni LMS. Nessuna email viene inviata da questa operazione; eventuali notifiche future richiederanno un outbox transazionale separato.
 
 ## Verifiche e limiti
 
-La pipeline crea tentativi con il pacchetto0.10 prima dell'aggiornamento, quindi verifica lettura e conservazione di snapshot/deadline nella0.11. Esegue i test esistenti e controlli su autorizzazione/ritiro, conflitti/replay, separazione dei motivi, revoca ACL e livelli, deadline effettiva, scadenza, log nativo, rollback in caso di audit fallito, form/CSRF HTTP e reinstallazione con storico conservato. Gli avvisi sono verificati con test JavaScript; non equivalgono a certificazione con tecnologie assistive reali.
+La pipeline corrente verifica lettura e conservazione di snapshot/deadline dopo l’aggiornamento. Esegue i test esistenti e controlli su autorizzazione/ritiro, conflitti/replay, separazione dei motivi, revoca ACL e livelli, deadline effettiva, scadenza, log nativo, rollback in caso di audit fallito, form/CSRF HTTP e reinstallazione con storico conservato. Gli avvisi sono verificati con test JavaScript; non equivalgono a certificazione con tecnologie assistive reali.
 
-Restano proroghe dei tentativi già aperti, rivalutazioni dei punteggi, politiche privacy complete, reporting, paginazione completa dello storico e collaudo di carico e accessibilità su browser reali. Il LMS completo e la compatibilità con la patch Joomla corrente non sono ancora certificati per la produzione.
+Restano rivalutazioni dei punteggi, politiche privacy complete, reporting, paginazione completa dello storico e collaudo di carico e accessibilità su browser reali. Il LMS completo e la compatibilità con la patch Joomla corrente non sono ancora certificati per la produzione.
 
-Dalla0.12 è disponibile l’annullamento tracciato dei tentativi, documentato in [QUIZ_CANCELLATION.md](QUIZ_CANCELLATION.md); non modifica retroattivamente le autorizzazioni al tempo.
+È disponibile l’annullamento tracciato dei tentativi, documentato in [QUIZ_CANCELLATION.md](QUIZ_CANCELLATION.md); non modifica retroattivamente le autorizzazioni al tempo.
 
-Dalla0.13 le proroghe autorizzate dei tentativi ancora aperti e non scaduti sono disponibili nel flusso distinto [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md). Non modificano lo snapshot originario né riaprono tentativi. I riferimenti sopra a funzioni di proroga successive descrivono il perimetro dell’incremento originario.
+Le proroghe autorizzate dei tentativi ancora aperti e non scaduti sono disponibili nel flusso distinto [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md). Non modificano lo snapshot originario né riaprono tentativi.

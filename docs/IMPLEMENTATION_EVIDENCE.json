@@ -1,51 +1,63 @@
 {
-  "audited_at": "2026-11-01",
+  "audited_at": "2026-11-05",
   "product": "JD Learn",
-  "version": "0.20.1-dev",
+  "version": "0.34.1-dev",
   "code_baseline": {
-    "tested_head": "dcedfa6061309c17254fc0d577ddfd267fb39ac3",
-    "tree": "601a016ec1a3a04da812b86052e23259c0e68419",
-    "parent_main_commit": "a46b66f6ab20b4181b29accd8dc11be307bb4a1e"
+    "tested_head": "79e97dc3243bdad780781fd03de64a4f3fa105cb",
+    "tree": "a1909b63681ff9b61750f79bca78fbc4fca77eb4",
+    "parent_main_commit": "198a779599c2bef29c748bebc6d98973388fc58a",
+    "merged_main_commit": "c927be7068ce5fe32fd782c03029846b504fd713"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 41349160121,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41349160121",
+    "run_id": 41872832537,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 124975377033,
-        "name": "PHP 8.3 / mysql:8.4",
+        "id": 126725126977,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 124975377302,
-        "name": "PHP 8.3 / mariadb:10.6",
+        "id": 126725127254,
+        "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 124975377328,
+        "id": 126725127261,
         "name": "PHP 8.4 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 124975377392,
-        "name": "PHP 8.4 / mariadb:10.6",
+        "id": 126725127344,
+        "name": "PHP 8.3 / mysql:8.4",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 126725127822,
+        "name": "PHP 8.3 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "first_publication_http_checks": 13,
-    "note": "Prima pubblicazione dalle form HTTP native e regressioni/upgrade da0.20, quattro ambienti. Riscontro sul sito utente ancora pendente. Non accettazione completa dei requisiti."
+    "note": "Suite native/HTTP/JS implementate, build riproducibile, installazione e upgrade0.34.0→0.34.1 con conservazione degli storici. Non accettazione completa dei requisiti.",
+    "curriculum_outline_checks_per_php_environment": 26,
+    "unsaved_editor_checks_per_php_environment": 20,
+    "browser_fixture_checks": 12,
+    "browser_scope": "Chromium su fixture controllata con viewport desktop/mobile; non collaudo visivo Joomla o integrazione reale TinyMCE."
   },
   "package": {
-    "name": "pkg_jlms-0.20.1-dev.zip",
-    "bytes": 342005,
-    "sha256": "28fe0847c937281656c89957dccbe9e93bf11ccde4c55d43fad26566638187d8",
+    "name": "pkg_jlms-0.34.1-dev.zip",
+    "bytes": 419634,
+    "sha256": "88c5c3ca7a7cb610d90c8ce5b6fad3c1fdd9e48b622370ebe33e0471cbbc074b",
+    "artifact_id": 13344494972,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537/artifacts/13344494972",
     "constituents": 7,
     "tables": 41,
     "foreign_keys": 58
@@ -61,6 +73,70 @@
   ],
   "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-01",
+      "product": "JD Learn",
+      "version": "0.20.1-dev",
+      "code_baseline": {
+        "tested_head": "dcedfa6061309c17254fc0d577ddfd267fb39ac3",
+        "tree": "601a016ec1a3a04da812b86052e23259c0e68419",
+        "parent_main_commit": "a46b66f6ab20b4181b29accd8dc11be307bb4a1e"
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 41349160121,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41349160121",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 124975377033,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 124975377302,
+            "name": "PHP 8.3 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 124975377328,
+            "name": "PHP 8.4 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 124975377392,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "first_publication_http_checks": 13,
+        "note": "Prima pubblicazione dalle form HTTP native e regressioni/upgrade da0.20, quattro ambienti. Riscontro sul sito utente ancora pendente. Non accettazione completa dei requisiti."
+      },
+      "package": {
+        "name": "pkg_jlms-0.20.1-dev.zip",
+        "bytes": 342005,
+        "sha256": "28fe0847c937281656c89957dccbe9e93bf11ccde4c55d43fad26566638187d8",
+        "constituents": 7,
+        "tables": 41,
+        "foreign_keys": 58
+      },
+      "full_requirement_acceptance": {},
+      "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
+      "excluded_evidence": [
+        "Nessun benchmark300/500",
+        "Nessun audit completo WCAG/ASVS",
+        "Nessun collaudo completo dei provider reali",
+        "Patch corrente Joomla non verificata",
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+      "evidence_scope": "Fotografia del primo build0.20.1 verificato indicato da tested_head. Il successivo chiarimento della voce nell’elenco corsi e la guida aggiornata cambiano lo ZIP: risultati e hash del build finale sono riportati nella PR22, senza attribuirgli questo hash storico."
+    },
     {
       "audited_at": "2026-11-01",
       "product": "JD Learn",
@@ -191,5 +267,5 @@
       "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati."
     }
   ],
-  "evidence_scope": "Fotografia del primo build0.20.1 verificato indicato da tested_head. Il successivo chiarimento della voce nell’elenco corsi e la guida aggiornata cambiano lo ZIP: risultati e hash del build finale sono riportati nella PR22, senza attribuirgli questo hash storico."
+  "evidence_scope": "Build runtime0.34.1 verificato nel commit tested_head e integrato con PR43. Gli aggiornamenti documentali successivi non cambiano il runtime e non trasformano queste prove parziali in accettazione completa."
 }

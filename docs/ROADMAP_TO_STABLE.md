@@ -1,12 +1,12 @@
-# Percorso di sviluppo verso JD Learn stabile
+# Roadmap verso il rilascio stabile
 
-Aggiornato il4novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.4, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
+La roadmap definisce **il risultato atteso per ciascuna fase**, non il suo avanzamento. Aggiornata al 5 novembre 2026 sulla specifica funzionale **1.5**. Per sapere cosa è disponibile leggere lo [stato attuale](IMPLEMENTATION_STATUS.md); per l'ordine operativo usare [NEXT_STEPS.md](NEXT_STEPS.md).
 
-Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi indicano l'ordine principale e la responsabilità del requisito; dipendenze tecniche possono richiedere interventi trasversali. Sicurezza, privacy, ACL, lingua, override e upgrade accompagnano tutte le fasi. Il file RELEASE_PLAN.json assegna tutti i210ID una sola volta a una fase primaria; questa assegnazione non rappresenta avanzamento o accettazione.
+La [mappatura delle fasi](RELEASE_PLAN.json) assegna una volta sola tutti i 210 requisiti: 209 del rilascio 1 e NOT-03 differito. Nessuna fase è integralmente accettata. Vendita e gruppi commerciali restano esterni; le evoluzioni differite non entrano implicitamente nel primo rilascio.
 
 | Fase | Risultato atteso | Passaggi e condizioni per chiuderla |
 |---|---|---|
-| M01 — editor corsi | Corso configurabile con tutti i dati previsti e interfaccia comprensibile | a) schede e presentazione (incremento0.21); b) immagini/alt, docenti, dati/metadati, calendario e opzioni pertinenti; c) permessi e associazioni native, errori e salvataggi coerenti; d) salvataggio pubblicato/storico e docenti secondo la1.3; e) duplicazione autonoma corso/modulo/lezione, ordine mouse/tastiera e parti dell’editor previste dalla checklist M01. Le dipendenze M02/M08/M10 non eliminano i criteri di M01. Non esporre comandi fittizi. |
+| M01 — editor corsi | Corso configurabile con tutti i dati previsti e interfaccia comprensibile | Dati/promozione, immagini/docenti/calendario, ACL, salvataggio pubblicato/storico, programma, duplicazioni, riordino e parti avanzate dell’editor secondo la checklist M01. Le dipendenze M02/M08/M10 non eliminano i criteri di M01. Non esporre comandi fittizi. |
 | M02 — ciclo editoriale | Bozza, revisione, pubblicazione, archivio e nuove versioni | Anteprima autorizzata senza iscrizioni/statistiche; workflow nativo e transizioni; clonazione completa con riferimenti a quiz/media/materiali corretti; versioni esistenti immutabili e migrazioni solo esplicite con anteprima/equivalenze. |
 | M03 — didattica | Programma e regole di completamento completi | Duplicazione/ordinamento con mouse e tastiera; lezioni audio/documento, prerequisiti senza cicli, sequenze/rilascio progressivo, corso consultabile distinto; progresso coerente e fallback Riprendi R-05. |
 | M04 — media | Quattro provider base completi e provider aggiuntivi installabili senza patch | Registro capacità/asset estensibile e quinto plugin di collaudo; sottotitoli/trascrizioni, sostituzione delle risorse e consenso; materiali con riuso/lifecycle/scansione/offload; test SDK/provider e browser reali. |
@@ -20,62 +20,7 @@ Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi ind
 | M12 — rilascio stabile | Pacchetto accettato e manutenibile | Tutti gli scenari obbligatori del rilascio1 collegati al build, nessun blocco aperto; patch corrente Joomla, installazione/upgrade, backup/ripristino, integrazione reale con estensione commerciale, guide, checksum, update server e procedura di supporto. |
 | M13 — differito | Conservare il perimetro successivo già concordato | NOT-03: promemoria inattività/comunicazioni di gruppo dopo rilascio1. Compiti/live/SCORM/xAPI/LTI e altre evoluzioni mantengono le fasi della specifica, non sono implicitamente incluse nel primo rilascio stabile. |
 
-## Incremento attivo: M01/h —0.33
 
-Richiesta esplicita RF-2026-11-04-B: amministrazione riconoscibile come gli articoli Joomla, con elenco/Search Tools/toolbar, editor compatto e Salva e apri programma. Specifica1.4 e AC-126; risultati nella PR del build. Il riordino mouse/tastiera già pianificato resta M01/i, senza cancellarne i criteri.
+## Criterio di completamento
 
-## Incremento precedente: M01/g —0.32
-
-Duplicazione autonoma del corso nella stessa categoria e di moduli/lezioni nel programma di lavoro, con quiz/materiali/campi secondo permessi, nuove identità e nessuna copia dei dati studente. Guida COURSE_EDITOR e nuove prove native/HTTP; risultati effettivi nella PR. Segue la revisione amministrativa M01/h richiesta dall’utente, poi M01/i riordino mouse/tastiera e collaudo dei residui dell’editor.
-
-## Incremento precedente: M01/f —0.31
-
-Richiesta del4novembre: flusso editoriale ordinario per aggiornare corsi pubblicati, storico Joomla, programma aggiornabile con copia completa, profili docente senza categoria nel form, custom fields e voci di menu. Sono anticipati i collegamenti M02/AUT-04 e M10/CORE-10/13/16 necessari al flusso richiesto. La specifica1.3 aggiorna esplicitamente i requisiti e aggiunge AC-119–125, mantenendo tutti gli ID e i criteri preesistenti. PR38/CI41819674307 verificano sottoinsiemi operativi; [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) distingue quanto già riscontrato da implementazione e collaudo mancanti.
-
-## Incremento precedente: M01/e —0.30
-
-Integra le regole per corso tramite il campo Rules e il controller nativo Joomla. Il collaudo complessivo M01 resta aperto. Il lavoro M02 successivo prosegue secondo AUT-02/04.
-
-## Incremento precedente: M01/d —0.29
-
-Completa il vincolo di descrizione estesa prima della pubblicazione. La 0.30 integra la gestione delle regole per corso. Resta il collaudo complessivo M01; il successivo lavoro M02 segue i criteri AUT-02/04.
-
-## Incremento precedente: M02/a —0.28
-
-Anteprima editoriale della versione selezionata dal Programma. Rimangono anteprima completa dei contenuti interattivi, workflow avanzato e nuove versioni.
-
-## Incremento precedente: M01/c2 —0.26
-
-Validazione della descrizione breve e diagnosi per alias duplicato. La descrizione estesa obbligatoria viene applicata nella 0.29. Resta la gestione delle regole per corso. Fields e History sono tracciati in M10.
-
-## Incremento precedente: M01/c1 —0.25
-
-ACL e navigazione editor, deleghe categoriali, paginazione/cache, riepilogo/opzioni native e checkout. Nuove prove nella PR del build. Riesame dei residui M01 e successivo ciclo editoriale M02, senza promuovere automaticamente la fase ad accettata.
-
-## Incremento precedente: M01/b3 —0.24
-
-Calendario pubblicazione/fruizione, UTC/DST, snapshot/edizione e disponibilità corrente. Guida CALENDAR e risultati nella PR del build. Successivamente riesaminare M01/c (permessi/opzioni native/errori) prima di M02; nessuna fase integralmente accettata.
-
-## Incremento precedente: M01/b2 —0.23
-
-Profili e associazioni docente, snapshot e filtri correnti/storici; guida TEACHERS e prove nella PR del build. Non completa M01; calendario successivo.
-
-## Incremento precedente: M01/b1 —0.22
-
-Copertina pubblica locale tramite Media Manager, alt/decorazione, titolo e descrizione SEO congelati. Primo sottoinsieme di M01/b: docenti, calendario e configurazione restano da completare. Prove servizio, HTTP e upgrade reale predisposte, risultati nella PR del build. Non dichiarare M01 o CORE-12 accettati.
-
-## Incremento precedente: M01/a —0.21
-
-Campi di presentazione nell'editor Joomla: descrizione estesa HTML filtrato, obiettivi, destinatari, prerequisiti dichiarativi, difficoltà e durata stimata in minuti. Persistenza in params_json.presentation senza nuova tabella; nessun JSON grezzo accettato dai form. Campi omessi da client precedenti conservati; gli altri parametri restano intatti.
-
-Il salvataggio continua a creare una bozza. La pubblicazione congela gli ultimi dati salvati nella presentazione della versione e nel suo hash. La scheda legge esclusivamente la presentazione pubblicata autorizzata; niente dati della bozza, corpi delle lezioni, parametri estranei o informazioni personali. Liste del catalogo e controlli di iscrizione non caricano la descrizione estesa. Le versioni precedenti prive di dettagli rimangono valide e inalterate.
-
-**Verifiche richieste:** persistenza e riapertura delle form, input malformati e dimensioni, HTML attivo, revisione obsoleta, ACL, immutabilità, visibilità della scheda, vecchi client e aggiornamento con dati conservati. I risultati saranno riportati nella PR del build; l'esistenza del test non ne certifica il successo.
-
-Questo incremento non completa tutta M01 né AUT-01/SCR-13. Immagine/alt/docenti, editor completo e altre opzioni restano nei passaggi successivi; descrizione obbligatoria alla pubblicazione e limite breve500caratteri richiedono gestione esplicita dei contenuti preesistenti, senza troncare o invalidare silenziosamente le versioni0.20.1. Il blocco R-00 resta aperto al riscontro sul sito dell'utente.
-
-## Regola di avanzamento
-
-Ogni PR deve fornire comportamento utilizzabile, modello/servizio/controller/vista quando necessari, ACL e validazione server, guida e ID, test positivi/negativi e upgrade pertinente. Dopo la CI si verifica il flusso tramite interfaccia; anomalie segnalate dall'utente restano aperte fino a riscontro. Il lavoro indipendente può proseguire senza fingere che la segnalazione sia chiusa.
-
-Nessuna percentuale derivata da tabelle, classi o test. Un requisito diventa accettato solo con tutti i criteri della sua baseline e un report riferito al build. La versione è stabile soltanto dopo M12:0.21 rimane un pacchetto di sviluppo.
+Ogni fase richiede implementazioni utilizzabili, controlli di accesso/validazione, guide e prove positive/negative riferite al build. I collaudi su interfaccia reale completano la CI. I requisiti trasversali si verificano durante tutte le fasi; la versione stabile richiede gli esiti obbligatori di M12. Lo stato e i prossimi passi non si aggiornano aggiungendo nuovi paragrafi di cronologia a questa roadmap.

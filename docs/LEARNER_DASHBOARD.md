@@ -1,4 +1,4 @@
-# Area personale — incremento 0.16
+# Area personale
 
 La voce menu Joomla **I miei corsi** apre `index.php?option=com_jlms&view=dashboard`. La vista è riservata all'account autenticato e attivo, indipendentemente dal livello impostato sulla voce menu. Si consiglia un livello menu per utenti registrati. Non esiste un parametro per selezionare un altro utente: anche aggiungendo `user_id` o `id` alla query si vede esclusivamente lo storico del proprio account Joomla.
 

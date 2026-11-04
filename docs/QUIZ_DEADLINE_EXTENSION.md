@@ -1,4 +1,4 @@
-# Proroga dei tentativi aperti — incremento 0.13
+# Proroga dei tentativi aperti
 
 Il gestore può aggiungere tempo a un singolo tentativo con timer, soltanto mentre è aperto e prima della sua scadenza effettiva. È un'operazione distinta dal tempo aggiuntivo preventivo della0.11: non modifica i tentativi futuri, le regole pubblicate o lo snapshot originario.
 
@@ -54,7 +54,7 @@ Il comando è vincolato ad autore, parent, revisioni, minuti, motivo e hash d'im
 
 Action Logs Joomla, contesto `com_jlms.quizextend`, registra autore, tentativo, deadline precedenti/successive, secondi aggiunti, riferimento al motivo e correlazione. Non duplica il motivo libero o le risposte. Il modello nativo è usato con l'adattatore senza email; la verifica del log per ID e correlazione è obbligatoria. Se fallisce, riga di proroga e proiezione vengono annullate nella stessa transazione. Nessuna notifica esterna o tabella di audit parallela.
 
-Schema additivo: nuova tabella `#__jlms_quiz_deadline_extensions`, con FK al tentativo e unicità per tentativo/revisione e tentativo/UUID. Totale39tabelle/56FK. Nessuna colonna precedente è alterata. Installer riprendibile e disinstallazione conservativa mantengono evidenze e autorizzazioni. Questo addendum descrive l'estensione implementativa rispetto al disegno tecnico iniziale.
+Tabella `#__jlms_quiz_deadline_extensions`, con FK al tentativo e unicità per tentativo/revisione e tentativo/UUID. Nessuna colonna precedente è alterata. Installer riprendibile e disinstallazione conservativa mantengono evidenze e autorizzazioni. Per lo schema corrente e i relativi conteggi vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 ## Verifica e limiti residui
 

@@ -1,4 +1,4 @@
-# Annullamento tracciato dei tentativi — incremento 0.12
+# Annullamento tracciato dei tentativi
 
 Il gestore può annullare un tentativo aperto, consegnato o scaduto, conservando domande, risposte, regole e punteggio originario. L'annullamento è distinto dalla rivalutazione: esclude il tentativo dal risultato valido, senza riscrivere la correzione originale. Non è una cancellazione fisica né una riapertura.
 
@@ -34,7 +34,7 @@ Una correzione già vista prima dell'annullamento non può diventare sconosciuta
 
 ## Limiti intenzionali
 
-Se l'iscrizione ha attestati, oppure esistono revisioni amministrative dell'esito per lo stesso quiz/iscrizione, l'anteprima segnala il vincolo e non mostra il pulsante di applicazione. Anche un POST diretto viene bloccato con409. Questo incremento non modifica documenti né simula una gestione delle anomalie: occorre il futuro flusso dedicato previsto da LIFE-08/EDGE-10 e dalla rivalutazione. Il blocco include anche emissioni/documenti preparatori, per evitare transizioni non gestite.
+Se l'iscrizione ha attestati, oppure esistono revisioni amministrative dell'esito per lo stesso quiz/iscrizione, l'anteprima segnala il vincolo e non mostra il pulsante di applicazione. Anche un POST diretto viene bloccato con409. Il flusso descritto non modifica documenti né simula una gestione delle anomalie: occorre il futuro flusso dedicato previsto da LIFE-08/EDGE-10 e dalla rivalutazione. Il blocco include anche emissioni/documenti preparatori, per evitare transizioni non gestite.
 
 Per una coppia quiz/iscrizione con oltre10.000tentativi il ricalcolo sincrono è rifiutato; servirà un job dedicato. Non si processa una porzione producendo risultati incompleti. La rivalutazione dei punteggi, l'invalidazione in massa, il ripristino di un annullamento, le notifiche e i flussi di revisione degli attestati non sono implementati da questa funzione.
 
@@ -66,4 +66,4 @@ La CI verifica rimborso/consumo, numerazione monotona, snapshot e risposte intat
 
 Il componente completo resta in sviluppo: questa funzione non completa la rivalutazione, il lifecycle degli attestati, l'integrazione privacy generale, il collaudo della patch Joomla corrente o i benchmark con centinaia di studenti.
 
-Dalla0.13 le proroghe autorizzate dei tentativi ancora aperti e non scaduti sono disponibili nel flusso distinto [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md). Non modificano lo snapshot originario né riaprono tentativi. I riferimenti sopra a funzioni di proroga successive descrivono il perimetro dell’incremento originario.
+Le proroghe autorizzate dei tentativi ancora aperti e non scaduti sono disponibili nel flusso distinto [QUIZ_DEADLINE_EXTENSION.md](QUIZ_DEADLINE_EXTENSION.md). Non modificano lo snapshot originario né riaprono tentativi.

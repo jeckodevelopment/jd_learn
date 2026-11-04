@@ -1,4 +1,4 @@
-# Video HTML5 locali — incremento 0.8
+# Video HTML5 locali
 
 Il provider `plg_jlmsvideo_html5` è incluso nel pacchetto base. Supporta MP4/H.264 a8bit yuv420p con una traccia video e, facoltativamente, una traccia audio AAC. Non effettua transcodifica. Altri container/codec, playlist, video remoti, sottotitoli/trascrizioni gestiti dal componente e CDN/object storage restano da implementare. Questa versione è di sviluppo, non una certificazione per la produzione.
 
@@ -10,7 +10,7 @@ Il provider `plg_jlmsvideo_html5` è incluso nel pacchetto base. Supporta MP4/H.
 4. Configurare `video_max_mib` (1–250MiB), comunque ridotto dai limiti PHP `upload_max_filesize` e `post_max_size`, con margine per il multipart. Questo limite è distinto dai20MiB degli allegati.
 5. Scegliere una consegna esplicita: `disabled` (default), `php_bounded` per prove/file fino a64MiB, oppure `x_accel` per Nginx. Nessun fallback automatico e nessun URL pubblico del file.
 
-Le opzioni autorevoli di storage/consegna/upload sono quelle del componente. I campi storici del manifest plugin (`storage_profile_id`, `delivery_mode`, `video_upload_max_bytes`, `preload`, ecc.) non attivano profili alternativi in questo incremento; il player usa `preload=metadata`. La gestione di più profili è da completare. Il primo percorso di verifica/consegna è Linux; altri sistemi operativi non sono stati collaudati.
+Le opzioni autorevoli di storage/consegna/upload sono quelle del componente. I campi storici del manifest plugin (`storage_profile_id`, `delivery_mode`, `video_upload_max_bytes`, `preload`, ecc.) non attivano profili alternativi nel flusso attuale; il player usa `preload=metadata`. La gestione di più profili è da completare. Il primo percorso di verifica/consegna è Linux; altri sistemi operativi non sono stati collaudati.
 
 ## Upload e versioni
 
