@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.30.0-dev — regole Joomla per corso
+
+- Campo Rules nativo nei corsi salvati per utenti autorizzati con core.admin sul relativo asset. Le modifiche vengono salvate dal controller com_config di Joomla.
+- I salvataggi editoriali conservano le regole; grant, deny, ereditarietà, CSRF e scope verificati sul percorso HTTP nativo.
+
 ## 0.29.0-dev — descrizione richiesta alla pubblicazione
 
 - Applica il requisito della descrizione estesa alla prima pubblicazione. Rifiuta testo assente o composto da soli spazi e markup vuoto, indicando il campo da completare.

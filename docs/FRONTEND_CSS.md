@@ -141,3 +141,5 @@ Tab amministrativo `#jlms-course-permissions`, regione `#jlms-course-effective-r
 Nel layout amministrativo Programma, `#jlms-video-setup` identifica il riepilogo dei prerequisiti video vicino al form della lezione.
 
 L’anteprima amministrativa usa `coursepreview/default.php`, con regioni `#jlms-course-preview` e `#jlms-course-preview-lesson`. Il Programma espone il collegamento `#jlms-course-preview-link`.
+
+Nella scheda Permessi dell’editor, `#jlms-course-rules` contiene il campo ACL nativo Joomla e il messaggio sul salvataggio immediato. Gli override devono conservare token, asset effettivo, campo Rules e controlli di autorizzazione.

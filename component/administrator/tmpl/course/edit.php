@@ -52,6 +52,15 @@ HTMLHelper::_('behavior.formvalidator');
     <section id="jlms-course-effective-rights"><p><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS_HELP') ?></p><dl>
     <?php foreach ($this->editorRights as $label=>$allowed) : ?><dt><?= Text::_($label) ?></dt><dd><?= Text::_($allowed ? 'JYES' : 'JNO') ?></dd><?php endforeach; ?></dl>
     <?php if ($this->canConfigure) : ?><a id="jlms-course-options-link" href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('JOPTIONS') ?></a><?php endif; ?></section>
+    <?php if ($this->canManageCourseRules) : ?>
+        <section id="jlms-course-rules">
+            <p class="alert alert-info"><?= Text::_('COM_JLMS_COURSE_RULES_IMMEDIATE') ?></p>
+            <?= $this->form->renderField('asset_id') ?>
+            <?= $this->form->renderField('rules') ?>
+        </section>
+    <?php elseif (empty($this->item->id)) : ?>
+        <p><?= Text::_('COM_JLMS_COURSE_RULES_SAVE_FIRST') ?></p>
+    <?php endif; ?>
     <?= HTMLHelper::_('uitab.endTab') ?>
     <?= HTMLHelper::_('uitab.endTabSet') ?>
     <input type="hidden" name="task" value="">
