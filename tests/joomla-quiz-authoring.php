@@ -106,7 +106,7 @@ quizReject(fn()=>$bank->save($actor,array_replace($question,['catid'=>$otherCate
 $multiple=$question;$multiple['id']=0;$multiple['revision']=1;$multiple['kind']='multiple';$multiple['options'][1]['correct']='1';$otherQuestion=$bank->save($actor,$multiple);
 $otherRevision=(int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id='.$otherQuestion)->loadResult();
 $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
-if(!$model->save(['id'=>0,'revision'=>1,'title'=>'Quiz draft fixture','alias'=>'quiz-draft-fixture','catid'=>$otherCategory,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Draft quiz fixture']))throw new \RuntimeException($model->getError());
+if(!$model->save(['id'=>0,'revision'=>1,'title'=>'Quiz draft fixture','alias'=>'quiz-draft-fixture','catid'=>$otherCategory,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Draft quiz fixture']))throw new \RuntimeException($model->getError());
 $course=(int)$model->getState('course.id');$version=$authoring->createDraft($actor,$course,1);
 $scope=static fn():array=>['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult()];
 $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Quiz chapter']);

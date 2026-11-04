@@ -68,7 +68,7 @@ $actor = $app->getIdentity();
 $catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $data = ['id'=>0,'title'=>'Publication fixture','alias'=>'publication-test','catid'=>$catid,'language'=>'*',
-    'catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Public summary','revision'=>1];
+    'catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Public summary','revision'=>1];
 if (!$model->save($data)) { throw new \RuntimeException('Publication fixture failed: ' . $model->getError()); }
 $course = (int) $model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);

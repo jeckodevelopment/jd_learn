@@ -1,22 +1,20 @@
 # Piano esecutivo residuo — stabilizzazione prima delle nuove funzioni
 
-Priorità attuale: gestione corsi e diagnosi dei provider video. Dopo la pubblicazione riuscita nel collaudo utente, verificare per ciascun provider il passaggio da configurazione e salvataggio della lezione alla riproduzione in aula. Riprodurre e correggere il blocco segnalato sul provider interessato prima degli incrementi di gestione non essenziali.
+Priorità attuale: completare i residui M01 e proseguire M02 secondo AUT-02/03/04 e SCR-13. Il collaudo utente ha confermato prima pubblicazione e YouTube. La 0.29 completa il vincolo della descrizione estesa; le ACL per corso, l’anteprima completa, la revisione e le nuove versioni rimangono nel piano.
 
-Data:1novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
+Aggiornamento:4novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
 
 ## Piano per incrementi fino alla versione stabile
 
-La [roadmap](ROADMAP_TO_STABLE.md) suddivide il perimetro in12fasi di rilascio e una fase differita. [RELEASE_PLAN.json](RELEASE_PLAN.json) assegna tutti i210requisiti alla fase primaria senza promuoverli a completati. M01/a0.21 è integrato e verificato; M01/b1–0.22 aggiunge copertina/alt e SEO, con esiti nella PR del build. Il blocco precedente include: schede dell'editor e presentazione persistente/pubblicata. Seguono M01/b2 docenti (incremento0.23 in verifica), M01/b3 calendario (incremento0.24 in verifica) e configurazione, poi M02 ciclo editoriale/anteprima/versioni e le altre fasi secondo le dipendenze. Il lavoro utile indipendente continua, mantenendo aperto il riscontro utente R-00. CSV non è il prossimo incremento.
+La [roadmap](ROADMAP_TO_STABLE.md) suddivide il perimetro in12fasi di rilascio e una fase differita. [RELEASE_PLAN.json](RELEASE_PLAN.json) assegna tutti i210requisiti alla fase primaria. Gli incrementi M01 comprendono presentazione, copertina/SEO, docenti, calendario, ACL di navigazione e validazioni. La 0.28 aggiunge l’anteprima editoriale iniziale M02. La 0.29 completa il requisito di descrizione prima della pubblicazione. M01 richiede ancora gestione delle regole per corso e collaudo complessivo; M02 richiede anteprima interattiva, revisione, archivio e versionamento. L’import CSV segue le dipendenze M06/M07 e non precede questi residui della gestione corsi.
 
-## 0. Bloccante: gestione corsi e prima pubblicazione
+## 0. Riscontro acquisito: prima pubblicazione e YouTube
 
-Priorità emersa dai test utente del1novembre2026: i corsi restano in bozza. Chiarimento del collaudo: manca un comando di pubblicazione riconoscibile nell’interfaccia. La0.20.1 espone il percorso nell’elenco e nell’editor; il riscontro sul sito è ancora da acquisire. Sospendere l'import CSV come prossimo incremento e verificare anzitutto la catena completa creazione → salvataggio → programma → prima pubblicazione → catalogo → aula. Il salvataggio dei dati generali non pubblica: il comando attuale è nel Programma tramite workflow Joomla, ma questo percorso deve essere evidente e utilizzabile.
-
-La0.20.1 aggiunge collegamento e istruzioni nell'editor, stato del corso nel programma, diagnostica per versione/permesso/plugin/transizioni mancanti, messaggi coerenti con testo/video/quiz e un test HTTP di creazione e prima pubblicazione. Le verifiche preesistenti di ritiro/ripubblicazione non coprivano questo intero percorso. La CI41349160121 ha verificato la prima pubblicazione con13asserzioni HTTP per ambiente; il chiarimento dell’elenco corsi è nella PR22. Finché manca il riscontro sul sito, non dichiarare il blocco complessivamente risolto.
+Il collaudo del1novembre aveva rilevato il percorso di pubblicazione assente o poco riconoscibile. Gli incrementi da0.20.1 hanno aggiunto il comando nel Programma, diagnostica, controlli e prove HTTP complete. L’utente ha successivamente confermato prima pubblicazione e riproduzione YouTube sulla0.27.2. Questo riscontro chiude il blocco specifico segnalato sul percorso provato. I criteri generali e le altre funzioni AUT rimangono nella matrice.
 
 **Accettazione del blocco:** riprodurre e registrare l'esito con versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione e messaggio mostrato; nessun dato personale o segreto. Provare corso minimo testuale, video e quiz supportati, errori comprensibili, permessi e token, prima pubblicazione e accesso studente con il livello richiesto. Nessuna modifica diretta dello stato o del database come workaround; nessuna perdita dello storico. La risoluzione di questo difetto non completa AUT-01/02/03/04 o SCR-13: editor completo, revisione, anteprima, archivio e versionamento restano nel piano.
 
-Dopo il blocco, riesaminare i residui della gestione corsi con la matrice e definire il successivo incremento coerente. Riprendere il punto1 solo quando il flusso essenziale è verificato. Privacy e sicurezza restano trasversali.
+Seguire i residui M01/M02 indicati sopra, con controlli di privacy e sicurezza trasversali.
 
 ## 1. Iscrizioni: ammissione e import
 

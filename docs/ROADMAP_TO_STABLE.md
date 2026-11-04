@@ -1,6 +1,6 @@
 # Percorso di sviluppo verso JD Learn stabile
 
-Aggiornato il1novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.2, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
+Aggiornato il4novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.2, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
 
 Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi indicano l'ordine principale e la responsabilità del requisito; dipendenze tecniche possono richiedere interventi trasversali. Sicurezza, privacy, ACL, lingua, override e upgrade accompagnano tutte le fasi. Il file RELEASE_PLAN.json assegna tutti i210ID una sola volta a una fase primaria; questa assegnazione non rappresenta avanzamento o accettazione.
 
@@ -20,13 +20,17 @@ Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi ind
 | M12 — rilascio stabile | Pacchetto accettato e manutenibile | Tutti gli scenari obbligatori del rilascio1 collegati al build, nessun blocco aperto; patch corrente Joomla, installazione/upgrade, backup/ripristino, integrazione reale con estensione commerciale, guide, checksum, update server e procedura di supporto. |
 | M13 — differito | Conservare il perimetro successivo già concordato | NOT-03: promemoria inattività/comunicazioni di gruppo dopo rilascio1. Compiti/live/SCORM/xAPI/LTI e altre evoluzioni mantengono le fasi della specifica, non sono implicitamente incluse nel primo rilascio stabile. |
 
-## Incremento attivo: M02/a —0.28
+## Incremento attivo: M01/d —0.29
+
+Completa il vincolo di descrizione estesa prima della pubblicazione. Restano gestione delle regole per corso e collaudo complessivo M01; il successivo lavoro M02 segue i criteri AUT-02/04.
+
+## Incremento precedente: M02/a —0.28
 
 Anteprima editoriale della versione selezionata dal Programma. Rimangono anteprima completa dei contenuti interattivi, workflow avanzato e nuove versioni.
 
 ## Incremento precedente: M01/c2 —0.26
 
-Validazione della descrizione breve e diagnosi per alias duplicato. Restano la descrizione estesa obbligatoria alla pubblicazione e la gestione delle regole per corso. Fields e History sono tracciati in M10.
+Validazione della descrizione breve e diagnosi per alias duplicato. La descrizione estesa obbligatoria viene applicata nella 0.29. Resta la gestione delle regole per corso. Fields e History sono tracciati in M10.
 
 ## Incremento precedente: M01/c1 —0.25
 

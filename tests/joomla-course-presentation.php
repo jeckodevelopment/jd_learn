@@ -184,6 +184,29 @@ unlink($root . '/' . $coverPath);
 try { CoursePresentation::snapshot($item); throw new RuntimeException('Missing cover accepted at publication'); }
 catch (InvalidArgumentException) { $checks++; }
 file_put_contents($root . '/' . $coverPath, $coverBytes);
+// New publication requires a meaningful description, including on drafts created by older clients.
+$originalParams = $item->params_json;
+$beforeVersionCheck = $db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+$beforeDescriptionCheck = $db->setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id=' . $course)->loadAssoc();
+foreach ([null, '', "<p>&nbsp; \t<br></p>", '<p>&#8203;</p>'] as $description) {
+    $params = json_decode($originalParams, true, 32, JSON_THROW_ON_ERROR);
+    if ($description === null) { unset($params['presentation']); }
+    else { $params['presentation']['description'] = $description; }
+    $missingDescription = (object) ['id' => $course, 'params_json' => json_encode($params, JSON_THROW_ON_ERROR)];
+    $db->updateObject('#__jlms_courses', $missingDescription, 'id');
+    try {
+        $choices = $publication->transitions($actor, $course);
+        $publication->transition($actor, $course, $version, (int) $item->revision, $revision(), (int) $choices[0]->id);
+        throw new RuntimeException('Publication accepted a missing promotional description');
+    } catch (DomainException $error) {
+        presentationExpect($error->getMessage() === 'COM_JLMS_COURSE_DESCRIPTION_REQUIRED', 'Missing description has a specific error');
+    }
+    presentationExpect($db->setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id=' . $course)->loadAssoc() === $beforeDescriptionCheck, 'Denied publication leaves course and revision unchanged');
+    presentationExpect($db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $beforeVersionCheck, 'Denied publication leaves the draft version unchanged');
+    presentationExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_version_id=' . $version)->loadResult() === 0, 'Denied publication creates no edition');
+}
+$restoredDescription = (object) ['id' => $course, 'params_json' => $originalParams];
+$db->updateObject('#__jlms_courses', $restoredDescription, 'id');
 $choices = $publication->transitions($actor, $course);
 $publication->transition($actor, $course, $version, (int) $item->revision, $revision(), (int) $choices[0]->id);
 $outline = $catalog->outline($guest, 'en-GB', $course);

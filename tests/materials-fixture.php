@@ -109,7 +109,7 @@ $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
 $fixture=[];
 foreach (['materials-fixture','materials-foreign'] as $alias) {
     if (!$model->save(['id'=>0,'revision'=>1,'title'=>$alias,'alias'=>$alias,'catid'=>$catid,'language'=>'*',
-        'catalog_access'=>1,'content_access'=>$level,'enrollment_mode'=>'auto','summary'=>'Protected materials fixture'])) {throw new \RuntimeException($model->getError());}
+        'catalog_access'=>1,'content_access'=>$level,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Protected materials fixture'])) {throw new \RuntimeException($model->getError());}
     $courseId=(int)$model->getState('course.id');$versionId=$author->createDraft($actor,$courseId,1);
     $module=$author->saveModule($actor,['course_id'=>$courseId,'version_id'=>$versionId,'expected_version_revision'=>1,'id'=>0,'title'=>'Materials chapter']);
     $lesson=$author->saveLesson($actor,['course_id'=>$courseId,'version_id'=>$versionId,'expected_version_revision'=>2,'id'=>0,'module_id'=>$module,

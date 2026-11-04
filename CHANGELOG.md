@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.29.0-dev — descrizione richiesta alla pubblicazione
+
+- Applica il requisito della descrizione estesa alla prima pubblicazione. Rifiuta testo assente o composto da soli spazi e markup vuoto, indicando il campo da completare.
+- Le bozze esistenti richiedono il completamento della descrizione. Le versioni già pubblicate e i ritiri/ripubblicazioni conservano i dati congelati.
+
 ## 0.28.0-dev — anteprima editoriale
 
 - Il Programma apre l’anteprima della versione selezionata. L’editor può consultare moduli e testo delle lezioni senza iscrizioni, riproduzione video, tentativi o progressi.
