@@ -1,10 +1,11 @@
 """Exercise real public/admin rendering in an isolated Joomla fixture, without a browser dependency."""
 from pathlib import Path
 from html.parser import HTMLParser
-from urllib.request import build_opener,HTTPCookieProcessor
+from urllib.request import build_opener,HTTPCookieProcessor,Request
 from urllib.error import HTTPError
 from urllib.parse import urlencode,urljoin,urlparse,parse_qs
 from http.cookiejar import CookieJar
+from html import unescape
 import subprocess,sys,time,json,os,re
 root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
@@ -143,7 +144,7 @@ try:
  editor_fixture=json.loads((root.parent/'editor-access-fixture.json').read_text())
  u,h=get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['locked']))
  locked_form=next(f for f in Page(h).forms if f['id']=='adminForm')
- if 'jform[title]' in locked_form['fields'] or 'id="jlms-course-effective-rights"' not in h:
+ if 'jform[title]' in locked_form['fields'] or 'id="jlms-course-effective-rights"' not in h or 'id="jlms-course-rules"' in h:
   raise RuntimeError('Other-operator checkout must render a read-only editor and permission diagnostic')
  if 'id="jlms-course-options-link"' not in h:raise RuntimeError('Authorised native options link missing')
  delegated_http=build_opener(HTTPCookieProcessor(CookieJar()))
@@ -162,6 +163,59 @@ try:
  du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
  if 'Editor allowed1' not in dh or 'Editor denied' in dh or 'Editor foreign' in dh or 'Editor other_owner' in dh:
   raise RuntimeError('Administrative course list leaked or omitted native delegated scope')
+ # The native Rules field persists through Joomla com_config, with its own ACL and CSRF guards.
+ rules_url,rules_html=get('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(editor_fixture['denied']))
+ rules_region=re.search(r'<section id="jlms-course-rules">(.*?)</section>',rules_html,re.S)
+ if not rules_region or '<joomla-field-permissions' not in rules_region[1]:
+  raise RuntimeError('Authorised saved-course editor must render the native Rules field')
+ rules_form=next(f for f in Page(rules_html).forms if f['id']=='adminForm')
+ rules_endpoint=unescape(re.search(r'data-uri="([^"]+)"',rules_region[1]).group(1))
+ permission={'comp':'com_jlms.course.'+str(editor_fixture['denied']),'action':'core.edit',
+  'rule':str(editor_fixture['group']),'value':'1','title':'Editor denied'}
+ def update_native_rule(client,endpoint,data):
+  req=Request(urljoin(rules_url,endpoint),data=json.dumps(data).encode(),headers={'Content-Type':'application/json','Accept':'application/json'})
+  try:
+   with client.open(req,timeout=20) as response:return json.loads(response.read().decode('utf-8'))
+  except HTTPError as error:
+   if error.code==403:return {'data':False}
+   raise
+ # Missing CSRF cannot turn a deny into a grant.
+ no_token=urlparse(rules_endpoint)
+ clean_endpoint=no_token._replace(query=urlencode({k:v[0] for k,v in parse_qs(no_token.query).items() if not re.fullmatch(r'[a-f0-9]{32}',k)})).geturl()
+ if (update_native_rule(http,clean_endpoint,permission).get('data') or {}).get('result'):
+  raise RuntimeError('Native permission endpoint accepted missing CSRF')
+ if not (update_native_rule(http,rules_endpoint,permission).get('data') or {}).get('result'):
+  raise RuntimeError('Native course permission grant failed')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' not in visible:raise RuntimeError('Record grant must take effect in the next delegated request')
+ # Restore inheritance, which grants edit through the category.
+ inherited=dict(permission,value='')
+ if not (update_native_rule(http,rules_endpoint,inherited).get('data') or {}).get('result'):
+  raise RuntimeError('Native inherited rule failed')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' not in visible:raise RuntimeError('Clearing a record rule must restore category inheritance')
+ denied=dict(permission,value='0')
+ if not (update_native_rule(http,rules_endpoint,denied).get('data') or {}).get('result'):
+  raise RuntimeError('Native record deny failed')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' in visible:raise RuntimeError('Record deny must take effect in the next delegated request')
+ # A user with edit rights but no core.admin cannot grant permission via the same native endpoint.
+ _,delegate_edit=delegated_get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['allowed']))
+ if 'id="jlms-course-rules"' in delegate_edit or '<joomla-field-permissions' in delegate_edit:
+  raise RuntimeError('The native Rules editor must be hidden from ordinary course editors')
+ delegate_edit_form=next(f for f in Page(delegate_edit).forms if f['id']=='adminForm')
+ delegate_token=next(k for k in delegate_edit_form['fields'] if re.fullmatch(r'[a-f0-9]{32}',k))
+ delegate_endpoint=no_token._replace(query=urlencode({'option':'com_config','task':'application.store','format':'json',delegate_token:'1'})).geturl()
+ if (update_native_rule(delegated_http,delegate_endpoint,permission).get('data') or {}).get('result'):
+  raise RuntimeError('Course editor escalated record permissions without core.admin')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' in visible:raise RuntimeError('Unauthorised permission request changed the rule')
+ # A standard metadata save must preserve rules already saved by native AJAX.
+ fields=dict(rules_form['fields']);fields['task']='course.save'
+ with http.open(urljoin(rules_url,rules_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' in visible:raise RuntimeError('Course metadata save overwrote the native deny')
+ print(json.dumps({'course_rules_http_checks':9,'status':'passed'}))
  du,dh=delegated_get('/administrator/index.php?option=com_jlms&task=course.add')
  delegate_form=next(f for f in Page(dh).forms if 'jform[title]' in f['fields'])
  selector=re.search(r'<select[^>]*name="jform\[catid\]"[^>]*>(.*?)</select>',dh,re.S).group(1)
@@ -300,6 +354,14 @@ try:
  stale_form=dict(form);stale_form['fields']=dict(form['fields'])
  transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
  u,h=submit(u,form,{'jform[transition_id]':transition})
+ # Current access rules remain native even when the teaching version is immutable.
+ published_editor_url,published_editor=get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(course_id))
+ if 'id="jlms-course-rules"' not in published_editor:
+  raise RuntimeError('Authorised administrators must be able to manage current permissions of a published course')
+ published_editor_form=next(f for f in Page(published_editor).forms if f['id']=='adminForm')
+ if 'jform[title]' in published_editor_form['fields']:
+  raise RuntimeError('Published teaching fields must stay read-only alongside the native permission editor')
+ print(json.dumps({'published_course_rules_http_checks':1,'status':'passed'}))
  published=fixture()['course']
  expect(int(published['state'])==1 and published['status']=='published' and int(published['editions'])==1 and int(published['associations'])==1,'First HTTP publication freezes version and creates one edition and native association')
  expect(bool(published['structure_hash']) and bool(published['published_at']),'Initial publication records immutable hash and timestamp')

@@ -59,3 +59,5 @@ Per pubblicare servono il permesso di cambiare stato sul corso (anche ereditato 
 In Programma, Anteprima editoriale apre la versione selezionata. Gli editor possono sfogliare il programma e leggere il testo salvato. Video, quiz e materiali rimangono nell’aula, con i controlli di fruizione.
 
 Prima della prima pubblicazione, compilare la descrizione estesa nella scheda Presentazione e salvare il corso. Un contenuto composto soltanto da spazi o formattazione vuota viene rifiutato. Anche le bozze create prima della 0.29 devono avere una descrizione; è sempre possibile salvarle incomplete. Le versioni già pubblicate mantengono la presentazione congelata.
+
+Gli amministratori con core.admin sul corso possono gestirne i permessi nella scheda Permessi effettivi. Il campo Rules salva ogni modifica immediatamente tramite Joomla. Vedere EDITOR_PERMISSIONS per ereditarietà e comportamento di Annulla.

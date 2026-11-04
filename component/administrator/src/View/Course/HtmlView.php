@@ -18,6 +18,7 @@ final class HtmlView extends BaseHtmlView
     public bool $checkedOutByOther = false;
     public array $editorRights = [];
     public bool $canConfigure = false;
+    public bool $canManageCourseRules = false;
 
     public function display($tpl = null)
     {
@@ -37,6 +38,15 @@ final class HtmlView extends BaseHtmlView
         $this->checkedOutByOther=$id>0 && $this->item->checked_out && (int)$this->item->checked_out!==(int)$actor->id;
         $asset=$id>0?'com_jlms.course.'.$id:'com_jlms';
         $this->canConfigure=$actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms');
+        if ($id > 0 && $actor->authorise('core.admin', $asset) && !$this->checkedOutByOther) {
+            $db = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+            $assetId = (int) $this->item->asset_id;
+            $query = $db->createQuery()->select('id')->from('#__assets')
+                ->where('id = :id AND name = :name')
+                ->bind(':id', $assetId, \Joomla\Database\ParameterType::INTEGER)->bind(':name', $asset);
+            $this->canManageCourseRules = (bool) $db->setQuery($query)->loadResult();
+            $this->form->setValue('asset_id', null, $assetId);
+        }
         $this->editorRights=['COM_JLMS_EDITOR_RIGHT_CREATE'=>\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor),'COM_JLMS_EDITOR_RIGHT_EDIT'=>$allowed,'COM_JLMS_EDITOR_RIGHT_PUBLISH'=>$actor->authorise('core.edit.state',$asset),'COM_JLMS_EDITOR_RIGHT_OPTIONS'=>$this->canConfigure];
         $this->readOnly = $this->checkedOutByOther || $id > 0 && ($this->item->current_version_id !== null || (int) $this->item->state !== 0);
         if ($this->readOnly) {
