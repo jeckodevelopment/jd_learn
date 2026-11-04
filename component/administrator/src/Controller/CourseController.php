@@ -23,9 +23,19 @@ final class CourseController extends FormController
 
     protected function postSaveHook(\Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = [])
     {
-        if ($this->getTask() === 'programme') {
-            $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
-                'index.php?option=com_jlms&view=curriculum&id=' . (int) $model->getState('course.id'), false));
+        if (strtolower($this->getTask()) === 'programme') {
+            $id = (int) $model->getState('course.id');
+            try {
+                $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app->getIdentity());
+                $item = $model->getItem($id);
+                $version = $this->app->bootComponent('com_jlms')->getCurriculumService()->createDraft($actor, $id, (int) $item->revision);
+                $url = 'index.php?option=com_jlms&view=curriculum&id=' . $id . '&version_id=' . $version;
+            } catch (\Throwable) {
+                // The editorial save has succeeded; keep it and explain a failed programme preparation.
+                $this->setMessage(\Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_PROGRAMME_SAVED_WARNING'), 'warning');
+                $url = 'index.php?option=com_jlms&view=course&layout=edit&id=' . $id;
+            }
+            $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator', $url, false));
         }
     }
 

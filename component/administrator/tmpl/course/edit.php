@@ -9,7 +9,8 @@ HTMLHelper::_('behavior.formvalidator');
 $id = (int) $this->item->id;
 ?>
 <form action="<?= Route::_('index.php?option=com_jlms&layout=edit&id=' . $id) ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
- <section id="jlms-course-publication-help" class="mb-3">
+ <section id="jlms-course-publication-help" class="mb-3" aria-labelledby="jlms-course-publication-heading">
+  <h2 id="jlms-course-publication-heading" class="visually-hidden"><?= Text::_('COM_JLMS_CURRICULUM') ?></h2>
   <?php if ($id) : ?>
    <a id="jlms-course-programme-link" class="btn btn-secondary" href="<?= Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . $id) ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
   <?php else : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
@@ -68,7 +69,7 @@ $id = (int) $this->item->id;
  </section>
  <section id="jlms-course-metadata"><h2 class="h4"><?= Text::_('COM_JLMS_COURSE_METADATA') ?></h2><?= $this->form->renderFieldset('metadata') ?></section>
  <?php if ($this->form->getFieldset('item_associations')) : ?>
-  <section id="jlms-course-translations"><h2 class="h4"><?= Text::_('COM_JLMS_ASSOCIATIONS') ?></h2><?= $this->form->renderFieldset('item_associations') ?></section>
+  <section id="jlms-course-translations"><h2 class="h4"><?= Text::_('COM_JLMS_ASSOCIATIONS') ?></h2><div id="jlms-course-associations"><?= $this->form->renderFieldset('item_associations') ?></div></section>
  <?php endif; ?>
  <section id="jlms-course-permissions"><h2 class="h4"><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS') ?></h2>
   <details id="jlms-course-effective-rights"><summary><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS_HELP') ?></summary><dl>

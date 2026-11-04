@@ -55,7 +55,7 @@ Separare tre controlli: visibilità del contenuto, diritto a fruirne e autorizza
 
 L’elenco corsi e l’editor adottano la gestione articoli Joomla come riferimento di interazione: toolbar nativa, selezione delle righe, titolo cliccabile, ricerca e filtri Search Tools, ordinamenti e paginazione coerenti. Nell’elenco sono leggibili stato, categoria del corso, accesso, autore Joomla, lingua e ultima modifica; il docente associato rimane un riferimento distinto dall’autore del record. Ricerca, filtri, totali e selettori rispettano le ACL correnti e non espongono corsi non modificabili.
 
-Nell’editor contenuto principale e impostazioni essenziali sono immediatamente riconoscibili; opzioni avanzate e permessi sono raccolti senza moltiplicare avvisi e passaggi. Programma e materiali sono raggiungibili direttamente, anche con Salva e apri programma, che conserva e valida il form prima della navigazione. Il workflow resta nativo e autorizzato: la somiglianza con gli articoli non introduce cambi di stato che aggirino validazioni o storico. Nessun comando fittizio per azioni assenti. Requisiti AUT-01, SCR-13 e CORE-20; scenario AC-126.
+Nell’editor contenuto principale e impostazioni essenziali sono immediatamente riconoscibili; opzioni avanzate e permessi sono raccolti senza moltiplicare avvisi e passaggi. Programma e materiali sono raggiungibili direttamente, anche con Salva e apri programma, che conserva e valida il form prima della navigazione e prepara o riapre il programma di lavoro senza un passaggio aggiuntivo di creazione della bozza. La versione didattica attiva e gli iscritti restano invariati. Il workflow resta nativo e autorizzato: la somiglianza con gli articoli non introduce cambi di stato che aggirino validazioni o storico. Nessun comando fittizio per azioni assenti. Requisiti AUT-01, SCR-13 e CORE-20; scenario AC-126.
 
 ### 3.1 Profili docente e associazione ai corsi
 
@@ -1152,7 +1152,7 @@ La richiesta del 4 novembre 2026 estende esplicitamente la baseline e non riduce
 
 | Test | Scenario | Risultato atteso |
 |---|---|---|
-| AC-126 | Gestire corsi dall’elenco e dall’editor secondo le convenzioni articoli Joomla, con ricerca/filtri/sort/paginazione, selezione, ACL, tastiera/mobile e salvataggio prima di aprire il programma | Metadati e azioni riconoscibili, totali e filtri coerenti, nessun corso estraneo esposto, input conservato/validato e nessuna modifica implicita di stato, versione o risultati |
+| AC-126 | Gestire corsi dall’elenco e dall’editor secondo le convenzioni articoli Joomla, con ricerca/filtri/sort/paginazione, selezione, ACL, tastiera/mobile e salvataggio prima di aprire il programma | Metadati e azioni riconoscibili, totali e filtri coerenti, nessun corso estraneo esposto, input conservato/validato e nessuna modifica implicita di stato, versione attiva o risultati |
 
 ## Fonti
 

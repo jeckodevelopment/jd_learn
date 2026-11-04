@@ -87,7 +87,7 @@ try:
  new_form=next(x for x in Page(new_html).forms if 'jform[title]' in x['fields'])
  new_fields=new_form['fields']|{'task':'course.programme','jform[title]':'Saved directly into programme','jform[alias]':'saved-into-programme','jform[catid]':str(f['categories']['parent']),'jform[language]':'*','jform[presentation_description]':'<p>Preserved on opening programme</p>','jform[catalog_access]':'1','jform[content_access]':'2','jform[enrollment_mode]':'auto'}
  saved_url,saved_html=request(urljoin(new_url,new_form['action']),new_fields)
- expect(parse_qs(urlparse(saved_url).query).get('view')==['curriculum'] and 'Saved directly into programme' in saved_html,'Native save-and-open creates the course and reaches its programme')
+ expect(parse_qs(urlparse(saved_url).query).get('view')==['curriculum'] and 'Saved directly into programme' in saved_html and 'id="jlms-module-form"' in saved_html and 'id="jlms-version-form"' not in saved_html,'Native save-and-open creates the course and reaches its programme')
  new_id=int(parse_qs(urlparse(saved_url).query)['id'][0])
  _,reopened=request('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(new_id))
  expect('Preserved on opening programme' in reopened,'Save-and-open preserves submitted course content')
