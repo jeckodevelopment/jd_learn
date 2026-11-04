@@ -1,8 +1,8 @@
 # Componente e-learning per Joomla — Specifica funzionale
 
-Versione 1.2 · 30 ottobre 2026 · Specifica funzionale consolidata del rilascio 1
+Versione 1.3 · 4 novembre 2026 · Specifica funzionale consolidata del rilascio 1
 
-**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. Mockup e matrice requisito-test sono allegati alla stessa versione.
+**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. La matrice requisito-test e il catalogo dei collaudi recepiscono la revisione 1.3. I mockup allegati restano quelli della 1.2 e non rappresentano ancora i nuovi flussi: prevalgono i requisiti testuali. Il [registro delle modifiche](../REQUIREMENTS_CHANGES.md) identifica la richiesta, gli ID interessati e i criteri aggiunti; i nomi file con suffisso 1.0 sono storici.
 
 Le sezioni 1–30 definiscono prodotto, campi, viste e processi; le sezioni 31–36 completano precedenze, integrazioni, selettori, collaudo e configurazione del sito. Le regole di dettaglio sono prescrittive. Le funzioni differite sono elencate soltanto come evoluzioni, senza costituire impegno del rilascio 1.
 
@@ -51,6 +51,14 @@ I ruoli si traducono in autorizzazioni granulari; una persona può avere più ru
 
 Separare tre controlli: visibilità del contenuto, diritto a fruirne e autorizzazione amministrativa. Sono verificati anche su URL diretti, download ed esportazioni. Un pulsante nascosto non costituisce un controllo di accesso.
 
+### 3.1 Profili docente e associazione ai corsi
+
+Il profilo docente è un riferimento autoriale del corso, non una categoria. L’editor associa uno o più profili dalla scheda del corso; non deve creare o selezionare categorie docente. L’associazione non crea utenti, gruppi o autorizzazioni operative. Un profilo pubblico può esistere senza account; il collegamento a un account Joomla abilita soltanto le modifiche espressamente autorizzate.
+
+La segreteria autorizzata può creare e aggiornare i profili. Il docente collegato può modificare il proprio testo di presentazione e i valori dei campi consentiti anche dal frontend. I campi aggiuntivi sono definiti con Campi e Gruppi di campi Joomla, con tipi installati, lingua, accesso e permesso di modifica dei valori. Email pubblica, riferimenti e contatti sono campi configurabili; l’email privata dell’account non diventa pubblica per effetto del collegamento. Il docente non cambia account collegato, pubblicazione o visibilità senza i relativi permessi amministrativi.
+
+I tipi di voce menu Pagina docente e Corsi di un docente permettono di scegliere il profilo e mostrare rispettivamente presentazione/campi/corsi o solo i corsi. La scheda corso collega il profilo. Tutte le viste filtrano profilo, valori e corsi secondo pubblicazione, lingua e livelli correnti; nessun URL diretto aggira questi controlli. Eventuali categorie tecniche dei profili preesistenti si conservano per compatibilità dei dati e delle ACL, senza diventare un passaggio del flusso ordinario.
+
 ## 4. Modello formativo e oggetti
 
 | Oggetto | Dati principali e relazioni |
@@ -58,6 +66,7 @@ Separare tre controlli: visibilità del contenuto, diritto a fruirne e autorizza
 | Categoria | Categoria nativa Joomla associata al contesto del componente; titolo, descrizione, gerarchia, lingua, accesso e permessi; classifica i corsi |
 | Percorso | Insieme ordinato di corsi, obiettivi e regola di completamento |
 | Corso | Titolo, alias, immagine, descrizioni, obiettivi, destinatari, prerequisiti, difficoltà, lingua, durata stimata, docenti, accessi, calendario, regole |
+| Profilo docente | Nome pubblico, presentazione, immagine, campi Joomla, eventuale account collegato e corsi associati; nessuna categoria da gestire |
 | Versione del corso | Struttura e requisiti pubblicati cui riferire iscrizioni e risultati |
 | Modulo didattico | Sezione ordinata di un corso; non è un modulo di visualizzazione Joomla |
 | Lezione | Tipo, contenuto, ordine, obbligatorietà, durata, materiali, completamento, eventuali prerequisiti |
@@ -76,7 +85,7 @@ Una lezione appartiene a una versione del corso; la duplicazione è disponibile 
 
 **CAT-01 — Catalogo.** Viste a schede ed elenco, paginazione, ricerca per titolo e descrizione; filtri per categoria, percorso, docente, difficoltà, lingua e durata. Filtro sui tag e sui corsi disponibili. Non esporre titoli o descrizioni di contenuti riservati salvo scheda promozionale esplicitamente pubblica.
 
-**CAT-02 — Scheda corso.** Mostrare programma, obiettivi, prerequisiti dichiarativi, docenti, durata stimata, regole di completamento, eventuale test, disponibilità dell'attestato e modalità di accesso. Pulsante coerente: Accedi, Iscriviti, Richiedi accesso, Inizia o Riprendi. Durata stimata e tempo registrato restano distinti.
+**CAT-02 — Scheda corso.** Mostrare programma, obiettivi, prerequisiti dichiarativi, docenti, durata stimata, regole di completamento, eventuale test, disponibilità dell'attestato e modalità di accesso. Pulsante coerente: Accedi, Iscriviti, Richiedi accesso, Inizia o Riprendi. Durata stimata e tempo registrato restano distinti. I docenti sono profili associati al corso come riferimenti autoriali, con collegamento alla pagina docente e ai suoi corsi visibili; la scheda usa la presentazione editoriale corrente senza riscrivere lo storico didattico.
 
 **CAT-03 — Percorsi.** Elenco ordinato dei corsi, progresso personale e requisiti. In prima release il percorso aggrega corsi; sblocco sequenziale fra corsi e attestato di percorso nella fase successiva.
 
@@ -84,13 +93,13 @@ Una lezione appartiene a una versione del corso; la duplicazione è disponibile 
 
 ## 6. Progettazione e pubblicazione dei corsi
 
-**AUT-01 — Editor corso.** Creazione guidata per dati generali, programma, accessi, completamento e attestato. Ordinamento di moduli e lezioni con trascinamento e alternativa da tastiera. Duplicazione corso, modulo e lezione.
+**AUT-01 — Editor corso.** Creazione guidata per dati generali, programma, accessi, completamento e attestato. Modifica ordinaria dei corsi anche pubblicati, con Salva e Salva e chiudi e storico Joomla, senza ritiro o ricreazione del corso. Moduli, lezioni e materiali si aggiornano dal programma secondo AUT-04. Ordinamento di moduli e lezioni con trascinamento e alternativa da tastiera. Duplicazione corso, modulo e lezione.
 
-**AUT-02 — Ciclo editoriale.** Bozza → in revisione → pubblicato → archiviato. Pubblicazione riservata ai ruoli autorizzati; date di inizio/fine opzionali. Anteprima come studente senza alterare statistiche reali.
+**AUT-02 — Ciclo editoriale.** Bozza → in revisione → pubblicato → archiviato. Pubblicazione riservata ai ruoli autorizzati; date di inizio/fine opzionali. Anteprima come studente senza alterare statistiche reali. Il workflow autorizza la pubblicazione degli aggiornamenti, senza imporre il ritiro del corso vigente per modificarlo; una versione di lavoro non sostituisce quella pubblicata fino alla transizione autorizzata.
 
 **AUT-03 — Controlli prima della pubblicazione.** Impedire corsi senza lezioni obbligatorie, quiz senza domande valide, prerequisiti circolari, risorse mancanti note e requisiti incompatibili. Avvisare per sottotitoli mancanti, durata assente e provider non tracciabile. Un corso solo consultabile e privo di completamento è una modalità esplicita distinta.
 
-**AUT-04 — Versioni.** Le modifiche di struttura, obbligatorietà o valutazione generano una nuova versione pubblicata. Gli iscritti esistenti restano sulla versione assegnata. Correzioni editoriali minori possono aggiornare la stessa versione con registro delle modifiche; il sistema chiede di classificare la modifica. Migrazione degli iscritti solo esplicita, con anteprima dell'impatto e mappatura delle equivalenze. Un semplice aggiornamento non revoca attestati né azzera risultati.
+**AUT-04 — Versioni.** La revisione editoriale usa Joomla Content History, con confronto e ripristino autorizzati. Il normale salvataggio dei dati promozionali di un corso pubblicato aggiorna la scheda corrente e conserva lo stato pubblicato. Il percorso di modifica distingue chiaramente dati editoriali e programma didattico, senza una classificazione aggiuntiva obbligatoria per ogni normale salvataggio. Modifiche di struttura, lezioni, materiali, obbligatorietà o valutazione si preparano in una copia di lavoro completa del programma corrente e si pubblicano come nuova versione didattica, con conferma dell’impatto. Gli iscritti esistenti restano sulla versione assegnata; i nuovi usano la versione attiva. Migrazione degli iscritti solo esplicita, con anteprima dell’impatto e mappatura delle equivalenze. Un aggiornamento o un ripristino editoriale non revoca attestati, non azzera risultati e non sovrascrive contenuti didattici storici.
 
 **AUT-05 — Lingue.** Interfaccia traducibile e contenuti con lingua assegnata. Nella prima versione le traduzioni dei corsi hanno iscrizioni distinte; la condivisione dei progressi tra traduzioni è un'opzione futura da progettare.
 
@@ -287,22 +296,22 @@ Tutte le integrazioni seguenti rientrano nel rilascio 1 per le entità e scherma
 
 | ID | Funzione Joomla | Requisito per il LMS | Verifica funzionale |
 |---|---|---|---|
-| CORE-01 | Categorie / com_categories | Gestione categorie nativa nel contesto del componente, gerarchia, ordinamento, stato, lingua, accesso e permessi; nessuna tabella di tassonomia parallela | Creare e modificare categorie dal gestore Joomla e ritrovarle nei corsi e nei filtri; verificare restrizioni e spostamenti |
+| CORE-01 | Categorie / com_categories | Gestione categorie nativa per i contesti pertinenti, in particolare la classificazione dei corsi, con gerarchia, ordinamento, stato, lingua, accesso e permessi; nessuna tabella di tassonomia parallela. La gestione dei docenti non espone categorie o richiede una scelta di categoria. Eventuali contenitori tecnici preesistenti rimangono un dettaglio di compatibilità, con ACL conservate. | Creare e modificare categorie dal gestore Joomla e ritrovarle nei corsi e nei filtri; verificare restrizioni e spostamenti |
 | CORE-02 | Utenti / com_users | Account, registrazione, attivazione, autenticazione, recupero credenziali, blocco e profilo tramite Joomla; rispettare MFA e provider configurati | Uno stesso account accede al sito e al LMS; account bloccato perde accesso senza cancellare implicitamente lo storico |
 | CORE-03 | Gruppi utenti e livelli di accesso | Usare gruppi e viewing access levels Joomla; nessun elenco parallelo di identità o livelli; gruppi didattici restano oggetti distinti | Cambiare il livello autorizzato e verificare gli effetti su catalogo, aula, download e ricerca |
-| CORE-04 | ACL e permessi | Azioni native create/edit/edit-own/edit-state/delete e permessi LMS aggiuntivi per iscrizioni, valutazioni, report e rettifiche; ereditarietà componente/categoria/record dove pertinente | Utente con edit-own modifica solo contenuti propri; negazioni e limitazioni applicate anche agli endpoint diretti |
+| CORE-04 | ACL e permessi | Azioni native create/edit/edit-own/edit-state/delete e permessi LMS aggiuntivi per iscrizioni, valutazioni, report e rettifiche; ereditarietà componente/categoria/record dove pertinente. Il docente collegato a un account può modificare il proprio profilo e i valori dei campi autorizzati; la segreteria autorizzata gestisce i profili nel suo ambito. La sola associazione docente-corso non concede permessi. Collegamento account, pubblicazione e visibilità non sono modificabili dal docente privo dei permessi amministrativi specifici. | Utente con edit-own modifica solo contenuti propri; negazioni e limitazioni applicate anche agli endpoint diretti |
 | CORE-05 | Template override e layout | Viste frontend, moduli distribuiti e sottolayout personalizzabili con i meccanismi standard; logica didattica e autorizzativa fuori dai template | Personalizzare scheda e aula tramite template override; aggiornare il componente senza sovrascrivere i file di override |
 | CORE-06 | Lingue e language override | Stringhe in file lingua Joomla, frontend/backend, messaggi, errori, email e testo generato; nessun testo di interfaccia incorporato nel codice; pacchetti it-IT ed en-GB | Cambiare lingua e sostituire una stringa con Language Overrides senza modificare il pacchetto |
 | CORE-07 | Multilingua e associazioni | Lingua dei contenuti, filtro lingua e associazioni fra traduzioni di corsi/categorie secondo i contesti supportati; rispetto delle voci menu multilingua | Cambio lingua conduce alla scheda associata; in assenza di traduzione fallback dichiarato; nessun trasferimento implicito dei progressi |
 | CORE-08 | Privacy / com_privacy | Plugin privacy del componente: dichiarazione delle capacità, export e gestione delle richieste di rimozione; dati su iscrizioni, progressi, tentativi, attestati e appunti quando presenti | Una richiesta Joomla include i dati LMS; cancellazione o impedimenti motivati sono gestiti dal processo nativo |
 | CORE-09 | Tag / com_tags | Tag nativi per corsi e per le altre entità editoriali previste; contesti e associazioni correttamente registrati | Un tag Joomla compare nell'editor, nei filtri e nelle visualizzazioni previste senza esporre contenuti riservati |
-| CORE-10 | Campi personalizzati / com_fields | Campi e gruppi di campi nativi per corsi e lezioni, con categorie, lingua, accesso e resa nei layout; nessun designer proprietario per gli stessi metadati | Aggiungere un campo dall'amministrazione Joomla e usarlo senza modificare codice o schema LMS |
+| CORE-10 | Campi personalizzati / com_fields | Campi e gruppi di campi nativi per corsi, lezioni e profili docente, con lingua, accesso, permessi e resa nei layout; categorie solo nei contesti pertinenti. La segreteria può configurare campi di presentazione, email pubblica, riferimenti e altri dati senza codice o schema proprietario. Docente e segreteria modificano i valori secondo le ACL Joomla; l’email dell’account non viene pubblicata automaticamente. | Aggiungere un campo dall'amministrazione Joomla e usarlo senza modificare codice o schema LMS |
 | CORE-11 | Editor e content plugin | Editor selezionato in Joomla; applicare gli eventi di preparazione contenuto nei contesti documentati, rispettando filtri e autorizzazioni | Cambiare editor e usare un content plugin ammesso nelle descrizioni/lezioni; nessuna esecuzione arbitraria di script |
 | CORE-12 | Media Manager | Selezione immagini e risorse pubbliche tramite gestore media e provider configurati; materiali didattici riservati attraverso consegna protetta | Immagine corso selezionabile dal gestore nativo; allegato riservato non reso pubblico per effetto della selezione |
-| CORE-13 | Menu, moduli e routing | Voci menu native per catalogo, categoria, percorso, corso e area personale; parametri, breadcrumbs, URL SEF e associazioni lingua | Creare le voci dal gestore menu, assegnare moduli per pagina e navigare con SEF attivo/disattivo |
+| CORE-13 | Menu, moduli e routing | Voci menu native per catalogo, categoria, percorso, corso, area personale, Pagina docente e Corsi di un docente; selezione del profilo, parametri, breadcrumbs, URL SEF e associazioni lingua. Le viste docente rispettano pubblicazione, lingua e accesso di profilo, campi e corsi, anche su URL diretto. | Creare le voci dal gestore menu, assegnare moduli per pagina e navigare con SEF attivo/disattivo |
 | CORE-14 | Smart Search / com_finder | Plugin Finder, contesti e aggiornamento dell'indice su modifica/stato/accesso/lingua; indicizzare solo schede o parti di contenuto autorizzate | Ricerca aggiornata dopo modifica o ritiro; nessuna fuga di testo riservato in titolo, anteprima o filtri |
 | CORE-15 | Workflow e stati editoriali | Integrare i workflow nativi per i corsi; lezioni e altre entità editoriali usano gli stati nativi e, quando previsto, lo stesso servizio workflow. Le transizioni sono autorizzate | Redattore propone e responsabile pubblica; gli stati non si confondono con completamento o iscrizione |
-| CORE-16 | Content History e blocco modifica | Storico editoriale Joomla sulle entità supportate e check-in/check-out per evitare sovrascritture concorrenti | Confrontare/ripristinare una revisione; due autori non sovrascrivono silenziosamente lo stesso contenuto |
+| CORE-16 | Content History e blocco modifica | Storico editoriale Joomla su corsi, profili docente e altre entità editoriali supportate, con confronto e ripristino autorizzati e check-in/check-out contro sovrascritture concorrenti. Un corso pubblicato rimane modificabile con i normali comandi. Il ripristino editoriale conserva stato, versione didattica attiva, iscrizioni e risultati; il recupero di una struttura didattica differente prepara una nuova versione di lavoro, senza mutare la versione assegnata agli iscritti. | Confrontare/ripristinare una revisione; due autori non sovrascrivono silenziosamente lo stesso contenuto |
 | CORE-17 | User Actions Log | Plugin per il registro azioni Joomla sulle operazioni amministrative rilevanti; audit didattico complementare e senza duplicazione indiscriminata di dati | Pubblicazione, modifica iscrizione, rettifica e revoca identificano operatore, oggetto e momento |
 | CORE-18 | Posta e Mail Templates | Mailer e configurazione SMTP Joomla; template LMS registrati nel sistema Mail Templates, traducibili e con variabili documentate | Modificare un template dal gestore nativo; un guasto SMTP lascia l'evento didattico valido e la notifica ritentabile |
 | CORE-19 | Scheduled Tasks | Plugin task per scadenze, notifiche e conservazione nel pianificatore Joomla; diagnostica ed esecuzioni sicure da ripetere | Configurare ed eseguire i task dall'amministrazione; una doppia esecuzione non duplica notifiche o emissioni |
@@ -311,7 +320,7 @@ Tutte le integrazioni seguenti rientrano nel rilascio 1 per le entità e scherma
 | CORE-22 | Installazione e aggiornamenti | Manifest, update server, gestione dipendenze e migrazioni supportate; messaggi post-installazione dove necessari | Installare e aggiornare dagli strumenti Joomla senza modificare il core o perdere dati |
 | CORE-23 | Eventi e plugin | Pubblicare eventi LMS documentati tramite il sistema eventi Joomla, con contesto e dati minimi; usare i servizi core nei punti applicabili | Un plugin estende il comportamento senza patch del componente e senza aggirare autorizzazioni |
 
-Il prefisso tecnico definitivo dell'estensione sarà scelto con il nome del prodotto. Categorie, campi e tag sono gestiti nei contesti registrati per l'estensione: l'uso dei servizi core non significa mescolare automaticamente categorie di articoli e corsi.
+Il prodotto JD Learn usa i contesti dell’estensione com_jlms. Categorie, campi e tag sono gestiti nei contesti registrati per l'estensione: l'uso dei servizi core non significa mescolare automaticamente categorie di articoli e corsi.
 
 ### 17.2 Distinzioni da preservare
 
@@ -336,7 +345,7 @@ Il prefisso neutro `jlms` è proposto per gli esempi; il prefisso definitivo sar
 | Catalogo corsi | `#jlms-courses` | `#jlms-courses-header`, `#jlms-courses-filters`, `#jlms-courses-results`, `#jlms-courses-pagination` |
 | Scheda corso | `#jlms-course` | `#jlms-course-header`, `#jlms-course-cover`, `#jlms-course-summary`, `#jlms-course-metadata`, `#jlms-course-teachers`, `#jlms-course-syllabus`, `#jlms-course-actions` |
 | Elenco percorsi e percorso | `#jlms-pathways`, `#jlms-pathway` | Intestazione, descrizione, corsi, avanzamento e azioni |
-| Docenti e scheda docente | `#jlms-teachers`, `#jlms-teacher` | Foto, biografia, metadati e corsi associati |
+| Docenti e scheda docente | `#jlms-teacher-profile`, `#jlms-teacher-presentation`, `#jlms-teacher-fields`, `#jlms-teacher-courses`, `#jlms-teacher-profile-form` | Foto, biografia, campi Joomla, corsi associati e modifica propria; selettori precedenti/override secondo UI-07 |
 | Aula/lezione | `#jlms-classroom` | `#jlms-lesson-header`, `#jlms-lesson-content`, `#jlms-video-player`, `#jlms-lesson-outline`, `#jlms-lesson-resources`, `#jlms-lesson-navigation`, `#jlms-lesson-progress` |
 | Quiz e risultato | `#jlms-quiz`, `#jlms-quiz-result` | Istruzioni, timer, domande, azioni, messaggi e riepilogo |
 | Area personale | `#jlms-dashboard`, `#jlms-my-courses` | Filtri, elenco, avanzamento, azioni e stato vuoto |
@@ -386,7 +395,7 @@ Il prefisso neutro `jlms` è proposto per gli esempi; il prefisso definitivo sar
 1. **Pubblicazione:** autore prepara corso e attività → controlli di validità → revisione → pubblicazione versione → apertura iscrizioni.
 2. **Studente:** scoperta → scheda → autenticazione → iscrizione/approvazione → fruizione → quiz → completamento → attestato.
 3. **Tutor:** accesso ai corsi assegnati → verifica degli avanzamenti → intervento o correzione → feedback tracciato.
-4. **Aggiornamento corso:** duplicazione/versionamento → analisi impatti → nuovi iscritti sulla nuova versione → eventuale migrazione esplicita degli iscritti precedenti.
+4. **Aggiornamento corso:** aprire il corso pubblicato e salvare i dati editoriali con storico Joomla; per lezioni/materiali aprire Modifica programma, lavorare sulla copia completa e usare Pubblica aggiornamento. Il corso vigente rimane disponibile durante la preparazione; nuovi iscritti sulla nuova versione, precedenti invariati salvo migrazione esplicita.
 5. **Eccezione:** risorsa non disponibile, salvataggio fallito o invio email fallito → stato comprensibile → tentativo di recupero → diagnosi amministrativa senza attribuire completamenti inesistenti.
 
 ## 19. Schermate previste
@@ -496,15 +505,21 @@ Sono confermati: separazione fra scheda e contenuti, anteprime esplicite, soglia
 | D-07 | Quando mostrare le risposte corrette? | Dopo superamento o esaurimento dei tentativi; prima mostrare soltanto punteggio e feedback generale | Feedback immediato, adatto all'esercitazione; oppure mai per test riservati |
 | D-08 | Quali attestati? | Abilitazione per corso; rilascio automatico al completamento; modello PDF e codice univoco; verifica pubblica disattivata di default | Nessun attestato, rilascio manuale oppure pagina pubblica con QR: va scelto il flusso |
 | D-09 | Cosa resta dopo la perdita di accesso? | Storico e attestati già emessi consultabili dall'account attivo; lezioni, risorse e nuovi tentativi bloccati; al ritorno si riprende | Bloccare anche i download di attestati oppure avviare nuova edizione; non cancellare implicitamente i dati |
-| D-10 | Come aggiornare corsi già frequentati? | Modifiche sostanziali in nuova versione; vecchi iscritti mantengono la precedente; migrazione manuale con equivalenze | Tutti migrano obbligatoriamente: richiede avvisi, riconoscimento crediti e regole sugli attestati |
+| D-10 | Come aggiornare corsi già frequentati? | Salvataggio editoriale ordinario con storico Joomla anche su corsi pubblicati; modifiche al programma in nuova versione; vecchi iscritti mantengono la precedente; migrazione manuale con equivalenze | Tutti migrano obbligatoriamente: richiede avvisi, riconoscimento crediti e regole sugli attestati |
 | D-11 | Come gestire traduzioni? | Corsi tradotti associati, con frequenza e risultati separati nella prima versione | Un'unica iscrizione condivisa fra lingue; richiede equivalenze di ogni lezione e quiz |
-| D-12 | Chi modifica e pubblica? | Contenuti gestiti nel backend; autore prepara, responsabile didattico pubblica; docente vede solo risultati assegnati | Editor docente anche frontend; amplia schermate, permessi e collaudo |
+| D-12 | Chi modifica e pubblica? | Contenuti dei corsi nel backend con workflow e permessi; il docente può inoltre modificare dal frontend il proprio profilo e i campi autorizzati; risultati limitati ai corsi assegnati | Editor frontend dei contenuti didattici: rimane un ampliamento distinto, non implicito nella modifica del profilo |
 | D-13 | Come si caricano i video? | Upload nei portali dei tre provider e collegamento nel LMS; niente upload remoto dal componente nella prima versione | Upload e libreria remota in Joomla; richiede trasferimenti, errori e sincronizzazione dedicati |
 | D-14 | Quali strumenti didattici avanzati al lancio? | Compiti, gruppi/classi didattiche, domande/commenti, appunti e live differiti; nessun chat/forum implicito | Anticipare uno o più moduli richiede dettaglio funzionale prima dello sviluppo |
 | D-15 | Contenuti preesistenti? | Nessun migratore da piattaforme esterne nel primo rilascio; duplicazione interna e import iscrizioni CSV | Migrazione di corsi, quiz e progressi: servono campioni e riconciliazione, non basta importare pagine |
 | D-16 | Quanto carico deve essere collaudato? | Profilo 300 studenti continuativi e 500 di picco, con i budget PERF-01–03 | Altro profilo e volumi; cambiano ambiente e prova, non solo una soglia nel codice |
 | D-17 | Come convivono LMS e gestore consensi? | Un adapter per il gestore effettivamente scelto; player esterno non caricato fino allo stato di consenso previsto | Nessun adapter dedicato: richiede comunque un contratto tecnico di integrazione e test sul sito |
 | D-18 | Quale politica dati adottare? | Tempi distinti e configurabili per tentativi, progressi, attestati e audit; decisione del titolare in configurazione sito | Nessuna durata può essere dedotta dal componente o fissata come obbligo legale generico |
+| D-19 | Aggiornare un corso pubblicato richiede il ritiro? | No: modifica e salvataggio ordinari, nuova revisione Joomla; il programma si prepara in una copia di lavoro | Ritiro obbligatorio o ricreazione manuale del corso |
+| D-20 | Il docente richiede una categoria? | No: profilo associato al corso come riferimento autoriale; eventuale contenitore tecnico solo per compatibilità | Tassonomia docente da configurare nel flusso ordinario |
+| D-21 | Come personalizzare il profilo docente? | Campi e gruppi Joomla; valori modificabili da docente collegato o segreteria autorizzati | Designer e gestione parallela dei campi |
+| D-22 | Come pubblicare docente e relativi corsi? | Voci menu Pagina docente e Corsi di un docente, con profilo selezionato e ACL correnti | Pagine fisse o modifica di codice/template per scegliere il docente |
+
+D-19–D-22 e le precisazioni D-10/D-12 recepiscono la richiesta esplicita del 4 novembre 2026, come registrato in REQUIREMENTS_CHANGES.md. Le restanti decisioni restano confermate.
 
 Non restano decisioni funzionali bloccanti nel registro per proseguire con il dettaglio della prima versione. Restano da completare: nome del componente e relativo prefisso; ambiente di esecuzione e strumenti di collaudo per D-16; scelta del gestore consensi per D-17; tempi effettivi e contatti del titolare per D-18. I parametri del sito non devono diventare valori fissi o riferimenti a un'organizzazione nel prodotto. Ulteriori requisiti relativi a minori o formazione regolamentata richiedono un'analisi dedicata se il caso d'uso li prevede: non sono assunti nel prodotto base.
 
@@ -524,7 +539,7 @@ Legenda: **O** obbligatorio al salvataggio; **P** obbligatorio alla pubblicazion
 | Descrizione breve | Testo, F, limite applicativo di 500 caratteri | Nessun contenuto riservato nei testi promozionali |
 | Descrizione estesa | HTML filtrato, P | Destinatari, obiettivi e prerequisiti possono essere campi distinti e renderizzati separatamente |
 | Immagine e testo alternativo | Media/URL consentito e testo, F | Richiedere alt descrittivo se immagine informativa; immagine decorativa marcata esplicitamente |
-| Docenti | Selezione multipla, F | Profili assegnati senza attribuzione automatica di permessi amministrativi |
+| Docenti | Selezione multipla, F | Profili associati come riferimenti autoriali, senza scelta di categoria docente o attribuzione automatica di permessi |
 | Livello/difficoltà | Elenco, F | Principiante/intermedio/avanzato come etichette traducibili; nessun effetto sull'accesso |
 | Durata stimata | Intero in minuti, F | Positivo; distinto dal tempo misurato e non calcolato come frequenza certificata |
 | Lingua e associazioni | Servizi Joomla, P | Tutte oppure lingua installata/configurata; associazioni coerenti con il contesto |
@@ -588,7 +603,7 @@ Un'esercitazione non influisce sul completamento a meno che l'autore la trasform
 
 Iscrizione: utente Joomla esistente e corso/versione O; origine S (avvio, manuale, import); stato S/azioni autorizzate; inizio e scadenza formativa F; progressi, completamento e ultimo evento S; nessuna appartenenza commerciale memorizzata. Unicità per studente/corso/versione/edizione; un nuovo click non crea una seconda iscrizione.
 
-Docente: nome pubblico O; biografia, immagine e link F; account Joomla collegato F; nessun indirizzo email pubblico automatico. Percorso: titolo O, descrizione/immagine/lingua/accesso della pagina e elenco ordinato dei corsi; nessuna autorizzazione implicita ai corsi e nessun attestato di percorso nel perimetro iniziale.
+Docente: nome pubblico O; biografia, immagine e link F; account Joomla collegato F; presentazione, email pubblica, riferimenti e altri valori estensibili tramite campi Joomla. Nessuna categoria da scegliere e nessun indirizzo email dell’account pubblicato automaticamente. Modifica propria e della segreteria secondo 3.1; tipi menu secondo CORE-13. Percorso: titolo O, descrizione/immagine/lingua/accesso della pagina e elenco ordinato dei corsi; nessuna autorizzazione implicita ai corsi e nessun attestato di percorso nel perimetro iniziale.
 
 Attestato: codice, iscrizione, identità al momento dell'emissione, titolo/versione, emittente, data completamento, modello/versione e stato S; documento protetto. L'identità di default usa il nome del profilo Joomla. Nome anagrafico distinto o altri dati per il PDF richiedono campi e regole espliciti, non una raccolta automatica aggiuntiva. Modello: nome O, sfondo e campi posizionabili F, orientamento e formato P; anteprima prima dell'assegnazione.
 
@@ -602,6 +617,7 @@ La tabella definisce profili di riferimento configurabili tramite ACL Joomla; no
 | Frequentare attività | Solo anteprime | Proprie e autorizzate | Solo con diritto studente | Solo con diritto studente | Solo con diritto studente | Anteprima amministrativa separata |
 | Vedere risultati personali | No | Propri | Se studente | Se studente | Se studente | Solo con permesso dati |
 | Creare corsi/lezioni | No | No | Sì, in bozza | Non implicito | Sì | Con permesso editoriale |
+| Modificare profilo docente e campi | No | Solo se account docente collegato e autorizzato | Solo se docente collegato e autorizzato | Proprio con edit-own e permessi sui valori | Nel perimetro della segreteria autorizzata | Con permesso profili/campi |
 | Modificare contenuti | No | No | Propri/assegnati | Se autorizzato | Sì nel perimetro | Con permesso editoriale |
 | Pubblicare o ritirare | No | No | No | No | Sì nel perimetro | Con permesso editoriale |
 | Gestire banca domande | No | No | Propria/assegnata | Se autorizzato | Sì nel perimetro | Con permesso dedicato |
@@ -632,6 +648,8 @@ La tabella definisce profili di riferimento configurabili tramite ACL Joomla; no
 | Bozza → in revisione | Autore, validazioni superate | Versione proposta; la pubblicazione vigente non cambia |
 | In revisione → bozza | Revisore con osservazioni | Modifica nuovamente consentita secondo permessi |
 | In revisione → pubblicato | Pubblicatore, validazioni e calendario | Nuova versione disponibile; iscritti precedenti non migrati automaticamente |
+| Pubblicato → pubblicato, salvataggio editoriale | Editor autorizzato, normale Salva/Salva e chiudi | Scheda corrente aggiornata e revisione Joomla; stesso programma assegnato e risultati conservati |
+| Pubblicato + copia di lavoro → aggiornamento pubblicato | Pubblicatore, controlli sulla copia completa e transizione workflow | Nuova versione attiva per nuove iscrizioni; precedente e iscritti conservati |
 | Pubblicato → ritirato | Pubblicatore autorizzato | Nessuna nuova iscrizione; politica di fruizione esistenti esplicitata nell'azione |
 | Ritirato → pubblicato | Pubblicatore e controlli | Ripristino della disponibilità secondo finestre e livelli |
 | Non pubblicato → cestino | Permesso edit-state | Esclusione dalla navigazione; storico ancora presente |
@@ -728,7 +746,7 @@ Una registrazione/login non costituisce iscrizione, acquisto o prova di accesso.
 
 ### 27.4 Amministrazione
 
-**SCR-13 — Editor corso.** Schede Dati generali, Programma, Accesso e catalogo, Regole didattiche, Attestato, Pubblicazione, Permessi e campi Joomla. Salva bozza, Anteprima, Invia in revisione, Pubblica solo con permessi. L'anteprima dei livelli/accessi non modifica l'appartenenza dell'utente. Prima di pubblicare mostrare errori bloccanti separati dagli avvisi.
+**SCR-13 — Editor corso.** Schede Dati generali, Programma, Accesso e catalogo, Regole didattiche, Attestato, Pubblicazione, Permessi e campi Joomla. Salva e Salva e chiudi disponibili anche sui corsi pubblicati; Versioni apre lo storico Joomla. Modifica programma prepara o riapre una copia completa per aggiornare lezioni e materiali; Pubblica aggiornamento mostra l’effetto su nuove iscrizioni e storico. Restano Salva bozza, Anteprima, Invia in revisione e Pubblica solo con permessi. La scheda Docenti associa profili senza gestione di categorie docente. L'anteprima dei livelli/accessi non modifica l'appartenenza dell'utente. Prima di pubblicare mostrare errori bloccanti separati dagli avvisi.
 
 **SCR-14 — Iscrizioni/report.** Filtri per corso/versione, utente, origine, apprendimento e stato accesso; colonne e azioni coerenti con i permessi. Operazioni massive mostrano selezionati, ambito e conteggio degli esclusi; nessuna promozione a un gruppo Joomla. Dettaglio studente/corso con attività obbligatorie, date, tentativi e rettifiche.
 
@@ -740,7 +758,7 @@ Una registrazione/login non costituisce iscrizione, acquisto o prova di accesso.
 
 **LIFE-01 — Dipendenze.** Un corso con iscrizioni, tentativi o attestati non è eliminabile definitivamente con un normale comando editoriale. Cestinamento/archiviazione e cancellazione dei dati sono operazioni diverse. La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Nessuna eliminazione a cascata non dichiarata.
 
-**LIFE-02 — Categoria e docenti.** Non consentire la cancellazione definitiva di una categoria con corsi senza scelta esplicita di ricollocazione, né lasciare riferimenti orfani. Rimuovere un docente dalla visualizzazione pubblica non cancella lezioni e risultati; le assegnazioni operative e il nome già presente in attestati storici sono gestiti separatamente.
+**LIFE-02 — Categoria e docenti.** Non consentire la cancellazione definitiva di una categoria con corsi senza scelta esplicita di ricollocazione, né lasciare riferimenti orfani. Il docente si gestisce tramite profilo e associazione ai corsi, senza tassonomia docente visibile. Rimuoverlo dalla visualizzazione pubblica non cancella lezioni, risultati o storico; le assegnazioni operative e il nome già presente in attestati storici sono gestiti separatamente.
 
 **LIFE-03 — Profilo/utente.** Cambio nome/email non riscrive attestati emessi né riallaccia iscrizioni usando la sola email. Le iscrizioni fanno riferimento all'identificativo Joomla; account eliminati o anonimizzati seguono la procedura privacy configurata. Nuovo account con stessa email non eredita automaticamente risultati o attestati dell'account precedente.
 
@@ -820,7 +838,7 @@ Le regole EDGE precisano i requisiti precedenti. In caso di ambiguità, prevale 
 
 **EDGE-10 — Rivalutazione e attestati.** Una correzione può riconoscere un completamento prima assente. Se il nuovo risultato toglierebbe l'idoneità a un attestato emesso, creare anomalia da riesaminare, senza revoca automatica. Il documento rimane nello stato precedente fino alla decisione di un responsabile autorizzato; la dashboard amministrativa segnala la pendenza. La revoca esplicita comprende motivazione ed eventuale notifica di servizio; il PDF revocato non viene riproposto come valido. Sostituzione genera un nuovo codice con collegamento allo storico. Una nuova edizione/reset non revoca l'attestato dell'edizione precedente.
 
-**EDGE-11 — Versioni e revisioni native.** Esiste una versione didattica assegnata a ogni iscrizione; una correzione ortografica è una revisione editoriale. Il ripristino Content History di una struttura con requisiti diversi propone una nuova versione in bozza, non altera gli iscritti in silenzio. Valori dei campi custom pertinenti alla fruizione sono acquisiti nello snapshot di pubblicazione; le definizioni dei campi rimangono nel core. Cambio di categoria o livello è applicato alla disponibilità corrente e non viene congelato come diritto storico. URL delle versioni storiche richiedono autorizzazione e non devono diventare indicizzabili autonomamente.
+**EDGE-11 — Versioni e revisioni native.** Ogni iscrizione conserva una versione didattica; le revisioni editoriali sono gestite da Joomla Content History. Salvare o ripristinare titolo, presentazione e profilo docente aggiorna i dati correnti secondo ACL, senza cambiare la versione attiva o i risultati assegnati. Ripristinare una struttura con requisiti diversi prepara una nuova versione in bozza. I valori custom pertinenti alla fruizione sono acquisiti nello snapshot di pubblicazione; definizioni e campi decorativi correnti rimangono nel core. Categoria, livelli e disponibilità sono controllati correntemente, senza concedere diritti storici. Gli URL storici rimangono autorizzati e non indicizzabili autonomamente.
 
 **EDGE-12 — Protezione provider.** Default Stream: token temporaneo 15 minuti, rinnovo anticipato con nuova verifica autorizzativa; durata configurabile e dichiarata in diagnostica. Non superare una scadenza didattica nota quando il modello di fruizione la rende vincolante. Token già emesso e buffer mantengono la validità residua; non promettere invalidazione immediata. Poster riservati non caricati da endpoint pubblici. Download disabilitato per default. Configurazione errata di dominio/privacy produce errore distinto, non ripiego a link pubblico o provider alternativo.
 
@@ -865,7 +883,7 @@ Verifica effettuata il 30 ottobre 2026 tramite manuale ufficiale Joomla 6.1, ind
 | CORE-07 | AssociationServiceInterface e helper per corsi/categorie | ContentComponent e AssociationsHelper | AC-20, AC-48 |
 | CORE-08 | Plugin privacy con export/removal/capabilities dei domini LMS | PrivacyPlugin e plugin core privacy/content | AC-15, AC-58, AC-63 |
 | CORE-09 | TagServiceInterface/Trait, tipi e mapping contenuti | ContentComponent | AC-19, AC-64 |
-| CORE-10 | Servizi Fields e contesti corsi/lezioni/categorie | ContentComponent, indice API Fields | AC-19, AC-65 |
+| CORE-10 | Servizi Fields e contesti corsi/lezioni/docenti; categorie solo dove pertinenti | ContentComponent, indice API Fields | AC-19, AC-65 |
 | CORE-11 | Form/editor core, content prepare per contesto | Form e plugin content core | AC-66 |
 | CORE-12 | Campo media e selezione con ACL; consegna protetta distinta | Integrazione editoriale core | AC-02, AC-67 |
 | CORE-13 | RouterServiceInterface, RouterView, menu e breadcrumbs | Router ufficiale com_content | AC-68 |
@@ -935,7 +953,7 @@ La guida dei selettori finale sarà generata dalla stessa fonte dei layout: aggi
 | AC-62 | Pacchetti it-IT/en-GB e override frontend/backend/email | Tutti i testi selezionati tradotti; override conservato all'update |
 | AC-63 | Export e rimozione privacy con attestati, audit e file temporanei | Domini LMS inclusi, impedimenti motivati, coerenza della verifica e delle code |
 | AC-64 | Tag creato, rinominato ed eliminato su corso pubblicato | Gestori, filtri e resa coerenti, nessun riferimento orfano |
-| AC-65 | Campi custom per corso/lezione, ACL, lingua e revisione | Valori visibili solo nel contesto autorizzato; snapshot non riscrive attestati |
+| AC-65 | Campi custom per corso/lezione/docente, ACL, lingua e revisione | Valori visibili solo nel contesto autorizzato; snapshot non riscrive attestati |
 | AC-66 | Cambio editor, content plugin consentito e HTML non ammesso | Rendering corretto del contenuto ammesso e rimozione del contenuto vietato |
 | AC-67 | Selezione media con utente privo di upload e download privato | Nessuna escalation; file riservato non esposto tramite URL pubblico |
 | AC-68 | Menu multilingua, SEF on/off, alias modificato e breadcrumbs | Destinazione stabile o redirect valido; controllo accesso invariato |
@@ -1106,6 +1124,20 @@ Il prodotto rimane neutro: nessun dominio, marchio, emittente, periodo di conser
 | AC-117 | Aggiornare componente e plugin con configurazioni/dati reali di prova | Stato e riferimenti preservati, errore parziale diagnosticato, nessuna apertura privacy o perdita segreti |
 | AC-118 | Confrontare documentazione e collaudi dei quattro plugin col build | Ogni plugin base ha scheda completa, parametri e test pertinenti con esiti tracciabili |
 
+
+## 42. Collaudi della revisione funzionale 1.3
+
+La richiesta del 4 novembre 2026 estende esplicitamente la baseline e non riduce i criteri preesistenti. I seguenti scenari completano quelli già previsti; l’implementazione parziale verificata nella 0.31 non equivale alla loro accettazione integrale.
+
+| Test | Scenario | Risultato atteso |
+|---|---|---|
+| AC-119 | Modificare, salvare, confrontare e ripristinare dati editoriali di un corso pubblicato, anche con iscritti | Corso sempre pubblicato; scheda aggiornata; revisioni Joomla confrontabili e ripristinabili con ACL/checkout; versione attiva, risultati e attestati invariati |
+| AC-120 | Aprire Modifica programma, aggiornare una lezione, aggiungere materiali e pubblicare un aggiornamento | Copia completa riutilizzabile senza duplicazioni manuali; corso vigente disponibile fino alla pubblicazione; nuova versione per nuovi iscritti; precedenti e risorse storiche conservati |
+| AC-121 | Creare un docente, associarlo a corsi e aggiornare un profilo preesistente | Nessuna gestione o selezione di categorie docente; associazioni semplici e persistenti; compatibilità di dati e ACL senza assegnare gruppi o permessi |
+| AC-122 | Definire campi e gruppi Joomla per un docente, con presentazione, email e riferimenti, e verificarne la resa | Valori gestiti senza codice/schema aggiuntivo; accesso, lingua e permessi nativi rispettati; email privata dell’account non pubblicata automaticamente |
+| AC-123 | Docente collegato e segreteria modificano il profilo; provare altro account, campi protetti, revoca e dati invalidi | Solo modifiche autorizzate; nessun cambio implicito di account, stato o accesso; dati conservati per correggere errori e conflitti gestiti |
+| AC-124 | Creare le voci menu Pagina docente e Corsi di un docente, con SEF e lingue, e provare URL diretti | Profilo selezionato e relativo elenco corretti; corsi e campi riservati assenti; routing, navigazione e paginazione coerenti |
+| AC-125 | Aggiornare il pacchetto con corsi pubblicati, profili e categorie tecniche preesistenti, campi e iscrizioni | Presentazione corrente, associazioni, campi e ACL conservati; revisioni e versioni storiche disponibili senza migrazione automatica degli iscritti |
 
 ## Fonti
 

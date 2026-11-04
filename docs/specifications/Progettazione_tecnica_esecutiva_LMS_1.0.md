@@ -1,8 +1,8 @@
 # LMS per Joomla — progettazione tecnica esecutiva
 
-Versione documento 1.0 · 30 ottobre 2026 · Baseline tecnica del primo rilascio
+Versione documento 1.1 · 4 novembre 2026 · Baseline tecnica del primo rilascio
 
-Questo documento traduce la specifica funzionale consolidata 1.2 e i contratti applicativi 1.1 in decisioni implementative. I nomi `jlms`, `com_jlms` e il namespace `Jlms` sono prefissi di lavoro neutrali. Non contiene nomi di committenti né dipendenze da prodotti concorrenti. Il pacchetto allegato è materiale di progettazione: schema, interfacce e contratti non costituiscono un componente già installabile o collaudato.
+Questo documento traduce la specifica funzionale consolidata 1.3 e i contratti applicativi 1.1 in decisioni implementative. I nomi `jlms`, `com_jlms` e il namespace `Jlms` sono prefissi di lavoro neutrali. Non contiene nomi di committenti né dipendenze da prodotti concorrenti. Il pacchetto allegato è materiale di progettazione: schema, interfacce e contratti non costituiscono un componente già installabile o collaudato.
 
 La specifica funzionale conserva la precedenza sulle funzionalità; questo documento fissa la loro realizzazione tecnica. Una divergenza va risolta aggiornando entrambi e registrando una decisione, senza cambiare silenziosamente il comportamento concordato. Vendita, abbonamenti e attribuzione dei gruppi da parte di estensioni commerciali restano fuori dal componente.
 
@@ -15,7 +15,7 @@ La specifica funzionale conserva la precedenza sulle funzionalità; questo docum
 | ADR-003 | MySQL 8.0.13+ e MariaDB 10.6+, InnoDB, utf8mb4 | CI anche su MySQL 8.4; PostgreSQL non supportato dal primo rilascio |
 | ADR-004 | Monolite modulare nello stesso sito Joomla | Servizi applicativi interni, non microservizi; worker Scheduler/CLI sugli stessi dati |
 | ADR-005 | Contratti video in lib_jlms, provider nel gruppo jlmsvideo | Installazione di nuovi provider senza modificare il componente |
-| ADR-006 | Identità corso stabile, versioni didattiche immutabili dopo pubblicazione | Iscrizioni e tentativi non cambiano sotto gli studenti |
+| ADR-006 | Identità corso stabile e dati promozionali correnti modificabili; programmi pubblicati immutabili | Salva ordinario con storico Joomla, nuova versione per aggiornamenti al programma; iscrizioni e tentativi assegnati non cambiano |
 | ADR-007 | Stato didattico nel DB, oggetti binari in storage protetto | Backup coordinato, nessun video nel DB o URL pubblico implicito |
 | ADR-008 | Endpoint MVC same-origin, nessuna API REST esterna iniziale | Sessione/CSRF/ACL core; webservices nativi solo in futura estensione |
 | ADR-009 | Outbox e job con consegna almeno una volta | Consumatori idempotenti; nessuna promessa di exactly-once per email/provider esterni |
@@ -68,16 +68,16 @@ Registrare dipendenze tramite provider del componente. Per l’iniezione nei con
 |---|---|---|
 | Utenti, login, MFA, sessione | Identità Joomla; collegamento subject LMS al core user_id | Nessun database password; disabilitazione utente verificata sui task sensibili |
 | Gruppi e livelli di accesso | course.content_access e catalog_access referenziano viewlevels; autorizzazione sui livelli correnti | Non confondere livello visivo con gruppo; nessuna scrittura di gruppi dall’iscrizione |
-| ACL | Asset componente > categoria > corso; asset question/teacher/pathway secondo categoria | core.create/edit/edit.own/edit.state/delete e permessi jlms distinti |
-| Categorie | com_categories, contesti com_jlms.course, .question, .teacher, .pathway | Albero, accesso, pubblicazione, lingua e ordine tramite API core |
+| ACL | Asset componente > categoria > corso; asset question/pathway; asset teacher con compatibilità dei parent esistenti | core.create/edit/edit.own/edit.state/delete e permessi jlms distinti; modifica del profilo da account collegato o segreteria autorizzata |
+| Categorie | com_categories per corsi/domande/percorsi; docente senza selettore o gestione categorie | Conservare eventuali categorie tecniche .teacher preesistenti e ACL; nessuna tassonomia docente richiesta all’operatore |
 | Tag | Servizio/observer core e content type per entità pubbliche | Solo metadati visibili, niente tag privati resi pubblici da Finder |
-| Campi personalizzati | Contesti course/lesson/teacher/pathway; editor core e snapshot per versione | Valori lezione pubblicata congelati; campi storici non riletti live |
+| Campi personalizzati | Contesti course/lesson/teacher/pathway, FieldsServiceInterface, gestore e plugin core; nessun designer/storage parallelo | Valori didattici congelati nella versione; campi promozionali del profilo corrente secondo accesso/lingua/ACL dei valori |
 | Multilingua e associazioni | language e associazioni per identità course/teacher/pathway | Le traduzioni sono risorse distinte; niente progressi trasferiti automaticamente |
 | Override e layout | tmpl e LayoutHelper; WAM e contratto CSS stabile | Override testato con template core e template alternativo |
-| Menu, SEF, breadcrumb | RouterView e regole menu core; alias entro categoria/lingua | Controllare autorizzazioni anche con ID/URL diretto; niente redirect aperti |
+| Menu, SEF, breadcrumb | RouterView e regole menu core; Pagina docente e Corsi di un docente con selettore del profilo, oltre alle viste già previste | Controllare autorizzazioni anche con ID/URL diretto; niente redirect aperti |
 | Editor, content plugin e Media | Editor/filtri Joomla sul testo; media manager per immagini promozionali | Non rendere pubblici i materiali protetti tramite media manager |
 | Workflow | WorkflowServiceInterface e associazioni core; stato editoriale separato da versione didattica | Solo transizione approvata pubblica una versione validata |
-| Cronologia e check-in/out | Content History per modifiche editoriali; checked_out core | Ripristino su bozza, mai mutare struttura pubblicata storica |
+| Cronologia e check-in/out | Versionable model/table, content type e com_contenthistory su corso/docente; checked_out core | Confronto/ripristino editoriali anche sul corso pubblicato tramite salvataggio autorizzato; recupero di struttura differente in nuova bozza, mai mutare lo storico assegnato |
 | Ricerca intelligente | plg_finder_jlms indicizza solo descrizioni e metadati promozionali | Nessun testo lezione protetta, quiz, file o URL firmato nell’indice |
 | Privacy | plg_privacy_jlms esporta/cancella/anonimizza dati secondo policy | Non elimina in cascata attestati e prove senza policy; rispetta richieste core |
 | Action Logs | plg_actionlog_jlms, payload minimi e chiavi traducibili | Mutazioni sensibili tracciate; nessuna risposta quiz/segreto nei log |
@@ -88,6 +88,18 @@ Registrare dipendenze tramite provider del componente. Per l’iniezione nei con
 La dichiarazione delle interfacce in Extension da sola non integra queste funzioni. Per ogni capacità servono helper, manifest/config, observer/eventi e prove su creazione, modifica, cancellazione e ripristino. I nomi concreti di trait/firme sono verificati sul core target prima di codificarli; riutilizzare i pattern com_content senza copiare logica commerciale non pertinente.
 
 I contenuti didattici non vengono salvati in `#__content`: si registrano i content type necessari agli strumenti core. Lezioni versionate e moduli ereditano ACL dal corso e non generano migliaia di asset ACL indipendenti. Entità con ACL autonoma hanno asset_id. Il context dei campi lezione usa ID fisico di bozza; alla pubblicazione si memorizzano definizioni rilevanti e valori nello snapshot. I parametri decorativi live restano separati dalle regole storiche.
+
+### 4.1 Aggiornamento ordinario e profili docente — revisione 1.3
+
+L’editor del corso pubblicato usa Salva/Salva e chiudi senza imporre ritiro o ricreazione. Il modello valida una allowlist di dati editoriali, conserva stato e puntatore alla versione didattica, aggiorna la proiezione pubblica corrente e registra una revisione tramite il servizio Content History di Joomla. Il ripristino passa dalle stesse ACL, dal checkout e dai controlli di concorrenza; non ripristina indiscriminatamente stato, puntatori o record di apprendimento.
+
+Modifica programma crea o riapre una copia completa con nuovi ID fisici e logical_key coerenti; rimappa moduli, lezioni, quiz, revisioni domanda e associazioni ai materiali. I blob immutabili possono essere riusati, ma le associazioni e l’autorizzazione al download restano riferite alla nuova versione. Non si copiano iscrizioni, progressi, tentativi o attestati. Pubblica aggiornamento usa validazioni e transizione workflow autorizzata in una transazione breve; l’effetto sui nuovi iscritti è mostrato prima dell’azione. Conservare versione e risorse precedenti. Migrazione ed equivalenze sono un comando esplicito distinto.
+
+Il docente rimane un profilo collegabile facoltativamente a un account Joomla e associato ai corsi; non coincide con un account o una categoria. Nei form ordinari non sono presenti creazione/selezione/gestione categorie docente. I contenitori tecnici preesistenti e i relativi asset si mantengono per compatibilità; il percorso di creazione non chiede di configurarli. Contesti Fields e gruppi di campi core forniscono i valori aggiuntivi. Il docente collegato con edit-own può modificare il proprio testo e i campi con core.edit.value, dal frontend o dal backend se dispone dell’accesso amministrativo. La segreteria richiede le capacità di gestione profili e i permessi sul record. Account, stato e visibilità restano protetti lato server.
+
+Le viste teacher e teacher/courses ricevono l’ID del profilo dal menu/router nativo, applicano accesso/lingua/stato al profilo e alle query dei corsi e paginano gli elenchi. I campi si preparano con FieldsHelper secondo le ACL correnti. Non esporre email dell’account, dati dello studente o risorse riservate. La modifica del profilo usa form MVC/sessione/CSRF core e conserva l’input in caso di errore. La sola associazione corso-docente non attribuisce gruppi o permessi.
+
+Queste sono prescrizioni tecniche; lo stato verificato della0.31 e le parti ancora mancanti si leggono in REQUIREMENTS_STATUS.csv e M01_ACCEPTANCE.md. In particolare non dedurre una conferma di impatto, migrazione o collaudo SEF completo dalla sola presenza di un pulsante o layout.
 
 ## 5. Policy di accesso e confini di fiducia
 

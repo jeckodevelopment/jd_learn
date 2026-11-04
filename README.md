@@ -8,6 +8,10 @@ Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC
 
 Segnalato nel collaudo utente: corsi che restano in bozza. La pubblicazione è una priorità bloccante prima dell’import CSV. La 0.20.1 rende esplicito il percorso editor → Programma → transizione e aggiunge diagnostica e una prova HTTP di prima pubblicazione; non dimostra ancora la risoluzione sul sito segnalante. Consultare [stato](docs/IMPLEMENTATION_STATUS.md) e [piano](docs/NEXT_STEPS.md).
 
+## Requisiti aggiornati —4novembre2026
+
+La [specifica funzionale1.3](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md) formalizza la modifica dei corsi pubblicati, lo storico Joomla e i profili docente senza categorie, con campi e voci di menu nativi. [Registro della richiesta](docs/REQUIREMENTS_CHANGES.md) e [criteri residui M01](docs/M01_ACCEPTANCE.md). Documentazione di requisiti aggiornata; pacchetto runtime invariato0.31.0-dev.
+
 ## Incremento0.31 — gestione editoriale e docenti
 
 Dati dei corsi pubblicati modificabili con storico Joomla. Modifica programma prepara una versione di lavoro completa e Pubblica aggiornamento la attiva per nuove iscrizioni. I profili docente usano campi personalizzati Joomla, supportano la modifica dal frontend da parte dell’account collegato e hanno viste di menu dedicate. [Guida](docs/COURSE_EDITOR.md).
@@ -70,7 +74,7 @@ La matrice baseline dei test resta il piano di accettazione. I test di singoli i
 
 ## Specifiche e guide
 
-- [Specifica funzionale consolidata1.2](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+- [Specifica funzionale consolidata1.3](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
 - [Progettazione tecnica esecutiva](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
 - [Sicurezza e specifiche dei quattro provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
 - [Servizi/endpoint progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)

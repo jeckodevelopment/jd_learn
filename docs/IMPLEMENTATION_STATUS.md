@@ -4,13 +4,13 @@ Aggiornamento: 4 novembre 2026. Versione di sviluppo **0.31.0-dev**, con revisio
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
-La specifica funzionale1.2 e il progetto tecnico sono il perimetro; il suffisso1.0 nei loro nomi è storico. La [matrice corrente](REQUIREMENTS_STATUS.csv) riporta tutti i210requisiti della [matrice baseline](specifications/Matrice_requisiti_test_LMS_1.0.csv), senza modificarne descrizione, perimetro o scenari previsti.
+La specifica funzionale1.3 e il progetto tecnico sono il perimetro; il suffisso1.0 nei loro nomi è storico. La [matrice corrente](REQUIREMENTS_STATUS.csv) riporta tutti i210requisiti della [matrice baseline](specifications/Matrice_requisiti_test_LMS_1.0.csv), con descrizioni e scenari aggiornati esplicitamente dalla richiesta del4novembre, registrata in [REQUIREMENTS_CHANGES.md](REQUIREMENTS_CHANGES.md). Gli ID e i perimetri restano conservati; lo stato di implementazione non riscrive i requisiti.
 
 ## Revisione funzionale M01 — richiesta del4novembre
 
 La0.31 semplifica il normale aggiornamento dei corsi pubblicati con storico editoriale Joomla, la modifica del programma con copia completa della versione corrente e i profili docente con campi personalizzati nativi e voci di menu. La richiesta aggiorna la presentazione della gestione docente eliminando il passaggio obbligatorio di categoria. I dati preesistenti conservano categorie e ACL tecniche.
 
-Il programma pubblicato e le assegnazioni didattiche già in uso mantengono la loro identità. Le nuove versioni vengono attivate con il workflow. Il collaudo completo M01, l’anteprima interattiva, la revisione e le migrazioni M02 rimangono da verificare secondo la matrice.
+Il programma pubblicato e le assegnazioni didattiche già in uso mantengono la loro identità. Le nuove versioni vengono attivate con il workflow. La PR38 è integrata; la CI41819674307 ha superato tutti e4gli ambienti, con34controlli editoriali nativi e6HTTP per ambiente e conservazione dopo upgrade. Questo non chiude M01: i criteri effettivamente residui, incluse duplicazioni autonome, ordinamento completo e parti dell’editor, sono in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md). Anteprima interattiva, revisione completa e migrazioni restano nel piano M02. La specifica1.3 aggiunge AC-119–125, ancora non dichiarati integralmente accettati.
 
 ## Anteprima editoriale M02
 
@@ -26,7 +26,7 @@ Il 3 novembre l’utente ha confermato di avere pubblicato il corso e ha segnala
 
 La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili per versione, permessi, plugin Publishing e transizioni, oltre al test HTTP completo di creazione/prima pubblicazione e ai rifiuti per programma vuoto/plugin disabilitato. La prima CI0.20.1 (41349160121) ha superato13verifiche HTTP per ambiente e tutte le regressioni, inclusa la prima pubblicazione. Il registro evidenze conserva quel build preciso; i controlli del successivo chiarimento nell’elenco sono consultabili nella PR22. Il riscontro successivo sul sito segnalante è stato acquisito. I messaggi e la guida di pubblicazione, rimasti erroneamente alle limitazioni della0.3, vengono riallineati.
 
-## Incremento corrente0.30 — M01/e
+## Incremento precedente0.30 — M01/e
 
 Regole per-record modificabili con il campo Rules e il controller Joomla, autorizzazione core.admin sul corso e avviso di salvataggio immediato. Prove HTTP native e conservazione dopo Salva. M01 richiede ancora il collaudo complessivo.
 
@@ -58,7 +58,7 @@ Copertina pubblica locale tramite Media Manager, alt/decorazione e metadati SEO 
 
 Schede native editor (dati generali, presentazione, accessi e pubblicazione; associazioni se abilitate), campi promozionali tipizzati e HTML filtrato. La pubblicazione congela gli ultimi dati salvati e la scheda pubblica li legge dalla versione autorizzata. Nessun dato di bozza o corpo delle lezioni viene esposto. Compatibilità dei vecchi client e versioni precedenti, schema invariato. La CI41417124499 ha superato44verifiche presentazione,19asserzioni di prima pubblicazione HTTP e3controlli di conservazione per ambiente, oltre alle regressioni. PR23 integrata; l’esito non completa M01. L'evidenza JSON storica continua a identificare soltanto i build già eseguiti.
 
-La [roadmap verso il rilascio stabile](ROADMAP_TO_STABLE.md) articola le fasi M01–M12 e il differito M13. Tutti i210ID sono assegnati in RELEASE_PLAN.json e controllati automaticamente; nessuna fase è dichiarata accettata. Immagini/docenti/calendario, editor completo, anteprima, workflow revisione/archivio e versionamento restano incompleti.
+La [roadmap verso il rilascio stabile](ROADMAP_TO_STABLE.md) articola le fasi M01–M12 e il differito M13. Tutti i210ID sono assegnati in RELEASE_PLAN.json e controllati automaticamente; nessuna fase è dichiarata accettata. Immagini, docenti, calendario, ACL e aggiornamenti hanno sottoinsiemi operativi verificati. Restano i criteri puntuali di M01, l’anteprima completa, workflow revisione/archivio e migrazioni; nessuna fase viene promossa sulla base dei soli sottoinsiemi.
 
 ## Come leggere lo stato
 
@@ -76,7 +76,7 @@ Nessun requisito è stato promosso ad accettazione completa in questo riallineam
 | Pacchetto e installazione | Manifest/DI/MVC, preflight, build riproducibile, installazione/upgrade e conservazione dati sui flussi CI | Update server, backup/ripristino, matrice completa sulla patch corrente e manutenzione di rilascio |
 | Utenti e accessi | Identità/sessioni/CSRF, livelli e asset Joomla; ricaricamento dei diritti, blocchi/revoche e controllo diretto per oggetto | MFA/provider reali e copertura di tutte le nuove azioni; integrazione reale con estensione abbonamenti |
 | Categorie e lingue | Categorie native, gerarchia/antenati, Pathway e associazioni; corsi associati in bozza, Language Filter e menu SEF | Lifecycle con dipendenze, associazioni dei gruppi pubblicati e selettori completi |
-| Authoring e pubblicazione | Bozze, moduli/lezioni testo/video/quiz, ordinamento/parent, editor filtrato; workflow/snapshot verificati nella CI, prima pubblicazione segnalata bloccata nel collaudo utente | Audio/documenti come lezioni autonome, clonazione/nuove versioni complete, equivalenze/migrazioni, prerequisiti e rilascio progressivo |
+| Authoring e pubblicazione | Bozze, moduli/lezioni testo/video/quiz, ordinamento/parent, editor filtrato; prima pubblicazione e YouTube confermati dall’utente; salvataggio pubblicato, storico Joomla e copia completa per aggiornamento0.31 | Duplicazioni autonome corso/modulo/lezione, audio/documenti come lezioni, analisi impatti/migrazioni, prerequisiti e rilascio progressivo |
 | Catalogo e aula | Schede/programma pubblici autorizzati, filtri categorie, aula protetta, materiali e completamenti persistenti | Ricerca/ordinamenti/SEO e metadati completi, percorsi aggregati, navigazione/UX/accessibilità complete |
 | Area personale | Storico del proprietario con filtri/pagine, apprendimento distinto dall’accesso, Riprendi/Rivedi e lingua originale | Attestati e attività dettagliate; fallback di ripresa R-05 |
 | Video | Quattro plugin base, consenso, copertura unica/ripresa, Stream API/token, MP4 privati PHP limitato/Nginx | Provider aggiuntivi senza patch R-02, sottotitoli/trascrizioni/velocità/configurazioni complete, firma locale/cache Stream, collaudo SDK/provider/browser reale |
@@ -86,7 +86,7 @@ Nessun requisito è stato promosso ad accettazione completa in questo riallineam
 | Attestati | Solo schema e specifica | Modelli/PDF, idoneità/emissione, download, verifica pubblica opzionale, revoca/sostituzione e anomalie |
 | Audit e task | Writer com_actionlogs su quiz/iscrizioni; plugin Scheduler per scadenze quiz | Plugin/coverage Action Logs generali, job/outbox/lease/retry, notifiche, Mail Templates e purghe |
 | Report | Elenco iscritti con filtri/versione/utente/stato/avanzamento e date UTC | Aggregati/KPI, dettagli studente/quiz/attestati, filtri/CSV export e dati temporanei protetti |
-| Core Joomla restante | Integrazioni già operative riportate sopra, WAM, override, form/menu e lingue | Plugin Privacy export/removal/capabilities, Finder, Tags, Custom Fields, Content History, Media Manager e tutte le azioni core pertinenti |
+| Core Joomla restante | WAM, override, form/menu/lingue; Fields sui docenti e Content History corso/docente0.31 | Plugin Privacy, Finder, Tags, estensione e collaudo completo Fields/History/Media e restanti azioni core |
 | Qualità e scala | Test PHP/database/Joomla/HTTP/JS, negativi, richieste concorrenti e upgrade della suite implementata | WCAG/manuali browser/mobile, analisi statica/stile/scan e revisione sicurezza completa, provider live, recovery e carico300/500 |
 
 I limiti specifici e le differenze rispetto alla specifica sono nel [registro aperto](IMPLEMENTATION_GAPS.md). Il ritiro dal catalogo non implementa ancora le due operazioni distinte previste da EDGE-09; i controlli sugli ID del componente non certificano l’unicità di tutta la pagina Joomla.
@@ -101,7 +101,7 @@ Non sono eseguiti i benchmark300studenti/60min e500/10min, né una verifica comp
 
 ## Prossimi passaggi
 
-Il [piano esecutivo residuo](NEXT_STEPS.md) specifica dipendenze e condizioni di accettazione. Priorità successiva: stabilizzare e collaudare la gestione corsi e la prima pubblicazione (punto0). Import CSV e job amministrati seguono dopo la verifica del flusso essenziale. Privacy e sicurezza accompagnano ogni incremento e non sono rinviate alla sola verifica finale.
+Il [piano esecutivo residuo](NEXT_STEPS.md) specifica dipendenze e condizioni di accettazione. Priorità successiva: chiudere i residui puntuali di [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), senza trattare la prima pubblicazione già confermata come un nuovo blocco aperto. Import CSV e job amministrati seguono dopo la verifica del flusso essenziale. Privacy e sicurezza accompagnano ogni incremento e non sono rinviate alla sola verifica finale.
 
 ## Cronologia e guide
 
