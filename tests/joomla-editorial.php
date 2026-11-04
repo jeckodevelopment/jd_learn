@@ -42,6 +42,7 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();

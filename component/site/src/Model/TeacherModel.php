@@ -12,6 +12,12 @@ use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 
 final class TeacherModel extends ListModel
 {
+    protected function populateState($ordering = 'c.title', $direction = 'ASC')
+    {
+        parent::populateState($ordering, $direction);
+        $this->setState('list.limit', max(1, min(100, (int) $this->state->get('list.limit', 20))));
+    }
+
     public function getProfile(): object
     {
         $app = Factory::getApplication();
