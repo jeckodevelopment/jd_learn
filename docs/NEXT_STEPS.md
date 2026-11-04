@@ -1,3 +1,5 @@
+Priorità aggiunta4novembre2026: M01/h0.33, amministrazione corsi simile agli articoli Joomla secondo RF-2026-11-04-B/AC-126. Elenco ed editor sono rivisti; esiti CI nella PR del build. Segue M01/i per il riordino mouse/tastiera, poi gli altri residui M01.
+
 # Piano esecutivo residuo — stabilizzazione prima delle nuove funzioni
 
 Priorità attuale: semplificazione M01 richiesta il4novembre, con storico Joomla e aggiornamento dei corsi, lezioni/materiali e docenti. Le dipendenze M02/AUT-04 e M10/CORE-10/13/16 sono anticipate per rendere coerente il flusso richiesto. Il collaudo utente ha confermato prima pubblicazione e YouTube. La 0.29 completa il vincolo della descrizione estesa e la 0.30 integra le ACL per corso. La0.31 integra salvataggio pubblicato/storico, copia completa per aggiornamenti e profili docente. La specifica1.3 e AC-119–125 recepiscono esplicitamente la richiesta. I residui M01 sono puntuali in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md); anteprima completa, revisione e migrazioni restano nel piano.

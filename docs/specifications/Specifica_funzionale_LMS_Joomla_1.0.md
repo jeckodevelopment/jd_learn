@@ -1,8 +1,8 @@
 # Componente e-learning per Joomla — Specifica funzionale
 
-Versione 1.3 · 4 novembre 2026 · Specifica funzionale consolidata del rilascio 1
+Versione 1.4 · 4 novembre 2026 · Specifica funzionale consolidata del rilascio 1
 
-**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. La matrice requisito-test e il catalogo dei collaudi recepiscono la revisione 1.3. I mockup allegati restano quelli della 1.2 e non rappresentano ancora i nuovi flussi: prevalgono i requisiti testuali. Il [registro delle modifiche](../REQUIREMENTS_CHANGES.md) identifica la richiesta, gli ID interessati e i criteri aggiunti; i nomi file con suffisso 1.0 sono storici.
+**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. La matrice requisito-test e il catalogo dei collaudi recepiscono le revisioni 1.3–1.4. I mockup allegati restano quelli della 1.2 e non rappresentano ancora i nuovi flussi: prevalgono i requisiti testuali. Il [registro delle modifiche](../REQUIREMENTS_CHANGES.md) identifica la richiesta, gli ID interessati e i criteri aggiunti; i nomi file con suffisso 1.0 sono storici.
 
 Le sezioni 1–30 definiscono prodotto, campi, viste e processi; le sezioni 31–36 completano precedenze, integrazioni, selettori, collaudo e configurazione del sito. Le regole di dettaglio sono prescrittive. Le funzioni differite sono elencate soltanto come evoluzioni, senza costituire impegno del rilascio 1.
 
@@ -51,6 +51,12 @@ I ruoli si traducono in autorizzazioni granulari; una persona può avere più ru
 
 Separare tre controlli: visibilità del contenuto, diritto a fruirne e autorizzazione amministrativa. Sono verificati anche su URL diretti, download ed esportazioni. Un pulsante nascosto non costituisce un controllo di accesso.
 
+### 3.0 Gestione amministrativa secondo le convenzioni Joomla — revisione1.4
+
+L’elenco corsi e l’editor adottano la gestione articoli Joomla come riferimento di interazione: toolbar nativa, selezione delle righe, titolo cliccabile, ricerca e filtri Search Tools, ordinamenti e paginazione coerenti. Nell’elenco sono leggibili stato, categoria del corso, accesso, autore Joomla, lingua e ultima modifica; il docente associato rimane un riferimento distinto dall’autore del record. Ricerca, filtri, totali e selettori rispettano le ACL correnti e non espongono corsi non modificabili.
+
+Nell’editor contenuto principale e impostazioni essenziali sono immediatamente riconoscibili; opzioni avanzate e permessi sono raccolti senza moltiplicare avvisi e passaggi. Programma e materiali sono raggiungibili direttamente, anche con Salva e apri programma, che conserva e valida il form prima della navigazione e prepara o riapre il programma di lavoro senza un passaggio aggiuntivo di creazione della bozza. La versione didattica attiva e gli iscritti restano invariati. Il workflow resta nativo e autorizzato: la somiglianza con gli articoli non introduce cambi di stato che aggirino validazioni o storico. Nessun comando fittizio per azioni assenti. Requisiti AUT-01, SCR-13 e CORE-20; scenario AC-126.
+
 ### 3.1 Profili docente e associazione ai corsi
 
 Il profilo docente è un riferimento autoriale del corso, non una categoria. L’editor associa uno o più profili dalla scheda del corso; non deve creare o selezionare categorie docente. L’associazione non crea utenti, gruppi o autorizzazioni operative. Un profilo pubblico può esistere senza account; il collegamento a un account Joomla abilita soltanto le modifiche espressamente autorizzate.
@@ -93,7 +99,7 @@ Una lezione appartiene a una versione del corso; la duplicazione è disponibile 
 
 ## 6. Progettazione e pubblicazione dei corsi
 
-**AUT-01 — Editor corso.** Creazione guidata per dati generali, programma, accessi, completamento e attestato. Modifica ordinaria dei corsi anche pubblicati, con Salva e Salva e chiudi e storico Joomla, senza ritiro o ricreazione del corso. Moduli, lezioni e materiali si aggiornano dal programma secondo AUT-04. Ordinamento di moduli e lezioni con trascinamento e alternativa da tastiera. Duplicazione corso, modulo e lezione.
+**AUT-01 — Editor corso.** Creazione guidata per dati generali, programma, accessi, completamento e attestato. Modifica ordinaria dei corsi anche pubblicati, con Salva e Salva e chiudi e storico Joomla, senza ritiro o ricreazione del corso. Moduli, lezioni e materiali si aggiornano dal programma secondo AUT-04. Ordinamento di moduli e lezioni con trascinamento e alternativa da tastiera. Duplicazione corso, modulo e lezione. Elenco ed editor seguono le convenzioni della gestione articoli Joomla: toolbar, selezione, Search Tools, metadati leggibili e accesso al programma con salvataggio del form.
 
 **AUT-02 — Ciclo editoriale.** Bozza → in revisione → pubblicato → archiviato. Pubblicazione riservata ai ruoli autorizzati; date di inizio/fine opzionali. Anteprima come studente senza alterare statistiche reali. Il workflow autorizza la pubblicazione degli aggiornamenti, senza imporre il ritiro del corso vigente per modificarlo; una versione di lavoro non sostituisce quella pubblicata fino alla transizione autorizzata.
 
@@ -315,7 +321,7 @@ Tutte le integrazioni seguenti rientrano nel rilascio 1 per le entità e scherma
 | CORE-17 | User Actions Log | Plugin per il registro azioni Joomla sulle operazioni amministrative rilevanti; audit didattico complementare e senza duplicazione indiscriminata di dati | Pubblicazione, modifica iscrizione, rettifica e revoca identificano operatore, oggetto e momento |
 | CORE-18 | Posta e Mail Templates | Mailer e configurazione SMTP Joomla; template LMS registrati nel sistema Mail Templates, traducibili e con variabili documentate | Modificare un template dal gestore nativo; un guasto SMTP lascia l'evento didattico valido e la notifica ritentabile |
 | CORE-19 | Scheduled Tasks | Plugin task per scadenze, notifiche e conservazione nel pianificatore Joomla; diagnostica ed esecuzioni sicure da ripetere | Configurare ed eseguire i task dall'amministrazione; una doppia esecuzione non duplica notifiche o emissioni |
-| CORE-20 | Configurazione e interfaccia amministrativa | Opzioni del componente, form, toolbar, filtri, ordinamento, paginazione, azioni batch e cestino secondo le convenzioni Joomla | Gestione coerente con il backend e permessi applicati a tutte le operazioni batch |
+| CORE-20 | Configurazione e interfaccia amministrativa | Opzioni del componente, form, toolbar, filtri, ordinamento, paginazione, azioni batch e cestino secondo le convenzioni Joomla Elenco ed editor seguono le convenzioni della gestione articoli Joomla: toolbar, selezione, Search Tools, metadati leggibili e accesso al programma con salvataggio del form. | Gestione coerente con il backend e permessi applicati a tutte le operazioni batch |
 | CORE-21 | Asset, cache e sessione | Web Asset Manager, sessione/token e caching Joomla; cache privata o disabilitata sulle viste personali | Nessun risultato di uno studente servito a un altro; asset caricati solo quando richiesti |
 | CORE-22 | Installazione e aggiornamenti | Manifest, update server, gestione dipendenze e migrazioni supportate; messaggi post-installazione dove necessari | Installare e aggiornare dagli strumenti Joomla senza modificare il core o perdere dati |
 | CORE-23 | Eventi e plugin | Pubblicare eventi LMS documentati tramite il sistema eventi Joomla, con contesto e dati minimi; usare i servizi core nei punti applicabili | Un plugin estende il comportamento senza patch del componente e senza aggirare autorizzazioni |
@@ -518,6 +524,9 @@ Sono confermati: separazione fra scheda e contenuti, anteprime esplicite, soglia
 | D-20 | Il docente richiede una categoria? | No: profilo associato al corso come riferimento autoriale; eventuale contenitore tecnico solo per compatibilità | Tassonomia docente da configurare nel flusso ordinario |
 | D-21 | Come personalizzare il profilo docente? | Campi e gruppi Joomla; valori modificabili da docente collegato o segreteria autorizzati | Designer e gestione parallela dei campi |
 | D-22 | Come pubblicare docente e relativi corsi? | Voci menu Pagina docente e Corsi di un docente, con profilo selezionato e ACL correnti | Pagine fisse o modifica di codice/template per scegliere il docente |
+| D-23 | Come rendere più semplice la gestione corsi? | Elenco ed editor secondo le convenzioni della gestione articoli Joomla, con toolbar/Search Tools e accesso diretto al programma che conserva le modifiche | Gestione separata con molti passaggi e avvisi ripetuti |
+
+D-23 recepisce la successiva indicazione esplicita del4novembre2026, RF-2026-11-04-B.
 
 D-19–D-22 e le precisazioni D-10/D-12 recepiscono la richiesta esplicita del 4 novembre 2026, come registrato in REQUIREMENTS_CHANGES.md. Le restanti decisioni restano confermate.
 
@@ -746,7 +755,7 @@ Una registrazione/login non costituisce iscrizione, acquisto o prova di accesso.
 
 ### 27.4 Amministrazione
 
-**SCR-13 — Editor corso.** Schede Dati generali, Programma, Accesso e catalogo, Regole didattiche, Attestato, Pubblicazione, Permessi e campi Joomla. Salva e Salva e chiudi disponibili anche sui corsi pubblicati; Versioni apre lo storico Joomla. Modifica programma prepara o riapre una copia completa per aggiornare lezioni e materiali; Pubblica aggiornamento mostra l’effetto su nuove iscrizioni e storico. Restano Salva bozza, Anteprima, Invia in revisione e Pubblica solo con permessi. La scheda Docenti associa profili senza gestione di categorie docente. L'anteprima dei livelli/accessi non modifica l'appartenenza dell'utente. Prima di pubblicare mostrare errori bloccanti separati dagli avvisi.
+**SCR-13 — Editor corso.** Schede Dati generali, Programma, Accesso e catalogo, Regole didattiche, Attestato, Pubblicazione, Permessi e campi Joomla. Salva e Salva e chiudi disponibili anche sui corsi pubblicati; Versioni apre lo storico Joomla. Modifica programma prepara o riapre una copia completa per aggiornare lezioni e materiali; Pubblica aggiornamento mostra l’effetto su nuove iscrizioni e storico. Restano Salva bozza, Anteprima, Invia in revisione e Pubblica solo con permessi. La scheda Docenti associa profili senza gestione di categorie docente. L'anteprima dei livelli/accessi non modifica l'appartenenza dell'utente. Prima di pubblicare mostrare errori bloccanti separati dagli avvisi. Elenco ed editor seguono le convenzioni della gestione articoli Joomla: toolbar, selezione, Search Tools, metadati leggibili e accesso al programma con salvataggio del form.
 
 **SCR-14 — Iscrizioni/report.** Filtri per corso/versione, utente, origine, apprendimento e stato accesso; colonne e azioni coerenti con i permessi. Operazioni massive mostrano selezionati, ambito e conteggio degli esclusi; nessuna promozione a un gruppo Joomla. Dettaglio studente/corso con attività obbligatorie, date, tentativi e rettifiche.
 
@@ -1138,6 +1147,12 @@ La richiesta del 4 novembre 2026 estende esplicitamente la baseline e non riduce
 | AC-123 | Docente collegato e segreteria modificano il profilo; provare altro account, campi protetti, revoca e dati invalidi | Solo modifiche autorizzate; nessun cambio implicito di account, stato o accesso; dati conservati per correggere errori e conflitti gestiti |
 | AC-124 | Creare le voci menu Pagina docente e Corsi di un docente, con SEF e lingue, e provare URL diretti | Profilo selezionato e relativo elenco corretti; corsi e campi riservati assenti; routing, navigazione e paginazione coerenti |
 | AC-125 | Aggiornare il pacchetto con corsi pubblicati, profili e categorie tecniche preesistenti, campi e iscrizioni | Presentazione corrente, associazioni, campi e ACL conservati; revisioni e versioni storiche disponibili senza migrazione automatica degli iscritti |
+
+## 43. Collaudo della revisione funzionale1.4
+
+| Test | Scenario | Risultato atteso |
+|---|---|---|
+| AC-126 | Gestire corsi dall’elenco e dall’editor secondo le convenzioni articoli Joomla, con ricerca/filtri/sort/paginazione, selezione, ACL, tastiera/mobile e salvataggio prima di aprire il programma | Metadati e azioni riconoscibili, totali e filtri coerenti, nessun corso estraneo esposto, input conservato/validato e nessuna modifica implicita di stato, versione attiva o risultati |
 
 ## Fonti
 

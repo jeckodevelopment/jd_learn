@@ -13,12 +13,31 @@ final class CourseController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory'], true)) {
+        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
+        if (strtolower($task) === 'programme') { $this->registerTask('programme', 'save'); }
         return parent::execute($task);
     }
 
+
+    protected function postSaveHook(\Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = [])
+    {
+        if (strtolower($this->getTask()) === 'programme') {
+            $id = (int) $model->getState('course.id');
+            try {
+                $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app->getIdentity());
+                $item = $model->getItem($id);
+                $version = $this->app->bootComponent('com_jlms')->getCurriculumService()->createDraft($actor, $id, (int) $item->revision);
+                $url = 'index.php?option=com_jlms&view=curriculum&id=' . $id . '&version_id=' . $version;
+            } catch (\Throwable) {
+                // The editorial save has succeeded; keep it and explain a failed programme preparation.
+                $this->setMessage(\Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_PROGRAMME_SAVED_WARNING'), 'warning');
+                $url = 'index.php?option=com_jlms&view=course&layout=edit&id=' . $id;
+            }
+            $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator', $url, false));
+        }
+    }
 
     protected function allowAdd($data = [])
     {

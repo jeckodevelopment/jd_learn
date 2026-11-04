@@ -1,6 +1,6 @@
 # Percorso di sviluppo verso JD Learn stabile
 
-Aggiornato il4novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.3, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
+Aggiornato il4novembre2026 su richiesta dell'utente. Il perimetro è quello della specifica funzionale1.4, progetto tecnico, servizi e plugin video già definiti. La matrice contiene209requisiti del rilascio1 e NOT-03 differito: nessuna funzione viene eliminata per accelerare il rilascio. Vendita e abbonamenti restano esterni come concordato.
 
 Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi indicano l'ordine principale e la responsabilità del requisito; dipendenze tecniche possono richiedere interventi trasversali. Sicurezza, privacy, ACL, lingua, override e upgrade accompagnano tutte le fasi. Il file RELEASE_PLAN.json assegna tutti i210ID una sola volta a una fase primaria; questa assegnazione non rappresenta avanzamento o accettazione.
 
@@ -20,9 +20,13 @@ Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi ind
 | M12 — rilascio stabile | Pacchetto accettato e manutenibile | Tutti gli scenari obbligatori del rilascio1 collegati al build, nessun blocco aperto; patch corrente Joomla, installazione/upgrade, backup/ripristino, integrazione reale con estensione commerciale, guide, checksum, update server e procedura di supporto. |
 | M13 — differito | Conservare il perimetro successivo già concordato | NOT-03: promemoria inattività/comunicazioni di gruppo dopo rilascio1. Compiti/live/SCORM/xAPI/LTI e altre evoluzioni mantengono le fasi della specifica, non sono implicitamente incluse nel primo rilascio stabile. |
 
-## Incremento attivo: M01/g —0.32
+## Incremento attivo: M01/h —0.33
 
-Duplicazione autonoma del corso nella stessa categoria e di moduli/lezioni nel programma di lavoro, con quiz/materiali/campi secondo permessi, nuove identità e nessuna copia dei dati studente. Guida COURSE_EDITOR e nuove prove native/HTTP; risultati effettivi nella PR. Segue M01/h, riordino mouse/tastiera e collaudo dei residui dell’editor.
+Richiesta esplicita RF-2026-11-04-B: amministrazione riconoscibile come gli articoli Joomla, con elenco/Search Tools/toolbar, editor compatto e Salva e apri programma. Specifica1.4 e AC-126; risultati nella PR del build. Il riordino mouse/tastiera già pianificato resta M01/i, senza cancellarne i criteri.
+
+## Incremento precedente: M01/g —0.32
+
+Duplicazione autonoma del corso nella stessa categoria e di moduli/lezioni nel programma di lavoro, con quiz/materiali/campi secondo permessi, nuove identità e nessuna copia dei dati studente. Guida COURSE_EDITOR e nuove prove native/HTTP; risultati effettivi nella PR. Segue la revisione amministrativa M01/h richiesta dall’utente, poi M01/i riordino mouse/tastiera e collaudo dei residui dell’editor.
 
 ## Incremento precedente: M01/f —0.31
 

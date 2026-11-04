@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.33.0-dev — gestione corsi nativa e più diretta
+
+- Elenco corsi secondo le convenzioni della gestione articoli Joomla: Search Tools, filtri, sort, paginazione e selezione con toolbar; metadati leggibili e accesso al programma dalla riga o dalla selezione.
+- Editor compatto con contenuto e impostazioni principali affiancati; schede Programma, Docenti, Immagine, Pubblicazione e Opzioni. Rimossi gli avvisi ripetuti dall’elenco e dall’editor; dati e ID di compatibilità conservati.
+- Salva e apri programma riusa la validazione e il salvataggio Joomla, conservando modifiche e storico. Lo stato rimanda al workflow autorizzato, senza toggle che aggirino la pubblicazione.
+- Specifica1.4 e AC-126 recepiscono la preferenza esplicita dell’utente per la gestione amministrativa simile agli articoli.
+
 ## 0.32.0-dev — duplicazioni autonome
 
 - Comandi per duplicare un corso come nuova bozza e un modulo o una lezione nel programma di lavoro, con titolo e destinazione espliciti.
