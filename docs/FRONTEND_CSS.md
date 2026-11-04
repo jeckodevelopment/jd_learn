@@ -145,3 +145,7 @@ L’anteprima amministrativa usa `coursepreview/default.php`, con regioni `#jlms
 Nella scheda Permessi dell’editor, `#jlms-course-rules` contiene il campo ACL nativo Joomla e il messaggio sul salvataggio immediato. Gli override devono conservare token, asset effettivo, campo Rules e controlli di autorizzazione.
 
 Nella0.31 la pagina docente usa `teacher/default.php` e il layout `teacher/courses.php`, con `#jlms-teacher-profile`, `#jlms-teacher-presentation`, `#jlms-teacher-fields` e `#jlms-teacher-courses`. Il form frontend del profilo usa `teacheredit/default.php` e `#jlms-teacher-profile-form`. Il Programma pubblicato offre `#jlms-edit-programme-form`. Conservare autorizzazioni, token e campi di revisione negli override.
+
+## Amministrazione0.32 — duplicazioni
+
+Nel template administrator/tmpl/curriculum/default.php, #jlms-duplicate-course contiene riepilogo e form della copia corso, #jlms-copy-course-title il titolo. Le regioni ripetute .jlms-duplicate-module e .jlms-duplicate-lesson usano details/summary nativi, form POST e label associate agli input/selettori. Nessun nuovo asset frontend o stile globale; mantenere task, token, ID di sorgente/destinazione e revisioni negli override. I comandi di modulo/lezione sono visibili solo nel programma di lavoro, quello del corso solo con creazione autorizzata nella categoria.

@@ -15,6 +15,11 @@ final class CourseTable extends Table
 {
     protected $_supportNullValue = true;
     protected bool $stableAssetRequired = false;
+    private int $preparedAsset = 0;
+
+    /** Internal copy path: reserve the native nested asset before the authoring transaction. */
+    public function usePreparedAsset(int $assetId): void { $this->preparedAsset = $assetId; }
+
 
     public function requireStableAsset(bool $required): void
     {
@@ -95,6 +100,11 @@ final class CourseTable extends Table
             && (int) $asset->id === (int) $this->asset_id
             && (int) $asset->parent_id === (int) $this->_getAssetParentId()
             && $this->_rules === null;
+        $prepared = !$this->id && $this->preparedAsset > 0 && $asset->load($this->preparedAsset)
+            && str_starts_with((string) $asset->name, 'com_jlms.copy.')
+            && (int) $asset->parent_id === (int) $this->_getAssetParentId();
+        if ($this->preparedAsset && !$prepared) { throw new \DomainException('COM_JLMS_SAVE_FAILED'); }
+        if ($prepared) { $this->asset_id = $this->preparedAsset; }
         if ($this->stableAssetRequired && !$stable) {
             throw new \DomainException('COM_JLMS_ASSOCIATION_SAVE_SEPARATELY');
         }
@@ -113,13 +123,18 @@ final class CourseTable extends Table
         $this->modified_at = $now;
         $this->modified_by = $userId;
         $tracking = $this->_trackAssets;
-        if ($stable) {
+        if ($stable || $prepared) {
             $this->_trackAssets = false;
             $title = (object) ['id' => (int) $asset->id, 'title' => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)];
             $this->getDatabase()->updateObject('#__assets', $title, 'id');
         }
         try {
-            return parent::store($updateNulls);
+            $success = parent::store($updateNulls);
+            if ($success && $prepared) {
+                $renamed = (object) ['id' => $this->preparedAsset, 'name' => $this->_getAssetName()];
+                $this->getDatabase()->updateObject('#__assets', $renamed, 'id');
+            }
+            return $success;
         } finally {
             $this->_trackAssets = $tracking;
         }

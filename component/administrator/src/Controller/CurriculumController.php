@@ -18,7 +18,9 @@ class CurriculumController extends BaseController
         if (strtoupper($this->input->getMethod()) !== 'POST') {
             throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
-        $this->checkToken('post');
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN'), 403);
+        }
         $input = $this->input->post->get('jform', [], 'array');
         $courseId = 0;
         $versionId = 0;
@@ -36,6 +38,14 @@ class CurriculumController extends BaseController
                     break;
                 case 'version':
                     $versionId = $service->createDraft($actor, $courseId, CurriculumService::id($input['revision'] ?? null));
+                    break;
+                case 'duplicatecourse':
+                    $model = $this->app->bootComponent('com_jlms')->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
+                    $courseId = $model->duplicate($input);
+                    $versionId = 0;
+                    break;
+                case 'duplicate':
+                    $service->duplicateItem($actor, $kind, $input);
                     break;
                 case 'save':
                     $kind === 'module' ? $service->saveModule($actor, $input) : $service->saveLesson($actor, $input);
@@ -83,11 +93,13 @@ class CurriculumController extends BaseController
 
     public function execute($task)
     {
-        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'transition'], true)) {
+        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'transition', 'duplicatecourse'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
+
+    public function duplicateCourse(): void { $this->perform('duplicatecourse'); }
 
     public function transition(): void
     {

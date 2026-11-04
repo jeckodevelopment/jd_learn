@@ -20,7 +20,11 @@ Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi ind
 | M12 — rilascio stabile | Pacchetto accettato e manutenibile | Tutti gli scenari obbligatori del rilascio1 collegati al build, nessun blocco aperto; patch corrente Joomla, installazione/upgrade, backup/ripristino, integrazione reale con estensione commerciale, guide, checksum, update server e procedura di supporto. |
 | M13 — differito | Conservare il perimetro successivo già concordato | NOT-03: promemoria inattività/comunicazioni di gruppo dopo rilascio1. Compiti/live/SCORM/xAPI/LTI e altre evoluzioni mantengono le fasi della specifica, non sono implicitamente incluse nel primo rilascio stabile. |
 
-## Incremento attivo: M01/f —0.31
+## Incremento attivo: M01/g —0.32
+
+Duplicazione autonoma del corso nella stessa categoria e di moduli/lezioni nel programma di lavoro, con quiz/materiali/campi secondo permessi, nuove identità e nessuna copia dei dati studente. Guida COURSE_EDITOR e nuove prove native/HTTP; risultati effettivi nella PR. Segue M01/h, riordino mouse/tastiera e collaudo dei residui dell’editor.
+
+## Incremento precedente: M01/f —0.31
 
 Richiesta del4novembre: flusso editoriale ordinario per aggiornare corsi pubblicati, storico Joomla, programma aggiornabile con copia completa, profili docente senza categoria nel form, custom fields e voci di menu. Sono anticipati i collegamenti M02/AUT-04 e M10/CORE-10/13/16 necessari al flusso richiesto. La specifica1.3 aggiorna esplicitamente i requisiti e aggiunge AC-119–125, mantenendo tutti gli ID e i criteri preesistenti. PR38/CI41819674307 verificano sottoinsiemi operativi; [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) distingue quanto già riscontrato da implementazione e collaudo mancanti.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.32.0-dev — duplicazioni autonome
+
+- Comandi per duplicare un corso come nuova bozza e un modulo o una lezione nel programma di lavoro, con titolo e destinazione espliciti.
+- Copia di quiz, revisioni domanda, materiali e campi del corso senza duplicare blob, iscrizioni, progressi, tentativi o attestati. Nuovi ID e chiavi logiche; ACL native ereditate dalla categoria.
+- Prenotazione dell’asset Joomla prima della transazione; rollback delle scritture e rimozione dell’asset inutilizzato se la copia fallisce. Controlli su identità corrente, sorgente, destinazione, checkout e revisioni.
+
 ## Requisiti funzionali1.3 —4novembre2026
 
 - Recepita esplicitamente la richiesta di aggiornamento dei corsi pubblicati con storico Joomla e gestione semplificata dei docenti, campi nativi e viste di menu.
