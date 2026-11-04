@@ -13,12 +13,21 @@ final class CourseController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory'], true)) {
+        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
+        if (strtolower($task) === 'programme') { $this->registerTask('programme', 'save'); }
         return parent::execute($task);
     }
 
+
+    protected function postSaveHook(\Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = [])
+    {
+        if ($this->getTask() === 'programme') {
+            $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
+                'index.php?option=com_jlms&view=curriculum&id=' . (int) $model->getState('course.id'), false));
+        }
+    }
 
     protected function allowAdd($data = [])
     {

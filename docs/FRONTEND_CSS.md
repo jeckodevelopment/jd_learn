@@ -149,3 +149,7 @@ Nella0.31 la pagina docente usa `teacher/default.php` e il layout `teacher/cours
 ## Amministrazione0.32 — duplicazioni
 
 Nel template administrator/tmpl/curriculum/default.php, #jlms-duplicate-course contiene riepilogo e form della copia corso, #jlms-copy-course-title il titolo. Le regioni ripetute .jlms-duplicate-module e .jlms-duplicate-lesson usano details/summary nativi, form POST e label associate agli input/selettori. Nessun nuovo asset frontend o stile globale; mantenere task, token, ID di sorgente/destinazione e revisioni negli override. I comandi di modulo/lezione sono visibili solo nel programma di lavoro, quello del corso solo con creazione autorizzata nella categoria.
+
+## Backend0.33 — elenco ed editor
+
+administrator/tmpl/courses/default.php: #jlms-admin-courses, #jlms-course-list, #jlms-courses-empty; righe .jlms-admin-course con data-course-id, .jlms-admin-course-title e .jlms-admin-course-actions. Search Tools/grid/multiselect/toolbar e classi responsive del template Joomla; nessun foglio globale aggiunto. administrator/tmpl/course/edit.php: #jlms-course-editor-layout, #jlms-course-editor-sidebar, #jlms-course-programme, #jlms-course-programme-summary, #jlms-course-options. ID precedenti presentazione/accessi/metadati/calendario/permessi/associazioni conservati come regioni, anche se raccolti in meno schede. Adattare gli override che assumono la vecchia gerarchia. Il controllo Salva e apri programma usa il web component toolbar Joomla e il task course.programme, non JavaScript o validazione paralleli.

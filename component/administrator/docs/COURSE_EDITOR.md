@@ -1,4 +1,4 @@
-# Gestione dei corsi —0.32
+# Gestione dei corsi —0.33
 
 ## Modificare i dati del corso
 
@@ -35,3 +35,13 @@ Nel programma di lavoro, ogni modulo e lezione espone Duplica modulo/Duplica lez
 Serve poter modificare la sorgente e creare nella categoria del nuovo corso. Si applicano anche i permessi sui quiz, sui materiali e sui valori dei campi coinvolti; un diniego impedisce la copia completa, senza omettere silenziosamente quelle parti. Le copie di moduli/lezioni richiedono un programma in bozza; checkout altrui e revisioni obsolete impediscono la scrittura. La destinazione di una lezione deve appartenere alla stessa versione. Per copiare un elemento pubblicato in un corso attivo, aprire prima Modifica programma e usare i comandi sulla copia di lavoro.
 
 Questi comandi sono distinti dalla nuova versione dello stesso corso. Duplicazione e rollback sono verificati dalle suite joomla-duplication.php e duplication-http.py nella CI del build; l’esistenza delle suite non attesta l’esito. Restano riordino con trascinamento/accessibilità, altre parti dell’editor e criteri M01 da completare.
+
+## Elenco ed editor0.33 — convenzioni articoli Joomla
+
+Corsi usa la toolbar nativa Nuovo/Modifica/Programma/Opzioni, checkbox di selezione, titolo cliccabile, Search Tools e paginazione. Ricerca per titolo/alias o id:123; filtri stato, categoria con discendenti, livello di accesso ai contenuti, autore Joomla, lingua e blocco modifica. Sono ordinabili titolo, stato, categoria, accesso, autore, lingua, ultima modifica e ID. I filtri persistono tornando dall’editor; un cambio filtro torna alla prima pagina, con massimo100righe. L’autore è il creatore del record Joomla, distinto dai profili docente associati.
+
+La riga mostra metadati e collegamenti Programma/Iscrizioni se autorizzati; lo stato apre la gestione della pubblicazione nel Programma. Non esegue un toggle che aggiri workflow e validazioni. Con selezione, Programma richiede un solo corso e ricontrolla i permessi. Nessuna azione massiva di stato viene simulata.
+
+L’editor mostra titolo, alias, sintesi e descrizione nella prima scheda, con categoria, lingua, stato e accesso essenziale nella sidebar. Programma, Docenti, Immagine e Pubblicazione sono schede dirette; Opzioni raccoglie accesso catalogo/avvio, SEO, associazioni e permessi. Tutti i campi precedenti rimangono renderizzati una volta e conservano i controlli di salvataggio.
+
+Salva e apri programma salva/valida prima i dati mediante il controller Joomla e poi apre moduli, lezioni e materiali. Funziona anche dopo la prima creazione; un errore lascia il form da correggere. L’apertura diretta del programma già salvato resta disponibile per compatibilità. I vecchi ID di regione restano nel layout; alcuni identificano ora sezioni della scheda Corso/Opzioni anziché schede separate. Gli override che dipendono dalla vecchia gerarchia vanno confrontati con il nuovo template.

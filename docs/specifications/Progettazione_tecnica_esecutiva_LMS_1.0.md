@@ -1,8 +1,8 @@
 # LMS per Joomla — progettazione tecnica esecutiva
 
-Versione documento 1.1 · 4 novembre 2026 · Baseline tecnica del primo rilascio
+Versione documento 1.2 · 4 novembre 2026 · Baseline tecnica del primo rilascio
 
-Questo documento traduce la specifica funzionale consolidata 1.3 e i contratti applicativi 1.1 in decisioni implementative. I nomi `jlms`, `com_jlms` e il namespace `Jlms` sono prefissi di lavoro neutrali. Non contiene nomi di committenti né dipendenze da prodotti concorrenti. Il pacchetto allegato è materiale di progettazione: schema, interfacce e contratti non costituiscono un componente già installabile o collaudato.
+Questo documento traduce la specifica funzionale consolidata 1.4 e i contratti applicativi 1.1 in decisioni implementative. I nomi `jlms`, `com_jlms` e il namespace `Jlms` sono prefissi di lavoro neutrali. Non contiene nomi di committenti né dipendenze da prodotti concorrenti. Il pacchetto allegato è materiale di progettazione: schema, interfacce e contratti non costituiscono un componente già installabile o collaudato.
 
 La specifica funzionale conserva la precedenza sulle funzionalità; questo documento fissa la loro realizzazione tecnica. Una divergenza va risolta aggiornando entrambi e registrando una decisione, senza cambiare silenziosamente il comportamento concordato. Vendita, abbonamenti e attribuzione dei gruppi da parte di estensioni commerciali restano fuori dal componente.
 
@@ -447,3 +447,7 @@ Il certificato root è l’unica emissione didattica; seriali/hash/identità e s
 Rigrading legge attempts originale e ultima assessment_revision efficace; scrive una nuova revisione, mai il grading originale del tentativo. Le proiezioni di superamento usano la revisione efficace e la regola migliore tra tentativi non invalidati. Salvataggi del tentativo chiuso non si riaprono per effetto del rigrading. subject_key e user_id ridondante sulle iscrizioni devono corrispondere: l’owner viene risolto da subjects, user_id è solo una proiezione indicizzabile, riconciliata e anonimizzata insieme. Non considerare mai una sua discordanza come concessione di accesso.
 
 Nomi dei constraint SQL includono #__ per evitare collisioni tra più siti Joomla nello stesso database. Preflight limita la lunghezza del prefisso in modo che nomi tabella/indice/constraint risultino <=64caratteri dopo sostituzione. Il dizionario include anche subjects. Le migrazioni richiedono test sul SQL mode strict effettivo; non disabilitare foreign_key_checks per mascherare incoerenze.
+
+## Aggiornamento amministrazione1.4
+
+CoursesModel/ListModel, form filter_courses e layout Search Tools core gestiscono stato/sessione, filtri, ordinamento allowlist e paginazione. Query e totali applicano lo stesso scope ACL corrente; la chiave cache include filtri e scope. Filtri autore/categoria derivano dai record modificabili; selezione del Programma validata dal controller su POST/CSRF e singolo ID autorizzato. Il titolo usa course.edit nativo. Il task course.programme è mappato al save del FormController con postSaveHook verso curriculum solo dopo successo; validazione/errore/storico restano nel modello originale. Viste/layout compatti riusano form e classi backend, senza CSS globale o scritture di stato dai template. Il riordino del programma e il collaudo completo browser/accessibilità rimangono separati.

@@ -14,6 +14,7 @@ final class HtmlView extends BaseHtmlView
 {
     public $form;
     public $item;
+    public ?array $programme = null;
     public bool $readOnly = false;
     public bool $checkedOutByOther = false;
     public array $editorRights = [];
@@ -30,6 +31,7 @@ final class HtmlView extends BaseHtmlView
         if (!$allowed) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
+        if ($id > 0) { $this->programme = Factory::getApplication()->bootComponent('com_jlms')->getCurriculumService()->outline($actor, $id); }
         $this->form = $this->get('Form');
         if (!$this->form) {
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
@@ -50,6 +52,7 @@ final class HtmlView extends BaseHtmlView
         $this->editorRights=['COM_JLMS_EDITOR_RIGHT_CREATE'=>\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor),'COM_JLMS_EDITOR_RIGHT_EDIT'=>$allowed,'COM_JLMS_EDITOR_RIGHT_PUBLISH'=>$actor->authorise('core.edit.state',$asset),'COM_JLMS_EDITOR_RIGHT_OPTIONS'=>$this->canConfigure];
         $this->readOnly = $this->checkedOutByOther;
         if ($this->readOnly) {
+            $this->form->setFieldAttribute('version_note', 'disabled', 'true');
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { $this->form->setFieldAttribute($field,'disabled','true'); }
             $this->form->setFieldAttribute('teacher_ids','disabled','true');
             foreach (['title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary'] as $field) {
@@ -64,6 +67,7 @@ final class HtmlView extends BaseHtmlView
         } else {
             ToolbarHelper::apply('course.apply');
             ToolbarHelper::save('course.save');
+            ToolbarHelper::custom('course.programme', 'list', 'list', 'COM_JLMS_COURSE_SAVE_PROGRAMME', false);
         }
         if ($id > 0) { ToolbarHelper::versions('com_jlms.course', $id); }
         ToolbarHelper::cancel('course.cancel');

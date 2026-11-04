@@ -26,3 +26,7 @@ La [PR38](https://github.com/jeckodevelopment/jd_learn/pull/38) ha introdotto il
 Lo stato dettagliato resta in REQUIREMENTS_STATUS.csv. CORE-10 è Campi personalizzati, CORE-13 è Menu/routing e CORE-16 è Content History: i tre non sono intercambiabili. AUT-05 riguarda Lingue; la vecchia nota di stato relativa ai workflow è corretta senza cambiare il requisito.
 
 La [checklist M01](M01_ACCEPTANCE.md) indica parti implementate, mancanti e collaudi residui. Questo aggiornamento riguarda i requisiti: non modifica il pacchetto runtime0.31 e non chiude alcuna fase automaticamente.
+
+## RF-2026-11-04-B — amministrazione corsi simile agli articoli Joomla
+
+L’utente segnala che la parte amministrativa rimane estremamente complessa e richiede una vista simile alla gestione articoli. La specifica1.4/progetto tecnico1.2 estendono AUT-01, SCR-13 e CORE-20 con elenco e form secondo le convenzioni Joomla, Search Tools/toolbar/selezione, metadati e accesso diretto al programma conservando il form. AC-126 si aggiunge al catalogo senza eliminare i criteri precedenti. D-23 registra la preferenza. Il sottoinsieme0.33 e la relativa CI sono riportati nella PR del build: non sono accettazione completa di tutte le interazioni browser/mobile/tastiera. M01/h dà priorità a questa indicazione; il riordino con trascinamento/tastiera resta nel passaggio M01/i.
