@@ -18,7 +18,9 @@ class CurriculumController extends BaseController
         if (strtoupper($this->input->getMethod()) !== 'POST') {
             throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
-        $this->checkToken('post');
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN'), 403);
+        }
         $input = $this->input->post->get('jform', [], 'array');
         $courseId = 0;
         $versionId = 0;

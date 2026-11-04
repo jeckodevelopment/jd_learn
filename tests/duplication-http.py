@@ -70,6 +70,7 @@ try:
  expect(any(x['fields'].get('task')=='module.duplicate' for x in Page(html).forms),'New copied programme is editable immediately')
  _,public=request('/index.php?option=com_jlms&view=courses')
  expect('Course duplicated over HTTP' not in public,'Duplicated course remains unpublished')
+ request('/index.php?option=com_jlms&view=course&id='+str(copied),expected=404)
  print(json.dumps({'duplication_http_checks':checks,'status':'passed'}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-8000:],file=sys.stderr);raise
