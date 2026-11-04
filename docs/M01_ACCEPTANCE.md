@@ -36,3 +36,9 @@ L’utente chiede una vista simile alla gestione articoli. Elenco nativo con fil
 ## Incremento M01/i0.34 — ricostruzione del programma
 
 RF-2026-11-04-C/AC-127: scaletta contestuale, moduli espandibili, lezioni cliccabili ed editor singolo; aggiunta nel modulo e materiali della lezione selezionata. Riordino drag con permutazione atomica/CAS, rollback visivo su errore, Su/Giù con POST nativo anche senza JS; spostamento tra moduli della bozza conservando riferimenti. Le nuove suite coprono servizio nativo, navigazione/form/JSON HTTP, handler JS con trasporto controllato e conservazione dopo upgrade. Esiti effettivi nella PR del build. Restano collaudo browser/mobile/tastiera reale, accessibilità e combinazioni complete AC-96/127; proseguire sulle altre righe residue. Nessuna chiusura automatica di M01.
+
+## Protezione editor programma0.34.1
+
+Il modulo o la lezione aperti nel programma avvertono tramite conferma nativa del browser prima di abbandonare modifiche non salvate. La conferma usa la lingua e il testo del browser; richiede JavaScript e interazione utente, e non sostituisce il salvataggio. TinyMCE viene controllato tramite API pubblica anche quando la textarea non è sincronizzata. Gli altri editor usano il valore esposto dalla API Joomla. Salva valido prosegue; validazioni annullate mantengono la protezione. Nessun contenuto viene scritto in localStorage/sessionStorage.
+
+Gli override devono mantenere `.jlms-focused-editor` con il form di modifica. Prove: `tests/curriculum-outline.mjs`; `tests/curriculum-browser.mjs` aggiunge navigazione Chromium su fixture controllata desktop/mobile, non eseguita localmente per restrizioni di avvio del browser; la verifica completa browser/mobile/accessibilità del sito Joomla resta aperta.

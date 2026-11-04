@@ -1,7 +1,7 @@
 import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const source = await readFile(new URL('../component/media/js/curriculum.js', import.meta.url), 'utf8');
-const {dropOrder, persistOrder, initOutline} = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+const {dropOrder, persistOrder, initOutline, initUnsavedEditor} = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 let checks = 0;
 const equal = (a,b) => {assert.deepEqual(a,b);checks++;};
 equal(dropOrder(['1','2','3'], '3', '1'), ['3','1','2']);
@@ -46,3 +46,40 @@ let boundWhileEditing=false;
 initOutline({dataset:{editorMode:'lesson'},querySelector:()=>form,addEventListener(){boundWhileEditing=true;}});
 equal(boundWhileEditing,false);
 console.log(JSON.stringify({curriculum_outline_checks:checks,status:'passed'}));
+
+// Leaving the focused editor must protect input, but not cancel a valid save.
+{
+ const listeners = {}, events = {}, pending = [];
+ const title = {name:'jform[title]', id:'title', type:'text', value:'Original'};
+ const body = {name:'jform[body]', id:'body', type:'textarea', value:'<p>Original</p>'};
+ const required = {name:'jform[required]', id:'required', type:'checkbox', checked:true};
+ const hidden = {name:'token', id:'token', type:'hidden', value:'one'};
+ const form = {elements:[title,body,required,hidden],addEventListener:(name,fn)=>{events[name]=fn;}};
+ const host = {addEventListener:(name,fn)=>{listeners[name]=fn;},setTimeout:fn=>pending.push(fn)};
+ let registry = {};
+ const guard = initUnsavedEditor({querySelector:()=>form},host,()=>registry);
+ const unload = () => {let warned=false; const event={preventDefault(){warned=true;}};listeners.beforeunload(event);return warned;};
+ equal(guard.dirty(),false); equal(unload(),false);
+ title.value='Changed'; equal(unload(),true);
+ title.value='Original'; equal(unload(),false);
+ required.checked=false; equal(unload(),true); required.checked=true;
+ hidden.value='renewed'; equal(unload(),false);
+ // Rich text can change without a bubbling input event or textarea synchronisation.
+ let editorDirty=false;
+ registry={body:{getType:()=> 'tinymce',getRawInstance:()=>({isDirty:()=>editorDirty})}};
+ equal(unload(),false); editorDirty=true; equal(unload(),true);
+ const saved={defaultPrevented:false};events.submit(saved);equal(unload(),false);
+ // Late Joomla validation cancellation must leave the warning enabled.
+ saved.defaultPrevented=true;equal(unload(),true);
+ pending.splice(0).forEach(fn=>fn());equal(unload(),true);
+ editorDirty=false; body.value='<p>Saved to textarea by editor, validation rejected</p>';equal(unload(),true);
+ body.value='<p>Original</p>';equal(unload(),false);
+ // Non-iframe editors expose current text through the Joomla decorator API.
+ registry={body:{getType:()=> 'codemirror',getValue:()=>'<p>Edited</p>'}};equal(unload(),true);
+ registry={body:{getValue(){throw Error('editor unavailable');}}};equal(unload(),true);
+ listeners.pageshow();equal(unload(),true);
+ let registered=false;
+ equal(initUnsavedEditor({querySelector:()=>null},{addEventListener(){registered=true;}}),undefined);
+ equal(registered,false);
+ console.log(JSON.stringify({unsaved_editor_checks:18,status:'passed'}));
+}

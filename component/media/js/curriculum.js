@@ -20,6 +20,47 @@ export async function persistOrder(form, group, order, transport = fetch) {
     return result.data.revision;
 }
 
+/** Protect the focused editor; never persist lesson content in browser storage. */
+export function initUnsavedEditor(root, host = window, editors = () => globalThis.Joomla?.editors?.instances ?? {}) {
+    const form = root.querySelector('.jlms-focused-editor form');
+    if (!form) return;
+    const controls = Array.from(form.elements).filter(field => field.name &&
+        !['hidden', 'submit', 'button', 'reset'].includes(field.type));
+    const value = field => {
+        const editor = editors()[field.id];
+        if (editor?.getType?.() === 'tinymce') {
+            // TinyMCE normalises HTML during init. Its public dirty API avoids a false
+            // warning on untouched HTML and also sees edits inside the iframe.
+            return editor.getRawInstance().isDirty() ? {editorChanged: true} : field.value;
+        }
+        if (editor?.getValue) return editor.getValue();
+        if (field.type === 'checkbox' || field.type === 'radio') return field.checked;
+        if (field.multiple) return Array.from(field.selectedOptions, option => option.value);
+        return field.value;
+    };
+    // Textareas may be enhanced asynchronously; their original value is the baseline.
+    const initial = controls.map(field => JSON.stringify(field.type === 'checkbox' || field.type === 'radio'
+        ? field.checked : field.multiple ? Array.from(field.selectedOptions, option => option.value) : field.value));
+    let submission = null;
+    const dirty = () => controls.some((field, index) => {
+        try { return JSON.stringify(value(field)) !== initial[index]; }
+        catch { return true; } // An unavailable editor must not silently discard input.
+    });
+    form.addEventListener('submit', event => {
+        submission = event;
+        // Honour Joomla validators that cancel later in the same event dispatch.
+        // A blocked navigation must not disable protection on subsequent navigation.
+        host.setTimeout(() => { submission = null; }, 0);
+    });
+    host.addEventListener('beforeunload', event => {
+        if ((submission && !submission.defaultPrevented) || !dirty()) return;
+        event.preventDefault();
+        event.returnValue = ''; // Browser supplies its own translated confirmation.
+    });
+    host.addEventListener('pageshow', () => { submission = null; });
+    return {dirty};
+}
+
 export function initOutline(root, reload = () => location.reload(), transport = fetch) {
     const form = root.querySelector('#jlms-reorder-form');
     if (!form || root.dataset.editorMode) return;
@@ -91,5 +132,5 @@ export function initOutline(root, reload = () => location.reload(), transport = 
 }
 if (typeof document !== 'undefined') {
     const root = document.getElementById('jlms-admin-curriculum');
-    if (root) initOutline(root);
+    if (root) { initUnsavedEditor(root); initOutline(root); }
 }

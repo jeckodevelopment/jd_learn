@@ -1,3 +1,5 @@
+Incremento0.34.1: protezione delle modifiche non salvate nel programma, con verifiche JS locali e test Chromium controllato predisposto. Restano CI, collaudo reale Joomla e criteri M01; non anticipare CSV.
+
 Priorità attuale M01/i0.34: ricostruzione del programma richiesta dall’utente (RF-2026-11-04-C/AC-127), implementazione contestuale e riordino con verifiche nella PR. Seguono collaudo reale e residui M01 della checklist.
 
 Priorità aggiunta4novembre2026: M01/h0.33, amministrazione corsi simile agli articoli Joomla secondo RF-2026-11-04-B/AC-126. Elenco ed editor sono rivisti; esiti CI nella PR del build. Segue M01/i per il riordino mouse/tastiera, poi gli altri residui M01.

@@ -153,3 +153,9 @@ Nel template administrator/tmpl/curriculum/default.php, #jlms-duplicate-course c
 ## Backend0.33 — elenco ed editor
 
 administrator/tmpl/courses/default.php: #jlms-admin-courses, #jlms-course-list, #jlms-courses-empty; righe .jlms-admin-course con data-course-id, .jlms-admin-course-title e .jlms-admin-course-actions. Search Tools/grid/multiselect/toolbar e classi responsive del template Joomla; nessun foglio globale aggiunto. administrator/tmpl/course/edit.php: #jlms-course-editor-layout, #jlms-course-editor-sidebar, #jlms-course-programme, #jlms-course-programme-summary, #jlms-course-options. ID precedenti presentazione/accessi/metadati/calendario/permessi/associazioni conservati come regioni, anche se raccolti in meno schede. Adattare gli override che assumono la vecchia gerarchia. Il controllo Salva e apri programma usa il web component toolbar Joomla e il task course.programme, non JavaScript o validazione paralleli.
+
+## Protezione editor programma0.34.1
+
+Il modulo o la lezione aperti nel programma avvertono tramite conferma nativa del browser prima di abbandonare modifiche non salvate. La conferma usa la lingua e il testo del browser; richiede JavaScript e interazione utente, e non sostituisce il salvataggio. TinyMCE viene controllato tramite API pubblica anche quando la textarea non è sincronizzata. Gli altri editor usano il valore esposto dalla API Joomla. Salva valido prosegue; validazioni annullate mantengono la protezione. Nessun contenuto viene scritto in localStorage/sessionStorage.
+
+Gli override devono mantenere `.jlms-focused-editor` con il form di modifica. Prove: `tests/curriculum-outline.mjs`; `tests/curriculum-browser.mjs` aggiunge navigazione Chromium su fixture controllata desktop/mobile, non eseguita localmente per restrizioni di avvio del browser; la verifica completa browser/mobile/accessibilità del sito Joomla resta aperta.

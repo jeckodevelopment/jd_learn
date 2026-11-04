@@ -15,3 +15,9 @@ Pubblicazione/stato e conteggi sono nel riepilogo laterale; versioni e duplicazi
 I comandi MVC richiedono POST, sessione/token Joomla, ACL correnti per corso, scope, checkout e revisioni. `curriculum.saveOrder` restituisce JSON: insieme esatto dei fratelli, transazione atomica, 409 su conflitto/storico immutabile, 403 su token/ACL, 404 fuori scope, 422 input invalido. `lesson.move` è un comando HTML con gli stessi controlli; i quiz richiedono anche jlms.quiz.manage. Le mutazioni bloccano corso e versione nello stesso ordine. Nessuna nuova API pubblica del catalogo e nessuna modifica dei gruppi o dei dati di apprendimento.
 
 Limiti della scaletta:1000moduli e5000lezioni per versione. Il riordino non modifica prerequisiti, regole didattiche, timer o attestati. La0.34 non chiude M01/AC-127: browser, mobile, accessibilità reale e i residui dell’editor restano nella [checklist](M01_ACCEPTANCE.md). Le prove JS con DOM/trasporto controllati non sono un collaudo visivo.
+
+## Protezione editor programma0.34.1
+
+Il modulo o la lezione aperti nel programma avvertono tramite conferma nativa del browser prima di abbandonare modifiche non salvate. La conferma usa la lingua e il testo del browser; richiede JavaScript e interazione utente, e non sostituisce il salvataggio. TinyMCE viene controllato tramite API pubblica anche quando la textarea non è sincronizzata. Gli altri editor usano il valore esposto dalla API Joomla. Salva valido prosegue; validazioni annullate mantengono la protezione. Nessun contenuto viene scritto in localStorage/sessionStorage.
+
+Gli override devono mantenere `.jlms-focused-editor` con il form di modifica. Prove: `tests/curriculum-outline.mjs`; `tests/curriculum-browser.mjs` aggiunge navigazione Chromium su fixture controllata desktop/mobile, non eseguita localmente per restrizioni di avvio del browser; la verifica completa browser/mobile/accessibilità del sito Joomla resta aperta.

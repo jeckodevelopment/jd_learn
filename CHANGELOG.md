@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.34.1-dev — protezione delle modifiche nel programma
+
+- Avviso nativo del browser quando si abbandona il modulo o la lezione con modifiche non salvate, incluse modifiche TinyMCE non sincronizzate nella textarea.
+- Salvataggio valido consentito; validazione annullata e ritorno dalla cache del browser non disattivano la protezione. Nessun contenuto memorizzato nel browser.
+- Test JS dedicati; collaudo completo M01 ancora aperto.
+
 ## 0.34.0-dev — programma didattico contestuale
 
 - Scaletta leggibile di moduli espandibili e lezioni cliccabili; aggiunta nel modulo, editor singolo, materiali e quiz nel contesto selezionato.
