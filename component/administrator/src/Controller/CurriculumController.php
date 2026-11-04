@@ -46,7 +46,7 @@ class CurriculumController extends BaseController
                     $versionId = 0;
                     break;
                 case 'duplicate':
-                    $service->duplicateItem($actor, $kind, $input);
+                    $resultId = $service->duplicateItem($actor, $kind, $input);
                     break;
                 case 'move':
                     $resultId = $service->moveLesson($actor, $input);
@@ -99,7 +99,10 @@ class CurriculumController extends BaseController
             $target .= $kind === 'module' ? '&edit_module=' . (int) ($input['id'] ?? 0) . '&new_module=1' : '&edit_lesson=' . (int) ($input['id'] ?? 0) . '&new_lesson=1&module_id=' . (int) ($input['module_id'] ?? 0);
         } elseif (!$failed && $operation === 'save') {
             $this->app->setUserState('com_jlms.curriculum.' . $courseId . '.' . $versionId . '.' . $kind, null);
-            $target .= '#jlms-' . $kind . '-' . $resultId;
+            $target .= '&module_id=' . ($kind === 'module' ? $resultId : (int) ($input['module_id'] ?? 0)) . '#jlms-' . $kind . '-' . $resultId;
+        }
+        if (!$failed && in_array($operation, ['move', 'duplicate'], true)) {
+            $target .= '&module_id=' . ($kind === 'module' ? $resultId : (int) ($input['module_id'] ?? 0)) . '#jlms-' . ($kind ?: 'lesson') . '-' . $resultId;
         }
         $this->setRedirect(Route::link('administrator', $target, false));
     }
