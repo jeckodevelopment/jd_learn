@@ -102,10 +102,11 @@ final class CourseVersionCopy
             $lessons[$old] = $this->insert('lessons', $lesson, $actor);
             $first = $first ?: $lessons[$old];
         }
-        foreach ($this->rows('attachments', 'course_version_id', $sourceVersion, 1000) as $attachment) {
-            if ($attachment['lesson_id'] === null ? !$whole : !isset($lessons[$attachment['lesson_id']])) { continue; }
+        $attachments = array_filter($this->rows('attachments', 'course_version_id', $sourceVersion, 1000),
+            static fn(array $attachment): bool => $attachment['lesson_id'] === null ? $whole : isset($lessons[$attachment['lesson_id']]));
+        $this->capacity('attachments', $target, count($attachments), 1000);
+        foreach ($attachments as $attachment) {
             if (!$materialsAllowed) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
-            $this->capacity('attachments', $target, 1, 1000);
             $attachment['course_version_id'] = $target;
             $attachment['lesson_id'] = $attachment['lesson_id'] === null ? null : $lessons[$attachment['lesson_id']];
             $this->insert('attachments', $attachment, $actor);

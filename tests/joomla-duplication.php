@@ -170,8 +170,8 @@ foreach (['html5-fixture','materials-fixture'] as $alias) {
  $mediaModel=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
  $new=$mediaModel->duplicate(['course_id'=>(int)$mediaSource->id,'version_id'=>(int)$mediaVersion->id,'revision'=>(int)$mediaSource->revision,'expected_version_revision'=>(int)$mediaVersion->revision,'title'=>'Copied '.$alias]);
  $newVersion=(int)$db->setQuery('SELECT id FROM #__jlms_course_versions WHERE course_id='.$new)->loadResult();
- copyExpect($db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id='.(int)$mediaVersion->id.' ORDER BY id')->loadColumn()===$db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id='.$newVersion.' ORDER BY id')->loadColumn(),'Copied attachments reuse immutable assets with new links');
- copyExpect($db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id='.(int)$mediaVersion->id.' ORDER BY id')->loadColumn()===$db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id='.$newVersion.' ORDER BY id')->loadColumn(),'Copied local video association retains the source asset');
+ copyExpect($db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id='.(int)$mediaVersion->id.' ORDER BY ordering,id')->loadColumn()===$db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id='.$newVersion.' ORDER BY ordering,id')->loadColumn(),'Copied attachments reuse immutable assets with new links');
+ copyExpect($db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id='.(int)$mediaVersion->id.' ORDER BY ordering,id')->loadColumn()===$db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id='.$newVersion.' ORDER BY ordering,id')->loadColumn(),'Copied local video association retains the source asset');
 }
 file_put_contents(dirname($root).'/duplication-fixture.json',json_encode(['course'=>$copy,'version'=>(int)$draft->id,'source'=>$course,'source_version'=>(int)$version->id],JSON_THROW_ON_ERROR));
 echo json_encode(['duplication_checks'=>$checks,'status'=>'passed']).PHP_EOL;

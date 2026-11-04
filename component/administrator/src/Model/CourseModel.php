@@ -177,7 +177,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         if (!$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
             || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate($db, $actor, (int) $source->catid)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
         $title = $input['title'] ?? null;
-        if (!is_string($title) || trim($title) === '' || \Joomla\String\StringHelper::strlen(trim($title)) > 255) { throw new \InvalidArgumentException('COM_JLMS_INVALID_COURSE'); }
+        if (!is_string($title) || preg_match('/\A[^\r\n]{1,255}\z/u', trim($title)) !== 1) { throw new \InvalidArgumentException('COM_JLMS_INVALID_COURSE'); }
         $title = trim($title);
         $category = new \Joomla\CMS\Table\Category($db);
         if (!$category->load((int) $source->catid) || $category->extension !== 'com_jlms.course' || (int) $category->published === -2) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
@@ -322,6 +322,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $target = $this->getItem($newId);
                 $user->clearAccessRights();
                 if (!\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($user, $target)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+                $workflow = new \Joomla\CMS\Workflow\Workflow('com_jlms.course', Factory::getApplication(), $db);
+                $stage = (int) $workflow->getDefaultStageByCategory((int) $target->catid);
+                if (!$stage || !$workflow->createAssociation($newId, $stage)) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
                 $selected = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db, $user, (string) $target->language,
                     \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $copySource->course->id));
                 foreach ($selected as $ordering => $teacher) { $relation = (object) ['course_id' => $newId, 'teacher_id' => $teacher, 'ordering' => $ordering]; $db->insertObject('#__jlms_course_teachers', $relation); }
