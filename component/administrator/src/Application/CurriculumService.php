@@ -253,6 +253,30 @@ final class CurriculumService
         });
     }
 
+    public function duplicateItem(User $identity, string $kind, array $input): int
+    {
+        $actor = CourseEditorAccess::fresh($identity);
+        $table = match ($kind) { 'module' => 'modules', 'lesson' => 'lessons', default => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT') };
+        $courseId = self::id($input['course_id'] ?? null);
+        $versionId = self::id($input['version_id'] ?? null);
+        $id = self::id($input['id'] ?? null);
+        $title = self::title($input['title'] ?? null);
+        return $this->transaction(function () use ($actor, $kind, $table, $input, $courseId, $versionId, $id, $title): int {
+            $version = $this->draft($actor, $courseId, $versionId, self::id($input['expected_version_revision'] ?? null));
+            $course = $this->row('courses', $courseId);
+            if (($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
+                || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            $source = $this->row($table, $id, true);
+            if ((int) $source->course_version_id !== $versionId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+            if ((int) $source->revision !== self::id($input['revision'] ?? null)) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+            $moduleId = $kind === 'lesson' ? self::id($input['module_id'] ?? null) : 0;
+            if ($moduleId && (int) $this->row('modules', $moduleId)->course_version_id !== $versionId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+            $newId = (new CourseVersionCopy($this->db))->item($actor, $kind, $source, $versionId, $title, $moduleId);
+            $this->update('course_versions', $version, [], $actor);
+            return $newId;
+        });
+    }
+
     public function providers(): array
     {
         return ($this->registryFactory)()->descriptors();

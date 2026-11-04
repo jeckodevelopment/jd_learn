@@ -17,12 +17,15 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     public $typeAlias = 'com_jlms.course';
     protected $associationsContext = 'com_jlms.item';
     private bool $associationWrite = false;
+    private int $preparedAsset = 0;
+    private ?array $copyPlan = null;
 
     public function getTable($name = '', $prefix = '', $options = [])
     {
         $table = parent::getTable($name, $prefix, $options);
         if ($table instanceof \Jlms\Component\Jlms\Administrator\Table\CourseTable) {
             $table->requireStableAsset($this->associationWrite);
+            if ($this->preparedAsset) { $table->usePreparedAsset($this->preparedAsset); }
         }
         return $table;
     }
@@ -161,6 +164,62 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $this->associationWrite = $record !== null;
     }
 
+    /** New course identity with a complete draft; native asset tree writes occur before the transaction. */
+    public function duplicate(array $input): int
+    {
+        $db = $this->getDatabase();
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->getCurrentUser());
+        $id = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['course_id'] ?? null);
+        $versionId = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['version_id'] ?? null);
+        $revision = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['revision'] ?? null);
+        $versionRevision = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['expected_version_revision'] ?? null);
+        $source = $this->getItem($id);
+        if (!$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
+            || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate($db, $actor, (int) $source->catid)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+        $title = $input['title'] ?? null;
+        if (!is_string($title) || trim($title) === '' || \Joomla\String\StringHelper::strlen(trim($title)) > 255) { throw new \InvalidArgumentException('COM_JLMS_INVALID_COURSE'); }
+        $title = trim($title);
+        $category = new \Joomla\CMS\Table\Category($db);
+        if (!$category->load((int) $source->catid) || $category->extension !== 'com_jlms.course' || (int) $category->published === -2) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+        $asset = new \Joomla\CMS\Table\Asset($db);
+        $asset->setLocation((int) $category->asset_id, 'last-child');
+        $asset->bind(['name' => 'com_jlms.copy.' . bin2hex(random_bytes(16)), 'title' => \Joomla\String\StringHelper::substr($title, 0, 100), 'rules' => '{}']);
+        if (!$asset->check() || !$asset->store()) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED'); }
+        $this->setState('course.copy_complete', false);
+        $this->preparedAsset = (int) $asset->id;
+        $this->copyPlan = ['course' => $id, 'version' => $versionId, 'revision' => $revision, 'version_revision' => $versionRevision];
+        try {
+            $data = (array) $source;
+            $data['id'] = 0; $data['revision'] = 0; $data['title'] = $title;
+            $data['alias'] = 'copy-' . bin2hex(random_bytes(12));
+            unset($data['associations'], $data['teacher_ids']);
+            if (!$this->save($data)) { throw new \RuntimeException($this->getError()); }
+            return (int) $this->getState('course.id');
+        } finally {
+            // Failed authoring writes roll back before removing the unused reserved native asset.
+            if (!$this->getState('course.copy_complete', false)) { $asset->delete((int) $asset->id); }
+            $this->preparedAsset = 0; $this->copyPlan = null;
+        }
+    }
+
+    private function copySource(\Joomla\CMS\User\User $actor): ?object
+    {
+        if ($this->copyPlan === null) { return null; }
+        $db = $this->getDatabase();
+        $id = $this->copyPlan['course']; $version = $this->copyPlan['version'];
+        $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
+        $q->setQuery((string) $q . ' FOR UPDATE'); $source = $db->setQuery($q)->loadObject();
+        if (!$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
+            || ($source->checked_out && (int) $source->checked_out !== (int) $actor->id)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+        if ((int) $source->revision !== $this->copyPlan['revision']) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+        $q = $db->createQuery()->select('*')->from('#__jlms_course_versions')->where('id=:id')->bind(':id', $version, ParameterType::INTEGER);
+        $q->setQuery((string) $q . ' FOR UPDATE'); $programme = $db->setQuery($q)->loadObject();
+        if (!$programme || (int) $programme->course_id !== $id) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+        if ((int) $programme->revision !== $this->copyPlan['version_revision']) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+        if ($programme->checked_out && (int) $programme->checked_out !== (int) $actor->id) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+        return (object) ['course' => $source, 'version' => $programme];
+    }
+
     public function save($data)
     {
         $db = $this->getDatabase();
@@ -182,6 +241,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $user->clearAccessRights();
             if ($user->guest || $user->block || !$user->authorise('core.manage','com_jlms')) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
             $this->setCurrentUser($user);
+            $copySource = $this->copySource($user);
             $record = null;
             if ($id > 0) {
                 $q = $db->createQuery()->select('*')->from($db->quoteName('#__jlms_courses'))
@@ -239,6 +299,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $calendar=\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data,$record ?? (object) [],$data['params_json'] ?? $record->params_json ?? '{}',Factory::getApplication()->getIdentity()->getTimezone()->getName());
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { unset($data[$field]); }
             $data=array_replace($data,$calendar);
+            if ($copySource !== null) {
+                // Trusted persisted source metadata, never raw JSON from the request.
+                foreach (['params_json', 'metadata_json', 'image'] as $field) { $data[$field] = $copySource->course->$field; }
+            }
             if (!parent::save($data)) {
                 $error = $this->getError();
                 $validationErrors = [
@@ -253,11 +317,39 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                     $relation = (object) ['course_id'=>$id,'teacher_id'=>$teacher,'ordering'=>$ordering]; $db->insertObject('#__jlms_course_teachers',$relation);
                 }
             }
+            if ($copySource !== null) {
+                $newId = (int) $this->getState('course.id');
+                $target = $this->getItem($newId);
+                $user->clearAccessRights();
+                if (!\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($user, $target)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+                $selected = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db, $user, (string) $target->language,
+                    \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $copySource->course->id));
+                foreach ($selected as $ordering => $teacher) { $relation = (object) ['course_id' => $newId, 'teacher_id' => $teacher, 'ordering' => $ordering]; $db->insertObject('#__jlms_course_teachers', $relation); }
+                $fieldModel = Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
+                $sourceItem = (string) $copySource->course->id;
+                $q = $db->createQuery()->select('v.field_id,v.value')->from('#__fields_values AS v')
+                    ->innerJoin('#__fields AS f ON f.id=v.field_id')->where("f.context='com_jlms.course'")
+                    ->where('v.item_id=:item')->bind(':item', $sourceItem);
+                $values = [];
+                foreach ($db->setQuery($q)->loadObjectList() as $value) { $values[(int) $value->field_id][] = $value->value; }
+                foreach ($values as $fieldId => $fieldValues) {
+                    $field = $fieldModel->getItem($fieldId);
+                    if (!$field || !$user->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
+                        || !in_array((int) $field->access, $user->getAuthorisedViewLevels(), true)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+                    if (!$fieldModel->setFieldValue($fieldId, $newId, $fieldValues)) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED'); }
+                }
+                $programme = clone $copySource->version;
+                $programme->course_id = $newId;
+                $programme->title_snapshot = $target->title;
+                $programme->presentation_json = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::snapshot($target);
+                (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionCopy($db))->copy($user, $programme, 1, true, (int) $copySource->version->id);
+            }
             $history = $data;
             $history['teacher_ids'] = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $this->getState('course.id'));
             $history['version_note'] = is_string($inputNote = Factory::getApplication()->getInput()->post->get('jform', [], 'array')['version_note'] ?? '') ? strip_tags($inputNote) : '';
             $this->persistHistory($history, $this->typeAlias);
             $db->transactionCommit();
+            if ($copySource !== null) { $this->setState('course.copy_complete', true); }
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();

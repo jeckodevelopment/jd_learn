@@ -37,6 +37,14 @@ class CurriculumController extends BaseController
                 case 'version':
                     $versionId = $service->createDraft($actor, $courseId, CurriculumService::id($input['revision'] ?? null));
                     break;
+                case 'duplicatecourse':
+                    $model = $this->app->bootComponent('com_jlms')->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
+                    $courseId = $model->duplicate($input);
+                    $versionId = 0;
+                    break;
+                case 'duplicate':
+                    $service->duplicateItem($actor, $kind, $input);
+                    break;
                 case 'save':
                     $kind === 'module' ? $service->saveModule($actor, $input) : $service->saveLesson($actor, $input);
                     break;
@@ -83,11 +91,13 @@ class CurriculumController extends BaseController
 
     public function execute($task)
     {
-        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'transition'], true)) {
+        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'transition', 'duplicatecourse'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
+
+    public function duplicateCourse(): void { $this->perform('duplicatecourse'); }
 
     public function transition(): void
     {

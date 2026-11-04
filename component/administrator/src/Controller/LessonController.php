@@ -8,11 +8,13 @@ final class LessonController extends CurriculumController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['save', 'delete', 'reorder'], true)) {
+        if (!in_array(strtolower($task), ['save', 'delete', 'reorder', 'duplicate'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
+
+    public function duplicate(): void { $this->perform('duplicate', 'lesson'); }
 
     public function save(): void
     {

@@ -17,6 +17,7 @@ final class HtmlView extends BaseHtmlView
     public $lessonForm;
     public array $lessonsByModule = [];
     public bool $editable = false;
+    public bool $canDuplicateCourse = false;
     public bool $canDelete = false;
     public array $transitions = [];
     public string $publicationNotice = '';
@@ -33,6 +34,8 @@ final class HtmlView extends BaseHtmlView
             $this->lessonsByModule[(int) $lesson->module_id][] = $lesson;
         }
         $app = Factory::getApplication();
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($app->getIdentity());
+        $this->canDuplicateCourse = $version && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor, (int) $course->catid);
         $this->editable = $version && $version->status === 'draft';
         $this->canDelete = $app->getIdentity()->authorise('core.delete', 'com_jlms.course.' . (int) $course->id);
         if (!$version) {

@@ -14,7 +14,7 @@ Il collaudo del1novembre aveva rilevato il percorso di pubblicazione assente o p
 
 **Accettazione del blocco:** riprodurre e registrare l'esito con versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione e messaggio mostrato; nessun dato personale o segreto. Provare corso minimo testuale, video e quiz supportati, errori comprensibili, permessi e token, prima pubblicazione e accesso studente con il livello richiesto. Nessuna modifica diretta dello stato o del database come workaround; nessuna perdita dello storico. La risoluzione di questo difetto non completa AUT-01/02/03/04 o SCR-13: editor completo, revisione, anteprima, archivio e versionamento restano nel piano.
 
-Seguire la checklist M01: prima duplicazioni autonome di corso/modulo/lezione e ordinamento mouse/tastiera con ID nuovi e nessuna copia dei risultati; poi parti mancanti dell’editor e relativi collegamenti M02/M08/M10. I comandi di aggiornamento0.31 non sono duplicazioni autonome. Conservare storico, ACL, token e controlli negativi. Non anticipare il CSV prima di questo lavoro.
+Seguire la checklist M01: duplicazioni autonome0.32 da verificare nella CI del build, poi ordinamento mouse/tastiera con ID nuovi e nessuna copia dei risultati; poi parti mancanti dell’editor e relativi collegamenti M02/M08/M10. I comandi di aggiornamento0.31 non sono duplicazioni autonome. Conservare storico, ACL, token e controlli negativi. Non anticipare il CSV prima di questo lavoro.
 
 ## 1. Iscrizioni: ammissione e import
 

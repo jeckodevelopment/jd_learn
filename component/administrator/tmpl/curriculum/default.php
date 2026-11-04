@@ -49,6 +49,16 @@ $hidden = static function (array $fields): void {
   <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_EDIT_PROGRAMME') ?></button>
  </form>
  <?php endif; ?>
+ <?php if ($this->canDuplicateCourse) : ?>
+ <details id="jlms-duplicate-course"><summary><?= Text::_('COM_JLMS_DUPLICATE_COURSE') ?></summary>
+ <p><?= Text::_('COM_JLMS_DUPLICATE_COURSE_NOTICE') ?></p>
+ <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+  <?php $hidden($scope + ['revision' => $course->revision]); ?><input type="hidden" name="task" value="curriculum.duplicateCourse">
+  <label for="jlms-copy-course-title"><?= Text::_('COM_JLMS_COPY_TITLE') ?></label>
+  <input id="jlms-copy-course-title" class="form-control" name="jform[title]" maxlength="255" required value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $course->title), 0, 255)) ?>">
+  <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_DUPLICATE_COURSE') ?></button>
+ </form></details>
+ <?php endif; ?>
  <p><a id="jlms-course-preview-link" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_COURSE_PREVIEW') ?></a></p>
  <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?> · <?= Text::_('COM_JLMS_REVISION') ?> <?= (int) $version->revision ?></p>
  <nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>">
@@ -75,6 +85,12 @@ $hidden = static function (array $fields): void {
   <section class="jlms-admin-module" data-module-id="<?= (int) $module->id ?>"><h2><?= $this->escape($module->title) ?></h2>
   <?php if ($this->editable) : ?>
    <a href="<?= $link($base . '&version_id=' . (int) $version->id . '&edit_module=' . (int) $module->id) ?>#jlms-module-form"><?= Text::_('JGLOBAL_EDIT') ?></a>
+   <details class="jlms-duplicate-module"><summary><?= Text::_('COM_JLMS_DUPLICATE_MODULE') ?></summary>
+   <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+    <?php $hidden($scope + ['id' => $module->id, 'revision' => $module->revision]); ?><input type="hidden" name="task" value="module.duplicate">
+    <label><?= Text::_('COM_JLMS_COPY_TITLE') ?><input class="form-control" name="jform[title]" maxlength="255" required value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $module->title), 0, 255)) ?>"></label>
+    <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_DUPLICATE_MODULE') ?></button>
+   </form></details>
    <?php foreach (['up', 'down'] as $direction) : ?>
    <form method="post" class="d-inline" action="<?= $link('index.php?option=com_jlms') ?>">
     <?php $hidden($scope + ['id' => $module->id, 'direction' => $direction]); ?><input type="hidden" name="task" value="module.reorder">
@@ -90,6 +106,15 @@ $hidden = static function (array $fields): void {
    <li><strong><?= $this->escape($lesson->title) ?></strong> · <?= Text::_($lesson->kind === 'text' ? 'COM_JLMS_LESSON_TEXT' : ($lesson->kind === 'video' ? 'COM_JLMS_LESSON_VIDEO' : 'COM_JLMS_LESSON_QUIZ')) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?>
    <?php if ($this->editable) : ?>
     <a href="<?= $lesson->kind === 'quiz' ? $link('index.php?option=com_jlms&view=quiz&id='.(int)$course->id.'&version_id='.(int)$version->id.'&lesson_id='.(int)$lesson->id) : $link($base . '&version_id=' . (int) $version->id . '&edit_lesson=' . (int) $lesson->id) . '#jlms-lesson-form' ?>"><?= Text::_('JGLOBAL_EDIT') ?></a>
+    <details class="jlms-duplicate-lesson"><summary><?= Text::_('COM_JLMS_DUPLICATE_LESSON') ?></summary>
+    <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+     <?php $hidden($scope + ['id' => $lesson->id, 'revision' => $lesson->revision]); ?><input type="hidden" name="task" value="lesson.duplicate">
+     <label><?= Text::_('COM_JLMS_COPY_TITLE') ?><input class="form-control" name="jform[title]" maxlength="255" required value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $lesson->title), 0, 255)) ?>"></label>
+     <label><?= Text::_('COM_JLMS_COPY_DESTINATION_MODULE') ?><select class="form-select" name="jform[module_id]">
+      <?php foreach ($this->outline['modules'] as $destination) : ?><option value="<?= (int) $destination->id ?>"<?= (int) $destination->id === (int) $module->id ? ' selected' : '' ?>><?= $this->escape($destination->title) ?></option><?php endforeach; ?>
+     </select></label>
+     <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_DUPLICATE_LESSON') ?></button>
+    </form></details>
     <?php foreach (['up','down'] as $direction) : ?>
     <form method="post" class="d-inline" action="<?= $link('index.php?option=com_jlms') ?>">
      <?php $hidden($scope + ['id' => $lesson->id, 'direction' => $direction]); ?><input type="hidden" name="task" value="lesson.reorder">
