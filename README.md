@@ -131,4 +131,4 @@ Area personale I miei corsi: [guida](docs/LEARNER_DASHBOARD.md), con storico pri
 
 Programma0.34: scaletta contestuale, un solo editor, aggiunta nel modulo, spostamento delle lezioni e riordino drag/tastiera. Vedere [guida del programma](docs/AUTHORING.md).
 
-Programma0.34.1: avviso browser per modifiche non salvate nel modulo/lezione. Incremento locale in attesa di CI; non chiude M01.
+Programma0.34.1: avviso browser per modifiche non salvate nel modulo/lezione. Verifiche effettive nella [PR43](https://github.com/jeckodevelopment/jd_learn/pull/43); non chiude M01.

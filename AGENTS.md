@@ -1,5 +1,7 @@
 # JD Learn development
 
+- User preference: work through GitHub for every development increment. Publish the branch, open/update a pull request and inspect its actual GitHub Actions results; do not leave an increment only as a local patch.
+
 - Use `docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md` (content version1.5), the technical design and the security/provider specifications as the scope baseline. Keep requirements and implementation status separate.
 - Product name: JD Learn. Installed IDs remain com_jlms, pkg_jlms, lib_jlms and plugin group jlmsvideo. No client-specific branding and no competitor references.
 - Joomla6 MVC, DI, native accounts, categories, assets/ACL, languages, forms, session/CSRF, WAM and other core features where applicable. Do not modify Joomla core or duplicate authentication/access levels.

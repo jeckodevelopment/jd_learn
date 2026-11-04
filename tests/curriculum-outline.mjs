@@ -49,13 +49,13 @@ console.log(JSON.stringify({curriculum_outline_checks:checks,status:'passed'}));
 
 // Leaving the focused editor must protect input, but not cancel a valid save.
 {
- const listeners = {}, events = {}, pending = [];
+ const listeners = {}, events = {};
  const title = {name:'jform[title]', id:'title', type:'text', value:'Original'};
  const body = {name:'jform[body]', id:'body', type:'textarea', value:'<p>Original</p>'};
  const required = {name:'jform[required]', id:'required', type:'checkbox', checked:true};
  const hidden = {name:'token', id:'token', type:'hidden', value:'one'};
  const form = {elements:[title,body,required,hidden],addEventListener:(name,fn)=>{events[name]=fn;}};
- const host = {addEventListener:(name,fn)=>{listeners[name]=fn;},setTimeout:fn=>pending.push(fn)};
+ const host = {addEventListener:(name,fn)=>{listeners[name]=fn;}};
  let registry = {};
  const guard = initUnsavedEditor({querySelector:()=>form},host,()=>registry);
  const unload = () => {let warned=false; const event={preventDefault(){warned=true;}};listeners.beforeunload(event);return warned;};
