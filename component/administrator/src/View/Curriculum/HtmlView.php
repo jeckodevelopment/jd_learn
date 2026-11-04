@@ -98,7 +98,7 @@ final class HtmlView extends BaseHtmlView
             $editLesson = $app->getInput()->getInt('edit_lesson');
             if ($editModule) { $this->editorMode = 'module'; }
             if ($editLesson) { $this->editorMode = 'lesson'; }
-            $action = $app->getInput()->getCmd('item_action');
+            $action = $app->getInput()->getCmd('item_action', '');
             if ($action !== '' && !in_array($action, ['copy_module','copy_lesson','delete_module','delete_lesson','move_lesson','order_module','order_lesson'], true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
             $this->itemAction = $action;
             if ($action !== '') { $this->editorMode = 'action'; }
