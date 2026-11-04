@@ -215,7 +215,7 @@ presentationExpect(!str_contains(json_encode($outline), 'PRESENTATION_PRIVATE_LE
 $baseline = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
 presentationExpect($model->save(array_replace($update, ['revision' => (int) $model->getItem($course)->revision, 'presentation_objectives' => 'Published editorial correction'])), 'Published editorial metadata can be updated through the normal editor');
 presentationExpect($catalog->outline($guest, 'en-GB', $course)['presentation']['objectives'] === 'Published editorial correction', 'Current public course shows the editorial correction');
-presentationExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $baseline, 'Denied mutation leaves frozen history unchanged');
+presentationExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $baseline, 'Editorial correction leaves frozen history unchanged');
 foreach ([0, 1] as $expectedState) {
     $choices = $publication->transitions($actor, $course);
     $publication->transition($actor, $course, $version, (int) $model->getItem($course)->revision, $revision(), (int) $choices[0]->id);
@@ -225,5 +225,5 @@ $oldPresentation = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Leg
 presentationExpect($oldPresentation['image'] === '' && !$oldPresentation['image_decorative'] && $oldPresentation['seo_title'] === '', '0.21 snapshots gain only empty optional defaults without database mutation');
 $legacy = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy public summary"}');
 presentationExpect($legacy === [], 'Legacy published snapshots do not require backfilling');
-file_put_contents($fixture, json_encode(['course' => $course, 'version' => $version, 'details' => $outline['presentation'], 'snapshot' => $baseline], JSON_THROW_ON_ERROR));
+file_put_contents($fixture, json_encode(['course' => $course, 'version' => $version, 'details' => $catalog->outline($guest, 'en-GB', $course)['presentation'], 'snapshot' => $baseline], JSON_THROW_ON_ERROR));
 echo json_encode(['course_presentation_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

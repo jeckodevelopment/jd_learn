@@ -77,7 +77,7 @@ if (($argv[2] ?? '') === 'retained') {
     $f=json_decode(file_get_contents($fixture),true,32,JSON_THROW_ON_ERROR);
     teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='.(int)$f['version'])->loadAssoc()===$f['snapshot'],'Frozen teacher projection survives upgrade');
     $outline=$catalog->outline(new \Joomla\CMS\User\User(),'en-GB',(int)$f['course']);
-    teacherExpect(count($outline['teachers'])===2&&$outline['teachers'][0]['title']==='Updated public teacher','Historical teacher text remains available after upgrade');
+    teacherExpect(count($outline['teachers'])===2&&$outline['teachers'][0]['title']==='Updated public teacher','Current teacher projection survives upgrade while the frozen projection is unchanged');
     teacherExpect(TeacherProfiles::selected($db,(int)$f['course'])===$f['ids'],'Assigned teacher relations survive upgrade');
     echo json_encode(['teacher_retention_checks'=>$checks,'status'=>'passed']).PHP_EOL;exit;
 }
@@ -133,7 +133,7 @@ teacherExpect(!str_contains(json_encode($outline),'PRIVATE_TEACHER_BIO')&&!str_c
 teacherExpect(count($catalog->outline($actor,'en-GB',$course)['teachers'])===2,'Authorised account can see both frozen teachers');
 $edit['title']='Updated public teacher';$edit['bio']='Updated public biography';
 teacherExpect($teacherModel->save($edit),'Public profile can be updated independently');
-teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers'][0]['title']==='Updated public teacher','Profile changes do not rewrite historical teacher text');
+teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers'][0]['title']==='Updated public teacher','Public profile reflects the current teacher presentation');
 teacherExpect(!$teacherModel->save($edit),'Stale teacher revision rejected');
 $edit['revision']=2;$edit['state']=0;teacherExpect($teacherModel->save($edit),'Teacher can be withdrawn with state permission');
 teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers']===[],'Withdrawal hides historical profile without changing snapshot');
