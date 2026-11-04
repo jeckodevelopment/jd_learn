@@ -17,7 +17,7 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')) { throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'),403); }
         $this->item = $this->get('Item'); $id = (int) $this->item->id;
         $scope = $id ? 'com_jlms.teacher.' . $id : 'com_jlms';
-        if ($id ? (!$actor->authorise('core.edit', $scope) && !(((int) $this->item->created_by === (int) $actor->id || (int) $this->item->user_id === (int) $actor->id) && $actor->authorise('core.edit.own', $scope))) : !$actor->authorise('core.create', $scope)) { throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'),403); }
+        if ($id ? !\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $this->item) : (!$actor->authorise('jlms.teachers.manage', 'com_jlms') || !$actor->authorise('core.create', $scope))) { throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'),403); }
         $this->form = $this->get('Form');
         if (!$this->form) { throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'),500); }
         if (!$actor->authorise('core.edit.state', $scope)) { $this->form->setFieldAttribute('state','disabled','true'); }
