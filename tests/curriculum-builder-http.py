@@ -8,7 +8,7 @@ from http.cookiejar import CookieJar
 import json,subprocess,sys,os,time,re
 root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable site required')
-f=json.loads((root.parent/'curriculum-builder-fixture.json').read_text());base='http://127.0.0.1:8095'
+f=json.loads((root.parent/'curriculum-builder-fixture.json').read_text());base='http://127.0.0.1:8093'
 class Page(HTMLParser):
  def __init__(self,html):
   super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.links=[];self.feed(html)
@@ -40,7 +40,7 @@ def expect(ok,message):
 def action(html,name):return next(link for link in Page(html).links if parse_qs(urlparse(link).query).get('item_action')==[name])
 def form(html,task):return next(x for x in Page(html).forms if x['fields'].get('task')==task)
 log=open(root.parent/'curriculum-builder-http.log','w+')
-server=subprocess.Popen(['php','-S','127.0.0.1:8095','-t',str(root)],stdout=log,stderr=log)
+server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
 def state():return json.loads(subprocess.check_output(['php',str(Path(__file__).with_name('joomla-curriculum-builder.php')),str(root),'state'],text=True))
 def link(html,key,value):return next(x for x in Page(html).links if parse_qs(urlparse(x).query).get(key)==[str(value)])
 def modules(html):return re.findall(r'<section id="jlms-module-([0-9]+)"',html)

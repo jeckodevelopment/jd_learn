@@ -52,6 +52,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   </div>
  </header>
  <?php if (!$version) : ?>
+ <p id="jlms-publication-notice" class="alert alert-info"><?= Text::_($this->publicationNotice) ?></p>
  <form method="post" id="jlms-version-form" action="<?= $link('index.php?option=com_jlms') ?>">
   <?php $hidden(['course_id'=>$course->id,'revision'=>$course->revision]); ?><input type="hidden" name="task" value="curriculum.createVersion">
   <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_CREATE_DRAFT_VERSION') ?></button>
