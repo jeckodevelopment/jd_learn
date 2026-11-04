@@ -11,6 +11,16 @@ use Joomla\Database\ParameterType;
 /** Public profile projection. Linked native accounts never confer rights or expose email. */
 final class TeacherProfiles
 {
+    public static function canEdit(User $actor, object $profile): bool
+    {
+        if (!$actor->id || $actor->block) { return false; }
+        $scope = 'com_jlms.teacher.' . (int) $profile->id;
+        if ($actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor->authorise('core.edit', $scope)) { return true; }
+        $own = (int) ($profile->user_id ?? 0) === (int) $actor->id
+            || ((int) ($profile->created_by ?? 0) === (int) $actor->id && $actor->authorise('core.manage', 'com_jlms'));
+        return $own && $actor->authorise('core.edit.own', $scope);
+    }
+
     public static function available(DatabaseInterface $db, User $actor, string $language = '*', ?array $only = null, bool $details = false): array
     {
         if ($only === []) { return []; }
@@ -52,6 +62,20 @@ final class TeacherProfiles
     {
         $q = $db->createQuery()->select('teacher_id')->from('#__jlms_course_teachers')->where('course_id=:course')->bind(':course', $course, ParameterType::INTEGER)->order('ordering,teacher_id');
         return array_map('intval', $db->setQuery($q, 0, 51)->loadColumn());
+    }
+
+    public static function current(DatabaseInterface $db, User $actor, string $language, int $course): array
+    {
+        $rows = self::available($db, $actor, $language, self::selected($db, $course), true);
+        $profiles = [];
+        foreach (self::selected($db, $course) as $id) {
+            if (!isset($rows[$id])) { continue; }
+            $row = $rows[$id]; $params = json_decode($row->params_json, true, 16, JSON_THROW_ON_ERROR);
+            $profiles[] = ['id' => $id, 'title' => $row->title, 'bio' => $row->bio, 'image' => $row->image,
+                'image_alt' => $params['image_alt'] ?? '', 'image_decorative' => (bool) ($params['image_decorative'] ?? false),
+                'website' => $params['website'] ?? ''];
+        }
+        return $profiles;
     }
 
     public static function freeze(DatabaseInterface $db, User $actor, object $course, string $presentation): string

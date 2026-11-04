@@ -20,7 +20,11 @@ Ogni fase è suddivisa in PR piccole ma funzionalmente verificabili. Le fasi ind
 | M12 — rilascio stabile | Pacchetto accettato e manutenibile | Tutti gli scenari obbligatori del rilascio1 collegati al build, nessun blocco aperto; patch corrente Joomla, installazione/upgrade, backup/ripristino, integrazione reale con estensione commerciale, guide, checksum, update server e procedura di supporto. |
 | M13 — differito | Conservare il perimetro successivo già concordato | NOT-03: promemoria inattività/comunicazioni di gruppo dopo rilascio1. Compiti/live/SCORM/xAPI/LTI e altre evoluzioni mantengono le fasi della specifica, non sono implicitamente incluse nel primo rilascio stabile. |
 
-## Incremento attivo: M01/e —0.30
+## Incremento attivo: M01/f —0.31
+
+Richiesta del4novembre: flusso editoriale ordinario per aggiornare corsi pubblicati, storico Joomla, programma aggiornabile con copia completa, profili docente senza categoria nel form, custom fields e voci di menu. Sono anticipati i collegamenti M02/AUT-04 e M10/CORE-13/16 necessari al flusso richiesto. I criteri generali della matrice restano invariati; la presentazione della gestione docente segue l’indicazione esplicita dell’utente.
+
+## Incremento precedente: M01/e —0.30
 
 Integra le regole per corso tramite il campo Rules e il controller nativo Joomla. Il collaudo complessivo M01 resta aperto. Il lavoro M02 successivo prosegue secondo AUT-02/04.
 

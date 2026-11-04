@@ -10,8 +10,19 @@ use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Joomla\CMS\Categories\CategoryServiceInterface;
 use Joomla\CMS\Categories\CategoryServiceTrait;
 
-final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Association\AssociationServiceInterface, CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
+final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\FieldsServiceInterface, \Joomla\CMS\Association\AssociationServiceInterface, CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
 {
+    public function validateSection($section, $item = null)
+    {
+        return in_array($section, ['teacher', 'course'], true) ? $section : null;
+    }
+
+    public function getContexts(): array
+    {
+        return ['com_jlms.teacher' => \Joomla\CMS\Language\Text::_('COM_JLMS_TEACHERS'),
+            'com_jlms.course' => \Joomla\CMS\Language\Text::_('COM_JLMS_COURSES')];
+    }
+
     private \Jlms\Component\Jlms\Administrator\Application\DashboardService $dashboardService;
     public function setDashboardService(\Jlms\Component\Jlms\Administrator\Application\DashboardService $service): void { $this->dashboardService = $service; }
     public function getDashboardService(): \Jlms\Component\Jlms\Administrator\Application\DashboardService { return $this->dashboardService; }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.31.0-dev — revisione del flusso editoriale
+
+- Corsi pubblicati aggiornabili dal normale editor, con Content History di Joomla e ripristino editoriale protetto.
+- Modifica del programma tramite copia completa della versione corrente, incluse lezioni, quiz e materiali. Pubblicazione degli aggiornamenti con conservazione delle assegnazioni didattiche.
+- Profili docente senza selettore di categoria, campi Joomla, pagina e lista corsi configurabili da menu, modifica del proprio profilo dal frontend.
+
 ## 0.30.0-dev — regole Joomla per corso
 
 - Campo Rules nativo nei corsi salvati per utenti autorizzati con core.admin sul relativo asset. Le modifiche vengono salvate dal controller com_config di Joomla.

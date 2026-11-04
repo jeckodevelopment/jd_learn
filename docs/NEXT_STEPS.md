@@ -1,6 +1,6 @@
 # Piano esecutivo residuo — stabilizzazione prima delle nuove funzioni
 
-Priorità attuale: completare i residui M01 e proseguire M02 secondo AUT-02/03/04 e SCR-13. Il collaudo utente ha confermato prima pubblicazione e YouTube. La 0.29 completa il vincolo della descrizione estesa e la 0.30 integra le ACL per corso. Il collaudo M01, l’anteprima completa, la revisione e le nuove versioni rimangono nel piano.
+Priorità attuale: semplificazione M01 richiesta il4novembre, con storico Joomla e aggiornamento dei corsi, lezioni/materiali e docenti. Le dipendenze M02/AUT-04 e M10/CORE-13/16 sono anticipate per rendere coerente il flusso richiesto. Il collaudo utente ha confermato prima pubblicazione e YouTube. La 0.29 completa il vincolo della descrizione estesa e la 0.30 integra le ACL per corso. Il collaudo M01, l’anteprima completa, la revisione e le nuove versioni rimangono nel piano.
 
 Aggiornamento:4novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
 

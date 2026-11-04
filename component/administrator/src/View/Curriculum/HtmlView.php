@@ -42,7 +42,7 @@ final class HtmlView extends BaseHtmlView
         } elseif (!\Joomla\CMS\Plugin\PluginHelper::isEnabled('workflow', 'publishing')) {
             $this->publicationNotice = 'COM_JLMS_PUBLICATION_PLUGIN_REQUIRED';
         } else {
-            $this->transitions = $app->bootComponent('com_jlms')->getPublicationService()->transitions($app->getIdentity(), (int) $course->id);
+            $this->transitions = $app->bootComponent('com_jlms')->getPublicationService()->transitions($app->getIdentity(), (int) $course->id, (int) $version->id);
             if (!$this->transitions) {
                 $this->publicationNotice = 'COM_JLMS_PUBLICATION_NO_TRANSITIONS';
             }

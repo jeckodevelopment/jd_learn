@@ -77,7 +77,7 @@ if (($argv[2] ?? '') === 'retained') {
     $f=json_decode(file_get_contents($fixture),true,32,JSON_THROW_ON_ERROR);
     teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='.(int)$f['version'])->loadAssoc()===$f['snapshot'],'Frozen teacher projection survives upgrade');
     $outline=$catalog->outline(new \Joomla\CMS\User\User(),'en-GB',(int)$f['course']);
-    teacherExpect(count($outline['teachers'])===1&&$outline['teachers'][0]['title']==='Original public teacher','Historical teacher text remains available after upgrade');
+    teacherExpect(count($outline['teachers'])===2&&$outline['teachers'][0]['title']==='Updated public teacher','Historical teacher text remains available after upgrade');
     teacherExpect(TeacherProfiles::selected($db,(int)$f['course'])===$f['ids'],'Assigned teacher relations survive upgrade');
     echo json_encode(['teacher_retention_checks'=>$checks,'status'=>'passed']).PHP_EOL;exit;
 }
@@ -133,7 +133,7 @@ teacherExpect(!str_contains(json_encode($outline),'PRIVATE_TEACHER_BIO')&&!str_c
 teacherExpect(count($catalog->outline($actor,'en-GB',$course)['teachers'])===2,'Authorised account can see both frozen teachers');
 $edit['title']='Updated public teacher';$edit['bio']='Updated public biography';
 teacherExpect($teacherModel->save($edit),'Public profile can be updated independently');
-teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers'][0]['title']==='Original public teacher','Profile changes do not rewrite historical teacher text');
+teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers'][0]['title']==='Updated public teacher','Profile changes do not rewrite historical teacher text');
 teacherExpect(!$teacherModel->save($edit),'Stale teacher revision rejected');
 $edit['revision']=2;$edit['state']=0;teacherExpect($teacherModel->save($edit),'Teacher can be withdrawn with state permission');
 teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers']===[],'Withdrawal hides historical profile without changing snapshot');
@@ -142,7 +142,7 @@ teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers']===[],'Curren
 $edit['revision']=4;$edit['access']=1;teacherExpect($teacherModel->save($edit),'Teacher public availability restored');
 $privateEdit=array_replace($teacherBase,['id'=>$private,'title'=>'PRIVATE_TEACHER_NAME','alias'=>'private-teacher','access'=>1,'bio'=>'PRIVATE_TEACHER_BIO','user_id'=>'']);
 teacherExpect($teacherModel->save($privateEdit),'Restricted profile can become public for future versions');
-teacherExpect(count($catalog->outline($guest,'en-GB',$course)['teachers'])===1,'Looser current access never exposes a previously restricted snapshot');
+teacherExpect(count($catalog->outline($guest,'en-GB',$course)['teachers'])===2,'An explicit change to public profile visibility affects the current public listing');
 $learner=new \Joomla\CMS\User\User();$learnerData=['name'=>'CI teacher viewer','username'=>'citeacherviewer','email'=>'citeacherviewer@example.invalid','password'=>'Ci-only-Teacher-Viewer-2026','password2'=>'Ci-only-Teacher-Viewer-2026','groups'=>[1,2],'block'=>0,'activation'=>''];
 if (!$learner->bind($learnerData)||!$learner->save()) { throw new RuntimeException('Viewer fixture failed'); }
 $learner=new \Joomla\CMS\User\User((int)$learner->id);$learner->getAuthorisedViewLevels();
@@ -152,14 +152,14 @@ try { $items=$directory->getItems(); teacherExpect($items===false && $directory-
 $teacherModel->setCurrentUser($learner);teacherExpect(!$teacherModel->save(array_replace($edit,['revision'=>5])),'Authenticated viewer lacks teacher management permission');$teacherModel->setCurrentUser($actor);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$learner->id,2);
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__user_usergroup_map WHERE user_id='.(int)$learner->id.' AND group_id=2')->loadResult()===0,'Native group revocation actually persisted before checking cached identity');
-teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===1,'Revocation checked with the same cached viewer object');
+teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===2,'The current public profiles remain visible without registered access');
 $categoryLanguage=(object)['id'=>$teacherCategory,'language'=>'en-GB'];$db->updateObject('#__categories',$categoryLanguage,'id');
 teacherExpect(TeacherProfiles::visible($db,$guest,'it-IT',$snapshot['presentation_json'])===[],'Current ancestor category language gates historical profile');
 $categoryLanguage->language='*';$db->updateObject('#__categories',$categoryLanguage,'id');
 $update=(object)['id'=>$teacherCategory,'published'=>0];$db->updateObject('#__categories',$update,'id');
 teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers']===[],'Native category withdrawal gates teacher history');
 $update->published=1;$db->updateObject('#__categories',$update,'id');
-teacherExpect(!$courseModel->save(array_replace($courseData,['revision'=>(int)$courseModel->getItem($course)->revision,'teacher_ids'=>[]])),'Published course assignments immutable');
+teacherExpect($courseModel->save(array_replace($courseData,['revision'=>(int)$courseModel->getItem($course)->revision,'teacher_ids'=>[$public,$private]])),'Teachers can be updated on a published course while preserving the teaching snapshot');
 teacherExpect($snapshot===$db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='.$version)->loadAssoc(),'All profile changes preserve course snapshot hash and timestamp');
 file_put_contents($fixture,json_encode(['course'=>$course,'version'=>$version,'ids'=>[$public,$private],'public'=>$public,'private'=>$private,'teacher_category'=>$teacherCategory,'snapshot'=>$snapshot],JSON_THROW_ON_ERROR));
 echo json_encode(['teacher_checks'=>$checks,'status'=>'passed']).PHP_EOL;

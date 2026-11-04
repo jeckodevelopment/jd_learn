@@ -10,11 +10,16 @@ use Joomla\CMS\User\User;
 use Joomla\Database\ParameterType;
 use Jlms\Component\Jlms\Administrator\Application\CourseArtwork;
 
-final class TeacherModel extends AdminModel
+class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\VersionableModelInterface
 {
+    use \Joomla\CMS\Versioning\VersionableModelTrait;
+
+    protected function versionHistoryEnabled(string $context): bool
+    { return (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('save_history', 1); }
+
     public $typeAlias = 'com_jlms.teacher';
     public function getForm($data = [], $loadData = true) { return $this->loadForm('com_jlms.teacher', 'teacher', ['control' => 'jform', 'load_data' => $loadData]); }
-    protected function loadFormData() { return Factory::getApplication()->getUserState('com_jlms.edit.teacher.data', []) ?: $this->getItem(); }
+    protected function loadFormData() { return Factory::getApplication()->getUserState(Factory::getApplication()->isClient('site') ? 'com_jlms.edit.teacheredit.data' : 'com_jlms.edit.teacher.data', []) ?: $this->getItem(); }
     public function getItem($pk = null)
     {
         $item = parent::getItem($pk);
@@ -32,8 +37,8 @@ final class TeacherModel extends AdminModel
         try {
             $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult() ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
             $actor = new User((int) $this->getCurrentUser()->id); $actor->clearAccessRights(); $this->setCurrentUser($actor);
-            if ($actor->guest || $actor->block || !$actor->authorise('jlms.teachers.manage', 'com_jlms')) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
-            $allowed = ['id', 'revision', 'title', 'alias', 'catid', 'bio', 'image', 'image_alt', 'image_decorative', 'website', 'language', 'access', 'state', 'user_id'];
+            if ($actor->guest || $actor->block) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            $allowed = ['id', 'revision', 'title', 'alias', 'catid', 'bio', 'image', 'image_alt', 'image_decorative', 'website', 'language', 'access', 'state', 'user_id', 'com_fields', 'version_note'];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id','revision','catid','access','state'] as $key) {
                 if (array_key_exists($key,$data) && ((!is_int($data[$key]) && !is_string($data[$key])) || !preg_match('/^[0-9]{1,10}$/D',(string) $data[$key]))) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
@@ -45,10 +50,18 @@ final class TeacherModel extends AdminModel
                 $q->setQuery((string) $q . ' FOR UPDATE'); $record = $db->setQuery($q)->loadObject();
                 if (!$record) { throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND'); }
                 $scope = 'com_jlms.teacher.' . $id;
-                if ((!$actor->authorise('core.edit', $scope) && !((int) $record->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $scope)))
+                if (!\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $record)
                     || ($record->checked_out && (int) $record->checked_out !== (int) $actor->id)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
                 if ((int) ($data['revision'] ?? 0) !== (int) $record->revision) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
-            } else { $scope = 'com_jlms.teacher.category.' . (int) ($data['catid'] ?? 0); }
+            } else {
+                if (!$actor->authorise('jlms.teachers.manage', 'com_jlms')) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+                $query = $db->createQuery()->select('id')->from('#__categories')->where("extension='com_jlms.teacher' AND alias='jd-learn-teachers'");
+                $data['catid'] = (int) ($data['catid'] ?? $db->setQuery($query)->loadResult());
+                $scope = 'com_jlms';
+            }
+            if (!$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
+                foreach (['user_id', 'catid', 'state', 'access', 'language'] as $protected) { unset($data[$protected]); }
+            }
             $catid = (int) ($data['catid'] ?? $record->catid ?? 0);
             if ((!$id || $catid !== (int) $record->catid) && !$actor->authorise('core.create', 'com_jlms.teacher.category.' . $catid)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
             if (array_key_exists('state', $data) && (int) $data['state'] !== (int) ($record->state ?? 0) && !$actor->authorise('core.edit.state', $scope)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
@@ -88,6 +101,20 @@ final class TeacherModel extends AdminModel
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED')); return false;
         }
     }
+    public function loadHistory(int $historyId)
+    {
+        $history = $this->getHistoryTable($historyId);
+        if (!$history) { return false; }
+        $data = json_decode($history->version_data, true, 64, JSON_THROW_ON_ERROR);
+        $id = (int) ($data['id'] ?? 0);
+        if (!$id || $history->item_id !== $this->typeAlias . '.' . $id) { return false; }
+        $current = $this->getItem($id);
+        if (!$current) { return false; }
+        $data['revision'] = (int) $current->revision;
+        $data = array_replace($data, array_intersect_key(json_decode($data['params_json'] ?? '{}', true), array_flip(['website', 'image_alt', 'image_decorative'])));
+        return $this->save($data);
+    }
+
     public function delete(&$pks) { $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE')); return false; }
     public function publish(&$pks, $value = 1) { $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE')); return false; }
 }

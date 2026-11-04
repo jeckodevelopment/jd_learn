@@ -12,7 +12,7 @@ final class DisplayController extends BaseController
 
     public function display($cachable = false, $urlparams = [])
     {
-        if (!in_array($this->input->getCmd('view', 'courses'), ['courses', 'course', 'categories', 'category', 'dashboard', 'classroom', 'quiz'], true)) {
+        if (!in_array($this->input->getCmd('view', 'courses'), ['courses', 'course', 'teacher', 'teacheredit', 'categories', 'category', 'dashboard', 'classroom', 'quiz'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         if ($this->input->getCmd('view') === 'dashboard') { $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true); }

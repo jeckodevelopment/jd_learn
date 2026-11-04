@@ -60,12 +60,17 @@ final class PublicationService
         }
     }
 
-    public function transitions(User $actor, int $courseId): array
+    public function transitions(User $actor, int $courseId, int $versionId = 0): array
     {
         $course = $this->row('courses', $courseId);
         $this->authorise($actor, $course);
         $workflow = $this->workflow();
         $assoc = $workflow->getAssociation($courseId);
+        if ($versionId) {
+            $version = $this->row('course_versions', $versionId);
+            if ((int) $version->course_id !== $courseId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+            if ($version->status === 'draft') { $assoc = null; }
+        }
         $stageId = $assoc ? (int) $assoc->stage_id : (int) $workflow->getDefaultStageByCategory((int) $course->catid);
         $q = $this->db->createQuery()->select('t.id, t.title, t.options')->from('#__workflow_transitions AS t')
             ->innerJoin('#__workflow_stages AS s ON s.workflow_id = t.workflow_id')
@@ -252,7 +257,7 @@ final class PublicationService
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $selected = null;
-            foreach ($this->transitions($actor, $courseId) as $candidate) {
+            foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) {
                 if ((int) $candidate->id === $transitionId) {
                     $selected = $candidate;
                 }
@@ -261,13 +266,19 @@ final class PublicationService
                 throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
             }
             $state = (int) (new Registry($selected->options))->get('publishing');
-            if ($version->status === 'draft' && $state === 1 && $course->current_version_id === null) {
+            if ($version->status === 'draft' && $state === 1) {
                 $this->validateAndFreeze($course, $version, $actor, $remoteChecks);
             } elseif ($version->status !== 'published' || (int) $course->current_version_id !== $versionId) {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
             }
             $workflow = $this->workflow();
-            if (!$workflow->getAssociation($courseId)) {
+            $association = $workflow->getAssociation($courseId);
+            $publishingUpdate = $course->current_version_id !== null && (int) $course->current_version_id !== $versionId;
+            if ($publishingUpdate && $association) {
+                $stage = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
+                if (!$stage || !$workflow->updateAssociations([$courseId], $stage)) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
+            }
+            if (!$association) {
                 $stage = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
                 if (!$stage || !$workflow->createAssociation($courseId, $stage)) {
                     throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');

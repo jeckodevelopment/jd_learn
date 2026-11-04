@@ -213,7 +213,8 @@ $outline = $catalog->outline($guest, 'en-GB', $course);
 presentationExpect($outline['presentation']['objectives'] === 'Latest objectives before publication', 'Publication freezes the latest presentation, not the initial draft copy');
 presentationExpect(!str_contains(json_encode($outline), 'PRESENTATION_PRIVATE_LESSON_BODY') && !str_contains(json_encode($outline), 'retain-me'), 'Public projection excludes private lesson content and unrelated params');
 $baseline = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
-presentationExpect(!$model->save(array_replace($update, ['revision' => (int) $model->getItem($course)->revision, 'presentation_objectives' => 'Published mutation'])), 'Published presentation cannot be changed through the draft editor');
+presentationExpect($model->save(array_replace($update, ['revision' => (int) $model->getItem($course)->revision, 'presentation_objectives' => 'Published editorial correction'])), 'Published editorial metadata can be updated through the normal editor');
+presentationExpect($catalog->outline($guest, 'en-GB', $course)['presentation']['objectives'] === 'Published editorial correction', 'Current public course shows the editorial correction');
 presentationExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $baseline, 'Denied mutation leaves frozen history unchanged');
 foreach ([0, 1] as $expectedState) {
     $choices = $publication->transitions($actor, $course);

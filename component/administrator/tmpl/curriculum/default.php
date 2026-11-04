@@ -42,12 +42,20 @@ $hidden = static function (array $fields): void {
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_CREATE_DRAFT_VERSION') ?></button>
   </form>
  <?php else : ?>
+ <?php if ($version->status === 'published') : ?>
+ <form method="post" id="jlms-edit-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">
+  <?php $hidden(['course_id' => $course->id, 'revision' => $course->revision]); ?>
+  <input type="hidden" name="task" value="curriculum.createVersion">
+  <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_EDIT_PROGRAMME') ?></button>
+ </form>
+ <?php endif; ?>
  <p><a id="jlms-course-preview-link" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_COURSE_PREVIEW') ?></a></p>
  <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?> · <?= Text::_('COM_JLMS_REVISION') ?> <?= (int) $version->revision ?></p>
  <nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>">
  <?php foreach ($this->outline['versions'] as $entry) : ?>
   <a href="<?= $link($base . '&version_id=' . (int) $entry->id) ?>">v<?= (int) $entry->version_no ?></a>
  <?php endforeach; ?></nav>
+ <?php if ($version->status === 'draft' && $course->current_version_id !== null) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_WORKING_REVISION_NOTICE') ?></p><?php endif; ?>
  <?php if ($this->transitions) : ?>
  <form method="post" id="jlms-publication-form" action="<?= $link('index.php?option=com_jlms') ?>">
   <?php $hidden($scope + ['revision' => $course->revision]); ?>
@@ -56,7 +64,7 @@ $hidden = static function (array $fields): void {
   <select id="jlms-transition" name="jform[transition_id]" class="form-select">
   <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape($transitionLabel($transition)) ?></option><?php endforeach; ?>
   </select>
-  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= count($this->transitions) === 1 ? $this->escape($transitionLabel($this->transitions[0])) : Text::_('COM_JLMS_EXECUTE_TRANSITION') ?></button>
+  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= $version->status === 'draft' && $course->current_version_id !== null ? Text::_('COM_JLMS_PUBLISH_UPDATE') : (count($this->transitions) === 1 ? $this->escape($transitionLabel($this->transitions[0])) : Text::_('COM_JLMS_EXECUTE_TRANSITION')) ?></button>
  </form><?php endif; ?>
  <?php if (\Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id)) : ?>
  <p><a id="jlms-manage-materials" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p>
