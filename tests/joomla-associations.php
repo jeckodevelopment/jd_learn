@@ -119,7 +119,7 @@ $catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_
 $create = static function (string $name, string $tag) use ($catid, $factory): int {
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
     if (!$model->save(['id'=>0, 'title'=>$name, 'alias'=>$name, 'catid'=>$catid, 'language'=>$tag,
-        'catalog_access'=>1, 'content_access'=>2, 'enrollment_mode'=>'auto', 'summary'=>'Translation fixture', 'revision'=>1])) {
+        'catalog_access'=>1, 'content_access'=>2, 'enrollment_mode'=>'auto', 'presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Translation fixture', 'revision'=>1])) {
         throw new \RuntimeException('Association draft fixture: ' . $model->getError());
     }
     return (int) $model->getState('course.id');

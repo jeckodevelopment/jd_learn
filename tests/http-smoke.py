@@ -185,6 +185,17 @@ try:
  publication_form=next(f for f in Page(dh).forms if f['id']=='jlms-publication-form')
  with delegated_http.open(urljoin(du,publication_form['action']),data=urlencode(publication_form['fields']).encode(),timeout=20) as response:
   published_html=response.read().decode('utf-8')
+ if 'Before publishing, enter the full description' not in published_html or re.search(r'<strong>Published</strong>',published_html):
+  raise RuntimeError('An otherwise valid course without a description must show the specific publication error')
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(editor_fixture['delegated']))
+ description_form=next(f for f in Page(dh).forms if 'jform[presentation_description]' in f['fields'])
+ fields=dict(description_form['fields']);fields.update({'task':'course.save','jform[presentation_description]':'<p>Delegated course presentation.</p>'})
+ with delegated_http.open(urljoin(du,description_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=curriculum&id='+str(editor_fixture['delegated']))
+ publication_form=next(f for f in Page(dh).forms if f['id']=='jlms-publication-form')
+ with delegated_http.open(urljoin(du,publication_form['action']),data=urlencode(publication_form['fields']).encode(),timeout=20) as response:
+  published_html=response.read().decode('utf-8')
+ print(json.dumps({'publication_description_http_checks':2,'status':'passed'}))
  if not re.search(r'<strong>Published</strong>',published_html):
   raise RuntimeError('First publication failed for the category-scoped publisher')
  print(json.dumps({'scoped_publication_http_checks':1,'status':'passed'}))

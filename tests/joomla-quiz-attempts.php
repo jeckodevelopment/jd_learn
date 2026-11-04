@@ -98,7 +98,7 @@ $level=(int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning
 $group=(int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learning entitlement'")->loadResult();
 $catid=(int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
-if(!$model->save(['id'=>0,'revision'=>1,'title'=>'Quiz runtime fixture','alias'=>'quiz-runtime-fixture','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>$level,'enrollment_mode'=>'auto','summary'=>'Quiz runtime']))throw new \RuntimeException($model->getError());
+if(!$model->save(['id'=>0,'revision'=>1,'title'=>'Quiz runtime fixture','alias'=>'quiz-runtime-fixture','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>$level,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Quiz runtime']))throw new \RuntimeException($model->getError());
 $course=(int)$model->getState('course.id');$version=$authoring->createDraft($actor,$course,1);
 $scope=static fn():array=>['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult()];
 $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Quiz runtime chapter']);

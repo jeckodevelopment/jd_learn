@@ -92,6 +92,16 @@ final class CoursePresentation
         return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }
 
+    public static function requireDescription(object $course): void
+    {
+        $details = self::details($course->params_json);
+        $description = $details['description'] ?? '';
+        $text = html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        if (preg_replace('/[\\s\\p{Z}\\p{Cf}]/u', '', $text) === '') {
+            throw new \DomainException('COM_JLMS_COURSE_DESCRIPTION_REQUIRED');
+        }
+    }
+
     public static function snapshot(object $course): string
     {
         $snapshot = ['_schema' => 1, 'summary' => $course->summary];

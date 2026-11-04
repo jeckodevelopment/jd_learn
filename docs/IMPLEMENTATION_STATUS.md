@@ -1,6 +1,6 @@
 # Avanzamento di JD Learn
 
-Aggiornamento: 3 novembre 2026. Versione di sviluppo **0.28.0-dev**, con anteprima editoriale M02; correzione iframe 0.27.2 verificata nella CI41731792184 e integrata con PR34; diagnostica 0.27.1 verificata nella CI41728328142 e integrata con PR33; player integrato 0.27.0 verificato nella CI41726857577 e integrato con PR32; correzione dell’avvio YouTube 0.26.3 verificata nella CI41725330930 e integrata con PR31; diagnostica video 0.26.2 verificata nella CI41722244743 e integrata con PR30 nell’editor e correzione ACL di pubblicazione nella 0.26.1; validazione editoriale 0.26 verificata nella CI41718537724 e integrata con PR28; permessi editor0.25 verificati nella CI41437667314 e integrati con PR27; calendario0.24 verificato nella CI41432090964 e integrato con PR26; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
+Aggiornamento: 4 novembre 2026. Versione di sviluppo **0.29.0-dev**, con completamento del vincolo di descrizione M01; anteprima editoriale 0.28 verificata nella CI41734705599 e integrata con PR35; correzione iframe 0.27.2 verificata nella CI41731792184 e integrata con PR34; diagnostica 0.27.1 verificata nella CI41728328142 e integrata con PR33; player integrato 0.27.0 verificato nella CI41726857577 e integrato con PR32; correzione dell’avvio YouTube 0.26.3 verificata nella CI41725330930 e integrata con PR31; diagnostica video 0.26.2 verificata nella CI41722244743 e integrata con PR30 nell’editor e correzione ACL di pubblicazione nella 0.26.1; validazione editoriale 0.26 verificata nella CI41718537724 e integrata con PR28; permessi editor0.25 verificati nella CI41437667314 e integrati con PR27; calendario0.24 verificato nella CI41432090964 e integrato con PR26; docenti0.23 verificati nella CI41428719456 e integrati con PR25; copertina/SEO e concorrenza iscrizioni0.22 verificati nella CI41421171965 e integrati con PR24; editor/presentazione0.21 verificato dalla CI41417124499 e integrato con PR23; prima pubblicazione0.20.1 già verificata nella CI; il prodotto non è ancora pronto per la produzione.
 
 Schema attuale: **41 tabelle / 58 FK**. Il pacchetto contiene7estensioni: componente, libreria, quattro provider video e plugin Scheduler. Il database presente non equivale a una funzionalità operativa.
 
@@ -22,7 +22,7 @@ La0.20.1 aggiunge navigazione editor/programma, istruzioni e diagnosi visibili p
 
 ## Incremento corrente0.26 — M01/c2
 
-Descrizione breve limitata a 500 caratteri per nuovi valori, conservazione dei testi precedenti e messaggio per alias duplicati per categoria e lingua. Prove native e HTTP nella PR. La descrizione estesa obbligatoria alla pubblicazione resta da applicare.
+Descrizione breve limitata a 500 caratteri per nuovi valori, conservazione dei testi precedenti e messaggio per alias duplicati per categoria e lingua. Prove native e HTTP nella PR. La 0.29 applica il vincolo di descrizione estesa alla prima pubblicazione.
 
 ## Incremento precedente0.25 — M01/c1
 

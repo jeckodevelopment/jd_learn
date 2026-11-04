@@ -119,7 +119,7 @@ $move->load($child);$move->setLocation($en,'last-child');if(!$move->store())thro
 catExpect(!catHidden($child),'native move restore reflected');
 $createCourse=static function(int $catid,string $tag,string $alias)use($factory,$component,$actor,$db):int{
     $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
-    if(!$model->save(['id'=>0,'title'=>$alias,'alias'=>$alias,'catid'=>$catid,'language'=>$tag,'catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Category course summary','revision'=>1]))throw new \RuntimeException($model->getError());
+    if(!$model->save(['id'=>0,'title'=>$alias,'alias'=>$alias,'catid'=>$catid,'language'=>$tag,'catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Category course summary','revision'=>1]))throw new \RuntimeException($model->getError());
     $course=(int)$model->getState('course.id');$authoring=$component->getCurriculumService();$version=$authoring->createDraft($actor,$course,1);
     $scope=static fn()=>['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$version)->loadResult()];
     $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Category chapter']);

@@ -13,7 +13,7 @@
   <field name="presentation_image" type="media" label="COM_JLMS_COURSE_IMAGE" description="COM_JLMS_COURSE_IMAGE_HELP" types="images" preview="tooltip" filter="raw" />
   <field name="presentation_image_alt" type="text" label="COM_JLMS_COURSE_IMAGE_ALT" maxlength="500" filter="raw" />
   <field name="presentation_image_decorative" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_COURSE_IMAGE_DECORATIVE" default="0" filter="raw"><option value="0">JNO</option><option value="1">JYES</option></field>
-  <field name="presentation_description" type="editor" label="COM_JLMS_COURSE_DESCRIPTION" description="COM_JLMS_COURSE_DESCRIPTION_HELP" filter="raw" buttons="false" height="300" />
+  <field name="presentation_description" type="editor" label="COM_JLMS_COURSE_DESCRIPTION" description="COM_JLMS_COURSE_DESCRIPTION_PUBLICATION_HELP" filter="raw" buttons="false" height="300" />
   <field name="presentation_objectives" type="textarea" label="COM_JLMS_COURSE_OBJECTIVES" filter="raw" rows="4" />
   <field name="presentation_audience" type="textarea" label="COM_JLMS_COURSE_AUDIENCE" filter="raw" rows="4" />
   <field name="presentation_prerequisite_text" type="textarea" label="COM_JLMS_COURSE_PREREQUISITE_TEXT" description="COM_JLMS_COURSE_PREREQUISITE_HELP" filter="raw" rows="4" />

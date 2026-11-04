@@ -97,7 +97,7 @@ teacherExpect($groups===$db->setQuery('SELECT user_id,group_id FROM #__user_user
 teacherExpect($teacherModel->save(array_replace($teacherBase,['title'=>'PRIVATE_TEACHER_NAME','alias'=>'private-teacher','access'=>2,'bio'=>'PRIVATE_TEACHER_BIO','user_id'=>''])),'Restricted teacher saved without native account');
 $private=(int)$teacherModel->getState('teacher.id');
 $courseModel=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
-$courseBase=['id'=>0,'revision'=>1,'title'=>'Teacher course fixture','alias'=>'teacher-course-fixture','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Teacher course'];
+$courseBase=['id'=>0,'revision'=>1,'title'=>'Teacher course fixture','alias'=>'teacher-course-fixture','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Teacher course'];
 teacherExpect(!$courseModel->save($courseBase+['teacher_ids'=>[$public]]),'Course must be saved before atomic assignment');
 teacherExpect($courseModel->save($courseBase),'Draft course saved');$course=(int)$courseModel->getState('course.id');
 $courseData=array_replace($courseBase,['id'=>$course,'teacher_ids'=>[$public,$private]]);

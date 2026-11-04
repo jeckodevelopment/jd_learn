@@ -1,6 +1,6 @@
 # Piano esecutivo residuo — stabilizzazione prima delle nuove funzioni
 
-Priorità attuale: gestione corsi e diagnosi dei provider video. Dopo la pubblicazione riuscita nel collaudo utente, verificare per ciascun provider il passaggio da configurazione e salvataggio della lezione alla riproduzione in aula. Riprodurre e correggere il blocco segnalato sul provider interessato prima degli incrementi di gestione non essenziali.
+Priorità attuale: completare i residui M01 e proseguire M02 secondo AUT-02/03/04 e SCR-13. Il collaudo utente ha confermato prima pubblicazione e YouTube. La 0.29 completa il vincolo della descrizione estesa; le ACL per corso, l’anteprima completa, la revisione e le nuove versioni rimangono nel piano.
 
 Data:1novembre2026. Questo è un backlog ordinato, non una stima di calendario né una dichiarazione di funzionalità già esistenti. La [matrice](REQUIREMENTS_STATUS.csv) e il [registro differenze](IMPLEMENTATION_GAPS.md) definiscono ciò che resta aperto; l’ordine può essere affinato per dipendenze mantenendo l’intero perimetro del rilascio1.
 
