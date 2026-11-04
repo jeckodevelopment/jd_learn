@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.34.0-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla6 di Jecko Development, riutilizzabile e indipendente dal sito/template. **Versione0.34.1-dev: sviluppo in corso, non pronta per la produzione.**
 
 Schema InnoDB: **41 tabelle / 58 FK**. Pacchetto con7costituenti: componente MVC, libreria, quattro plugin video e plugin Scheduler. Né lo schema né il numero degli incrementi indicano completezza del prodotto.
 
@@ -109,7 +109,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-Lo ZIP generato è `dist/pkg_jlms-0.34.0-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
+Lo ZIP generato è `dist/pkg_jlms-0.34.1-dev.zip`, accompagnato da SHA256SUMS. Non richiede Composer o NPM sul sito del cliente. La pipeline esegue lint PHP, test dominio, schema su MySQL/MariaDB, doppia build riproducibile e installazione/smoke test su Joomla reale. I risultati effettivi sono visibili nelle Actions, non dedotti dall’esistenza del workflow.
 
 `tests/database.php` e `tests/joomla-smoke.php` richiedono un database/sito usa e getta e opt-in `JLMS_TEST_DISPOSABLE=1`. Non eseguirli su siti reali. Le credenziali nei test sono esclusivamente fixture effimere della CI.
 
@@ -130,3 +130,5 @@ Area personale I miei corsi: [guida](docs/LEARNER_DASHBOARD.md), con storico pri
 - [Preassegnazione0.20](docs/PREASSIGNMENT.md): assegnazione senza livelli correnti, nessun gruppo o diritto di fruizione aggiunto.
 
 Programma0.34: scaletta contestuale, un solo editor, aggiunta nel modulo, spostamento delle lezioni e riordino drag/tastiera. Vedere [guida del programma](docs/AUTHORING.md).
+
+Programma0.34.1: avviso browser per modifiche non salvate nel modulo/lezione. Verifiche effettive nella [PR43](https://github.com/jeckodevelopment/jd_learn/pull/43); non chiude M01.
