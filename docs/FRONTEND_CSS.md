@@ -143,3 +143,5 @@ Nel layout amministrativo Programma, `#jlms-video-setup` identifica il riepilogo
 L’anteprima amministrativa usa `coursepreview/default.php`, con regioni `#jlms-course-preview` e `#jlms-course-preview-lesson`. Il Programma espone il collegamento `#jlms-course-preview-link`.
 
 Nella scheda Permessi dell’editor, `#jlms-course-rules` contiene il campo ACL nativo Joomla e il messaggio sul salvataggio immediato. Gli override devono conservare token, asset effettivo, campo Rules e controlli di autorizzazione.
+
+Nella0.31 la pagina docente usa `teacher/default.php` e il layout `teacher/courses.php`, con `#jlms-teacher-profile`, `#jlms-teacher-presentation`, `#jlms-teacher-fields` e `#jlms-teacher-courses`. Il form frontend del profilo usa `teacheredit/default.php` e `#jlms-teacher-profile-form`. Il Programma pubblicato offre `#jlms-edit-programme-form`. Conservare autorizzazioni, token e campi di revisione negli override.

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata><layout title="COM_JLMS_TEACHER_MENU"><message>COM_JLMS_TEACHER_MENU_DESC</message></layout>
+<fields name="request" addfieldprefix="Jlms\Component\Jlms\Site\Field"><fieldset name="request">
+<field name="id" type="Teacherprofile" label="COM_JLMS_TEACHER" filter="integer" required="true" /></fieldset></fields></metadata>

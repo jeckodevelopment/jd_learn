@@ -13,7 +13,7 @@ final class TeacherController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel'], true)) {
+        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -31,7 +31,7 @@ final class TeacherController extends FormController
         $id = (int) ($data[$key] ?? 0);
         $item = $this->getModel()->getItem($id);
         $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id); $actor->clearAccessRights();
-        return $actor->id && !$actor->block && $actor->authorise('jlms.teachers.manage', 'com_jlms') && $id > 0 && $item && ($actor->authorise('core.edit', 'com_jlms.teacher.' . $id)
-            || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', 'com_jlms.teacher.' . $id)));
+        return $actor->authorise('core.manage', 'com_jlms') && $id > 0 && $item
+            && \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $item);
     }
 }

@@ -30,6 +30,12 @@ final class Router extends RouterView
         $classroom = new RouterViewConfiguration('classroom');
         $classroom->setKey('id');
         $this->registerView($classroom);
+        $teacher = new RouterViewConfiguration('teacher');
+        $teacher->setKey('id');
+        $this->registerView($teacher);
+        $teacheredit = new RouterViewConfiguration('teacheredit');
+        $teacheredit->setKey('id');
+        $this->registerView($teacheredit);
         $quiz = new RouterViewConfiguration('quiz');
         $quiz->setKey('id');
         $this->registerView($quiz);
@@ -38,6 +44,12 @@ final class Router extends RouterView
         $this->attachRule(new StandardRules($this));
         $this->attachRule(new NomenuRules($this));
     }
+
+    public function getTeachereditSegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
+    public function getTeachereditId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
+
+    public function getTeacherSegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
+    public function getTeacherId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
 
     public function getCategorySegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
     public function getCategoryId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }

@@ -128,7 +128,7 @@ foreach ([['publish_up','2099-01-01 00:00:00'],['publish_down','1999-01-01 00:00
  scheduleDenied(fn()=>$catalog->outline($learner,'en-GB',$course),404,'Publication window gates direct course access');
  $change->$field=$current;$db->updateObject('#__jlms_courses',$change,'id',true);
 }
-scheduleExpect(!$model->save(array_replace($edit,['revision'=>(int)$model->getItem($course)->revision,'calendar_ends_at'=>'2097-01-01 00:00:00'])),'Published calendar cannot be silently edited');
+scheduleExpect($model->save(array_replace($edit,['revision'=>(int)$model->getItem($course)->revision,'calendar_ends_at'=>'2097-01-01 00:00:00'])),'Current course calendar can be updated with a native history revision');
 foreach ([0,1] as $state) {
  $publication->transition($actor,$course,$version,(int)$model->getItem($course)->revision,$rev(),(int)$publication->transitions($actor,$course)[0]->id);
  scheduleExpect($snapshot===$db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='.$version)->loadAssoc()&&$window===$db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id='.$edition)->loadAssoc(),'Withdrawal/republication preserves snapshot and edition window');

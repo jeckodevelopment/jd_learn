@@ -48,7 +48,7 @@ final class HtmlView extends BaseHtmlView
             $this->form->setValue('asset_id', null, $assetId);
         }
         $this->editorRights=['COM_JLMS_EDITOR_RIGHT_CREATE'=>\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor),'COM_JLMS_EDITOR_RIGHT_EDIT'=>$allowed,'COM_JLMS_EDITOR_RIGHT_PUBLISH'=>$actor->authorise('core.edit.state',$asset),'COM_JLMS_EDITOR_RIGHT_OPTIONS'=>$this->canConfigure];
-        $this->readOnly = $this->checkedOutByOther || $id > 0 && ($this->item->current_version_id !== null || (int) $this->item->state !== 0);
+        $this->readOnly = $this->checkedOutByOther;
         if ($this->readOnly) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { $this->form->setFieldAttribute($field,'disabled','true'); }
             $this->form->setFieldAttribute('teacher_ids','disabled','true');
@@ -65,6 +65,7 @@ final class HtmlView extends BaseHtmlView
             ToolbarHelper::apply('course.apply');
             ToolbarHelper::save('course.save');
         }
+        if ($id > 0) { ToolbarHelper::versions('com_jlms.course', $id); }
         ToolbarHelper::cancel('course.cancel');
         parent::display($tpl);
     }

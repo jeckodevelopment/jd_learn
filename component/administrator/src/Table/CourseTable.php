@@ -94,7 +94,6 @@ final class CourseTable extends Table
         $stable = $this->id && $asset->loadByName($this->_getAssetName())
             && (int) $asset->id === (int) $this->asset_id
             && (int) $asset->parent_id === (int) $this->_getAssetParentId()
-            && $asset->title === \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)
             && $this->_rules === null;
         if ($this->stableAssetRequired && !$stable) {
             throw new \DomainException('COM_JLMS_ASSOCIATION_SAVE_SEPARATELY');
@@ -114,7 +113,11 @@ final class CourseTable extends Table
         $this->modified_at = $now;
         $this->modified_by = $userId;
         $tracking = $this->_trackAssets;
-        if ($stable) { $this->_trackAssets = false; }
+        if ($stable) {
+            $this->_trackAssets = false;
+            $title = (object) ['id' => (int) $asset->id, 'title' => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)];
+            $this->getDatabase()->updateObject('#__assets', $title, 'id');
+        }
         try {
             return parent::store($updateNulls);
         } finally {

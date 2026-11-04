@@ -10,8 +10,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\ParameterType;
 
-final class CourseModel extends AdminModel
+final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\VersionableModelInterface
 {
+    use \Joomla\CMS\Versioning\VersionableModelTrait { saveHistory as private persistHistory; }
+
     public $typeAlias = 'com_jlms.course';
     protected $associationsContext = 'com_jlms.item';
     private bool $associationWrite = false;
@@ -201,10 +203,7 @@ final class CourseModel extends AdminModel
                 if ((int) $record->revision !== $expected) {
                     throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                 }
-                // Foundation edits drafts only; never mutate a course already published/versioned by later increments.
-                if ((int) $record->state !== 0 || $record->current_version_id !== null) {
-                    throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
-                }
+                // Teaching records remain immutable; this model edits live editorial metadata.
                 if ((int) $record->catid !== (int) ($data['catid'] ?? $record->catid)
                     && !$user->authorise('core.create', 'com_jlms.course.category.' . (int) $data['catid'])) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
@@ -254,6 +253,10 @@ final class CourseModel extends AdminModel
                     $relation = (object) ['course_id'=>$id,'teacher_id'=>$teacher,'ordering'=>$ordering]; $db->insertObject('#__jlms_course_teachers',$relation);
                 }
             }
+            $history = $data;
+            $history['teacher_ids'] = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $this->getState('course.id'));
+            $history['version_note'] = is_string($inputNote = Factory::getApplication()->getInput()->post->get('jform', [], 'array')['version_note'] ?? '') ? strip_tags($inputNote) : '';
+            $this->persistHistory($history, $this->typeAlias);
             $db->transactionCommit();
             return true;
         } catch (\Throwable $error) {
@@ -270,6 +273,34 @@ final class CourseModel extends AdminModel
         } finally {
             $this->associationWrite = false;
         }
+    }
+
+    protected function versionHistoryEnabled(string $context): bool
+    {
+        return (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('save_history', 1);
+    }
+
+    public function saveHistory(array $data, string $context)
+    {
+        // Save once after course relations have been persisted by this model.
+        return true;
+    }
+
+    public function loadHistory(int $historyId)
+    {
+        $history = $this->getHistoryTable($historyId);
+        if (!$history) { return false; }
+        $data = json_decode($history->version_data, true, 64, JSON_THROW_ON_ERROR);
+        $id = (int) ($data['id'] ?? 0);
+        if ($id < 1 || $history->item_id !== $this->typeAlias . '.' . $id) { return false; }
+        $current = $this->getItem($id);
+        if (!$current) { return false; }
+        $data['revision'] = (int) $current->revision;
+        foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($data['params_json'] ?? '{}') ?? [] as $name => $value) {
+            if ($name !== '_schema') { $data['presentation_' . $name] = $value; }
+        }
+        $data = array_replace($data, \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor((object) $data, Factory::getApplication()->getIdentity()->getTimezone()->getName()));
+        return $this->save($data);
     }
 
     public function delete(&$pks)
@@ -290,7 +321,12 @@ final class CourseModel extends AdminModel
             $this->setError(Text::_('COM_JLMS_PUBLICATION_NOT_AVAILABLE'));
             return false;
         }
+        $historyIds = array_map('intval', $pks);
         $success = parent::publish($pks, $value);
+        if ($success && $historyIds) {
+            $this->setState('course.id', $historyIds[0]);
+            $this->persistHistory(['teacher_ids' => \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(), $historyIds[0])], $this->typeAlias);
+        }
         $service->recordStateChangeResult($success);
         return $success;
     }

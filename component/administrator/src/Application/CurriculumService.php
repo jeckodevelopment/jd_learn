@@ -187,6 +187,7 @@ final class CurriculumService
         return $this->transaction(function () use ($actor, $courseId, $expectedRevision): int {
             $course = $this->row('courses', $courseId, true);
             $this->authorise($actor, $course);
+            if ($course->checked_out && (int) $course->checked_out !== (int) $actor->id) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
             $q = $this->db->createQuery()->select('id')->from($this->db->quoteName('#__jlms_course_versions'))
                 ->where('course_id = :course')->where('status = :status');
             $status = 'draft';
@@ -198,16 +199,17 @@ final class CurriculumService
             if ((int) $course->revision !== $expectedRevision) {
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
-            // Full historical cloning is deliberately gated until its quiz/resource/equivalence mapping is implemented.
+            $query = $this->db->createQuery()->select('COALESCE(MAX(version_no), 0)')
+                ->from('#__jlms_course_versions')->where('course_id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
+            $number = (int) $this->db->setQuery($query)->loadResult() + 1;
             if ($course->current_version_id !== null) {
-                throw new \DomainException('COM_JLMS_VERSION_COPY_NOT_AVAILABLE');
-            }
-            $q = $this->db->createQuery()->select('COALESCE(MAX(version_no), 0)')
-                ->from($this->db->quoteName('#__jlms_course_versions'))->where('course_id = :course')
-                ->bind(':course', $courseId, ParameterType::INTEGER);
-            $number = (int) $this->db->setQuery($q)->loadResult() + 1;
-            if ($number > 1) {
-                throw new \DomainException('COM_JLMS_VERSION_COPY_NOT_AVAILABLE');
+                $source = $this->row('course_versions', (int) $course->current_version_id);
+                if ((int) $source->course_id !== $courseId || $source->status !== 'published') {
+                    throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
+                }
+                $id = (new CourseVersionCopy($this->db))->copy($actor, $source, $number);
+                $this->update('courses', $course, [], $actor);
+                return $id;
             }
             $id = $this->insert('course_versions', ['course_id' => $courseId, 'version_no' => $number,
                 'status' => 'draft', 'title_snapshot' => $course->title,

@@ -39,7 +39,17 @@ final class TeacherTable extends Table
         if (!$this->id) { $this->revision = 1; $this->created_at = $now; $this->created_by = $actor; }
         else { $this->revision = (int) $this->revision + 1; }
         $this->modified_at = $now; $this->modified_by = $actor;
-        return parent::store($updateNulls);
+        $asset = new \Joomla\CMS\Table\Asset($this->getDatabase());
+        $stable = $this->id && $asset->loadByName($this->_getAssetName())
+            && (int) $asset->id === (int) $this->asset_id && (int) $asset->parent_id === (int) $this->_getAssetParentId() && $this->_rules === null;
+        $tracking = $this->_trackAssets;
+        if ($stable) {
+            $this->_trackAssets = false;
+            $title = (object) ['id' => (int) $asset->id, 'title' => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)];
+            $this->getDatabase()->updateObject('#__assets', $title, 'id');
+        }
+        try { return parent::store($updateNulls); }
+        finally { $this->_trackAssets = $tracking; }
     }
     protected function _getAssetName() { return 'com_jlms.teacher.' . (int) $this->id; }
     protected function _getAssetTitle() { return $this->title; }

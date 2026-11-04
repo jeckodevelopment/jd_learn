@@ -260,10 +260,9 @@ try:
  if 'id="jlms-admin-teachers"' not in h:raise RuntimeError('Native teacher list missing')
  u,h=get('/administrator/index.php?option=com_jlms&task=teacher.add')
  teacher_form=next(f for f in Page(h).forms if 'jform[bio]' in f['fields'])
- category=re.search(r'<select[^>]*name="jform\[catid\]"[^>]*>(.*?)</select>',h,re.S).group(1)
- teacher_catid=re.search(r'<option[^>]*value="([1-9][0-9]*)"[^>]*>[^<]*CI Teachers',category).group(1)
+ if 'jform[catid]' in teacher_form['fields']:raise RuntimeError('Teacher creation must not require choosing a category')
  teacher_fields=dict(teacher_form['fields']);teacher_fields.update({'task':'teacher.apply','jform[title]':'HTTP teacher','jform[alias]':'http-teacher',
-  'jform[catid]':teacher_catid,'jform[state]':'1','jform[access]':'1','jform[language]':'*','jform[bio]':'HTTP teacher biography <script>plain text</script>',
+  'jform[state]':'1','jform[access]':'1','jform[language]':'*','jform[bio]':'HTTP teacher biography <script>plain text</script>',
   'jform[image]':'','jform[image_alt]':'','jform[image_decorative]':'0','jform[website]':'https://example.invalid/http-teacher','jform[user_id]':'0'})
  with http.open(urljoin(u,teacher_form['action']),data=urlencode(teacher_fields).encode(),timeout=20) as response:
   u=response.geturl();h=response.read().decode('utf-8')
@@ -359,8 +358,8 @@ try:
  if 'id="jlms-course-rules"' not in published_editor:
   raise RuntimeError('Authorised administrators must be able to manage current permissions of a published course')
  published_editor_form=next(f for f in Page(published_editor).forms if f['id']=='adminForm')
- if 'jform[title]' in published_editor_form['fields']:
-  raise RuntimeError('Published teaching fields must stay read-only alongside the native permission editor')
+ if 'jform[title]' not in published_editor_form['fields']:
+  raise RuntimeError('Published course editorial fields must be editable')
  print(json.dumps({'published_course_rules_http_checks':1,'status':'passed'}))
  published=fixture()['course']
  expect(int(published['state'])==1 and published['status']=='published' and int(published['editions'])==1 and int(published['associations'])==1,'First HTTP publication freezes version and creates one edition and native association')

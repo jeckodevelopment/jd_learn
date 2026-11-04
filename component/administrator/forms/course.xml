@@ -2,6 +2,7 @@
 <form>
  <fieldset name="details" label="COM_JLMS_COURSE_GENERAL">
   <field name="id" type="hidden" filter="integer" default="0" />
+  <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" filter="string" maxlength="255" />
   <field name="revision" type="hidden" filter="integer" default="1" />
   <field name="title" type="text" label="JGLOBAL_TITLE" required="true" maxlength="255" filter="string" />
   <field name="alias" type="text" label="JFIELD_ALIAS_LABEL" maxlength="180" filter="string" />

@@ -105,15 +105,13 @@ final class CatalogService
         foreach ($lessons as $lesson) {
             $grouped[(int) $lesson->module_id][] = $lesson;
         }
-        // Read the frozen promotional snapshot only on an authorised detail request.
-        // Catalog lists and enrolment checks never load large presentation bodies or draft params.
-        $q = $this->db->createQuery()->select('presentation_json')->from('#__jlms_course_versions')
-            ->where('id = :presentationVersion')->where('course_id = :presentationCourse')
-            ->bind(':presentationVersion', $version, ParameterType::INTEGER)->bind(':presentationCourse', $id, ParameterType::INTEGER);
-        $snapshot = (string) $this->db->setQuery($q)->loadResult();
+        $query = $this->db->createQuery()->select('*')->from('#__jlms_courses')
+            ->where('id = :course')->bind(':course', $id, ParameterType::INTEGER);
+        $editorial = $this->db->setQuery($query)->loadObject();
+        $snapshot = CoursePresentation::snapshot($editorial);
         $presentation = CoursePresentation::fromSnapshot($snapshot);
-        $calendar=CourseSchedule::fromSnapshot($snapshot);
-        $teachers = TeacherProfiles::visible($this->db,$actor,$language,$snapshot);
+        $calendar = CourseSchedule::fromSnapshot($snapshot);
+        $teachers = TeacherProfiles::current($this->db, $actor, $language, $id);
         $q=$this->db->createQuery()->select('e.status,e.starts_at,e.ends_at')->from('#__jlms_editions AS e')
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
             ->where('e.course_id=:windowCourse')->where('e.course_version_id=:windowVersion')->where("e.code=CONCAT('default-v',v.version_no)")
