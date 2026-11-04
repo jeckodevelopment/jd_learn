@@ -1,6 +1,6 @@
 # JD Learn development
 
-- Use `docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md` (content version1.4), the technical design and the security/provider specifications as the scope baseline. Keep requirements and implementation status separate.
+- Use `docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md` (content version1.5), the technical design and the security/provider specifications as the scope baseline. Keep requirements and implementation status separate.
 - Product name: JD Learn. Installed IDs remain com_jlms, pkg_jlms, lib_jlms and plugin group jlmsvideo. No client-specific branding and no competitor references.
 - Joomla6 MVC, DI, native accounts, categories, assets/ACL, languages, forms, session/CSRF, WAM and other core features where applicable. Do not modify Joomla core or duplicate authentication/access levels.
 - Subscription sales and Joomla group assignment are outside scope. Enrolment never grants groups. Recheck current access before each protected operation, including retries.

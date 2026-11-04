@@ -1,0 +1,33 @@
+/* Administrator curriculum only. No template or frontend rules are overridden. */
+#jlms-admin-curriculum { max-width: 100rem; margin: 0 auto; }
+#jlms-admin-curriculum .jlms-programme-header { margin-bottom: 1.5rem; }
+#jlms-admin-curriculum .jlms-programme-header h1 { margin: .6rem 0; }
+#jlms-admin-curriculum .jlms-programme-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem); gap: 1.5rem; align-items: start; }
+#jlms-admin-curriculum .jlms-programme-main { min-width: 0; }
+#jlms-admin-curriculum .jlms-programme-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-block: .6rem; }
+#jlms-admin-curriculum .jlms-admin-module { border: 1px solid var(--border-color, #adb5bd); border-radius: .4rem; margin-block: 1rem; background: var(--body-bg, #fff); }
+#jlms-admin-curriculum .jlms-admin-module > details > summary { padding: 1rem; cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
+#jlms-admin-curriculum .jlms-module-title { margin-inline-end: .75rem; }
+#jlms-admin-curriculum .jlms-module-content { padding: 0 1rem 1rem; }
+#jlms-admin-curriculum .jlms-programme-lessons { padding: 0; margin: .75rem 0; list-style: none; }
+#jlms-admin-curriculum .jlms-programme-lessons > li { display: flex; align-items: center; gap: .75rem; padding: .8rem .25rem; border-bottom: 1px solid var(--border-color, #dee2e6); }
+#jlms-admin-curriculum .jlms-lesson-label { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+#jlms-admin-curriculum .jlms-lesson-title { font-weight: 600; }
+#jlms-admin-curriculum .jlms-drag-handle { cursor: grab; flex-shrink: 0; min-width: 2.75rem; min-height: 2.75rem; }
+#jlms-admin-curriculum .jlms-dragging { opacity: .5; }
+#jlms-admin-curriculum .jlms-item-menu { position: relative; flex-shrink: 0; }
+#jlms-admin-curriculum .jlms-item-menu > summary { padding: .6rem; cursor: pointer; }
+#jlms-admin-curriculum .jlms-item-menu ul { position: absolute; inset-inline-end: 0; top: 100%; z-index: 20; min-width: 13rem; padding: .4rem; list-style: none; background: var(--body-bg, #fff); border: 1px solid var(--border-color, #adb5bd); border-radius: .3rem; box-shadow: 0 .2rem .5rem #0002; }
+#jlms-admin-curriculum .jlms-item-menu a { display: block; padding: .6rem; }
+#jlms-admin-curriculum .jlms-focused-editor, #jlms-admin-curriculum .jlms-video-file { padding: 1.25rem; border: 2px solid var(--border-color, #adb5bd); border-radius: .4rem; margin-block: 1.5rem; scroll-margin-top: 5rem; }
+#jlms-admin-curriculum .jlms-focused-editor .form-control, #jlms-admin-curriculum .jlms-focused-editor .form-select { max-width: 100%; }
+#jlms-admin-curriculum .jlms-programme-sidebar { padding: 1rem; background: var(--body-bg, #fff); border: 1px solid var(--border-color, #adb5bd); border-radius: .4rem; }
+#jlms-admin-curriculum .jlms-programme-sidebar details { margin-block: 1rem; }
+#jlms-admin-curriculum .jlms-programme-sidebar summary { cursor: pointer; padding-block: .5rem; }
+#jlms-admin-curriculum [id^="jlms-module-"], #jlms-admin-curriculum [id^="jlms-lesson-"] { scroll-margin-top: 5rem; }
+@media (max-width: 991px) {
+ #jlms-admin-curriculum .jlms-programme-layout { grid-template-columns: minmax(0, 1fr); }
+ #jlms-admin-curriculum .jlms-programme-lessons > li { gap: .3rem; flex-wrap: wrap; }
+ #jlms-admin-curriculum .jlms-lesson-label { min-width: 10rem; }
+ #jlms-admin-curriculum .jlms-item-menu ul { max-width: 85vw; }
+}

@@ -24,6 +24,13 @@ final class HtmlView extends BaseHtmlView
     public array $videoProviders = [];
     public bool $canConfigureVideo = false;
     public bool $canManagePlugins = false;
+    public bool $canMaterials = false;
+    public bool $canQuiz = false;
+    public string $editorMode = '';
+    public string $itemAction = '';
+    public ?object $selectedItem = null;
+    public int $selectedModule = 0;
+
 
     public function display($tpl = null)
     {
@@ -36,7 +43,14 @@ final class HtmlView extends BaseHtmlView
         $app = Factory::getApplication();
         $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($app->getIdentity());
         $this->canDuplicateCourse = $version && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor, (int) $course->catid);
-        $this->editable = $version && $version->status === 'draft';
+        $locked = ($course->checked_out && (int) $course->checked_out !== (int) $actor->id);
+        $locked = $locked || ($version && $version->checked_out && (int) $version->checked_out !== (int) $actor->id);
+        $this->editable = $version && $version->status === 'draft' && !$locked;
+        $this->canMaterials = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id);
+        $this->canQuiz = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . (int) $course->id);
+        $this->getDocument()->getWebAssetManager()->getRegistry()->addExtensionRegistryFile('com_jlms');
+        $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.curriculum');
+        if ($this->editable) { $this->getDocument()->getWebAssetManager()->useScript('com_jlms.curriculum'); }
         $this->canDelete = $app->getIdentity()->authorise('core.delete', 'com_jlms.course.' . (int) $course->id);
         if (!$version) {
             $this->publicationNotice = 'COM_JLMS_PUBLICATION_NEEDS_VERSION';
@@ -76,25 +90,43 @@ final class HtmlView extends BaseHtmlView
             $common = ['course_id' => $course->id, 'version_id' => $version->id,
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
-            $lessonData = $common + ['kind' => 'text', 'required' => 1];
+            $lessonData = $common + ['kind' => $app->getInput()->getCmd('lesson_kind') === 'video' ? 'video' : 'text', 'required' => 1];
+            $this->selectedModule = $app->getInput()->getInt('module_id');
+            $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
+            if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) { $this->editorMode = 'lesson'; }
             $editModule = $app->getInput()->getInt('edit_module');
             $editLesson = $app->getInput()->getInt('edit_lesson');
+            if ($editModule) { $this->editorMode = 'module'; }
+            if ($editLesson) { $this->editorMode = 'lesson'; }
+            $action = $app->getInput()->getCmd('item_action');
+            if ($action !== '' && !in_array($action, ['copy_module','copy_lesson','delete_module','delete_lesson','move_lesson','order_module','order_lesson'], true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
+            $this->itemAction = $action;
+            if ($action !== '') { $this->editorMode = 'action'; }
+            $actionId = $app->getInput()->getInt('item_id');
             $foundModule = !$editModule;
             $foundLesson = !$editLesson;
             $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />');
             foreach ($this->outline['modules'] as $module) {
                 $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))->addAttribute('value', (string) $module->id);
+                if (!$this->selectedModule) { $this->selectedModule = (int) $module->id; }
+                if ($actionId === (int) $module->id && str_ends_with($action, '_module')) { $this->selectedItem = $module; }
                 if ((int) $module->id === $editModule) {
                     $moduleData = array_replace($common, ['id' => $module->id, 'revision' => $module->revision, 'title' => $module->title]);
+                    $this->selectedItem = $module;
                     $foundModule = true;
                 }
             }
+            if ($this->selectedModule && !in_array($this->selectedModule, array_map(static fn($m): int => (int) $m->id, $this->outline['modules']), true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
+            $lessonData['module_id'] = $this->selectedModule;
             $this->lessonForm->setField($field);
             foreach ($this->outline['lessons'] as $lesson) {
+                if ($actionId === (int) $lesson->id && str_ends_with($action, '_lesson')) { $this->selectedItem = $lesson; }
                 if ((int) $lesson->id === $editLesson) {
                     $lesson = $app->bootComponent('com_jlms')->getCurriculumService()->lessonForEdit(
                         $app->getIdentity(), (int) $course->id, (int) $version->id, $editLesson,
                     );
+                    $this->selectedItem = $lesson;
+                    $this->selectedModule = (int) $lesson->module_id;
                     $source = $lesson->source_json ? json_decode($lesson->source_json, true, 32, JSON_THROW_ON_ERROR) : [];
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
@@ -108,13 +140,33 @@ final class HtmlView extends BaseHtmlView
             if (!$foundModule || !$foundLesson) {
                 throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
             }
+            if ($action && !$this->selectedItem) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
+            if (str_starts_with($action, 'delete_') && !$this->canDelete) { throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403); }
+            $stateKey = 'com_jlms.curriculum.' . (int) $course->id . '.' . (int) $version->id . '.' . $this->editorMode;
+            if (in_array($this->editorMode, ['module','lesson'], true)) {
+                $saved = $app->getUserState($stateKey, []);
+                $app->setUserState($stateKey, null);
+                $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0) : (int) ($lessonData['id'] ?? 0);
+                if (is_array($saved) && (int) ($saved['id'] ?? -1) === $expectedId) {
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_seconds','duration_confirmed','required','kind']));
+                    if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
+                    else { $lessonData = array_replace($lessonData, $safe); }
+                }
+            }
             $this->moduleForm->bind($moduleData);
             $this->lessonForm->bind($lessonData);
+            if ($editLesson) { $this->lessonForm->setFieldAttribute('module_id', 'readonly', 'true'); }
             // Two Joomla forms on one page must not emit duplicate jform_* element IDs.
             $this->moduleForm->setFieldAttribute('title', 'id', 'jlms_module_title');
             foreach (['id','revision','course_id','version_id','expected_version_revision'] as $name) {
                 $this->moduleForm->setFieldAttribute($name, 'id', 'jlms_module_' . $name);
             }
+        }
+        if (!$this->editable && $version && $app->getInput()->getInt('edit_lesson')) {
+            foreach ($this->outline['lessons'] as $lesson) {
+                if ((int) $lesson->id === $app->getInput()->getInt('edit_lesson')) { $this->selectedItem = $lesson; }
+            }
+            if (!$this->selectedItem) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
         }
         ToolbarHelper::title(Text::_('COM_JLMS_CURRICULUM'), 'graduation-cap');
         parent::display($tpl);

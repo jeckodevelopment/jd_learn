@@ -39,6 +39,7 @@ final class CurriculumService
 
     private function authorise(User $actor, object $course, string $action = 'core.edit'): void
     {
+        $actor = new User((int) $actor->id); $actor->clearAccessRights();
         $asset = 'com_jlms.course.' . (int) $course->id;
         $editOwn = $action === 'core.edit' && (int) $course->created_by === (int) $actor->id
             && $actor->authorise('core.edit.own', $asset);
@@ -56,6 +57,8 @@ final class CurriculumService
         if ((int) $version->course_id !== $courseId) {
             throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
+        if (($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
+            || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
         if ($version->status !== 'draft') {
             throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
         }
@@ -143,7 +146,7 @@ final class CurriculumService
     {
         $course = $this->row('courses', $courseId);
         $this->authorise($actor, $course);
-        $q = $this->db->createQuery()->select('id, course_id, version_no, status, revision')
+        $q = $this->db->createQuery()->select('id, course_id, version_no, status, revision, checked_out')
             ->from($this->db->quoteName('#__jlms_course_versions'))->where('course_id = :course')
             ->bind(':course', $courseId, ParameterType::INTEGER)->order('version_no DESC');
         $versions = $this->db->setQuery($q, 0, 100)->loadObjectList();
@@ -416,6 +419,58 @@ final class CurriculumService
                 ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
             $this->db->setQuery($q)->execute();
             $this->update('course_versions', $version, [], $actor);
+        });
+    }
+
+    /** Exact sibling permutation, saved atomically against the current draft revision. */
+    public function saveOrder(User $identity, array $input): int
+    {
+        $actor = CourseEditorAccess::fresh($identity);
+        $kind = $input['kind'] ?? '';
+        if (!in_array($kind, ['module', 'lesson'], true) || !is_array($input['order'] ?? null)
+            || !array_is_list($input['order']) || count($input['order']) > ($kind === 'module' ? 1000 : 5000)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        $course = self::id($input['course_id'] ?? null); $versionId = self::id($input['version_id'] ?? null);
+        $revision = self::id($input['expected_version_revision'] ?? null);
+        $order = array_map(static fn($id): int => self::id($id), $input['order']);
+        if (count(array_unique($order)) !== count($order)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        return $this->transaction(function () use ($actor, $input, $kind, $course, $versionId, $revision, $order): int {
+            $version = $this->draft($actor, $course, $versionId, $revision);
+            $module = $kind === 'lesson' ? self::id($input['module_id'] ?? null) : $versionId;
+            if ($kind === 'lesson' && (int) $this->row('modules', $module)->course_version_id !== $versionId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+            $table = $kind === 'module' ? 'modules' : 'lessons';
+            $items = $this->listRows($table, $kind === 'module' ? 'course_version_id' : 'module_id', $module, $kind === 'module' ? 1001 : 5001);
+            $ids = array_map(static fn($row): int => (int) $row->id, $items); $sorted = $ids; $wanted = $order;
+            sort($sorted, SORT_NUMERIC); sort($wanted, SORT_NUMERIC);
+            if ($sorted !== $wanted) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+            $byId = []; foreach ($items as $item) { $byId[(int) $item->id] = $item; }
+            $changed = false;
+            foreach ($order as $position => $id) {
+                if ((int) $byId[$id]->ordering !== $position) { $this->update($table, $byId[$id], ['ordering' => $position], $actor); $changed = true; }
+            }
+            if ($changed) { $this->update('course_versions', $version, [], $actor); }
+            return (int) $version->revision + (int) $changed;
+        });
+    }
+
+    /** Move a lesson, including quiz/file references, without changing its identity or source revision. */
+    public function moveLesson(User $identity, array $input): int
+    {
+        $actor = CourseEditorAccess::fresh($identity);
+        $course = self::id($input['course_id'] ?? null); $versionId = self::id($input['version_id'] ?? null);
+        $id = self::id($input['id'] ?? null); $destination = self::id($input['module_id'] ?? null);
+        return $this->transaction(function () use ($actor, $input, $course, $versionId, $id, $destination): int {
+            $version = $this->draft($actor, $course, $versionId, self::id($input['expected_version_revision'] ?? null));
+            $lesson = $this->row('lessons', $id, true); $module = $this->row('modules', $destination, true);
+            if ((int) $lesson->course_version_id !== $versionId || (int) $module->course_version_id !== $versionId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+            if ((int) $lesson->revision !== self::id($input['revision'] ?? null)) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+            if ($lesson->kind === 'quiz' && !$actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . $course)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            if ((int) $lesson->module_id !== $destination) {
+                $items = $this->listRows('lessons', 'module_id', $destination, 5001);
+                $position = $items ? max(array_map(static fn($row): int => (int) $row->ordering, $items)) + 1 : 0;
+                $this->update('lessons', $lesson, ['module_id' => $destination, 'ordering' => $position], $actor);
+                $this->update('course_versions', $version, [], $actor);
+            }
+            return $id;
         });
     }
 

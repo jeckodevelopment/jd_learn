@@ -8,11 +8,11 @@ Override Joomla: `templates/NOME/html/com_jlms/courses/default.php`; preservare 
 
 Aggiornare questa guida a ogni introduzione/modifica di stili e layout. Non modificare i file del core o del componente installato per una personalizzazione del sito.
 
-## Backend del programma didattico0.2
+## Backend del programma didattico0.34
 
-La nuova view amministrativa usa `#jlms-admin-curriculum`, `#jlms-admin-course-outline`, `#jlms-version-form`, `#jlms-module-form` e `#jlms-lesson-form`. Gli elementi ripetuti usano `.jlms-admin-module` e `data-module-id`; nessun ID viene duplicato per ciascun modulo. I due form nativi usano ID di campo distinti.
+Override: `administrator/templates/NOME/html/com_jlms/curriculum/default.php`. La scaletta conserva `#jlms-admin-curriculum`, `#jlms-admin-course-outline`, `.jlms-admin-module` e `data-module-id`. Nuovi ID unici `jlms-module-ID`, `jlms-lesson-ID`, `jlms-order-status`, `jlms-reorder-form`. Il form `jlms-module-form` o `jlms-lesson-form` è presente soltanto per l’editor richiesto, non su ogni pagina. I test o override che assumevano entrambi sempre visibili devono seguire i link contestuali. Le lezioni MP4 espongono upload/scan soltanto nella selezione della lezione; la scansione di sicurezza resta consentita sullo storico.
 
-Le classi Bootstrap del template amministrativo gestiscono le colonne: editor del modulo ed editor della lezione si dispongono verticalmente su schermi piccoli. Il singolo editor Joomla evita di istanziare un editor per ogni lezione. Override: `administrator/templates/NOME/html/com_jlms/curriculum/default.php`; preservare i nomi dei campi, i token e gli ambiti di versione.
+WAM `com_jlms.curriculum` registra `curriculum.css` e il modulo `curriculum.js`, caricato solo per bozze modificabili. CSS confinato alla radice amministrativa; griglia scaletta/riepilogo che passa a una colonna sotto991px. Preservare `data-sort-kind`, `data-item-id`, `data-drag-handle`, nomi/token/scope del form condiviso e attributi tradotti dello stato. Gli attributi sono contratto funzionale, non selettori estetici. Modifiche dell’override non devono introdurre form annidati, ID duplicati o scorciatoie GET mutative. La struttura usa dettagli nativi, titoli, label e link per navigazione/tastiera; il collaudo browser/accessibilità resta richiesto.
 
 ## Regioni aggiunte in 0.3
 

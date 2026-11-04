@@ -1,8 +1,8 @@
 # Componente e-learning per Joomla — Specifica funzionale
 
-Versione 1.4 · 4 novembre 2026 · Specifica funzionale consolidata del rilascio 1
+Versione 1.5 · 4 novembre 2026 · Specifica funzionale consolidata del rilascio 1
 
-**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. La matrice requisito-test e il catalogo dei collaudi recepiscono le revisioni 1.3–1.4. I mockup allegati restano quelli della 1.2 e non rappresentano ancora i nuovi flussi: prevalgono i requisiti testuali. Il [registro delle modifiche](../REQUIREMENTS_CHANGES.md) identifica la richiesta, gli ID interessati e i criteri aggiunti; i nomi file con suffisso 1.0 sono storici.
+**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. La matrice requisito-test e il catalogo dei collaudi recepiscono le revisioni 1.3–1.5. I mockup allegati restano quelli della 1.2 e non rappresentano ancora i nuovi flussi: prevalgono i requisiti testuali. Il [registro delle modifiche](../REQUIREMENTS_CHANGES.md) identifica la richiesta, gli ID interessati e i criteri aggiunti; i nomi file con suffisso 1.0 sono storici.
 
 Le sezioni 1–30 definiscono prodotto, campi, viste e processi; le sezioni 31–36 completano precedenze, integrazioni, selettori, collaudo e configurazione del sito. Le regole di dettaglio sono prescrittive. Le funzioni differite sono elencate soltanto come evoluzioni, senza costituire impegno del rilascio 1.
 
@@ -1178,3 +1178,13 @@ Le pagine “next” descrivono un manuale in evoluzione: firme API e modalità 
 Le verifiche documentali e l'ispezione dei sorgenti ufficiali non sostituiscono il collaudo operativo delle integrazioni nel componente.
 
 Riferimenti aggiuntivi della verifica 1.0: codice ufficiale Joomla CMS, tag 6.0.0, percorsi e SHA in `Evidenze_Joomla_6.json`; manuale categorie della serie 6.1 e API Joomla 6; riferimenti dettagliati nella sezione 32. La verifica non usa il manuale “next” come prova di compatibilità di una release ancora futura.
+
+## 44. Programma didattico contestuale — revisione1.5
+
+Richiesta RF-2026-11-04-C: ricostruire la vista del programma, giudicata inusabile. Il flusso ordinario mostra una scaletta con moduli espandibili, lezioni riconoscibili per titolo/tipo/obbligatorietà e aggiunta di lezioni direttamente nel modulo. Il clic sulla lezione apre un solo editor nativo. Modifica del modulo, materiali della lezione e nuovi quiz mantengono il contesto selezionato; non mostrare tutti i form operativi contemporaneamente. Duplicazione, spostamento ed eliminazione sono azioni secondarie contestuali, con destinazione e conferma ove richiesta. Le versioni precedenti e la configurazione video rimangono disponibili senza occupare il percorso principale.
+
+Riordinare moduli e lezioni tramite trascinamento dei fratelli e comandi utilizzabili da tastiera; mantenere un percorso con form nativo in assenza di JavaScript. Salvare l’ordine in modo atomico con verifica della revisione e dell’insieme completo dei fratelli; conflitti o errori non devono sovrascrivere modifiche concorrenti. Lo spostamento di una lezione tra moduli della stessa bozza conserva identità, contenuti, quiz e materiali associati. Verificare sempre scope, ACL, token, checkout e immutabilità del programma pubblicato; nessuna modifica ai dati di apprendimento. Conservare l’input dopo errori di validazione. La somiglianza agli articoli riguarda anche chiarezza delle azioni e gestione degli errori, non soltanto l’aspetto grafico.
+
+| ID | Scenario | Risultato atteso |
+|---|---|---|
+| AC-127 | Creare, modificare, duplicare, spostare ed eliminare elementi dal programma contestuale; aggiungere video/quiz/materiali nel modulo o nella lezione selezionata; riordinare con trascinamento e tastiera, senza JS, con errori/concorrenza e su mobile | Un solo editor richiesto, contesto conservato, ordine persistente o errore con ripristino; input recuperabile; nessuna scrittura da GET, fuori scope, senza ACL/token o sullo storico; programmi pubblicati e risultati invariati; collaudo browser/accessibilità esplicito |

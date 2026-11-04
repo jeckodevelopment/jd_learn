@@ -27,11 +27,16 @@ final class HtmlView extends BaseHtmlView
         $this->form->setField($field);
         $data = ['course_id' => $this->item['course']->id, 'version_id' => $this->item['version']->id,
             'expected_version_revision' => $this->item['version']->revision, 'replace_id' => 0];
+        $selectedLesson = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('lesson_id');
+        if ($selectedLesson) {
+            if (!in_array($selectedLesson, array_map(static fn($lesson): int => (int) $lesson->id, $this->item['lessons']), true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
+            $data['lesson_id'] = $selectedLesson;
+        }
         $replaceId = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('replace_id', 0);
         if ($replaceId) {
             foreach ($this->item['files']['items'] as $file) {
                 if ((int) $file->id === $replaceId && $this->item['version']->status === 'draft') {
-                    $data += ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id];
+                    $data = array_replace($data, ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id]);
                     $data['replace_id'] = $replaceId;
                     $this->replacement = $replaceId;
                     $this->replacementLesson = (int) $file->lesson_id;

@@ -30,3 +30,7 @@ La [checklist M01](M01_ACCEPTANCE.md) indica parti implementate, mancanti e coll
 ## RF-2026-11-04-B — amministrazione corsi simile agli articoli Joomla
 
 L’utente segnala che la parte amministrativa rimane estremamente complessa e richiede una vista simile alla gestione articoli. La specifica1.4/progetto tecnico1.2 estendono AUT-01, SCR-13 e CORE-20 con elenco e form secondo le convenzioni Joomla, Search Tools/toolbar/selezione, metadati e accesso diretto al programma conservando il form. AC-126 si aggiunge al catalogo senza eliminare i criteri precedenti. D-23 registra la preferenza. Il sottoinsieme0.33 e la relativa CI sono riportati nella PR del build: non sono accettazione completa di tutte le interazioni browser/mobile/tastiera. M01/h dà priorità a questa indicazione; il riordino con trascinamento/tastiera resta nel passaggio M01/i.
+
+## RF-2026-11-04-C — ricostruzione del programma didattico
+
+Richiesta: «dovremmo ricostruire anche la vista del programma didattico. La modalità attuale è inusabile». Specifica1.5 sezione44, AUT-01/SCR-13/CORE-20 e nuovo AC-127: scaletta contestuale, moduli espandibili, editor singolo, aggiunta nel modulo, materiali/quiz contestuali e azioni secondarie. M01/i implementa ordine mouse/tastiera con protezione da conflitti e spostamento tra moduli della bozza; nessuna mutazione di storico, risultati o gruppi. Tutti i210ID conservati. AC-127 e M01 non dichiarati accettati: le prove automatizzate non sostituiscono il collaudo browser/mobile/accessibilità.

@@ -2,7 +2,7 @@
   "version": "1.1",
   "updated_at": "2026-11-04",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
-  "current_increment": "0.33.0-dev — M01/h: amministrazione corsi secondo convenzioni articoli Joomla",
+  "current_increment": "0.34.0-dev — M01/i: programma contestuale, riordino mouse/tastiera e spostamento lezioni",
   "semantics": "Responsabilità primaria pianificata, non completamento. I requisiti trasversali sono verificati in ogni incremento e accettati solo dopo tutti gli scenari della baseline. Nessuna data o percentuale dedotta da questa mappatura.",
   "milestones": [
     {

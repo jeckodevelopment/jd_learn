@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.34.0-dev — programma didattico contestuale
+
+- Scaletta leggibile di moduli espandibili e lezioni cliccabili; aggiunta nel modulo, editor singolo, materiali e quiz nel contesto selezionato.
+- Duplicazione, eliminazione con conferma e spostamento della lezione raccolti nelle azioni secondarie. Input recuperato dopo errori di validazione.
+- Riordino tramite trascinamento con permutazione atomica/CAS e ripristino visivo su errore; Su/Giù da tastiera e form nativo senza JS. Nessuna modifica dello storico o dei risultati.
+- Specifica1.5/AC-127 e guide aggiornate; M01 resta parziale.
+
 ## 0.33.0-dev — gestione corsi nativa e più diretta
 
 - Elenco corsi secondo le convenzioni della gestione articoli Joomla: Search Tools, filtri, sort, paginazione e selezione con toolbar; metadati leggibili e accesso al programma dalla riga o dalla selezione.
