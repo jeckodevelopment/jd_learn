@@ -181,3 +181,7 @@ Il form lezione contiene `#jlms-video-metadata` (stato aria-live) e `#jlms-video
 ### Navigazione amministrativa 0.40
 
 Ingresso diretto nella vista courses esistente (`jlms-admin-courses`); nessun nuovo CSS o menu HTML parallelo. Il submenu è reso da mod_menu/Atum e segue gli override nativi Joomla. Il collegamento Plugin video apre com_plugins e usa markup/override Joomla; non rende la vecchia dashboard.
+
+### Campi corso pubblici (0.41)
+
+I contenitori opzionali `jlms-course-fields-after-title`, `jlms-course-fields-before-content` e `jlms-course-fields-after-content` condividono la classe `jlms-course-fields`. I singoli elementi usano markup/classi dei layout com_fields (`fields-container`, `field-entry` e plugin di tipo), senza CSS globale aggiunto. Gli override nativi sono html/layouts/com_jlms/fields/render.php e html/layouts/com_jlms/field/render.php, con fallback com_fields; il layout corso rimane sovrascrivibile da com_jlms/course/default.php. Non rimuovere i controlli di accesso o trasformare valori editoriali correnti in regole didattiche storiche.

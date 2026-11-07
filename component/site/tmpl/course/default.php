@@ -8,14 +8,22 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 $course = $this->item['course'];
 $presentation = $this->item['presentation'] ?? [];
+$fieldOutput = [];
+foreach ([1, 2, 3] as $position) {
+    $fieldOutput[$position] = \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::render('com_jlms.course', 'fields.render', [
+        'item' => $course, 'context' => 'com_jlms.course', 'fields' => $this->item['fields'][$position] ?? [],
+    ]);
+}
 ?>
 <article id="jlms-course" class="jlms-course" data-course-id="<?= (int) $course->id ?>">
  <header id="jlms-course-header"><h1 id="jlms-course-title"><?= $this->escape($course->title) ?></h1>
   <a id="jlms-course-category" href="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $course->catid) ?>"><?= $this->escape($course->category_title) ?></a>
  </header>
+ <?php if (trim($fieldOutput[1]) !== '') : ?><div id="jlms-course-fields-after-title" class="jlms-course-fields"><?= $fieldOutput[1] /* Prepared and rendered by native com_fields layouts. */ ?></div><?php endif; ?>
  <?php if (!empty($presentation['image'])) : ?>
  <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $presentation['image'])))) ?>" alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
  <?php endif; ?>
+ <?php if (trim($fieldOutput[2]) !== '') : ?><div id="jlms-course-fields-before-content" class="jlms-course-fields"><?= $fieldOutput[2] ?></div><?php endif; ?>
  <section id="jlms-course-summary"><h2><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?= nl2br($this->escape((string) $course->summary)) ?></p></section>
  <?php if (!empty($presentation['description'])) : ?>
  <section id="jlms-course-description" class="jlms-course-description"><h2><?= Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?= $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
@@ -31,6 +39,7 @@ $presentation = $this->item['presentation'] ?? [];
  <?php if (!empty($presentation['estimated_minutes'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_ESTIMATED_MINUTES') ?></dt><dd id="jlms-course-estimated-duration"><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', (int) $presentation['estimated_minutes']) ?></dd><?php endif; ?>
  </dl></section>
  <?php endif; ?>
+ <?php if (trim($fieldOutput[3]) !== '') : ?><div id="jlms-course-fields-after-content" class="jlms-course-fields"><?= $fieldOutput[3] ?></div><?php endif; ?>
  <?php if (!empty($this->item['teachers'])) : ?><section id="jlms-course-teachers"><h2><?= Text::_('COM_JLMS_TEACHERS') ?></h2>
  <?php foreach ($this->item['teachers'] as $teacher) : ?><article id="jlms-course-teacher-<?= (int) $teacher['id'] ?>" class="jlms-course-teacher"><h3><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?= $this->escape($teacher['title']) ?></a></h3>
  <?php if ($teacher['image'] !== '') : ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/',array_map('rawurlencode',explode('/',$teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php endif; ?>

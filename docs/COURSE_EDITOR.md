@@ -12,7 +12,7 @@ Definire campi e gruppi con il gestore Campi di Joomla, contesto Corsi (`com_jlm
 
 Salva/Salva e chiudi inoltrano `com_fields` agli eventi Joomla. Gli errori di validazione della form conservano l’input; Annulla lascia i valori salvati. Client precedenti che omettono il gruppo non cancellano i valori. Le revisioni obsolete e i permessi del corso vengono verificati prima del salvataggio. Il modello non scrive una tabella parallela dei campi.
 
-Questo incremento completa il collegamento amministrativo, non il requisito CORE-10 intero: campi lezione, snapshot didattici, resa pubblica dei campi corso e ripristino completo dei valori tramite Content History restano da implementare/verificare. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
+Il collegamento amministrativo e la resa editoriale pubblica dei campi corso sono implementati, senza completare CORE-10: campi lezione, snapshot didattici e ripristino completo dei valori tramite Content History restano da implementare/verificare. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
 
 ## Aggiornare lezioni e materiali
 
@@ -81,3 +81,11 @@ Il form video usa Rileva automaticamente: SDK/anteprima per YouTube e Vimeo, API
 Aprire JD Learn porta direttamente all’elenco corsi. Nella sidebar nativa Joomla sono disponibili Corsi, Categorie corsi, Banca domande, Docenti e Plugin video. Programma, materiali e iscritti si aprono dal corso selezionato. Le categorie sono dei corsi; non occorre una categoria per il docente. La sidebar e i percorsi mantengono i controlli dei permessi Joomla.
 
 La voce Plugin video apre la gestione nativa Joomla filtrata sul gruppo `jlmsvideo`, con ricerca, stato, accesso e singolo plugin azzerati per vedere tutti i provider installati, anche disattivati. Da qui si abilitano/disabilitano e configurano i plugin secondo i permessi di `com_plugins`. Non è una verifica della riproduzione; nessun accesso ai plugin è concesso dal solo permesso di gestire corsi.
+
+## Campi nella scheda pubblica del corso (0.41)
+
+I campi correnti del contesto `com_jlms.course` sono preparati dai plugin di tipo Joomla e resi con i layout nativi. La posizione automatica si configura nel campo: dopo il titolo, prima della presentazione o dopo la presentazione. Con visualizzazione automatica disattivata il campo non compare; valori vuoti non generano etichette o contenitori vuoti. Sono applicati pubblicazione, categoria, lingua e accesso di campo e gruppo, oltre all’accesso corrente al corso. La sola visibilità del corso non rende pubblici campi riservati.
+
+Una modifica editoriale aggiorna la scheda senza dover ripubblicare il programma. Questi valori correnti non definiscono regole, soglie, risultati o diritto di accesso e non vengono inseriti retroattivamente nelle versioni degli iscritti. I campi pertinenti alla fruizione richiedono ancora il proprio snapshot: non usare campi editoriali live come regole didattiche.
+
+Sono usati `fields.render` e `field.render` di Joomla. Gli override del template possono essere definiti sotto `html/layouts/com_jlms/fields/render.php` e `html/layouts/com_jlms/field/render.php`, con fallback ai layout com_fields. Plugin di tipo e override installati sono codice del sito: devono mantenere escaping, ACL e accessibilità. Le prove campionano testo, area di testo e lista; non certificano ogni plugin di terze parti o tutte le combinazioni multilingua.

@@ -25,6 +25,8 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | 0.40.1 | Plugin video apre com_plugins filtrato per gruppo, azzerando i filtri precedenti; sostituisce il collegamento fuorviante alla vecchia dashboard |
 
+| 0.41 | Campi editoriali correnti nella scheda pubblica tramite plugin/layout Joomla, tre posizioni automatiche e controlli di accesso; storico didattico invariato |
+
 Il [changelog](../CHANGELOG.md) contiene i dettagli per versione. Il [registro dei requisiti](REQUIREMENTS_CHANGES.md) descrive le variazioni del risultato richiesto, non le implementazioni. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) identifica il build corrente verificato e mantiene i record storici precedenti.
 
 Le vecchie indicazioni “mancante”, “da verificare” o “prossimo incremento” nelle fotografie storiche descrivono soltanto il momento in cui furono scritte. Le versioni precedenti dei riepiloghi rimangono disponibili nella cronologia Git, senza copiarle nei documenti correnti.
