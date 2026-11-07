@@ -17,6 +17,12 @@ final class CatalogService
 
     public function query(User $actor, string $language, int $categoryId = 0)
     {
+        return $this->courseQuery($actor, $language, $categoryId, false);
+    }
+
+    /** Availability for an existing enrollment is independent of catalog publication. */
+    private function courseQuery(User $actor, string $language, int $categoryId, bool $forEnrolledLearner)
+    {
         if ((int) $actor->id) {
             $actor = new User((int) $actor->id);
         }
@@ -26,13 +32,20 @@ final class CatalogService
         $q = $this->db->createQuery()->select('c.id, c.title, c.summary, c.catid, c.content_access, c.language, c.current_version_id, c.enrollment_mode, cat.title AS category_title')
             ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.current_version_id AND v.course_id = c.id')
-            ->where('c.state = 1')->where('v.status = :status')->where('cat.extension = :extension')
-            ->whereIn('c.catalog_access', $levels)->whereIn('cat.access', $levels)
-            ->where('cat.published = 1')->where('(c.language = :allLanguage OR c.language = :language)')
-            ->where('(c.publish_up IS NULL OR c.publish_up <= :nowUp)')->where('(c.publish_down IS NULL OR c.publish_down > :nowDown)');
-        $status = 'published'; $extension = 'com_jlms.course'; $all = '*'; $now = gmdate('Y-m-d H:i:s');
-        $q->bind(':status', $status)->bind(':extension', $extension)->bind(':allLanguage', $all)->bind(':language', $language)
-            ->bind(':nowUp', $now)->bind(':nowDown', $now);
+            ->where('v.status = :status')->where('cat.extension = :extension')
+            ->whereIn('cat.access', $levels)
+            ->where('cat.published = 1')->where('(c.language = :allLanguage OR c.language = :language)');
+        if (!$forEnrolledLearner) {
+            $q->where('c.state = 1')->whereIn('c.catalog_access', $levels)
+                ->where('(c.publish_up IS NULL OR c.publish_up <= :nowUp)')
+                ->where('(c.publish_down IS NULL OR c.publish_down > :nowDown)');
+        }
+        $status = 'published'; $extension = 'com_jlms.course'; $all = '*';
+        $q->bind(':status', $status)->bind(':extension', $extension)->bind(':allLanguage', $all)->bind(':language', $language);
+        if (!$forEnrolledLearner) {
+            $now = gmdate('Y-m-d H:i:s');
+            $q->bind(':nowUp', $now)->bind(':nowDown', $now);
+        }
         // An unpublished/restricted ancestor hides the descendant even through a direct course URL.
         $ancestor = $this->db->createQuery()->select('1')->from('#__categories AS ancestor')
             ->where('ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.id <> 1')
@@ -50,6 +63,13 @@ final class CatalogService
     public function course(User $actor, string $language, int $id): object
     {
         $q = $this->query($actor, $language)->where('c.id = :course')->bind(':course', $id, ParameterType::INTEGER);
+        return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+    }
+
+    /** A current enrollment can outlive catalog visibility, but not taxonomy or content ACL. */
+    public function enrolledCourse(User $actor, string $language, int $id): object
+    {
+        $q = $this->courseQuery($actor, $language, 0, true)->where('c.id = :course')->bind(':course', $id, ParameterType::INTEGER);
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
