@@ -60,6 +60,7 @@ export class VideoMetadataEditor {
       if (data.duration_ms !== null) { if (!accept(data.duration_ms)) throw Error('duration'); return; }
       const url = new URL(data.adapter_url, this.host.location.href);
       if (url.origin !== this.host.location.origin || !url.pathname.endsWith(`/media/plg_jlmsvideo_${provider}/js/player.js`)) throw Error('adapter');
+      url.search = new URL(import.meta.url).search;
       const adapter = await this.importer(url.href);
       if (generation !== this.generation || !this.allowed(provider)) return;
       this.container.hidden = false;

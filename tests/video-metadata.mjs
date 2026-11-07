@@ -28,4 +28,14 @@ check(controls.duration_ticket.value,'');check(imports,1);
 editor.transport=async()=>({ok:true,json:async()=>({success:true,data:{provider:'youtube',duration_ms:10000,ticket}})});
 await editor.probe(editor.generation);check(controls.sdk_duration_ms.value,'10000');check(imports,1);editor.clear();
 globalThis.FormData=original;
+// A temporary Vimeo SDK error must not poison the next preview attempt.
+const vmSource=await readFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url),'utf8');
+const vm=await import('data:text/javascript;base64,'+Buffer.from(vmSource).toString('base64'));
+let appends=0;
+globalThis.document={createElement:()=>({remove(){}}),head:{append(script){appends++;if(appends===1)script.onerror();else {globalThis.Vimeo={Player:class{ready(){return Promise.resolve();}on(){}off(){}destroy(){return Promise.resolve();}}};script.onload();}}}};
+const vmHost={dataset:{title:'Preview'},append(){}};
+let failed=false;try{await vm.create(vmHost,{options:{reference:'123456789'}},()=>{});}catch{failed=true;}
+check(failed,true);check(appends,1);
+const recovered=await vm.create(vmHost,{options:{reference:'123456789'}},()=>{});check(appends,2);await recovered.destroy();
+delete globalThis.document;delete globalThis.Vimeo;
 console.log(JSON.stringify({video_metadata_client_checks:checks,status:'passed',scope:'controlled transport/SDK; no live providers'}));
