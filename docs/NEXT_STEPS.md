@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.41.3-dev**, resa pubblica dei campi editoriali corso verificata nella CI standard; menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.41.4-dev candidato, PR #60 in bozza**, resa pubblica dei campi editoriali corso verificata nella CI standard; menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -23,7 +23,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-Riprendere da M01: chiudere i residui dell’editor e del programma indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), con priorità alle modifiche di un corso pubblicato, all’aggiornamento di lezioni/materiali e all’esperienza amministrativa. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
+La PR #60 riorganizza le schede del corso senza modificare dati o salvataggi. Completare la revisione leggera e il candidato; dopo il collaudo d’integrazione affrontare i residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 
 In parallelo, mantenere i tre provider esterni e i media locali come requisiti core: la [durata automatica e gli scarti video](VIDEO_DURATION_PLAN.md) sono implementati nella linea0.39 ma il collaudo completo con provider/browser/account reali resta necessario. Aggiornare lo stato per ciascun build e distinguere ciò che è implementato da ciò che è accettato.
 
