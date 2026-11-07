@@ -1,18 +1,16 @@
-# Pubblicazione e catalogo — stato0.20.1
+# Pubblicazione e catalogo
 
-## Segnalazione aperta e priorità
-
-Il collaudo utente segnala corsi che rimangono in bozza. L’utente precisa che non trova il comando di pubblicazione nell’interfaccia. Il nuovo accesso esplicito deve essere verificato anche sul sito. Questa guida spiega il percorso presente e la diagnostica0.20.1; non certifica la risoluzione sul sito. La stabilizzazione del flusso precede l'import CSV, come indicato in NEXT_STEPS.md (punto0 nella repository).
+La prima pubblicazione è disponibile ed è stata confermata dall’utente sul percorso provato. Questa guida descrive l’uso corrente; per funzioni e collaudi mancanti vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 ## Procedura amministrativa attuale
 
-1. In **Corsi → Nuovo**, compilare titolo, categoria, lingua e livelli di catalogo/contenuto. Salvare e chiudere. Il campo Stato è intenzionalmente disabilitato: il salvataggio non pubblica un programma non validato.
-2. Aprire **Programma** dall'elenco, oppure **Apri programma e pubblicazione** dal corso salvato dopo aver salvato/chiuso eventuali modifiche. Creare la versione in bozza se assente.
+1. In **Corsi → Nuovo**, compilare titolo, categoria, lingua, descrizione estesa e livelli di catalogo/contenuto. Le bozze incomplete possono essere salvate, ma la prima pubblicazione richiede una descrizione con testo significativo. Il campo Stato è intenzionalmente disabilitato: il salvataggio non pubblica un programma non validato.
+2. Scegliere **Salva e apri programma** nell’editor: salva i dati e prepara/riapre la bozza di lavoro. Dal corso già salvato si può anche aprire **Programma** nell’elenco.
 3. Aggiungere almeno un modulo e una lezione valida per ciascun modulo. Almeno una lezione del corso deve essere obbligatoria. Salvare ogni operazione.
 4. Nella sezione Pubblicazione premere **Pubblica**. Se il workflow configurato offre più transizioni, selezionare quella desiderata ed eseguirla. Il workflow standard mostra direttamente il nome dell’azione sul pulsante. Verificare sia lo Stato del corso sia quello della versione. Una validazione fallita conserva la bozza e mostra un errore; un salvataggio riuscito delle lezioni non equivale alla pubblicazione.
 5. Verificare catalogo e scheda con categoria, lingua e livello richiesti, poi la fruizione con un account studente avente il livello contenuto. La preassegnazione non concede tale livello.
 
-La gestione è ancora parziale: mancano editor completo a schede, anteprima studente, revisione/archivio completi, clonazione e nuove versioni pubblicate. Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
+L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. Restano anteprima studente interattiva, revisione/archivio completi, analisi impatti e migrazioni. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
 
 ## Diagnostica
 
@@ -23,7 +21,7 @@ Il Programma mostra lo stato del corso e un motivo se il comando non è disponib
 - Plugin Joomla **Workflow - Pubblicazione** non attivo: un amministratore lo verifica in Sistema → Plugin. Non viene abilitato automaticamente.
 - Nessuna transizione: verificare workflow assegnato alla categoria/default, fasi/transizioni pubblicate, opzione `publishing` 0/1 e `core.execute.transition` sull'asset della transizione. Gestione nativa: `administrator/index.php?option=com_workflow&extension=com_jlms.course`.
 
-Se il comando esiste ma fallisce, leggere il messaggio: programma vuoto, configurazione non supportata, materiale non pronto, revisione obsoleta o transizione annullata. Ricaricare prima di riprovare una revisione obsoleta. Per riprodurre la segnalazione registrare versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione, azione e messaggio esatto, senza dati personali o segreti. Un override amministrativo precedente può nascondere nuovi avvisi: confrontarlo con i layout distribuiti.
+Se il comando esiste ma fallisce, leggere il messaggio: programma vuoto, configurazione non supportata, materiale non pronto, revisione obsoleta o transizione annullata. Ricaricare prima di riprovare una revisione obsoleta. Per segnalare una nuova regressione registrare versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione, azione e messaggio esatto, senza dati personali o segreti. Un override amministrativo precedente può nascondere nuovi avvisi: confrontarlo con i layout distribuiti.
 
 ## Contenuti pubblicabili e limiti
 
@@ -44,3 +42,17 @@ Ritiro e ripubblicazione della versione corrente non ricreano edizioni né hash/
 Catalogo: `index.php?option=com_jlms&view=courses`; scheda: `index.php?option=com_jlms&view=course&id=ID`. Router/menu/SEF nativi. Richiesti corso e versione corrente pubblicati, disponibilità temporale, livello catalogo, lingua e categoria/antenati pubblicati, accessibili e coerenti. Lookup non autorizzato404. Scheda e programma pubblico non espongono corpi, sorgenti o risposte. Dati personalizzati `private, no-store`.
 
 `tests/joomla-publication.php` verifica servizio, rifiuti, congelamento e rollback; `tests/http-smoke.py` aggiunge nella0.20.1 creazione iniziale dalle form native, editor → programma → versione → modulo → lezione → prima pubblicazione → scheda, oltre a programma vuoto, plugin disabilitato e POST ripetuto. Conserva le precedenti verifiche di ritiro/ripubblicazione. Le prove devono risultare verdi nella CI del build effettivo; non sostituiscono il riscontro sul sito segnalante, tutte le configurazioni/ruoli/provider o l'accettazione completa.
+
+## Confermare l’impatto di un aggiornamento
+
+Per una bozza che aggiorna una versione già attiva, il comando iniziale apre la vista amministrativa `publicationreview` con un riepilogo di differenze e assegnazioni esistenti. Solo la successiva conferma esplicita pubblica. GET non pubblica; POST richiede sessione/token Joomla e ticket di revisione consumabile una volta, con scadenza15minuti. Nessun nuovo endpoint pubblico o cambio dei gruppi.
+
+Il confronto usa chiavi logiche per moduli/lezioni e definizioni/riferimenti per quiz/materiali, ignorando gli ID e le revisioni rigenerati dalla copia. Sostituzioni degli asset dei materiali possono apparire come rimozione e aggiunta. Dettagli limitati alle prime100modifiche per tipo, con conteggi complessivi completi. Corpi, sorgenti e risposte corrette non vengono esposti; query aggregate/batch e hash limitano memoria e accessi. I conteggi delle iscrizioni sono informativi, anche storici; nuove ammissioni nel frattempo non alterano la conferma del programma.
+
+`PublicationService::transition` richiede l’impronta restituita da `updateImpact` quando attiva una bozza di aggiornamento. La verifica è ripetuta sotto i lock corso/versione prima del congelamento. I client interni devono richiedere e confermare il riepilogo; nessuna conferma implicita di aggiornamenti. Cambi a corso, bozza, versione sorgente o contenuti producono un rifiuto. Identità/ACL/transizione/checkout e validazioni didattiche/media vengono ricontrollati. Prima pubblicazione e ritiro/ripubblicazione della medesima versione mantengono il flusso precedente. Il confronto non è un certificato di pubblicabilità e non avvia richieste ai provider.
+
+Gli iscritti mantengono versioni, tentativi, progressi e file assegnati. La migrazione esplicita e l’anteprima interattiva restano nel residuo AUT-04/M02; il recupero storico è disponibile come nuova bozza separata e non chiude l’intero requisito.
+
+## Recuperare un programma storico
+
+Dal Programma → Versioni selezionare una versione storica e usare **Recupera come nuova bozza**. Le altre bozze, la scheda e la pubblicazione corrente e i dati studente restano invariati. La nuova pubblicazione richiede il normale riepilogo/conferma e i controlli dei provider. Contratto, permessi e procedura nella [guida editor](COURSE_EDITOR.md#recuperare-un-programma-storico).
