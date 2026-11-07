@@ -1,6 +1,6 @@
 # Perimetro della prima versione stabile
 
-**Decisione approvata il 7 novembre 2026.** Questo documento registra il perimetro concordato con il committente per la prima versione stabile di JD Learn. Ha precedenza nel pianificare il lavoro rispetto alla suddivisione storica delle fasi, senza cancellare o riscrivere la specifica funzionale 1.5 e la matrice dei 210 requisiti. Prima dell’accettazione stabile, i criteri inclusi dovranno essere mappati esplicitamente ai requisiti e agli scenari di collaudo esistenti.
+**Decisione approvata il 7 novembre 2026.** Questo documento registra il perimetro concordato con il committente per la prima versione stabile di JD Learn. La corrispondenza con requisiti e scenari è dettagliata nella [mappatura del perimetro](RELEASE_SCOPE_MATRIX.md). Ha precedenza nel pianificare il lavoro rispetto alla suddivisione storica delle fasi, senza cancellare o riscrivere la specifica funzionale 1.5 e la matrice dei 210 requisiti. Prima dell’accettazione stabile, i criteri inclusi dovranno essere mappati esplicitamente ai requisiti e agli scenari di collaudo esistenti.
 
 ## Prima versione stabile: funzionalità essenziali
 
