@@ -1,6 +1,6 @@
 # Problemi specifici e differenze aperte
 
-Stato al **7 novembre 2026**: main **0.41.3-dev**, candidato **0.41.4-dev** in PR draft. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
+Stato al **7 novembre 2026**: main **0.41.4-dev**; PR #60 integrata, CI standard superata. Restano aperti i casi sotto e il collaudo manuale dell’editor nel sito Joomla. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
 
 ## Casi aperti
 
