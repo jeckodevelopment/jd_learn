@@ -1,6 +1,8 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.40.0-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Correzione0.40.1 in verifica: la voce Plugin video sostituisce il collegamento alla vecchia schermata e apre il gestore plugin nativo filtrato su jlmsvideo. Permessi com_plugins invariati; le prove seguenti restano riferite alla0.40 finché la nuova CI non è conclusa.
+
+Aggiornato al **7 novembre 2026**. Versione **0.40.1-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 

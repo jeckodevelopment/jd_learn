@@ -17,6 +17,8 @@ Verificare il menu dopo installazione e upgrade, in italiano/inglese, con Super 
 
 ## Incremento 0.40
 
-Ingresso predefinito sull’elenco corsi e submenu dichiarato nel manifest, gestito dall’installer e dal menu nativo Joomla. Cinque destinazioni: Corsi, Categorie corsi, Banca domande, Docenti e Stato provider video (pagina precedente, accesso esplicito). Etichette IT/EN nei file sys per il caricamento fuori dal componente. Il core filtra per core.manage; le viste mantengono i propri controlli e il proprio scope. Nessuna concessione di permessi e nessuna voce globale per materiali/programma/iscritti.
+Ingresso predefinito sull’elenco corsi e submenu dichiarato nel manifest, gestito dall’installer e dal menu nativo Joomla. Cinque destinazioni: Corsi, Categorie corsi, Banca domande, Docenti e Plugin video. Nella0.40.1, Plugin video apre la gestione nativa com_plugins filtrata su jlmsvideo e azzera i filtri precedenti; sostituisce il precedente collegamento fuorviante alla vecchia dashboard. Visibilità e azioni rispettano i permessi com_plugins, distinti dalla gestione corsi. Etichette IT/EN nei file sys per il caricamento fuori dal componente. Il core filtra per core.manage; le viste mantengono i propri controlli e il proprio scope. Nessuna concessione di permessi e nessuna voce globale per materiali/programma/iscritti.
 
 Restano il restyling della pagina diagnostica, il collaudo visivo/ruoli/menu compresso e la selezione attiva nel contesto completo. Le prove automatiche verificano creazione/upgrade senza duplicati e destinazioni HTTP, non equivalgono al collaudo completo della sidebar.
+
+Correzione0.40.1 in verifica: menu filtrato e navigazione nativa, nessuna diagnostica della riproduzione dichiarata disponibile.

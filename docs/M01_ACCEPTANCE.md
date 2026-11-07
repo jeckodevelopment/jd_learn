@@ -1,6 +1,6 @@
 # M01 — completamento della gestione corsi
 
-Stato al **7 novembre 2026**, incremento **0.40.0-dev**: **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; le dipendenze da M02/M03/M08/M10 restano parte del lavoro richiesto.
+Stato al **7 novembre 2026**, incremento **0.40.1-dev**: **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; le dipendenze da M02/M03/M08/M10 restano parte del lavoro richiesto.
 
 Questa checklist distingue ciò che è già utilizzabile da implementazioni mancanti e collaudi. Non ripianificare pubblicazione, duplicazioni e riordino come funzioni assenti. Le regressioni implementate e i nuovi controlli della navigazione passano nella [CI0.40](https://github.com/jeckodevelopment/jd_learn/actions/runs/42395767098); gli esiti non sostituiscono l'accettazione completa degli scenari.
 

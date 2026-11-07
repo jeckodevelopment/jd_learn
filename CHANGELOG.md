@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.40.1-dev — gestione nativa dei plugin video
+
+- Sostituita la voce fuorviante Stato provider video con Plugin video: apre com_plugins filtrato su jlmsvideo, azzerando i filtri precedenti e la paginazione.
+- Visibilità e gestione restano soggette ai permessi nativi Joomla per com_plugins. La vecchia dashboard non è più destinazione del menu e non rappresenta un controllo di riproduzione.
+- Prove aggiornate di navigazione HTTP, filtri persistiti, quattro plugin e conservazione del menu dopo upgrade.
+
 ## 0.40.0-dev — accesso diretto ai corsi e menu amministrativo
 
 - JD Learn apre direttamente l’elenco corsi. Menu nativo Joomla con Corsi, Categorie corsi, Banca domande, Docenti e Stato provider video, installato/aggiornato dal manifest.

@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.40.0-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.40.1-dev: sviluppo in corso, non pronta per la produzione.**
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -46,7 +46,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-La build genera `dist/pkg_jlms-0.40.0-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
+La build genera `dist/pkg_jlms-0.40.1-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
 I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
@@ -56,3 +56,5 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 Durata automatica dei video nell’editor e gestione degli scarti implementate nella 0.39 e verificate nella CI standard. [Pacchetto di sviluppo verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42395767098/artifacts/13583486787); esiti e limiti nel registro delle prove.
 
 La 0.40 aggiunge l’ingresso diretto nei corsi e il menu amministrativo nativo; CI standard superata. M01 resta aperto per le funzioni e i collaudi residui.
+
+Correzione0.40.1 in verifica: Plugin video apre il gestore plugin Joomla filtrato sul gruppo jlmsvideo. Non è una diagnostica di riproduzione.
