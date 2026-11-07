@@ -359,7 +359,50 @@ final class CurriculumService
         return $ms;
     }
 
-    public function saveLesson(User $actor, array $input): int
+    /** Read-only authoring scope; no remote request or long transaction before fresh authorisation. */
+    public function durationFingerprint(User $actor, array $input): string
+    {
+        $course = $this->row('courses', self::id($input['course_id'] ?? null)); $this->authorise($actor, $course);
+        $version = $this->row('course_versions', self::id($input['version_id'] ?? null));
+        $module = $this->row('modules', self::id($input['module_id'] ?? null));
+        if ((int)$version->course_id !== (int)$course->id || (int)$module->course_version_id !== (int)$version->id) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+        if ($version->status !== 'draft') { throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE'); }
+        if ((int)$version->revision !== self::id($input['expected_version_revision'] ?? null)) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+        if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+        $id = self::id($input['id'] ?? 0, true); $revision = self::id($input['revision'] ?? 1);
+        if ($id) {
+            $lesson = $this->row('lessons', $id);
+            if ((int)$lesson->course_version_id !== (int)$version->id || (int)$lesson->module_id !== (int)$module->id) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+            if ((int)$lesson->revision !== $revision) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+            if ($lesson->checked_out && (int)$lesson->checked_out !== (int)$actor->id) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+        }
+        $provider = $input['provider_key'] ?? null;
+        if (!is_string($provider) || !in_array($provider, ['youtube','vimeo','cloudflarestream'], true)
+            || !is_string($input['source_reference'] ?? null) || !is_string($input['privacy_hash'] ?? '')) { throw new \DomainException('COM_JLMS_SOURCE_INVALID'); }
+        $source = ($this->registryFactory)()->get($provider)->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash'=>$input['privacy_hash']]));
+        return hash('sha256', json_encode([(int)$actor->id,(int)$course->id,(int)$version->id,(int)$version->revision,(int)$module->id,$id,$revision,$source->providerKey,$source->reference,$source->options], JSON_THROW_ON_ERROR));
+    }
+
+    public function authoringMetadata(User $actor, array $input): array
+    {
+        $fingerprint = $this->durationFingerprint($actor, $input);
+        $key = $input['provider_key']; $provider = ($this->registryFactory)()->get($key);
+        if (!$provider->getDescriptor()->configured) { throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED'); }
+        $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
+        if (!in_array($policy, ['embed','site_consent'], true)) { throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED'); }
+        $source = $provider->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash'=>$input['privacy_hash']]));
+        $duration = null;
+        if ($key === 'cloudflarestream') {
+            $metadata = $provider->fetchMetadata($source, new \Jlms\Contracts\Video\MetadataContext((int)$actor->id, \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag(), true));
+            $duration = $metadata->durationMs;
+            if (!\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($duration)) { throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED'); }
+        }
+        if (!hash_equals($fingerprint, $this->durationFingerprint($actor, $input))) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+        return ['fingerprint'=>$fingerprint,'duration_ms'=>$duration,'origin'=>$duration === null ? 'author_sdk' : 'provider_api',
+            'provider'=>$key,'options'=>['reference'=>$source->reference,'locale'=>\Joomla\CMS\Factory::getApplication()->getLanguage()->getTag()] + $source->options];
+    }
+
+    public function saveLesson(User $actor, array $input, ?array $durationProof = null): int
     {
         $courseId = self::id($input['course_id'] ?? null);
         $versionId = self::id($input['version_id'] ?? null);
@@ -387,8 +430,18 @@ final class CurriculumService
             // HTML5 source/duration are assigned only by LocalVideoService; ignore stale or forged form values.
             $fields['provider_key'] = 'html5';
         } elseif ($kind === 'video') {
-            $fields['duration_ms'] = self::duration($input['duration_seconds'] ?? null);
-            $fields['params_json'] = json_encode(['video_duration_confirmed' => ($input['duration_confirmed'] ?? '') === '1'], JSON_THROW_ON_ERROR);
+            $mode = $input['duration_mode'] ?? 'legacy';
+            if (!in_array($mode, ['auto','manual','legacy'], true)) { throw new \DomainException('COM_JLMS_INVALID_INPUT'); }
+            $duration = $mode === 'auto' ? null : self::duration($input['duration_seconds'] ?? null);
+            $origin = $mode === 'auto' ? 'unmeasured' : 'declared'; $confirmed = $mode === 'manual' ? $duration !== null : ($mode === 'legacy' && ($input['duration_confirmed'] ?? '') === '1');
+            if ($durationProof !== null) {
+                if ($mode !== 'auto' || !hash_equals($this->durationFingerprint($actor, $input), (string)($durationProof['fingerprint'] ?? ''))
+                    || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($durationProof['duration_ms'] ?? null)
+                    || !in_array($durationProof['origin'] ?? '', ['author_sdk','provider_api'], true)) { throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE'); }
+                $duration = $durationProof['duration_ms']; $origin = $durationProof['origin']; $confirmed = true;
+            }
+            $fields['duration_ms'] = $duration;
+            $fields['params_json'] = json_encode(['video_duration_confirmed'=>$confirmed, 'video_duration_origin'=>$origin], JSON_THROW_ON_ERROR);
             if (!is_string($input['provider_key'] ?? null) || !is_string($input['source_reference'] ?? null)
                 || !is_string($input['privacy_hash'] ?? '')) {
                 throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
@@ -403,7 +456,7 @@ final class CurriculumService
             $fields['source_json'] = json_encode(['_schema' => 1, 'provider' => $source->providerKey,
                 'reference' => $source->reference, 'options' => $source->options], JSON_THROW_ON_ERROR);
         }
-        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields): int {
+        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof): int {
             $version = $this->draft($actor, $courseId, $versionId, $versionRevision);
             $module = $this->row('modules', $moduleId, true);
             if ((int) $module->course_version_id !== $versionId) {
@@ -425,6 +478,10 @@ final class CurriculumService
                 }
                 if ($fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key === 'html5') {
                     foreach (['source_json', 'media_asset_id', 'duration_ms', 'params_json'] as $field) { $fields[$field] = $lesson->$field; }
+                }
+                if ($fields['kind'] === 'video' && $fields['provider_key'] !== 'html5' && ($input['duration_mode'] ?? '') === 'auto'
+                    && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson->source_json === $fields['source_json']) {
+                    $fields['duration_ms'] = $lesson->duration_ms; $fields['params_json'] = $lesson->params_json;
                 }
                 $changedSource = $lesson->kind !== $fields['kind'] || $lesson->provider_key !== $fields['provider_key']
                     || $lesson->source_json !== $fields['source_json'] || $lesson->duration_ms != $fields['duration_ms'];

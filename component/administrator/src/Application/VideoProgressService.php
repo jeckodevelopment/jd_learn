@@ -178,7 +178,7 @@ final class VideoProgressService
             [$actor, $version, $enrollment, $lesson] = $this->context($identity, $language, $enrollmentId, $lessonId);
             $now = ($this->clock)();
             if ((int) $lesson->source_revision !== $sourceRevision) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
-            if (abs($reportedDuration - (int) $lesson->duration_ms) > max(1000, (int) $lesson->duration_ms / 200)) {
+            if (!\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, $reportedDuration)) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_DURATION_MISMATCH', 422);
             }
             $progress = $this->progress($enrollmentId, $lesson);
@@ -193,13 +193,13 @@ final class VideoProgressService
             $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
             if (isset($state['playback_expiry']) && $state['playback_expiry'] <= $now) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
             try {
-                $telemetry = VideoTelemetry::consume($state, $events, (int) $lesson->duration_ms, $now);
+                $telemetry = VideoTelemetry::consume($state, $events, $reportedDuration, $now);
                 $coverage = Coverage::merge(json_decode($progress->coverage_json, true, 32, JSON_THROW_ON_ERROR),
-                    $telemetry['intervals'], (int) $lesson->duration_ms);
+                    $telemetry['intervals'], min(\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::MAX, (int)$lesson->duration_ms + \Jlms\Component\Jlms\Administrator\Domain\VideoDuration::tolerance((int)$lesson->duration_ms)));
             } catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 422); }
             $covered = Coverage::coveredMs($coverage);
             $rules = json_decode($version->rules_json, true, 16, JSON_THROW_ON_ERROR);
-            $completed = Coverage::isComplete($covered, (int) $lesson->duration_ms, (int) ($rules['video_threshold_basis_points'] ?? 9000));
+            $completed = Coverage::isComplete(min($covered, $reportedDuration), $reportedDuration, (int) ($rules['video_threshold_basis_points'] ?? 9000));
             $newCompletion = $completed && $progress->state !== 'completed';
             $resumeConflict = (int) $progress->revision !== $state['progress_revision'];
             $progress->coverage_json = json_encode($coverage, JSON_THROW_ON_ERROR);

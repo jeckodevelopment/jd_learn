@@ -4,11 +4,11 @@ function loadSdk() {
   if (!sdk) sdk = new Promise((resolve, reject) => {
     const script = document.createElement('script');
     const timeout = setTimeout(() => { script.remove(); reject(new Error('sdk timeout')); }, 30000);
-    const fail = () => { clearTimeout(timeout); reject(new Error('sdk')); };
+    const fail = () => { clearTimeout(timeout); script.remove(); reject(new Error('sdk')); };
     script.src = 'https://player.vimeo.com/api/player.js';
     script.onload = () => { clearTimeout(timeout); resolve(); }; script.onerror = fail;
     document.head.append(script);
-  });
+  }).catch(error => { sdk = null; throw error; });
   return sdk;
 }
 export async function create(container, descriptor, emit, signal) {

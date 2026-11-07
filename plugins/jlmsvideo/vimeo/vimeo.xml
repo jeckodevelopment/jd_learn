@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="jlmsvideo" method="upgrade">
- <name>PLG_JLMSVIDEO_VIMEO</name><author>Jecko Development</author><version>0.6.0</version>
+ <name>PLG_JLMSVIDEO_VIMEO</name><author>Jecko Development</author><version>0.6.1</version>
  <description>PLG_JLMSVIDEO_VIMEO_DESCRIPTION</description><namespace path="src">Jlms\Plugin\Jlmsvideo\Vimeo</namespace>
  <files><folder plugin="vimeo">services</folder><folder>src</folder><folder>language</folder><folder>docs</folder></files>
  <media destination="plg_jlmsvideo_vimeo" folder="media"><folder>js</folder></media>

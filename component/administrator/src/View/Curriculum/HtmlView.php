@@ -142,7 +142,7 @@ final class HtmlView extends BaseHtmlView
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
-                        'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
+                        'duration_mode'=>'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
                         'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0']);
                     $foundLesson = true;
                 }
@@ -159,7 +159,7 @@ final class HtmlView extends BaseHtmlView
                 $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0) : (int) ($lessonData['id'] ?? 0);
                 if (is_array($saved) && (int) ($saved['id'] ?? -1) === $expectedId) {
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value));
-                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_seconds','duration_confirmed','required','kind']));
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','required','kind']));
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }
@@ -171,6 +171,16 @@ final class HtmlView extends BaseHtmlView
                 $saved = $app->getUserState($key, []); $app->setUserState($key, null);
                 if (is_array($saved) && (is_string($saved['video_threshold'] ?? null) || is_int($saved['video_threshold'] ?? null))) { $data['video_threshold'] = $saved['video_threshold']; }
                 $this->rulesForm->bind($data);
+            }
+            if ($this->editorMode === 'lesson') {
+                $this->getDocument()->getWebAssetManager()->useScript('com_jlms.videoMetadata');
+                $this->getDocument()->addScriptOptions('com_jlms.videoMetadata', [
+                    'url'=>\Joomla\CMS\Router\Route::link('administrator', 'index.php?option=com_jlms&task=lesson.metadata&format=json', false),
+                    'policy'=>\Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
+                    'labels'=>array_map(static fn($key):string=>Text::_($key), [
+                        'detected'=>'COM_JLMS_VIDEO_DURATION_DETECTED','loading'=>'COM_JLMS_VIDEO_DURATION_LOADING','play'=>'COM_JLMS_VIDEO_DURATION_PLAY',
+                        'failed'=>'COM_JLMS_VIDEO_METADATA_FAILED','consent'=>'COM_JLMS_VIDEO_DURATION_CONSENT','manual'=>'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
+                        'local'=>'COM_JLMS_VIDEO_DURATION_LOCAL','source'=>'COM_JLMS_VIDEO_DURATION_SOURCE'])]);
             }
             $this->moduleForm->bind($moduleData);
             $this->lessonForm->bind($lessonData);

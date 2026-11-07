@@ -4,7 +4,7 @@ Plugin `plg_jlmsvideo_youtube`, gruppo `jlmsvideo`, contratto1. Incluso nel pacc
 
 ## Stato0.6.0-dev
 
-Embed con SDK ufficiale, opt-in `playback_enabled`, registrazione lazy e normalizzazione locale. Posizione/durata/seek disponibili solo quando abilitato. Il componente gestisce consenso, grant, progressi e completamento; il plugin non attribuisce crediti. Default disabilitato. Metadati automatici e configurazioni avanzate ancora da completare. Vedere `docs/VIDEO.md` nel repository per comportamento effettivo, endpoint e limiti. Nessuna promessa di riservatezza di URL condivisibili o di certificazione della visione.
+Embed con SDK ufficiale, opt-in `playback_enabled`, registrazione lazy e normalizzazione locale. Posizione/durata/seek disponibili solo quando abilitato. Il componente gestisce consenso, grant, progressi e completamento; il plugin non attribuisce crediti. Default disabilitato. La durata nell’authoring viene acquisita dal componente mediante lo SDK del player, con consenso e ricevuta di sorgente; non è un’implementazione server di fetchMetadata per questo plugin. Configurazioni avanzate e collaudo SDK/browser reali restano da completare. Vedere `docs/VIDEO.md` nel repository per comportamento effettivo, endpoint e limiti. Nessuna promessa di riservatezza di URL condivisibili o di certificazione della visione.
 
 ## Specifica completa
 

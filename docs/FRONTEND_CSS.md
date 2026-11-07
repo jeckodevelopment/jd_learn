@@ -173,3 +173,7 @@ Nel contenitore amministrativo esistente: `#jlms-restore-programme` è il disclo
 ### Regole didattiche
 
 La scheda corso è `#jlms-course-teaching-rules`; il programma usa `#jlms-teaching-rules`, heading `#jlms-teaching-rules-heading`, form `#jlms-teaching-rules-form` e campo `#jlms_rules_threshold`. Il form riusa `.jlms-focused-editor` e l’avviso modifiche non salvate; il riordino JS rimane sospeso durante l’editor. Il confronto usa `#jlms-publication-threshold-change`. Nessun nuovo stile globale. Gli override devono conservare task, scope, revisione, token e campo con label; sulle versioni immutabili non renderizzare un form di scrittura.
+
+### Metadati video nell’authoring
+
+Il form lezione contiene `#jlms-video-metadata` (stato aria-live) e `#jlms-video-metadata-preview` (player visibile senza autoplay, nessun progresso studente). Classi Bootstrap ratio esistenti, nessuno stile globale nuovo. Gli override devono renderizzare i campi nativi duration_mode/duration_ticket/sdk_duration_ms, la regione di stato e il pulsante Rileva di nuovo; non reintrodurre la conferma obbligatoria. Il modulo WAM `com_jlms.videoMetadata` opera solo nel form lezione e rispetta consenso, annullamento e cambio sorgente.

@@ -120,6 +120,11 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <?php if (!$isModule) : ?><p><?= Text::_('COM_JLMS_MODULE') ?>: <strong><?php foreach ($this->outline['modules'] as $m) { if ((int) $m->id === $this->selectedModule) { echo $this->escape($m->title); } } ?></strong></p><?php endif; ?>
   <form id="jlms-<?= $isModule ? 'module' : 'lesson' ?>-form" class="form-validate" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
    <?= $form->renderFieldset('details') ?><input type="hidden" name="task" value="<?= $isModule ? 'module' : 'lesson' ?>.save">
+   <?php if (!$isModule) : ?><section id="jlms-video-metadata" hidden aria-label="<?= Text::_('COM_JLMS_VIDEO_DURATION_AUTO') ?>">
+    <p role="status" aria-live="polite"></p>
+    <div id="jlms-video-metadata-preview" data-preview data-title="<?= Text::_('COM_JLMS_VIDEO_DURATION_PREVIEW') ?>" class="ratio ratio-16x9" hidden></div>
+    <button class="btn btn-secondary mb-2" type="button"><?= Text::_('COM_JLMS_VIDEO_DURATION_RETRY') ?></button>
+   </section><?php endif; ?>
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button>
    <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
   </form>
