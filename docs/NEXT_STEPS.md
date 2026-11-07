@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.40.1-dev**, menu amministrativo nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; durata automatica verificata nella 0.39. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.41.0-dev**, menu amministrativo nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; durata automatica verificata nella 0.39. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità
 
@@ -21,7 +21,7 @@ Aggiornato al **7 novembre 2026**. Riferimento: **0.40.1-dev**, menu amministrat
 
 ## Primo lavoro da svolgere
 
-**Durata automatica e scarti (R-06):** la0.39 implementa il flusso nell’editor per YouTube/Vimeo/Stream e conserva la misura da file MP4, con ricevute di sorgente e tolleranza coerente con il completamento. CI standard superata; prima di accettarlo completare il collaudo SDK/browser/account reali secondo [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md), correggendo subito eventuali blocchi. Il seguito di implementazione riprende campi/snapshot e residui dell’editor; menu nativo e ingresso diretto implementati nella 0.40 verificati nella CI standard42395767098; restyling residuo pianificato M01/M10. Non ripianificare l’acquisizione ordinaria come assente, né dichiarare concluso il collaudo reale.
+**Durata automatica e scarti (R-06):** la0.39 implementa il flusso nell’editor per YouTube/Vimeo/Stream e conserva la misura da file MP4, con ricevute di sorgente e tolleranza coerente con il completamento. CI standard superata; prima di accettarlo completare il collaudo SDK/browser/account reali secondo [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md), correggendo subito eventuali blocchi. La resa pubblica dei campi editoriali corso è implementata nella0.41 in verifica; il seguito riprende snapshot didattici, campi lezione e residui dell’editor; menu nativo e ingresso diretto implementati nella 0.40 verificati nella CI standard42395767098; restyling residuo pianificato M01/M10. Non ripianificare l’acquisizione ordinaria come assente, né dichiarare concluso il collaudo reale.
 
 Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: collaudare l’amministrazione e il programma su Joomla reale e registrare gli esiti per build/ruolo/browser, affrontando subito eventuali blocchi dei provider essenziali. Campi corso, riepilogo/conferma degli aggiornamenti e recupero storico sono implementati e coperti dalle rispettive regressioni. L’editor delle regole supportate e la soglia video della versione sono implementati e coperti dalla CI standard della0.38. Seguono campi/snapshot pertinenti e regole avanzate, rispettando le dipendenze M03/M08/M10; non mostrare controlli per attestati o regole ancora non operative. L’anteprima interattiva senza effetti e il ciclo revisione/archivio restano il seguito M02. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
 
@@ -80,3 +80,5 @@ Audit sicurezza con analisi statica/stile/scansioni e risultati motivati. Carico
 **Accettazione:** nessun obbligo di rilascio senza esito, anomalie con decisione esplicita, report reale delle prestazioni e guide/ZIP/checksum/aggiornamenti completi. Vendita e abbonamenti restano esterni; compiti/live/SCORM/xAPI/LTI mantengono le rispettive fasi differite.
 
 Correzione corrente0.40.1: collegamento Plugin video a com_plugins filtrato implementato e verificato nella CI standard42397626415. Non cambia l’ordine dei requisiti successivi.
+
+Incremento corrente0.41: verificare la resa dei campi editoriali nella scheda pubblica e conservazione dello storico. Non dichiarare implementati snapshot didattici o campi lezione per effetto della sola resa editoriale.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.0-dev — campi nativi nella scheda pubblica del corso
+
+- Resa dei campi editoriali correnti con com_fields, plugin di tipo e layout/override nativi; posizioni dopo titolo, prima e dopo la presentazione. Nascosti/manuali ed elementi vuoti non producono una sezione vuota.
+- Accesso corrente a corso, campo e gruppo, pubblicazione, categoria e lingua; aggiornamenti dei valori senza ripubblicare il programma e senza mutare versioni assegnate o progressi.
+- Prove native/HTTP per tipi testo/area/lista, impostazioni di visualizzazione, revoche nella stessa sessione e override, più conservazione dopo upgrade. Snapshot didattici, campi lezione e ripristino completo dei valori tramite Content History restano aperti.
+
 ## 0.40.1-dev — gestione nativa dei plugin video
 
 - Sostituita la voce fuorviante Stato provider video con Plugin video: apre com_plugins filtrato su jlmsvideo, azzerando i filtri precedenti e la paginazione.

@@ -12,7 +12,7 @@ Definire campi e gruppi con il gestore Campi di Joomla, contesto Corsi (`com_jlm
 
 Salva/Salva e chiudi inoltrano `com_fields` agli eventi Joomla. Gli errori di validazione della form conservano l’input; Annulla lascia i valori salvati. Client precedenti che omettono il gruppo non cancellano i valori. Le revisioni obsolete e i permessi del corso vengono verificati prima del salvataggio. Il modello non scrive una tabella parallela dei campi.
 
-Questo incremento completa il collegamento amministrativo, non il requisito CORE-10 intero: campi lezione, snapshot didattici, resa pubblica dei campi corso e ripristino completo dei valori tramite Content History restano da implementare/verificare. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
+Il collegamento amministrativo e la resa editoriale pubblica dei campi corso sono implementati, senza completare CORE-10: campi lezione, snapshot didattici e ripristino completo dei valori tramite Content History restano da implementare/verificare. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
 
 ## Aggiornare lezioni e materiali
 
@@ -81,3 +81,11 @@ Il form video usa Rileva automaticamente: SDK/anteprima per YouTube e Vimeo, API
 JD Learn apre l’elenco corsi. La sidebar Joomla offre Corsi, Categorie corsi, Banca domande, Docenti e Plugin video. Programma, materiali e iscritti si aprono dal corso selezionato, secondo i permessi.
 
 La voce Plugin video apre la gestione nativa Joomla filtrata sul gruppo `jlmsvideo`, con ricerca, stato, accesso e singolo plugin azzerati per vedere tutti i provider installati, anche disattivati. Da qui si abilitano/disabilitano e configurano i plugin secondo i permessi di `com_plugins`. Non è una verifica della riproduzione; nessun accesso ai plugin è concesso dal solo permesso di gestire corsi.
+
+## Campi nella scheda pubblica del corso (0.41)
+
+I campi correnti com_jlms.course sono preparati dai plugin di tipo e dai layout com_fields di Joomla. La posizione automatica è dopo il titolo, prima o dopo la presentazione; disattivandola il campo non compare. Valori vuoti, campi/gruppi non pubblicati o non accessibili e assegnazioni non pertinenti non vengono mostrati. Accesso al corso e lingua restano obbligatori.
+
+Le modifiche editoriali compaiono senza ripubblicare il programma e non riscrivono versioni assegnate, progressi o risultati. Snapshot didattici e campi lezione restano un’integrazione distinta: i campi editoriali live non sono regole di completamento.
+
+Gli override nativi usano html/layouts/com_jlms/fields/render.php e html/layouts/com_jlms/field/render.php, con fallback com_fields. Tipi/override installati devono preservare escaping, accesso e accessibilità. Le prove automatiche campionano testo, area di testo e lista, non tutti i plugin di terze parti.

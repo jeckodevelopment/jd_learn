@@ -1,8 +1,8 @@
 # Stato attuale di JD Learn
 
-La voce Plugin video apre il gestore nativo Joomla filtrato su jlmsvideo; sostituisce il precedente collegamento alla vecchia dashboard. Nessuna diagnostica di riproduzione viene dichiarata disponibile.
+Incremento0.41 in verifica: campi editoriali correnti nella scheda pubblica del corso, tramite plugin/layout Joomla. Snapshot didattici e campi lezione restano aperti; gli esiti seguenti identificano ancora il build0.40.1.
 
-Aggiornato al **7 novembre 2026**. Versione **0.40.1-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42397626415; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.41.0-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42397626415; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -12,7 +12,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 | Area | Disponibile oggi | Da implementare o completare |
 |---|---|---|
-| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi e accesso alle Regole didattiche, modifica propria e voci di menu; menu amministrativo nativo e ingresso diretto ai corsi | Completare restyling e collaudo; regole avanzate e attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
+| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi e accesso alle Regole didattiche, modifica propria e voci di menu; menu amministrativo nativo e ingresso diretto ai corsi | Completare restyling e collaudo; regole avanzate e attestato; snapshot didattici dei campi corso e campi lezione, copertura completa di lingue, associazioni e gestione dei dati |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate e soglia video della bozza | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
 | Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento; recupero di una versione storica in una nuova bozza con audit, senza sovrascrivere le altre | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
