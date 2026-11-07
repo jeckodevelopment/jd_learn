@@ -197,6 +197,13 @@ fixtureUpdate('jlms_editions',(object)['id'=>$edition,'status'=>'open']);
 fixtureUpdate('categories',(object)['id'=>$catid,'published'=>0]);
 learningDenied(fn()=>$learning->classroom($student,'en-GB',$enrollment),404,'category withdrawal blocks direct classroom');
 fixtureUpdate('categories',(object)['id'=>$catid,'published'=>1]);
+// Removing a course from the promotional catalog does not suspend a valid enrollment.
+$catalog=$component->getCatalogService();
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>0,'publish_down'=>'2000-01-01 00:00:00']);
+learningDenied(fn()=>$catalog->course($student,'en-GB',$course),404,'withdrawn course is absent from the promotional catalog');
+learningDenied(fn()=>$learning->start($student,'en-GB',$course,bin2hex(random_bytes(16))),404,'withdrawn course cannot accept a new self-service admission');
+learningExpect($learning->classroom($student,'en-GB',$enrollment)['percent']===33,'catalog withdrawal and end date preserve the authorised existing classroom');
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>1,'publish_down'=>null],true);
 learningWorkers([$lessons[1],$lessons[2]]);
 $done=$learning->classroom($student,'en-GB',$enrollment);
 learningExpect($done['percent']===100 && $done['completed_at']!==null,'concurrent distinct requirements complete course once');
