@@ -40,3 +40,9 @@ Richiesta: «dovremmo ricostruire anche la vista del programma didattico. La mod
 **Origine:** richiesta esplicita del committente: evitare l’inserimento ordinario della durata esatta nell’authoring e gli errori causati da piccoli scarti; preferire l’acquisizione dai metadati del provider/file. La specifica1.5 già prevede lettura da player/API in VID-02 e confronto corretto degli intervalli in PRO-04: la richiesta rende prioritario completare questa parte, senza modificare i210ID o dichiarare accettati criteri mancanti.
 
 Percorso richiesto e collaudi in [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md), caso aperto R-06. Manuale soltanto come ripiego esplicito; misure associate alla sorgente, consenso/permessi, tolleranza limitata coerente con percentuali e salvaguardia delle versioni assegnate. Riguarda anche VID-03/08, PRO-06, AUT-01/04 e SCR-13. Implementazione ancora assente nella0.38 per il flusso esterno completo: nessuna modifica runtime in questo aggiornamento dei requisiti.
+
+## RF-2026-11-07-B — perimetro della prima versione stabile
+
+**Decisione approvata dal committente:** concentrare la prima versione stabile sulle funzionalità essenziali e congelare lo sviluppo di quiz/banca domande, attestati e KPI/reportistica avanzata per la fase 2. L’elenco operativo essenziale degli iscritti rimane incluso. Importazioni e flussi iscrizioni complessi sono differiti salvo dipendenze dimostrate per l’uso essenziale.
+
+Il perimetro, le condizioni e l’ordine operativo sono registrati in [RELEASE_SCOPE.md](RELEASE_SCOPE.md). La specifica 1.5 e i 210 requisiti restano conservati come baseline; le assegnazioni originarie del piano non vengono riscritte implicitamente. Prima dell’accettazione stabile andranno mappati i criteri inclusi agli scenari della baseline, separando il roster essenziale da KPI/export avanzati. Il congelamento consente soltanto correzioni di blocchi, sicurezza e integrità dei dati per le funzionalità rinviate.
