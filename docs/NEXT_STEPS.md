@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.40.0-dev**, menu amministrativo nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; durata automatica verificata nella 0.39. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.40.1-dev**, menu amministrativo nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; durata automatica verificata nella 0.39. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità
 
@@ -78,3 +78,5 @@ Eseguire tutti gli scenari obbligatori della matrice funzionale e dei provider c
 Audit sicurezza con analisi statica/stile/scansioni e risultati motivati. Carico misto dichiarato:300studenti attivi per60minuti e500per10minuti, dataset/infrastruttura misurati, p95/errori/integrità/lock/code e prove oltre soglia. I test concorrenti della CI non sostituiscono questo benchmark.
 
 **Accettazione:** nessun obbligo di rilascio senza esito, anomalie con decisione esplicita, report reale delle prestazioni e guide/ZIP/checksum/aggiornamenti completi. Vendita e abbonamenti restano esterni; compiti/live/SCORM/xAPI/LTI mantengono le rispettive fasi differite.
+
+Correzione corrente0.40.1: collegamento Plugin video a com_plugins filtrato implementato e verificato nella CI standard42397626415. Non cambia l’ordine dei requisiti successivi.

@@ -73,12 +73,20 @@ try:
  url,html=get('/administrator/index.php?option=com_jlms')
  if 'id="jlms-admin-courses"' not in html:raise RuntimeError('JD Learn must open the course list directly')
  menu_links=[parse_qs(urlparse(x).query) for x in Page(html).links]
- for view in ['courses','teachers','questionbank','dashboard']:
+ for view in ['courses','teachers','questionbank']:
   if not any(q.get('option')==['com_jlms'] and q.get('view')==[view] for q in menu_links):raise RuntimeError('Native JD Learn sidebar link missing: '+view)
  if not any(q.get('option')==['com_categories'] and q.get('extension')==['com_jlms.course'] for q in menu_links):raise RuntimeError('Native course category sidebar missing')
- url,html=get('/administrator/index.php?option=com_jlms&view=dashboard')
- if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('Provider status page remains accessible explicitly')
- print(json.dumps({'admin_navigation_http_checks':7,'status':'passed'}))
+ plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
+ if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
+ # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
+ get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')
+ _,plugin_html=get(urljoin(urljoin(url,Page(html).base or ""),plugin_link))
+ plugin_page=Page(plugin_html)
+ plugin_form=next(f for f in plugin_page.forms if f['id']=='adminForm')
+ if plugin_form['fields'].get('filter[folder]')!='jlmsvideo' or plugin_form['fields'].get('filter[search]')!='' or plugin_form['fields'].get('filter[enabled]')!='':raise RuntimeError('Video plugin filter or cleared search/status is incorrect')
+ plugin_ids={parse_qs(urlparse(x).query).get('extension_id',[''])[0] for x in plugin_page.links if parse_qs(urlparse(x).query).get('task')==['plugin.edit']}
+ if len(plugin_ids)!=4 or '' in plugin_ids:raise RuntimeError('Filtered manager must show exactly the four installed video plugins')
+ print(json.dumps({'admin_navigation_http_checks':8,'status':'passed'}))
  url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
  if 'CI Courses' not in html:raise RuntimeError('Native Joomla category manager did not render the saved category')
  url,html=get('/administrator/index.php?option=com_jlms&view=courses')

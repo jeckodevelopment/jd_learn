@@ -78,4 +78,6 @@ Il form video usa Rileva automaticamente: SDK/anteprima per YouTube e Vimeo, API
 
 ## Accesso amministrativo (0.40)
 
-JD Learn apre l’elenco corsi. La sidebar Joomla offre Corsi, Categorie corsi, Banca domande, Docenti e Stato provider video. Programma, materiali e iscritti si aprono dal corso selezionato, secondo i permessi.
+JD Learn apre l’elenco corsi. La sidebar Joomla offre Corsi, Categorie corsi, Banca domande, Docenti e Plugin video. Programma, materiali e iscritti si aprono dal corso selezionato, secondo i permessi.
+
+La voce Plugin video apre la gestione nativa Joomla filtrata sul gruppo `jlmsvideo`, con ricerca, stato, accesso e singolo plugin azzerati per vedere tutti i provider installati, anche disattivati. Da qui si abilitano/disabilitano e configurano i plugin secondo i permessi di `com_plugins`. Non è una verifica della riproduzione; nessun accesso ai plugin è concesso dal solo permesso di gestire corsi.

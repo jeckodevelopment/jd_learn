@@ -1,6 +1,8 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.40.0-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+La voce Plugin video apre il gestore nativo Joomla filtrato su jlmsvideo; sostituisce il precedente collegamento alla vecchia dashboard. Nessuna diagnostica di riproduzione viene dichiarata disponibile.
+
+Aggiornato al **7 novembre 2026**. Versione **0.40.1-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42397626415; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -29,9 +31,9 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-La [CI 0.40](https://github.com/jeckodevelopment/jd_learn/actions/runs/42395767098) ha superato i quattro job standard sul codice `d126c8f7f24aad1f689cb7273c7aff80ab594570`:
+La [CI 0.40.1](https://github.com/jeckodevelopment/jd_learn/actions/runs/42397626415) ha superato i quattro job standard sul codice `03301648017bc218c9c2d7d3fe57af443f703fc1`:
 
-- PHP8.3/MySQL8.4 e PHP8.4/MariaDB10.6: intera suite implementata, build riproducibile, installazione Joomla e upgrade0.39→0.40, reinstallazione e storico conservato. Per ambiente, 7 nuove condizioni HTTP sulla navigazione e 2 controlli del menu nativo dopo upgrade/reinstallazione. Nessun duplicato; ingresso diretto nell’elenco corsi e accesso esplicito allo stato provider. Le regressioni video della0.39 restano incluse.
+- PHP8.3/MySQL8.4 e PHP8.4/MariaDB10.6: intera suite implementata, build riproducibile, installazione Joomla, upgrade0.40→0.40.1, reinstallazione e storico conservato. Per ambiente, 8 condizioni HTTP della navigazione, incluso ingresso nel gestore plugin filtrato e azzeramento dei filtri precedenti con quattro plugin visibili; 2 controlli del menu dopo upgrade/reinstallazione, senza duplicati. Le regressioni video restano incluse.
 - Chromium: 12 controlli su fixture desktop/mobile delle modifiche non salvate. Non è collaudo interattivo dell’intero Joomla o del nuovo form regole.
 - Job leggero: politica CI, build, struttura, traduzioni e tracciabilità. Le bozze preparatorie hanno eseguito soltanto questi controlli; la verifica finale usa la [matrice standard](CI_POLICY.md). Le due coppie incrociate restano da eseguire nella matrice completa prima di milestone/rilascio o modifiche di compatibilità.
 

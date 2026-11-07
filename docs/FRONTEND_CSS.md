@@ -180,4 +180,4 @@ Il form lezione contiene `#jlms-video-metadata` (stato aria-live) e `#jlms-video
 
 ### Navigazione amministrativa 0.40
 
-Ingresso diretto nella vista courses esistente (`jlms-admin-courses`); nessun nuovo CSS o menu HTML parallelo. Il submenu è reso da mod_menu/Atum e segue gli override nativi Joomla. La diagnostica conserva `jlms-admin-dashboard` su view=dashboard.
+Ingresso diretto nella vista courses esistente (`jlms-admin-courses`); nessun nuovo CSS o menu HTML parallelo. Il submenu è reso da mod_menu/Atum e segue gli override nativi Joomla. Il collegamento Plugin video apre com_plugins e usa markup/override Joomla; non rende la vecchia dashboard.
