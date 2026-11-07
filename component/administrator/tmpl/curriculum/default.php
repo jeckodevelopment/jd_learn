@@ -119,7 +119,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <h2 id="jlms-editor-heading" class="h3"><?= Text::_($isModule ? 'COM_JLMS_MODULE_EDITOR' : 'COM_JLMS_LESSON_EDITOR') ?></h2>
   <?php if (!$isModule) : ?><p><?= Text::_('COM_JLMS_MODULE') ?>: <strong><?php foreach ($this->outline['modules'] as $m) { if ((int) $m->id === $this->selectedModule) { echo $this->escape($m->title); } } ?></strong></p><?php endif; ?>
   <form id="jlms-<?= $isModule ? 'module' : 'lesson' ?>-form" class="form-validate" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
-   <?= $form->renderFieldset('details') ?><input type="hidden" name="task" value="<?= $isModule ? 'module' : 'lesson' ?>.save">
+   <?= $form->renderFieldset('details') ?>
+   <?php if (!$isModule && $form->getFieldset('com_fields')) : ?><fieldset id="jlms-lesson-fields"><legend><?= Text::_('JFIELD_CUSTOM_FIELDS') ?></legend><?= $form->renderFieldset('com_fields') ?></fieldset><?php endif; ?>
+   <input type="hidden" name="task" value="<?= $isModule ? 'module' : 'lesson' ?>.save">
    <?php if (!$isModule) : ?><section id="jlms-video-metadata" hidden aria-label="<?= Text::_('COM_JLMS_VIDEO_DURATION_AUTO') ?>">
     <p role="status" aria-live="polite"></p>
     <div id="jlms-video-metadata-preview" data-preview data-title="<?= Text::_('COM_JLMS_VIDEO_DURATION_PREVIEW') ?>" class="ratio ratio-16x9" hidden></div>

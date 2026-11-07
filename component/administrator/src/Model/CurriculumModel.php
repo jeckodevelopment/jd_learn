@@ -23,6 +23,8 @@ final class CurriculumModel extends FormModel
     public function getLessonForm()
     {
         $form = $this->loadForm('com_jlms.curriculum_lesson', 'curriculum_lesson', ['control' => 'jform', 'load_data' => false]);
+        // Keep lesson definitions in Joomla com_fields; never add a parallel LMS schema.
+        \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::prepareForm('com_jlms.lesson', $form, []);
         $field = new \SimpleXMLElement('<field name="provider_key" type="list" label="COM_JLMS_VIDEO_PROVIDER" showon="kind:video" />');
         foreach (Factory::getApplication()->bootComponent('com_jlms')->getCurriculumService()->providers() as $provider) {
             $field->addChild('option', htmlspecialchars($provider->labelKey, ENT_XML1))->addAttribute('value', $provider->key);

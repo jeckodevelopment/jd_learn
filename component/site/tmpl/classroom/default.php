@@ -33,6 +33,11 @@ $currentModule = 0;
  </nav>
  <article id="jlms-lesson-content" class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
   <div id="jlms-lesson-body"><?= $selected->body /* HTML cleaned by the server-side core InputFilter. */ ?></div>
+  <?php if (!empty($selected->custom_fields)) : ?><dl id="jlms-lesson-custom-fields" class="jlms-custom-fields">
+   <?php foreach ($selected->custom_fields as $field) : if (!$field['values']) { continue; } ?>
+    <dt><?= $this->escape($field['label']) ?></dt><dd><?= $this->escape(implode(', ', $field['values'])) ?></dd>
+   <?php endforeach; ?>
+  </dl><?php endif; ?>
   <?php if ($selected->kind === 'video') : ?>
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
    <p id="jlms-player-status" role="status" aria-live="polite"></p>

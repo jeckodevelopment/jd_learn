@@ -137,13 +137,18 @@ final class HtmlView extends BaseHtmlView
                     );
                     $this->selectedItem = $lesson;
                     $this->selectedModule = (int) $lesson->module_id;
+                    $customFields = [];
+                    foreach (\Joomla\Component\Fields\Administrator\Helper\FieldsHelper::getFields('com_jlms.lesson', $lesson, true) as $customField) {
+                        $customFields[$customField->name] = $customField->value;
+                    }
                     $source = $lesson->source_json ? json_decode($lesson->source_json, true, 32, JSON_THROW_ON_ERROR) : [];
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
                         'duration_mode'=>'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
-                        'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0']);
+                        'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0',
+                        'com_fields' => $customFields]);
                     $foundLesson = true;
                 }
             }

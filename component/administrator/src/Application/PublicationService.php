@@ -152,6 +152,8 @@ final class PublicationService
                     || $lesson->publish_down !== null || $lesson->release_after_days !== null || strlen((string) $lesson->body) > 1048576) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
+                $lessonFields = $this->snapshotLessonFields($actor, (int) $lesson->id);
+                $lesson->fields_snapshot_json = json_encode(['_schema' => 1, 'fields' => $lessonFields], JSON_THROW_ON_ERROR);
                 $quizHash = null;
                 if ($lesson->kind === 'quiz') {
                     $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze($actor, $course, $lesson);
@@ -199,7 +201,10 @@ final class PublicationService
                     'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
                     'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'quiz_sha256' => $quizHash, 'duration_ms' => $lesson->duration_ms,
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
+                    'fields_sha256' => hash('sha256', $lesson->fields_snapshot_json),
                     'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' => hash('sha256', (string) $lesson->body)];
+                $lessonSnapshot = (object) ['id' => (int) $lesson->id, 'fields_snapshot_json' => $lesson->fields_snapshot_json];
+                $this->db->updateObject('#__jlms_lessons', $lessonSnapshot, 'id');
                 $lastId = (int) $lesson->id;
             }
         } while (count($batch) === 16);
@@ -241,6 +246,26 @@ final class PublicationService
             'revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
             'created_at' => $now, 'modified_at' => $now];
         $this->db->insertObject('#__jlms_editions', $edition);
+    }
+
+    /** Freeze lesson field values and their display metadata into the immutable teaching version. */
+    private function snapshotLessonFields(User $actor, int $lessonId): array
+    {
+        $context = 'com_jlms.lesson';
+        $item = (string) $lessonId;
+        $q = $this->db->createQuery()->select('f.id, f.name, f.title, f.type, f.access, v.value')
+            ->from('#__fields AS f')->innerJoin('#__fields_values AS v ON v.field_id = f.id')
+            ->where('f.context = :context')->where('f.state = 1')->where('v.item_id = :item')
+            ->bind(':context', $context)->bind(':item', $item)->order('f.id');
+        $fields = [];
+        foreach ($this->db->setQuery($q, 0, 1001)->loadObjectList() as $row) {
+            if (!in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) { continue; }
+            $fields[$row->name] ??= ['label' => (string) $row->title, 'type' => (string) $row->type,
+                'access' => (int) $row->access, 'values' => []];
+            $fields[$row->name]['values'][] = (string) $row->value;
+        }
+        ksort($fields, SORT_STRING);
+        return $fields;
     }
 
     public function transition(User $actor, int $courseId, int $versionId, int $courseRevision, int $versionRevision, int $transitionId, ?string $expectedImpact = null): void
