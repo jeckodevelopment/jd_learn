@@ -1,5 +1,11 @@
 # Changelog
 
+## Processo e roadmap — 7 novembre 2026
+
+- PR in bozza con controlli leggeri; integrazioni per il candidato pronto, due coppie PHP/database e Chromium. Matrice completa disponibile manualmente prima di milestone/rilascio o interventi di compatibilità; nessuna rimozione di scenari dalla suite.
+- Restyling del backend/ingresso e menu amministrativo JD Learn nella sidebar nativa pianificati in M01/M10, con verifica ACL, installazione/upgrade e navigazione accessibile. Non ancora implementati.
+- Versione applicativa e pacchetto0.37 invariati.
+
 ## 0.37.0-dev — recupero del programma storico come nuova bozza
 
 - Comando nativo dal programma storico con conferma POST/CSRF, ACL fresche, checkout, revisioni e audit atomico. Rigenera gli ID mantenendo chiavi logiche, lezioni, riferimenti video, quiz e materiali.

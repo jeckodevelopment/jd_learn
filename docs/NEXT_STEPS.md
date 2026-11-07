@@ -6,7 +6,7 @@ Aggiornato al **7 novembre 2026**. Riferimento: **0.37.0-dev**, recupero storico
 
 | Ordine | Attività | Risultato richiesto / dipendenze |
 |---|---|---|
-| 1 | Completare gestione corsi, programma e provider essenziali (M01/M02/M04) | Eseguire e registrare i collaudi reali della checklist; completare le parti mancanti dell'editor, con i collegamenti M02/M03/M08/M10. Prima pubblicazione, duplicazioni, riordino, riepilogo impatto e recupero storico sono disponibili. Correggere subito ogni blocco di pubblicazione/fruizione YouTube, Vimeo e Cloudflare Stream; collaudare configurazioni e SDK reali su desktop/mobile. |
+| 1 | Completare gestione corsi, programma e provider essenziali (M01/M02/M04) | Eseguire e registrare i collaudi reali della checklist; completare le parti mancanti dell'editor, con i collegamenti M02/M03/M08/M10. Prima pubblicazione, duplicazioni, riordino, riepilogo impatto e recupero storico sono disponibili. Pianificato anche il restyling dell’ingresso/backend e il menu amministrativo JD Learn nella sidebar Joomla, secondo ADMIN_UX_PLAN.md. Correggere subito ogni blocco di pubblicazione/fruizione YouTube, Vimeo e Cloudflare Stream; collaudare configurazioni e SDK reali su desktop/mobile. |
 | 2 | Ciclo editoriale (M02) | Anteprima interattiva e dei livelli senza effetti, revisione/archivio, errori e avvisi distinti; migrazioni esplicite. |
 | 3 | Didattica (M03) | Audio/documento autonomi, prerequisiti/cicli, sequenze/rilascio progressivo e fallback Riprendi R-05. |
 | 4 | Infrastruttura job (M07) | Batch recuperabili, cursore/lease/retry/idempotenza e gestione degli esiti; prerequisito di import, notifiche e attestati. |
@@ -22,6 +22,10 @@ Aggiornato al **7 novembre 2026**. Riferimento: **0.37.0-dev**, recupero storico
 ## Primo lavoro da svolgere
 
 Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: collaudare l’amministrazione e il programma su Joomla reale e registrare gli esiti per build/ruolo/browser, affrontando subito eventuali blocchi dei provider essenziali. Campi corso, riepilogo/conferma degli aggiornamenti e recupero storico sono implementati e coperti dalle rispettive regressioni. Il lavoro di implementazione successivo riguarda i residui dell’editor per regole didattiche e i campi/snapshot pertinenti, rispettando le dipendenze M03/M08/M10; non mostrare controlli per attestati o regole ancora non operative. L’anteprima interattiva senza effetti e il ciclo revisione/archivio restano il seguito M02. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
+
+## Modalità di sviluppo e verifica
+
+PR in bozza durante i commit preparatori; controlli leggeri a ogni aggiornamento, integrazioni sul candidato pronto per il merge. Due ambienti PHP/database più browser ordinariamente; matrice completa su avvio manuale prima di milestone/rilascio o modifiche di compatibilità. Nessuna duplicazione al merge. Procedura e invalidazione degli esiti in [CI_POLICY.md](CI_POLICY.md).
 
 ## Condizioni tecniche delle attività successive
 

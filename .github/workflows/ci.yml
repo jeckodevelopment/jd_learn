@@ -1,15 +1,45 @@
 name: JD Learn verification
 on:
   pull_request:
+    types: [opened, reopened, synchronize, ready_for_review, converted_to_draft]
   workflow_dispatch:
+    inputs:
+      matrix:
+        description: Compatibility coverage (full before milestones/releases)
+        type: choice
+        options: [standard, full]
+        default: standard
 permissions:
   contents: read
 concurrency:
   group: jd-learn-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  plan:
+    name: Candidate plan and lightweight checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      integration: ${{ steps.plan.outputs.integration }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate CI policy and choose candidate coverage
+        id: plan
+        run: |
+          python3 tests/ci-plan.py
+          python3 tools/ci_plan.py
+      - name: Lightweight structure, package and documentation checks
+        run: |
+          python3 tools/build.py
+          python3 tools/check.py
   browser-navigation:
     name: Curriculum navigation in Chromium (controlled fixture)
+    needs: plan
+    if: needs.plan.outputs.integration == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -24,13 +54,13 @@ jobs:
         run: node tests/curriculum-browser.mjs
   verify:
     name: PHP ${{ matrix.php }} / ${{ matrix.database }}
+    needs: plan
+    if: needs.plan.outputs.integration == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
-      matrix:
-        php: ['8.3', '8.4']
-        database: ['mysql:8.4', 'mariadb:10.6']
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     container: php:${{ matrix.php }}-cli-bookworm
     services:
       db:
@@ -266,7 +296,7 @@ jobs:
       - name: Verify recovered programmes and provider references survive upgrade
         run: php tests/joomla-programme-restore.php .runtime/joomla retained
       - name: Make the verified development package downloadable
-        if: matrix.php == '8.4' && matrix.database == 'mysql:8.4'
+        if: matrix.php == '8.4' && matrix.database == 'mariadb:10.6'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: JD-Learn-0.37.0-dev

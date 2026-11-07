@@ -14,7 +14,15 @@
         "AUT-05",
         "SCR-13"
       ],
-      "acceptance_checklist": "docs/M01_ACCEPTANCE.md"
+      "acceptance_checklist": "docs/M01_ACCEPTANCE.md",
+      "planned_administration_ux": {
+        "status": "Da implementare",
+        "scope": "Ingresso backend intuitivo e menu amministrativo JD Learn nella sidebar Joomla",
+        "plan": "docs/ADMIN_UX_PLAN.md",
+        "dependencies": [
+          "M10"
+        ]
+      }
     },
     {
       "id": "M02",
