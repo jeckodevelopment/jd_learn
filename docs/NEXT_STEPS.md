@@ -21,6 +21,8 @@ Aggiornato al **7 novembre 2026**. Riferimento: **0.38.0-dev**, regole didattich
 
 ## Primo lavoro da svolgere
 
+**Prossimo incremento prioritario: durata automatica dei video e gestione degli scarti (R-06).** Completare il percorso autore per YouTube, Vimeo e Cloudflare Stream e mantenere la durata da file per MP4 locali; eliminare l’inserimento preciso come passaggio ordinario. Correggere insieme confronto player/server e denominatore del completamento, con tolleranza limitata, provenienza dei metadati e storici conservati. Contratto e collaudi in [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md). Non è ancora implementato nella0.38 e precede i residui successivi dell’editor.
+
 Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: collaudare l’amministrazione e il programma su Joomla reale e registrare gli esiti per build/ruolo/browser, affrontando subito eventuali blocchi dei provider essenziali. Campi corso, riepilogo/conferma degli aggiornamenti e recupero storico sono implementati e coperti dalle rispettive regressioni. L’editor delle regole supportate e la soglia video della versione sono implementati e coperti dalla CI standard della0.38. Seguono campi/snapshot pertinenti e regole avanzate, rispettando le dipendenze M03/M08/M10; non mostrare controlli per attestati o regole ancora non operative. L’anteprima interattiva senza effetti e il ciclo revisione/archivio restano il seguito M02. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
 
 ## Modalità di sviluppo e verifica

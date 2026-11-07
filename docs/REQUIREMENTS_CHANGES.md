@@ -34,3 +34,9 @@ L’utente segnala che la parte amministrativa rimane estremamente complessa e r
 ## RF-2026-11-04-C — ricostruzione del programma didattico
 
 Richiesta: «dovremmo ricostruire anche la vista del programma didattico. La modalità attuale è inusabile». Specifica1.5 sezione44, AUT-01/SCR-13/CORE-20 e nuovo AC-127: scaletta contestuale, moduli espandibili, editor singolo, aggiunta nel modulo, materiali/quiz contestuali e azioni secondarie. M01/i implementa ordine mouse/tastiera con protezione da conflitti e spostamento tra moduli della bozza; nessuna mutazione di storico, risultati o gruppi. Tutti i210ID conservati. AC-127 e M01 non dichiarati accettati: le prove automatizzate non sostituiscono il collaudo browser/mobile/accessibilità.
+
+## RF-2026-11-07 — durata automatica dei video
+
+**Origine:** richiesta esplicita del committente: evitare l’inserimento ordinario della durata esatta nell’authoring e gli errori causati da piccoli scarti; preferire l’acquisizione dai metadati del provider/file. La specifica1.5 già prevede lettura da player/API in VID-02 e confronto corretto degli intervalli in PRO-04: la richiesta rende prioritario completare questa parte, senza modificare i210ID o dichiarare accettati criteri mancanti.
+
+Percorso richiesto e collaudi in [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md), caso aperto R-06. Manuale soltanto come ripiego esplicito; misure associate alla sorgente, consenso/permessi, tolleranza limitata coerente con percentuali e salvaguardia delle versioni assegnate. Riguarda anche VID-03/08, PRO-06, AUT-01/04 e SCR-13. Implementazione ancora assente nella0.38 per il flusso esterno completo: nessuna modifica runtime in questo aggiornamento dei requisiti.
