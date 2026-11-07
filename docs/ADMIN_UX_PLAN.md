@@ -8,7 +8,7 @@ La PR #60 (ora integrata in main) riunisce immagine/docenti nei dati corso, rego
 
 ## Incremento0.41.8-dev — dashboard amministrativa più chiara
 
-La schermata iniziale mette in evidenza la gestione corsi, raccoglie i collegamenti secondari e rende espandibile lo stato dei provider. Il foglio WAM è limitato alla dashboard e mantiene lo stile del template Joomla. Restano da verificare manualmente ruoli, tastiera e viewport mobile nel backend Joomla reale.
+La PR #68 è integrata in main nella 0.41.8-dev. La schermata iniziale mette in evidenza la gestione corsi, raccoglie i collegamenti secondari e rende espandibile lo stato dei provider. Il foglio WAM è limitato alla dashboard e mantiene lo stile del template Joomla. La CI standard è superata (run [42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)); restano da verificare manualmente ruoli, tastiera e viewport mobile nel backend Joomla reale.
 
 ## Risultato richiesto
 
@@ -27,6 +27,6 @@ Verificare il menu dopo installazione e upgrade, in italiano/inglese, con Super 
 
 Ingresso predefinito sull’elenco corsi e submenu dichiarato nel manifest, gestito dall’installer e dal menu nativo Joomla. Cinque destinazioni: Corsi, Categorie corsi, Banca domande, Docenti e Plugin video. Nella0.40.1, Plugin video apre la gestione nativa com_plugins filtrata su jlmsvideo e azzera i filtri precedenti; sostituisce il precedente collegamento fuorviante alla vecchia dashboard. Visibilità e azioni rispettano i permessi com_plugins, distinti dalla gestione corsi. Etichette IT/EN nei file sys per il caricamento fuori dal componente. Il core filtra per core.manage; le viste mantengono i propri controlli e il proprio scope. Nessuna concessione di permessi e nessuna voce globale per materiali/programma/iscritti.
 
-Restano il restyling della pagina diagnostica, il collaudo visivo/ruoli/menu compresso e la selezione attiva nel contesto completo. Le prove automatiche verificano creazione/upgrade senza duplicati e destinazioni HTTP, non equivalgono al collaudo completo della sidebar.
+Il restyling della dashboard è stato integrato nella 0.41.8-dev (PR #68); la CI standard è passata nel run [42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440). Restano il collaudo visivo/ruoli/menu compresso e la selezione attiva nel contesto completo. Le prove automatiche verificano creazione/upgrade senza duplicati e destinazioni HTTP, non equivalgono al collaudo completo della sidebar.
 
 Correzione0.40.1 verificata nella CI standard42397626415: menu filtrato e navigazione nativa, nessuna diagnostica della riproduzione dichiarata disponibile.
