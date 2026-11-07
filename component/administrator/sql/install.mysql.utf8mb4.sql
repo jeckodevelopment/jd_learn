@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS `#__jlms_courses` (
   `content_access` INT UNSIGNED NOT NULL,
   `state` SMALLINT NOT NULL DEFAULT 0,
   `enrollment_mode` VARCHAR(16) NOT NULL DEFAULT 'auto',
+  `admissions_open` TINYINT(1) NOT NULL DEFAULT 1,
+  `delivery_enabled` TINYINT(1) NOT NULL DEFAULT 1,
   `current_version_id` BIGINT UNSIGNED NULL,
   `summary` MEDIUMTEXT NULL,
   `image` VARCHAR(1024) NULL,
@@ -734,6 +736,24 @@ CREATE TABLE IF NOT EXISTS `#__jlms_enrollment_state_changes` (
   UNIQUE KEY `uq_enrollment_state_mutation` (`enrollment_id`,`mutation_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ALTER TABLE `#__jlms_enrollment_state_changes` ADD CONSTRAINT `#__jlms_fk_state_enrollment` FOREIGN KEY (`enrollment_id`, `course_version_id`) REFERENCES `#__jlms_enrollments` (`id`, `course_version_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `#__jlms_course_operations` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `course_id` BIGINT UNSIGNED NOT NULL,
+  `revision_no` INT UNSIGNED NOT NULL,
+  `operation` VARCHAR(32) NOT NULL,
+  `previous_value` TINYINT(1) NOT NULL,
+  `target_value` TINYINT(1) NOT NULL,
+  `impact_hash` CHAR(64) NOT NULL,
+  `reason` VARCHAR(500) NOT NULL,
+  `actor_user_id` INT UNSIGNED NULL,
+  `mutation_id` CHAR(36) NOT NULL,
+  `created_at` DATETIME(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_course_operation_revision` (`course_id`,`revision_no`),
+  UNIQUE KEY `uq_course_operation_mutation` (`mutation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `#__jlms_course_operations` ADD CONSTRAINT `#__jlms_fk_course_operation` FOREIGN KEY (`course_id`) REFERENCES `#__jlms_courses` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `#__jlms_manual_enrollments` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

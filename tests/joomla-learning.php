@@ -134,6 +134,13 @@ $publication->transition($actor,$course,$version,$cr,$scope()['expected_version_
 $key=bin2hex(random_bytes(16));$enrollment=$learning->start($student,'en-GB',$course,$key);
 learningExpect($learning->start($student,'en-GB',$course,$key)===$enrollment,'same start key reuses enrollment');
 learningExpect($learning->start($student,'en-GB',$course,bin2hex(random_bytes(16)))===$enrollment,'natural enrollment uniqueness across keys');
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'admissions_open'=>0]);
+learningExpect($learning->start($student,'en-GB',$course,bin2hex(random_bytes(16)))===$enrollment,'closed admissions preserve access to an existing enrollment');
+learningDenied(fn()=>$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16))),409,'closed admissions reject a new self-service enrollment');
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'admissions_open'=>1,'delivery_enabled'=>0]);
+learningDenied(fn()=>$learning->classroom($student,'en-GB',$enrollment),403,'suspended course delivery blocks an existing enrollment');
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'delivery_enabled'=>1]);
+learningExpect($learning->classroom($student,'en-GB',$enrollment)['percent']===0,'resuming delivery preserves existing progress');
 learningExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id='.(int)$student->id)->loadResult()===1,'one enrollment persisted');
 learningExpect($db->setQuery('SELECT started_at FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult()===null,'enrollment alone grants no learning credit');
 $editionForCapacity=(int)$db->setQuery('SELECT edition_id FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult();

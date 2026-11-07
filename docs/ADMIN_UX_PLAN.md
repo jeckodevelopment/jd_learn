@@ -30,3 +30,8 @@ Ingresso predefinito sull’elenco corsi e submenu dichiarato nel manifest, gest
 Il restyling della dashboard è stato integrato nella 0.41.8-dev (PR #68); la CI standard è passata nel run [42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440). Restano il collaudo visivo/ruoli/menu compresso e la selezione attiva nel contesto completo. Le prove automatiche verificano creazione/upgrade senza duplicati e destinazioni HTTP, non equivalgono al collaudo completo della sidebar.
 
 Correzione0.40.1 verificata nella CI standard42397626415: menu filtrato e navigazione nativa, nessuna diagnostica della riproduzione dichiarata disponibile.
+
+
+## Incremento candidato 0.41.9-dev — disponibilità operativa R-03
+
+Dal roster si apre una schermata operativa del corso con quattro comandi indipendenti: chiusura/apertura ammissioni e sospensione/ripresa erogazione. L’anteprima mostra iscritti e tentativi quiz aperti; motivo, conferma e storico sono richiesti. La guida installabile è [COURSE_OPERATIONS.md](../component/administrator/docs/COURSE_OPERATIONS.md). Il candidato è in attesa di CI e collaudo Joomla; il menu principale non cambia.

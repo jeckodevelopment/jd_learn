@@ -2,7 +2,7 @@
   "version": "1.1",
   "updated_at": "2026-11-08",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
-  "current_increment": "0.41.8-dev — dashboard amministrativa aggiornata; PR #68 integrata",
+  "current_increment": "0.41.9-dev — candidato R-03 per controlli separati di ammissione ed erogazione; PR/CI in corso",
   "semantics": "Responsabilità primaria pianificata, non completamento. I requisiti trasversali sono verificati in ogni incremento e accettati solo dopo tutti gli scenari della baseline. Nessuna data o percentuale dedotta da questa mappatura.",
   "milestones": [
     {
@@ -16,7 +16,7 @@
       ],
       "acceptance_checklist": "docs/M01_ACCEPTANCE.md",
       "planned_administration_ux": {
-        "status": "Dashboard rivista nella0.41.8-dev (PR #68, CI standard42423237440 superata); collaudo completo di ruoli e navigazione ancora aperto",
+        "status": "Dashboard 0.41.8 integrata. Candidato 0.41.9 aggiunge i comandi R-03; CI/runtime e collaudo Joomla aperti",
         "scope": "Ingresso backend intuitivo e menu amministrativo JD Learn nella sidebar Joomla",
         "plan": "docs/ADMIN_UX_PLAN.md",
         "dependencies": [

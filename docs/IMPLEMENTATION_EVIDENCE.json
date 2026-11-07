@@ -1747,5 +1747,22 @@
     "full_matrix": "Available through workflow_dispatch(matrix=full); not executed in this policy increment. Last full runtime matrix remains the application baseline above.",
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
+  },
+  "candidate_status": "R-03 candidate prepared; pull request and CI pending; no candidate package evidence yet",
+  "previous_verified_release": {
+    "version": "0.41.8-dev",
+    "package": "pkg_jlms-0.41.8-dev.zip",
+    "sha256": "5a1e7e236dc8171bff8fe318374fc47c27d10605740fa83ed09f4fead0861c92"
+  },
+  "candidate_increment": {
+    "version": "0.41.9-dev",
+    "scope": "R-03 course admissions and delivery controls",
+    "status": "Implementation prepared; pull request, candidate CI, build and package evidence pending",
+    "local_build": {
+      "package": "dist/pkg_jlms-0.41.9-dev.zip",
+      "sha256": "7113eb6c1f6b903a0814ebd8b37eb3e7bacd50589c24e7f1cdf5999c9bb76489",
+      "bytes": 457629,
+      "status": "Local reproducible build only; no CI evidence yet"
+    }
   }
 }
