@@ -58,7 +58,7 @@ $menuLinks = $db->setQuery('SELECT link FROM #__menu WHERE client_id=1 AND paren
 $expectedLinks = ['index.php?option=com_jlms&view=courses', 'index.php?option=com_categories&view=categories&extension=com_jlms.course', 'index.php?option=com_jlms&view=questionbank', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'];
 sort($menuLinks); sort($expectedLinks);
 if (!$menuParent || $menuLinks !== $expectedLinks) { throw new \RuntimeException('Native administrator menu missing or duplicated after installation/upgrade.'); }
-echo json_encode(['admin_menu_install_checks'=>1,'mode'=>$argv[2] ?? 'installed','status'=>'passed']) . "\n";
+
 
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
 if (!$userId) {
@@ -73,7 +73,7 @@ if (($argv[2] ?? '') === 'retained') {
     if (!$record || $record->title !== 'Updated course' || (int) $record->revision !== 2 || $enabled !== 4) {
         throw new \RuntimeException('Package update lost draft data or plugin state.');
     }
-    echo json_encode(['package_upgrade' => 'passed', 'draft_revision' => 2, 'enabled_providers' => $enabled], JSON_THROW_ON_ERROR) . PHP_EOL;
+    echo json_encode(['admin_menu_install_checks' => 1, 'package_upgrade' => 'passed', 'draft_revision' => 2, 'enabled_providers' => $enabled], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit(0);
 }
 
@@ -125,4 +125,4 @@ $categoryService=$component->getCategory([], 'course');
 if (!$categoryService) {
     throw new \RuntimeException('Native category service failed.');
 }
-echo json_encode(['joomla'=>JVERSION,'status'=>'passed','native_course_id'=>$id,'providers'=>$keys,'draft_revision_conflict'=>'denied','mass_assignment'=>'denied'],JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode(['admin_menu_install_checks'=>1,'joomla'=>JVERSION,'status'=>'passed','native_course_id'=>$id,'providers'=>$keys,'draft_revision_conflict'=>'denied','mass_assignment'=>'denied'],JSON_THROW_ON_ERROR) . PHP_EOL;
