@@ -95,15 +95,15 @@ if($mode!==''){
  }elseif($mode==='revoke'){
   $db->setQuery('DELETE FROM #__user_usergroup_map WHERE user_id='.(int)$f['reader'])->execute();
  }elseif($mode==='group-public'){
-  $db->updateObject('#__fields_groups',(object)['id'=>$f['group'],'access'=>1],'id');
+  $change=(object)['id'=>$f['group'],'access'=>1]; $db->updateObject('#__fields_groups',$change,'id');
  }elseif($mode==='group-hidden'){
-  $db->updateObject('#__fields_groups',(object)['id'=>$f['group'],'state'=>0],'id');
+  $change=(object)['id'=>$f['group'],'state'=>0]; $db->updateObject('#__fields_groups',$change,'id');
  }elseif($mode==='field-hidden'){
-  $db->updateObject('#__fields',(object)['id'=>$f['fields']['before-content'],'state'=>0],'id');
+  $change=(object)['id'=>$f['fields']['before-content'],'state'=>0]; $db->updateObject('#__fields',$change,'id');
  }elseif($mode==='withdraw'){
-  $db->updateObject('#__jlms_courses',(object)['id'=>$f['course'],'state'=>0],'id');
+  $change=(object)['id'=>$f['course'],'state'=>0]; $db->updateObject('#__jlms_courses',$change,'id');
  }elseif($mode==='restore'){
-  $db->updateObject('#__jlms_courses',(object)['id'=>$f['course'],'state'=>1],'id');
+  $change=(object)['id'=>$f['course'],'state'=>1]; $db->updateObject('#__jlms_courses',$change,'id');
  }elseif(in_array($mode,['override','remove-override'],true)){
   $path=$root.'/templates/cassiopeia/html/layouts/com_jlms/fields/render.php';
   if($mode==='override'){
@@ -149,7 +149,7 @@ $definitions=[
  'empty'=>[2,'text','',[]],
 ];
 foreach($definitions as $key=>$definition){
- $data=['id'=>0,'context'=>'com_jlms.course','title'=>'Public field '.$key,'name'=>'public-fields-'.$key,'type'=>$definition[1],
+ $data=['id'=>0,'context'=>'com_jlms.course','title'=>'Public field '.$key,'label'=>'Public field '.$key,'required'=>0,'name'=>'public-fields-'.$key,'type'=>$definition[1],
   'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','assigned_cat_ids'=>[$cat],
   'params'=>['display'=>$definition[0],'showlabel'=>1],'fieldparams'=>$definition[3]];
  foreach($definition as $name=>$value){if(is_string($name)){$data[$name]=$value;}}
@@ -158,7 +158,8 @@ foreach($definitions as $key=>$definition){
  if($definition[2]!==null){publicFieldsExpect($fieldModel->setFieldValue($id,$course,$definition[2]),'Native field value saved: '.$key);}
 }
 $reader=new \Joomla\CMS\User\User();
-publicFieldsExpect($reader->bind(['name'=>'Public fields reader','username'=>'publicfieldsreader','email'=>'publicfieldsreader@example.invalid','password'=>'Ci-only-Fields-Password-2026','password2'=>'Ci-only-Fields-Password-2026','groups'=>[2]]) && $reader->save(),'Native registered reader created');
+$readerData=['name'=>'Public fields reader','username'=>'publicfieldsreader','email'=>'publicfieldsreader@example.invalid','password'=>'Ci-only-Fields-Password-2026','password2'=>'Ci-only-Fields-Password-2026','groups'=>[2]];
+publicFieldsExpect($reader->bind($readerData) && $reader->save(),'Native registered reader created');
 $f=['course'=>$course,'version'=>$version,'enrollment'=>$enrollment,'reader'=>(int)$reader->id,'fields'=>$fields,'group'=>$group];
 file_put_contents($fixture,json_encode($f,JSON_THROW_ON_ERROR));
 $frozen=publicFieldsState($f)['teaching'];
