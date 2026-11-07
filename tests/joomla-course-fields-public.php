@@ -65,6 +65,7 @@ $factory = $component->getMVCFactory();
 
 $checks=0;
 function publicFieldsExpect(bool $ok,string $message): void { global $checks; if(!$ok){throw new RuntimeException($message);} $checks++; }
+PluginHelper::importPlugin('system','fields');
 $fixture=dirname($root).'/course-fields-public-fixture.json';
 $mode=$argv[2]??'';
 function publicFieldsState(array $f): array {
@@ -92,6 +93,7 @@ if($mode!==''){
  if($mode==='edit'){
   $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);$item=$model->getItem($f['course']);
   publicFieldsExpect($model->save(['id'=>$f['course'],'revision'=>$item->revision,'com_fields'=>['public-fields-after-title'=>'PUB_UPDATED_VALUE']]),'Native course model changes current field');
+  publicFieldsExpect($db->setQuery('SELECT value FROM #__fields_values WHERE field_id='.(int)$f['fields']['after-title'].' AND item_id='.$db->quote((string)$f['course']))->loadResult()==='PUB_UPDATED_VALUE','Native fields plugin persists updated value');
  }elseif($mode==='revoke'){
   $db->setQuery('DELETE FROM #__user_usergroup_map WHERE user_id='.(int)$f['reader'])->execute();
  }elseif($mode==='group-public'){
