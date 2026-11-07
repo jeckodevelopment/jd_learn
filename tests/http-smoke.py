@@ -80,7 +80,7 @@ try:
  if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
  # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
  get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')
- _,plugin_html=get(plugin_link)
+ _,plugin_html=get(urljoin(urljoin(url,Page(html).base or ""),plugin_link))
  plugin_page=Page(plugin_html)
  plugin_form=next(f for f in plugin_page.forms if f['id']=='adminForm')
  if plugin_form['fields'].get('filter[folder]')!='jlmsvideo' or plugin_form['fields'].get('filter[search]')!='' or plugin_form['fields'].get('filter[enabled]')!='':raise RuntimeError('Video plugin filter or cleared search/status is incorrect')
