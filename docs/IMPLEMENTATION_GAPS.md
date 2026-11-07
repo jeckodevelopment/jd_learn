@@ -7,9 +7,13 @@ Stato al **7 novembre 2026**: main **0.41.5-dev**; PR #60 e #62 integrate, CI st
 | ID | Requisiti | Differenza attuale | Condizione di chiusura |
 |---|---|---|---|
 | R-02 | PVD-01/06, CORE-23, VID-01, PBASE-03 | Il registry PHP esiste, ma pubblicazione e client sono ancora limitati ai quattro adapter base | Quinto provider di prova installabile senza patch, con asset/capacità/validazione/WAM autorizzati e completamento centrale invariato |
-| R-03 | EDGE-09, ISC-04 | Ritiro dal catalogo e disponibilità dell'aula non sono ancora due comandi indipendenti | Chiudi nuove iscrizioni mantiene la fruizione degli iscritti; Sospendi erogazione la blocca, inclusi quiz aperti; motivo/anteprima/audit |
+| R-03 | EDGE-09, ISC-04 | Candidato 0.41.6: ritiro dal catalogo e fine pubblicazione non revocano la fruizione di un’iscrizione valida; i comandi distinti non sono ancora disponibili | Chiudi nuove iscrizioni mantiene la fruizione degli iscritti; Sospendi erogazione la blocca, inclusi quiz aperti; entrambi con motivo/anteprima/audit; prova sul candidato PR in attesa di CI |
 | R-04 | UI-02, ACC-01, REL-02 | Le prove sugli ID del componente non certificano l'intera pagina Joomla; rilevato in CI un duplicato nativo `guidedtours-popup-content109` | Verifica dell'intero documento nel contesto core/template target e sulla patch corrente, senza modificare il core; collaudo accessibilità completo |
 | R-06 | VID-02/03/08, PRO-04/06, AUT-01/04, SCR-13 | Flusso automatico e tolleranza implementati nella 0.39, CI standard42393451244 superata; accettazione reale provider/browser ancora aperta | Collaudare ricevute/consenso, SDK e metadati reali, scarti/percentuali/seek/sessioni e storico nei quattro provider; [contratto](VIDEO_DURATION_PLAN.md). Non ripetere la precedente diagnosi di editor soltanto manuale |
+
+## Incrementi parziali
+
+- **R-03 (0.41.6-dev, candidato):** l’accesso di un iscritto non dipende dallo stato, dal livello catalogo o dalla finestra promozionale della scheda; categoria e livello contenuto restano verificati, e l’ammissione continua a richiedere disponibilità catalogo. Il ritiro non sospende i progressi né l’aula video. Non è ancora possibile chiudere tutte le nuove ammissioni o sospendere l’erogazione tramite operazioni amministrative motivate e tracciate. La CI della PR e la prova manuale in Joomla sono ancora da svolgere.
 
 ## Segnalazioni risolte nel percorso indicato
 
