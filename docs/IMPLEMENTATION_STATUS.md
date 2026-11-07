@@ -2,13 +2,17 @@
 
 I campi editoriali correnti sono disponibili nella scheda pubblica del corso tramite plugin e layout Joomla. Snapshot didattici, campi lezione e ripristino completo dei valori tramite Content History restano aperti.
 
-Aggiornato al **7 novembre 2026**. Candidato **0.41.3-dev** verificato nella CI standard42405954861; main pubblica **0.41.2-dev**. La causa del422 è individuata e corretta nel form Joomla; resta la verifica dell’utente sul proprio sito. La diagnosi automatizzata non sostituisce questo collaudo. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Main **0.41.3-dev**; candidato **0.41.4-dev** nella PR #60, ancora in bozza. Il candidato raggruppa le schede dell’editor corso; la CI d’integrazione non è ancora stata eseguita. La correzione della banca domande 0.41.3 è nel main; resta la verifica dell’utente sul proprio sito. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
 ### Incremento0.41.3-dev — checkbox risposta corretta
 
 In Joomla `default="0"` diventava anche il valore HTML inviato dal checkbox selezionato. Il server riceveva0 e non trovava risposte corrette. Rimosso il default; il markup Joomla ora invia1 quando la casella è selezionata. La regressione è verificata dai test HTTP che estraggono nomi e valori dal form nativo. I quattro job standard sono passati; attende conferma sul sito dell’utente.
+
+### Candidato0.41.4-dev — schede del corso raggruppate
+
+La PR #60 riunisce copertina/docenti con i dati del corso, accesso/calendario in una scheda unica e regole nel contesto del programma. Modifica solo la presentazione dell’editor: i campi vengono salvati una volta, senza cambiare schema, workflow o versioni. Aggiunte verifiche HTTP mirate per disposizione e salvataggio. La PR è in bozza; la suite d’integrazione e Chromium restano da eseguire sul candidato pronto.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -47,7 +51,7 @@ Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso p
 
 ## Prossimo passo
 
-Riprendere i residui prioritari di M01: campi lezione e snapshot didattici dei campi, editor amministrativo e acceptance completa. La banca domande ha ricevuto la correzione mirata0.41.3; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
+Continuare M01 sul flusso editoriale semplificato e sui residui di programma/campi/versioni indicati nella checklist, senza includere quiz e attestati nel gate della prima stabile. La banca domande ha ricevuto la correzione mirata0.41.3; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
 
 ## Perimetro e tracciabilità
 

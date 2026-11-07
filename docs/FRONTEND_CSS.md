@@ -128,7 +128,7 @@ La descrizione è HTML con allowlist già applicata; gli altri testi sono escapa
 
 ## Docenti
 
-`#jlms-admin-teachers` e `#jlms-teacher-editor` nelle viste amministrative native; scheda corso editor `#jlms-course-teachers-settings`. Frontend: `#jlms-course-teachers` opzionale, `#jlms-course-teacher-{id}` e `.jlms-course-teacher` per ciascun profilo. Foto con larghezza massima10rem e proporzioni conservate; esempio `.jlms-course-teacher { padding: 1rem; border: 1px solid currentColor; }`. Conservare escaping di nome/bio/alt/link, alt vuoto per foto decorative e proiezione già autorizzata `$this->item['teachers']`. La scheda pubblica usa la proiezione corrente autorizzata; lo storico didattico mantiene gli snapshot. Non aggiungere query dirette al profilo o all’account negli override. Form amministrative e selezione multipla devono conservare token/revisioni, stato e controlli nativi.
+`#jlms-admin-teachers` e `#jlms-teacher-editor` nelle viste amministrative native; sezione Docenti nella scheda Corso `#jlms-course-teacher-fields`, insieme a copertina e dati principali. Frontend: `#jlms-course-teachers` opzionale, `#jlms-course-teacher-{id}` e `.jlms-course-teacher` per ciascun profilo. Foto con larghezza massima10rem e proporzioni conservate; esempio `.jlms-course-teacher { padding: 1rem; border: 1px solid currentColor; }`. Conservare escaping di nome/bio/alt/link, alt vuoto per foto decorative e proiezione già autorizzata `$this->item['teachers']`. La scheda pubblica usa la proiezione corrente autorizzata; lo storico didattico mantiene gli snapshot. Non aggiungere query dirette al profilo o all’account negli override. Form amministrative e selezione multipla devono conservare token/revisioni, stato e controlli nativi.
 
 ## Calendario
 

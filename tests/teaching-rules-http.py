@@ -80,7 +80,7 @@ try:
  # Native course task saves editorial input before opening the working rules editor.
  url,html=request('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(f['course']))
  courseForm=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
- expect('task="course.programmeRules"' in html and 'jlms-course-teaching-rules' in html,'Course editor offers native save-and-open rules tab')
+ expect('task="course.programmeRules"' in html and 'jlms-course-programme' in html and 'jlms-course-teaching-rules' in html and 'jlms-course-access-publication' in html and html.index('id="jlms-course-programme"') < html.index('id="jlms-course-teaching-rules"') < html.index('id="jlms-course-access-publication"'),'Course editor places teaching rules in the programme context')
  url,html=request(urljoin(url,courseForm['action']),courseForm['fields']|{'task':'course.programmeRules','jform[title]':'Saved before rules editor'})
  expect('id="jlms-teaching-rules-form"' in html and 'Saved before rules editor' in html,'Native editorial save opens existing draft rules with saved context')
  expect(state()['learning']==before['learning'],'Save-and-open never migrates learning')

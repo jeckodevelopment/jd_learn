@@ -1,5 +1,10 @@
 # Gestione dei corsi
 
+## Editor corso essenziale (0.41.4-dev)
+
+L’editor raggruppa le attività in cinque schede: **Corso** (testi, immagine, docenti e metadati essenziali), **Programma** (struttura e regole didattiche supportate), **Accesso e pubblicazione** (categoria, lingua, livelli, iscrizione e calendario), **Campi personalizzati** quando disponibili, e **Opzioni** (SEO, associazioni e permessi). Le regole si aprono dal contesto del programma. La riorganizzazione riguarda la navigazione del form; non cambia i dati salvati, le versioni didattiche o i permessi.
+
+
 ## Modificare i dati del corso
 
 Aprire Corsi → Modifica, cambiare titolo, descrizioni, immagine, docenti, accessi o calendario e scegliere Salva oppure Salva e chiudi. Il corso pubblicato resta pubblicato. Le correzioni editoriali aggiornano la scheda pubblica e vengono registrate nello storico Joomla.
