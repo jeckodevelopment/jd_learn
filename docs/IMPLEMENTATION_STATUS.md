@@ -8,7 +8,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 ### Incremento candidato0.41.2-dev — diagnosi banca domande
 
-La correzione0.41.1 non ha risolto il problema nell’installazione dell’utente: il 422 continua. Il nuovo candidato separa gli errori di validazione del form Joomla dagli errori semantici della domanda e mostra il campo o la regola rifiutati. La PR e la CI sono ancora da completare; finché l’utente non riprova con il messaggio specifico, il difetto resta aperto.
+La correzione0.41.1 non ha risolto il problema nell’installazione dell’utente: il 422 continua. Il nuovo candidato separa gli errori di validazione del form Joomla dagli errori semantici della domanda e mostra il campo o la regola rifiutati. I quattro job standard sono passati. Il difetto sul sito segnalato resta aperto finché non viene riprovato e letto il messaggio specifico restituito dal form.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -35,7 +35,7 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-La [CI 0.41](https://github.com/jeckodevelopment/jd_learn/actions/runs/42400903346) ha superato i quattro job standard sul codice `dd2b5ba8ca5489909f0968c0cad3c15c2975a8fc`:
+La [CI0.41.2](https://github.com/jeckodevelopment/jd_learn/actions/runs/42404631048) ha superato i quattro job standard: 23 controlli di dominio e 9 HTTP del questionario in ciascun ambiente, inclusa la visualizzazione dei campi rifiutati. Il caso reale sul sito dell’utente resta da verificare. La CI0.41 precedente (vedi registro prove) ha superato i quattro job standard sul codice `dd2b5ba8ca5489909f0968c0cad3c15c2975a8fc`:
 
 - PHP8.3/MySQL8.4 e PHP8.4/MariaDB10.6: intera suite implementata, build riproducibile, installazione Joomla, upgrade0.40.1→0.41, reinstallazione e storico conservato. Per ambiente, 29 nuovi controlli nativi, 20 HTTP e 1 retained sui campi editoriali pubblici. Provati plugin testo/textarea/lista, posizioni e default, accesso campo/gruppo/corso e revoca nella stessa sessione, lingua/categoria, aggiornamento editoriale e override nativo; versione assegnata e progressi invariati. Le regressioni video e del menu rimangono incluse.
 - Chromium: 12 controlli su fixture desktop/mobile delle modifiche non salvate. Non è collaudo interattivo dell’intero Joomla, del form regole o dei nuovi campi pubblici.
