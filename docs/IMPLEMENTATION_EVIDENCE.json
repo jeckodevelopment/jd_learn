@@ -1,58 +1,58 @@
 {
   "audited_at": "2026-11-07",
   "product": "JD Learn",
-  "version": "0.41.2-dev",
+  "version": "0.41.3-dev",
   "code_baseline": {
-    "tested_head": "63c37de203b506919040ab0ea9c25a86618d653b",
-    "tree": "8e75acac782c56ddf248b39272f0d03eaf615645",
-    "parent_main_commit": "e75d7d13fd259448b44eea55211555169dc841a9",
-    "pull_request": 56
+    "tested_head": "39668679791ca8803a21ae7846844820884d6b1b",
+    "tree": "055c7ca49878bd13185e41b465ffed00d4a32d5c",
+    "parent_main_commit": "8aef66e012a1d500a6be83da7054ee0821512181",
+    "pull_request": 57
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42404631048,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42404631048",
+    "run_id": 42405954861,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128499569019,
+        "id": 128503571198,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128499604860,
+        "id": 128503599478,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128499604871,
+        "id": 128503599472,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128499604894,
+        "id": 128503599513,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "Quattro job standard superati. Per ciascun ambiente: 23 test dominio domanda e 9 test HTTP questionario, incluso il messaggio del form Joomla che identifica il campo non valido e le categorie di errore semantico. Suite completa/build/installazione/upgrade/regressioni superati. Il problema osservato dall’utente resta aperto finché la diagnosi non è ripetuta sul sito reale.",
+    "note": "Quattro job standard superati. Per ambiente: 23 controlli dominio e 11 HTTP banca/quiz; test aggiornato per estrarre nomi/valori dal markup nativo Joomla, verifica checkbox selezionato=>1, salvataggio Vero/Falso e Scelta singola. Suite completa/build/upgrade/regressioni superati. Prova dell’installazione reale dell’utente ancora aperta.",
     "question_definition_checks_per_php_environment": 23,
-    "quiz_authoring_http_checks_per_php_environment": 9,
-    "questionbank_diagnostics": "Form Joomla restituisce i messaggi di validazione campo nativi; gli errori di dominio distinguono testo, quantità/formato opzioni, etichette, risposte corrette e dimensione. Test in sito usa e getta CI; non prova i dati o l’installazione reale dell’utente."
+    "quiz_authoring_http_checks_per_php_environment": 11,
+    "question_checkbox_scope": "Markup nativo Joomla: il checkbox selezionato rende value=1, il POST salva le risposte corrette Vero/Falso e scelta singola; due selezioni in scelta singola continuano a essere respinte. Non è ancora prova sull’installazione reale dell’utente."
   },
   "package": {
-    "name": "pkg_jlms-0.41.2-dev.zip",
-    "bytes": 444527,
-    "sha256": "b9ff2e87067b86d60451fea28169afa84ef0b209d9fa176ec79dd1e9a8fcc553",
-    "artifact_id": 13587425738,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42404631048/artifacts/13587425738",
-    "artifact_archive_bytes": 444500,
-    "artifact_archive_sha256": "ed2f5162a1b4b6606f521cf8fc8e0e69b22b8b4e30fcb5d595e1c2a140895acf",
+    "name": "pkg_jlms-0.41.3-dev.zip",
+    "bytes": 444529,
+    "sha256": "ec371d189f9d7d00161cc461644782501c7cc4137950a41722d50530e2accc5f",
+    "artifact_id": 13587097598,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861/artifacts/13587097598",
+    "artifact_archive_bytes": 444496,
+    "artifact_archive_sha256": "b6d020977baf1816ffcdb916c4beedefbd1159c3791bebb917a285cd3088fadf",
     "constituents": 7,
     "tables": 41,
     "foreign_keys": 58

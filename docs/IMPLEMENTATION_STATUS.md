@@ -2,13 +2,13 @@
 
 I campi editoriali correnti sono disponibili nella scheda pubblica del corso tramite plugin e layout Joomla. Snapshot didattici, campi lezione e ripristino completo dei valori tramite Content History restano aperti.
 
-Aggiornato al **7 novembre 2026**. Candidato in lavorazione **0.41.2-dev**; main pubblica **0.41.1-dev**; la CI standard42402189584 ha superato le prove automatizzate, ma l’utente riferisce che il salvataggio domanda continua a restituire422. La diagnosi reale non è ancora chiusa. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Candidato **0.41.3-dev** verificato nella CI standard42405954861; main pubblica **0.41.2-dev**. La causa del422 è individuata e corretta nel form Joomla; resta la verifica dell’utente sul proprio sito. La diagnosi automatizzata non sostituisce questo collaudo. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
-### Incremento candidato0.41.2-dev — diagnosi banca domande
+### Incremento0.41.3-dev — checkbox risposta corretta
 
-La correzione0.41.1 non ha risolto il problema nell’installazione dell’utente: il 422 continua. Il nuovo candidato separa gli errori di validazione del form Joomla dagli errori semantici della domanda e mostra il campo o la regola rifiutati. I quattro job standard sono passati. Il difetto sul sito segnalato resta aperto finché non viene riprovato e letto il messaggio specifico restituito dal form.
+In Joomla `default="0"` diventava anche il valore HTML inviato dal checkbox selezionato. Il server riceveva0 e non trovava risposte corrette. Rimosso il default; il markup Joomla ora invia1 quando la casella è selezionata. La regressione è verificata dai test HTTP che estraggono nomi e valori dal form nativo. I quattro job standard sono passati; attende conferma sul sito dell’utente.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -35,7 +35,7 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-La [CI0.41.2](https://github.com/jeckodevelopment/jd_learn/actions/runs/42404631048) ha superato i quattro job standard: 23 controlli di dominio e 9 HTTP del questionario in ciascun ambiente, inclusa la visualizzazione dei campi rifiutati. Il caso reale sul sito dell’utente resta da verificare. La CI0.41 precedente (vedi registro prove) ha superato i quattro job standard sul codice `dd2b5ba8ca5489909f0968c0cad3c15c2975a8fc`:
+La [CI0.41.3](https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861) ha superato i quattro job standard: per ambiente, 23 controlli di dominio e 11 HTTP sulla banca/quiz. Il test usa il checkbox del markup nativo, verifica valore1 e salvataggio Vero/Falso e Scelta singola. Il caso reale sul sito dell’utente resta da verificare. La [CI0.41.2](https://github.com/jeckodevelopment/jd_learn/actions/runs/42404631048) ha verificato i messaggi di validazione. La CI0.41 precedente (vedi registro prove) ha superato i quattro job standard sul codice `dd2b5ba8ca5489909f0968c0cad3c15c2975a8fc`:
 
 - PHP8.3/MySQL8.4 e PHP8.4/MariaDB10.6: intera suite implementata, build riproducibile, installazione Joomla, upgrade0.40.1→0.41, reinstallazione e storico conservato. Per ambiente, 29 nuovi controlli nativi, 20 HTTP e 1 retained sui campi editoriali pubblici. Provati plugin testo/textarea/lista, posizioni e default, accesso campo/gruppo/corso e revoca nella stessa sessione, lingua/categoria, aggiornamento editoriale e override nativo; versione assegnata e progressi invariati. Le regressioni video e del menu rimangono incluse.
 - Chromium: 12 controlli su fixture desktop/mobile delle modifiche non salvate. Non è collaudo interattivo dell’intero Joomla, del form regole o dei nuovi campi pubblici.
@@ -47,7 +47,7 @@ Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso p
 
 ## Prossimo passo
 
-Riprendere i residui prioritari di M01: campi lezione e snapshot didattici dei campi, editor amministrativo e acceptance completa. La banca domande ha ricevuto la correzione mirata0.41.2; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
+Riprendere i residui prioritari di M01: campi lezione e snapshot didattici dei campi, editor amministrativo e acceptance completa. La banca domande ha ricevuto la correzione mirata0.41.3; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
 
 ## Perimetro e tracciabilità
 

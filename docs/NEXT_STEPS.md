@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.41.2-dev**, resa pubblica dei campi editoriali corso verificata nella CI standard; menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.41.3-dev**, resa pubblica dei campi editoriali corso verificata nella CI standard; menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità
 

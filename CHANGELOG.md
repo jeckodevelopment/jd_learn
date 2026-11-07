@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.3-dev — valore corretto per il checkbox della risposta
+
+- Rimuove `default="0"` dal campo checkbox Joomla: il core usa quel default anche come attributo `value`, così una casella selezionata inviava `0` invece di `1`.
+- Aggiorna il test HTTP affinché legga nomi e valori dei checkbox dal markup nativo Joomla e simuli la selezione reale dell’autore.
+- La causa è individuata; la correzione resta da verificare sul sito dell’utente dopo installazione.
+
+
 ## 0.41.2-dev — diagnosi degli errori della banca domande
 
 - Mostra i messaggi di validazione nativi Joomla quando il form non supera la validazione, così da indicare il campo rifiutato.

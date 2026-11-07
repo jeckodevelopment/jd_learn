@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.41.2-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.41.3-dev: sviluppo in corso, non pronta per la produzione.**
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -46,7 +46,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-La build genera `dist/pkg_jlms-0.41.2-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
+La build genera `dist/pkg_jlms-0.41.3-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
 I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
@@ -55,4 +55,4 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale pubblica dei campi corso è disponibile e verificata nella CI standard0.41; snapshot didattici e campi lezione restano aperti.
 
-[Pacchetto0.41.2 verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42402189584/artifacts/13585861657); commit, esiti e limiti nel registro delle prove. M01 resta aperto.
+[Pacchetto0.41.3 verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861/artifacts/13587097598); commit, esiti e limiti nel registro delle prove. M01 resta aperto.
