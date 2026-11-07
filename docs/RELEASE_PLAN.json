@@ -317,5 +317,8 @@
     }
   ],
   "functional_specification_version": "1.4",
-  "requirements_change_record": "docs/REQUIREMENTS_CHANGES.md"
+  "requirements_change_record": "docs/REQUIREMENTS_CHANGES.md",
+  "approved_release_scope": "docs/RELEASE_SCOPE.md",
+  "release_scope_mapping": "docs/RELEASE_SCOPE_MATRIX.md",
+  "acceptance_note": "La mappatura del perimetro stabile prevale sulle assegnazioni storiche delle fasi per definire il gate della prima release; la baseline requisiti resta intatta e gli scenari misti vanno suddivisi."
 }
