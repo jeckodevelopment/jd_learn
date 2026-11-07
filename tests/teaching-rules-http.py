@@ -11,7 +11,7 @@ if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable si
 f=json.loads((root.parent/'teaching-rules-fixture.json').read_text());base='http://127.0.0.1:8093'
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.links=[];self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.textarea=None;self.links=[];self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
   if tag=='a' and a.get('href'):self.links.append(a['href'])
@@ -19,12 +19,21 @@ class Page(HTMLParser):
   if tag=='form':self.current={'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
   if tag=='input' and self.current is not None and 'name' in a and 'disabled' not in a:
    if a.get('type') not in ['radio','checkbox'] or 'checked' in a:self.current['fields'][a['name']]=a.get('value','')
+  if tag=='textarea':
+   self.textarea=a.get('name') if self.current is not None and 'disabled' not in a else None
+   if self.textarea:self.current['fields'][self.textarea]=''
   if tag=='select':self.select=a.get('name') if self.current is not None else None
   if tag=='option' and self.select and self.current is not None:
    if self.select not in self.current['fields'] or 'selected' in a:self.current['fields'][self.select]=a.get('value','')
  def handle_endtag(self,tag):
   if tag=='form':self.current=None
+  if tag=='textarea':
+   self.textarea=a.get('name') if self.current is not None and 'disabled' not in a else None
+   if self.textarea:self.current['fields'][self.textarea]=''
   if tag=='select':self.select=None
+  if tag=='textarea':self.textarea=None
+ def handle_data(self,data):
+  if self.textarea and self.current is not None:self.current['fields'][self.textarea]+=data
 client=build_opener(HTTPCookieProcessor(CookieJar()))
 def request(path,fields=None,expected=200):
  try:
@@ -75,7 +84,7 @@ try:
  url,html=request('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(f['course']))
  courseForm=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect('task="course.programmeRules"' in html and 'jlms-course-teaching-rules' in html,'Course editor offers native save-and-open rules tab')
- url,html=request(courseForm['action'],courseForm['fields']|{'task':'course.programmeRules','jform[title]':'Saved before rules editor'})
+ url,html=request(urljoin(url,courseForm['action']),courseForm['fields']|{'task':'course.programmeRules','jform[title]':'Saved before rules editor'})
  expect('id="jlms-teaching-rules-form"' in html and 'Saved before rules editor' in html,'Native editorial save opens existing draft rules with saved context')
  expect(state()['learning']==before['learning'],'Save-and-open never migrates learning')
  subprocess.check_call(['php',str(Path(__file__).with_name('joomla-teaching-rules.php')),str(root),'checkpoint'])
