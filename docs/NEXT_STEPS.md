@@ -1,13 +1,13 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.35.0-dev**, campi corso nell’editor nativo verificati nella CI della PR #45. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.36.0-dev**, riepilogo/conferma dell’impatto degli aggiornamenti verificato dalla CI42382758865 della PR #46. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità
 
 | Ordine | Attività | Risultato richiesto / dipendenze |
 |---|---|---|
 | 1 | Completare gestione corsi e programma (M01) | Eseguire e registrare i collaudi reali della checklist; completare le parti mancanti dell'editor, con i collegamenti M02/M03/M08/M10. Prima pubblicazione, duplicazioni e riordino sono già disponibili. |
-| 2 | Ciclo editoriale (M02) | Anteprima interattiva e dei livelli senza effetti, revisione/archivio, errori e avvisi distinti, riepilogo impatti; migrazioni esplicite e recupero storico. |
+| 2 | Ciclo editoriale (M02) | Anteprima interattiva e dei livelli senza effetti, revisione/archivio, errori e avvisi distinti; migrazioni esplicite e recupero storico. |
 | 3 | Didattica (M03) | Audio/documento autonomi, prerequisiti/cicli, sequenze/rilascio progressivo e fallback Riprendi R-05. |
 | 4 | Infrastruttura job (M07) | Batch recuperabili, cursore/lease/retry/idempotenza e gestione degli esiti; prerequisito di import, notifiche e attestati. |
 | 5 | Iscrizioni complete (M06) | CSV simulato/confermato, approvazioni/rifiuti, annullamenti, edizioni/finestre e separazione nuove iscrizioni/erogazione R-03. |
@@ -21,7 +21,7 @@ Aggiornato al **7 novembre 2026**. Riferimento: **0.35.0-dev**, campi corso nell
 
 ## Primo lavoro da svolgere
 
-Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: verificare la nuova amministrazione e il programma su Joomla reale, registrare esiti per build/ruolo/browser e correggere i difetti. La scheda dei campi corso e il salvataggio nativo sono nell’incremento0.35; esiti della CI42379941609 nella PR #45. Seguono riepilogo/conferma dell’impatto degli aggiornamenti e recupero di strutture storiche come nuova bozza, oltre alle parti di regole, attestato, anteprima e snapshot/campi lezione ancora assenti secondo le rispettive fasi. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
+Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: verificare la nuova amministrazione e il programma su Joomla reale, registrare esiti per build/ruolo/browser e correggere i difetti. La scheda dei campi corso e il salvataggio nativo sono nell’incremento0.35; esiti della CI42379941609 nella PR #45. Il riepilogo/conferma dell’impatto degli aggiornamenti è disponibile nella0.36, verificato dalla CI42382758865 / PR46. Segue il recupero di strutture storiche come nuova bozza, oltre alle parti di regole, attestato, anteprima e snapshot/campi lezione ancora assenti secondo le rispettive fasi. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
 
 ## Condizioni tecniche delle attività successive
 
@@ -45,7 +45,7 @@ Completare richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gesti
 
 ### Didattica, versioni e media
 
-Audio/documenti come lezioni autonome; prerequisiti/sequenze/rilascio con validazione dei cicli e dei contenuti irraggiungibili; fallback R-05. Completamento del versionamento: analisi impatti, recupero storico ed equivalenze/migrazione esplicita e rivalutazioni quiz senza alterare evidenze congelate. Percorsi aggregati del primo rilascio, senza anticipare attestati di percorso/sequenze fra corsi differiti.
+Audio/documenti come lezioni autonome; prerequisiti/sequenze/rilascio con validazione dei cicli e dei contenuti irraggiungibili; fallback R-05. Completamento del versionamento: recupero storico ed equivalenze/migrazione esplicita con la propria anteprima di impatto e rivalutazioni quiz senza alterare evidenze congelate. Percorsi aggregati del primo rilascio, senza anticipare attestati di percorso/sequenze fra corsi differiti.
 
 Chiudere R-02 con un quinto provider di prova installabile senza patch; completare capacità/asset, sottotitoli/trascrizioni/preferenze dove supportati, limiti e diagnostica. I quattro provider base restano obbligatori nella distribuzione. Collaudare SDK e contenuti reali autorizzati su desktop/mobile, non soltanto mock.
 

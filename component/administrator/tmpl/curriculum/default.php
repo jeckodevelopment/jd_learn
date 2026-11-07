@@ -162,7 +162,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <select id="jlms-transition" name="jform[transition_id]" class="form-select">
   <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape($transitionLabel($transition)) ?></option><?php endforeach; ?>
   </select>
-  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= $version->status === 'draft' && $course->current_version_id !== null ? Text::_('COM_JLMS_PUBLISH_UPDATE') : (count($this->transitions) === 1 ? $this->escape($transitionLabel($this->transitions[0])) : Text::_('COM_JLMS_EXECUTE_TRANSITION')) ?></button>
+  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= $version->status === 'draft' && $course->current_version_id !== null ? Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') : (count($this->transitions) === 1 ? $this->escape($transitionLabel($this->transitions[0])) : Text::_('COM_JLMS_EXECUTE_TRANSITION')) ?></button>
  </form><?php endif; ?>
  <?php if ($version->status === 'published') : ?>
  <form method="post" id="jlms-edit-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">

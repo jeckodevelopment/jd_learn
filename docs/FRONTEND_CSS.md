@@ -161,3 +161,7 @@ Gli override del programma devono mantenere `.jlms-focused-editor` con il form d
 ## Editor corso: campi Joomla
 
 La scheda condizionale `jlms-course-fields-tab` contiene la regione `jlms-course-custom-fields` e il gruppo nativo `com_fields`. Gli override del form corso devono renderizzare i fieldset restituiti da Joomla, preservando nomi, validazioni e token; non creare campi paralleli o inviare valori disabilitati. Nessun nuovo stile globale.
+
+## Riepilogo di pubblicazione amministrativo
+
+Override `administrator/templates/NOME/html/com_jlms/publicationreview/default.php`. Regioni: `jlms-publication-review`, tabella `jlms-publication-changes`, form `jlms-publication-confirm-form`, checkbox `jlms-publication-confirm`. Preservare scope, ticket, token Joomla e conferma richiesta. La tabella usa caption/intestazioni e contenitore responsive nativi; nessun nuovo CSS globale o script. Non mostrare corpi, sorgenti video, risposte o nominativi nelle differenze.

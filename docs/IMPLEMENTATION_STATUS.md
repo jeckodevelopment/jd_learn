@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.35.0-dev**: campi personalizzati nativi nell’editor corso, PR #45. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.36.0-dev**: riepilogo e conferma dell’impatto degli aggiornamenti didattici, PR #46. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -12,7 +12,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 |---|---|---|
 | Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi, modifica propria e voci di menu | Parti dell'editor per regole didattiche/attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
-| Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, riepilogo impatti e migrazioni con equivalenze, recupero di programmi storici in nuova bozza |
+| Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze, recupero di programmi storici in nuova bozza |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
 | Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata | Fallback di Riprendi sulla prima attività obbligatoria non completata (R-05), attività dettagliate e collegamento agli attestati |
 | Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; consenso, copertura/ripresa, API/token Stream e MP4 privati con Range/Nginx | Quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
@@ -27,16 +27,14 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 ## Verifiche disponibili e limiti
 
-La [CI0.35](https://github.com/jeckodevelopment/jd_learn/actions/runs/42379941609) ha superato tutti5i job: quattro combinazioni PHP/database e Chromium, con9nuovi controlli nativi e5HTTP dei campi corso, installazione/upgrade0.34.1→0.35 e conservazione degli storici. Il codice verificato è4d7f012ccb1f07c742f943271f6d50902423664b; la successiva registrazione documentale non cambia il codice o il pacchetto. Le prove della baseline sotto restano riferite alla0.34.1. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
+La [CI0.36](https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865) ha superato tutti5i job sul codice `dee3f1f2481fd215cb7b4538760fb1513b0b2017`:
 
-La [CI del build 0.34.1](https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537) ha superato **tutti e cinque i job**:
+- PHP8.3/8.4 × MySQL8.4/MariaDB10.6: intera suite nativa/HTTP/JS,19nuovi controlli nativi e10HTTP di confronto/conferma degli aggiornamenti, build riproducibile, installazione e upgrade0.35→0.36, reinstallazione e storici conservati.
+- Chromium:12controlli della navigazione con modifiche non salvate su fixture desktop/mobile. Non è un collaudo visivo dell’intero Joomla, della nuova pagina di riepilogo o un’integrazione reale TinyMCE.
 
-- PHP 8.3/8.4 × MySQL 8.4/MariaDB 10.6: suite native/HTTP/JS, build riproducibile, installazione, upgrade 0.34.0 → 0.34.1 e conservazione degli storici.
-- Chromium: 12 controlli di navigazione su fixture con viewport desktop/mobile per l'avviso modifiche non salvate e il salvataggio. Non è un collaudo visivo dell'intero sito Joomla né un'integrazione reale TinyMCE.
+La successiva registrazione degli esiti modifica soltanto documentazione; il runtime e il pacchetto restano quelli verificati. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
 
-Prima pubblicazione e riproduzione YouTube sono state confermate anche dall'utente sul percorso provato. **Il precedente blocco di prima pubblicazione R-00 è risolto per quel percorso**, non è una priorità ancora da riprodurre.
-
-Restano da eseguire collaudo completo browser/mobile/tastiera e accessibilità, provider reali, revisione sicurezza completa, backup/ripristino e carico di 300 studenti per 60 minuti / 500 per 10 minuti. I test concorrenti della suite non dimostrano quella capacità. Commit, hash e job sono nel [registro delle prove](IMPLEMENTATION_EVIDENCE.json).
+Prima pubblicazione e YouTube sono stati confermati anche dall’utente sul percorso provato. Restano collaudo completo browser/mobile/tastiera/accessibilità, provider reali, audit sicurezza, backup/ripristino, patch Joomla corrente e benchmark300studenti/60minuti e500/10minuti. I test concorrenti non dimostrano tale capacità. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) conserva build, hash, job e limiti; nessuna accettazione completa M01/AUT-04 è dedotta dalla CI.
 
 ## Prossimo passo
 
