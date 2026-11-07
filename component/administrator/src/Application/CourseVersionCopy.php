@@ -97,8 +97,8 @@ final class CourseVersionCopy
             $module = $modules[$lesson['module_id']] ?? (!$whole && !$moduleRows ? $destinationModule : 0);
             if (!$module || (int) $lesson['course_version_id'] !== $sourceVersion) { throw new \DomainException('COM_JLMS_INVALID_INPUT'); }
             $lesson['course_version_id'] = $target; $lesson['module_id'] = $module;
-            // A draft receives live native field values; its publication snapshot is always rebuilt.
-            $lesson['fields_snapshot_json'] = '{}';
+            // Keep the source baseline for publication impact review. Saving draft
+            // field values refreshes it, and publication rebuilds the frozen snapshot.
             if ($freshKeys) { $lesson['logical_key'] = self::key(); }
             if (!$whole && !$moduleRows) { $lesson['title'] = $title; $lesson['ordering'] = $this->nextOrder('lessons', 'module_id', $module); }
             $lessons[$old] = $this->insert('lessons', $lesson, $actor);

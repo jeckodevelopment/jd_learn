@@ -537,6 +537,25 @@ final class CurriculumService
             }
             if (!$fieldModel->setFieldValue($fieldId, $lessonId, $value)) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED'); }
         }
+        // Keep a draft baseline for publication impact review. Publication rebuilds
+        // this snapshot from the same native Fields values before the version freezes.
+        $item = (string) $lessonId;
+        $snapshotQuery = $this->db->createQuery()->select('f.name, f.title, f.type, f.access, v.value')
+            ->from('#__fields AS f')->innerJoin('#__fields_values AS v ON v.field_id = f.id')
+            ->where('f.context = :context')->where('f.state = 1')->where('v.item_id = :item')
+            ->bind(':context', $context)->bind(':item', $item)->order('f.id');
+        $snapshot = [];
+        $levels = array_map('intval', $actor->getAuthorisedViewLevels());
+        foreach ($this->db->setQuery($snapshotQuery, 0, 1001)->loadObjectList() as $field) {
+            if (!in_array((int) $field->access, $levels, true)) { continue; }
+            $snapshot[$field->name] ??= ['label' => (string) $field->title, 'type' => (string) $field->type,
+                'access' => (int) $field->access, 'values' => []];
+            $snapshot[$field->name]['values'][] = (string) $field->value;
+        }
+        ksort($snapshot, SORT_STRING);
+        $record = (object) ['id' => $lessonId,
+            'fields_snapshot_json' => json_encode(['_schema' => 1, 'fields' => $snapshot], JSON_THROW_ON_ERROR)];
+        $this->db->updateObject('#__jlms_lessons', $record, 'id');
     }
 
     public function deleteItem(User $actor, string $kind, array $input): void
