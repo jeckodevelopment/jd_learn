@@ -36,6 +36,13 @@ final class PublicationService
         return $this->db->setQuery($q)->loadObject() ?: throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
     }
 
+    private function fresh(User $identity): User
+    {
+        // Preserve the service's DomainException contract for denied publication.
+        $actor = new User((int)$identity->id); $actor->clearAccessRights();
+        return $actor;
+    }
+
     private function authorise(User $actor, object $course): void
     {
         if (!$actor->id || $actor->block || (int) $actor->id !== (int) $this->app->getIdentity()->id
@@ -62,7 +69,7 @@ final class PublicationService
 
     public function transitions(User $actor, int $courseId, int $versionId = 0): array
     {
-        $actor = CourseEditorAccess::fresh($actor);
+        $actor = $this->fresh($actor);
         $course = $this->row('courses', $courseId);
         $this->authorise($actor, $course);
         $workflow = $this->workflow();
@@ -92,7 +99,7 @@ final class PublicationService
     /** Read-only review of a publishing update; initial publication and withdrawal need no update review. */
     public function updateImpact(User $identity, int $courseId, int $versionId, int $transitionId): ?array
     {
-        $actor = CourseEditorAccess::fresh($identity);
+        $actor = $this->fresh($identity);
         $course = $this->row('courses', $courseId); $this->authorise($actor, $course);
         $version = $this->row('course_versions', $versionId);
         if ((int)$version->course_id !== $courseId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
@@ -238,7 +245,7 @@ final class PublicationService
 
     public function transition(User $actor, int $courseId, int $versionId, int $courseRevision, int $versionRevision, int $transitionId, ?string $expectedImpact = null): void
     {
-        $actor = CourseEditorAccess::fresh($actor);
+        $actor = $this->fresh($actor);
         $remoteChecks = [];
         $course = $this->row('courses', $courseId);
         $this->authorise($actor, $course);
@@ -266,7 +273,7 @@ final class PublicationService
         }
         $this->db->transactionStart();
         try {
-            $actor = CourseEditorAccess::fresh($actor);
+            $actor = $this->fresh($actor);
             $course = $this->row('courses', $courseId, true);
             $this->authorise($actor, $course);
             $version = $this->row('course_versions', $versionId, true);
