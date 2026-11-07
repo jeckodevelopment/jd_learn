@@ -14,7 +14,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.41.4-dev: svi
 | [Roadmap](docs/ROADMAP_TO_STABLE.md) | Perimetro delle fasi fino al rilascio stabile |
 | [Matrice requisiti](docs/REQUIREMENTS_STATUS.csv) | Tracciabilità dettagliata dei 210 requisiti |
 | [Problemi specifici](docs/IMPLEMENTATION_GAPS.md) | Differenze aperte e segnalazioni risolte |
-| [Backend: piano UX](docs/ADMIN_UX_PLAN.md) | Restyling ingresso e menu amministrativo, ancora da implementare |
+| [Backend: piano UX](docs/ADMIN_UX_PLAN.md) | Menu amministrativo nativo implementato; restyling e collaudo UX residui |
 | [Politica CI](docs/CI_POLICY.md) | Bozze leggere e integrazioni sul candidato prima del merge |
 | [Prove del build](docs/IMPLEMENTATION_EVIDENCE.json) | Commit, CI e pacchetto effettivamente verificati |
 | [Cronologia](docs/IMPLEMENTATION_HISTORY.md) e [changelog](CHANGELOG.md) | Come siamo arrivati allo stato attuale |
