@@ -28,10 +28,17 @@ $id = (int) $this->item->id;
      <?= $this->form->renderField('presentation_objectives') ?><?= $this->form->renderField('presentation_audience') ?><?= $this->form->renderField('presentation_prerequisite_text') ?>
     </details>
    </section>
+   <section id="jlms-course-image-fields" aria-labelledby="jlms-course-image-fields-heading">
+    <h2 id="jlms-course-image-fields-heading" class="h4"><?= Text::_('COM_JLMS_COURSE_IMAGE') ?></h2>
+    <?= $this->form->renderField('presentation_image') ?><?= $this->form->renderField('presentation_image_alt') ?><?= $this->form->renderField('presentation_image_decorative') ?>
+   </section>
+   <section id="jlms-course-teachers" aria-labelledby="jlms-course-teachers-heading">
+    <h2 id="jlms-course-teachers-heading" class="h4"><?= Text::_('COM_JLMS_TEACHERS') ?></h2>
+    <?php if ($id) : ?><?= $this->form->renderFieldset('teachers') ?><?php else : ?><p><?= Text::_('COM_JLMS_TEACHER_SAVE_FIRST') ?></p><?php endif; ?>
+   </section>
   </div>
   <aside id="jlms-course-editor-sidebar" class="col-lg-3">
-   <?= $this->form->renderField('state') ?><?= $this->form->renderField('catid') ?><?= $this->form->renderField('language') ?>
-   <?= $this->form->renderField('content_access') ?>
+   <h2 class="h5"><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2>
    <?= $this->form->renderField('presentation_difficulty') ?><?= $this->form->renderField('presentation_estimated_minutes') ?>
    <?= $this->form->renderField('version_note') ?>
   </aside>
@@ -51,22 +58,23 @@ $id = (int) $this->item->id;
     <button type="button" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_SAVE_PROGRAMME') ?></button>
    </joomla-toolbar-button>
   <?php endif; ?>
- <?php endif; ?>
+ <section id="jlms-course-teaching-rules" class="mt-4" aria-labelledby="jlms-course-teaching-rules-heading">
+  <h2 id="jlms-course-teaching-rules-heading" class="h4"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></h2>
+  <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
+  <?php if (!$id) : ?><p><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p>
+  <?php elseif (!$this->readOnly) : ?><joomla-toolbar-button task="course.programmeRules" form-validation><button type="button" class="btn btn-secondary"><?= Text::_('COM_JLMS_TEACHING_RULES_OPEN') ?></button></joomla-toolbar-button><?php endif; ?>
+ </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
- <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-teaching-rules', Text::_('COM_JLMS_TEACHING_RULES')) ?>
- <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
- <?php if (!$id) : ?><p><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p>
- <?php elseif (!$this->readOnly) : ?><joomla-toolbar-button task="course.programmeRules" form-validation><button type="button" class="btn btn-primary"><?= Text::_('COM_JLMS_TEACHING_RULES_OPEN') ?></button></joomla-toolbar-button><?php endif; ?>
- <?= HTMLHelper::_('uitab.endTab') ?>
- <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-teachers-settings', Text::_('COM_JLMS_TEACHERS')) ?>
- <?php if ($id) : ?><?= $this->form->renderFieldset('teachers') ?><?php else : ?><p><?= Text::_('COM_JLMS_TEACHER_SAVE_FIRST') ?></p><?php endif; ?>
- <?= HTMLHelper::_('uitab.endTab') ?>
- <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-images', Text::_('COM_JLMS_COURSE_IMAGE')) ?>
- <?= $this->form->renderField('presentation_image') ?><?= $this->form->renderField('presentation_image_alt') ?><?= $this->form->renderField('presentation_image_decorative') ?>
- <?= HTMLHelper::_('uitab.endTab') ?>
- <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-publishing', Text::_('COM_JLMS_PUBLICATION_HEADING')) ?>
- <p><?= Text::_('COM_JLMS_COURSE_WORKFLOW_HELP') ?></p>
- <section id="jlms-course-calendar"><?= $this->form->renderFieldset('calendar') ?></section>
+ <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-access-publication', Text::_('COM_JLMS_COURSE_ACCESS_PUBLICATION_TAB')) ?>
+ <section id="jlms-course-access-settings" class="row">
+  <div class="col-lg-6"><?= $this->form->renderField('state') ?><?= $this->form->renderField('catid') ?><?= $this->form->renderField('language') ?></div>
+  <div class="col-lg-6"><?= $this->form->renderField('content_access') ?><?= $this->form->renderField('catalog_access') ?><?= $this->form->renderField('enrollment_mode') ?></div>
+ </section>
+ <section id="jlms-course-publishing">
+  <h2 class="h4"><?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?></h2>
+  <p><?= Text::_('COM_JLMS_COURSE_WORKFLOW_HELP') ?></p>
+  <div id="jlms-course-calendar"><?= $this->form->renderFieldset('calendar') ?></div>
+ </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
  <?php if ($this->form->getFieldsets('com_fields')) : ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-fields-tab', Text::_('COM_JLMS_COURSE_CUSTOM_FIELDS')) ?>
@@ -78,9 +86,6 @@ $id = (int) $this->item->id;
  <?= HTMLHelper::_('uitab.endTab') ?>
  <?php endif; ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-options', Text::_('JOPTIONS')) ?>
- <section id="jlms-course-access-settings"><h2 class="h4"><?= Text::_('COM_JLMS_COURSE_ACCESS_SETTINGS') ?></h2>
-  <?= $this->form->renderField('catalog_access') ?><?= $this->form->renderField('enrollment_mode') ?>
- </section>
  <section id="jlms-course-metadata"><h2 class="h4"><?= Text::_('COM_JLMS_COURSE_METADATA') ?></h2><?= $this->form->renderFieldset('metadata') ?></section>
  <?php if ($this->form->getFieldset('item_associations')) : ?>
   <section id="jlms-course-translations"><h2 class="h4"><?= Text::_('COM_JLMS_ASSOCIATIONS') ?></h2><div id="jlms-course-associations"><?= $this->form->renderFieldset('item_associations') ?></div></section>
