@@ -512,8 +512,9 @@ final class CurriculumService
     private function saveLessonCustomFields(User $actor, int $lessonId, mixed $values): void
     {
         if (!is_array($values)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        $context = 'com_jlms.lesson';
         $q = $this->db->createQuery()->select('id, name, access')->from('#__fields')
-            ->where('context = :context')->where('state = 1')->bind(':context', 'com_jlms.lesson');
+            ->where('context = :context')->where('state = 1')->bind(':context', $context);
         $definitions = $this->db->setQuery($q, 0, 501)->loadObjectList();
         if (count($definitions) > 500) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
         $byName = [];

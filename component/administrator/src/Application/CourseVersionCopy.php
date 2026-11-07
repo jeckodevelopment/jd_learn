@@ -146,10 +146,12 @@ final class CourseVersionCopy
     /** Copy native field values only when the operator can edit those values in both items. */
     private function copyLessonFields(User $actor, int $sourceId, int $targetId): void
     {
+        $context = 'com_jlms.lesson';
+        $item = (string) $sourceId;
         $q = $this->db->createQuery()->select('f.id, f.access, v.value')->from('#__fields AS f')
             ->innerJoin('#__fields_values AS v ON v.field_id = f.id')->where('f.context = :context')
             ->where('v.item_id = :item')->where('f.state = 1')
-            ->bind(':context', 'com_jlms.lesson')->bind(':item', (string) $sourceId)->order('f.id');
+            ->bind(':context', $context)->bind(':item', $item)->order('f.id');
         $values = [];
         foreach ($this->db->setQuery($q, 0, 1001)->loadObjectList() as $row) {
             $fieldId = (int) $row->id;

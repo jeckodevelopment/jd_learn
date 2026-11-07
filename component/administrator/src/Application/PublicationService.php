@@ -251,10 +251,12 @@ final class PublicationService
     /** Freeze lesson field values and their display metadata into the immutable teaching version. */
     private function snapshotLessonFields(User $actor, int $lessonId): array
     {
+        $context = 'com_jlms.lesson';
+        $item = (string) $lessonId;
         $q = $this->db->createQuery()->select('f.id, f.name, f.title, f.type, f.access, v.value')
             ->from('#__fields AS f')->innerJoin('#__fields_values AS v ON v.field_id = f.id')
             ->where('f.context = :context')->where('f.state = 1')->where('v.item_id = :item')
-            ->bind(':context', 'com_jlms.lesson')->bind(':item', (string) $lessonId)->order('f.id');
+            ->bind(':context', $context)->bind(':item', $item)->order('f.id');
         $fields = [];
         foreach ($this->db->setQuery($q, 0, 1001)->loadObjectList() as $row) {
             if (!in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) { continue; }
