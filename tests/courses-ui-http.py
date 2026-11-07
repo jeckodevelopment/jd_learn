@@ -78,7 +78,7 @@ try:
  expect(parse_qs(urlparse(dest).query).get('view')==['curriculum'] and 'List UI module' in programme,'Selected Programme action opens the authorized course')
  edit='/administrator/index.php?option=com_jlms&task=course.edit&id='+str(f['courses']['Alpha'])
  _,editor=request(edit)
- expect(all('id="'+x+'"' in editor for x in ['jlms-course-editor-layout','jlms-course-editor-sidebar','jlms-course-general','jlms-course-programme','jlms-course-access-publication','jlms-course-access-settings','jlms-course-calendar','jlms-course-image-fields','jlms-course-teachers','jlms-course-teaching-rules','jlms-course-options']),'Core course fields are grouped into five focused editor tabs')
+ expect(all('id="'+x+'"' in editor for x in ['jlms-course-editor-layout','jlms-course-editor-sidebar','jlms-course-general','jlms-course-programme','jlms-course-access-publication','jlms-course-access-settings','jlms-course-calendar','jlms-course-image-fields','jlms-course-teacher-fields','jlms-course-teaching-rules','jlms-course-options']),'Core course fields are grouped into five focused editor tabs')
  expect('jlms-course-images' not in editor and 'jlms-course-teachers-settings' not in editor,'Separate image and teacher tabs are removed')
  expect(all(editor.count('name="jform['+x+']"')==1 for x in ['title','content_access','catalog_access','enrollment_mode','presentation_description','presentation_image']) and editor.count('name="jform[teacher_ids][]"')==1,'Core fields are rendered once across the grouped form')
  expect('id="jlms-course-programme-summary"' in editor and 'List UI module' in editor,'Editor Programme tab summarizes the saved outline')
