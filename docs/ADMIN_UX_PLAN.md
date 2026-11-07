@@ -2,9 +2,9 @@
 
 Richiesta del 7 novembre 2026, **prima parte implementata nella 0.40, verificati nella CI standard42395767098**. Chiarisce CORE-20, CORE-13, UI-02 e SCR-13; non introduce un pannello parallelo al backend Joomla. Collegamento M01/M10. L’editor corsi è già stato semplificato; questo lavoro riguarda anche l’ingresso nel componente e la navigazione persistente.
 
-## Incremento0.41.4-dev candidato
+## Incremento0.41.4-dev — integrato
 
-La PR #60 riunisce immagine/docenti nei dati corso, regole didattiche nel programma e accesso/calendario nella scheda Accesso e pubblicazione. Le opzioni avanzate restano separate. La modifica è solo di navigazione: valori, permessi e salvataggi restano invariati. In bozza; collaudo integrazione e browser non ancora eseguiti.
+La PR #60 (ora integrata in main) riunisce immagine/docenti nei dati corso, regole didattiche nel programma e accesso/calendario nella scheda Accesso e pubblicazione. Le opzioni avanzate restano separate. La modifica è solo di navigazione: valori, permessi e salvataggi restano invariati. CI standard e Chromium superati (run 42410200676); restano i controlli manuali su Joomla reale, menu, ruoli, mobile, tastiera e override.
 
 ## Risultato richiesto
 
