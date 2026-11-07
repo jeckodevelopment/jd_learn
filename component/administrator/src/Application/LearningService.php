@@ -330,10 +330,25 @@ final class LearningService
         }
         if (!$lessonId) {
             $versionId = (int) $version->id;
+            $completedState = 'completed';
             $q = $this->db->createQuery()->select('l.id')->from('#__jlms_lessons AS l')
                 ->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
-                ->where('l.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('m.ordering, m.id, l.ordering, l.id');
+                ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = l.id AND p.enrollment_id = :enrollment')
+                ->where('l.course_version_id = :version')->where('l.required = 1')
+                ->where('(p.state IS NULL OR p.state <> :completed)')
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':version', $versionId, ParameterType::INTEGER)
+                ->bind(':completed', $completedState)
+                ->order('m.ordering, m.id, l.ordering, l.id');
             $lessonId = (int) $this->db->setQuery($q, 0, 1)->loadResult();
+            if (!$lessonId) {
+                // When all required lessons are complete, Resume can still reopen the first lesson for review.
+                $q = $this->db->createQuery()->select('l.id')->from('#__jlms_lessons AS l')
+                    ->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
+                    ->where('l.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)
+                    ->order('m.ordering, m.id, l.ordering, l.id');
+                $lessonId = (int) $this->db->setQuery($q, 0, 1)->loadResult();
+            }
             $this->lesson($versionId, $lessonId);
         }
         return ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId, 'language' => $language];

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.5-dev — ripresa alla prima attività obbligatoria incompleta
+
+- Se non esiste un’ultima attività valida, Riprendi sceglie la prima lezione obbligatoria non completata nell’ordine del programma.
+- Se tutte le attività obbligatorie sono completate, Riprendi apre la prima lezione per consentire la revisione.
+- Mantiene controlli di accesso, versione e disponibilità; lettura senza modificare progressi o iscrizione.
+- Test Joomla aggiornato per attività obbligatorie già completate, fallback alla successiva incompleta e ultima attività ancora valida.
+
 ## 0.41.4-dev — editor corso più lineare
 
 - Riunisce dati, copertina e docenti nella scheda Corso; colloca regole nel contesto Programma e consolida accesso e calendario.
