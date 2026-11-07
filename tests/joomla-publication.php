@@ -57,6 +57,7 @@ if (!$userId) {
     throw new \RuntimeException('Test Joomla operator missing.');
 }
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($userId));
+$app->getSession()->set('user', $app->getIdentity());
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 
@@ -110,7 +111,7 @@ pubExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__workflow_associations WHE
 $module=$authoring->saveModule($actor,pubScope()+['id'=>0,'title'=>'Published chapter']);
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system','fields');
 $fieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
-if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson reference','name'=>'lesson-reference','type'=>'text',
+if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson reference','label'=>'Lesson reference','name'=>'lesson-reference','type'=>'text',
     'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','params'=>['showlabel'=>1],'fieldparams'=>['filter'=>'string']])) {
     throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
 }
