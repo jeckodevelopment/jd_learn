@@ -5,7 +5,7 @@
 - Abilita il contesto nativo `com_jlms.lesson` in Joomla Fields e aggiunge i campi dinamici all’editor delle lezioni.
 - Salva i valori tramite il modello Fields, controllando permesso `core.edit.value`, livello di accesso e contesto; copia i valori nelle nuove bozze.
 - Congela valori e metadati dei campi alla pubblicazione e li mostra nell’aula dal relativo snapshot, filtrando per livello di accesso e facendo escaping dell’output.
-- Regressione Joomla aggiunta per salvataggio, snapshot e resa nell’aula. CI e collaudo manuale sito da registrare.
+- Regressione Joomla aggiunta per salvataggio, snapshot, impatto della pubblicazione e resa nell’aula. PR #65 integrata; CI standard superata nei due ambienti PHP/database e Chromium ([run 42420998171](https://github.com/jeckodevelopment/jd_learn/actions/runs/42420998171)). Il collaudo manuale Joomla resta da eseguire.
 
 ## 0.41.6-dev — continuità dell’aula dopo il ritiro dal catalogo
 

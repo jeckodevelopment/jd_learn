@@ -17,9 +17,9 @@ Definire campi e gruppi con il gestore Campi di Joomla, contesto Corsi (`com_jlm
 
 Salva/Salva e chiudi inoltrano `com_fields` agli eventi Joomla. Gli errori di validazione della form conservano l’input; Annulla lascia i valori salvati. Client precedenti che omettono il gruppo non cancellano i valori. Le revisioni obsolete e i permessi del corso vengono verificati prima del salvataggio. Il modello non scrive una tabella parallela dei campi.
 
-Il collegamento amministrativo e la resa editoriale pubblica dei campi corso sono implementati. Il candidato 0.41.7 aggiunge campi nativi per le lezioni, salvataggio autorizzato e snapshot dei valori alla pubblicazione, con resa dei valori assegnati nell’aula. CORE-10 resta in corso: il candidato richiede CI e collaudo manuale, mentre il ripristino completo dei valori tramite Content History resta aperto. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
+Il collegamento amministrativo e la resa editoriale pubblica dei campi corso sono implementati. La 0.41.7 aggiunge campi nativi per le lezioni, salvataggio autorizzato e snapshot dei valori alla pubblicazione, con resa dei valori assegnati nell’aula; CI standard superata. CORE-10 resta in corso per collaudo manuale, copertura completa dei tipi/plugin e ripristino tramite Content History. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
 
-## Campi personalizzati delle lezioni (candidato 0.41.7)
+## Campi personalizzati delle lezioni (0.41.7)
 
 In Joomla → Campi, scegliere il contesto Lezioni (`com_jlms.lesson`), creare/pubblicare i campi e assegnarli ai livelli e gruppi desiderati. Abilitare il plugin di sistema Fields. Nell’editor Programma aprire o creare una lezione: il fieldset Campi personalizzati mostra i campi applicabili. Il salvataggio usa il modello Fields nativo; l’operatore deve avere `core.edit.value` sul campo e il suo livello di accesso. Quando si duplica una lezione o si prepara una nuova versione, i valori consentiti vengono copiati nella nuova bozza.
 

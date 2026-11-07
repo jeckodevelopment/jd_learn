@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.41.7-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.7-dev.** La PR #65 è integrata in main; il prodotto resta in sviluppo e non è pronto per la produzione.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 

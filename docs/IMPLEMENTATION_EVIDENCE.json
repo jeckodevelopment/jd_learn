@@ -1,56 +1,55 @@
 {
   "audited_at": "2026-11-07",
   "product": "JD Learn",
-  "version": "0.41.5-dev",
+  "version": "0.41.7-dev",
   "code_baseline": {
-    "tested_head": "d5722d836fabd7d81beed94117bd78a033e104b4",
-    "parent_main_commit": "5e554422c1de1add1e6e5a3acbe4630d492617bf",
-    "pull_request": 62,
-    "merged_main_commit": "b48b13c4494cf9e21e88ff802f1d3f39e1b02828"
+    "tested_head": "054381f7d1d80058f40cb42a1aa06f4a30f8b23d",
+    "parent_main_commit": "2b4ba1c9ae4aa2eede31da018946f7bc93f180c2",
+    "pull_request": 65,
+    "merged_main_commit": "50925d2f27ddcf9b23a18643747bbc047dae1ddd"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42412135232,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232",
+    "run_id": 42420998171,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42420998171",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128522368955,
+        "id": 128549190483,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128522398080,
+        "id": 128549226567,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128522398092,
+        "id": 128549226751,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128522398147,
+        "id": 128549226636,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #62 integrata; tutti e quattro i job standard superati. Suite Joomla in entrambi gli ambienti verifica il fallback di Riprendi alla prima attività obbligatoria non completata, il mantenimento dell’ultima attività valida e l’assenza di scritture del fallback. Il collaudo manuale sul sito dell’utente resta da eseguire."
+    "note": "PR #65 integrata in main. Suite standard superata in entrambi gli ambienti Joomla/database e Chromium. Inclusi salvataggio, ACL, copia e snapshot dei campi lezione, resa nell’aula e revisione impatto; collaudo manuale sul sito Joomla reale ancora da eseguire."
   },
   "package": {
-    "name": "pkg_jlms-0.41.5-dev.zip",
-    "bytes": 444785,
-    "sha256": "baaf4447da1f9559472ea889fdc34c224259501d061a84e797d10b8709bbe70c",
-    "artifact_id": 13590285852,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232/artifacts/13590285852",
+    "name": "pkg_jlms-0.41.7-dev.zip",
+    "bytes": 447993,
+    "sha256": "897b4f9976c6d2976247082927aeccf8821fe80f89a35b1fc4ea73889c3c9d72",
     "constituents": 7,
     "tables": 41,
-    "foreign_keys": 58
+    "foreign_keys": 58,
+    "build_source": "main at 50925d2f27ddcf9b23a18643747bbc047dae1ddd; packaged administrator guide synchronized after merge"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -63,6 +62,72 @@
   ],
   "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-07",
+      "product": "JD Learn",
+      "version": "0.41.5-dev",
+      "code_baseline": {
+        "tested_head": "d5722d836fabd7d81beed94117bd78a033e104b4",
+        "parent_main_commit": "5e554422c1de1add1e6e5a3acbe4630d492617bf",
+        "pull_request": 62,
+        "merged_main_commit": "b48b13c4494cf9e21e88ff802f1d3f39e1b02828"
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 42412135232,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 128522368955,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128522398080,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128522398092,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128522398147,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "PR #62 integrata; tutti e quattro i job standard superati. Suite Joomla in entrambi gli ambienti verifica il fallback di Riprendi alla prima attività obbligatoria non completata, il mantenimento dell’ultima attività valida e l’assenza di scritture del fallback. Il collaudo manuale sul sito dell’utente resta da eseguire."
+      },
+      "package": {
+        "name": "pkg_jlms-0.41.5-dev.zip",
+        "bytes": 444785,
+        "sha256": "baaf4447da1f9559472ea889fdc34c224259501d061a84e797d10b8709bbe70c",
+        "artifact_id": 13590285852,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232/artifacts/13590285852",
+        "constituents": 7,
+        "tables": 41,
+        "foreign_keys": 58
+      },
+      "full_requirement_acceptance": {},
+      "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
+      "excluded_evidence": [
+        "Nessun benchmark300/500",
+        "Nessun audit completo WCAG/ASVS",
+        "Nessun collaudo completo dei provider reali",
+        "Patch corrente Joomla non verificata",
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+      "evidence_scope": "Previous current record for 0.41.5-dev, retained unchanged."
+    },
     {
       "audited_at": "2026-11-07",
       "product": "JD Learn",
@@ -1474,7 +1539,7 @@
       }
     }
   ],
-  "evidence_scope": "Codice runtime 0.41.5-dev verificato nella PR #62 e integrato in main. Riprendi usa l’ultima lezione ancora valida; quando manca, seleziona la prima obbligatoria non completata nell’ordine del programma, oppure la prima lezione per revisione se le obbligatorie sono terminate. Mantenuti controlli autorizzativi e lettura senza mutazioni. Accettazione manuale Joomla dell’utente ancora aperta.",
+  "evidence_scope": "PR #65 runtime tested at 054381f7d1d80058f40cb42a1aa06f4a30f8b23d and integrated as 50925d2f27ddcf9b23a18643747bbc047dae1ddd. Package rebuilt reproducibly from merged source with only post-merge documentation wording synchronized; runtime is byte-for-byte the tested tree. Joomla site acceptance remains open.",
   "ci_policy_verification": {
     "date": "2026-11-07",
     "pull_request": 48,

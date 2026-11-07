@@ -25,7 +25,8 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | 0.40.1 | Plugin video apre com_plugins filtrato per gruppo, azzerando i filtri precedenti; sostituisce il collegamento fuorviante alla vecchia dashboard |
 
-| 0.41.6 | Ritiro dal catalogo senza revoca dell’aula per iscritti autorizzati; PR #64 integrata, CI standard finale superata (run 42414492267), R-03 parziale e collaudo Joomla reale ancora aperto |\n| 0.41.7 | Campi personalizzati nativi delle lezioni, snapshot in pubblicazione e valori nell’aula; candidato PR #65, verifiche da registrare |
+| 0.41.6 | Ritiro dal catalogo senza revoca dell’aula per iscritti autorizzati; PR #64 integrata, CI standard finale superata (run 42414492267), R-03 parziale e collaudo Joomla reale ancora aperto |
+| 0.41.7 | Campi personalizzati nativi delle lezioni, baseline aggiornato per la revisione dell’impatto, snapshot in pubblicazione e valori nell’aula; PR #65 integrata nel commit [50925d2](https://github.com/jeckodevelopment/jd_learn/commit/50925d2f27ddcf9b23a18643747bbc047dae1ddd), CI standard superata ([run 42420998171]); collaudo Joomla reale aperto |
 | 0.41.6 | Ritiro catalogo senza revoca aula per gli iscritti autorizzati; PR #64 integrata, CI standard superata; R-03 parziale |
 | 0.41.5 | Fallback Riprendi alla prima attività obbligatoria incompleta; CI standard superata e PR #62 integrata |
 | 0.41.4 | Schede dell’editor corso raggruppate; CI standard superata e PR #60 integrata |
