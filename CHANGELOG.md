@@ -4,7 +4,7 @@
 
 - Riunisce dati, copertina e docenti nella scheda Corso; colloca regole nel contesto Programma e consolida accesso e calendario.
 - Lascia invariati modello dati, salvataggio, versioni e permessi.
-- La CI d’integrazione del candidato è in attesa della revisione finale della PR.
+- PR #60 integrata in main. Quattro job standard superati: controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium ([run 42410200676](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676)). Pacchetto: [artifact 13589411586](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676/artifacts/13589411586).
 
 ## 0.41.3-dev — valore corretto per il checkbox della risposta
 
