@@ -14,6 +14,10 @@ In Joomla `default="0"` diventava anche il valore HTML inviato dal checkbox sele
 
 La PR #60 è stata unita. Riunisce copertina/docenti con i dati del corso, accesso/calendario in una scheda unica e regole nel contesto del programma. Modifica solo la presentazione dell’editor: campi salvati una volta, senza cambiare schema, workflow o versioni. Le verifiche HTTP mirate, la suite standard d’integrazione e Chromium sono passati nella CI 42410200676; resta il collaudo manuale nel Joomla reale, inclusi mobile, tastiera e override.
 
+### Incremento0.41.5-dev — ripresa dell’attività
+
+La PR #62 corregge R-05: quando manca un’ultima lezione valida, Riprendi seleziona la prima obbligatoria non completata; se non ne restano, apre la prima lezione per revisione. Integrazione Joomla superata in entrambi gli ambienti. Da provare nel sito Joomla reale.
+
 ## Funzioni presenti e lavoro residuo
 
 “Disponibile” significa che esiste un flusso operativo con prove parziali. Non significa che l'intero requisito sia accettato. “Da implementare” indica una funzione assente, anche quando ne esistono schema o specifiche.
@@ -53,7 +57,7 @@ Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso p
 
 ## Prossimo passo
 
-La PR candidata 0.41.5 corregge R-05: quando non esiste una lezione precedente valida, Riprendi seleziona la prima obbligatoria non completata; se tutte sono complete, apre la prima lezione per la revisione. La prova automatica copre entrambi i percorsi e l’assenza di scritture. Comportamenti Joomla da verificare sono elencati nella PR.
+La PR #62 integrata nella 0.41.5 corregge R-05: quando non esiste una lezione precedente valida, Riprendi seleziona la prima obbligatoria non completata; se tutte sono complete, apre la prima lezione per la revisione. La prova automatica copre entrambi i percorsi e l’assenza di scritture. Comportamenti Joomla da verificare sono elencati nella PR.
 
 Continuare M01 sul flusso editoriale semplificato, ora integrato in main, e sui residui di programma/campi/versioni indicati nella checklist, senza includere quiz e attestati nel gate della prima stabile. La banca domande ha ricevuto la correzione mirata0.41.3; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
 
