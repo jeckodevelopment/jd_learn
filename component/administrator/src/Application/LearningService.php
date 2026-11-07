@@ -189,7 +189,7 @@ final class LearningService
             $actor = $this->freshActor($actor);
             $this->course($actor, $language, $courseId);
             $current = $this->row('courses', $courseId);
-            if ((int) $current->current_version_id !== $versionId || $current->enrollment_mode !== 'auto' || !(int) $current->admissions_open) {
+            if ((int) $current->current_version_id !== $versionId || $current->enrollment_mode !== 'auto') {
                 throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
             }
             if ($edition->status !== 'open') {
