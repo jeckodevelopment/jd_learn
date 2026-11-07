@@ -149,7 +149,7 @@ pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course
 $assoc=(new \Joomla\CMS\Workflow\Workflow('com_jlms.course',$app,$db))->getAssociation($course);
 pubExpect((bool)$assoc,'native workflow association exists');
 pubExpect((int)$catalog->course($guest,'en-GB',$course)->id===$course,'published promotional course available without content level');
-$learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('b',40));
+$learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('p',40));
 $classroom=$component->getLearningService()->classroom($actor,'en-GB',$learnerEnrollment,$lesson);
 pubExpect(($classroom['lesson']->custom_fields[0]['values'][0] ?? '')==='LESSON_FIELD_SNAPSHOT',
     'assigned classroom renders frozen lesson custom field value');
