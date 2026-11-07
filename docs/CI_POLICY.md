@@ -1,12 +1,12 @@
 # CI: verificare il candidato prima del merge
 
-Politica operativa del7novembre2026. Cambia il momento e l’ampiezza della verifica; non elimina casi funzionali dalla suite. Versione applicativa invariata:0.37.0-dev.
+Politica operativa del 7 novembre 2026. Cambia il momento e l’ampiezza della verifica; non elimina casi funzionali dalla suite. Versione applicativa invariata: 0.37.0-dev.
 
 | Fase | Controlli | Integrazioni |
 |---|---|---|
 | PR in bozza, anche con più commit | Test della selezione CI, build, struttura, traduzioni e tracciabilità | Non avviate |
 | PR di sola documentazione | Gli stessi controlli leggeri, anche sulle guide incluse nel pacchetto | Non avviate |
-| Candidato runtime pronto per il merge | Controlli leggeri, intera suite implementata su PHP8.3/MySQL8.4 e PHP8.4/MariaDB10.6, prova Chromium | Due ambienti più browser |
+| Candidato runtime pronto per il merge | Controlli leggeri, intera suite implementata su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, prova Chromium | Due ambienti più browser |
 | Milestone/rilascio o rischio di compatibilità | Avvio manuale con matrix=full: tutte le quattro coppie PHP/database più browser | Quattro ambienti più browser |
 | Merge in main | Riutilizzo degli esiti del candidato verificato | Nessuna ripetizione automatica |
 
@@ -32,4 +32,8 @@ Repository verificata pubblica; il workflow usa il runner standard ubuntu-24.04.
 
 Per un riscontro contabile usare Billing → Actions → View details, filtrare repository, periodo e SKU e confrontare utilizzo, sconti e totale netto. Non dedurre un addebito dal solo contatore e non dichiarare assenza di addebiti senza il dettaglio dell’account. Nessun accesso alla fatturazione è stato effettuato in questo incremento.
 
-Fonti ufficiali consultate il7novembre2026: [fatturazione Actions](https://docs.github.com/en/billing/concepts/product-billing/github-actions), [runner standard](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job), [eventi PR](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows), [campi dei report](https://docs.github.com/en/billing/reference/billing-reports).
+Fonti ufficiali consultate il 7 novembre 2026: [fatturazione Actions](https://docs.github.com/en/billing/concepts/product-billing/github-actions), [runner standard](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job), [eventi PR](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows), [campi dei report](https://docs.github.com/en/billing/reference/billing-reports).
+
+## Verifica della politica corrente
+
+[PR #48](https://github.com/jeckodevelopment/jd_learn/pull/48), codice `14b3451fa64e49051890889d8b0a8b49b23fb32d`: [run in bozza](https://github.com/jeckodevelopment/jd_learn/actions/runs/42386414314) con solo il job leggero superato e integrazioni/browser saltati; [run del candidato pronto](https://github.com/jeckodevelopment/jd_learn/actions/runs/42386442389) con due ambienti, Chromium e job leggero superati. Otto test di politica e prove locali della CLI/eventi/output coprono anche la selezione manuale delle quattro coppie. Il nuovo avvio manuale full non è stato eseguito: nessuna nuova certificazione delle coppie omesse viene dedotta da questo incremento. Codice applicativo e checksum del pacchetto0.37 invariati; la precedente matrice completa rimane nel registro delle prove.
