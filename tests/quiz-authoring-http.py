@@ -57,6 +57,8 @@ try:
   if correct is not None:fields[f'jform[options][option{i}][correct]']=correct
  bad={k:v for k,v in fields.items()if not re.fullmatch('[a-f0-9]{32}',k)}
  request(admin,urljoin(u,form['action']),fields=bad,expected=403)
+ _,invalid_form,_=request(admin,urljoin(u,form['action']),fields=fields|{'jform[prompt]':''},expected=422)
+ expect(b'The form contains invalid fields' in invalid_form and b'Question' in invalid_form,'native form validation identifies its invalid field')
  result,b,_=request(admin,urljoin(u,form['action']),fields=fields);expect('HTTP_PRIVATE_QUESTION'in b.decode()and'HTTP_PRIVATE_ANSWER_KEY'in b.decode(),'native subform saves an authorised private answer definition')
  edit_form=next(x for x in Page(b.decode()).forms if x['id']=='jlms-question-form');question_id=int(edit_form['fields']['jform[id]']);expect(question_id>f['question_id'],'HTTP create received a distinct native ID')
  blank_option=fields|{'jform[id]':'0','jform[kind]':'single','jform[prompt]':'<p>HTTP_EMPTY_CHECKBOX_QUESTION</p>','jform[options][option1][correct]':''}

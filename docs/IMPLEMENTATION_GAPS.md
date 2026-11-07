@@ -1,6 +1,6 @@
 # Problemi specifici e differenze aperte
 
-Stato al **7 novembre 2026**, build **0.41.1-dev**. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
+Stato al **7 novembre 2026**, build **0.41.2-dev**. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
 
 ## Casi aperti
 

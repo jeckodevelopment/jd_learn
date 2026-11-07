@@ -2,13 +2,13 @@
 
 I campi editoriali correnti sono disponibili nella scheda pubblica del corso tramite plugin e layout Joomla. Snapshot didattici, campi lezione e ripristino completo dei valori tramite Content History restano aperti.
 
-Aggiornato al **7 novembre 2026**. Versione **0.41.1-dev**: oltre alla CI0.41, la CI standard42402189584 ha verificato la correzione del salvataggio della banca domande in entrambi gli ambienti PHP/database; collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Candidato in lavorazione **0.41.2-dev**; main pubblica **0.41.1-dev**; la CI standard42402189584 ha superato le prove automatizzate, ma l’utente riferisce che il salvataggio domanda continua a restituire422. La diagnosi reale non è ancora chiusa. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
-### Incremento0.41.1-dev — banca domande
+### Incremento candidato0.41.2-dev — diagnosi banca domande
 
-Corretto il 422 al salvataggio quando il checkbox “risposta corretta” non selezionato arriva come stringa vuota dal filtro Joomla. Il browser può anche ometterlo: entrambe le rappresentazioni sono interpretate come non corrette. Restano obbligatorie le regole: almeno una risposta corretta e una sola per scelta singola/vero-falso. Test di dominio e form HTTP Joomla superati nella CI standard [42402189584](https://github.com/jeckodevelopment/jd_learn/actions/runs/42402189584), insieme ai quattro job, su PHP8.3/MySQL8.4 e PHP8.4/MariaDB10.6. Questa correzione risolve il caso di salvataggio segnalato; non dichiara M05 o tutto l’authoring quiz accettati.
+La correzione0.41.1 non ha risolto il problema nell’installazione dell’utente: il 422 continua. Il nuovo candidato separa gli errori di validazione del form Joomla dagli errori semantici della domanda e mostra il campo o la regola rifiutati. La PR e la CI sono ancora da completare; finché l’utente non riprova con il messaggio specifico, il difetto resta aperto.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -47,7 +47,7 @@ Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso p
 
 ## Prossimo passo
 
-Riprendere i residui prioritari di M01: campi lezione e snapshot didattici dei campi, editor amministrativo e acceptance completa. La banca domande ha ricevuto la correzione mirata0.41.1; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
+Riprendere i residui prioritari di M01: campi lezione e snapshot didattici dei campi, editor amministrativo e acceptance completa. La banca domande ha ricevuto la correzione mirata0.41.2; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
 
 ## Perimetro e tracciabilità
 
