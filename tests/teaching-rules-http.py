@@ -27,9 +27,6 @@ class Page(HTMLParser):
    if self.select not in self.current['fields'] or 'selected' in a:self.current['fields'][self.select]=a.get('value','')
  def handle_endtag(self,tag):
   if tag=='form':self.current=None
-  if tag=='textarea':
-   self.textarea=a.get('name') if self.current is not None and 'disabled' not in a else None
-   if self.textarea:self.current['fields'][self.textarea]=''
   if tag=='select':self.select=None
   if tag=='textarea':self.textarea=None
  def handle_data(self,data):
