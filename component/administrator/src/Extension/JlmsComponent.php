@@ -14,13 +14,14 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
 {
     public function validateSection($section, $item = null)
     {
-        return in_array($section, ['teacher', 'course'], true) ? $section : null;
+        return in_array($section, ['teacher', 'course', 'lesson'], true) ? $section : null;
     }
 
     public function getContexts(): array
     {
         return ['com_jlms.teacher' => \Joomla\CMS\Language\Text::_('COM_JLMS_TEACHERS'),
-            'com_jlms.course' => \Joomla\CMS\Language\Text::_('COM_JLMS_COURSES')];
+            'com_jlms.course' => \Joomla\CMS\Language\Text::_('COM_JLMS_COURSES'),
+            'com_jlms.lesson' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSONS')];
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\DashboardService $dashboardService;
