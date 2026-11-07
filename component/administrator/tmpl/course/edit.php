@@ -58,11 +58,11 @@ $id = (int) $this->item->id;
     <button type="button" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_SAVE_PROGRAMME') ?></button>
    </joomla-toolbar-button>
   <?php endif; ?>
+ <?php endif; ?>
  <section id="jlms-course-teaching-rules" class="mt-4" aria-labelledby="jlms-course-teaching-rules-heading">
   <h2 id="jlms-course-teaching-rules-heading" class="h4"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></h2>
   <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
-  <?php if (!$id) : ?><p><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p>
-  <?php elseif (!$this->readOnly) : ?><joomla-toolbar-button task="course.programmeRules" form-validation><button type="button" class="btn btn-secondary"><?= Text::_('COM_JLMS_TEACHING_RULES_OPEN') ?></button></joomla-toolbar-button><?php endif; ?>
+  <?php if ($id && !$this->readOnly) : ?><joomla-toolbar-button task="course.programmeRules" form-validation><button type="button" class="btn btn-secondary"><?= Text::_('COM_JLMS_TEACHING_RULES_OPEN') ?></button></joomla-toolbar-button><?php endif; ?>
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-access-publication', Text::_('COM_JLMS_COURSE_ACCESS_PUBLICATION_TAB')) ?>
