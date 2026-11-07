@@ -19,6 +19,7 @@ $changeLabels = ['added'=>'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed'=>'COM_J
   <tbody><?php foreach ($labels as $kind=>$label) : ?><tr><th scope="row"><?= Text::_($label) ?></th><?php foreach ($changeLabels as $change=>$unused) : ?><td data-kind="<?= $kind ?>" data-change="<?= $change ?>"><?= (int)$item['changes'][$kind][$change] ?></td><?php endforeach; ?></tr><?php endforeach; ?></tbody>
  </table></div>
  <p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_RULES') ?>: <strong><?= Text::_($item['rules_changed'] ? 'JYES' : 'JNO') ?></strong></p>
+ <?php if ($item['video_threshold_change']) : ?><p id="jlms-publication-threshold-change"><?= Text::sprintf('COM_JLMS_TEACHING_THRESHOLD_CHANGE', $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['before'])), $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['after']))) ?></p><?php endif; ?>
  <?php foreach ($labels as $kind=>$label) : if (!$item['changes'][$kind]['details']) { continue; } ?>
  <details><summary><?= Text::_($label) ?> — <?= Text::_('COM_JLMS_PUBLICATION_REVIEW_DETAILS') ?></summary>
   <ul><?php foreach ($item['changes'][$kind]['details'] as $entry) : ?><li><?= Text::_($changeLabels[$entry['kind']]) ?>: <?= $this->escape($entry['title']) ?></li><?php endforeach; ?></ul>

@@ -1,8 +1,8 @@
 # M01 — completamento della gestione corsi
 
-Stato al **7 novembre 2026**, incremento **0.37.0-dev**: **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; le dipendenze da M02/M03/M08/M10 restano parte del lavoro richiesto.
+Stato al **7 novembre 2026**, incremento **0.38.0-dev**: **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; le dipendenze da M02/M03/M08/M10 restano parte del lavoro richiesto.
 
-Questa checklist distingue ciò che è già utilizzabile da implementazioni mancanti e collaudi. Non ripianificare pubblicazione, duplicazioni e riordino come funzioni assenti. Le regressioni implementate e i nuovi controlli di recupero passano nella [CI0.37](https://github.com/jeckodevelopment/jd_learn/actions/runs/42385237648); gli esiti non sostituiscono l'accettazione completa degli scenari.
+Questa checklist distingue ciò che è già utilizzabile da implementazioni mancanti e collaudi. Non ripianificare pubblicazione, duplicazioni e riordino come funzioni assenti. Le regressioni implementate e i nuovi controlli delle regole passano nella [CI0.38](https://github.com/jeckodevelopment/jd_learn/actions/runs/42388597025); gli esiti non sostituiscono l'accettazione completa degli scenari.
 
 | Ambito | Già disponibile | Implementazione mancante | Collaudo ancora richiesto |
 |---|---|---|---|
@@ -14,7 +14,7 @@ Questa checklist distingue ciò che è già utilizzabile da implementazioni manc
 | Duplicazioni | Nuovo corso in bozza, modulo con sottoalbero, lezione con destinazione; quiz/materiali/campi secondo ACL, dati studente esclusi | Nessun comando di duplicazione di base mancante | AC-96 completo, browser e combinazioni di ruoli/contenuti |
 | Scaletta e riordino | Editor singolo, aggiunta contestuale, spostamento lezioni, drag atomico e Su/Giù con fallback senza JS | Nessun comando di riordino di base mancante | Drag/tastiera reali, mobile, accessibilità e conflitti nel contesto completo AC-127 |
 | Modifiche non salvate | Avviso browser, controllo TinyMCE e API Joomla; salvataggio valido consentito | Nessun ulteriore meccanismo di recupero dichiarato disponibile | Editor Joomla reali e navigazione sul sito; i 12 test Chromium usano una fixture controllata |
-| Regole, attestato e campi corso | Sottoinsiemi di servizi e campi; scheda Campi personalizzati nativa per i corsi, salvataggio via plugin Fields (0.35, CI42379941609/PR45 superata) | Form/servizi di regole didattiche e attestato; campi lezione, snapshot e resa pertinenti (M03/M08/M10) | Pubblicazione dei valori effettivamente supportati e tutti i criteri collegati |
+| Regole, attestato e campi corso | Scheda Regole didattiche e soglia video configurabile nella versione (0.38, CI42388597025/PR49 superata); scheda Campi personalizzati nativa per i corsi, salvataggio via plugin Fields (0.35, CI42379941609/PR45 superata) | Regole avanzate e attestato; campi lezione, snapshot e resa pertinenti (M03/M08/M10) | Pubblicazione dei valori effettivamente supportati e tutti i criteri collegati |
 | Ciclo editoriale | Bozza e pubblicazione; anteprima di struttura/testo in sola lettura | Invio in revisione, archivio completo, anteprima interattiva e dei livelli senza effetti, errori bloccanti separati dagli avvisi (M02) | Transizioni configurabili e scenari SCR-13 |
 | Permessi e associazioni | Rules nativo, checkout, livelli e prime associazioni multilingua | Lifecycle completo delle associazioni pubblicate e funzioni collegate M10 | AUT-05 completo, revoche, traduzioni e frequenze distinte |
 | Docenti | Associazione senza categoria nel form, campi Joomla, modifica propria, pagina e lista corsi da menu | Integrazioni residue del profilo previste dalla matrice | AC-121–125: menu/SEF/lingue, tipi/gruppi/ACL campi, altro account, revoche e profili preesistenti |

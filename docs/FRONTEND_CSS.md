@@ -169,3 +169,7 @@ Override `administrator/templates/NOME/html/com_jlms/publicationreview/default.p
 ### Recupero del programma storico
 
 Nel contenitore amministrativo esistente: `#jlms-restore-programme` è il disclosure nativo, `#jlms-restore-programme-form` il form POST, `#jlms-restore-confirm` il checkbox con label e conferma obbligatoria. Si usano classi Joomla esistenti, senza stili globali nuovi. Gli override della vista curriculum devono conservare token, campi di scope/revisione e conferma; le versioni storiche non mostrano il comando che copia il programma attivo.
+
+### Regole didattiche
+
+La scheda corso è `#jlms-course-teaching-rules`; il programma usa `#jlms-teaching-rules`, heading `#jlms-teaching-rules-heading`, form `#jlms-teaching-rules-form` e campo `#jlms_rules_threshold`. Il form riusa `.jlms-focused-editor` e l’avviso modifiche non salvate; il riordino JS rimane sospeso durante l’editor. Il confronto usa `#jlms-publication-threshold-change`. Nessun nuovo stile globale. Gli override devono conservare task, scope, revisione, token e campo con label; sulle versioni immutabili non renderizzare un form di scrittura.

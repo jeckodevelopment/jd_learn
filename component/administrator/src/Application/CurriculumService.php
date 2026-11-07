@@ -260,6 +260,27 @@ final class CurriculumService
         });
     }
 
+    public function teachingRules(User $actor, int $courseId, int $versionId): array
+    {
+        $course = $this->row('courses', $courseId);
+        $this->authorise($actor, $course);
+        $version = $this->row('course_versions', $versionId);
+        if ((int)$version->course_id !== $courseId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+        return \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
+    }
+
+    public function saveTeachingRules(User $actor, array $input): void
+    {
+        $course = self::id($input['course_id'] ?? null); $version = self::id($input['version_id'] ?? null);
+        $revision = self::id($input['expected_version_revision'] ?? null);
+        $this->transaction(function () use ($actor, $course, $version, $revision, $input): void {
+            $record = $this->draft($actor, $course, $version, $revision);
+            $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($record->rules_json);
+            $rules['video_threshold_basis_points'] = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold'] ?? null);
+            $this->update('course_versions', $record, ['rules_json'=>json_encode($rules, JSON_THROW_ON_ERROR)], $actor);
+        });
+    }
+
     public function saveModule(User $actor, array $input): int
     {
         $courseId = self::id($input['course_id'] ?? null);

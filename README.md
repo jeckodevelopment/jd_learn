@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.37.0-dev: sviluppo in corso, non pronta per la produzione.**
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione 0.38.0-dev: sviluppo in corso, non pronta per la produzione.**
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -46,9 +46,10 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-La build genera `dist/pkg_jlms-0.37.0-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
+La build genera `dist/pkg_jlms-0.38.0-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
 I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
 
-[Pacchetto verificato 0.37.0](https://github.com/jeckodevelopment/jd_learn/actions/runs/42385237648/artifacts/13579895127): estrarre e installare `pkg_jlms-0.37.0-dev.zip` su Joomla di prova. Esiti, hash e limiti in `docs/IMPLEMENTATION_EVIDENCE.json`.
+
+[Pacchetto verificato 0.38.0](https://github.com/jeckodevelopment/jd_learn/actions/runs/42388597025/artifacts/13581040368): estrarre e installare `pkg_jlms-0.38.0-dev.zip` su Joomla di prova. Scheda Regole didattiche e soglia video della versione disponibili; esiti, checksum e limiti nel registro delle prove.

@@ -104,6 +104,11 @@ final class PublicationImpact
         $diff = []; foreach ($before as $kind=>$items) { $diff[$kind] = self::changes($items, $after[$kind]); }
         $rulesBefore = self::canonical(json_decode($source->rules_json, true, 32, JSON_THROW_ON_ERROR));
         $rulesAfter = self::canonical(json_decode($draft->rules_json, true, 32, JSON_THROW_ON_ERROR));
+        $oldThreshold = $rulesBefore['video_threshold_basis_points'] ?? 9000;
+        $newThreshold = $rulesAfter['video_threshold_basis_points'] ?? 9000;
+        $thresholdChange = is_int($oldThreshold) && is_int($newThreshold) && $oldThreshold >= 1 && $oldThreshold <= 10000
+            && $newThreshold >= 1 && $newThreshold <= 10000 && $oldThreshold !== $newThreshold
+            ? ['before'=>$oldThreshold, 'after'=>$newThreshold] : null;
         $query = $this->db->createQuery()->select('v.version_no,COUNT(e.id) AS total')->from('#__jlms_enrollments AS e')
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
             ->where('e.course_id=:course')->group('v.id,v.version_no')->order('v.version_no');
@@ -113,6 +118,6 @@ final class PublicationImpact
         // Enrollment counts are informational at preview time; admissions do not invalidate a programme review.
         $fingerprint = self::hash([$id,(int)$course->revision,(int)$source->id,(int)$source->revision,(int)$draft->id,(int)$draft->revision,$transition,$actor,$before,$after,$rulesBefore,$rulesAfter,$draft->fields_snapshot_json]);
         return ['course'=>$course, 'version'=>$draft, 'source'=>$source, 'transition_id'=>$transition,
-            'changes'=>$diff, 'rules_changed'=>$rulesBefore !== $rulesAfter, 'enrollments'=>$enrollments, 'fingerprint'=>$fingerprint];
+            'changes'=>$diff, 'video_threshold_change'=>$thresholdChange, 'rules_changed'=>$rulesBefore !== $rulesAfter, 'enrollments'=>$enrollments, 'fingerprint'=>$fingerprint];
     }
 }

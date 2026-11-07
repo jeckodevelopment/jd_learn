@@ -48,6 +48,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <p><?= Text::_('COM_JLMS_PROGRAMME_INTRO') ?></p>
   <div class="jlms-programme-buttons">
    <?php if ($this->editable) : ?><a class="btn btn-primary" href="<?= $link($view . '&new_module=1') ?>#jlms-module-form"><?= Text::_('COM_JLMS_PROGRAMME_ADD_MODULE') ?></a><?php endif; ?>
+   <?php if ($version) : ?><a class="btn btn-secondary" href="<?= $link($view . '&edit_rules=1') ?>#jlms-teaching-rules"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></a><?php endif; ?>
    <?php if ($version) : ?><a id="jlms-course-preview-link" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_COURSE_PREVIEW') ?></a><?php endif; ?>
   </div>
  </header>
@@ -96,6 +97,23 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  </section>
  <?php endforeach; ?></div>
  <?php if (!$this->outline['modules']) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_CREATE_MODULE_FIRST') ?></p><?php endif; ?>
+<?php if ($version && ($this->editable ? $this->editorMode === 'rules' : \Joomla\CMS\Factory::getApplication()->getInput()->getBool('edit_rules'))) : ?>
+ <section id="jlms-teaching-rules" class="<?= $this->editable && $this->rulesForm ? 'jlms-focused-editor' : '' ?>" aria-labelledby="jlms-teaching-rules-heading">
+  <h2 id="jlms-teaching-rules-heading" class="h3"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></h2>
+  <?php if ($this->teachingRules === null) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_PUBLICATION_UNSUPPORTED') ?></p>
+  <?php else : ?>
+   <p><?= Text::_('COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
+   <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p>
+   <?php if ($this->editable && $this->rulesForm) : ?>
+   <form id="jlms-teaching-rules-form" class="form-validate" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+    <?= $this->rulesForm->renderFieldset('details') ?><input type="hidden" name="task" value="curriculum.saveTeachingRules">
+    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button>
+    <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
+   </form>
+   <?php else : ?><p><?= Text::_('COM_JLMS_TEACHING_THRESHOLD') ?>: <?= $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])) ?>%</p><p><?= Text::_('COM_JLMS_TEACHING_RULES_READ_ONLY') ?></p><?php endif; ?>
+  <?php endif; ?>
+ </section>
+<?php endif; ?>
 <?php if ($this->editable && in_array($this->editorMode, ['module','lesson'], true)) : $isModule = $this->editorMode === 'module'; $form = $isModule ? $this->moduleForm : $this->lessonForm; ?>
  <section class="jlms-focused-editor" aria-labelledby="jlms-editor-heading">
   <h2 id="jlms-editor-heading" class="h3"><?= Text::_($isModule ? 'COM_JLMS_MODULE_EDITOR' : 'COM_JLMS_LESSON_EDITOR') ?></h2>
