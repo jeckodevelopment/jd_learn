@@ -8,7 +8,7 @@
  <field name="prompt" type="editor" label="COM_JLMS_QUESTION_PROMPT" required="true" filter="\Joomla\CMS\Component\ComponentHelper::filterText" />
  <field name="default_points" type="number" label="COM_JLMS_QUESTION_POINTS" default="1" min="1" max="10000" filter="string" />
  <field name="options" type="subform" label="COM_JLMS_QUESTION_OPTIONS" description="COM_JLMS_QUESTION_OPTIONS_DESC" multiple="true" min="2" max="20" layout="joomla.form.field.subform.repeatable-table" filter="Subform" validate="Subform">
-  <form><field name="option_id" type="hidden" default="" filter="string" /><field name="label" type="textarea" label="COM_JLMS_OPTION_LABEL" required="true" maxlength="4096" rows="2" filter="string" /><field name="correct" type="checkbox" label="COM_JLMS_OPTION_CORRECT" value="1" default="0" filter="integer" /></form>
+  <form><field name="option_id" type="hidden" default="" filter="string" /><field name="label" type="textarea" label="COM_JLMS_OPTION_LABEL" required="true" maxlength="4096" rows="2" filter="string" /><field name="correct" type="checkbox" label="COM_JLMS_OPTION_CORRECT" value="1" filter="integer" /></form>
  </field>
  <field name="explanation" type="editor" label="COM_JLMS_QUESTION_EXPLANATION" filter="\Joomla\CMS\Component\ComponentHelper::filterText" />
 </fieldset></form>

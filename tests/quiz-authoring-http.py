@@ -51,19 +51,24 @@ try:
  _,b,_=request(admin,bank);expect('id="jlms-question-form"'in b.decode()and'PRIVATE_QUIZ_PROMPT_V2'in b.decode(),'native bank list and question form rendered')
  request(admin,'/administrator/index.php?option=com_jlms&task=questionbank.save',expected=405)
  u,form=form_page(bank,'jlms-question-form');fields={k:v for k,v in form['fields'].items()if'options'not in k}
+ row_keys=sorted({m.group(1)for key in form['fields']if(m:=re.fullmatch(r'jform\[options\]\[([^\]]+)\]\[option_id\]',key))and not m.group(1).endswith('X')})
+ expect(len(row_keys)>=2,'native repeatable form renders at least two real option rows')
+ checkbox_name=f'jform[options][{row_keys[0]}][correct]';checkbox_value=form['fields'].get(checkbox_name)
+ expect(checkbox_value=='1','a selected native correct-answer checkbox submits value 1')
  fields|={'jform[id]':'0','jform[revision]':'1','jform[catid]':f['category_id'],'jform[language]':'*','jform[state]':'1','jform[kind]':'true_false','jform[prompt]':'<p>HTTP_PRIVATE_QUESTION</p>','jform[default_points]':'2','jform[explanation]':'HTTP_PRIVATE_ANSWER_KEY'}
- for i,(label,correct)in enumerate([('True','1'),('False',None)]):
-  fields|={f'jform[options][option{i}][option_id]':f'http{i}',f'jform[options][option{i}][label]':label}
-  if correct is not None:fields[f'jform[options][option{i}][correct]']=correct
+ for i,(row_key,label)in enumerate(zip(row_keys[:2],['True','False'])):
+  fields|={f'jform[options][{row_key}][option_id]':f'http{i}',f'jform[options][{row_key}][label]':label}
+ fields[checkbox_name]=checkbox_value
  bad={k:v for k,v in fields.items()if not re.fullmatch('[a-f0-9]{32}',k)}
  request(admin,urljoin(u,form['action']),fields=bad,expected=403)
  _,invalid_form,_=request(admin,urljoin(u,form['action']),fields=fields|{'jform[prompt]':''},expected=422)
  expect(b'The form contains invalid fields' in invalid_form and b'Question' in invalid_form,'native form validation identifies its invalid field')
  result,b,_=request(admin,urljoin(u,form['action']),fields=fields);expect('HTTP_PRIVATE_QUESTION'in b.decode()and'HTTP_PRIVATE_ANSWER_KEY'in b.decode(),'native subform saves an authorised private answer definition')
  edit_form=next(x for x in Page(b.decode()).forms if x['id']=='jlms-question-form');question_id=int(edit_form['fields']['jform[id]']);expect(question_id>f['question_id'],'HTTP create received a distinct native ID')
- blank_option=fields|{'jform[id]':'0','jform[kind]':'single','jform[prompt]':'<p>HTTP_EMPTY_CHECKBOX_QUESTION</p>','jform[options][option1][correct]':''}
+ unchecked_name=f'jform[options][{row_keys[1]}][correct]'
+ blank_option=fields|{'jform[id]':'0','jform[kind]':'single','jform[prompt]':'<p>HTTP_EMPTY_CHECKBOX_QUESTION</p>',unchecked_name:''}
  _,b,_=request(admin,urljoin(u,form['action']),fields=blank_option);expect('HTTP_EMPTY_CHECKBOX_QUESTION'in b.decode(),'native single-choice form accepts Joomla empty unchecked checkbox value')
- request(admin,urljoin(u,form['action']),fields=fields|{'jform[options][option1][correct]':'1'},expected=422)
+ request(admin,urljoin(u,form['action']),fields=fields|{unchecked_name:checkbox_value},expected=422)
  request(guest,'/index.php?option=com_jlms&view=questionbank',expected=404)
  _,public,_=request(guest,'/index.php?option=com_jlms&view=courses');expect(b'HTTP_PRIVATE_ANSWER_KEY'not in public and b'PRIVATE_QUIZ_PROMPT'not in public,'public catalog contains no bank content or grading data')
  _,login,_=request(guest,bank);expect(b'HTTP_PRIVATE_ANSWER_KEY'not in login and b'id="jlms-question-form"'not in login,'native backend sign-in protects question editing')
