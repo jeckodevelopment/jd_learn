@@ -53,6 +53,6 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 
 
-La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale pubblica dei campi corso è disponibile e verificata nella CI standard0.41; snapshot didattici e campi lezione restano aperti.
+La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della0.41.7 è superata (PR #65, run42420998171). M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
 
 Ultimo pacchetto verificato: [0.41.3](https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861/artifacts/13587097598); commit, esiti e limiti nel registro delle prove. M01 resta aperto.

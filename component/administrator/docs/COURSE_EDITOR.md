@@ -12,7 +12,7 @@ Definire campi e gruppi con il gestore Campi di Joomla, contesto Corsi (`com_jlm
 
 Salva/Salva e chiudi inoltrano `com_fields` agli eventi Joomla. Gli errori di validazione della form conservano l’input; Annulla lascia i valori salvati. Client precedenti che omettono il gruppo non cancellano i valori. Le revisioni obsolete e i permessi del corso vengono verificati prima del salvataggio. Il modello non scrive una tabella parallela dei campi.
 
-Il collegamento amministrativo e la resa editoriale pubblica dei campi corso sono implementati, senza completare CORE-10: campi lezione, snapshot didattici e ripristino completo dei valori tramite Content History restano da implementare/verificare. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
+Il collegamento amministrativo e la resa editoriale pubblica dei campi corso sono implementati. La0.41.7 aggiunge campi lezione con salvataggio ACL, copia in bozza e snapshot alla pubblicazione; CI standard superata. CORE-10 resta in corso per collaudo Joomla reale, copertura completa dei tipi/plugin e ripristino tramite Content History. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
 
 ## Aggiornare lezioni e materiali
 
