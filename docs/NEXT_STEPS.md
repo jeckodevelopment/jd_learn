@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **5 novembre 2026**. Riferimento: **0.34.1-dev** integrata in `main`. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.35.0-dev**, campi corso nell’editor nativo verificati nella CI della PR #45. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità
 
@@ -21,7 +21,7 @@ Aggiornato al **5 novembre 2026**. Riferimento: **0.34.1-dev** integrata in `mai
 
 ## Primo lavoro da svolgere
 
-Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: verificare la nuova amministrazione e il programma su Joomla reale, registrare esiti per build/ruolo/browser e correggere i difetti. Le parti di regole, attestato, anteprima e campi ancora assenti richiedono implementazioni collegate alle rispettive fasi. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
+Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: verificare la nuova amministrazione e il programma su Joomla reale, registrare esiti per build/ruolo/browser e correggere i difetti. La scheda dei campi corso e il salvataggio nativo sono nell’incremento0.35; esiti della CI42379941609 nella PR #45. Seguono riepilogo/conferma dell’impatto degli aggiornamenti e recupero di strutture storiche come nuova bozza, oltre alle parti di regole, attestato, anteprima e snapshot/campi lezione ancora assenti secondo le rispettive fasi. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
 
 ## Condizioni tecniche delle attività successive
 

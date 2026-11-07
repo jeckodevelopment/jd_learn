@@ -63,6 +63,15 @@ $id = (int) $this->item->id;
  <p><?= Text::_('COM_JLMS_COURSE_WORKFLOW_HELP') ?></p>
  <section id="jlms-course-calendar"><?= $this->form->renderFieldset('calendar') ?></section>
  <?= HTMLHelper::_('uitab.endTab') ?>
+ <?php if ($this->form->getFieldsets('com_fields')) : ?>
+ <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-fields-tab', Text::_('COM_JLMS_COURSE_CUSTOM_FIELDS')) ?>
+ <section id="jlms-course-custom-fields">
+ <?php foreach ($this->form->getFieldsets('com_fields') as $fieldset) : ?>
+  <fieldset><legend><?= $this->escape(Text::_($fieldset->label)) ?></legend><?= $this->form->renderFieldset($fieldset->name) ?></fieldset>
+ <?php endforeach; ?>
+ </section>
+ <?= HTMLHelper::_('uitab.endTab') ?>
+ <?php endif; ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-options', Text::_('JOPTIONS')) ?>
  <section id="jlms-course-access-settings"><h2 class="h4"><?= Text::_('COM_JLMS_COURSE_ACCESS_SETTINGS') ?></h2>
   <?= $this->form->renderField('catalog_access') ?><?= $this->form->renderField('enrollment_mode') ?>

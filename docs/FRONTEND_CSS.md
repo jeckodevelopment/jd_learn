@@ -157,3 +157,7 @@ administrator/tmpl/courses/default.php: #jlms-admin-courses, #jlms-course-list, 
 ## Protezione delle modifiche non salvate
 
 Gli override del programma devono mantenere `.jlms-focused-editor` con il form di modifica. Lo script dipende dal form e dai suoi controlli, non da un archivio locale dei contenuti. L'avviso usa la conferma tradotta del browser; richiede JavaScript e interazione utente. Per il comportamento d'uso vedere [AUTHORING.md](AUTHORING.md), per le prove [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+
+## Editor corso: campi Joomla
+
+La scheda condizionale `jlms-course-fields-tab` contiene la regione `jlms-course-custom-fields` e il gruppo nativo `com_fields`. Gli override del form corso devono renderizzare i fieldset restituiti da Joomla, preservando nomi, validazioni e token; non creare campi paralleli o inviare valori disabilitati. Nessun nuovo stile globale.

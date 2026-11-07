@@ -52,6 +52,11 @@ final class HtmlView extends BaseHtmlView
         $this->editorRights=['COM_JLMS_EDITOR_RIGHT_CREATE'=>\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor),'COM_JLMS_EDITOR_RIGHT_EDIT'=>$allowed,'COM_JLMS_EDITOR_RIGHT_PUBLISH'=>$actor->authorise('core.edit.state',$asset),'COM_JLMS_EDITOR_RIGHT_OPTIONS'=>$this->canConfigure];
         $this->readOnly = $this->checkedOutByOther;
         if ($this->readOnly) {
+            foreach ($this->form->getFieldsets('com_fields') as $fieldset) {
+                foreach ($this->form->getFieldset($fieldset->name) as $field) {
+                    $this->form->setFieldAttribute($field->fieldname, 'disabled', 'true', $field->group);
+                }
+            }
             $this->form->setFieldAttribute('version_note', 'disabled', 'true');
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { $this->form->setFieldAttribute($field,'disabled','true'); }
             $this->form->setFieldAttribute('teacher_ids','disabled','true');
