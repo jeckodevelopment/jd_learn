@@ -2,9 +2,13 @@
 
 I campi editoriali correnti sono disponibili nella scheda pubblica del corso tramite plugin e layout Joomla. Snapshot didattici, campi lezione e ripristino completo dei valori tramite Content History restano aperti.
 
-Aggiornato al **7 novembre 2026**. Versione **0.41.0-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42400903346; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.41.1-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42400903346; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
+
+### Incremento candidato0.41.1-dev
+
+Il salvataggio della banca domande trattava una stringa vuota del checkbox “corretta” come input malformato. Il browser normalmente omette i checkbox non selezionati, mentre alcuni percorsi di filtro del form possono preservare il valore vuoto: entrambe le rappresentazioni ora significano risposta non corretta. Restano obbligatorie le regole di validazione (almeno una risposta corretta; una sola per scelta singola e vero/falso). Regressioni dominio e invio HTTP nativo sono aggiunti; la CI standard di questa correzione è in attesa e la correzione non è ancora pubblicata.
 
 ## Funzioni presenti e lavoro residuo
 

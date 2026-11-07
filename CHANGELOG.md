@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.1-dev — salvataggio delle opzioni domanda
+
+- Normalizza i checkbox non selezionati della banca domande sia quando il browser li omette sia quando Joomla li filtra come stringa vuota.
+- Aggiunge regressioni di dominio e invio HTTP del form nativo che riproducono il checkbox non selezionato.
+- Incremento mirato alla segnalazione di salvataggio 422; non dichiara l’intero authoring quiz accettato.
+
+
 ## 0.41.0-dev — campi nativi nella scheda pubblica del corso
 
 - Resa dei campi editoriali correnti con com_fields, plugin di tipo e layout/override nativi; posizioni dopo titolo, prima e dopo la presentazione. Nascosti/manuali ed elementi vuoti non producono una sezione vuota.

@@ -11,6 +11,8 @@ $input=['kind'=>'single','prompt'=>'<p>A question?</p>','options'=>[['option_id'
 $filter=static fn(string $html):string=>strip_tags($html,'<p>');
 $d=QuestionDefinition::normalise($input,$filter);
 qExpect($d['grading']['correct']===['a']&&$d['grading']['default_points']===3,'correct IDs and integral points retained');
+$nativeUnchecked=$input;$nativeUnchecked['options'][1]['correct']='';qExpect(QuestionDefinition::normalise($nativeUnchecked,$filter)['grading']['correct']===['a'],'empty native checkbox value is treated as unchecked');
+$browserUnchecked=$input;unset($browserUnchecked['options'][1]['correct']);qExpect(QuestionDefinition::normalise($browserUnchecked,$filter)['grading']['correct']===['a'],'omitted native checkbox value is treated as unchecked');
 qExpect(!str_contains(QuestionDefinition::canonical($d['options']),'correct'),'public options contain no answer key');
 qExpect(QuestionDefinition::canonical(['z'=>1,'a'=>['x'=>2,'b'=>3]])===QuestionDefinition::canonical(['a'=>['b'=>3,'x'=>2],'z'=>1]),'canonical object keys independent of insertion order');
 qExpect(QuestionDefinition::canonical([['id'=>'a'],['id'=>'b']])!==QuestionDefinition::canonical([['id'=>'b'],['id'=>'a']]),'display list order preserved');
