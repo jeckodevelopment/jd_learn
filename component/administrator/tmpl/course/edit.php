@@ -32,7 +32,7 @@ $id = (int) $this->item->id;
     <h2 id="jlms-course-image-fields-heading" class="h4"><?= Text::_('COM_JLMS_COURSE_IMAGE') ?></h2>
     <?= $this->form->renderField('presentation_image') ?><?= $this->form->renderField('presentation_image_alt') ?><?= $this->form->renderField('presentation_image_decorative') ?>
    </section>
-   <section id="jlms-course-teachers" aria-labelledby="jlms-course-teachers-heading">
+   <section id="jlms-course-teacher-fields" aria-labelledby="jlms-course-teachers-heading">
     <h2 id="jlms-course-teachers-heading" class="h4"><?= Text::_('COM_JLMS_TEACHERS') ?></h2>
     <?php if ($id) : ?><?= $this->form->renderFieldset('teachers') ?><?php else : ?><p><?= Text::_('COM_JLMS_TEACHER_SAVE_FIRST') ?></p><?php endif; ?>
    </section>
