@@ -1,6 +1,6 @@
 # M01 — completamento della gestione corsi
 
-Stato al **7 novembre 2026**, main **0.41.7-dev**; PR #65 integrata e CI standard superata nei due ambienti PHP/database e Chromium ([run 42420998171](https://github.com/jeckodevelopment/jd_learn/actions/runs/42420998171)). **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; perimetro e criteri di chiusura seguono la [mappa della prima release](RELEASE_SCOPE_MATRIX.md). Quiz e attestati non sono gate della prima stabile.
+Stato all’**8 novembre 2026**, main **0.41.8-dev**; PR #68 integrata, PR #65 e PR #68 superano la CI standard ([run 42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)). **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; perimetro e criteri di chiusura seguono la [mappa della prima release](RELEASE_SCOPE_MATRIX.md). Quiz e attestati non sono gate della prima stabile.
 
 Questa checklist distingue ciò che è già utilizzabile da implementazioni mancanti e collaudi. Non ripianificare pubblicazione, duplicazioni e riordino come funzioni assenti. Le regressioni implementate e i controlli dei campi editoriali pubblici e dei campi didattici lezione passano nelle CI registrate; il riordino del form è integrato e ha superato la CI d’integrazione; resta il collaudo manuale sul sito Joomla. Le funzioni congelate in fase 2 non sono gate M01.
 

@@ -1,6 +1,6 @@
 # Problemi specifici e differenze aperte
 
-Stato al **7 novembre 2026**: main **0.41.7-dev**; PR #65 integrata, CI standard superata nei due ambienti PHP/database e Chromium (run [42420998171](https://github.com/jeckodevelopment/jd_learn/actions/runs/42420998171)). Il collaudo manuale dell’editor, della ripresa e dei campi lezione resta aperto. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
+Stato all’**8 novembre 2026**: main **0.41.8-dev**; PR #68 integrata, CI standard superata nei due ambienti PHP/database e Chromium (run [42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)). Il collaudo manuale dell’editor, della ripresa, dei campi lezione e della dashboard resta aperto. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
 
 ## Casi aperti
 

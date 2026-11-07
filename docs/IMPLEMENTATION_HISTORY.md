@@ -27,6 +27,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | 0.41.6 | Ritiro dal catalogo senza revoca dell’aula per iscritti autorizzati; PR #64 integrata, CI standard finale superata (run 42414492267), R-03 parziale e collaudo Joomla reale ancora aperto |
 | 0.41.7 | Campi personalizzati nativi delle lezioni, baseline aggiornato per la revisione dell’impatto, snapshot in pubblicazione e valori nell’aula; PR #65 integrata nel commit [50925d2](https://github.com/jeckodevelopment/jd_learn/commit/50925d2f27ddcf9b23a18643747bbc047dae1ddd), CI standard superata ([run 42420998171]); collaudo Joomla reale aperto |
+| 0.41.8 | Dashboard amministrativa con percorso corsi in evidenza, strumenti raggruppati, provider espandibili e foglio WAM responsive; PR #68 integrata nel commit [6e7789a](https://github.com/jeckodevelopment/jd_learn/commit/6e7789afff3aadce4353c5a17a072f945075c212), CI standard superata ([run 42423237440]); collaudo Joomla reale aperto |
 | 0.41.6 | Ritiro catalogo senza revoca aula per gli iscritti autorizzati; PR #64 integrata, CI standard superata; R-03 parziale |
 | 0.41.5 | Fallback Riprendi alla prima attività obbligatoria incompleta; CI standard superata e PR #62 integrata |
 | 0.41.4 | Schede dell’editor corso raggruppate; CI standard superata e PR #60 integrata |

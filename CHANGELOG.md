@@ -4,7 +4,7 @@
 
 - Mette in evidenza l’accesso alla gestione corsi, raggruppa gli strumenti secondari e raccoglie lo stato provider in un dettaglio espandibile.
 - Aggiunge stile responsive confinato alla dashboard tramite Joomla Web Asset Manager; nessuna modifica ai permessi o al template amministrativo.
-- Aggiunge stringhe italiane e inglesi e documenta gli ID/classi per gli override. Collaudo visivo e dei ruoli nel backend Joomla reale ancora da svolgere.
+- Aggiunge stringhe italiane e inglesi e documenta gli ID/classi per gli override. PR #68 integrata; CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium (run [42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)). Collaudo visivo e dei ruoli nel backend Joomla reale ancora da svolgere.
 
 ## 0.41.7-dev — campi personalizzati delle lezioni
 

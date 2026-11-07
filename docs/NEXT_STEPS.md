@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.41.7-dev in main; PR #65 integrata**. La CI standard è superata nei due ambienti PHP/database e Chromium ([run 42420998171](https://github.com/jeckodevelopment/jd_learn/actions/runs/42420998171)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Riferimento: **0.41.8-dev in main; PR #68 integrata**. La CI standard è superata nei due ambienti PHP/database e Chromium ([run 42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -23,7 +23,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. CI superata; resta il collaudo sul sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
+La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. La PR #68 ha completato il restyling previsto della schermata iniziale. Entrambe hanno superato la CI prevista; resta il collaudo nel sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 
 In parallelo, mantenere i tre provider esterni e i media locali come requisiti core: la [durata automatica e gli scarti video](VIDEO_DURATION_PLAN.md) sono implementati nella linea0.39 ma il collaudo completo con provider/browser/account reali resta necessario. Aggiornare lo stato per ciascun build e distinguere ciò che è implementato da ciò che è accettato.
 

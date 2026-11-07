@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.8-dev.** Il miglioramento della dashboard amministrativa è in preparazione; il prodotto resta in sviluppo e non è pronto per la produzione.
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.8-dev.** La PR #68 per la dashboard amministrativa è integrata in main; il prodotto resta in sviluppo e non è pronto per la produzione.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -14,7 +14,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.4
 | [Roadmap](docs/ROADMAP_TO_STABLE.md) | Perimetro delle fasi fino al rilascio stabile |
 | [Matrice requisiti](docs/REQUIREMENTS_STATUS.csv) | Tracciabilità dettagliata dei 210 requisiti |
 | [Problemi specifici](docs/IMPLEMENTATION_GAPS.md) | Differenze aperte e segnalazioni risolte |
-| [Backend: piano UX](docs/ADMIN_UX_PLAN.md) | Menu amministrativo nativo implementato; restyling e collaudo UX residui |
+| [Backend: piano UX](docs/ADMIN_UX_PLAN.md) | Menu e dashboard amministrativa aggiornati; restano collaudo ruoli, accessibilità e navigazione in Joomla reale |
 | [Politica CI](docs/CI_POLICY.md) | Bozze leggere e integrazioni sul candidato prima del merge |
 | [Prove del build](docs/IMPLEMENTATION_EVIDENCE.json) | Commit, CI e pacchetto effettivamente verificati |
 | [Cronologia](docs/IMPLEMENTATION_HISTORY.md) e [changelog](CHANGELOG.md) | Come siamo arrivati allo stato attuale |
@@ -55,4 +55,4 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della 0.41.7 è superata (PR #65, run 42420998171). La 0.41.8 aggiorna la dashboard amministrativa; la verifica visiva e dei ruoli in Joomla è ancora da svolgere. M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
 
-Ultimo pacchetto verificato: [0.41.3](https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861/artifacts/13587097598); commit, esiti e limiti nel registro delle prove. M01 resta aperto.
+Ultimo pacchetto verificato: **0.41.8-dev**, SHA-256 `5a1e7e236dc8171bff8fe318374fc47c27d10605740fa83ed09f4fead0861c92`; build riproducibile da main dopo la PR #68. La CI standard è superata (run [42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)). Restano aperti il controllo manuale nel backend Joomla e gli altri requisiti M01 indicati nello stato attuale.
