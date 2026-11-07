@@ -61,3 +61,13 @@ Nel Programma aprire Versioni, selezionare una versione storica già pubblicata 
 Il recupero conserva scheda promozionale, docenti, accessi e versione attiva correnti. Non assegna gruppi e non modifica iscrizioni, progressi o tentativi. Per rendere attivo il programma recuperato occorre modificarlo se necessario e pubblicarlo tramite il normale riepilogo/conferma dell’impatto; si applicano di nuovo i controlli su regole, risorse, privacy e configurazione dei provider. Gli iscritti esistenti conservano la versione assegnata.
 
 Il comando richiede POST/token Joomla, conferma, identità e permessi correnti, checkout compatibile, revisioni del corso e della fonte; la fonte deve appartenere al corso ed essere storica congelata. Rifiuta fonti attive o bozze e richieste obsolete. Copia e Action Logs nativo sono atomici. Nessun ripristino o migrazione automatica degli studenti.
+
+## Regole didattiche e soglia video
+
+Nell’editor del corso la scheda **Regole didattiche** offre **Salva e modifica le regole didattiche**: valida/salva prima la scheda corrente e prepara o riapre la bozza del programma. Dal Programma il collegamento Regole didattiche apre lo stesso editor contestuale, senza un secondo form di lezione o modulo. Sono esplicitate navigazione libera e completamento di tutte le attività obbligatorie, attualmente operative.
+
+La soglia video della versione è modificabile da **0,01% a 100%**, massimo due decimali, con predefinita90%. Si applica agli intervalli unici riprodotti dei video tracciati, indipendentemente dal provider supportato. Non misura l’apprendimento e saltare alla fine non completa la lezione. Il salvataggio usa un form Joomla POST/token con permesso corrente, checkout e revisione della bozza; gli errori conservano il valore per correggerlo e le modifiche non salvate usano l’avviso già previsto nell’editor contestuale.
+
+Le versioni pubblicate/storiche sono in sola lettura. Una modifica in bozza non cambia corso attivo, dati promozionali, iscritti o progressi. La pubblicazione aggiornata richiede il normale riepilogo/conferma, che mostra anche soglia precedente e nuova; i nuovi iscritti seguono la versione aggiornata e quelli già assegnati conservano la propria soglia. Un cambiamento successivo al riepilogo lo invalida.
+
+Questo è il sottoinsieme operativo dell’editor regole: sequenze/rilascio/prerequisiti avanzati, modalità consultabile, attestati e soglie specifiche per singola lezione restano residui delle rispettive fasi. Non si mostrano controlli che attivino funzioni ancora non supportate.

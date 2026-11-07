@@ -56,3 +56,7 @@ Gli iscritti mantengono versioni, tentativi, progressi e file assegnati. La migr
 ## Recuperare un programma storico
 
 Dal Programma → Versioni selezionare una versione storica e usare **Recupera come nuova bozza**. Le altre bozze, la scheda e la pubblicazione corrente e i dati studente restano invariati. La nuova pubblicazione richiede il normale riepilogo/conferma e i controlli dei provider. Contratto, permessi e procedura nella [guida editor](COURSE_EDITOR.md#recuperare-un-programma-storico).
+
+## Soglia video della versione
+
+La pubblicazione verifica che la soglia sia un intero valido in centesimi di percentuale (1–10000), con default90% quando manca nei dati legacy supportati. Il form Regole didattiche usa percentuali con massimo due decimali, senza arrotondamento in virgola mobile. Il riepilogo mostra soglia precedente e nuova quando cambiano; l’impronta include le regole e rifiuta conferme superate. Dopo la pubblicazione, ogni iscrizione continua a usare la soglia della versione assegnata; nessun ricalcolo dei completamenti esistenti.

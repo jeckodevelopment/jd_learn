@@ -25,3 +25,7 @@ Per gli override vedere il [contratto CSS](FRONTEND_CSS.md). Le prove e i collau
 ## Recuperare un programma storico
 
 Dal Programma → Versioni selezionare una versione storica e usare **Recupera come nuova bozza**. Le altre bozze, la scheda e la pubblicazione corrente e i dati studente restano invariati. La nuova pubblicazione richiede il normale riepilogo/conferma e i controlli dei provider. Contratto, permessi e procedura nella [guida editor](COURSE_EDITOR.md#recuperare-un-programma-storico).
+
+## Regole del programma
+
+Dal Programma → Regole didattiche si modifica la soglia video nella bozza. Le regole pubblicate rimangono leggibili e immutabili; il normale riepilogo/conferma governa la nuova pubblicazione. La scheda corso offre anche il salvataggio prima dell’apertura dell’editor. Procedura e limiti nella [guida editor](COURSE_EDITOR.md#regole-didattiche-e-soglia-video).

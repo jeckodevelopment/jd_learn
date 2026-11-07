@@ -206,7 +206,7 @@ final class PublicationService
         if (!$required || in_array(0, array_values($moduleIds), true)) {
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
         }
-        $rules = json_decode($version->rules_json, true, 32, JSON_THROW_ON_ERROR);
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
         if (($rules['mode'] ?? '') !== 'learning' || ($rules['sequence_mode'] ?? '') !== 'free'
             || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required'
             || $version->fields_snapshot_json !== '{}') {

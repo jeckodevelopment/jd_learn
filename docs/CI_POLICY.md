@@ -1,6 +1,6 @@
 # CI: verificare il candidato prima del merge
 
-Politica operativa del 7 novembre 2026. Cambia il momento e l’ampiezza della verifica; non elimina casi funzionali dalla suite. Versione applicativa invariata: 0.37.0-dev.
+Politica operativa del 7 novembre 2026. Cambia il momento e l’ampiezza della verifica; non elimina casi funzionali dalla suite. La versione applicativa è indicata nello stato corrente.
 
 | Fase | Controlli | Integrazioni |
 |---|---|---|

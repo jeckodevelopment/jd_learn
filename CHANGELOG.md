@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.38.0-dev — regole didattiche e soglia video della versione
+
+- Scheda Regole didattiche nel corso con salvataggio prima dell’apertura della bozza; editor contestuale nel Programma, lettura delle versioni pubblicate e riuso dell’avviso modifiche non salvate.
+- Soglia video configurabile da0,01% a100%, massimo due decimali, default90%; conversione/confronto esatti e validazione anche prima del congelamento. Navigazione libera e tutte le attività obbligatorie restano le regole operative.
+- Salvataggio POST/token con ACL correnti, checkout e CAS. Riepilogo di pubblicazione con soglia precedente/nuova e invalidazione se le regole cambiano; storico e iscritti conservano la versione assegnata.
+- Prove di completamento a soglie diverse per iscrizioni vecchie/nuove, form nativi e conservazione dopo upgrade. Regole avanzate, attestati e override per lezione restano aperti.
+
 ## Processo e roadmap — 7 novembre 2026
 
 - PR in bozza con controlli leggeri; integrazioni per il candidato pronto, due coppie PHP/database e Chromium. Matrice completa disponibile manualmente prima di milestone/rilascio o interventi di compatibilità; nessuna rimozione di scenari dalla suite.

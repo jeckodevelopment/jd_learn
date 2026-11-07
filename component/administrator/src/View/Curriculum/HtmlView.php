@@ -15,6 +15,8 @@ final class HtmlView extends BaseHtmlView
     public array $outline;
     public $moduleForm;
     public $lessonForm;
+    public $rulesForm;
+    public ?array $teachingRules = null;
     public array $lessonsByModule = [];
     public bool $editable = false;
     public bool $canDuplicateCourse = false;
@@ -49,6 +51,10 @@ final class HtmlView extends BaseHtmlView
         $this->editable = $version && $version->status === 'draft' && !$locked;
         $this->canRestoreProgramme = $version && !$locked && $course->current_version_id !== null
             && (int)$course->current_version_id !== (int)$version->id && in_array($version->status, ['published','retired'], true);
+        if ($version) {
+            try { $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()->teachingRules($actor, (int)$course->id, (int)$version->id); }
+            catch (\DomainException $error) { if ($error->getMessage() !== 'COM_JLMS_PUBLICATION_UNSUPPORTED') { throw $error; } }
+        }
         $this->canMaterials = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id);
         $this->canQuiz = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . (int) $course->id);
         $this->getDocument()->getWebAssetManager()->getRegistry()->addExtensionRegistryFile('com_jlms');
@@ -97,6 +103,7 @@ final class HtmlView extends BaseHtmlView
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) { $this->editorMode = 'lesson'; }
+            if ($app->getInput()->getBool('edit_rules')) { $this->editorMode = 'rules'; }
             $editModule = $app->getInput()->getInt('edit_module');
             $editLesson = $app->getInput()->getInt('edit_lesson');
             if ($editModule) { $this->editorMode = 'module'; }
@@ -156,6 +163,14 @@ final class HtmlView extends BaseHtmlView
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }
+            }
+            if ($this->editorMode === 'rules' && $this->teachingRules !== null) {
+                $this->rulesForm = $this->get('RulesForm');
+                $data = $common + ['video_threshold'=>\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])];
+                $key = 'com_jlms.curriculum.' . (int)$course->id . '.' . (int)$version->id . '.rules';
+                $saved = $app->getUserState($key, []); $app->setUserState($key, null);
+                if (is_array($saved) && (is_string($saved['video_threshold'] ?? null) || is_int($saved['video_threshold'] ?? null))) { $data['video_threshold'] = $saved['video_threshold']; }
+                $this->rulesForm->bind($data);
             }
             $this->moduleForm->bind($moduleData);
             $this->lessonForm->bind($lessonData);

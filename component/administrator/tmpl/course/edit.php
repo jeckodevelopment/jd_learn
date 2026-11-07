@@ -53,6 +53,11 @@ $id = (int) $this->item->id;
   <?php endif; ?>
  <?php endif; ?>
  <?= HTMLHelper::_('uitab.endTab') ?>
+ <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-teaching-rules', Text::_('COM_JLMS_TEACHING_RULES')) ?>
+ <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
+ <?php if (!$id) : ?><p><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p>
+ <?php elseif (!$this->readOnly) : ?><joomla-toolbar-button task="course.programmeRules" form-validation><button type="button" class="btn btn-primary"><?= Text::_('COM_JLMS_TEACHING_RULES_OPEN') ?></button></joomla-toolbar-button><?php endif; ?>
+ <?= HTMLHelper::_('uitab.endTab') ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-teachers-settings', Text::_('COM_JLMS_TEACHERS')) ?>
  <?php if ($id) : ?><?= $this->form->renderFieldset('teachers') ?><?php else : ?><p><?= Text::_('COM_JLMS_TEACHER_SAVE_FIRST') ?></p><?php endif; ?>
  <?= HTMLHelper::_('uitab.endTab') ?>

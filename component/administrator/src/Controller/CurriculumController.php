@@ -57,6 +57,9 @@ class CurriculumController extends BaseController
                     $publication->transition($actor, $courseId, $versionId, CurriculumService::id($input['revision'] ?? null),
                         CurriculumService::id($input['expected_version_revision'] ?? null), $transition, $fingerprint);
                     break;
+                case 'rules':
+                    $service->saveTeachingRules($actor, $input);
+                    break;
                 case 'restore':
                     $versionId = $service->restoreVersion($actor, $input);
                     break;
@@ -94,7 +97,7 @@ class CurriculumController extends BaseController
                 'PROVIDER_UNAVAILABLE' => 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING',
                 default => $error->getMessage(),
             };
-            $known = ['COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED', 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID', 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'COM_JLMS_PUBLICATION_REVIEW_STALE', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
+            $known = ['COM_JLMS_TEACHING_THRESHOLD_INVALID', 'COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED', 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID', 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'COM_JLMS_PUBLICATION_REVIEW_STALE', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
                 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_INVALID_COURSE',
                 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING', 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED',
                 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED', 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', 'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_VERSION_COPY_NOT_AVAILABLE', 'COM_JLMS_SOURCE_INVALID',
@@ -117,6 +120,10 @@ class CurriculumController extends BaseController
         }
         $target = $courseId ? 'index.php?option=com_jlms&view=curriculum&id=' . $courseId . '&version_id=' . $versionId
             : 'index.php?option=com_jlms&view=courses';
+        if ($operation === 'rules' && $courseId && $versionId) {
+            $this->app->setUserState('com_jlms.curriculum.' . $courseId . '.' . $versionId . '.rules', $failed ? ['video_threshold'=>$input['video_threshold'] ?? ''] : null);
+            $target .= '&edit_rules=1#jlms-teaching-rules';
+        }
         if ($failed && $operation === 'save' && $courseId && $versionId) {
             $this->app->setUserState('com_jlms.curriculum.' . $courseId . '.' . $versionId . '.' . $kind, $input);
             $target .= $kind === 'module' ? '&edit_module=' . (int) ($input['id'] ?? 0) . '&new_module=1' : '&edit_lesson=' . (int) ($input['id'] ?? 0) . '&new_lesson=1&module_id=' . (int) ($input['module_id'] ?? 0);
@@ -132,7 +139,7 @@ class CurriculumController extends BaseController
 
     public function execute($task)
     {
-        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'restoreversion', 'transition', 'duplicatecourse', 'saveorder'], true)) {
+        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'restoreversion', 'saveteachingrules', 'transition', 'duplicatecourse', 'saveorder'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -166,6 +173,8 @@ class CurriculumController extends BaseController
         echo new \Joomla\CMS\Response\JsonResponse($data, $message, $error, true);
         $this->app->close();
     }
+
+    public function saveTeachingRules(): void { $this->perform('rules'); }
 
     public function restoreVersion(): void { $this->perform('restore'); }
 

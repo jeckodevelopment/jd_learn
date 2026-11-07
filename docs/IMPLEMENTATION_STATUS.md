@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.37.0-dev**: recupero del programma storico come nuova bozza; PR #47 verificata dalla CI42385237648. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.38.0-dev**: editor delle regole didattiche e soglia video della versione; verifiche del nuovo incremento in corso. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -10,12 +10,12 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 | Area | Disponibile oggi | Da implementare o completare |
 |---|---|---|
-| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi, modifica propria e voci di menu | Restyling dell’ingresso/backend e menu JD Learn nella sidebar Joomla; parti dell'editor per regole didattiche/attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
-| Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
+| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi e accesso alle Regole didattiche, modifica propria e voci di menu | Restyling dell’ingresso/backend e menu JD Learn nella sidebar Joomla; regole avanzate e attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
+| Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate e soglia video della bozza | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
 | Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento; recupero di una versione storica in una nuova bozza con audit, senza sovrascrivere le altre | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
 | Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata | Fallback di Riprendi sulla prima attività obbligatoria non completata (R-05), attività dettagliate e collegamento agli attestati |
-| Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; consenso, copertura/ripresa, API/token Stream e MP4 privati con Range/Nginx | Quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
+| Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; consenso, copertura/ripresa, soglia video configurabile per versione con default90%, API/token Stream e MP4 privati con Range/Nginx | Quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
 | Materiali | Allegati distinti corso/lezione, upload validato, quarantena/scanner opzionale, storage privato e download autorizzato | Riuso/anteprima/metadati e lifecycle completi, offload, pulizia e conservazione |
 | Iscrizioni | Avvio automatico, elenco amministrativo, ammissione singola con anteprima/conferma/audit, preassegnazione esplicita senza concedere accesso, sospensione/riattivazione | CSV, richieste/approvazioni/rifiuti, annullamenti, edizioni aggiuntive e proroghe; separare chiusura nuove iscrizioni e sospensione dell'aula (R-03) |
 | Quiz | Banca/revisioni, composizione/pool/snapshot, tentativi e autosave/CAS, valutazione/feedback, scadenza server, tempi individuali, annullamenti e proroghe motivati | Rivalutazioni, disponibilità e anomalie complete, collegamento agli attestati e rifinitura dell'interfaccia |
@@ -28,6 +28,8 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream sono la priorità corrente condivisa. Estensioni avanzate dei provider restano separate: ogni difetto che impedisce di pubblicare o fruire un corso video va affrontato subito.
 
 ## Verifiche disponibili e limiti
+
+Il nuovo incremento aggiunge prove della soglia esatta, form/CSRF/ACL/checkout/revisioni, conferma di impatto, completamento e conservazione delle soglie assegnate dopo upgrade. Esiti della nuova CI non ancora disponibili; le prove seguenti restano il riferimento verificato precedente.
 
 La [CI0.37](https://github.com/jeckodevelopment/jd_learn/actions/runs/42385237648) ha superato tutti e 5 i job sul codice `ef660a4809c23e1a9ae2d1f14759f7361b05d765`:
 
