@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Incremento **0.35.0-dev**: campi personalizzati nativi nell’editor corso; risultati delle nuove verifiche nella PR del build. Ultima baseline integrata: 0.34.1-dev / PR #43. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.35.0-dev**: campi personalizzati nativi nell’editor corso, PR #45. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -27,7 +27,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 ## Verifiche disponibili e limiti
 
-La0.35 aggiunge prove native e HTTP dei campi corso. Gli esiti effettivi del nuovo build sono nella relativa PR; le prove della baseline sotto restano riferite alla0.34.1. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
+La [CI0.35](https://github.com/jeckodevelopment/jd_learn/actions/runs/42379941609) ha superato tutti5i job: quattro combinazioni PHP/database e Chromium, con9nuovi controlli nativi e5HTTP dei campi corso, installazione/upgrade0.34.1→0.35 e conservazione degli storici. Il codice verificato è4d7f012ccb1f07c742f943271f6d50902423664b; la successiva registrazione documentale non cambia il codice o il pacchetto. Le prove della baseline sotto restano riferite alla0.34.1. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
 
 La [CI del build 0.34.1](https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537) ha superato **tutti e cinque i job**:
 
