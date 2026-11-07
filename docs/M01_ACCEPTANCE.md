@@ -1,13 +1,13 @@
 # M01 — completamento della gestione corsi
 
-Stato al **7 novembre 2026**, incremento **0.39.0-dev**: **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; le dipendenze da M02/M03/M08/M10 restano parte del lavoro richiesto.
+Stato al **7 novembre 2026**, incremento **0.40.0-dev**: **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; le dipendenze da M02/M03/M08/M10 restano parte del lavoro richiesto.
 
 Questa checklist distingue ciò che è già utilizzabile da implementazioni mancanti e collaudi. Non ripianificare pubblicazione, duplicazioni e riordino come funzioni assenti. Le regressioni implementate e i nuovi controlli della durata passano nella [CI0.39](https://github.com/jeckodevelopment/jd_learn/actions/runs/42393451244); gli esiti non sostituiscono l'accettazione completa degli scenari.
 
 | Ambito | Già disponibile | Implementazione mancante | Collaudo ancora richiesto |
 |---|---|---|---|
 | Elenco ed editor | Toolbar/ricerca/filtri/ordinamenti nativi, contenuto/sidebar, Salva e apri programma | Parti specifiche elencate sotto; correggere eventuali difetti emersi dal collaudo | Browser/mobile/tastiera, override e combinazioni AC-126 |
-| Ingresso e navigazione backend | Schermata iniziale con collegamenti e viste amministrative già operative | Restyling della schermata iniziale e menu JD Learn nella sidebar nativa Joomla; accessi autorizzati e contesto corso coerente ([piano](ADMIN_UX_PLAN.md)) | Installazione/upgrade, menu attivo, ruoli limitati, IT/EN, tastiera/mobile e percorsi completi |
+| Ingresso e navigazione backend | Apertura diretta elenco corsi e cinque voci native di menu (0.40, CI in preparazione) | Restyling residuo e collaudo menu/ACL nel contesto Joomla ([piano](ADMIN_UX_PLAN.md)) | Installazione/upgrade, menu attivo, ruoli limitati, IT/EN, tastiera/mobile e percorsi completi |
 | Dati corso | Descrizioni e validazioni, copertina/alt/SEO, accessi, calendario e ACL per corso | Nessuna ulteriore funzione dichiarata assente in questo sottoinsieme | Picker Media interattivo, combinazioni di date/lingue/ACL e compatibilità degli override |
 | Durata dei video | Acquisizione SDK YouTube/Vimeo e API Stream con ricevute di sorgente, misura MP4, ripiego manuale distinto, tolleranza/denominatore osservato (0.39, CI42393451244 superata) | Riconoscimento certo dei live/ulteriori configurazioni, se richiesti dal percorso provider; nessuna dichiarazione di completamento integrale | Quattro provider reali, arrotondamenti/timeout/consenso/CSP, cambio sorgente, percentuali, sessioni e storico; nuove regressioni automatiche superate, collaudo reale aperto |
 | Modifica pubblicato | Salva e Salva e chiudi, storico editoriale e ripristino nel modello; recupero del programma storico in nuova bozza (0.37, CI42385237648/PR47 superata) | Nessun ulteriore comando di recupero di base mancante | Confronto/ripristino dalla UI Content History, checkout e combinazioni AC-119/125 |

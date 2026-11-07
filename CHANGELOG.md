@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.40.0-dev — accesso diretto ai corsi e menu amministrativo
+
+- JD Learn apre direttamente l’elenco corsi. Menu nativo Joomla con Corsi, Categorie corsi, Banca domande, Docenti e Stato provider video, installato/aggiornato dal manifest.
+- La pagina precedente resta accessibile esplicitamente per la diagnostica; nessun menu globale per pagine che richiedono il contesto corso.
+- Controlli di installazione/upgrade del menu e navigazione HTTP autenticata. Restyling completo, collaudo ruoli/browser e campi/snapshot restano aperti.
+
 ## 0.39.0-dev — durata automatica dei video
 
 - Metadati nell’editor con preview SDK YouTube/Vimeo, API server Stream e durata MP4 da file invariata. Automatico predefinito, ripiego manuale distinto, nessuna casella di conferma ordinaria.

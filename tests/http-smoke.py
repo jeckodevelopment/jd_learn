@@ -71,7 +71,14 @@ try:
  fields=form['fields'];fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
  with http.open(urljoin(urljoin(url,page.base or ''),form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
  url,html=get('/administrator/index.php?option=com_jlms')
- if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('Authenticated JD Learn dashboard did not render')
+ if 'id="jlms-admin-courses"' not in html:raise RuntimeError('JD Learn must open the course list directly')
+ menu_links=[parse_qs(urlparse(x).query) for x in Page(html).links]
+ for view in ['courses','teachers','questionbank','dashboard']:
+  if not any(q.get('option')==['com_jlms'] and q.get('view')==[view] for q in menu_links):raise RuntimeError('Native JD Learn sidebar link missing: '+view)
+ if not any(q.get('option')==['com_categories'] and q.get('extension')==['com_jlms.course'] for q in menu_links):raise RuntimeError('Native course category sidebar missing')
+ url,html=get('/administrator/index.php?option=com_jlms&view=dashboard')
+ if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('Provider status page remains accessible explicitly')
+ print(json.dumps({'admin_navigation_http_checks':7,'status':'passed'}))
  url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
  if 'CI Courses' not in html:raise RuntimeError('Native Joomla category manager did not render the saved category')
  url,html=get('/administrator/index.php?option=com_jlms&view=courses')

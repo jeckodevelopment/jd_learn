@@ -177,3 +177,7 @@ La scheda corso è `#jlms-course-teaching-rules`; il programma usa `#jlms-teachi
 ### Metadati video nell’authoring
 
 Il form lezione contiene `#jlms-video-metadata` (stato aria-live) e `#jlms-video-metadata-preview` (player visibile senza autoplay, nessun progresso studente). Classi Bootstrap ratio esistenti, nessuno stile globale nuovo. Gli override devono renderizzare i campi nativi duration_mode/duration_ticket/sdk_duration_ms, la regione di stato e il pulsante Rileva di nuovo; non reintrodurre la conferma obbligatoria. Il modulo WAM `com_jlms.videoMetadata` opera solo nel form lezione e rispetta consenso, annullamento e cambio sorgente.
+
+### Navigazione amministrativa 0.40
+
+Ingresso diretto nella vista courses esistente (`jlms-admin-courses`); nessun nuovo CSS o menu HTML parallelo. Il submenu è reso da mod_menu/Atum e segue gli override nativi Joomla. La diagnostica conserva `jlms-admin-dashboard` su view=dashboard.

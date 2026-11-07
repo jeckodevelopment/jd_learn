@@ -52,6 +52,14 @@ $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
+// Native extension installer must create the submenu once and preserve it on upgrade.
+$menuParent = (int) $db->setQuery("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND link='index.php?option=com_jlms&view=courses' AND parent_id=1")->loadResult();
+$menuLinks = $db->setQuery('SELECT link FROM #__menu WHERE client_id=1 AND parent_id=' . $menuParent)->loadColumn();
+$expectedLinks = ['index.php?option=com_jlms&view=courses', 'index.php?option=com_categories&view=categories&extension=com_jlms.course', 'index.php?option=com_jlms&view=questionbank', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_jlms&view=dashboard'];
+sort($menuLinks); sort($expectedLinks);
+if (!$menuParent || $menuLinks !== $expectedLinks) { throw new \RuntimeException('Native administrator menu missing or duplicated after installation/upgrade.'); }
+echo json_encode(['admin_menu_install_checks'=>1,'mode'=>$argv[2] ?? 'installed','status'=>'passed']) . "\n";
+
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
 if (!$userId) {
     throw new \RuntimeException('Test Joomla operator missing.');
