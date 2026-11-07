@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.41.4-dev in main, PR #60 unita; candidato 0.41.5-dev per R-05**; editor corso raggruppato e quattro job standard superati nella [CI 42410200676](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676). Menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.41.5-dev in main; PR #60 e #62 unite**; editor corso raggruppato e quattro job standard superati nella [CI 42410200676](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676). Menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -55,7 +55,7 @@ Completare richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gesti
 
 ### Didattica, versioni e media
 
-Audio/documenti come lezioni autonome; prerequisiti/sequenze/rilascio con validazione dei cicli e dei contenuti irraggiungibili. Il fallback R-05 è candidato alla correzione nella 0.41.5. Completamento del versionamento: equivalenze/migrazione esplicita con la propria anteprima di impatto e rivalutazioni quiz senza alterare evidenze congelate. Percorsi aggregati del primo rilascio, senza anticipare attestati di percorso/sequenze fra corsi differiti.
+Audio/documenti come lezioni autonome; prerequisiti/sequenze/rilascio con validazione dei cicli e dei contenuti irraggiungibili. Il fallback R-05 è stato corretto nella 0.41.5; il test manuale sul sito resta da svolgere. Completamento del versionamento: equivalenze/migrazione esplicita con la propria anteprima di impatto e rivalutazioni quiz senza alterare evidenze congelate. Percorsi aggregati del primo rilascio, senza anticipare attestati di percorso/sequenze fra corsi differiti.
 
 Chiudere R-02 con un quinto provider di prova installabile senza patch; completare capacità/asset, sottotitoli/trascrizioni/preferenze dove supportati, limiti e diagnostica. I quattro provider base restano obbligatori nella distribuzione. Collaudare SDK e contenuti reali autorizzati su desktop/mobile, non soltanto mock.
 

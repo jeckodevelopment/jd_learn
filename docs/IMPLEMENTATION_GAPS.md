@@ -1,6 +1,6 @@
 # Problemi specifici e differenze aperte
 
-Stato al **7 novembre 2026**: main **0.41.4-dev**; PR #60 integrata, CI standard superata. PR candidata 0.41.5 per la correzione R-05; collaudi manuali ancora aperti. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
+Stato al **7 novembre 2026**: main **0.41.5-dev**; PR #60 e #62 integrate, CI standard superata. Il collaudo manuale dell’editor e della ripresa resta aperto. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
 
 ## Casi aperti
 
@@ -13,7 +13,7 @@ Stato al **7 novembre 2026**: main **0.41.4-dev**; PR #60 integrata, CI standard
 
 ## Segnalazioni risolte nel percorso indicato
 
-| R-05 — ripresa dell’attività | Correzione candidata nella 0.41.5: usa l’ultima attività valida; in sua assenza individua la prima obbligatoria non completata e, se il corso è concluso, consente la revisione dalla prima lezione | CI della PR candidata e prova manuale in Joomla ancora da registrare |
+| R-05 — ripresa dell’attività | Corretto nella 0.41.5: usa l’ultima attività valida; in sua assenza individua la prima obbligatoria non completata e, se il corso è concluso, consente la revisione dalla prima lezione | [CI standard della PR #62](https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232) superata; prova manuale in Joomla ancora da registrare |
 
 | ID | Risoluzione riscontrata | Cosa rimane separatamente aperto |
 |---|---|---|

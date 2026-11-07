@@ -2,7 +2,7 @@
 
 I campi editoriali correnti sono disponibili nella scheda pubblica del corso tramite plugin e layout Joomla. Snapshot didattici, campi lezione e ripristino completo dei valori tramite Content History restano aperti.
 
-Aggiornato al **7 novembre 2026**. Main **0.41.4-dev**; PR #60 unita. Candidato successivo **0.41.5-dev** nella PR R-05 in preparazione. L’editor corso raggruppa i campi per attività; tutti i quattro job standard (controlli leggeri, due ambienti PHP/database e Chromium) sono passati nella [CI 42410200676](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676). La correzione della banca domande 0.41.3 è nel main; resta la verifica dell’utente sul proprio sito. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Main **0.41.5-dev**; PR #60 e #62 unite. Editor corso raggruppato e ripresa R-05 corretta; tutti i quattro job standard sono passati nella [CI 42412135232](https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232). Restano collaudi manuali sul sito dell’utente. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -14,6 +14,10 @@ In Joomla `default="0"` diventava anche il valore HTML inviato dal checkbox sele
 
 La PR #60 è stata unita. Riunisce copertina/docenti con i dati del corso, accesso/calendario in una scheda unica e regole nel contesto del programma. Modifica solo la presentazione dell’editor: campi salvati una volta, senza cambiare schema, workflow o versioni. Le verifiche HTTP mirate, la suite standard d’integrazione e Chromium sono passati nella CI 42410200676; resta il collaudo manuale nel Joomla reale, inclusi mobile, tastiera e override.
 
+### Incremento0.41.5-dev — ripresa dell’attività
+
+La PR #62 corregge R-05: quando manca un’ultima lezione valida, Riprendi seleziona la prima obbligatoria non completata; se non ne restano, apre la prima lezione per revisione. Integrazione Joomla superata in entrambi gli ambienti. Da provare nel sito Joomla reale.
+
 ## Funzioni presenti e lavoro residuo
 
 “Disponibile” significa che esiste un flusso operativo con prove parziali. Non significa che l'intero requisito sia accettato. “Da implementare” indica una funzione assente, anche quando ne esistono schema o specifiche.
@@ -24,7 +28,7 @@ La PR #60 è stata unita. Riunisce copertina/docenti con i dati del corso, acces
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate e soglia video della bozza | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
 | Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento; recupero di una versione storica in una nuova bozza con audit, senza sovrascrivere le altre | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
-| Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata; fallback R-05 corretto nella 0.41.5-dev candidata | Attività dettagliate e collegamento agli attestati; collaudo manuale di ripresa ancora richiesto |
+| Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata; fallback R-05 corretto nella 0.41.5 | Attività dettagliate e collegamento agli attestati; collaudo manuale di ripresa ancora richiesto |
 | Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; metadati automatici nell’editor, provenienza/ricevute e tolleranza con denominatore osservato; consenso, copertura/ripresa, soglia video configurabile per versione con default90%, API/token Stream e MP4 privati con Range/Nginx | Collaudo completo di acquisizione/scarti con provider e browser reali (R-06); quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
 | Materiali | Allegati distinti corso/lezione, upload validato, quarantena/scanner opzionale, storage privato e download autorizzato | Riuso/anteprima/metadati e lifecycle completi, offload, pulizia e conservazione |
 | Iscrizioni | Avvio automatico, elenco amministrativo, ammissione singola con anteprima/conferma/audit, preassegnazione esplicita senza concedere accesso, sospensione/riattivazione | CSV, richieste/approvazioni/rifiuti, annullamenti, edizioni aggiuntive e proroghe; separare chiusura nuove iscrizioni e sospensione dell'aula (R-03) |
@@ -39,7 +43,7 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-La [CI0.41.4 (PR #60)](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676) ha superato i quattro job standard; il pacchetto verificato e i relativi limiti sono nel [registro prove](IMPLEMENTATION_EVIDENCE.json). Il collaudo manuale su Joomla reale resta aperto.
+La [CI0.41.5 (PR #62)](https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232) ha superato i quattro job standard. La [CI0.41.4 (PR #60)](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676) ha superato i quattro job standard; il pacchetto verificato e i relativi limiti sono nel [registro prove](IMPLEMENTATION_EVIDENCE.json). Il collaudo manuale su Joomla reale resta aperto.
 
 La [CI0.41.3](https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861) ha superato i quattro job standard: per ambiente, 23 controlli di dominio e 11 HTTP sulla banca/quiz. Il test usa il checkbox del markup nativo, verifica valore1 e salvataggio Vero/Falso e Scelta singola. Il caso reale sul sito dell’utente resta da verificare. La [CI0.41.2](https://github.com/jeckodevelopment/jd_learn/actions/runs/42404631048) ha verificato i messaggi di validazione. La CI0.41 precedente (vedi registro prove) ha superato i quattro job standard sul codice `dd2b5ba8ca5489909f0968c0cad3c15c2975a8fc`:
 
@@ -53,7 +57,7 @@ Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso p
 
 ## Prossimo passo
 
-La PR candidata 0.41.5 corregge R-05: quando non esiste una lezione precedente valida, Riprendi seleziona la prima obbligatoria non completata; se tutte sono complete, apre la prima lezione per la revisione. La prova automatica copre entrambi i percorsi e l’assenza di scritture. Comportamenti Joomla da verificare sono elencati nella PR.
+La PR #62 integrata nella 0.41.5 corregge R-05: quando non esiste una lezione precedente valida, Riprendi seleziona la prima obbligatoria non completata; se tutte sono complete, apre la prima lezione per la revisione. La prova automatica copre entrambi i percorsi e l’assenza di scritture. Comportamenti Joomla da verificare sono elencati nella PR.
 
 Continuare M01 sul flusso editoriale semplificato, ora integrato in main, e sui residui di programma/campi/versioni indicati nella checklist, senza includere quiz e attestati nel gate della prima stabile. La banca domande ha ricevuto la correzione mirata0.41.3; i requisiti quiz restano aperti per i criteri non coperti. Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
 

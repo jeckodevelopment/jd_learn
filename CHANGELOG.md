@@ -5,7 +5,7 @@
 - Se non esiste un’ultima attività valida, Riprendi sceglie la prima lezione obbligatoria non completata nell’ordine del programma.
 - Se tutte le attività obbligatorie sono completate, Riprendi apre la prima lezione per consentire la revisione.
 - Mantiene controlli di accesso, versione e disponibilità; lettura senza modificare progressi o iscrizione.
-- Test Joomla aggiornato per attività obbligatorie già completate, fallback alla successiva incompleta e ultima attività ancora valida.
+- Test Joomla aggiornato per attività obbligatorie già completate, fallback alla successiva incompleta e ultima attività ancora valida. PR #62 integrata; quattro job standard superati ([run 42412135232](https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232)). Pacchetto verificato: [0.41.5-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42412135232/artifacts/13590285852), SHA-256 `baaf4447da1f9559472ea889fdc34c224259501d061a84e797d10b8709bbe70c`.
 
 ## 0.41.4-dev — editor corso più lineare
 
