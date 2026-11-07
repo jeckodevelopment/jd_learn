@@ -76,6 +76,10 @@ if ($mode==='state') {
 $source=(int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();$record=impactRow('courses',$source);$original=impactRow('course_versions',(int)$record->current_version_id);
 $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
 $course=$model->duplicate(['course_id'=>$source,'version_id'=>$original->id,'revision'=>$record->revision,'expected_version_revision'=>$original->revision,'title'=>'Publication impact fixture']);
+// Keep this independent fixture publicly accessible. The copied source deliberately uses
+// a restricted test level which does not include the administrator as a learner.
+$copyRecord=$model->getItem($course);
+impactExpect($model->save(['id'=>$course,'revision'=>$copyRecord->revision,'catalog_access'=>1,'content_access'=>1,'enrollment_mode'=>'auto']),'Independent impact fixture has explicit learner access');
 $version=(int)$authoring->outline($actor,$course)['version']->id;
 $transition=(int)$service->transitions($actor,$course,$version)[0]->id;
 impactExpect($service->updateImpact($actor,$course,$version,$transition)===null,'Initial publication has no update review');
