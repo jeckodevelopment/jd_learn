@@ -71,3 +71,7 @@ La soglia video della versione è modificabile da **0,01% a 100%**, massimo due 
 Le versioni pubblicate/storiche sono in sola lettura. Una modifica in bozza non cambia corso attivo, dati promozionali, iscritti o progressi. La pubblicazione aggiornata richiede il normale riepilogo/conferma, che mostra anche soglia precedente e nuova; i nuovi iscritti seguono la versione aggiornata e quelli già assegnati conservano la propria soglia. Un cambiamento successivo al riepilogo lo invalida.
 
 Questo è il sottoinsieme operativo dell’editor regole: sequenze/rilascio/prerequisiti avanzati, modalità consultabile, attestati e soglie specifiche per singola lezione restano residui delle rispettive fasi. Non si mostrano controlli che attivino funzioni ancora non supportate.
+
+## Durata automatica nell’editor delle lezioni
+
+Il form video usa Rileva automaticamente: SDK/anteprima per YouTube e Vimeo, API server per Stream, misura dal file per MP4. Per YouTube può essere necessario avviare l’anteprima prima che i metadati siano disponibili. Il campo manuale è un ripiego esplicito; la vecchia conferma della durata non è un passaggio ordinario. Le ricevute impediscono il riuso di una misura su sorgenti o revisioni diverse. Una bozza incompleta può essere salvata; una durata acquisita per la stessa sorgente viene conservata durante modifiche al testo. Politica privacy e consenso restano applicati anche nel backend. Procedura, tolleranza e limiti in [VIDEO.md](VIDEO.md).

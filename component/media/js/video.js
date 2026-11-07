@@ -83,8 +83,8 @@ export class VideoLesson {
       if (this.stopped) return;
       // YouTube returns zero until metadata loads, which can require the first play.
       if (this.config.provider === 'youtube' && sample.duration_ms === 0) return;
-      if (!Number.isInteger(sample.duration_ms) || sample.duration_ms < 1000
-        || Math.abs(sample.duration_ms - this.session.duration_ms) > Math.max(1000, this.session.duration_ms / 200)) {
+      if (!Number.isInteger(sample.duration_ms) || sample.duration_ms < 1000 || sample.duration_ms > 28800000
+        || Math.abs(sample.duration_ms - this.session.duration_ms) > Math.max(2000, Math.min(5000, Math.ceil(this.session.duration_ms / 100)))) {
         this.message('duration'); await this.stop(false); return;
       }
       this.duration = sample.duration_ms;
@@ -92,7 +92,7 @@ export class VideoLesson {
       // SDKs differ in seek notifications: discontinuities also reset the server anchor.
       if (this.previous && type === 'position' && Math.abs(sample.position_ms - this.previous.position_ms
         - (now - this.previous.client_ms) * this.previous.rate_milli / 1000) > 500) type = 'seeked';
-      const event = {id: ++this.id, type, position_ms: Math.max(0, Math.min(this.session.duration_ms, sample.position_ms)),
+      const event = {id: ++this.id, type, position_ms: Math.max(0, Math.min(sample.duration_ms, sample.position_ms)),
         client_ms: now, rate_milli: sample.rate_milli, playing: sample.playing};
       if (this.queue.length >= 80) { this.player.pause(); this.message('offline'); return; }
       this.queue.push(event); this.previous = event;

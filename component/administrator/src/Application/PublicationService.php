@@ -179,7 +179,7 @@ final class PublicationService
                         $proof = $remoteChecks[(int) $lesson->id] ?? null;
                         if (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
                             || $proof['source_revision'] !== (int) $lesson->source_revision
-                            || abs($proof['duration_ms'] - (int) $lesson->duration_ms) > max(1000, (int) $lesson->duration_ms / 200)) {
+                            || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, (int)$proof['duration_ms'])) {
                             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                         }
                     }

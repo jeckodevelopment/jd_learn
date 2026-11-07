@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.38.0-dev**: editor delle regole didattiche e soglia video della versione; PR #49 verificata dalla CI42388597025. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.39.0-dev**: durata automatica nell’authoring e scarti player/server; verifiche del nuovo incremento in corso. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -15,7 +15,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 | Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento; recupero di una versione storica in una nuova bozza con audit, senza sovrascrivere le altre | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
 | Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata | Fallback di Riprendi sulla prima attività obbligatoria non completata (R-05), attività dettagliate e collegamento agli attestati |
-| Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; consenso, copertura/ripresa, soglia video configurabile per versione con default90%, API/token Stream e MP4 privati con Range/Nginx | Acquisizione automatica della durata esterna nell’editor e gestione degli scarti player/server (R-06, prossima priorità); quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
+| Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; metadati automatici nell’editor, provenienza/ricevute e tolleranza con denominatore osservato; consenso, copertura/ripresa, soglia video configurabile per versione con default90%, API/token Stream e MP4 privati con Range/Nginx | Collaudo completo di acquisizione/scarti con provider e browser reali (R-06); quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
 | Materiali | Allegati distinti corso/lezione, upload validato, quarantena/scanner opzionale, storage privato e download autorizzato | Riuso/anteprima/metadati e lifecycle completi, offload, pulizia e conservazione |
 | Iscrizioni | Avvio automatico, elenco amministrativo, ammissione singola con anteprima/conferma/audit, preassegnazione esplicita senza concedere accesso, sospensione/riattivazione | CSV, richieste/approvazioni/rifiuti, annullamenti, edizioni aggiuntive e proroghe; separare chiusura nuove iscrizioni e sospensione dell'aula (R-03) |
 | Quiz | Banca/revisioni, composizione/pool/snapshot, tentativi e autosave/CAS, valutazione/feedback, scadenza server, tempi individuali, annullamenti e proroghe motivati | Rivalutazioni, disponibilità e anomalie complete, collegamento agli attestati e rifinitura dell'interfaccia |
@@ -29,6 +29,8 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
+La0.39 aggiunge prove su acquisizione SDK/API, autorizzazione prima delle richieste remote, ricevute e sorgenti obsolete, scarti/denominatore/seek/fine, form nativi e conservazione dopo upgrade. Nuova CI ancora da completare; le prove seguenti identificano il build precedente.
+
 La [CI0.38](https://github.com/jeckodevelopment/jd_learn/actions/runs/42388597025) ha superato i quattro job standard sul codice `fd35af582f6ba757e89b0270bf96020465e7841b`:
 
 - PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6: intera suite implementata nativa/HTTP/JS, build riproducibile, installazione e upgrade 0.37→0.38, reinstallazione e conservazione dello storico. Nuovi controlli per ambiente: 37 di dominio, 21 nativi, 15 HTTP e 1 di upgrade. Provati confronto esatto, form/scoping/CSRF/checkout/CAS, review delle soglie, conferme obsolete e completamenti con regole diverse per le versioni assegnate.
@@ -41,7 +43,7 @@ Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso p
 
 ## Prossimo passo
 
-Affrontare prima la [durata automatica e gli scarti video](VIDEO_DURATION_PLAN.md), richiesta prioritaria R-06 ancora da implementare. Poi chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
+Verificare il nuovo percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
 
 ## Perimetro e tracciabilità
 

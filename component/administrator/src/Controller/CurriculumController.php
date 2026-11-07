@@ -78,7 +78,7 @@ class CurriculumController extends BaseController
                     $resultId = $service->moveLesson($actor, $input);
                     break;
                 case 'save':
-                    $resultId = $kind === 'module' ? $service->saveModule($actor, $input) : $service->saveLesson($actor, $input);
+                    $resultId = $kind === 'module' ? $service->saveModule($actor, $input) : $service->saveLesson($actor, $input, $this->durationReceipt($actor, $input));
                     break;
                 case 'delete':
                     $service->deleteItem($actor, $kind, $input);
@@ -97,7 +97,7 @@ class CurriculumController extends BaseController
                 'PROVIDER_UNAVAILABLE' => 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING',
                 default => $error->getMessage(),
             };
-            $known = ['COM_JLMS_TEACHING_THRESHOLD_INVALID', 'COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED', 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID', 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'COM_JLMS_PUBLICATION_REVIEW_STALE', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
+            $known = ['COM_JLMS_VIDEO_METADATA_STALE', 'COM_JLMS_TEACHING_THRESHOLD_INVALID', 'COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED', 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID', 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'COM_JLMS_PUBLICATION_REVIEW_STALE', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
                 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_INVALID_COURSE',
                 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING', 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED',
                 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED', 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', 'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_VERSION_COPY_NOT_AVAILABLE', 'COM_JLMS_SOURCE_INVALID',
@@ -135,6 +135,26 @@ class CurriculumController extends BaseController
             $target .= '&module_id=' . ($kind === 'module' ? $resultId : (int) ($input['module_id'] ?? 0)) . '#jlms-' . ($kind ?: 'lesson') . '-' . $resultId;
         }
         $this->setRedirect(Route::link('administrator', $target, false));
+    }
+
+    /** A session receipt binds measured duration to this actor, source and current draft revision. */
+    private function durationReceipt(\Joomla\CMS\User\User $actor, array $input): ?array
+    {
+        if (($input['duration_mode'] ?? '') !== 'auto' || empty($input['duration_ticket'])) { return null; }
+        $ticket = $input['duration_ticket']; $key = 'com_jlms.video.duration';
+        $plans = $this->app->getUserState($key, []); $plans = is_array($plans) ? $plans : [];
+        $proof = is_string($ticket) ? ($plans[$ticket] ?? null) : null;
+        if (!is_array($proof) || ($proof['expires'] ?? 0) < time()
+            || !hash_equals($proof['fingerprint'], $this->app->bootComponent('com_jlms')->getCurriculumService()->durationFingerprint($actor, $input))) {
+            throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
+        }
+        unset($plans[$ticket]); $this->app->setUserState($key, $plans);
+        if ($proof['duration_ms'] === null) {
+            $value = $input['sdk_duration_ms'] ?? '';
+            if ((!is_string($value) && !is_int($value)) || !preg_match('/\A[1-9][0-9]{0,7}\z/D', (string)$value)) { throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED'); }
+            $proof['duration_ms'] = (int)$value;
+        }
+        return $proof;
     }
 
     public function execute($task)

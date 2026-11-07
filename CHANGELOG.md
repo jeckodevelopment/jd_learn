@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.39.0-dev — durata automatica dei video
+
+- Metadati nell’editor con preview SDK YouTube/Vimeo, API server Stream e durata MP4 da file invariata. Automatico predefinito, ripiego manuale distinto, nessuna casella di conferma ordinaria.
+- Ricevute di sessione per autore/sorgente/revisioni, scadenza e consumo; scope, ACL, checkout e CSRF. Richieste remote fuori dalle transazioni, bozze incomplete salvabili e durata preservata sulle modifiche della stessa sorgente.
+- Tolleranza player/server max(2s,min(5s,1%)), durata osservata per intervalli e denominatore, copertura/idempotenza e dati congelati preservati. Grandi incongruenze restano bloccate. Nessun progresso generato dall’anteprima amministrativa.
+- Controlli su metadati/provenienza, sorgente cambiata/risposta tardiva, consenso e completamento con scarti; collaudo reale dei quattro provider ancora distinto dalle fixture automatiche.
+
 ## Requisiti — 7 novembre 2026: durata video
 
 - Registrata come prossima priorità R-06 l’acquisizione automatica della durata dai provider/file, con inserimento manuale di ripiego e gestione coerente degli scarti player/server.
