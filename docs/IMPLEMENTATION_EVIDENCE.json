@@ -1,63 +1,65 @@
 {
-  "audited_at": "2026-11-05",
+  "audited_at": "2026-11-07",
   "product": "JD Learn",
-  "version": "0.34.1-dev",
+  "version": "0.36.0-dev",
   "code_baseline": {
-    "tested_head": "79e97dc3243bdad780781fd03de64a4f3fa105cb",
-    "tree": "a1909b63681ff9b61750f79bca78fbc4fca77eb4",
-    "parent_main_commit": "198a779599c2bef29c748bebc6d98973388fc58a",
-    "merged_main_commit": "c927be7068ce5fe32fd782c03029846b504fd713"
+    "tested_head": "dee3f1f2481fd215cb7b4538760fb1513b0b2017",
+    "tree": "06133d672f1e4598ca0f0287fafe3281f48d8fc5",
+    "parent_main_commit": "cdeb8d98a8bc215bc9f1bfc7d5beceebc924dd0b",
+    "pull_request": 46
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 41872832537,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537",
+    "run_id": 42382758865,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 126725126977,
+        "id": 128433669587,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 126725127254,
-        "name": "PHP 8.4 / mariadb:10.6",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 126725127261,
-        "name": "PHP 8.4 / mysql:8.4",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 126725127344,
+        "id": 128433669736,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 126725127822,
+        "id": 128433669739,
         "name": "PHP 8.3 / mariadb:10.6",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 128433669767,
+        "name": "PHP 8.4 / mysql:8.4",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 128433669780,
+        "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "Suite native/HTTP/JS implementate, build riproducibile, installazione e upgrade0.34.0→0.34.1 con conservazione degli storici. Non accettazione completa dei requisiti.",
+    "note": "Intera suite implementata, build riproducibile, installazione/upgrade0.35→0.36, reinstallazione e storici conservati; non accettazione completa dei requisiti.",
     "curriculum_outline_checks_per_php_environment": 26,
     "unsaved_editor_checks_per_php_environment": 20,
     "browser_fixture_checks": 12,
-    "browser_scope": "Chromium su fixture controllata con viewport desktop/mobile; non collaudo visivo Joomla o integrazione reale TinyMCE."
+    "browser_scope": "Chromium su fixture controllata con viewport desktop/mobile; non collaudo visivo Joomla o integrazione reale TinyMCE.",
+    "publication_impact_native_checks_per_php_environment": 19,
+    "publication_impact_http_checks_per_php_environment": 10
   },
   "package": {
-    "name": "pkg_jlms-0.34.1-dev.zip",
-    "bytes": 419634,
-    "sha256": "88c5c3ca7a7cb610d90c8ce5b6fad3c1fdd9e48b622370ebe33e0471cbbc074b",
-    "artifact_id": 13344494972,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537/artifacts/13344494972",
+    "name": "pkg_jlms-0.36.0-dev.zip",
+    "bytes": 426849,
+    "sha256": "8fe0be32cc22fbdbd3f0b398db799310649d507b150a33097c82fdaee9206548",
+    "artifact_id": 13577989412,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865/artifacts/13577989412",
     "constituents": 7,
     "tables": 41,
     "foreign_keys": 58
@@ -265,7 +267,85 @@
         "Recovery/backup completo non verificato"
       ],
       "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati."
+    },
+    {
+      "audited_at": "2026-11-05",
+      "product": "JD Learn",
+      "version": "0.34.1-dev",
+      "code_baseline": {
+        "tested_head": "79e97dc3243bdad780781fd03de64a4f3fa105cb",
+        "tree": "a1909b63681ff9b61750f79bca78fbc4fca77eb4",
+        "parent_main_commit": "198a779599c2bef29c748bebc6d98973388fc58a",
+        "merged_main_commit": "c927be7068ce5fe32fd782c03029846b504fd713"
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 42382758865,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 128433669587,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128433669736,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128433669739,
+            "name": "PHP 8.3 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128433669767,
+            "name": "PHP 8.4 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128433669780,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "Intera suite implementata, build riproducibile, installazione/upgrade0.35→0.36, reinstallazione e storici conservati; non accettazione completa dei requisiti.",
+        "curriculum_outline_checks_per_php_environment": 26,
+        "unsaved_editor_checks_per_php_environment": 20,
+        "browser_fixture_checks": 12,
+        "browser_scope": "Chromium su fixture controllata con viewport desktop/mobile; non collaudo visivo Joomla o integrazione reale TinyMCE.",
+        "publication_impact_native_checks_per_php_environment": 19,
+        "publication_impact_http_checks_per_php_environment": 10
+      },
+      "package": {
+        "name": "pkg_jlms-0.36.0-dev.zip",
+        "bytes": 426849,
+        "sha256": "8fe0be32cc22fbdbd3f0b398db799310649d507b150a33097c82fdaee9206548",
+        "artifact_id": 13577989412,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865/artifacts/13577989412",
+        "constituents": 7,
+        "tables": 41,
+        "foreign_keys": 58
+      },
+      "full_requirement_acceptance": {},
+      "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
+      "excluded_evidence": [
+        "Nessun benchmark300/500",
+        "Nessun audit completo WCAG/ASVS",
+        "Nessun collaudo completo dei provider reali",
+        "Patch corrente Joomla non verificata",
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+      "evidence_scope": "Build runtime0.34.1 verificato nel commit tested_head e integrato con PR43. Gli aggiornamenti documentali successivi non cambiano il runtime e non trasformano queste prove parziali in accettazione completa."
     }
   ],
-  "evidence_scope": "Build runtime0.34.1 verificato nel commit tested_head e integrato con PR43. Gli aggiornamenti documentali successivi non cambiano il runtime e non trasformano queste prove parziali in accettazione completa."
+  "evidence_scope": "Runtime0.36 verificato nel tested_head della PR46. La successiva registrazione documentale non cambia runtime/pacchetto e non converte prove parziali in accettazione completa."
 }

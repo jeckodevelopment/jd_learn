@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Incremento **0.36.0-dev**: riepilogo e conferma dell’impatto degli aggiornamenti didattici; risultati delle nuove verifiche nella relativa PR. Baseline precedente0.35.0 / PR45. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.36.0-dev**: riepilogo e conferma dell’impatto degli aggiornamenti didattici, PR #46. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -27,18 +27,14 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 ## Verifiche disponibili e limiti
 
-La0.36 aggiunge prove native/HTTP del confronto, dell’immutabilità degli iscritti e delle conferme mancanti/obsolete. Le nuove prove sono riferite alla PR del build; gli esiti della baseline sotto restano riferiti al codice0.35. Non si considera M01 o AUT-04 integralmente accettato.
+La [CI0.36](https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865) ha superato tutti5i job sul codice `dee3f1f2481fd215cb7b4538760fb1513b0b2017`:
 
-La [CI0.35](https://github.com/jeckodevelopment/jd_learn/actions/runs/42379941609) ha superato tutti5i job: quattro combinazioni PHP/database e Chromium, con9nuovi controlli nativi e5HTTP dei campi corso, installazione/upgrade0.34.1→0.35 e conservazione degli storici. Il codice verificato è4d7f012ccb1f07c742f943271f6d50902423664b; la successiva registrazione documentale non cambia il codice o il pacchetto. Le prove della baseline sotto restano riferite alla0.34.1. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
+- PHP8.3/8.4 × MySQL8.4/MariaDB10.6: intera suite nativa/HTTP/JS,19nuovi controlli nativi e10HTTP di confronto/conferma degli aggiornamenti, build riproducibile, installazione e upgrade0.35→0.36, reinstallazione e storici conservati.
+- Chromium:12controlli della navigazione con modifiche non salvate su fixture desktop/mobile. Non è un collaudo visivo dell’intero Joomla, della nuova pagina di riepilogo o un’integrazione reale TinyMCE.
 
-La [CI del build 0.34.1](https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537) ha superato **tutti e cinque i job**:
+La successiva registrazione degli esiti modifica soltanto documentazione; il runtime e il pacchetto restano quelli verificati. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
 
-- PHP 8.3/8.4 × MySQL 8.4/MariaDB 10.6: suite native/HTTP/JS, build riproducibile, installazione, upgrade 0.34.0 → 0.34.1 e conservazione degli storici.
-- Chromium: 12 controlli di navigazione su fixture con viewport desktop/mobile per l'avviso modifiche non salvate e il salvataggio. Non è un collaudo visivo dell'intero sito Joomla né un'integrazione reale TinyMCE.
-
-Prima pubblicazione e riproduzione YouTube sono state confermate anche dall'utente sul percorso provato. **Il precedente blocco di prima pubblicazione R-00 è risolto per quel percorso**, non è una priorità ancora da riprodurre.
-
-Restano da eseguire collaudo completo browser/mobile/tastiera e accessibilità, provider reali, revisione sicurezza completa, backup/ripristino e carico di 300 studenti per 60 minuti / 500 per 10 minuti. I test concorrenti della suite non dimostrano quella capacità. Commit, hash e job sono nel [registro delle prove](IMPLEMENTATION_EVIDENCE.json).
+Prima pubblicazione e YouTube sono stati confermati anche dall’utente sul percorso provato. Restano collaudo completo browser/mobile/tastiera/accessibilità, provider reali, audit sicurezza, backup/ripristino, patch Joomla corrente e benchmark300studenti/60minuti e500/10minuti. I test concorrenti non dimostrano tale capacità. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) conserva build, hash, job e limiti; nessuna accettazione completa M01/AUT-04 è dedotta dalla CI.
 
 ## Prossimo passo
 
