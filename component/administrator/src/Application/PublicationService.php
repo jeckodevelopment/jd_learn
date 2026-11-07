@@ -62,6 +62,7 @@ final class PublicationService
 
     public function transitions(User $actor, int $courseId, int $versionId = 0): array
     {
+        $actor = CourseEditorAccess::fresh($actor);
         $course = $this->row('courses', $courseId);
         $this->authorise($actor, $course);
         $workflow = $this->workflow();
@@ -86,6 +87,23 @@ final class PublicationService
             return in_array((string) $state, ['0', '1'], true)
                 && $actor->authorise('core.execute.transition', 'com_jlms.transition.' . (int) $transition->id);
         }));
+    }
+
+    /** Read-only review of a publishing update; initial publication and withdrawal need no update review. */
+    public function updateImpact(User $identity, int $courseId, int $versionId, int $transitionId): ?array
+    {
+        $actor = CourseEditorAccess::fresh($identity);
+        $course = $this->row('courses', $courseId); $this->authorise($actor, $course);
+        $version = $this->row('course_versions', $versionId);
+        if ((int)$version->course_id !== $courseId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+        $selected = null;
+        foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) { if ((int)$candidate->id === $transitionId) { $selected = $candidate; } }
+        if (!$selected) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
+        if ($version->status !== 'draft' || $course->current_version_id === null || (int)(new Registry($selected->options))->get('publishing') !== 1) { return null; }
+        if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+        $source = $this->row('course_versions', (int)$course->current_version_id);
+        if ((int)$source->course_id !== $courseId || $source->status !== 'published' || (int)$source->id === $versionId) { throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE'); }
+        return (new PublicationImpact($this->db))->build($course, $source, $version, $transitionId, (int)$actor->id);
     }
 
     private function validateAndFreeze(object $course, object $version, User $actor, array $remoteChecks = []): void
@@ -218,8 +236,9 @@ final class PublicationService
         $this->db->insertObject('#__jlms_editions', $edition);
     }
 
-    public function transition(User $actor, int $courseId, int $versionId, int $courseRevision, int $versionRevision, int $transitionId): void
+    public function transition(User $actor, int $courseId, int $versionId, int $courseRevision, int $versionRevision, int $transitionId, ?string $expectedImpact = null): void
     {
+        $actor = CourseEditorAccess::fresh($actor);
         $remoteChecks = [];
         $course = $this->row('courses', $courseId);
         $this->authorise($actor, $course);
@@ -229,6 +248,7 @@ final class PublicationService
         $version = $this->row('course_versions', $versionId);
         if ((int) $version->course_id !== $courseId || (int) $version->revision !== $versionRevision
             || (int) $course->revision !== $courseRevision) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+        if ($version->status === 'draft' && $course->current_version_id !== null && $expectedImpact === null) { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED'); }
         if ($version->status === 'draft') {
             $q = $this->db->createQuery()->select('id, source_json, source_revision')->from('#__jlms_lessons')
                 ->where('course_version_id = :version')->where($this->db->quoteName('provider_key') . ' = ' . $this->db->quote('cloudflarestream'))
@@ -246,6 +266,7 @@ final class PublicationService
         }
         $this->db->transactionStart();
         try {
+            $actor = CourseEditorAccess::fresh($actor);
             $course = $this->row('courses', $courseId, true);
             $this->authorise($actor, $course);
             $version = $this->row('course_versions', $versionId, true);
@@ -253,7 +274,8 @@ final class PublicationService
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             if ((int) $course->revision !== $courseRevision || (int) $version->revision !== $versionRevision
-                || ($course->checked_out && (int) $course->checked_out !== (int) $actor->id)) {
+                || ($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
+                || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) {
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $selected = null;
@@ -267,6 +289,11 @@ final class PublicationService
             }
             $state = (int) (new Registry($selected->options))->get('publishing');
             if ($version->status === 'draft' && $state === 1) {
+                if ($course->current_version_id !== null) {
+                    if ($expectedImpact === null) { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED'); }
+                    $impact = $this->updateImpact($actor, $courseId, $versionId, $transitionId);
+                    if (!$impact || !hash_equals($impact['fingerprint'], $expectedImpact)) { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_STALE'); }
+                }
                 $this->validateAndFreeze($course, $version, $actor, $remoteChecks);
             } elseif ($version->status !== 'published' || (int) $course->current_version_id !== $versionId) {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');

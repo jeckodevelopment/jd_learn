@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.36.0-dev — riepilogo e conferma degli aggiornamenti didattici
+
+- Riepilogo separato prima di pubblicare una bozza che aggiorna il programma attivo: conteggi e dettagli di moduli, lezioni, quiz e materiali aggiunti/modificati/rimossi, regole e assegnazioni esistenti per versione.
+- Confronto per chiavi logiche e riferimenti immutabili, senza falsi cambi per gli ID rigenerati dalla copia di lavoro; corpi e descrizioni confrontati tramite hash senza esporli nel riepilogo.
+- Conferma esplicita POST/CSRF con ticket di sessione, validità15minuti e consumo singolo; impronta ricontrollata nella transazione di pubblicazione, con ACL fresche e rifiuto delle modifiche concorrenti. Nessuna migrazione o modifica dei dati studente.
+- Prima pubblicazione e ritiro/ripubblicazione della stessa versione conservano il percorso precedente. Tutti i controlli ordinari di pubblicazione restano applicati dopo la conferma.
+
 ## 0.35.0-dev — campi personalizzati nativi nell’editor corso
 
 - Scheda Campi personalizzati presente quando Joomla aggiunge campi al form del corso; resa di campi e gruppi tramite il core, con disabilitazione sul corso bloccato da un altro operatore.

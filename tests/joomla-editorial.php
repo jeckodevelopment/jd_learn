@@ -103,7 +103,7 @@ $current = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->l
 editorialExpect($authoring->createDraft($actor, $course, (int) $current->revision) === $draft, 'Opening edit again reuses the working copy');
 $transitions = $publication->transitions($actor, $course, $draft);
 editorialExpect(count($transitions) > 0, 'Working copy has a native publication transition');
-$publication->transition($actor,$course,$draft,(int)$current->revision,$revision(),(int)$transitions[0]->id);
+$publication->transition($actor,$course,$draft,(int)$current->revision,$revision(),(int)$transitions[0]->id,$publication->updateImpact($actor,$course,$draft,(int)$transitions[0]->id)['fingerprint']);
 editorialExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.$course)->loadResult() === $draft, 'Publication activates the edited version');
 editorialExpect($oldRows === $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id='.$oldVersion.' ORDER BY id')->loadAssocList(), 'Published source lessons retain all original data');
 editorialExpect($oldEnrollment === $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id='.$course.' ORDER BY id')->loadAssocList(), 'Existing enrollments and results stay unchanged');

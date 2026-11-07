@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.35.0-dev**: campi personalizzati nativi nell’editor corso, PR #45. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Incremento **0.36.0-dev**: riepilogo e conferma dell’impatto degli aggiornamenti didattici; risultati delle nuove verifiche nella relativa PR. Baseline precedente0.35.0 / PR45. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -12,7 +12,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 |---|---|---|
 | Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi, modifica propria e voci di menu | Parti dell'editor per regole didattiche/attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
-| Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, riepilogo impatti e migrazioni con equivalenze, recupero di programmi storici in nuova bozza |
+| Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze, recupero di programmi storici in nuova bozza |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
 | Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata | Fallback di Riprendi sulla prima attività obbligatoria non completata (R-05), attività dettagliate e collegamento agli attestati |
 | Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; consenso, copertura/ripresa, API/token Stream e MP4 privati con Range/Nginx | Quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
@@ -26,6 +26,8 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 | Installazione e rilascio | Build riproducibile, installazione/upgrade/reinstall con conservazione dei dati verificati dalla suite | Update server, backup/ripristino, patch Joomla corrente, integrazione reale con estensione abbonamenti e documentazione di rilascio |
 
 ## Verifiche disponibili e limiti
+
+La0.36 aggiunge prove native/HTTP del confronto, dell’immutabilità degli iscritti e delle conferme mancanti/obsolete. Le nuove prove sono riferite alla PR del build; gli esiti della baseline sotto restano riferiti al codice0.35. Non si considera M01 o AUT-04 integralmente accettato.
 
 La [CI0.35](https://github.com/jeckodevelopment/jd_learn/actions/runs/42379941609) ha superato tutti5i job: quattro combinazioni PHP/database e Chromium, con9nuovi controlli nativi e5HTTP dei campi corso, installazione/upgrade0.34.1→0.35 e conservazione degli storici. Il codice verificato è4d7f012ccb1f07c742f943271f6d50902423664b; la successiva registrazione documentale non cambia il codice o il pacchetto. Le prove della baseline sotto restano riferite alla0.34.1. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
 

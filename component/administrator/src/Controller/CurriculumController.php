@@ -32,10 +32,30 @@ class CurriculumController extends BaseController
             $actor = $this->app->getIdentity();
             switch ($operation) {
                 case 'transition':
-                    $this->app->bootComponent('com_jlms')->getPublicationService()->transition(
-                        $actor, $courseId, $versionId, CurriculumService::id($input['revision'] ?? null),
-                        CurriculumService::id($input['expected_version_revision'] ?? null), CurriculumService::id($input['transition_id'] ?? null),
-                    );
+                    $publication = $this->app->bootComponent('com_jlms')->getPublicationService();
+                    $transition = CurriculumService::id($input['transition_id'] ?? null);
+                    $impact = $publication->updateImpact($actor, $courseId, $versionId, $transition);
+                    $fingerprint = null;
+                    if ($impact !== null) {
+                        $key = 'com_jlms.publication.review.' . $courseId . '.' . $versionId;
+                        $ticket = $input['review_ticket'] ?? '';
+                        if ($ticket === '' && !isset($input['publication_confirmation'])) {
+                            if ((int)$impact['course']->revision !== CurriculumService::id($input['revision'] ?? null)
+                                || (int)$impact['version']->revision !== CurriculumService::id($input['expected_version_revision'] ?? null)) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+                            $this->app->setUserState($key, ['actor'=>(int)$actor->id, 'transition'=>$transition, 'expires'=>time()+900,
+                                'ticket'=>bin2hex(random_bytes(32)), 'fingerprint'=>$impact['fingerprint']]);
+                            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=publicationreview&id=' . $courseId . '&version_id=' . $versionId, false));
+                            return;
+                        }
+                        $plan = $this->app->getUserState($key);
+                        if (!is_array($plan) || (int)$plan['actor'] !== (int)$actor->id || (int)$plan['transition'] !== $transition
+                            || (int)$plan['expires'] < time() || !is_string($ticket) || !hash_equals($plan['ticket'], $ticket)
+                            || ($input['publication_confirmation'] ?? '') !== '1') { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED'); }
+                        $fingerprint = $plan['fingerprint'];
+                        $this->app->setUserState($key, null);
+                    }
+                    $publication->transition($actor, $courseId, $versionId, CurriculumService::id($input['revision'] ?? null),
+                        CurriculumService::id($input['expected_version_revision'] ?? null), $transition, $fingerprint);
                     break;
                 case 'version':
                     $versionId = $service->createDraft($actor, $courseId, CurriculumService::id($input['revision'] ?? null));
@@ -71,7 +91,7 @@ class CurriculumController extends BaseController
                 'PROVIDER_UNAVAILABLE' => 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING',
                 default => $error->getMessage(),
             };
-            $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
+            $known = ['COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'COM_JLMS_PUBLICATION_REVIEW_STALE', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
                 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_INVALID_COURSE',
                 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING', 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED',
                 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED', 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', 'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_VERSION_COPY_NOT_AVAILABLE', 'COM_JLMS_SOURCE_INVALID',
