@@ -2,6 +2,8 @@
 
 ## Configurazione e limiti attuali
 
+**R-06 — intervento prioritario da implementare:** acquisire automaticamente la durata esterna nell’editor e gestire gli scarti di misura senza blocchi impropri. Il flusso descritto sotto è ancora quello effettivo della0.38; [requisiti e piano](VIDEO_DURATION_PLAN.md) non sono una funzione già rilasciata. Gli MP4 locali hanno già durata rilevata dal file.
+
 Nel Programma del corso, sotto Configurazione video, sono visibili lo stato di registrazione dei quattro provider, la configurazione della riproduzione e l’eventuale blocco per la politica dei video esterni. Gli operatori autorizzati possono aprire direttamente le opzioni Joomla. Lo stato configurato indica i controlli locali: la sorgente e la riproduzione vanno provate nell’aula.
 
 Il pacchetto base contiene i quattro plugin Joomla del gruppo `jlmsvideo`. YouTube e Vimeo includono adapter JavaScript per gli SDK ufficiali. Abilitare il plugin nel gestore Joomla e attivare `playback_enabled`; entrambi sono chiusi per impostazione iniziale. Cloudflare Stream supporta token temporanei in modalità API e rinnovo: vedere [CLOUDFLARE_STREAM.md](CLOUDFLARE_STREAM.md) per prerequisiti e limiti. HTML5 supporta MP4 privati con PHP limitato/Nginx: vedere [HTML5_VIDEO.md](HTML5_VIDEO.md). La firma locale Cloudflare resta chiusa. La presenza nel pacchetto non ne dichiara il completamento.
