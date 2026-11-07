@@ -6,6 +6,14 @@ Aprire Corsi → Modifica, cambiare titolo, descrizioni, immagine, docenti, acce
 
 Il pulsante Versioni apre Content History di Joomla per confrontare le revisioni editoriali e ripristinarle. Il ripristino passa dagli stessi controlli del salvataggio, con permessi, blocco modifica e revisione corrente. La nota di versione può descrivere l’intervento. La configurazione del componente permette di abilitare lo storico e definirne il limite. Il ripristino editoriale conserva la versione didattica attiva e le assegnazioni degli iscritti.
 
+## Campi personalizzati del corso
+
+Definire campi e gruppi con il gestore Campi di Joomla, contesto Corsi (`com_jlms.course`), e abilitare il plugin di sistema Fields. Quando il core aggiunge campi al form, l’editor mostra la scheda Campi personalizzati: tipi, gruppi, lingua, categoria, validazione e permessi dei valori restano quelli nativi. La scheda non compare se non ci sono campi applicabili. Sul corso bloccato da un altro operatore i campi sono disabilitati come gli altri dati.
+
+Salva/Salva e chiudi inoltrano `com_fields` agli eventi Joomla. Gli errori di validazione della form conservano l’input; Annulla lascia i valori salvati. Client precedenti che omettono il gruppo non cancellano i valori. Le revisioni obsolete e i permessi del corso vengono verificati prima del salvataggio. Il modello non scrive una tabella parallela dei campi.
+
+Questo incremento completa il collegamento amministrativo, non il requisito CORE-10 intero: campi lezione, snapshot didattici, resa pubblica dei campi corso e ripristino completo dei valori tramite Content History restano da implementare/verificare. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
+
 ## Aggiornare lezioni e materiali
 
 Nel Programma di un corso pubblicato, scegliere Modifica programma. Il sistema prepara o riapre la versione di lavoro con moduli, lezioni, quiz, domande e collegamenti ai materiali. Da qui si usano i normali comandi di modifica, aggiunta e caricamento. I file immutabili esistenti vengono riutilizzati, con associazioni indipendenti per la nuova versione.

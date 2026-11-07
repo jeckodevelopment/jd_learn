@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **5 novembre 2026**. Versione **0.34.1-dev**, integrata in `main` con la [PR #43](https://github.com/jeckodevelopment/jd_learn/pull/43). **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Incremento **0.35.0-dev**: campi personalizzati nativi nell’editor corso; risultati delle nuove verifiche nella PR del build. Ultima baseline integrata: 0.34.1-dev / PR #43. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -10,7 +10,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 | Area | Disponibile oggi | Da implementare o completare |
 |---|---|---|
-| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi, modifica propria e voci di menu | Parti dell'editor per regole didattiche/attestato/campi corso; copertura completa di lingue, associazioni e gestione dei dati |
+| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi, modifica propria e voci di menu | Parti dell'editor per regole didattiche/attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
 | Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, riepilogo impatti e migrazioni con equivalenze, recupero di programmi storici in nuova bozza |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
@@ -26,6 +26,8 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 | Installazione e rilascio | Build riproducibile, installazione/upgrade/reinstall con conservazione dei dati verificati dalla suite | Update server, backup/ripristino, patch Joomla corrente, integrazione reale con estensione abbonamenti e documentazione di rilascio |
 
 ## Verifiche disponibili e limiti
+
+La0.35 aggiunge prove native e HTTP dei campi corso. Gli esiti effettivi del nuovo build sono nella relativa PR; le prove della baseline sotto restano riferite alla0.34.1. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
 
 La [CI del build 0.34.1](https://github.com/jeckodevelopment/jd_learn/actions/runs/41872832537) ha superato **tutti e cinque i job**:
 

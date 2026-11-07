@@ -15,3 +15,5 @@
 - Update implementation status, requirement mapping, changelog and CSS/override documentation when changing the corresponding behaviour. Test release install/upgrade and current Joomla patch before production distribution.
 
 - Documentation ownership: IMPLEMENTATION_STATUS.md is the current feature snapshot; NEXT_STEPS.md owns ordered remaining work; ROADMAP_TO_STABLE.md defines phase scope; M01_ACCEPTANCE.md separates missing implementation from pending validation. Put release-by-release notes only in CHANGELOG.md/IMPLEMENTATION_HISTORY.md, not appended to current summaries or guides. Replace superseded statements, update current evidence, and keep requirement descriptions/IDs/acceptance separate from implementation status.
+
+- Operational efficiency: prepare and review a candidate locally before publishing changes; batch corrections and avoid redundant Actions runs. Keep the complete PR verification and manual workflow_dispatch available. A merge into main does not repeat the already-passed PR suite; use PRs for all changes, and manually verify any exceptional direct main change. Do not describe unexecuted or skipped checks as passed.

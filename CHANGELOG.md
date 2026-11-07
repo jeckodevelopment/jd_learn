@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.35.0-dev — campi personalizzati nativi nell’editor corso
+
+- Scheda Campi personalizzati presente quando Joomla aggiunge campi al form del corso; resa di campi e gruppi tramite il core, con disabilitazione sul corso bloccato da un altro operatore.
+- Salvataggio di com_fields tramite gli eventi del plugin Fields nativo, conservando i valori per i client che omettono il gruppo e rifiutando revisioni obsolete prima delle scritture.
+- Prove native/HTTP del percorso di creazione, modifica, errore e annullamento. Snapshot didattici e campi lezione rimangono residui M10.
+- CI completa conservata sulle PR e avvio manuale disponibile; rimosso il secondo avvio automatico al merge in main per evitare esecuzioni duplicate.
+
 ## Documentazione — 5 novembre 2026
 
 - Consolidato lo stato attuale per funzionalità; separati piano residuo, perimetro delle fasi e cronologia.
