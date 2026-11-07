@@ -1,6 +1,6 @@
 # Durata video: acquisizione automatica e tolleranza
 
-Richiesta del 7 novembre 2026, priorità gestione corsi/provider R-06. **Implementazione0.39 in verifica**, non accettazione completa dei provider reali. Specifica vigente1.5; gli ID e i criteri dei requisiti restano invariati. Contratto operativo e limiti attuali nella [guida video](VIDEO.md).
+Richiesta del 7 novembre 2026, priorità gestione corsi/provider R-06. **Implementazione 0.39 verificata nella [CI standard](https://github.com/jeckodevelopment/jd_learn/actions/runs/42393451244)**, non accettazione completa dei provider reali. Specifica vigente1.5; gli ID e i criteri dei requisiti restano invariati. Contratto operativo e limiti attuali nella [guida video](VIDEO.md).
 
 ## Risultato per l’autore
 

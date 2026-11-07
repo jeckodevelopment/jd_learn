@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.39.0-dev**: durata automatica nell’authoring e scarti player/server; verifiche del nuovo incremento in corso. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.39.0-dev**: durata automatica nell’authoring e scarti player/server; CI standard superata, collaudo reale dei provider ancora aperto. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -29,11 +29,9 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-La0.39 aggiunge prove su acquisizione SDK/API, autorizzazione prima delle richieste remote, ricevute e sorgenti obsolete, scarti/denominatore/seek/fine, form nativi e conservazione dopo upgrade. Nuova CI ancora da completare; le prove seguenti identificano il build precedente.
+La [CI 0.39](https://github.com/jeckodevelopment/jd_learn/actions/runs/42393451244) ha superato i quattro job standard sul codice `774aa34f49cce991cb3cb715cdc34d2574274ee4`:
 
-La [CI0.38](https://github.com/jeckodevelopment/jd_learn/actions/runs/42388597025) ha superato i quattro job standard sul codice `fd35af582f6ba757e89b0270bf96020465e7841b`:
-
-- PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6: intera suite implementata nativa/HTTP/JS, build riproducibile, installazione e upgrade 0.37→0.38, reinstallazione e conservazione dello storico. Nuovi controlli per ambiente: 37 di dominio, 21 nativi, 15 HTTP e 1 di upgrade. Provati confronto esatto, form/scoping/CSRF/checkout/CAS, review delle soglie, conferme obsolete e completamenti con regole diverse per le versioni assegnate.
+- PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6: intera suite implementata nativa/HTTP/JS, build riproducibile, installazione e upgrade 0.38→0.39, reinstallazione e conservazione dello storico. Nuovi controlli per ambiente: 17 di dominio, 22 nativi, 11 HTTP, 24 del client con trasporto/SDK controllati e 1 di upgrade. Provati acquisizione/provenienza, ricevute, autorizzazioni e sorgenti obsolete, scarti/denominatore, seek/fine e completamento senza alterare lo storico.
 - Chromium: 12 controlli su fixture desktop/mobile delle modifiche non salvate. Non è collaudo interattivo dell’intero Joomla o del nuovo form regole.
 - Job leggero: politica CI, build, struttura, traduzioni e tracciabilità. Le bozze preparatorie hanno eseguito soltanto questi controlli; la verifica finale usa la [matrice standard](CI_POLICY.md). Le due coppie incrociate restano da eseguire nella matrice completa prima di milestone/rilascio o modifiche di compatibilità.
 
@@ -43,7 +41,7 @@ Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso p
 
 ## Prossimo passo
 
-Verificare il nuovo percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
+Collaudare con i provider e browser reali il percorso di [durata automatica e scarti video](VIDEO_DURATION_PLAN.md) e chiudere i residui della [checklist M01](M01_ACCEPTANCE.md), distinguendo implementazioni mancanti e collaudi. Il [piano ordinato](NEXT_STEPS.md) definisce il lavoro successivo e le dipendenze; l'import CSV viene dopo il flusso essenziale dei corsi e richiede i job recuperabili. Privacy e sicurezza accompagnano ogni attività.
 
 ## Perimetro e tracciabilità
 

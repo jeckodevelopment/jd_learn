@@ -19,6 +19,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 | 0.36 | Riepilogo/conferma degli aggiornamenti didattici |
 | 0.37 | Recupero del programma storico in nuova bozza, conservando altre bozze e dati studente; prove miste dei tre provider esterni |
 | 0.38 | Editor delle regole supportate e soglia video configurabile per versione; confronto prima/dopo e soglie assegnate conservate |
+| 0.39 | Durata automatica nell’editor, provenienza e ricevute legate alla sorgente; piccoli scarti tollerati con completamento sulla durata osservata; ripiego manuale e retry SDK Vimeo |
 
 Il [changelog](../CHANGELOG.md) contiene i dettagli per versione. Il [registro dei requisiti](REQUIREMENTS_CHANGES.md) descrive le variazioni del risultato richiesto, non le implementazioni. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) identifica il build corrente verificato e mantiene i record storici precedenti.
 

@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.39.0-dev**, acquisizione automatica e tolleranza video implementate e in verifica. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.39.0-dev**, acquisizione automatica e tolleranza video implementate e verificate nella CI standard. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità
 
@@ -21,7 +21,7 @@ Aggiornato al **7 novembre 2026**. Riferimento: **0.39.0-dev**, acquisizione aut
 
 ## Primo lavoro da svolgere
 
-**Durata automatica e scarti (R-06):** la0.39 implementa il flusso nell’editor per YouTube/Vimeo/Stream e conserva la misura da file MP4, con ricevute di sorgente e tolleranza coerente con il completamento. Prima di accettarlo completare CI e collaudo SDK/browser/account reali secondo [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md), correggendo subito eventuali blocchi. Il seguito di implementazione riprende campi/snapshot e residui dell’editor; restyling e menu backend restano pianificati M01/M10. Non ripianificare l’acquisizione ordinaria come assente, né dichiarare concluso il collaudo reale.
+**Durata automatica e scarti (R-06):** la0.39 implementa il flusso nell’editor per YouTube/Vimeo/Stream e conserva la misura da file MP4, con ricevute di sorgente e tolleranza coerente con il completamento. CI standard superata; prima di accettarlo completare il collaudo SDK/browser/account reali secondo [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md), correggendo subito eventuali blocchi. Il seguito di implementazione riprende campi/snapshot e residui dell’editor; restyling e menu backend restano pianificati M01/M10. Non ripianificare l’acquisizione ordinaria come assente, né dichiarare concluso il collaudo reale.
 
 Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: collaudare l’amministrazione e il programma su Joomla reale e registrare gli esiti per build/ruolo/browser, affrontando subito eventuali blocchi dei provider essenziali. Campi corso, riepilogo/conferma degli aggiornamenti e recupero storico sono implementati e coperti dalle rispettive regressioni. L’editor delle regole supportate e la soglia video della versione sono implementati e coperti dalla CI standard della0.38. Seguono campi/snapshot pertinenti e regole avanzate, rispettando le dipendenze M03/M08/M10; non mostrare controlli per attestati o regole ancora non operative. L’anteprima interattiva senza effetti e il ciclo revisione/archivio restano il seguito M02. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
 

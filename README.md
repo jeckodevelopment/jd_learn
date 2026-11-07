@@ -53,4 +53,4 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 
 
-Durata automatica dei video nell’editor e gestione degli scarti implementate nella0.39; verifica del candidato in corso, esiti nel registro delle prove.
+Durata automatica dei video nell’editor e gestione degli scarti implementate nella 0.39 e verificate nella CI standard. [Pacchetto di sviluppo verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42393451244/artifacts/13582033529); esiti e limiti nel registro delle prove.
