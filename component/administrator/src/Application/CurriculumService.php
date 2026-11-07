@@ -500,9 +500,42 @@ final class CurriculumService
                     'ordering' => $order, 'source_revision' => 1, 'preview' => 0,
                     'params_json' => '{}', 'fields_snapshot_json' => '{}'], $actor);
             }
+            if (array_key_exists('com_fields', $input)) {
+                $this->saveLessonCustomFields($actor, $id, $input['com_fields']);
+            }
             $this->update('course_versions', $version, [], $actor);
             return $id;
         });
+    }
+
+    /** Persist configured lesson fields through Joomla's field model in the same transaction. */
+    private function saveLessonCustomFields(User $actor, int $lessonId, mixed $values): void
+    {
+        if (!is_array($values)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        $q = $this->db->createQuery()->select('id, name, access')->from('#__fields')
+            ->where('context = :context')->where('state = 1')->bind(':context', 'com_jlms.lesson');
+        $definitions = $this->db->setQuery($q, 0, 501)->loadObjectList();
+        if (count($definitions) > 500) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+        $byName = [];
+        foreach ($definitions as $field) { $byName[$field->name] = $field; }
+        foreach (array_keys($values) as $name) {
+            if (!is_string($name) || !isset($byName[$name])) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        }
+        $fieldModel = \Joomla\CMS\Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()
+            ->createModel('Field', 'Administrator', ['ignore_request' => true]);
+        foreach ($definitions as $field) {
+            if (!array_key_exists($field->name, $values)) { continue; }
+            $fieldId = (int) $field->id;
+            if (!$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
+                || !in_array((int) $field->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) {
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
+            $value = $values[$field->name];
+            if (!is_string($value) && !is_int($value) && !is_float($value) && !is_bool($value) && !is_array($value)) {
+                throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+            }
+            if (!$fieldModel->setFieldValue($fieldId, $lessonId, $value)) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED'); }
+        }
     }
 
     public function deleteItem(User $actor, string $kind, array $input): void

@@ -305,12 +305,21 @@ final class LearningService
         }
         $lessonId = $lessonId ?: (int) ($enrollment->last_lesson_id ?: $outline[0]->id);
         $lesson = $this->lesson($versionId, $lessonId, true);
+        $fieldSnapshot = json_decode((string) ($lesson->fields_snapshot_json ?? '{}'), true, 32, JSON_THROW_ON_ERROR);
+        $viewLevels = array_map('intval', $actor->getAuthorisedViewLevels());
+        $customFields = [];
+        foreach (($fieldSnapshot['fields'] ?? []) as $name => $field) {
+            if (!is_array($field) || !in_array((int) ($field['access'] ?? 0), $viewLevels, true)) { continue; }
+            $customFields[] = ['name' => (string) $name, 'label' => (string) ($field['label'] ?? $name),
+                'values' => array_values(array_filter($field['values'] ?? [], static fn($value): bool => is_string($value) || is_numeric($value)))];
+        }
         $percent = (int) $enrollment->required_total > 0
             ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
-                'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) $lesson->body, 'HTML')],
+                'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) $lesson->body, 'HTML'),
+                'custom_fields' => $customFields],
             'outline' => $outline, 'percent' => $percent, 'completed_at' => $enrollment->completed_at];
     }
 

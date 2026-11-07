@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.7-dev — campi personalizzati delle lezioni
+
+- Abilita il contesto nativo `com_jlms.lesson` in Joomla Fields e aggiunge i campi dinamici all’editor delle lezioni.
+- Salva i valori tramite il modello Fields, controllando permesso `core.edit.value`, livello di accesso e contesto; copia i valori nelle nuove bozze.
+- Congela valori e metadati dei campi alla pubblicazione e li mostra nell’aula dal relativo snapshot, filtrando per livello di accesso e facendo escaping dell’output.
+- Regressione Joomla aggiunta per salvataggio, snapshot e resa nell’aula. CI e collaudo manuale sito da registrare.
+
 ## 0.41.6-dev — continuità dell’aula dopo il ritiro dal catalogo
 
 - L’accesso degli iscritti autorizzati non dipende più dallo stato editoriale, dal livello di catalogo o dalla scadenza della scheda del corso. Restano attivi i controlli correnti su account, livello contenuto, categoria, lingua, versione, edizione e finestre dell’iscrizione.

@@ -82,10 +82,18 @@ JD Learn apre l’elenco corsi. La sidebar Joomla offre Corsi, Categorie corsi, 
 
 La voce Plugin video apre la gestione nativa Joomla filtrata sul gruppo `jlmsvideo`, con ricerca, stato, accesso e singolo plugin azzerati per vedere tutti i provider installati, anche disattivati. Da qui si abilitano/disabilitano e configurano i plugin secondo i permessi di `com_plugins`. Non è una verifica della riproduzione; nessun accesso ai plugin è concesso dal solo permesso di gestire corsi.
 
+## Campi personalizzati delle lezioni (candidato 0.41.7)
+
+In Joomla → Campi, scegliere il contesto Lezioni (`com_jlms.lesson`), creare/pubblicare i campi e assegnarli ai livelli e gruppi desiderati. Abilitare il plugin di sistema Fields. Nell’editor Programma aprire o creare una lezione: il fieldset Campi personalizzati mostra i campi applicabili. Il salvataggio usa il modello Fields nativo; l’operatore deve avere `core.edit.value` sul campo e il suo livello di accesso. Quando si duplica una lezione o si prepara una nuova versione, i valori consentiti vengono copiati nella nuova bozza.
+
+Alla pubblicazione i valori e le etichette visibili all’autore vengono congelati nella lezione della versione didattica. L’aula mostra i valori della versione assegnata e ricontrolla il livello di accesso corrente; l’output è escapato come testo. Cambiare il valore corrente o la definizione non riscrive versioni già pubblicate.
+
+**Collaudo dopo l’installazione:** creare un campo testo nel contesto Lezioni; assegnare un valore, salvare e riaprire la lezione; pubblicare la bozza e verificare il valore nell’aula; cambiare il valore nella nuova bozza e verificare che la versione già assegnata resti invariata; provare con un operatore senza `core.edit.value` e con uno studente privo del livello del campo.
+
 ## Campi nella scheda pubblica del corso (0.41)
 
 I campi correnti com_jlms.course sono preparati dai plugin di tipo e dai layout com_fields di Joomla. La posizione automatica è dopo il titolo, prima o dopo la presentazione; disattivandola il campo non compare. Valori vuoti, campi/gruppi non pubblicati o non accessibili e assegnazioni non pertinenti non vengono mostrati. Accesso al corso e lingua restano obbligatori.
 
-Le modifiche editoriali compaiono senza ripubblicare il programma e non riscrivono versioni assegnate, progressi o risultati. Snapshot didattici e campi lezione restano un’integrazione distinta: i campi editoriali live non sono regole di completamento.
+Le modifiche editoriali compaiono senza ripubblicare il programma e non riscrivono versioni assegnate, progressi o risultati. Il candidato 0.41.7 aggiunge il contesto nativo `com_jlms.lesson`: i valori vengono salvati nel gestore Fields con ACL, copiati nelle nuove bozze e congelati alla pubblicazione. L’aula mostra i valori della versione assegnata con escaping e filtro dell’accesso corrente; non sono regole di completamento.
 
 Gli override nativi usano html/layouts/com_jlms/fields/render.php e html/layouts/com_jlms/field/render.php, con fallback com_fields. Tipi/override installati devono preservare escaping, accesso e accessibilità. Le prove automatiche campionano testo, area di testo e lista, non tutti i plugin di terze parti.

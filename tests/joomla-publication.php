@@ -108,7 +108,17 @@ pubExpect($hidden(),'draft absent from public direct lookup');
 pubDenied(fn()=>pubTransition(),'empty structure rejected');
 pubExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__workflow_associations WHERE extension=\'com_jlms.course\' AND item_id='.$course)->loadResult(),'failed publish has no workflow side effects');
 $module=$authoring->saveModule($actor,pubScope()+['id'=>0,'title'=>'Published chapter']);
-$lesson=$authoring->saveLesson($actor,pubScope()+['id'=>0,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text','required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>']);
+\Joomla\CMS\Plugin\PluginHelper::importPlugin('system','fields');
+$fieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
+if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson reference','name'=>'lesson-reference','type'=>'text',
+    'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','params'=>['showlabel'=>1],'fieldparams'=>['filter'=>'string']])) {
+    throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
+}
+$lessonField=(int)$fieldModel->getState('field.id');
+$lesson=$authoring->saveLesson($actor,pubScope()+['id'=>0,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text','required'=>'1',
+    'body'=>'<p>SECRET_LESSON_BODY</p>','com_fields'=>['lesson-reference'=>'LESSON_FIELD_SNAPSHOT']]);
+pubExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id='.$lessonField.' AND item_id='.$db->quote((string)$lesson))->loadResult()==='LESSON_FIELD_SNAPSHOT',
+    'native custom field value saved with draft lesson');
 pubDenied(fn()=>pubTransition(1),'stale publication revision rejected');
 $choices=$publication->transitions($actor,$course);
 pubDenied(fn()=>$publication->transition($guest,$course,$version,pubRevision('courses',$course),pubRevision('course_versions',$version),(int)$choices[0]->id),'guest publication denied');
@@ -132,10 +142,16 @@ pubExpect($hidden(),'failed state callback leaves public course hidden');
 pubTransition();
 $frozen=$db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id='.$version)->loadObject();
 pubExpect($frozen->status==='published' && strlen($frozen->structure_hash)===64 && $frozen->published_at!==null,'publication freezes hash and timestamp');
+$lessonSnapshot=json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_lessons WHERE id='.$lesson)->loadResult(),true,32,JSON_THROW_ON_ERROR);
+pubExpect(($lessonSnapshot['fields']['lesson-reference']['values'][0] ?? '')==='LESSON_FIELD_SNAPSHOT','publication freezes lesson custom field value');
 pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id='.$course)->loadResult()===1,'one default edition created');
 $assoc=(new \Joomla\CMS\Workflow\Workflow('com_jlms.course',$app,$db))->getAssociation($course);
 pubExpect((bool)$assoc,'native workflow association exists');
 pubExpect((int)$catalog->course($guest,'en-GB',$course)->id===$course,'published promotional course available without content level');
+$learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('b',40));
+$classroom=$component->getLearningService()->classroom($actor,'en-GB',$learnerEnrollment,$lesson);
+pubExpect(($classroom['lesson']->custom_fields[0]['values'][0] ?? '')==='LESSON_FIELD_SNAPSHOT',
+    'assigned classroom renders frozen lesson custom field value');
 pubExpect(!str_contains(json_encode($catalog->outline($guest,'en-GB',$course)), 'SECRET_LESSON_BODY'),'public outline contains no protected body');
 pubDenied(fn()=>$authoring->saveModule($actor,pubScope()+['id'=>0,'title'=>'Change history']),'published authoring is immutable');
 $ids=[$course];pubExpect(!$model->publish($ids,0),'direct state change bypass rejected');

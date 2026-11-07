@@ -97,9 +97,12 @@ final class CourseVersionCopy
             $module = $modules[$lesson['module_id']] ?? (!$whole && !$moduleRows ? $destinationModule : 0);
             if (!$module || (int) $lesson['course_version_id'] !== $sourceVersion) { throw new \DomainException('COM_JLMS_INVALID_INPUT'); }
             $lesson['course_version_id'] = $target; $lesson['module_id'] = $module;
+            // A draft receives live native field values; its publication snapshot is always rebuilt.
+            $lesson['fields_snapshot_json'] = '{}';
             if ($freshKeys) { $lesson['logical_key'] = self::key(); }
             if (!$whole && !$moduleRows) { $lesson['title'] = $title; $lesson['ordering'] = $this->nextOrder('lessons', 'module_id', $module); }
             $lessons[$old] = $this->insert('lessons', $lesson, $actor);
+            $this->copyLessonFields($actor, $old, $lessons[$old]);
             $first = $first ?: $lessons[$old];
         }
         $attachments = array_filter($this->rows('attachments', 'course_version_id', $sourceVersion, 1000),
@@ -138,6 +141,30 @@ final class CourseVersionCopy
             $this->db->insertObject('#__jlms_prerequisites', $record);
         }
         return $first;
+    }
+
+    /** Copy native field values only when the operator can edit those values in both items. */
+    private function copyLessonFields(User $actor, int $sourceId, int $targetId): void
+    {
+        $q = $this->db->createQuery()->select('f.id, f.access, v.value')->from('#__fields AS f')
+            ->innerJoin('#__fields_values AS v ON v.field_id = f.id')->where('f.context = :context')
+            ->where('v.item_id = :item')->where('f.state = 1')
+            ->bind(':context', 'com_jlms.lesson')->bind(':item', (string) $sourceId)->order('f.id');
+        $values = [];
+        foreach ($this->db->setQuery($q, 0, 1001)->loadObjectList() as $row) {
+            $fieldId = (int) $row->id;
+            if (!in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)
+                || !$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)) {
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
+            $values[$fieldId][] = (string) $row->value;
+        }
+        if (!$values) { return; }
+        $model = \Joomla\CMS\Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()
+            ->createModel('Field', 'Administrator', ['ignore_request' => true]);
+        foreach ($values as $fieldId => $fieldValues) {
+            if (!$model->setFieldValue((int) $fieldId, $targetId, $fieldValues)) { throw new \RuntimeException('COM_JLMS_VERSION_COPY_NOT_AVAILABLE'); }
+        }
     }
 
     private function course(int $version): int
