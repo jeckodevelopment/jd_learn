@@ -2,28 +2,32 @@
 
 Aggiornato al **7 novembre 2026**. Riferimento: **0.41.3-dev**, resa pubblica dei campi editoriali corso verificata nella CI standard; menu amministrativo e durata automatica già implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
-## Priorità
+## Priorità per la prima versione stabile
 
-| Ordine | Attività | Risultato richiesto / dipendenze |
+Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Le fasi originarie restano utili come mappa tecnica, ma le attività elencate come fase 2 non sono criteri di blocco per la prima stabile.
+
+| Ordine | Attività | Risultato richiesto |
 |---|---|---|
-| 1 | Completare gestione corsi, programma e provider essenziali (M01/M02/M04) | Eseguire e registrare i collaudi reali della checklist; completare le parti mancanti dell'editor, con i collegamenti M02/M03/M08/M10. Prima pubblicazione, duplicazioni, riordino, riepilogo impatto e recupero storico sono disponibili. Menu nativo e ingresso diretto ai corsi implementati; prosegue il restyling residuo, secondo ADMIN_UX_PLAN.md. Correggere subito ogni blocco di pubblicazione/fruizione YouTube, Vimeo e Cloudflare Stream; collaudare configurazioni e SDK reali su desktop/mobile. |
-| 2 | Ciclo editoriale (M02) | Anteprima interattiva e dei livelli senza effetti, revisione/archivio, errori e avvisi distinti; migrazioni esplicite. |
-| 3 | Didattica (M03) | Audio/documento autonomi, prerequisiti/cicli, sequenze/rilascio progressivo e fallback Riprendi R-05. |
-| 4 | Infrastruttura job (M07) | Batch recuperabili, cursore/lease/retry/idempotenza e gestione degli esiti; prerequisito di import, notifiche e attestati. |
-| 5 | Iscrizioni complete (M06) | CSV simulato/confermato, approvazioni/rifiuti, annullamenti, edizioni/finestre e separazione nuove iscrizioni/erogazione R-03. |
-| 6 | Estensioni media (M04) | Estensibilità senza patch R-02, accessibilità video e lifecycle materiali. I tre provider esterni essenziali e il loro collaudo operativo sono già priorità1. |
-| 7 | Valutazione (M05) | Rivalutazioni, disponibilità e anomalie complete senza alterare le evidenze storiche. |
-| 8 | Attestati e notifiche (M08/M07) | PDF/idoneità/emissione/download/verifica/revoca; outbox e Mail Templates affidabili. |
-| 9 | Esperienza e report (M09) | Catalogo/percorsi/area personale completi, KPI/dettagli e CSV protetti. |
-| 10 | Integrazioni residue e rilascio (M10–M12) | Completare core/lifecycle, matrice di accettazione, patch corrente, recovery e carico. |
+| 1 | Gestione corsi e programma (M01/M02) | Completare il percorso intuitivo di creazione, modifica dei corsi pubblicati, aggiornamento di lezioni/materiali e pubblicazione della nuova versione, preservando corsi in uso, versioni assegnate e progressi. |
+| 2 | Provider video e materiali essenziali (M04) | YouTube, Vimeo, Cloudflare Stream e media locali previsti funzionano nella lezione con consenso, accesso e progressi corretti; collaudo su browser e account reali. |
+| 3 | Fruizione e progressi core (M03/M09) | Lezioni testo/video, regole supportate, aula, catalogo, ripresa e progressi persistenti; non rendere i quiz prerequisito di pubblicazione o completamento quando il corso non li usa. |
+| 4 | Iscrizione singola e roster essenziale (M06/M09, sottoinsieme) | Accesso e iscrizione singola, sospensione/riattivazione e roster per corso con stato, avanzamento e date; ACL e storico conservati. Nessun KPI/export necessario in questa fase. |
+| 5 | Qualità amministrativa e integrazioni Joomla | Completare usabilità del backend, voci di menu, docente/corsi, privacy e integrazioni core applicabili, senza introdurre flussi incompleti per quiz o attestati. |
+| 6 | Accettazione della release (M10–M12) | Installazione/upgrade, sicurezza, accessibilità, browser/provider, conservazione dati e guide per il perimetro core. Eseguire la matrice estesa al candidato stabile, non a ogni commit preparatorio. |
 
-**Privacy, ACL, sicurezza, lingue, accessibilità e conservazione dati sono trasversali.** Il plugin Privacy e le politiche sui dati vanno avviati presto, senza aspettare il punto 10. Il collaudo accompagna ogni attività, non soltanto il rilascio finale. Le dipendenze possono anticipare parti di una fase senza ridurre il perimetro.
+### Funzionalità congelate per la fase 2
+
+Quiz e banca domande, attestati, KPI/reportistica avanzata, export CSV e importazioni/operazioni massive, edizioni e finestre complesse, notifiche e job non indispensabili al flusso core. Sono ammesse correzioni mirate di blocchi, sicurezza e integrità. La gestione essenziale degli iscritti resta in prima fase.
+
+Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applicano da subito a ogni funzione inclusa.
 
 ## Primo lavoro da svolgere
 
-**Durata automatica e scarti (R-06):** la0.39 implementa il flusso nell’editor per YouTube/Vimeo/Stream e conserva la misura da file MP4, con ricevute di sorgente e tolleranza coerente con il completamento. CI standard superata; prima di accettarlo completare il collaudo SDK/browser/account reali secondo [VIDEO_DURATION_PLAN.md](VIDEO_DURATION_PLAN.md), correggendo subito eventuali blocchi. La resa pubblica dei campi editoriali corso è implementata e verificata nella CI standard0.41; il seguito riprende snapshot didattici, campi lezione e residui dell’editor; menu nativo e ingresso diretto implementati; restyling residuo pianificato M01/M10. Non ripianificare l’acquisizione ordinaria come assente, né dichiarare concluso il collaudo reale.
+Riprendere da M01: chiudere i residui dell’editor e del programma indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), con priorità alle modifiche di un corso pubblicato, all’aggiornamento di lezioni/materiali e all’esperienza amministrativa. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 
-Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: collaudare l’amministrazione e il programma su Joomla reale e registrare gli esiti per build/ruolo/browser, affrontando subito eventuali blocchi dei provider essenziali. Campi corso, riepilogo/conferma degli aggiornamenti e recupero storico sono implementati e coperti dalle rispettive regressioni. L’editor delle regole supportate e la soglia video della versione sono implementati e coperti dalla CI standard della0.38. Seguono campi/snapshot pertinenti e regole avanzate, rispettando le dipendenze M03/M08/M10; non mostrare controlli per attestati o regole ancora non operative. L’anteprima interattiva senza effetti e il ciclo revisione/archivio restano il seguito M02. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
+In parallelo, mantenere i tre provider esterni e i media locali come requisiti core: la [durata automatica e gli scarti video](VIDEO_DURATION_PLAN.md) sono implementati nella linea0.39 ma il collaudo completo con provider/browser/account reali resta necessario. Aggiornare lo stato per ciascun build e distinguere ciò che è implementato da ciò che è accettato.
+
+Dopo il consolidamento di corsi, programma e media, completare l’iscrizione singola e il roster core secondo AC-128. Quiz, attestati e reportistica avanzata restano congelati: non riprendere quei lavori per ampliare funzionalità mentre il core è aperto.
 
 ## Modalità di sviluppo e verifica
 
