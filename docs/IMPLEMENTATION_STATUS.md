@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.38.0-dev**: editor delle regole didattiche e soglia video della versione; verifiche del nuovo incremento in corso. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.38.0-dev**: editor delle regole didattiche e soglia video della versione; PR #49 verificata dalla CI42388597025. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -29,16 +29,15 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-Il nuovo incremento aggiunge prove della soglia esatta, form/CSRF/ACL/checkout/revisioni, conferma di impatto, completamento e conservazione delle soglie assegnate dopo upgrade. Esiti della nuova CI non ancora disponibili; le prove seguenti restano il riferimento verificato precedente.
+La [CI0.38](https://github.com/jeckodevelopment/jd_learn/actions/runs/42388597025) ha superato i quattro job standard sul codice `fd35af582f6ba757e89b0270bf96020465e7841b`:
 
-La [CI0.37](https://github.com/jeckodevelopment/jd_learn/actions/runs/42385237648) ha superato tutti e 5 i job sul codice `ef660a4809c23e1a9ae2d1f14759f7361b05d765`:
+- PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6: intera suite implementata nativa/HTTP/JS, build riproducibile, installazione e upgrade 0.37→0.38, reinstallazione e conservazione dello storico. Nuovi controlli per ambiente: 37 di dominio, 21 nativi, 15 HTTP e 1 di upgrade. Provati confronto esatto, form/scoping/CSRF/checkout/CAS, review delle soglie, conferme obsolete e completamenti con regole diverse per le versioni assegnate.
+- Chromium: 12 controlli su fixture desktop/mobile delle modifiche non salvate. Non è collaudo interattivo dell’intero Joomla o del nuovo form regole.
+- Job leggero: politica CI, build, struttura, traduzioni e tracciabilità. Le bozze preparatorie hanno eseguito soltanto questi controlli; la verifica finale usa la [matrice standard](CI_POLICY.md). Le due coppie incrociate restano da eseguire nella matrice completa prima di milestone/rilascio o modifiche di compatibilità.
 
-- PHP 8.3/8.4 × MySQL 8.4/MariaDB 10.6: intera suite nativa/HTTP/JS, 153 nuovi controlli nativi e 14 HTTP di recupero storico, build riproducibile, installazione e upgrade 0.36→0.37, reinstallazione e storici conservati. Il recupero include riferimenti dei tre provider, quiz/domande/materiali, altre bozze, rifiuti di richieste obsolete e nuova pubblicazione con controlli di configurazione.
-- Chromium: 12 controlli della navigazione con modifiche non salvate su fixture desktop/mobile. Non è un collaudo visivo dell’intero Joomla, del nuovo recupero o un’integrazione reale TinyMCE.
+La registrazione successiva degli esiti modifica soltanto documentazione esterna al pacchetto: runtime e pacchetto restano quelli verificati. Nessuna ripetizione automatica al merge. La matrice completa precedente è conservata nel [registro delle prove](IMPLEMENTATION_EVIDENCE.json), con i propri limiti.
 
-La successiva registrazione degli esiti modifica soltanto documentazione; il runtime e il pacchetto restano quelli verificati. La nuova [politica CI](CI_POLICY.md) usa controlli leggeri sulle bozze/documentazione e integra due ambienti più browser sul candidato pronto; matrice completa manuale prima di milestone/rilascio e nessuna ripetizione automatica al merge. Politica verificata nella [PR48](https://github.com/jeckodevelopment/jd_learn/pull/48): la bozza esegue solo il job leggero e il candidato pronto supera i quattro job previsti nella [CI42386442389](https://github.com/jeckodevelopment/jd_learn/actions/runs/42386442389). La matrice completa della versione0.37 rimane quella del report sopra; non è stata ripetuta per questo intervento CI/documentazione.
-
-La nuova prova mista usa gli adapter server YouTube/Vimeo e il trasporto API Stream controllato; non riproduce video reali. Prima pubblicazione e YouTube sono stati confermati anche dall’utente sul percorso provato. Restano collaudo completo browser/mobile/tastiera/accessibilità, provider reali, audit sicurezza, backup/ripristino, patch Joomla corrente e benchmark300studenti/60minuti e500/10minuti. I test concorrenti non dimostrano tale capacità. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) conserva build, hash, job e limiti; nessuna accettazione completa M01/AUT-04 è dedotta dalla CI.
+Prima pubblicazione e YouTube sono stati confermati dall’utente sul percorso provato. Restano collaudo completo browser/mobile/tastiera/accessibilità e dei provider/SDK reali, audit sicurezza, backup/ripristino, patch Joomla corrente e benchmark di 300 studenti/60 minuti e 500/10 minuti. Le prove di telemetria server e i test concorrenti non sostituiscono queste verifiche. M01 resta aperto.
 
 ## Prossimo passo
 

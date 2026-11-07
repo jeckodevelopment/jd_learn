@@ -52,4 +52,4 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 
 
-Regole didattiche della versione: scheda corso e soglia video configurabile in bozza. Verifiche del nuovo incremento in corso; esiti nel registro delle prove.
+[Pacchetto verificato 0.38.0](https://github.com/jeckodevelopment/jd_learn/actions/runs/42388597025/artifacts/13581040368): estrarre e installare `pkg_jlms-0.38.0-dev.zip` su Joomla di prova. Scheda Regole didattiche e soglia video della versione disponibili; esiti, checksum e limiti nel registro delle prove.
