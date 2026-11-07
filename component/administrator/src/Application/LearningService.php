@@ -234,6 +234,7 @@ final class LearningService
             'publish_up', 'publish_down', 'release_after_days', 'source_revision', 'provider_key', 'duration_ms', 'media_asset_id', 'params_json'];
         if ($includeBody) {
             $columns[] = 'body';
+            $columns[] = 'fields_snapshot_json';
         }
         $q = $this->db->createQuery()->select($this->db->quoteName($columns))->from('#__jlms_lessons')
             ->where('id = :lesson')->where('course_version_id = :version')
