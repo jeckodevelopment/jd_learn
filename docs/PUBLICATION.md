@@ -52,3 +52,7 @@ Il confronto usa chiavi logiche per moduli/lezioni e definizioni/riferimenti per
 `PublicationService::transition` richiede l’impronta restituita da `updateImpact` quando attiva una bozza di aggiornamento. La verifica è ripetuta sotto i lock corso/versione prima del congelamento. I client interni devono richiedere e confermare il riepilogo; nessuna conferma implicita di aggiornamenti. Cambi a corso, bozza, versione sorgente o contenuti producono un rifiuto. Identità/ACL/transizione/checkout e validazioni didattiche/media vengono ricontrollati. Prima pubblicazione e ritiro/ripubblicazione della medesima versione mantengono il flusso precedente. Il confronto non è un certificato di pubblicabilità e non avvia richieste ai provider.
 
 Gli iscritti mantengono versioni, tentativi, progressi e file assegnati. La migrazione esplicita, il recupero storico e l’anteprima interattiva restano nel residuo AUT-04/M02; questo incremento non chiude il requisito.
+
+## Recuperare un programma storico
+
+Dal Programma → Versioni selezionare una versione storica e usare **Recupera come nuova bozza**. Le altre bozze, la scheda e la pubblicazione corrente e i dati studente restano invariati. La nuova pubblicazione richiede il normale riepilogo/conferma e i controlli dei provider. Contratto, permessi e procedura nella [guida editor](COURSE_EDITOR.md#recuperare-un-programma-storico).

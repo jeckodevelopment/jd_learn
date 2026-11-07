@@ -196,6 +196,7 @@ final class CurriculumService
                 ->where('course_id = :course')->where('status = :status');
             $status = 'draft';
             $q->bind(':course', $courseId, ParameterType::INTEGER)->bind(':status', $status);
+            $q->order('version_no DESC, id DESC');
             $existing = (int) $this->db->setQuery($q)->loadResult();
             if ($existing) {
                 return $existing;
@@ -222,6 +223,40 @@ final class CurriculumService
                 'fields_snapshot_json' => '{}'], $actor);
             $this->update('courses', $course, [], $actor);
             return $id;
+        });
+    }
+
+    /** Recover a frozen programme as a separate draft; never replace other drafts or learning records. */
+    public function restoreVersion(User $identity, array $input): int
+    {
+        if (!in_array($input['confirmation'] ?? null, ['1', 1], true)) { throw new \DomainException('COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED'); }
+        $courseId = self::id($input['course_id'] ?? null); $sourceId = self::id($input['version_id'] ?? null);
+        $courseRevision = self::id($input['revision'] ?? null); $sourceRevision = self::id($input['expected_version_revision'] ?? null);
+        return $this->transaction(function () use ($identity, $courseId, $sourceId, $courseRevision, $sourceRevision): int {
+            $course = $this->row('courses', $courseId, true);
+            $actor = new User((int)$identity->id); $actor->clearAccessRights();
+            $this->authorise($actor, $course);
+            $source = $this->row('course_versions', $sourceId, true);
+            if ((int)$source->course_id !== $courseId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+            if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id)
+                || ($source->checked_out && (int)$source->checked_out !== (int)$actor->id)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            if ((int)$course->revision !== $courseRevision || (int)$source->revision !== $sourceRevision) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
+            if ($course->current_version_id === null || (int)$course->current_version_id === $sourceId
+                || !in_array($source->status, ['published', 'retired'], true) || !$source->published_at
+                || !is_string($source->structure_hash) || preg_match('/\A[a-f0-9]{64}\z/D', $source->structure_hash) !== 1) {
+                throw new \DomainException('COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
+            }
+            $query = $this->db->createQuery()->select('COALESCE(MAX(version_no), 0)')->from('#__jlms_course_versions')
+                ->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
+            $number = (int)$this->db->setQuery($query)->loadResult() + 1;
+            $target = (new CourseVersionCopy($this->db))->copy($actor, $source, $number);
+            $this->update('courses', $course, [], $actor);
+            (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record($actor,
+                ['id'=>$courseId, 'title'=>$course->title, 'source_version_id'=>$sourceId, 'target_version_id'=>$target,
+                 'source_version_no'=>(int)$source->version_no, 'target_version_no'=>$number,
+                 'link'=>'index.php?option=com_jlms&view=curriculum&id='.$courseId.'&version_id='.$target,
+                 'correlation_id'=>bin2hex(random_bytes(16))], 'programmerestore');
+            return $target;
         });
     }
 

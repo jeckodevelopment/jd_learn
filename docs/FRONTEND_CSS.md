@@ -165,3 +165,7 @@ La scheda condizionale `jlms-course-fields-tab` contiene la regione `jlms-course
 ## Riepilogo di pubblicazione amministrativo
 
 Override `administrator/templates/NOME/html/com_jlms/publicationreview/default.php`. Regioni: `jlms-publication-review`, tabella `jlms-publication-changes`, form `jlms-publication-confirm-form`, checkbox `jlms-publication-confirm`. Preservare scope, ticket, token Joomla e conferma richiesta. La tabella usa caption/intestazioni e contenitore responsive nativi; nessun nuovo CSS globale o script. Non mostrare corpi, sorgenti video, risposte o nominativi nelle differenze.
+
+### Recupero del programma storico
+
+Nel contenitore amministrativo esistente: `#jlms-restore-programme` è il disclosure nativo, `#jlms-restore-programme-form` il form POST, `#jlms-restore-confirm` il checkbox con label e conferma obbligatoria. Si usano classi Joomla esistenti, senza stili globali nuovi. Gli override della vista curriculum devono conservare token, campi di scope/revisione e conferma; le versioni storiche non mostrano il comando che copia il programma attivo.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.37.0-dev — recupero del programma storico come nuova bozza
+
+- Comando nativo dal programma storico con conferma POST/CSRF, ACL fresche, checkout, revisioni e audit atomico. Rigenera gli ID mantenendo chiavi logiche, lezioni, riferimenti video, quiz e materiali.
+- Nessuna sovrascrittura delle altre bozze, dei dati promozionali correnti o dei dati studente; la versione attiva cambia soltanto con la pubblicazione ordinaria e il riepilogo di impatto. Modifica programma riapre la bozza più recente.
+- Prove di recupero e ripubblicazione con YouTube, Vimeo e Cloudflare Stream; trasporto Stream controllato, senza credenziali o rete reali. Il collaudo SDK/browser reale rimane distinto.
+
 ## 0.36.0-dev — riepilogo e conferma degli aggiornamenti didattici
 
 - Riepilogo separato prima di pubblicare una bozza che aggiorna il programma attivo: conteggi e dettagli di moduli, lezioni, quiz e materiali aggiunti/modificati/rimossi, regole e assegnazioni esistenti per versione.

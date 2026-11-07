@@ -164,7 +164,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   </select>
   <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= $version->status === 'draft' && $course->current_version_id !== null ? Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') : (count($this->transitions) === 1 ? $this->escape($transitionLabel($this->transitions[0])) : Text::_('COM_JLMS_EXECUTE_TRANSITION')) ?></button>
  </form><?php endif; ?>
- <?php if ($version->status === 'published') : ?>
+ <?php if ($version->status === 'published' && (int)$course->current_version_id === (int)$version->id) : ?>
  <form method="post" id="jlms-edit-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">
   <?php $hidden(['course_id' => $course->id, 'revision' => $course->revision]); ?>
   <input type="hidden" name="task" value="curriculum.createVersion">
@@ -177,6 +177,17 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <details class="jlms-programme-versions"><summary><?= Text::_('COM_JLMS_VERSIONS') ?></summary><nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>"><ul>
  <?php foreach ($this->outline['versions'] as $entry) : ?><li><a href="<?= $link($base . '&version_id=' . (int) $entry->id) ?>"<?= (int) $entry->id === (int) $version->id ? ' aria-current="page"' : '' ?>>v<?= (int) $entry->version_no ?> · <?= Text::_($entry->status === 'draft' ? 'COM_JLMS_DRAFT' : ($entry->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?></a></li><?php endforeach; ?>
  </ul></nav></details>
+ <?php if ($this->canRestoreProgramme) : ?>
+ <details id="jlms-restore-programme"><summary><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_ACTION') ?></summary>
+  <p><?= Text::sprintf('COM_JLMS_PROGRAMME_RESTORE_NOTICE', (int)$version->version_no) ?></p>
+  <p><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_KEEP_DRAFTS') ?></p>
+  <form method="post" id="jlms-restore-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">
+   <?php $hidden($scope + ['revision'=>$course->revision]); ?><input type="hidden" name="task" value="curriculum.restoreVersion">
+   <label for="jlms-restore-confirm"><input type="checkbox" id="jlms-restore-confirm" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_RESTORE_CONFIRM') ?></label>
+   <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary mt-2" type="submit"><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_ACTION') ?></button>
+  </form>
+ </details>
+ <?php endif; ?>
  <?php if ($this->canDuplicateCourse) : ?>
  <details id="jlms-duplicate-course"><summary><?= Text::_('COM_JLMS_DUPLICATE_COURSE') ?></summary>
  <p><?= Text::_('COM_JLMS_DUPLICATE_COURSE_NOTICE') ?></p>
