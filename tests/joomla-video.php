@@ -115,8 +115,14 @@ videoDenied(fn()=>$service->playback(new \Joomla\CMS\User\User(),'en-GB',$enroll
 videoDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lesson,bin2hex(random_bytes(16))),403,'manual completion cannot bypass video');
 $view=$learning->classroom($student,'en-GB',$enrollment,$lesson);
 videoExpect($view['lesson']->kind==='video' && !isset($view['lesson']->source_json),'classroom never exposes reference');
+// Course catalog withdrawal and publication end do not expire an existing video enrollment.
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>0,'publish_down'=>'2000-01-01 00:00:00']);
+[, , , $withdrawnVideo]=$learning->videoContext($student,'en-GB',$enrollment,$lesson);
+videoExpect($withdrawnVideo->access_expires_at===null,'course publication end is not a playback deadline');
+videoDenied(fn()=>$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16))),404,'withdrawn course rejects a new learner');
 $a=$service->playback($student,'en-GB',$enrollment,$lesson,true);$b=$service->playback($student,'en-GB',$enrollment,$lesson,true);
 videoExpect($a['options']['reference']==='dQw4w9WgXcQ' && !isset($a['playback_token']),'safe descriptor');
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>1,'publish_down'=>null],true);
 $event=static fn(int $id,string $type,int $p,int $t,bool $playing=true):array=>['id'=>$id,'type'=>$type,'position_ms'=>$p,'client_ms'=>$t,'rate_milli'=>1000,'playing'=>$playing];
 $batch=json_encode([$event(1,'play',0,0),$event(2,'position',5000,5000)],JSON_THROW_ON_ERROR);$now+=5000;
 $save=static fn(array $grant,int $seq,string $events,int $duration=10000)=>$service->save($student,'en-GB',$enrollment,$lesson,$grant['session_id'],$grant['source_revision'],$seq,$duration,$events);
