@@ -1,0 +1,21 @@
+/* Administrator landing page only; the Joomla administrator template remains in control. */
+#jlms-admin-dashboard { max-width: 76rem; margin-inline: auto; }
+#jlms-admin-dashboard .jlms-admin-dashboard__header { margin-block: 1rem 1.5rem; }
+#jlms-admin-dashboard .jlms-admin-dashboard__header h1 { margin-block: 0 .5rem; }
+#jlms-admin-dashboard .jlms-admin-dashboard__header p,
+#jlms-admin-dashboard .jlms-admin-dashboard__primary p { max-width: 65ch; margin-block-end: 0; }
+#jlms-admin-dashboard .jlms-admin-dashboard__primary { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.5rem; border: 1px solid var(--border-color, #adb5bd); border-radius: .5rem; background: var(--body-bg, #fff); }
+#jlms-admin-dashboard .jlms-admin-dashboard__primary h2 { margin-block: 0 .5rem; }
+#jlms-admin-dashboard .jlms-admin-dashboard__primary .btn { flex: 0 0 auto; }
+#jlms-admin-dashboard .jlms-admin-dashboard__links { margin-block: 1.5rem; }
+#jlms-admin-dashboard .jlms-admin-dashboard__links ul { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin: 0; padding-inline-start: 1.25rem; }
+#jlms-admin-dashboard .jlms-admin-dashboard__providers { border-block-start: 1px solid var(--border-color, #adb5bd); padding-block: 1rem; }
+#jlms-admin-dashboard .jlms-admin-dashboard__providers summary { cursor: pointer; font-weight: 600; padding-block: .35rem; }
+#jlms-admin-dashboard .jlms-admin-dashboard__providers ul { max-width: 38rem; padding: 0; list-style: none; }
+#jlms-admin-dashboard .jlms-admin-dashboard__providers li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: .5rem; border-bottom: 1px solid var(--border-color, #dee2e6); }
+#jlms-admin-dashboard a:focus-visible,
+#jlms-admin-dashboard summary:focus-visible { outline: 3px solid var(--focus-ring, #0d6efd); outline-offset: 3px; }
+@media (max-width: 767px) {
+    #jlms-admin-dashboard .jlms-admin-dashboard__primary { align-items: stretch; flex-direction: column; }
+    #jlms-admin-dashboard .jlms-admin-dashboard__primary .btn { align-self: flex-start; }
+}

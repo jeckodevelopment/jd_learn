@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
   "name": "com_jlms",
-  "version": "0.41.0",
+  "version": "0.41.8",
   "assets": [
     {
       "name": "com_jlms.site",
@@ -34,6 +34,11 @@
       "name": "com_jlms.curriculum",
       "type": "style",
       "uri": "com_jlms/curriculum.css"
+    },
+    {
+      "name": "com_jlms.admin-dashboard",
+      "type": "style",
+      "uri": "com_jlms/admin-dashboard.css"
     },
     {
       "name": "com_jlms.curriculum",

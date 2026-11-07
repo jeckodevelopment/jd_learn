@@ -8,6 +8,10 @@ Override Joomla: `templates/NOME/html/com_jlms/courses/default.php`; preservare 
 
 Aggiornare questa guida a ogni introduzione/modifica di stili e layout. Non modificare i file del core o del componente installato per una personalizzazione del sito.
 
+## Ingresso amministrativo
+
+La dashboard amministrativa usa `#jlms-admin-dashboard` e il foglio WAM `com_jlms.admin-dashboard` (`admin-dashboard.css`), caricato solo nella vista iniziale. La regione primaria `jlms-admin-dashboard__primary` porta all’elenco corsi; gli strumenti secondari e lo stato dei provider hanno regioni distinte. Gli ID e le classi sono stabili per gli override. Gli stili sono limitati alla radice della dashboard e si adattano sotto767px; il template amministrativo Joomla conserva colori e tipografia di base.
+
 ## Backend del programma didattico
 
 Override: `administrator/templates/NOME/html/com_jlms/curriculum/default.php`. La scaletta conserva `#jlms-admin-curriculum`, `#jlms-admin-course-outline`, `.jlms-admin-module` e `data-module-id`. Nuovi ID unici `jlms-module-ID`, `jlms-lesson-ID`, `jlms-order-status`, `jlms-reorder-form`. Il form `jlms-module-form` o `jlms-lesson-form` è presente soltanto per l’editor richiesto, non su ogni pagina. I test o override che assumevano entrambi sempre visibili devono seguire i link contestuali. Le lezioni MP4 espongono upload/scan soltanto nella selezione della lezione; la scansione di sicurezza resta consentita sullo storico.

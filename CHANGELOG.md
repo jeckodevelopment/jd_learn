@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.8-dev — ingresso amministrativo più chiaro
+
+- Mette in evidenza l’accesso alla gestione corsi, raggruppa gli strumenti secondari e raccoglie lo stato provider in un dettaglio espandibile.
+- Aggiunge stile responsive confinato alla dashboard tramite Joomla Web Asset Manager; nessuna modifica ai permessi o al template amministrativo.
+- Aggiunge stringhe italiane e inglesi e documenta gli ID/classi per gli override. Collaudo visivo e dei ruoli nel backend Joomla reale ancora da svolgere.
+
 ## 0.41.7-dev — campi personalizzati delle lezioni
 
 - Abilita il contesto nativo `com_jlms.lesson` in Joomla Fields e aggiunge i campi dinamici all’editor delle lezioni.
