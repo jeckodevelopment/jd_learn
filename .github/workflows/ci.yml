@@ -124,7 +124,8 @@ jobs:
           php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.40.1-dev.zip" --no-interaction
           php -r 'ob_start(); $script = $argv[1]; array_shift($argv); require $script;' .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
           php tests/legacy-time-fixture.php .runtime/joomla
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.41.5-dev.zip"
+          PACKAGE_VERSION="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-${PACKAGE_VERSION}.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
@@ -260,7 +261,8 @@ jobs:
           python3 tests/programme-restore-http.py .runtime/joomla
       - name: Upgrade the full package with retained data and enabled providers
         run: |
-          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-0.41.5-dev.zip"
+          PACKAGE_VERSION="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
+          php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-${PACKAGE_VERSION}.zip"
           php tests/joomla-smoke.php .runtime/joomla retained
       - name: Verify completed student history survives package update
         run: php tests/joomla-learning.php .runtime/joomla retained

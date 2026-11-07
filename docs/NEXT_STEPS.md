@@ -49,7 +49,7 @@ Anteprima con esito per riga, esclusioni per scope del corso e duplicati senza a
 
 ### Stati, edizioni e disponibilità
 
-Completare richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gestione delle edizioni/finestre e proroghe formative. Chiudere R-03 con comandi separati per nuove iscrizioni ed erogazione. Ogni operazione sensibile ha scope, motivo/anteprima/conferma, audit, replay e impatto sui quiz/risorse già aperti. Non confondere un rinnovo di livello con una nuova frequenza.
+Il candidato 0.41.6 separa il ritiro promozionale dalla fruizione degli iscritti, ma non completa R-03. Prossimo passo: comandi distinti per chiudere tutte le nuove ammissioni e sospendere l’erogazione. Poi completare richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gestione delle edizioni/finestre e proroghe formative. Ogni operazione sensibile ha scope, motivo/anteprima/conferma, audit, replay e impatto sui quiz/risorse già aperti. Non confondere un rinnovo di livello con una nuova frequenza.
 
 **Accettazione:** transizioni valide/negate, stesse sessioni dopo revoca/ripristino, timer che non si riaprono, stato didattico separato dall’accesso e nessuna cancellazione o migrazione silenziosa.
 

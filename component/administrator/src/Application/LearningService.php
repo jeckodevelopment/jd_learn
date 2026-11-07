@@ -69,13 +69,22 @@ final class LearningService
         return $course;
     }
 
+    private function enrolledCourse(User $actor, string $language, int $id): object
+    {
+        $course = $this->catalog->enrolledCourse($actor, $language, $id);
+        if (!in_array((int) $course->content_access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) {
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+        }
+        return $course;
+    }
+
     private function authorisedEnrollment(User $actor, string $language, int $id, bool $lock = false, bool $allowExpiredWindow = false): array
     {
         $enrollment = $this->row('enrollments', $id, $lock);
         if ((int) $enrollment->user_id !== (int) $actor->id) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
-        $course = $this->course($actor, $language, (int) $enrollment->course_id);
+        $course = $this->enrolledCourse($actor, $language, (int) $enrollment->course_id);
         $version = $this->row('course_versions', (int) $enrollment->course_version_id);
         $edition = $this->row('editions', (int) $enrollment->edition_id);
         if (!in_array($enrollment->status, ['active', 'completed'], true)
@@ -261,12 +270,11 @@ final class LearningService
         $lesson = $this->lesson((int) $version->id, $lessonId);
         if ($lesson->kind !== 'video') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         $courseId = (int) $course->id;
-        $q = $this->db->createQuery()->select('l.source_json, c.publish_down')->from('#__jlms_lessons AS l')
-            ->innerJoin('#__jlms_courses AS c ON c.id = :course')->where('l.id = :lesson')
-            ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
+        $q = $this->db->createQuery()->select('l.source_json')->from('#__jlms_lessons AS l')
+            ->where('l.id = :lesson')->bind(':lesson', $lessonId, ParameterType::INTEGER);
         $source = $this->db->setQuery($q)->loadObject();
         $lesson->source_json = $source->source_json;
-        $deadlines = array_filter([$source->publish_down, $edition->ends_at, $enrollment->ends_at], static fn ($v): bool => $v !== null && $v !== '');
+        $deadlines = array_filter([$edition->ends_at, $enrollment->ends_at], static fn ($v): bool => $v !== null && $v !== '');
         sort($deadlines);
         $lesson->access_expires_at = $deadlines[0] ?? null;
         return [$actor, $version, $enrollment, $lesson];

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.6-dev — continuità dell’aula dopo il ritiro dal catalogo
+
+- L’accesso degli iscritti autorizzati non dipende più dallo stato editoriale, dal livello di catalogo o dalla scadenza della scheda del corso. Restano attivi i controlli correnti su account, livello contenuto, categoria, lingua, versione, edizione e finestre dell’iscrizione.
+- Le nuove ammissioni restano soggette alla pubblicazione e disponibilità del corso.
+- Aggiunte regressioni d’integrazione per aula testo/video; CI candidato e prova Joomla reale ancora da svolgere.
+- R-03 è parziale: mancano le azioni amministrative separate di chiusura iscrizioni e sospensione erogazione, con riepilogo, motivo e audit.
+
 ## 0.41.5-dev — ripresa alla prima attività obbligatoria incompleta
 
 - Se non esiste un’ultima attività valida, Riprendi sceglie la prima lezione obbligatoria non completata nell’ordine del programma.
