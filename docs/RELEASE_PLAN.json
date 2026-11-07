@@ -16,7 +16,7 @@
       ],
       "acceptance_checklist": "docs/M01_ACCEPTANCE.md",
       "planned_administration_ux": {
-        "status": "Menu e ingresso implementati, CI in preparazione; restyling e collaudo residui",
+        "status": "Menu e ingresso implementati, CI42395767098 superata; restyling e collaudo residui",
         "scope": "Ingresso backend intuitivo e menu amministrativo JD Learn nella sidebar Joomla",
         "plan": "docs/ADMIN_UX_PLAN.md",
         "dependencies": [

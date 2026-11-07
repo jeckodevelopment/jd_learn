@@ -53,4 +53,6 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 
 
-Durata automatica dei video nell’editor e gestione degli scarti implementate nella 0.39 e verificate nella CI standard. [Pacchetto di sviluppo verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42393451244/artifacts/13582033529); esiti e limiti nel registro delle prove.
+Durata automatica dei video nell’editor e gestione degli scarti implementate nella 0.39 e verificate nella CI standard. [Pacchetto di sviluppo verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42395767098/artifacts/13583486787); esiti e limiti nel registro delle prove.
+
+La 0.40 aggiunge l’ingresso diretto nei corsi e il menu amministrativo nativo; CI standard superata. M01 resta aperto per le funzioni e i collaudi residui.

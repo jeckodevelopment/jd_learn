@@ -1,6 +1,6 @@
 # Backend: accesso e navigazione amministrativa
 
-Richiesta del 7 novembre 2026, **prima parte implementata nella 0.40, in verifica**. Chiarisce CORE-20, CORE-13, UI-02 e SCR-13; non introduce un pannello parallelo al backend Joomla. Collegamento M01/M10. L’editor corsi è già stato semplificato; questo lavoro riguarda anche l’ingresso nel componente e la navigazione persistente.
+Richiesta del 7 novembre 2026, **prima parte implementata nella 0.40, verificati nella CI standard42395767098**. Chiarisce CORE-20, CORE-13, UI-02 e SCR-13; non introduce un pannello parallelo al backend Joomla. Collegamento M01/M10. L’editor corsi è già stato semplificato; questo lavoro riguarda anche l’ingresso nel componente e la navigazione persistente.
 
 ## Risultato richiesto
 
