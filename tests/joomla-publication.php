@@ -112,7 +112,7 @@ $module=$authoring->saveModule($actor,pubScope()+['id'=>0,'title'=>'Published ch
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system','fields');
 $fieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
 if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson reference','label'=>'Lesson reference','name'=>'lesson-reference','type'=>'text',
-    'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','params'=>['showlabel'=>1],'fieldparams'=>['filter'=>'string']])) {
+    'state'=>1,'access'=>2,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','params'=>['showlabel'=>1],'fieldparams'=>['filter'=>'string']])) {
     throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
 }
 $lessonField=(int)$fieldModel->getState('field.id');
