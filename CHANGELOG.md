@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.4-dev — editor corso più lineare
+
+- Riunisce dati, copertina e docenti nella scheda Corso; colloca regole nel contesto Programma e consolida accesso e calendario.
+- Lascia invariati modello dati, salvataggio, versioni e permessi.
+- La CI d’integrazione del candidato è in attesa della revisione finale della PR.
+
 ## 0.41.3-dev — valore corretto per il checkbox della risposta
 
 - Rimuove `default="0"` dal campo checkbox Joomla: il core usa quel default anche come attributo `value`, così una casella selezionata inviava `0` invece di `1`.
