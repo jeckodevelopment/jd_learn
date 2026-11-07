@@ -20,6 +20,10 @@ L'elenco usa paginazione a cursore e controlli ACL per record. Legge al massimo1
 
 Le opzioni checkbox non selezionate possono essere omesse dal POST HTML oppure arrivare come valore vuoto dopo il filtro del form Joomla: entrambe le forme equivalgono a “non corretta”. Le domande richiedono comunque almeno una risposta corretta e i tipi a risposta singola/vero-falso ne ammettono esattamente una. Questo caso è coperto dalle verifiche dell’incremento0.41.1.
 
+### Diagnostica degli errori di salvataggio
+
+La validazione del form mostra i messaggi Joomla relativi ai campi rifiutati. Le verifiche successive distinguono testo domanda, numero/forma delle opzioni, etichette duplicate o mancanti e numero di risposte corrette. Un errore422 generico va trattato come difetto aperto finché la causa non è visibile e riproducibile.
+
 ## Composizione di un quiz
 
 Nel programma di una versione in bozza, creare almeno un modulo e usare «Aggiungi quiz». Il quiz è una lezione ordinata, modificabile dal suo editor dedicato. Il titolo e l'obbligatorietà appartengono alla lezione; soglia, tentativi, timer e selezione appartengono alla configurazione del quiz.

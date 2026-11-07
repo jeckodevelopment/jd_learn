@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.2-dev — diagnosi degli errori della banca domande
+
+- Mostra i messaggi di validazione nativi Joomla quando il form non supera la validazione, così da indicare il campo rifiutato.
+- Distingue gli errori semantici di testo, opzioni, etichette e risposte corrette.
+- La segnalazione reale persiste dopo0.41.1; questo incremento è diagnostico e non è dichiarato risolutivo finché non viene riprovato nell’installazione che ha segnalato il problema.
+
+
 ## 0.41.1-dev — salvataggio delle opzioni domanda
 
 - Normalizza i checkbox non selezionati della banca domande sia quando il browser li omette sia quando Joomla li filtra come stringa vuota.
