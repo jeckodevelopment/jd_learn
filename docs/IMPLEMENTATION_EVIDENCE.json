@@ -1760,8 +1760,8 @@
     "status": "Implementation prepared; pull request, candidate CI, build and package evidence pending",
     "local_build": {
       "package": "dist/pkg_jlms-0.41.9-dev.zip",
-      "sha256": "7113eb6c1f6b903a0814ebd8b37eb3e7bacd50589c24e7f1cdf5999c9bb76489",
-      "bytes": 457629,
+      "sha256": "95a1c1799b2bc991a0f037edc39a5e2edc604c4cf0a73b08e4984eaa8bc25005",
+      "bytes": 457620,
       "status": "Local reproducible build only; no CI evidence yet"
     }
   }
