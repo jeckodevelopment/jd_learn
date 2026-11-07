@@ -25,7 +25,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | 0.40.1 | Plugin video apre com_plugins filtrato per gruppo, azzerando i filtri precedenti; sostituisce il collegamento fuorviante alla vecchia dashboard |
 
-| 0.41.5 | Fallback Riprendi alla prima attività obbligatoria incompleta; CI standard superata e PR #62 integrata |
+| 0.41.6 | Ritiro dal catalogo senza revoca dell’aula per iscritti autorizzati; PR #64 integrata, CI standard finale superata (run 42414492267), R-03 parziale e collaudo Joomla reale ancora aperto |\n| 0.41.5 | Fallback Riprendi alla prima attività obbligatoria incompleta; CI standard superata e PR #62 integrata |
 | 0.41.4 | Schede dell’editor corso raggruppate; CI standard superata e PR #60 integrata |
 | 0.41.3 | Corretto il valore inviato dal checkbox di risposta corretta; regressione HTTP legge il markup Joomla effettivo |
 | 0.41.1 | Normalizzazione dei checkbox non selezionati nel salvataggio delle opzioni della banca domande; verifiche dominio e HTTP aggiunte |
