@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.39.0-dev**: durata automatica nell’authoring e scarti player/server; CI standard superata, collaudo reale dei provider ancora aperto. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.40.0-dev**: menu nativo e ingresso diretto ai corsi verificati nella CI standard42395767098; regressioni e upgrade superati, collaudi reali ancora aperti. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -10,7 +10,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 
 | Area | Disponibile oggi | Da implementare o completare |
 |---|---|---|
-| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi e accesso alle Regole didattiche, modifica propria e voci di menu | Restyling dell’ingresso/backend e menu JD Learn nella sidebar Joomla; regole avanzate e attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
+| Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi e accesso alle Regole didattiche, modifica propria e voci di menu; menu amministrativo nativo e ingresso diretto ai corsi | Completare restyling e collaudo; regole avanzate e attestato; snapshot e resa dei campi corso/lezione, copertura completa di lingue, associazioni e gestione dei dati |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate e soglia video della bozza | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
 | Ciclo editoriale | Bozza, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento; recupero di una versione storica in una nuova bozza con audit, senza sovrascrivere le altre | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
@@ -29,9 +29,9 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-La [CI 0.39](https://github.com/jeckodevelopment/jd_learn/actions/runs/42393451244) ha superato i quattro job standard sul codice `774aa34f49cce991cb3cb715cdc34d2574274ee4`:
+La [CI 0.40](https://github.com/jeckodevelopment/jd_learn/actions/runs/42395767098) ha superato i quattro job standard sul codice `d126c8f7f24aad1f689cb7273c7aff80ab594570`:
 
-- PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6: intera suite implementata nativa/HTTP/JS, build riproducibile, installazione e upgrade 0.38→0.39, reinstallazione e conservazione dello storico. Nuovi controlli per ambiente: 17 di dominio, 22 nativi, 11 HTTP, 24 del client con trasporto/SDK controllati e 1 di upgrade. Provati acquisizione/provenienza, ricevute, autorizzazioni e sorgenti obsolete, scarti/denominatore, seek/fine e completamento senza alterare lo storico.
+- PHP8.3/MySQL8.4 e PHP8.4/MariaDB10.6: intera suite implementata, build riproducibile, installazione Joomla e upgrade0.39→0.40, reinstallazione e storico conservato. Per ambiente, 7 nuove condizioni HTTP sulla navigazione e 2 controlli del menu nativo dopo upgrade/reinstallazione. Nessun duplicato; ingresso diretto nell’elenco corsi e accesso esplicito allo stato provider. Le regressioni video della0.39 restano incluse.
 - Chromium: 12 controlli su fixture desktop/mobile delle modifiche non salvate. Non è collaudo interattivo dell’intero Joomla o del nuovo form regole.
 - Job leggero: politica CI, build, struttura, traduzioni e tracciabilità. Le bozze preparatorie hanno eseguito soltanto questi controlli; la verifica finale usa la [matrice standard](CI_POLICY.md). Le due coppie incrociate restano da eseguire nella matrice completa prima di milestone/rilascio o modifiche di compatibilità.
 

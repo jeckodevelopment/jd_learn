@@ -75,3 +75,7 @@ Questo è il sottoinsieme operativo dell’editor regole: sequenze/rilascio/prer
 ## Durata automatica nell’editor delle lezioni
 
 Il form video usa Rileva automaticamente: SDK/anteprima per YouTube e Vimeo, API server per Stream, misura dal file per MP4. Per YouTube può essere necessario avviare l’anteprima prima che i metadati siano disponibili. Il campo manuale è un ripiego esplicito; la vecchia conferma della durata non è un passaggio ordinario. Le ricevute impediscono il riuso di una misura su sorgenti o revisioni diverse. Una bozza incompleta può essere salvata; una durata acquisita per la stessa sorgente viene conservata durante modifiche al testo. Politica privacy e consenso restano applicati anche nel backend. Procedura, tolleranza e limiti in [VIDEO.md](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/VIDEO.md).
+
+## Accesso amministrativo (0.40)
+
+JD Learn apre l’elenco corsi. La sidebar Joomla offre Corsi, Categorie corsi, Banca domande, Docenti e Stato provider video. Programma, materiali e iscritti si aprono dal corso selezionato, secondo i permessi.

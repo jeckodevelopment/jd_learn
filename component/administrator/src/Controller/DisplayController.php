@@ -9,11 +9,11 @@ use Joomla\CMS\MVC\Controller\BaseController;
 
 final class DisplayController extends BaseController
 {
-    protected $default_view = 'dashboard';
+    protected $default_view = 'courses';
 
     public function display($cachable = false, $urlparams = [])
     {
-        $view = $this->input->getCmd('view', 'dashboard');
+        $view = $this->input->getCmd('view', 'courses');
         if (!in_array($view, ['dashboard', 'courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'materials', 'questionbank', 'quiz', 'quiztime', 'quizreview', 'quizextend', 'enrollments', 'enrollmentstate', 'manualenrollment', 'teachers', 'teacher'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
