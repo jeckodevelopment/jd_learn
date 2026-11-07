@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.7-dev.** La PR #65 è integrata in main; il prodotto resta in sviluppo e non è pronto per la produzione.
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.8-dev.** Il miglioramento della dashboard amministrativa è in preparazione; il prodotto resta in sviluppo e non è pronto per la produzione.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -46,13 +46,13 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-La build genera `dist/pkg_jlms-0.41.7-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
+La build genera `dist/pkg_jlms-0.41.8-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
 I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
 
 
 
-La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della0.41.7 è superata (PR #65, run42420998171). M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
+La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della 0.41.7 è superata (PR #65, run 42420998171). La 0.41.8 aggiorna la dashboard amministrativa; la verifica visiva e dei ruoli in Joomla è ancora da svolgere. M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
 
 Ultimo pacchetto verificato: [0.41.3](https://github.com/jeckodevelopment/jd_learn/actions/runs/42405954861/artifacts/13587097598); commit, esiti e limiti nel registro delle prove. M01 resta aperto.

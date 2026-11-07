@@ -6,6 +6,10 @@ Richiesta del 7 novembre 2026, **prima parte implementata nella 0.40, verificati
 
 La PR #60 (ora integrata in main) riunisce immagine/docenti nei dati corso, regole didattiche nel programma e accesso/calendario nella scheda Accesso e pubblicazione. Le opzioni avanzate restano separate. La modifica è solo di navigazione: valori, permessi e salvataggi restano invariati. CI standard e Chromium superati (run 42410200676); restano i controlli manuali su Joomla reale, menu, ruoli, mobile, tastiera e override.
 
+## Incremento0.41.8-dev — dashboard amministrativa più chiara
+
+La schermata iniziale mette in evidenza la gestione corsi, raccoglie i collegamenti secondari e rende espandibile lo stato dei provider. Il foglio WAM è limitato alla dashboard e mantiene lo stile del template Joomla. Restano da verificare manualmente ruoli, tastiera e viewport mobile nel backend Joomla reale.
+
 ## Risultato richiesto
 
 - Rivedere la schermata iniziale: l’attuale gruppo di pulsanti Corsi/Categorie/Banca domande/Docenti non deve essere l’unico accesso alle funzioni. Rendere evidenti il percorso principale di gestione corsi e le azioni disponibili, con etichette comprensibili e spazi contenuti.

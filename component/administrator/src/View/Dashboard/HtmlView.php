@@ -20,6 +20,7 @@ final class HtmlView extends BaseHtmlView
     {
         $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         ToolbarHelper::title('JD Learn', 'graduation-cap');
+        $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.admin-dashboard');
         if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
         $registry = new VideoProviderRegistry();
         PluginHelper::importPlugin('jlmsvideo');

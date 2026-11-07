@@ -1,5 +1,7 @@
 # Stato attuale di JD Learn
 
+La dashboard amministrativa 0.41.8-dev mette in primo piano la gestione corsi, raggruppa gli strumenti e rende espandibile lo stato dei provider; i controlli manuali nel backend Joomla restano aperti.
+
 I campi editoriali del corso e i campi didattici delle lezioni sono disponibili tramite Joomla Fields. La **0.41.7-dev** integra il contesto lezioni, il salvataggio ACL, la copia e revisione dei valori, lo snapshot immutabile alla pubblicazione e la resa nell’aula. CI standard superata; il collaudo Joomla reale resta da completare. Il ripristino completo dei valori tramite Content History resta aperto.
 
 Aggiornato al **7 novembre 2026**. Main **0.41.7-dev**; PR #65 integrata nel commit [50925d2](https://github.com/jeckodevelopment/jd_learn/commit/50925d2f27ddcf9b23a18643747bbc047dae1ddd). PR #64 resta nella cronologia. CI standard finale superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium ([run 42420998171](https://github.com/jeckodevelopment/jd_learn/actions/runs/42420998171)); il collaudo manuale Joomla reale è ancora aperto. R-03 resta parziale: ritirare la scheda non revoca l’aula degli iscritti autorizzati, ma mancano i comandi distinti per chiudere ammissioni e sospendere l’erogazione; l’incremento 0.41.6 è stato verificato nel run [42414492267](https://github.com/jeckodevelopment/jd_learn/actions/runs/42414492267). **Il prodotto è in sviluppo e non è pronto per la produzione.**
