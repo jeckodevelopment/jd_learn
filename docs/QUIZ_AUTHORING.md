@@ -16,6 +16,10 @@ Sono disponibili riserva e rilascio mediante checkout/checkin nativi: la riserva
 
 L'elenco usa paginazione a cursore e controlli ACL per record. Legge al massimo100 candidati e restituisce fino a20 domande autorizzate, senza totale globale delle domande altrui. Il menu categorie è nativo; ricerche/filtri avanzati e ordinamenti multipli restano da completare.
 
+### Correttezza delle opzioni non selezionate
+
+Le opzioni checkbox non selezionate possono essere omesse dal POST HTML oppure arrivare come valore vuoto dopo il filtro del form Joomla: entrambe le forme equivalgono a “non corretta”. Le domande richiedono comunque almeno una risposta corretta e i tipi a risposta singola/vero-falso ne ammettono esattamente una. Questo caso è coperto dalle verifiche dell’incremento0.41.1.
+
 ## Composizione di un quiz
 
 Nel programma di una versione in bozza, creare almeno un modulo e usare «Aggiungi quiz». Il quiz è una lezione ordinata, modificabile dal suo editor dedicato. Il titolo e l'obbligatorietà appartengono alla lezione; soglia, tentativi, timer e selezione appartengono alla configurazione del quiz.

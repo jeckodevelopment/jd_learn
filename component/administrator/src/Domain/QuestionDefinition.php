@@ -40,8 +40,14 @@ final class QuestionDefinition
         }
         $options = []; $correct = []; $ids = []; $labels = [];
         foreach ($rows as $row) {
-            if (!is_array($row) || !is_string($row['label'] ?? null) || !is_string($row['option_id'] ?? '')
-                || !in_array($row['correct'] ?? '0', [0,1,'0','1'], true)) { throw new \RuntimeException('COM_JLMS_QUESTION_INVALID', 422); }
+            if (!is_array($row) || !is_string($row['label'] ?? null) || !is_string($row['option_id'] ?? '')) {
+                throw new \RuntimeException('COM_JLMS_QUESTION_INVALID', 422);
+            }
+            // Native HTML checkboxes are omitted when unchecked. Some Joomla form
+            // filters instead retain an empty value, so both forms mean false.
+            $correctValue = $row['correct'] ?? '0';
+            if ($correctValue === '') { $correctValue = '0'; }
+            if (!in_array($correctValue, [0,1,'0','1'], true)) { throw new \RuntimeException('COM_JLMS_QUESTION_INVALID', 422); }
             $label = trim($row['label']); $id = $row['option_id'] ?? '';
             if ($id === '') { $id = bin2hex(random_bytes(12)); }
             if (!preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D', $id) || isset($ids[$id]) || $label === '' || strlen($label) > 4096
@@ -49,7 +55,7 @@ final class QuestionDefinition
                 throw new \RuntimeException('COM_JLMS_QUESTION_INVALID', 422);
             }
             $ids[$id] = true; $labels[$label] = true; $options[] = ['id' => $id, 'label' => $label];
-            if ((string) ($row['correct'] ?? '0') === '1') { $correct[] = $id; }
+            if ((string) $correctValue === '1') { $correct[] = $id; }
         }
         if (!$correct || ($kind !== 'multiple' && count($correct) !== 1)) { throw new \RuntimeException('COM_JLMS_QUESTION_INVALID', 422); }
         $points = self::integer($input['default_points'] ?? 1, 1, 10000);
