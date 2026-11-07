@@ -44,12 +44,12 @@
   },
   "package": {
     "name": "pkg_jlms-0.41.7-dev.zip",
-    "bytes": 447993,
-    "sha256": "897b4f9976c6d2976247082927aeccf8821fe80f89a35b1fc4ea73889c3c9d72",
+    "bytes": 448024,
+    "sha256": "74c81eb2e036c59fa826402f92dc5f982be10fe4161da6815d629a12e99c3f63",
     "constituents": 7,
     "tables": 41,
     "foreign_keys": 58,
-    "build_source": "main at 50925d2f27ddcf9b23a18643747bbc047dae1ddd; packaged administrator guide synchronized after merge"
+    "build_source": "main after post-merge documentation sync (PR #66 and PR #67); runtime unchanged from tested PR #65"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",

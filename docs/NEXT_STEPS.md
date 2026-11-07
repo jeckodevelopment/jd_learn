@@ -49,7 +49,7 @@ Anteprima con esito per riga, esclusioni per scope del corso e duplicati senza a
 
 ### Stati, edizioni e disponibilità
 
-Il candidato 0.41.6 separa il ritiro promozionale dalla fruizione degli iscritti, ma non completa R-03. Prossimo passo: comandi distinti per chiudere tutte le nuove ammissioni e sospendere l’erogazione. Poi completare richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gestione delle edizioni/finestre e proroghe formative. Ogni operazione sensibile ha scope, motivo/anteprima/conferma, audit, replay e impatto sui quiz/risorse già aperti. Non confondere un rinnovo di livello con una nuova frequenza.
+La 0.41.6 integrata (PR #64, CI standard superata) separa il ritiro promozionale dalla fruizione degli iscritti, ma non completa R-03. Prossimo passo: comandi distinti per chiudere tutte le nuove ammissioni e sospendere l’erogazione. Poi completare richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gestione delle edizioni/finestre e proroghe formative. Ogni operazione sensibile ha scope, motivo/anteprima/conferma, audit, replay e impatto sui quiz/risorse già aperti. Non confondere un rinnovo di livello con una nuova frequenza.
 
 **Accettazione:** transizioni valide/negate, stesse sessioni dopo revoca/ripristino, timer che non si riaprono, stato didattico separato dall’accesso e nessuna cancellazione o migrazione silenziosa.
 
@@ -83,4 +83,4 @@ Audit sicurezza con analisi statica/stile/scansioni e risultati motivati. Carico
 
 **Accettazione:** nessun obbligo di rilascio senza esito, anomalie con decisione esplicita, report reale delle prestazioni e guide/ZIP/checksum/aggiornamenti completi. Vendita e abbonamenti restano esterni; compiti/live/SCORM/xAPI/LTI mantengono le rispettive fasi differite.
 
-Il seguito dei campi riguarda snapshot didattici e campi lezione; il loro contratto richiede definizioni e valori pertinenti congelati alla pubblicazione, accesso corrente e conservazione delle evidenze assegnate. La sola resa editoriale pubblica non li completa.
+La0.41.7 (PR #65, CI standard superata) completa il primo flusso dei campi didattici lezione: valori autorizzati copiati nelle bozze, snapshot alla pubblicazione, accesso corrente e resa nell’aula. Restano il collaudo sul sito Joomla, il supporto/accettazione di tutti i tipi e plugin e il ripristino dei valori tramite Content History (CORE-10); non confondere i campi editoriali correnti con lo storico assegnato.
