@@ -130,7 +130,7 @@ $transition=(int)$service->transitions($actor,$course,$version)[0]->id;
 $item=$model->getItem($course);$service->transition($actor,$course,$version,(int)$item->revision,$revision(),$transition);
 $enrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('b',40));
 $groupModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Group','Administrator',['ignore_request'=>true]);
-publicFieldsExpect($groupModel->save(['id'=>0,'context'=>'com_jlms.course','title'=>'Public fields restricted group','state'=>1,'access'=>2,'language'=>'*']),'Native field group created');
+publicFieldsExpect($groupModel->save(['id'=>0,'context'=>'com_jlms.course','title'=>'Public fields restricted group','description'=>'','note'=>'','params'=>[],'state'=>1,'access'=>2,'language'=>'*']),'Native field group created: '.(string)$groupModel->getError());
 $group=(int)$groupModel->getState('group.id');
 $fieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
 $fields=[];
@@ -153,7 +153,7 @@ foreach($definitions as $key=>$definition){
   'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','assigned_cat_ids'=>[$cat],
   'params'=>['display'=>$definition[0],'showlabel'=>1],'fieldparams'=>$definition[3]];
  foreach($definition as $name=>$value){if(is_string($name)){$data[$name]=$value;}}
- publicFieldsExpect($fieldModel->save($data),'Native field created: '.$key);
+ publicFieldsExpect($fieldModel->save($data),'Native field created: '.$key.' '.(string)$fieldModel->getError());
  $id=(int)$fieldModel->getState('field.id');$fields[$key]=$id;
  if($definition[2]!==null){publicFieldsExpect($fieldModel->setFieldValue($id,$course,$definition[2]),'Native field value saved: '.$key);}
 }
