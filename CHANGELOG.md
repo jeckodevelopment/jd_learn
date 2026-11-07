@@ -4,7 +4,7 @@
 
 - L’accesso degli iscritti autorizzati non dipende più dallo stato editoriale, dal livello di catalogo o dalla scadenza della scheda del corso. Restano attivi i controlli correnti su account, livello contenuto, categoria, lingua, versione, edizione e finestre dell’iscrizione.
 - Le nuove ammissioni restano soggette alla pubblicazione e disponibilità del corso.
-- Aggiunte regressioni d’integrazione per aula testo/video; CI candidato e prova Joomla reale ancora da svolgere.
+- Aggiunte regressioni d’integrazione per aula testo/video. PR #64 integrata nel commit [303f781](https://github.com/jeckodevelopment/jd_learn/commit/303f78124ef94a6968a0f0997770bb80e3d28800); CI standard finale superata in PHP/database e Chromium ([run 42414492267](https://github.com/jeckodevelopment/jd_learn/actions/runs/42414492267)). Collaudo manuale Joomla reale ancora aperto.
 - R-03 è parziale: mancano le azioni amministrative separate di chiusura iscrizioni e sospensione erogazione, con riepilogo, motivo e audit.
 
 ## 0.41.5-dev — ripresa alla prima attività obbligatoria incompleta
