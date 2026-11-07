@@ -18,6 +18,7 @@ final class HtmlView extends BaseHtmlView
     public array $lessonsByModule = [];
     public bool $editable = false;
     public bool $canDuplicateCourse = false;
+    public bool $canRestoreProgramme = false;
     public bool $canDelete = false;
     public array $transitions = [];
     public string $publicationNotice = '';
@@ -46,6 +47,8 @@ final class HtmlView extends BaseHtmlView
         $locked = ($course->checked_out && (int) $course->checked_out !== (int) $actor->id);
         $locked = $locked || ($version && $version->checked_out && (int) $version->checked_out !== (int) $actor->id);
         $this->editable = $version && $version->status === 'draft' && !$locked;
+        $this->canRestoreProgramme = $version && !$locked && $course->current_version_id !== null
+            && (int)$course->current_version_id !== (int)$version->id && in_array($version->status, ['published','retired'], true);
         $this->canMaterials = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id);
         $this->canQuiz = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . (int) $course->id);
         $this->getDocument()->getWebAssetManager()->getRegistry()->addExtensionRegistryFile('com_jlms');

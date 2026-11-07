@@ -21,3 +21,7 @@ Limiti della scaletta:1000moduli e5000lezioni per versione. Il riordino non modi
 Il modulo o la lezione aperti nel programma avvertono tramite conferma nativa del browser prima di abbandonare modifiche non salvate. La conferma usa la lingua e il testo del browser; richiede JavaScript e interazione utente, e non sostituisce il salvataggio. TinyMCE viene controllato tramite API pubblica anche quando la textarea non è sincronizzata. Gli altri editor usano il valore esposto dalla API Joomla. Salva valido prosegue; validazioni annullate mantengono la protezione. Nessun contenuto viene scritto in localStorage/sessionStorage.
 
 Per gli override vedere il [contratto CSS](FRONTEND_CSS.md). Le prove e i collaudi residui sono riepilogati nello [stato attuale](IMPLEMENTATION_STATUS.md).
+
+## Recuperare un programma storico
+
+Dal Programma → Versioni selezionare una versione storica e usare **Recupera come nuova bozza**. Le altre bozze, la scheda e la pubblicazione corrente e i dati studente restano invariati. La nuova pubblicazione richiede il normale riepilogo/conferma e i controlli dei provider. Contratto, permessi e procedura nella [guida editor](COURSE_EDITOR.md#recuperare-un-programma-storico).

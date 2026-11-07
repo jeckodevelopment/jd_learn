@@ -15,6 +15,9 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 | 0.33 | Elenco/editor corsi secondo le convenzioni articoli Joomla |
 | 0.34 | Programma contestuale, spostamento e riordino drag/tastiera |
 | 0.34.1 | Protezione delle modifiche non salvate; [PR #43](https://github.com/jeckodevelopment/jd_learn/pull/43) integrata |
+| 0.35 | Campi personalizzati nativi nell’editor corso; CI sulle PR senza duplicazione al merge |
+| 0.36 | Riepilogo/conferma degli aggiornamenti didattici |
+| 0.37 | Recupero del programma storico in nuova bozza, conservando altre bozze e dati studente; prove miste dei tre provider esterni |
 
 Il [changelog](../CHANGELOG.md) contiene i dettagli per versione. Il [registro dei requisiti](REQUIREMENTS_CHANGES.md) descrive le variazioni del risultato richiesto, non le implementazioni. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) identifica il build corrente verificato e mantiene i record storici precedenti.
 

@@ -1,7 +1,9 @@
-# Documentazione JD Learn0.9.0-dev
+# Documentazione JD Learn
 
-Questo incremento include authoring in bozza, pubblicazione di testo/video supportati, catalogo, iscrizione automatica, aula, progressi e materiali protetti. YouTube/Vimeo dispongono di player opt-in con consenso; Cloudflare Stream dispone di token API e rinnovo previa verifica remota; HTML5 dispone di MP4 locali e consegna privata (HTML5_VIDEO.md); la firma locale Cloudflare rimane chiusa. Vedere CLOUDFLARE_STREAM.md per configurazione e limiti. Il sistema completo delle specifiche è ancora in sviluppo.
+Il componente è in sviluppo. Sono disponibili gestione corsi, programma, aggiornamenti con riepilogo/conferma, recupero del programma storico come nuova bozza, lezioni testo/video/quiz, iscrizioni e progressi persistenti. La versione attiva e gli iscritti storici rimangono separati dalle bozze. Guida amministrativa: [COURSE_EDITOR.md](COURSE_EDITOR.md); pubblicazione e versioni: [PUBLICATION.md](PUBLICATION.md).
 
-La specifica completa di sicurezza e dei quattro plugin video è inclusa in VIDEO_PROVIDERS_SPEC.md. Configurazione effettiva e limiti in docs/VIDEO.md, avanzamento in docs/IMPLEMENTATION_STATUS.md nella repository. Nessuna credenziale reale è inclusa. ID CSS e override disponibili in docs/FRONTEND_CSS.md.
+La distribuzione include i plugin YouTube, Vimeo, Cloudflare Stream e HTML5. Il funzionamento operativo dei tre provider esterni è prioritario insieme ai corsi. Impostazioni privacy del sito, plugin e restrizioni del provider devono consentire il caricamento; il video compare direttamente nella lezione quando autorizzato. Stream usa token API e rinnovo previa verifica remota; HTML5 offre MP4 privati con consegna autorizzata. Configurazione e limiti: [CLOUDFLARE_STREAM.md](CLOUDFLARE_STREAM.md), [HTML5_VIDEO.md](HTML5_VIDEO.md), [VIDEO_PROVIDERS_SPEC.md](VIDEO_PROVIDERS_SPEC.md). Nessuna credenziale reale è inclusa.
 
-Banca domande e quiz in bozza: QUIZ_AUTHORING.md. Tentativi degli studenti e pubblicazione dei corsi con quiz sono ancora chiusi.
+Banca domande, composizione e tentativi: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md), [QUIZ_RUNTIME.md](QUIZ_RUNTIME.md). Le guide descrivono i sottoinsiemi disponibili, non attestano il completamento dell’intero sistema.
+
+[Stato aggiornato e prove](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/IMPLEMENTATION_STATUS.md), [priorità residue](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/NEXT_STEPS.md) e [CSS/override](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/FRONTEND_CSS.md) sono mantenuti nella repository a ogni incremento.

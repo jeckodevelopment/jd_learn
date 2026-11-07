@@ -57,6 +57,9 @@ class CurriculumController extends BaseController
                     $publication->transition($actor, $courseId, $versionId, CurriculumService::id($input['revision'] ?? null),
                         CurriculumService::id($input['expected_version_revision'] ?? null), $transition, $fingerprint);
                     break;
+                case 'restore':
+                    $versionId = $service->restoreVersion($actor, $input);
+                    break;
                 case 'version':
                     $versionId = $service->createDraft($actor, $courseId, CurriculumService::id($input['revision'] ?? null));
                     break;
@@ -83,7 +86,7 @@ class CurriculumController extends BaseController
                 default:
                     throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
-            $this->setMessage(Text::_('COM_JLMS_CURRICULUM_SAVED'));
+            $this->setMessage(Text::_($operation === 'restore' ? 'COM_JLMS_PROGRAMME_RESTORE_SAVED' : 'COM_JLMS_CURRICULUM_SAVED'));
         } catch (\DomainException | \InvalidArgumentException $error) {
             $failed = true;
             $key = match ($error->getMessage()) {
@@ -91,7 +94,7 @@ class CurriculumController extends BaseController
                 'PROVIDER_UNAVAILABLE' => 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING',
                 default => $error->getMessage(),
             };
-            $known = ['COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'COM_JLMS_PUBLICATION_REVIEW_STALE', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
+            $known = ['COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED', 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID', 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'COM_JLMS_PUBLICATION_REVIEW_STALE', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_VERSION_IMMUTABLE',
                 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_INVALID_COURSE',
                 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING', 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED',
                 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED', 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', 'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_VERSION_COPY_NOT_AVAILABLE', 'COM_JLMS_SOURCE_INVALID',
@@ -129,7 +132,7 @@ class CurriculumController extends BaseController
 
     public function execute($task)
     {
-        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'transition', 'duplicatecourse', 'saveorder'], true)) {
+        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'restoreversion', 'transition', 'duplicatecourse', 'saveorder'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -163,6 +166,8 @@ class CurriculumController extends BaseController
         echo new \Joomla\CMS\Response\JsonResponse($data, $message, $error, true);
         $this->app->close();
     }
+
+    public function restoreVersion(): void { $this->perform('restore'); }
 
     public function duplicateCourse(): void { $this->perform('duplicatecourse'); }
 
