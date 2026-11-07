@@ -1,6 +1,6 @@
 # Roadmap verso il rilascio stabile
 
-La roadmap definisce **il risultato atteso per ciascuna fase**, non il suo avanzamento. Aggiornata al 7 novembre 2026 sulla specifica funzionale **1.5**. Per sapere cosa è disponibile leggere lo [stato attuale](IMPLEMENTATION_STATUS.md); per l'ordine operativo usare [NEXT_STEPS.md](NEXT_STEPS.md).
+La roadmap definisce **il risultato atteso per ciascuna fase**, non il suo avanzamento. Il perimetro approvato per la prima versione stabile è definito in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e prevale sulle assegnazioni storiche delle fasi quando si decide cosa è necessario per il rilascio. Aggiornata al 7 novembre 2026 sulla specifica funzionale **1.5**. Per sapere cosa è disponibile leggere lo [stato attuale](IMPLEMENTATION_STATUS.md); per l'ordine operativo usare [NEXT_STEPS.md](NEXT_STEPS.md).
 
 La [mappatura delle fasi](RELEASE_PLAN.json) assegna una volta sola tutti i 210 requisiti: 209 del rilascio 1 e NOT-03 differito. Nessuna fase è integralmente accettata. Vendita e gruppi commerciali restano esterni; le evoluzioni differite non entrano implicitamente nel primo rilascio.
 
