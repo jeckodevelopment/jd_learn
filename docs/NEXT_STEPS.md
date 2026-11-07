@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **7 novembre 2026**. Riferimento: **0.37.0-dev**, recupero storico implementato; verifica del nuovo incremento in corso. La CI0.36 resta l’ultima evidenza completa registrata. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato al **7 novembre 2026**. Riferimento: **0.37.0-dev**, recupero storico verificato dalla CI42385237648 / PR #47. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità
 
@@ -21,7 +21,7 @@ Aggiornato al **7 novembre 2026**. Riferimento: **0.37.0-dev**, recupero storico
 
 ## Primo lavoro da svolgere
 
-Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: verificare la nuova amministrazione e il programma su Joomla reale, registrare esiti per build/ruolo/browser e correggere i difetti. La scheda dei campi corso e il salvataggio nativo sono nell’incremento0.35; esiti della CI42379941609 nella PR #45. Il riepilogo/conferma dell’impatto degli aggiornamenti è disponibile nella0.36, verificato dalla CI42382758865 / PR46. Il recupero di strutture storiche come nuova bozza è implementato nella0.37 e deve essere verificato dalla nuova CI e dal collaudo. Seguono le parti di regole, attestato, anteprima e snapshot/campi lezione ancora assenti secondo le rispettive fasi. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
+Usare [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md) come elenco operativo: collaudare l’amministrazione e il programma su Joomla reale e registrare gli esiti per build/ruolo/browser, affrontando subito eventuali blocchi dei provider essenziali. Campi corso, riepilogo/conferma degli aggiornamenti e recupero storico sono implementati e coperti dalle rispettive regressioni. Il lavoro di implementazione successivo riguarda i residui dell’editor per regole didattiche e i campi/snapshot pertinenti, rispettando le dipendenze M03/M08/M10; non mostrare controlli per attestati o regole ancora non operative. L’anteprima interattiva senza effetti e il ciclo revisione/archivio restano il seguito M02. Non considerare M01 chiuso per effetto della sola CI o di una conferma generica.
 
 ## Condizioni tecniche delle attività successive
 

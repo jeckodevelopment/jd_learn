@@ -2,13 +2,13 @@
 
 Stato al **7 novembre 2026**, incremento **0.37.0-dev**: **M01 aperto**. Requisiti primari AUT-01, AUT-05, SCR-13; le dipendenze da M02/M03/M08/M10 restano parte del lavoro richiesto.
 
-Questa checklist distingue ciò che è già utilizzabile da implementazioni mancanti e collaudi. Non ripianificare pubblicazione, duplicazioni e riordino come funzioni assenti. Le regressioni implementate e i nuovi controlli di impatto passano nella [CI0.36](https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865); gli esiti non sostituiscono l'accettazione completa degli scenari.
+Questa checklist distingue ciò che è già utilizzabile da implementazioni mancanti e collaudi. Non ripianificare pubblicazione, duplicazioni e riordino come funzioni assenti. Le regressioni implementate e i nuovi controlli di recupero passano nella [CI0.37](https://github.com/jeckodevelopment/jd_learn/actions/runs/42385237648); gli esiti non sostituiscono l'accettazione completa degli scenari.
 
 | Ambito | Già disponibile | Implementazione mancante | Collaudo ancora richiesto |
 |---|---|---|---|
 | Elenco ed editor | Toolbar/ricerca/filtri/ordinamenti nativi, contenuto/sidebar, Salva e apri programma | Parti specifiche elencate sotto; correggere eventuali difetti emersi dal collaudo | Browser/mobile/tastiera, override e combinazioni AC-126 |
 | Dati corso | Descrizioni e validazioni, copertina/alt/SEO, accessi, calendario e ACL per corso | Nessuna ulteriore funzione dichiarata assente in questo sottoinsieme | Picker Media interattivo, combinazioni di date/lingue/ACL e compatibilità degli override |
-| Modifica pubblicato | Salva e Salva e chiudi, storico editoriale e ripristino nel modello; recupero del programma storico in nuova bozza (0.37, CI da verificare) | Nessun ulteriore comando di recupero di base mancante | Confronto/ripristino dalla UI Content History, checkout e combinazioni AC-119/125 |
+| Modifica pubblicato | Salva e Salva e chiudi, storico editoriale e ripristino nel modello; recupero del programma storico in nuova bozza (0.37, CI42385237648/PR47 superata) | Nessun ulteriore comando di recupero di base mancante | Confronto/ripristino dalla UI Content History, checkout e combinazioni AC-119/125 |
 | Aggiornamento programma | Copia completa della versione attiva, modifica e pubblicazione per nuove iscrizioni; storici esistenti conservati; riepilogo/conferma dell’impatto (0.36, CI42382758865/PR46 superata) | Migrazioni esplicite (M02) | Tutti i tipi di risorsa/ruoli e percorso completo di aggiornamento, recupero e provider reali |
 | Duplicazioni | Nuovo corso in bozza, modulo con sottoalbero, lezione con destinazione; quiz/materiali/campi secondo ACL, dati studente esclusi | Nessun comando di duplicazione di base mancante | AC-96 completo, browser e combinazioni di ruoli/contenuti |
 | Scaletta e riordino | Editor singolo, aggiunta contestuale, spostamento lezioni, drag atomico e Su/Giù con fallback senza JS | Nessun comando di riordino di base mancante | Drag/tastiera reali, mobile, accessibilità e conflitti nel contesto completo AC-127 |

@@ -49,4 +49,4 @@ La build genera `dist/pkg_jlms-0.37.0-dev.zip` e `SHA256SUMS.txt`. Non richiede 
 I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
 
-Incremento 0.37: recupero del programma storico come nuova bozza; esiti e pacchetto verificato sono registrati in `docs/IMPLEMENTATION_EVIDENCE.json` dopo la CI.
+[Pacchetto verificato 0.37.0](https://github.com/jeckodevelopment/jd_learn/actions/runs/42385237648/artifacts/13579895127): estrarre e installare `pkg_jlms-0.37.0-dev.zip` su Joomla di prova. Esiti, hash e limiti in `docs/IMPLEMENTATION_EVIDENCE.json`.

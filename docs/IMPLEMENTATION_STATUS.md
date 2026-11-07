@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato al **7 novembre 2026**. Versione **0.37.0-dev**: recupero del programma storico come nuova bozza; verifiche del nuovo incremento in corso. **Il prodotto è in sviluppo e non è pronto per la produzione.**
+Aggiornato al **7 novembre 2026**. Versione **0.37.0-dev**: recupero del programma storico come nuova bozza; PR #47 verificata dalla CI42385237648. **Il prodotto è in sviluppo e non è pronto per la produzione.**
 
 Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -20,7 +20,7 @@ Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il 
 | Iscrizioni | Avvio automatico, elenco amministrativo, ammissione singola con anteprima/conferma/audit, preassegnazione esplicita senza concedere accesso, sospensione/riattivazione | CSV, richieste/approvazioni/rifiuti, annullamenti, edizioni aggiuntive e proroghe; separare chiusura nuove iscrizioni e sospensione dell'aula (R-03) |
 | Quiz | Banca/revisioni, composizione/pool/snapshot, tentativi e autosave/CAS, valutazione/feedback, scadenza server, tempi individuali, annullamenti e proroghe motivati | Rivalutazioni, disponibilità e anomalie complete, collegamento agli attestati e rifinitura dell'interfaccia |
 | Attestati | Schema e specifiche; **nessun flusso operativo** | Modelli/PDF, idoneità ed emissione, download, verifica opzionale, revoca/sostituzione |
-| Processi e notifiche | Task Scheduler per scadenze quiz; audit nativo su quiz/iscrizioni | Job generali recuperabili, outbox/retry, email/Mail Templates e pulizia programmata |
+| Processi e notifiche | Task Scheduler per scadenze quiz; audit nativo su quiz/iscrizioni/recupero programma | Job generali recuperabili, outbox/retry, email/Mail Templates e pulizia programmata |
 | Report | Elenco iscritti con filtri, stato, avanzamento e date | Aggregati/KPI, dettagli studente/quiz/attestati e CSV protetti |
 | Integrazioni Joomla | Identità/sessioni/CSRF, ACL/asset, categorie, form, WAM, menu, override e lingue nei flussi presenti; Fields docenti e storico corso/docente parziali | Privacy, Finder, Tags, copertura completa Fields/History/Media/lifecycle e audit generale |
 | Installazione e rilascio | Build riproducibile, installazione/upgrade/reinstall con conservazione dei dati verificati dalla suite | Update server, backup/ripristino, patch Joomla corrente, integrazione reale con estensione abbonamenti e documentazione di rilascio |
@@ -29,16 +29,14 @@ Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream s
 
 ## Verifiche disponibili e limiti
 
-La nuova0.37 aggiunge prove native/HTTP di recupero storico, mantenimento delle altre bozze, riferimenti dei tre provider, nuova pubblicazione e conservazione dopo upgrade. Esiti non ancora disponibili.
+La [CI0.37](https://github.com/jeckodevelopment/jd_learn/actions/runs/42385237648) ha superato tutti e 5 i job sul codice `ef660a4809c23e1a9ae2d1f14759f7361b05d765`:
 
-La [CI0.36](https://github.com/jeckodevelopment/jd_learn/actions/runs/42382758865) ha superato tutti5i job sul codice `dee3f1f2481fd215cb7b4538760fb1513b0b2017`:
-
-- PHP8.3/8.4 × MySQL8.4/MariaDB10.6: intera suite nativa/HTTP/JS,19nuovi controlli nativi e10HTTP di confronto/conferma degli aggiornamenti, build riproducibile, installazione e upgrade0.35→0.36, reinstallazione e storici conservati.
-- Chromium:12controlli della navigazione con modifiche non salvate su fixture desktop/mobile. Non è un collaudo visivo dell’intero Joomla, della nuova pagina di riepilogo o un’integrazione reale TinyMCE.
+- PHP 8.3/8.4 × MySQL 8.4/MariaDB 10.6: intera suite nativa/HTTP/JS, 153 nuovi controlli nativi e 14 HTTP di recupero storico, build riproducibile, installazione e upgrade 0.36→0.37, reinstallazione e storici conservati. Il recupero include riferimenti dei tre provider, quiz/domande/materiali, altre bozze, rifiuti di richieste obsolete e nuova pubblicazione con controlli di configurazione.
+- Chromium: 12 controlli della navigazione con modifiche non salvate su fixture desktop/mobile. Non è un collaudo visivo dell’intero Joomla, del nuovo recupero o un’integrazione reale TinyMCE.
 
 La successiva registrazione degli esiti modifica soltanto documentazione; il runtime e il pacchetto restano quelli verificati. La CI completa si esegue sulle PR, senza ripetizione automatica al merge; resta disponibile l’avvio manuale.
 
-Prima pubblicazione e YouTube sono stati confermati anche dall’utente sul percorso provato. Restano collaudo completo browser/mobile/tastiera/accessibilità, provider reali, audit sicurezza, backup/ripristino, patch Joomla corrente e benchmark300studenti/60minuti e500/10minuti. I test concorrenti non dimostrano tale capacità. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) conserva build, hash, job e limiti; nessuna accettazione completa M01/AUT-04 è dedotta dalla CI.
+La nuova prova mista usa gli adapter server YouTube/Vimeo e il trasporto API Stream controllato; non riproduce video reali. Prima pubblicazione e YouTube sono stati confermati anche dall’utente sul percorso provato. Restano collaudo completo browser/mobile/tastiera/accessibilità, provider reali, audit sicurezza, backup/ripristino, patch Joomla corrente e benchmark300studenti/60minuti e500/10minuti. I test concorrenti non dimostrano tale capacità. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) conserva build, hash, job e limiti; nessuna accettazione completa M01/AUT-04 è dedotta dalla CI.
 
 ## Prossimo passo
 
