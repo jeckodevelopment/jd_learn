@@ -21,4 +21,4 @@ Ingresso predefinito sull’elenco corsi e submenu dichiarato nel manifest, gest
 
 Restano il restyling della pagina diagnostica, il collaudo visivo/ruoli/menu compresso e la selezione attiva nel contesto completo. Le prove automatiche verificano creazione/upgrade senza duplicati e destinazioni HTTP, non equivalgono al collaudo completo della sidebar.
 
-Correzione0.40.1 in verifica: menu filtrato e navigazione nativa, nessuna diagnostica della riproduzione dichiarata disponibile.
+Correzione0.40.1 verificata nella CI standard42397626415: menu filtrato e navigazione nativa, nessuna diagnostica della riproduzione dichiarata disponibile.

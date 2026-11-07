@@ -79,4 +79,4 @@ Audit sicurezza con analisi statica/stile/scansioni e risultati motivati. Carico
 
 **Accettazione:** nessun obbligo di rilascio senza esito, anomalie con decisione esplicita, report reale delle prestazioni e guide/ZIP/checksum/aggiornamenti completi. Vendita e abbonamenti restano esterni; compiti/live/SCORM/xAPI/LTI mantengono le rispettive fasi differite.
 
-Correzione corrente0.40.1: verificare e integrare il collegamento Plugin video a com_plugins filtrato. Non cambia l’ordine dei requisiti successivi.
+Correzione corrente0.40.1: collegamento Plugin video a com_plugins filtrato implementato e verificato nella CI standard42397626415. Non cambia l’ordine dei requisiti successivi.

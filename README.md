@@ -53,8 +53,8 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 
 
-Durata automatica dei video nell’editor e gestione degli scarti implementate nella 0.39 e verificate nella CI standard. [Pacchetto di sviluppo verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42395767098/artifacts/13583486787); esiti e limiti nel registro delle prove.
+Durata automatica dei video nell’editor e gestione degli scarti implementate nella 0.39 e verificate nella CI standard. [Pacchetto di sviluppo verificato](https://github.com/jeckodevelopment/jd_learn/actions/runs/42397626415/artifacts/13584087878); esiti e limiti nel registro delle prove.
 
 La 0.40 aggiunge l’ingresso diretto nei corsi e il menu amministrativo nativo; CI standard superata. M01 resta aperto per le funzioni e i collaudi residui.
 
-Correzione0.40.1 in verifica: Plugin video apre il gestore plugin Joomla filtrato sul gruppo jlmsvideo. Non è una diagnostica di riproduzione.
+Correzione0.40.1 verificata nella CI standard: Plugin video apre il gestore plugin Joomla filtrato sul gruppo jlmsvideo. Non è una diagnostica di riproduzione.
