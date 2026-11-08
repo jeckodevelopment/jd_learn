@@ -112,4 +112,4 @@ La PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120), integrata i
 
 **Criteri / scenario AC-133 (AUT-01, SCR-13):** la lista Docenti mostra, per ogni profilo, quanti corsi assegnati sono compresi nell’ambito che l’utente corrente può gestire. Il conteggio è un collegamento alla lista Corsi filtrata per quel docente. La lista Corsi offre anche il filtro Docente; ricerca e gli altri filtri Joomla devono poter coesistere. L’intestazione del backend e il titolo del browser mostrano l’etichetta tradotta invece della chiave `COM_JLMS_TEACHERS`. Conteggio e destinazione rispettano lo stesso ambito ACL della lista Corsi e non modificano assegnazioni o autorizzazioni.
 
-La candidata 0.41.28-dev implementa AC-133; il testbook descrive la prova manuale, ancora pendente.
+La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122) integra AC-133 in 0.41.28-dev. Tutti i quattro job CI standard sono superati nel [run 42531222588](https://github.com/jeckodevelopment/jd_learn/actions/runs/42531222588); il testbook descrive la prova manuale, ancora pendente.

@@ -120,7 +120,7 @@ Riferimento: [issue #117](https://github.com/jeckodevelopment/jd_learn/issues/11
 4. Ripetere con l’account a permessi ridotti. Conteggio e link devono mostrare solo corsi gestibili da quell’account; un ID docente arbitrario o una modifica manuale dell’URL non devono ampliare i risultati. I profili non visibili non devono esporre dettagli privati nelle opzioni del filtro.
 5. Verificare navigazione da tastiera, testi accessibili del conteggio e resa della colonna su viewport desktop e stretta.
 
-**Stato:** issue #117 / AC-133 è implementata nella candidata 0.41.28-dev; collaudo manuale Joomla pendente.
+**Stato:** issue #117 / AC-133 è integrata nella 0.41.28-dev dalla PR #122; collaudo manuale Joomla pendente.
 
 ### PR #94 — ricerca roster (deviazione di perimetro, non gate di accettazione)
 

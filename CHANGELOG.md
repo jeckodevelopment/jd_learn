@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.41.28-dev — collegamento tra docenti e corsi (candidata)
+## 0.41.28-dev — collegamento tra docenti e corsi
 
 - Mostra nella lista docenti il conteggio dei corsi assegnati nel perimetro gestibile dall’utente; il conteggio apre la lista corsi filtrata per docente.
 - Aggiunge il filtro Docente alla lista Corsi e traduce correttamente titolo browser/intestazione della lista docenti.
-- Issue [#117](https://github.com/jeckodevelopment/jd_learn/issues/117), scenario AC-133; collaudo Joomla da eseguire secondo il testbook.
+- Issue [#117](https://github.com/jeckodevelopment/jd_learn/issues/117), scenario AC-133. PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122) integrata; CI standard superata ([run 42531222588](https://github.com/jeckodevelopment/jd_learn/actions/runs/42531222588)). Pacchetto [JD-Learn-0.41.28-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42531222588/artifacts/13637556798), SHA-256 interno `2e49152eb377dab09b9135bd95910d465b71f4293159a62e18c50a4178e5a628` (510805 byte; scadenza 22 novembre 2026). Collaudo manuale Joomla AC-133 ancora da eseguire.
 
 ## 0.41.27-dev — elenco e azioni standard per la banca domande
 
