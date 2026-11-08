@@ -45,7 +45,7 @@ final class PathwayModel extends AdminModel
         $db = $this->getDatabase();
         $db->transactionStart();
         try {
-            $db->setQuery(\"SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE\")->loadResult()
+            $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult()
                 ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
             $actor = new User((int) $this->getCurrentUser()->id);
             $actor->clearAccessRights();
@@ -83,7 +83,7 @@ final class PathwayModel extends AdminModel
 
             $categoryId = (int) ($data['catid'] ?? $record->catid ?? 0);
             $categoryQuery = $db->createQuery()->select('id')->from('#__categories')
-                ->where(\"extension='com_jlms.pathway' AND published <> -2\")
+                ->where("extension='com_jlms.pathway' AND published <> -2")
                 ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
             if (!$categoryId || !$db->setQuery($categoryQuery)->loadResult()) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
