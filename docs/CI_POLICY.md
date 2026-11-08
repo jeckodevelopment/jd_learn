@@ -10,6 +10,10 @@ Politica operativa del 7 novembre 2026. Cambia il momento e l’ampiezza della v
 | Milestone/rilascio o rischio di compatibilità | Avvio manuale con matrix=full: tutte le quattro coppie PHP/database più browser | Quattro ambienti più browser |
 | Merge in main | Riutilizzo degli esiti del candidato verificato | Nessuna ripetizione automatica |
 
+## Prevenzione dei difetti ricorrenti
+
+Le cause emerse e la checklist prima di dichiarare pronto un candidato sono raccolte in [INTEGRATION_FAILURE_PREVENTION.md](INTEGRATION_FAILURE_PREVENTION.md). Consultarla quando si modifica accesso, iscrizione, pubblicazione, audit, schema o integrazione con API native Joomla; registrare nuove cause solo dopo averle correlate a una correzione e a una prova.
+
 ## Procedura
 
 Aprire la PR in bozza, preparare e raggruppare le modifiche, aggiornare subito la documentazione e controllare localmente quanto disponibile. Marcarla pronta per la revisione solo quando il candidato è completo: l’evento ready_for_review avvia la verifica di integrazione.
