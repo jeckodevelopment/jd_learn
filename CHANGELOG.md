@@ -5,6 +5,7 @@
 - Rifà l’elenco docenti con Search Tools, ricerca, filtri stato/lingua, ordinamento, paginazione e collegamento al form separato.
 - Mostra metadati utili senza esporre categorie docente; non modifica dati, associazioni o regole ACL.
 - Aggiunge/aggiorna i passi di collaudo manuale AC-130 nel testbook; la verifica sul sito Joomla è pendente.
+- PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116) integrata; i quattro job standard sono superati ([run 42524671164](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164)). Pacchetto [JD-Learn-0.41.26-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771), SHA-256 interno `869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5` (503665 byte), scadenza 22 novembre 2026.
 
 ## 0.41.25-dev — accesso Dashboard nella sidebar
 

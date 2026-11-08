@@ -1,61 +1,61 @@
 {
   "audited_at": "2026-11-08",
   "product": "JD Learn",
-  "version": "0.41.25-dev",
+  "version": "0.41.26-dev",
   "code_baseline": {
-    "tested_head": "a43c18fd41a78b0e0fc61aa259c1c36aa4720278",
-    "parent_main_commit": "60b7a170959496b33224df18cc57f49a04a30324",
-    "pull_request": 112,
-    "merged_main_commit": "50dcded229bc68b6ae7f2d845336727ff12867bd"
+    "tested_head": "51209a30644de6df4b3ccd0d6abb078f6fb037cd",
+    "parent_main_commit": "c9f402e780ef2a49c07af340d0d054295144f71a",
+    "pull_request": 116,
+    "merged_main_commit": "ed08b4c22db38b184c3a7ba5ace79cc32392466a"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42520306552,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552",
+    "run_id": 42524671164,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128851079699,
+        "id": 128865530303,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128852182529,
+        "id": 128865575619,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128852182547,
+        "id": 128865575502,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128852182522,
+        "id": 128865575606,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #112 integrata. Tutti i quattro job standard superati; il ricollaudo manuale Joomla AC-132 resta da registrare."
+    "note": "PR #116 integrata. Tutti i quattro job standard superati; il collaudo manuale Joomla AC-130 resta da registrare."
   },
   "package": {
-    "name": "pkg_jlms-0.41.25-dev.zip",
-    "bytes": 501472,
-    "sha256": "bd0a7796d3f260af9ea2e2d8079265623d987db4fa485716bd1c43f966929b03",
+    "name": "pkg_jlms-0.41.26-dev.zip",
+    "bytes": 503665,
+    "sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
     "constituents": 8,
     "tables": 42,
     "foreign_keys": 59,
-    "build_source": "PR #112 testata e integrata; checksum interno coincidente con build locale riproducibile.",
-    "artifact_id": 13633183064,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552/artifacts/13633183064",
-    "ci_artifact_archive_sha256": "sha256:e37443cae3f68a59c35ac70387b5cda6fa52dce8dd75fc7b3ca9d6bf9014d362",
-    "artifact_expires_at": "2026-11-22T20:32:36Z",
+    "build_source": "PR #116 verificata e integrata; build riproducibile del CI.",
+    "artifact_id": 13634039771,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771",
+    "ci_artifact_archive_sha256": "sha256:a11100b989ff7b70ee4bc442cc997559eae13148201bafb3431d63eafae1a1e3",
+    "artifact_expires_at": "2026-11-22T21:24:36Z",
     "wrapper_zip": true,
-    "inner_version": "0.41.25-dev"
+    "inner_version": "0.41.26-dev"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -1884,33 +1884,33 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.25-dev integrata in main dalla PR #112; CI standard superata; ricollaudo manuale Joomla AC-132 pendente.",
+  "candidate_status": "0.41.26-dev integrata in main dalla PR #116; CI standard superata; collaudo manuale Joomla AC-130 pendente.",
   "previous_verified_release": {
-    "version": "0.41.24-dev",
-    "package": "pkg_jlms-0.41.24-dev.zip",
-    "sha256": "5162d657369820d14b082b0e1f14037bf65923f9c8a1c682cde584821ab0c174",
-    "artifact_id": 13632870363,
-    "run_id": 42518292971,
-    "expires_at": "2026-11-22T20:09:44Z"
+    "version": "0.41.25-dev",
+    "package": "pkg_jlms-0.41.25-dev.zip",
+    "sha256": "bd0a7796d3f260af9ea2e2d8079265623d987db4fa485716bd1c43f966929b03",
+    "artifact_id": 13633183064,
+    "run_id": 42520306552,
+    "expires_at": "2026-11-22T20:32:36Z"
   },
   "candidate_increment": {
-    "version": "0.41.25-dev",
-    "scope": "Issue #105 / AC-132: aggiunge Dashboard come prima voce figlia della sidebar e la collega alla dashboard amministrativa esistente, mantenendo ordine e voci già presenti.",
-    "status": "PR #112 integrata; CI standard superata; collaudo manuale Joomla da registrare. Nessuna funzione didattica aggiunta.",
+    "version": "0.41.26-dev",
+    "scope": "AC-130: riorganizza la lista backend docenti con Search Tools Joomla, ricerca, filtri stato/lingua, ordinamento e paginazione; il form resta separato. Nessuna modifica alle associazioni, ai dati o alle ACL.",
+    "status": "PR #116 integrata; CI standard superata; collaudo manuale Joomla da registrare.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
-    "version": "0.41.25-dev",
-    "pull_request": 112,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/112",
-    "tested_head": "a43c18fd41a78b0e0fc61aa259c1c36aa4720278",
-    "merged_main_commit": "50dcded229bc68b6ae7f2d845336727ff12867bd",
-    "ci_run_id": 42520306552,
-    "artifact_id": 13633183064,
-    "artifact_name": "JD-Learn-0.41.25-dev",
-    "artifact_sha256": "bd0a7796d3f260af9ea2e2d8079265623d987db4fa485716bd1c43f966929b03",
-    "artifact_size_bytes": 501472,
-    "artifact_expires_at": "2026-11-22T20:32:36Z",
+    "version": "0.41.26-dev",
+    "pull_request": 116,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/116",
+    "tested_head": "51209a30644de6df4b3ccd0d6abb078f6fb037cd",
+    "merged_main_commit": "ed08b4c22db38b184c3a7ba5ace79cc32392466a",
+    "ci_run_id": 42524671164,
+    "artifact_id": 13634039771,
+    "artifact_name": "JD-Learn-0.41.26-dev",
+    "artifact_sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
+    "artifact_size_bytes": 503665,
+    "artifact_expires_at": "2026-11-22T21:24:36Z",
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {
@@ -1920,11 +1920,5 @@
     "ci_run_id": 42439956364,
     "artifact_name": "JD-Learn-0.41.10-dev",
     "artifact_id": 13601830152
-  },
-  "next_candidate": {
-    "version": "0.41.26-dev",
-    "scope": "AC-130: riorganizza la lista backend docenti con Search Tools Joomla, ricerca, filtri stato/lingua, ordinamento e paginazione; il form resta separato. Nessuna modifica alle associazioni, ai dati o alle ACL.",
-    "status": "Implementazione candidata; CI e collaudo manuale Joomla pendenti.",
-    "manual_joomla_acceptance": "pending"
   }
 }

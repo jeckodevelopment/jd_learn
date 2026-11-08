@@ -86,7 +86,7 @@ Riferimento: CORE-10; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b-
 
 **Stato:** PR #104 integrata in main 0.41.22-dev; CI standard superata. Il collaudo manuale è dettagliato nella sezione Issue #99 e resta da registrare.
 
-### AC-130 — vista standard per i docenti (candidata 0.41.26-dev; collaudo Joomla pendente)
+### AC-130 — vista standard per i docenti (PR #116 integrata in 0.41.26-dev; collaudo Joomla pendente)
 
 Riferimenti: AUT-01, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native).
 
@@ -96,7 +96,7 @@ Riferimenti: AUT-01, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-1
 4. Ripetere con ruoli autorizzati e non autorizzati. Verificare navigazione da tastiera e viewport mobile.
 5. Controllare che nessuna categoria docente sia richiesta o esposta.
 
-**Stato:** l’incremento 0.41.26-dev prepara la lista secondo Search Tools e toolbar standard Joomla; il form resta separato e accessibile dal titolo/toolbar. La categoria docente non è esposta. Verificare ACL e ricerca sul sito; il cambio stato del profilo resta disponibile nel form secondo i permessi, senza introdurre azioni massive.
+**Stato:** PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116) integrata; tutti i quattro job della [CI standard 42524671164](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164) superati. Il pacchetto [0.41.26-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771) ha SHA-256 interno `869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5` (503665 byte), disponibile fino al 22 novembre 2026. La lista usa Search Tools e toolbar standard Joomla; il form resta separato e accessibile dal titolo/toolbar. La categoria docente non è esposta. Verificare ACL e ricerca sul sito; il cambio stato del profilo resta disponibile nel form secondo i permessi, senza introdurre azioni massive.
 
 ### AC-131 — elenco separato per la banca domande (in attesa di implementazione)
 
