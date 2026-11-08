@@ -6,6 +6,13 @@
 
 # Changelog
 
+## 0.41.10-dev — riepilogo preliminare di pubblicazione
+
+- Mostra nella bozza del programma gli errori strutturali bloccanti separati dagli avvisi facoltativi su riepilogo e copertina.
+- Mantiene la verifica definitiva in `PublicationService`; il controllo preliminare non carica i corpi delle lezioni né contatta provider.
+- Aggiunge test unitari e regressioni HTTP per il passaggio da modulo vuoto a lezione obbligatoria; CI e collaudo Joomla reale da completare.
+
+
 ## 0.41.8-dev — ingresso amministrativo più chiaro
 
 - Mette in evidenza l’accesso alla gestione corsi, raggruppa gli strumenti secondari e raccoglie lo stato provider in un dettaglio espandibile.
