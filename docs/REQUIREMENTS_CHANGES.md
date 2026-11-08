@@ -10,7 +10,7 @@
 
 **Stato:** implementata dalla PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108) e corretta dalla PR [#110](https://github.com/jeckodevelopment/jd_learn/pull/110), integrata in `2f99f3285b8be4a1017a86d838b4789d9efe5b30`; CI standard superata nel run [42518292971](https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971). Il ricollaudo manuale Joomla AC-132 resta aperto e va registrato nel [testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).
 
-La richiesta successiva di aggiungere **Dashboard** come prima voce figlia della sidebar è tracciata nella candidata 0.41.25-dev; è un accesso alla stessa vista già compresa in AC-132.
+La richiesta successiva di aggiungere **Dashboard** come prima voce figlia della sidebar è stata integrata dalla PR [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) in 0.41.25-dev; CI standard superata nel [run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552). È un accesso alla stessa vista già compresa in AC-132; collaudo manuale ancora pendente.
 
 ## RF-2026-11-08 — lifecycle Privacy e provider video della prima release
 

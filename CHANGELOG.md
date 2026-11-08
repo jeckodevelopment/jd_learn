@@ -6,6 +6,7 @@
 - Traduce l'etichetta in italiano e inglese e aggiunge una regressione Joomla sull'ordine delle voci dopo l'upgrade.
 - Collaudo manuale di posizione, destinazione e lingue aggiunto al testbook AC-132.
 - Nessuna nuova funzione didattica o capacità di fase 2.
+- PR [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) integrata; tutti i quattro job CI superati ([run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552)). Pacchetto [JD-Learn-0.41.25-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552/artifacts/13633183064), SHA-256 interno `bd0a7796d3f260af9ea2e2d8079265623d987db4fa485716bd1c43f966929b03` (501472 byte), scadenza 22 novembre 2026.
 
 ## 0.41.24-dev — correzioni dashboard amministrativa
 
