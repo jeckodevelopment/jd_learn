@@ -78,10 +78,11 @@ $ownerUsername=(string)$db->setQuery('SELECT username FROM #__users WHERE id='.(
 $usernameMatches=$read($actor,['user'=>$f['owner'],'search'=>substr($ownerUsername,0,6)]);
 rosterExpect(count($usernameMatches)===25,'search finds learner by username');
 $ownerName=(string)$db->setQuery('SELECT name FROM #__users WHERE id='.(int)$f['owner'])->loadResult();
-$rename=$db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name','Unique Roster Search Name')->bind(':id',(int)$f['owner'],\Joomla\Database\ParameterType::INTEGER);
+$searchFixtureName='Unique Roster Search Name';$ownerId=(int)$f['owner'];
+$rename=$db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name',$searchFixtureName)->bind(':id',$ownerId,\Joomla\Database\ParameterType::INTEGER);
 $db->setQuery($rename)->execute();
 try { rosterExpect(count($read($actor,['user'=>$f['owner'],'search'=>'Roster Search Name']))===25,'search finds learner by display name'); }
-finally { $restore=$db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name',$ownerName)->bind(':id',(int)$f['owner'],\Joomla\Database\ParameterType::INTEGER);$db->setQuery($restore)->execute(); }
+finally { $restore=$db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name',$ownerName)->bind(':id',$ownerId,\Joomla\Database\ParameterType::INTEGER);$db->setQuery($restore)->execute(); }
 rosterExpect(count($read($actor,['search'=>'%']))===0,'search treats LIKE wildcards literally');
 rosterDenied(fn()=>$service->query($actor,$course,['search'=>str_repeat('x',101)]),400,'overlong learner search rejected');
 rosterDenied(fn()=>$service->query($actor,$course,['search'=>['cidash']]),400,'non-string learner search rejected');
