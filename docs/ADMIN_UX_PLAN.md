@@ -30,6 +30,10 @@ Per ogni vista amministrativa, prima si individua la vista standard Joomla più 
 
 Questi punti sono tracciati in AC-129–131 e nella [decisione requisiti RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native). La banca domande è inclusa come eccezione limitata di usabilità: le altre funzionalità quiz restano fase 2.
 
+### AC-130 — elenco docenti Joomla standard
+
+La candidata 0.41.26-dev porta la lista docenti sul layout nativo Search Tools: ricerca, filtri di stato e lingua, ordinamento, paginazione, stato/lingua/modifica/ID leggibili e titolo collegato al form separato. Rimangono invariati dati e modello docente; la categoria tecnica non viene mostrata e lo stato si modifica nel form secondo ACL. Collaudare con AC-130 nel [testbook](QA_TESTBOOK.md#ac-130).
+
 - Rivedere la schermata iniziale: l’attuale gruppo di pulsanti Corsi/Categorie/Banca domande/Docenti non deve essere l’unico accesso alle funzioni. Rendere evidenti il percorso principale di gestione corsi e le azioni disponibili, con etichette comprensibili e spazi contenuti.
 - Predisporre un menu amministrativo JD Learn nella sidebar nativa Joomla, visibile nelle viste del componente e coerente con le convenzioni del core. Accessi diretti almeno a Corsi, Categorie corsi, Banca domande e Docenti, secondo i permessi; configurazione tramite strumenti nativi e altri collegamenti solo quando le funzioni sono operative.
 - Mantenere il contesto del corso per programma, materiali e iscritti: evitare voci globali che aprano pagine prive del corso necessario. Le categorie riguardano i corsi, non la gestione dei docenti.

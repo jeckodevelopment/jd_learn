@@ -1920,5 +1920,11 @@
     "ci_run_id": 42439956364,
     "artifact_name": "JD-Learn-0.41.10-dev",
     "artifact_id": 13601830152
+  },
+  "next_candidate": {
+    "version": "0.41.26-dev",
+    "scope": "AC-130: riorganizza la lista backend docenti con Search Tools Joomla, ricerca, filtri stato/lingua, ordinamento e paginazione; il form resta separato. Nessuna modifica alle associazioni, ai dati o alle ACL.",
+    "status": "Implementazione candidata; CI e collaudo manuale Joomla pendenti.",
+    "manual_joomla_acceptance": "pending"
   }
 }
