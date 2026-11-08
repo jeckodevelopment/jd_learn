@@ -71,8 +71,8 @@ try:
  expect(enrollments(suspended)=={f['suspended']},'native status filter')
  _,empty,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[user]':'2147483647'}))
  expect('jlms-roster-empty'in Page(empty).ids and not enrollments(empty),'empty filtered roster')
- _,by_name,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[search]':'cidash'}))
- expect(f['active']in enrollments(by_name) and len(enrollments(by_name))>0,'learner search filters by display name or username')
+ _,by_name,_=request(admin,roster+'&limit=50&limitstart=0&'+urlencode({'filter[user]':f['owner'],'filter[search]':'cidash'}))
+ expect(len(enrollments(by_name))==25,'learner search combines with the user filter')
  _,literal,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[search]':'%'}))
  expect('jlms-roster-empty'in Page(literal).ids,'LIKE wildcard is treated literally')
  for query in [{'filter[status]':"active' OR 1=1 --"},{'filter[user]':'1 OR 1=1'},{'filter[version]':-1},{'filter[progress][]':'completed'},{'filter[search]':'x'*101},{'filter[search][]':'cidash'}]:
