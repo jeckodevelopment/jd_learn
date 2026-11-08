@@ -49,7 +49,8 @@ def admin_page(course=None,version=None,replace=0):
  course=fixture['course_id'] if course is None else course;version=fixture['version_id'] if version is None else version
  return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version)+'&replace_id='+str(replace))
 def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False,publish_up='',publish_down=''):
- url,body,_=admin_page(course,version,replace);page=Page(body.decode());form=next(f for f in page.forms if f['id']=='jlms-material-upload')
+ url,body,_=admin_page(course,version,replace);html=body.decode();page=Page(html);form=next(f for f in page.forms if f['id']=='jlms-material-upload')
+ expect('jform[publish_up]' in html and 'jform[publish_down]' in html and 'datetime-local' in html,'Material form exposes both course-time-zone availability fields')
  fields=dict(form['fields']);fields.update({'jform[title]':title,'jform[description]':'Extra facoltativo','jform[lesson_id]':str(lesson),'jform[replace_id]':str(replace),'jform[publish_up]':publish_up,'jform[publish_down]':publish_down})
  if invalid_token:
   fields={k:v for k,v in fields.items() if not re.fullmatch('[a-f0-9]{32}',k)}
