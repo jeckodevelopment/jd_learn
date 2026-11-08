@@ -276,6 +276,10 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
     {
         $language = $this->getApplication()->getLanguage();
 
+        if (!$language) {
+            return;
+        }
+
         if (!$language->load('plg_privacy_jdlearn', JPATH_ADMINISTRATOR)) {
             $language->load('plg_privacy_jdlearn', JPATH_PLUGINS . '/privacy/jdlearn');
         }
