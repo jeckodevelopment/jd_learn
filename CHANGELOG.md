@@ -11,7 +11,7 @@
 - Aggiunge dal roster la migrazione singola di iscrizioni verso la versione pubblicata corrente, con selezione esplicita delle equivalenze fra lezioni e anteprima protetta da hash.
 - Trasferisce soltanto stati di completamento non quiz approvati; progressi e iscrizione sorgente restano nello storico, mentre quiz, coverage video, risposte e attestati non vengono copiati.
 - Conferma con motivo, CSRF, ACL e idempotenza; blocca tentativi aperti, iscrizioni duplicate, edizioni indisponibili/a capienza e corso con erogazione sospesa. Registrazione atomica in job, equivalenze, migrazione e Action Log.
-- CI sul candidato da completare; il collaudo manuale Joomla resta aperto.
+- PR #88 integrata con squash (`f2f8c76`); CI standard superata nei due ambienti PHP/database, Chromium e controlli leggeri (run [42473935482](https://github.com/jeckodevelopment/jd_learn/actions/runs/42473935482)). Collaudo manuale Joomla ancora aperto. Pacchetto `pkg_jlms-0.41.14-dev.zip` verificato: SHA-256 `7a9f08f7ad01c88c04d19e9568d8aebb9d6e5b3258c066d6d8f9b6cd26f335a4`.
 
 ## 0.41.13-dev — finestre temporali dei materiali
 
