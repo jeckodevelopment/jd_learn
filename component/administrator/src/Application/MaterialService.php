@@ -76,7 +76,7 @@ final class MaterialService
         }
         $count = clone $q;
         $total = (int) $this->db->setQuery($count->select('COUNT(*)'))->loadResult();
-        $q->select('a.id, a.title, a.description, a.lesson_id, a.ordering, a.state, a.revision, f.original_name, f.mime_type, f.byte_size, f.status')
+        $q->select('a.id, a.title, a.description, a.lesson_id, a.ordering, a.state, a.preview, a.publish_up, a.publish_down, a.revision, f.original_name, f.mime_type, f.byte_size, f.status')
             ->order('a.ordering, a.id');
         return ['items' => $this->db->setQuery($q, $page * 20, 20)->loadObjectList(), 'total' => $total, 'page' => $page, 'limit' => 20];
     }
@@ -88,15 +88,17 @@ final class MaterialService
             ->bind(':version', $versionId, ParameterType::INTEGER)->order('module_id, ordering, id');
         return ['course' => $course, 'version' => $version, 'files' => $this->listing($versionId, 0, $page, true),
             'lessons' => $this->db->setQuery($q, 0, 5000)->loadObjectList(), 'limit' => $this->storage->limit(),
-            'scan_required' => (bool) $this->storage->config()->get('material_scan_required', false)];
+            'scan_required' => (bool) $this->storage->config()->get('material_scan_required', false),
+            'schedule_timezone' => CourseSchedule::read($course)['timezone']];
     }
 
     /** Uploaded binary is validated/scanned before the short authoring transaction. */
     public function upload(User $identity, int $courseId, int $versionId, int $lessonId, int $expected, string $title,
-        string $description, array $upload, int $replaceId = 0): int
+        string $description, array $upload, int $replaceId = 0, mixed $publishUp = null, mixed $publishDown = null): int
     {
-        [, , $version] = $this->author($identity, $courseId, $versionId);
+        [, $course, $version] = $this->author($identity, $courseId, $versionId);
         $this->draft($version, $expected);
+        $availability = MaterialAvailability::normalize($publishUp, $publishDown, CourseSchedule::read($course)['timezone']);
         if (in_array($upload['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
@@ -111,7 +113,7 @@ final class MaterialService
         $staged = $this->storage->stage($upload['tmp_name'], $upload['name']);
         $scan = $this->storage->scan((object) $staged);
         // A failed concurrent save may leave an unreferenced private blob; never delete a referenced blob speculatively.
-        return $this->transaction(function () use ($identity, $courseId, $versionId, $lessonId, $expected, $title, $description, $staged, $scan, $replaceId): int {
+        return $this->transaction(function () use ($identity, $courseId, $versionId, $lessonId, $expected, $title, $description, $staged, $scan, $replaceId, $availability): int {
             [$actor, , $version] = $this->author($identity, $courseId, $versionId, true);
             $this->draft($version, $expected);
             $now = gmdate('Y-m-d H:i:s');
@@ -124,7 +126,8 @@ final class MaterialService
                     throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 }
                 $update = (object) ['id' => $replaceId, 'asset_id' => (int) $asset->id, 'title' => trim($title),
-                    'description' => $description, 'revision' => (int) $attachment->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
+                    'description' => $description, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
+                    'revision' => (int) $attachment->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');
                 $id = $replaceId;
             } else {
@@ -134,7 +137,8 @@ final class MaterialService
                 if ($count >= 1000) { throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409); }
                 $attachment = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
                     'asset_id' => (int) $asset->id, 'title' => trim($title), 'description' => $description, 'ordering' => $count,
-                    'state' => 1, 'preview' => 0, 'revision' => 1, 'created_by' => (int) $actor->id,
+                    'state' => 1, 'preview' => 0, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
+                    'revision' => 1, 'created_by' => (int) $actor->id,
                     'modified_by' => (int) $actor->id, 'created_at' => $now, 'modified_at' => $now];
                 $this->db->insertObject('#__jlms_attachments', $attachment, 'id'); $id = (int) $attachment->id;
             }
@@ -156,7 +160,7 @@ final class MaterialService
             $scannedId = (int) $asset->id;
         }
         $this->transaction(function () use ($identity, $courseId, $versionId, $id, $expected, $operation, $input, $scan, $scannedId): void {
-            [$actor, , $version] = $this->author($identity, $courseId, $versionId, true);
+            [$actor, $course, $version] = $this->author($identity, $courseId, $versionId, true);
             if ($operation === 'scan' && in_array($version->status, ['published', 'retired'], true)) {
                 if ((int) $version->revision !== $expected) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409); }
             } else { $this->draft($version, $expected); }
@@ -182,7 +186,11 @@ final class MaterialService
                 if (!is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1
                     || !is_string($description) || strlen($description) > 4096 || !in_array($state, ['0', '1'], true)
                     || !ctype_digit($order) || strlen($order) > 5) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+                $availability = array_key_exists('publish_up', $input) || array_key_exists('publish_down', $input)
+                    ? MaterialAvailability::normalize($input['publish_up'] ?? null, $input['publish_down'] ?? null, CourseSchedule::read($course)['timezone'])
+                    : ['publish_up' => $link->publish_up, 'publish_down' => $link->publish_down];
                 $update = (object) ['id' => $id, 'title' => trim($title), 'description' => $description, 'state' => (int) $state,
+                    'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
                     'ordering' => (int) $order, 'revision' => (int) $link->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');
             } else { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
