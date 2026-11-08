@@ -64,3 +64,17 @@ Aggiunto AC-128 al catalogo per rendere verificabile questo roster limitato; sce
 ## RF-2026-11-07-D — semplificazione delle schede dell’editor corso
 
 L’incremento0.41.4 raggruppa i dati editoriali, l’immagine e i docenti nella scheda Corso; programma e regole didattiche nel contesto Programma; livelli, categoria, lingua e calendario in Accesso e pubblicazione. Opzioni contiene metadati, associazioni e permessi. Nessun campo duplicato e nessuna modifica al modello, allo stato, al versionamento o ai permessi. La disposizione segue la decisione di rendere il backend più intuitivo e la mappa [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Test HTTP, suite standard e Chromium superati in [CI 42410200676](https://github.com/jeckodevelopment/jd_learn/actions/runs/42410200676); PR #60 integrata. Restano M01 e i collaudi manuali.
+
+## RF-2026-11-08-B — accesso e viste amministrative native
+
+**Origine e autorizzazione:** richiesta esplicita del committente dell’8 novembre 2026: aggiungere l’accesso alle viste Joomla dei campi aggiuntivi per corsi e lezioni; rifare la vista dei docenti usando i pattern standard Joomla, sul modello di `com_contacts` o della gestione articoli; rendere la banca domande una lista usabile secondo la gestione articoli, separando elenco e form di creazione/modifica e offrendo duplicazione ed eliminazione delle domande esistenti.
+
+**Criteri recepiti:**
+
+- **Campi corsi e lezioni — CORE-10 / AC-129:** offrire dalle rispettive aree di gestione un accesso riconoscibile alla vista Joomla dove si configurano i campi aggiuntivi del contesto; mantenere contesto/estensione corretti e permessi nativi. Questo riguarda il punto di accesso all’amministrazione `com_fields`, non una nuova tipologia di campo o un nuovo motore.
+- **Docenti — AUT-01, SCR-13 / AC-130:** elenco separato dal form, basato su una vista standard Joomla adatta all’entità (riferimento `com_contacts`/articoli); navigazione, toolbar, ricerca/filtri, ordinamento, paginazione, stati e ritorno coerenti con Joomla. Nessuna categoria docente o permesso implicito dall’associazione al corso.
+- **Banca domande — QUI-02, SCR-13 / AC-131:** separare l’elenco delle domande dal form di creazione/modifica; usare pattern articolo Joomla per lista, toolbar e filtri; includere azioni per creare, duplicare e cancellare domande, con conferme, ACL, CSRF, dipendenze e storico/versioni preservati. L’intervento richiesto è limitato all’amministrazione della banca esistente: non aggiunge tipi di domanda, logiche di valutazione o capacità quiz ulteriori.
+
+**Perimetro:** per decisione esplicita, la rifinitura di navigazione e gestione delle domande già esistenti è inclusa nel lavoro di usabilità backend della prima release. È un’eccezione limitata al congelamento QUI-01–08: funzionalità didattiche quiz non nominate restano fase 2; si implementano soltanto le azioni amministrative descritte qui e i relativi controlli d’integrità.
+
+La specifica schermate, il catalogo dei test, la matrice e i prossimi step sono stati aggiornati. Le richieste non dichiarano le viste già complete e il loro stato resta “In corso” fino ai collaudi dei nuovi scenari. Il [testbook](QA_TESTBOOK.md) conserva i percorsi da eseguire dopo l’implementazione.

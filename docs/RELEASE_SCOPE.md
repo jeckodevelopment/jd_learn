@@ -9,12 +9,12 @@
 - **Video e materiali funzionanti:** supportare e collaudare i provider video previsti dal progetto — YouTube, Vimeo e Cloudflare Stream — oltre ai media locali previsti; mostrare il player direttamente nella lezione secondo la politica di consenso del sito; gestire i materiali didattici essenziali.
 - **Pubblicazione e fruizione:** catalogo e scheda corso, iscrizione/accesso essenziali, aula studente, ripresa del percorso e salvataggio affidabile dei progressi.
 - **Gestione essenziale degli iscritti:** elenco per corso con stato dell’iscrizione e informazioni operative di base; operazioni singole necessarie per ammettere, sospendere o riattivare l’accesso, nel rispetto dei permessi e dello storico. Questo elenco resta nella prima versione stabile.
-- **Amministrazione intuitiva:** schermate dei corsi e del programma comprensibili, navigazione e voci principali di JD Learn nella sidebar amministrativa Joomla.
+- **Amministrazione intuitiva:** schermate di corsi, programma e docenti conformi ai pattern standard backend Joomla; accesso alle viste native dei campi corso/lezione; lista e form banca domande separati con creazione, duplicazione ed eliminazione delle domande esistenti come eccezione limitata esplicitamente approvata. Navigazione e voci principali di JD Learn nella sidebar Joomla.
 - **Requisiti trasversali di rilascio:** installazione e aggiornamento del pacchetto, ACL, protezione dei dati, privacy/consenso, accessibilità, lingua, affidabilità e documentazione necessarie a usare in sicurezza le funzionalità incluse.
 
 ## Fase 2: sviluppo sospeso per la prima versione
 
-- **Quiz e banca domande:** niente nuove funzionalità o ampliamenti per il rilascio stabile iniziale. Il codice già presente si conserva; si interviene solo per correggere blocchi, vulnerabilità o problemi d’integrità dei dati.
+- **Quiz e banca domande:** le funzionalità didattiche quiz restano congelate. Eccezione approvata l’8 novembre 2026: rendere usabile l’amministrazione della banca esistente con elenco e form separati e azioni di creazione, duplicazione ed eliminazione, usando i pattern standard Joomla (AC-131). Nessun nuovo tipo di domanda, comportamento di valutazione o flusso studente rientra nell’eccezione. Il codice esistente si conserva; restano ammesse correzioni di blocchi, sicurezza e integrità.
 - **Attestati:** emissione, modelli, download, verifica e revoca rinviati.
 - **Reportistica avanzata:** KPI, analisi dettagliate di frequenza/risultati e report avanzati rinviati. Il roster operativo essenziale descritto sopra rimane incluso.
 - **Flussi iscrizioni avanzati:** importazioni massive, approvazioni articolate, edizioni/finestre e reportistica di massa rinviati, salvo una dipendenza dimostrata per i flussi essenziali.

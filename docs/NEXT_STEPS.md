@@ -4,7 +4,7 @@ Aggiornato all’**8 novembre 2026**. Main **0.41.18-dev** include i percorsi ag
 
 ## Priorità per la prima versione stabile
 
-Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Le fasi originarie restano utili come mappa tecnica, ma le attività elencate come fase 2 non sono criteri di blocco per la prima stabile.
+Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Le richieste nuove sono registrate in [REQUIREMENTS_CHANGES.md](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native) e negli scenari AC-129–131. La gestione amministrativa minima AC-131 è l’eccezione esplicita alla sospensione delle nuove funzionalità quiz; i criteri didattici rimanenti di fase 2 non sono gate della prima stabile.
 
 | Ordine | Attività | Risultato richiesto |
 |---|---|---|
@@ -12,7 +12,7 @@ Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md
 | 2 | Provider video e materiali essenziali (M04) | YouTube, Vimeo, Cloudflare Stream e media locali previsti funzionano nella lezione con consenso, accesso e progressi corretti; collaudo su browser e account reali. |
 | 3 | Fruizione e progressi core (M03/M09) | Lezioni testo/video, regole supportate, aula, catalogo, ripresa e progressi persistenti; non rendere i quiz prerequisito di pubblicazione o completamento quando il corso non li usa. |
 | 4 | Iscrizione singola e roster essenziale (M06/M09, sottoinsieme) | Accesso e iscrizione singola, sospensione/riattivazione e roster per corso con stato, avanzamento e date; ACL e storico conservati. Nessun KPI/export necessario in questa fase. |
-| 5 | Qualità amministrativa e integrazioni Joomla | Completare usabilità del backend, voci di menu, docente/corsi, privacy e integrazioni core applicabili, senza introdurre flussi incompleti per quiz o attestati. |
+| 5 | Qualità amministrativa e integrazioni Joomla | Aggiungere accesso alle viste `com_fields` per corsi e lezioni; rifare la lista docenti secondo un pattern standard Joomla; separare lista e form della banca domande e introdurre create/duplicate/delete per le domande esistenti (AC-129–131). In parallelo chiudere menu, privacy e integrazioni core. Nessun ampliamento quiz oltre questa eccezione di usabilità. |
 | 6 | Accettazione della release (M10–M12) | Installazione/upgrade, sicurezza, accessibilità, browser/provider, conservazione dati e guide per il perimetro core. Eseguire la matrice estesa al candidato stabile, non a ogni commit preparatorio. |
 
 ### Funzionalità congelate per la fase 2
@@ -23,13 +23,13 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-Main 0.41.18 include i percorsi aggregati (PR #93) e la ricerca testuale roster (PR #94). Quest’ultima è una deviazione non approvata come requisito del primo rilascio, annotata nel [testbook](QA_TESTBOOK.md); non va usata per ampliare il perimetro. Proseguire soltanto con i residui già tracciati nella matrice e nell’ordine sopra, distinguendo implementazione, CI e collaudo manuale.
+Main 0.41.18 include i percorsi aggregati (PR #93) e la ricerca testuale roster (PR #94). Quest’ultima è una deviazione non approvata come requisito del primo rilascio, annotata nel [testbook](QA_TESTBOOK.md); non va usata per ampliare il perimetro. I nuovi lavori di usabilità backend approvati l’8 novembre sono tracciati in [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native), AC-129–131 e nella tabella priorità. Proseguire soltanto con questi punti espliciti e gli altri residui già mappati, distinguendo implementazione, CI e collaudo manuale.
 
 La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. La PR #68 ha completato il restyling previsto della schermata iniziale. Entrambe hanno superato la CI prevista; resta il collaudo nel sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 
 In parallelo, mantenere i tre provider esterni e i media locali come requisiti core: la [durata automatica e gli scarti video](VIDEO_DURATION_PLAN.md) sono implementati nella linea0.39 ma il collaudo completo con provider/browser/account reali resta necessario. Aggiornare lo stato per ciascun build e distinguere ciò che è implementato da ciò che è accettato.
 
-Dopo il consolidamento di corsi, programma e media, completare l’iscrizione singola e il roster core secondo AC-128. Quiz, attestati e reportistica avanzata restano congelati: non riprendere quei lavori per ampliare funzionalità mentre il core è aperto.
+Dopo il consolidamento di corsi, programma e media, completare l’iscrizione singola e il roster core secondo AC-128. Per la banca domande è autorizzata la sola riorganizzazione amministrativa AC-131; tipi, valutazione e flussi studente restano congelati, insieme ad attestati e reportistica avanzata.
 
 ## Modalità di sviluppo e verifica
 
