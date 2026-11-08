@@ -10,9 +10,10 @@ final class PublicationReadiness
     /**
      * @param list<object> $modules
      * @param list<object> $lessons
+     * @param list<object> $attachments
      * @return array{blockers:list<string>,warnings:list<string>}
      */
-    public static function inspect(object $course, array $modules, array $lessons): array
+    public static function inspect(object $course, array $modules, array $lessons, array $attachments = [], bool $scanRequired = false): array
     {
         $blockers = [];
         $warnings = [];
@@ -51,6 +52,15 @@ final class PublicationReadiness
                     || !is_array($lessonParams) || ($lessonParams['video_duration_confirmed'] ?? false) !== true) {
                     $blockers[] = 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED';
                 }
+            }
+        }
+
+        foreach ($attachments as $attachment) {
+            $scan = json_decode((string) ($attachment->scan_json ?? '{}'), true);
+            if (($scanRequired && (!is_array($scan) || ($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
+                || ($attachment->status ?? '') !== 'ready' || (int) ($attachment->preview ?? 0) !== 0
+                || ($attachment->publish_up ?? null) !== null || ($attachment->publish_down ?? null) !== null) {
+                $blockers[] = 'COM_JLMS_MATERIAL_NOT_READY';
             }
         }
 
