@@ -88,10 +88,24 @@ final class HtmlView extends BaseHtmlView
             $this->canConfigureVideo = $actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms');
             $this->canManagePlugins = $actor->authorise('core.manage', 'com_plugins');
             $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
+            $providers = [];
             foreach ($app->bootComponent('com_jlms')->getCurriculumService()->providers() as $provider) {
-                $key = $provider->key;
-                $label = \Joomla\CMS\Language\Text::_($provider->labelKey);
-                if (!$provider->configured) {
+                $providers[$provider->key] = $provider;
+            }
+            $coreProviders = ['youtube' => 'YouTube', 'vimeo' => 'Vimeo',
+                'cloudflarestream' => 'Cloudflare Stream', 'html5' => 'MP4'];
+            $rows = $coreProviders;
+            foreach ($providers as $key => $provider) {
+                if (!isset($coreProviders[$key])) {
+                    $rows[$key] = \Joomla\CMS\Language\Text::_($provider->labelKey);
+                }
+            }
+            foreach ($rows as $key => $fallbackLabel) {
+                $provider = $providers[$key] ?? null;
+                $label = $provider ? \Joomla\CMS\Language\Text::_($provider->labelKey) : $fallbackLabel;
+                if (!$provider) {
+                    $status = 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING';
+                } elseif (!$provider->configured) {
                     $status = 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED';
                 } elseif ($key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) {
                     $status = 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED';
