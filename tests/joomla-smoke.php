@@ -115,14 +115,16 @@ $privacyPlugin->setApplication($app);
 $privacyPlugin->setDatabase($db);
 $privacyCheck = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $app->getIdentity()]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyCheck);
-if (count($privacyCheck->getResult()) !== 1 || !$privacyCheck->getResult()[0]->canRemove) {
+$privacyCheckData = $privacyCheck->getArgument('result', []);
+if (count($privacyCheckData) !== 1 || !$privacyCheckData[0]->canRemove) {
     throw new \RuntimeException('JD Learn privacy plugin blocked removal for a user without JD Learn data.');
 }
 $db->setQuery("INSERT INTO #__jlms_jobs (kind, owner_user_id, scope_json, payload_json, status, available_at, created_at) VALUES ('privacy-fixture', " . (int) $userId . ", '{}', '{}', 'complete', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))")->execute();
 $privacyBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $app->getIdentity()]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyBlocked);
+$privacyBlockedData = $privacyBlocked->getArgument('result', []);
 $db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_user_id=" . (int) $userId)->execute();
-if (count($privacyBlocked->getResult()) !== 1 || $privacyBlocked->getResult()[0]->canRemove || !$privacyBlocked->getResult()[0]->reason) {
+if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$privacyBlockedData[0]->reason) {
     throw new \RuntimeException('JD Learn privacy plugin did not explain the removal blocker for an owned job.');
 }
 $privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $app->getIdentity()]);
