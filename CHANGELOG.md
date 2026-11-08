@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.20-dev — integrazione Privacy attiva e tradotta
+
+- La prima installazione del pacchetto abilita il plugin `plg_privacy_jdlearn`; gli aggiornamenti rispettano lo stato scelto dall'amministratore.
+- Il plugin carica esplicitamente le proprie stringhe prima di esporre capacità, domini export e impedimenti alla rimozione.
+- Collaudo manuale Joomla richiesto per installazione nuova, upgrade con plugin disabilitato e lingue amministrative italiana/inglese.
+
 ## 0.41.19-dev — accesso ai campi aggiuntivi corso e lezione
 
 - Aggiunge dall’elenco Corsi il collegamento al gestore Joomla `com_fields` filtrato sul contesto `com_jlms.course`.

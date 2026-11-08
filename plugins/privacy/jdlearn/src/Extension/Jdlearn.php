@@ -29,6 +29,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyCollectAdminCapabilities(CollectCapabilitiesEvent $event): void
     {
+        $this->loadLanguage();
+
         $event->addResult([
             Text::_('PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE') => [
                 Text::_('PLG_PRIVACY_JDLEARN_CAPABILITY_ENROLLMENTS'),
@@ -41,6 +43,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyExportRequest(ExportRequestEvent $event): void
     {
+        $this->loadLanguage();
+
         $user = $event->getUser();
 
         if (!$user) {
@@ -150,6 +154,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyCanRemoveData(CanRemoveDataEvent $event): void
     {
+        $this->loadLanguage();
+
         $user = $event->getUser();
         $status = new Status();
 
