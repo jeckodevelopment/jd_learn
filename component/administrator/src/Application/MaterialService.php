@@ -8,6 +8,7 @@ use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage;
+use Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability;
 
 final class MaterialService
 {
