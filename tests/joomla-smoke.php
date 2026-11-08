@@ -75,14 +75,15 @@ $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($u
 PluginHelper::importPlugin('privacy');
 $privacyCapabilities = new CollectCapabilitiesEvent('onPrivacyCollectAdminCapabilities');
 $app->getDispatcher()->dispatch('onPrivacyCollectAdminCapabilities', $privacyCapabilities);
-$privacyData = $privacyCapabilities->getResult();
+$privacyData = $privacyCapabilities->getArgument('result', []);
 if (!is_array($privacyData) || $privacyData === []) {
     throw new \RuntimeException('JD Learn privacy capabilities were not collected by Joomla.');
 }
 $privacyRequest = new RequestTable($db);
 $privacyExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $app->getIdentity()]);
 $app->getDispatcher()->dispatch('onPrivacyExportRequest', $privacyExport);
-if (count($privacyExport->getResult()) !== 1 || count($privacyExport->getResult()[0]) !== 6) {
+$privacyExportData = $privacyExport->getArgument('result', []);
+if (count($privacyExportData) !== 1 || count($privacyExportData[0]) !== 6) {
     throw new \RuntimeException('JD Learn privacy export did not contribute all six data domains.');
 }
 $privacyPlugin = new \Jlms\Plugin\Privacy\Jdlearn\Extension\Jdlearn((array) PluginHelper::getPlugin('privacy', 'jdlearn'));
