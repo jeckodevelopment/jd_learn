@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**8 novembre 2026**. Main **0.41.15-dev**, PR [#90](https://github.com/jeckodevelopment/jd_learn/pull/90) integrata e CI standard verde (run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500)). La prova di estendibilità con un quinto provider è rinviata alla fase 2; la prima stabile deve verificare i quattro provider distribuiti (YouTube, Vimeo, Cloudflare Stream e HTML5) su Joomla e browser reali. Il collaudo manuale sul sito Joomla resta da eseguire. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Main **0.41.16-dev**, PR #92 integrata; candidata **0.41.17-dev** copre i percorsi aggregati CAT-03/SCR-04/EDGE-04. CI e prova manuale da completare. La prova di estendibilità con un quinto provider è rinviata alla fase 2; la prima stabile deve verificare i quattro provider distribuiti (YouTube, Vimeo, Cloudflare Stream e HTML5) su Joomla e browser reali. Il collaudo manuale sul sito Joomla resta da eseguire. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -23,7 +23,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-La PR #86 ha integrato la programmazione delle finestre temporali dei materiali; la PR #88 ha aggiunto la migrazione esplicita di una singola iscrizione con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz. La CI standard è superata; resta il collaudo Joomla manuale. Proseguire con le priorità M04 e M03/M09, distinguendo i difetti runtime dalle accettazioni live di provider/browser.
+La candidata 0.41.17 aggiunge ora percorsi aggregati con gestione nativa, ordinamento, progressi e controllo accessi; chiudere prima CI e collaudo manuale previsto nella PR. La PR #86 ha integrato la programmazione delle finestre temporali dei materiali; la PR #88 ha aggiunto la migrazione esplicita di una singola iscrizione con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz. La CI standard è superata; resta il collaudo Joomla manuale. Proseguire con le priorità M04 e M03/M09, distinguendo i difetti runtime dalle accettazioni live di provider/browser.
 
 La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. La PR #68 ha completato il restyling previsto della schermata iniziale. Entrambe hanno superato la CI prevista; resta il collaudo nel sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 

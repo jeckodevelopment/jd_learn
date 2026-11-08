@@ -14,7 +14,7 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
 {
     public function validateSection($section, $item = null)
     {
-        return in_array($section, ['teacher', 'course', 'lesson'], true) ? $section : null;
+        return in_array($section, ['teacher', 'course', 'lesson', 'pathway'], true) ? $section : null;
     }
 
     public function getContexts(): array
@@ -27,6 +27,10 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     private \Jlms\Component\Jlms\Administrator\Application\DashboardService $dashboardService;
     public function setDashboardService(\Jlms\Component\Jlms\Administrator\Application\DashboardService $service): void { $this->dashboardService = $service; }
     public function getDashboardService(): \Jlms\Component\Jlms\Administrator\Application\DashboardService { return $this->dashboardService; }
+
+    private \Jlms\Component\Jlms\Administrator\Application\PathwayService $pathwayService;
+    public function setPathwayService(\Jlms\Component\Jlms\Administrator\Application\PathwayService $service): void { $this->pathwayService = $service; }
+    public function getPathwayService(): \Jlms\Component\Jlms\Administrator\Application\PathwayService { return $this->pathwayService; }
 
     private \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $enrollmentRosterService;
     public function setEnrollmentRosterService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $service): void { $this->enrollmentRosterService = $service; }

@@ -1,3 +1,9 @@
+## 0.41.17-dev — percorsi formativi aggregati
+
+- Aggiunge la gestione amministrativa dei percorsi: categoria Joomla dedicata, accesso, lingua, pubblicazione e associazione ordinata fino a 100 corsi.
+- Aggiunge catalogo e scheda percorso pubblici con stato di apprendimento per corso e progresso aggregato a peso uniforme. Gli ospiti non vedono progressi personali; corsi nascosti non rivelano titolo o ID e i percorsi non concedono iscrizioni o accesso.
+- Non introduce sblocco sequenziale né attestati di percorso, rinviati alla fase 2. Nuovi test Joomla coprono salvataggio, ordinamento, accesso, progresso e conservazione dopo upgrade; la matrice CI e il collaudo manuale restano da completare.
+
 ## 0.41.9-dev — controlli separati di ammissione ed erogazione
 
 - Aggiunge i comandi motivati per chiudere/aprire nuove ammissioni e sospendere/riprendere l’erogazione, con anteprima di iscritti e quiz aperti, conferma, conflitto su revisioni obsolete e storico transazionale.

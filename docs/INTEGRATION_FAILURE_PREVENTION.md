@@ -20,6 +20,13 @@ Aggiornato l’8 novembre 2026 sulla base delle PR #62, #64, #65, #70, #74, #86,
 
 Evidenze: [PR #70](https://github.com/jeckodevelopment/jd_learn/pull/70), [run integrato PR #70](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835), [PR #62](https://github.com/jeckodevelopment/jd_learn/pull/62), [PR #64](https://github.com/jeckodevelopment/jd_learn/pull/64), [PR #65](https://github.com/jeckodevelopment/jd_learn/pull/65), [PR #74](https://github.com/jeckodevelopment/jd_learn/pull/74), [run integrato PR #74](https://github.com/jeckodevelopment/jd_learn/actions/runs/42439350519), [PR #86](https://github.com/jeckodevelopment/jd_learn/pull/86), [CI integrata PR #86](https://github.com/jeckodevelopment/jd_learn/actions/runs/42466812848), [PR #88](https://github.com/jeckodevelopment/jd_learn/pull/88), [CI integrata PR #88](https://github.com/jeckodevelopment/jd_learn/actions/runs/42473935482). I nomi dei job documentano l’area che ha fallito; le lezioni qui sopra sono ricavate anche dai commit correttivi e dai casi di regressione aggiunti. Un run fallito su entrambi i database indica con buona probabilità una causa condivisa nell’applicazione o nel setup comune; non dimostra da solo quale sia la causa.
 
+### Controlli specifici introdotti per i percorsi
+
+- Creare la categoria con il modello nativo Joomla e il percorso tramite il modello/servizio applicativo: inserimenti SQL manuali non esercitano ACL, asset e validazione del form.
+- Usare una fixture corso realmente pubblicata e visibile nel catalogo; un semplice record o una bozza non percorrono i join con versione/edizione/iscrizione.
+- Provare separatamente utente autenticato, ospite, corso inaccessibile e percorso vuoto. L’ospite non ha progresso personale; le schede nascoste non devono rivelare titolo/ID; il percorso non concede iscrizioni o view level.
+- Eseguire una prova retained dopo upgrade per assicurare che ordine e relazioni persistano; eseguire l’HTTP dopo aver scritto la fixture, perché il processo web è successivo al test nativo nel job CI.
+
 ## Checklist prima di scrivere il codice
 
 1. **Rendere verificabile il requisito.** Scrivere prima criteri di accettazione e casi positivi, negativi e di confine. Per modifiche a stati/accesso, elencare separatamente catalogo, ammissioni, utenti già iscritti, aula, progressi e operazioni didattiche.

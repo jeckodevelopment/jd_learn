@@ -7,7 +7,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 ?>
 <section id="jlms-courses" class="jlms-catalog">
- <header id="jlms-catalog-header"><h1><?= Text::_('COM_JLMS_COURSES') ?></h1><a id="jlms-catalog-categories" href="<?= Route::_('index.php?option=com_jlms&view=categories') ?>"><?= Text::_('COM_JLMS_CATEGORIES') ?></a></header>
+ <header id="jlms-catalog-header"><h1><?= Text::_('COM_JLMS_COURSES') ?></h1><a id="jlms-catalog-categories" href="<?= Route::_('index.php?option=com_jlms&view=categories') ?>"><?= Text::_('COM_JLMS_CATEGORIES') ?></a> <a id="jlms-catalog-pathways" href="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>"><?= Text::_('COM_JLMS_PATHWAYS') ?></a></header>
  <?php if ($this->categoryId) : ?><p id="jlms-category-filter"><?= Text::_('COM_JLMS_CATEGORY_FILTER_ACTIVE') ?> <a href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php endif; ?>
  <div id="jlms-course-grid" class="jlms-course-grid">
  <?php foreach ($this->items as $item) : ?>
