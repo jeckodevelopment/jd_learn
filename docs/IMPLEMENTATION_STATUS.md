@@ -1,13 +1,13 @@
 # Stato attuale di JD Learn
 
-Il candidato **0.41.13-dev** aggiunge finestre di disponibilità per i materiali extra, interpretate nel fuso del corso e conservate in UTC; finestre valide sono pubblicabili e visibili nell’aula solo entro il periodo configurato. La CI del candidato è da completare; il collaudo Joomla manuale resta aperto.
+**JD Learn 0.41.13-dev è integrato in main** con la PR #86: finestre di disponibilità per i materiali extra, interpretate nel fuso del corso e conservate in UTC; finestre valide sono pubblicabili e visibili nell’aula solo entro il periodo configurato. CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium (run [42466812848](https://github.com/jeckodevelopment/jd_learn/actions/runs/42466812848)). Resta il collaudo Joomla manuale.
 
 
 La versione **0.41.9-dev**, ora integrata in main con la PR #70 (merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f)), aggiunge i controlli separati di ammissione ed erogazione R-03, con anteprima, motivo, conferma e storico. La CI standard è superata nei due ambienti PHP/database e Chromium (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); resta il collaudo manuale Joomla. La dashboard amministrativa della **0.41.8-dev** mette in primo piano la gestione corsi, raggruppa gli strumenti e rende espandibile lo stato dei provider. La PR #68 è integrata in main; la CI standard è superata. Restano aperti i controlli manuali nel backend Joomla.
 
 I campi editoriali del corso e i campi didattici delle lezioni sono disponibili tramite Joomla Fields. La **0.41.7-dev** integra il contesto lezioni, il salvataggio ACL, la copia e revisione dei valori, lo snapshot immutabile alla pubblicazione e la resa nell’aula. CI standard superata; il collaudo Joomla reale resta da completare. Il ripristino completo dei valori tramite Content History resta aperto.
 
-Aggiornato all’**8 novembre 2026**. Candidato **0.41.13-dev**; main **0.41.12-dev**, PR #80 integrata. Ultima CI runtime superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42463087211](https://github.com/jeckodevelopment/jd_learn/actions/runs/42463087211)); CI del candidato aperta. Il collaudo manuale Joomla reale resta aperto. Il prodotto è in sviluppo e non è pronto per la produzione.
+Aggiornato all’**8 novembre 2026**. Main **0.41.13-dev**; PR #86 integrata con squash ([merge c7a17fa](https://github.com/jeckodevelopment/jd_learn/commit/c7a17fa6cb7bd1b0ffabaa0f2139f8eb330264d9)). Ultima CI runtime superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42466812848](https://github.com/jeckodevelopment/jd_learn/actions/runs/42466812848)). Il collaudo manuale Joomla reale resta aperto. Il prodotto è in sviluppo e non è pronto per la produzione.
 
 La PR #65 ha completato questo incremento M01/M02: campi personalizzati delle lezioni con salvataggio nativo, copia/revisione del baseline, snapshot immutabile e resa in aula. Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -22,6 +22,20 @@ La PR #60 è stata unita. Riunisce copertina/docenti con i dati del corso, acces
 ### Incremento0.41.6-dev — continuità dell’aula dopo il ritiro\n\nLa PR #64 è integrata in main. La CI standard finale ha superato entrambi gli ambienti PHP/database e Chromium ([run 42414492267](https://github.com/jeckodevelopment/jd_learn/actions/runs/42414492267)). Gli iscritti autorizzati mantengono l’accesso dopo il ritiro della scheda; le nuove ammissioni continuano a richiedere la disponibilità editoriale. R-03 è parziale: restano da implementare chiusura separata delle nuove ammissioni e sospensione dell’erogazione, con motivo e audit. Il collaudo manuale in Joomla reale resta aperto.\n\n### Incremento0.41.5-dev — ripresa dell’attività
 
 La PR #62 corregge R-05: quando manca un’ultima lezione valida, Riprendi seleziona la prima obbligatoria non completata; se non ne restano, apre la prima lezione per revisione. Integrazione Joomla superata in entrambi gli ambienti. Da provare nel sito Joomla reale.
+
+## Avanzamento stimato verso la prima versione stabile
+
+Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
+
+| Area | Avanzamento |
+|---|---:|
+| Corsi, versioni e programma (M01/M02) | 63% |
+| Fruizione e progressi core (M03/M09) | 55% |
+| Video e materiali essenziali (M04) | 80% |
+| Iscrizione e roster essenziale (M06/M09) | 65% |
+| Usabilità amministrativa e integrazioni Joomla | 80% |
+| Collaudo e preparazione release (M10–M12) | 58% |
+| **Avanzamento complessivo stimato** | **67%** |
 
 ## Funzioni presenti e lavoro residuo
 
