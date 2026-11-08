@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**8 novembre 2026**. Riferimento: **0.41.8-dev in main; PR #68 integrata**. La CI standard è superata nei due ambienti PHP/database e Chromium ([run 42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Riferimento: **0.41.8-dev in main; PR #70 per 0.41.9-dev R-03; CI standard superata nel run 42427891837**. La CI standard è superata nei due ambienti PHP/database e Chromium ([run 42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 

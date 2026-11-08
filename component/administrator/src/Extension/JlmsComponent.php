@@ -36,6 +36,10 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     public function setEnrollmentStateService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService $service): void { $this->enrollmentStateService = $service; }
     public function getEnrollmentStateService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService { return $this->enrollmentStateService; }
 
+    private \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService $courseOperationsService;
+    public function setCourseOperationsService(\Jlms\Component\Jlms\Administrator\Application\CourseOperationsService $service): void { $this->courseOperationsService = $service; }
+    public function getCourseOperationsService(): \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService { return $this->courseOperationsService; }
+
     private \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService $manualEnrollmentService;
     public function setManualEnrollmentService(\Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService $service): void { $this->manualEnrollmentService = $service; }
     public function getManualEnrollmentService(): \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService { return $this->manualEnrollmentService; }

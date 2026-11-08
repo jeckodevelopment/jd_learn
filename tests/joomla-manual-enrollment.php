@@ -80,6 +80,17 @@ $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Manual admissi
 $pub=$component->getPublicationService();$pub->transition($actor,$course,$version,(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult(),$scope()['expected_version_revision'],(int)$pub->transitions($actor,$course)[0]->id);
 $users=[];foreach(['one','failure','race','capacity1','capacity2','automatic','snapshot','http','denied']as$name){$u=new \Joomla\CMS\User\User();$data=['name'=>'CI Manual '.$name,'username'=>'cimanual'.$name,'email'=>'cimanual'.$name.'@example.invalid','password'=>'Ci-only-Manual-Password-2026','password2'=>'Ci-only-Manual-Password-2026','groups'=>$name==='denied'?[2]:[2,$group],'block'=>0,'activation'=>''];if(!$u->bind($data)||!$u->save())throw new \RuntimeException($u->getError());$users[$name]=new \Joomla\CMS\User\User((int)$u->id);}
 $manager=new \Joomla\CMS\User\User((int)$rf['manager']);$asset=new \Joomla\CMS\Table\Asset($db);$asset->loadByName('com_jlms.course.'.$course);$rules=json_decode($asset->rules,true);$rules['jlms.enrollments.manage'][(string)$rf['group']]=true;$asset->rules=json_encode($rules,JSON_THROW_ON_ERROR);$asset->store();
+$operations=$component->getCourseOperationsService();$closed=$operations->editor($manager,$course,'admissions_close');$closedKey=manualKey();
+$operations->apply($manager,$course,'admissions_close',$closed['impact']['revision'],'Fixture closure',$closedKey,$closed['impact']['hash']);
+manualDenied(fn()=>$service->editor($manager,$course,(int)$users['one']->id,'en-GB'),409,'closed admissions reject manual assignments');
+$staleKey=manualKey();manualDenied(fn()=>$operations->apply($manager,$course,'admissions_close',$closed['impact']['revision'],'Stale closure',$staleKey,$closed['impact']['hash']),409,'stale course operation preview is rejected');
+$operationCount=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id='.$course)->loadResult();
+$operations->apply($manager,$course,'admissions_close',$closed['impact']['revision'],'Fixture closure',$closedKey,$closed['impact']['hash']);
+manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id='.$course)->loadResult()===$operationCount,'identical course operation retry is idempotent');
+$opened=$operations->editor($manager,$course,'admissions_open');$brokenOperations=new \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService($db,$component->getEnrollmentRosterService(),static function():void{throw new \RuntimeException('COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED',503);});
+manualDenied(fn()=>$brokenOperations->apply($manager,$course,'admissions_open',$opened['impact']['revision'],'Fixture reopening',manualKey(),$opened['impact']['hash']),503,'course operation audit failure is not successful');
+manualExpect((int)$db->setQuery('SELECT admissions_open FROM #__jlms_courses WHERE id='.$course)->loadResult()===0&&(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id='.$course)->loadResult()===$operationCount,'audit failure rolls back course and history');
+$opened=$operations->editor($manager,$course,'admissions_open');$operations->apply($manager,$course,'admissions_open',$opened['impact']['revision'],'Fixture reopening',manualKey(),$opened['impact']['hash']);
 $groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
 $counts=static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.$course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments')->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects')->loadResult()];
 $before=$counts();$i=$service->editor($manager,$course,(int)$users['one']->id,'en-GB');$edition=$i['impact']['edition_id'];
@@ -96,6 +107,10 @@ $id=$service->apply($manager,...$command);$record=$db->setQuery('SELECT * FROM #
 manualExpect($record->origin==='manual'&&(int)$record->created_by===(int)$manager->id&&(int)$record->user_id===(int)$users['one']->id,'manual creation has operator and learner provenance');
 manualExpect((int)$record->required_total===1&&(int)$record->completed_total===0&&$record->completed_at===null,'new assignment carries no invented progress');
 manualExpect($learning->resumeTarget($users['one'],'en-GB',$id)['lesson_id']===$lesson,'manual learner can enter published classroom');
+$delivery=$operations->editor($manager,$course,'delivery_suspend');$operations->apply($manager,$course,'delivery_suspend',$delivery['impact']['revision'],'Fixture delivery suspension',manualKey(),$delivery['impact']['hash']);
+manualDenied(fn()=>$learning->classroom($users['one'],'en-GB',$id),403,'course delivery suspension blocks the active enrollment');
+$resume=$operations->editor($manager,$course,'delivery_resume');$operations->apply($manager,$course,'delivery_resume',$resume['impact']['revision'],'Fixture delivery resumed',manualKey(),$resume['impact']['hash']);
+manualExpect($learning->resumeTarget($users['one'],'en-GB',$id)['lesson_id']===$lesson,'resuming delivery preserves learner progress and access');
 $after=$counts();manualExpect($service->apply($manager,...$command)===$id&&$counts()===$after,'identical retry returns one enrollment and receipt');
 $changed=$command;$changed[3]='Changed reason';manualDenied(fn()=>$service->apply($manager,...$changed),409,'same UUID different payload rejected');
 manualExpect($service->editor($manager,$course,(int)$users['one']->id,'en-GB')['impact']['blocked']==='COM_JLMS_MANUAL_EXISTS','existing assignment blocks distinct creation');

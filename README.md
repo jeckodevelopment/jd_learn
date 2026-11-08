@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.8-dev.** La PR #68 per la dashboard amministrativa è integrata in main; il prodotto resta in sviluppo e non è pronto per la produzione.
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.9-dev (candidato R-03).** La 0.41.8 è integrata; il candidato #70 aggiunge i comandi separati di disponibilità del corso e la CI standard è superata; il prodotto resta in sviluppo e non è pronto per la produzione.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -24,7 +24,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.4
 - Corsi: [editor](docs/COURSE_EDITOR.md), [programma](docs/AUTHORING.md), [pubblicazione](docs/PUBLICATION.md), [permessi](docs/EDITOR_PERMISSIONS.md), [docenti](docs/TEACHERS.md), [calendario](docs/CALENDAR.md).
 - Studenti: [aula](docs/LEARNING.md), [area personale](docs/LEARNER_DASHBOARD.md), [categorie](docs/CATEGORIES.md), [multilingua](docs/MULTILINGUAL.md).
 - Media: [video](docs/VIDEO.md), [Cloudflare Stream](docs/CLOUDFLARE_STREAM.md), [HTML5 privato](docs/HTML5_VIDEO.md), [materiali](docs/MATERIALS.md).
-- Iscrizioni: [elenco iscritti](docs/ENROLLMENT_ROSTER.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md), [preassegnazione](docs/PREASSIGNMENT.md), [sospensione e riattivazione](docs/ENROLLMENT_STATE.md).
+- Iscrizioni: [elenco iscritti](docs/ENROLLMENT_ROSTER.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md), [preassegnazione](docs/PREASSIGNMENT.md), [stato della singola iscrizione](docs/ENROLLMENT_STATE.md), [disponibilità operativa del corso](docs/COURSE_OPERATIONS.md).
 - Quiz: [composizione](docs/QUIZ_AUTHORING.md), [tentativi](docs/QUIZ_RUNTIME.md), [tempi individuali](docs/QUIZ_EXTRA_TIME.md), [annullamenti](docs/QUIZ_CANCELLATION.md), [proroghe](docs/QUIZ_DEADLINE_EXTENSION.md).
 - Personalizzazioni: [contratto CSS e override](docs/FRONTEND_CSS.md).
 
@@ -38,7 +38,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **41 tabelle / 58 FK**. Il pacchetto contiene 7 estensioni: componente, libreria, quattro provider video e plugin Scheduler.
+Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto contiene 7 estensioni: componente, libreria, quattro provider video e plugin Scheduler.
 
 ```sh
 python3 tools/build.py
@@ -46,13 +46,13 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-La build genera `dist/pkg_jlms-0.41.8-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
+La build genera `dist/pkg_jlms-0.41.9-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
 I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
 
 
 
-La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della 0.41.7 è superata (PR #65, run 42420998171). La 0.41.8 aggiorna la dashboard amministrativa; la verifica visiva e dei ruoli in Joomla è ancora da svolgere. M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
+La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della 0.41.7 è superata (PR #65, run 42420998171). La 0.41.8 aggiorna la dashboard amministrativa. Il candidato 0.41.9 implementa i controlli R-03 per ammissioni ed erogazione; CI standard della PR #70 superata (run 42427891837); collaudo manuale Joomla ancora aperto. M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
 
-Ultimo pacchetto verificato: **0.41.8-dev**, SHA-256 `5a1e7e236dc8171bff8fe318374fc47c27d10605740fa83ed09f4fead0861c92`; build riproducibile da main dopo la PR #68. La CI standard è superata (run [42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)). Restano aperti il controllo manuale nel backend Joomla e gli altri requisiti M01 indicati nello stato attuale.
+Ultimo pacchetto rilasciato e verificato su main: **0.41.8-dev** (dettagli e hash nello storico prove). Il candidato 0.41.9-dev ha superato i quattro job standard della PR #70 (run 42427891837); la verifica manuale Joomla resta aperta. Restano aperti il controllo manuale nel backend Joomla e gli altri requisiti M01 indicati nello stato attuale.

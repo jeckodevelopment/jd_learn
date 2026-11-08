@@ -29,7 +29,7 @@ final class CatalogService
         $actor->clearAccessRights();
         $levels = $actor->block ? [0] : array_map('intval', $actor->getAuthorisedViewLevels());
         $levels = $levels ?: [0];
-        $q = $this->db->createQuery()->select('c.id, c.title, c.summary, c.catid, c.content_access, c.language, c.current_version_id, c.enrollment_mode, cat.title AS category_title')
+        $q = $this->db->createQuery()->select('c.id, c.title, c.summary, c.catid, c.content_access, c.language, c.current_version_id, c.enrollment_mode, c.admissions_open, c.delivery_enabled, cat.title AS category_title')
             ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.current_version_id AND v.course_id = c.id')
             ->where('v.status = :status')->where('cat.extension = :extension')

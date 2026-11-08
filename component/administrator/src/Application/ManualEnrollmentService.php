@@ -16,7 +16,7 @@ final class ManualEnrollmentService
     /** Administrative assignment does not grant viewing rights. Editorial availability is still mandatory. */
     private function assignmentCourse(int $courseId, string $language): object
     {
-        $q = $this->db->createQuery()->select('c.id, c.title, c.catid, c.language, c.content_access, c.current_version_id, c.enrollment_mode')
+        $q = $this->db->createQuery()->select('c.id, c.title, c.catid, c.language, c.content_access, c.current_version_id, c.enrollment_mode, c.admissions_open')
             ->from('#__jlms_courses AS c')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.current_version_id AND v.course_id = c.id')
             ->innerJoin('#__categories AS cat ON cat.id = c.catid')
@@ -71,6 +71,7 @@ final class ManualEnrollmentService
         }
         // Approval is a distinct workflow; this increment does not bypass pending requests.
         if (!in_array($course->enrollment_mode, ['auto', 'explicit'], true)) { throw new \RuntimeException('COM_JLMS_MANUAL_MODE_PENDING', 409); }
+        if (!(int) $course->admissions_open) { throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409); }
         $versionId = (int) $course->current_version_id;
         $q = $this->db->createQuery()->select('id, version_no, revision, rules_json')->from('#__jlms_course_versions')
             ->where('id = :version')->where('course_id = :course')->where("status = 'published'")

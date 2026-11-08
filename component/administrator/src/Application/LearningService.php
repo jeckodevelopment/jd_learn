@@ -75,6 +75,7 @@ final class LearningService
         if (!in_array((int) $course->content_access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
+        if (!(int) $course->delivery_enabled) { throw new \RuntimeException('COM_JLMS_COURSE_DELIVERY_SUSPENDED', 403); }
         return $course;
     }
 
@@ -202,6 +203,7 @@ final class LearningService
             if ($id) {
                 $this->authorisedEnrollment($actor, $language, $id, true);
             } else {
+                if (!(int) $current->admissions_open) { throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409); }
                 if ($edition->capacity !== null) {
                     $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')->where('edition_id = :edition')
                         ->where("status <> 'cancelled'")->bind(':edition', $editionId, ParameterType::INTEGER);

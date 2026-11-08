@@ -1,3 +1,9 @@
+## 0.41.9-dev — controlli separati di ammissione ed erogazione
+
+- Aggiunge i comandi motivati per chiudere/aprire nuove ammissioni e sospendere/riprendere l’erogazione, con anteprima di iscritti e quiz aperti, conferma, conflitto su revisioni obsolete e storico transazionale.
+- Blocca nuove iscrizioni automatiche/manuali quando le ammissioni sono chiuse; la sospensione nega le azioni didattiche protette senza modificare iscrizioni, risposte o progressi.
+- Introduce migrazione 0.41.9.0, comandi dal roster, traduzioni e guida operativa. CI standard della PR #70 superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run 42427891837); collaudo manuale Joomla ancora aperto.
+
 # Changelog
 
 ## 0.41.8-dev — ingresso amministrativo più chiaro
