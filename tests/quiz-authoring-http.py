@@ -48,9 +48,12 @@ try:
  page=Page(b.decode());form=next(x for x in page.forms if 'username'in x['fields']and'passwd'in x['fields'])
  request(admin,urljoin(urljoin(u,page.base or ''),form['action']),fields=form['fields']|{'username':'cioperator','passwd':'Ci-only-Long-Password-2026'})
  bank='/administrator/index.php?option=com_jlms&view=questionbank'
- _,b,_=request(admin,bank);expect('id="jlms-question-form"'in b.decode()and'PRIVATE_QUIZ_PROMPT_V2'in b.decode(),'native bank list and question form rendered')
+ _,b,_=request(admin,bank);expect('id="jlms-question-list"'in b.decode()and'PRIVATE_QUIZ_PROMPT_V2'in b.decode()and'id="jlms-question-form"'not in b.decode(),'native question list is separate from its editor')
  request(admin,'/administrator/index.php?option=com_jlms&task=questionbank.save',expected=405)
- u,form=form_page(bank,'jlms-question-form');fields={k:v for k,v in form['fields'].items()if'options'not in k}
+ new_question='/administrator/index.php?option=com_jlms&view=question'
+ u,form=form_page(new_question,'adminForm');fields={k:v for k,v in form['fields'].items()if'options'not in k}
+ request(admin,'/administrator/index.php?option=com_jlms&task=questionbank.duplicate',expected=405)
+ request(admin,'/administrator/index.php?option=com_jlms&task=questionbank.delete',expected=405)
  row_keys=sorted({m.group(1)for key in form['fields']if(m:=re.fullmatch(r'jform\[options\]\[([^\]]+)\]\[option_id\]',key))and not m.group(1).endswith('X')})
  expect(len(row_keys)>=2,'native repeatable form renders at least two real option rows')
  checkbox_name=f'jform[options][{row_keys[0]}][correct]';checkbox_value=form['fields'].get(checkbox_name)
@@ -64,7 +67,7 @@ try:
  _,invalid_form,_=request(admin,urljoin(u,form['action']),fields=fields|{'jform[prompt]':''},expected=422)
  expect(b'The form contains invalid fields' in invalid_form and b'Question' in invalid_form,'native form validation identifies its invalid field')
  result,b,_=request(admin,urljoin(u,form['action']),fields=fields);expect('HTTP_PRIVATE_QUESTION'in b.decode()and'HTTP_PRIVATE_ANSWER_KEY'in b.decode(),'native subform saves an authorised private answer definition')
- edit_form=next(x for x in Page(b.decode()).forms if x['id']=='jlms-question-form');question_id=int(edit_form['fields']['jform[id]']);expect(question_id>f['question_id'],'HTTP create received a distinct native ID')
+ edit_form=next(x for x in Page(b.decode()).forms if x['id']=='adminForm');question_id=int(edit_form['fields']['jform[id]']);expect(question_id>f['question_id'],'HTTP create received a distinct native ID')
  unchecked_name=f'jform[options][{row_keys[1]}][correct]'
  blank_option=fields|{'jform[id]':'0','jform[kind]':'single','jform[prompt]':'<p>HTTP_EMPTY_CHECKBOX_QUESTION</p>',unchecked_name:''}
  _,b,_=request(admin,urljoin(u,form['action']),fields=blank_option);expect('HTTP_EMPTY_CHECKBOX_QUESTION'in b.decode(),'native single-choice form accepts Joomla empty unchecked checkbox value')

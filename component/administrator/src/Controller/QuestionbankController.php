@@ -14,7 +14,7 @@ final class QuestionbankController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['save','checkout','checkin'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!in_array(strtolower($task), ['save','checkout','checkin','duplicate','delete'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
         return parent::execute($task);
     }
     private function perform(string $action): void
@@ -24,7 +24,7 @@ final class QuestionbankController extends BaseController
         $formValidationMessage = null;
         try {
             $data = $this->input->post->get('jform', [], 'array');
-            $model = $this->getModel('Questionbank', 'Administrator', ['ignore_request' => true]);
+            $model = $this->getModel('Question', 'Administrator', ['ignore_request' => true]);
             $service = $this->app->bootComponent('com_jlms')->getQuestionBankService();
             if ($action === 'save') {
                 $form = $model->getForm(); $data = $form->filter($data);
@@ -42,7 +42,8 @@ final class QuestionbankController extends BaseController
                 $id = $service->save($this->app->getIdentity(), $data);
             } else { $id = CurriculumService::id($data['id'] ?? null); $service->lock($this->app->getIdentity(), $id, $action === 'checkin'); }
             $this->setMessage(Text::_('COM_JLMS_QUESTION_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=questionbank&id=' . $id, false));
+            $target='index.php?option=com_jlms&view=question&id='.$id;
+            $this->setRedirect(Route::link('administrator', $target, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage(); $code = (int) $error->getCode();
             if ($formValidationMessage !== null && $code === 422) { throw new \RuntimeException($formValidationMessage, 422); }
@@ -55,4 +56,30 @@ final class QuestionbankController extends BaseController
     public function save(): void { $this->perform('save'); }
     public function checkout(): void { $this->perform('checkout'); }
     public function checkin(): void { $this->perform('checkin'); }
+
+    private function mutate(string $action): void
+    {
+        if (strtoupper($this->input->getMethod())!=='POST') { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'),405); }
+        if (!$this->checkToken('post',false)) { throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'),403); }
+        try {
+            $id=CurriculumService::id($this->input->post->get('id',null,'raw'));
+            $service=$this->app->bootComponent('com_jlms')->getQuestionBankService();
+            if ($action==='duplicate') {
+                $copy=$service->duplicate($this->app->getIdentity(),$id);
+                $this->setMessage(Text::_('COM_JLMS_QUESTION_DUPLICATED'));
+                $this->setRedirect(Route::link('administrator','index.php?option=com_jlms&view=question&id='.$copy,false));
+            } else {
+                $service->delete($this->app->getIdentity(),$id);
+                $this->setMessage(Text::_('COM_JLMS_QUESTION_DELETED'));
+                $this->setRedirect(Route::link('administrator','index.php?option=com_jlms&view=questionbank',false));
+            }
+        } catch (\Throwable $error) {
+            $key=$error->getMessage();$code=(int)$error->getCode();
+            if ($error instanceof \InvalidArgumentException) { $key='COM_JLMS_INVALID_INPUT';$code=400; }
+            if (in_array($code,[400,401,403,404,409,422],true)&&preg_match('/\ACOM_JLMS_[A-Z_]+\z/D',$key)) { throw new \RuntimeException(Text::_($key),$code); }
+            throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'),500);
+        }
+    }
+    public function duplicate(): void { $this->mutate('duplicate'); }
+    public function delete(): void { $this->mutate('delete'); }
 }

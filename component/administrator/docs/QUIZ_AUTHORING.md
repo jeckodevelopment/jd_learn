@@ -54,7 +54,7 @@ La rimozione di un quiz in bozza è un'azione dedicata, con token, conferma, per
 
 Viste backend `questionbank` e `quiz`, FormModel, form XML e subform Joomla, QuestionTable con asset e checkout/checkin core; servizi `QuestionBankService` e `QuizAuthoringService` registrati nel container. Non sono endpoint Web Services API né viste studenti.
 
-Task amministrativi POST: `questionbank.save`, `questionbank.checkout`, `questionbank.checkin`, `quiz.save`, `quiz.delete`. Tutti richiedono sessione Joomla, token CSRF e controlli server; task generici non previsti sono rifiutati. I form sono allowlistati e i servizi non accettano chiavi di correzione arbitrarie nella composizione di un quiz: la revisione proviene dalla banca autorizzata.
+Task amministrativi POST: `questionbank.save`, `questionbank.checkout`, `questionbank.checkin`, `questionbank.duplicate`, `questionbank.delete`, `quiz.save`, `quiz.delete`. La lista usa Search Tools Joomla e il form domanda è una vista distinta; duplicare crea una nuova bozza indipendente, cancellare richiede conferma e viene bloccato se una revisione compare in quiz o tentativi. Tutti richiedono sessione Joomla, token CSRF e controlli server; task generici non previsti sono rifiutati. I form sono allowlistati e i servizi non accettano chiavi di correzione arbitrarie nella composizione di un quiz: la revisione proviene dalla banca autorizzata.
 
 Nessuna domanda o spiegazione viene aggiunta al catalogo pubblico o al GET dello studente. La pubblicazione dei corsi con quiz resta rifiutata finché non saranno presenti avvio/ripresa/salvataggio/consegna/timer e valutazione del tentativo. Configurazioni di timer/tentativi/feedback non sono presentate come già applicate agli studenti.
 

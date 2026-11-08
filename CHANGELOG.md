@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.27-dev — elenco e azioni standard per la banca domande
+
+- Separa l’elenco domande dal form di creazione/modifica e adotta Search Tools Joomla con ricerca, filtri, ordinamento e paginazione.
+- Aggiunge duplicazione come nuova bozza indipendente e cancellazione CSRF con conferma, ACL e blocco per revisioni usate da quiz/tentativi.
+- Aggiorna il testbook AC-131; nessun nuovo comportamento didattico quiz.
+
 ## 0.41.26-dev — elenco docenti secondo convenzioni Joomla
 
 - Rifà l’elenco docenti con Search Tools, ricerca, filtri stato/lingua, ordinamento, paginazione e collegamento al form separato.

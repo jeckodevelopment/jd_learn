@@ -1920,5 +1920,21 @@
     "ci_run_id": 42439956364,
     "artifact_name": "JD-Learn-0.41.10-dev",
     "artifact_id": 13601830152
+  },
+  "user_reported_manual_results": [
+    {
+      "requirement": "AC-132",
+      "area": "Dashboard amministrativa e relativo accesso menu",
+      "status": "passed",
+      "reported_at": "2026-11-08",
+      "report": "L’utente ha comunicato in chat il superamento del collaudo manuale della dashboard.",
+      "environment_details": "Non forniti"
+    }
+  ],
+  "next_candidate": {
+    "version": "0.41.27-dev",
+    "scope": "AC-131: separazione della lista banca domande dal form; Search Tools, duplicazione come nuova bozza e cancellazione protetta con CSRF, ACL e controlli sulle referenze a quiz/tentativi.",
+    "status": "Implementazione candidata; CI e collaudo manuale Joomla pendenti.",
+    "manual_joomla_acceptance": "pending"
   }
 }

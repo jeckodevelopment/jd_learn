@@ -57,3 +57,8 @@ Correzione0.40.1 verificata nella CI standard42397626415: menu filtrato e naviga
 ## Incremento 0.41.9-dev integrato — disponibilità operativa R-03
 
 Dal roster si apre una schermata operativa del corso con quattro comandi indipendenti: chiusura/apertura ammissioni e sospensione/ripresa erogazione. L’anteprima mostra iscritti e tentativi quiz aperti; motivo, conferma e storico sono richiesti. La guida installabile è [COURSE_OPERATIONS.md](../component/administrator/docs/COURSE_OPERATIONS.md). La PR #70 è integrata (merge 70f6ed7) e la CI standard è superata (run 42428496835); il collaudo manuale Joomla resta aperto. Il menu principale non cambia.
+
+
+### AC-131 — elenco e form separati per la banca domande
+
+La candidata 0.41.27-dev usa un elenco con Search Tools Joomla e un form distinto. Aggiunge duplicazione come bozza autonoma e cancellazione CSRF protetta; ogni revisione collegata a un quiz o a un tentativo impedisce l’eliminazione. Le altre funzioni quiz restano fuori perimetro. Vedere il [testbook AC-131](QA_TESTBOOK.md#ac-131--elenco-separato-per-la-banca-domande-candidata-04127-dev-collaudo-joomla-pendente).

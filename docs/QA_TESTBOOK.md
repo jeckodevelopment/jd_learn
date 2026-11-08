@@ -61,7 +61,7 @@ Riferimenti: [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/10
 9. Verificare l'introduzione in italiano e inglese. Atteso: descrive gli strumenti amministrativi e non mostra «Storico didattico e disponibilità attuale dell’aula sono mostrati separatamente.»
 10. Verificare nel sottomenu laterale di JD Learn che **Dashboard** sia la prima voce, sopra **Corsi**; fare clic e controllare che apra la dashboard. Ripetere in italiano e inglese e dopo l'aggiornamento da 0.41.24-dev.
 
-**Stato:** PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), [#110](https://github.com/jeckodevelopment/jd_learn/pull/110) e [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) integrate. Tutti i quattro job CI standard sono superati nel [run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552). Il pacchetto [JD-Learn-0.41.25-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552/artifacts/13633183064) ha SHA-256 interno `bd0a7796d3f260af9ea2e2d8079265623d987db4fa485716bd1c43f966929b03` (501472 byte), disponibile fino al 22 novembre 2026. I passi 1–10 restano da eseguire e registrare su Joomla prima di accettare AC-132.
+**Stato:** PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), [#110](https://github.com/jeckodevelopment/jd_learn/pull/110) e [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) integrate; tutti i quattro job CI standard superati nel [run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552). L’utente ha comunicato il superamento del collaudo manuale Dashboard in data 8 novembre 2026; non sono stati forniti dettagli aggiuntivi su versione Joomla, browser o account.
 
 ### Issue #99 — accesso centralizzato ai campi aggiuntivi
 
@@ -98,17 +98,17 @@ Riferimenti: AUT-01, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-1
 
 **Stato:** PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116) integrata; tutti i quattro job della [CI standard 42524671164](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164) superati. Il pacchetto [0.41.26-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771) ha SHA-256 interno `869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5` (503665 byte), disponibile fino al 22 novembre 2026. La lista usa Search Tools e toolbar standard Joomla; il form resta separato e accessibile dal titolo/toolbar. La categoria docente non è esposta. Verificare ACL e ricerca sul sito; il cambio stato del profilo resta disponibile nel form secondo i permessi, senza introdurre azioni massive.
 
-### AC-131 — elenco separato per la banca domande (in attesa di implementazione)
+### AC-131 — elenco separato per la banca domande (candidata 0.41.27-dev; collaudo Joomla pendente)
 
 Riferimenti: QUI-02, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native). Questa prova riguarda l’amministrazione delle domande esistenti, non nuovi comportamenti didattici quiz.
 
 1. Aprire Banca domande: deve mostrare l’elenco senza il form di creazione incorporato; usare il comando standard per aprire separatamente il form di nuova domanda.
 2. Tornare all’elenco e aprire una domanda esistente in modifica; annullare e salvare una modifica controllando stato e feedback.
 3. Duplicare una domanda: deve essere creata una nuova definizione indipendente, lasciando invariata la sorgente e le revisioni/tentativi già esistenti.
-4. Eliminare una domanda senza dipendenze: richiedere conferma e verificare l’esito. Ripetere con domanda usata da quiz/revisioni o tentativi: l’azione deve essere bloccata o gestita secondo i vincoli esistenti, senza cancellazioni parziali.
-5. Verificare ricerca/filtri, ordinamento, paginazione, toolbar, CSRF e diniego con ruolo non autorizzato.
+4. Eliminare una domanda senza dipendenze: richiedere conferma e verificare che domanda, revisioni e asset siano eliminati insieme. Ripetere con domanda usata da quiz o tentativi: il comando è disabilitato e la richiesta diretta deve essere bloccata, senza cancellazioni parziali.
+5. Verificare ricerca per testo/ID, filtri categoria/stato/lingua, ordinamento, paginazione, toolbar, CSRF e diniego con ruolo non autorizzato. Ripetere in italiano/inglese, da tastiera e viewport mobile.
 
-**Stato:** da implementare e collaudare. Nessun nuovo tipo di domanda, regola di valutazione o flusso studente è incluso.
+**Stato:** la candidata 0.41.27-dev separa elenco e form, usa Search Tools Joomla e prevede azioni crea/duplica/elimina. Le duplicazioni creano una bozza indipendente; l’eliminazione è permessa solo se nessuna revisione della domanda è usata da quiz o tentativi. Nessun nuovo tipo di domanda, regola di valutazione o flusso studente è incluso. Collaudo manuale ancora pendente.
 
 ### PR #94 — ricerca roster (deviazione di perimetro, non gate di accettazione)
 

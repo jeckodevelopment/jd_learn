@@ -8,9 +8,9 @@
 
 **Tracciabilità:** chiarisce CORE-20, UI-02 e SCR-13; scenario **AC-132**. Il percorso resta in rilascio 1 come navigazione delle funzioni correnti. La valutazione complessiva resta distinta dall'accettazione manuale e dal completamento degli altri requisiti.
 
-**Stato:** implementata dalla PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108) e corretta dalla PR [#110](https://github.com/jeckodevelopment/jd_learn/pull/110), integrata in `2f99f3285b8be4a1017a86d838b4789d9efe5b30`; CI standard superata nel run [42518292971](https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971). Il ricollaudo manuale Joomla AC-132 resta aperto e va registrato nel [testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).
+**Stato:** implementata dalla PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108) e corretta dalla PR [#110](https://github.com/jeckodevelopment/jd_learn/pull/110), integrata in `2f99f3285b8be4a1017a86d838b4789d9efe5b30`; CI standard superata nel run [42518292971](https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971). L’utente ha confermato il superamento del collaudo manuale Dashboard AC-132 l’8 novembre 2026; la registrazione è nel [testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).
 
-La richiesta successiva di aggiungere **Dashboard** come prima voce figlia della sidebar è stata integrata dalla PR [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) in 0.41.25-dev; CI standard superata nel [run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552). È un accesso alla stessa vista già compresa in AC-132; collaudo manuale ancora pendente.
+La richiesta successiva di aggiungere **Dashboard** come prima voce figlia della sidebar è stata integrata dalla PR [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) in 0.41.25-dev; CI standard superata nel [run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552). È un accesso alla stessa vista già compresa in AC-132; l’utente ha confermato il superamento del collaudo manuale Dashboard l’8 novembre 2026.
 
 ## RF-2026-11-08 — lifecycle Privacy e provider video della prima release
 
@@ -99,3 +99,8 @@ L'issue [#99](https://github.com/jeckodevelopment/jd_learn/issues/99) precisa la
 ### Avanzamento AC-130 — vista amministrativa docenti
 
 La PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116), integrata in 0.41.26-dev, riorganizza l’elenco docenti secondo il pattern Search Tools Joomla: ricerca per titolo/ID, filtri stato e lingua, ordinamento, paginazione, colonne di stato/metadati e collegamento al form distinto. Non mostra categorie e non modifica dati, associazioni o regole ACL. Il collaudo manuale aggiornato è nel [testbook AC-130](QA_TESTBOOK.md#ac-130--vista-standard-per-i-docenti-candidata-04126-dev-collaudo-joomla-pendente).
+
+
+### Avanzamento AC-131 — elenco amministrativo banca domande
+
+La candidata 0.41.27-dev realizza la riorganizzazione richiesta: elenco con Search Tools e form separato, azioni di creazione/duplicazione/eliminazione, CSRF e ACL. La duplicazione crea una nuova bozza con revisioni indipendenti; l’eliminazione rimuove solo domande non referenziate da quiz o tentativi, preservando le evidenze già usate. Il testbook AC-131 contiene i percorsi manuali Joomla. Non sono aggiunte funzioni didattiche.
