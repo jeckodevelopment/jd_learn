@@ -6,6 +6,8 @@
 - Carica il dominio `plg_privacy_jdlearn` dai percorsi lingua amministrativo e plugin prima degli eventi Privacy; conserva le scelte di attivazione sugli upgrade.
 - Aggiunge regressioni CI che controllano l'installazione senza forzare il plugin attivo nel fixture e verificano le quattro stringhe tradotte.
 - Il test ha rilevato che il tentativo di attivazione a livello package della 0.41.20 non veniva applicato; corregge quel difetto, senza aggiungere capacità Privacy.
+- PR [#102](https://github.com/jeckodevelopment/jd_learn/pull/102) integrata nel merge `0a05f004823156abc750981a11db6598a8cf9972`; CI standard superata ([run 42503477910](https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910)).
+- Pacchetto CI [JD-Learn-0.41.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474): wrapper ZIP da estrarre una volta; SHA-256 del pacchetto interno `40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7`, scadenza 22 novembre 2026. Collaudo Joomla manuale ancora aperto.
 
 ## 0.41.20-dev — integrazione Privacy e primo tentativo di correzione
 

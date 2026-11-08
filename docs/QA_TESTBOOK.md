@@ -29,11 +29,11 @@ Riferimenti: PRI-02, CORE-08; correzione del comportamento già incluso, senza i
 5. Con un account di prova soggetto a un impedimento di rimozione (documento attestato, job o notifica), richiedere la rimozione privacy. Atteso: il motivo è localizzato nella lingua backend e nessun dato cambia prima della risoluzione dell'impedimento.
 6. Con dati privacy di prova, verificare che export e rimozione continuino a mostrare i domini tradotti e a rispettare i comportamenti di conservazione descritti nella sezione PR #92.
 
-**Stato:** PR #100 integrata in main 0.41.20-dev; CI originale superata ma non copriva lo stato reale di attivazione né traduzione. I test PR #102 hanno trovato che il suo hook package non attivava il plugin. Il run che poi ha confermato l'attivazione è stato interrotto perché il fixture CLI non aveva inizializzato una lingua Joomla, quindi non ha verificato le stringhe. La candidata .21 usa il postflight del manifest plugin, carica `plg_privacy_jdlearn` dai percorsi espliciti e inizializza en-GB nel fixture. **Esito sito Joomla:** ricollaudo ancora da eseguire, incluse entrambe le lingue e l'upgrade con plugin intenzionalmente disabilitato.
+**Stato:** PR #100 integrata in main 0.41.20-dev; la CI originale non copriva lo stato reale di attivazione né la traduzione. Le regressioni della PR #102 hanno identificato l'hook package inefficace e poi il caricamento lingua non risolto. PR #102 ha spostato l'attivazione nel postflight del manifest plugin e carica `plg_privacy_jdlearn` nella lingua usata da Joomla. CI completa superata sulla revisione integrata in 0.41.21-dev (run [42503477910](https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910)). **Esito sito Joomla:** ricollaudo ancora da eseguire, incluse entrambe le lingue e l'upgrade con plugin intenzionalmente disabilitato.
 
 ### PR #102 — regressione installazione e traduzioni Privacy
 
-PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattivava il plugin nel fixture e lo forzava nuovamente attivo subito dopo l'installazione, nascondendo il difetto. La build candidata **0.41.21-dev** sposta l'attivazione nel postflight del plugin e carica il dominio lingua esplicito; gli upgrade mantengono lo stato esistente.
+PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattivava il plugin nel fixture e lo forzava nuovamente attivo subito dopo l'installazione, nascondendo il difetto. La build **0.41.21-dev** sposta l'attivazione nel postflight del plugin e carica il dominio lingua esplicito; gli upgrade mantengono lo stato esistente. PR [#102](https://github.com/jeckodevelopment/jd_learn/pull/102) è stata integrata in `0a05f004823156abc750981a11db6598a8cf9972`; CI standard superata.
 
 1. Su un Joomla 6 usa e getta pulito installare 0.41.21-dev. Atteso: **JD Learn - Privacy** è attivo; YouTube, Vimeo, Cloudflare Stream e HTML5 non vengono attivati automaticamente.
 2. Aprire **Utenti → Privacy → Funzionalità** in italiano e inglese. Atteso: titolo e quattro descrizioni tradotti, nessuna chiave tecnica.
@@ -41,7 +41,7 @@ PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattiv
 4. Con utente di prova bloccato da documento attestato/job/notifica, verificare motivo localizzato e nessuna modifica ai dati finché l'impedimento resta.
 5. Ripetere export e rimozione con dati di prova e verificare domini, minimizzazione e conservazione descritti in PR #92.
 
-**Stato:** la CI della revisione precedente ha confermato l'attivazione ma si è fermata prima dell'assert traduzioni perché il fixture non aveva una lingua inizializzata. Il fixture ora carica en-GB; candidata aggiornata per esplicitare dominio/percorso lingua. CI completa e collaudo manuale Joomla ancora da registrare.
+**Stato:** i quattro job standard della CI sono superati sul commit PR `8b962c62f3af95100c1da7b1794297df66452d78`, incluso il test install-package senza preattivazione e lo smoke test delle stringhe. Il pacchetto installabile è [artefatto CI 13626378474](https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474), SHA-256 interno `40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7`. Collaudo manuale Joomla ancora da registrare.
 
 ### AC-129 — accesso ai campi aggiuntivi di corsi e lezioni (in attesa di implementazione)
 
