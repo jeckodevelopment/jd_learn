@@ -22,14 +22,26 @@ Prima del test annotare: data, versione e checksum del pacchetto, versione/patch
 
 Riferimenti: PRI-02, CORE-08; correzione del comportamento già incluso, senza introdurre nuove capacità privacy. Usare due installazioni Joomla usa e getta: una pulita e una con JD Learn già installato e `JD Learn - Privacy` intenzionalmente disabilitato.
 
-1. Installazione pulita: installare il pacchetto completo 0.41.20-dev e aprire **Sistema → Gestisci → Plugin**. Atteso: **JD Learn - Privacy** risulta abilitato; i quattro plugin video conservano la loro procedura di configurazione e stato previsto.
+1. Installazione pulita: installare il pacchetto completo 0.41.21-dev e aprire **Sistema → Gestisci → Plugin**. Atteso: **JD Learn - Privacy** risulta abilitato; i quattro plugin video conservano la loro procedura di configurazione e stato previsto.
 2. Aprire **Utenti → Privacy → Funzionalità** con lingua amministrativa italiana. Atteso: titolo **JD Learn** e descrizioni leggibili per iscrizioni/richieste, progressi, tentativi/risposte e attestati; nessuna chiave `PLG_PRIVACY_...` visibile.
 3. Cambiare la lingua amministrativa in inglese e riaprire la pagina. Atteso: gli stessi quattro elementi sono tradotti in inglese, senza chiavi grezze.
 4. Sul sito già installato, disabilitare intenzionalmente il plugin e aggiornare il pacchetto. Atteso: il plugin resta disabilitato; gli aggiornamenti non sovrascrivono la scelta dell'amministratore. Riabilitarlo per i controlli successivi.
 5. Con un account di prova soggetto a un impedimento di rimozione (documento attestato, job o notifica), richiedere la rimozione privacy. Atteso: il motivo è localizzato nella lingua backend e nessun dato cambia prima della risoluzione dell'impedimento.
 6. Con dati privacy di prova, verificare che export e rimozione continuino a mostrare i domini tradotti e a rispettare i comportamenti di conservazione descritti nella sezione PR #92.
 
-**Stato:** PR #100 integrata in main 0.41.20-dev; CI superata. **Esito sito Joomla:** ricollaudo della correzione ancora da eseguire. La prova dell'utente sulla 0.41.19 ha rilevato plugin disabilitato e stringhe non tradotte, quindi non vale come accettazione della correzione.
+**Stato:** PR #100 integrata in main 0.41.20-dev; CI originale superata ma non copriva lo stato reale di attivazione né traduzione. I test PR #102 hanno trovato che il suo hook package non attivava il plugin. Il run che poi ha confermato l'attivazione è stato interrotto perché il fixture CLI non aveva inizializzato una lingua Joomla, quindi non ha verificato le stringhe. La candidata .21 usa il postflight del manifest plugin, carica `plg_privacy_jdlearn` dai percorsi espliciti e inizializza en-GB nel fixture. **Esito sito Joomla:** ricollaudo ancora da eseguire, incluse entrambe le lingue e l'upgrade con plugin intenzionalmente disabilitato.
+
+### PR #102 — regressione installazione e traduzioni Privacy
+
+PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattivava il plugin nel fixture e lo forzava nuovamente attivo subito dopo l'installazione, nascondendo il difetto. La build candidata **0.41.21-dev** sposta l'attivazione nel postflight del plugin e carica il dominio lingua esplicito; gli upgrade mantengono lo stato esistente.
+
+1. Su un Joomla 6 usa e getta pulito installare 0.41.21-dev. Atteso: **JD Learn - Privacy** è attivo; YouTube, Vimeo, Cloudflare Stream e HTML5 non vengono attivati automaticamente.
+2. Aprire **Utenti → Privacy → Funzionalità** in italiano e inglese. Atteso: titolo e quattro descrizioni tradotti, nessuna chiave tecnica.
+3. Su un'installazione esistente disattivare manualmente JD Learn - Privacy e aggiornare a 0.41.21-dev. Atteso: rimane disattivato; l'upgrade rispetta la scelta dell'amministratore.
+4. Con utente di prova bloccato da documento attestato/job/notifica, verificare motivo localizzato e nessuna modifica ai dati finché l'impedimento resta.
+5. Ripetere export e rimozione con dati di prova e verificare domini, minimizzazione e conservazione descritti in PR #92.
+
+**Stato:** la CI della revisione precedente ha confermato l'attivazione ma si è fermata prima dell'assert traduzioni perché il fixture non aveva una lingua inizializzata. Il fixture ora carica en-GB; candidata aggiornata per esplicitare dominio/percorso lingua. CI completa e collaudo manuale Joomla ancora da registrare.
 
 ### AC-129 — accesso ai campi aggiuntivi di corsi e lezioni (in attesa di implementazione)
 

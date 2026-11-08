@@ -8,6 +8,7 @@ use Joomla\CMS\Event\Privacy\CanRemoveDataEvent;
 use Joomla\CMS\Event\Privacy\CollectCapabilitiesEvent;
 use Joomla\CMS\Event\Privacy\ExportRequestEvent;
 use Joomla\CMS\Event\Privacy\RemoveDataEvent;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Component\Privacy\Administrator\Plugin\PrivacyPlugin;
 use Joomla\Component\Privacy\Administrator\Removal\Status;
@@ -29,7 +30,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyCollectAdminCapabilities(CollectCapabilitiesEvent $event): void
     {
-        $this->loadLanguage();
+        $this->loadPrivacyLanguage();
 
         $event->addResult([
             Text::_('PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE') => [
@@ -43,7 +44,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyExportRequest(ExportRequestEvent $event): void
     {
-        $this->loadLanguage();
+        $this->loadPrivacyLanguage();
 
         $user = $event->getUser();
 
@@ -154,7 +155,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyCanRemoveData(CanRemoveDataEvent $event): void
     {
-        $this->loadLanguage();
+        $this->loadPrivacyLanguage();
 
         $user = $event->getUser();
         $status = new Status();
@@ -269,6 +270,20 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         } catch (\Throwable $error) {
             $db->transactionRollback();
             throw $error;
+        }
+    }
+
+    private function loadPrivacyLanguage(): void
+    {
+        // Text::_() resolves through Factory::getLanguage(); load into that same instance.
+        $language = Factory::getLanguage();
+
+        if (!$language) {
+            return;
+        }
+
+        if (!$language->load('plg_privacy_jdlearn', JPATH_ADMINISTRATOR)) {
+            $language->load('plg_privacy_jdlearn', JPATH_PLUGINS . '/privacy/jdlearn');
         }
     }
 }

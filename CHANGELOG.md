@@ -1,12 +1,20 @@
 # Changelog
 
-## 0.41.20-dev — integrazione Privacy attiva e tradotta
+## 0.41.21-dev — attivazione Privacy e dominio lingua esplicito
 
-- La prima installazione del pacchetto abilita il plugin `plg_privacy_jdlearn`; gli aggiornamenti rispettano lo stato scelto dall'amministratore.
-- Il plugin carica esplicitamente le proprie stringhe prima di esporre capacità, domini export e impedimenti alla rimozione.
+- Sposta l'attivazione automatica nel postflight del plugin `plg_privacy_jdlearn`, quando la riga plugin è già stata creata dal suo installer nativo.
+- Carica il dominio `plg_privacy_jdlearn` dai percorsi lingua amministrativo e plugin prima degli eventi Privacy; conserva le scelte di attivazione sugli upgrade.
+- Aggiunge regressioni CI che controllano l'installazione senza forzare il plugin attivo nel fixture e verificano le quattro stringhe tradotte.
+- Il test ha rilevato che il tentativo di attivazione a livello package della 0.41.20 non veniva applicato; corregge quel difetto, senza aggiungere capacità Privacy.
+
+## 0.41.20-dev — integrazione Privacy e primo tentativo di correzione
+
+- La prima installazione del pacchetto tentava di abilitare il plugin `plg_privacy_jdlearn`; il successivo test installazione ha mostrato che l'hook package non veniva applicato.
+- Il plugin tentava di caricare le stringhe prima di esporre capacità, domini export e impedimenti; la regressione Joomla ha poi mostrato che il dominio restava non risolto.
 - Collaudo manuale Joomla richiesto per installazione nuova, upgrade con plugin disabilitato e lingue amministrative italiana/inglese.
 - PR [#100](https://github.com/jeckodevelopment/jd_learn/pull/100) integrata; i quattro job CI sono superati ([run 42498937182](https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182)). Il collaudo Joomla della correzione è ancora pendente.
 - Pacchetto [JD-Learn-0.41.20-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182/artifacts/13623954016): contenitore da estrarre una volta; ZIP interno SHA-256 `d640593bd6cb91d9d57b58ed98917ebb8efe698ec2c36ddfbccd17f05d8118f2`, scadenza 22 novembre 2026.
+- Correzione in corso: PR #102 sposta l'attivazione nel manifest plugin e rende espliciti il dominio e i percorsi lingua, con regressioni automatiche per entrambi i difetti.
 
 ## 0.41.19-dev — accesso ai campi aggiuntivi corso e lezione
 

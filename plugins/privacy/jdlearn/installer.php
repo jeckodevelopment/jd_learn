@@ -5,14 +5,35 @@ declare(strict_types=1);
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Installer\InstallerAdapter;
+use Joomla\CMS\Installer\InstallerScriptInterface;
 use Joomla\Database\DatabaseInterface;
 
-final class pkg_jlmsInstallerScript
-{
-    public function postflight($type, $parent): bool
+return new class implements InstallerScriptInterface {
+    public function install(InstallerAdapter $adapter): bool
     {
-        // Enable the privacy integration for a fresh package installation. On updates,
-        // preserve the administrator's current choice, including an intentional disable.
+        return true;
+    }
+
+    public function update(InstallerAdapter $adapter): bool
+    {
+        return true;
+    }
+
+    public function uninstall(InstallerAdapter $adapter): bool
+    {
+        return true;
+    }
+
+    public function preflight(string $type, InstallerAdapter $adapter): bool
+    {
+        return true;
+    }
+
+    public function postflight(string $type, InstallerAdapter $adapter): bool
+    {
+        // The plugin installer creates new plugins disabled. Enable JD Learn Privacy
+        // only on a fresh install and preserve the administrator's choice on updates.
         if ($type !== 'install') {
             return true;
         }
@@ -32,12 +53,7 @@ final class pkg_jlmsInstallerScript
             ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
             ->where($db->quoteName('folder') . ' = ' . $db->quote('privacy'))
             ->where($db->quoteName('element') . ' = ' . $db->quote('jdlearn'));
-        $enabled = $db->setQuery($verify)->loadResult();
 
-        if ((int) $enabled !== 1) {
-            throw new RuntimeException('JD Learn Privacy plugin was not installed or could not be enabled.');
-        }
-
-        return true;
+        return (int) $db->setQuery($verify)->loadResult() === 1;
     }
-}
+};
