@@ -131,7 +131,7 @@ Riferimento: issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/11
 3. Cambiare la lingua amministrativa dell’account in inglese e riaprire la stessa pagina. Atteso: titolo **JD Learn: Options** e label **Version History Options** in entrambi i punti; nessuna chiave grezza.
 4. Verificare che le altre schede/campi delle Opzioni continuino a essere tradotti e che i valori salvati (inclusi versioni e limite cronologia) restino invariati durante la sola navigazione.
 
-**Stato:** issue #115 / AC-134 implementata nella candidata 0.41.29-dev; collaudo manuale Joomla pendente.
+**Stato:** issue #115 / AC-134 integrata dalla PR [#124](https://github.com/jeckodevelopment/jd_learn/pull/124) in 0.41.29-dev; tutti i quattro job CI standard sono superati nel [run 42533814214](https://github.com/jeckodevelopment/jd_learn/actions/runs/42533814214). Collaudo manuale Joomla pendente.
 
 ### PR #94 — ricerca roster (deviazione di perimetro, non gate di accettazione)
 

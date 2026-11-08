@@ -4,7 +4,7 @@
 
 - Sostituisce la chiave Joomla mancante `JGLOBAL_HISTORY_OPTIONS` con l’etichetta JD Learn tradotta in italiano e inglese, sia nella tab sia nel gruppo della pagina Opzioni.
 - Traduce il titolo generato da `com_config` in “JD Learn: Opzioni” / “JD Learn: Options”.
-- Issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115), scenario amministrativo AC-134; collaudo Joomla manuale da eseguire secondo il testbook.
+- Issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115), scenario amministrativo AC-134. PR [#124](https://github.com/jeckodevelopment/jd_learn/pull/124) integrata; CI standard superata ([run 42533814214](https://github.com/jeckodevelopment/jd_learn/actions/runs/42533814214)). Pacchetto [JD-Learn-0.41.29-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42533814214/artifacts/13638104439), SHA-256 interno `7f1810d1d6adb5f4c92ac9237e4bd6c9079932acb6cd9cfd8d3d72ff385bf62b` (510851 byte; scadenza 22 novembre 2026). Collaudo manuale Joomla AC-134 ancora pendente.
 
 
 ## 0.41.28-dev — collegamento tra docenti e corsi
