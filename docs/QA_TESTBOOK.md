@@ -29,7 +29,7 @@ Riferimenti: PRI-02, CORE-08; correzione del comportamento già incluso, senza i
 5. Con un account di prova soggetto a un impedimento di rimozione (documento attestato, job o notifica), richiedere la rimozione privacy. Atteso: il motivo è localizzato nella lingua backend e nessun dato cambia prima della risoluzione dell'impedimento.
 6. Con dati privacy di prova, verificare che export e rimozione continuino a mostrare i domini tradotti e a rispettare i comportamenti di conservazione descritti nella sezione PR #92.
 
-**Esito sito Joomla:** da eseguire con il pacchetto candidato; la verifica dell'utente sulla 0.41.19 ha rilevato plugin disabilitato e stringhe non tradotte, quindi non vale come accettazione della correzione.
+**Stato:** PR #100 integrata in main 0.41.20-dev; CI superata. **Esito sito Joomla:** ricollaudo della correzione ancora da eseguire. La prova dell'utente sulla 0.41.19 ha rilevato plugin disabilitato e stringhe non tradotte, quindi non vale come accettazione della correzione.
 
 ### AC-129 — accesso ai campi aggiuntivi di corsi e lezioni (in attesa di implementazione)
 
