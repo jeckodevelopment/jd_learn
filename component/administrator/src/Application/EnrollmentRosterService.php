@@ -39,7 +39,7 @@ final class EnrollmentRosterService
         $userId = $this->optionalId($filters['user'] ?? '0');
         $status = $filters['status'] ?? '';
         $progress = $filters['progress'] ?? '';
-        if (!is_string($status) || !in_array($status, ['', 'requested', 'active', 'completed', 'suspended', 'expired', 'cancelled', 'rejected'], true)
+        if (!is_string($status) || !in_array($status, ['', 'requested', 'active', 'completed', 'suspended', 'migrated', 'expired', 'cancelled', 'rejected'], true)
             || !is_string($progress) || !in_array($progress, ['', 'not_started', 'in_progress', 'completed'], true)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
@@ -48,9 +48,10 @@ final class EnrollmentRosterService
                 ->where('course_id = :course')->where('id = :version')->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER);
             if (!$this->db->setQuery($q)->loadResult()) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
         }
-        $q = $this->db->createQuery()->select('e.id, e.course_version_id, e.edition_id, e.status, e.required_total, e.completed_total, e.started_at, e.completed_at, e.last_activity_at, e.starts_at, e.ends_at, u.name AS learner_name, u.username, u.block AS account_blocked, v.version_no, v.title_snapshot')
+        $q = $this->db->createQuery()->select('e.id, e.course_version_id, e.edition_id, e.status, e.required_total, e.completed_total, e.started_at, e.completed_at, e.last_activity_at, e.starts_at, e.ends_at, u.name AS learner_name, u.username, u.block AS account_blocked, v.version_no, v.title_snapshot, c.current_version_id')
             ->from('#__jlms_enrollments AS e')
             ->leftJoin('#__users AS u ON u.id = e.user_id')
+            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
             ->leftJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id AND v.course_id = e.course_id')
             ->where('e.course_id = :rosterCourse')->bind(':rosterCourse', $courseId, ParameterType::INTEGER);
         if ($version) { $q->where('e.course_version_id = :rosterVersion')->bind(':rosterVersion', $version, ParameterType::INTEGER); }

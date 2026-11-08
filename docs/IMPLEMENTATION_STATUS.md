@@ -1,13 +1,13 @@
 # Stato attuale di JD Learn
 
-**JD Learn 0.41.13-dev è integrato in main** con la PR #86: finestre di disponibilità per i materiali extra, interpretate nel fuso del corso e conservate in UTC; finestre valide sono pubblicabili e visibili nell’aula solo entro il periodo configurato. CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium (run [42466812848](https://github.com/jeckodevelopment/jd_learn/actions/runs/42466812848)). Resta il collaudo Joomla manuale.
+**Main è 0.41.13-dev** con la PR #86 integrata. Il candidato **0.41.14-dev** aggiunge la migrazione esplicita di una singola iscrizione alla versione corrente con anteprima delle equivalenze e trasferimento limitato ai completamenti non quiz. La CI del candidato è da completare; il collaudo Joomla manuale resta aperto.
 
 
 La versione **0.41.9-dev**, ora integrata in main con la PR #70 (merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f)), aggiunge i controlli separati di ammissione ed erogazione R-03, con anteprima, motivo, conferma e storico. La CI standard è superata nei due ambienti PHP/database e Chromium (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); resta il collaudo manuale Joomla. La dashboard amministrativa della **0.41.8-dev** mette in primo piano la gestione corsi, raggruppa gli strumenti e rende espandibile lo stato dei provider. La PR #68 è integrata in main; la CI standard è superata. Restano aperti i controlli manuali nel backend Joomla.
 
 I campi editoriali del corso e i campi didattici delle lezioni sono disponibili tramite Joomla Fields. La **0.41.7-dev** integra il contesto lezioni, il salvataggio ACL, la copia e revisione dei valori, lo snapshot immutabile alla pubblicazione e la resa nell’aula. CI standard superata; il collaudo Joomla reale resta da completare. Il ripristino completo dei valori tramite Content History resta aperto.
 
-Aggiornato all’**8 novembre 2026**. Main **0.41.13-dev**; PR #86 integrata con squash ([merge c7a17fa](https://github.com/jeckodevelopment/jd_learn/commit/c7a17fa6cb7bd1b0ffabaa0f2139f8eb330264d9)). Ultima CI runtime superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42466812848](https://github.com/jeckodevelopment/jd_learn/actions/runs/42466812848)). Il collaudo manuale Joomla reale resta aperto. Il prodotto è in sviluppo e non è pronto per la produzione.
+Aggiornato all’**8 novembre 2026**. Main **0.41.13-dev**; candidato **0.41.14-dev** con migrazione esplicita in CI. Ultima CI runtime di main superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42466812848](https://github.com/jeckodevelopment/jd_learn/actions/runs/42466812848)). Il collaudo manuale Joomla reale resta aperto. Il prodotto è in sviluppo e non è pronto per la produzione.
 
 La PR #65 ha completato questo incremento M01/M02: campi personalizzati delle lezioni con salvataggio nativo, copia/revisione del baseline, snapshot immutabile e resa in aula. Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -29,13 +29,13 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 
 | Area | Avanzamento |
 |---|---:|
-| Corsi, versioni e programma (M01/M02) | 63% |
+| Corsi, versioni e programma (M01/M02) | 68% |
 | Fruizione e progressi core (M03/M09) | 55% |
 | Video e materiali essenziali (M04) | 80% |
 | Iscrizione e roster essenziale (M06/M09) | 65% |
 | Usabilità amministrativa e integrazioni Joomla | 80% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **67%** |
+| **Avanzamento complessivo stimato** | **68%** |
 
 ## Funzioni presenti e lavoro residuo
 
@@ -45,7 +45,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 |---|---|---|
 | Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi, resa editoriale nella scheda pubblica e accesso alle Regole didattiche, modifica propria e voci di menu; menu amministrativo nativo, ingresso diretto ai corsi e dashboard rivista nella 0.41.8; controlli operativi R-03 integrati nella 0.41.9 | Collaudo manuale; regole avanzate e attestato; snapshot didattici dei campi corso e campi lezione, copertura completa di lingue, associazioni e gestione dei dati |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate, soglia video e finestre temporali dei materiali della bozza | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
-| Ciclo editoriale | Bozza, precontrollo con blocchi/avvisi distinti nella 0.41.10 e controlli video/materiali nella 0.41.11–0.41.12, prima pubblicazione, aggiornamento del programma mediante copia completa, versioni didattiche immutabili, campi lezione congelati nella 0.41.7 e iscritti mantenuti sulla versione assegnata; anteprima amministrativa di struttura e testo; riepilogo delle differenze e conferma esplicita dell’aggiornamento; recupero di una versione storica in una nuova bozza con audit, senza sovrascrivere le altre | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti, migrazioni con equivalenze |
+| Ciclo editoriale | Bozza, precontrollo con blocchi/avvisi distinti nella 0.41.10 e controlli video/materiali nella 0.41.11–0.41.12; aggiornamento in nuova versione immutabile; recupero storico con audit; candidato 0.41.14: migrazione esplicita singola dal roster con mappatura, anteprima/hash, conferma/motivo, trasferimento dei soli completamenti non quiz e provenienza. La fonte resta nello storico; tentativi aperti, destinazione esistente o edizione non disponibile bloccano l’azione | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti; collaudo manuale della migrazione e dei casi negativi |
 | Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
 | Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata; fallback R-05 corretto nella 0.41.5; la 0.41.7 rende i campi lezione congelati | Attività dettagliate e collegamento agli attestati; collaudo manuale di ripresa ancora richiesto |
 | Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; metadati automatici nell’editor, provenienza/ricevute e tolleranza con denominatore osservato; consenso, copertura/ripresa, soglia video configurabile per versione con default90%, API/token Stream e MP4 privati con Range/Nginx | Collaudo completo di acquisizione/scarti con provider e browser reali (R-06); quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |

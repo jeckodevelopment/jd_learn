@@ -6,6 +6,13 @@
 
 # Changelog
 
+## 0.41.14-dev — migrazione esplicita di un’iscrizione
+
+- Aggiunge dal roster la migrazione singola di iscrizioni verso la versione pubblicata corrente, con selezione esplicita delle equivalenze fra lezioni e anteprima protetta da hash.
+- Trasferisce soltanto stati di completamento non quiz approvati; progressi e iscrizione sorgente restano nello storico, mentre quiz, coverage video, risposte e attestati non vengono copiati.
+- Conferma con motivo, CSRF, ACL e idempotenza; blocca tentativi aperti, iscrizioni duplicate, edizioni indisponibili/a capienza e corso con erogazione sospesa. Registrazione atomica in job, equivalenze, migrazione e Action Log.
+- CI sul candidato da completare; il collaudo manuale Joomla resta aperto.
+
 ## 0.41.13-dev — finestre temporali dei materiali
 
 - Aggiunge date iniziali/finali ai materiali extra, inserite nel fuso del corso e conservate in UTC; modifica delle date disponibile soltanto sulla bozza.
