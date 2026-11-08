@@ -8,7 +8,7 @@
 
 **Tracciabilità:** chiarisce CORE-20, UI-02 e SCR-13; scenario **AC-132**. Il percorso resta in rilascio 1 come navigazione delle funzioni correnti. La valutazione complessiva resta distinta dall'accettazione manuale e dal completamento degli altri requisiti.
 
-**Stato:** implementata nella PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), integrata in `7d4584e5ae96795344d8f72b2639e96d1edbc171`; CI standard superata nel run [42513162483](https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483). Il collaudo manuale Joomla AC-132 resta da eseguire e registrare nel [testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).
+**Stato:** implementata nella PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), integrata in `7d4584e5ae96795344d8f72b2639e96d1edbc171`; CI standard superata nel run [42513162483](https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483). Il collaudo manuale Joomla AC-132 ha rilevato le regressioni descritte nel [testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa); la correzione è candidata alla 0.41.24-dev e richiede ricollaudo prima dell’accettazione.
 
 ## RF-2026-11-08 — lifecycle Privacy e provider video della prima release
 

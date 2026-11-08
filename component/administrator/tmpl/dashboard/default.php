@@ -17,7 +17,7 @@ use Joomla\CMS\Language\Text;
         <ul>
             <?php foreach ($this->shortcuts as $shortcut) : ?>
                 <li>
-                    <a id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key']))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $this->escape($shortcut['url']) ?>">
+                    <a id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key']))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
                         <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
                         <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
                     </a>

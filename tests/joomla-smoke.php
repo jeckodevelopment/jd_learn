@@ -65,6 +65,12 @@ $menuLinks = $db->setQuery('SELECT link FROM #__menu WHERE client_id=1 AND paren
 $expectedLinks = ['index.php?option=com_jlms&view=courses', 'index.php?option=com_categories&view=categories&extension=com_jlms.course', 'index.php?option=com_jlms&view=questionbank', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_fields&view=fields&context=com_jlms.course', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'];
 sort($menuLinks); sort($expectedLinks);
 if (!$menuParent || $menuLinks !== $expectedLinks) { throw new \RuntimeException('Native administrator menu missing or duplicated after installation/upgrade.'); }
+// Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
+$db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
+require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
+(new \Com_JlmsInstallerScript())->postflight('update', null);
+$menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
+if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') { throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.'); }
 $fieldContexts = array_keys(Factory::getApplication()->bootComponent('com_jlms')->getContexts());
 if ($fieldContexts !== ['com_jlms.teacher', 'com_jlms.course', 'com_jlms.lesson']) {
     throw new \RuntimeException('JD Learn custom-field contexts are unavailable to the native com_fields filter.');

@@ -1,61 +1,60 @@
 {
   "audited_at": "2026-11-08",
   "product": "JD Learn",
-  "version": "0.41.22-dev",
+  "version": "0.41.23-dev",
   "code_baseline": {
-    "tested_head": "8211a89f732af80dda563773584b7698ff3ba86a",
-    "parent_main_commit": "9d297fb54c58529d5a2dee03519c9b142d086edb",
-    "pull_request": 104,
-    "merged_main_commit": "4a924e87c046d076cd48ec2e63d125f5d25657e1"
+    "tested_head": "0bb9322c4b05b48f0512fbb62864a97deb57360e",
+    "parent_main_commit": "02f30904e23aa17e459c0ba6478444db7468cc86",
+    "pull_request": 108,
+    "merged_main_commit": "7d4584e5ae96795344d8f72b2639e96d1edbc171"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42507760027,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027",
+    "run_id": 42513162483,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128814003050,
+        "id": 128830394967,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128814039988,
+        "id": 128830425348,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128814040034,
+        "id": 128830425341,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128814039965,
+        "id": 128830425327,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #104 integrata. Quattro job standard superati; includono la navigazione HTTP di com_fields e i contesti personalizzati corso/docente/lezione. Collaudo manuale sul sito Joomla ancora pendente."
+    "note": "PR #108 integrata. Quattro job standard superati; il collaudo Joomla reale ha poi rilevato anomalie di upgrade menu, URL dei riquadri e traduzione, ora candidate in 0.41.24-dev."
   },
   "package": {
-    "name": "pkg_jlms-0.41.22-dev.zip",
-    "bytes": 499454,
-    "sha256": "2d02d554f134e10087df79cb45fa334b68c9b809b4fa2794b34993d6f817b388",
+    "name": "pkg_jlms-0.41.23-dev.zip",
+    "bytes": 500579,
+    "sha256": "0b3692497d996da91055121c6ca2ed82176d52f87e7a6f92af2ba7a204f25ae3",
     "constituents": 8,
     "tables": 42,
     "foreign_keys": 59,
-    "build_source": "PR #104 verificata e integrata; pacchetto interno CI corrisponde alla build candidata.",
-    "artifact_id": 13628566353,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027/artifacts/13628566353",
-    "ci_artifact_archive_sha256": "sha256:f92156622123439b66efa2fb2e66a3e718f1b87b2fac1c7ff2e968b764da9975",
-    "artifact_expires_at": "2026-11-22T18:04:42Z",
+    "build_source": "PR #108 verificata e integrata; pacchetto interno CI corrisponde al candidato testato. Le anomalie manuali sono documentate come aperte.",
+    "artifact_id": 13630646222,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483/artifacts/13630646222",
+    "artifact_expires_at": "2026-11-22T19:08:57Z",
     "wrapper_zip": true,
-    "inner_version": "0.41.22-dev"
+    "inner_version": "0.41.23-dev"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -1884,7 +1883,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.23-dev integrata in main con PR #108 (merge 7d4584e5ae96795344d8f72b2639e96d1edbc171); CI standard superata nel run 42513162483; collaudo Joomla manuale issue #105/AC-132 pendente.",
+  "candidate_status": "0.41.23-dev integrata in main con PR #108; collaudo manuale issue #105 ha rilevato tre anomalie; correzioni candidate in 0.41.24-dev e in attesa di CI/ricollaudo.",
   "previous_verified_release": {
     "version": "0.41.10-dev",
     "package": "pkg_jlms-0.41.10-dev.zip",
@@ -1894,9 +1893,9 @@
     "expires_at": "2026-11-22T03:14:01Z"
   },
   "candidate_increment": {
-    "version": "0.41.23-dev",
-    "scope": "Issue #105 / AC-132: dashboard come ingresso predefinito e collegamenti iconografici alle funzioni esistenti con ACL.",
-    "status": "Integrato dalla PR #108 nel merge 7d4584e5ae96795344d8f72b2639e96d1edbc171; CI standard superata nel run 42513162483; collaudo manuale Joomla pendente. Nessun elemento fase 2 aggiunto.",
+    "version": "0.41.24-dev",
+    "scope": "Issue #105 / AC-132: correzione del menu root sulle installazioni aggiornate, doppia codifica HTML degli URL dei riquadri e traduzione introduttiva duplicata.",
+    "status": "Implementazione candidata; CI e ricollaudo manuale Joomla pendenti. Nessun elemento fase 2 aggiunto.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {

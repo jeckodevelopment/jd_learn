@@ -67,6 +67,8 @@ final class Com_JlmsInstallerScript
         if (!$component->loadByName('com_jlms')) {
             throw new \RuntimeException('JD Learn component ACL root is unavailable.');
         }
+        require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/AdminMenuInstaller.php';
+        \Jlms\Component\Jlms\Administrator\Infrastructure\AdminMenuInstaller::ensureDashboardRootLink($db);
         // Section roots make native categories inherit from the component instead of Joomla ROOT.
         foreach (['course', 'question', 'teacher', 'pathway'] as $section) {
             $asset = new Asset($db);
