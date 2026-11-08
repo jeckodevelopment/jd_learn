@@ -6,6 +6,13 @@
 
 # Changelog
 
+## 0.41.11-dev — preflight durata video
+
+- Il controllo preliminare della bozza segnala come bloccante il video privo di durata tra 1 secondo e 8 ore o senza conferma registrata, coerentemente con il validatore server.
+- Il controllo usa solo i metadati già salvati e non interroga provider o carica i corpi delle lezioni.
+- Aggiunte verifiche di dominio per durata mancante e valida; documentazione Programma sincronizzata nel pacchetto.
+
+
 ## 0.41.10-dev — riepilogo preliminare di pubblicazione
 
 - Mostra nella bozza del programma gli errori strutturali bloccanti separati dagli avvisi facoltativi su riepilogo e copertina.
