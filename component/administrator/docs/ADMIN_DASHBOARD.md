@@ -13,5 +13,6 @@ Su Joomla 6 di prova, con account autorizzato e account con permessi limitati:
 3. Usare l'account limitato: i collegamenti non autorizzati non devono apparire e l'accesso diretto alla destinazione deve restare negato da Joomla.
 4. Verificare l'uso da tastiera, layout a finestra stretta e stato espandibile dei provider video.
 5. Cambiare lingua amministrativa fra italiano e inglese e verificare tutte le etichette.
+6. Su un sito aggiornato dalla 0.41.23-dev, fare clic sulla voce radice JD Learn: deve aprire la dashboard. Verificare inoltre che i link dei riquadri si aprano senza `&amp;` letterale e che l'introduzione sia pertinente in entrambe le lingue.
 
 Registrare ogni esito in `docs/QA_TESTBOOK.md`, sezione issue #105.

@@ -85,7 +85,8 @@ try:
  plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
  if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
  dashboard_page=Page(html)
- dashboard_shortcuts={a.get('id'):parse_qs(urlparse(unescape(a.get('href',''))).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+ dashboard_shortcuts={a.get('id'):parse_qs(urlparse(a.get('href','')).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+ if any('&amp;' in a.get('href','') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')):raise RuntimeError('Dashboard shortcut href must not contain a literal HTML entity')
  required_shortcuts={
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
@@ -99,6 +100,8 @@ try:
   if not query or query.get('option')!=[option] or query.get('view')!=[view]:
    found={a.get('id'):a.get('href') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
    raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
+ if 'Manage courses, the learning programme and teaching resources from the administrator panel.' not in html or 'Your learning history and current classroom availability are shown separately.' in html:
+  raise RuntimeError('Administrator dashboard introduction must use its current, relevant translation')
  if len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))!=6:raise RuntimeError('Dashboard shortcuts must each include a Joomla icon')
  # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
  get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')

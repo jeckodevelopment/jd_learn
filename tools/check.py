@@ -27,6 +27,14 @@ for folder in ['component','plugins']:
   if p.suffix in ['.php','.xml']:used.update(re.findall(r'\b(?:COM_JLMS|PLG_JLMSVIDEO|PLG_PRIVACY_JDLEARN)_[A-Z0-9_]+\b',p.read_text()))
 # Installer error codes are caught explicitly and listed in the implementation status; still translate them.
 assert used<=keys,sorted(used-keys)
+# The dashboard introduction used to have a stale duplicate value later in each INI file.
+for tag,expected in {
+ 'it-IT':'Gestisci corsi, programma e risorse didattiche dal pannello amministrativo.',
+ 'en-GB':'Manage courses, the learning programme and teaching resources from the administrator panel.',
+}.items():
+ ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.ini').read_text()
+ matches=re.findall(r'^COM_JLMS_DASHBOARD_INTRO="([^"]*)"$',ini,re.M)
+ assert matches==[expected],(tag,matches)
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
