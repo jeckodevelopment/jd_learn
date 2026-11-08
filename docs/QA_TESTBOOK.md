@@ -18,7 +18,7 @@ Prima del test annotare: data, versione e checksum del pacchetto, versione/patch
 
 ## Registro PR
 
-### PR #99 — attivazione e lingue del plugin Privacy Joomla
+### PR #100 — attivazione e lingue del plugin Privacy Joomla
 
 Riferimenti: PRI-02, CORE-08; correzione del comportamento già incluso, senza introdurre nuove capacità privacy. Usare due installazioni Joomla usa e getta: una pulita e una con JD Learn già installato e `JD Learn - Privacy` intenzionalmente disabilitato.
 
