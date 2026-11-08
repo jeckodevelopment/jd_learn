@@ -8,6 +8,7 @@ use Joomla\CMS\Event\Privacy\CanRemoveDataEvent;
 use Joomla\CMS\Event\Privacy\CollectCapabilitiesEvent;
 use Joomla\CMS\Event\Privacy\ExportRequestEvent;
 use Joomla\CMS\Event\Privacy\RemoveDataEvent;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Component\Privacy\Administrator\Plugin\PrivacyPlugin;
 use Joomla\Component\Privacy\Administrator\Removal\Status;
@@ -274,7 +275,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     private function loadPrivacyLanguage(): void
     {
-        $language = $this->getApplication()->getLanguage();
+        // Text::_() resolves through Factory::getLanguage(); load into that same instance.
+        $language = Factory::getLanguage();
 
         if (!$language) {
             return;

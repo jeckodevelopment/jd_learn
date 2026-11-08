@@ -87,7 +87,8 @@ $privacyDescriptionKeys = [
 ];
 $privacyDescriptions = array_map(static fn(string $key): string => Text::_($key), $privacyDescriptionKeys);
 $privacyLanguageFailure = static function () use ($app, $privacyTitle): string {
-    $language = $app->getLanguage();
+    $language = Factory::getLanguage();
+    $appLanguage = $app->getLanguage();
     $tag = $language->getTag();
     $adminFile = JPATH_ADMINISTRATOR . '/language/' . $tag . '/plg_privacy_jdlearn.ini';
     $pluginFile = JPATH_PLUGINS . '/privacy/jdlearn/language/' . $tag . '/plg_privacy_jdlearn.ini';
@@ -95,6 +96,7 @@ $privacyLanguageFailure = static function () use ($app, $privacyTitle): string {
     return 'JD Learn privacy capability language strings were not loaded (tag=' . $tag
         . ', title=' . $privacyTitle . ', adminFile=' . (is_file($adminFile) ? 'yes' : 'no')
         . ', pluginFile=' . (is_file($pluginFile) ? 'yes' : 'no')
+        . ', appHasKey=' . ($appLanguage->hasKey('PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE') ? 'yes' : 'no')
         . ', loadedPaths=' . json_encode($language->getPaths('plg_privacy_jdlearn'), JSON_THROW_ON_ERROR) . ').';
 };
 if ($privacyTitle === 'PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE') {
