@@ -8,11 +8,11 @@ Il pulsante Versioni apre Content History di Joomla per confrontare le revisioni
 
 ## Campi personalizzati del corso
 
-Definire campi e gruppi con il gestore Campi di Joomla, contesto Corsi (`com_jlms.course`), e abilitare il plugin di sistema Fields. Quando il core aggiunge campi al form, l’editor mostra la scheda Campi personalizzati: tipi, gruppi, lingua, categoria, validazione e permessi dei valori restano quelli nativi. La scheda non compare se non ci sono campi applicabili. Sul corso bloccato da un altro operatore i campi sono disabilitati come gli altri dati.
+Dall’elenco Corsi, selezionare **Gestisci campi aggiuntivi dei corsi** per aprire il gestore Campi Joomla nel contesto Corsi (`com_jlms.course`). Il collegamento è visibile solo a chi dispone di `core.manage` su `com_fields`. In alternativa, aprire Joomla → Campi e scegliere lo stesso contesto. Abilitare il plugin di sistema Fields. Quando il core aggiunge campi al form, l’editor mostra la scheda Campi personalizzati: tipi, gruppi, lingua, categoria, validazione e permessi dei valori restano quelli nativi. La scheda non compare se non ci sono campi applicabili. Sul corso bloccato da un altro operatore i campi sono disabilitati come gli altri dati.
 
 Salva/Salva e chiudi inoltrano `com_fields` agli eventi Joomla. Gli errori di validazione della form conservano l’input; Annulla lascia i valori salvati. Client precedenti che omettono il gruppo non cancellano i valori. Le revisioni obsolete e i permessi del corso vengono verificati prima del salvataggio. Il modello non scrive una tabella parallela dei campi.
 
-Il collegamento amministrativo e la resa editoriale pubblica dei campi corso sono implementati. La0.41.7 aggiunge campi lezione con salvataggio ACL, copia in bozza e snapshot alla pubblicazione; CI standard superata. CORE-10 resta in corso per collaudo Joomla reale, copertura completa dei tipi/plugin e ripristino tramite Content History. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
+La versione 0.41.19 aggiunge all’elenco Corsi il collegamento al gestore Joomla `com_fields` nel contesto `com_jlms.course`. È visibile solo con `core.manage` su `com_fields`. La 0.41.7 aggiunge campi lezione con salvataggio ACL, copia in bozza e snapshot alla pubblicazione; questo incremento aggiunge il collegamento al contesto `com_jlms.lesson` dal Programma. CORE-10 resta in corso per collaudo Joomla reale, copertura completa dei tipi/plugin e ripristino tramite Content History. La modifica dei campi editoriali non migra gli iscritti o riscrive lo storico didattico.
 
 ## Aggiornare lezioni e materiali
 
@@ -84,7 +84,7 @@ La voce Plugin video apre la gestione nativa Joomla filtrata sul gruppo `jlmsvid
 
 ## Campi personalizzati delle lezioni (0.41.7)
 
-In Joomla → Campi, scegliere il contesto Lezioni (`com_jlms.lesson`), creare/pubblicare i campi e assegnarli ai livelli e gruppi desiderati. Abilitare il plugin di sistema Fields. Nell’editor Programma aprire o creare una lezione: il fieldset Campi personalizzati mostra i campi applicabili. Il salvataggio usa il modello Fields nativo; l’operatore deve avere `core.edit.value` sul campo e il suo livello di accesso. Quando si duplica una lezione o si prepara una nuova versione, i valori consentiti vengono copiati nella nuova bozza.
+In Joomla → Campi, scegliere il contesto Lezioni (`com_jlms.lesson`), creare/pubblicare i campi e assegnarli ai livelli e gruppi desiderati. In alternativa, aprire Programma e selezionare **Gestisci campi aggiuntivi delle lezioni**, disponibile solo con `core.manage` su `com_fields`. Abilitare il plugin di sistema Fields. Nell’editor Programma aprire o creare una lezione: il fieldset Campi personalizzati mostra i campi applicabili. Il salvataggio usa il modello Fields nativo; l’operatore deve avere `core.edit.value` sul campo e il suo livello di accesso. Quando si duplica una lezione o si prepara una nuova versione, i valori consentiti vengono copiati nella nuova bozza.
 
 Alla pubblicazione i valori e le etichette visibili all’autore vengono congelati nella lezione della versione didattica. L’aula mostra i valori della versione assegnata e ricontrolla il livello di accesso corrente; l’output è escapato come testo. Cambiare il valore corrente o la definizione non riscrive versioni già pubblicate.
 

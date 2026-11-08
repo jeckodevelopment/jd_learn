@@ -21,7 +21,7 @@ Il collegamento amministrativo e la resa editoriale pubblica dei campi corso son
 
 ## Campi personalizzati delle lezioni (0.41.7)
 
-In Joomla → Campi, scegliere il contesto Lezioni (`com_jlms.lesson`), creare/pubblicare i campi e assegnarli ai livelli e gruppi desiderati. Abilitare il plugin di sistema Fields. Nell’editor Programma aprire o creare una lezione: il fieldset Campi personalizzati mostra i campi applicabili. Il salvataggio usa il modello Fields nativo; l’operatore deve avere `core.edit.value` sul campo e il suo livello di accesso. Quando si duplica una lezione o si prepara una nuova versione, i valori consentiti vengono copiati nella nuova bozza.
+In Joomla → Campi, scegliere il contesto Lezioni (`com_jlms.lesson`), creare/pubblicare i campi e assegnarli ai livelli e gruppi desiderati. Si può raggiungere questa vista anche dal pulsante **Gestisci campi aggiuntivi delle lezioni** in Programma, visibile solo a chi può gestire `com_fields`. Abilitare il plugin di sistema Fields. Nell’editor Programma aprire o creare una lezione: il fieldset Campi personalizzati mostra i campi applicabili. Il salvataggio usa il modello Fields nativo; l’operatore deve avere `core.edit.value` sul campo e il suo livello di accesso. Quando si duplica una lezione o si prepara una nuova versione, i valori consentiti vengono copiati nella nuova bozza.
 
 Alla pubblicazione i valori e le etichette visibili all’autore vengono congelati nella lezione della versione didattica. L’aula mostra i valori della versione assegnata e ricontrolla il livello di accesso corrente; l’output è escapato come testo. Cambiare il valore corrente o la definizione non riscrive versioni già pubblicate.
 
@@ -96,6 +96,8 @@ Aprire JD Learn porta direttamente all’elenco corsi. Nella sidebar nativa Joom
 La voce Plugin video apre la gestione nativa Joomla filtrata sul gruppo `jlmsvideo`, con ricerca, stato, accesso e singolo plugin azzerati per vedere tutti i provider installati, anche disattivati. Da qui si abilitano/disabilitano e configurano i plugin secondo i permessi di `com_plugins`. Non è una verifica della riproduzione; nessun accesso ai plugin è concesso dal solo permesso di gestire corsi.
 
 ## Campi nella scheda pubblica del corso (0.41)
+
+La vista dei campi corso (`com_jlms.course`) è raggiungibile dal pulsante **Gestisci campi aggiuntivi dei corsi** nell’elenco Corsi. Il collegamento apre il gestore Joomla `com_fields` sul contesto corso e viene mostrato solo agli operatori autorizzati a gestire `com_fields`.
 
 I campi correnti del contesto `com_jlms.course` sono preparati dai plugin di tipo Joomla e resi con i layout nativi. La posizione automatica si configura nel campo: dopo il titolo, prima della presentazione o dopo la presentazione. Con visualizzazione automatica disattivata il campo non compare; valori vuoti non generano etichette o contenitori vuoti. Sono applicati pubblicazione, categoria, lingua e accesso di campo e gruppo, oltre all’accesso corrente al corso. La sola visibilità del corso non rende pubblici campi riservati.
 

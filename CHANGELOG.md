@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.19-dev — accesso ai campi aggiuntivi corso e lezione
+
+- Aggiunge dall’elenco Corsi il collegamento al gestore Joomla `com_fields` filtrato sul contesto `com_jlms.course`.
+- Aggiunge dal Programma il collegamento al contesto `com_jlms.lesson`.
+- I collegamenti sono mostrati solo agli operatori con `core.manage` su `com_fields`; le definizioni e i valori restano gestiti dal core Joomla.
+- Collaudo manuale Joomla AC-129 richiesto; nessun requisito è dichiarato completo da questo incremento.
+
 ## 0.41.18-dev — ricerca iscritti nel roster
 
 - Aggiunge al roster amministrativo la ricerca per nome visualizzato o username Joomla, combinabile con i filtri esistenti.
