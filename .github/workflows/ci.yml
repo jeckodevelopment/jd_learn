@@ -316,11 +316,16 @@ jobs:
         run: php tests/joomla-video-duration.php .runtime/joomla retained
       - name: Verify public editorial fields and teaching history survive upgrade
         run: php tests/joomla-course-fields-public.php .runtime/joomla retained
+      - name: Read package version for artifact label
+        id: package
+        run: |
+          version="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Make the verified development package downloadable
         if: matrix.php == '8.4' && matrix.database == 'mariadb:10.6'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: JD-Learn-0.41.4-dev
+          name: JD-Learn-${{ steps.package.outputs.version }}
           path: dist/
           if-no-files-found: error
           retention-days: 14
