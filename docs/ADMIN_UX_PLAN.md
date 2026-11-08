@@ -12,6 +12,10 @@ La PR #68 è integrata in main nella 0.41.8-dev. La schermata iniziale mette in 
 
 ## Risultato richiesto
 
+## Issue #105 — dashboard di navigazione amministrativa
+
+La dashboard esistente diventa l'ingresso predefinito del componente. Presenta riquadri con icone per Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video, usando le destinazioni Joomla già disponibili. Ogni riquadro è mostrato in base ai permessi nativi della relativa gestione. Non si inseriscono indicatori o collegamenti a statistiche, attestati e altre funzioni di fase 2. La verifica di ruoli, tastiera, responsive e URL è nello [scenario AC-132 e nel testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).
+
 ### Regola di uniformità delle viste Joomla
 
 Per ogni vista amministrativa, prima si individua la vista standard Joomla più vicina (ad esempio elenco articoli per i corsi, categorie native per le categorie) e se ne riusano struttura, navigazione, toolbar, filtri e convenzioni quando rappresentano correttamente i dati. Si introduce un layout specifico solo dove la vista core non copre il flusso richiesto; anche in quel caso si mantengono menu, titoli, ritorno all’elenco, stato vuoto/errori, ACL e comportamento coerenti con Joomla. Questa regola guida l’implementazione dei requisiti già nel perimetro; non aggiunge funzionalità.

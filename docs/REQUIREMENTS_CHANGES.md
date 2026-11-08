@@ -1,5 +1,13 @@
 # Registro delle modifiche ai requisiti
 
+## RF-2026-11-08-C — dashboard amministrativa di accesso alle funzioni
+
+**Origine e autorizzazione:** richiesta del committente tramite [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/105). All'apertura del backend JD Learn il componente deve mostrare una dashboard di navigazione con icone e accessi alle funzioni già operative.
+
+**Perimetro concordato:** l'ingresso della voce radice JD Learn apre la dashboard. Sono collegati Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video. Ogni collegamento usa la vista Joomla nativa esistente ed è visibile solo se l'utente ha il permesso Joomla richiesto. Statistiche, attestati e altre funzioni future nominate nell'issue sono esplicitamente fase 2; non si aggiungono riepiloghi o capacità non già presenti.
+
+**Tracciabilità:** chiarisce CORE-20, UI-02 e SCR-13; scenario **AC-132**. Il percorso resta in rilascio 1 come navigazione delle funzioni correnti. La valutazione complessiva resta distinta dall'accettazione manuale e dal completamento degli altri requisiti.
+
 ## RF-2026-11-08 — lifecycle Privacy e provider video della prima release
 
 **Origine e autorizzazione:** il committente richiede l'integrazione con le funzionalità restanti verso la prima release e specifica che lo sviluppo/verifica di ulteriori plugin di streaming, incluso il quinto provider di prova, è rinviato alla fase 2. Prima release: verificare i quattro adapter già distribuiti (YouTube, Vimeo, Cloudflare Stream e HTML5) su Joomla e browser reali.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.23-dev — dashboard con accessi rapidi
+
+- Risolve [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/105): la voce radice JD Learn apre la dashboard amministrativa.
+- Aggiunge riquadri con icone per Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video; usa percorsi Joomla esistenti e li mostra in base ai relativi permessi.
+- Mantiene la panoramica provider esistente. Statistiche, attestati e altre funzioni future restano fase 2.
+- Collaudo manuale ruoli, lingue, tastiera e viewport registrato nel testbook AC-132.
+
 ## 0.41.22-dev — accesso centralizzato ai campi aggiuntivi
 
 - Risolve l'issue [#99](https://github.com/jeckodevelopment/jd_learn/issues/99), collegata alla presentazione dei campi dopo la PR #98.

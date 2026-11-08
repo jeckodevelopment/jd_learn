@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.22-dev** corregge l'attivazione predefinita del plugin Privacy nelle installazioni nuove e il caricamento delle sue stringhe italiane/inglesi (PR #102, CI completa superata). La PR #104 integrata in **0.41.22-dev** raccoglie l'accesso ai campi corso/docente nella sidebar e usa il filtro contesto nativo di `com_fields` (issue #99; CI completa superata, collaudo Joomla manuale pendente). La PR #98 aveva collocato i collegamenti direttamente nelle liste Corsi e Docenti; la PR #104 li rimuove da quelle viste. La ricerca roster della PR #94 è una deviazione non approvata come requisito stabile. Per la prima stabile vanno verificati i quattro provider distribuiti.
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.22-dev** include la correzione Privacy (PR #102) e l’accesso centralizzato ai campi Corsi/Docenti/Lezioni (issue #99, PR #104; CI superata, collaudo Joomla pendente). La candidata **0.41.23-dev** recepisce issue #105: apre la dashboard amministrativa all’ingresso di JD Learn e aggiunge sei riquadri con icone e accesso ACL alle funzioni esistenti. Statistiche, attestati e altre voci future restano fuori da questa modifica.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -29,6 +29,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.22-dev** corre
 - Media: [video](docs/VIDEO.md), [Cloudflare Stream](docs/CLOUDFLARE_STREAM.md), [HTML5 privato](docs/HTML5_VIDEO.md), [materiali](docs/MATERIALS.md).
 - Iscrizioni: [elenco iscritti](docs/ENROLLMENT_ROSTER.md), [migrazione tra versioni](component/administrator/docs/ENROLLMENT_MIGRATION.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md), [preassegnazione](docs/PREASSIGNMENT.md), [stato della singola iscrizione](docs/ENROLLMENT_STATE.md), [disponibilità operativa del corso](docs/COURSE_OPERATIONS.md).
 - Quiz: [composizione](docs/QUIZ_AUTHORING.md), [tentativi](docs/QUIZ_RUNTIME.md), [tempi individuali](docs/QUIZ_EXTRA_TIME.md), [annullamenti](docs/QUIZ_CANCELLATION.md), [proroghe](docs/QUIZ_DEADLINE_EXTENSION.md).
+- Amministrazione: [dashboard JD Learn](component/administrator/docs/ADMIN_DASHBOARD.md).
 - Personalizzazioni: [contratto CSS e override](docs/FRONTEND_CSS.md).
 
 ## Specifiche e perimetro
