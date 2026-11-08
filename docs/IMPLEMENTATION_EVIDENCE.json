@@ -1,57 +1,59 @@
 {
   "audited_at": "2026-11-08",
   "product": "JD Learn",
-  "version": "0.41.10-dev",
+  "version": "0.41.11-dev",
   "code_baseline": {
-    "tested_head": "b41378adc3a4979c9c2b958973e5f78d27c8a392",
-    "parent_main_commit": "003a70019f91db4138470fd9ed6f78c4fee8777f",
-    "pull_request": 74,
-    "merged_main_commit": "c023fc4ed29f3d643414cd5afc83b3ad42615dba"
+    "tested_head": "f5c24f5b91a1f13a5dae7d71386aa2285af3e550",
+    "parent_main_commit": "64dcf6c269b10d640702eb0ec4ada1cfb627e25a",
+    "pull_request": 78,
+    "merged_main_commit": "64dcf6c269b10d640702eb0ec4ada1cfb627e25a"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42439350519,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42439350519",
+    "run_id": 42441526162,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42441526162",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128605028821,
+        "id": 128611583195,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128605056315,
+        "id": 128611609091,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128605056331,
+        "id": 128611609104,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128605056286,
+        "id": 128611609109,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #74 integrata nel commit c023fc4. Suite standard superata nei due ambienti Joomla/database, Chromium e controlli leggeri sullo SHA finale. Collaudo manuale Joomla reale ancora aperto."
+    "note": "PR #78 integrata. Suite standard superata sullo SHA finale nei due ambienti Joomla/database, Chromium e controlli leggeri. Collaudo manuale Joomla reale ancora aperto."
   },
   "package": {
-    "name": "pkg_jlms-0.41.10-dev.zip",
-    "bytes": 459888,
-    "sha256": "4d95e9627ddd6db338961da374e35721262e95356c817d46940e5b6ddc469ab3",
+    "name": "pkg_jlms-0.41.11-dev.zip",
+    "bytes": 460185,
+    "sha256": "3a67a2e92424cf426c593f0cedcee7efb4d470f674095baacc898878568edf1a",
     "constituents": 7,
-    "build_source": "PR #74 tested and merged runtime; reproducibly rebuilt and uploaded with version-correct label in PR #76 CI.",
-    "artifact_id": 13601830152,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42439956364/artifacts/13601830152",
-    "ci_artifact_archive_sha256": "sha256:7e520d7b86338705026485b9ffde31d6b3fe7974d3932500cd6f427e1084e654",
-    "artifact_expires_at": "2026-11-22T02:51:13Z"
+    "build_source": "PR #78 tested and merged runtime; downloaded and verified from run 42441526162.",
+    "artifact_id": 13602036481,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42441526162/artifacts/13602036481",
+    "ci_artifact_archive_sha256": "sha256:e0993bb304d22f30245a466d376bb4ae06eb740bcd9ccfe542f6afae69095972",
+    "artifact_expires_at": "2026-11-22T03:14:01Z",
+    "wrapper_zip": true,
+    "inner_version": "0.41.11"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -1747,30 +1749,63 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.10-dev integrata in main con PR #74; CI standard superata nel run 42439350519; collaudo manuale Joomla ancora aperto",
+  "candidate_status": "0.41.11-dev integrata in main con PR #78; CI standard superata; collaudo manuale Joomla ancora aperto",
   "previous_verified_release": {
-    "version": "0.41.8-dev",
-    "package": "pkg_jlms-0.41.8-dev.zip",
-    "sha256": "5a1e7e236dc8171bff8fe318374fc47c27d10605740fa83ed09f4fead0861c92"
+    "version": "0.41.10-dev",
+    "package": "pkg_jlms-0.41.10-dev.zip",
+    "sha256": "4d95e9627ddd6db338961da374e35721262e95356c817d46940e5b6ddc469ab3",
+    "artifact_id": 13601830152,
+    "run_id": 42439956364,
+    "expires_at": "2026-11-22T03:14:01Z"
   },
   "candidate_increment": {
-    "version": "0.41.9-dev",
-    "scope": "R-03 course admissions and delivery controls",
-    "status": "Integrated in main by PR #70 (merge commit 70f6ed7f2a1f4386b943bcb834f57e8d31cf935f); standard CI passed; manual Joomla acceptance pending",
-    "local_build": {
-      "package": "dist/pkg_jlms-0.41.9-dev.zip",
-      "sha256": "9ca51259061ec966f6a263f123edb1a3b154b93ad26f1781b587167049b74454",
-      "bytes": 457812,
-      "status": "Reproducible local build with SHA-256 recorded below; final source behavior passed standard CI run 42428496835"
+    "version": "0.41.11-dev",
+    "scope": "Publication preflight blocks video without valid confirmed duration",
+    "status": "Integrated in main by PR #78 (merge commit 64dcf6c269b10d640702eb0ec4ada1cfb627e25a); standard CI passed; manual Joomla acceptance pending",
+    "pull_request": 78,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/78",
+    "tested_head": "f5c24f5b91a1f13a5dae7d71386aa2285af3e550",
+    "merged_commit": "64dcf6c269b10d640702eb0ec4ada1cfb627e25a",
+    "ci_run_id": 42441526162,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42441526162",
+    "ci_status": "all four standard jobs passed on final PR head: candidate plan/lightweight checks, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium controlled fixture",
+    "jobs": [
+      {
+        "id": 128611583195,
+        "name": "Candidate plan and lightweight checks",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 128611609091,
+        "name": "PHP 8.3 / mysql:8.4",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 128611609104,
+        "name": "PHP 8.4 / mariadb:10.6",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 128611609109,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "package": {
+      "name": "pkg_jlms-0.41.11-dev.zip",
+      "artifact_id": 13602036481,
+      "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42441526162/artifacts/13602036481",
+      "expires_at": "2026-11-22T03:14:01Z",
+      "sha256": "3a67a2e92424cf426c593f0cedcee7efb4d470f674095baacc898878568edf1a",
+      "outer_artifact_sha256": "e0993bb304d22f30245a466d376bb4ae06eb740bcd9ccfe542f6afae69095972",
+      "wrapper_zip": true,
+      "verified_inner_package_version": "0.41.11"
     },
-    "pull_request": 70,
-    "tested_head": "96ae89918babf05156e2b36361d1335f80dc0986",
-    "ci_run_id": 42428496835,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835",
-    "ci_status": "all four standard jobs passed on final PR head: PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium controlled fixture, lightweight checks",
-    "manual_joomla_acceptance": "pending",
-    "merged_commit": "70f6ed7f2a1f4386b943bcb834f57e8d31cf935f",
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/70"
+    "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
     "version": "0.41.10-dev",

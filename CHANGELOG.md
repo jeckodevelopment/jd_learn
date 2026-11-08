@@ -10,7 +10,7 @@
 
 - Il controllo preliminare della bozza segnala come bloccante il video privo di durata tra 1 secondo e 8 ore o senza conferma registrata, coerentemente con il validatore server.
 - Il controllo usa solo i metadati già salvati e non interroga provider o carica i corpi delle lezioni.
-- Aggiunte verifiche di dominio per durata mancante e valida; documentazione Programma sincronizzata nel pacchetto.
+- Aggiunte verifiche di dominio per durata mancante e valida; documentazione Programma sincronizzata nel pacchetto. PR #78 integrata (merge 64dcf6c); CI standard superata nei due ambienti PHP/database e Chromium (run 42441526162). Collaudo manuale Joomla ancora aperto. Artefatto verificato: SHA-256 interno `3a67a2e92424cf426c593f0cedcee7efb4d470f674095baacc898878568edf1a`.
 
 
 ## 0.41.10-dev — riepilogo preliminare di pubblicazione

@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**8 novembre 2026**. Main **0.41.10-dev**, PR #74 integrata (merge c023fc4), CI standard superata nel run 42439350519. Collaudo Joomla reale ancora aperto. Riferimento precedente: 0.41.9-dev/PR #70. La CI standard finale è superata nei due ambienti PHP/database e Chromium ([run 42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Main **0.41.11-dev**, PR #78 integrata; CI standard superata nel run 42441526162. Il collaudo manuale sul sito Joomla resta da eseguire. La verifica preliminare segnala ora anche video senza durata valida confermata; non sostituisce la validazione autorevole della pubblicazione. Menu amministrativo, dashboard e acquisizione automatica della durata sono implementati. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
