@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.13-dev (candidato in revisione)**. Aggiunge la programmazione delle finestre di disponibilità dei materiali nel fuso del corso; la CI del candidato è da completare e il collaudo manuale Joomla resta aperto.
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.14-dev (candidato in revisione)**. Aggiunge la migrazione esplicita di una singola iscrizione alla versione corrente, con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz; la CI del candidato è da completare e il collaudo manuale Joomla resta aperto.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 

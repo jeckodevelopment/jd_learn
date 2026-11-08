@@ -247,6 +247,8 @@ jobs:
         run: |
           php tests/joomla-publication-impact.php .runtime/joomla
           python3 tests/publication-impact-http.py .runtime/joomla
+      - name: Explicit versioned enrollment migration, preview, completion equivalences and idempotency
+        run: php tests/joomla-enrollment-migration.php .runtime/joomla
       - name: Automatic authoring metadata, bounded duration differences and native receipts
         run: |
           php tests/joomla-video-duration.php .runtime/joomla
@@ -303,6 +305,8 @@ jobs:
         run: php tests/joomla-courses-ui.php .runtime/joomla retained
       - name: Verify frozen course presentation after package upgrade
         run: php tests/joomla-course-presentation.php .runtime/joomla retained
+      - name: Verify migrated enrollment provenance and source history survive package upgrade
+        run: php tests/joomla-enrollment-migration.php .runtime/joomla retained
       - name: Verify teacher profile snapshots and assignments survive upgrade
         run: php tests/joomla-teachers.php .runtime/joomla retained
       - name: Verify frozen calendar and edition dates survive upgrade
