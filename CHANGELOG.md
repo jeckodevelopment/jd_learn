@@ -16,7 +16,9 @@
 
 - Aggiunge al roster amministrativo la ricerca per nome visualizzato o username Joomla, combinabile con i filtri esistenti.
 - Limita l'input a 100 caratteri, rifiuta valori non testuali/caratteri di controllo e tratta `%`, `_` e `!` come testo letterale; la query resta limitata al corso autorizzato e non modifica dati.
-- Aggiunge regressioni native e HTTP; il collaudo manuale e la CI della PR restano da completare.
+- Aggiunge regressioni native Joomla e HTTP; PR [#94](https://github.com/jeckodevelopment/jd_learn/pull/94) integrata nel merge `2b411fc`.
+- CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium controllato e controlli leggeri ([run 42492865814](https://github.com/jeckodevelopment/jd_learn/actions/runs/42492865814)). Collaudo manuale Joomla ancora aperto.
+- Pacchetto CI [JD-Learn-0.41.18-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42492865814/artifacts/13622073971): SHA-256 interno `e1d046a16e11f5b89c2487f450d6088d097d2281553b1205108348ccad5b03ff`, wrapper ZIP verificato, scadenza 22 novembre 2026.
 
 ## 0.41.16-dev — lifecycle Privacy Joomla
 

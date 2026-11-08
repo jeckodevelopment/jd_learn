@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.17-dev**: integra il plugin Privacy nativo e i percorsi formativi con elenco ordinato dei corsi e progresso aggregato. **Candidata 0.41.18-dev**: ricerca per nome/username nel roster iscritti. I collaudi manuali su Joomla reale restano aperti. L'estendibilità dei provider video oltre i quattro inclusi resta prevista per la fase 2; la prima versione richiede la verifica reale di YouTube, Vimeo, Cloudflare Stream e HTML5.
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.18-dev**: include il plugin Privacy nativo, i percorsi formativi aggregati e la ricerca per nome/username nel roster iscritti. La PR #94 ha superato la CI standard (PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri); il collaudo manuale su Joomla reale resta aperto. L'estendibilità dei provider video oltre i quattro inclusi resta prevista per la fase 2; la prima versione richiede la verifica reale di YouTube, Vimeo, Cloudflare Stream e HTML5.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
