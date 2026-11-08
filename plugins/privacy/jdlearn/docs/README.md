@@ -4,7 +4,7 @@ The plugin contributes course enrolments, enrolment requests, lesson progress, q
 
 Removal preserves learning evidence needed for course history while unlinking the Joomla user ID from enrolments, deleting ephemeral progress sessions, clearing submitted answer payloads and enrolment request reasons, and removing the account ID from enrolment-level audit actors. Joomla's user privacy plugin remains responsible for pseudonymising the Joomla account and ending its sessions.
 
-The plugin blocks removal when certificate documents with identifying snapshots, JD Learn jobs owned by the account, or undelivered enrollment notifications are present. The site operator must resolve those records under the site's retention policy before retrying. This guard prevents orphaned identifying documents or pending payloads; it does not define retention periods or purge backups.
+The plugin blocks removal when certificate documents with identifying snapshots, JD Learn jobs owned by the account, or enrollment notification records are present. The site operator must resolve those records under the site's retention policy before retrying. This guard prevents orphaned identifying documents or payloads; it does not define retention periods or purge backups.
 
 The installed package registers the plugin, but site administrators must confirm it is enabled under System → Manage → Plugins. Joomla's privacy component and its request workflow must also be enabled.
 
