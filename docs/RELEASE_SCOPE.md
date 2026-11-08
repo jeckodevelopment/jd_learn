@@ -21,6 +21,8 @@
 
 La sospensione è una scelta di priorità, non una rimozione delle funzioni già sviluppate o dei dati. Le attività di manutenzione correttiva, sicurezza, privacy e conservazione dello storico rimangono applicabili anche alle funzioni congelate.
 
+**Decisione dell’8 novembre 2026:** la prova end-to-end con un quinto plugin video e lo sviluppo di ulteriori plugin di streaming passano alla fase 2. Per la prima stabile si verifica il funzionamento dei quattro adapter già distribuiti (YouTube, Vimeo, Cloudflare Stream e HTML5), inclusi installazione/configurazione, consenso, autorizzazioni e progressi.
+
 ## Ordine operativo
 
 1. Completare e collaudare la gestione dei corsi e del programma, inclusa la revisione dei corsi pubblicati.

@@ -24,7 +24,7 @@ for p in ROOT.rglob('*.ini'):
 used=set()
 for folder in ['component','plugins']:
  for p in (ROOT/folder).rglob('*'):
-  if p.suffix in ['.php','.xml']:used.update(re.findall(r'\b(?:COM_JLMS|PLG_JLMSVIDEO)_[A-Z0-9_]+\b',p.read_text()))
+  if p.suffix in ['.php','.xml']:used.update(re.findall(r'\b(?:COM_JLMS|PLG_JLMSVIDEO|PLG_PRIVACY_JDLEARN)_[A-Z0-9_]+\b',p.read_text()))
 # Installer error codes are caught explicitly and listed in the implementation status; still translate them.
 assert used<=keys,sorted(used-keys)
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
@@ -44,7 +44,7 @@ if package.exists():
      for f in list(files):
       source='/'.join(x for x in [prefix,f.text] if x)
       assert source in names or any(n.startswith(source+'/') for n in names),(manifest,source)
- print('ZIP manifests and all 7 child archives verified')
+ print(f'ZIP manifests and all {len(m.findall("./files/file"))} child archives verified')
 # Keep implementation claims separate from planned acceptance and verify their source references.
 import runpy
 runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')

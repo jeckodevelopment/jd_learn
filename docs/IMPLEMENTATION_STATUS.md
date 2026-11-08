@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-**Main è 0.41.15-dev**, PR [#90](https://github.com/jeckodevelopment/jd_learn/pull/90) integrata con merge [0f55bd1](https://github.com/jeckodevelopment/jd_learn/commit/0f55bd149a58c6fd1ce373655d89b1154c58edd4). Il registry video, pubblicazione/fruizione e loader asset ora accettano plugin provider aggiuntivi senza patch al componente. CI standard superata sul commit verificato 1833162 nel run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500); collaudo end-to-end con un quinto plugin e collaudo manuale Joomla restano aperti.
+**Main è 0.41.15-dev**; la candidata di questo incremento è **0.41.16-dev**. La PR #90 è integrata nel merge [0f55bd1](https://github.com/jeckodevelopment/jd_learn/commit/0f55bd149a58c6fd1ce373655d89b1154c58edd4). La prova con un quinto plugin provider è stata rinviata alla fase 2; per la prima release restano da collaudare i quattro plugin distribuiti con Joomla e browser reali.
 
 **Main è 0.41.14-dev**, integrata con la PR [#88](https://github.com/jeckodevelopment/jd_learn/pull/88) (merge [f2f8c76](https://github.com/jeckodevelopment/jd_learn/commit/f2f8c76b7ed88119e0a8c8b9796a52bcb0b97810)). La migrazione esplicita di una singola iscrizione alla versione corrente trasferisce solo i completamenti non quiz selezionati e conserva la provenienza. CI standard superata sul candidato esatto (run [42473935482](https://github.com/jeckodevelopment/jd_learn/actions/runs/42473935482)); resta il collaudo Joomla manuale.
 
@@ -9,7 +9,7 @@ La versione **0.41.9-dev**, ora integrata in main con la PR #70 (merge [70f6ed7]
 
 I campi editoriali del corso e i campi didattici delle lezioni sono disponibili tramite Joomla Fields. La **0.41.7-dev** integra il contesto lezioni, il salvataggio ACL, la copia e revisione dei valori, lo snapshot immutabile alla pubblicazione e la resa nell’aula. CI standard superata; il collaudo Joomla reale resta da completare. Il ripristino completo dei valori tramite Content History resta aperto.
 
-Aggiornato all’**8 novembre 2026**. Candidato corrente **0.41.15-dev**; main integrata **0.41.14-dev**; ultima CI runtime superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42473935482](https://github.com/jeckodevelopment/jd_learn/actions/runs/42473935482)). Il collaudo manuale Joomla reale resta aperto. Il prodotto è in sviluppo e non è pronto per la produzione.
+Aggiornato all’**8 novembre 2026**. Candidata **0.41.16-dev**; main integrata **0.41.15-dev**; ultima CI runtime superata sulla main su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500)). La verifica dell'incremento Privacy e il collaudo manuale Joomla restano aperti. Il prodotto è in sviluppo e non è pronto per la produzione.
 
 La PR #65 ha completato questo incremento M01/M02: campi personalizzati delle lezioni con salvataggio nativo, copia/revisione del baseline, snapshot immutabile e resa in aula. Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -27,7 +27,11 @@ La PR #62 corregge R-05: quando manca un’ultima lezione valida, Riprendi selez
 
 ### Incremento 0.41.15-dev — provider video plugin estendibili
 
-Rimosse le liste fisse dei quattro provider base nei percorsi di metadata editor, pubblicazione e ammissione alla fruizione. Il loader carica il player secondo la convenzione Joomla `media/plg_jlmsvideo_<provider>/js/player.js`; chiave validata e modulo importato soltanto dopo consenso e grant di playback. Il riepilogo in Programma legge i provider registrati. Aggiunta regressione client per provider aggiuntivo. R-02 resta parziale finché un quinto plugin Joomla non supera prova end-to-end; la CI PR e il collaudo manuale Joomla del sito restano da completare.
+Rimosse le liste fisse dei quattro provider base nei percorsi di metadata editor, pubblicazione e ammissione alla fruizione. Il loader carica il player secondo la convenzione Joomla `media/plg_jlmsvideo_<provider>/js/player.js`; chiave validata e modulo importato soltanto dopo consenso e grant di playback. Il riepilogo in Programma legge i provider registrati. Aggiunta regressione client per provider aggiuntivo. La prova con un quinto plugin è stata differita alla fase 2; per la prima stabile restano da verificare i quattro plugin distribuiti su Joomla reale.
+
+### Candidata 0.41.16-dev — lifecycle Privacy
+
+Il pacchetto aggiunge `plg_privacy_jdlearn`. Il plugin dichiara le capacità Joomla ed esporta iscrizioni/richieste, progresso, tentativi/risposte e snapshot degli attestati eventualmente emessi. Alla rimozione elimina sessioni temporanee, scollega gli account dalle iscrizioni e richieste, cancella risposte testuali e motivi delle richieste e rimuove identificativi dagli audit delle iscrizioni, mantenendo i risultati didattici minimizzati. Blocca l'operazione in presenza di documenti attestato identificativi o job proprietari da risolvere secondo la policy del sito. Test automatici e collaudo reale sono ancora da eseguire; la procedura non imposta periodi di conservazione né pulisce i backup.
 
 ## Avanzamento stimato verso la prima versione stabile
 
@@ -39,7 +43,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Fruizione e progressi core (M03/M09) | 55% |
 | Video e materiali essenziali (M04) | 80% |
 | Iscrizione e roster essenziale (M06/M09) | 65% |
-| Usabilità amministrativa e integrazioni Joomla | 80% |
+| Usabilità amministrativa e integrazioni Joomla | 84% |
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **68%** |
 
@@ -61,7 +65,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Attestati | Schema e specifiche; **nessun flusso operativo** | Modelli/PDF, idoneità ed emissione, download, verifica opzionale, revoca/sostituzione |
 | Processi e notifiche | Task Scheduler per scadenze quiz; audit nativo su quiz/iscrizioni/recupero programma | Job generali recuperabili, outbox/retry, email/Mail Templates e pulizia programmata |
 | Report | Elenco iscritti con filtri, stato, avanzamento e date | Aggregati/KPI, dettagli studente/quiz/attestati e CSV protetti |
-| Integrazioni Joomla | Identità/sessioni/CSRF, ACL/asset, categorie, form, WAM, menu, override e lingue nei flussi presenti; Fields docenti e storico corso/docente parziali | Privacy, Finder, Tags, copertura completa Fields/History/Media/lifecycle e audit generale |
+| Integrazioni Joomla | Identità/sessioni/CSRF, ACL/asset, categorie, form, WAM, menu, override e lingue nei flussi presenti; plugin Privacy 0.41.16 candidato con export e rimozione minimizzata | Verifica CI/Joomla del plugin Privacy e della retention; Finder, Tags, copertura completa Fields/History/Media/lifecycle e audit generale |
 | Installazione e rilascio | Build riproducibile, installazione/upgrade/reinstall con conservazione dei dati verificati dalla suite | Update server, backup/ripristino, patch Joomla corrente, integrazione reale con estensione abbonamenti e documentazione di rilascio |
 
 Gestione corsi e funzionamento operativo di YouTube, Vimeo e Cloudflare Stream sono la priorità corrente condivisa. Estensioni avanzate dei provider restano separate: ogni difetto che impedisce di pubblicare o fruire un corso video va affrontato subito.
@@ -90,6 +94,6 @@ Continuare M01 sul flusso editoriale semplificato, ora integrato in main, e sui 
 
 La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) restano il perimetro: 209 requisiti del rilascio 1 e uno differito. Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
-Schema attuale: **42 tabelle / 59 FK**; 7 estensioni nel pacchetto. Questi conteggi descrivono l'architettura, non l'avanzamento.
+Schema attuale: **42 tabelle / 59 FK**; 8 estensioni nel pacchetto candidato. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.

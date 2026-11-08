@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.15-dev**, integrata in main con la PR [#90](https://github.com/jeckodevelopment/jd_learn/pull/90). Rende estendibile senza patch il caricamento dei provider video plugin Joomla oltre ai quattro adapter inclusi. CI standard superata sul commit 1833162 (run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500)); resta il collaudo end-to-end di un quinto plugin aggiuntivo.
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione candidata 0.41.16-dev**: integra il plugin Privacy nativo per esportare e gestire la rimozione dei dati studente, mantenendo le evidenze didattiche minimizzate. L'estendibilità dei provider video oltre i quattro inclusi resta prevista per la fase 2; la prima versione richiede la verifica reale di YouTube, Vimeo, Cloudflare Stream e HTML5.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -38,7 +38,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto contiene 7 estensioni: componente, libreria, quattro provider video e plugin Scheduler.
+Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto contiene 8 estensioni: componente, libreria, quattro provider video, plugin Scheduler e plugin Privacy.
 
 ```sh
 python3 tools/build.py
