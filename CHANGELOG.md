@@ -5,6 +5,7 @@
 - Separa l’elenco domande dal form di creazione/modifica e adotta Search Tools Joomla con ricerca, filtri, ordinamento e paginazione.
 - Aggiunge duplicazione come nuova bozza indipendente e cancellazione CSRF con conferma, ACL e blocco per revisioni usate da quiz/tentativi.
 - Aggiorna il testbook AC-131; nessun nuovo comportamento didattico quiz.
+- PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120) integrata; CI standard completa superata ([run 42527985085](https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085)). Pacchetto [JD-Learn-0.41.27-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085/artifacts/13636515713), SHA-256 interno `2d5f53f22445eda2445025346fc42878d7652124befd7dc0bd17dd7224ff4506` (509376 byte), scadenza 22 novembre 2026. Collaudo Joomla pendente.
 
 ## 0.41.26-dev — elenco docenti secondo convenzioni Joomla
 

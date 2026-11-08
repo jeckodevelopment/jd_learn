@@ -103,4 +103,4 @@ La PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116), integrata i
 
 ### Avanzamento AC-131 — elenco amministrativo banca domande
 
-La candidata 0.41.27-dev realizza la riorganizzazione richiesta: elenco con Search Tools e form separato, azioni di creazione/duplicazione/eliminazione, CSRF e ACL. La duplicazione crea una nuova bozza con revisioni indipendenti; l’eliminazione rimuove solo domande non referenziate da quiz o tentativi, preservando le evidenze già usate. Il testbook AC-131 contiene i percorsi manuali Joomla. Non sono aggiunte funzioni didattiche.
+La PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120), integrata in main 0.41.27-dev, realizza la riorganizzazione richiesta: elenco con Search Tools e form separato, azioni di creazione/duplicazione/eliminazione, CSRF e ACL. La duplicazione crea una nuova bozza con revisioni indipendenti; l’eliminazione rimuove solo domande non referenziate da quiz o tentativi. Tutti i quattro job CI sono superati nel run 42527985085; il testbook AC-131 contiene i percorsi manuali Joomla, ancora da eseguire. Nessuna funzione didattica aggiunta.

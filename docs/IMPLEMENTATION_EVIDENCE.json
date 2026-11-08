@@ -1,61 +1,61 @@
 {
   "audited_at": "2026-11-08",
   "product": "JD Learn",
-  "version": "0.41.26-dev",
+  "version": "0.41.27-dev",
   "code_baseline": {
-    "tested_head": "51209a30644de6df4b3ccd0d6abb078f6fb037cd",
-    "parent_main_commit": "c9f402e780ef2a49c07af340d0d054295144f71a",
-    "pull_request": 116,
-    "merged_main_commit": "ed08b4c22db38b184c3a7ba5ace79cc32392466a"
+    "tested_head": "824e74187fc8d2d258a9c9427bdda4c03ff5831d",
+    "parent_main_commit": "a76e0109a4a85e47fb21a7b75f029d13359968e6",
+    "pull_request": 120,
+    "merged_main_commit": "03ca260f7746ea8fc3156acb96d85cb3acea9e07"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42524671164,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164",
+    "run_id": 42527985085,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128865530303,
+        "id": 128875743275,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128865575619,
+        "id": 128875775525,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128865575502,
+        "id": 128875775485,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128865575606,
+        "id": 128875775518,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #116 integrata. Tutti i quattro job standard superati; il collaudo manuale Joomla AC-130 resta da registrare."
+    "note": "PR #120 integrata. Tutti e quattro i job standard superati; inclusi test banca domande MVC/ACL/duplicazione/cancellazione, test HTTP della lista e del form distinti, lint PHP e build riproducibile."
   },
   "package": {
-    "name": "pkg_jlms-0.41.26-dev.zip",
-    "bytes": 503665,
-    "sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
+    "name": "pkg_jlms-0.41.27-dev.zip",
+    "bytes": 509376,
+    "sha256": "2d5f53f22445eda2445025346fc42878d7652124befd7dc0bd17dd7224ff4506",
     "constituents": 8,
     "tables": 42,
     "foreign_keys": 59,
-    "build_source": "PR #116 verificata e integrata; build riproducibile del CI.",
-    "artifact_id": 13634039771,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771",
-    "ci_artifact_archive_sha256": "sha256:a11100b989ff7b70ee4bc442cc997559eae13148201bafb3431d63eafae1a1e3",
-    "artifact_expires_at": "2026-11-22T21:24:36Z",
+    "build_source": "PR #120 testata e integrata; package bytes/SHA-256 riportati dal controllo riproducibile della CI.",
+    "artifact_id": 13636515713,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085/artifacts/13636515713",
+    "ci_artifact_archive_sha256": "sha256:6620cbb23f7b87416e952a967eb166227ad9788396683165070910d9affe5757",
+    "artifact_expires_at": "2026-11-22T22:04:41Z",
     "wrapper_zip": true,
-    "inner_version": "0.41.26-dev"
+    "inner_version": "0.41.27-dev"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -68,6 +68,78 @@
   ],
   "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-08",
+      "version": "0.41.26-dev",
+      "code_baseline": {
+        "tested_head": "51209a30644de6df4b3ccd0d6abb078f6fb037cd",
+        "parent_main_commit": "c9f402e780ef2a49c07af340d0d054295144f71a",
+        "pull_request": 116,
+        "merged_main_commit": "ed08b4c22db38b184c3a7ba5ace79cc32392466a"
+      },
+      "ci": {
+        "run_id": 42524671164,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 128865530303,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128865575619,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128865575502,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128865575606,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "PR #116 integrata. Tutti i quattro job standard superati; il collaudo manuale Joomla AC-130 resta da registrare."
+      },
+      "package": {
+        "name": "pkg_jlms-0.41.26-dev.zip",
+        "bytes": 503665,
+        "sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
+        "constituents": 8,
+        "tables": 42,
+        "foreign_keys": 59,
+        "build_source": "PR #116 verificata e integrata; build riproducibile del CI.",
+        "artifact_id": 13634039771,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771",
+        "ci_artifact_archive_sha256": "sha256:a11100b989ff7b70ee4bc442cc997559eae13148201bafb3431d63eafae1a1e3",
+        "artifact_expires_at": "2026-11-22T21:24:36Z",
+        "wrapper_zip": true,
+        "inner_version": "0.41.26-dev"
+      },
+      "candidate_status": "0.41.26-dev integrata in main dalla PR #116; CI standard superata; collaudo manuale Joomla AC-130 pendente.",
+      "latest_verified_increment": {
+        "version": "0.41.26-dev",
+        "pull_request": 116,
+        "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/116",
+        "tested_head": "51209a30644de6df4b3ccd0d6abb078f6fb037cd",
+        "merged_main_commit": "ed08b4c22db38b184c3a7ba5ace79cc32392466a",
+        "ci_run_id": 42524671164,
+        "artifact_id": 13634039771,
+        "artifact_name": "JD-Learn-0.41.26-dev",
+        "artifact_sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
+        "artifact_size_bytes": 503665,
+        "artifact_expires_at": "2026-11-22T21:24:36Z",
+        "manual_joomla_acceptance": "pending"
+      }
+    },
     {
       "audited_at": "2026-11-08",
       "version": "0.41.21-dev",
@@ -1813,7 +1885,7 @@
       }
     }
   ],
-  "evidence_scope": "Runtime PR #102 tested at 8b962c62f3af95100c1da7b1794297df66452d78 and integrated as 0a05f004823156abc750981a11db6598a8cf9972. The exact inner package from the downloaded CI artifact matched the independently rebuilt package SHA-256. CI passed; manual Joomla site acceptance remains open.",
+  "evidence_scope": "PR #120 / AC-131 integrata e verificata dalla CI completa; il collaudo Joomla reale resta aperto. La dashboard AC-132 è registrata superata secondo la comunicazione dell’utente dell’8 novembre 2026.",
   "ci_policy_verification": {
     "date": "2026-11-07",
     "pull_request": 48,
@@ -1884,33 +1956,33 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.26-dev integrata in main dalla PR #116; CI standard superata; collaudo manuale Joomla AC-130 pendente.",
+  "candidate_status": "0.41.27-dev integrata in main dalla PR #120; CI standard superata; collaudo manuale Joomla AC-131 pendente.",
   "previous_verified_release": {
-    "version": "0.41.25-dev",
-    "package": "pkg_jlms-0.41.25-dev.zip",
-    "sha256": "bd0a7796d3f260af9ea2e2d8079265623d987db4fa485716bd1c43f966929b03",
-    "artifact_id": 13633183064,
-    "run_id": 42520306552,
-    "expires_at": "2026-11-22T20:32:36Z"
+    "version": "0.41.26-dev",
+    "package": "pkg_jlms-0.41.26-dev.zip",
+    "sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
+    "artifact_id": 13634039771,
+    "run_id": 42524671164,
+    "expires_at": "2026-11-22T21:24:36Z"
   },
   "candidate_increment": {
-    "version": "0.41.26-dev",
-    "scope": "AC-130: riorganizza la lista backend docenti con Search Tools Joomla, ricerca, filtri stato/lingua, ordinamento e paginazione; il form resta separato. Nessuna modifica alle associazioni, ai dati o alle ACL.",
-    "status": "PR #116 integrata; CI standard superata; collaudo manuale Joomla da registrare.",
+    "version": "0.41.27-dev",
+    "scope": "AC-131: lista banca domande Search Tools separata dal form; crea/duplica/elimina con ACL/CSRF e controllo dipendenze quiz/tentativi.",
+    "status": "PR #120 integrata; CI standard superata; collaudo manuale Joomla da registrare.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
-    "version": "0.41.26-dev",
-    "pull_request": 116,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/116",
-    "tested_head": "51209a30644de6df4b3ccd0d6abb078f6fb037cd",
-    "merged_main_commit": "ed08b4c22db38b184c3a7ba5ace79cc32392466a",
-    "ci_run_id": 42524671164,
-    "artifact_id": 13634039771,
-    "artifact_name": "JD-Learn-0.41.26-dev",
-    "artifact_sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
-    "artifact_size_bytes": 503665,
-    "artifact_expires_at": "2026-11-22T21:24:36Z",
+    "version": "0.41.27-dev",
+    "pull_request": 120,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/120",
+    "tested_head": "824e74187fc8d2d258a9c9427bdda4c03ff5831d",
+    "merged_main_commit": "03ca260f7746ea8fc3156acb96d85cb3acea9e07",
+    "ci_run_id": 42527985085,
+    "artifact_id": 13636515713,
+    "artifact_name": "JD-Learn-0.41.27-dev",
+    "artifact_sha256": "2d5f53f22445eda2445025346fc42878d7652124befd7dc0bd17dd7224ff4506",
+    "artifact_size_bytes": 509376,
+    "artifact_expires_at": "2026-11-22T22:04:41Z",
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {
@@ -1931,10 +2003,5 @@
       "environment_details": "Non forniti"
     }
   ],
-  "next_candidate": {
-    "version": "0.41.27-dev",
-    "scope": "AC-131: separazione della lista banca domande dal form; Search Tools, duplicazione come nuova bozza e cancellazione protetta con CSRF, ACL e controlli sulle referenze a quiz/tentativi.",
-    "status": "Implementazione candidata; CI e collaudo manuale Joomla pendenti.",
-    "manual_joomla_acceptance": "pending"
-  }
+  "next_candidate": null
 }

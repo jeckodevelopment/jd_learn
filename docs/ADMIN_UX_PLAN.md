@@ -61,4 +61,4 @@ Dal roster si apre una schermata operativa del corso con quattro comandi indipen
 
 ### AC-131 — elenco e form separati per la banca domande
 
-La candidata 0.41.27-dev usa un elenco con Search Tools Joomla e un form distinto. Aggiunge duplicazione come bozza autonoma e cancellazione CSRF protetta; ogni revisione collegata a un quiz o a un tentativo impedisce l’eliminazione. Le altre funzioni quiz restano fuori perimetro. Vedere il [testbook AC-131](QA_TESTBOOK.md#ac-131--elenco-separato-per-la-banca-domande-candidata-04127-dev-collaudo-joomla-pendente).
+La PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120) è integrata in main 0.41.27-dev; la CI standard è superata. L’elenco usa Search Tools Joomla e il form è separato. La duplicazione crea una bozza autonoma; una revisione collegata a quiz o tentativi impedisce l’eliminazione. Le altre funzioni quiz restano fuori perimetro. Collaudo manuale ancora aperto nel [testbook AC-131](QA_TESTBOOK.md#ac-131--elenco-separato-per-la-banca-domande-pr-120-integrata-in-04127-dev-collaudo-joomla-pendente).

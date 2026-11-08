@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.26-dev** include la correzione Privacy (PR #102), l’accesso centralizzato ai campi Corsi/Docenti/Lezioni (issue #99, PR #104), la dashboard amministrativa (issue #105, PR #108/#110/#112) e la vista Docenti secondo Search Tools Joomla (AC-130, PR #116). L’utente ha confermato il superamento del collaudo manuale della dashboard l’8 novembre 2026; i dettagli di ambiente non sono stati forniti. La candidata **0.41.27-dev** implementa AC-131 per l’elenco separato della banca domande. Statistiche, attestati e altre voci future restano fuori dalla dashboard.
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.27-dev** include la correzione Privacy (PR #102), l’accesso centralizzato ai campi Corsi/Docenti/Lezioni (issue #99, PR #104), la dashboard amministrativa (issue #105, PR #108/#110/#112), la vista Docenti standard Joomla (AC-130, PR #116) e la gestione banca domande riorganizzata (AC-131, PR #120). Il collaudo manuale della dashboard è stato confermato superato dall’utente l’8 novembre 2026; per AC-131 il collaudo Joomla resta da eseguire. Statistiche, attestati e altre voci future restano fuori dalla dashboard.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
