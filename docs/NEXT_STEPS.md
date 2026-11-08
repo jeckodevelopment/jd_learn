@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**8 novembre 2026**. Riferimento: **0.41.9-dev integrata in main (PR #70, merge 70f6ed7); CI standard superata nel run 42428496835**. La CI standard finale è superata nei due ambienti PHP/database e Chromium ([run 42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Candidato in corso: **0.41.10-dev**, riepilogo preliminare dei problemi di pubblicazione; CI da completare. Main di riferimento: **0.41.9-dev integrata in main (PR #70, merge 70f6ed7); CI standard superata nel run 42428496835**. La CI standard finale è superata nei due ambienti PHP/database e Chromium ([run 42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -22,6 +22,8 @@ Quiz e banca domande, attestati, KPI/reportistica avanzata, export CSV e importa
 Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applicano da subito a ogni funzione inclusa.
 
 ## Primo lavoro da svolgere
+
+Prima completare/verificare il candidato 0.41.10-dev: controllo preliminare della bozza con separazione tra blocchi strutturali e avvisi; non sostituisce i controlli definitivi su provider, quiz, materiali, ACL e revisioni.
 
 La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. La PR #68 ha completato il restyling previsto della schermata iniziale. Entrambe hanno superato la CI prevista; resta il collaudo nel sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 
