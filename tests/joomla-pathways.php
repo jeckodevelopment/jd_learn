@@ -96,7 +96,7 @@ $check($before===$after,'reading a pathway never changes enrollment or access');
 $rejected = ['id'=>0,'revision'=>1,'title'=>'Rejected pathway','alias'=>'rejected-ci-pathway','description'=>'','catid'=>$categoryId,
     'access'=>1,'language'=>'*','state'=>1,'courses'=>[['course_id'=>$courseId,'ordering'=>0],['course_id'=>$courseId,'ordering'=>1]]];
 $check(!$pathModel->save($rejected),'duplicate course association is rejected');
-$check(!(int)$db->setQuery("SELECT COUNT(*) FROM #__assets WHERE name LIKE 'com_jlms.pathway.pending.%'")->loadResult(),
+$check(!(int)$db->setQuery("SELECT COUNT(*) FROM #__assets WHERE name LIKE 'com_jlms.pathway.tmp.%'")->loadResult(),
     'failed pathway save removes its prepared Joomla asset');
 $emptyPayload = ['id'=>0,'revision'=>1,'title'=>'Empty CI pathway','alias'=>'empty-ci-pathway','description'=>'','catid'=>$categoryId,
     'access'=>1,'language'=>'*','state'=>1,'courses'=>[]];

@@ -78,7 +78,7 @@ final class PathwayModel extends AdminModel
                 $assetTable = new \Joomla\CMS\Table\Asset($db);
                 $assetTable->setLocation((int) $category->asset_id, 'last-child');
                 $assetTable->bind([
-                    'name' => 'com_jlms.pathway.pending.' . bin2hex(random_bytes(16)),
+                    'name' => 'com_jlms.pathway.tmp.' . bin2hex(random_bytes(12)),
                     'title' => 'JD Learn pathway draft',
                     'rules' => '{}',
                 ]);

@@ -75,7 +75,7 @@ final class PathwayTable extends Table
             && (int) $asset->parent_id === (int) $this->_getAssetParentId()
             && $this->_rules === null;
         $prepared = !$this->id && $this->preparedAsset > 0 && $asset->load($this->preparedAsset)
-            && str_starts_with((string) $asset->name, 'com_jlms.pathway.pending.')
+            && str_starts_with((string) $asset->name, 'com_jlms.pathway.tmp.')
             && (int) $asset->parent_id === (int) $this->_getAssetParentId();
         if ($this->preparedAsset && !$prepared) {
             throw new \DomainException('COM_JLMS_SAVE_FAILED');
