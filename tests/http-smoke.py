@@ -76,9 +76,8 @@ try:
  for view in ['courses','teachers','questionbank']:
   if not any(q.get('option')==['com_jlms'] and q.get('view')==[view] for q in menu_links):raise RuntimeError('Native JD Learn sidebar link missing: '+view)
  if not any(q.get('option')==['com_categories'] and q.get('extension')==['com_jlms.course'] for q in menu_links):raise RuntimeError('Native course category sidebar missing')
- custom_fields_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_fields'] and parse_qs(urlparse(x).query).get('view')==['fields']),None)
+ custom_fields_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_fields'] and parse_qs(urlparse(x).query).get('view')==['fields'] and parse_qs(urlparse(x).query).get('context')==['com_jlms.course']),None)
  if not custom_fields_link:raise RuntimeError('Native custom fields sidebar link missing')
- if parse_qs(urlparse(custom_fields_link).query).get('context')!=['com_jlms.course']:raise RuntimeError('Custom fields sidebar must open the native manager on a JD Learn context')
  _,custom_fields_html=get(custom_fields_link)
  context_filter=re.search(r'<select[^>]+name="context"[^>]*>(.*?)</select>',custom_fields_html,re.S)
  if not context_filter or any('value="com_jlms.'+context+'"' not in context_filter.group(1) for context in ['course','teacher','lesson']):raise RuntimeError('Native custom fields context filter must offer course, teacher and lesson')
