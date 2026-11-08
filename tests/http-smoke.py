@@ -74,7 +74,8 @@ try:
  options_url,options_html=get('/administrator/index.php?option=com_config&view=component&component=com_jlms')
  options_title=re.search(r'<title>(.*?)</title>',options_html,re.S)
  if not options_title or 'JD Learn: Options' not in unescape(options_title.group(1)) or 'com_jlms_configuration' in options_html:
-  raise RuntimeError('JD Learn component options must have the translated browser title')
+  actual_title=unescape(options_title.group(1)) if options_title else '(missing <title>)'
+  raise RuntimeError('JD Learn component options must have the translated browser title; title='+actual_title)
  if 'JGLOBAL_HISTORY_OPTIONS' in options_html or options_html.count('Version History Options')<2:
   raise RuntimeError('Component history tab and group must use the translated label')
  print(json.dumps({'component_options_translation_http_checks':2,'status':'passed'}))
