@@ -96,7 +96,9 @@ try:
  }
  for shortcut,(option,view) in required_shortcuts.items():
   query=dashboard_shortcuts.get(shortcut)
-  if not query or query.get('option')!=[option] or query.get('view')!=[view]:raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut)
+  if not query or query.get('option')!=[option] or query.get('view')!=[view]:
+   found={a.get('id'):a.get('href') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+   raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
  if len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))!=6:raise RuntimeError('Dashboard shortcuts must each include a Joomla icon')
  # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
  get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')
