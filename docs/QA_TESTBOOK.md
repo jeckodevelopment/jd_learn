@@ -54,13 +54,13 @@ Riferimenti: [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/10
 5. Espandere **Stato dei provider video**: il riepilogo esistente deve continuare a mostrare provider e configurazione senza diventare un nuovo flusso o requisito.
 6. Verificare che non compaiano riquadri Statistiche o Attestati, rinviati alla fase 2.
 
-**Anomalie segnalate sul pacchetto 0.41.23-dev:** la voce radice **JD Learn** nella sidebar apre ancora Corsi dopo l'aggiornamento; i riquadri possono portare a un URL con `&amp;` letterale; l'introduzione mostra una frase sullo storico didattico non pertinente alla dashboard. La correzione candidata 0.41.24-dev aggiunge queste regressioni:
+**Anomalie rilevate sul pacchetto 0.41.23-dev e correzioni incluse in 0.41.24-dev:** la voce radice **JD Learn** nella sidebar apriva ancora Corsi dopo l'aggiornamento; i riquadri potevano portare a un URL con `&amp;` letterale; l'introduzione mostrava una frase sullo storico didattico non pertinente alla dashboard. Verificare la correzione con queste regressioni:
 
 7. Aggiornare il sito da 0.41.23-dev a 0.41.24-dev. Fare clic sulla voce radice **JD Learn** della sidebar. Atteso: si apre la dashboard; Corsi resta una voce figlia distinta, senza duplicati.
 8. Aprire tutti i sei riquadri. Atteso: ogni indirizzo nel browser contiene parametri separati da `&`, porta alla vista corretta e non contiene il testo letterale `&amp;`.
 9. Verificare l'introduzione in italiano e inglese. Atteso: descrive gli strumenti amministrativi e non mostra «Storico didattico e disponibilità attuale dell’aula sono mostrati separatamente.»
 
-**Stato:** la funzione base è stata implementata dalla PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), integrata in `7d4584e5ae96795344d8f72b2639e96d1edbc171`; CI standard superata nel [run 42513162483](https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483). La correzione delle tre anomalie è in candidata 0.41.24-dev; non dichiarare accettato AC-132 finché non siano superati i passi sopra sul sito Joomla e registrati versione, ambiente e risultati.
+**Stato:** PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108) e correzioni [#110](https://github.com/jeckodevelopment/jd_learn/pull/110) integrate; CI standard superata nei run [42513162483](https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483) e [42518292971](https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971). Pacchetto [JD-Learn-0.41.24-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971/artifacts/13632870363), SHA-256 interno `5162d657369820d14b082b0e1f14037bf65923f9c8a1c682cde584821ab0c174`. Le correzioni sono in main; i passi 1–9 di ricollaudo Joomla restano da eseguire e registrare prima di accettare AC-132.
 
 ### Issue #99 — accesso centralizzato ai campi aggiuntivi
 
