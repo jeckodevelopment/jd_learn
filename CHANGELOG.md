@@ -6,6 +6,13 @@
 
 # Changelog
 
+## 0.41.12-dev — preflight materiali non pronti
+
+- Il controllo preliminare del Programma segnala allegati in quarantena, con scansione ClamAV obbligatoria non pulita, marcati come sola anteprima o con finestra di pubblicazione configurata, in linea con la validazione server.
+- Il preflight legge soltanto i metadati degli allegati della bozza; aggiunte verifiche di dominio e regressione HTTP con materiale fixture temporaneamente inserito e rimosso.
+- Nessuna modifica ai file, ai permessi o ai contenuti pubblicati.
+
+
 ## 0.41.11-dev — preflight durata video
 
 - Il controllo preliminare della bozza segnala come bloccante il video privo di durata tra 1 secondo e 8 ore o senza conferma registrata, coerentemente con il validatore server.
