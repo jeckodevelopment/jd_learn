@@ -74,6 +74,18 @@ rosterExpect(count($rows)>=26,'course roster includes more than one student');
 rosterExpect(in_array($f['active'],$allIds,true)&&in_array($f['other_enrollment'],$allIds,true),'authorized operator sees all course owners');
 rosterExpect(!in_array($f['italian'],$allIds,true),'another course is excluded');
 rosterExpect(count($read($actor,['user'=>$f['owner']]))===25,'exact native user ID filter');
+$ownerUsername=(string)$db->setQuery('SELECT username FROM #__users WHERE id='.(int)$f['owner'])->loadResult();
+$usernameMatches=$read($actor,['user'=>$f['owner'],'search'=>substr($ownerUsername,0,6)]);
+rosterExpect(count($usernameMatches)===25,'search finds learner by username');
+$ownerName=(string)$db->setQuery('SELECT name FROM #__users WHERE id='.(int)$f['owner'])->loadResult();
+$searchFixtureName='Unique Roster Search Name';$ownerId=(int)$f['owner'];
+$rename=$db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name',$searchFixtureName)->bind(':id',$ownerId,\Joomla\Database\ParameterType::INTEGER);
+$db->setQuery($rename)->execute();
+try { rosterExpect(count($read($actor,['user'=>$f['owner'],'search'=>'Roster Search Name']))===25,'search finds learner by display name'); }
+finally { $restore=$db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name',$ownerName)->bind(':id',$ownerId,\Joomla\Database\ParameterType::INTEGER);$db->setQuery($restore)->execute(); }
+rosterExpect(count($read($actor,['search'=>'%']))===0,'search treats LIKE wildcards literally');
+rosterDenied(fn()=>$service->query($actor,$course,['search'=>str_repeat('x',101)]),400,'overlong learner search rejected');
+rosterDenied(fn()=>$service->query($actor,$course,['search'=>['cidash']]),400,'non-string learner search rejected');
 rosterExpect(count($read($actor,['user'=>$f['owner'],'status'=>'suspended']))===1,'status filter');
 rosterExpect(count($read($actor,['user'=>$f['owner'],'progress'=>'completed']))===1,'completion filter independent of expiration');
 rosterExpect(count($read($actor,['user'=>$f['owner'],'progress'=>'in_progress']))===1,'activity filter');
@@ -104,7 +116,7 @@ try{rosterDenied(fn()=>$read($user),403,'explicit course deny refreshes stale id
 try{rosterDenied(fn()=>$read($user),403,'group revocation refreshes stale identity');}finally{\Joomla\CMS\User\UserHelper::addUserToGroup((int)$user->id,$group);}
 $app->loadIdentity($user);$m=$factory->createModel('Enrollments','Administrator',['ignore_request'=>true]);$m->setState('filter.course',$course);$m->setState('filter.roster',['user'=>$f['owner']]);$m->setState('list.start',20);$m->setState('list.limit',20);
 rosterExpect($m->getTotal()===25&&count($m->getItems())===5,'native list total and pagination');
-rosterExpect($m->getRosterForm()->getField('version')!==false,'native filter form');
+rosterExpect($m->getRosterForm()->getField('version')!==false&&$m->getRosterForm()->getField('search')!==false,'native filter form includes learner search');
 $app->loadIdentity(new \Joomla\CMS\User\User($f['owner']));
 rosterDenied(fn()=>$m->getItems(),403,'cached native list rechecks authorization');rosterDenied(fn()=>$m->getTotal(),403,'cached total rechecks authorization');
 $app->loadIdentity($actor);

@@ -12,7 +12,7 @@ La tabella mostra stato iscrizione e completamento separatamente: una frequenza 
 
 ## Filtri e paginazione
 
-Form GET nativo Joomla con `filter[version]` (ID versione), `filter[user]` (ID account), `filter[status]` e `filter[progress]`. ID0/vuoti significano tutti, ID negativi/non interi sono rifiutati. La versione deve appartenere al corso autorizzato. Stati ammessi: requested, active, completed (compatibilità storica), suspended, expired, cancelled, rejected; avanzamento: not_started, in_progress, completed. Campi e ordinamento SQL sono fissati dal servizio, valori bindati; il filtro non accetta SQL o nomi di colonna arbitrari.
+Form GET nativo Joomla con `filter[version]` (ID versione), `filter[user]` (ID account), `filter[search]`, `filter[status]` e `filter[progress]`. Ricerca per sottostringa nel nome visualizzato o nello username Joomla, massimo100 caratteri; i caratteri `%`, `_` e `!` sono letterali. Ricerca e filtri si combinano. ID0/vuoti significano tutti, ID negativi/non interi sono rifiutati. La versione deve appartenere al corso autorizzato. Stati ammessi: requested, active, completed (compatibilità storica), suspended, expired, cancelled, rejected; avanzamento: not_started, in_progress, completed. Campi e ordinamento SQL sono fissati dal servizio, valori bindati; il filtro non accetta SQL o nomi di colonna arbitrari.
 
 Paginazione ListModel/Pagination con massimo50 righe, ordine ID iscrizione decrescente, totale filtrato. Il form riporta a pagina0 quando applicato. Il totale comprende le righe storiche, senza filtrare sui diritti di fruizione attuali degli studenti. Nessuna cache condivisa contenente dati personali. Gli indici esistenti `ix_reports` coprono il corso/versione/stato; i test di carico e piani su dataset reali restano pendenti.
 
@@ -22,9 +22,9 @@ Il servizio `EnrollmentRosterService::course/query`, registrato nella DI del com
 
 Override `html/com_jlms/enrollments/default.php` del template amministrativo. ID stabili: `jlms-admin-enrollments`, `jlms-roster-policy`, `jlms-roster-filters`, `jlms-roster-total`, `jlms-roster-table`, `jlms-roster-enrollment-{ID}`, `jlms-roster-empty`, `jlms-roster-pagination`. Stili tabella/form/responsive nativi del template Joomla; nessun CSS globale aggiunto. Gli override devono conservare escaping, etichette, intestazioni e confine del servizio.
 
-Test su sito effimero: operatori con scope diverso, account studente/anonimo, revoca gruppo e diniego per corso su identità già caricata, totale/pagine native, filtri e input ostili, nomi HTML escapati, nessuna mutazione dello storico e conservazione al reinstall. La CI automatica R-03 è superata; il collaudo su Joomla reale resta aperto; questo non equivale a completamento dei requisiti REP-01/02 o ISC-02.
+Test su sito effimero: operatori con scope diverso, account studente/anonimo, revoca gruppo e diniego per corso su identità già caricata, totale/pagine native, ricerca per nome/username e caratteri jolly, filtri e input ostili, nomi HTML escapati, nessuna mutazione dello storico e conservazione al reinstall. Il collaudo su Joomla reale resta aperto; questo non equivale a completamento dei requisiti REP-01/02 o ISC-02.
 
-Restano da implementare ricerca per nome, selettori versione/utente ricercabili, risultati quiz/attestati nel riepilogo, dashboard aggregata, export e dettaglio studente. Ammissione singola, stato della singola iscrizione e comandi di corso con motivo/anteprima/audit sono flussi separati, non azioni batch nella tabella. R-03 0.41.9 è integrata con la PR #70 e ha superato la CI standard (run 42428496835); resta il collaudo manuale su Joomla reale.
+Restano da implementare selettori versione/utente ricercabili, risultati quiz/attestati nel riepilogo, dashboard aggregata, export e dettaglio studente. Ammissione singola, stato della singola iscrizione e comandi di corso con motivo/anteprima/audit sono flussi separati, non azioni batch nella tabella. R-03 0.41.9 è integrata con la PR #70 e ha superato la CI standard (run 42428496835); resta il collaudo manuale su Joomla reale.
 
 ## Gestione stato dalla0.18
 

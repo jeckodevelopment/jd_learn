@@ -12,6 +12,12 @@
 
 # Changelog
 
+## 0.41.18-dev — ricerca iscritti nel roster
+
+- Aggiunge al roster amministrativo la ricerca per nome visualizzato o username Joomla, combinabile con i filtri esistenti.
+- Limita l'input a 100 caratteri, rifiuta valori non testuali/caratteri di controllo e tratta `%`, `_` e `!` come testo letterale; la query resta limitata al corso autorizzato e non modifica dati.
+- Aggiunge regressioni native e HTTP; il collaudo manuale e la CI della PR restano da completare.
+
 ## 0.41.16-dev — lifecycle Privacy Joomla
 
 - Aggiunge al pacchetto `plg_privacy_jdlearn`, con dichiarazione delle capacità e domini export per iscrizioni/richieste, progressi, tentativi/risposte e attestati eventualmente emessi.

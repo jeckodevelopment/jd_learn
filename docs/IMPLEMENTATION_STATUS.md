@@ -1,17 +1,12 @@
 # Stato attuale di JD Learn
 
-**Main è 0.41.16-dev**; la candidata di questo incremento è **0.41.17-dev**. La PR #92 è integrata nel merge `7343285` con CI standard verde; la candidata aggiunge percorsi formativi aggregati. La prova con un quinto plugin provider è stata rinviata alla fase 2; per la prima release restano da collaudare i quattro plugin distribuiti con Joomla e browser reali.
+Aggiornato all’**8 novembre 2026**. **Main 0.41.17-dev** include i percorsi formativi aggregati nel commit `02a1a62`; la CI e l’accettazione manuale di tali percorsi restano da registrare. La candidata di questa PR è **0.41.18-dev** e aggiunge la ricerca per nome/username nel roster amministrativo degli iscritti. Il prodotto è in sviluppo e non è pronto per la produzione. La prova con un quinto provider è differita; per la stabile restano richieste le verifiche reali dei quattro provider distribuiti.
 
-**Main è 0.41.14-dev**, integrata con la PR [#88](https://github.com/jeckodevelopment/jd_learn/pull/88) (merge [f2f8c76](https://github.com/jeckodevelopment/jd_learn/commit/f2f8c76b7ed88119e0a8c8b9796a52bcb0b97810)). La migrazione esplicita di una singola iscrizione alla versione corrente trasferisce solo i completamenti non quiz selezionati e conserva la provenienza. CI standard superata sul candidato esatto (run [42473935482](https://github.com/jeckodevelopment/jd_learn/actions/runs/42473935482)); resta il collaudo Joomla manuale.
+### Candidata 0.41.18-dev — ricerca nel roster
 
+L’operatore autorizzato può cercare le iscrizioni del corso per nome visualizzato o username Joomla, combinando la ricerca con filtri esistenti. Il testo è limitato e i caratteri jolly sono trattati letteralmente. Test di dominio/HTTP e CI standard da eseguire sul candidato; resta il collaudo manuale nel backend Joomla. Il roster resta in sola lettura e non rivela email, risposte quiz o dati di altri corsi.
 
-La versione **0.41.9-dev**, ora integrata in main con la PR #70 (merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f)), aggiunge i controlli separati di ammissione ed erogazione R-03, con anteprima, motivo, conferma e storico. La CI standard è superata nei due ambienti PHP/database e Chromium (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); resta il collaudo manuale Joomla. La dashboard amministrativa della **0.41.8-dev** mette in primo piano la gestione corsi, raggruppa gli strumenti e rende espandibile lo stato dei provider. La PR #68 è integrata in main; la CI standard è superata. Restano aperti i controlli manuali nel backend Joomla.
-
-I campi editoriali del corso e i campi didattici delle lezioni sono disponibili tramite Joomla Fields. La **0.41.7-dev** integra il contesto lezioni, il salvataggio ACL, la copia e revisione dei valori, lo snapshot immutabile alla pubblicazione e la resa nell’aula. CI standard superata; il collaudo Joomla reale resta da completare. Il ripristino completo dei valori tramite Content History resta aperto.
-
-Aggiornato all’**8 novembre 2026**. Candidata **0.41.17-dev**; main integrata **0.41.16-dev**. La candidata aggiunge percorsi e nuove prove native Joomla/HTTP; CI e collaudo manuale di questa PR restano aperti. Il prodotto è in sviluppo e non è pronto per la produzione.
-
-La PR #65 ha completato questo incremento M01/M02: campi personalizzati delle lezioni con salvataggio nativo, copia/revisione del baseline, snapshot immutabile e resa in aula. Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
+Il percorso di base disponibile comprende creazione/pubblicazione di corsi, aggiornamenti immutabili del programma, ammissione singola e fruizione con progressi persistenti. La gestione M01 e i collaudi core di M03/M04/M06 restano aperti; non si considerano accettate le funzioni solo perché presenti nel codice.
 
 ### Incremento0.41.3-dev — checkbox risposta corretta
 
