@@ -1884,7 +1884,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.24-dev integrata in main con PR #110 (merge 2f99f3285b8be4a1017a86d838b4789d9efe5b30); CI standard superata nel run 42518292971; ricollaudo manuale Joomla AC-132 pendente.",
+  "candidate_status": "0.41.25-dev candidata su main 0.41.24-dev; aggiunge la voce Dashboard come prima voce figlia del menu amministrativo. CI e ricollaudo manuale pendenti.",
   "previous_verified_release": {
     "version": "0.41.23-dev",
     "package": "pkg_jlms-0.41.23-dev.zip",
@@ -1894,9 +1894,9 @@
     "expires_at": "2026-11-22T19:08:57Z"
   },
   "candidate_increment": {
-    "version": "0.41.24-dev",
-    "scope": "Issue #105 / AC-132: link root aggiornato in upgrade, URL dei riquadri non doppiamente codificati e traduzioni introduttive ripulite.",
-    "status": "Integrato dalla PR #110 nel merge 2f99f3285b8be4a1017a86d838b4789d9efe5b30; CI standard superata nel run 42518292971; ricollaudo manuale Joomla pendente.",
+    "version": "0.41.25-dev",
+    "scope": "Issue #105 / AC-132: aggiunge Dashboard come prima voce figlia della sidebar e la collega alla dashboard amministrativa esistente, mantenendo ordine e voci già presenti.",
+    "status": "Implementazione candidata; CI e collaudo manuale Joomla pendenti. Nessuna funzione didattica aggiunta.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {

@@ -61,16 +61,19 @@ $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 // Native extension installer must create the submenu once and preserve it on upgrade.
 $menuParent = (int) $db->setQuery("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND link='index.php?option=com_jlms&view=dashboard' AND parent_id=1")->loadResult();
-$menuLinks = $db->setQuery('SELECT link FROM #__menu WHERE client_id=1 AND parent_id=' . $menuParent)->loadColumn();
-$expectedLinks = ['index.php?option=com_jlms&view=courses', 'index.php?option=com_categories&view=categories&extension=com_jlms.course', 'index.php?option=com_jlms&view=questionbank', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_fields&view=fields&context=com_jlms.course', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'];
-sort($menuLinks); sort($expectedLinks);
-if (!$menuParent || $menuLinks !== $expectedLinks) { throw new \RuntimeException('Native administrator menu missing or duplicated after installation/upgrade.'); }
+$menuLinks = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('ordering') . ' ASC'))->loadColumn();
+$expectedLinks = ['index.php?option=com_jlms&view=dashboard', 'index.php?option=com_jlms&view=courses', 'index.php?option=com_categories&view=categories&extension=com_jlms.course', 'index.php?option=com_jlms&view=questionbank', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_fields&view=fields&context=com_jlms.course', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'];
+$menuTitles = $db->setQuery($db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('ordering') . ' ASC'))->loadColumn();
+$expectedMenuTitles = ['COM_JLMS_DASHBOARD_MENU', 'COM_JLMS_COURSES', 'COM_JLMS_COURSE_CATEGORIES', 'COM_JLMS_QUESTION_BANK', 'COM_JLMS_TEACHERS', 'COM_JLMS_CUSTOM_FIELDS', 'COM_JLMS_VIDEO_PLUGINS'];
+if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMenuTitles) { throw new \RuntimeException('Native administrator menu must include Dashboard first with the localized label and without duplicates.'); }
 // Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
 require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
 (new \Com_JlmsInstallerScript())->postflight('update', null);
 $menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
 if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') { throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.'); }
+$menuLinksAfterUpdate = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('ordering') . ' ASC'))->loadColumn();
+if ($menuLinksAfterUpdate !== $expectedLinks) { throw new \RuntimeException('Dashboard submenu order or links changed during component upgrade.'); }
 $fieldContexts = array_keys(Factory::getApplication()->bootComponent('com_jlms')->getContexts());
 if ($fieldContexts !== ['com_jlms.teacher', 'com_jlms.course', 'com_jlms.lesson']) {
     throw new \RuntimeException('JD Learn custom-field contexts are unavailable to the native com_fields filter.');

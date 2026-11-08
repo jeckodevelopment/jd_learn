@@ -35,6 +35,9 @@ for tag,expected in {
  ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.ini').read_text()
  matches=re.findall(r'^COM_JLMS_DASHBOARD_INTRO="([^"]*)"$',ini,re.M)
  assert matches==[expected],(tag,matches)
+for tag in ['it-IT','en-GB']:
+ sys_ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.sys.ini').read_text()
+ assert re.findall(r'^COM_JLMS_DASHBOARD_MENU="([^"]*)"$',sys_ini,re.M)==['Dashboard'],tag
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
