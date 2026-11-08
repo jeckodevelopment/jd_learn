@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.25-dev — accesso Dashboard nella sidebar
+
+- Aggiunge **Dashboard** come prima voce figlia di JD Learn nel menu amministrativo, collegata alla vista dashboard esistente; Corsi e le altre voci seguono nell'ordine.
+- Traduce l'etichetta in italiano e inglese e aggiunge una regressione Joomla sull'ordine delle voci dopo l'upgrade.
+- Collaudo manuale di posizione, destinazione e lingue aggiunto al testbook AC-132.
+- Nessuna nuova funzione didattica o capacità di fase 2.
+
 ## 0.41.24-dev — correzioni dashboard amministrativa
 
 - Aggiorna nel postflight l'elemento principale della sidebar Joomla rimasto collegato alla lista Corsi, senza toccare voci personalizzate o i collegamenti figli.
