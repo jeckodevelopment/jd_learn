@@ -85,7 +85,7 @@ try:
  plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
  if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
  dashboard_page=Page(html)
- dashboard_shortcuts={a.get('id'):parse_qs(urlparse(a.get('href','')).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+ dashboard_shortcuts={a.get('id'):parse_qs(urlparse(unescape(a.get('href',''))).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
  required_shortcuts={
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
