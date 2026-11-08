@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-La versione **0.41.10-dev**, integrata nella PR #74 (merge [c023fc4](https://github.com/jeckodevelopment/jd_learn/commit/c023fc4ed29f3d643414cd5afc83b3ad42615dba), CI standard superata nel run [42439350519](https://github.com/jeckodevelopment/jd_learn/actions/runs/42439350519)), mostra nella bozza del Programma i blocchi strutturali separati dagli avvisi facoltativi. Il controllo definitivo resta nel servizio di pubblicazione; collaudo manuale Joomla ancora aperto.
+La versione **0.41.11-dev (candidato in revisione)** aggiunge al preflight il blocco video con durata mancante/non valida o non confermata. Usa solo metadati salvati; il servizio di pubblicazione resta autorevole. CI da completare e collaudo manuale Joomla ancora aperto.
 
 La versione **0.41.9-dev**, ora integrata in main con la PR #70 (merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f)), aggiunge i controlli separati di ammissione ed erogazione R-03, con anteprima, motivo, conferma e storico. La CI standard è superata nei due ambienti PHP/database e Chromium (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); resta il collaudo manuale Joomla. La dashboard amministrativa della **0.41.8-dev** mette in primo piano la gestione corsi, raggruppa gli strumenti e rende espandibile lo stato dei provider. La PR #68 è integrata in main; la CI standard è superata. Restano aperti i controlli manuali nel backend Joomla.
 

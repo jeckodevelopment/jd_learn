@@ -43,6 +43,15 @@ final class PublicationReadiness
             }
             $moduleCounts[$moduleId]++;
             $required += (int) $lesson->required;
+
+            if (($lesson->kind ?? '') === 'video') {
+                $lessonParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
+                $duration = (int) ($lesson->duration_ms ?? 0);
+                if ($duration < 1000 || $duration > 28800000
+                    || !is_array($lessonParams) || ($lessonParams['video_duration_confirmed'] ?? false) !== true) {
+                    $blockers[] = 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED';
+                }
+            }
         }
 
         foreach ($moduleCounts as $count) {
