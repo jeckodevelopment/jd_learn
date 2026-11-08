@@ -36,7 +36,7 @@ function rejects(callable $work, string $message): void
 }
 $readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
     'summary' => $summary,
-    'params_json' => json_encode(['presentation' => ['description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),
+    'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),
 ];
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect($readinessCourse('  '), [], []);
 expect(in_array('COM_JLMS_COURSE_DESCRIPTION_REQUIRED', $readiness['blockers'], true)
