@@ -118,7 +118,7 @@ jobs:
         run: |
           mkdir -p .runtime/joomla
           curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 --output /tmp/joomla.zip 'https://downloads.joomla.org/extensions/joomla6/6-0-0/Joomla_6-0-0-Stable-Full_Package.zip?format=zip'
-echo 'cbac50ba7344958ce02ad49e6ef80536aa534a8c  /tmp/joomla.zip' | sha1sum --check --status
+          echo 'cbac50ba7344958ce02ad49e6ef80536aa534a8c  /tmp/joomla.zip' | sha1sum --check --status
           unzip -q /tmp/joomla.zip -d .runtime/joomla
           php .runtime/joomla/installation/joomla.php install --site-name="JD Learn CI" --admin-user="CI Operator" --admin-username=cioperator --admin-password="Ci-only-Long-Password-2026" --admin-email=ci@example.invalid --db-type=mysqli --db-host=db --db-user=jlms_ci --db-pass=ci-disposable-password --db-name=jlms_test --db-prefix=joomla_ --db-encryption=0 --public-folder="" --no-interaction
           python3 .runtime/previous-source/tools/build.py
