@@ -53,18 +53,18 @@ Riferimento: CORE-10 / AC-129 e [issue #99](https://github.com/jeckodevelopment/
 4. Aprire Programma e verificare che il collegamento contestuale ai campi delle lezioni continui a portare alla lista nativa nel contesto lezioni.
 5. Con il ruolo privo di `core.manage` su `com_fields`, provare la voce sidebar e l'URL diretto. Atteso: Joomla nega la gestione dei campi; non si ottiene accesso cambiando il contesto nell'URL.
 
-**Stato:** implementazione candidata 0.41.22-dev; CI e collaudo Joomla manuale da eseguire.
+**Stato:** PR [#104](https://github.com/jeckodevelopment/jd_learn/pull/104) integrata nel commit `4a924e87c046d076cd48ec2e63d125f5d25657e1`; CI standard superata nel run [42507760027](https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027). Il pacchetto [0.41.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027/artifacts/13628566353) ha SHA-256 interno `2d02d554f134e10087df79cb45fa334b68c9b809b4fa2794b34993d6f817b388`; scade il 22 novembre 2026. Collaudo manuale Joomla ancora da eseguire e registrare.
 
-### AC-129 — accesso ai campi aggiuntivi di corsi e lezioni (in attesa di implementazione)
+### AC-129 — accesso ai campi aggiuntivi di corsi, docenti e lezioni (implementato; collaudo manuale pendente)
 
 Riferimento: CORE-10; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native).
 
-1. Con un ruolo autorizzato, aprire la gestione corsi e usare il collegamento ai campi aggiuntivi: deve aprire la vista Joomla per il contesto corsi.
-2. Ripetere dall’area di gestione lezioni: deve aprire il contesto campi delle lezioni, distinto da quello corsi.
-3. Verificare che l’URL/destinazione non consenta di cambiare contesto per accedere a campi non autorizzati; usare un ruolo privo del permesso necessario e verificare il diniego.
-4. Tornare al componente tramite la navigazione standard Joomla e verificare che non siano state create voci/campi paralleli nel componente.
+1. Da JD Learn, aprire la voce sidebar **Campi aggiuntivi**; la lista Joomla deve aprirsi sui campi corsi.
+2. Usare il filtro contesto per scegliere Corsi, Docenti e Lezioni; ciascuna selezione deve mostrare il contesto corretto.
+3. Verificare che i link non compaiano più negli elenchi Corsi e Docenti e che Programma mantenga l’accesso contestuale alle lezioni.
+4. Con un ruolo senza `core.manage` su `com_fields`, verificare il diniego dalla voce e dall’URL diretto.
 
-**Stato:** implementato in main 0.41.19-dev; collaudo manuale ancora da eseguire.
+**Stato:** PR #104 integrata in main 0.41.22-dev; CI standard superata. Il collaudo manuale è dettagliato nella sezione Issue #99 e resta da registrare.
 
 ### AC-130 — vista standard per i docenti (in attesa di implementazione)
 

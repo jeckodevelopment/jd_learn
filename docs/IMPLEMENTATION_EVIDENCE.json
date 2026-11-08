@@ -1,61 +1,61 @@
 {
   "audited_at": "2026-11-08",
   "product": "JD Learn",
-  "version": "0.41.21-dev",
+  "version": "0.41.22-dev",
   "code_baseline": {
-    "tested_head": "8b962c62f3af95100c1da7b1794297df66452d78",
-    "parent_main_commit": "14fc03ceae56bfb09042118725bd738d1084ffd8",
-    "pull_request": 102,
-    "merged_main_commit": "0a05f004823156abc750981a11db6598a8cf9972"
+    "tested_head": "8211a89f732af80dda563773584b7698ff3ba86a",
+    "parent_main_commit": "9d297fb54c58529d5a2dee03519c9b142d086edb",
+    "pull_request": 104,
+    "merged_main_commit": "4a924e87c046d076cd48ec2e63d125f5d25657e1"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42503477910,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910",
+    "run_id": 42507760027,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128801015831,
+        "id": 128814003050,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128801047820,
+        "id": 128814039988,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128801047804,
+        "id": 128814040034,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128801047869,
+        "id": 128814039965,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #102 integrata. Tutti e quattro i job standard superati. La suite verifica installazione del pacchetto senza preattivare Privacy, abilitazione al primo install, preservazione dello stato in aggiornamento e stringhe Privacy nel contesto lingua Joomla. Collaudo manuale sul sito Joomla ancora pendente."
+    "note": "PR #104 integrata. Quattro job standard superati; includono la navigazione HTTP di com_fields e i contesti personalizzati corso/docente/lezione. Collaudo manuale sul sito Joomla ancora pendente."
   },
   "package": {
-    "name": "pkg_jlms-0.41.21-dev.zip",
-    "bytes": 499562,
-    "sha256": "40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7",
+    "name": "pkg_jlms-0.41.22-dev.zip",
+    "bytes": 499454,
+    "sha256": "2d02d554f134e10087df79cb45fa334b68c9b809b4fa2794b34993d6f817b388",
     "constituents": 8,
     "tables": 42,
     "foreign_keys": 59,
-    "build_source": "PR #102 merged runtime; package bytes and SHA-256 independently checked against the downloaded CI wrapper artifact.",
-    "artifact_id": 13626378474,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474",
-    "ci_artifact_archive_sha256": "sha256:b2e45fa4130b0bb31924cf8536c585b71d9b0785be50126786d28896b7a0f81b",
-    "artifact_expires_at": "2026-11-22T17:12:18Z",
+    "build_source": "PR #104 verificata e integrata; pacchetto interno CI corrisponde alla build candidata.",
+    "artifact_id": 13628566353,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027/artifacts/13628566353",
+    "ci_artifact_archive_sha256": "sha256:f92156622123439b66efa2fb2e66a3e718f1b87b2fac1c7ff2e968b764da9975",
+    "artifact_expires_at": "2026-11-22T18:04:42Z",
     "wrapper_zip": true,
-    "inner_version": "0.41.21-dev"
+    "inner_version": "0.41.22-dev"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -68,6 +68,72 @@
   ],
   "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-08",
+      "version": "0.41.21-dev",
+      "code_baseline": {
+        "tested_head": "8b962c62f3af95100c1da7b1794297df66452d78",
+        "parent_main_commit": "14fc03ceae56bfb09042118725bd738d1084ffd8",
+        "pull_request": 102,
+        "merged_main_commit": "0a05f004823156abc750981a11db6598a8cf9972"
+      },
+      "ci": {
+        "run_id": 42503477910,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 128801015831,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128801047820,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128801047804,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128801047869,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "PR #102 integrata. Tutti e quattro i job standard superati. La suite verifica installazione del pacchetto senza preattivare Privacy, abilitazione al primo install, preservazione dello stato in aggiornamento e stringhe Privacy nel contesto lingua Joomla. Collaudo manuale sul sito Joomla ancora pendente."
+      },
+      "package": {
+        "name": "pkg_jlms-0.41.21-dev.zip",
+        "bytes": 499562,
+        "sha256": "40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7",
+        "constituents": 8,
+        "tables": 42,
+        "foreign_keys": 59,
+        "build_source": "PR #102 merged runtime; package bytes and SHA-256 independently checked against the downloaded CI wrapper artifact.",
+        "artifact_id": 13626378474,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474",
+        "ci_artifact_archive_sha256": "sha256:b2e45fa4130b0bb31924cf8536c585b71d9b0785be50126786d28896b7a0f81b",
+        "artifact_expires_at": "2026-11-22T17:12:18Z",
+        "wrapper_zip": true,
+        "inner_version": "0.41.21-dev"
+      },
+      "candidate_status": "0.41.20-dev integrata in main con PR #100; CI standard superata; ricollaudo manuale Privacy ancora aperto.",
+      "latest_verified_increment": {
+        "version": "0.41.20-dev",
+        "pull_request": 100,
+        "tested_head": "7fd38224eac69307df6631b417a39b1878e25d56",
+        "merged_main_commit": "ff0999141409552e5fcfb4d1ee89543afa179a9b",
+        "ci_run_id": 42498937182,
+        "manual_joomla_acceptance": "pending"
+      }
+    },
     {
       "audited_at": "2026-11-08",
       "version": "0.41.20-dev",
@@ -1818,7 +1884,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.20-dev integrata in main con PR #100; CI standard superata; ricollaudo manuale Privacy ancora aperto.",
+  "candidate_status": "0.41.22-dev integrata in main con PR #104 (merge 4a924e87); CI standard superata; collaudo manuale issue #99 pendente.",
   "previous_verified_release": {
     "version": "0.41.10-dev",
     "package": "pkg_jlms-0.41.10-dev.zip",
@@ -1828,65 +1894,28 @@
     "expires_at": "2026-11-22T03:14:01Z"
   },
   "candidate_increment": {
-    "version": "0.41.20-dev",
-    "scope": "Correzione installazione e caricamento traduzioni del plugin Privacy com_privacy (PRI-02/CORE-08).",
-    "status": "Integrata in main con PR #100; CI standard superata; ricollaudo Joomla manuale pendente.",
-    "pull_request": 100,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/100",
-    "tested_head": "7fd38224eac69307df6631b417a39b1878e25d56",
-    "merged_commit": "ff0999141409552e5fcfb4d1ee89543afa179a9b",
-    "ci_run_id": 42498937182,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182",
-    "ci_status": "Tutti e quattro i job standard superati: controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium controllato.",
-    "jobs": [
-      {
-        "id": 128787239178,
-        "name": "Candidate plan and lightweight checks",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 128787287393,
-        "name": "PHP 8.3 / mysql:8.4",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 128787287482,
-        "name": "PHP 8.4 / mariadb:10.6",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 128787287470,
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
-        "status": "completed",
-        "conclusion": "success"
-      }
-    ],
-    "package": {
-      "name": "pkg_jlms-0.41.20-dev.zip",
-      "bytes": 499387,
-      "sha256": "d640593bd6cb91d9d57b58ed98917ebb8efe698ec2c36ddfbccd17f05d8118f2",
-      "constituents": 8,
-      "tables": 42,
-      "foreign_keys": 59,
-      "build_source": "PR #100 testata e integrata; versione interna e SHA-256 verificati dall’artefatto CI 42498937182.",
-      "artifact_id": 13623954016,
-      "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182/artifacts/13623954016",
-      "ci_artifact_archive_sha256": "sha256:b95852490bfe1cd1c5baff72813e5f1b476fbe10d761719afc5ca61e5797ccc3",
-      "artifact_expires_at": "2026-11-22T16:18:44Z",
-      "wrapper_zip": true,
-      "inner_version": "0.41.20"
-    },
+    "version": "0.41.22-dev",
+    "scope": "Accesso centralizzato alla gestione nativa dei campi, issue #99 / AC-129.",
+    "status": "Integrata in main con PR #104; CI standard superata; collaudo Joomla manuale pendente.",
+    "pull_request": 104,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/104",
+    "tested_head": "8211a89f732af80dda563773584b7698ff3ba86a",
+    "merged_commit": "4a924e87c046d076cd48ec2e63d125f5d25657e1",
+    "ci_run_id": 42507760027,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027",
+    "artifact_id": 13628566353,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027/artifacts/13628566353",
+    "package_sha256": "2d02d554f134e10087df79cb45fa334b68c9b809b4fa2794b34993d6f817b388",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
-    "version": "0.41.20-dev",
-    "pull_request": 100,
-    "tested_head": "7fd38224eac69307df6631b417a39b1878e25d56",
-    "merged_main_commit": "ff0999141409552e5fcfb4d1ee89543afa179a9b",
-    "ci_run_id": 42498937182,
+    "version": "0.41.22-dev",
+    "pull_request": 104,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/104",
+    "tested_head": "8211a89f732af80dda563773584b7698ff3ba86a",
+    "merged_main_commit": "4a924e87c046d076cd48ec2e63d125f5d25657e1",
+    "ci_run_id": 42507760027,
+    "artifact_id": 13628566353,
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {
