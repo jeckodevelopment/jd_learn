@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.29-dev — traduzioni delle opzioni componente
+
+- Sostituisce la chiave Joomla mancante `JGLOBAL_HISTORY_OPTIONS` con l’etichetta JD Learn tradotta in italiano e inglese, sia nella tab sia nel gruppo della pagina Opzioni.
+- Traduce il titolo generato da `com_config` in “JD Learn: Opzioni” / “JD Learn: Options”.
+- Issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115), scenario amministrativo AC-134; collaudo Joomla manuale da eseguire secondo il testbook.
+
+
 ## 0.41.28-dev — collegamento tra docenti e corsi
 
 - Mostra nella lista docenti il conteggio dei corsi assegnati nel perimetro gestibile dall’utente; il conteggio apre la lista corsi filtrata per docente.

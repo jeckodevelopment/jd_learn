@@ -122,6 +122,17 @@ Riferimento: [issue #117](https://github.com/jeckodevelopment/jd_learn/issues/11
 
 **Stato:** issue #117 / AC-133 è integrata nella 0.41.28-dev dalla PR #122; collaudo manuale Joomla pendente.
 
+### AC-134 — traduzioni della pagina Opzioni (issue #115)
+
+Riferimento: issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115), CORE-20. Usare Joomla 6 di prova con interfaccia amministrativa disponibile in italiano e inglese e un Super User autorizzato alle Opzioni del componente.
+
+1. Impostare l’italiano come lingua amministrativa dell’account e aprire **Componenti → JD Learn → Opzioni**. Atteso: titolo della scheda browser e intestazione mostrano **JD Learn: Opzioni**.
+2. Controllare la scheda e il titolo del gruppo Cronologia versioni. Entrambi mostrano **Opzioni cronologia versioni**; la chiave `JGLOBAL_HISTORY_OPTIONS` non compare.
+3. Cambiare la lingua amministrativa dell’account in inglese e riaprire la stessa pagina. Atteso: titolo **JD Learn: Options** e label **Version History Options** in entrambi i punti; nessuna chiave grezza.
+4. Verificare che le altre schede/campi delle Opzioni continuino a essere tradotti e che i valori salvati (inclusi versioni e limite cronologia) restino invariati durante la sola navigazione.
+
+**Stato:** issue #115 / AC-134 implementata nella candidata 0.41.29-dev; collaudo manuale Joomla pendente.
+
 ### PR #94 — ricerca roster (deviazione di perimetro, non gate di accettazione)
 
 Riferimenti: [PR #94](https://github.com/jeckodevelopment/jd_learn/pull/94), [AC-128](RELEASE_SCOPE_MATRIX.md#scenario-specifico-del-roster-core). La ricerca è stata aggiunta senza precedente identificazione nel backlog del primo rilascio. È inclusa nel pacchetto main per effetto del merge, ma questo testbook **non la promuove a requisito**: registrare il suo controllo come regressione informativa finché il proprietario del prodotto non decide se mantenerla.
