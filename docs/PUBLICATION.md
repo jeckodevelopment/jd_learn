@@ -25,9 +25,9 @@ Se il comando esiste ma fallisce, leggere il messaggio: programma vuoto, configu
 
 ## Controllo preliminare della bozza
 
-Nella vista Programma di una versione in bozza, il riquadro **Verifica prima della pubblicazione** separa i problemi strutturali bloccanti dagli avvisi facoltativi. Al momento segnala descrizione estesa mancante, assenza di moduli, moduli senza lezioni, assenza di lezioni obbligatorie, riepilogo breve assente e copertina assente. I primi quattro sono bloccanti; riepilogo e copertina sono avvisi.
+Nella vista Programma di una versione in bozza, il riquadro **Verifica prima della pubblicazione** separa i problemi strutturali bloccanti dagli avvisi facoltativi. Al momento segnala descrizione estesa mancante, assenza di moduli, moduli senza lezioni, assenza di lezioni obbligatorie e video senza durata valida confermata. Sono bloccanti. Riepilogo breve e copertina assenti sono avvisi. Il video deve avere durata tra 1 secondo e 8 ore e conferma esplicita già registrata; il riquadro riusa `COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED`, perché il servizio definitivo rifiuterebbe la pubblicazione nelle stesse condizioni.
 
-È un controllo rapido, non una promessa che il corso sia pubblicabile: non carica i corpi delle lezioni e non contatta provider. Al comando **Pubblica**, `PublicationService` ripete i controlli autorevoli su contenuti, materiali, provider, quiz, permessi e revisioni; eventuali errori mantengono la bozza. Un avviso non impedisce la pubblicazione.
+È un controllo rapido, non una promessa che il corso sia pubblicabile: non carica i corpi delle lezioni e non contatta provider; legge soltanto tipo, durata e metadati di conferma già salvati nel programma. Al comando **Pubblica**, `PublicationService` ripete i controlli autorevoli su contenuti, materiali, provider, quiz, permessi e revisioni; eventuali errori mantengono la bozza. Un avviso non impedisce la pubblicazione.
 
 ## Contenuti pubblicabili e limiti
 
