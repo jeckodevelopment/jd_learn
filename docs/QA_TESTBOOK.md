@@ -54,7 +54,7 @@ Riferimenti: [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/10
 5. Espandere **Stato dei provider video**: il riepilogo esistente deve continuare a mostrare provider e configurazione senza diventare un nuovo flusso o requisito.
 6. Verificare che non compaiano riquadri Statistiche o Attestati, rinviati alla fase 2.
 
-**Stato:** issue #105 in implementazione candidata 0.41.23-dev. CI e collaudo manuale Joomla da eseguire.
+**Stato:** implementato dalla PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), integrata in `7d4584e5ae96795344d8f72b2639e96d1edbc171`. CI standard superata nel [run 42513162483](https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483). Pacchetto installabile [JD-Learn-0.41.23-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483/artifacts/13630646222), SHA-256 ZIP interno `0b3692497d996da91055121c6ca2ed82176d52f87e7a6f92af2ba7a204f25ae3`. Collaudo manuale Joomla ancora da eseguire e registrare; usare i sei passi sopra e annotare versione, ambiente e risultato per ciascun ruolo/lingua.
 
 ### Issue #99 — accesso centralizzato ai campi aggiuntivi
 

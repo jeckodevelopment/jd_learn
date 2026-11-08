@@ -14,7 +14,7 @@ La PR #68 è integrata in main nella 0.41.8-dev. La schermata iniziale mette in 
 
 ## Issue #105 — dashboard di navigazione amministrativa
 
-La dashboard esistente diventa l'ingresso predefinito del componente. Presenta riquadri con icone per Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video, usando le destinazioni Joomla già disponibili. Ogni riquadro è mostrato in base ai permessi nativi della relativa gestione. Non si inseriscono indicatori o collegamenti a statistiche, attestati e altre funzioni di fase 2. La verifica di ruoli, tastiera, responsive e URL è nello [scenario AC-132 e nel testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).
+La dashboard esistente diventa l'ingresso predefinito del componente. Presenta riquadri con icone per Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video, usando le destinazioni Joomla già disponibili. Ogni riquadro è mostrato in base ai permessi nativi della relativa gestione. Non si inseriscono indicatori o collegamenti a statistiche, attestati e altre funzioni di fase 2. La PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108) integra il requisito e supera la CI standard; resta il collaudo Joomla manuale. La verifica di ruoli, tastiera, responsive e URL è nello [scenario AC-132 e nel testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).
 
 ### Regola di uniformità delle viste Joomla
 

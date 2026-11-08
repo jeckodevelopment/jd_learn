@@ -1884,7 +1884,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.23-dev candidata su main 0.41.22-dev; issue #105/AC-132. CI e collaudo Joomla manuale pendenti.",
+  "candidate_status": "0.41.23-dev integrata in main con PR #108 (merge 7d4584e5ae96795344d8f72b2639e96d1edbc171); CI standard superata nel run 42513162483; collaudo Joomla manuale issue #105/AC-132 pendente.",
   "previous_verified_release": {
     "version": "0.41.10-dev",
     "package": "pkg_jlms-0.41.10-dev.zip",
@@ -1896,17 +1896,21 @@
   "candidate_increment": {
     "version": "0.41.23-dev",
     "scope": "Issue #105 / AC-132: dashboard come ingresso predefinito e collegamenti iconografici alle funzioni esistenti con ACL.",
-    "status": "In implementazione; CI e collaudo manuale Joomla pendenti. Nessun elemento fase 2 aggiunto.",
+    "status": "Integrato dalla PR #108 nel merge 7d4584e5ae96795344d8f72b2639e96d1edbc171; CI standard superata nel run 42513162483; collaudo manuale Joomla pendente. Nessun elemento fase 2 aggiunto.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
-    "version": "0.41.22-dev",
-    "pull_request": 104,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/104",
-    "tested_head": "8211a89f732af80dda563773584b7698ff3ba86a",
-    "merged_main_commit": "4a924e87c046d076cd48ec2e63d125f5d25657e1",
-    "ci_run_id": 42507760027,
-    "artifact_id": 13628566353,
+    "version": "0.41.23-dev",
+    "pull_request": 108,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/108",
+    "tested_head": "0bb9322c4b05b48f0512fbb62864a97deb57360e",
+    "merged_main_commit": "7d4584e5ae96795344d8f72b2639e96d1edbc171",
+    "ci_run_id": 42513162483,
+    "artifact_id": 13630646222,
+    "artifact_name": "JD-Learn-0.41.23-dev",
+    "artifact_sha256": "0b3692497d996da91055121c6ca2ed82176d52f87e7a6f92af2ba7a204f25ae3",
+    "artifact_size_bytes": 500579,
+    "artifact_expires_at": "2026-11-22T19:08:57Z",
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {
