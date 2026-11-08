@@ -56,7 +56,6 @@ final class MaterialController extends BaseController
 
     private function failure(\Throwable $error): never
     {
-        if (getenv('JLMS_TEST_DISPOSABLE') === '1') { error_log('JD Learn material test diagnostic: ' . $error::class . ': ' . $error->getMessage()); }
         $known = ['COM_JLMS_FILE_INVALID', 'COM_JLMS_FILE_SIZE', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_DELIVERY_DISABLED',
             'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_INVALID_INPUT',
             'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_OUTLINE_LIMIT',
