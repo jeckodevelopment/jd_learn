@@ -21,12 +21,23 @@ final class MaterialAvailability
 
     public static function validStored(mixed $publishUp, mixed $publishDown): bool
     {
+        $start = self::storedValue($publishUp);
+        $end = self::storedValue($publishDown);
         try {
-            $values = self::normalize($publishUp, $publishDown, 'UTC');
-            return $values['publish_up'] === $publishUp && $values['publish_down'] === $publishDown;
+            $values = self::normalize($start, $end, 'UTC');
+            return $values['publish_up'] === $start && $values['publish_down'] === $end;
         } catch (\Throwable) {
             return false;
         }
+    }
+
+    /** MySQL DATETIME(6) may return zero microseconds even for second-precision values. */
+    private static function storedValue(mixed $value): mixed
+    {
+        if (is_string($value) && preg_match('/\A([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\.000000\z/D', $value, $match)) {
+            return $match[1];
+        }
+        return $value;
     }
 
     public static function editor(?string $value, string $timezone): string
