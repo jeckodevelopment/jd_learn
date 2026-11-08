@@ -102,18 +102,20 @@ final class PathwayTable extends Table
         $tracking = $this->_trackAssets;
         if ($stable || $prepared) {
             $this->_trackAssets = false;
-            $this->getDatabase()->updateObject('#__assets', (object) [
+            $assetTitleUpdate = (object) [
                 'id' => (int) $asset->id,
                 'title' => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100),
-            ], 'id');
+            ];
+            $this->getDatabase()->updateObject('#__assets', $assetTitleUpdate, 'id');
         }
         try {
             $success = parent::store($updateNulls);
             if ($success && $prepared) {
-                $this->getDatabase()->updateObject('#__assets', (object) [
+                $assetNameUpdate = (object) [
                     'id' => $this->preparedAsset,
                     'name' => $this->_getAssetName(),
-                ], 'id');
+                ];
+                $this->getDatabase()->updateObject('#__assets', $assetNameUpdate, 'id');
             }
             return $success;
         } finally {
