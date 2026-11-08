@@ -50,9 +50,10 @@ if ($retained) {
     $check(array_map('intval',$rows) === [(int)$data['course'],(int)$data['hidden_course']],'ordered course associations retained through package update');
     $student = new Joomla\CMS\User\User((int)$data['student']);
     $detail = $service->detail($student,'en-GB',(int)$path);
-    $check(count($detail['courses'])===1 && $detail['courses'][0]['id']===(int)$data['course'],
-        'public pathway service remains usable after update: '.json_encode($detail,JSON_THROW_ON_ERROR));
-    echo json_encode(['pathway_retention_checks'=>3,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
+    $check(count($detail['courses'])===2 && $detail['courses'][0]['id']===(int)$data['course']
+        && $detail['courses'][1]['id']===null && $detail['courses'][1]['title']==='',
+        'public pathway service preserves visible course and anonymous hidden placeholder after update');
+    echo json_encode(['pathway_retention_checks'=>4,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
     return;
 }
 
