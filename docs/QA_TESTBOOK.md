@@ -43,6 +43,19 @@ PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattiv
 
 **Stato:** i quattro job standard della CI sono superati sul commit PR `8b962c62f3af95100c1da7b1794297df66452d78`, incluso il test install-package senza preattivazione e lo smoke test delle stringhe. Il pacchetto installabile è [artefatto CI 13626378474](https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474), SHA-256 interno `40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7`. Collaudo manuale Joomla ancora da registrare.
 
+### Issue #105 — dashboard amministrativa
+
+Riferimenti: [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/105), CORE-20, UI-02, SCR-13 e AC-132. La dashboard deve agevolare l'accesso alle sole funzioni già presenti; statistiche e attestati sono fase 2.
+
+1. Su un Joomla 6 di prova, aprire **Componenti → JD Learn**. Atteso: si apre la dashboard, non l'elenco corsi.
+2. Verificare i riquadri con icone per Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video. Aprire ciascun collegamento; deve arrivare alla relativa gestione nativa e conservare filtri/contesti previsti.
+3. Con un account limitato, verificare che i riquadri senza permesso non compaiano. Provare l'URL diretto: Joomla deve negare l'accesso. Ripetere con account autorizzato per ciascuna destinazione.
+4. Verificare tutte le etichette in italiano e inglese, navigazione da tastiera, focus visibile e griglia su finestra desktop e stretta/mobile.
+5. Espandere **Stato dei provider video**: il riepilogo esistente deve continuare a mostrare provider e configurazione senza diventare un nuovo flusso o requisito.
+6. Verificare che non compaiano riquadri Statistiche o Attestati, rinviati alla fase 2.
+
+**Stato:** issue #105 in implementazione candidata 0.41.23-dev. CI e collaudo manuale Joomla da eseguire.
+
 ### Issue #99 — accesso centralizzato ai campi aggiuntivi
 
 Riferimento: CORE-10 / AC-129 e [issue #99](https://github.com/jeckodevelopment/jd_learn/issues/99). Usare un Joomla 6 di prova con un ruolo che abbia `core.manage` su `com_fields`, e un ruolo di confronto senza tale permesso. La correzione non crea campi o gruppi: verifica solo navigazione e filtro dei contesti nativi.

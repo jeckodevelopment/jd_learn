@@ -7,3 +7,5 @@ La distribuzione include i plugin YouTube, Vimeo, Cloudflare Stream e HTML5. Il 
 Banca domande, composizione e tentativi: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md), [QUIZ_RUNTIME.md](QUIZ_RUNTIME.md). Le guide descrivono i sottoinsiemi disponibili, non attestano il completamento dell’intero sistema.
 
 [Stato aggiornato e prove](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/IMPLEMENTATION_STATUS.md), [priorità residue](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/NEXT_STEPS.md) e [CSS/override](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/FRONTEND_CSS.md) sono mantenuti nella repository a ogni incremento.
+
+- [Dashboard amministrativa](ADMIN_DASHBOARD.md)

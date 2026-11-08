@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" method="upgrade">
- <name>COM_JLMS</name><author>Jecko Development</author><version>0.41.22</version>
+ <name>COM_JLMS</name><author>Jecko Development</author><version>0.41.23</version>
  <description>COM_JLMS_XML_DESCRIPTION</description><namespace path="src">Jlms\Component\Jlms</namespace>
  <scriptfile>script.php</scriptfile>
  <files folder="site"><folder>forms</folder><folder>src</folder><folder>tmpl</folder><folder>language</folder></files>
  <media destination="com_jlms" folder="media"><folder>css</folder><folder>js</folder><filename>joomla.asset.json</filename></media>
 <languages folder="site/language"><language tag="it-IT">it-IT/com_jlms.ini</language><language tag="it-IT">it-IT/com_jlms.sys.ini</language><language tag="en-GB">en-GB/com_jlms.ini</language><language tag="en-GB">en-GB/com_jlms.sys.ini</language></languages>
- <administration><menu img="class:graduation-cap" view="courses">COM_JLMS</menu>
+ <administration><menu img="class:graduation-cap" view="dashboard">COM_JLMS</menu>
   <submenu>
    <menu link="option=com_jlms&amp;view=courses">COM_JLMS_COURSES</menu>
    <menu link="option=com_categories&amp;view=categories&amp;extension=com_jlms.course">COM_JLMS_COURSE_CATEGORIES</menu>

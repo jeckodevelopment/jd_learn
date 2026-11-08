@@ -60,7 +60,7 @@ $app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 // Native extension installer must create the submenu once and preserve it on upgrade.
-$menuParent = (int) $db->setQuery("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND link='index.php?option=com_jlms&view=courses' AND parent_id=1")->loadResult();
+$menuParent = (int) $db->setQuery("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND link='index.php?option=com_jlms&view=dashboard' AND parent_id=1")->loadResult();
 $menuLinks = $db->setQuery('SELECT link FROM #__menu WHERE client_id=1 AND parent_id=' . $menuParent)->loadColumn();
 $expectedLinks = ['index.php?option=com_jlms&view=courses', 'index.php?option=com_categories&view=categories&extension=com_jlms.course', 'index.php?option=com_jlms&view=questionbank', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_fields&view=fields&context=com_jlms.course', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'];
 sort($menuLinks); sort($expectedLinks);

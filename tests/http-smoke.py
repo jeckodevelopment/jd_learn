@@ -11,7 +11,7 @@ root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.links=[];self.base=None;self.textarea=None;self.select=None;self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.links=[];self.anchors=[];self.base=None;self.textarea=None;self.select=None;self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
   if tag=='base' and a.get('href'):self.base=a['href']
@@ -24,7 +24,8 @@ class Page(HTMLParser):
   if tag=='select':self.select=a.get('name') if self.current is not None and 'disabled' not in a else None
   if tag=='option' and self.select and self.current is not None:
    if self.select not in self.current['fields'] or 'selected' in a:self.current['fields'][self.select]=a.get('value','')
-  if tag=='a' and a.get('href'):self.links.append(a['href'])
+  if tag=='a' and a.get('href'):
+   self.links.append(a['href']);self.anchors.append(a)
  def handle_endtag(self,tag):
   if tag=='form':self.current=None;self.textarea=None;self.select=None
   if tag=='textarea':self.textarea=None
@@ -71,7 +72,7 @@ try:
  fields=form['fields'];fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
  with http.open(urljoin(urljoin(url,page.base or ''),form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
  url,html=get('/administrator/index.php?option=com_jlms')
- if 'id="jlms-admin-courses"' not in html:raise RuntimeError('JD Learn must open the course list directly')
+ if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('JD Learn must open the administrator dashboard directly')
  menu_links=[parse_qs(urlparse(x).query) for x in Page(html).links]
  for view in ['courses','teachers','questionbank']:
   if not any(q.get('option')==['com_jlms'] and q.get('view')==[view] for q in menu_links):raise RuntimeError('Native JD Learn sidebar link missing: '+view)
@@ -83,6 +84,22 @@ try:
  if not context_filter or any('value="com_jlms.'+context+'"' not in context_filter.group(1) for context in ['course','teacher','lesson']):raise RuntimeError('Native custom fields context filter must offer course, teacher and lesson')
  plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
  if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
+ dashboard_page=Page(html)
+ dashboard_shortcuts={a.get('id'):parse_qs(urlparse(unescape(a.get('href',''))).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+ required_shortcuts={
+  'jlms-admin-shortcut-courses':('com_jlms','courses'),
+  'jlms-admin-shortcut-course_categories':('com_categories','categories'),
+  'jlms-admin-shortcut-teachers':('com_jlms','teachers'),
+  'jlms-admin-shortcut-question_bank':('com_jlms','questionbank'),
+  'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
+  'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
+ }
+ for shortcut,(option,view) in required_shortcuts.items():
+  query=dashboard_shortcuts.get(shortcut)
+  if not query or query.get('option')!=[option] or query.get('view')!=[view]:
+   found={a.get('id'):a.get('href') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+   raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
+ if len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))!=6:raise RuntimeError('Dashboard shortcuts must each include a Joomla icon')
  # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
  get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')
  _,plugin_html=get(urljoin(urljoin(url,Page(html).base or ""),plugin_link))

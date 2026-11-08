@@ -1884,7 +1884,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.22-dev integrata in main con PR #104 (merge 4a924e87); CI standard superata; collaudo manuale issue #99 pendente.",
+  "candidate_status": "0.41.23-dev candidata su main 0.41.22-dev; issue #105/AC-132. CI e collaudo Joomla manuale pendenti.",
   "previous_verified_release": {
     "version": "0.41.10-dev",
     "package": "pkg_jlms-0.41.10-dev.zip",
@@ -1894,18 +1894,9 @@
     "expires_at": "2026-11-22T03:14:01Z"
   },
   "candidate_increment": {
-    "version": "0.41.22-dev",
-    "scope": "Accesso centralizzato alla gestione nativa dei campi, issue #99 / AC-129.",
-    "status": "Integrata in main con PR #104; CI standard superata; collaudo Joomla manuale pendente.",
-    "pull_request": 104,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/104",
-    "tested_head": "8211a89f732af80dda563773584b7698ff3ba86a",
-    "merged_commit": "4a924e87c046d076cd48ec2e63d125f5d25657e1",
-    "ci_run_id": 42507760027,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027",
-    "artifact_id": 13628566353,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027/artifacts/13628566353",
-    "package_sha256": "2d02d554f134e10087df79cb45fa334b68c9b809b4fa2794b34993d6f817b388",
+    "version": "0.41.23-dev",
+    "scope": "Issue #105 / AC-132: dashboard come ingresso predefinito e collegamenti iconografici alle funzioni esistenti con ACL.",
+    "status": "In implementazione; CI e collaudo manuale Joomla pendenti. Nessun elemento fase 2 aggiunto.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
