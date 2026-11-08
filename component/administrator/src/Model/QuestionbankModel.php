@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 namespace Jlms\Component\Jlms\Administrator\Model;
-use Joomla\CMS\MVC\Model\FormModel;
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-final class QuestionbankModel extends FormModel
+final class QuestionbankModel extends ListModel
 {
     public function getFilterForm($data = [], $loadData = true) { return $this->loadForm('com_jlms.filter_questionbank','filter_questionbank',['control'=>'filter','load_data'=>false]); }
     public function getBank(): array
