@@ -68,9 +68,9 @@ final class CourseOperationsService
                 throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT',409);
             }
             if ($p['blocked'] || $p['revision']!==$revision || !hash_equals($p['hash'],$impactHash)) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT',409);
-            $field=self::FIELDS[substr($operation,0,strrpos($operation,'_'))]; $target=(int)$p['target']; $now=gmdate('Y-m-d H:i:s.u');
+            $field=self::FIELDS[substr($operation,0,strrpos($operation,'_'))]; $target=(int)$p['target']; $actorId=(int)$actor->id; $now=gmdate('Y-m-d H:i:s.u');
             $q=$this->db->createQuery()->update('#__jlms_courses')->set($this->db->quoteName($field).'=:target')->set('revision=revision+1')->set('modified_by=:actor')->set('modified_at=:now')->where('id=:course')->where('revision=:revision')
-                ->bind(':target',$target,ParameterType::INTEGER)->bind(':actor',(int)$actor->id,ParameterType::INTEGER)->bind(':now',$now)->bind(':course',$courseId,ParameterType::INTEGER)->bind(':revision',$revision,ParameterType::INTEGER);
+                ->bind(':target',$target,ParameterType::INTEGER)->bind(':actor',$actorId,ParameterType::INTEGER)->bind(':now',$now)->bind(':course',$courseId,ParameterType::INTEGER)->bind(':revision',$revision,ParameterType::INTEGER);
             $this->db->setQuery($q)->execute(); if ($this->db->getAffectedRows()!==1) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT',409);
             $q=$this->db->createQuery()->select('COALESCE(MAX(revision_no),0)+1')->from('#__jlms_course_operations')->where('course_id=:course')->bind(':course',$courseId,ParameterType::INTEGER);
             $sequence=(int)$this->db->setQuery($q)->loadResult();
