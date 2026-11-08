@@ -179,6 +179,22 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <p><?= Text::_('JSTATUS') ?>: <strong><?= Text::_((int) $course->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></strong></p>
  <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?></p>
  <p><?= count($this->outline['modules']) ?> <?= Text::_('COM_JLMS_PROGRAMME_MODULES') ?> · <?= count($this->outline['lessons']) ?> <?= Text::_('COM_JLMS_PROGRAMME_LESSONS') ?></p>
+ <?php if ($version->status === 'draft') : ?>
+ <section id="jlms-publication-readiness" aria-labelledby="jlms-publication-readiness-heading">
+  <h3 id="jlms-publication-readiness-heading" class="h5"><?= Text::_('COM_JLMS_READINESS_HEADING') ?></h3>
+  <?php if ($this->publicationReadiness['blockers']) : ?>
+   <div class="alert alert-danger" id="jlms-publication-blockers"><h4 class="h6"><?= Text::_('COM_JLMS_READINESS_BLOCKERS') ?></h4><ul>
+   <?php foreach ($this->publicationReadiness['blockers'] as $message) : ?><li data-readiness-code="<?= $this->escape($message) ?>"><?= Text::_($message) ?></li><?php endforeach; ?>
+   </ul></div>
+  <?php else : ?><p class="alert alert-success" id="jlms-publication-blockers"><?= Text::_('COM_JLMS_READINESS_STRUCTURE_OK') ?></p><?php endif; ?>
+  <?php if ($this->publicationReadiness['warnings']) : ?>
+   <div class="alert alert-warning" id="jlms-publication-warnings"><h4 class="h6"><?= Text::_('COM_JLMS_READINESS_WARNINGS') ?></h4><ul>
+   <?php foreach ($this->publicationReadiness['warnings'] as $message) : ?><li data-readiness-code="<?= $this->escape($message) ?>"><?= Text::_($message) ?></li><?php endforeach; ?>
+   </ul></div>
+  <?php endif; ?>
+  <p class="small text-muted"><?= Text::_('COM_JLMS_READINESS_FINAL_CHECK') ?></p>
+ </section>
+ <?php endif; ?>
  <?php if ($this->transitions) : ?>
  <form method="post" id="jlms-publication-form" action="<?= $link('index.php?option=com_jlms') ?>">
   <?php $hidden($scope + ['revision' => $course->revision]); ?>
