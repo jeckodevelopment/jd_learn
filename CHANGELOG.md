@@ -5,7 +5,7 @@
 - Risolve l'issue [#99](https://github.com/jeckodevelopment/jd_learn/issues/99), collegata alla presentazione dei campi dopo la PR #98.
 - Rimuove il collegamento fuori toolbar dalla lista Corsi e quello dalla lista Docenti; aggiunge la voce sidebar **Campi aggiuntivi**, diretta alla lista nativa `com_fields`.
 - La lista nativa apre il contesto JD Learn e consente di scegliere corsi, docenti o lezioni dal filtro contesto di Joomla. Nessuna nuova vista o gestione proprietaria dei campi.
-- Le prove automatiche verificano submenu, contesti registrati e assenza dei link dalle liste. Collaudo manuale Joomla richiesto; nessun criterio dichiarato accettato.
+- Le prove automatiche verificano submenu, contesti registrati e assenza dei link dalle liste. PR [#104](https://github.com/jeckodevelopment/jd_learn/pull/104) integrata; CI completa superata. Collaudo manuale Joomla ancora da eseguire.
 
 ## 0.41.21-dev — attivazione Privacy e dominio lingua esplicito
 
