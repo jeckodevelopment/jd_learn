@@ -135,6 +135,8 @@ jobs:
         run: php tests/joomla-quiz-authoring.php .runtime/joomla
       - name: Native workflow publication and catalog access tests
         run: php tests/joomla-publication.php .runtime/joomla
+      - name: Native pathway authoring, ordering, access and progress aggregation
+        run: php tests/joomla-pathways.php .runtime/joomla
       - name: Typed course presentation, frozen public snapshot and legacy clients
         run: php tests/joomla-course-presentation.php .runtime/joomla
       - name: Native teacher profiles, assignments and frozen access-gated history
@@ -321,6 +323,8 @@ jobs:
         run: php tests/joomla-video-duration.php .runtime/joomla retained
       - name: Verify public editorial fields and teaching history survive upgrade
         run: php tests/joomla-course-fields-public.php .runtime/joomla retained
+      - name: Verify pathway relations and public access survive package update
+        run: php tests/joomla-pathways.php .runtime/joomla retained
       - name: Read package version for artifact label
         id: package
         run: |

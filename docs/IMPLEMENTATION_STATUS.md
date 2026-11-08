@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-**Main è 0.41.15-dev**; la candidata di questo incremento è **0.41.16-dev**. La PR #90 è integrata nel merge [0f55bd1](https://github.com/jeckodevelopment/jd_learn/commit/0f55bd149a58c6fd1ce373655d89b1154c58edd4). La prova con un quinto plugin provider è stata rinviata alla fase 2; per la prima release restano da collaudare i quattro plugin distribuiti con Joomla e browser reali.
+**Main è 0.41.16-dev**; la candidata di questo incremento è **0.41.17-dev**. La PR #92 è integrata nel merge `7343285` con CI standard verde; la candidata aggiunge percorsi formativi aggregati. La prova con un quinto plugin provider è stata rinviata alla fase 2; per la prima release restano da collaudare i quattro plugin distribuiti con Joomla e browser reali.
 
 **Main è 0.41.14-dev**, integrata con la PR [#88](https://github.com/jeckodevelopment/jd_learn/pull/88) (merge [f2f8c76](https://github.com/jeckodevelopment/jd_learn/commit/f2f8c76b7ed88119e0a8c8b9796a52bcb0b97810)). La migrazione esplicita di una singola iscrizione alla versione corrente trasferisce solo i completamenti non quiz selezionati e conserva la provenienza. CI standard superata sul candidato esatto (run [42473935482](https://github.com/jeckodevelopment/jd_learn/actions/runs/42473935482)); resta il collaudo Joomla manuale.
 
@@ -9,7 +9,7 @@ La versione **0.41.9-dev**, ora integrata in main con la PR #70 (merge [70f6ed7]
 
 I campi editoriali del corso e i campi didattici delle lezioni sono disponibili tramite Joomla Fields. La **0.41.7-dev** integra il contesto lezioni, il salvataggio ACL, la copia e revisione dei valori, lo snapshot immutabile alla pubblicazione e la resa nell’aula. CI standard superata; il collaudo Joomla reale resta da completare. Il ripristino completo dei valori tramite Content History resta aperto.
 
-Aggiornato all’**8 novembre 2026**. Candidata **0.41.16-dev**; main integrata **0.41.15-dev**; ultima CI runtime superata sulla main su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500)). La verifica dell'incremento Privacy e il collaudo manuale Joomla restano aperti. Il prodotto è in sviluppo e non è pronto per la produzione.
+Aggiornato all’**8 novembre 2026**. Candidata **0.41.17-dev**; main integrata **0.41.16-dev**. La candidata aggiunge percorsi e nuove prove native Joomla/HTTP; CI e collaudo manuale di questa PR restano aperti. Il prodotto è in sviluppo e non è pronto per la produzione.
 
 La PR #65 ha completato questo incremento M01/M02: campi personalizzati delle lezioni con salvataggio nativo, copia/revisione del baseline, snapshot immutabile e resa in aula. Il percorso di base è disponibile: creare e pubblicare un corso, aggiornare il programma, ammettere uno studente e fruire lezioni testo/video/quiz con progressi persistenti. Il lavoro corrente è il completamento della gestione corsi **M01**, che resta aperta per funzioni mancanti e collaudi; non stiamo più implementando da zero pubblicazione, duplicazioni o riordino.
 
@@ -29,6 +29,10 @@ La PR #62 corregge R-05: quando manca un’ultima lezione valida, Riprendi selez
 
 Rimosse le liste fisse dei quattro provider base nei percorsi di metadata editor, pubblicazione e ammissione alla fruizione. Il loader carica il player secondo la convenzione Joomla `media/plg_jlmsvideo_<provider>/js/player.js`; chiave validata e modulo importato soltanto dopo consenso e grant di playback. Il riepilogo in Programma legge i provider registrati. Aggiunta regressione client per provider aggiuntivo. La prova con un quinto plugin è stata differita alla fase 2; per la prima stabile restano da verificare i quattro plugin distribuiti su Joomla reale.
 
+### Candidata 0.41.17-dev — percorsi formativi aggregati
+
+Gestione amministrativa con categorie Joomla native, ACL, lingua e pubblicazione; associazione ordinata di corsi. Il catalogo e la scheda mostrano accesso e stato per corso e calcolano il progresso uniforme. L’ospite non riceve percentuali personali; corsi non visibili sono rappresentati senza dati identificativi. Il percorso non modifica iscrizioni o accesso. Inclusi test nativi/HTTP e retention di associazioni dopo upgrade; esito CI ancora da registrare.
+
 ### Candidata 0.41.16-dev — lifecycle Privacy
 
 Il pacchetto aggiunge `plg_privacy_jdlearn`. Il plugin dichiara le capacità Joomla ed esporta iscrizioni/richieste, progresso, tentativi/risposte e snapshot degli attestati eventualmente emessi. Alla rimozione elimina sessioni temporanee, scollega gli account dalle iscrizioni e richieste, cancella risposte testuali e motivi delle richieste e rimuove identificativi dagli audit delle iscrizioni, mantenendo i risultati didattici minimizzati. Blocca l'operazione in presenza di documenti attestato identificativi o job proprietari da risolvere secondo la policy del sito. Test automatici e collaudo reale sono ancora da eseguire; la procedura non imposta periodi di conservazione né pulisce i backup.
@@ -40,12 +44,13 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 68% |
+| Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 55% |
 | Fruizione e progressi core (M03/M09) | 55% |
 | Video e materiali essenziali (M04) | 80% |
 | Iscrizione e roster essenziale (M06/M09) | 65% |
 | Usabilità amministrativa e integrazioni Joomla | 84% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **68%** |
+| **Avanzamento complessivo stimato** | **69%** |
 
 ## Funzioni presenti e lavoro residuo
 
@@ -56,7 +61,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Amministrazione corsi e docenti | Elenco/editor secondo le convenzioni articoli Joomla; presentazione, copertina/alt/SEO di base, calendario, accessi e ACL; salvataggio dei corsi pubblicati con storico; profili docente, campi nativi docente e scheda Campi personalizzati per i corsi, resa editoriale nella scheda pubblica e accesso alle Regole didattiche, modifica propria e voci di menu; menu amministrativo nativo, ingresso diretto ai corsi e dashboard rivista nella 0.41.8; controlli operativi R-03 integrati nella 0.41.9 | Collaudo manuale; regole avanzate e attestato; snapshot didattici dei campi corso e campi lezione, copertura completa di lingue, associazioni e gestione dei dati |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate, soglia video e finestre temporali dei materiali della bozza | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
 | Ciclo editoriale | Bozza, precontrollo con blocchi/avvisi distinti nella 0.41.10 e controlli video/materiali nella 0.41.11–0.41.12; aggiornamento in nuova versione immutabile; recupero storico con audit; 0.41.14: migrazione esplicita singola dal roster con mappatura, anteprima/hash, conferma/motivo, trasferimento dei soli completamenti non quiz e provenienza. La fonte resta nello storico; tentativi aperti, destinazione esistente o edizione non disponibile bloccano l’azione | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti; collaudo manuale della migrazione e dei casi negativi |
-| Catalogo e categorie | Catalogo paginato, categorie e antenati, scheda/programma autorizzati, menu/Pathway/SEF e prime associazioni multilingua | Ricerca/ordinamenti/filtri e SEO completi, percorsi aggregati, lifecycle categorie e associazioni pubblicate |
+| Catalogo, categorie e percorsi | Catalogo paginato, categorie/antenati, schede autorizzate, menu/SEF; 0.41.17 candidato aggiunge gestione percorsi ordinati, viste pubbliche, accesso/stato corsi e progresso aggregato | CI e collaudo manuale del percorso, SEO/ricerca completi, lifecycle categorie e associazioni pubblicate |
 | Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata; fallback R-05 corretto nella 0.41.5; la 0.41.7 rende i campi lezione congelati | Attività dettagliate e collegamento agli attestati; collaudo manuale di ripresa ancora richiesto |
 | Video | Quattro plugin base: YouTube, Vimeo, Cloudflare Stream e HTML5; registry, controlli di pubblicazione/fruizione, riepilogo plugin e loader asset estendibili senza patch (0.41.15); metadati automatici nell’editor, provenienza/ricevute e tolleranza con denominatore osservato; consenso, copertura/ripresa, soglia video configurabile per versione con default90%, API/token Stream e MP4 privati con Range/Nginx | Collaudo completo di acquisizione/scarti con provider e browser reali (R-06); collaudo end-to-end di un quinto provider installabile senza patch (R-02), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
 | Materiali | Allegati distinti corso/lezione, upload validato, quarantena/scanner opzionale, storage privato e download autorizzato; preflight coerente con stato/scansione/preview e date iniziali/finali nel fuso del corso (0.41.13 in CI) | Riuso/anteprima/metadati e lifecycle completi, offload, pulizia e conservazione |

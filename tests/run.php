@@ -45,6 +45,24 @@ expect(in_array('COM_JLMS_COURSE_DESCRIPTION_REQUIRED', $readiness['blockers'], 
     && in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true), 'pre-publication checklist reports description and empty programme blockers');
 expect(in_array('COM_JLMS_READINESS_SUMMARY_MISSING', $readiness['warnings'], true)
     && in_array('COM_JLMS_READINESS_IMAGE_MISSING', $readiness['warnings'], true), 'optional course presentation gaps are warnings');
+$pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([
+    ['access' => 'available', 'percent' => 50],
+    ['access' => 'available', 'percent' => null],
+]);
+expect($pathwayProgress === ['percent' => 25, 'unavailable' => false, 'required' => 2], 'unenrolled course contributes zero to equally weighted pathway progress');
+$pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([
+    ['access' => 'available', 'percent' => 80],
+    ['access' => 'unavailable', 'percent' => 100],
+    ['access' => 'restricted', 'percent' => 70],
+]);
+expect($pathwayProgress === ['percent' => 26, 'unavailable' => true, 'required' => 3], 'unavailable courses count as zero without leaking their stored progress');
+expect(\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([])
+    === ['percent' => null, 'unavailable' => false, 'required' => 0], 'empty pathway has no completion percentage');
+$pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([
+    ['access' => 'available', 'percent' => 150],
+    ['access' => 'available', 'percent' => -5],
+]);
+expect($pathwayProgress['percent'] === 50, 'pathway progress is bounded to each course range');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],

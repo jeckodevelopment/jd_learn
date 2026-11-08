@@ -36,6 +36,11 @@ final class Router extends RouterView
         $teacheredit = new RouterViewConfiguration('teacheredit');
         $teacheredit->setKey('id');
         $this->registerView($teacheredit);
+        $pathways = new RouterViewConfiguration('pathways');
+        $this->registerView($pathways);
+        $pathway = new RouterViewConfiguration('pathway');
+        $pathway->setKey('id')->setParent($pathways);
+        $this->registerView($pathway);
         $quiz = new RouterViewConfiguration('quiz');
         $quiz->setKey('id');
         $this->registerView($quiz);
@@ -53,6 +58,9 @@ final class Router extends RouterView
 
     public function getCategorySegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
     public function getCategoryId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
+
+    public function getPathwaySegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
+    public function getPathwayId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
 
     public function getQuizSegment($id, $query): array { return [(int)$id => (string)(int)$id]; }
     public function getQuizId($segment, $query): int { return ctype_digit((string)$segment) ? (int)$segment : 0; }

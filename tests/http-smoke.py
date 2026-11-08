@@ -398,6 +398,25 @@ try:
  u,h=submit(u,stale_form,{'jform[transition_id]':transition})
  expect(fixture()['course']==published,'Repeated stale publication does not duplicate edition or change history')
  public_http=build_opener(HTTPCookieProcessor(CookieJar()))
+ pathways=json.loads((root.parent/'pathways-fixture.json').read_text())
+ _,pathway_admin=get('/administrator/index.php?option=com_jlms&view=pathways')
+ expect('id="jlms-admin-pathways"' in pathway_admin and 'CI learning pathway' in pathway_admin,
+        'Authenticated administrator sees the native pathway list')
+ _,pathway_editor=get('/administrator/index.php?option=com_jlms&task=pathway.edit&id='+str(pathways['pathway']))
+ expect('id="jlms-pathway-editor"' in pathway_editor and 'jform[title]' in pathway_editor and 'jform[courses]' in pathway_editor,
+        'Authenticated administrator can edit pathway details and course associations')
+ with public_http.open(base+'/index.php?option=com_jlms&view=pathways',timeout=15) as response:
+  pathway_catalog=response.read().decode('utf-8')
+ expect('id="jlms-pathways"' in pathway_catalog and 'CI learning pathway' in pathway_catalog,
+        'Public pathway catalog renders published pathways')
+ with public_http.open(base+'/index.php?option=com_jlms&view=pathway&id='+str(pathways['pathway']),timeout=15) as response:
+  pathway_page=response.read().decode('utf-8')
+ expect('id="jlms-pathway"' in pathway_page and 'CI learning pathway' in pathway_page and 'Publication fixture' in pathway_page,
+        'Public pathway sheet renders ordered course association')
+ expect('id="jlms-pathway-progress-label"' not in pathway_page and 'id="jlms-pathway-course-1"' in pathway_page,
+        'Guest pathway page hides personal progress and keeps the unavailable course position')
+ expect('Test course' not in pathway_page and 'This course is not currently available.' in pathway_page,
+        'Guest pathway page labels the hidden course without revealing its identity')
  with public_http.open(base+'/index.php?option=com_jlms&view=course&id='+str(course_id),timeout=15) as response:
   sheet=response.read().decode('utf-8')
  expect('HTTP first required lesson' in sheet and 'FIRST_PUBLICATION_PRIVATE_BODY' not in sheet,'First published course is public with no lesson body leak')

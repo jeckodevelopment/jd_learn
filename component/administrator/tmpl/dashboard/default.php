@@ -24,6 +24,10 @@ use Joomla\CMS\Router\Route;
         <h2><?= Text::_('COM_JLMS_DASHBOARD_TOOLS') ?></h2>
         <ul>
             <li><a href="<?= Route::_('index.php?option=com_categories&extension=com_jlms.course') ?>"><?= Text::_('COM_JLMS_DASHBOARD_COURSE_CATEGORIES') ?></a></li>
+            <?php if (\Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.pathways.manage','com_jlms')) : ?>
+                <li><a href="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>"><?= Text::_('COM_JLMS_PATHWAYS') ?></a></li>
+                <li><a href="<?= Route::_('index.php?option=com_categories&extension=com_jlms.pathway') ?>"><?= Text::_('COM_JLMS_PATHWAY_CATEGORIES') ?></a></li>
+            <?php endif; ?>
             <li><a href="<?= Route::_('index.php?option=com_jlms&view=questionbank') ?>"><?= Text::_('COM_JLMS_QUESTION_BANK') ?></a></li>
             <?php if (\Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('core.manage','com_jlms')) : ?><li><a href="<?= Route::_('index.php?option=com_jlms&view=teachers') ?>"><?= Text::_('COM_JLMS_TEACHERS') ?></a></li><?php endif; ?>
         </ul>
