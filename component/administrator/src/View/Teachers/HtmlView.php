@@ -13,6 +13,9 @@ final class HtmlView extends BaseHtmlView
 {
     public $items;
     public $pagination;
+    public $state;
+    public $filterForm;
+    public $activeFilters;
 
     public function display($tpl = null)
     {
@@ -20,7 +23,10 @@ final class HtmlView extends BaseHtmlView
         if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')) { throw new \RuntimeException('JERROR_ALERTNOAUTHOR',403); }
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
-        ToolbarHelper::title('JD Learn', 'graduation-cap');
+        $this->state = $this->get('State');
+        $this->filterForm = $this->get('FilterForm');
+        $this->activeFilters = $this->get('ActiveFilters');
+        ToolbarHelper::title('COM_JLMS_TEACHERS', 'users');
         if ($actor->authorise('core.create', 'com_jlms') && $actor->authorise('jlms.teachers.manage', 'com_jlms')) {
             ToolbarHelper::addNew('teacher.add');
         }

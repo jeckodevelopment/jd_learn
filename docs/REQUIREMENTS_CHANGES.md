@@ -94,3 +94,8 @@ La specifica schermate, il catalogo dei test, la matrice e i prossimi step sono 
 ### Chiarimento dell’8 novembre — issue #99, accesso ai campi personalizzati
 
 L'issue [#99](https://github.com/jeckodevelopment/jd_learn/issues/99) precisa la navigazione richiesta da AC-129: rimuovere i collegamenti ai campi aggiuntivi dalle viste elenco Corsi e Docenti, aggiungere un'unica voce **Campi aggiuntivi** alla sidebar JD Learn e aprire la lista nativa `com_fields` sul contesto JD Learn. Da quella lista si usa il filtro contesto nativo per scegliere corsi, docenti o lezioni. Il componente già espone i tre contesti tramite `FieldsServiceInterface::getContexts()`; non si aggiungono viste, tipi di campo o logiche proprietarie.
+
+
+### Avanzamento AC-130 — vista amministrativa docenti
+
+La candidata 0.41.26-dev riorganizza l’elenco docenti secondo il pattern Search Tools Joomla: ricerca per titolo/ID, filtri stato e lingua, ordinamento, paginazione, colonne di stato/metadati e collegamento al form distinto. Non mostra categorie e non modifica dati, associazioni o regole ACL. Il collaudo manuale aggiornato è nel [testbook AC-130](QA_TESTBOOK.md#ac-130--vista-standard-per-i-docenti-candidata-04126-dev-collaudo-joomla-pendente).

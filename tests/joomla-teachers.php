@@ -147,6 +147,9 @@ $learner=new \Joomla\CMS\User\User();$learnerData=['name'=>'CI teacher viewer','
 if (!$learner->bind($learnerData)||!$learner->save()) { throw new RuntimeException('Viewer fixture failed'); }
 $learner=new \Joomla\CMS\User\User((int)$learner->id);$learner->getAuthorisedViewLevels();
 teacherExpect(count($catalog->outline($learner,'en-GB',$course)['teachers'])===2,'Registered viewer sees originally registered snapshot');
+$directory=$factory->createModel('Teachers','Administrator',['ignore_request'=>true]);$directory->setCurrentUser($actor);
+$directory->setState('filter.search','Updated public');$directory->setState('filter.published','1');
+$filtered=$directory->getItems();teacherExpect(is_array($filtered)&&count($filtered)===1&&(int)$filtered[0]->id===$public,'Teacher administration list searches title and filters published profiles');
 $directory=$factory->createModel('Teachers','Administrator',['ignore_request'=>true]);$directory->setCurrentUser($learner);
 try { $items=$directory->getItems(); teacherExpect($items===false && $directory->getError()!==null,'Native list model rejects unauthorised directory reads'); } catch (RuntimeException $denied) { teacherExpect($denied->getCode()===403,'Authenticated viewer cannot read administrative teacher directory'); }
 $teacherModel->setCurrentUser($learner);teacherExpect(!$teacherModel->save(array_replace($edit,['revision'=>5])),'Authenticated viewer lacks teacher management permission');$teacherModel->setCurrentUser($actor);

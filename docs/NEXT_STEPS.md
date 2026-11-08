@@ -23,6 +23,8 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
+La candidata 0.41.26-dev attua AC-130 per la lista docenti secondo le convenzioni Joomla. Dopo l’integrazione, il prossimo incremento backend circoscritto resta AC-131: elenco separato per la banca domande con sole azioni amministrative dichiarate. Non avviare altri ampliamenti quiz.
+
 Main 0.41.25 include la dashboard e le correzioni (PR #108/#110/#112, issue #105/AC-132, CI completa superata) e i percorsi aggregati (PR #93), la ricerca roster (PR #94, deviazione non approvata), i link ai campi (PR #98), la correzione Privacy (PR #102) e issue #99 (PR #104, CI completa superata). La regressione install-package verifica lo stato nativo senza preattivare il plugin; lo smoke test verifica le stringhe tradotte. I lavori backend dell'8 novembre sono tracciati in [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native), AC-129–131. Privacy resta un fix di accettazione di PRI-02/CORE-08, non una nuova funzionalità.
 
 La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. La PR #68 ha completato il restyling previsto della schermata iniziale. Entrambe hanno superato la CI prevista; resta il collaudo nel sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.

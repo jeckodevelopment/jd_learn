@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.26-dev — elenco docenti secondo convenzioni Joomla
+
+- Rifà l’elenco docenti con Search Tools, ricerca, filtri stato/lingua, ordinamento, paginazione e collegamento al form separato.
+- Mostra metadati utili senza esporre categorie docente; non modifica dati, associazioni o regole ACL.
+- Aggiunge/aggiorna i passi di collaudo manuale AC-130 nel testbook; la verifica sul sito Joomla è pendente.
+
 ## 0.41.25-dev — accesso Dashboard nella sidebar
 
 - Aggiunge **Dashboard** come prima voce figlia di JD Learn nel menu amministrativo, collegata alla vista dashboard esistente; Corsi e le altre voci seguono nell'ordine.

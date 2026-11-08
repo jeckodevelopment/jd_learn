@@ -86,17 +86,17 @@ Riferimento: CORE-10; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b-
 
 **Stato:** PR #104 integrata in main 0.41.22-dev; CI standard superata. Il collaudo manuale è dettagliato nella sezione Issue #99 e resta da registrare.
 
-### AC-130 — vista standard per i docenti (in attesa di implementazione)
+### AC-130 — vista standard per i docenti (candidata 0.41.26-dev; collaudo Joomla pendente)
 
 Riferimenti: AUT-01, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native).
 
 1. Aprire Docenti: deve apparire un elenco, con form di modifica/creazione distinto e accesso a quest’ultimo mediante toolbar/azione standard.
-2. Provare ricerca, filtri, ordinamento, paginazione, cambio stato e ritorno all’elenco; controllare che i risultati e i totali corrispondano ai filtri.
+2. Provare ricerca per titolo e ID (`id:...`), filtro pubblicato/non pubblicato, lingua, ordinamento per titolo/stato/lingua/modifica/ID, paginazione e ritorno all’elenco; controllare che risultati e totali corrispondano ai filtri.
 3. Aprire e salvare un profilo esistente, quindi annullare una modifica: verificare persistenza e annullamento senza cambiare associazioni al corso.
 4. Ripetere con ruoli autorizzati e non autorizzati. Verificare navigazione da tastiera e viewport mobile.
 5. Controllare che nessuna categoria docente sia richiesta o esposta.
 
-**Stato:** da implementare e collaudare; il riferimento visivo è una lista backend Joomla standard (com_contacts/articoli).
+**Stato:** l’incremento 0.41.26-dev prepara la lista secondo Search Tools e toolbar standard Joomla; il form resta separato e accessibile dal titolo/toolbar. La categoria docente non è esposta. Verificare ACL e ricerca sul sito; il cambio stato del profilo resta disponibile nel form secondo i permessi, senza introdurre azioni massive.
 
 ### AC-131 — elenco separato per la banca domande (in attesa di implementazione)
 
