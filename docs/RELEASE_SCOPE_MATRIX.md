@@ -25,7 +25,7 @@ Riferimento decisionale: [RELEASE_SCOPE.md](RELEASE_SCOPE.md). Questa mappa appl
 
 ## Scenario specifico del roster core
 
-AC-128 è aggiunto al [catalogo dei test](specifications/Catalogo_test_LMS_1.0.csv) per verificare la parte essenziale di REP-02 e SCR-14: un operatore autorizzato consulta il roster del corso assegnato con stato iscrizione, avanzamento e date operative; può compiere le sole azioni singole autorizzate; non riceve dati quiz/attestati, KPI o export. L'accesso a un corso fuori ambito resta negato secondo AC-12. Il test è pianificato, non ancora eseguito.
+AC-128 è aggiunto al [catalogo dei test](specifications/Catalogo_test_LMS_1.0.csv) per verificare la parte essenziale di REP-02 e SCR-14: un operatore autorizzato consulta il roster del corso assegnato con stato iscrizione, avanzamento e date operative; può compiere le sole azioni singole autorizzate; non riceve dati quiz/attestati, KPI o export. La candidata 0.41.18 aggiunge la ricerca per nome/username nello scope del corso, ma non equivale all'esecuzione o all'accettazione del test. L'accesso a un corso fuori ambito resta negato secondo AC-12. Il test complessivo è pianificato, non ancora eseguito.
 
 ## Regola per gli scenari misti e lo stato
 

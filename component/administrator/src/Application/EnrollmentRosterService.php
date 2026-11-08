@@ -37,8 +37,15 @@ final class EnrollmentRosterService
         $this->course($identity, $courseId);
         $version = $this->optionalId($filters['version'] ?? '0');
         $userId = $this->optionalId($filters['user'] ?? '0');
+        $search = $filters['search'] ?? '';
         $status = $filters['status'] ?? '';
         $progress = $filters['progress'] ?? '';
+        if (!is_string($search)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        $search = trim($search);
+        $searchLength = preg_match_all('/./us', $search);
+        if (strlen($search) > 400 || $searchLength === false || $searchLength > 100 || preg_match('/[\\x00-\\x1f\\x7f]/', $search)) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
         if (!is_string($status) || !in_array($status, ['', 'requested', 'active', 'completed', 'suspended', 'migrated', 'expired', 'cancelled', 'rejected'], true)
             || !is_string($progress) || !in_array($progress, ['', 'not_started', 'in_progress', 'completed'], true)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
@@ -56,6 +63,12 @@ final class EnrollmentRosterService
             ->where('e.course_id = :rosterCourse')->bind(':rosterCourse', $courseId, ParameterType::INTEGER);
         if ($version) { $q->where('e.course_version_id = :rosterVersion')->bind(':rosterVersion', $version, ParameterType::INTEGER); }
         if ($userId) { $q->where('e.user_id = :rosterUser')->bind(':rosterUser', $userId, ParameterType::INTEGER); }
+        if ($search !== '') {
+            // Escape LIKE metacharacters independently of SQL quoting; the value remains bound.
+            $pattern = '%' . strtr($search, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
+            $q->where('(u.name LIKE :rosterSearchName ESCAPE \'!\' OR u.username LIKE :rosterSearchUsername ESCAPE \'!\')')
+                ->bind(':rosterSearchName', $pattern)->bind(':rosterSearchUsername', $pattern);
+        }
         if ($status !== '') { $q->where('e.status = :rosterStatus')->bind(':rosterStatus', $status); }
         if ($progress === 'completed') { $q->where('e.completed_at IS NOT NULL'); }
         elseif ($progress === 'not_started') { $q->where('e.completed_at IS NULL AND e.started_at IS NULL AND e.last_activity_at IS NULL AND e.completed_total = 0'); }

@@ -2,6 +2,7 @@
 <form><fieldset name="filters">
  <field name="version" type="number" min="0" step="1" default="0" label="COM_JLMS_ROSTER_VERSION_FILTER" description="COM_JLMS_ROSTER_ID_HINT" />
  <field name="user" type="number" min="0" step="1" default="0" label="COM_JLMS_ROSTER_USER_FILTER" description="COM_JLMS_ROSTER_ID_HINT" />
+ <field name="search" type="text" maxlength="100" label="COM_JLMS_ROSTER_SEARCH" description="COM_JLMS_ROSTER_SEARCH_HELP" />
  <field name="status" type="list" label="COM_JLMS_ROSTER_STATUS"><option value="">JALL</option><option value="requested">COM_JLMS_ROSTER_REQUESTED</option><option value="active">COM_JLMS_ROSTER_ACTIVE</option><option value="completed">COM_JLMS_ROSTER_LEGACY_COMPLETED</option><option value="suspended">COM_JLMS_ROSTER_SUSPENDED</option><option value="migrated">COM_JLMS_ROSTER_MIGRATED</option><option value="expired">COM_JLMS_ROSTER_EXPIRED</option><option value="cancelled">COM_JLMS_ROSTER_CANCELLED</option><option value="rejected">COM_JLMS_ROSTER_REJECTED</option></field>
  <field name="progress" type="list" label="COM_JLMS_ROSTER_PROGRESS"><option value="">JALL</option><option value="not_started">COM_JLMS_ROSTER_NOT_STARTED</option><option value="in_progress">COM_JLMS_ROSTER_IN_PROGRESS</option><option value="completed">COM_JLMS_ROSTER_COMPLETED</option></field>
 </fieldset></form>

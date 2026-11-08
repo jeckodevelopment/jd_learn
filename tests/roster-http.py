@@ -51,6 +51,7 @@ try:
  _,html,headers=request(admin,roster+'&limitstart=0')
  p=Page(html)
  expect('jlms-roster-table'in p.ids and'jlms-roster-filters'in p.ids,'native roster rendered')
+ expect('name="filter[search]"'in html,'native learner search control rendered')
  expect('no-store'in headers.get('Cache-Control',''),'private no-store administrative response')
  expect(len(enrollments(html))==20 and f['foreign_enrollment']not in enrollments(html),'bounded course-only first page')
  # Audit the IDs owned by this component, including the native filter controls.
@@ -70,7 +71,11 @@ try:
  expect(enrollments(suspended)=={f['suspended']},'native status filter')
  _,empty,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[user]':'2147483647'}))
  expect('jlms-roster-empty'in Page(empty).ids and not enrollments(empty),'empty filtered roster')
- for query in [{'filter[status]':"active' OR 1=1 --"},{'filter[user]':'1 OR 1=1'},{'filter[version]':-1},{'filter[progress][]':'completed'}]:
+ _,by_name,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[search]':'cidash'}))
+ expect(f['active']in enrollments(by_name) and len(enrollments(by_name))>0,'learner search filters by display name or username')
+ _,literal,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[search]':'%'}))
+ expect('jlms-roster-empty'in Page(literal).ids,'LIKE wildcard is treated literally')
+ for query in [{'filter[status]':"active' OR 1=1 --"},{'filter[user]':'1 OR 1=1'},{'filter[version]':-1},{'filter[progress][]':'completed'},{'filter[search]':'x'*101},{'filter[search][]':'cidash'}]:
   request(admin,roster+'&'+urlencode(query),expected=400)
  _,courses,_=request(admin,'/administrator/index.php?option=com_jlms&view=courses')
  expect('view=enrollments'in courses,'authorized course list links to roster')
