@@ -143,6 +143,21 @@ final class CurriculumService
         return $rows;
     }
 
+    /** @return list<object> */
+    private function publicationAttachments(int $versionId): array
+    {
+        $query = $this->db->createQuery()->select('f.status, f.scan_json, a.preview, a.publish_up, a.publish_down')
+            ->from($this->db->quoteName('#__jlms_attachments', 'a'))
+            ->innerJoin($this->db->quoteName('#__jlms_assets', 'f') . ' ON f.id = a.asset_id')
+            ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)
+            ->order('a.id');
+        $rows = $this->db->setQuery($query, 0, 1001)->loadObjectList();
+        if (count($rows) > 1000) {
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+        }
+        return $rows;
+    }
+
     public function outline(User $actor, int $courseId, int $versionId = 0): array
     {
         $course = $this->row('courses', $courseId);
@@ -171,7 +186,8 @@ final class CurriculumService
         }
         return ['course' => $course, 'versions' => $versions, 'version' => $version,
             'modules' => $version ? $this->listRows('modules', 'course_version_id', $versionId) : [],
-            'lessons' => $version ? $this->listRows('lessons', 'course_version_id', $versionId, 5001) : []];
+            'lessons' => $version ? $this->listRows('lessons', 'course_version_id', $versionId, 5001) : [],
+            'attachments' => $version && $version->status === 'draft' ? $this->publicationAttachments($versionId) : []];
     }
 
     public function lessonForEdit(User $actor, int $courseId, int $versionId, int $lessonId): object

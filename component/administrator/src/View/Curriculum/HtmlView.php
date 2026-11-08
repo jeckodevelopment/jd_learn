@@ -60,6 +60,8 @@ final class HtmlView extends BaseHtmlView
                     $course,
                     $this->outline['modules'],
                     $this->outline['lessons'],
+                    $this->outline['attachments'],
+                    (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false),
                 );
             }
         }
