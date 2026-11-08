@@ -1,6 +1,6 @@
-# Profili e associazioni docente —0.31
+# Profili e associazioni docente
 
-Creare un profilo, collegare facoltativamente l’account Joomla e associarlo ai corsi dalla scheda Docenti. Il form non richiede una categoria. Il link Campi personalizzati dei docenti apre il gestore core com_fields nel contesto com_jlms.teacher.
+Creare un profilo, collegare facoltativamente l’account Joomla e associarlo ai corsi dalla scheda Docenti. Il form non richiede una categoria. I campi si gestiscono da JD Learn → Campi aggiuntivi nella sidebar: il filtro contesto nativo di com_fields include Docenti (`com_jlms.teacher`) oltre a Corsi e Lezioni.
 
 La segreteria può definire campi testo, email o altri tipi installati, con lingua, accesso e ACL native. La presentazione di base, la foto e il sito rimangono disponibili. La pubblicazione dei valori aggiuntivi rispetta le ACL dei campi. Il docente collegato può modificare il proprio profilo con core.edit.own e i valori dei campi autorizzati con core.edit.value. La segreteria conserva jlms.teachers.manage e i normali permessi core.
 

@@ -78,3 +78,7 @@ L’incremento0.41.4 raggruppa i dati editoriali, l’immagine e i docenti nella
 **Perimetro:** per decisione esplicita, la rifinitura di navigazione e gestione delle domande già esistenti è inclusa nel lavoro di usabilità backend della prima release. È un’eccezione limitata al congelamento QUI-01–08: funzionalità didattiche quiz non nominate restano fase 2; si implementano soltanto le azioni amministrative descritte qui e i relativi controlli d’integrità.
 
 La specifica schermate, il catalogo dei test, la matrice e i prossimi step sono stati aggiornati. Le richieste non dichiarano le viste già complete e il loro stato resta “In corso” fino ai collaudi dei nuovi scenari. Il [testbook](QA_TESTBOOK.md) conserva i percorsi da eseguire dopo l’implementazione.
+
+### Chiarimento dell’8 novembre — issue #99, accesso ai campi personalizzati
+
+L'issue [#99](https://github.com/jeckodevelopment/jd_learn/issues/99) precisa la navigazione richiesta da AC-129: rimuovere i collegamenti ai campi aggiuntivi dalle viste elenco Corsi e Docenti, aggiungere un'unica voce **Campi aggiuntivi** alla sidebar JD Learn e aprire la lista nativa `com_fields` sul contesto JD Learn. Da quella lista si usa il filtro contesto nativo per scegliere corsi, docenti o lezioni. Il componente già espone i tre contesti tramite `FieldsServiceInterface::getContexts()`; non si aggiungono viste, tipi di campo o logiche proprietarie.

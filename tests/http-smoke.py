@@ -76,6 +76,12 @@ try:
  for view in ['courses','teachers','questionbank']:
   if not any(q.get('option')==['com_jlms'] and q.get('view')==[view] for q in menu_links):raise RuntimeError('Native JD Learn sidebar link missing: '+view)
  if not any(q.get('option')==['com_categories'] and q.get('extension')==['com_jlms.course'] for q in menu_links):raise RuntimeError('Native course category sidebar missing')
+ custom_fields_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_fields'] and parse_qs(urlparse(x).query).get('view')==['fields']),None)
+ if not custom_fields_link:raise RuntimeError('Native custom fields sidebar link missing')
+ if parse_qs(urlparse(custom_fields_link).query).get('context')!=['com_jlms.course']:raise RuntimeError('Custom fields sidebar must open the native manager on a JD Learn context')
+ _,custom_fields_html=get(custom_fields_link)
+ context_filter=re.search(r'<select[^>]+name="context"[^>]*>(.*?)</select>',custom_fields_html,re.S)
+ if not context_filter or any('value="com_jlms.'+context+'"' not in context_filter.group(1) for context in ['course','teacher','lesson']):raise RuntimeError('Native custom fields context filter must offer course, teacher and lesson')
  plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
  if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
  # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
@@ -90,6 +96,7 @@ try:
  url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
  if 'CI Courses' not in html:raise RuntimeError('Native Joomla category manager did not render the saved category')
  url,html=get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'COM_JLMS_COURSE_FIELDS_MANAGE' in html or 'option=com_fields&amp;view=fields&amp;context=com_jlms.course' in html:raise RuntimeError('Course custom fields access must be in the sidebar, not the list view')
  links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('task')==['course.edit']]
  if not links:raise RuntimeError('Saved draft is absent from the native course list')
  # The latest course may already be published: find an actually editable draft.
@@ -276,6 +283,7 @@ try:
  # Exercise teacher creation through the native administrator form.
  u,h=get('/administrator/index.php?option=com_jlms&view=teachers')
  if 'id="jlms-admin-teachers"' not in h:raise RuntimeError('Native teacher list missing')
+ if 'COM_JLMS_TEACHER_FIELDS' in h or 'option=com_fields&amp;view=fields&amp;context=com_jlms.teacher' in h:raise RuntimeError('Teacher custom fields access must be in the sidebar, not the list view')
  u,h=get('/administrator/index.php?option=com_jlms&task=teacher.add')
  teacher_form=next(f for f in Page(h).forms if 'jform[bio]' in f['fields'])
  if 'jform[catid]' in teacher_form['fields']:raise RuntimeError('Teacher creation must not require choosing a category')
