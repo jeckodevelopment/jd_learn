@@ -24,6 +24,7 @@ final class HtmlView extends BaseHtmlView
     public bool $canDelete = false;
     public array $transitions = [];
     public string $publicationNotice = '';
+    public array $publicationReadiness = ['blockers' => [], 'warnings' => []];
     public array $videoProviders = [];
     public bool $canConfigureVideo = false;
     public bool $canManagePlugins = false;
@@ -54,6 +55,13 @@ final class HtmlView extends BaseHtmlView
         if ($version) {
             try { $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()->teachingRules($actor, (int)$course->id, (int)$version->id); }
             catch (\DomainException $error) { if ($error->getMessage() !== 'COM_JLMS_PUBLICATION_UNSUPPORTED') { throw $error; } }
+            if ($version->status === 'draft') {
+                $this->publicationReadiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+                    $course,
+                    $this->outline['modules'],
+                    $this->outline['lessons'],
+                );
+            }
         }
         $this->canMaterials = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id);
         $this->canQuiz = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . (int) $course->id);

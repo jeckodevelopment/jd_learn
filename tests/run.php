@@ -34,6 +34,29 @@ function rejects(callable $work, string $message): void
     }
     throw new \RuntimeException($message);
 }
+$readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
+    'summary' => $summary,
+    'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),
+];
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect($readinessCourse('  '), [], []);
+expect(in_array('COM_JLMS_COURSE_DESCRIPTION_REQUIRED', $readiness['blockers'], true)
+    && in_array('COM_JLMS_READINESS_MODULES_REQUIRED', $readiness['blockers'], true)
+    && in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true), 'pre-publication checklist reports description and empty programme blockers');
+expect(in_array('COM_JLMS_READINESS_SUMMARY_MISSING', $readiness['warnings'], true)
+    && in_array('COM_JLMS_READINESS_IMAGE_MISSING', $readiness['warnings'], true), 'optional course presentation gaps are warnings');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'text']],
+);
+expect(in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true)
+    && !in_array('COM_JLMS_READINESS_MODULE_EMPTY', $readiness['blockers'], true), 'pre-publication checklist distinguishes optional lesson from empty module');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
+);
+expect($readiness === ['blockers' => [], 'warnings' => []], 'complete basic structure passes preliminary checks without notices');
 expect(Coverage::merge([[0, 20000], [50000, 60000]], [[10000, 40000], [40000, 50000]], 100000) === [[0, 60000]], 'union across duplicates/adjacent intervals');
 $replayed = Coverage::merge([[0, 60000]], [[10000, 40000]], 100000);
 expect(Coverage::coveredMs($replayed) === 60000, 'replay does not double count');

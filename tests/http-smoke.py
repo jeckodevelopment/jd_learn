@@ -346,6 +346,8 @@ try:
  expect('id="jlms-publication-notice"' in h and 'id="jlms-version-form"' in h,'Course without version explains the next step')
  form=next(f for f in Page(h).forms if f['id']=='jlms-version-form');u,h=submit(u,form)
  expect('id="jlms-publication-form"' in h and re.search(r'id="jlms-publication-submit"[^>]*>\s*Publish\s*</button>',h),'First draft exposes an explicit Publish command')
+ expect('id="jlms-publication-readiness"' in h and 'data-readiness-code="COM_JLMS_READINESS_MODULES_REQUIRED"' in h
+  and 'data-readiness-code="COM_JLMS_READINESS_REQUIRED_LESSON"' in h,'Draft publication page shows basic blockers before the user submits')
  before=fixture()
  form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
  transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
@@ -354,11 +356,14 @@ try:
  form=next(f for f in Page(h).forms if f['id']=='jlms-module-form');u,h=submit(u,form,{'jform[title]':'HTTP first module'})
  lesson_link=next(x for x in Page(h).links if parse_qs(urlparse(x).query).get('new_lesson')==['1'])
  u,h=get(lesson_link)
+ expect('data-readiness-code="COM_JLMS_READINESS_MODULE_EMPTY"' in h,'An empty module remains a publication blocker while editing its first lesson')
  form=next(f for f in Page(h).forms if f['id']=='jlms-lesson-form')
  u,h=submit(u,form,{'jform[title]':'HTTP first required lesson','jform[kind]':'text','jform[required]':'1',
   'jform[module_id]':re.search(r'data-module-id="([1-9][0-9]*)"',h).group(1),
   'jform[body]':'<p>FIRST_PUBLICATION_PRIVATE_BODY</p>'})
  expect('HTTP first required lesson' in h,'Module and required text lesson saved through HTTP')
+ expect('id="jlms-publication-blockers"' in h and 'COM_JLMS_READINESS_MODULE_EMPTY' not in h
+  and 'COM_JLMS_READINESS_REQUIRED_LESSON' not in h,'Adding the required lesson clears structural blockers')
  form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
  transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
  # A disabled native plugin must be diagnosed without changing course/version data.
