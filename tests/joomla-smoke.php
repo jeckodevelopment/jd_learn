@@ -78,9 +78,28 @@ $privacyCapabilities = new CollectCapabilitiesEvent('onPrivacyCollectAdminCapabi
 $app->getDispatcher()->dispatch('onPrivacyCollectAdminCapabilities', $privacyCapabilities);
 $privacyData = $privacyCapabilities->getArgument('result', []);
 $privacyTitle = Text::_('PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE');
+$privacyDescriptionKeys = [
+    'PLG_PRIVACY_JDLEARN_CAPABILITY_ENROLLMENTS',
+    'PLG_PRIVACY_JDLEARN_CAPABILITY_PROGRESS',
+    'PLG_PRIVACY_JDLEARN_CAPABILITY_ATTEMPTS',
+    'PLG_PRIVACY_JDLEARN_CAPABILITY_CERTIFICATES',
+];
+$privacyDescriptions = array_map(static fn(string $key): string => Text::_($key), $privacyDescriptionKeys);
+if ($privacyTitle === 'PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE') {
+    throw new \RuntimeException('JD Learn privacy capability language strings were not loaded.');
+}
+foreach ($privacyDescriptionKeys as $index => $key) {
+    if ($privacyDescriptions[$index] === $key) {
+        throw new \RuntimeException('JD Learn privacy capability language strings were not loaded.');
+    }
+}
 $hasPrivacyCapabilities = false;
 foreach ($privacyData as $capabilitySet) {
-    if (is_array($capabilitySet) && array_key_exists($privacyTitle, $capabilitySet)) {
+    if (is_array($capabilitySet)
+        && array_key_exists($privacyTitle, $capabilitySet)
+        && is_array($capabilitySet[$privacyTitle])
+        && array_diff($privacyDescriptions, $capabilitySet[$privacyTitle]) === []
+    ) {
         $hasPrivacyCapabilities = true;
         break;
     }
