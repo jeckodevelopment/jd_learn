@@ -16,6 +16,14 @@ La PR #68 è integrata in main nella 0.41.8-dev. La schermata iniziale mette in 
 
 Per ogni vista amministrativa, prima si individua la vista standard Joomla più vicina (ad esempio elenco articoli per i corsi, categorie native per le categorie) e se ne riusano struttura, navigazione, toolbar, filtri e convenzioni quando rappresentano correttamente i dati. Si introduce un layout specifico solo dove la vista core non copre il flusso richiesto; anche in quel caso si mantengono menu, titoli, ritorno all’elenco, stato vuoto/errori, ACL e comportamento coerenti con Joomla. Questa regola guida l’implementazione dei requisiti già nel perimetro; non aggiunge funzionalità.
 
+### Incremento richiesto l’8 novembre — campi, docenti e banca domande
+
+- **Campi aggiuntivi di corsi e lezioni:** dalla gestione del corso e della lezione fornire un accesso visibile alla relativa vista nativa Joomla per configurare i campi (`com_fields`), con il contesto corretto e senza aggirare i permessi Joomla.
+- **Docenti:** rifare l’elenco backend seguendo una vista Joomla standard adeguata, ispirata a `com_contacts` o alla gestione articoli. Elenco e form devono essere distinti; riusare toolbar, Search Tools/filtri, ordinamento, paginazione, stati e navigazione core. La gestione docente resta senza categorie docente.
+- **Banca domande:** vista elenco dedicata, separata dal form di creazione/modifica. Usare le convenzioni elenco articoli Joomla e azioni standard per creare, duplicare ed eliminare domande, con conferme e controlli d’accesso. Nessun ampliamento dei tipi di quiz o della valutazione.
+
+Questi punti sono tracciati in AC-129–131 e nella [decisione requisiti RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native). La banca domande è inclusa come eccezione limitata di usabilità: le altre funzionalità quiz restano fase 2.
+
 - Rivedere la schermata iniziale: l’attuale gruppo di pulsanti Corsi/Categorie/Banca domande/Docenti non deve essere l’unico accesso alle funzioni. Rendere evidenti il percorso principale di gestione corsi e le azioni disponibili, con etichette comprensibili e spazi contenuti.
 - Predisporre un menu amministrativo JD Learn nella sidebar nativa Joomla, visibile nelle viste del componente e coerente con le convenzioni del core. Accessi diretti almeno a Corsi, Categorie corsi, Banca domande e Docenti, secondo i permessi; configurazione tramite strumenti nativi e altri collegamenti solo quando le funzioni sono operative.
 - Mantenere il contesto del corso per programma, materiali e iscritti: evitare voci globali che aprano pagine prive del corso necessario. Le categorie riguardano i corsi, non la gestione dei docenti.

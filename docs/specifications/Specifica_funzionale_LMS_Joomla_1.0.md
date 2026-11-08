@@ -1,8 +1,8 @@
 # Componente e-learning per Joomla — Specifica funzionale
 
-Versione 1.5 · 4 novembre 2026 · Specifica funzionale consolidata del rilascio 1
+Versione 1.5 · 4 novembre 2026 · Specifica funzionale consolidata del rilascio 1 · addendum approvato 8 novembre 2026
 
-**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. La matrice requisito-test e il catalogo dei collaudi recepiscono le revisioni 1.3–1.5. I mockup allegati restano quelli della 1.2 e non rappresentano ancora i nuovi flussi: prevalgono i requisiti testuali. Il [registro delle modifiche](../REQUIREMENTS_CHANGES.md) identifica la richiesta, gli ID interessati e i criteri aggiunti; i nomi file con suffisso 1.0 sono storici.
+**Stato:** specifica funzionale consolidata della prima versione. Comportamenti e default derivano dalle proposte accolte dall'utente. Il documento descrive cosa realizzare e come accettarlo; non attesta che il software sia già implementato o che le prestazioni siano state misurate. La verifica Joomla è documentale e su sorgenti ufficiali, con riferimenti riproducibili in sezione 32. La matrice requisito-test e il catalogo dei collaudi recepiscono le revisioni 1.3–1.5 e l’addendum del8novembre2026. I mockup allegati restano quelli della 1.2 e non rappresentano ancora i nuovi flussi: prevalgono i requisiti testuali. Il [registro delle modifiche](../REQUIREMENTS_CHANGES.md) identifica la richiesta, gli ID interessati e i criteri aggiunti; i nomi file con suffisso 1.0 sono storici.
 
 Le sezioni 1–30 definiscono prodotto, campi, viste e processi; le sezioni 31–36 completano precedenze, integrazioni, selettori, collaudo e configurazione del sito. Le regole di dettaglio sono prescrittive. Le funzioni differite sono elencate soltanto come evoluzioni, senza costituire impegno del rilascio 1.
 
@@ -756,6 +756,12 @@ Una registrazione/login non costituisce iscrizione, acquisto o prova di accesso.
 ### 27.4 Amministrazione
 
 **SCR-13 — Editor corso.** Schede Dati generali, Programma, Accesso e catalogo, Regole didattiche, Attestato, Pubblicazione, Permessi e campi Joomla. Salva e Salva e chiudi disponibili anche sui corsi pubblicati; Versioni apre lo storico Joomla. Modifica programma prepara o riapre una copia completa per aggiornare lezioni e materiali; Pubblica aggiornamento mostra l’effetto su nuove iscrizioni e storico. Restano Salva bozza, Anteprima, Invia in revisione e Pubblica solo con permessi. La scheda Docenti associa profili senza gestione di categorie docente. L'anteprima dei livelli/accessi non modifica l'appartenenza dell'utente. Prima di pubblicare mostrare errori bloccanti separati dagli avvisi. Elenco ed editor seguono le convenzioni della gestione articoli Joomla: toolbar, selezione, Search Tools, metadati leggibili e accesso al programma con salvataggio del form.
+
+**Addendum AC-129 — accesso ai campi Joomla.** Dalle aree backend di gestione dei corsi e delle lezioni è disponibile un collegamento riconoscibile alla vista nativa `com_fields` per il contesto/estensione corretto. Il collegamento è visibile e utilizzabile solo secondo i permessi Joomla; configurazione, gruppi di campi e valori restano gestiti dai componenti core.
+
+**Addendum AC-130 — elenco docenti.** La vista backend dei docenti separa l’elenco dal form di creazione/modifica e segue un pattern standard Joomla adatto ai profili, prendendo come riferimento `com_contacts` o la gestione articoli. Toolbar, ricerca/filtri, ordinamento, paginazione, stato, navigazione e ritorno all’elenco sono coerenti con il backend core. Non si introduce una categoria docente.
+
+**Addendum AC-131 — banca domande amministrativa.** La vista della banca presenta un elenco di domande distinto dai form di creazione/modifica. Usa il pattern standard della lista articoli Joomla e offre azioni per creare, duplicare ed eliminare domande esistenti. ACL, CSRF, conferme, dipendenze, revisioni e tentativi sono rispettati. L’addendum non estende tipi di domanda, valutazione o flussi dello studente; l’eccezione di perimetro è registrata in RF-2026-11-08-B.
 
 **SCR-14 — Iscrizioni/report.** Filtri per corso/versione, utente, origine, apprendimento e stato accesso; colonne e azioni coerenti con i permessi. Operazioni massive mostrano selezionati, ambito e conteggio degli esclusi; nessuna promozione a un gruppo Joomla. Dettaglio studente/corso con attività obbligatorie, date, tentativi e rettifiche.
 

@@ -13,6 +13,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.18-dev**: incl
 | [Checklist gestione corsi](docs/M01_ACCEPTANCE.md) | Funzioni presenti, implementazioni mancanti e collaudi M01 |
 | [Roadmap](docs/ROADMAP_TO_STABLE.md) | Perimetro delle fasi fino al rilascio stabile |
 | [Matrice requisiti](docs/REQUIREMENTS_STATUS.csv) | Tracciabilità dettagliata dei 210 requisiti |
+| [Modifiche ai requisiti](docs/REQUIREMENTS_CHANGES.md) | Decisioni approvate e scenari AC aggiornati |
 | [Come leggere lo stato requisiti](docs/REQUIREMENTS_STATUS_GUIDE.md) | Significato di implementazione parziale, criteri completi e accettazione |
 | [Testbook collaudo Joomla](docs/QA_TESTBOOK.md) | Percorsi manuali per PR, registrazione esiti e prove ancora da ricostruire |
 | [Problemi specifici](docs/IMPLEMENTATION_GAPS.md) | Differenze aperte e segnalazioni risolte |
@@ -32,7 +33,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.18-dev**: incl
 
 ## Specifiche e perimetro
 
-La [specifica funzionale 1.5](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md), il [progetto tecnico](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md), le [specifiche di sicurezza e provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md) e i [servizi progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md) definiscono il risultato da raggiungere. Il suffisso `1.0` nei nomi è storico: la versione interna è autorevole. Le specifiche descrivono anche funzioni non ancora implementate; il loro aggiornamento è registrato in [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md).
+La [specifica funzionale 1.5 con addendum approvato l’8 novembre](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md), il [progetto tecnico](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md), le [specifiche di sicurezza e provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md) e i [servizi progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md) definiscono il risultato da raggiungere. Il suffisso `1.0` nei nomi è storico: la versione interna è autorevole. Le specifiche descrivono anche funzioni non ancora implementate; le decisioni sono registrate in [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md).
 
 Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo`. Account, gruppi e livelli sono quelli Joomla. Vendita e gestione degli abbonamenti sono esterne; l'iscrizione non assegna gruppi. Compiti, live e interoperabilità seguono le fasi differite della specifica.
 
