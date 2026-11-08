@@ -102,7 +102,8 @@ final class HtmlView extends BaseHtmlView
             }
             foreach ($rows as $key => $fallbackLabel) {
                 $provider = $providers[$key] ?? null;
-                $label = $provider ? \Joomla\CMS\Language\Text::_($provider->labelKey) : $fallbackLabel;
+                $label = $provider && !isset($coreProviders[$key])
+                    ? \Joomla\CMS\Language\Text::_($provider->labelKey) : $fallbackLabel;
                 if (!$provider) {
                     $status = 'COM_JLMS_VIDEO_EDITOR_PLUGIN_MISSING';
                 } elseif (!$provider->configured) {
