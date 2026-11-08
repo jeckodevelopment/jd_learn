@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.21-dev — attivazione Privacy verificata all'installazione
+
+- Sposta l'attivazione automatica nel postflight del plugin `plg_privacy_jdlearn`, quando la riga plugin è già stata creata dal suo installer nativo.
+- Gli upgrade continuano a rispettare lo stato scelto dall'amministratore; le lingue vengono caricate dagli eventi Privacy come in 0.41.20.
+- Aggiunge regressioni CI che controllano l'installazione senza forzare il plugin attivo nel fixture e verificano le quattro stringhe tradotte.
+- Il test ha rilevato che il tentativo di attivazione a livello package della 0.41.20 non veniva applicato; corregge quel difetto, senza aggiungere capacità Privacy.
+
 ## 0.41.20-dev — integrazione Privacy attiva e tradotta
 
 - La prima installazione del pacchetto abilita il plugin `plg_privacy_jdlearn`; gli aggiornamenti rispettano lo stato scelto dall'amministratore.
@@ -7,6 +14,7 @@
 - Collaudo manuale Joomla richiesto per installazione nuova, upgrade con plugin disabilitato e lingue amministrative italiana/inglese.
 - PR [#100](https://github.com/jeckodevelopment/jd_learn/pull/100) integrata; i quattro job CI sono superati ([run 42498937182](https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182)). Il collaudo Joomla della correzione è ancora pendente.
 - Pacchetto [JD-Learn-0.41.20-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182/artifacts/13623954016): contenitore da estrarre una volta; ZIP interno SHA-256 `d640593bd6cb91d9d57b58ed98917ebb8efe698ec2c36ddfbccd17f05d8118f2`, scadenza 22 novembre 2026.
+- Nota correttiva: il hook dichiarato nel manifest del package non attivava il plugin durante l'installazione Joomla; la PR #102 lo sposta nel manifest del plugin e aggiunge una verifica automatica.
 
 ## 0.41.19-dev — accesso ai campi aggiuntivi corso e lezione
 
