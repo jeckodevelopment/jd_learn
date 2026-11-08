@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.18-dev; candidata 0.41.19-dev** aggiunge i collegamenti alle viste Joomla dei campi aggiuntivi di corsi e lezioni (AC-129). La ricerca nel roster introdotta dalla PR #94 è registrata come deviazione di perimetro da riesaminare: il merge non la rende automaticamente un requisito accettato. La CI della candidata e il collaudo manuale sono da completare. Per la prima versione stabile si verificano i quattro provider distribuiti: YouTube, Vimeo, Cloudflare Stream e HTML5.
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.19-dev; candidata 0.41.20-dev** corregge l'attivazione iniziale e il caricamento delle lingue del plugin com_privacy. La candidata è in collaudo CI; resta necessaria la verifica manuale su Joomla. La PR #98 ha integrato i collegamenti ai campi nativi dei corsi e delle lezioni (AC-129). La ricerca nel roster introdotta dalla PR #94 è una deviazione non approvata come requisito stabile e resta da riesaminare. Per il primo rilascio stabile vanno verificati i quattro provider distribuiti: YouTube, Vimeo, Cloudflare Stream e HTML5.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -51,11 +51,11 @@ php tests/run.php
 
 La build genera `dist/pkg_jlms-<versione>-dev.zip` e `SHA256SUMS.txt`; la versione è letta dai manifest del pacchetto. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
-I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
+I provider video sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Il plugin **JD Learn - Privacy** viene abilitato alla prima installazione del pacchetto perché i flussi nativi Privacy includano i dati JD Learn; gli aggiornamenti preservano la scelta attuale dell'amministratore. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
 
 
 
 La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della 0.41.7 è superata (PR #65, run 42420998171). La 0.41.8 aggiorna la dashboard amministrativa. La 0.41.9 integra i controlli R-03 per ammissioni ed erogazione (PR #70, merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f)); CI standard superata (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); collaudo manuale Joomla ancora aperto. M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
 
-Pacchetto verificato per main **0.41.18-dev**: [artefatto CI 42492865814](https://github.com/jeckodevelopment/jd_learn/actions/runs/42492865814/artifacts/13622073971), disponibile fino al 22 novembre 2026. Lo ZIP scaricato è un contenitore da estrarre una volta; lo ZIP interno installabile ha SHA-256 `e1d046a16e11f5b89c2487f450d6088d097d2281553b1205108348ccad5b03ff`.
+Pacchetto verificato per il runtime main **0.41.19-dev**: [artefatto CI 42496954014](https://github.com/jeckodevelopment/jd_learn/actions/runs/42496954014/artifacts/13624136987), disponibile fino al 22 novembre 2026. Lo ZIP scaricato è un contenitore da estrarre una volta; il suo pacchetto interno installabile contiene la versione 0.41.19.
