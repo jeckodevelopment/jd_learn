@@ -11,10 +11,17 @@ use Joomla\Database\ParameterType;
 
 final class PathwayTable extends Table
 {
+    private int $preparedAsset = 0;
+
     public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__jlms_pathways', 'id', $db);
         $this->setColumnAlias('published', 'state');
+    }
+
+    public function usePreparedAsset(int $assetId): void
+    {
+        $this->preparedAsset = $assetId;
     }
 
     public function check(): bool
@@ -62,6 +69,21 @@ final class PathwayTable extends Table
 
     public function store($updateNulls = true)
     {
+        $asset = new \Joomla\CMS\Table\Asset($this->getDatabase());
+        $stable = $this->id && $asset->loadByName($this->_getAssetName())
+            && (int) $asset->id === (int) $this->asset_id
+            && (int) $asset->parent_id === (int) $this->_getAssetParentId()
+            && $this->_rules === null;
+        $prepared = !$this->id && $this->preparedAsset > 0 && $asset->load($this->preparedAsset)
+            && str_starts_with((string) $asset->name, 'com_jlms.pathway.pending.')
+            && (int) $asset->parent_id === (int) $this->_getAssetParentId();
+        if ($this->preparedAsset && !$prepared) {
+            throw new \DomainException('COM_JLMS_SAVE_FAILED');
+        }
+        if ($prepared) {
+            $this->asset_id = $this->preparedAsset;
+        }
+
         $now = Factory::getDate()->toSql();
         $actor = (int) Factory::getApplication()->getIdentity()->id;
         if (!$this->id) {
@@ -75,12 +97,8 @@ final class PathwayTable extends Table
         $this->modified_by = $actor;
 
         $asset = new \Joomla\CMS\Table\Asset($this->getDatabase());
-        $stable = $this->id && $asset->loadByName($this->_getAssetName())
-            && (int) $asset->id === (int) $this->asset_id
-            && (int) $asset->parent_id === (int) $this->_getAssetParentId()
-            && $this->_rules === null;
         $tracking = $this->_trackAssets;
-        if ($stable) {
+        if ($stable || $prepared) {
             $this->_trackAssets = false;
             $this->getDatabase()->updateObject('#__assets', (object) [
                 'id' => (int) $asset->id,
@@ -88,7 +106,14 @@ final class PathwayTable extends Table
             ], 'id');
         }
         try {
-            return parent::store($updateNulls);
+            $success = parent::store($updateNulls);
+            if ($success && $prepared) {
+                $this->getDatabase()->updateObject('#__assets', (object) [
+                    'id' => $this->preparedAsset,
+                    'name' => $this->_getAssetName(),
+                ], 'id');
+            }
+            return $success;
         } finally {
             $this->_trackAssets = $tracking;
         }

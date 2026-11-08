@@ -93,6 +93,11 @@ $before = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE use
 $again = $service->detail($guest,'en-GB',$pathwayId);
 $after = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id='.(int)$operator->id.' AND course_id='.(int)$courseId)->loadResult();
 $check($before===$after,'reading a pathway never changes enrollment or access');
+$rejected = ['id'=>0,'revision'=>1,'title'=>'Rejected pathway','alias'=>'rejected-ci-pathway','description'=>'','catid'=>$categoryId,
+    'access'=>1,'language'=>'*','state'=>1,'courses'=>[['course_id'=>$courseId,'ordering'=>0],['course_id'=>$courseId,'ordering'=>1]]];
+$check(!$pathModel->save($rejected),'duplicate course association is rejected');
+$check(!(int)$db->setQuery("SELECT COUNT(*) FROM #__assets WHERE name LIKE 'com_jlms.pathway.pending.%'")->loadResult(),
+    'failed pathway save removes its prepared Joomla asset');
 $emptyPayload = ['id'=>0,'revision'=>1,'title'=>'Empty CI pathway','alias'=>'empty-ci-pathway','description'=>'','catid'=>$categoryId,
     'access'=>1,'language'=>'*','state'=>1,'courses'=>[]];
 $check((bool)$pathModel->save($emptyPayload),'empty pathway can be authored: '.$pathModel->getError());
@@ -100,4 +105,4 @@ $emptyId=(int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='empty-
 $emptyDetail=$service->detail($operator,'en-GB',$emptyId);
 $check($emptyDetail['progress']===null && $emptyDetail['required_courses']===0,'empty pathway has no completion percentage');
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
-echo json_encode(['pathway_checks'=>12,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;
+echo json_encode(['pathway_checks'=>14,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;

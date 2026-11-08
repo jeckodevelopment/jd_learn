@@ -43,10 +43,10 @@ final class PathwayModel extends AdminModel
     public function save($input)
     {
         $db = $this->getDatabase();
-        $db->transactionStart();
+        $preparedAsset = 0;
+        $transactionStarted = false;
+        $assetTable = null;
         try {
-            $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult()
-                ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
             $actor = new User((int) $this->getCurrentUser()->id);
             $actor->clearAccessRights();
             $this->setCurrentUser($actor);
@@ -54,6 +54,42 @@ final class PathwayModel extends AdminModel
                 || !$actor->authorise('jlms.pathways.manage', 'com_jlms')) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
+
+            // Joomla's nested asset store uses table locks. Reserve a placeholder
+            // before beginning the data transaction, then rename it atomically
+            // after the pathway row has its primary key.
+            if (!(int) ($input['id'] ?? 0)) {
+                $categoryId = $input['catid'] ?? null;
+                if ((!is_int($categoryId) && !is_string($categoryId))
+                    || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $categoryId)) {
+                    throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+                }
+                $categoryId = (int) $categoryId;
+                $categoryQuery = $db->createQuery()->select('id, asset_id')->from('#__categories')
+                    ->where("extension='com_jlms.pathway' AND published <> -2")
+                    ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
+                $category = $db->setQuery($categoryQuery)->loadObject()
+                    ?: throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+                if (!$actor->authorise('core.create', 'com_jlms.pathway.category.' . $categoryId)) {
+                    throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                }
+                $assetTable = new \Joomla\CMS\Table\Asset($db);
+                $assetTable->setLocation((int) $category->asset_id, 'last-child');
+                $assetTable->bind([
+                    'name' => 'com_jlms.pathway.pending.' . bin2hex(random_bytes(16)),
+                    'title' => 'JD Learn pathway draft',
+                    'rules' => '{}',
+                ]);
+                if (!$assetTable->check() || !$assetTable->store()) {
+                    throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+                }
+                $preparedAsset = (int) $assetTable->id;
+            }
+
+            $db->transactionStart();
+            $transactionStarted = true;
+            $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult()
+                ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
 
             $allowed = ['id', 'revision', 'title', 'alias', 'description', 'catid', 'access', 'language', 'state', 'courses'];
             $data = array_intersect_key($input, array_flip($allowed));
@@ -92,6 +128,9 @@ final class PathwayModel extends AdminModel
                 && !$actor->authorise('core.create', 'com_jlms.pathway.category.' . $categoryId)) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
+            if ($record && $categoryId !== (int) $record->catid) {
+                throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+            }
             if (isset($data['state']) && (int) $data['state'] !== (int) ($record->state ?? 0)
                 && !$actor->authorise('core.edit.state', $id ? 'com_jlms.pathway.' . $id : 'com_jlms')) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
@@ -112,6 +151,9 @@ final class PathwayModel extends AdminModel
             unset($data['courses'], $data['revision']);
 
             $table = $this->getTable('Pathway');
+            if ($preparedAsset) {
+                $table->usePreparedAsset($preparedAsset);
+            }
             if ($record) {
                 foreach ((array) $record as $key => $value) {
                     $table->$key = $value;
@@ -131,9 +173,20 @@ final class PathwayModel extends AdminModel
             }
 
             $db->transactionCommit();
+            $transactionStarted = false;
+            $preparedAsset = 0;
             return true;
         } catch (\Throwable $error) {
-            $db->transactionRollback();
+            if ($transactionStarted) {
+                $db->transactionRollback();
+            }
+            if ($preparedAsset && $assetTable) {
+                try {
+                    $assetTable->delete($preparedAsset);
+                } catch (\Throwable) {
+                    // A later asset maintenance pass can remove an orphaned placeholder.
+                }
+            }
             $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_PATHWAY_INVALID'];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             return false;

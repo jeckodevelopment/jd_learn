@@ -33,6 +33,10 @@ final class HtmlView extends BaseHtmlView
         if (!$this->form) {
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
+        if ($id) {
+            $this->form->setFieldAttribute('catid', 'disabled', 'true');
+            $this->form->setFieldAttribute('catid', 'description', 'COM_JLMS_PATHWAY_CATEGORY_LOCKED');
+        }
         if (!$actor->authorise('core.edit.state', $scope)) {
             $this->form->setFieldAttribute('state', 'disabled', 'true');
         }
