@@ -14,6 +14,8 @@ final class HtmlView extends BaseHtmlView
     public $form;
     public int $replacement = 0;
     public int $replacementLesson = 0;
+    public string $scheduleTimezone = 'UTC';
+    public array $dateValues = ['publish_up' => '', 'publish_down' => ''];
 
     public function display($tpl = null)
     {
@@ -27,6 +29,8 @@ final class HtmlView extends BaseHtmlView
         $this->form->setField($field);
         $data = ['course_id' => $this->item['course']->id, 'version_id' => $this->item['version']->id,
             'expected_version_revision' => $this->item['version']->revision, 'replace_id' => 0];
+        $data['publish_up'] = '';
+        $data['publish_down'] = '';
         $selectedLesson = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('lesson_id');
         if ($selectedLesson) {
             if (!in_array($selectedLesson, array_map(static fn($lesson): int => (int) $lesson->id, $this->item['lessons']), true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
@@ -36,7 +40,9 @@ final class HtmlView extends BaseHtmlView
         if ($replaceId) {
             foreach ($this->item['files']['items'] as $file) {
                 if ((int) $file->id === $replaceId && $this->item['version']->status === 'draft') {
-                    $data = array_replace($data, ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id]);
+                    $data = array_replace($data, ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id,
+                        'publish_up' => \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_up, $this->item['schedule_timezone']),
+                        'publish_down' => \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_down, $this->item['schedule_timezone'])]);
                     $data['replace_id'] = $replaceId;
                     $this->replacement = $replaceId;
                     $this->replacementLesson = (int) $file->lesson_id;
@@ -45,6 +51,12 @@ final class HtmlView extends BaseHtmlView
             }
             if (!$this->replacement) {throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);}
         }
+        foreach ($this->item['files']['items'] as $file) {
+            $file->publish_up_editor = \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_up, $this->item['schedule_timezone']);
+            $file->publish_down_editor = \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_down, $this->item['schedule_timezone']);
+        }
+        $this->scheduleTimezone = $this->item['schedule_timezone'];
+        $this->dateValues = ['publish_up' => $data['publish_up'], 'publish_down' => $data['publish_down']];
         $this->form->bind($data);
         ToolbarHelper::title(Text::_('COM_JLMS_MATERIALS'), 'file');
         parent::display($tpl);
