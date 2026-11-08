@@ -105,7 +105,9 @@ foreach ($privacyExportData as $contribution) {
     }
 }
 sort($privacyDomainNames);
-if ($privacyDomainNames !== ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates', 'jdlearn_enrollments', 'jdlearn_enrollment_requests', 'jdlearn_progress']) {
+$expectedPrivacyDomainNames = ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates', 'jdlearn_enrollments', 'jdlearn_enrollment_requests', 'jdlearn_progress'];
+sort($expectedPrivacyDomainNames);
+if ($privacyDomainNames !== $expectedPrivacyDomainNames) {
     throw new \RuntimeException('JD Learn privacy export domains missing: ' . implode(', ', $privacyDomainNames));
 }
 $privacyPlugin = new \Jlms\Plugin\Privacy\Jdlearn\Extension\Jdlearn((array) PluginHelper::getPlugin('privacy', 'jdlearn'));
