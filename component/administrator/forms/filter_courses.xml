@@ -6,6 +6,7 @@
   <field name="category_id" type="Coursefiltercategory" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" extension="com_jlms.course" published="0,1,2" label="JCATEGORY" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_CATEGORY</option></field>
   <field name="access" type="accesslevel" label="JGRID_HEADING_ACCESS" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_ACCESS</option></field>
   <field name="author_id" type="Courseauthors" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" label="JAUTHOR" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_AUTHOR</option></field>
+  <field name="teacher_id" type="Teacherfilter" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" label="COM_JLMS_TEACHER_FILTER" class="js-select-submit-on-change"><option value="">COM_JLMS_TEACHER_FILTER_SELECT</option></field>
   <field name="language" type="contentlanguage" label="JGRID_HEADING_LANGUAGE" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_LANGUAGE</option><option value="*">JALL</option></field>
   <field name="checked_out" type="list" label="COM_JLMS_COURSES_CHECKOUT" class="js-select-submit-on-change" validate="options"><option value="">COM_JLMS_COURSES_CHECKOUT</option><option value="1">COM_JLMS_COURSES_LOCKED</option><option value="0">COM_JLMS_COURSES_UNLOCKED</option></field>
  </fields>

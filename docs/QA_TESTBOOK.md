@@ -110,6 +110,18 @@ Riferimenti: QUI-02, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-1
 
 **Stato:** PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120) integrata in main 0.41.27-dev; tutti e quattro i job della [CI standard](https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085) superati su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium controllato. Il pacchetto [JD-Learn-0.41.27-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085/artifacts/13636515713) contiene lo ZIP installabile, SHA-256 interno `2d5f53f22445eda2445025346fc42878d7652124befd7dc0bd17dd7224ff4506` (509376 byte), disponibile fino al 22 novembre 2026. La lista e il form sono separati, con Search Tools e azioni crea/duplica/elimina. Le duplicazioni creano una bozza indipendente; l’eliminazione è permessa solo se nessuna revisione è usata da quiz o tentativi. Nessun nuovo tipo di domanda, regola di valutazione o flusso studente è incluso. Collaudo manuale Joomla ancora pendente.
 
+### AC-133 — conteggio corsi e filtro docente (issue #117)
+
+Riferimento: [issue #117](https://github.com/jeckodevelopment/jd_learn/issues/117), AUT-01 e SCR-13. Usare un Joomla 6 di prova con un corso assegnato a un docente e un utente amministrativo autorizzato a gestire quel corso. Preparare anche un account con ambito ACL più ristretto.
+
+1. Aprire JD Learn → Docenti in italiano. Atteso: intestazione backend e titolo della scheda browser mostrano **Docenti**, senza `COM_JLMS_TEACHERS`. Ripetere in inglese e verificare **Teachers**.
+2. Verificare la colonna Corsi per docenti con corsi assegnati e senza corsi. Il numero deve corrispondere ai corsi accessibili nella vista corrente. Fare clic sul numero: si apre Corsi e restano solo quelli assegnati a quel docente.
+3. Aprire JD Learn → Corsi e usare il filtro Docente. Selezionare il docente di prova: devono apparire solo i corsi a lui associati. Combinare il filtro con ricerca, stato e categoria; azzerare i filtri e verificare che l’elenco torni completo.
+4. Ripetere con l’account a permessi ridotti. Conteggio e link devono mostrare solo corsi gestibili da quell’account; un ID docente arbitrario o una modifica manuale dell’URL non devono ampliare i risultati. I profili non visibili non devono esporre dettagli privati nelle opzioni del filtro.
+5. Verificare navigazione da tastiera, testi accessibili del conteggio e resa della colonna su viewport desktop e stretta.
+
+**Stato:** issue #117 / AC-133 è implementata nella candidata 0.41.28-dev; collaudo manuale Joomla pendente.
+
 ### PR #94 — ricerca roster (deviazione di perimetro, non gate di accettazione)
 
 Riferimenti: [PR #94](https://github.com/jeckodevelopment/jd_learn/pull/94), [AC-128](RELEASE_SCOPE_MATRIX.md#scenario-specifico-del-roster-core). La ricerca è stata aggiunta senza precedente identificazione nel backlog del primo rilascio. È inclusa nel pacchetto main per effetto del merge, ma questo testbook **non la promuove a requisito**: registrare il suo controllo come regressione informativa finché il proprietario del prodotto non decide se mantenerla.

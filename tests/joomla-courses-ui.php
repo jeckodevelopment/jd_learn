@@ -86,12 +86,19 @@ foreach(['parent','child'] as $name){
  listExpect($categoryModel->save(['id'=>0,'parent_id'=>$parent,'extension'=>'com_jlms.course','title'=>'List UI '.$name,'alias'=>'list-ui-'.$name,'published'=>1,'language'=>'*','access'=>1]),'Native list category fixture');
  $categories[$name]=(int)$categoryModel->getState('category.id');$parent=$categories[$name];
 }
+$teacherCategoryModel=$app->bootComponent('com_categories')->getMVCFactory()->createModel('Category','Administrator',['ignore_request'=>true]);
+listExpect($teacherCategoryModel->save(['id'=>0,'parent_id'=>1,'extension'=>'com_jlms.teacher','title'=>'List UI teachers','alias'=>'list-ui-teachers','published'=>1,'language'=>'*','access'=>1]),'Native teacher category fixture');
+$teacherCategory=(int)$teacherCategoryModel->getState('category.id');
+$teacherModel=$factory->createModel('Teacher','Administrator',['ignore_request'=>true]);
+listExpect($teacherModel->save(['id'=>0,'revision'=>1,'title'=>'List UI assigned teacher','alias'=>'list-ui-assigned-teacher','catid'=>$teacherCategory,'bio'=>'','image'=>'','image_alt'=>'','image_decorative'=>'0','website'=>'','language'=>'*','access'=>1,'state'=>1,'user_id'=>'']),'Native assigned teacher fixture');
+$teacherId=(int)$teacherModel->getState('teacher.id');
 $editor=(int)$db->setQuery("SELECT id FROM #__users WHERE username='cieditor'")->loadResult();
 $ids=[];$versions=[];
 foreach(['Zebra','Alpha','Bravo'] as $name){
  $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
  listExpect($model->save(['id'=>0,'revision'=>1,'title'=>'List UI '.$name,'alias'=>'list-ui-'.strtolower($name),'catid'=>$categories[$name==='Alpha'?'child':'parent'],'language'=>$name==='Alpha'?'en-GB':'*','catalog_access'=>1,'content_access'=>$name==='Bravo'?1:2,'enrollment_mode'=>'auto','summary'=>'List fixture','presentation_description'=>'<p>List UI public presentation</p>']),'List course fixture');
  $id=(int)$model->getState('course.id');$ids[$name]=$id;
+ if(in_array($name,['Alpha','Bravo'],true))listExpect($model->save(['id'=>$id,'revision'=>1,'teacher_ids'=>[$teacherId]]),'Teacher assigned to selected list fixture course');
  $draft=$authoring->createDraft($actor,$id,(int)$model->getItem($id)->revision);$versions[$name]=$draft;
  $module=$authoring->saveModule($actor,['course_id'=>$id,'version_id'=>$draft,'expected_version_revision'=>1,'title'=>'List UI module']);
  $revision=(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$draft)->loadResult();
@@ -111,6 +118,9 @@ $list->setState('filter.published','0');listExpect($get()===[$ids['Bravo'],$ids[
 $list->setState('filter.published','');$list->setState('filter.category_id',(string)$categories['parent']);listExpect(count($get())===3,'Category filter includes native descendants');
 $list->setState('filter.category_id',(string)$categories['child']);listExpect($get()===[$ids['Alpha']],'Child category filter is precise');
 $list->setState('filter.category_id','');$list->setState('filter.author_id',(string)$editor);listExpect($get()===[$ids['Bravo']],'Native author filter');
+$list->setState('filter.author_id','');$list->setState('filter.teacher_id',(string)$teacherId);listExpect($get()===[$ids['Alpha'],$ids['Bravo']],'Native assigned-teacher filter');
+$list->setState('filter.teacher_id','malformed');listExpect($get()===[],'Malformed teacher filter cannot broaden the list');
+$list->setState('filter.teacher_id','');
 $list->setState('filter.author_id','');$list->setState('filter.access','1');listExpect($get()===[$ids['Bravo']],'Content access level filter');
 $list->setState('filter.access','');$list->setState('filter.language','en-GB');listExpect($get()===[$ids['Alpha']],'Language filter');
 $list->setState('filter.language','');$list->setState('filter.checked_out','1');listExpect($get()===[$ids['Zebra']],'Checkout filter');
@@ -122,5 +132,5 @@ $list->setState('filter.published','');$list->setState('list.ordering','a.title;
 $restricted=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);$restricted->setCurrentUser(new \Joomla\CMS\User\User($editor));$restricted->setState('list.limit',100);$restricted->setState('list.start',0);$restricted->setState('filter.search','id:'.$ids['Alpha']);
 listExpect(count($restricted->getItems())===0&&(int)$restricted->getTotal()===0,'Filters and totals cannot expose an uneditable course');
 $rows=$db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN ('.implode(',',$ids).') ORDER BY id')->loadAssocList();
-file_put_contents(dirname($root).'/courses-ui-fixture.json',json_encode(['courses'=>$ids,'versions'=>$versions,'categories'=>$categories,'editor'=>$editor,'rows'=>$rows],JSON_THROW_ON_ERROR));
+file_put_contents(dirname($root).'/courses-ui-fixture.json',json_encode(['courses'=>$ids,'versions'=>$versions,'categories'=>$categories,'teacher_id'=>$teacherId,'editor'=>$editor,'rows'=>$rows],JSON_THROW_ON_ERROR));
 echo json_encode(['courses_ui_checks'=>$checks,'status'=>'passed']).PHP_EOL;

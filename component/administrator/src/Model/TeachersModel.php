@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\ParameterType;
+use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 
 final class TeachersModel extends ListModel
 {
@@ -46,10 +47,17 @@ final class TeachersModel extends ListModel
         $fresh = new \Joomla\CMS\User\User((int) $this->getCurrentUser()->id); $fresh->clearAccessRights(); $this->setCurrentUser($fresh);
         if (!$fresh->id || $fresh->block || !$fresh->authorise('core.manage', 'com_jlms')) { throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403); }
         $db = $this->getDatabase();
-        $query = $db->createQuery()->select('a.id, a.title, a.state, a.revision, a.created_by, a.modified_at, a.language, author.name AS author_name, lang.title AS language_title')
+        $courseIds = CourseEditorAccess::editableIds($db, $fresh);
+        $courseCounts = $db->createQuery()->select('teacher_id, COUNT(DISTINCT course_id) AS course_count')
+            ->from('#__jlms_course_teachers');
+        if ($courseIds) { $courseCounts->whereIn('course_id', $courseIds); }
+        else { $courseCounts->where('1=0'); }
+        $courseCounts->group('teacher_id');
+        $query = $db->createQuery()->select('a.id, a.title, a.state, a.revision, a.created_by, a.modified_at, a.language, author.name AS author_name, lang.title AS language_title, COALESCE(teacher_courses.course_count, 0) AS course_count')
             ->from($db->quoteName('#__jlms_teachers', 'a'))
             ->leftJoin($db->quoteName('#__users', 'author') . ' ON author.id = a.created_by')
-            ->leftJoin($db->quoteName('#__languages', 'lang') . ' ON lang.lang_code = a.language');
+            ->leftJoin($db->quoteName('#__languages', 'lang') . ' ON lang.lang_code = a.language')
+            ->leftJoin('(' . (string) $courseCounts . ') AS teacher_courses ON teacher_courses.teacher_id = a.id');
         if (!$fresh->authorise('jlms.teachers.manage', 'com_jlms')) {
             $id = (int) $fresh->id;
             $query->where('(a.created_by = :actor OR a.user_id = :linked)')->bind(':actor', $id, ParameterType::INTEGER)->bind(':linked', $id, ParameterType::INTEGER);

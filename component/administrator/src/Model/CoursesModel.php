@@ -11,7 +11,7 @@ use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 final class CoursesModel extends ListModel
 {
     private const ORDERS = ['a.id','a.title','a.state','category_title','access_title','author_name','a.language','a.modified_at'];
-    private const FILTERS = ['search','published','category_id','access','author_id','language','checked_out'];
+    private const FILTERS = ['search','published','category_id','access','author_id','teacher_id','language','checked_out'];
 
     public function __construct($config = [], $factory = null)
     {
@@ -101,6 +101,10 @@ final class CoursesModel extends ListModel
                         ->where('cat.lft>=selected_category.lft AND cat.rgt<=selected_category.rgt')->bind(':category', $category, ParameterType::INTEGER);
                 } elseif ($name === 'author_id') {
                     $author = (int) $value; $q->where('a.created_by=:author')->bind(':author', $author, ParameterType::INTEGER);
+                } elseif ($name === 'teacher_id') {
+                    $teacher = (int) $value;
+                    $q->where('EXISTS (SELECT 1 FROM #__jlms_course_teachers AS course_teacher WHERE course_teacher.course_id=a.id AND course_teacher.teacher_id=:teacher)')
+                        ->bind(':teacher', $teacher, ParameterType::INTEGER);
                 } else {
                     $access = (int) $value; $q->where('a.content_access=:access')->bind(':access', $access, ParameterType::INTEGER);
                 }
