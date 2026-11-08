@@ -98,7 +98,7 @@ Riferimenti: AUT-01, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-1
 
 **Stato:** PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116) integrata; tutti i quattro job della [CI standard 42524671164](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164) superati. Il pacchetto [0.41.26-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771) ha SHA-256 interno `869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5` (503665 byte), disponibile fino al 22 novembre 2026. La lista usa Search Tools e toolbar standard Joomla; il form resta separato e accessibile dal titolo/toolbar. La categoria docente non è esposta. Verificare ACL e ricerca sul sito; il cambio stato del profilo resta disponibile nel form secondo i permessi, senza introdurre azioni massive.
 
-### AC-131 — elenco separato per la banca domande (candidata 0.41.27-dev; collaudo Joomla pendente)
+### AC-131 — elenco separato per la banca domande (PR #120 integrata in 0.41.27-dev; collaudo Joomla pendente)
 
 Riferimenti: QUI-02, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native). Questa prova riguarda l’amministrazione delle domande esistenti, non nuovi comportamenti didattici quiz.
 
@@ -108,7 +108,7 @@ Riferimenti: QUI-02, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-1
 4. Eliminare una domanda senza dipendenze: richiedere conferma e verificare che domanda, revisioni e asset siano eliminati insieme. Ripetere con domanda usata da quiz o tentativi: il comando è disabilitato e la richiesta diretta deve essere bloccata, senza cancellazioni parziali.
 5. Verificare ricerca per testo/ID, filtri categoria/stato/lingua, ordinamento, paginazione, toolbar, CSRF e diniego con ruolo non autorizzato. Ripetere in italiano/inglese, da tastiera e viewport mobile.
 
-**Stato:** la candidata 0.41.27-dev separa elenco e form, usa Search Tools Joomla e prevede azioni crea/duplica/elimina. Le duplicazioni creano una bozza indipendente; l’eliminazione è permessa solo se nessuna revisione della domanda è usata da quiz o tentativi. Nessun nuovo tipo di domanda, regola di valutazione o flusso studente è incluso. Collaudo manuale ancora pendente.
+**Stato:** PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120) integrata in main 0.41.27-dev; tutti e quattro i job della [CI standard](https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085) superati su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium controllato. Il pacchetto [JD-Learn-0.41.27-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42527985085/artifacts/13636515713) contiene lo ZIP installabile, SHA-256 interno `2d5f53f22445eda2445025346fc42878d7652124befd7dc0bd17dd7224ff4506` (509376 byte), disponibile fino al 22 novembre 2026. La lista e il form sono separati, con Search Tools e azioni crea/duplica/elimina. Le duplicazioni creano una bozza indipendente; l’eliminazione è permessa solo se nessuna revisione è usata da quiz o tentativi. Nessun nuovo tipo di domanda, regola di valutazione o flusso studente è incluso. Collaudo manuale Joomla ancora pendente.
 
 ### PR #94 — ricerca roster (deviazione di perimetro, non gate di accettazione)
 
