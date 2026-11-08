@@ -1,15 +1,3 @@
-## 0.41.17-dev — percorsi formativi aggregati
-
-- Aggiunge la gestione amministrativa dei percorsi: categoria Joomla dedicata, accesso, lingua, pubblicazione e associazione ordinata fino a 100 corsi.
-- Aggiunge catalogo e scheda percorso pubblici con stato di apprendimento per corso e progresso aggregato a peso uniforme. Gli ospiti non vedono progressi personali; corsi nascosti non rivelano titolo o ID e i percorsi non concedono iscrizioni o accesso.
-- Non introduce sblocco sequenziale né attestati di percorso, rinviati alla fase 2. Nuovi test Joomla coprono salvataggio, ordinamento, accesso, progresso e conservazione dopo upgrade; la matrice CI e il collaudo manuale restano da completare.
-
-## 0.41.9-dev — controlli separati di ammissione ed erogazione
-
-- Aggiunge i comandi motivati per chiudere/aprire nuove ammissioni e sospendere/riprendere l’erogazione, con anteprima di iscritti e quiz aperti, conferma, conflitto su revisioni obsolete e storico transazionale.
-- Blocca nuove iscrizioni automatiche/manuali quando le ammissioni sono chiuse; la sospensione nega le azioni didattiche protette senza modificare iscrizioni, risposte o progressi.
-- Introduce migrazione 0.41.9.0, comandi dal roster, traduzioni e guida operativa. PR #70 integrata nel merge 70f6ed7; CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run 42428496835); collaudo manuale Joomla ancora aperto.
-
 # Changelog
 
 ## 0.41.18-dev — ricerca iscritti nel roster
@@ -19,6 +7,12 @@
 - Aggiunge regressioni native Joomla e HTTP; PR [#94](https://github.com/jeckodevelopment/jd_learn/pull/94) integrata nel merge `2b411fc`.
 - CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium controllato e controlli leggeri ([run 42492865814](https://github.com/jeckodevelopment/jd_learn/actions/runs/42492865814)). Collaudo manuale Joomla ancora aperto.
 - Pacchetto CI [JD-Learn-0.41.18-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42492865814/artifacts/13622073971): SHA-256 interno `e1d046a16e11f5b89c2487f450d6088d097d2281553b1205108348ccad5b03ff`, wrapper ZIP verificato, scadenza 22 novembre 2026.
+
+## 0.41.17-dev — percorsi formativi aggregati
+
+- Aggiunge la gestione amministrativa dei percorsi: categoria Joomla dedicata, accesso, lingua, pubblicazione e associazione ordinata fino a 100 corsi.
+- Aggiunge catalogo e scheda percorso pubblici con stato di apprendimento per corso e progresso aggregato a peso uniforme. Gli ospiti non vedono progressi personali; corsi nascosti non rivelano titolo o ID e i percorsi non concedono iscrizioni o accesso.
+- Non introduce sblocco sequenziale né attestati di percorso, rinviati alla fase 2. Nuovi test Joomla coprono salvataggio, ordinamento, accesso, progresso e conservazione dopo upgrade; la CI standard è superata, il collaudo manuale resta da completare.
 
 ## 0.41.16-dev — lifecycle Privacy Joomla
 
@@ -69,6 +63,13 @@
 - Mostra nella bozza del programma gli errori strutturali bloccanti separati dagli avvisi facoltativi su riepilogo e copertina.
 - Mantiene la verifica definitiva in `PublicationService`; il controllo preliminare non carica i corpi delle lezioni né contatta provider.
 - Aggiunge test unitari e regressioni HTTP per il passaggio da modulo vuoto a lezione obbligatoria; PR #74 integrata nel merge [c023fc4](https://github.com/jeckodevelopment/jd_learn/commit/c023fc4ed29f3d643414cd5afc83b3ad42615dba); CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42439350519](https://github.com/jeckodevelopment/jd_learn/actions/runs/42439350519)). Collaudo manuale Joomla ancora aperto. Pacchetto verificato: SHA-256 `4d95e9627ddd6db338961da374e35721262e95356c817d46940e5b6ddc469ab3`.
+
+
+## 0.41.9-dev — controlli separati di ammissione ed erogazione
+
+- Aggiunge i comandi motivati per chiudere/aprire nuove ammissioni e sospendere/riprendere l’erogazione, con anteprima di iscritti e quiz aperti, conferma, conflitto su revisioni obsolete e storico transazionale.
+- Blocca nuove iscrizioni automatiche/manuali quando le ammissioni sono chiuse; la sospensione nega le azioni didattiche protette senza modificare iscrizioni, risposte o progressi.
+- Introduce migrazione 0.41.9.0, comandi dal roster, traduzioni e guida operativa. PR #70 integrata nel merge 70f6ed7; CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run 42428496835); collaudo manuale Joomla ancora aperto.
 
 
 ## 0.41.8-dev — ingresso amministrativo più chiaro
@@ -151,23 +152,12 @@
 - Vimeo0.6.1: un errore temporaneo di caricamento SDK non compromette i successivi tentativi di anteprima/player. Import locali dell’authoring con versione cache coerente al componente.
 - Controlli su metadati/provenienza, sorgente cambiata/risposta tardiva, consenso e completamento con scarti; collaudo reale dei quattro provider ancora distinto dalle fixture automatiche.
 
-## Requisiti — 7 novembre 2026: durata video
-
-- Registrata come prossima priorità R-06 l’acquisizione automatica della durata dai provider/file, con inserimento manuale di ripiego e gestione coerente degli scarti player/server.
-- Aggiornati piano, limiti attuali, checklist e tracciabilità; runtime/pacchetto0.38 invariati. La funzione esterna completa è ancora da implementare.
-
 ## 0.38.0-dev — regole didattiche e soglia video della versione
 
 - Scheda Regole didattiche nel corso con salvataggio prima dell’apertura della bozza; editor contestuale nel Programma, lettura delle versioni pubblicate e riuso dell’avviso modifiche non salvate.
 - Soglia video configurabile da0,01% a100%, massimo due decimali, default90%; conversione/confronto esatti e validazione anche prima del congelamento. Navigazione libera e tutte le attività obbligatorie restano le regole operative.
 - Salvataggio POST/token con ACL correnti, checkout e CAS. Riepilogo di pubblicazione con soglia precedente/nuova e invalidazione se le regole cambiano; storico e iscritti conservano la versione assegnata.
 - Prove di completamento a soglie diverse per iscrizioni vecchie/nuove, form nativi e conservazione dopo upgrade. Regole avanzate, attestati e override per lezione restano aperti.
-
-## Processo e roadmap — 7 novembre 2026
-
-- PR in bozza con controlli leggeri; integrazioni per il candidato pronto, due coppie PHP/database e Chromium. Matrice completa disponibile manualmente prima di milestone/rilascio o interventi di compatibilità; nessuna rimozione di scenari dalla suite.
-- Restyling del backend/ingresso e menu amministrativo JD Learn nella sidebar nativa pianificati in M01/M10, con verifica ACL, installazione/upgrade e navigazione accessibile. Non ancora implementati.
-- Versione applicativa e pacchetto0.37 invariati.
 
 ## 0.37.0-dev — recupero del programma storico come nuova bozza
 
@@ -188,12 +178,6 @@
 - Salvataggio di com_fields tramite gli eventi del plugin Fields nativo, conservando i valori per i client che omettono il gruppo e rifiutando revisioni obsolete prima delle scritture.
 - Prove native/HTTP del percorso di creazione, modifica, errore e annullamento. Snapshot didattici e campi lezione rimangono residui M10.
 - CI completa conservata sulle PR e avvio manuale disponibile; rimosso il secondo avvio automatico al merge in main per evitare esecuzioni duplicate.
-
-## Documentazione — 5 novembre 2026
-
-- Consolidato lo stato attuale per funzionalità; separati piano residuo, perimetro delle fasi e cronologia.
-- Allineati matrice, problemi aperti, prove del build e guide alla 0.34.1; distinte funzioni assenti e collaudi pendenti.
-- Nessuna modifica del runtime, della versione o dei criteri di accettazione.
 
 ## 0.34.1-dev — protezione delle modifiche nel programma
 
@@ -220,12 +204,6 @@
 - Comandi per duplicare un corso come nuova bozza e un modulo o una lezione nel programma di lavoro, con titolo e destinazione espliciti.
 - Copia di quiz, revisioni domanda, materiali e campi del corso senza duplicare blob, iscrizioni, progressi, tentativi o attestati. Nuovi ID e chiavi logiche; ACL native ereditate dalla categoria.
 - Prenotazione dell’asset Joomla prima della transazione; rollback delle scritture e rimozione dell’asset inutilizzato se la copia fallisce. Controlli su identità corrente, sorgente, destinazione, checkout e revisioni.
-
-## Requisiti funzionali1.3 —4novembre2026
-
-- Recepita esplicitamente la richiesta di aggiornamento dei corsi pubblicati con storico Joomla e gestione semplificata dei docenti, campi nativi e viste di menu.
-- Aggiornate specifica funzionale/tecnica, matrice e catalogo con AC-119–125, registro della modifica e criteri residui M01; nessun requisito dichiarato completo per effetto dell’aggiornamento documentale.
-- Pacchetto runtime invariato0.31.0-dev; verifiche della PR38 registrate separatamente dai nuovi criteri di accettazione.
 
 ## 0.31.0-dev — revisione del flusso editoriale
 
@@ -326,13 +304,6 @@
 - Assegnazione distinta dalla fruizione: nessun gruppo aggiunto, stessi controlli runtime, disponibilità editoriale obbligatoria.
 - Opt-in vincolato all’anteprima/hash e registrato nel log Joomla; compatibilità degli hash standard0.19 preservata.
 - Nessuna modifica allo schema41tabelle/58FK; prove negative, concorrenza, grant/revoca e conservazione superate nella CI41319974680 (37servizio/18HTTP/4conservazione per ambiente). CSV e accettazione completa ancora pendenti.
-
-## Riallineamento documentale della baseline0.19
-
-- Riepilogo/README aggiornati ai flussi realmente presenti, schema41tabelle/58FK e integrazioni core ancora mancanti.
-- Matrice dei210requisiti con descrizione/perimetro/scenari baseline preservati, sorgenti e prove parziali distinti dai criteri residui; nessuna accettazione completa dedotta dalla CI.
-- Registro delle differenze aperte (preassegnazione senza livello, provider aggiuntivi, ritiro/erogazione, ID pagina e fallback di ripresa), evidenze del build0.19 e piano esecutivo residuo.
-- Note storiche conservate separatamente e controllo di coerenza documentale nella verifica strutturale. Nessuna modifica al codice distribuito o al pacchetto0.19.
 
 ## 0.19.0-dev
 
@@ -484,3 +455,33 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Aggiunte regole dominio iniziali, traduzioni, WAM, prime regioni CSS pubbliche e guida agli override.
 - Predisposte build riproducibile e CI PHP8.3/8.4, MySQL8.4/MariaDB10.6, installazione/aggiornamento Joomla, test MVC e rendering HTTP.
 - Pubblicazione, fruizione, quiz persistenti, attestati e integrazioni rimanenti restano nello stato documentato in IMPLEMENTATION_STATUS.md.
+
+## Requisiti — 7 novembre 2026: durata video
+
+- Registrata come prossima priorità R-06 l’acquisizione automatica della durata dai provider/file, con inserimento manuale di ripiego e gestione coerente degli scarti player/server.
+- Aggiornati piano, limiti attuali, checklist e tracciabilità; runtime/pacchetto0.38 invariati. La funzione esterna completa è ancora da implementare.
+
+## Processo e roadmap — 7 novembre 2026
+
+- PR in bozza con controlli leggeri; integrazioni per il candidato pronto, due coppie PHP/database e Chromium. Matrice completa disponibile manualmente prima di milestone/rilascio o interventi di compatibilità; nessuna rimozione di scenari dalla suite.
+- Restyling del backend/ingresso e menu amministrativo JD Learn nella sidebar nativa pianificati in M01/M10, con verifica ACL, installazione/upgrade e navigazione accessibile. Non ancora implementati.
+- Versione applicativa e pacchetto0.37 invariati.
+
+## Documentazione — 5 novembre 2026
+
+- Consolidato lo stato attuale per funzionalità; separati piano residuo, perimetro delle fasi e cronologia.
+- Allineati matrice, problemi aperti, prove del build e guide alla 0.34.1; distinte funzioni assenti e collaudi pendenti.
+- Nessuna modifica del runtime, della versione o dei criteri di accettazione.
+
+## Requisiti funzionali1.3 —4novembre2026
+
+- Recepita esplicitamente la richiesta di aggiornamento dei corsi pubblicati con storico Joomla e gestione semplificata dei docenti, campi nativi e viste di menu.
+- Aggiornate specifica funzionale/tecnica, matrice e catalogo con AC-119–125, registro della modifica e criteri residui M01; nessun requisito dichiarato completo per effetto dell’aggiornamento documentale.
+- Pacchetto runtime invariato0.31.0-dev; verifiche della PR38 registrate separatamente dai nuovi criteri di accettazione.
+
+## Riallineamento documentale della baseline0.19
+
+- Riepilogo/README aggiornati ai flussi realmente presenti, schema41tabelle/58FK e integrazioni core ancora mancanti.
+- Matrice dei210requisiti con descrizione/perimetro/scenari baseline preservati, sorgenti e prove parziali distinti dai criteri residui; nessuna accettazione completa dedotta dalla CI.
+- Registro delle differenze aperte (preassegnazione senza livello, provider aggiuntivi, ritiro/erogazione, ID pagina e fallback di ripresa), evidenze del build0.19 e piano esecutivo residuo.
+- Note storiche conservate separatamente e controllo di coerenza documentale nella verifica strutturale. Nessuna modifica al codice distribuito o al pacchetto0.19.

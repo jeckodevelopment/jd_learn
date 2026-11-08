@@ -12,6 +12,10 @@ La PR #68 è integrata in main nella 0.41.8-dev. La schermata iniziale mette in 
 
 ## Risultato richiesto
 
+### Regola di uniformità delle viste Joomla
+
+Per ogni vista amministrativa, prima si individua la vista standard Joomla più vicina (ad esempio elenco articoli per i corsi, categorie native per le categorie) e se ne riusano struttura, navigazione, toolbar, filtri e convenzioni quando rappresentano correttamente i dati. Si introduce un layout specifico solo dove la vista core non copre il flusso richiesto; anche in quel caso si mantengono menu, titoli, ritorno all’elenco, stato vuoto/errori, ACL e comportamento coerenti con Joomla. Questa regola guida l’implementazione dei requisiti già nel perimetro; non aggiunge funzionalità.
+
 - Rivedere la schermata iniziale: l’attuale gruppo di pulsanti Corsi/Categorie/Banca domande/Docenti non deve essere l’unico accesso alle funzioni. Rendere evidenti il percorso principale di gestione corsi e le azioni disponibili, con etichette comprensibili e spazi contenuti.
 - Predisporre un menu amministrativo JD Learn nella sidebar nativa Joomla, visibile nelle viste del componente e coerente con le convenzioni del core. Accessi diretti almeno a Corsi, Categorie corsi, Banca domande e Docenti, secondo i permessi; configurazione tramite strumenti nativi e altri collegamenti solo quando le funzioni sono operative.
 - Mantenere il contesto del corso per programma, materiali e iscritti: evitare voci globali che aprano pagine prive del corso necessario. Le categorie riguardano i corsi, non la gestione dei docenti.
