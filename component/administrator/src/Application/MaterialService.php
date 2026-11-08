@@ -187,7 +187,7 @@ final class MaterialService
                     || !is_string($description) || strlen($description) > 4096 || !in_array($state, ['0', '1'], true)
                     || !ctype_digit($order) || strlen($order) > 5) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
                 $availability = array_key_exists('publish_up', $input) || array_key_exists('publish_down', $input)
-                    ? MaterialAvailability::normalize($input['publish_up'] ?? null, $input['publish_down'] ?? null, CourseSchedule::read($course)['timezone'])
+                    ? MaterialAvailability::normalize($input['publish_up'] ?? $link->publish_up, $input['publish_down'] ?? $link->publish_down, CourseSchedule::read($course)['timezone'])
                     : ['publish_up' => $link->publish_up, 'publish_down' => $link->publish_down];
                 $update = (object) ['id' => $id, 'title' => trim($title), 'description' => $description, 'state' => (int) $state,
                     'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
