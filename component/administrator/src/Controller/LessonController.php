@@ -28,7 +28,8 @@ final class LessonController extends CurriculumController
             $plans[$ticket] = ['fingerprint'=>$data['fingerprint'],'duration_ms'=>$data['duration_ms'],'origin'=>$data['origin'],'expires'=>time()+900];
             $this->app->setUserState('com_jlms.video.duration', $plans);
             unset($data['fingerprint']); $data['ticket'] = $ticket;
-            $data['adapter_url'] = in_array($data['provider'], ['youtube','vimeo'], true)
+            $data['adapter_url'] = is_string($data['provider'] ?? null)
+                && preg_match('/\\A[a-z][a-z0-9_]{1,63}\\z/D', $data['provider'])
                 ? \Joomla\CMS\Uri\Uri::root(true) . '/media/plg_jlmsvideo_' . $data['provider'] . '/js/player.js' : null;
         } catch (\Throwable $error) {
             $key = $error->getMessage();

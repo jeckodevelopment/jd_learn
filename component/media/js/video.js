@@ -46,12 +46,12 @@ export class VideoLesson {
     try {
       const grant = await this.request('playback', {consent: '1'});
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
-      const paths = {youtube: '../../plg_jlmsvideo_youtube/js/player.js', vimeo: '../../plg_jlmsvideo_vimeo/js/player.js', cloudflarestream: '../../plg_jlmsvideo_cloudflarestream/js/player.js', html5: '../../plg_jlmsvideo_html5/js/player.js'};
-      if (grant.provider !== this.config.provider || !paths[grant.provider]) throw new Error('provider');
+      // The PHP registry validates keys; Joomla plugins provide this conventional module path.
+      if (grant.provider !== this.config.provider || !/^[a-z][a-z0-9_]{1,63}$/.test(grant.provider)) throw new Error('provider');
       this.session = grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
       this.started = performance.now(); this.previous = null; this.aborter = new AbortController();
       failure = 'startup_module';
-      const moduleUrl = new URL(paths[grant.provider], import.meta.url);
+      const moduleUrl = new URL(`../../plg_jlmsvideo_${grant.provider}/js/player.js`, import.meta.url);
       moduleUrl.search = new URL(import.meta.url).search;
       const adapter = await this.importer(moduleUrl.href);
       if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }

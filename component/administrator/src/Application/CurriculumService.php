@@ -393,7 +393,7 @@ final class CurriculumService
             if ($lesson->checked_out && (int)$lesson->checked_out !== (int)$actor->id) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
         }
         $provider = $input['provider_key'] ?? null;
-        if (!is_string($provider) || !in_array($provider, ['youtube','vimeo','cloudflarestream'], true)
+        if (!is_string($provider) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $provider)
             || !is_string($input['source_reference'] ?? null) || !is_string($input['privacy_hash'] ?? '')) { throw new \DomainException('COM_JLMS_SOURCE_INVALID'); }
         $source = ($this->registryFactory)()->get($provider)->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash'=>$input['privacy_hash']]));
         return hash('sha256', json_encode([(int)$actor->id,(int)$course->id,(int)$version->id,(int)$version->revision,(int)$module->id,$id,$revision,$source->providerKey,$source->reference,$source->options], JSON_THROW_ON_ERROR));

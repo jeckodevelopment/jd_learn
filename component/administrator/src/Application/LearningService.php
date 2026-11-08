@@ -248,7 +248,8 @@ final class LearningService
         $supported = ($lesson->kind === 'quiz' && $lesson->completion_rule === 'quiz_pass')
             || ($lesson->kind === 'text' && $lesson->completion_rule === 'manual')
             || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
-                && in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream', 'html5'], true) && (int) $lesson->duration_ms >= 1000);
+                && is_string($lesson->provider_key) && preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key) === 1
+                && (int) $lesson->duration_ms >= 1000);
         if (!$supported || $lesson->publish_up !== null
             || $lesson->publish_down !== null || $lesson->release_after_days !== null) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);

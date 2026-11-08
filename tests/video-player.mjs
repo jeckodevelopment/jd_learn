@@ -67,6 +67,18 @@ await automatic.start();
 assert.deepEqual(startup, ['/playback','https://school.example/media/plg_jlmsvideo_youtube/js/player.js']);
 assert.equal(automatic.stopped, false);
 await automatic.stop(false);
+const extensionCalls=[];
+const extension = new VideoLesson({...config, policy:'embed', provider:'demo_provider'}, root, async url => {
+  extensionCalls.push(url);
+  return {ok:true,json:async()=>({success:true,data:{provider:'demo_provider',session_id:'extension',duration_ms:10000,options:{}}})};
+}, async url => {
+  extensionCalls.push(url);
+  return {create:async()=>({sample:async()=>({position_ms:0,duration_ms:10000,rate_milli:1000,playing:false}),destroy(){}})};
+});
+await extension.start();
+assert.deepEqual(extensionCalls, ['/playback','https://school.example/media/plg_jlmsvideo_demo_provider/js/player.js']);
+assert.equal(extension.stopped, false);
+await extension.stop(false);
 automatic.session = null;
 await automatic.destroy();
 globalThis.fetch = originalFetch;

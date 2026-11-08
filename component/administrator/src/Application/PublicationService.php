@@ -165,7 +165,7 @@ final class PublicationService
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
-                    if (!in_array($lesson->provider_key, ['youtube', 'vimeo', 'cloudflarestream', 'html5'], true)
+                    if (!is_string($lesson->provider_key) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key)
                         || $lesson->completion_rule !== 'video_coverage') {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
