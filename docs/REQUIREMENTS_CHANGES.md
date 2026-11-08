@@ -104,3 +104,12 @@ La PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116), integrata i
 ### Avanzamento AC-131 — elenco amministrativo banca domande
 
 La PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120), integrata in main 0.41.27-dev, realizza la riorganizzazione richiesta: elenco con Search Tools e form separato, azioni di creazione/duplicazione/eliminazione, CSRF e ACL. La duplicazione crea una nuova bozza con revisioni indipendenti; l’eliminazione rimuove solo domande non referenziate da quiz o tentativi. Tutti i quattro job CI sono superati nel run 42527985085; il testbook AC-131 contiene i percorsi manuali Joomla, ancora da eseguire. Nessuna funzione didattica aggiunta.
+
+
+## RF-2026-11-08-E — conteggio corsi e filtro docente
+
+**Origine e autorizzazione:** issue [#117](https://github.com/jeckodevelopment/jd_learn/issues/117), aperta dal committente per la vista amministrativa docenti introdotta dalla PR #116.
+
+**Criteri / scenario AC-133 (AUT-01, SCR-13):** la lista Docenti mostra, per ogni profilo, quanti corsi assegnati sono compresi nell’ambito che l’utente corrente può gestire. Il conteggio è un collegamento alla lista Corsi filtrata per quel docente. La lista Corsi offre anche il filtro Docente; ricerca e gli altri filtri Joomla devono poter coesistere. L’intestazione del backend e il titolo del browser mostrano l’etichetta tradotta invece della chiave `COM_JLMS_TEACHERS`. Conteggio e destinazione rispettano lo stesso ambito ACL della lista Corsi e non modificano assegnazioni o autorizzazioni.
+
+La candidata 0.41.28-dev implementa AC-133; il testbook descrive la prova manuale, ancora pendente.

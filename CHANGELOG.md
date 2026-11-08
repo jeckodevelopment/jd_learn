@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.28-dev — collegamento tra docenti e corsi (candidata)
+
+- Mostra nella lista docenti il conteggio dei corsi assegnati nel perimetro gestibile dall’utente; il conteggio apre la lista corsi filtrata per docente.
+- Aggiunge il filtro Docente alla lista Corsi e traduce correttamente titolo browser/intestazione della lista docenti.
+- Issue [#117](https://github.com/jeckodevelopment/jd_learn/issues/117), scenario AC-133; collaudo Joomla da eseguire secondo il testbook.
+
 ## 0.41.27-dev — elenco e azioni standard per la banca domande
 
 - Separa l’elenco domande dal form di creazione/modifica e adotta Search Tools Joomla con ricerca, filtri, ordinamento e paginazione.

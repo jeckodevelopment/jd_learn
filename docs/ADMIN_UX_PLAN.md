@@ -62,3 +62,8 @@ Dal roster si apre una schermata operativa del corso con quattro comandi indipen
 ### AC-131 — elenco e form separati per la banca domande
 
 La PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120) è integrata in main 0.41.27-dev; la CI standard è superata. L’elenco usa Search Tools Joomla e il form è separato. La duplicazione crea una bozza autonoma; una revisione collegata a quiz o tentativi impedisce l’eliminazione. Le altre funzioni quiz restano fuori perimetro. Collaudo manuale ancora aperto nel [testbook AC-131](QA_TESTBOOK.md#ac-131--elenco-separato-per-la-banca-domande-pr-120-integrata-in-04127-dev-collaudo-joomla-pendente).
+
+
+### AC-133 — conteggio corsi e filtro docente (issue #117)
+
+La candidata 0.41.28-dev aggiunge alla lista Docenti il conteggio dei corsi assegnati che l’utente backend può gestire; il numero apre la lista Corsi già filtrata per quel docente. La lista Corsi espone il filtro Docente con profili assegnati a corsi nel perimetro gestibile, rispettando visibilità/ACL dei profili. La toolbar traduce l’etichetta Docenti anche nel titolo della pagina. Non cambia le associazioni o i permessi. Collaudo manuale: [testbook AC-133](QA_TESTBOOK.md#ac-133--conteggio-corsi-e-filtro-docente-issue-117).

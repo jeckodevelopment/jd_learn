@@ -103,6 +103,16 @@ teacherExpect($courseModel->save($courseBase),'Draft course saved');$course=(int
 $courseData=array_replace($courseBase,['id'=>$course,'teacher_ids'=>[$public,$private]]);
 teacherExpect($courseModel->save($courseData),'Ordered teachers assigned to saved draft');
 teacherExpect(TeacherProfiles::selected($db,$course)===[$public,$private],'Teacher order persisted in relation table');
+$directory=$factory->createModel('Teachers','Administrator',['ignore_request'=>true]);$directory->setCurrentUser($actor);
+ $teacherRows=$directory->getItems();
+if (!is_array($teacherRows)) { throw new RuntimeException('Teacher directory listing failed: ' . (string) $directory->getError()); }
+$publicRow=array_values(array_filter($teacherRows,static fn($row):bool=>(int)$row->id===$public));
+teacherExpect(count($publicRow)===1&&(int)$publicRow[0]->course_count===1,'Teacher list reports the number of assigned courses in the current editable course scope');
+$courseList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);$courseList->setCurrentUser($actor);$courseList->setState('list.limit',100);
+$courseList->setState('filter.teacher_id',(string)$public);
+teacherExpect(array_map(static fn($row):int=>(int)$row->id,$courseList->getItems())===[$course],'Native course list filters by assigned teacher');
+$courseList->setState('filter.teacher_id','1 OR 1=1');
+teacherExpect($courseList->getItems()===[],'Malformed teacher filter cannot broaden the course list');
 $courseData['revision']=2;unset($courseData['teacher_ids']);
 teacherExpect($courseModel->save($courseData),'Legacy client can save without teacher field');
 teacherExpect(TeacherProfiles::selected($db,$course)===[$public,$private],'Omitted teacher field preserves assignment');

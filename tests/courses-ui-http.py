@@ -11,9 +11,10 @@ if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable si
 f=json.loads((root.parent/'courses-ui-fixture.json').read_text());base='http://127.0.0.1:8093'
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.textarea=None;self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.links=[];self.current=None;self.base=None;self.select=None;self.textarea=None;self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if tag=='a' and a.get('href'):self.links.append(a['href'])
   if tag=='base':self.base=a.get('href')
   if tag=='form':self.current={'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
   if tag=='input' and self.current is not None and 'name' in a and 'disabled' not in a:
@@ -53,14 +54,23 @@ try:
  request(urljoin(urljoin(url,page.base or ''),login['action']),login['fields']|{'username':'cioperator','passwd':'Ci-only-Long-Password-2026'})
  path='/administrator/index.php?option=com_jlms&view=courses'
  def listing(filters=None,order='a.title ASC',limit='20',start='0'):
-  fields={'filter[search]':'List UI','filter[published]':'','filter[category_id]':'','filter[access]':'','filter[author_id]':'','filter[language]':'','filter[checked_out]':'','list[fullordering]':order,'list[limit]':limit,'limitstart':start}
+  fields={'filter[search]':'List UI','filter[published]':'','filter[category_id]':'','filter[access]':'','filter[author_id]':'','filter[teacher_id]':'','filter[language]':'','filter[checked_out]':'','list[fullordering]':order,'list[limit]':limit,'limitstart':start}
   fields.update(filters or {})
   return request(path,fields)
  def visible(html):return [int(x) for x in re.findall(r'data-course-id="([0-9]+)"',html)]
  url,html=listing()
  expect(visible(html)==[f['courses']['Alpha'],f['courses']['Bravo'],f['courses']['Zebra']],'Search Tools title ordering renders only matching courses')
  page=Page(html);admin_form=next(x for x in page.forms if 'boxchecked' in x['fields'])
- expect(all(name in admin_form['fields'] for name in ['filter[search]','filter[published]','filter[category_id]','filter[access]','filter[author_id]','filter[language]','list[fullordering]','list[limit]']),'Native search, filters, sort and limit fields are present')
+ expect(all(name in admin_form['fields'] for name in ['filter[search]','filter[published]','filter[category_id]','filter[access]','filter[author_id]','filter[teacher_id]','filter[language]','list[fullordering]','list[limit]']),'Native search, filters, sort and limit fields are present')
+ expect('List UI assigned teacher' in html,'Teacher filter options are rendered with the available teacher profile')
+ _,teacher_filtered=listing({'filter[teacher_id]':str(f['teacher_id'])})
+ expect(visible(teacher_filtered)==[f['courses']['Alpha'],f['courses']['Bravo']],'Native teacher filter returns only courses assigned to that profile')
+ teacher_url,teacher_html=request('/administrator/index.php?option=com_jlms&view=teachers')
+ expect('COM_JLMS_TEACHERS' not in teacher_html and 'Teachers' in re.search(r'<title[^>]*>(.*?)</title>',teacher_html,re.S).group(1),'Teacher heading and browser title use the translated label')
+ teacher_link=next((x for x in Page(teacher_html).links if parse_qs(urlparse(x).query).get('view')==['courses'] and parse_qs(urlparse(x).query).get('filter[teacher_id]')==[str(f['teacher_id'])]),None)
+ expect(teacher_link is not None,'Teacher course count links to the matching filtered course list')
+ _,linked_courses=request(teacher_link)
+ expect(visible(linked_courses)==[f['courses']['Alpha'],f['courses']['Bravo']],'Teacher course count link opens the matching course filter')
  expect('joomla-toolbar-button' in html and 'courses.programme' in html and 'course.edit' in html,'Native selection toolbar exposes edit and programme')
  expect('LIST_UI_PRIVATE_LESSON_BODY' not in html and 'COM_JLMS_FOUNDATION_NOTICE' not in html,'List excludes lesson content and development warning')
  _,filtered=listing({'filter[published]':'1'});expect(visible(filtered)==[f['courses']['Alpha']],'Published filter over HTTP')
