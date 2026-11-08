@@ -11,9 +11,10 @@ if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable si
 f=json.loads((root.parent/'courses-ui-fixture.json').read_text());base='http://127.0.0.1:8093'
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.textarea=None;self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.links=[];self.current=None;self.base=None;self.select=None;self.textarea=None;self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if tag=='a' and a.get('href'):self.links.append(a['href'])
   if tag=='base':self.base=a.get('href')
   if tag=='form':self.current={'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
   if tag=='input' and self.current is not None and 'name' in a and 'disabled' not in a:
