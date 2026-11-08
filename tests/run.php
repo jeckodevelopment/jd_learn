@@ -69,6 +69,28 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json' => '{"video_duration_confirmed":true}']],
 );
 expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts confirmed video duration in the publication range');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
+    [(object) ['status' => 'quarantine', 'preview' => 0, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
+);
+expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist blocks a material that is still quarantined');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
+    [(object) ['status' => 'ready', 'preview' => 0, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{"engine":"clamd","result":"clean"}']],
+    true,
+);
+expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist accepts a ready material with required clean scan');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
+    [(object) ['status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
+);
+expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist blocks an attachment configured as preview-only');
 expect(Coverage::merge([[0, 20000], [50000, 60000]], [[10000, 40000], [40000, 50000]], 100000) === [[0, 60000]], 'union across duplicates/adjacent intervals');
 $replayed = Coverage::merge([[0, 60000]], [[10000, 40000]], 100000);
 expect(Coverage::coveredMs($replayed) === 60000, 'replay does not double count');
