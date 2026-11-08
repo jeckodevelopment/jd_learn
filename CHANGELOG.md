@@ -5,6 +5,8 @@
 - La prima installazione del pacchetto abilita il plugin `plg_privacy_jdlearn`; gli aggiornamenti rispettano lo stato scelto dall'amministratore.
 - Il plugin carica esplicitamente le proprie stringhe prima di esporre capacità, domini export e impedimenti alla rimozione.
 - Collaudo manuale Joomla richiesto per installazione nuova, upgrade con plugin disabilitato e lingue amministrative italiana/inglese.
+- PR [#100](https://github.com/jeckodevelopment/jd_learn/pull/100) integrata; i quattro job CI sono superati ([run 42498937182](https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182)). Il collaudo Joomla della correzione è ancora pendente.
+- Pacchetto [JD-Learn-0.41.20-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182/artifacts/13623954016): contenitore da estrarre una volta; ZIP interno SHA-256 `d640593bd6cb91d9d57b58ed98917ebb8efe698ec2c36ddfbccd17f05d8118f2`, scadenza 22 novembre 2026.
 
 ## 0.41.19-dev — accesso ai campi aggiuntivi corso e lezione
 
