@@ -23,6 +23,12 @@ Il Programma mostra lo stato del corso e un motivo se il comando non è disponib
 
 Se il comando esiste ma fallisce, leggere il messaggio: programma vuoto, configurazione non supportata, materiale non pronto, revisione obsoleta o transizione annullata. Ricaricare prima di riprovare una revisione obsoleta. Per segnalare una nuova regressione registrare versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione, azione e messaggio esatto, senza dati personali o segreti. Un override amministrativo precedente può nascondere nuovi avvisi: confrontarlo con i layout distribuiti.
 
+## Controllo preliminare della bozza
+
+Nella vista Programma di una versione in bozza, il riquadro **Verifica prima della pubblicazione** separa i problemi strutturali bloccanti dagli avvisi facoltativi. Al momento segnala descrizione estesa mancante, assenza di moduli, moduli senza lezioni, assenza di lezioni obbligatorie, riepilogo breve assente e copertina assente. I primi quattro sono bloccanti; riepilogo e copertina sono avvisi.
+
+È un controllo rapido, non una promessa che il corso sia pubblicabile: non carica i corpi delle lezioni e non contatta provider. Al comando **Pubblica**, `PublicationService` ripete i controlli autorevoli su contenuti, materiali, provider, quiz, permessi e revisioni; eventuali errori mantengono la bozza. Un avviso non impedisce la pubblicazione.
+
 ## Contenuti pubblicabili e limiti
 
 Sono supportate lezioni testo con corpo non vuoto e completamento manuale, video validi e quiz con snapshot valido. Sequenza libera, completamento di tutte le attività obbligatorie e attestati disattivati. Non ancora supportati prerequisiti, rilascio differito, preview di lezione, audio/documenti come lezioni autonome e regole avanzate. Gli allegati a corso/lezione sono supportati se pronti e conformi alla politica di scansione; non vanno confusi con lezioni documento.
