@@ -46,6 +46,7 @@ final class PathwayModel extends AdminModel
         $preparedAsset = 0;
         $transactionStarted = false;
         $assetTable = null;
+        $stage = 'identity';
         try {
             $actor = new User((int) $this->getCurrentUser()->id);
             $actor->clearAccessRights();
@@ -58,6 +59,7 @@ final class PathwayModel extends AdminModel
             // Joomla's nested asset store uses table locks. Reserve a placeholder
             // before beginning the data transaction, then rename it atomically
             // after the pathway row has its primary key.
+            $stage = 'prepare-asset';
             if (!(int) ($input['id'] ?? 0)) {
                 $categoryId = $input['catid'] ?? null;
                 if ((!is_int($categoryId) && !is_string($categoryId))
@@ -80,12 +82,18 @@ final class PathwayModel extends AdminModel
                     'title' => 'JD Learn pathway draft',
                     'rules' => '{}',
                 ]);
-                if (!$assetTable->check() || !$assetTable->store()) {
-                    throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+                $stage = 'asset-check';
+                if (!$assetTable->check()) {
+                    throw new \RuntimeException('pathway asset check: ' . $assetTable->getError());
+                }
+                $stage = 'asset-store';
+                if (!$assetTable->store()) {
+                    throw new \RuntimeException('pathway asset store: ' . $assetTable->getError());
                 }
                 $preparedAsset = (int) $assetTable->id;
             }
 
+            $stage = 'begin-transaction';
             $db->transactionStart();
             $transactionStarted = true;
             $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult()
@@ -150,6 +158,7 @@ final class PathwayModel extends AdminModel
             $courses = $this->normalizeCourses($data['courses'] ?? []);
             unset($data['courses'], $data['revision']);
 
+            $stage = 'pathway-table';
             $table = $this->getTable('Pathway');
             if ($preparedAsset) {
                 $table->usePreparedAsset($preparedAsset);
@@ -159,8 +168,14 @@ final class PathwayModel extends AdminModel
                     $table->$key = $value;
                 }
             }
-            if (!$table->bind($data) || !$table->check() || !$table->store()) {
-                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+            if (!$table->bind($data)) {
+                throw new \RuntimeException('pathway bind: ' . $table->getError());
+            }
+            if (!$table->check()) {
+                throw new \RuntimeException('pathway check: ' . $table->getError());
+            }
+            if (!$table->store()) {
+                throw new \RuntimeException('pathway table store: ' . $table->getError());
             }
             $pathwayId = (int) $table->id;
 
@@ -189,6 +204,9 @@ final class PathwayModel extends AdminModel
             }
             $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_PATHWAY_INVALID'];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            if (getenv('JLMS_TEST_DISPOSABLE') === '1') {
+                $this->setError($this->getError() . ' [' . $stage . ': ' . $error->getMessage() . ']');
+            }
             return false;
         }
     }
