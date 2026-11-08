@@ -12,6 +12,7 @@
 - Il player carica il modulo Joomla convenzionale `media/plg_jlmsvideo_<provider>/js/player.js` dopo autorizzazione e grant server; la chiave è validata dal registry e dal client.
 - Stato provider in Programma derivato dai plugin installati. Regressione JS aggiunta per `demo_provider`, oltre ai provider già inclusi.
 - Comportamento aggiuntivo: installare un plugin compatibile non richiede patch al componente; restano obbligatori consenso, validazione sorgente, capability di posizione/durata e sicurezza server.
+- PR #90 integrata con squash nel merge `0f55bd1`; matrice standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500)). Test end-to-end con quinto plugin Joomla ancora da eseguire; R-02 resta parziale. Artefatto CI [JD-Learn-0.41.15-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500) (SHA-256 wrapper `e9814b1d68150ea9cb74e2254768b63051bb3872cfd007e793fedc9b1b607d04`, scadenza 22 novembre 2026).
 
 
 ## 0.41.14-dev — migrazione esplicita di un’iscrizione

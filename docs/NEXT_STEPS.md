@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**8 novembre 2026**. Main **0.41.14-dev**, con PR [#88](https://github.com/jeckodevelopment/jd_learn/pull/88) integrata; il prossimo candidato è **0.41.15-dev**; ora il candidato successivo chiude la parte di estensibilità R-02 ancora bloccata da elenchi fissi. Il collaudo manuale sul sito Joomla resta da eseguire. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Main **0.41.15-dev**, PR [#90](https://github.com/jeckodevelopment/jd_learn/pull/90) integrata e CI standard verde (run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500)); il codice usa il registry dei provider aggiuntivi senza whitelist fisse nei flussi core. R-02 resta parziale fino al collaudo con un quinto plugin installato end-to-end. Il collaudo manuale sul sito Joomla resta da eseguire. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -59,7 +59,7 @@ La 0.41.9 integrata (PR #70) completa i comandi R-03 per chiudere/aprire le ammi
 
 Audio/documenti come lezioni autonome; prerequisiti/sequenze/rilascio con validazione dei cicli e dei contenuti irraggiungibili. Il fallback R-05 è stato corretto nella 0.41.5; il test manuale sul sito resta da svolgere. Completamento del versionamento: equivalenze/migrazione esplicita con la propria anteprima di impatto e rivalutazioni quiz senza alterare evidenze congelate. Percorsi aggregati del primo rilascio, senza anticipare attestati di percorso/sequenze fra corsi differiti.
 
-La PR corrente rimuove le liste fisse di provider in pubblicazione/fruizione/editor, usa il modulo convenzionale del plugin e aggiunge una regressione client con provider aggiuntivo. Per chiudere R-02 resta da collaudare un quinto plugin Joomla installabile end-to-end senza patch; completare capacità/asset, sottotitoli/trascrizioni/preferenze dove supportati, limiti e diagnostica. I quattro provider base restano obbligatori nella distribuzione. Collaudare SDK e contenuti reali autorizzati su desktop/mobile, non soltanto mock.
+La PR #90 integrata rimuove le liste fisse di provider in pubblicazione/fruizione/editor, usa il modulo convenzionale del plugin e aggiunge una regressione client con provider aggiuntivo. Per chiudere R-02 resta da collaudare un quinto plugin Joomla installabile end-to-end senza patch; completare capacità/asset, sottotitoli/trascrizioni/preferenze dove supportati, limiti e diagnostica. I quattro provider base restano obbligatori nella distribuzione. Collaudare SDK e contenuti reali autorizzati su desktop/mobile, non soltanto mock.
 
 **Accettazione:** storico sulla versione assegnata, pubblicazione impossibile per regole non supportate/cicliche, progresso coerente dopo cambiamenti espliciti e nessuna apertura di media o risposte riservate.
 
