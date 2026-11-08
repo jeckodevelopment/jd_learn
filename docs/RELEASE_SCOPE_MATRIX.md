@@ -25,7 +25,7 @@ Riferimento decisionale: [RELEASE_SCOPE.md](RELEASE_SCOPE.md). Questa mappa appl
 
 ## Scenario specifico del roster core
 
-AC-128 è aggiunto al [catalogo dei test](specifications/Catalogo_test_LMS_1.0.csv) per verificare la parte essenziale di REP-02 e SCR-14: un operatore autorizzato consulta il roster del corso assegnato con stato iscrizione, avanzamento e date operative; può compiere le sole azioni singole autorizzate; non riceve dati quiz/attestati, KPI o export. La PR #94 (0.41.18) aggiunge la ricerca per nome/username nello scope del corso e supera i test automatici standard. L'accesso a un corso fuori ambito resta negato secondo AC-12. Il test complessivo è parziale: il collaudo manuale Joomla è ancora pendente.
+AC-128 è aggiunto al [catalogo dei test](specifications/Catalogo_test_LMS_1.0.csv) per verificare la parte essenziale di REP-02 e SCR-14: un operatore autorizzato consulta il roster del corso assegnato con stato iscrizione, avanzamento e date operative; può compiere le sole azioni singole autorizzate; non riceve dati quiz/attestati, KPI o export. La PR #94 (0.41.18) ha aggiunto una ricerca per nome/username che non era richiesta da AC-128 né identificata nel backlog concordato. È una deviazione implementativa, non un criterio accettato né un requisito aggiuntivo; la CI è superata e il suo controllo manuale resta nel [testbook](QA_TESTBOOK.md#pr-94--ricerca-roster-deviazione-di-perimetro-non-gate-di-accettazione) come regressione informativa in attesa di decisione. L'accesso a un corso fuori ambito resta negato secondo AC-12. Il test complessivo è parziale: il collaudo manuale Joomla è ancora pendente.
 
 ## Regola per gli scenari misti e lo stato
 

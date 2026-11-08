@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.18-dev**: include il plugin Privacy nativo, i percorsi formativi aggregati e la ricerca per nome/username nel roster iscritti. La PR #94 ha superato la CI standard (PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri); il collaudo manuale su Joomla reale resta aperto. L'estendibilità dei provider video oltre i quattro inclusi resta prevista per la fase 2; la prima versione richiede la verifica reale di YouTube, Vimeo, Cloudflare Stream e HTML5.
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.18-dev**: include il plugin Privacy nativo e i percorsi formativi aggregati. La ricerca nel roster introdotta dalla PR #94 è registrata come deviazione di perimetro da riesaminare: il merge non la rende automaticamente un requisito accettato. La CI standard è superata; il collaudo manuale su Joomla reale resta aperto. Per la prima versione stabile si verificano i quattro provider distribuiti: YouTube, Vimeo, Cloudflare Stream e HTML5.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -13,6 +13,8 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.18-dev**: incl
 | [Checklist gestione corsi](docs/M01_ACCEPTANCE.md) | Funzioni presenti, implementazioni mancanti e collaudi M01 |
 | [Roadmap](docs/ROADMAP_TO_STABLE.md) | Perimetro delle fasi fino al rilascio stabile |
 | [Matrice requisiti](docs/REQUIREMENTS_STATUS.csv) | Tracciabilità dettagliata dei 210 requisiti |
+| [Come leggere lo stato requisiti](docs/REQUIREMENTS_STATUS_GUIDE.md) | Significato di implementazione parziale, criteri completi e accettazione |
+| [Testbook collaudo Joomla](docs/QA_TESTBOOK.md) | Percorsi manuali per PR, registrazione esiti e prove ancora da ricostruire |
 | [Problemi specifici](docs/IMPLEMENTATION_GAPS.md) | Differenze aperte e segnalazioni risolte |
 | [Backend: piano UX](docs/ADMIN_UX_PLAN.md) | Menu e dashboard amministrativa aggiornati; restano collaudo ruoli, accessibilità e navigazione in Joomla reale |
 | [Politica CI](docs/CI_POLICY.md) | Bozze leggere e integrazioni sul candidato prima del merge |
@@ -46,7 +48,7 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-La build genera `dist/pkg_jlms-0.41.10-dev.zip` e `SHA256SUMS.txt`. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
+La build genera `dist/pkg_jlms-<versione>-dev.zip` e `SHA256SUMS.txt`; la versione è letta dai manifest del pacchetto. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
 I provider sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
@@ -55,4 +57,4 @@ I provider sono installati disabilitati: configurare plugin e consenso secondo l
 
 La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della 0.41.7 è superata (PR #65, run 42420998171). La 0.41.8 aggiorna la dashboard amministrativa. La 0.41.9 integra i controlli R-03 per ammissioni ed erogazione (PR #70, merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f)); CI standard superata (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); collaudo manuale Joomla ancora aperto. M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
 
-Pacchetto verificato **0.41.11-dev**: [artefatto CI 42441526162](https://github.com/jeckodevelopment/jd_learn/actions/runs/42441526162/artifacts/13602036481), disponibile fino al 22 novembre 2026. Lo ZIP scaricato è un contenitore da estrarre una volta; lo ZIP interno installabile ha SHA-256 `3a67a2e92424cf426c593f0cedcee7efb4d470f674095baacc898878568edf1a`.
+Pacchetto verificato per main **0.41.18-dev**: [artefatto CI 42492865814](https://github.com/jeckodevelopment/jd_learn/actions/runs/42492865814/artifacts/13622073971), disponibile fino al 22 novembre 2026. Lo ZIP scaricato è un contenitore da estrarre una volta; lo ZIP interno installabile ha SHA-256 `e1d046a16e11f5b89c2487f450d6088d097d2281553b1205108348ccad5b03ff`.
