@@ -6,6 +6,14 @@
 
 # Changelog
 
+## 0.41.15-dev — provider video estendibili senza patch al componente
+
+- Rimuove i blocchi a elenco fisso nel salvataggio durata, pubblicazione e fruizione dei video: i provider aggiuntivi passano dal registry comune e dalle capacità dichiarate.
+- Il player carica il modulo Joomla convenzionale `media/plg_jlmsvideo_<provider>/js/player.js` dopo autorizzazione e grant server; la chiave è validata dal registry e dal client.
+- Stato provider in Programma derivato dai plugin installati. Regressione JS aggiunta per `demo_provider`, oltre ai provider già inclusi.
+- Comportamento aggiuntivo: installare un plugin compatibile non richiede patch al componente; restano obbligatori consenso, validazione sorgente, capability di posizione/durata e sicurezza server.
+
+
 ## 0.41.14-dev — migrazione esplicita di un’iscrizione
 
 - Aggiunge dal roster la migrazione singola di iscrizioni verso la versione pubblicata corrente, con selezione esplicita delle equivalenze fra lezioni e anteprima protetta da hash.

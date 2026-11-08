@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.14-dev**, integrata in main con la PR [#88](https://github.com/jeckodevelopment/jd_learn/pull/88). Aggiunge la migrazione esplicita di una singola iscrizione alla versione corrente, con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz. La CI standard è superata; il collaudo manuale Joomla resta aperto.
+Sistema e-learning per Joomla 6 di Jecko Development. **Candidato 0.41.15-dev** in sviluppo sopra main 0.41.14-dev. Rende estendibile senza patch il caricamento dei provider video plugin Joomla oltre ai quattro adapter inclusi. I controlli locali di struttura e regressione client sono superati; la CI runtime della PR e il collaudo manuale Joomla sono ancora da eseguire.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
