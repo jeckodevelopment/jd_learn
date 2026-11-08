@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.20-dev** carica le lingue Privacy ma non applica in modo affidabile l'attivazione al primo install. La candidata **0.41.21-dev** sposta la logica nel postflight del plugin e aggiunge la regressione CI mancante; resta in verifica. La PR #100 ha corretto le stringhe e documentato l'attivazione prevista, ma il controllo automatico successivo ha trovato questo difetto nell'installer package. La PR #98 ha integrato i collegamenti ai campi nativi dei corsi e delle lezioni (AC-129). La ricerca roster della PR #94 è una deviazione non approvata come requisito stabile. Per la prima stabile vanno verificati i quattro provider distribuiti.
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.20-dev** non attiva in modo affidabile il plugin Privacy al primo install e lascia non risolte le relative stringhe. La candidata **0.41.21-dev** sposta l'attivazione nel postflight del plugin e carica esplicitamente il dominio lingua; la suite ha già verificato il primo comportamento e ora sta verificando il secondo. La PR #100 ha tentato di correggere entrambi, ma i test successivi hanno mostrato che i due hook erano inefficaci. La PR #98 ha integrato i collegamenti ai campi nativi dei corsi e delle lezioni (AC-129). La ricerca roster della PR #94 è una deviazione non approvata come requisito stabile. Per la prima stabile vanno verificati i quattro provider distribuiti.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -51,7 +51,7 @@ php tests/run.php
 
 La build genera `dist/pkg_jlms-<versione>-dev.zip` e `SHA256SUMS.txt`; la versione è letta dai manifest del pacchetto. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
 
-I provider video sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. La candidata **0.41.21-dev** abilita **JD Learn - Privacy** alla prima installazione; gli aggiornamenti preservano la scelta attuale dell'amministratore. Il pacchetto main 0.41.20 non applica ancora correttamente questo comportamento. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
+I provider video sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. La candidata **0.41.21-dev** abilita **JD Learn - Privacy** alla prima installazione e carica le stringhe Privacy; gli aggiornamenti preservano la scelta amministrativa. Il pacchetto main 0.41.20 non applica ancora correttamente questi comportamenti. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
 
 
 

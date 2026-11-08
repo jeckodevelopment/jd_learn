@@ -29,11 +29,11 @@ Riferimenti: PRI-02, CORE-08; correzione del comportamento già incluso, senza i
 5. Con un account di prova soggetto a un impedimento di rimozione (documento attestato, job o notifica), richiedere la rimozione privacy. Atteso: il motivo è localizzato nella lingua backend e nessun dato cambia prima della risoluzione dell'impedimento.
 6. Con dati privacy di prova, verificare che export e rimozione continuino a mostrare i domini tradotti e a rispettare i comportamenti di conservazione descritti nella sezione PR #92.
 
-**Stato:** PR #100 integrata in main 0.41.20-dev; CI originale superata. Il suo hook package non ha attivato il plugin; il difetto è stato scoperto dalla regressione aggiunta con PR #102. La candidata .21 usa il postflight del manifest plugin. **Esito sito Joomla:** ricollaudo ancora da eseguire, incluse entrambe le lingue e l'upgrade con plugin intenzionalmente disabilitato. Le prove dell'utente sulla 0.41.19 e la CI priva dell'assert corretto non valgono come accettazione.
+**Stato:** PR #100 integrata in main 0.41.20-dev; CI originale superata ma non copriva lo stato reale di attivazione né traduzione. I test PR #102 hanno trovato che il suo hook package non attivava il plugin e che il caricamento lingua generico non risolveva il dominio. La candidata .21 usa il postflight del manifest plugin e carica `plg_privacy_jdlearn` dai percorsi espliciti. **Esito sito Joomla:** ricollaudo ancora da eseguire, incluse entrambe le lingue e l'upgrade con plugin intenzionalmente disabilitato.
 
 ### PR #102 — regressione installazione e traduzioni Privacy
 
-PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattivava il plugin nel fixture e lo forzava nuovamente attivo subito dopo l'installazione, nascondendo il difetto. La build candidata **0.41.21-dev** sposta l'attivazione nel postflight del plugin; gli upgrade mantengono lo stato esistente.
+PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattivava il plugin nel fixture e lo forzava nuovamente attivo subito dopo l'installazione, nascondendo il difetto. La build candidata **0.41.21-dev** sposta l'attivazione nel postflight del plugin e carica il dominio lingua esplicito; gli upgrade mantengono lo stato esistente.
 
 1. Su un Joomla 6 usa e getta pulito installare 0.41.21-dev. Atteso: **JD Learn - Privacy** è attivo; YouTube, Vimeo, Cloudflare Stream e HTML5 non vengono attivati automaticamente.
 2. Aprire **Utenti → Privacy → Funzionalità** in italiano e inglese. Atteso: titolo e quattro descrizioni tradotti, nessuna chiave tecnica.
@@ -41,7 +41,7 @@ PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattiv
 4. Con utente di prova bloccato da documento attestato/job/notifica, verificare motivo localizzato e nessuna modifica ai dati finché l'impedimento resta.
 5. Ripetere export e rimozione con dati di prova e verificare domini, minimizzazione e conservazione descritti in PR #92.
 
-**Stato:** regressione automatica inclusa nella candidata; CI completa e collaudo manuale Joomla ancora da registrare.
+**Stato:** la CI della revisione precedente ha confermato l'attivazione ma fallito l'assert delle traduzioni; candidata aggiornata per esplicitare dominio/percorso lingua. CI completa e collaudo manuale Joomla ancora da registrare.
 
 ### AC-129 — accesso ai campi aggiuntivi di corsi e lezioni (in attesa di implementazione)
 

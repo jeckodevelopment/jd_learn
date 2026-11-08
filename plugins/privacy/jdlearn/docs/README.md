@@ -6,7 +6,7 @@ Removal preserves learning evidence needed for course history while unlinking th
 
 The plugin blocks removal when certificate documents with identifying snapshots, JD Learn jobs owned by the account, or enrollment notification records are present. The site operator must resolve those records under the site's retention policy before retrying. This guard prevents orphaned identifying documents or payloads; it does not define retention periods or purge backups.
 
-Starting with package 0.41.21, the plugin's own Joomla installer enables it on a fresh install, after Joomla has created its extension record. Package updates preserve the administrator's current enabled/disabled choice. Package 0.41.20 does not reliably apply this default and should be upgraded before relying on automatic activation. Joomla's Privacy component and its request workflow must also be enabled. Administrators can still disable this integration under System → Manage → Plugins if the site's policy requires it.
+Starting with package 0.41.21, the plugin's own Joomla installer enables it on a fresh install, after Joomla has created its extension record. Package updates preserve the administrator's current enabled/disabled choice. Version 0.41.21 also loads the plugin's language domain explicitly from Joomla's administrator and plugin language paths before Privacy events. Package 0.41.20 does not reliably apply automatic activation or language loading and should be upgraded before relying on these behaviors. Joomla's Privacy component and its request workflow must also be enabled. Administrators can still disable this integration under System → Manage → Plugins if the site's policy requires it.
 
 ## Manual Joomla checks
 
