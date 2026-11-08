@@ -57,6 +57,18 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
 );
 expect($readiness === ['blockers' => [], 'warnings' => []], 'complete basic structure passes preliminary checks without notices');
+$readiness = \\Jlms\\Component\\Jlms\\Administrator\\Domain\\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']],
+);
+expect(in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist blocks a video without confirmed bounded duration');
+$readiness = \\Jlms\\Component\\Jlms\\Administrator\\Domain\\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json' => '{"video_duration_confirmed":true}']],
+);
+expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts confirmed video duration in the publication range');
 expect(Coverage::merge([[0, 20000], [50000, 60000]], [[10000, 40000], [40000, 50000]], 100000) === [[0, 60000]], 'union across duplicates/adjacent intervals');
 $replayed = Coverage::merge([[0, 60000]], [[10000, 40000]], 100000);
 expect(Coverage::coveredMs($replayed) === 60000, 'replay does not double count');
