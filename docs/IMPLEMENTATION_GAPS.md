@@ -1,6 +1,6 @@
 # Problemi specifici e differenze aperte
 
-Stato all’**8 novembre 2026**: main **0.41.9-dev**; PR #70 integrata nel merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f), CI standard superata nei due ambienti PHP/database e Chromium (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)). Il collaudo manuale dell’editor, della ripresa, dei campi lezione, della dashboard e dei controlli R-03 resta aperto. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
+Stato all’**8 novembre 2026**: main **0.41.15-dev**; PR #90 integrata nel merge [0f55bd1](https://github.com/jeckodevelopment/jd_learn/commit/0f55bd149a58c6fd1ce373655d89b1154c58edd4), CI standard superata sul candidato esatto (run [42476313500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42476313500)). R-02 è avanzata: flussi estendibili; test end-to-end del quinto plugin ancora aperto. Il collaudo manuale dell’editor, della ripresa, dei campi lezione, della dashboard e dei controlli R-03 resta aperto. Questo registro tratta casi specifici; l'elenco completo delle funzioni residue è nello [stato attuale](IMPLEMENTATION_STATUS.md) e nella [matrice](REQUIREMENTS_STATUS.csv).
 
 ## Casi aperti
 
