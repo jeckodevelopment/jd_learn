@@ -104,7 +104,9 @@ $courseData=array_replace($courseBase,['id'=>$course,'teacher_ids'=>[$public,$pr
 teacherExpect($courseModel->save($courseData),'Ordered teachers assigned to saved draft');
 teacherExpect(TeacherProfiles::selected($db,$course)===[$public,$private],'Teacher order persisted in relation table');
 $directory=$factory->createModel('Teachers','Administrator',['ignore_request'=>true]);$directory->setCurrentUser($actor);
-$teacherRows=$directory->getItems();$publicRow=array_values(array_filter($teacherRows,static fn($row):bool=>(int)$row->id===$public));
+ $teacherRows=$directory->getItems();
+if (!is_array($teacherRows)) { throw new RuntimeException('Teacher directory listing failed: ' . (string) $directory->getError()); }
+$publicRow=array_values(array_filter($teacherRows,static fn($row):bool=>(int)$row->id===$public));
 teacherExpect(count($publicRow)===1&&(int)$publicRow[0]->course_count===1,'Teacher list reports the number of assigned courses in the current editable course scope');
 $courseList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);$courseList->setCurrentUser($actor);$courseList->setState('list.limit',100);
 $courseList->setState('filter.teacher_id',(string)$public);
