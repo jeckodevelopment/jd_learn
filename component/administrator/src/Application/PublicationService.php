@@ -227,7 +227,7 @@ final class PublicationService
             $scanRequired = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false);
             if (($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
                 || $attachment['status'] !== 'ready' || (int) $attachment['preview'] !== 0
-                || $attachment['publish_up'] !== null || $attachment['publish_down'] !== null) {
+                || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored($attachment['publish_up'], $attachment['publish_down'])) {
                 throw new \DomainException('COM_JLMS_MATERIAL_NOT_READY');
             }
         }

@@ -48,9 +48,10 @@ admin=client();student=client();guest=client()
 def admin_page(course=None,version=None,replace=0):
  course=fixture['course_id'] if course is None else course;version=fixture['version_id'] if version is None else version
  return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version)+'&replace_id='+str(replace))
-def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False):
- url,body,_=admin_page(course,version,replace);page=Page(body.decode());form=next(f for f in page.forms if f['id']=='jlms-material-upload')
- fields=dict(form['fields']);fields.update({'jform[title]':title,'jform[description]':'Extra facoltativo','jform[lesson_id]':str(lesson),'jform[replace_id]':str(replace)})
+def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False,publish_up='',publish_down=''):
+ url,body,_=admin_page(course,version,replace);html=body.decode();page=Page(html);form=next(f for f in page.forms if f['id']=='jlms-material-upload')
+ expect('jform[publish_up]' in html and 'jform[publish_down]' in html and 'datetime-local' in html,'Material form exposes both course-time-zone availability fields')
+ fields=dict(form['fields']);fields.update({'jform[title]':title,'jform[description]':'Extra facoltativo','jform[lesson_id]':str(lesson),'jform[replace_id]':str(replace),'jform[publish_up]':publish_up,'jform[publish_down]':publish_down})
  if invalid_token:
   fields={k:v for k,v in fields.items() if not re.fullmatch('[a-f0-9]{32}',k)}
  boundary='JDMaterial'+uuid.uuid4().hex;parts=[]
@@ -117,6 +118,12 @@ try:
  upload('infected.txt',b'FIXTURE_INFECTED\n','Blocked handout')
  infected=files()[-1];expect(infected['status']=='rejected','Positive scanner result blocks asset')
  act_material('delete',infected['id'])
+ before_invalid=set(private.iterdir());before_invalid_links=len(files())
+ upload('bad-window.txt',b'BAD_WINDOW\n','Invalid window',publish_up='2099-01-02T00:00:00',publish_down='2099-01-01T00:00:00',expected=400)
+ expect(set(private.iterdir())==before_invalid and len(files())==before_invalid_links,'An invalid date range is rejected before a blob or link is created')
+ upload('scheduled.txt',b'SCHEDULED_PRIVATE\n','Scheduled handout',publish_up='2099-01-01T00:00:00',publish_down='2099-01-02T00:00:00')
+ u,b,_=request(admin,'/administrator/index.php?option=com_jlms&view=curriculum&id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id']))
+ readiness=b.decode();expect('data-readiness-code="COM_JLMS_READINESS_MATERIAL_SCHEDULED"' in readiness and 'data-readiness-code="COM_JLMS_MATERIAL_NOT_READY"' not in readiness,'A valid material schedule is a readiness notice, not a publication blocker')
  publish()
  _,published,_=admin_page();expect('id="jlms-material-upload"' not in published.decode(),'Published material associations are immutable')
  frozen=json.loads(command('inspect'))['version']
@@ -132,7 +139,7 @@ try:
  url,body,_=request(student,course);expect(b'NEW_PRIVATE_NOTES' not in body and b'Course handout' not in body,'Promotional sheet exposes no protected file content or titles')
  form=next(f for f in Page(body.decode()).forms if f['id']=='jlms-start-form');classroom,body,_=request(student,urljoin(url,form['action']),fields=form['fields'])
  enrollment=int(re.search(rb'data-enrollment-id="([1-9][0-9]*)"',body).group(1))
- expect(b'id="jlms-classroom-course-materials"' in body and b'id="jlms-lesson-resources"' in body and b'Course handout' in body and b'Lesson handout' in body,'Classroom separates course and lesson resources')
+ expect(b'id="jlms-classroom-course-materials"' in body and b'id="jlms-lesson-resources"' in body and b'Course handout' in body and b'Lesson handout' in body and b'Scheduled handout' not in body,'Classroom separates resources and hides materials before their start date')
  download='/index.php?option=com_jlms&task=attachment.download&format=raw&enrollment_id='+str(enrollment)+'&id='+str(first['id'])
  _,binary,headers=request(student,download);expect(binary==b'NEW_PRIVATE_NOTES\n','Authorised download is exact')
  pdf_id=next(f['id'] for f in files() if f['title']=='PDF handout')

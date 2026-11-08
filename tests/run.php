@@ -9,6 +9,7 @@ use Jlms\Component\Jlms\Administrator\Domain\Coverage;
 use Jlms\Component\Jlms\Administrator\Domain\QuizScorer;
 use Jlms\Component\Jlms\Administrator\Domain\AccessPolicy;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
+use Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability;
 use Jlms\Contracts\Video\SourceInput;
 use Jlms\Contracts\Video\SourceNormalizer;
 use Jlms\Contracts\Video\VideoProviderRegistry;
@@ -91,6 +92,20 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
 );
 expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist blocks an attachment configured as preview-only');
+$scheduled = MaterialAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T12:00:00', 'Europe/Rome');
+expect($scheduled === ['publish_up' => '2026-02-02 09:30:00', 'publish_down' => '2026-02-02 11:00:00'], 'material window is stored as UTC using the course time zone');
+expect(MaterialAvailability::editor($scheduled['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00', 'stored material window is shown in the course time zone');
+expect(MaterialAvailability::validStored($scheduled['publish_up'], $scheduled['publish_down']), 'stored material schedule is publishable');
+expect(MaterialAvailability::validStored($scheduled['publish_up'] . '.000000', $scheduled['publish_down'] . '.000000'), 'MySQL zero-microsecond DATETIME(6) values preserve valid material schedules');
+rejects(static fn () => MaterialAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'material end must be later than its start');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
+    [(object) ['status' => 'ready', 'preview' => 0, 'publish_up' => $scheduled['publish_up'], 'publish_down' => $scheduled['publish_down'], 'scan_json' => '{}']],
+);
+expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true)
+    && in_array('COM_JLMS_READINESS_MATERIAL_SCHEDULED', $readiness['warnings'], true), 'valid scheduled material warns without blocking publication');
 expect(Coverage::merge([[0, 20000], [50000, 60000]], [[10000, 40000], [40000, 50000]], 100000) === [[0, 60000]], 'union across duplicates/adjacent intervals');
 $replayed = Coverage::merge([[0, 60000]], [[10000, 40000]], 100000);
 expect(Coverage::coveredMs($replayed) === 60000, 'replay does not double count');

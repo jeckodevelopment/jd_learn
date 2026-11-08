@@ -6,6 +6,13 @@
 
 # Changelog
 
+## 0.41.13-dev — finestre temporali dei materiali
+
+- Aggiunge date iniziali/finali ai materiali extra, inserite nel fuso del corso e conservate in UTC; modifica delle date disponibile soltanto sulla bozza.
+- La pubblicazione accetta finestre valide; il preflight le segnala come avviso e l’aula continua a nascondere gli allegati fuori finestra.
+- Intervalli invertiti o date ambigue/non valide vengono rifiutati prima di creare o sostituire un asset.
+
+
 ## 0.41.12-dev — preflight materiali non pronti
 
 - Il controllo preliminare del Programma segnala allegati in quarantena, con scansione ClamAV obbligatoria non pulita, marcati come sola anteprima o con finestra di pubblicazione configurata, in linea con la validazione server.
