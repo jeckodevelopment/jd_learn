@@ -364,6 +364,12 @@ try:
  expect('HTTP first required lesson' in h,'Module and required text lesson saved through HTTP')
  expect('id="jlms-publication-blockers"' in h and 'COM_JLMS_READINESS_MODULE_EMPTY' not in h
   and 'COM_JLMS_READINESS_REQUIRED_LESSON' not in h,'Adding the required lesson clears structural blockers')
+ material=fixture('material-add')
+ u,h=get(u)
+ expect('data-readiness-code="COM_JLMS_MATERIAL_NOT_READY"' in h,'Draft readiness identifies an attachment that the publication service would reject')
+ fixture('material-remove',material['attachment_id'])
+ u,h=get(u)
+ expect('data-readiness-code="COM_JLMS_MATERIAL_NOT_READY"' not in h,'Removing the unready fixture material clears its readiness blocker')
  form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
  transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
  # A disabled native plugin must be diagnosed without changing course/version data.
