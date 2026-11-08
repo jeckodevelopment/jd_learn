@@ -96,6 +96,7 @@ $scheduled = MaterialAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T
 expect($scheduled === ['publish_up' => '2026-02-02 09:30:00', 'publish_down' => '2026-02-02 11:00:00'], 'material window is stored as UTC using the course time zone');
 expect(MaterialAvailability::editor($scheduled['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00', 'stored material window is shown in the course time zone');
 expect(MaterialAvailability::validStored($scheduled['publish_up'], $scheduled['publish_down']), 'stored material schedule is publishable');
+expect(MaterialAvailability::validStored($scheduled['publish_up'] . '.000000', $scheduled['publish_down'] . '.000000'), 'MySQL zero-microsecond DATETIME(6) values preserve valid material schedules');
 rejects(static fn () => MaterialAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'material end must be later than its start');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
