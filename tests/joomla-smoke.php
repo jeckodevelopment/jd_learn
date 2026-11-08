@@ -45,6 +45,7 @@ use Joomla\CMS\Event\Privacy\CanRemoveDataEvent;
 use Joomla\CMS\Event\Privacy\ExportRequestEvent;
 use Joomla\CMS\Event\Privacy\RemoveDataEvent;
 use Joomla\Component\Privacy\Administrator\Table\RequestTable;
+use Joomla\CMS\Language\Text;
 use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
 use Jlms\Contracts\Video\VideoProviderRegistry;
 
@@ -76,15 +77,36 @@ PluginHelper::importPlugin('privacy');
 $privacyCapabilities = new CollectCapabilitiesEvent('onPrivacyCollectAdminCapabilities');
 $app->getDispatcher()->dispatch('onPrivacyCollectAdminCapabilities', $privacyCapabilities);
 $privacyData = $privacyCapabilities->getArgument('result', []);
-if (!is_array($privacyData) || $privacyData === []) {
+$privacyTitle = Text::_('PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE');
+$hasPrivacyCapabilities = false;
+foreach ($privacyData as $capabilitySet) {
+    if (is_array($capabilitySet) && array_key_exists($privacyTitle, $capabilitySet)) {
+        $hasPrivacyCapabilities = true;
+        break;
+    }
+}
+if (!$hasPrivacyCapabilities) {
     throw new \RuntimeException('JD Learn privacy capabilities were not collected by Joomla.');
 }
 $privacyRequest = new RequestTable($db);
 $privacyExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $app->getIdentity()]);
 $app->getDispatcher()->dispatch('onPrivacyExportRequest', $privacyExport);
 $privacyExportData = $privacyExport->getArgument('result', []);
-if (count($privacyExportData) !== 1 || count($privacyExportData[0]) !== 6) {
-    throw new \RuntimeException('JD Learn privacy export did not contribute all six data domains.');
+$privacyDomainNames = [];
+foreach ($privacyExportData as $contribution) {
+    if (!is_array($contribution)) {
+        continue;
+    }
+
+    foreach ($contribution as $domain) {
+        if ($domain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain && str_starts_with($domain->name, 'jdlearn_')) {
+            $privacyDomainNames[] = $domain->name;
+        }
+    }
+}
+sort($privacyDomainNames);
+if ($privacyDomainNames !== ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates', 'jdlearn_enrollments', 'jdlearn_enrollment_requests', 'jdlearn_progress']) {
+    throw new \RuntimeException('JD Learn privacy export domains missing: ' . implode(', ', $privacyDomainNames));
 }
 $privacyPlugin = new \Jlms\Plugin\Privacy\Jdlearn\Extension\Jdlearn((array) PluginHelper::getPlugin('privacy', 'jdlearn'));
 $privacyPlugin->setApplication($app);
