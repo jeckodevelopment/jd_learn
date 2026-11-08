@@ -1,61 +1,61 @@
 {
   "audited_at": "2026-11-08",
   "product": "JD Learn",
-  "version": "0.41.20-dev",
+  "version": "0.41.21-dev",
   "code_baseline": {
-    "tested_head": "7fd38224eac69307df6631b417a39b1878e25d56",
-    "parent_main_commit": "18f3a79182a9fb1d16aac112f5b0850e41860316",
-    "pull_request": 100,
-    "merged_main_commit": "ff0999141409552e5fcfb4d1ee89543afa179a9b"
+    "tested_head": "8b962c62f3af95100c1da7b1794297df66452d78",
+    "parent_main_commit": "14fc03ceae56bfb09042118725bd738d1084ffd8",
+    "pull_request": 102,
+    "merged_main_commit": "0a05f004823156abc750981a11db6598a8cf9972"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42498937182,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182",
+    "run_id": 42503477910,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128787239178,
+        "id": 128801015831,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128787287393,
+        "id": 128801047820,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128787287482,
+        "id": 128801047804,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128787287470,
+        "id": 128801047869,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #100 integrata. Tutti e quattro i job standard superati: controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium controllato. Collaudo manuale Privacy ancora pendente."
+    "note": "PR #102 integrata. Tutti e quattro i job standard superati. La suite verifica installazione del pacchetto senza preattivare Privacy, abilitazione al primo install, preservazione dello stato in aggiornamento e stringhe Privacy nel contesto lingua Joomla. Collaudo manuale sul sito Joomla ancora pendente."
   },
   "package": {
-    "name": "pkg_jlms-0.41.20-dev.zip",
-    "bytes": 499387,
-    "sha256": "d640593bd6cb91d9d57b58ed98917ebb8efe698ec2c36ddfbccd17f05d8118f2",
+    "name": "pkg_jlms-0.41.21-dev.zip",
+    "bytes": 499562,
+    "sha256": "40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7",
     "constituents": 8,
     "tables": 42,
     "foreign_keys": 59,
-    "build_source": "PR #100 testata e integrata; versione interna e SHA-256 verificati dall’artefatto CI 42498937182.",
-    "artifact_id": 13623954016,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182/artifacts/13623954016",
-    "ci_artifact_archive_sha256": "sha256:b95852490bfe1cd1c5baff72813e5f1b476fbe10d761719afc5ca61e5797ccc3",
-    "artifact_expires_at": "2026-11-22T16:18:44Z",
+    "build_source": "PR #102 merged runtime; package bytes and SHA-256 independently checked against the downloaded CI wrapper artifact.",
+    "artifact_id": 13626378474,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474",
+    "ci_artifact_archive_sha256": "sha256:b2e45fa4130b0bb31924cf8536c585b71d9b0785be50126786d28896b7a0f81b",
+    "artifact_expires_at": "2026-11-22T17:12:18Z",
     "wrapper_zip": true,
-    "inner_version": "0.41.20"
+    "inner_version": "0.41.21-dev"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -68,6 +68,65 @@
   ],
   "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-08",
+      "version": "0.41.20-dev",
+      "code_baseline": {
+        "tested_head": "7fd38224eac69307df6631b417a39b1878e25d56",
+        "parent_main_commit": "18f3a79182a9fb1d16aac112f5b0850e41860316",
+        "pull_request": 100,
+        "merged_main_commit": "ff0999141409552e5fcfb4d1ee89543afa179a9b"
+      },
+      "ci": {
+        "run_id": 42498937182,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 128787239178,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128787287393,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128787287482,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128787287470,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "PR #100 integrata. Tutti e quattro i job standard superati: controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium controllato. Collaudo manuale Privacy ancora pendente."
+      },
+      "package": {
+        "name": "pkg_jlms-0.41.20-dev.zip",
+        "bytes": 499387,
+        "sha256": "d640593bd6cb91d9d57b58ed98917ebb8efe698ec2c36ddfbccd17f05d8118f2",
+        "constituents": 8,
+        "tables": 42,
+        "foreign_keys": 59,
+        "build_source": "PR #100 testata e integrata; versione interna e SHA-256 verificati dall’artefatto CI 42498937182.",
+        "artifact_id": 13623954016,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42498937182/artifacts/13623954016",
+        "ci_artifact_archive_sha256": "sha256:b95852490bfe1cd1c5baff72813e5f1b476fbe10d761719afc5ca61e5797ccc3",
+        "artifact_expires_at": "2026-11-22T16:18:44Z",
+        "wrapper_zip": true,
+        "inner_version": "0.41.20"
+      },
+      "evidence_scope": "PR #68 changes administrator dashboard hierarchy and scoped WAM styling only. CI standard passed on the candidate; Joomla real-site visual/accessibility/role acceptance remains open.",
+      "superseded_by": "PR #102 / 0.41.21-dev"
+    },
     {
       "version": "0.41.19-dev",
       "pull_request": 98,
@@ -1688,7 +1747,7 @@
       }
     }
   ],
-  "evidence_scope": "PR #68 changes administrator dashboard hierarchy and scoped WAM styling only. CI standard passed on the candidate; Joomla real-site visual/accessibility/role acceptance remains open.",
+  "evidence_scope": "Runtime PR #102 tested at 8b962c62f3af95100c1da7b1794297df66452d78 and integrated as 0a05f004823156abc750981a11db6598a8cf9972. The exact inner package from the downloaded CI artifact matched the independently rebuilt package SHA-256. CI passed; manual Joomla site acceptance remains open.",
   "ci_policy_verification": {
     "date": "2026-11-07",
     "pull_request": 48,
