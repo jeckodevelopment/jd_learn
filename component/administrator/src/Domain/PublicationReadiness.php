@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Jlms\Component\Jlms\Administrator\Domain;
 
-use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
-
 /** Quick structural checks for the editor; publication remains authoritative. */
 final class PublicationReadiness
 {
@@ -19,10 +17,13 @@ final class PublicationReadiness
         $blockers = [];
         $warnings = [];
 
-        try {
-            CoursePresentation::requireDescription($course);
-        } catch (\DomainException $error) {
-            $blockers[] = $error->getMessage();
+        $params = json_decode((string) ($course->params_json ?? '{}'), true);
+        $presentation = is_array($params) && is_array($params['presentation'] ?? null)
+            ? $params['presentation']
+            : [];
+        $description = html_entity_decode(strip_tags((string) ($presentation['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        if (preg_replace('/[\s\p{Z}\p{Cf}]/u', '', $description) === '') {
+            $blockers[] = 'COM_JLMS_COURSE_DESCRIPTION_REQUIRED';
         }
 
         if (!$modules) {
@@ -57,8 +58,7 @@ final class PublicationReadiness
         if (trim((string) ($course->summary ?? '')) === '') {
             $warnings[] = 'COM_JLMS_READINESS_SUMMARY_MISSING';
         }
-        $details = CoursePresentation::details($course->params_json ?? null) ?? [];
-        if (trim((string) ($details['image'] ?? '')) === '') {
+        if (trim((string) ($presentation['image'] ?? '')) === '') {
             $warnings[] = 'COM_JLMS_READINESS_IMAGE_MISSING';
         }
 
