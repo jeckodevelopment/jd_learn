@@ -1,60 +1,61 @@
 {
   "audited_at": "2026-11-08",
   "product": "JD Learn",
-  "version": "0.41.23-dev",
+  "version": "0.41.24-dev",
   "code_baseline": {
-    "tested_head": "0bb9322c4b05b48f0512fbb62864a97deb57360e",
-    "parent_main_commit": "02f30904e23aa17e459c0ba6478444db7468cc86",
-    "pull_request": 108,
-    "merged_main_commit": "7d4584e5ae96795344d8f72b2639e96d1edbc171"
+    "tested_head": "9a5693f5aeeda56ffe8024b79285a97e7d34de55",
+    "parent_main_commit": "fa101d5f0f9201627462c87c18a94a763b661841",
+    "pull_request": 110,
+    "merged_main_commit": "2f99f3285b8be4a1017a86d838b4789d9efe5b30"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42513162483,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483",
+    "run_id": 42518292971,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 128830394967,
+        "id": 128846019462,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128830425348,
+        "id": 128846053643,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128830425341,
+        "id": 128846053690,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 128830425327,
+        "id": 128846053539,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #108 integrata. Quattro job standard superati; il collaudo Joomla reale ha poi rilevato anomalie di upgrade menu, URL dei riquadri e traduzione, ora candidate in 0.41.24-dev."
+    "note": "PR #110 integrata. Tutti i quattro job standard superati; il ricollaudo manuale Joomla AC-132 resta da registrare."
   },
   "package": {
-    "name": "pkg_jlms-0.41.23-dev.zip",
-    "bytes": 500579,
-    "sha256": "0b3692497d996da91055121c6ca2ed82176d52f87e7a6f92af2ba7a204f25ae3",
+    "name": "pkg_jlms-0.41.24-dev.zip",
+    "bytes": 501318,
+    "sha256": "5162d657369820d14b082b0e1f14037bf65923f9c8a1c682cde584821ab0c174",
     "constituents": 8,
     "tables": 42,
     "foreign_keys": 59,
-    "build_source": "PR #108 verificata e integrata; pacchetto interno CI corrisponde al candidato testato. Le anomalie manuali sono documentate come aperte.",
-    "artifact_id": 13630646222,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42513162483/artifacts/13630646222",
-    "artifact_expires_at": "2026-11-22T19:08:57Z",
+    "build_source": "PR #110 testata e integrata; checksum interno coincidente con build locale riproducibile.",
+    "artifact_id": 13632870363,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971/artifacts/13632870363",
+    "ci_artifact_archive_sha256": "sha256:8ae94e62627ca970fa4469bd49946e6bde4cbdde26b8890407542f5490ff64dd",
+    "artifact_expires_at": "2026-11-22T20:09:44Z",
     "wrapper_zip": true,
-    "inner_version": "0.41.23-dev"
+    "inner_version": "0.41.24-dev"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -1883,33 +1884,33 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.23-dev integrata in main con PR #108; collaudo manuale issue #105 ha rilevato tre anomalie; correzioni candidate in 0.41.24-dev e in attesa di CI/ricollaudo.",
+  "candidate_status": "0.41.24-dev integrata in main con PR #110 (merge 2f99f3285b8be4a1017a86d838b4789d9efe5b30); CI standard superata nel run 42518292971; ricollaudo manuale Joomla AC-132 pendente.",
   "previous_verified_release": {
-    "version": "0.41.10-dev",
-    "package": "pkg_jlms-0.41.10-dev.zip",
-    "sha256": "4d95e9627ddd6db338961da374e35721262e95356c817d46940e5b6ddc469ab3",
-    "artifact_id": 13601830152,
-    "run_id": 42439956364,
-    "expires_at": "2026-11-22T03:14:01Z"
+    "version": "0.41.23-dev",
+    "package": "pkg_jlms-0.41.23-dev.zip",
+    "sha256": "0b3692497d996da91055121c6ca2ed82176d52f87e7a6f92af2ba7a204f25ae3",
+    "artifact_id": 13630646222,
+    "run_id": 42513162483,
+    "expires_at": "2026-11-22T19:08:57Z"
   },
   "candidate_increment": {
     "version": "0.41.24-dev",
-    "scope": "Issue #105 / AC-132: correzione del menu root sulle installazioni aggiornate, doppia codifica HTML degli URL dei riquadri e traduzione introduttiva duplicata.",
-    "status": "Implementazione candidata; CI e ricollaudo manuale Joomla pendenti. Nessun elemento fase 2 aggiunto.",
+    "scope": "Issue #105 / AC-132: link root aggiornato in upgrade, URL dei riquadri non doppiamente codificati e traduzioni introduttive ripulite.",
+    "status": "Integrato dalla PR #110 nel merge 2f99f3285b8be4a1017a86d838b4789d9efe5b30; CI standard superata nel run 42518292971; ricollaudo manuale Joomla pendente.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
-    "version": "0.41.23-dev",
-    "pull_request": 108,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/108",
-    "tested_head": "0bb9322c4b05b48f0512fbb62864a97deb57360e",
-    "merged_main_commit": "7d4584e5ae96795344d8f72b2639e96d1edbc171",
-    "ci_run_id": 42513162483,
-    "artifact_id": 13630646222,
-    "artifact_name": "JD-Learn-0.41.23-dev",
-    "artifact_sha256": "0b3692497d996da91055121c6ca2ed82176d52f87e7a6f92af2ba7a204f25ae3",
-    "artifact_size_bytes": 500579,
-    "artifact_expires_at": "2026-11-22T19:08:57Z",
+    "version": "0.41.24-dev",
+    "pull_request": 110,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/110",
+    "tested_head": "9a5693f5aeeda56ffe8024b79285a97e7d34de55",
+    "merged_main_commit": "2f99f3285b8be4a1017a86d838b4789d9efe5b30",
+    "ci_run_id": 42518292971,
+    "artifact_id": 13632870363,
+    "artifact_name": "JD-Learn-0.41.24-dev",
+    "artifact_sha256": "5162d657369820d14b082b0e1f14037bf65923f9c8a1c682cde584821ab0c174",
+    "artifact_size_bytes": 501318,
+    "artifact_expires_at": "2026-11-22T20:09:44Z",
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {

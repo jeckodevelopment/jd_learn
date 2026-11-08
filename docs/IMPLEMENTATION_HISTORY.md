@@ -4,6 +4,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | Versione / periodo | Risultato introdotto |
 |---|---|
+| 0.41.24 | Correzioni dashboard: link root aggiornato nel postflight, URL shortcuts non doppiamente codificati, traduzioni IT/EN ripulite; PR #110 e CI standard superata; ricollaudo Joomla AC-132 ancora aperto |
 | 0.41.23 | Dashboard amministrativa come ingresso del componente e sei riquadri con icone/ACL per funzioni già esistenti; issue #105, PR #108 integrata, CI standard superata; collaudo Joomla reale ancora aperto |
 | Fino alla 0.19 | Base Joomla, catalogo/aula, video/materiali, quiz e gestione singola delle iscrizioni; [fotografia storica](history/IMPLEMENTATION_THROUGH_0.19.md) |
 | 0.20–0.20.1 | Preassegnazione senza livelli; percorso esplicito di prima pubblicazione e diagnostica |

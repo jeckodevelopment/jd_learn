@@ -7,6 +7,7 @@
 - Rimuove le vecchie traduzioni duplicate della frase introduttiva, conservando la descrizione corrente degli strumenti amministrativi in italiano e inglese.
 - Collaudo manuale Joomla di upgrade, link, traduzioni e ruoli aggiunto al testbook; AC-132 resta da accettare sul sito di prova.
 - Nessuna modifica ai dati didattici o alle funzioni di fase 2.
+- PR [#110](https://github.com/jeckodevelopment/jd_learn/pull/110) integrata; CI standard superata ([run 42518292971](https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971)). Pacchetto [JD-Learn-0.41.24-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42518292971/artifacts/13632870363), SHA-256 interno `5162d657369820d14b082b0e1f14037bf65923f9c8a1c682cde584821ab0c174`, scadenza 22 novembre 2026.
 
 ## 0.41.23-dev — dashboard con accessi rapidi
 
