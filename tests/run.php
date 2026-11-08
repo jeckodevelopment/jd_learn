@@ -57,13 +57,13 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
 );
 expect($readiness === ['blockers' => [], 'warnings' => []], 'complete basic structure passes preliminary checks without notices');
-$readiness = \\Jlms\\Component\\Jlms\\Administrator\\Domain\\PublicationReadiness::inspect(
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']],
 );
 expect(in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist blocks a video without confirmed bounded duration');
-$readiness = \\Jlms\\Component\\Jlms\\Administrator\\Domain\\PublicationReadiness::inspect(
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json' => '{"video_duration_confirmed":true}']],
