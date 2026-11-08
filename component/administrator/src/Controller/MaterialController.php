@@ -44,7 +44,8 @@ final class MaterialController extends BaseController
                 $files = $this->input->files->get('jform', [], 'array');
                 $service->upload($this->app->getIdentity(), $courseId, $versionId,
                     CurriculumService::id($data['lesson_id'] ?? 0, true), $revision, $data['title'], $data['description'] ?? '',
-                    $files['upload'] ?? [], CurriculumService::id($data['replace_id'] ?? 0, true));
+                    $files['upload'] ?? [], CurriculumService::id($data['replace_id'] ?? 0, true),
+                    $data['publish_up'] ?? null, $data['publish_down'] ?? null);
             } else {
                 $service->mutate($this->app->getIdentity(), $courseId, $versionId,
                     CurriculumService::id($data['id'] ?? null), $revision, $operation, $data);
@@ -57,7 +58,8 @@ final class MaterialController extends BaseController
     {
         $known = ['COM_JLMS_FILE_INVALID', 'COM_JLMS_FILE_SIZE', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_DELIVERY_DISABLED',
             'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_INVALID_INPUT',
-            'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_OUTLINE_LIMIT', 'COM_JLMS_RANGE_INVALID'];
+            'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_OUTLINE_LIMIT',
+            'COM_JLMS_RANGE_INVALID', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
         if (in_array($error->getMessage(), $known, true)) {
             $code = in_array($error->getCode(), [400, 401, 403, 404, 409, 413, 416, 422, 503], true) ? $error->getCode() : 400;
             throw new \RuntimeException(Text::_($error->getMessage()), $code);
