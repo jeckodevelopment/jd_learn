@@ -29,7 +29,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyCollectAdminCapabilities(CollectCapabilitiesEvent $event): void
     {
-        $this->loadLanguage();
+        $this->loadPrivacyLanguage();
 
         $event->addResult([
             Text::_('PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE') => [
@@ -43,7 +43,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyExportRequest(ExportRequestEvent $event): void
     {
-        $this->loadLanguage();
+        $this->loadPrivacyLanguage();
 
         $user = $event->getUser();
 
@@ -154,7 +154,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
     public function onPrivacyCanRemoveData(CanRemoveDataEvent $event): void
     {
-        $this->loadLanguage();
+        $this->loadPrivacyLanguage();
 
         $user = $event->getUser();
         $status = new Status();
@@ -269,6 +269,15 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         } catch (\Throwable $error) {
             $db->transactionRollback();
             throw $error;
+        }
+    }
+
+    private function loadPrivacyLanguage(): void
+    {
+        $language = $this->getApplication()->getLanguage();
+
+        if (!$language->load('plg_privacy_jdlearn', JPATH_ADMINISTRATOR)) {
+            $language->load('plg_privacy_jdlearn', JPATH_PLUGINS . '/privacy/jdlearn');
         }
     }
 }
