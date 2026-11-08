@@ -2,7 +2,7 @@
   "version": "1.1",
   "updated_at": "2026-11-08",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
-  "current_increment": "0.41.9-dev — PR #70, controlli R-03; CI standard superata nel run 42427891837, collaudo Joomla reale aperto",
+  "current_increment": "0.41.9-dev integrata in main con PR #70 (merge 70f6ed7); CI standard superata nel run 42428496835; collaudo Joomla reale aperto",
   "semantics": "Responsabilità primaria pianificata, non completamento. I requisiti trasversali sono verificati in ogni incremento e accettati solo dopo tutti gli scenari della baseline. Nessuna data o percentuale dedotta da questa mappatura.",
   "milestones": [
     {
@@ -16,13 +16,14 @@
       ],
       "acceptance_checklist": "docs/M01_ACCEPTANCE.md",
       "planned_administration_ux": {
-        "status": "Dashboard 0.41.8 integrata. PR #70 aggiunge i comandi R-03; CI standard superata nel run 42427891837, collaudo Joomla reale ancora aperto",
+        "status": "Dashboard 0.41.8 e controlli operativi R-03 della 0.41.9 integrate; CI standard superata nel run 42428496835; collaudo Joomla reale ancora aperto",
         "scope": "Ingresso backend intuitivo e menu amministrativo JD Learn nella sidebar Joomla",
         "plan": "docs/ADMIN_UX_PLAN.md",
         "dependencies": [
           "M10"
         ]
-      }
+      },
+      "status": "Dashboard 0.41.8 e controlli operativi R-03 della 0.41.9 integrate. PR #70/CI standard superate nel run 42428496835; collaudo Joomla reale ancora aperto."
     },
     {
       "id": "M02",

@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**8 novembre 2026**. Riferimento: **0.41.8-dev in main; PR #70 per 0.41.9-dev R-03; CI standard superata nel run 42427891837**. La CI standard è superata nei due ambienti PHP/database e Chromium ([run 42423237440](https://github.com/jeckodevelopment/jd_learn/actions/runs/42423237440)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Riferimento: **0.41.9-dev integrata in main (PR #70, merge 70f6ed7); CI standard superata nel run 42428496835**. La CI standard finale è superata nei due ambienti PHP/database e Chromium ([run 42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); il collaudo sul sito Joomla resta da eseguire. Menu amministrativo, dashboard rivista e durata automatica sono implementati. Qui si pianifica soltanto il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -49,7 +49,7 @@ Anteprima con esito per riga, esclusioni per scope del corso e duplicati senza a
 
 ### Stati, edizioni e disponibilità
 
-La 0.41.6 integrata (PR #64, CI standard superata) separa il ritiro promozionale dalla fruizione degli iscritti, ma non completa R-03. Prossimo passo: comandi distinti per chiudere tutte le nuove ammissioni e sospendere l’erogazione. Poi completare richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gestione delle edizioni/finestre e proroghe formative. Ogni operazione sensibile ha scope, motivo/anteprima/conferma, audit, replay e impatto sui quiz/risorse già aperti. Non confondere un rinnovo di livello con una nuova frequenza.
+La 0.41.9 integrata (PR #70) completa i comandi R-03 per chiudere/aprire le ammissioni e sospendere/riprendere l’erogazione, con anteprima, motivo, conferma e audit. Il collaudo manuale Joomla è ancora necessario; il successivo lavoro implementativo resta nell’ordine M01/M02 e provider core definito sopra. Più avanti: richieste/approvazioni/rifiuti, annullamento dell’iscrizione, gestione delle edizioni/finestre e proroghe formative. Ogni operazione sensibile ha scope, motivo/anteprima/conferma, audit, replay e impatto sui quiz/risorse già aperti. Non confondere un rinnovo di livello con una nuova frequenza.
 
 **Accettazione:** transizioni valide/negate, stesse sessioni dopo revoca/ripristino, timer che non si riaprono, stato didattico separato dall’accesso e nessuna cancellazione o migrazione silenziosa.
 

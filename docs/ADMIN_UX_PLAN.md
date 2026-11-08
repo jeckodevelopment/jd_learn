@@ -32,6 +32,6 @@ Il restyling della dashboard è stato integrato nella 0.41.8-dev (PR #68); la CI
 Correzione0.40.1 verificata nella CI standard42397626415: menu filtrato e navigazione nativa, nessuna diagnostica della riproduzione dichiarata disponibile.
 
 
-## Incremento candidato 0.41.9-dev — disponibilità operativa R-03
+## Incremento 0.41.9-dev integrato — disponibilità operativa R-03
 
-Dal roster si apre una schermata operativa del corso con quattro comandi indipendenti: chiusura/apertura ammissioni e sospensione/ripresa erogazione. L’anteprima mostra iscritti e tentativi quiz aperti; motivo, conferma e storico sono richiesti. La guida installabile è [COURSE_OPERATIONS.md](../component/administrator/docs/COURSE_OPERATIONS.md). La CI standard della PR #70 è superata (run 42427891837); il collaudo manuale Joomla resta aperto. Il menu principale non cambia.
+Dal roster si apre una schermata operativa del corso con quattro comandi indipendenti: chiusura/apertura ammissioni e sospensione/ripresa erogazione. L’anteprima mostra iscritti e tentativi quiz aperti; motivo, conferma e storico sono richiesti. La guida installabile è [COURSE_OPERATIONS.md](../component/administrator/docs/COURSE_OPERATIONS.md). La PR #70 è integrata (merge 70f6ed7) e la CI standard è superata (run 42428496835); il collaudo manuale Joomla resta aperto. Il menu principale non cambia.
