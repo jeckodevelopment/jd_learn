@@ -27,7 +27,7 @@ Riferimento: CORE-10; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b-
 3. Verificare che l’URL/destinazione non consenta di cambiare contesto per accedere a campi non autorizzati; usare un ruolo privo del permesso necessario e verificare il diniego.
 4. Tornare al componente tramite la navigazione standard Joomla e verificare che non siano state create voci/campi paralleli nel componente.
 
-**Stato:** da implementare e collaudare. Il collegamento e la destinazione effettiva vanno verificati sul candidato.
+**Stato:** implementato nella candidata 0.41.19-dev; collaudo manuale ancora da eseguire.
 
 ### AC-130 — vista standard per i docenti (in attesa di implementazione)
 

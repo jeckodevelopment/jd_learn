@@ -22,6 +22,8 @@ Per ogni vista amministrativa, prima si individua la vista standard Joomla più 
 - **Docenti:** rifare l’elenco backend seguendo una vista Joomla standard adeguata, ispirata a `com_contacts` o alla gestione articoli. Elenco e form devono essere distinti; riusare toolbar, Search Tools/filtri, ordinamento, paginazione, stati e navigazione core. La gestione docente resta senza categorie docente.
 - **Banca domande:** vista elenco dedicata, separata dal form di creazione/modifica. Usare le convenzioni elenco articoli Joomla e azioni standard per creare, duplicare ed eliminare domande, con conferme e controlli d’accesso. Nessun ampliamento dei tipi di quiz o della valutazione.
 
+**AC-129 implementato nella candidata 0.41.19-dev:** l’elenco Corsi apre `com_fields` per `com_jlms.course` e Programma apre `com_jlms.lesson`; i link sono limitati a `core.manage` su `com_fields`. Restano il collaudo manuale AC-129 e le implementazioni AC-130/131.
+
 Questi punti sono tracciati in AC-129–131 e nella [decisione requisiti RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native). La banca domande è inclusa come eccezione limitata di usabilità: le altre funzionalità quiz restano fase 2.
 
 - Rivedere la schermata iniziale: l’attuale gruppo di pulsanti Corsi/Categorie/Banca domande/Docenti non deve essere l’unico accesso alle funzioni. Rendere evidenti il percorso principale di gestione corsi e le azioni disponibili, con etichette comprensibili e spazi contenuti.

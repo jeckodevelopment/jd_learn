@@ -28,6 +28,7 @@ final class HtmlView extends BaseHtmlView
     public array $videoProviders = [];
     public bool $canConfigureVideo = false;
     public bool $canManagePlugins = false;
+    public bool $canManageFields = false;
     public bool $canMaterials = false;
     public bool $canQuiz = false;
     public string $editorMode = '';
@@ -67,6 +68,7 @@ final class HtmlView extends BaseHtmlView
         }
         $this->canMaterials = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id);
         $this->canQuiz = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . (int) $course->id);
+        $this->canManageFields = $actor->authorise('core.manage', 'com_fields');
         $this->getDocument()->getWebAssetManager()->getRegistry()->addExtensionRegistryFile('com_jlms');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.curriculum');
         if ($this->editable) { $this->getDocument()->getWebAssetManager()->useScript('com_jlms.curriculum'); }

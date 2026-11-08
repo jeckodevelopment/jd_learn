@@ -48,6 +48,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <p><?= Text::_('COM_JLMS_PROGRAMME_INTRO') ?></p>
   <div class="jlms-programme-buttons">
    <?php if ($this->editable) : ?><a class="btn btn-primary" href="<?= $link($view . '&new_module=1') ?>#jlms-module-form"><?= Text::_('COM_JLMS_PROGRAMME_ADD_MODULE') ?></a><?php endif; ?>
+   <?php if ($this->canManageFields) : ?><a class="btn btn-outline-secondary" href="<?= $link('index.php?option=com_fields&view=fields&context=com_jlms.lesson') ?>"><?= Text::_('COM_JLMS_LESSON_FIELDS_MANAGE') ?></a><?php endif; ?>
    <?php if ($version) : ?><a class="btn btn-secondary" href="<?= $link($view . '&edit_rules=1') ?>#jlms-teaching-rules"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></a><?php endif; ?>
    <?php if ($version) : ?><a id="jlms-course-preview-link" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_COURSE_PREVIEW') ?></a><?php endif; ?>
   </div>
