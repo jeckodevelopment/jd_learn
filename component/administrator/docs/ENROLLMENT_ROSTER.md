@@ -24,7 +24,7 @@ Override `html/com_jlms/enrollments/default.php` del template amministrativo. ID
 
 Test su sito effimero: operatori con scope diverso, account studente/anonimo, revoca gruppo e diniego per corso su identità già caricata, totale/pagine native, filtri e input ostili, nomi HTML escapati, nessuna mutazione dello storico e conservazione al reinstall. La CI del candidato R-03 e il collaudo su Joomla reale sono ancora pendenti; questo non equivale a completamento dei requisiti REP-01/02 o ISC-02.
 
-Restano da implementare ricerca per nome, selettori versione/utente ricercabili, risultati quiz/attestati nel riepilogo, dashboard aggregata, export e dettaglio studente. Ammissione singola, stato della singola iscrizione e comandi di corso con motivo/anteprima/audit sono flussi separati, non azioni batch nella tabella. R-03 0.41.9 richiede ancora CI e collaudo su Joomla reale.
+Restano da implementare ricerca per nome, selettori versione/utente ricercabili, risultati quiz/attestati nel riepilogo, dashboard aggregata, export e dettaglio studente. Ammissione singola, stato della singola iscrizione e comandi di corso con motivo/anteprima/audit sono flussi separati, non azioni batch nella tabella. R-03 0.41.9 ha superato la CI standard della PR #70 (run 42427891837); resta il collaudo manuale su Joomla reale.
 
 ## Gestione stato dalla0.18
 

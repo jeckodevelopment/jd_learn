@@ -34,4 +34,4 @@ Correzione0.40.1 verificata nella CI standard42397626415: menu filtrato e naviga
 
 ## Incremento candidato 0.41.9-dev — disponibilità operativa R-03
 
-Dal roster si apre una schermata operativa del corso con quattro comandi indipendenti: chiusura/apertura ammissioni e sospensione/ripresa erogazione. L’anteprima mostra iscritti e tentativi quiz aperti; motivo, conferma e storico sono richiesti. La guida installabile è [COURSE_OPERATIONS.md](../component/administrator/docs/COURSE_OPERATIONS.md). Il candidato è in attesa di CI e collaudo Joomla; il menu principale non cambia.
+Dal roster si apre una schermata operativa del corso con quattro comandi indipendenti: chiusura/apertura ammissioni e sospensione/ripresa erogazione. L’anteprima mostra iscritti e tentativi quiz aperti; motivo, conferma e storico sono richiesti. La guida installabile è [COURSE_OPERATIONS.md](../component/administrator/docs/COURSE_OPERATIONS.md). La CI standard della PR #70 è superata (run 42427891837); il collaudo manuale Joomla resta aperto. Il menu principale non cambia.

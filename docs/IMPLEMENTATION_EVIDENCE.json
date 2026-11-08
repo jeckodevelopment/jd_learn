@@ -1760,9 +1760,15 @@
     "status": "Implementation prepared; pull request, candidate CI, build and package evidence pending",
     "local_build": {
       "package": "dist/pkg_jlms-0.41.9-dev.zip",
-      "sha256": "95a1c1799b2bc991a0f037edc39a5e2edc604c4cf0a73b08e4984eaa8bc25005",
-      "bytes": 457620,
-      "status": "Local reproducible build only; no CI evidence yet"
-    }
+      "sha256": "138cbf3981e15e010e86053812647353cc27748752c6b4c29f043aa3be101391",
+      "bytes": 457707,
+      "status": "Local reproducible build; source behavior passed the full CI standard run 42427891837"
+    },
+    "pull_request": 70,
+    "tested_head": "a4b99baa680d903c35d729d8ecb7fa76afcd339d",
+    "ci_run_id": 42427891837,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42427891837",
+    "ci_status": "all standard jobs passed: PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium controlled fixture, lightweight checks",
+    "manual_joomla_acceptance": "pending"
   }
 }
