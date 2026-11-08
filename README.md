@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.12-dev (candidato in revisione)**. Estende il preflight ai materiali che il validatore server rifiuterebbe; la CI del candidato è da completare e il collaudo manuale Joomla resta aperto.
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.12-dev**. PR #80 integrata: il preflight evidenzia i materiali che il validatore server rifiuterebbe. CI standard superata nel run [42463087211](https://github.com/jeckodevelopment/jd_learn/actions/runs/42463087211); il collaudo manuale Joomla resta aperto.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
