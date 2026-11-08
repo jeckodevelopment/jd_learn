@@ -10,7 +10,7 @@
 
 - Mostra nella bozza del programma gli errori strutturali bloccanti separati dagli avvisi facoltativi su riepilogo e copertina.
 - Mantiene la verifica definitiva in `PublicationService`; il controllo preliminare non carica i corpi delle lezioni né contatta provider.
-- Aggiunge test unitari e regressioni HTTP per il passaggio da modulo vuoto a lezione obbligatoria; CI e collaudo Joomla reale da completare.
+- Aggiunge test unitari e regressioni HTTP per il passaggio da modulo vuoto a lezione obbligatoria; PR #74 integrata nel merge [c023fc4](https://github.com/jeckodevelopment/jd_learn/commit/c023fc4ed29f3d643414cd5afc83b3ad42615dba); CI standard superata su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri (run [42439350519](https://github.com/jeckodevelopment/jd_learn/actions/runs/42439350519)). Collaudo manuale Joomla ancora aperto. Pacchetto verificato: SHA-256 `4d95e9627ddd6db338961da374e35721262e95356c817d46940e5b6ddc469ab3`.
 
 
 ## 0.41.8-dev — ingresso amministrativo più chiaro
