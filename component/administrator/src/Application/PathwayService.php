@@ -89,6 +89,7 @@ final class PathwayService
                 ->whereIn('c.id', $courseIds);
             $visibleCourses = $this->db->setQuery($catalogQuery, 0, 100)->loadObjectList('id');
 
+            $pathwayOwnerId = (int) $actor->id;
             $enrollmentQuery = $this->db->createQuery()
                 ->select('e.id, e.course_id, e.status, e.required_total, e.completed_total, e.completed_at, e.started_at, e.last_activity_at, e.starts_at, e.ends_at, v.status AS version_status, v.rules_json, ed.status AS edition_status, ed.starts_at AS edition_starts_at, ed.ends_at AS edition_ends_at')
                 ->from($this->db->quoteName('#__jlms_enrollments', 'e'))
@@ -97,7 +98,7 @@ final class PathwayService
                 ->where('e.user_id = :pathwayOwner')
                 ->whereIn('e.course_id', $courseIds)
                 ->order('e.last_activity_at DESC, e.id DESC')
-                ->bind(':pathwayOwner', (int) $actor->id, ParameterType::INTEGER);
+                ->bind(':pathwayOwner', $pathwayOwnerId, ParameterType::INTEGER);
 
             foreach ($this->db->setQuery($enrollmentQuery, 0, 1000)->loadObjectList() as $enrollment) {
                 $courseId = (int) $enrollment->course_id;

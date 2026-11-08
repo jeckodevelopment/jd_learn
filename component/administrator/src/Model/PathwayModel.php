@@ -31,8 +31,9 @@ final class PathwayModel extends AdminModel
     {
         $item = parent::getItem($pk);
         if ($item && !empty($item->id)) {
+            $pathwayId = (int) $item->id;
             $query = $this->getDatabase()->createQuery()->select('course_id, ordering')->from('#__jlms_pathway_courses')
-                ->where('pathway_id = :pathway')->bind(':pathway', (int) $item->id, ParameterType::INTEGER)->order('ordering, course_id');
+                ->where('pathway_id = :pathway')->bind(':pathway', $pathwayId, ParameterType::INTEGER)->order('ordering, course_id');
             $item->courses = $this->getDatabase()->setQuery($query, 0, 100)->loadAssocList();
         } else {
             $item->courses = [];
@@ -179,8 +180,9 @@ final class PathwayModel extends AdminModel
             }
             $pathwayId = (int) $table->id;
 
+            $deletePathwayId = $pathwayId;
             $db->setQuery($db->createQuery()->delete('#__jlms_pathway_courses')
-                ->where('pathway_id = :pathway')->bind(':pathway', $pathwayId, ParameterType::INTEGER))->execute();
+                ->where('pathway_id = :pathway')->bind(':pathway', $deletePathwayId, ParameterType::INTEGER))->execute();
             foreach ($courses as $ordering => $courseId) {
                 $db->setQuery($db->createQuery()->insert('#__jlms_pathway_courses')
                     ->columns(['pathway_id', 'course_id', 'ordering'])

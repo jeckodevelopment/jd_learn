@@ -40,24 +40,27 @@ final class PathwayTable extends Table
         }
 
         $db = $this->getDatabase();
+        $categoryId = (int) $this->catid;
         $category = $db->createQuery()->select('id')->from('#__categories')
             ->where("extension='com_jlms.pathway' AND published <> -2")
-            ->where('id = :category')->bind(':category', (int) $this->catid, ParameterType::INTEGER);
+            ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
         if (!$db->setQuery($category)->loadResult()) {
             $this->setError('COM_JLMS_PATHWAY_INVALID');
             return false;
         }
 
+        $accessId = (int) $this->access;
         $access = $db->createQuery()->select('id')->from('#__viewlevels')
-            ->where('id = :access')->bind(':access', (int) $this->access, ParameterType::INTEGER);
+            ->where('id = :access')->bind(':access', $accessId, ParameterType::INTEGER);
         if (!$db->setQuery($access)->loadResult()) {
             $this->setError('COM_JLMS_INVALID_ACCESS');
             return false;
         }
 
         if ($this->language !== '*') {
+            $languageCode = $this->language;
             $language = $db->createQuery()->select('lang_id')->from('#__languages')
-                ->where('lang_code = :language')->bind(':language', $this->language);
+                ->where('lang_code = :language')->bind(':language', $languageCode);
             if (!$db->setQuery($language)->loadResult()) {
                 $this->setError('COM_JLMS_PATHWAY_INVALID');
                 return false;
@@ -130,8 +133,9 @@ final class PathwayTable extends Table
 
     protected function _getAssetParentId(?Table $table = null, $id = null)
     {
+        $categoryId = (int) $this->catid;
         $query = $this->getDatabase()->createQuery()->select('asset_id')->from('#__categories')
-            ->where('id = :category')->bind(':category', (int) $this->catid, ParameterType::INTEGER);
+            ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
         return (int) $this->getDatabase()->setQuery($query)->loadResult() ?: parent::_getAssetParentId($table, $id);
     }
 }
