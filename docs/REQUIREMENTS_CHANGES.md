@@ -1,5 +1,13 @@
 # Registro delle modifiche ai requisiti
 
+## RF-2026-11-08 — lifecycle Privacy e provider video della prima release
+
+**Origine e autorizzazione:** il committente richiede l'integrazione con le funzionalità restanti verso la prima release e specifica che lo sviluppo/verifica di ulteriori plugin di streaming, incluso il quinto provider di prova, è rinviato alla fase 2. Prima release: verificare i quattro adapter già distribuiti (YouTube, Vimeo, Cloudflare Stream e HTML5) su Joomla e browser reali.
+
+**Decisioni recepite:** avvio del plugin Joomla `com_privacy` per dichiarazione capacità, export e lifecycle di rimozione minimizzata. Le evidenze didattiche utili restano anonime/scollegate; risposte testuali e sessioni temporanee vengono eliminate; documenti identificativi o job pendenti bloccano la rimozione finché il sito non li gestisce secondo la propria policy. Non si inventano tempi di conservazione e non si dichiara il purge dei backup. L'estensione del registry provider introdotta dalla PR #90 resta nel codice, ma prova con un quinto plugin e ulteriori provider non sono gate della prima versione stabile.
+
+**Tracciabilità:** CORE-08, LIFE-09 e PRI-02 passano a implementazione in corso; accettazione completa solo dopo CI, test nativi `com_privacy` e policy/controlli Joomla del sito. La matrice di release limita la verifica video ai quattro adapter inclusi.
+
 ## RF-2026-11-04 — aggiornamento dei corsi e profili docente
 
 **Origine e autorizzazione:** richiesta esplicita del committente del4novembre2026: completare M01, semplificare la modifica dei corsi pubblicati come nell’editor articoli Joomla, usare il versioning nativo, aggiornare lezioni/materiali, associare corso e docente senza gestione di categorie docente, usare campi Joomla per il profilo e consentire pagine/elenco corsi tramite menu.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="package" method="upgrade">
- <name>JD Learn</name><packagename>jlms</packagename><author>Jecko Development</author><version>0.41.15</version>
+ <name>JD Learn</name><packagename>jlms</packagename><author>Jecko Development</author><version>0.41.16</version>
  <description>JD Learn — development foundation</description><blockChildUninstall>true</blockChildUninstall>
  <files folder="constituents">
   <file type="library" id="jlms">lib_jlms.zip</file>
@@ -9,6 +9,7 @@
   <file type="plugin" id="vimeo" group="jlmsvideo">plg_jlmsvideo_vimeo.zip</file>
   <file type="plugin" id="cloudflarestream" group="jlmsvideo">plg_jlmsvideo_cloudflarestream.zip</file>
   <file type="plugin" id="html5" group="jlmsvideo">plg_jlmsvideo_html5.zip</file>
+  <file type="plugin" id="jdlearn" group="privacy">plg_privacy_jdlearn.zip</file>
   <file type="plugin" id="jlms" group="task">plg_task_jlms.zip</file>
  </files>
 </extension>

@@ -12,7 +12,7 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
+    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='privacy' AND element='jdlearn'))");
     unset($fixtureDb);
 }
 
@@ -68,6 +68,11 @@ try {
     $ok = $installer->install($package['extractdir']);
     if (!$ok) {
         throw new \RuntimeException('Native package installation failed: ' . json_encode($app->getMessageQueue(),JSON_THROW_ON_ERROR));
+    }
+    $db->setQuery("UPDATE #__extensions SET enabled=1 WHERE type='plugin' AND folder='privacy' AND element='jdlearn'")->execute();
+    $privacyPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='privacy' AND element='jdlearn'")->loadResult();
+    if ($privacyPlugin === null || (int) $privacyPlugin !== 1) {
+        throw new \RuntimeException('JD Learn privacy plugin was not installed and enabled by the package fixture.');
     }
     echo json_encode(['package_install'=>'passed','messages'=>$app->getMessageQueue()],JSON_THROW_ON_ERROR).PHP_EOL;
 } finally {

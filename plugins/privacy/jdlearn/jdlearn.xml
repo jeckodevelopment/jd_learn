@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="privacy" method="upgrade">
+ <name>PLG_PRIVACY_JDLEARN</name><author>Jecko Development</author><version>0.1.0</version>
+ <description>PLG_PRIVACY_JDLEARN_DESCRIPTION</description><namespace path="src">Jlms\Plugin\Privacy\Jdlearn</namespace>
+ <files><folder plugin="jdlearn">services</folder><folder>src</folder><folder>language</folder><folder>docs</folder></files>
+ <languages>
+  <language tag="it-IT">language/it-IT/plg_privacy_jdlearn.ini</language><language tag="it-IT">language/it-IT/plg_privacy_jdlearn.sys.ini</language>
+  <language tag="en-GB">language/en-GB/plg_privacy_jdlearn.ini</language><language tag="en-GB">language/en-GB/plg_privacy_jdlearn.sys.ini</language>
+ </languages>
+</extension>

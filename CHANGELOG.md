@@ -6,6 +6,13 @@
 
 # Changelog
 
+## 0.41.16-dev — lifecycle Privacy Joomla
+
+- Aggiunge al pacchetto `plg_privacy_jdlearn`, con dichiarazione delle capacità e domini export per iscrizioni/richieste, progressi, tentativi/risposte e attestati eventualmente emessi.
+- Il controllo nativo impedisce la rimozione finché esistono documenti attestato identificativi, job dell'account o notifiche legate alle iscrizioni. Alla rimozione elimina sessioni temporanee, scollega l'account, cancella risposte e motivi testuali e anonimizza i riferimenti utente negli audit, conservando lo storico didattico minimizzato.
+- La CI include verifiche su installazione del plugin, dichiarazione capabilities, export e impedimento motivato per job attivi. Da completare la prova su dati personali reali e la policy di conservazione del sito.
+- I test end-to-end di un quinto provider video e lo sviluppo di ulteriori provider sono stati differiti alla fase 2; la prima stabile richiede la verifica dei quattro provider già distribuiti.
+
 ## 0.41.15-dev — provider video estendibili senza patch al componente
 
 - Rimuove i blocchi a elenco fisso nel salvataggio durata, pubblicazione e fruizione dei video: i provider aggiuntivi passano dal registry comune e dalle capacità dichiarate.

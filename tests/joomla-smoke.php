@@ -12,7 +12,7 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
+    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='privacy' AND element='jdlearn'))");
     unset($fixtureDb);
 }
 
@@ -40,6 +40,12 @@ use Joomla\Session\SessionInterface;
 use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Event\Privacy\CollectCapabilitiesEvent;
+use Joomla\CMS\Event\Privacy\CanRemoveDataEvent;
+use Joomla\CMS\Event\Privacy\ExportRequestEvent;
+use Joomla\CMS\Event\Privacy\RemoveDataEvent;
+use Joomla\Component\Privacy\Administrator\Table\RequestTable;
+use Joomla\CMS\Language\Text;
 use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
 use Jlms\Contracts\Video\VideoProviderRegistry;
 
@@ -65,6 +71,75 @@ if (!$userId) {
     throw new \RuntimeException('Test Joomla operator missing.');
 }
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($userId));
+
+// The package must install and activate JD Learn's native Joomla Privacy event subscriber.
+PluginHelper::importPlugin('privacy');
+$privacyCapabilities = new CollectCapabilitiesEvent('onPrivacyCollectAdminCapabilities');
+$app->getDispatcher()->dispatch('onPrivacyCollectAdminCapabilities', $privacyCapabilities);
+$privacyData = $privacyCapabilities->getArgument('result', []);
+$privacyTitle = Text::_('PLG_PRIVACY_JDLEARN_CAPABILITY_TITLE');
+$hasPrivacyCapabilities = false;
+foreach ($privacyData as $capabilitySet) {
+    if (is_array($capabilitySet) && array_key_exists($privacyTitle, $capabilitySet)) {
+        $hasPrivacyCapabilities = true;
+        break;
+    }
+}
+if (!$hasPrivacyCapabilities) {
+    throw new \RuntimeException('JD Learn privacy capabilities were not collected by Joomla.');
+}
+$privacyRequest = new RequestTable($db);
+$privacyExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $app->getIdentity()]);
+$app->getDispatcher()->dispatch('onPrivacyExportRequest', $privacyExport);
+$privacyExportData = $privacyExport->getArgument('result', []);
+$privacyDomainNames = [];
+foreach ($privacyExportData as $contribution) {
+    if (!is_array($contribution)) {
+        continue;
+    }
+
+    foreach ($contribution as $domain) {
+        if ($domain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain && str_starts_with($domain->name, 'jdlearn_')) {
+            $privacyDomainNames[] = $domain->name;
+        }
+    }
+}
+sort($privacyDomainNames);
+$expectedPrivacyDomainNames = ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates', 'jdlearn_enrollments', 'jdlearn_enrollment_requests', 'jdlearn_progress'];
+sort($expectedPrivacyDomainNames);
+if ($privacyDomainNames !== $expectedPrivacyDomainNames) {
+    throw new \RuntimeException('JD Learn privacy export domains missing: ' . implode(', ', $privacyDomainNames));
+}
+$privacyPlugin = new \Jlms\Plugin\Privacy\Jdlearn\Extension\Jdlearn((array) PluginHelper::getPlugin('privacy', 'jdlearn'));
+$privacyPlugin->setApplication($app);
+$privacyPlugin->setDatabase($db);
+$privacyUserId = (int) $db->setQuery("SELECT id FROM #__users WHERE username='ciprivacyclean'")->loadResult();
+if (!$privacyUserId) {
+    $privacyUser = new \Joomla\CMS\User\User();
+    $privacyUserData = ['name' => 'CI Privacy Clean User', 'username' => 'ciprivacyclean', 'email' => 'ciprivacyclean@example.invalid', 'password' => 'Ci-only-Privacy-Password-2026', 'password2' => 'Ci-only-Privacy-Password-2026', 'groups' => [2], 'block' => 0, 'activation' => ''];
+    if (!$privacyUser->bind($privacyUserData) || !$privacyUser->save()) {
+        throw new \RuntimeException('Could not create isolated clean privacy user: ' . $privacyUser->getError());
+    }
+    $privacyUserId = (int) $privacyUser->id;
+}
+$privacyUser = new \Joomla\CMS\User\User($privacyUserId);
+$db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_user_id=" . $privacyUserId)->execute();
+$privacyCheck = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyPlugin->onPrivacyCanRemoveData($privacyCheck);
+$privacyCheckData = $privacyCheck->getArgument('result', []);
+if (count($privacyCheckData) !== 1 || !$privacyCheckData[0]->canRemove) {
+    throw new \RuntimeException('JD Learn privacy plugin blocked removal for a user without JD Learn data.');
+}
+$db->setQuery("INSERT INTO #__jlms_jobs (kind, owner_user_id, scope_json, payload_json, status, available_at, created_at) VALUES ('privacy-fixture', " . $privacyUserId . ", '{}', '{}', 'complete', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))")->execute();
+$privacyBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyPlugin->onPrivacyCanRemoveData($privacyBlocked);
+$privacyBlockedData = $privacyBlocked->getArgument('result', []);
+$db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_user_id=" . $privacyUserId)->execute();
+if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$privacyBlockedData[0]->reason) {
+    throw new \RuntimeException('JD Learn privacy plugin did not explain the removal blocker for an owned job.');
+}
+$privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyPlugin->onPrivacyRemoveData($privacyRemoval);
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 if (($argv[2] ?? '') === 'retained') {
