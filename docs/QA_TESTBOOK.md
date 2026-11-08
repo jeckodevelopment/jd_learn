@@ -43,6 +43,18 @@ PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattiv
 
 **Stato:** i quattro job standard della CI sono superati sul commit PR `8b962c62f3af95100c1da7b1794297df66452d78`, incluso il test install-package senza preattivazione e lo smoke test delle stringhe. Il pacchetto installabile è [artefatto CI 13626378474](https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474), SHA-256 interno `40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7`. Collaudo manuale Joomla ancora da registrare.
 
+### Issue #99 — accesso centralizzato ai campi aggiuntivi
+
+Riferimento: CORE-10 / AC-129 e [issue #99](https://github.com/jeckodevelopment/jd_learn/issues/99). Usare un Joomla 6 di prova con un ruolo che abbia `core.manage` su `com_fields`, e un ruolo di confronto senza tale permesso. La correzione non crea campi o gruppi: verifica solo navigazione e filtro dei contesti nativi.
+
+1. Aprire JD Learn → **Campi aggiuntivi** nella sidebar. Atteso: si apre la lista nativa di Joomla `com_fields`, inizialmente nel contesto corsi.
+2. Usare il filtro contesto della lista e scegliere in sequenza Corsi, Docenti e Lezioni. Atteso: il contesto selezionato resta quello della rispettiva entità JD Learn e la lista mostra solo i campi di quel contesto.
+3. Tornare a Corsi e Docenti. Atteso: le liste non mostrano più i link ai campi aggiuntivi né elementi inseriti fuori dalla toolbar; ricerca, filtri e azioni esistenti restano disponibili.
+4. Aprire Programma e verificare che il collegamento contestuale ai campi delle lezioni continui a portare alla lista nativa nel contesto lezioni.
+5. Con il ruolo privo di `core.manage` su `com_fields`, provare la voce sidebar e l'URL diretto. Atteso: Joomla nega la gestione dei campi; non si ottiene accesso cambiando il contesto nell'URL.
+
+**Stato:** implementazione candidata 0.41.22-dev; CI e collaudo Joomla manuale da eseguire.
+
 ### AC-129 — accesso ai campi aggiuntivi di corsi e lezioni (in attesa di implementazione)
 
 Riferimento: CORE-10; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native).

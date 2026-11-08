@@ -17,9 +17,6 @@ $actor = Factory::getApplication()->getIdentity();
  <div id="j-main-container" class="j-main-container">
   <section id="jlms-admin-courses" aria-label="<?= Text::_('COM_JLMS_COURSES') ?>">
    <?= LayoutHelper::render('joomla.searchtools.default', ['view'=>$this]) ?>
-   <?php if ($actor->authorise('core.manage', 'com_fields')) : ?>
-    <p class="mb-3"><a class="btn btn-outline-secondary" href="<?= Route::_('index.php?option=com_fields&view=fields&context=com_jlms.course') ?>"><?= Text::_('COM_JLMS_COURSE_FIELDS_MANAGE') ?></a></p>
-   <?php endif; ?>
    <?php if (!$this->items) : ?>
     <p id="jlms-courses-empty" class="alert alert-info"><?= Text::_('JGLOBAL_NO_MATCHING_RESULTS') ?></p>
    <?php else : ?>

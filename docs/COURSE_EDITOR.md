@@ -91,13 +91,13 @@ Il form video usa Rileva automaticamente: SDK/anteprima per YouTube e Vimeo, API
 
 ## Accesso amministrativo (0.40)
 
-Aprire JD Learn porta direttamente all’elenco corsi. Nella sidebar nativa Joomla sono disponibili Corsi, Categorie corsi, Banca domande, Docenti e Plugin video. Programma, materiali e iscritti si aprono dal corso selezionato. Le categorie sono dei corsi; non occorre una categoria per il docente. La sidebar e i percorsi mantengono i controlli dei permessi Joomla.
+Aprire JD Learn porta direttamente all’elenco corsi. Nella sidebar nativa Joomla sono disponibili Corsi, Categorie corsi, Banca domande, Docenti, Campi aggiuntivi e Plugin video. Programma, materiali e iscritti si aprono dal corso selezionato. Le categorie sono dei corsi; non occorre una categoria per il docente. La sidebar e i percorsi mantengono i controlli dei permessi Joomla.
 
 La voce Plugin video apre la gestione nativa Joomla filtrata sul gruppo `jlmsvideo`, con ricerca, stato, accesso e singolo plugin azzerati per vedere tutti i provider installati, anche disattivati. Da qui si abilitano/disabilitano e configurano i plugin secondo i permessi di `com_plugins`. Non è una verifica della riproduzione; nessun accesso ai plugin è concesso dal solo permesso di gestire corsi.
 
 ## Campi nella scheda pubblica del corso (0.41)
 
-La vista dei campi corso (`com_jlms.course`) è raggiungibile dal pulsante **Gestisci campi aggiuntivi dei corsi** nell’elenco Corsi. Il collegamento apre il gestore Joomla `com_fields` sul contesto corso e viene mostrato solo agli operatori autorizzati a gestire `com_fields`.
+La vista dei campi corso (`com_jlms.course`) è raggiungibile da JD Learn → **Campi aggiuntivi** nella sidebar e dal filtro contesto nativo di Joomla.
 
 I campi correnti del contesto `com_jlms.course` sono preparati dai plugin di tipo Joomla e resi con i layout nativi. La posizione automatica si configura nel campo: dopo il titolo, prima della presentazione o dopo la presentazione. Con visualizzazione automatica disattivata il campo non compare; valori vuoti non generano etichette o contenitori vuoti. Sono applicati pubblicazione, categoria, lingua e accesso di campo e gruppo, oltre all’accesso corrente al corso. La sola visibilità del corso non rende pubblici campi riservati.
 
