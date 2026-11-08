@@ -98,4 +98,4 @@ L'issue [#99](https://github.com/jeckodevelopment/jd_learn/issues/99) precisa la
 
 ### Avanzamento AC-130 — vista amministrativa docenti
 
-La candidata 0.41.26-dev riorganizza l’elenco docenti secondo il pattern Search Tools Joomla: ricerca per titolo/ID, filtri stato e lingua, ordinamento, paginazione, colonne di stato/metadati e collegamento al form distinto. Non mostra categorie e non modifica dati, associazioni o regole ACL. Il collaudo manuale aggiornato è nel [testbook AC-130](QA_TESTBOOK.md#ac-130--vista-standard-per-i-docenti-candidata-04126-dev-collaudo-joomla-pendente).
+La PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116), integrata in 0.41.26-dev, riorganizza l’elenco docenti secondo il pattern Search Tools Joomla: ricerca per titolo/ID, filtri stato e lingua, ordinamento, paginazione, colonne di stato/metadati e collegamento al form distinto. Non mostra categorie e non modifica dati, associazioni o regole ACL. Il collaudo manuale aggiornato è nel [testbook AC-130](QA_TESTBOOK.md#ac-130--vista-standard-per-i-docenti-candidata-04126-dev-collaudo-joomla-pendente).
