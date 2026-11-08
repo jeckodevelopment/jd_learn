@@ -96,7 +96,6 @@ final class PathwayTable extends Table
         $this->modified_at = $now;
         $this->modified_by = $actor;
 
-        $asset = new \Joomla\CMS\Table\Asset($this->getDatabase());
         $tracking = $this->_trackAssets;
         if ($stable || $prepared) {
             $this->_trackAssets = false;
