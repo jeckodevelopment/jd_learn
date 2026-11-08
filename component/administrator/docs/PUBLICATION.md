@@ -35,7 +35,7 @@ POST HTML interno `curriculum.transition`, con token Joomla, `jform[course_id]`,
 
 Il servizio autorizza e valida parent, revisioni e check-out; acquisisce lock corso → versione. Limiti:1000moduli,5000lezioni, corpo testo massimo1MiB letto in lotti di16. Congela titolo, presentazione, regole, struttura e hash dei contenuti; crea una sola edizione default. Versione, puntatore corrente, edizione, associazione e stato workflow cambiano nella stessa transazione. Veto/errori ripristinano i dati. Nessun bypass del plugin Publishing o modifica delle versioni pubblicate.
 
-Ritiro e ripubblicazione della versione corrente non ricreano edizioni né hash/timestamp. Il ritiro attuale può bloccare anche la fruizione: chiusura nuove iscrizioni e sospensione erogazione restano da separare (R-03). Gli eventi di terze parti devono evitare effetti esterni non transazionali.
+Ritiro e ripubblicazione della versione corrente non ricreano edizioni né hash/timestamp. Il ritiro dal catalogo resta distinto dai comandi R-03 integrati nella 0.41.9: chiusura ammissioni e sospensione erogazione sono leve indipendenti, ciascuna con motivo e audit. Gli eventi di terze parti devono evitare effetti esterni non transazionali.
 
 ## Catalogo e verifiche
 

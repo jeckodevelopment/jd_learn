@@ -1748,7 +1748,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "R-03 candidate prepared; pull request and CI pending; no candidate package evidence yet",
+  "candidate_status": "0.41.9-dev integrata in main con PR #70; CI standard e build candidate verificati; collaudo manuale Joomla ancora aperto",
   "previous_verified_release": {
     "version": "0.41.8-dev",
     "package": "pkg_jlms-0.41.8-dev.zip",
@@ -1757,18 +1757,20 @@
   "candidate_increment": {
     "version": "0.41.9-dev",
     "scope": "R-03 course admissions and delivery controls",
-    "status": "Implementation prepared; pull request, candidate CI, build and package evidence pending",
+    "status": "Integrated in main by PR #70 (merge commit 70f6ed7f2a1f4386b943bcb834f57e8d31cf935f); standard CI passed; manual Joomla acceptance pending",
     "local_build": {
       "package": "dist/pkg_jlms-0.41.9-dev.zip",
-      "sha256": "138cbf3981e15e010e86053812647353cc27748752c6b4c29f043aa3be101391",
-      "bytes": 457707,
-      "status": "Local reproducible build; source behavior passed the full CI standard run 42427891837"
+      "sha256": "9ca51259061ec966f6a263f123edb1a3b154b93ad26f1781b587167049b74454",
+      "bytes": 457812,
+      "status": "Reproducible local build with SHA-256 recorded below; final source behavior passed standard CI run 42428496835"
     },
     "pull_request": 70,
-    "tested_head": "a4b99baa680d903c35d729d8ecb7fa76afcd339d",
-    "ci_run_id": 42427891837,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42427891837",
-    "ci_status": "all standard jobs passed: PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium controlled fixture, lightweight checks",
-    "manual_joomla_acceptance": "pending"
+    "tested_head": "96ae89918babf05156e2b36361d1335f80dc0986",
+    "ci_run_id": 42428496835,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835",
+    "ci_status": "all four standard jobs passed on final PR head: PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium controlled fixture, lightweight checks",
+    "manual_joomla_acceptance": "pending",
+    "merged_commit": "70f6ed7f2a1f4386b943bcb834f57e8d31cf935f",
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/70"
   }
 }
