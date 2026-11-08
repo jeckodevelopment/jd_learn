@@ -67,3 +67,7 @@ La PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120) è integrata
 ### AC-133 — conteggio corsi e filtro docente (issue #117)
 
 La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122), integrata in 0.41.28-dev, aggiunge alla lista Docenti il conteggio dei corsi assegnati che l’utente backend può gestire; il numero apre la lista Corsi già filtrata per quel docente. La lista Corsi espone il filtro Docente con profili assegnati a corsi nel perimetro gestibile, rispettando visibilità/ACL dei profili. La toolbar traduce l’etichetta Docenti anche nel titolo della pagina. Non cambia le associazioni o i permessi. Collaudo manuale: [testbook AC-133](QA_TESTBOOK.md#ac-133--conteggio-corsi-e-filtro-docente-issue-117).
+
+### AC-134 — traduzioni Opzioni componente (issue #115)
+
+La candidata 0.41.29-dev sostituisce il titolo del fieldset Joomla non disponibile con una label JD Learn localizzata in italiano e inglese e definisce la chiave letterale usata da `com_config` per il titolo della pagina Opzioni. I risultati attesi sono “Opzioni cronologia versioni” e “JD Learn: Opzioni” in italiano, “Version History Options” e “JD Learn: Options” in inglese. Non cambia impostazioni o valori. Collaudo manuale: [testbook AC-134](QA_TESTBOOK.md#ac-134--traduzioni-della-pagina-opzioni-issue-115).

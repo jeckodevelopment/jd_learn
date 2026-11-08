@@ -71,6 +71,13 @@ try:
  if not form:raise RuntimeError('Native Joomla admin login form was not found')
  fields=form['fields'];fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
  with http.open(urljoin(urljoin(url,page.base or ''),form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
+ options_url,options_html=get('/administrator/index.php?option=com_config&view=component&component=com_jlms')
+ options_title=re.search(r'<title>(.*?)</title>',options_html,re.S)
+ if not options_title or 'JD Learn: Options' not in unescape(options_title.group(1)) or 'com_jlms_configuration' in options_html:
+  raise RuntimeError('JD Learn component options must have the translated browser title')
+ if 'JGLOBAL_HISTORY_OPTIONS' in options_html or options_html.count('Version History Options')<2:
+  raise RuntimeError('Component history tab and group must use the translated label')
+ print(json.dumps({'component_options_translation_http_checks':2,'status':'passed'}))
  url,html=get('/administrator/index.php?option=com_jlms')
  if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('JD Learn must open the administrator dashboard directly')
  menu_links=[parse_qs(urlparse(x).query) for x in Page(html).links]

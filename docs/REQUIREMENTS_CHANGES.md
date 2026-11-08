@@ -113,3 +113,9 @@ La PR [#120](https://github.com/jeckodevelopment/jd_learn/pull/120), integrata i
 **Criteri / scenario AC-133 (AUT-01, SCR-13):** la lista Docenti mostra, per ogni profilo, quanti corsi assegnati sono compresi nell’ambito che l’utente corrente può gestire. Il conteggio è un collegamento alla lista Corsi filtrata per quel docente. La lista Corsi offre anche il filtro Docente; ricerca e gli altri filtri Joomla devono poter coesistere. L’intestazione del backend e il titolo del browser mostrano l’etichetta tradotta invece della chiave `COM_JLMS_TEACHERS`. Conteggio e destinazione rispettano lo stesso ambito ACL della lista Corsi e non modificano assegnazioni o autorizzazioni.
 
 La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122) integra AC-133 in 0.41.28-dev. Tutti i quattro job CI standard sono superati nel [run 42531222588](https://github.com/jeckodevelopment/jd_learn/actions/runs/42531222588); il testbook descrive la prova manuale, ancora pendente.
+
+## RF-2026-11-08-F — traduzioni della pagina Opzioni
+
+**Origine:** issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115), che segnala la chiave grezza `JGLOBAL_HISTORY_OPTIONS` in due punti della pagina e il titolo browser non tradotto `com_jlms_configuration`.
+
+**Scenario aggiuntivo AC-134 (CORE-20):** in Opzioni del componente JD Learn, il titolo browser e l’intestazione devono tradursi in **JD Learn: Opzioni** (IT) e **JD Learn: Options** (EN). L’etichetta del gruppo Cronologia versioni, sia nella scheda sia nel gruppo, deve essere tradotta in entrambe le lingue. Nessuna impostazione, valore o convenzione di navigazione cambia. Il testbook contiene i passaggi IT/EN. Lo scenario è un addendum di accettazione e non modifica gli ID della matrice baseline.

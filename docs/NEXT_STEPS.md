@@ -4,7 +4,7 @@ Aggiornato all’**8 novembre 2026**. Main **0.41.28-dev** include la correzione
 
 ## Priorità per la prima versione stabile
 
-Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Le richieste nuove sono registrate in [REQUIREMENTS_CHANGES.md](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native) e negli scenari AC-129–131. La gestione amministrativa minima AC-131 è l’eccezione esplicita alla sospensione delle nuove funzionalità quiz; i criteri didattici rimanenti di fase 2 non sono gate della prima stabile.
+Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Le richieste nuove sono registrate in [REQUIREMENTS_CHANGES.md](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native) e negli scenari AC-129–134. La gestione amministrativa minima AC-131 è l’eccezione esplicita alla sospensione delle nuove funzionalità quiz; i criteri didattici rimanenti di fase 2 non sono gate della prima stabile.
 
 | Ordine | Attività | Risultato richiesto |
 |---|---|---|
@@ -12,7 +12,7 @@ Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md
 | 2 | Provider video e materiali essenziali (M04) | YouTube, Vimeo, Cloudflare Stream e media locali previsti funzionano nella lezione con consenso, accesso e progressi corretti; collaudo su browser e account reali. |
 | 3 | Fruizione e progressi core (M03/M09) | Lezioni testo/video, regole supportate, aula, catalogo, ripresa e progressi persistenti; non rendere i quiz prerequisito di pubblicazione o completamento quando il corso non li usa. |
 | 4 | Iscrizione singola e roster essenziale (M06/M09, sottoinsieme) | Accesso e iscrizione singola, sospensione/riattivazione e roster per corso con stato, avanzamento e date; ACL e storico conservati. Nessun KPI/export necessario in questa fase. |
-| 5 | Qualità amministrativa e integrazioni Joomla | Collaudare accesso centralizzato ai campi (issue #99/AC-129) e Privacy 0.41.21: installazione pulita, traduzioni IT/EN e upgrade che preserva la preferenza (CI Privacy superata). Restano i collaudi manuali AC-130, AC-131 e AC-133 (ora integrato dalla PR #122 in 0.41.28-dev), e le verifiche Privacy/campi. Nessun ampliamento quiz ulteriore. |
+| 5 | Qualità amministrativa e integrazioni Joomla | Collaudare accesso centralizzato ai campi (issue #99/AC-129) e Privacy 0.41.21: installazione pulita, traduzioni IT/EN e upgrade che preserva la preferenza (CI Privacy superata). Restano i collaudi manuali AC-130, AC-131, AC-133 e AC-134, integrato come correzione traduzioni in candidata 0.41.29-dev, e le verifiche Privacy/campi. Nessun ampliamento quiz ulteriore. |
 | 6 | Accettazione della release (M10–M12) | Installazione/upgrade, sicurezza, accessibilità, browser/provider, conservazione dati e guide per il perimetro core. Eseguire la matrice estesa al candidato stabile, non a ogni commit preparatorio. |
 
 ### Funzionalità congelate per la fase 2
@@ -23,7 +23,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-La PR #116 ha integrato AC-130 in 0.41.26-dev per la lista docenti secondo le convenzioni Joomla; il collaudo manuale resta da registrare. La PR #120 integra AC-131 in 0.41.27-dev: elenco separato per la banca domande; CI completa superata, collaudo Joomla pendente. La PR #122 integra issue #117 / AC-133 in 0.41.28-dev: conteggio/link corsi docenti, filtro docente e traduzione titolo. Non avviare altri ampliamenti quiz.
+La PR #116 ha integrato AC-130 in 0.41.26-dev per la lista docenti secondo le convenzioni Joomla; il collaudo manuale resta da registrare. La PR #120 integra AC-131 in 0.41.27-dev: elenco separato per la banca domande; CI completa superata, collaudo Joomla pendente. La PR #122 integra issue #117 / AC-133 in 0.41.28-dev: conteggio/link corsi docenti, filtro docente e traduzione titolo. La candidata 0.41.29-dev corregge issue #115 / AC-134: chiave cronologia e titolo della pagina Opzioni. Non avviare altri ampliamenti quiz.
 
 Main 0.41.28 include la dashboard e le correzioni (PR #108/#110/#112, issue #105/AC-132, CI completa superata) e i percorsi aggregati (PR #93), AC-130 lista docenti (PR #116, CI standard superata) e la ricerca roster (PR #94, deviazione non approvata), i link ai campi (PR #98), la correzione Privacy (PR #102) e issue #99 (PR #104, CI completa superata). La regressione install-package verifica lo stato nativo senza preattivare il plugin; lo smoke test verifica le stringhe tradotte. I lavori backend dell'8 novembre sono tracciati in [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native), AC-129–133. Privacy resta un fix di accettazione di PRI-02/CORE-08, non una nuova funzionalità.
 
