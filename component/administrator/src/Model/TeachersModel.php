@@ -47,10 +47,10 @@ final class TeachersModel extends ListModel
         $fresh = new \Joomla\CMS\User\User((int) $this->getCurrentUser()->id); $fresh->clearAccessRights(); $this->setCurrentUser($fresh);
         if (!$fresh->id || $fresh->block || !$fresh->authorise('core.manage', 'com_jlms')) { throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403); }
         $db = $this->getDatabase();
-        $courseIds = CourseEditorAccess::editableIds($db, $fresh);
+        $courseIds = array_map('intval', CourseEditorAccess::editableIds($db, $fresh));
         $courseCounts = $db->createQuery()->select('teacher_id, COUNT(DISTINCT course_id) AS course_count')
             ->from('#__jlms_course_teachers');
-        if ($courseIds) { $courseCounts->whereIn('course_id', $courseIds); }
+        if ($courseIds) { $courseCounts->where('course_id IN (' . implode(',', $courseIds) . ')'); }
         else { $courseCounts->where('1=0'); }
         $courseCounts->group('teacher_id');
         $query = $db->createQuery()->select('a.id, a.title, a.state, a.revision, a.created_by, a.modified_at, a.language, author.name AS author_name, lang.title AS language_title, COALESCE(teacher_courses.course_count, 0) AS course_count')
