@@ -99,6 +99,13 @@ $bank->lock($actor,$id,true);quizExpect(!(int)$db->setQuery('SELECT checked_out 
 $question['id']=$id;$question['prompt']='<p>PRIVATE_QUIZ_PROMPT_V2</p>';$bank->save($actor,$question);
 quizExpect($bank->editor($actor,$id)['revision']===2,'editing creates a new revision');
 quizExpect(json_encode($db->setQuery('SELECT * FROM #__jlms_question_revisions WHERE id='.$firstRevision)->loadObject(),JSON_THROW_ON_ERROR)===json_encode($firstContent,JSON_THROW_ON_ERROR),'entire old revision remains byte-for-byte unchanged after native HTML filtering');
+$currentDefinition=$bank->editor($actor,$id);$copyId=$bank->duplicate($actor,$id);$copy=$bank->editor($actor,$copyId);
+quizExpect($copyId!==$id&&$copy['revision']===1&&$copy['state']===0&&$copy['prompt']===$currentDefinition['prompt'],'question duplication creates a separate unpublished draft from the current definition');
+quizExpect($copy['options'][0]['option_id']!==$currentDefinition['options'][0]['option_id'],'duplicated question receives fresh answer option identities');
+$bank->delete($actor,$copyId);
+quizExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_questions WHERE id='.$copyId)->loadResult()&&!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_question_revisions WHERE question_id='.$copyId)->loadResult(),'unused question and revisions delete atomically');
+$list=$bank->adminListing($actor,['search'=>'id:'.$id,'published'=>'1'],0,20,'q.id','DESC');
+quizExpect($list['total']===1&&(int)$list['items'][0]->id===$id,'question administration list searches by ID and filters state');
 quizReject(fn()=>$bank->save($actor,$question),409,'stale question revision rejected');
 quizReject(fn()=>$bank->save(new \Joomla\CMS\User\User(),$question),401,'guest bank mutation rejected');
 $otherCategory=(int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
@@ -113,6 +120,7 @@ $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Quiz chapter']
 $input=$scope()+['lesson_id'=>0,'revision'=>1,'module_id'=>$module,'title'=>'Quiz draft','required'=>'1','assessment'=>'graded','threshold'=>'70.25','max_attempts'=>'3','time_minutes'=>'15','retry_minutes'=>'2',
  'selection_mode'=>'fixed','shuffle_questions'=>'0','shuffle_options'=>'1','feedback_policy'=>'pass_or_exhausted','questions'=>[['revision_id'=>$firstRevision,'points'=>'3'],['revision_id'=>$otherRevision,'points'=>'2']]];
 $lesson=$quizzes->save($actor,$input);$config=$quizzes->editor($actor,$course,$version,$lesson);
+quizReject(fn()=>$bank->delete($actor,$id),409,'question used in quiz cannot be deleted');
 quizExpect($config['data']['threshold']==='70.25'&&$config['data']['time_minutes']===15,'exact basis-point threshold and time configuration');
 quizExpect((int)$config['data']['questions'][0]['revision_id']===$firstRevision,'explicit older immutable revision remains pinned');
 quizExpect(!str_contains(json_encode($config,JSON_THROW_ON_ERROR),'PRIVATE_CORRECT_EXPLANATION')&&!str_contains(json_encode($config,JSON_THROW_ON_ERROR),'"correct"'),'quiz editor DTO contains no answer key');
