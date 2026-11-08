@@ -59,10 +59,15 @@ final class PublicationReadiness
             $scan = json_decode((string) ($attachment->scan_json ?? '{}'), true);
             if (($scanRequired && (!is_array($scan) || ($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
                 || ($attachment->status ?? '') !== 'ready' || (int) ($attachment->preview ?? 0) !== 0
-                || ($attachment->publish_up ?? null) !== null || ($attachment->publish_down ?? null) !== null) {
+                || !MaterialAvailability::validStored($attachment->publish_up ?? null, $attachment->publish_down ?? null)) {
                 $blockers[] = 'COM_JLMS_MATERIAL_NOT_READY';
             }
+            if (($attachment->publish_up ?? null) !== null || ($attachment->publish_down ?? null) !== null) {
+                $warnings[] = 'COM_JLMS_READINESS_MATERIAL_SCHEDULED';
+            }
         }
+
+        $warnings = array_values(array_unique($warnings));
 
         foreach ($moduleCounts as $count) {
             if ($count === 0) {
