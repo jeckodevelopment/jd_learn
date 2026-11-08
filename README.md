@@ -1,6 +1,6 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.14-dev (candidato in revisione)**. Aggiunge la migrazione esplicita di una singola iscrizione alla versione corrente, con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz; la CI del candidato è da completare e il collaudo manuale Joomla resta aperto.
+Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.41.14-dev**, integrata in main con la PR [#88](https://github.com/jeckodevelopment/jd_learn/pull/88). Aggiunge la migrazione esplicita di una singola iscrizione alla versione corrente, con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz. La CI standard è superata; il collaudo manuale Joomla resta aperto.
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/video/quiz sono disponibili. Restano incompleti il ciclo editoriale avanzato, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
@@ -24,7 +24,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Versione di sviluppo 0.4
 - Corsi: [editor](docs/COURSE_EDITOR.md), [programma](docs/AUTHORING.md), [pubblicazione](docs/PUBLICATION.md), [permessi](docs/EDITOR_PERMISSIONS.md), [docenti](docs/TEACHERS.md), [calendario](docs/CALENDAR.md).
 - Studenti: [aula](docs/LEARNING.md), [area personale](docs/LEARNER_DASHBOARD.md), [categorie](docs/CATEGORIES.md), [multilingua](docs/MULTILINGUAL.md).
 - Media: [video](docs/VIDEO.md), [Cloudflare Stream](docs/CLOUDFLARE_STREAM.md), [HTML5 privato](docs/HTML5_VIDEO.md), [materiali](docs/MATERIALS.md).
-- Iscrizioni: [elenco iscritti](docs/ENROLLMENT_ROSTER.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md), [preassegnazione](docs/PREASSIGNMENT.md), [stato della singola iscrizione](docs/ENROLLMENT_STATE.md), [disponibilità operativa del corso](docs/COURSE_OPERATIONS.md).
+- Iscrizioni: [elenco iscritti](docs/ENROLLMENT_ROSTER.md), [migrazione tra versioni](component/administrator/docs/ENROLLMENT_MIGRATION.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md), [preassegnazione](docs/PREASSIGNMENT.md), [stato della singola iscrizione](docs/ENROLLMENT_STATE.md), [disponibilità operativa del corso](docs/COURSE_OPERATIONS.md).
 - Quiz: [composizione](docs/QUIZ_AUTHORING.md), [tentativi](docs/QUIZ_RUNTIME.md), [tempi individuali](docs/QUIZ_EXTRA_TIME.md), [annullamenti](docs/QUIZ_CANCELLATION.md), [proroghe](docs/QUIZ_DEADLINE_EXTENSION.md).
 - Personalizzazioni: [contratto CSS e override](docs/FRONTEND_CSS.md).
 

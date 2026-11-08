@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**8 novembre 2026**. Main **0.41.13-dev**, con PR #86 integrata; il candidato **0.41.14-dev** implementa la migrazione esplicita singola fra versioni e attende CI. Il collaudo manuale sul sito Joomla resta da eseguire. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**8 novembre 2026**. Main **0.41.14-dev**, con PR [#88](https://github.com/jeckodevelopment/jd_learn/pull/88) integrata; la migrazione esplicita singola fra versioni ha superato la CI standard. Il collaudo manuale sul sito Joomla resta da eseguire. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -23,7 +23,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-La PR #86 ha integrato la programmazione delle finestre temporali dei materiali: date nel fuso del corso, validazione server e rispetto della finestra nell’aula. Il candidato 0.41.14 aggiunge la migrazione esplicita di una singola iscrizione con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz; restano da superare CI e collaudo Joomla manuale. Dopo questo incremento, proseguire con le priorità M04 e M03/M09, distinguendo i difetti runtime dalle accettazioni live di provider/browser.
+La PR #86 ha integrato la programmazione delle finestre temporali dei materiali; la PR #88 ha aggiunto la migrazione esplicita di una singola iscrizione con anteprima delle equivalenze e trasferimento dei soli completamenti non quiz. La CI standard è superata; resta il collaudo Joomla manuale. Proseguire con le priorità M04 e M03/M09, distinguendo i difetti runtime dalle accettazioni live di provider/browser.
 
 La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. La PR #68 ha completato il restyling previsto della schermata iniziale. Entrambe hanno superato la CI prevista; resta il collaudo nel sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 
