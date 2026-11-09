@@ -47,7 +47,7 @@ PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattiv
 
 Riferimenti: [issue #113](https://github.com/jeckodevelopment/jd_learn/issues/113), CORE-20 / AC-132. Il plugin `plg_system_jlmsmenu` deve filtrare le voci della sidebar secondo i permessi già applicati alle destinazioni senza cambiare gli altri menu Joomla.
 
-1. Su una Joomla 6 usa e getta, installare il pacchetto pulito. In **Sistema → Gestisci → Plugin**, verificare che **JD Learn — filtro menu amministrativo** sia abilitato.
+1. Su una Joomla 6 usa e getta, installare il pacchetto pulito. In **Sistema → Gestisci → Plugin**, verificare che **JD Learn - ACL menu amministrativo** sia abilitato.
 2. Con account completo, verificare le voci Dashboard, Corsi, Categorie, Banca domande, Docenti, Campi aggiuntivi e Plugin video.
 3. Con account che ha `core.manage` su `com_jlms` ma non `jlms.quiz.manage`, verificare che Banca domande non compaia in sidebar né dashboard; provare l’URL diretto e verificare il diniego.
 4. Rimuovere a turno i permessi `core.manage` su `com_jlms.course`, `com_fields` e `com_plugins`. Atteso: scompaiono dalla sidebar e dashboard rispettivamente Categorie corsi, Campi aggiuntivi e Plugin video.

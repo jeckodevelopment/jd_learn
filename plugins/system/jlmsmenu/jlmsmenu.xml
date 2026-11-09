@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="system" method="upgrade">
  <name>PLG_SYSTEM_JLMSMENU</name><author>Jecko Development</author><version>0.1.0</version>
- <description>Permission-aware administrator navigation for JD Learn</description>
+ <description>PLG_SYSTEM_JLMSMENU_DESCRIPTION</description>
  <namespace path="src">Jlms\Plugin\System\Jlmsmenu</namespace>
  <scriptfile>installer.php</scriptfile>
- <files><filename>installer.php</filename><folder plugin="jlmsmenu">services</folder><folder>src</folder></files>
+ <files><filename>installer.php</filename><folder plugin="jlmsmenu">services</folder><folder>src</folder><folder>language</folder></files>
+ <languages><language tag="it-IT">language/it-IT/plg_system_jlmsmenu.sys.ini</language><language tag="en-GB">language/en-GB/plg_system_jlmsmenu.sys.ini</language></languages>
 </extension>
