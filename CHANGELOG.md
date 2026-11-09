@@ -1,3 +1,11 @@
+# Changelog
+
+## 0.41.43-dev — anteprima dei livelli di accesso (PR #162 integrata)
+
+- La preview editoriale consente di simulare viewing access level Joomla e distingue visibilità di catalogo, accesso ai contenuti e requisito combinato. La simulazione è read-only e non modifica identità, iscrizioni, corso o progressi.
+- Aggiunte traduzioni IT/EN e verifiche HTTP/integrazione per accessi misti, autorizzazione editor e assenza di mutazioni.
+- CI standard 4/4 superata nel run 42712132178; merge `4c87851d427592885ef3a5348da3e1a182de6042`. Pacchetto [JD-Learn-0.41.43-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795), SHA-256 interno `39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738`; collaudo manuale Joomla pendente.
+
 ## 0.41.42-dev — archiviazione e ripristino corsi (PR #159 integrata)
 
 - Estende il workflow Joomla JD Learn con archiviazione e ripristino del corso pubblicato. L’archivio sparisce dal catalogo e non ammette nuove iscrizioni.

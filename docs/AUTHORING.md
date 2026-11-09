@@ -29,3 +29,8 @@ Dal Programma → Versioni selezionare una versione storica e usare **Recupera c
 ## Regole del programma
 
 Dal Programma → Regole didattiche si modifica la soglia video nella bozza. Le regole pubblicate rimangono leggibili e immutabili; il normale riepilogo/conferma governa la nuova pubblicazione. La scheda corso offre anche il salvataggio prima dell’apertura dell’editor. Procedura e limiti nella [guida editor](COURSE_EDITOR.md#regole-didattiche-e-soglia-video).
+
+
+## Verifica dei livelli di accesso nella preview
+
+Dalla preview editoriale del programma, **Verifica dei livelli di accesso** consente a un editor autorizzato di simulare uno o più viewing access level Joomla. Il risultato distingue visibilità nel catalogo (corso, categoria e antenati) e accesso ai contenuti del corso; l’esito combinato passa solo quando entrambe le condizioni sono soddisfatte. La simulazione non impersona un utente e non modifica gruppi, iscrizioni, versioni, progressi o tentativi. La preview studente interattiva è un’attività separata ancora aperta.

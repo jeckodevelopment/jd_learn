@@ -1,57 +1,57 @@
 {
   "audited_at": "2026-11-09",
   "product": "JD Learn",
-  "version": "0.41.42-dev",
+  "version": "0.41.43-dev",
   "code_baseline": {
-    "tested_head": "bd0f416d99ee2543a51699ebd46b80c301d7d6b6",
-    "parent_main_commit": "68f6ee311304a8fa733ccb2a069fe111bcdd4e7e",
-    "pull_request": 159,
-    "merged_main_commit": "1c42b07f3fb7ec7d605f455dcf431510282ef5f2"
+    "tested_head": "63774d916fc7607571ccd0ac4bb471c63a6c7abf",
+    "parent_main_commit": "a47838efd539405a19a11c9fd6c367391f2820f6",
+    "pull_request": 162,
+    "merged_main_commit": "4c87851d427592885ef3a5348da3e1a182de6042"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42704783478,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478",
+    "run_id": 42712132178,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 129458607015,
+        "id": 129484171392,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129458672914,
+        "id": 129484235885,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129458673024,
+        "id": 129484235853,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129458673091,
+        "id": 129484235935,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #159 integra archiviazione e ripristino nel workflow nativo; corso e versione live non vengono eliminati o modificati. CI standard 4/4 superata; collaudo manuale Joomla pendente."
+    "note": "PR #162 aggiunge preview editoriale read-only dei livelli Joomla; confronto delle date di pubblicazione a timestamp. CI standard 4/4 superata; collaudo manuale Joomla pendente."
   },
   "package": {
-    "artifact_id": 13711989978,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478/artifacts/13711989978",
-    "artifact_name": "JD-Learn-0.41.42-dev",
-    "installable_package": "pkg_jlms-0.41.42-dev.zip",
-    "sha256": "0e8ab0086a7305829b24f76e5859369213320d8529eda56a9556edaf7f0ad6fb",
-    "artifact_sha256": "0ebc9706c420fbf9fee452cb967724b2ed2f1de592fbdd962a728df69c4701ac",
-    "size_bytes": 532563,
-    "artifact_size_bytes": 532389,
-    "expires_at": "2026-11-23T21:44:35Z",
+    "artifact_id": 13715794795,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795",
+    "artifact_name": "JD-Learn-0.41.43-dev",
+    "installable_package": "pkg_jlms-0.41.43-dev.zip",
+    "sha256": "39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738",
+    "artifact_sha256": "180213ed6f86fd3d796c98a1e76a41e282e7a54508a51ddb368da0e7c44b5492",
+    "size_bytes": 534434,
+    "artifact_size_bytes": 534263,
+    "expires_at": "2026-11-23T22:31:32Z",
     "wrapper_zip": true
   },
   "full_requirement_acceptance": {},
@@ -2434,86 +2434,86 @@
     "expires_at": "2026-11-23T12:07:47Z"
   },
   "candidate_increment": {
-    "version": "0.41.42-dev",
-    "scope": "Workflow nativo: archivia e ripristina corsi pubblicati, nascondendo l’archivio dal catalogo e preservando versione, iscrizioni e accesso già assegnato.",
+    "version": "0.41.43-dev",
+    "scope": "Preview editoriale read-only dei livelli di accesso Joomla: visibilità catalogo, accesso ai contenuti e risultato combinato; nessuna modifica a utenti, iscrizioni, corso o progressi.",
     "status": "Integrata in main; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 159,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/159",
-    "ci_run_id": 42704783478,
-    "artifact_id": 13711989978,
-    "artifact_name": "JD-Learn-0.41.42-dev",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478/artifacts/13711989978",
-    "artifact_sha256": "0ebc9706c420fbf9fee452cb967724b2ed2f1de592fbdd962a728df69c4701ac",
-    "artifact_wrapper_sha256": "0ebc9706c420fbf9fee452cb967724b2ed2f1de592fbdd962a728df69c4701ac",
-    "package_sha256": "0e8ab0086a7305829b24f76e5859369213320d8529eda56a9556edaf7f0ad6fb",
-    "package_size_bytes": 532563,
-    "artifact_size_bytes": 532389,
-    "artifact_expires_at": "2026-11-23T21:44:35Z",
-    "tested_head": "bd0f416d99ee2543a51699ebd46b80c301d7d6b6",
-    "parent_main_commit": "68f6ee311304a8fa733ccb2a069fe111bcdd4e7e",
-    "merged_main_commit": "1c42b07f3fb7ec7d605f455dcf431510282ef5f2",
+    "pull_request": 162,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/162",
+    "ci_run_id": 42712132178,
+    "artifact_id": 13715794795,
+    "artifact_name": "JD-Learn-0.41.43-dev",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795",
+    "artifact_sha256": "180213ed6f86fd3d796c98a1e76a41e282e7a54508a51ddb368da0e7c44b5492",
+    "artifact_wrapper_sha256": "180213ed6f86fd3d796c98a1e76a41e282e7a54508a51ddb368da0e7c44b5492",
+    "package_sha256": "39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738",
+    "package_size_bytes": 534434,
+    "artifact_size_bytes": 534263,
+    "artifact_expires_at": "2026-11-23T22:31:32Z",
+    "tested_head": "63774d916fc7607571ccd0ac4bb471c63a6c7abf",
+    "parent_main_commit": "a47838efd539405a19a11c9fd6c367391f2820f6",
+    "merged_main_commit": "4c87851d427592885ef3a5348da3e1a182de6042",
     "ci_jobs": [
       {
-        "id": 129458607015,
+        "id": 129484171392,
         "name": "Candidate plan and lightweight checks",
         "conclusion": "success"
       },
       {
-        "id": 129458672914,
+        "id": 129484235885,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "conclusion": "success"
       },
       {
-        "id": 129458673024,
+        "id": 129484235853,
         "name": "PHP 8.3 / mysql:8.4",
         "conclusion": "success"
       },
       {
-        "id": 129458673091,
+        "id": 129484235935,
         "name": "PHP 8.4 / mariadb:10.6",
         "conclusion": "success"
       }
     ]
   },
   "latest_verified_increment": {
-    "version": "0.41.42-dev",
-    "scope": "Workflow nativo: archivia e ripristina corsi pubblicati, nascondendo l’archivio dal catalogo e preservando versione, iscrizioni e accesso già assegnato.",
+    "version": "0.41.43-dev",
+    "scope": "Preview editoriale read-only dei livelli di accesso Joomla: visibilità catalogo, accesso ai contenuti e risultato combinato; nessuna modifica a utenti, iscrizioni, corso o progressi.",
     "status": "Integrata in main; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 159,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/159",
-    "ci_run_id": 42704783478,
-    "artifact_id": 13711989978,
-    "artifact_name": "JD-Learn-0.41.42-dev",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478/artifacts/13711989978",
-    "artifact_sha256": "0ebc9706c420fbf9fee452cb967724b2ed2f1de592fbdd962a728df69c4701ac",
-    "artifact_wrapper_sha256": "0ebc9706c420fbf9fee452cb967724b2ed2f1de592fbdd962a728df69c4701ac",
-    "package_sha256": "0e8ab0086a7305829b24f76e5859369213320d8529eda56a9556edaf7f0ad6fb",
-    "package_size_bytes": 532563,
-    "artifact_size_bytes": 532389,
-    "artifact_expires_at": "2026-11-23T21:44:35Z",
-    "tested_head": "bd0f416d99ee2543a51699ebd46b80c301d7d6b6",
-    "parent_main_commit": "68f6ee311304a8fa733ccb2a069fe111bcdd4e7e",
-    "merged_main_commit": "1c42b07f3fb7ec7d605f455dcf431510282ef5f2",
+    "pull_request": 162,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/162",
+    "ci_run_id": 42712132178,
+    "artifact_id": 13715794795,
+    "artifact_name": "JD-Learn-0.41.43-dev",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795",
+    "artifact_sha256": "180213ed6f86fd3d796c98a1e76a41e282e7a54508a51ddb368da0e7c44b5492",
+    "artifact_wrapper_sha256": "180213ed6f86fd3d796c98a1e76a41e282e7a54508a51ddb368da0e7c44b5492",
+    "package_sha256": "39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738",
+    "package_size_bytes": 534434,
+    "artifact_size_bytes": 534263,
+    "artifact_expires_at": "2026-11-23T22:31:32Z",
+    "tested_head": "63774d916fc7607571ccd0ac4bb471c63a6c7abf",
+    "parent_main_commit": "a47838efd539405a19a11c9fd6c367391f2820f6",
+    "merged_main_commit": "4c87851d427592885ef3a5348da3e1a182de6042",
     "ci_jobs": [
       {
-        "id": 129458607015,
+        "id": 129484171392,
         "name": "Candidate plan and lightweight checks",
         "conclusion": "success"
       },
       {
-        "id": 129458672914,
+        "id": 129484235885,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "conclusion": "success"
       },
       {
-        "id": 129458673024,
+        "id": 129484235853,
         "name": "PHP 8.3 / mysql:8.4",
         "conclusion": "success"
       },
       {
-        "id": 129458673091,
+        "id": 129484235935,
         "name": "PHP 8.4 / mariadb:10.6",
         "conclusion": "success"
       }
@@ -2538,8 +2538,8 @@
     }
   ],
   "next_candidate": {
-    "priority": "Completare M02 con anteprima studente interattiva in sola lettura, senza statistiche o tentativi; mantenere aperti i collaudi Joomla manuali dei rilasci integrati.",
+    "priority": "Completare M02 con anteprima studente interattiva in sola lettura, senza tentativi o statistiche; poi continuare sui requisiti M01/M02 residui e mantenere aperti i collaudi Joomla manuali dei rilasci integrati.",
     "status": "Prossimo incremento dai residui approvati del perimetro release 1; fase 2 esclusa."
   },
-  "current_status": "PR #159 integrata in main 0.41.42-dev; CI standard 4/4 superata nel run 42704783478; pacchetto installabile verificato; collaudo manuale Joomla pendente."
+  "current_status": "PR #162 integrata in main 0.41.43-dev; CI standard 4/4 superata nel run 42712132178; pacchetto installabile verificato; collaudo manuale Joomla pendente."
 }
