@@ -61,6 +61,52 @@ final class LearningService
         }
     }
 
+    /** Reject an admission whose required lessons cannot all fit before the known closing windows. */
+    public function assertEnrollmentScheduleReachable(int $courseId, int $versionId, int $editionId,
+        ?string $enrollmentStartsAt = null, ?string $enrollmentEndsAt = null, ?string $startedAt = null): void
+    {
+        $course = $this->row('courses', $courseId);
+        $edition = $this->row('editions', $editionId);
+        if ((int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId) {
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+        }
+        $window = CourseSchedule::read($course);
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $base = $startedAt ? new \DateTimeImmutable($startedAt, new \DateTimeZone('UTC')) : $now;
+        foreach ([$window['publish_up'], $window['starts_at'], $edition->starts_at, $enrollmentStartsAt] as $candidate) {
+            if ($candidate) {
+                $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
+                if ($date > $base) { $base = $date; }
+            }
+        }
+        $q = $this->db->createQuery()->select('publish_up,publish_down,release_after_days')->from('#__jlms_lessons')
+            ->where('course_version_id = :version')->where($this->db->quoteName('required') . ' = 1')
+            ->bind(':version', $versionId, ParameterType::INTEGER)->order('ordering,id');
+        foreach ($this->db->setQuery($q, 0, 5000)->loadObjectList() as $lesson) {
+            $days = LessonAvailability::normalizeReleaseDays($lesson->release_after_days);
+            if (!LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)) {
+                throw new \RuntimeException('COM_JLMS_LESSON_SCHEDULE_INVALID', 409);
+            }
+            $available = LessonAvailability::effectiveStart($lesson->publish_up, $days, $days ? $base->format('Y-m-d H:i:s') : null);
+            foreach ([$window['publish_up'], $window['starts_at']] as $courseStart) {
+                if ($courseStart) {
+                    $date = new \DateTimeImmutable($courseStart, new \DateTimeZone('UTC'));
+                    if (!$available || $date > $available) { $available = $date; }
+                }
+            }
+            $close = null;
+            foreach ([$lesson->publish_down, $window['publish_down'], $window['ends_at'], $edition->ends_at, $enrollmentEndsAt] as $candidate) {
+                if ($candidate) {
+                    $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
+                    if (!$close || $date < $close) { $close = $date; }
+                }
+            }
+            if ($available && $close && $available >= $close) {
+                throw new \RuntimeException('COM_JLMS_LESSON_UNREACHABLE', 409);
+            }
+        }
+    }
+
     private function course(User $actor, string $language, int $id): object
     {
         $course = $this->catalog->course($actor, $language, $id);
@@ -218,6 +264,8 @@ final class LearningService
                 if ($total < 1) {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
+                $this->assertEnrollmentScheduleReachable($courseId, $versionId, $editionId,
+                    $edition->starts_at, $edition->ends_at);
                 $now = gmdate('Y-m-d H:i:s');
                 $record = (object) ['user_id' => (int) $actor->id, 'subject_key' => $subject, 'course_id' => $courseId,
                     'course_version_id' => $versionId, 'edition_id' => $editionId, 'status' => 'active', 'origin' => 'start',
@@ -251,16 +299,17 @@ final class LearningService
             || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
                 && is_string($lesson->provider_key) && preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key) === 1
                 && (int) $lesson->duration_ms >= 1000);
-        if (!$supported || $lesson->release_after_days !== null) {
+        if (!$supported || !LessonAvailability::validReleaseDays($lesson->release_after_days)) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         return $lesson;
     }
 
-    private function assertLessonAvailable(object $lesson): void
+    private function assertLessonAvailable(object $lesson, object $enrollment): void
     {
-        $state = LessonAvailability::state($lesson->publish_up, $lesson->publish_down);
-        if ($state === 'upcoming') {
+        $state = LessonAvailability::state($lesson->publish_up, $lesson->publish_down,
+            $lesson->release_after_days, $enrollment->started_at);
+        if ($state === 'upcoming' || $state === 'awaiting_start') {
             throw new \RuntimeException('COM_JLMS_LESSON_NOT_YET_AVAILABLE', 403);
         }
         if ($state === 'closed') {
@@ -306,7 +355,7 @@ final class LearningService
         $actor = $this->freshActor($identity);
         [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock, $allowExpiredWindow);
         $lesson = $this->lesson((int) $version->id, $lessonId);
-        $this->assertLessonAvailable($lesson);
+        $this->assertLessonAvailable($lesson, $enrollment);
         $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         if ($lesson->kind !== 'quiz') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         return [$actor, $enrollment, $lesson];
@@ -318,7 +367,7 @@ final class LearningService
         $actor = $this->freshActor($identity);
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
         $lesson = $this->lesson((int) $version->id, $lessonId);
-        $this->assertLessonAvailable($lesson);
+        $this->assertLessonAvailable($lesson, $enrollment);
         $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         if ($lesson->kind !== 'video') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         $courseId = (int) $course->id;
@@ -334,9 +383,9 @@ final class LearningService
 
     public function audioLessonContext(User $identity, string $language, int $enrollmentId, int $lessonId): array
     {
-        $actor = $this->freshActor($identity); [$course, $version] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
+        $actor = $this->freshActor($identity); [$course, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
         $lesson = $this->lesson((int) $version->id, $lessonId);
-        $this->assertLessonAvailable($lesson);
+        $this->assertLessonAvailable($lesson, $enrollment);
         $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         if ($lesson->kind !== 'audio') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
@@ -346,10 +395,10 @@ final class LearningService
     public function resourceContext(User $identity, string $language, int $enrollmentId, int $lessonId = 0): array
     {
         $actor = $this->freshActor($identity);
-        [$course, $version] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
+        [$course, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
         if ($lessonId) {
             $lesson = $this->lesson((int) $version->id, $lessonId);
-            $this->assertLessonAvailable($lesson);
+            $this->assertLessonAvailable($lesson, $enrollment);
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         }
         return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
@@ -360,7 +409,7 @@ final class LearningService
         $actor = $this->freshActor($identity);
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
         $versionId = (int) $version->id;
-        $q = $this->db->createQuery()->select('m.id AS module_id, m.title AS module_title, l.id, l.title, l.required, l.publish_up, l.publish_down, p.state')
+        $q = $this->db->createQuery()->select('m.id AS module_id, m.title AS module_title, l.id, l.title, l.required, l.publish_up, l.publish_down, l.release_after_days, p.state')
             ->from('#__jlms_modules AS m')->innerJoin('#__jlms_lessons AS l ON l.module_id = m.id AND l.course_version_id = m.course_version_id')
             ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = l.id AND p.enrollment_id = :enrollment')
             ->where('m.course_version_id = :version')->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
@@ -396,10 +445,11 @@ final class LearningService
             $entry->prerequisite_blocked = $blocker !== null;
             $entry->blocked_by_id = $blocker ? (int) $blocker->required_id : 0;
             $entry->blocked_by_title = $blocker ? (string) $blocker->required_title : '';
-            $entry->schedule_state = LessonAvailability::state($entry->publish_up, $entry->publish_down);
+            $entry->schedule_state = LessonAvailability::state($entry->publish_up, $entry->publish_down, $entry->release_after_days, $enrollment->started_at);
             $entry->schedule_blocked = $entry->schedule_state !== 'available';
             $entry->schedule_available_at = $entry->schedule_state === 'upcoming'
-                ? LessonAvailability::display($entry->publish_up, $timezone) : '';
+                ? LessonAvailability::displayEffectiveStart($entry->publish_up, $entry->release_after_days, $enrollment->started_at, $timezone) : '';
+            $entry->schedule_after_days = $entry->schedule_state === 'awaiting_start' ? (int) $entry->release_after_days : 0;
         }
         $lessonId = $lessonId ?: (int) ($enrollment->last_lesson_id ?: $outline[0]->id);
         $blocker = $blockers[$lessonId] ?? null;
@@ -419,7 +469,7 @@ final class LearningService
         }
         $percent = (int) $enrollment->required_total > 0
             ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
-        if (!$blocker && $lesson->kind === 'audio') {
+        if (!$blocker && !$scheduleBlocked && $lesson->kind === 'audio') {
             $resumeQuery = $this->db->createQuery()->select('resume_ms')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :resumeEnrollment')->where('lesson_id = :resumeLesson')
                 ->bind(':resumeEnrollment', $enrollmentId, ParameterType::INTEGER)
@@ -439,7 +489,8 @@ final class LearningService
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
                 'prerequisite_blocked' => $blocker !== null, 'schedule_blocked' => $scheduleBlocked,
                 'schedule_state' => $selectedScheduleState,
-                'schedule_available_at' => $selectedScheduleState === 'upcoming' ? LessonAvailability::display($lesson->publish_up, $timezone) : '',
+                'schedule_available_at' => $selectedScheduleState === 'upcoming' ? LessonAvailability::displayEffectiveStart($lesson->publish_up, $lesson->release_after_days, $enrollment->started_at, $timezone) : '',
+                'schedule_after_days' => $selectedScheduleState === 'awaiting_start' ? (int) $lesson->release_after_days : 0,
                 'blocked_by_id' => $blocker ? (int) $blocker->required_id : 0,
                 'blocked_by_title' => $blocker ? (string) $blocker->required_title : '',
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
@@ -467,7 +518,7 @@ final class LearningService
         if ($lessonId) {
             try {
                 $last = $this->lesson((int) $version->id, $lessonId);
-                $this->assertLessonAvailable($last);
+                $this->assertLessonAvailable($last, $enrollment);
             }
             catch (\RuntimeException $error) {
                 if (!in_array($error->getMessage(), ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LESSON_NOT_YET_AVAILABLE', 'COM_JLMS_LESSON_CLOSED'], true)) { throw $error; }
@@ -507,7 +558,7 @@ final class LearningService
         $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $key): void {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
             $lesson = $this->lesson((int) $version->id, $lessonId);
-            $this->assertLessonAvailable($lesson);
+            $this->assertLessonAvailable($lesson, $enrollment);
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
             if (!in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule !== 'manual') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
             $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
@@ -543,7 +594,7 @@ final class LearningService
         return $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $positionMs): int {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
             $lesson = $this->lesson((int) $version->id, $lessonId);
-            $this->assertLessonAvailable($lesson);
+            $this->assertLessonAvailable($lesson, $enrollment);
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
             if ($lesson->kind !== 'audio') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')

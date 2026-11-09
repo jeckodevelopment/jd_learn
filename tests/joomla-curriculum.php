@@ -102,9 +102,10 @@ $anonymous = new \Joomla\CMS\User\User();
 curriculumDenied(fn () => $service->outline($anonymous,$course),'anonymous cannot read draft');
 curriculumDenied(fn () => $service->saveModule($anonymous,scopeInput()+['id'=>0,'title'=>'No access']),'anonymous cannot mutate draft');
 $firstLesson = $service->saveLesson($actor, scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Text introduction',
-    'kind'=>'text','required'=>'1','body'=>'<p>First lesson</p>','preview'=>1,'completion_rule'=>'forged']);
+    'kind'=>'text','required'=>'1','body'=>'<p>First lesson</p>','preview'=>1,'completion_rule'=>'forged','release_after_days'=>'2']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $firstLesson)->loadObject();
 curriculumExpect($row->completion_rule==='manual' && (int)$row->preview===0,'server derives rules and ignores preview mass assignment');
+curriculumExpect((int)$row->release_after_days===2,'relative lesson release is validated and persisted');
 curriculumExpect($row->body===\Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'),'body uses the native Joomla content filter');
 $video = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Video draft','kind'=>'video',
     'required'=>'0','body'=>'','provider_key'=>'youtube','source_reference'=>'https://youtu.be/dQw4w9WgXcQ']);

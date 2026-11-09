@@ -125,7 +125,7 @@ final class HtmlView extends BaseHtmlView
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
             $requestedKind = $app->getInput()->getCmd('lesson_kind');
-            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '', 'publish_down' => ''];
+            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '', 'publish_down' => '', 'release_after_days' => ''];
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) { $this->editorMode = 'lesson'; }
@@ -184,6 +184,7 @@ final class HtmlView extends BaseHtmlView
                         'required_lesson_ids' => $this->outline['prerequisites'][(int) $lesson->id] ?? [],
                         'publish_up' => LessonAvailability::editor($lesson->publish_up, CourseSchedule::read($course)['timezone']),
                         'publish_down' => LessonAvailability::editor($lesson->publish_down, CourseSchedule::read($course)['timezone']),
+                        'release_after_days' => $lesson->release_after_days === null ? '' : (string) $lesson->release_after_days,
                         'com_fields' => $customFields]);
                     $foundLesson = true;
                 }
@@ -202,7 +203,7 @@ final class HtmlView extends BaseHtmlView
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
-                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','required','kind','required_lesson_ids','publish_up','publish_down']));
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days']));
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }

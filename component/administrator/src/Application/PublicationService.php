@@ -131,6 +131,7 @@ final class PublicationService
         // Keyset batches bound memory even on drivers which buffer complete query results.
         $lessons = [];
         $required = 0;
+        $initialRequired = 0;
         $lastId = 0;
         do {
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lessons')
@@ -142,10 +143,11 @@ final class PublicationService
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
                 if (($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5') || (int) $lesson->preview !== 0
-                    || $lesson->release_after_days !== null || strlen((string) $lesson->body) > 1048576) {
+                    || strlen((string) $lesson->body) > 1048576) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
-                if (!\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)) {
+                if (!\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)
+                    || !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validReleaseDays($lesson->release_after_days)) {
                     throw new \DomainException('COM_JLMS_LESSON_SCHEDULE_INVALID');
                 }
                 if ((int) $lesson->required === 1 && !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::reachable(
@@ -221,10 +223,12 @@ final class PublicationService
                 } else { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
                 $moduleIds[$lesson->module_id]++;
                 $required += (int) $lesson->required;
+                if ((int) $lesson->required === 1 && (int) ($lesson->release_after_days ?? 0) === 0) { $initialRequired++; }
                 $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
                     'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
                     'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'quiz_sha256' => $quizHash, 'duration_ms' => $lesson->duration_ms,
                     'publish_up' => $lesson->publish_up, 'publish_down' => $lesson->publish_down,
+                    'release_after_days' => $lesson->release_after_days === null ? null : (int) $lesson->release_after_days,
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
                     'fields_sha256' => hash('sha256', $lesson->fields_snapshot_json),
                     'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' => hash('sha256', (string) $lesson->body)];
@@ -235,6 +239,9 @@ final class PublicationService
         } while (count($batch) === 16);
         if (!$required || in_array(0, array_values($moduleIds), true)) {
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
+        }
+        if ($initialRequired === 0) {
+            throw new \DomainException('COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED');
         }
         $prerequisiteMap = [];
         $lessonIds = array_fill_keys(array_map(static fn(array $row): int => (int) $row['id'], $lessons), true);

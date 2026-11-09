@@ -26,23 +26,61 @@ final class LessonAvailability
         return MaterialAvailability::validStored($publishUp, $publishDown);
     }
 
-    public static function state(mixed $publishUp, mixed $publishDown, ?\DateTimeImmutable $now = null): string
+    public static function state(mixed $publishUp, mixed $publishDown, mixed $releaseAfterDays = null, ?string $startedAt = null, ?\DateTimeImmutable $now = null): string
     {
-        if (!self::validStored($publishUp, $publishDown)) {
+        if (!self::validStored($publishUp, $publishDown) || !self::validReleaseDays($releaseAfterDays)) {
             throw new \InvalidArgumentException('COM_JLMS_LESSON_SCHEDULE_INVALID');
         }
 
         $now ??= new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $start = self::date($publishUp);
         $end = self::date($publishDown);
-        if ($start && $start > $now) {
-            return 'upcoming';
-        }
         if ($end && $end <= $now) {
             return 'closed';
         }
+        if ((int) $releaseAfterDays > 0 && ($startedAt === null || $startedAt === '')) {
+            return 'awaiting_start';
+        }
+        $start = self::effectiveStart($publishUp, $releaseAfterDays, $startedAt);
+        if ($start && $start > $now) {
+            return 'upcoming';
+        }
 
         return 'available';
+    }
+
+    public static function effectiveStart(mixed $publishUp, mixed $releaseAfterDays, ?string $startedAt): ?\DateTimeImmutable
+    {
+        $start = self::date($publishUp);
+        if ((int) $releaseAfterDays > 0 && $startedAt !== null && $startedAt !== '') {
+            $relative = self::date($startedAt)?->modify('+' . (int) $releaseAfterDays . ' days');
+            if ($relative && (!$start || $relative > $start)) {
+                $start = $relative;
+            }
+        }
+        return $start;
+    }
+
+    public static function displayEffectiveStart(mixed $publishUp, mixed $releaseAfterDays, ?string $startedAt, string $timezone): string
+    {
+        $start = self::effectiveStart($publishUp, $releaseAfterDays, $startedAt);
+        return $start ? CourseSchedule::display($start->format('Y-m-d H:i:s'), $timezone) : '';
+    }
+
+    public static function validReleaseDays(mixed $days): bool
+    {
+        return $days === null || $days === '' || (is_int($days) && $days >= 0 && $days <= 3650)
+            || (is_string($days) && preg_match('/\A(?:0|[1-9][0-9]{0,3})\z/D', $days) === 1 && (int) $days <= 3650);
+    }
+
+    public static function normalizeReleaseDays(mixed $days): ?int
+    {
+        if ($days === null || $days === '') {
+            return null;
+        }
+        if (!self::validReleaseDays($days)) {
+            throw new \InvalidArgumentException('COM_JLMS_LESSON_SCHEDULE_INVALID');
+        }
+        return (int) $days;
     }
 
     public static function reachable(mixed $publishUp, mixed $publishDown, array $courseWindow): bool

@@ -2,6 +2,20 @@
 
 Registro cumulativo delle verifiche da eseguire su un **sito Joomla di prova usa e getta**. Si aggiorna a ogni PR con comportamenti runtime, aggiungendo le prove descritte nella PR e mantenendo il collegamento al requisito/scenario esistente. Non crea criteri funzionali nuovi. Un test è superato solo dopo esecuzione manuale sul sito e registrazione dell’esito qui; CI e test HTTP sono evidenze separate.
 
+## Candidato 0.41.38-dev — rilascio relativo all’avvio iscrizione
+
+Su un Joomla di prova usa e getta, predisporre un corso pubblicabile con una lezione obbligatoria immediata e una seconda lezione obbligatoria con attesa di 2 giorni.
+
+1. Salvare e riaprire la lezione differita; verificare che il valore `2` sia persistito. Provare valori negativi e oltre 3650: rifiutati.
+2. Pubblicare il corso e iscrivere un account studente. Nell’aula verificare l’indicazione “disponibile dopo l’avvio, tra 2 giorni”, senza corpo, campi, allegati o player.
+3. Provare URL diretti di materiale/player, completamento e ripresa prima della data; atteso diniego senza mutazioni o progresso.
+4. Avviare l’iscrizione completando la lezione iniziale. Verificare che la data di disponibilità sia `started_at + 48 ore` (fuso visualizzato coerente) e che la lezione resti bloccata fino all’istante; poi verificare accesso e completamento.
+5. Combinare il rilascio con `publish_up` e `publish_down`: deve valere l’apertura più tarda e la chiusura è esclusiva.
+6. Tentare di pubblicare un corso dove tutte le lezioni obbligatorie hanno attesa positiva: atteso blocco per assenza di attività iniziale disponibile.
+7. Provare ammissione automatica e manuale con una scadenza di iscrizione/edizione precedente al rilascio di una lezione obbligatoria: atteso rifiuto esplicito. Verificare che un’iscrizione già attiva e i relativi progressi restino invariati.
+
+**Stato:** candidato in preparazione; attendere CI e merge prima di registrare l’esito del pacchetto.
+
 ## Come registrare un’esecuzione
 
 Prima del test annotare: data, versione e checksum del pacchetto, versione/patch Joomla, template e browser, ruoli/account e dati di prova. Per ogni prova indicare **Superato / Fallito / Bloccato**, breve esito e riferimento a screenshot/log senza dati personali. Usare account e contenuti fittizi; per prove con alterazioni DB usare esclusivamente un’istanza eliminabile. Dopo upgrade verificare anche i dati preesistenti richiesti dalla procedura.
