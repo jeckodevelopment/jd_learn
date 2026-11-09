@@ -205,10 +205,13 @@ final class HtmlView extends BaseHtmlView
             }
             if ($this->editorMode === 'rules' && $this->teachingRules !== null) {
                 $this->rulesForm = $this->get('RulesForm');
-                $data = $common + ['video_threshold'=>\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])];
+                $data = $common + ['sequence_mode'=>$this->teachingRules['sequence_mode'], 'video_threshold'=>\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])];
                 $key = 'com_jlms.curriculum.' . (int)$course->id . '.' . (int)$version->id . '.rules';
                 $saved = $app->getUserState($key, []); $app->setUserState($key, null);
-                if (is_array($saved) && (is_string($saved['video_threshold'] ?? null) || is_int($saved['video_threshold'] ?? null))) { $data['video_threshold'] = $saved['video_threshold']; }
+                if (is_array($saved)) {
+                    if (is_string($saved['video_threshold'] ?? null) || is_int($saved['video_threshold'] ?? null)) { $data['video_threshold'] = $saved['video_threshold']; }
+                    if (in_array($saved['sequence_mode'] ?? null, ['free', 'sequential'], true)) { $data['sequence_mode'] = $saved['sequence_mode']; }
+                }
                 $this->rulesForm->bind($data);
             }
             if ($this->editorMode === 'lesson') {

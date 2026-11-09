@@ -149,7 +149,7 @@ final class PathwayService
                         : 'unavailable';
                 } elseif ($enrollment->version_status !== 'published' || $enrollment->edition_status !== 'open'
                     || !is_array($rules) || ($rules['mode'] ?? '') !== 'learning'
-                    || ($rules['sequence_mode'] ?? '') !== 'free' || ($rules['certificate_enabled'] ?? true) !== false
+                    || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true) || ($rules['certificate_enabled'] ?? true) !== false
                     || ($rules['completion_policy'] ?? '') !== 'all_required') {
                     $access = 'unavailable';
                 } elseif ($required > 0 && $done <= $required) {

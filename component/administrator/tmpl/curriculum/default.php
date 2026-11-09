@@ -113,7 +113,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button>
     <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
    </form>
-   <?php else : ?><p><?= Text::_('COM_JLMS_TEACHING_THRESHOLD') ?>: <?= $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])) ?>%</p><p><?= Text::_('COM_JLMS_TEACHING_RULES_READ_ONLY') ?></p><?php endif; ?>
+   <?php else : ?><p><?= Text::_('COM_JLMS_SEQUENCE_MODE') ?>: <?= Text::_($this->teachingRules['sequence_mode'] === 'sequential' ? 'COM_JLMS_SEQUENCE_SEQUENTIAL' : 'COM_JLMS_SEQUENCE_FREE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_THRESHOLD') ?>: <?= $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])) ?>%</p><p><?= Text::_('COM_JLMS_TEACHING_RULES_READ_ONLY') ?></p><?php endif; ?>
   <?php endif; ?>
  </section>
 <?php endif; ?>

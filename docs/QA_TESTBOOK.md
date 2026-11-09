@@ -43,6 +43,18 @@ Usare un corso, un autore e uno studente fittizi su Joomla di prova.
 
 **Stato:** PR [#136](https://github.com/jeckodevelopment/jd_learn/pull/136) integrata nel commit `832d7d4089071002a11eb09cabdc86fae4e3f820`. CI standard 4/4 superata nel [run 42628727538](https://github.com/jeckodevelopment/jd_learn/actions/runs/42628727538). Pacchetto [JD-Learn-0.41.35-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42628727538/artifacts/13679892795), wrapper SHA-256 `fe8fa8bc4aa560548bd92db27d74c979e4f3dee7eec361421bc4462dcc212bd2`, interno `609719d24445eda91e0f35ab6aa4895cc60a564da54a0995e1499f5d6bdc617ab` (520630 byte), scade il 23 novembre 2026. Collaudo manuale Joomla pendente. Requisiti collegati: STU-04, EDGE-03, MAT-04, PRO-01. Sequenziamento automatico e rilascio temporale non sono inclusi in questo incremento.
 
+## PR sequenziamento delle attività obbligatorie (0.41.36-dev)
+
+Usare un corso, un autore e uno studente fittizi su Joomla di prova.
+
+1. Nella bozza crea tre lezioni obbligatorie A, B, C in ordine e una facoltativa tra A e B. Apri Regole didattiche, seleziona Sequenziale e salva. Riapri la schermata e verifica che la modalità sia conservata.
+2. Pubblica il programma. Da studente iscritto prova ad aprire B e C: devono mostrare la prima attività obbligatoria ancora incompleta e un collegamento, senza esporre corpo, campi, materiali o player.
+3. Prova URL diretti di allegati/player e richieste di completamento/ripresa per una lezione bloccata: nessun contenuto né progresso deve essere restituito. Completa A: B si sblocca. Completa B: C si sblocca. La lezione facoltativa non deve interrompere la catena.
+4. Crea una nuova bozza, passa a Libera e pubblica l’aggiornamento: la navigazione torna libera salvo prerequisiti espliciti. Verifica che gli iscritti alla versione precedente mantengano la regola assegnata.
+5. In una bozza sequenziale aggiungi un prerequisito esplicito da una lezione successiva verso una precedente: la pubblicazione deve rifiutare il ciclo combinato e lasciare intatta la versione attiva.
+
+**Stato:** candidato PR 0.41.36-dev; CI e pacchetto da registrare dopo il merge.
+
 ## Registro PR
 
 ### PR #130 — lezioni-documento
