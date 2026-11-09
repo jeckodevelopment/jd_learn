@@ -106,9 +106,6 @@ $firstLesson = $service->saveLesson($actor, scopeInput()+['id'=>0,'module_id'=>$
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $firstLesson)->loadObject();
 curriculumExpect($row->completion_rule==='manual' && (int)$row->preview===0,'server derives rules and ignores preview mass assignment');
 curriculumExpect($row->body===\Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'),'body uses the native Joomla content filter');
-$document = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Document lesson','kind'=>'document','required'=>'1','body'=>'<p>Read the attached document</p>']);
-$documentRow = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $document)->loadObject();
-curriculumExpect($documentRow->kind==='document' && $documentRow->completion_rule==='manual' && $documentRow->provider_key===null,'document lessons use manual completion and no video source');
 $video = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Video draft','kind'=>'video',
     'required'=>'0','body'=>'','provider_key'=>'youtube','source_reference'=>'https://youtu.be/dQw4w9WgXcQ']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $video)->loadObject();
@@ -124,6 +121,9 @@ curriculumExpect((int)$outline['modules'][0]->id===$second,'module ordering pers
 $service->reorder($actor,'lesson',scopeInput()+['id'=>$video,'direction'=>'up']);
 $outline = $service->outline($actor,$course,$version);
 curriculumExpect((int)$outline['lessons'][0]->id===$video,'lesson ordering persisted');
+$document = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Document lesson','kind'=>'document','required'=>'1','body'=>'<p>Read the attached document</p>']);
+$documentRow = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $document)->loadObject();
+curriculumExpect($documentRow->kind==='document' && $documentRow->completion_rule==='manual' && $documentRow->provider_key===null,'document lessons use manual completion and no video source');
 curriculumDenied(fn () => $service->deleteItem($actor,'module',scopeInput()+['id'=>$module,'revision'=>recordRevision('modules',$module),'confirmation'=>'1']),'non-empty module cannot be removed');
 $service->saveModule($actor,scopeInput()+['id'=>$second,'revision'=>recordRevision('modules',$second),'title'=>'Updated module']);
 $secondRevision=recordRevision('modules',$second);
