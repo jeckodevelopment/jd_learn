@@ -3,8 +3,9 @@
 Questo documento conserva il percorso passato. **Per decidere cosa funziona e cosa manca usare [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)**; per le prossime attività usare [NEXT_STEPS.md](NEXT_STEPS.md).
 
 | Versione / periodo | Risultato introdotto |
-| 0.41.37 | PR #141 integrata: finestre assolute di disponibilità delle lezioni nel fuso del corso, validazione di raggiungibilità e protezione aula/endpoint; CI standard 4/4 superata (run 42646076977); pacchetto verificato; collaudo Joomla pendente; rilascio relativo a giorni dall’iscrizione ancora residuo |
 |---|---|
+| 0.41.38 | PR #143 integrata nel commit `7681473d34e23ec633fcf9fc59c3711e644b2d98`: rilascio relativo lezioni, protezione pre-rilascio, requisito lezione iniziale e controllo scadenze note durante ammissione; CI standard 4/4 (run 42652681260); pacchetto verificato; collaudo Joomla pendente |
+| 0.41.37 | PR #141 integrata: finestre assolute di disponibilità delle lezioni nel fuso del corso, validazione di raggiungibilità e protezione aula/endpoint; CI standard 4/4 superata (run 42646076977); pacchetto verificato; collaudo Joomla pendente; rilascio relativo a giorni dall’iscrizione ancora residuo |
 | 0.41.36 | Candidato: modalità sequenziale per legare le attività obbligatorie nell’ordine del programma; CI e collaudo Joomla da completare |
 | 0.41.35 | PR #136 integrata: prerequisiti espliciti delle lezioni, controllo cicli, blocco protetto e collegamento nell’aula; CI 4/4 superata, collaudo Joomla pendente |
 | 0.41.34 | Ripresa protetta della posizione audio, senza completamento automatico; PR #134 integrata, CI standard 4/4 superata nel run 42613814879, collaudo manuale Joomla pendente |
