@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato all’**9 novembre 2026**. Candidato **0.41.31-dev**: la PR #126 ha aggiunto i controlli ACL specifici alle scorciatoie Dashboard; il candidato completa il filtraggio della sidebar per Banca domande, Categorie, Campi e Plugin video tramite plugin di sistema Joomla. CI e collaudo Joomla del candidato sono pendenti. Restano aperte le prove manuali AC-129–134, compresi i permessi e gli URL diretti di AC-132. Il prodotto non è pronto per la produzione.
+Aggiornato all’**9 novembre 2026**. Main **0.41.31-dev**, PR #128 integrata nel commit `26c7ad5264dfbbdbdab9c446162220567df2d30e`: issue #113 è implementata anche nella sidebar nativa tramite plugin di sistema. CI standard superata nel [run 42594246627](https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627). Restano da collaudare manualmente ruoli e URL diretti di AC-132 e le altre prove AC-129–134. Il prodotto non è pronto per la produzione.
 
 **Controllo del perimetro:** la ricerca roster PR #94 non era nell’elenco precedente delle lacune concordate. È una deviazione di processo; il merge non equivale ad approvazione come requisito stabile. È conservata nel runtime di main e annotata come elemento da riesaminare in [testbook](QA_TESTBOOK.md#pr-94--ricerca-roster-deviazione-di-perimetro-non-gate-di-accettazione). Le prossime implementazioni devono riferirsi a requisiti/scenari e residui già elencati in [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Per le viste backend, seguire la regola di uniformità documentata nel [piano UX](ADMIN_UX_PLAN.md#regola-di-uniformità-delle-viste-joomla).
 
@@ -24,7 +24,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **68%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (473/7 = 68%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; tutte le prove Joomla reali restano conteggiate separatamente come pendenti.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (473/7 = 68%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 ## Funzioni presenti e lavoro residuo
 

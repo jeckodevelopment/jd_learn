@@ -43,7 +43,7 @@ PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattiv
 
 **Stato:** i quattro job standard della CI sono superati sul commit PR `8b962c62f3af95100c1da7b1794297df66452d78`, incluso il test install-package senza preattivazione e lo smoke test delle stringhe. Il pacchetto installabile è [artefatto CI 13626378474](https://github.com/jeckodevelopment/jd_learn/actions/runs/42503477910/artifacts/13626378474), SHA-256 interno `40c1743ba9556a6fd96eeba9da1c403edc2f67c91d9b93773daac539c9f380f7`. Collaudo manuale Joomla ancora da registrare.
 
-### Issue #113 — ACL della sidebar nativa (candidato 0.41.31-dev)
+### Issue #113 — ACL della sidebar nativa (PR #128, 0.41.31-dev)
 
 Riferimenti: [issue #113](https://github.com/jeckodevelopment/jd_learn/issues/113), CORE-20 / AC-132. Il plugin `plg_system_jlmsmenu` deve filtrare le voci della sidebar secondo i permessi già applicati alle destinazioni senza cambiare gli altri menu Joomla.
 
@@ -54,7 +54,7 @@ Riferimenti: [issue #113](https://github.com/jeckodevelopment/jd_learn/issues/11
 5. Verificare che i menu di Joomla non collegati a JD Learn, incluse le categorie contenuti, restino invariati.
 6. Aggiornare un sito con plugin attivo: deve restare attivo. Disattivarlo e aggiornare di nuovo: deve restare disattivato.
 
-**Stato:** implementazione candidata; CI, merge e collaudo sul sito di prova ancora pendenti.
+**Stato:** PR #128 integrata in main 0.41.31-dev nel commit `26c7ad5264dfbbdbdab9c446162220567df2d30e`; CI standard superata nel [run 42594246627](https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627), inclusi test installazione/upgrade e preservazione dello stato plugin. Collaudo sul sito Joomla di prova ancora pendente.
 
 ### Issue #105 — dashboard amministrativa
 
