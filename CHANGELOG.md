@@ -5,6 +5,7 @@
 - Issue [#113](https://github.com/jeckodevelopment/jd_learn/issues/113): Banca domande ora richiede anche `jlms.quiz.manage`; Categorie corsi e Campi aggiuntivi richiedono i permessi di destinazione oltre all’accesso a JD Learn.
 - La parte del sottomenu nativo resta da completare; il testbook distingue il comportamento implementato dal collaudo Joomla pendente.
 - **Collaudo manuale Joomla:** gruppo con `core.manage` JD Learn ma senza `jlms.quiz.manage`; verificare assenza della scorciatoia banca domande, diniego dell’URL diretto, e visibilità dei link categorie/campi con permessi mancanti/presenti.
+- PR [#126](https://github.com/jeckodevelopment/jd_learn/pull/126) integrata nel commit `92f05f82cc74671b07a5b0c8275f410ddf74756d`; quattro job CI superati ([run 42589362926](https://github.com/jeckodevelopment/jd_learn/actions/runs/42589362926)). Pacchetto [JD-Learn-0.41.30-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42589362926/artifacts/13660408807), checksum interno `5c43dff45c5d121e4f96aa897926e7db8fbf7fec6799406cb7b2a512aab5770c` (511075 byte), artefatto in scadenza 23 novembre 2026; wrapper ZIP da estrarre una volta.
 
 ## 0.41.29-dev — traduzioni delle opzioni componente
 
