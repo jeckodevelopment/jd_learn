@@ -105,7 +105,8 @@ final class PublicationService
         }
         $currentState = (int) $course->state;
         $returnState = $course->current_version_id === null ? 0 : 1;
-        return array_values(array_filter($transitions, function ($transition) use ($actor, $version, $currentState, $returnState, $reviewStage): bool {
+        $currentVersionId = (int) ($course->current_version_id ?? 0);
+        return array_values(array_filter($transitions, function ($transition) use ($actor, $version, $currentState, $returnState, $reviewStage, $currentVersionId): bool {
             $options = new Registry($transition->options);
             $state = $options->get('publishing');
             $action = (string) $options->get('jlms_action', (string) $state === '1' ? 'publish' : 'unpublish');
@@ -115,7 +116,7 @@ final class PublicationService
                 if ($action === 'return' && ((int) $transition->jlms_source_stage_id !== $reviewStage || (int) $state !== $returnState)) { return false; }
                 if ($action === 'publish' && (int) $state !== 1) { return false; }
                 if (!in_array($action, ['review', 'return', 'publish'], true)) { return false; }
-            } elseif ($version && ($version->status !== 'published' || (int) $version->id !== (int) $course->current_version_id)) {
+            } elseif ($version && ($version->status !== 'published' || (int) $version->id !== $currentVersionId)) {
                 return false;
             } elseif ($action === 'review' || $action === 'return') {
                 return false;
