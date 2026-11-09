@@ -18,6 +18,19 @@ Prima del test annotare: data, versione e checksum del pacchetto, versione/patch
 
 ## Registro PR
 
+### PR #130 — lezioni-documento autonome
+
+Riferimenti: M01/M02, LES-01–04, MAT-01–08. Usare corso e account fittizi su Joomla di prova.
+
+1. Con ruolo docente autorizzato, creare una bozza, un modulo e una lezione di tipo **Documento**. Verificare che il tipo sia disponibile in italiano e inglese e che il form salvi senza mostrare i campi provider video.
+2. Tentare la pubblicazione senza allegati della lezione. Atteso: pubblicazione negata e blocco di preflight che richiede un documento.
+3. Aprire **Materiali** dalla lezione, caricare un PDF, attendere lo stato pronto e pubblicare. Atteso: pubblicazione completata, con le normali verifiche di scansione e disponibilità.
+4. Con uno studente iscritto, aprire la lezione, scaricare il file protetto e segnare la lezione completata. Atteso: avanzamento persistente e completamento corso coerente.
+5. Provare il download da sessione anonima e da account non iscritto. Atteso: accesso negato; date di disponibilità e scansione obbligatoria sono rispettate.
+
+**Stato:** CI standard in attesa; nessun esito manuale registrato.
+
+
 ### PR #100 — attivazione e lingue del plugin Privacy Joomla
 
 Riferimenti: PRI-02, CORE-08; correzione del comportamento già incluso, senza introdurre nuove capacità privacy. Usare due installazioni Joomla usa e getta: una pulita e una con JD Learn già installato e `JD Learn - Privacy` intenzionalmente disabilitato.
