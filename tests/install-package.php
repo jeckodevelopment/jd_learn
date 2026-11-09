@@ -73,7 +73,24 @@ try {
     if ($privacyPlugin === null || (int) $privacyPlugin !== 1) {
         throw new \RuntimeException('The package installer did not enable the JD Learn privacy plugin.');
     }
-    echo json_encode(['package_install'=>'passed','messages'=>$app->getMessageQueue()],JSON_THROW_ON_ERROR).PHP_EOL;
+    $menuPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->loadResult();
+    if ($menuPlugin === null || (int) $menuPlugin !== 1) {
+        throw new \RuntimeException('The package installer did not enable the JD Learn menu ACL plugin.');
+    }
+
+    // Reinstall as an upgrade after an administrator has intentionally disabled the plugin.
+    $db->setQuery("UPDATE #__extensions SET enabled=0 WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->execute();
+    $upgradeInstaller = new \Joomla\CMS\Installer\Installer();
+    $upgradeInstaller->setDatabase($db);
+    if (!$upgradeInstaller->install($package['extractdir'])) {
+        throw new \RuntimeException('JD Learn package upgrade failed after disabling the menu ACL plugin.');
+    }
+    $menuPluginAfterUpgrade = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->loadResult();
+    if ((int) $menuPluginAfterUpgrade !== 0) {
+        throw new \RuntimeException('A JD Learn package upgrade must preserve the administrator plugin state.');
+    }
+
+    echo json_encode(['package_install'=>'passed','menu_acl_plugin_upgrade_state'=>'preserved','messages'=>$app->getMessageQueue()],JSON_THROW_ON_ERROR).PHP_EOL;
 } finally {
     \Joomla\CMS\Installer\InstallerHelper::cleanupInstall('', $package['extractdir']);
 }

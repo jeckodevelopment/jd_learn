@@ -2,7 +2,7 @@
 
 La voce radice **JD Learn** apre la dashboard del componente. I riquadri sono collegamenti di sola navigazione alle gestioni Joomla esistenti: Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video. Ogni riquadro usa un'icona ed è mostrato solo se l'utente dispone dei permessi richiesti per quella destinazione. In particolare, Banca domande richiede anche `jlms.quiz.manage`; Categorie corsi e Campi aggiuntivi richiedono i permessi nativi e l'accesso a JD Learn. I permessi delle destinazioni sono comunque riapplicati dal componente o da Joomla.
 
-Nel sottomenu laterale di **JD Learn**, la prima voce **Dashboard** riapre la pagina principale; **Corsi** segue subito dopo. Le voci del menu nativo sono ancora filtrate dal permesso generale del componente; la visibilità per permesso specifico di ciascuna funzione è un'attività aperta nell'issue #113.
+Nel sottomenu laterale di **JD Learn**, la prima voce **Dashboard** riapre la pagina principale; **Corsi** segue subito dopo. Il plugin di sistema `plg_system_jlmsmenu` filtra anche il sottomenu nativo per i permessi specifici: Banca domande richiede `jlms.quiz.manage`; Categorie e Campi applicano i permessi Joomla nativi e quelli del contesto JD Learn; Plugin video richiede `core.manage` su `com_plugins`. Le altre voci JD Learn richiedono `core.manage` su `com_jlms`. I controlli d’accesso di Joomla e del componente restano attivi sugli URL diretti. Il plugin viene attivato all’installazione del pacchetto e un aggiornamento conserva l’eventuale scelta di disattivarlo.
 
 I provider video mantengono il riepilogo espandibile già presente. La dashboard non aggiunge statistiche, attestati, report o nuovi flussi amministrativi: tali funzioni restano fuori da questa implementazione e seguono la pianificazione di fase 2.
 
@@ -19,4 +19,4 @@ Su Joomla 6 di prova, con account autorizzato e account con permessi limitati:
 7. Nel sottomenu JD Learn verificare che **Dashboard** sia la prima voce, preceda **Corsi** e apra la dashboard.
 8. Registrare separatamente le voci del sottomenu visibili all'account limitato: il filtraggio per permesso specifico non è ancora implementato.
 
-Registrare ogni esito in `docs/QA_TESTBOOK.md`, sezione issue #105.
+Registrare ogni esito in `docs/QA_TESTBOOK.md`, scenario issue #113 / AC-132.

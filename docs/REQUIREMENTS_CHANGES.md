@@ -119,3 +119,10 @@ La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122) integra AC-1
 **Origine:** issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115), che segnala la chiave grezza `JGLOBAL_HISTORY_OPTIONS` in due punti della pagina e il titolo browser non tradotto `com_jlms_configuration`.
 
 **Scenario aggiuntivo AC-134 (CORE-20):** in Opzioni del componente JD Learn, il titolo browser e l’intestazione devono tradursi in **JD Learn: Opzioni** (IT) e **JD Learn: Options** (EN). L’etichetta del gruppo Cronologia versioni, sia nella scheda sia nel gruppo, deve essere tradotta in entrambe le lingue. Nessuna impostazione, valore o convenzione di navigazione cambia. Il testbook contiene i passaggi IT/EN. La CI standard è superata nel [run 42533814214](https://github.com/jeckodevelopment/jd_learn/actions/runs/42533814214); il collaudo manuale resta pendente. Lo scenario è un addendum di accettazione e non modifica gli ID della matrice baseline.
+
+
+## Completamento AC-132 — issue #113, voci sidebar native
+
+La PR candidata 0.41.31 implementa il secondo controllo richiesto dall’issue #113 con il plugin di sistema Joomla `plg_system_jlmsmenu`. La sidebar segue i permessi già definiti per le scorciatoie Dashboard: `jlms.quiz.manage` per Banca domande; `core.manage` sull’estensione/context nativo e su JD Learn per Categorie e Campi; `core.manage` su `com_plugins` per Plugin video; `core.manage` su `com_jlms` per le altre voci. Il plugin non modifica le voci non JD Learn. Si attiva al primo install e rispetta lo stato deliberato dall’amministratore durante gli upgrade. L’URL diretto continua a essere autorizzato dal componente o dall’estensione Joomla di destinazione.
+
+**Stato candidato:** implementazione e documentazione incluse nella PR; CI e collaudo Joomla manuale pendenti. L’accettazione AC-132 resta aperta finché non sono registrate le prove su account completi/limitati e URL diretti nel [testbook](QA_TESTBOOK.md#issue-113--acl-della-sidebar-nativa-candidato-04131-dev).

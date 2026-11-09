@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato all’**9 novembre 2026**. Main è **0.41.30-dev** dopo il merge della PR [#126](https://github.com/jeckodevelopment/jd_learn/pull/126): le scorciatoie Dashboard per Banca domande, Categorie corsi e Campi aggiuntivi rispettano i permessi specifici. La CI standard è superata nel [run 42589362926](https://github.com/jeckodevelopment/jd_learn/actions/runs/42589362926). Issue #113 resta parzialmente aperta per il filtraggio delle voci del sottomenu nativo. AC-133/134 e le nuove condizioni ACL richiedono ancora collaudo Joomla manuale. Il prodotto non è pronto per la produzione.
+Aggiornato all’**9 novembre 2026**. Candidato **0.41.31-dev**: la PR #126 ha aggiunto i controlli ACL specifici alle scorciatoie Dashboard; il candidato completa il filtraggio della sidebar per Banca domande, Categorie, Campi e Plugin video tramite plugin di sistema Joomla. CI e collaudo Joomla del candidato sono pendenti. Restano aperte le prove manuali AC-129–134, compresi i permessi e gli URL diretti di AC-132. Il prodotto non è pronto per la produzione.
 
 **Controllo del perimetro:** la ricerca roster PR #94 non era nell’elenco precedente delle lacune concordate. È una deviazione di processo; il merge non equivale ad approvazione come requisito stabile. È conservata nel runtime di main e annotata come elemento da riesaminare in [testbook](QA_TESTBOOK.md#pr-94--ricerca-roster-deviazione-di-perimetro-non-gate-di-accettazione). Le prossime implementazioni devono riferirsi a requisiti/scenari e residui già elencati in [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Per le viste backend, seguire la regola di uniformità documentata nel [piano UX](ADMIN_UX_PLAN.md#regola-di-uniformità-delle-viste-joomla).
 
@@ -20,11 +20,11 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Fruizione e progressi core (M03/M09) | 55% |
 | Video e materiali essenziali (M04) | 80% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
-| Usabilità amministrativa e integrazioni Joomla | 85% |
+| Usabilità amministrativa e integrazioni Joomla | 88% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **67%** |
+| **Avanzamento complessivo stimato** | **68%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (470/7 = 67%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; tutte le prove Joomla reali restano conteggiate separatamente come pendenti.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (473/7 = 68%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; tutte le prove Joomla reali restano conteggiate separatamente come pendenti.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -32,7 +32,7 @@ Metodo: media semplice delle sette aree incluse nella prima versione stabile rip
 
 | Area | Disponibile oggi | Da implementare o completare |
 |---|---|---|
-| Amministrazione corsi, docenti e campi | Elenco/editor corsi secondo convenzioni articoli Joomla; accesso nativo a `com_fields` e contesti corso/docente/lezione; PR #104 centralizza l'accesso nella sidebar; PR #108 in 0.41.23 apre la dashboard con sei riquadri e ACL; PR #110 in 0.41.24 corregge menu root, URL e introduzione; PR #112 in 0.41.25 aggiunge la voce Dashboard in cima alla sidebar; PR #116 in 0.41.26 rende la lista Docenti conforme a Search Tools Joomla (AC-130); PR #122 in 0.41.28 aggiunge conteggio corsi e filtro docente (AC-133); la PR #124 in 0.41.29 corregge titolo pagina Opzioni e label Cronologia versioni in IT/EN (AC-134); PR #120 in 0.41.27 separa la lista banca domande dal form (AC-131) | Collaudi manuali issue #99/AC-129 e AC-130, collaudo AC-133, ACL/lifecycle/snapshot campi; collaudo AC-131 pendente; ricollaudo issue #105/AC-132 già superato secondo utente |
+| Amministrazione corsi, docenti e campi | Elenco/editor corsi secondo convenzioni articoli Joomla; accesso nativo a `com_fields` e contesti corso/docente/lezione; PR #104 centralizza l'accesso nella sidebar; PR #108 in 0.41.23 apre la dashboard con sei riquadri e ACL; PR #110 in 0.41.24 corregge menu root, URL e introduzione; PR #112 in 0.41.25 aggiunge la voce Dashboard in cima alla sidebar; PR #116 in 0.41.26 rende la lista Docenti conforme a Search Tools Joomla (AC-130); PR #122 in 0.41.28 aggiunge conteggio corsi e filtro docente (AC-133); la PR #124 in 0.41.29 corregge titolo pagina Opzioni e label Cronologia versioni in IT/EN (AC-134); PR #120 in 0.41.27 separa la lista banca domande dal form (AC-131) | Collaudi manuali issue #99/AC-129 e AC-130, collaudo AC-133, ACL/lifecycle/snapshot campi; collaudo AC-131 pendente; ricollaudo dashboard issue #105 superato secondo utente; ACL sidebar AC-132 candidata nella PR 0.41.31 con CI e manuale Joomla pendenti |
 | Banca domande | Banca a revisioni e composizione quiz esistenti | PR #120 / 0.41.27-dev: elenco Search Tools separato dal form, crea/duplica/elimina e blocco cancellazione per dipendenze quiz/tentativi (AC-131); CI completa superata, collaudo manuale Joomla pendente. Altre nuove funzioni didattiche quiz restano fase 2 |
 | Programma | Moduli e lezioni testo/video/quiz; editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate, soglia video e finestre temporali dei materiali della bozza | Lezioni audio/documento autonome; prerequisiti, sequenze e rilascio progressivo |
 | Ciclo editoriale | Bozza, precontrollo con blocchi/avvisi distinti nella 0.41.10 e controlli video/materiali nella 0.41.11–0.41.12; aggiornamento in nuova versione immutabile; recupero storico con audit; 0.41.14: migrazione esplicita singola dal roster con mappatura, anteprima/hash, conferma/motivo, trasferimento dei soli completamenti non quiz e provenienza. La fonte resta nello storico; tentativi aperti, destinazione esistente o edizione non disponibile bloccano l’azione | Revisione/archivio completi, anteprima interattiva e dei livelli senza effetti; collaudo manuale della migrazione e dei casi negativi |
@@ -74,6 +74,6 @@ Seguire l’ordine e i confini già approvati in [NEXT_STEPS.md](NEXT_STEPS.md),
 
 La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) restano il perimetro: 209 requisiti del rilascio 1 e uno differito. Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
-Schema attuale: **42 tabelle / 59 FK**; 8 estensioni nel pacchetto candidato. Questi conteggi descrivono l'architettura, non l'avanzamento.
+Schema attuale: **42 tabelle / 59 FK**; 9 estensioni nel pacchetto candidato. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.

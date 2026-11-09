@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato all’**9 novembre 2026**. Main **0.41.30-dev** include la PR #126 / prima parte di issue #113: le scorciatoie dashboard applicano i permessi specifici; CI standard superata nel run 42589362926. Completare il filtraggio delle voci del sottomenu nativo e registrare l’accettazione su Joomla. I collaudi di campi, Privacy e ruoli dashboard restano aperti. La ricerca roster della PR #94 è una deviazione non approvata. L’accettazione manuale dei percorsi, dei provider e del roster core resta da completare. Il quinto provider è rinviato alla fase 2; la prima stabile deve verificare i quattro provider distribuiti su Joomla e browser reali. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
+Aggiornato all’**9 novembre 2026**. Main **0.41.30-dev** include la PR #126; la PR candidata **0.41.31-dev** completa issue #113 filtrando le voci del sottomenu nativo per permesso specifico. La CI e l’accettazione manuale su Joomla del nuovo candidato devono essere registrate prima di chiudere AC-132. I collaudi di campi, Privacy e ruoli dashboard restano aperti. La ricerca roster della PR #94 è una deviazione non approvata. L’accettazione manuale dei percorsi, dei provider e del roster core resta da completare. Il quinto provider è rinviato alla fase 2; la prima stabile deve verificare i quattro provider distribuiti su Joomla e browser reali. Qui si pianifica il lavoro residuo; funzioni presenti e prove sono nello [stato attuale](IMPLEMENTATION_STATUS.md).
 
 ## Priorità per la prima versione stabile
 
@@ -22,6 +22,9 @@ Quiz e banca domande, attestati, KPI/reportistica avanzata, export CSV e importa
 Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applicano da subito a ogni funzione inclusa.
 
 ## Primo lavoro da svolgere
+
+La PR candidata 0.41.31 completa l’implementazione ACL della sidebar; dopo la CI e il merge, il primo passo è il collaudo sul sito Joomla (account con permessi completi e limitati, URL diretti, installazione e upgrade). Poi riprendere il primo residuo implementativo dell’ordine approvato: gestione corsi e programma M01/M02, verificando prima la matrice dei residui specifici in M01_ACCEPTANCE.md.
+
 
 La PR #116 ha integrato AC-130 in 0.41.26-dev per la lista docenti secondo le convenzioni Joomla; il collaudo manuale resta da registrare. La PR #120 integra AC-131 in 0.41.27-dev: elenco separato per la banca domande; CI completa superata, collaudo Joomla pendente. La PR #122 integra issue #117 / AC-133 in 0.41.28-dev: conteggio/link corsi docenti, filtro docente e traduzione titolo. La PR #124 integra issue #115 / AC-134 in 0.41.29-dev: titolo della pagina Opzioni e label Cronologia versioni tradotti in IT/EN; collaudo manuale pendente. Non avviare altri ampliamenti quiz.
 

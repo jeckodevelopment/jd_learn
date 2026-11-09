@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.31-dev — permessi specifici nella sidebar nativa
+
+- Completa issue #113: `plg_system_jlmsmenu` filtra le voci di JD Learn per le autorizzazioni di Banca domande, Categorie, Campi e Plugin video. Le altre voci JD Learn mantengono il requisito `core.manage` del componente; gli altri menu Joomla non sono modificati.
+- Il pacchetto attiva il plugin alla prima installazione e conserva lo stato scelto dall’amministratore agli aggiornamenti.
+- **Collaudo manuale Joomla:** account con accesso JD Learn ma senza `jlms.quiz.manage`; verificare assenza di Banca domande in sidebar e dashboard e diniego dell’URL diretto. Rimuovere separatamente i permessi `com_jlms.course`, `com_fields`, `com_plugins` e verificare l’assenza rispettiva di Categorie, Campi, Plugin video. Verificare account completo, altri menu Joomla e installazione/upgrade con plugin attivo e disattivato.
+- CI, merge e pacchetto verificato saranno registrati dopo l’esito della pipeline.
+
+
 ## 0.41.30-dev — ACL nelle scorciatoie Dashboard
 
 - Issue [#113](https://github.com/jeckodevelopment/jd_learn/issues/113): Banca domande ora richiede anche `jlms.quiz.manage`; Categorie corsi e Campi aggiuntivi richiedono i permessi di destinazione oltre all’accesso a JD Learn.
