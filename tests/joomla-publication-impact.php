@@ -89,13 +89,23 @@ $enrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_r
 impactExpect((int)impactRow('enrollments',$enrollment)->course_version_id===$old,'Real enrollment assigned to the original programme');
 $before=impactLearning();
 $draft=$authoring->createDraft($actor,$course,(int)impactRow('courses',$course)->revision);
-$transition=(int)$service->transitions($actor,$course,$draft)[0]->id;
+$findTransition=static function(string $action)use($service,$actor,$course,$draft):object {
+    foreach($service->transitions($actor,$course,$draft) as $candidate) {
+        if((new \Joomla\Registry\Registry($candidate->options))->get('jlms_action')===$action)return $candidate;
+    }
+    throw new RuntimeException('Missing editorial transition '.$action);
+};
+$submit=$findTransition('review');
+$service->transition($actor,$course,$draft,(int)impactRow('courses',$course)->revision,(int)impactRow('course_versions',$draft)->revision,(int)$submit->id);
+$transition=(int)$findTransition('publish')->id;
 $review=static fn(): array => $service->updateImpact($actor,$course,$draft,$transition);
 $initial=$review();
 foreach (['modules','lessons','quizzes','materials'] as $kind) { impactExpect($initial['changes'][$kind]['added']===0&&$initial['changes'][$kind]['changed']===0&&$initial['changes'][$kind]['removed']===0,'Unchanged working copy has no false changes for '.$kind); }
 impactExpect(!$initial['rules_changed'],'Equivalent teaching rules remain unchanged');
 impactExpect((int)$initial['enrollments'][0]['total']===1,'Review counts existing assignments without learner identities');
 impactDenied(fn()=>$service->transition($actor,$course,$draft,(int)impactRow('courses',$course)->revision,(int)impactRow('course_versions',$draft)->revision,$transition),'COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
+$return=$findTransition('return');
+$service->transition($actor,$course,$draft,(int)impactRow('courses',$course)->revision,(int)impactRow('course_versions',$draft)->revision,(int)$return->id);
 $scope=static fn(): array => ['course_id'=>$course,'version_id'=>$draft,'expected_version_revision'=>impactRow('course_versions',$draft)->revision];
 $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'New impact module']);
 $lesson=$authoring->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$module,'title'=>'New impact lesson','kind'=>'text','required'=>'0','body'=>'<p>Publication review content</p>']);
@@ -104,13 +114,21 @@ $authoring->saveModule($actor,$scope()+['id'=>$existingModule->id,'revision'=>$e
 $quiz=$db->setQuery('SELECT * FROM #__jlms_quizzes WHERE course_version_id='.$draft.' ORDER BY id')->loadObject();
 $quizChange=(object)['id'=>(int)$quiz->id,'pass_basis_points'=>6500];$db->updateObject('#__jlms_quizzes',$quizChange,'id');
 $versionChange=(object)['id'=>$draft,'revision'=>(int)impactRow('course_versions',$draft)->revision+1];$db->updateObject('#__jlms_course_versions',$versionChange,'id');
+$submit=$findTransition('review');
+$service->transition($actor,$course,$draft,(int)impactRow('courses',$course)->revision,(int)impactRow('course_versions',$draft)->revision,(int)$submit->id);
+$transition=(int)$findTransition('publish')->id;
 $updated=$review();
 impactExpect($updated['changes']['modules']['changed']===1&&$updated['changes']['quizzes']['changed']===1,'Existing module and quiz definition changes are recognised without exposing questions');
 
 impactExpect($updated['changes']['modules']['added']===1&&$updated['changes']['lessons']['added']===1,'New module and lesson classified as additions');
 impactDenied(fn()=>$service->transition($actor,$course,$draft,(int)impactRow('courses',$course)->revision,(int)impactRow('course_versions',$draft)->revision,$transition,$initial['fingerprint']),'COM_JLMS_PUBLICATION_REVIEW_STALE');
 impactExpect(impactRow('course_versions',$draft)->status==='draft'&&impactLearning()===$before,'Stale review causes no publication or learning mutation');
+$return=$findTransition('return');
+$service->transition($actor,$course,$draft,(int)impactRow('courses',$course)->revision,(int)impactRow('course_versions',$draft)->revision,(int)$return->id);
 $authoring->saveLesson($actor,$scope()+['id'=>$lesson,'revision'=>impactRow('lessons',$lesson)->revision,'module_id'=>$module,'title'=>'Changed added lesson','kind'=>'text','required'=>'0','body'=>'<p>Changed body</p>']);
+$submit=$findTransition('review');
+$service->transition($actor,$course,$draft,(int)impactRow('courses',$course)->revision,(int)impactRow('course_versions',$draft)->revision,(int)$submit->id);
+$transition=(int)$findTransition('publish')->id;
 impactExpect($review()['fingerprint']!==$updated['fingerprint'],'Changed draft content invalidates the review');
 $guest=new \Joomla\CMS\User\User(0);
 impactDenied(fn()=>$service->updateImpact($guest,$course,$draft,$transition),'JERROR_ALERTNOAUTHOR');
