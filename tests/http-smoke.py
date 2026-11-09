@@ -97,6 +97,7 @@ try:
  if any('&amp;' in a.get('href','') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')):raise RuntimeError('Dashboard shortcut href must not contain a literal HTML entity')
  required_shortcuts={
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
+  'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
   'jlms-admin-shortcut-teachers':('com_jlms','teachers'),
   'jlms-admin-shortcut-question_bank':('com_jlms','questionbank'),
@@ -110,7 +111,8 @@ try:
    raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
  if 'Manage courses, the learning programme and teaching resources from the administrator panel.' not in html or 'Your learning history and current classroom availability are shown separately.' in html:
   raise RuntimeError('Administrator dashboard introduction must use its current, relevant translation')
- if len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))!=6:raise RuntimeError('Dashboard shortcuts must each include a Joomla icon')
+ icon_count=len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))
+ if icon_count!=len(dashboard_shortcuts):raise RuntimeError('Every visible dashboard shortcut must include a Joomla icon')
  # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
  get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')
  _,plugin_html=get(urljoin(urljoin(url,Page(html).base or ""),plugin_link))
