@@ -1,8 +1,8 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Candidato 0.41.43-dev**: anteprima dei livelli Joomla in sola lettura, senza modificare utenti o iscrizioni. Il pacchetto candidato verrà collegato dopo la CI. Ultimo pacchetto verificato: [JD-Learn-0.41.42-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478/artifacts/13711989978) (archivio Actions da estrarre una volta; SHA-256 ZIP Joomla interno `0e8ab0086a7305829b24f76e5859369213320d8529eda56a9556edaf7f0ad6fb`).
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.43-dev**, PR [#162](https://github.com/jeckodevelopment/jd_learn/pull/162) integrata: anteprima in sola lettura dei livelli di accesso Joomla, con separazione tra visibilità catalogo e accesso ai contenuti. [Scarica JD-Learn-0.41.43-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795) (archivio Actions da estrarre una volta; SHA-256 ZIP Joomla interno `39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738`; wrapper `180213ed6f86fd3d796c98a1e76a41e282e7a54508a51ddb368da0e7c44b5492`; scade il 23 novembre 2026).
 
-**Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/documento/audio/video/quiz sono disponibili nei flussi implementati; collaudi manuali di release ancora aperti, inclusi il rilascio relativo della 0.41.38-dev, l’authoring Percorsi della 0.41.39-dev e la dashboard provider 0.41.40-dev e il workflow editoriale 0.41.42-dev. Resta da completare l’anteprima studente interattiva, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
+**Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/documento/audio/video/quiz sono disponibili nei flussi implementati; collaudi manuali di release ancora aperti, inclusi il rilascio relativo della 0.41.38-dev, l’authoring Percorsi della 0.41.39-dev e la dashboard provider 0.41.40-dev e il workflow editoriale e anteprima accessi 0.41.43-dev. Resta da completare l’anteprima studente interattiva, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
 ## Orientarsi nella documentazione
 
@@ -46,7 +46,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto candidato 0.41.31 contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto 0.41.43-dev contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
 
 ```sh
 python3 tools/build.py
