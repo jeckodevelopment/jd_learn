@@ -84,7 +84,7 @@ $draft=$authoring->createDraft($actor,$course,$rev('courses',$course));
 $activeVersion=$draft;
 $draftScope=$scope($draft);
 $draftModule=$authoring->saveModule($actor,$draftScope+['id'=>0,'title'=>'Updated module']);
-$authoring->saveLesson($actor,$draftScope+['id'=>0,'module_id'=>$draftModule,'title'=>'Updated lesson','kind'=>'text','required'=>'1','body'=>'<p>Updated content.</p>']);
+$authoring->saveLesson($actor,$scope($draft)+['id'=>0,'module_id'=>$draftModule,'title'=>'Updated lesson','kind'=>'text','required'=>'1','body'=>'<p>Updated content.</p>']);
 $transition($choice('review',1),$draft);
 $row=$db->setQuery('SELECT state,current_version_id FROM #__jlms_courses WHERE id='.$course)->loadObject();
 $expect((int)$row->state===1&&(int)$row->current_version_id===$current&&$stage()==='COM_JLMS_IN_REVIEW','reviewing an update preserves the currently published course');
