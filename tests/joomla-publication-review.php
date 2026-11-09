@@ -103,7 +103,7 @@ $expect((int)$row->state===1&&(int)$row->current_version_id===$version&&$stage()
 $beforeAccess=$db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id='.$course)->loadAssoc();
 $publicAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1]);
 $registeredAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1,2]);
-$expect($publicAccess['catalog_visible']&&!$publicAccess['content_allowed'],'level preview separates public catalogue access from restricted course content');
+$expect($publicAccess['catalog_visible']&&!$publicAccess['content_allowed'],'level preview separates public catalogue access from restricted course content: '.json_encode($publicAccess));
 $expect($registeredAccess['catalog_visible']&&$registeredAccess['content_allowed'],'combined Joomla view levels satisfy both configured access gates');
 $expect($beforeAccess===$db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id='.$course)->loadAssoc(),'access preview does not alter course state, version, or access settings');
 try{$component->getCatalogService()->accessPreview($guest,$course,'en-GB',[1]);throw new RuntimeException('Unauthorized user received access preview');}
