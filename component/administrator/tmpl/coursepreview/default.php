@@ -21,6 +21,27 @@ foreach ($this->preview['lessons'] as $entry) {
     <h1><?= $this->escape($course->title) ?></h1>
     <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_('COM_JLMS_REVISION') ?> <?= (int) $version->revision ?></p>
     <p class="alert alert-info"><?= Text::_('COM_JLMS_COURSE_PREVIEW_NOTICE') ?></p>
+    <?php $access = $this->preview['access_preview']; ?>
+    <section id="jlms-course-access-preview" aria-labelledby="jlms-course-access-preview-title">
+        <h2 id="jlms-course-access-preview-title"><?= Text::_('COM_JLMS_ACCESS_PREVIEW_TITLE') ?></h2>
+        <p><?= Text::_('COM_JLMS_ACCESS_PREVIEW_NOTICE') ?></p>
+        <form method="get" action="<?= Route::_('index.php') ?>">
+            <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="coursepreview">
+            <input type="hidden" name="id" value="<?= (int) $course->id ?>"><input type="hidden" name="version_id" value="<?= (int) $version->id ?>">
+            <?php if ($lesson) : ?><input type="hidden" name="lesson_id" value="<?= (int) $lesson->id ?>"><?php endif; ?>
+            <fieldset><legend><?= Text::_('COM_JLMS_ACCESS_PREVIEW_LEVELS') ?></legend>
+            <?php foreach ($access['levels'] as $level) : $levelId = (int) $level->id; ?>
+                <label class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="access_levels[]" value="<?= $levelId ?>"<?= in_array($levelId, $access['selected'], true) ? ' checked' : '' ?>> <span class="form-check-label"><?= $this->escape($level->title) ?></span></label>
+            <?php endforeach; ?>
+            </fieldset>
+            <button class="btn btn-secondary mt-2" type="submit"><?= Text::_('COM_JLMS_ACCESS_PREVIEW_CHECK') ?></button>
+        </form>
+        <ul class="mt-3">
+            <li><?= Text::_('COM_JLMS_ACCESS_PREVIEW_CATALOG') ?>: <strong><?= Text::_($access['catalog_visible'] ? 'JYES' : 'JNO') ?></strong></li>
+            <li><?= Text::_('COM_JLMS_ACCESS_PREVIEW_CONTENT') ?>: <strong><?= Text::_($access['content_allowed'] ? 'JYES' : 'JNO') ?></strong></li>
+            <li><?= Text::_('COM_JLMS_ACCESS_PREVIEW_REQUIREMENTS') ?>: <strong><?= Text::_($access['access_requirements_met'] ? 'JYES' : 'JNO') ?></strong></li>
+        </ul>
+    </section>
     <p><a href="<?= Route::_('index.php?option=com_jlms&view=curriculum' . $scope) ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a></p>
     <nav aria-label="<?= Text::_('COM_JLMS_CURRICULUM') ?>">
     <?php foreach ($this->preview['modules'] as $module) : ?>

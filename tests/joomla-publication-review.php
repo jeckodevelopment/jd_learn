@@ -100,6 +100,14 @@ $expect($restore!==null,'archived course offers an explicit restore transition')
 $transition($restore,$version);
 $row=$db->setQuery('SELECT state,current_version_id FROM #__jlms_courses WHERE id='.$course)->loadObject();
 $expect((int)$row->state===1&&(int)$row->current_version_id===$version&&$stage()==='JPUBLISHED','restore republishes the same immutable version');
+$beforeAccess=$db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id='.$course)->loadAssoc();
+$publicAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1]);
+$registeredAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1,2]);
+$expect($publicAccess['catalog_visible']&&!$publicAccess['content_allowed'],'level preview separates public catalogue access from restricted course content');
+$expect($registeredAccess['catalog_visible']&&$registeredAccess['content_allowed'],'combined Joomla view levels satisfy both configured access gates');
+$expect($beforeAccess===$db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id='.$course)->loadAssoc(),'access preview does not alter course state, version, or access settings');
+try{$component->getCatalogService()->accessPreview($guest,$course,'en-GB',[1]);throw new RuntimeException('Unauthorized user received access preview');}
+catch(DomainException $e){$expect($e->getMessage()==='JERROR_ALERTNOAUTHOR','access-level simulation requires course editor permissions');}
 
 $draft=$authoring->createDraft($actor,$course,$rev('courses',$course));
 $activeVersion=$draft;

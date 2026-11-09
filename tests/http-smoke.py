@@ -182,6 +182,8 @@ try:
  preview_url,preview=get(preview_link)
  if 'id="jlms-course-preview"' not in preview or 'HTTP text lesson' not in preview:
   raise RuntimeError('Program link must open the correct editorial preview')
+ if 'id="jlms-course-access-preview"' not in preview or 'name="access_levels[]"' not in preview or 'satisfy course access requirements' not in preview:
+  raise RuntimeError('Editorial preview must provide a read-only simulation of catalogue and content access levels')
  for link in Page(preview).links:
   if parse_qs(urlparse(link).query).get('lesson_id'):
    _,preview_lesson=get(link)
