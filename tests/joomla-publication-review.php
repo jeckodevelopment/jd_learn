@@ -95,7 +95,8 @@ catch(DomainException $e){$expect($e->getMessage()==='COM_JLMS_VERSION_IN_REVIEW
 $transition($choice('return',1),$draft);
 $expect($stage()==='JPUBLISHED'&&(int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.$course)->loadResult()===$current,
     'returning an update preserves the live version and published course state');
-$authoring->saveModule($actor,$scope($draft)+['id'=>0,'title'=>'Final update module']);
+$finalModule=$authoring->saveModule($actor,$scope($draft)+['id'=>0,'title'=>'Final update module']);
+$authoring->saveLesson($actor,$scope($draft)+['id'=>0,'module_id'=>$finalModule,'title'=>'Final update lesson','kind'=>'text','required'=>'1','body'=>'<p>Final update content.</p>']);
 $transition($choice('review',1),$draft);
 $approval=$choice('publish',1);$impact=$publication->updateImpact($actor,$course,$draft,(int)$approval->id);
 $expect(is_array($impact)&&isset($impact['fingerprint']),'approval of a revision requires an impact preview');
