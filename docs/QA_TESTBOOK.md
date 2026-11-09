@@ -65,7 +65,7 @@ Usare un corso fittizio con fuso **Europe/Rome**, una lezione obbligatoria con d
 4. Verificare che un’attività obbligatoria futura resti nel denominatore del progresso. Una lezione obbligatoria la cui finestra non interseca la disponibilità corso deve bloccare la pubblicazione; una finestra raggiungibile deve essere pubblicabile.
 5. In una nuova versione controllare che le date restino congelate per chi è già assegnato alla versione precedente.
 
-**Stato:** candidato PR 0.41.37-dev; CI e pacchetto da registrare; collaudo manuale Joomla pendente. Il drip relativo a giorni dall’avvio dell’iscrizione non è incluso.
+**Stato:** PR #141 integrata in 0.41.37-dev; CI standard 4/4 superata nel [run 42646076977](https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977); pacchetto verificato [JD-Learn-0.41.37-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977/artifacts/13688665407); collaudo manuale Joomla pendente. Il drip relativo a giorni dall’avvio dell’iscrizione non è incluso.
 
 ## Registro PR
 
