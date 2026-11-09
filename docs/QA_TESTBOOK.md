@@ -1,6 +1,6 @@
-## PR candidata #153 — workflow nativo “In revisione”
+## PR #153 integrata — workflow nativo “In revisione” (0.41.41-dev)
 
-Su un Joomla 6 di prova con il pacchetto 0.41.41-dev, predisporre un ruolo autore e un ruolo revisore con permessi Joomla di transizione distinti.
+CI standard 4/4 superata nel [run 42701584797](https://github.com/jeckodevelopment/jd_learn/actions/runs/42701584797). Il [pacchetto 0.41.41-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42701584797/artifacts/13711269099) contiene il runtime verificato (SHA-256 interno `1f13ea58b21496521111bc75fb054f06aa807805a99847233912faf0136264b0`); il collaudo manuale seguente resta aperto. Su un Joomla 6 di prova, predisporre un ruolo autore e un ruolo revisore con permessi Joomla di transizione distinti.
 
 1. Creare una bozza valida e inviarla in revisione. Atteso: stato In revisione; corso ancora non pubblico e nessuna versione didattica congelata.
 2. Provare a salvare o riordinare la bozza durante la revisione, sia dalla UI sia via richiesta diretta autenticata. Atteso: rifiuto; nessuna modifica a versione, contenuti o revisione.

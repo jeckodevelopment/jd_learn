@@ -1,9 +1,10 @@
-## 0.41.41-dev — revisione della versione didattica (candidata)
+## 0.41.41-dev — workflow di revisione della versione didattica (PR #153 integrata)
 
 - Estende il workflow Joomla installato da JD Learn con invio In revisione, restituzione e approvazione; l’upgrade è idempotente e non sovrascrive workflow amministrativi personalizzati.
 - Blocca al livello applicativo le modifiche alla bozza durante la revisione. La versione live e gli iscritti correnti restano invariati sino all’approvazione.
 - L’approvazione usa i controlli di pubblicazione esistenti e richiede il riepilogo d’impatto per una nuova versione.
-- **Collaudo manuale Joomla:** testare autore/revisore con ACL distinte, invio, blocco dei salvataggi, restituzione, prima pubblicazione, approvazione di aggiornamento, accesso studenti e upgrade ripetuto.
+- CI standard 4/4 superata nel run 42701584797 (PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri); runtime integrato nel commit `a754805387b41bd0509f898e15bd380f76a45645`.
+- **Collaudo manuale Joomla:** resta aperto; testare autore/revisore con ACL distinte, invio, blocco dei salvataggi, restituzione, prima pubblicazione, approvazione di aggiornamento, accesso studenti e upgrade ripetuto.
 
 ## 0.41.40-dev — navigazione dashboard e stato provider (issue #149, integrata PR #151)
 
