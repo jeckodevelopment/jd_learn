@@ -6,7 +6,7 @@
 - L’aula e gli endpoint di contenuti, materiali, player, quiz, completamento e ripresa impediscono l’accesso finché l’attività precedente richiesta non è completata. Dashboard, iscrizioni e percorsi riconoscono la nuova modalità.
 - Il rilascio programmato per data non è incluso.
 - **Comportamenti da testare in Joomla:** creare in bozza tre attività obbligatorie in ordine A/B/C e una facoltativa; scegliere Sequenziale e pubblicare. Da studente verificare che B e C siano bloccate con collegamento all’attività richiesta, che URL diretti/player e completamento siano negati, che completare A sblocchi B e completare B sblocchi C. Verificare che la facoltativa non blocchi l’attività obbligatoria seguente, che la modalità Libera consenta la navigazione salvo prerequisiti espliciti, che gli iscritti esistenti mantengano le regole congelate e che un prerequisito esplicito inverso incompatibile sia rifiutato in pubblicazione.
-- CI e pacchetto installabile: da completare sul candidato PR.
+- PR #138 integrata in main (`24013410e41d1c51361762405c67a3a2237c6616`); CI standard 4/4 superata nel [run 42636746915](https://github.com/jeckodevelopment/jd_learn/actions/runs/42636746915). Pacchetto [JD-Learn-0.41.36-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42636746915/artifacts/13683107045), ZIP installabile interno `pkg_jlms-0.41.36-dev.zip`, SHA-256 `d8e274a9eed880c7750ec638fce268065814cf0c9eca7e0a41c2dd4ea3b4a5c2`; wrapper SHA-256 `e1b9d0424f590a07e23a7cb7ebac7225a61061cd0f2597b4ab669e3cd1d888cd`. Artefatto in scadenza il 23 novembre 2026. Collaudo manuale Joomla pendente.
 
 ## 0.41.35-dev — prerequisiti espliciti delle lezioni
 

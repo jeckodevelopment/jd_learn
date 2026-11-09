@@ -53,7 +53,7 @@ Usare un corso, un autore e uno studente fittizi su Joomla di prova.
 4. Crea una nuova bozza, passa a Libera e pubblica l’aggiornamento: la navigazione torna libera salvo prerequisiti espliciti. Verifica che gli iscritti alla versione precedente mantengano la regola assegnata.
 5. In una bozza sequenziale aggiungi un prerequisito esplicito da una lezione successiva verso una precedente: la pubblicazione deve rifiutare il ciclo combinato e lasciare intatta la versione attiva.
 
-**Stato:** candidato PR 0.41.36-dev; CI e pacchetto da registrare dopo il merge.
+**Stato:** PR #138 integrata; CI standard 4/4 superata; collaudo manuale Joomla pendente.
 
 ## Registro PR
 

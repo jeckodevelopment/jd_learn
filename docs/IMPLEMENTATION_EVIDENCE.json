@@ -2428,7 +2428,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "Candidato 0.41.36-dev: sequenziamento delle attività obbligatorie; CI e collaudo Joomla da completare.",
+  "candidate_status": "PR #138 integrata in main 0.41.36-dev; CI standard 4/4 superata; collaudo manuale Joomla pendente.",
   "previous_verified_release": {
     "version": "0.41.34-dev",
     "package": "pkg_jlms-0.41.34-dev.zip",
@@ -2440,23 +2440,63 @@
   "candidate_increment": {
     "version": "0.41.36-dev",
     "scope": "Regole di navigazione libera/sequenziale; catena automatica delle attività obbligatorie in ordine moduli/lezioni, grafo combinato validato e blocchi applicati in aula/endpoint. Rilascio per data escluso.",
-    "status": "Candidato PR; CI e pacchetto da registrare, collaudo manuale Joomla pendente.",
-    "manual_joomla_acceptance": "pending"
+    "status": "Integrata in main; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
+    "manual_joomla_acceptance": "pending",
+    "pull_request": 138,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/138",
+    "ci_run_id": 42636746915,
+    "artifact_id": 13683107045,
+    "artifact_name": "JD-Learn-0.41.36-dev",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42636746915/artifacts/13683107045",
+    "artifact_sha256": "d8e274a9eed880c7750ec638fce268065814cf0c9eca7e0a41c2dd4ea3b4a5c2",
+    "artifact_wrapper_sha256": "e1b9d0424f590a07e23a7cb7ebac7225a61061cd0f2597b4ab669e3cd1d888cd",
+    "artifact_size_bytes": 521847,
+    "artifact_wrapper_size_bytes": 521657,
+    "artifact_expires_at": "2026-11-23T14:43:26Z",
+    "tested_head": "47f9a6e3bcd619144a7fd366a94ce23183a7443e",
+    "parent_main_commit": "f5aea62890b0294923ef0283eb77d4aa02acdc5c",
+    "merged_main_commit": "24013410e41d1c51361762405c67a3a2237c6616",
+    "ci_jobs": [
+      {
+        "id": 129226789388,
+        "name": "Candidate plan and lightweight checks",
+        "conclusion": "success"
+      },
+      {
+        "id": 129226880812,
+        "name": "PHP 8.3 / mysql:8.4",
+        "conclusion": "success"
+      },
+      {
+        "id": 129226881001,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "conclusion": "success"
+      },
+      {
+        "id": 129226881144,
+        "name": "PHP 8.4 / mariadb:10.6",
+        "conclusion": "success"
+      }
+    ]
   },
   "latest_verified_increment": {
-    "version": "0.41.35-dev",
-    "pull_request": 136,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/136",
-    "tested_head": "c82e1e0bbb9f9af35fc2eb0e88c31f746fc0c88b",
-    "merged_main_commit": "832d7d4089071002a11eb09cabdc86fae4e3f820",
-    "ci_run_id": 42628727538,
-    "artifact_id": 13679892795,
-    "artifact_name": "JD-Learn-0.41.35-dev",
-    "artifact_sha256": "609719d24445eda91e0f35ab6aa4895cc60a564da54a0995e1499f5d6bdc617ab",
-    "artifact_wrapper_sha256": "fe8fa8bc4aa560548bd92db27d74c979e4f3dee7eec361421bc4462dcc212bd2",
-    "artifact_size_bytes": 520630,
-    "artifact_wrapper_size_bytes": 520453,
-    "artifact_expires_at": "2026-11-23T13:52:42Z",
+    "version": "0.41.36-dev",
+    "pull_request": 138,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/138",
+    "tested_head": "47f9a6e3bcd619144a7fd366a94ce23183a7443e",
+    "parent_main_commit": "f5aea62890b0294923ef0283eb77d4aa02acdc5c",
+    "merged_main_commit": "24013410e41d1c51361762405c67a3a2237c6616",
+    "ci_run_id": 42636746915,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42636746915",
+    "artifact_id": 13683107045,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42636746915/artifacts/13683107045",
+    "artifact_name": "JD-Learn-0.41.36-dev",
+    "installable_package": "pkg_jlms-0.41.36-dev.zip",
+    "artifact_sha256": "d8e274a9eed880c7750ec638fce268065814cf0c9eca7e0a41c2dd4ea3b4a5c2",
+    "artifact_wrapper_sha256": "e1b9d0424f590a07e23a7cb7ebac7225a61061cd0f2597b4ab669e3cd1d888cd",
+    "artifact_size_bytes": 521847,
+    "artifact_wrapper_size_bytes": 521657,
+    "artifact_expires_at": "2026-11-23T14:43:26Z",
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {
