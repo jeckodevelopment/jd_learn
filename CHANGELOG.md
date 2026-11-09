@@ -1,3 +1,10 @@
+## 0.41.40-dev — navigazione dashboard e stato provider (issue #149)
+
+- Riordinati i collegamenti rapidi: Corsi, Percorsi, Categorie corsi, Categorie percorsi, Banca domande, Docenti, Campi aggiuntivi, Plugin video. I controlli ACL esistenti restano applicati.
+- Il riepilogo provider mostra sempre le quattro estensioni incluse e distingue installazione, attivazione, disponibilità e configurazione senza esporre segreti.
+- Aggiornati test HTTP/unitari e guida dashboard; collaudo manuale Joomla aggiunto al testbook.
+- **Collaudo manuale Joomla:** verificare l’ordine, i ruoli, le traduzioni IT/EN e gli stati provider abilitando/disabilitando e configurando le estensioni nel sito di prova.
+
 # Changelog
 
 ## 0.41.39-dev — accesso amministrativo ai percorsi (integrata, PR #147)

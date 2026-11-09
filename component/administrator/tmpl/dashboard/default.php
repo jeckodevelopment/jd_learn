@@ -32,7 +32,7 @@ use Joomla\CMS\Language\Text;
         <?php else : ?>
             <ul>
                 <?php foreach ($this->providers as $provider) : ?>
-                    <li><span><?= $this->escape(Text::_($provider->labelKey)) ?></span><span class="badge bg-<?= $provider->configured ? 'success' : 'secondary' ?>"><?= Text::_($provider->configured ? 'COM_JLMS_READY' : 'COM_JLMS_NOT_CONFIGURED') ?></span></li>
+                    <li data-jlms-provider="<?= $this->escape($provider['key']) ?>"><span><?= $this->escape(Text::_($provider['labelKey'])) ?></span><span class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>

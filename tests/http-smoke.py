@@ -99,11 +99,15 @@ try:
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
   'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
-  'jlms-admin-shortcut-teachers':('com_jlms','teachers'),
+  'jlms-admin-shortcut-pathway_categories':('com_categories','categories'),
   'jlms-admin-shortcut-question_bank':('com_jlms','questionbank'),
+  'jlms-admin-shortcut-teachers':('com_jlms','teachers'),
   'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
   'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
  }
+ expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','question_bank','teachers','custom_fields','video_plugins']
+ actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
+ if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
  for shortcut,(option,view) in required_shortcuts.items():
   query=dashboard_shortcuts.get(shortcut)
   if not query or query.get('option')!=[option] or query.get('view')!=[view]:
@@ -113,6 +117,8 @@ try:
   raise RuntimeError('Administrator dashboard introduction must use its current, relevant translation')
  icon_count=len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))
  if icon_count!=len(dashboard_shortcuts):raise RuntimeError('Every visible dashboard shortcut must include a Joomla icon')
+ provider_rows=re.findall(r'<li data-jlms-provider="([^"]+)">',html)
+ if provider_rows!=['youtube','vimeo','cloudflarestream','html5']:raise RuntimeError('Dashboard must show all bundled providers in a stable order: '+json.dumps(provider_rows))
  # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
  get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')
  _,plugin_html=get(urljoin(urljoin(url,Page(html).base or ""),plugin_link))

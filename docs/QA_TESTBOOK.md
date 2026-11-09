@@ -1,3 +1,15 @@
+## Issue #149 — dashboard e stato dei provider video
+
+Nel sito Joomla 6 di prova, accedere come amministratore e aprire Componenti → JD Learn.
+
+1. Verificare l’ordine: Corsi, Percorsi formativi, Categorie corsi, Categorie dei percorsi, Banca domande, Docenti, Campi aggiuntivi, Plugin video.
+2. Verificare che ogni link apra la destinazione corretta e che un account senza i permessi specifici non veda le voci protette.
+3. Aprire lo stato provider: devono apparire YouTube, Vimeo, Cloudflare Stream e Video locali.
+4. Disattivare un plugin video e ricaricare: compare “Disattivato”; riattivarlo senza configurazione: compare “Riproduzione non ancora disponibile”; completare la configurazione: compare “Configurato”. I provider mancanti o non disponibili devono avere il rispettivo stato.
+5. Ripetere in italiano e inglese e verificare layout da tastiera/finestra stretta.
+
+CI automatica prevista: test PHP del riepilogo e smoke HTTP dell’ordine/visibilità. Il collaudo Joomla reale resta da registrare separatamente.
+
 # Testbook manuale Joomla — JD Learn
 
 ## PR #147 integrata — accesso amministrativo ai Percorsi formativi (0.41.39-dev)
