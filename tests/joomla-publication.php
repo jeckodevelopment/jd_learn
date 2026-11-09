@@ -138,7 +138,7 @@ catch (\DomainException $error) { $unreachableRejected=$error->getMessage()==='C
 pubExpect($unreachableRejected,'publication rejects a required lesson outside the course window');
 $writeFixture('#__jlms_courses',(object)['id'=>$course,'publish_down'=>null],'id',true);
 $authoring->saveLesson($actor,pubScope()+['id'=>$lesson,'revision'=>2,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text',
-    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>']);
+    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>','publish_up'=>'','publish_down'=>'']);
 // Native plugin veto must roll back frozen version, pointer and edition as one unit.
 $veto = static function ($event): void { if ($event->getArgument('extension')==='com_jlms.course') { $event->setStopTransition(); } };
 $app->getDispatcher()->addListener('onWorkflowBeforeTransition',$veto);
