@@ -28,6 +28,7 @@ final class MaterialFilePolicy
         }
         $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         $types = ['pdf' => ['application/pdf'], 'txt' => ['text/plain'], 'csv' => ['text/plain', 'text/csv', 'application/csv'],
+            'mp3' => ['audio/mpeg'], 'ogg' => ['audio/ogg', 'application/ogg'],
             'jpg' => ['image/jpeg'], 'jpeg' => ['image/jpeg'], 'png' => ['image/png'], 'webp' => ['image/webp'],
             'zip' => ['application/zip', 'application/octet-stream'],
             'docx' => ['application/zip', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -41,7 +42,13 @@ final class MaterialFilePolicy
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }
         $head = file_get_contents($path, false, null, 0, min(1024, $size));
-        if ($ext === 'pdf') {
+        if (in_array($ext, ['mp3', 'ogg'], true)) {
+            if (($ext === 'ogg' && !str_starts_with($head, 'OggS'))
+                || ($ext === 'mp3' && !str_starts_with($head, 'ID3') && (strlen($head) < 2 || ord($head[0]) !== 0xFF || (ord($head[1]) & 0xE0) !== 0xE0))) {
+                throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
+            }
+            $mime = $ext === 'ogg' ? 'audio/ogg' : 'audio/mpeg';
+        } elseif ($ext === 'pdf') {
             $tail = file_get_contents($path, false, null, max(0, $size - 1024));
             if (!str_starts_with($head, '%PDF-') || !str_contains($tail, '%%EOF')) {
                 throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);

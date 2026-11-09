@@ -246,7 +246,7 @@ final class LearningService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $supported = ($lesson->kind === 'quiz' && $lesson->completion_rule === 'quiz_pass')
-            || (in_array($lesson->kind, ['text', 'document'], true) && $lesson->completion_rule === 'manual')
+            || (in_array($lesson->kind, ['text', 'document', 'audio'], true) && $lesson->completion_rule === 'manual')
             || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
                 && is_string($lesson->provider_key) && preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key) === 1
                 && (int) $lesson->duration_ms >= 1000);
@@ -284,6 +284,14 @@ final class LearningService
         return [$actor, $version, $enrollment, $lesson];
     }
 
+    public function audioLessonContext(User $identity, string $language, int $enrollmentId, int $lessonId): array
+    {
+        $actor = $this->freshActor($identity); [$course, $version] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
+        $lesson = $this->lesson((int) $version->id, $lessonId);
+        if ($lesson->kind !== 'audio') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
+    }
+
     /** Reused by attachment policy: no lesson body, progress read or credit is produced. */
     public function resourceContext(User $identity, string $language, int $enrollmentId, int $lessonId = 0): array
     {
@@ -319,6 +327,17 @@ final class LearningService
         }
         $percent = (int) $enrollment->required_total > 0
             ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
+        if ($lesson->kind === 'audio') {
+            $availableAt = gmdate('Y-m-d H:i:s.u');
+            $audioQuery = $this->db->createQuery()->select('a.id, a.title, f.mime_type')->from('#__jlms_attachments AS a')
+                ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')
+                ->where('a.state = 1')->where('a.preview = 0')->where("f.status = 'ready'")->where("f.mime_type IN ('audio/mpeg', 'audio/ogg')")
+                ->where('(a.publish_up IS NULL OR a.publish_up <= :audioUp) AND (a.publish_down IS NULL OR a.publish_down > :audioDown)')
+                ->bind(':audioUp', $availableAt)->bind(':audioDown', $availableAt)->order('a.ordering, a.id')
+                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
+            $audio = $this->db->setQuery($audioQuery, 0, 2)->loadObjectList();
+            if (count($audio) >= 1) { $lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->title, 'mime' => $audio[0]->mime_type]; }
+        }
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
@@ -382,7 +401,7 @@ final class LearningService
         $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $key): void {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
             $lesson = $this->lesson((int) $version->id, $lessonId);
-            if (!in_array($lesson->kind, ['text', 'document'], true) || $lesson->completion_rule !== 'manual') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+            if (!in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule !== 'manual') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
             $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
             $q = $this->db->createQuery()->select('state')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')

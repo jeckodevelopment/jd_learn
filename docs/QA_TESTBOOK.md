@@ -16,6 +16,18 @@ Prima del test annotare: data, versione e checksum del pacchetto, versione/patch
 | Account e permessi usati | Da compilare, senza password |
 | Esito complessivo / evidenze | Da compilare |
 
+## Candidato 0.41.33-dev — lezioni audio autonome
+
+Usare corso e account fittizi su Joomla di prova. Il candidato aggiunge il tipo lezione Audio, file MP3/OGG e riproduzione con URL privata.
+
+1. Con un docente autorizzato, creare bozza, modulo e lezione Audio; verificare tipo e traduzioni IT/EN.
+2. Tentare la pubblicazione senza file audio pronto; atteso: preflight e pubblicazione bloccati.
+3. Caricare un MP3 o OGG nella gestione materiali della lezione; verificare rifiuto di WAV e di file MP3 rinominati. Pubblicare.
+4. Con studente iscritto, riprodurre e cercare in avanti/indietro, quindi segnare completata; verificare che il progresso persista.
+5. Provare accesso al player da anonimo, utente non iscritto, lezione differente e allegato disattivato; atteso: nessun contenuto. Verificare richieste Range durante seek e risposta privata/no-store.
+
+**Stato:** CI e collaudo manuale Joomla non ancora eseguiti. Non sono inclusi il salvataggio della posizione audio e le trascrizioni.
+
 ## Registro PR
 
 ### PR #130 — lezioni-documento

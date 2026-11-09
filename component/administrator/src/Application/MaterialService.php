@@ -221,6 +221,22 @@ final class MaterialService
         return $this->open((int) $link->asset_id);
     }
 
+    public function audioDownload(User $actor, string $language, int $enrollmentId, int $lessonId, int $id): array
+    {
+        $actor = $this->learning->freshActor($actor); $link = $this->row('attachments', $id);
+        $context = $this->learning->audioLessonContext($actor, $language, $enrollmentId, $lessonId);
+        if ((int) $link->course_version_id !== $context['version_id'] || (int) $link->lesson_id !== $lessonId
+            || (int) $link->state !== 1 || (int) $link->preview !== 0) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        $now = gmdate('Y-m-d H:i:s.u');
+        if (($link->publish_up !== null && $link->publish_up > $now) || ($link->publish_down !== null && $link->publish_down <= $now)) {
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        $file = $this->open((int) $link->asset_id);
+        if (!in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) { fclose($file['handle']); throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        $file['inline'] = true;
+        return $file;
+    }
+
     public function adminDownload(User $actor, int $courseId, int $versionId, int $id): array
     {
         $this->author($actor, $courseId, $versionId);

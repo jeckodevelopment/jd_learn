@@ -43,6 +43,12 @@ $currentModule = 0;
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
   </section>
+  <?php elseif ($selected->kind === 'audio' && !empty($selected->audio_attachment)) : ?>
+  <section id="jlms-audio-region" aria-labelledby="jlms-lesson-title">
+   <audio id="jlms-audio-player" controls preload="metadata" aria-label="<?= $this->escape($selected->title) ?>">
+    <source src="<?= Route::_('index.php?option=com_jlms&task=attachment.audio&format=raw&id=' . (int) $selected->audio_attachment['id'] . '&lesson_id=' . (int) $selected->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>" type="<?= $this->escape($selected->audio_attachment['mime']) ?>">
+   </audio>
+  </section>
   <?php elseif ($selected->kind === 'quiz') : ?>
   <a id="jlms-lesson-quiz" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=quiz&id='.(int)$item['enrollment_id'].'&lesson_id='.(int)$selected->id) ?>"><?= Text::_('COM_JLMS_QUIZ_OPEN') ?></a>
   <?php else : ?>

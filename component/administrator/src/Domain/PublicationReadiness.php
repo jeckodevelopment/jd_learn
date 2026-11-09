@@ -55,6 +55,14 @@ final class PublicationReadiness
                     }
                 }
                 if (!$linked) { $blockers[] = 'COM_JLMS_DOCUMENT_MATERIAL_REQUIRED'; }
+            } elseif (($lesson->kind ?? '') === 'audio') {
+                $linked = false;
+                foreach ($attachments as $attachment) {
+                    if ((int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
+                        && in_array(($attachment->mime_type ?? ''), ['audio/mpeg', 'audio/ogg'], true)
+                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0) { $linked = true; break; }
+                }
+                if (!$linked) { $blockers[] = 'COM_JLMS_AUDIO_MATERIAL_REQUIRED'; }
             } elseif (($lesson->kind ?? '') === 'video') {
                 $lessonParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
                 $duration = (int) ($lesson->duration_ms ?? 0);

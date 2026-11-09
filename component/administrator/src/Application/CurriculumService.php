@@ -427,7 +427,7 @@ final class CurriculumService
         $id = self::id($input['id'] ?? 0, true);
         $title = self::title($input['title'] ?? null);
         $kind = $input['kind'] ?? null;
-        if (!in_array($kind, ['text', 'document', 'video'], true) || !is_string($input['body'] ?? '')
+        if (!in_array($kind, ['text', 'document', 'audio', 'video'], true) || !is_string($input['body'] ?? '')
             || strlen($input['body'] ?? '') > 1048576) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
@@ -486,7 +486,7 @@ final class CurriculumService
                 if ((int) $lesson->revision !== self::id($input['revision'] ?? null)) {
                     throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                 }
-                if (!in_array($lesson->kind, ['text', 'document', 'video'], true)) {
+                if (!in_array($lesson->kind, ['text', 'document', 'audio', 'video'], true)) {
                     throw new \DomainException('COM_JLMS_LESSON_KIND_NOT_AVAILABLE');
                 }
                 if ((int) $lesson->module_id !== $moduleId) {
