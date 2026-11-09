@@ -21,6 +21,10 @@ La [mappatura delle fasi](RELEASE_PLAN.json) assegna una volta sola tutti i 210 
 | M13 — differito | Conservare il perimetro successivo già concordato | NOT-03: promemoria inattività/comunicazioni di gruppo dopo rilascio1. Compiti/live/SCORM/xAPI/LTI e altre evoluzioni mantengono le fasi della specifica, non sono implicitamente incluse nel primo rilascio stabile. |
 
 
+## Evoluzione post-1.0.0 — JD Learn Credentials
+
+Il modulo opzionale **JD Learn Credentials** è documentato nella [specifica funzionale Open Badges 3.0](specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md). Prevede emissione e firma delle credenziali, verifica pubblica sul dominio dell'organizzazione, revoca, area studente e condivisione LinkedIn con URL di verifica. La roadmap del modulo segue incrementi C1–C4 autonomi. **È escluso da JD Learn 1.0.0** e non aggiunge criteri ai 210 requisiti della baseline né modifica i relativi indicatori di avanzamento. La pianificazione di implementazione sarà successiva alla prima stabile.
+
 ## Criterio di completamento
 
 Ogni fase richiede implementazioni utilizzabili, controlli di accesso/validazione, guide e prove positive/negative riferite al build. I collaudi su interfaccia reale completano la CI. I requisiti trasversali si verificano durante tutte le fasi; la versione stabile richiede gli esiti obbligatori di M12. Lo stato e i prossimi passi non si aggiornano aggiungendo nuovi paragrafi di cronologia a questa roadmap.
