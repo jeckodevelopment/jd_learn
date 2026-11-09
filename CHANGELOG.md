@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.41.39-dev — accesso amministrativo ai percorsi (candidato)
+## 0.41.39-dev — accesso amministrativo ai percorsi (integrata, PR #147)
 
 - Aggiunti la voce Percorsi formativi nel sottomenu JD Learn e la scorciatoia dashboard, entrambi filtrati con `jlms.pathways.manage`; le categorie rispettano anche le ACL native Joomla.
 - Aggiornati i test di installazione del menu e HTTP dashboard per verificare la nuova scorciatoia e le icone visibili senza un conteggio rigido.
-- Aggiunta la guida amministrativa dei percorsi. Collaudo manuale Joomla pendente.
+- Aggiunta la guida amministrativa dei percorsi. CI standard 4/4 superata nel [run 42674520291](https://github.com/jeckodevelopment/jd_learn/actions/runs/42674520291). Pacchetto [installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/42674520291/artifacts/13699268584); il collaudo manuale Joomla resta pendente.
 
 
 ## 0.41.38-dev — rilascio relativo delle lezioni (candidato)

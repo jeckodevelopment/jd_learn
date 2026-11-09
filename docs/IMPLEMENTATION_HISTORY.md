@@ -4,6 +4,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | Versione / periodo | Risultato introdotto |
 |---|---|
+| 0.41.39 | PR #147 integrata nel commit `55ec3d5cc81f9d6756a470d19f123188e37459a4`: accesso amministrativo ai Percorsi formativi dalla dashboard e dal sottomenu con ACL dedicate, guida authoring; CI standard 4/4 superata nel run 42674520291; collaudo Joomla pendente |
 | 0.41.38 | PR #143 integrata nel commit `7681473d34e23ec633fcf9fc59c3711e644b2d98`: rilascio relativo lezioni, protezione pre-rilascio, requisito lezione iniziale e controllo scadenze note durante ammissione; CI standard 4/4 (run 42652681260); pacchetto verificato; collaudo Joomla pendente |
 | 0.41.37 | PR #141 integrata: finestre assolute di disponibilità delle lezioni nel fuso del corso, validazione di raggiungibilità e protezione aula/endpoint; CI standard 4/4 superata (run 42646076977); pacchetto verificato; collaudo Joomla pendente; rilascio relativo a giorni dall’iscrizione ancora residuo |
 | 0.41.36 | Candidato: modalità sequenziale per legare le attività obbligatorie nell’ordine del programma; CI e collaudo Joomla da completare |

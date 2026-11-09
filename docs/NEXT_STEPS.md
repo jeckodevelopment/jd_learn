@@ -95,4 +95,4 @@ La0.41.7 (PR #65, CI standard superata) completa il primo flusso dei campi didat
 
 ## Percorsi formativi (AC-79 / issue #119)
 
-Il CRUD amministrativo e le viste pubbliche sono già implementati. Il candidato 0.41.39 aggiunge l’accesso dal sottomenu/dashboard con ACL `jlms.pathways.manage`, aggiorna i test HTTP e d’installazione, e fornisce una guida operativa. Resta il collaudo manuale Joomla: creazione/ordinamento/pubblicazione, vista pubblica/progressi e verifica dei ruoli con/senza permesso.
+Il CRUD amministrativo e le viste pubbliche erano già implementati. La PR [#147](https://github.com/jeckodevelopment/jd_learn/pull/147) in 0.41.39-dev integra l’accesso dal sottomenu/dashboard con ACL `jlms.pathways.manage`, i test HTTP e d’installazione e la guida operativa. CI standard 4/4 superata; resta il collaudo manuale Joomla: creazione/ordinamento/pubblicazione, vista pubblica/progressi e verifica dei ruoli con/senza permesso.

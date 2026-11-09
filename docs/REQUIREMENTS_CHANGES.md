@@ -134,4 +134,4 @@ La PR candidata 0.41.31 implementa il secondo controllo richiesto dall’issue #
 
 **Perimetro:** collegamento nel sottomenu e nella dashboard JD Learn, entrambi filtrati per `jlms.pathways.manage`; guida amministrativa su authoring, ordinamento e comportamento di accesso. Nessun cambiamento al modello o al flusso pubblico.
 
-**Accettazione:** voce visibile solo ai ruoli autorizzati; URL diretto continua a essere protetto; guida chiarisce che il percorso non iscrive e non concede accesso ai corsi. Collaudo Joomla manuale pendente nel candidato 0.41.39-dev.
+**Accettazione:** voce visibile solo ai ruoli autorizzati; URL diretto continua a essere protetto; guida chiarisce che il percorso non iscrive e non concede accesso ai corsi. Implementazione integrata dalla PR [#147](https://github.com/jeckodevelopment/jd_learn/pull/147) in 0.41.39-dev; CI standard 4/4 superata nel [run 42674520291]({run}). Il collaudo Joomla manuale resta pendente.

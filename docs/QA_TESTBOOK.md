@@ -1,5 +1,21 @@
 # Testbook manuale Joomla — JD Learn
 
+## PR #147 integrata — accesso amministrativo ai Percorsi formativi (0.41.39-dev)
+
+La CI standard 4/4 è superata nel [run 42674520291](https://github.com/jeckodevelopment/jd_learn/actions/runs/42674520291): controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. La verifica automatica controlla il link nativo d’installazione e la scorciatoia dashboard; non sostituisce il collaudo Joomla reale.
+
+Su un Joomla di prova usa e getta:
+
+1. Con un account autorizzato, aprire dashboard e sottomenu JD Learn; verificare la scorciatoia Percorsi e la posizione dopo Corsi.
+2. Creare un percorso con almeno due corsi, riordinarli, salvare, riaprire e pubblicare. Verificare descrizione, lingua, livello di accesso e categorie.
+3. Aprire catalogo/scheda da studente e controllare ordine e avanzamento; aggiungere corsi al percorso non deve iscrivere né concedere accesso.
+4. Con un account senza `jlms.pathways.manage`, verificare che scorciatoia e voce laterale non compaiano e che l’URL diretto sia negato.
+5. Con un account con permesso dedicato ma senza `core.create`, verificare che **Nuovo** non sia disponibile; verificare anche le ACL native delle categorie.
+6. Ripetere in italiano e inglese.
+
+**Stato:** collaudo manuale non ancora registrato.
+
+
 Registro cumulativo delle verifiche da eseguire su un **sito Joomla di prova usa e getta**. Si aggiorna a ogni PR con comportamenti runtime, aggiungendo le prove descritte nella PR e mantenendo il collegamento al requisito/scenario esistente. Non crea criteri funzionali nuovi. Un test è superato solo dopo esecuzione manuale sul sito e registrazione dell’esito qui; CI e test HTTP sono evidenze separate.
 
 ## PR #143 integrata — rilascio relativo all’avvio iscrizione
