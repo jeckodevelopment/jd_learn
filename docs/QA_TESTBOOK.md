@@ -41,7 +41,7 @@ Usare un corso, un autore e uno studente fittizi su Joomla di prova.
 4. Completare A e riaprire B: il contenuto diventa fruibile; materiali e regola di completamento funzionano come prima.
 5. Creare una nuova bozza e verificare che il collegamento sia copiato; modificare il prerequisito nella bozza senza alterare la versione già assegnata.
 
-**Stato:** da collaudare manualmente dopo installazione del pacchetto generato dalla PR. Requisiti collegati: STU-04, EDGE-03, MAT-04, PRO-01. Sequenziamento automatico e rilascio temporale non sono inclusi in questo incremento.
+**Stato:** PR [#136](https://github.com/jeckodevelopment/jd_learn/pull/136) integrata nel commit `832d7d4089071002a11eb09cabdc86fae4e3f820`. CI standard 4/4 superata nel [run 42628727538](https://github.com/jeckodevelopment/jd_learn/actions/runs/42628727538). Pacchetto [JD-Learn-0.41.35-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42628727538/artifacts/13679892795), wrapper SHA-256 `fe8fa8bc4aa560548bd92db27d74c979e4f3dee7eec361421bc4462dcc212bd2`, interno `609719d24445eda91e0f35ab6aa4895cc60a564da54a0995e1499f5d6bdc617ab` (520630 byte), scade il 23 novembre 2026. Collaudo manuale Joomla pendente. Requisiti collegati: STU-04, EDGE-03, MAT-04, PRO-01. Sequenziamento automatico e rilascio temporale non sono inclusi in questo incremento.
 
 ## Registro PR
 

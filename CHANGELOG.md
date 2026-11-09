@@ -6,7 +6,8 @@
 - Nell’aula, le lezioni bloccate mostrano la prima attività richiesta ancora incompleta e un collegamento per raggiungerla. Corpo, materiali e player restano protetti; gli endpoint diretti e i comandi di completamento/ripresa rifiutano la lezione finché tutti i prerequisiti non risultano completati.
 - È supportato il prerequisito esplicito in modalità libera. Sequenziamento automatico e rilascio temporale restano da completare.
 - **Collaudo manuale Joomla:** creare nella bozza due lezioni A e B; impostare A come prerequisito di B, salvare e pubblicare. Da studente verificare che B mostri il collegamento ad A senza corpo/materiali/player e che URL diretti di materiali e completamento siano negati. Completare A e verificare che B diventi fruibile. Tentare un ciclo A→B→A e l’autopropedeuticità: salvataggio rifiutato. Verificare che una nuova bozza conservi i prerequisiti e che la versione già assegnata non cambi.
-- CI, pacchetto e collaudo Joomla: da completare sulla PR.
+- PR [#136](https://github.com/jeckodevelopment/jd_learn/pull/136) integrata nel commit `832d7d4089071002a11eb09cabdc86fae4e3f820`. CI standard 4/4 superata nel [run 42628727538](https://github.com/jeckodevelopment/jd_learn/actions/runs/42628727538): controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium controllato.
+- Pacchetto installabile [JD-Learn-0.41.35-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42628727538/artifacts/13679892795), wrapper ZIP da estrarre una volta; SHA-256 wrapper `fe8fa8bc4aa560548bd92db27d74c979e4f3dee7eec361421bc4462dcc212bd2`, pacchetto interno `609719d24445eda91e0f35ab6aa4895cc60a564da54a0995e1499f5d6bdc617ab` (520630 byte), scadenza 23 novembre 2026. Il collaudo manuale Joomla resta pendente.
 
 ## 0.41.34-dev — ripresa lezioni audio
 
