@@ -31,7 +31,7 @@ Nella vista Programma di una versione in bozza, il riquadro **Verifica prima del
 
 ## Contenuti pubblicabili e limiti
 
-Sono supportate lezioni testo con corpo non vuoto e completamento manuale, video validi e quiz con snapshot valido. Sequenza libera, completamento di tutte le attività obbligatorie e attestati disattivati. Non ancora supportati prerequisiti, rilascio differito, preview di lezione, audio/documenti come lezioni autonome e regole avanzate. Gli allegati a corso/lezione sono supportati se pronti e conformi alla politica di scansione; non vanno confusi con lezioni documento.
+Sono supportate lezioni testo con corpo non vuoto e completamento manuale, video validi e quiz con snapshot valido. Sequenza libera, completamento di tutte le attività obbligatorie e attestati disattivati. Sono supportati i prerequisiti espliciti fra lezioni della stessa versione, con controllo dei cicli e accesso protetto. Non sono ancora supportati la creazione automatica della sequenza, il rilascio differito e la preview di lezione; audio/documenti come lezioni autonome e regole avanzate sono descritti nei rispettivi aggiornamenti. Gli allegati a corso/lezione sono supportati se pronti e conformi alla politica di scansione; non vanno confusi con lezioni documento.
 
 Per video esterni serve la politica consenso configurata (`embed`/`site_consent`); il default bloccato impedisce la pubblicazione. Durata dichiarata/confermata fra1secondo e8ore, provider configurato e tracciamento posizione disponibile. Cloudflare richiede metadati remoti coerenti prima dei lock; HTML5 richiede un file pronto. Il quiz deve superare la validazione di QuizSnapshotService. Non tutte le capacità dei provider sono ancora implementate; vedere le rispettive guide.
 

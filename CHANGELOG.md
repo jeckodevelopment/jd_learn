@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.35-dev — prerequisiti espliciti delle lezioni
+
+- L’autore può collegare una lezione a una o più lezioni richieste nella stessa bozza. Il salvataggio controlla appartenenza alla versione, riferimenti duplicati e cicli; la pubblicazione valida e congela il grafo.
+- Nell’aula, le lezioni bloccate mostrano la prima attività richiesta ancora incompleta e un collegamento per raggiungerla. Corpo, materiali e player restano protetti; gli endpoint diretti e i comandi di completamento/ripresa rifiutano la lezione finché tutti i prerequisiti non risultano completati.
+- È supportato il prerequisito esplicito in modalità libera. Sequenziamento automatico e rilascio temporale restano da completare.
+- **Collaudo manuale Joomla:** creare nella bozza due lezioni A e B; impostare A come prerequisito di B, salvare e pubblicare. Da studente verificare che B mostri il collegamento ad A senza corpo/materiali/player e che URL diretti di materiali e completamento siano negati. Completare A e verificare che B diventi fruibile. Tentare un ciclo A→B→A e l’autopropedeuticità: salvataggio rifiutato. Verificare che una nuova bozza conservi i prerequisiti e che la versione già assegnata non cambi.
+- CI, pacchetto e collaudo Joomla: da completare sulla PR.
+
 ## 0.41.34-dev — ripresa lezioni audio
 
 - Salva la posizione di ascolto su intervalli di 12 secondi, pausa, seek e uscita pagina; ripristina l’ultimo punto confermato. L’endpoint richiede sessione, CSRF, iscrizione e lezione audio della versione assegnata.

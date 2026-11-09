@@ -123,7 +123,7 @@ final class HtmlView extends BaseHtmlView
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
             $requestedKind = $app->getInput()->getCmd('lesson_kind');
-            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document'], true) ? $requestedKind : 'text', 'required' => 1];
+            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => []];
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) { $this->editorMode = 'lesson'; }
@@ -152,6 +152,13 @@ final class HtmlView extends BaseHtmlView
             }
             if ($this->selectedModule && !in_array($this->selectedModule, array_map(static fn($m): int => (int) $m->id, $this->outline['modules']), true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
             $lessonData['module_id'] = $this->selectedModule;
+            $prerequisiteField = new \SimpleXMLElement('<field name="required_lesson_ids" type="list" label="COM_JLMS_LESSON_PREREQUISITES" multiple="true" size="6" />');
+            foreach ($this->outline['lessons'] as $candidate) {
+                if ((int) $candidate->id === $editLesson) { continue; }
+                $option = $prerequisiteField->addChild('option', htmlspecialchars($candidate->title, ENT_XML1));
+                $option->addAttribute('value', (string) $candidate->id);
+            }
+            $this->lessonForm->setField($prerequisiteField);
             $this->lessonForm->setField($field);
             foreach ($this->outline['lessons'] as $lesson) {
                 if ($actionId === (int) $lesson->id && str_ends_with($action, '_lesson')) { $this->selectedItem = $lesson; }
@@ -172,6 +179,7 @@ final class HtmlView extends BaseHtmlView
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
                         'duration_mode'=>'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
                         'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0',
+                        'required_lesson_ids' => $this->outline['prerequisites'][(int) $lesson->id] ?? [],
                         'com_fields' => $customFields]);
                     $foundLesson = true;
                 }
@@ -187,8 +195,10 @@ final class HtmlView extends BaseHtmlView
                 $app->setUserState($stateKey, null);
                 $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0) : (int) ($lessonData['id'] ?? 0);
                 if (is_array($saved) && (int) ($saved['id'] ?? -1) === $expectedId) {
-                    $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value));
-                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','required','kind']));
+                    $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
+                        || (is_array($value) && array_is_list($value) && count($value) <= 5000
+                            && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','required','kind','required_lesson_ids']));
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }

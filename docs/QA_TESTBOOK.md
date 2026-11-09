@@ -31,6 +31,18 @@ Usare corso e account fittizi su Joomla di prova. Il candidato aggiunge il tipo 
 
 **Stato:** PR #132 integrata in 0.41.33-dev nel commit `2d0984bc4adf0ee420eed3cdc7a0356f97813e39`. CI standard superata nel [run 42609983073](https://github.com/jeckodevelopment/jd_learn/actions/runs/42609983073): controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. Artefatto [JD-Learn-0.41.33-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42609983073/artifacts/13669353295), wrapper da estrarre una volta; SHA-256 interno `6e80193338036652f6fa1550da29ae9859bfc8a30bb3b47f354111429de09880`, wrapper `fff003d89ecac607a5a57b7b29972dcd56a3c46cecb2dbc00bcec550aa1073e9`. Nessun collaudo manuale Joomla registrato. La PR [#134](https://github.com/jeckodevelopment/jd_learn/pull/134) integra la ripresa audio in 0.41.34-dev nel commit `ba703f361a8530a0d8f4fb6805025492f78657d6`. CI standard 4/4 superata nel [run 42613814879](https://github.com/jeckodevelopment/jd_learn/actions/runs/42613814879). Pacchetto [JD-Learn-0.41.34-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42613814879/artifacts/13671314050), wrapper da estrarre una volta, SHA-256 interno `972b74d91132503634538d2eec68edb149cee7e89fa00b438255ccbd1981f9f1`, scade il 23 novembre 2026. Nessun collaudo manuale Joomla registrato; ascolto/fine player non completano automaticamente. Trascrizioni non incluse. Trascrizioni non incluse.
 
+## PR prerequisiti espliciti delle lezioni (0.41.35-dev)
+
+Usare un corso, un autore e uno studente fittizi su Joomla di prova.
+
+1. In una bozza con due lezioni testo A e B, aprire B, impostare A come prerequisito e salvare. Verificare che la selezione resti dopo la riapertura.
+2. Tentare di impostare B come prerequisito di A (ciclo) e di impostare una lezione come prerequisito di sé stessa. Atteso: salvataggio rifiutato, nessuna modifica parziale. Provare anche un ID appartenente a un’altra versione con una richiesta modificata: deve essere rifiutata.
+3. Pubblicare la versione. Con lo studente iscritto aprire B prima di A: l’aula mostra il nome e il collegamento ad A, senza corpo, campi aggiuntivi, materiali, player o comando di completamento per B. Provare URL diretto di allegato, player audio/video e POST di completamento per B: nessun contenuto né progresso.
+4. Completare A e riaprire B: il contenuto diventa fruibile; materiali e regola di completamento funzionano come prima.
+5. Creare una nuova bozza e verificare che il collegamento sia copiato; modificare il prerequisito nella bozza senza alterare la versione già assegnata.
+
+**Stato:** da collaudare manualmente dopo installazione del pacchetto generato dalla PR. Requisiti collegati: STU-04, EDGE-03, MAT-04, PRO-01. Sequenziamento automatico e rilascio temporale non sono inclusi in questo incremento.
+
 ## Registro PR
 
 ### PR #130 — lezioni-documento

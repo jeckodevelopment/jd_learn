@@ -4,6 +4,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | Versione / periodo | Risultato introdotto |
 |---|---|
+| 0.41.35 | Prerequisiti espliciti delle lezioni, controllo cicli, blocco protetto e collegamento al prerequisito nell’aula; candidato PR, CI e collaudo Joomla da completare |
 | 0.41.34 | Ripresa protetta della posizione audio, senza completamento automatico; PR #134 integrata, CI standard 4/4 superata nel run 42613814879, collaudo manuale Joomla pendente |
 | 0.41.33 | Lezioni Audio MP3/OGG con player HTML5, streaming privato e completamento manuale; PR #132 integrata, CI standard superata nel run 42609983073, collaudo Joomla manuale pendente |
 | 0.41.31 | Filtro ACL delle voci sidebar native via plugin di sistema; PR #128 integrata, CI standard superata nel run 42594246627, collaudo Joomla manuale pendente |

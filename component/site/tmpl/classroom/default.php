@@ -26,12 +26,18 @@ $currentModule = 0;
   <?php endif; ?>
   <li id="jlms-classroom-lesson-<?= (int) $entry->id ?>" class="jlms-classroom-lesson">
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $entry->id) ?>"<?= (int) $selected->id === (int) $entry->id ? ' aria-current="page"' : '' ?>><?= $this->escape($entry->title) ?></a>
-   <span><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL')) ?></span>
+   <span><?= !empty($entry->prerequisite_blocked) ? Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') : Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL')) ?></span>
   </li>
  <?php endforeach; ?>
  <?php if ($currentModule) : ?></ol></section><?php endif; ?>
  </nav>
  <article id="jlms-lesson-content" class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
+  <?php if (!empty($selected->prerequisite_blocked)) : ?>
+  <div id="jlms-lesson-prerequisite-notice" class="alert alert-info" role="status">
+   <p><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?></p>
+   <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->blocked_by_id) ?>"><?= $this->escape($selected->blocked_by_title) ?></a>
+  </div>
+  <?php else : ?>
   <div id="jlms-lesson-body"><?= $selected->body /* HTML cleaned by the server-side core InputFilter. */ ?></div>
   <?php if (!empty($selected->custom_fields)) : ?><dl id="jlms-lesson-custom-fields" class="jlms-custom-fields">
    <?php foreach ($selected->custom_fields as $field) : if (!$field['values']) { continue; } ?>
@@ -85,6 +91,7 @@ $currentModule = 0;
  <?php if (($files['page'] + 1) * 20 < $files['total']) : ?><a href="<?= Route::_($materialsBase . ($files['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?>
  </nav></section>
  <?php endforeach; ?></div>
+  <?php endif; ?>
  </article></div>
  <a id="jlms-classroom-back" href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item['course_id']) ?>"><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></a>
 </section>
