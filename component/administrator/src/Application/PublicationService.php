@@ -79,12 +79,15 @@ final class PublicationService
             $version = $this->row('course_versions', $versionId);
             if ((int) $version->course_id !== $courseId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
         }
-        $stageIds = [$assoc ? (int) $assoc->stage_id : (int) $workflow->getDefaultStageByCategory((int) $course->catid)];
+        $defaultStage = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
+        $stageIds = [$assoc ? (int) $assoc->stage_id : $defaultStage];
         $reviewStage = $this->stageId('COM_JLMS_IN_REVIEW');
-        // A working version can use its course's current stage for review and the
-        // category's default draft stage for the legacy direct-publish transition.
+        // A working version can use both the category's draft transition and the
+        // course's current stage for review. Keep the legacy publish choice first.
         if ($version?->status === 'draft' && (!$assoc || (int) $assoc->stage_id !== $reviewStage)) {
-            $stageIds[] = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
+            $stageIds = $assoc && (int) $assoc->stage_id !== $defaultStage
+                ? [$defaultStage, (int) $assoc->stage_id]
+                : [$defaultStage];
         }
         $stageIds = array_values(array_unique(array_filter($stageIds)));
         $extension = 'com_jlms.course';
