@@ -25,9 +25,10 @@ final class CatalogService
     {
         $actor = new User((int) $identity->id);
         $actor->clearAccessRights();
+        $extension = 'com_jlms.course';
         $q = $this->db->createQuery()->select('c.id, c.title, c.created_by, c.catid, c.state, c.catalog_access, c.content_access, c.language, c.current_version_id, c.admissions_open, c.delivery_enabled, c.publish_up, c.publish_down, cat.lft, cat.rgt, cat.published AS category_published, cat.access AS category_access, cat.language AS category_language')
             ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid AND cat.extension = :extension')
-            ->where('c.id = :course')->bind(':course', $courseId, ParameterType::INTEGER)->bind(':extension', 'com_jlms.course');
+            ->where('c.id = :course')->bind(':course', $courseId, ParameterType::INTEGER)->bind(':extension', $extension);
         $course = $this->db->setQuery($q)->loadObject() ?: throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         $asset = 'com_jlms.course.' . (int) $course->id;
         $own = (int) $course->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset);
