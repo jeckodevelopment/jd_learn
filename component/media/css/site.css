@@ -11,6 +11,7 @@
 #jlms-player:not(:empty) { aspect-ratio:16/9; width:100%; background:#000; }
 #jlms-player iframe { width:100%; height:100%; border:0; }
 #jlms-player-status { min-height:1.5em; }
+#jlms-audio-region audio { display:block; width:min(100%,48rem); max-width:100%; }
 #jlms-video-region button { margin-block:0.5rem; }
 
 #jlms-player video { width:100%; height:100%; object-fit:contain; }
