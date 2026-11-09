@@ -1,3 +1,13 @@
+## PR #159 integrata — archiviazione e ripristino (0.41.42-dev)
+
+CI standard 4/4 superata nel [run 42704783478](https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478). Il [pacchetto 0.41.42-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478/artifacts/13711989978) contiene il runtime verificato (SHA-256 interno `0e8ab0086a7305829b24f76e5859369213320d8529eda56a9556edaf7f0ad6fb`); resta aperto il collaudo sul Joomla di prova.
+
+1. Predisporre un corso pubblicato e un’iscrizione attiva con progressi, più autore e revisore con ACL distinte.
+2. Come revisore, archiviare il corso dal Programma. Atteso: fase **Archiviato**, corso non visibile nel catalogo e nuove iscrizioni negate.
+3. Come studente già iscritto, aprire l’aula e una lezione già assegnata. Atteso: accesso, versione, materiali e progressi invariati. Verificare che roster e cronologia iscrizione siano conservati.
+4. Ripristinare il corso. Atteso: la stessa versione torna nel catalogo; storico e progressi restano identici.
+5. Ripetere upgrade del pacchetto e verificare idempotenza delle fasi/transizioni; provare un utente privo del permesso di transizione e verificare il diniego senza mutazioni.
+
 ## PR #153 integrata — workflow nativo “In revisione” (0.41.41-dev)
 
 CI standard 4/4 superata nel [run 42701584797](https://github.com/jeckodevelopment/jd_learn/actions/runs/42701584797). Il [pacchetto 0.41.41-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42701584797/artifacts/13711269099) contiene il runtime verificato (SHA-256 interno `1f13ea58b21496521111bc75fb054f06aa807805a99847233912faf0136264b0`); il collaudo manuale seguente resta aperto. Su un Joomla 6 di prova, predisporre un ruolo autore e un ruolo revisore con permessi Joomla di transizione distinti.

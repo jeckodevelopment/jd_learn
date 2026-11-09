@@ -10,7 +10,7 @@ La prima pubblicazione è disponibile ed è stata confermata dall’utente sul p
 4. Nella sezione Pubblicazione premere **Pubblica**. Se il workflow configurato offre più transizioni, selezionare quella desiderata ed eseguirla. Il workflow standard mostra direttamente il nome dell’azione sul pulsante. Verificare sia lo Stato del corso sia quello della versione. Una validazione fallita conserva la bozza e mostra un errore; un salvataggio riuscito delle lezioni non equivale alla pubblicazione.
 5. Verificare catalogo e scheda con categoria, lingua e livello richiesti, poi la fruizione con un account studente avente il livello contenuto. La preassegnazione non concede tale livello.
 
-L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. La 0.41.41-dev (PR #153 integrata, CI 4/4) aggiunge il passaggio In revisione nel workflow Joomla: l’invio non cambia stato o versione live; l’authoring della bozza è bloccato fino alla restituzione o approvazione. L’approvazione di un aggiornamento richiede sempre la schermata di impatto. Restano archiviazione completa e anteprima studente interattiva. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
+L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. Il workflow Joomla supporta Bozza, In revisione, Pubblicato e Archiviato. L’invio in revisione non cambia la versione live e blocca le modifiche finché la bozza non è restituita o approvata; l’aggiornamento richiede sempre la schermata di impatto. Archiviare nasconde il corso dal catalogo e impedisce nuove iscrizioni, mantenendo versione corrente, storico e accesso degli iscritti esistenti. **Ripristina corso** riporta nel catalogo la medesima versione. Resta l’anteprima studente interattiva. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
 
 ## Diagnostica
 
@@ -19,7 +19,7 @@ Il Programma mostra lo stato del corso e un motivo se il comando non è disponib
 - Nessuna versione: crearla con il pulsante dedicato.
 - Permesso di modifica stato assente: serve `core.edit.state` sull'asset del corso, oltre ai permessi di accesso/authoring.
 - Plugin Joomla **Workflow - Pubblicazione** non attivo: un amministratore lo verifica in Sistema → Plugin. Non viene abilitato automaticamente.
-- Nessuna transizione: verificare workflow assegnato alla categoria/default, fasi/transizioni pubblicate, opzione `publishing` 0/1 e `core.execute.transition` sull'asset della transizione. Gestione nativa: `administrator/index.php?option=com_workflow&extension=com_jlms.course`.
+- Nessuna transizione: verificare workflow assegnato alla categoria/default, fasi/transizioni pubblicate, opzioni `publishing` 0/1/2 e `core.execute.transition` sull'asset della transizione. Gestione nativa: `administrator/index.php?option=com_workflow&extension=com_jlms.course`.
 
 Se il comando esiste ma fallisce, leggere il messaggio: programma vuoto, configurazione non supportata, materiale non pronto, revisione obsoleta o transizione annullata. Ricaricare prima di riprovare una revisione obsoleta. Per segnalare una nuova regressione registrare versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione, azione e messaggio esatto, senza dati personali o segreti. Un override amministrativo precedente può nascondere nuovi avvisi: confrontarlo con i layout distribuiti.
 
@@ -67,11 +67,14 @@ Dal Programma → Versioni selezionare una versione storica e usare **Recupera c
 
 La pubblicazione verifica che la soglia sia un intero valido in centesimi di percentuale (1–10000), con default90% quando manca nei dati legacy supportati. Il form Regole didattiche usa percentuali con massimo due decimali, senza arrotondamento in virgola mobile. Il riepilogo mostra soglia precedente e nuova quando cambiano; l’impronta include le regole e rifiuta conferme superate. Dopo la pubblicazione, ogni iscrizione continua a usare la soglia della versione assegnata; nessun ricalcolo dei completamenti esistenti.
 
-## Workflow di revisione — 0.41.41-dev (PR #153 integrata)
+## Workflow di revisione, archiviazione e ripristino — 0.41.42-dev (PR #153/#159 integrate)
 
 1. Con un ruolo autorizzato al cambio stato e alla transizione di invio, aprire Programma della bozza e scegliere **Invia in revisione**.
 2. Per un aggiornamento, verificare che il corso live e gli iscritti correnti continuino a usare la versione precedente. La bozza appare **In revisione** e non è modificabile via interfaccia né tramite le operazioni di authoring del componente.
 3. Un revisore autorizzato può scegliere **Riporta in bozza**; il corso live rimane invariato e la bozza torna modificabile.
 4. Per approvare, scegliere **Approva e pubblica**. La prima versione passa dai validatori autorevoli. Per un aggiornamento, leggere e confermare il riepilogo dell’impatto; una richiesta senza conferma o con contenuti cambiati viene rifiutata.
 
-CI standard 4/4 superata nel run 42701584797. Il collaudo manuale sul sito Joomla resta da registrare. Il pacchetto aggiorna in modo idempotente il workflow predefinito installato da JD Learn e non sostituisce workflow amministrativi personalizzati. I permessi si assegnano con le ACL native delle transizioni.
+5. Per archiviare un corso pubblicato, scegliere **Archivia corso**. Atteso: fase **Archiviato**, il corso non compare nel catalogo e non ammette nuove iscrizioni; aula e dati degli iscritti correnti restano disponibili.
+6. Per renderlo nuovamente disponibile scegliere **Ripristina corso**. Atteso: stessa versione pubblicata, corso di nuovo nel catalogo e nessun cambiamento ai progressi o allo storico.
+
+CI standard 4/4 superata nel run 42704783478. Il collaudo manuale sul sito Joomla resta da registrare. Il pacchetto aggiorna in modo idempotente il workflow predefinito installato da JD Learn e non sostituisce workflow amministrativi personalizzati. I permessi si assegnano con le ACL native delle transizioni.
