@@ -11,7 +11,7 @@ if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable si
 f=json.loads((root.parent/'publication-impact-fixture.json').read_text());base='http://127.0.0.1:8093'
 class Page(HTMLParser):
  def __init__(self,html):
-  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.links=[];self.feed(html)
+  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.base=None;self.select=None;self.option=None;self.links=[];self.feed(html)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
   if tag=='a' and a.get('href'):self.links.append(a['href'])
@@ -19,12 +19,18 @@ class Page(HTMLParser):
   if tag=='form':self.current={'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
   if tag=='input' and self.current is not None and 'name' in a and 'disabled' not in a:
    if a.get('type') not in ['radio','checkbox'] or 'checked' in a:self.current['fields'][a['name']]=a.get('value','')
-  if tag=='select':self.select=a.get('name') if self.current is not None else None
+  if tag=='select' and self.current is not None:
+   self.select=a.get('name');self.current.setdefault('options',{}).setdefault(self.select,[])
   if tag=='option' and self.select and self.current is not None:
+   self.option={'value':a.get('value',''),'text':''}
    if self.select not in self.current['fields'] or 'selected' in a:self.current['fields'][self.select]=a.get('value','')
  def handle_endtag(self,tag):
   if tag=='form':self.current=None
+  if tag=='option' and self.option is not None and self.current is not None:
+   self.current['options'][self.select].append(self.option);self.option=None
   if tag=='select':self.select=None
+ def handle_data(self,data):
+  if self.option is not None:self.option['text']+=data
 client=build_opener(HTTPCookieProcessor(CookieJar()))
 def request(path,fields=None,expected=200):
  try:
@@ -42,7 +48,13 @@ def form(html,task):return next(x for x in Page(html).forms if x['fields'].get('
 log=open(root.parent/'publication-impact-http.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
 def state():return json.loads(subprocess.check_output(['php',str(Path(__file__).with_name('joomla-publication-impact.php')),str(root),'state'],text=True))
-def publication(html):return next(x for x in Page(html).forms if x['fields'].get('task')=='curriculum.transition')
+def publication(html,label=None):
+ p=Page(html);current=next(x for x in p.forms if x['fields'].get('task')=='curriculum.transition')
+ if label is not None:
+  choices=current.get('options',{}).get('jform[transition_id]',[])
+  choice=next(x for x in choices if label in x['text'])
+  current['fields']['jform[transition_id]']=choice['value']
+ return current
 try:
  for _ in range(40):
   try:url,html=request('/administrator/index.php');break
@@ -50,27 +62,35 @@ try:
  page=Page(html);login=next(x for x in page.forms if 'username' in x['fields'] and 'passwd' in x['fields'])
  request(urljoin(urljoin(url,page.base or ''),login['action']),login['fields']|{'username':'cioperator','passwd':'Ci-only-Long-Password-2026'})
  path='/administrator/index.php?option=com_jlms&view=curriculum&id='+str(f['course'])+'&version_id='+str(f['version'])
- before=state();url,html=request(path);command=publication(html)
+ before=state();url,html=request(path);command=publication(html,'Send for review')
  url,html=request(command['action'],command['fields'])
- expect('id="jlms-publication-review"' in html and 'id="jlms-publication-confirm-form"' in html,'Update command opens a separate native impact review')
- expect(state()==before,'Opening and reading the review never publishes or changes learning data')
+ reviewed=state()
+ expect(reviewed['course']['current_version_id']==before['course']['current_version_id'] and reviewed['learning']==before['learning'],'Submitting an update for review preserves current version and learning data')
+ _,html=request(path);command=publication(html,'Approve and publish')
+ url,html=request(command['action'],command['fields'])
+ expect('id="jlms-publication-review"' in html and 'id="jlms-publication-confirm-form"' in html,'Approval opens a separate native impact review')
+ reviewed=state()
+ expect(reviewed['course']['current_version_id']==before['course']['current_version_id'] and reviewed['learning']==before['learning'],'Opening and reading the review never publishes or changes learning data')
  expect('HTTP impact &lt;script&gt;safe&lt;/script&gt;' in html and '<script>safe</script>' not in html,'Review escapes private lesson titles')
  expect('New enrollments will use the updated version' in html and 'Existing enrollments keep their assigned version' in html,'Review explains the effect on new and existing assignments')
  confirm=publication(html);request('/administrator/index.php?option=com_jlms&task=curriculum.transition',expected=405)
  request('/administrator/index.php?option=com_jlms',{'task':'curriculum.transition'},expected=403)
  _,rejected=request(confirm['action'],confirm['fields'])
- expect(state()==before,'Confirmation checkbox is required by the server')
+ after_rejection=state()
+ expect(after_rejection['course']['current_version_id']==before['course']['current_version_id'] and after_rejection['learning']==before['learning'],'Confirmation checkbox is required by the server')
  _,rejected=request(confirm['action'],confirm['fields']|{'jform[publication_confirmation]':'1','jform[review_ticket]':'0'*64})
- expect(state()==before,'Forged session-bound confirmation ticket cannot publish')
- # Prepare a new review, then change the draft through its native module form.
- _,html=request(path);_,html=request(publication(html)['action'],publication(html)['fields']);stale=publication(html)
+ after_rejection=state()
+ expect(after_rejection['course']['current_version_id']==before['course']['current_version_id'] and after_rejection['learning']==before['learning'],'Forged session-bound confirmation ticket cannot publish')
+ # Return to the author, edit while in draft, and verify the old impact ticket is stale.
+ _,html=request(path);_,html=request(publication(html,'Return to draft')['action'],publication(html,'Return to draft')['fields'])
  _,edit=request(path+'&edit_module='+str(f['module']));module=next(x for x in Page(edit).forms if x['fields'].get('task')=='module.save')
  request(module['action'],module['fields']|{'jform[title]':'Changed after reviewing'})
- changed=state();_,rejected=request(stale['action'],stale['fields']|{'jform[publication_confirmation]':'1'})
- expect(state()==changed,'Draft change after review prevents stale publication')
- # Fresh review and explicit confirmation publish exactly once.
- _,html=request(path);_,html=request(publication(html)['action'],publication(html)['fields']);current=publication(html)
- fields=current['fields']|{'jform[publication_confirmation]':'1'}
+ changed=state();_,rejected=request(confirm['action'],confirm['fields']|{'jform[publication_confirmation]':'1'})
+ expect(state()==changed,'Returning and changing a draft prevents stale publication')
+ # Resubmit the fresh draft and explicitly approve the current impact.
+ _,html=request(path);_,html=request(publication(html,'Send for review')['action'],publication(html,'Send for review')['fields'])
+ _,html=request(path);_,html=request(publication(html,'Approve and publish')['action'],publication(html,'Approve and publish')['fields'])
+ current=publication(html);fields=current['fields']|{'jform[publication_confirmation]':'1'}
  _,html=request(current['action'],fields);after=state()
  expect(after['version']['status']=='published' and int(after['course']['current_version_id'])==f['version'],'Current explicit confirmation publishes the new programme')
  expect(after['learning']==before['learning'],'Publication preserves all existing enrollment, attempt and progress rows')

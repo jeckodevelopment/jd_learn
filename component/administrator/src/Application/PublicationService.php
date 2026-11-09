@@ -74,26 +74,80 @@ final class PublicationService
         $this->authorise($actor, $course);
         $workflow = $this->workflow();
         $assoc = $workflow->getAssociation($courseId);
+        $version = null;
         if ($versionId) {
             $version = $this->row('course_versions', $versionId);
             if ((int) $version->course_id !== $courseId) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
-            if ($version->status === 'draft') { $assoc = null; }
         }
-        $stageId = $assoc ? (int) $assoc->stage_id : (int) $workflow->getDefaultStageByCategory((int) $course->catid);
-        $q = $this->db->createQuery()->select('t.id, t.title, t.options')->from('#__workflow_transitions AS t')
-            ->innerJoin('#__workflow_stages AS s ON s.workflow_id = t.workflow_id')
-            ->innerJoin('#__workflow_stages AS dest ON dest.id = t.to_stage_id AND dest.workflow_id = t.workflow_id')
-            ->innerJoin('#__workflows AS w ON w.id = t.workflow_id')
-            ->where('s.id = :stage')->where('(t.from_stage_id = s.id OR t.from_stage_id = -1)')
-            ->where('t.published = 1 AND s.published = 1 AND dest.published = 1 AND w.published = 1')
-            ->where('w.extension = :extension')->bind(':stage', $stageId, ParameterType::INTEGER);
+        $defaultStage = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
+        $stageIds = [$assoc ? (int) $assoc->stage_id : $defaultStage];
+        $reviewStage = $this->stageId('COM_JLMS_IN_REVIEW');
+        // A working version can use both the category's draft transition and the
+        // course's current stage for review. Keep the legacy publish choice first.
+        if ($version?->status === 'draft' && (!$assoc || (int) $assoc->stage_id !== $reviewStage)) {
+            $stageIds = $assoc && (int) $assoc->stage_id !== $defaultStage
+                ? [$defaultStage, (int) $assoc->stage_id]
+                : [$defaultStage];
+        }
+        $stageIds = array_values(array_unique(array_filter($stageIds)));
         $extension = 'com_jlms.course';
-        $q->bind(':extension', $extension)->order('t.ordering, t.id');
-        return array_values(array_filter($this->db->setQuery($q)->loadObjectList(), static function ($transition) use ($actor): bool {
-            $state = (new Registry($transition->options))->get('publishing');
-            return in_array((string) $state, ['0', '1'], true)
-                && $actor->authorise('core.execute.transition', 'com_jlms.transition.' . (int) $transition->id);
+        $transitions = [];
+        foreach ($stageIds as $stageId) {
+            $q = $this->db->createQuery()->select('t.id, t.title, t.options, t.from_stage_id')->from('#__workflow_transitions AS t')
+                ->innerJoin('#__workflow_stages AS s ON s.workflow_id = t.workflow_id')
+                ->innerJoin('#__workflow_stages AS dest ON dest.id = t.to_stage_id AND dest.workflow_id = t.workflow_id')
+                ->innerJoin('#__workflows AS w ON w.id = t.workflow_id')
+                ->where('s.id = :stage')->where('(t.from_stage_id = s.id OR t.from_stage_id = -1)')
+                ->where('t.published = 1 AND s.published = 1 AND dest.published = 1 AND w.published = 1')
+                ->where('w.extension = :extension')->bind(':stage', $stageId, ParameterType::INTEGER)
+                ->bind(':extension', $extension)->order('t.ordering, t.id');
+            foreach ($this->db->setQuery($q)->loadObjectList() as $transition) {
+                $transition->jlms_source_stage_id = $stageId;
+                $transitions[(int) $transition->id] = $transition;
+            }
+        }
+        $currentState = (int) $course->state;
+        $returnState = $course->current_version_id === null ? 0 : 1;
+        $currentVersionId = (int) ($course->current_version_id ?? 0);
+        return array_values(array_filter($transitions, function ($transition) use ($actor, $version, $currentState, $returnState, $reviewStage, $currentVersionId): bool {
+            $options = new Registry($transition->options);
+            $state = $options->get('publishing');
+            $action = (string) $options->get('jlms_action', (string) $state === '1' ? 'publish' : 'unpublish');
+            if (!in_array((string) $state, ['0', '1'], true)) { return false; }
+            if ($version?->status === 'draft') {
+                if ($action === 'review' && (int) $state !== $currentState) { return false; }
+                if ($action === 'return' && ((int) $transition->jlms_source_stage_id !== $reviewStage || (int) $state !== $returnState)) { return false; }
+                if ($action === 'publish' && (int) $state !== 1) { return false; }
+                if (!in_array($action, ['review', 'return', 'publish'], true)) { return false; }
+            } elseif ($version && ($version->status !== 'published' || (int) $version->id !== $currentVersionId)) {
+                return false;
+            } elseif ($action === 'review' || $action === 'return') {
+                return false;
+            }
+            return $actor->authorise('core.execute.transition', 'com_jlms.transition.' . (int) $transition->id);
         }));
+    }
+
+    private function stageId(string $title): int
+    {
+        $extension = 'com_jlms.course';
+        $q = $this->db->createQuery()->select('s.id')->from('#__workflow_stages AS s')
+            ->innerJoin('#__workflows AS w ON w.id = s.workflow_id')
+            ->where('s.title = :title')->where('w.extension = :extension')
+            ->bind(':title', $title)->bind(':extension', $extension);
+        return (int) $this->db->setQuery($q)->loadResult();
+    }
+
+    public function isInReview(int $courseId): bool
+    {
+        $extension = 'com_jlms.course';
+        $stageTitle = 'COM_JLMS_IN_REVIEW';
+        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__workflow_associations AS a')
+            ->innerJoin('#__workflow_stages AS s ON s.id = a.stage_id')
+            ->where('a.extension = :extension')->where('a.item_id = :course')->where('s.title = :stage')
+            ->bind(':extension', $extension)->bind(':course', $courseId, ParameterType::INTEGER)
+            ->bind(':stage', $stageTitle);
+        return (int) $this->db->setQuery($q)->loadResult() > 0;
     }
 
     /** Read-only review of a publishing update; initial publication and withdrawal need no update review. */
@@ -106,7 +160,9 @@ final class PublicationService
         $selected = null;
         foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) { if ((int)$candidate->id === $transitionId) { $selected = $candidate; } }
         if (!$selected) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
-        if ($version->status !== 'draft' || $course->current_version_id === null || (int)(new Registry($selected->options))->get('publishing') !== 1) { return null; }
+        $options = new Registry($selected->options);
+        $action = (string) $options->get('jlms_action', (string) $options->get('publishing') === '1' ? 'publish' : 'unpublish');
+        if ($version->status !== 'draft' || $course->current_version_id === null || $action !== 'publish') { return null; }
         if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
         $source = $this->row('course_versions', (int)$course->current_version_id);
         if ((int)$source->course_id !== $courseId || $source->status !== 'published' || (int)$source->id === $versionId) { throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE'); }
@@ -347,8 +403,20 @@ final class PublicationService
         $version = $this->row('course_versions', $versionId);
         if ((int) $version->course_id !== $courseId || (int) $version->revision !== $versionRevision
             || (int) $course->revision !== $courseRevision) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
-        if ($version->status === 'draft' && $course->current_version_id !== null && $expectedImpact === null) { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED'); }
-        if ($version->status === 'draft') {
+        if ($version->status === 'draft' && $course->current_version_id !== null && $expectedImpact === null) {
+            // Only actual publication requires impact confirmation. Sending a
+            // version to review does not affect the live course or learners.
+            $selected = null;
+            foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) { if ((int) $candidate->id === $transitionId) { $selected = $candidate; } }
+            $action = $selected ? (string) (new Registry($selected->options))->get('jlms_action', '') : '';
+            if ($action !== 'review' && $action !== 'return') { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED'); }
+        }
+        $preselected = null;
+        foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) { if ((int) $candidate->id === $transitionId) { $preselected = $candidate; } }
+        if (!$preselected) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
+        $preOptions = new Registry($preselected->options);
+        $preAction = (string) $preOptions->get('jlms_action', (string) $preOptions->get('publishing') === '1' ? 'publish' : 'unpublish');
+        if ($version->status === 'draft' && $preAction === 'publish') {
             $q = $this->db->createQuery()->select('id, source_json, source_revision')->from('#__jlms_lessons')
                 ->where('course_version_id = :version')->where($this->db->quoteName('provider_key') . ' = ' . $this->db->quote('cloudflarestream'))
                 ->bind(':version', $versionId, ParameterType::INTEGER)->order('id');
@@ -386,32 +454,44 @@ final class PublicationService
             if (!$selected) {
                 throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
             }
-            $state = (int) (new Registry($selected->options))->get('publishing');
-            if ($version->status === 'draft' && $state === 1) {
+            $options = new Registry($selected->options);
+            $state = (int) $options->get('publishing');
+            $action = (string) $options->get('jlms_action', $state === 1 ? 'publish' : 'unpublish');
+            if ($version->status === 'draft' && $action === 'review') {
+                if ($state !== (int) $course->state || $expectedImpact !== null) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
+            } elseif ($version->status === 'draft' && $action === 'return') {
+                $returnState = $course->current_version_id === null ? 0 : 1;
+                if ($state !== $returnState || $expectedImpact !== null) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
+            } elseif ($version->status === 'draft' && $action === 'publish' && $state === 1) {
                 if ($course->current_version_id !== null) {
                     if ($expectedImpact === null) { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED'); }
                     $impact = $this->updateImpact($actor, $courseId, $versionId, $transitionId);
                     if (!$impact || !hash_equals($impact['fingerprint'], $expectedImpact)) { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_STALE'); }
                 }
                 $this->validateAndFreeze($course, $version, $actor, $remoteChecks);
-            } elseif ($version->status !== 'published' || (int) $course->current_version_id !== $versionId) {
+            } elseif ($action === 'publish' && $version->status === 'published'
+                && (int) $course->current_version_id === $versionId && $state === 1) {
+                // Republish the current immutable version without rebuilding its snapshot.
+            } elseif ($action === 'unpublish' && $version->status === 'published' && (int) $course->current_version_id === $versionId && $state === 0) {
+                // The current teaching version stays immutable; workflow withdrawal
+                // only changes whether a new learner can find or start the course.
+            } else {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
             }
             $workflow = $this->workflow();
             $association = $workflow->getAssociation($courseId);
-            $publishingUpdate = $course->current_version_id !== null && (int) $course->current_version_id !== $versionId;
-            if ($publishingUpdate && $association) {
-                $stage = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
-                if (!$stage || !$workflow->updateAssociations([$courseId], $stage)) { throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED'); }
-            }
+            $sourceStage = (int) $selected->jlms_source_stage_id;
             if (!$association) {
-                $stage = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
-                if (!$stage || !$workflow->createAssociation($courseId, $stage)) {
+                if (!$sourceStage || !$workflow->createAssociation($courseId, $sourceStage)) {
                     throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
                 }
+            } elseif ((int) $association->stage_id !== $sourceStage
+                && !$workflow->updateAssociations([$courseId], $sourceStage)) {
+                throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
             }
-            $update = (object) ['id' => $courseId, 'current_version_id' => $versionId,
+            $update = (object) ['id' => $courseId,
                 'revision' => (int) $course->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
+            if ($version->status === 'draft' && $action === 'publish') { $update->current_version_id = $versionId; }
             $this->db->updateObject('#__jlms_courses', $update, 'id');
             $this->permittedChange = [$courseId, $state];
             if (!$workflow->executeTransition([$courseId], $transitionId) || $this->stateChangeResult !== true

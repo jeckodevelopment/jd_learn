@@ -1,4 +1,4 @@
-Aggiornato al **9 novembre 2026**. Main **0.41.40-dev**: PR [#151](https://github.com/jeckodevelopment/jd_learn/pull/151) integrata nel commit `2dd9d41c2e7496143a009da763fa9738871321c0`; ordine dashboard e stati provider completati. CI standard 4/4 superata nel [run 42679096692](https://github.com/jeckodevelopment/jd_learn/actions/runs/42679096692), inclusi PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. Pacchetto [JD-Learn-0.41.40-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42679096692/artifacts/13701777402), digest SHA-256 dell’artefatto GitHub (wrapper ZIP) `39ac9e037ec27201adb2b8b7255f4fcc6b6421eb667c3e0061db2e1251c08143`, scade il 23 novembre 2026. Il collaudo Joomla manuale resta da eseguire.
+Aggiornato al **9 novembre 2026**. Main **0.41.40-dev**; PR candidata #153 porta la 0.41.41-dev. Implementa il passaggio nativo a **In revisione** per le versioni didattiche, il blocco server-side delle modifiche e l’approvazione/restituzione senza interrompere il corso pubblicato. La CI della candidata è ancora da eseguire; resta il collaudo manuale Joomla. Pacchetto 0.41.40-dev disponibile nel link seguente: [JD-Learn-0.41.40-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42679096692/artifacts/13701777402).
 
 La precedente 0.41.38-dev, PR [#143](https://github.com/jeckodevelopment/jd_learn/pull/143) integra rilascio relativo delle lezioni da `enrollment.started_at`, protezione aula/endpoint, requisito di attività iniziale e controllo delle scadenze note in ammissione. CI standard 4/4 superata nel [run 42652681260](https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260); pacchetto [JD-Learn-0.41.38-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260/artifacts/13690028782), SHA-256 interno `382cc48ce54045326041f0a84bcfaa7db76d32ee2b3bc73bbfa5bd2bc3b2de22`, wrapper `b8a7b72014647d2a2cb7adad9c588318fed014403ba745d9cf59564ba6ca968d`, scade il 23 novembre 2026. Il collaudo Joomla della PR #143 resta pendente. PR #141 (finestre assolute), #138 (sequenziamento) e #136 (prerequisiti) sono integrate; i rispettivi collaudi manuali restano aperti.
 
@@ -17,7 +17,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 
 | Area | Avanzamento |
 |---|---:|
-| Corsi, versioni e programma (M01/M02) | 72% |
+| Corsi, versioni e programma (M01/M02) | 73% |
 | Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 57% |
 | Fruizione e progressi core (M03/M09) | 69% |
 | Video e materiali essenziali (M04) | 82% |
@@ -26,7 +26,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **71%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (495/7 = 70,7%, arrotondato a 71%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (496/7 = 70,9%, arrotondato a 71%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -89,3 +89,8 @@ La PR aggiunge l’accesso alla gestione percorsi dal sottomenu e dalla dashboar
 ### Dashboard e stati provider — PR #151 integrata in 0.41.40-dev
 
 La dashboard ordina gli otto accessi rapidi secondo il flusso operativo e mostra sempre gli stati di YouTube, Vimeo, Cloudflare Stream e video locali. CI standard 4/4 superata nel run 42679096692. Collaudo Joomla su ruoli, ordine, stati e lingue pendente. L’avanzamento dell’area amministrativa passa dall’89% al 90%; complessivo invariato al 71% (495/7).
+
+
+### Revisione delle versioni didattiche — candidata 0.41.41-dev
+
+Il workflow Joomla installato da JD Learn include lo stato **In revisione**. L’autore invia la bozza con una transizione autorizzata; durante la revisione i servizi di authoring rifiutano le modifiche. Il revisore può riportarla in bozza oppure approvarla. Per gli aggiornamenti, la versione pubblicata e gli iscritti assegnati restano invariati finché la pubblicazione confermata non supera il controllo d’impatto e i validatori. È un incremento parziale di AUT-02/M02: archiviazione completa e anteprima studente interattiva restano aperte; test Joomla manuale da registrare.

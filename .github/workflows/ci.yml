@@ -135,6 +135,8 @@ jobs:
         run: php tests/joomla-quiz-authoring.php .runtime/joomla
       - name: Native workflow publication and catalog access tests
         run: php tests/joomla-publication.php .runtime/joomla
+      - name: Native course review workflow and live-version preservation
+        run: php tests/joomla-publication-review.php .runtime/joomla
       - name: Native pathway authoring, ordering, access and progress aggregation
         run: php tests/joomla-pathways.php .runtime/joomla
       - name: Typed course presentation, frozen public snapshot and legacy clients

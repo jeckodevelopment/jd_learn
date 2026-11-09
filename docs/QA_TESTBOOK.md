@@ -1,3 +1,16 @@
+## PR candidata #153 — workflow nativo “In revisione”
+
+Su un Joomla 6 di prova con il pacchetto 0.41.41-dev, predisporre un ruolo autore e un ruolo revisore con permessi Joomla di transizione distinti.
+
+1. Creare una bozza valida e inviarla in revisione. Atteso: stato In revisione; corso ancora non pubblico e nessuna versione didattica congelata.
+2. Provare a salvare o riordinare la bozza durante la revisione, sia dalla UI sia via richiesta diretta autenticata. Atteso: rifiuto; nessuna modifica a versione, contenuti o revisione.
+3. Restituire la bozza al redattore. Atteso: stato Bozza e modifiche nuovamente consentite.
+4. Inviare di nuovo e approvare con il revisore. Atteso: validatori autorevoli superati, nuova versione pubblicata una sola volta e iscritti esistenti immutati.
+5. Ripetere su un corso già pubblicato: durante la revisione verificare catalogo e aula con un account studente e confermare che il corso live resta disponibile sulla versione assegnata. All’approvazione verificare il riepilogo impatto, il diniego senza conferma e che la versione precedente resti immutata.
+6. Rimuovere il permesso di transizione dai due ruoli a turno e provare URL diretto/token non valido: atteso diniego senza cambio di fase. Aggiornare il pacchetto due volte e verificare che non vengano duplicati fasi o transizioni.
+
+La CI deve coprire installazione/upgrade, idempotenza, transizioni native, ACL, blocco authoring e conservazione della versione corrente.
+
 ## Issue #149 — dashboard e stato dei provider video
 
 Nel sito Joomla 6 di prova, accedere come amministratore e aprire Componenti → JD Learn.

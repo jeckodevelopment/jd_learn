@@ -388,7 +388,8 @@ try:
  u,h=get(programme)
  expect('id="jlms-publication-notice"' in h and 'id="jlms-version-form"' in h,'Course without version explains the next step')
  form=next(f for f in Page(h).forms if f['id']=='jlms-version-form');u,h=submit(u,form)
- expect('id="jlms-publication-form"' in h and re.search(r'id="jlms-publication-submit"[^>]*>\s*Publish\s*</button>',h),'First draft exposes an explicit Publish command')
+ expect('id="jlms-publication-form"' in h and re.search(r'id="jlms-publication-submit"[^>]*>\s*Execute transition\s*</button>',h)
+  and 'Send for review' in h and 'Publish' in h,'First draft exposes explicit review and authorized publish transitions')
  expect('id="jlms-publication-readiness"' in h and 'data-readiness-code="COM_JLMS_READINESS_MODULES_REQUIRED"' in h
   and 'data-readiness-code="COM_JLMS_READINESS_REQUIRED_LESSON"' in h,'Draft publication page shows basic blockers before the user submits')
  before=fixture()

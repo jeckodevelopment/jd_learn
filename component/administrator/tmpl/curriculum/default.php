@@ -7,6 +7,7 @@ declare(strict_types=1);
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Registry\Registry;
 HTMLHelper::_('behavior.formvalidator');
 $course = $this->outline['course'];
 $version = $this->outline['version'];
@@ -19,6 +20,16 @@ $transitionLabel = static fn (object $transition): string => Text::_(match ($tra
     'JUNPUBLISH' => 'COM_JLMS_UNPUBLISH_ACTION',
     default => $transition->title,
 });
+$transitionAction = static fn (object $transition): string => (string) (new Registry($transition->options))->get('jlms_action', '');
+$transitionDisplay = static function (object $transition) use ($transitionLabel, $transitionAction): string {
+    return Text::_(match ($transitionAction($transition)) {
+        'review' => 'COM_JLMS_SUBMIT_REVIEW',
+        'return' => 'COM_JLMS_RETURN_TO_DRAFT',
+        'publish' => 'COM_JLMS_APPROVE_REVIEW',
+        default => $transition->title === 'JPUBLISH' ? 'COM_JLMS_PUBLISH_ACTION'
+            : ($transition->title === 'JUNPUBLISH' ? 'COM_JLMS_UNPUBLISH_ACTION' : $transition->title),
+    });
+};
 $scope = $version ? ['course_id' => $course->id, 'version_id' => $version->id, 'expected_version_revision' => $version->revision] : [];
 $hidden = static function (array $fields): void {
     foreach ($fields as $name => $value) {
@@ -62,6 +73,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <?php else : ?>
  <div class="jlms-programme-layout"><div class="jlms-programme-main">
  <?php if ($this->editable && $course->current_version_id !== null) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_WORKING_REVISION_NOTICE') ?></p><?php endif; ?>
+ <?php if ($this->inReview) : ?><p class="alert alert-info" id="jlms-version-in-review"><?= Text::_('COM_JLMS_VERSION_IN_REVIEW') ?></p><?php endif; ?>
  <?php if (!$this->editable) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
  <p id="jlms-order-status" role="status" aria-live="polite" data-reload="<?= Text::_('COM_JLMS_PROGRAMME_RELOAD') ?>" data-saving="<?= Text::_('COM_JLMS_PROGRAMME_SAVING') ?>" data-error="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_FAILED') ?>"></p>
  <?php if ($this->editable && $this->outline['modules']) : ?><p class="small text-muted"><?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?></p><?php endif; ?>
@@ -180,7 +192,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  </div><aside class="jlms-programme-sidebar" aria-label="<?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?>">
  <section id="jlms-publication-status"><h2 class="h4"><?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?></h2>
  <p><?= Text::_('JSTATUS') ?>: <strong><?= Text::_((int) $course->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></strong></p>
- <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?></p>
+ <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($this->inReview && $version->status === 'draft' ? 'COM_JLMS_IN_REVIEW' : ($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED'))) ?></p>
  <p><?= count($this->outline['modules']) ?> <?= Text::_('COM_JLMS_PROGRAMME_MODULES') ?> · <?= count($this->outline['lessons']) ?> <?= Text::_('COM_JLMS_PROGRAMME_LESSONS') ?></p>
  <?php if ($version->status === 'draft') : ?>
  <section id="jlms-publication-readiness" aria-labelledby="jlms-publication-readiness-heading">
@@ -204,9 +216,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <input type="hidden" name="task" value="curriculum.transition">
   <label for="jlms-transition"><?= Text::_('COM_JLMS_WORKFLOW_TRANSITION') ?></label>
   <select id="jlms-transition" name="jform[transition_id]" class="form-select">
-  <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape($transitionLabel($transition)) ?></option><?php endforeach; ?>
+  <?php foreach ($this->transitions as $transition) : ?><option value="<?= (int) $transition->id ?>"><?= $this->escape($transitionDisplay($transition)) ?></option><?php endforeach; ?>
   </select>
-  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?= $version->status === 'draft' && $course->current_version_id !== null ? Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') : (count($this->transitions) === 1 ? $this->escape($transitionLabel($this->transitions[0])) : Text::_('COM_JLMS_EXECUTE_TRANSITION')) ?></button>
+  <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) : ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php elseif ($transitionAction($this->transitions[0]) === 'review') : ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php elseif ($transitionAction($this->transitions[0]) === 'return') : ?><?= Text::_('COM_JLMS_RETURN_TO_DRAFT') ?><?php elseif ($version->status === 'draft' && $course->current_version_id !== null && $transitionAction($this->transitions[0]) === 'publish') : ?><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') ?><?php else : ?><?= $this->escape($transitionDisplay($this->transitions[0])) ?><?php endif; ?></button>
  </form><?php endif; ?>
  <?php if ($version->status === 'published' && (int)$course->current_version_id === (int)$version->id) : ?>
  <form method="post" id="jlms-edit-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">
@@ -219,7 +231,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  </section>
  <?php if ($this->canMaterials) : ?><p><a id="jlms-manage-materials" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p><?php endif; ?>
  <details class="jlms-programme-versions"><summary><?= Text::_('COM_JLMS_VERSIONS') ?></summary><nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>"><ul>
- <?php foreach ($this->outline['versions'] as $entry) : ?><li><a href="<?= $link($base . '&version_id=' . (int) $entry->id) ?>"<?= (int) $entry->id === (int) $version->id ? ' aria-current="page"' : '' ?>>v<?= (int) $entry->version_no ?> · <?= Text::_($entry->status === 'draft' ? 'COM_JLMS_DRAFT' : ($entry->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED')) ?></a></li><?php endforeach; ?>
+ <?php foreach ($this->outline['versions'] as $entry) : ?><li><a href="<?= $link($base . '&version_id=' . (int) $entry->id) ?>"<?= (int) $entry->id === (int) $version->id ? ' aria-current="page"' : '' ?>>v<?= (int) $entry->version_no ?> · <?= Text::_($this->inReview && (int) $entry->id === (int) $version->id ? 'COM_JLMS_IN_REVIEW' : ($entry->status === 'draft' ? 'COM_JLMS_DRAFT' : ($entry->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED'))) ?></a></li><?php endforeach; ?>
  </ul></nav></details>
  <?php if ($this->canRestoreProgramme) : ?>
  <details id="jlms-restore-programme"><summary><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_ACTION') ?></summary>
