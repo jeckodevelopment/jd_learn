@@ -10,7 +10,7 @@ La prima pubblicazione è disponibile ed è stata confermata dall’utente sul p
 4. Nella sezione Pubblicazione premere **Pubblica**. Se il workflow configurato offre più transizioni, selezionare quella desiderata ed eseguirla. Il workflow standard mostra direttamente il nome dell’azione sul pulsante. Verificare sia lo Stato del corso sia quello della versione. Una validazione fallita conserva la bozza e mostra un errore; un salvataggio riuscito delle lezioni non equivale alla pubblicazione.
 5. Verificare catalogo e scheda con categoria, lingua e livello richiesti, poi la fruizione con un account studente avente il livello contenuto. La preassegnazione non concede tale livello.
 
-L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. Restano anteprima studente interattiva, revisione/archivio completi, analisi impatti e migrazioni. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
+L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. Il workflow Joomla supporta Bozza, In revisione, Pubblicato e Archiviato. L’archiviazione rimuove il corso dal catalogo e impedisce nuove iscrizioni; la versione live e l’accesso degli iscritti esistenti restano disponibili. Ripristina corso rende nuovamente visibile la stessa versione senza alterare lo storico. Restano anteprima studente interattiva, analisi impatti e migrazioni. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
 
 ## Diagnostica
 
@@ -19,7 +19,7 @@ Il Programma mostra lo stato del corso e un motivo se il comando non è disponib
 - Nessuna versione: crearla con il pulsante dedicato.
 - Permesso di modifica stato assente: serve `core.edit.state` sull'asset del corso, oltre ai permessi di accesso/authoring.
 - Plugin Joomla **Workflow - Pubblicazione** non attivo: un amministratore lo verifica in Sistema → Plugin. Non viene abilitato automaticamente.
-- Nessuna transizione: verificare workflow assegnato alla categoria/default, fasi/transizioni pubblicate, opzione `publishing` 0/1 e `core.execute.transition` sull'asset della transizione. Gestione nativa: `administrator/index.php?option=com_workflow&extension=com_jlms.course`.
+- Nessuna transizione: verificare workflow assegnato alla categoria/default, fasi/transizioni pubblicate, opzioni `publishing` 0/1/2 e `core.execute.transition` sull'asset della transizione. Gestione nativa: `administrator/index.php?option=com_workflow&extension=com_jlms.course`.
 
 Se il comando esiste ma fallisce, leggere il messaggio: programma vuoto, configurazione non supportata, materiale non pronto, revisione obsoleta o transizione annullata. Ricaricare prima di riprovare una revisione obsoleta. Per segnalare una nuova regressione registrare versione Joomla/pacchetto, ruolo, categoria/workflow, tipo di lezione, azione e messaggio esatto, senza dati personali o segreti. Un override amministrativo precedente può nascondere nuovi avvisi: confrontarlo con i layout distribuiti.
 

@@ -26,6 +26,8 @@ $transitionDisplay = static function (object $transition) use ($transitionLabel,
         'review' => 'COM_JLMS_SUBMIT_REVIEW',
         'return' => 'COM_JLMS_RETURN_TO_DRAFT',
         'publish' => 'COM_JLMS_APPROVE_REVIEW',
+        'archive' => 'COM_JLMS_ARCHIVE_COURSE',
+        'restore' => 'COM_JLMS_RESTORE_COURSE',
         default => $transition->title === 'JPUBLISH' ? 'COM_JLMS_PUBLISH_ACTION'
             : ($transition->title === 'JUNPUBLISH' ? 'COM_JLMS_UNPUBLISH_ACTION' : $transition->title),
     });

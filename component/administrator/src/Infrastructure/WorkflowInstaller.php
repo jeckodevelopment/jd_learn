@@ -58,6 +58,12 @@ final class WorkflowInstaller
             self::ensureTransition($db, $workflow, 'COM_JLMS_RETURN_INITIAL_DRAFT', $review, $draft, 'return', 0, $save);
             self::ensureTransition($db, $workflow, 'COM_JLMS_RETURN_PUBLISHED_DRAFT', $review, $published, 'return', 1, $save);
             self::ensureTransition($db, $workflow, 'COM_JLMS_APPROVE_REVIEW', $review, $published, 'publish', 1, $save);
+            $archived = self::stageId($db, $workflow, 'JARCHIVED');
+            if (!$archived) {
+                $archived = $save('Stage', ['workflow_id' => $workflow, 'title' => 'JARCHIVED', 'published' => 1, 'default' => 0, 'ordering' => 3]);
+            }
+            self::ensureTransition($db, $workflow, 'COM_JLMS_ARCHIVE_COURSE', $published, $archived, 'archive', 2, $save);
+            self::ensureTransition($db, $workflow, 'COM_JLMS_RESTORE_COURSE', $archived, $published, 'restore', 1, $save);
             $db->transactionCommit();
         } catch (\Throwable $error) {
             $db->transactionRollback();
