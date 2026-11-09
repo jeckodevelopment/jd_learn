@@ -4,6 +4,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | Versione / periodo | Risultato introdotto |
 |---|---|
+| 0.41.30 | ACL feature-specific nelle scorciatoie dashboard (issue #113, PR #126); CI standard superata; filtraggio del sottomenu nativo e collaudo Joomla ancora aperti |
 | 0.41.29 | Corrette le traduzioni IT/EN della pagina Opzioni: titolo browser e gruppo Cronologia versioni; issue #115 / AC-134, PR #124 integrata, quattro job CI superati; collaudo Joomla manuale aperto |
 | 0.41.28 | Conteggio corsi per docente, link alla lista Corsi filtrata, filtro Docente e intestazione tradotta; issue #117 / AC-133, PR #122 integrata, CI standard superata; collaudo Joomla AC-133 aperto |
 | 0.41.27 | Banca domande con elenco Search Tools e form separato, duplicazione e cancellazione protetta; PR #120 integrata, quattro job CI superati; collaudo Joomla AC-131 aperto |
