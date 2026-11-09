@@ -6,7 +6,7 @@
 - Aula e outline mostrano la data di rilascio; prima/dopo la finestra corpo, campi, materiali, player, quiz e mutazioni restano protetti anche sugli endpoint diretti. Le lezioni obbligatorie future restano nel denominatore.
 - `release_after_days` relativo all’avvio dell’iscrizione resta non supportato; la verifica di compatibilità con scadenze individuali resta residua.
 - **Comportamenti da testare in Joomla:** impostare sul corso un fuso diverso da UTC, salvare una lezione con apertura futura e chiusura successiva, riaprire il form e verificare gli orari locali; pubblicare; da studente verificare la data visibile senza contenuti/materiali/player e i dinieghi di completamento e URL diretti; dopo l’apertura verificare la fruizione, dopo la chiusura verificare il blocco; tentare una finestra senza sovrapposizione con la disponibilità del corso e verificare che la pubblicazione sia rifiutata. Controllare che il conteggio delle attività obbligatorie non escluda quelle future.
-- Candidato 0.41.37-dev; CI e pacchetto da registrare dopo il merge; accettazione manuale Joomla pendente.
+- PR [#141](https://github.com/jeckodevelopment/jd_learn/pull/141) integrata; CI standard 4/4 superata nel [run 42646076977](https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977). Pacchetto [JD-Learn-0.41.37-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977/artifacts/13688665407), SHA-256 `55c3c53886c0f668ee1113a24941a64ff8ad299c23a91afbec29c79d9d06b6a3` (artifact SHA-256 `e9eb13658a7cdf0f1f3e3b7db47657ddda7ec8714620b6a2eebe5ccc09c0e461`), scadenza 23 novembre 2026; collaudo manuale Joomla pendente.
 
 ## 0.41.36-dev — sequenziamento delle attività obbligatorie
 
