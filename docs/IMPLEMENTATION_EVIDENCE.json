@@ -1,57 +1,58 @@
 {
   "audited_at": "2026-11-09",
   "product": "JD Learn",
-  "version": "0.41.37-dev",
+  "version": "0.41.38-dev",
   "code_baseline": {
-    "tested_head": "58b0330e0e7deb8580d680c500ec450c6253acc5",
-    "parent_main_commit": "89c18d52d573cb8cd6149e7877e85cc76852fc7f",
-    "pull_request": 141,
-    "merged_main_commit": "14554c2b74a10e9a4d67352485ff5d40f9210691"
+    "tested_head": "2c14d9529444943467f197c9bf29dadd58b83ae0",
+    "parent_main_commit": "0179ab804e533ad96f8273d4993e50867a707ae7",
+    "pull_request": 143,
+    "merged_main_commit": "7681473d34e23ec633fcf9fc59c3711e644b2d98"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42646076977,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977",
+    "run_id": 42652681260,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 129259561128,
+        "id": 129282926146,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129259643231,
+        "id": 129283014712,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129259643379,
+        "id": 129283015046,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129259643695,
+        "id": 129283015192,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #141 integra finestre assolute delle lezioni nel fuso del corso; CI standard 4/4 superata. Collaudo manuale Joomla pendente."
+    "note": "PR #143 integra rilascio relativo a enrollment.started_at, controlli di ammissione e protezione dei contenuti. CI standard 4/4 superata; collaudo manuale Joomla pendente."
   },
   "package": {
-    "artifact_id": 13688665407,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977/artifacts/13688665407",
-    "artifact_name": "JD-Learn-0.41.37-dev",
-    "installable_package": "pkg_jlms-0.41.37-dev.zip",
-    "sha256": "55c3c53886c0f668ee1113a24941a64ff8ad299c23a91afbec29c79d9d06b6a3",
-    "artifact_sha256": "e9eb13658a7cdf0f1f3e3b7db47657ddda7ec8714620b6a2eebe5ccc09c0e461",
-    "size_bytes": 524292,
-    "artifact_size_bytes": 524103,
-    "expires_at": "2026-11-23T15:39:16Z"
+    "artifact_id": 13690028782,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260/artifacts/13690028782",
+    "artifact_name": "JD-Learn-0.41.38-dev",
+    "installable_package": "pkg_jlms-0.41.38-dev.zip",
+    "sha256": "382cc48ce54045326041f0a84bcfaa7db76d32ee2b3bc73bbfa5bd2bc3b2de22",
+    "artifact_sha256": "b8a7b72014647d2a2cb7adad9c588318fed014403ba745d9cf59564ba6ca968d",
+    "size_bytes": 526473,
+    "artifact_size_bytes": 526308,
+    "expires_at": "2026-11-23T16:18:43Z",
+    "wrapper_zip": true
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -2423,7 +2424,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #141 integrata in main 0.41.37-dev; CI standard 4/4 superata nel run 42646076977; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
+  "candidate_status": "PR #143 integrata in main 0.41.38-dev; CI standard 4/4 superata nel run 42652681260; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
   "previous_verified_release": {
     "version": "0.41.34-dev",
     "package": "pkg_jlms-0.41.34-dev.zip",
@@ -2475,23 +2476,23 @@
     ]
   },
   "latest_verified_increment": {
-    "version": "0.41.37-dev",
-    "pull_request": 141,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/141",
-    "tested_head": "58b0330e0e7deb8580d680c500ec450c6253acc5",
-    "parent_main_commit": "89c18d52d573cb8cd6149e7877e85cc76852fc7f",
-    "merged_main_commit": "14554c2b74a10e9a4d67352485ff5d40f9210691",
-    "ci_run_id": 42646076977,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977",
-    "artifact_id": 13688665407,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42646076977/artifacts/13688665407",
-    "artifact_name": "JD-Learn-0.41.37-dev",
-    "installable_package": "pkg_jlms-0.41.37-dev.zip",
-    "artifact_sha256": "55c3c53886c0f668ee1113a24941a64ff8ad299c23a91afbec29c79d9d06b6a3",
-    "artifact_wrapper_sha256": "e9eb13658a7cdf0f1f3e3b7db47657ddda7ec8714620b6a2eebe5ccc09c0e461",
-    "artifact_size_bytes": 524103,
-    "package_size_bytes": 524292,
-    "artifact_expires_at": "2026-11-23T15:39:16Z",
+    "version": "0.41.38-dev",
+    "pull_request": 143,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/143",
+    "tested_head": "2c14d9529444943467f197c9bf29dadd58b83ae0",
+    "parent_main_commit": "0179ab804e533ad96f8273d4993e50867a707ae7",
+    "merged_main_commit": "7681473d34e23ec633fcf9fc59c3711e644b2d98",
+    "ci_run_id": 42652681260,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260",
+    "artifact_id": 13690028782,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260/artifacts/13690028782",
+    "artifact_name": "JD-Learn-0.41.38-dev",
+    "installable_package": "pkg_jlms-0.41.38-dev.zip",
+    "package_sha256": "382cc48ce54045326041f0a84bcfaa7db76d32ee2b3bc73bbfa5bd2bc3b2de22",
+    "artifact_sha256": "b8a7b72014647d2a2cb7adad9c588318fed014403ba745d9cf59564ba6ca968d",
+    "package_size_bytes": 526473,
+    "artifact_size_bytes": 526308,
+    "artifact_expires_at": "2026-11-23T16:18:43Z",
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {
@@ -2513,7 +2514,7 @@
     }
   ],
   "next_candidate": {
-    "priority": "Rilascio relativo delle lezioni a giorni dall’avvio dell’iscrizione e interoperabilità con le scadenze individuali.",
-    "status": "Da implementare secondo la matrice requisiti e la roadmap; nessuna nuova feature avviata."
+    "priority": "Completare il percorso intuitivo di gestione corsi e programma (M01/M02), come indicato in docs/NEXT_STEPS.md; mantenere in parallelo i collaudi manuali Joomla pendenti dei rilasci già integrati.",
+    "status": "Prossimo incremento da selezionare dai residui approvati del perimetro release 1; funzionalità phase 2 escluse."
   }
 }

@@ -2,7 +2,7 @@
 
 Registro cumulativo delle verifiche da eseguire su un **sito Joomla di prova usa e getta**. Si aggiorna a ogni PR con comportamenti runtime, aggiungendo le prove descritte nella PR e mantenendo il collegamento al requisito/scenario esistente. Non crea criteri funzionali nuovi. Un test è superato solo dopo esecuzione manuale sul sito e registrazione dell’esito qui; CI e test HTTP sono evidenze separate.
 
-## Candidato 0.41.38-dev — rilascio relativo all’avvio iscrizione
+## PR #143 integrata — rilascio relativo all’avvio iscrizione
 
 Su un Joomla di prova usa e getta, predisporre un corso pubblicabile con una lezione obbligatoria immediata e una seconda lezione obbligatoria con attesa di 2 giorni.
 
@@ -14,7 +14,7 @@ Su un Joomla di prova usa e getta, predisporre un corso pubblicabile con una lez
 6. Tentare di pubblicare un corso dove tutte le lezioni obbligatorie hanno attesa positiva: atteso blocco per assenza di attività iniziale disponibile.
 7. Provare ammissione automatica e manuale con una scadenza di iscrizione/edizione precedente al rilascio di una lezione obbligatoria: atteso rifiuto esplicito. Verificare che un’iscrizione già attiva e i relativi progressi restino invariati.
 
-**Stato:** candidato in preparazione; attendere CI e merge prima di registrare l’esito del pacchetto.
+**Stato:** PR [#143](https://github.com/jeckodevelopment/jd_learn/pull/143) integrata nel commit `7681473d34e23ec633fcf9fc59c3711e644b2d98`; CI standard 4/4 superata nel [run 42652681260](https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260). Pacchetto [JD-Learn-0.41.38-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260/artifacts/13690028782), wrapper SHA-256 `b8a7b72014647d2a2cb7adad9c588318fed014403ba745d9cf59564ba6ca968d`, pacchetto interno SHA-256 `382cc48ce54045326041f0a84bcfaa7db76d32ee2b3bc73bbfa5bd2bc3b2de22` (526473 byte), scade il 23 novembre 2026. Collaudo Joomla pendente.
 
 ## Come registrare un’esecuzione
 
