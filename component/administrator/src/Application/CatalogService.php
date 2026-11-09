@@ -55,11 +55,12 @@ final class CatalogService
             if ((int) $category->published !== 1 || !in_array((int) $category->access, $selected, true)
                 || !in_array((string) $category->language, ['*', $language], true)) { $categoryVisible = false; break; }
         }
-        $now = gmdate('Y-m-d H:i:s');
+        $now = time();
         $courseLanguage = in_array((string) $course->language, ['*', $language], true);
         $catalogVisible = (int) $course->state === 1 && $course->current_version_id !== null
             && in_array((int) $course->catalog_access, $selected, true) && $categoryVisible && $courseLanguage
-            && (!$course->publish_up || $course->publish_up <= $now) && (!$course->publish_down || $course->publish_down > $now);
+            && (!$course->publish_up || strtotime((string) $course->publish_up) <= $now)
+            && (!$course->publish_down || strtotime((string) $course->publish_down) > $now);
         $contentAllowed = in_array((int) $course->content_access, $selected, true);
         return ['levels' => $available, 'selected' => $selected, 'catalog_visible' => $catalogVisible,
             'content_allowed' => $contentAllowed, 'access_requirements_met' => $catalogVisible && $contentAllowed];
