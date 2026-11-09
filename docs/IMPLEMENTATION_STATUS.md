@@ -1,4 +1,4 @@
-Aggiornato al **9 novembre 2026**. Candidate **0.41.40-dev** (PR in preparazione): PR [#147](https://github.com/jeckodevelopment/jd_learn/pull/147) integra l’accesso amministrativo ai Percorsi e la guida d’uso nel commit `55ec3d5`. CI standard 4/4 superata nel [run 42674520291](https://github.com/jeckodevelopment/jd_learn/actions/runs/42674520291); pacchetto [JD-Learn-0.41.39-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42674520291/artifacts/13699268584), SHA-256 interno `3ab83bbc7477e07991f9f96fea0b2c2c92d9a3883ef5076094daba267a501bba`, SHA-256 dell’artefatto GitHub `8b49af446aa43274a3bcb96b08fca6b4f5d644da4e7c781e1cbb8651cc4184a6`, scade il 23 novembre 2026. Il collaudo manuale Joomla per Percorsi resta pendente.
+Aggiornato al **9 novembre 2026**. Main **0.41.40-dev**: PR [#151](https://github.com/jeckodevelopment/jd_learn/pull/151) integrata nel commit `2dd9d41c2e7496143a009da763fa9738871321c0`; ordine dashboard e stati provider completati. CI standard 4/4 superata nel [run 42679096692](https://github.com/jeckodevelopment/jd_learn/actions/runs/42679096692), inclusi PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. Pacchetto [JD-Learn-0.41.40-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42679096692/artifacts/13701777402), digest SHA-256 dell’artefatto GitHub (wrapper ZIP) `39ac9e037ec27201adb2b8b7255f4fcc6b6421eb667c3e0061db2e1251c08143`, scade il 23 novembre 2026. Il collaudo Joomla manuale resta da eseguire.
 
 La precedente 0.41.38-dev, PR [#143](https://github.com/jeckodevelopment/jd_learn/pull/143) integra rilascio relativo delle lezioni da `enrollment.started_at`, protezione aula/endpoint, requisito di attività iniziale e controllo delle scadenze note in ammissione. CI standard 4/4 superata nel [run 42652681260](https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260); pacchetto [JD-Learn-0.41.38-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42652681260/artifacts/13690028782), SHA-256 interno `382cc48ce54045326041f0a84bcfaa7db76d32ee2b3bc73bbfa5bd2bc3b2de22`, wrapper `b8a7b72014647d2a2cb7adad9c588318fed014403ba745d9cf59564ba6ca968d`, scade il 23 novembre 2026. Il collaudo Joomla della PR #143 resta pendente. PR #141 (finestre assolute), #138 (sequenziamento) e #136 (prerequisiti) sono integrate; i rispettivi collaudi manuali restano aperti.
 
@@ -22,11 +22,11 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Fruizione e progressi core (M03/M09) | 69% |
 | Video e materiali essenziali (M04) | 82% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
-| Usabilità amministrativa e integrazioni Joomla | 89% |
+| Usabilità amministrativa e integrazioni Joomla | 90% |
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **71%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (494/7 = 70,6%, arrotondato a 71%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (495/7 = 70,7%, arrotondato a 71%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -76,7 +76,7 @@ Seguire l’ordine e i confini già approvati in [NEXT_STEPS.md](NEXT_STEPS.md),
 
 La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) restano il perimetro: 209 requisiti del rilascio 1 e uno differito. Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
-Schema attuale: **42 tabelle / 59 FK**; 9 estensioni nel pacchetto 0.41.39-dev. Questi conteggi descrivono l'architettura, non l'avanzamento.
+Schema attuale: **42 tabelle / 59 FK**; 9 estensioni nel pacchetto 0.41.40-dev. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.
 
@@ -84,3 +84,8 @@ Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [pro
 ### Percorsi amministrativi — PR #147 integrata in 0.41.39-dev
 
 La PR aggiunge l’accesso alla gestione percorsi dal sottomenu e dalla dashboard con ACL `jlms.pathways.manage`, i test d’installazione e HTTP e la guida [PATHWAYS.md](../component/administrator/docs/PATHWAYS.md). CI standard 4/4 superata. Resta il collaudo manuale Joomla su ACL, CRUD e viste pubbliche; la stima complessiva sale al 71%.
+
+
+### Dashboard e stati provider — PR #151 integrata in 0.41.40-dev
+
+La dashboard ordina gli otto accessi rapidi secondo il flusso operativo e mostra sempre gli stati di YouTube, Vimeo, Cloudflare Stream e video locali. CI standard 4/4 superata nel run 42679096692. Collaudo Joomla su ruoli, ordine, stati e lingue pendente. L’avanzamento dell’area amministrativa passa dall’89% al 90%; complessivo invariato al 71% (495/7).
