@@ -18,7 +18,7 @@ Prima del test annotare: data, versione e checksum del pacchetto, versione/patch
 
 ## Registro PR
 
-### PR #130 — lezioni-documento autonome
+### PR #130 — lezioni-documento
 
 Riferimenti: M01/M02, LES-01–04, MAT-01–08. Usare corso e account fittizi su Joomla di prova.
 
@@ -28,7 +28,7 @@ Riferimenti: M01/M02, LES-01–04, MAT-01–08. Usare corso e account fittizi su
 4. Con uno studente iscritto, aprire la lezione, scaricare il file protetto e segnare la lezione completata. Atteso: avanzamento persistente e completamento corso coerente.
 5. Provare il download da sessione anonima e da account non iscritto. Atteso: accesso negato; date di disponibilità e scansione obbligatoria sono rispettate.
 
-**Stato:** CI standard in attesa; nessun esito manuale registrato.
+**Stato:** PR #130 integrata nel commit `0c3c0109681cdaca6673dded3c10941c06a2ae20`; CI standard superata nel [run 42601315214](https://github.com/jeckodevelopment/jd_learn/actions/runs/42601315214). Pacchetto [JD-Learn-0.41.32-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42601315214/artifacts/13666127495), wrapper da estrarre una volta; checksum SHA-256 pacchetto interno `3cc98f6837810f72c366b98a4ec28d2c4645ccd78d03ec546ef336d44c351a71`. Nessun esito manuale registrato.
 
 
 ### PR #100 — attivazione e lingue del plugin Privacy Joomla
