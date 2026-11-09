@@ -45,9 +45,17 @@ $currentModule = 0;
   </section>
   <?php elseif ($selected->kind === 'audio' && !empty($selected->audio_attachment)) : ?>
   <section id="jlms-audio-region" aria-labelledby="jlms-lesson-title">
-   <audio id="jlms-audio-player" controls preload="metadata" aria-label="<?= $this->escape($selected->title) ?>">
+   <audio id="jlms-audio-player" controls preload="metadata" data-resume-ms="<?= (int) ($selected->resume_ms ?? 0) ?>" aria-label="<?= $this->escape($selected->title) ?>">
     <source src="<?= Route::_('index.php?option=com_jlms&task=attachment.audio&format=raw&id=' . (int) $selected->audio_attachment['id'] . '&lesson_id=' . (int) $selected->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>" type="<?= $this->escape($selected->audio_attachment['mime']) ?>">
    </audio>
+   <p id="jlms-audio-progress-status" role="status" aria-live="polite"></p>
+   <form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+    <input type="hidden" name="task" value="lesson.complete">
+    <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">
+    <input type="hidden" name="jform[lesson_id]" value="<?= (int) $selected->id ?>">
+    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
+    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
+   </form>
   </section>
   <?php elseif ($selected->kind === 'quiz') : ?>
   <a id="jlms-lesson-quiz" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=quiz&id='.(int)$item['enrollment_id'].'&lesson_id='.(int)$selected->id) ?>"><?= Text::_('COM_JLMS_QUIZ_OPEN') ?></a>

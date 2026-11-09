@@ -8,7 +8,8 @@ Per provare il flusso: pubblicare un corso contenente solo lezioni di testo, mod
 |---|---|---|
 | `enrollment.start` | POST HTML, token Joomla, `jform[course_id]`, `jform[idempotency_key]` | Crea o ritrova la frequenza nell’edizione default della versione corrente; redirect interno all’aula |
 | `view=classroom&id=ENROLLMENT_ID&lesson_id=LESSON_ID` | GET HTML, sessione Joomla | Programma e un solo corpo lezione, dopo controllo proprietario/parent/accesso |
-| `lesson.complete` | POST HTML, token, `jform[enrollment_id]`, `jform[lesson_id]`, `jform[idempotency_key]` | Completa una lezione di testo/manuale; aggiorna contatori e conclusione; redirect interno |
+| `lesson.complete` | POST HTML, token, `jform[enrollment_id]`, `jform[lesson_id]`, `jform[idempotency_key]` | Completa una lezione di testo/documento/audio con conferma esplicita; aggiorna contatori e conclusione; redirect interno |
+| `audio.save` | POST JSON, token Joomla, `enrollment_id`, `lesson_id`, `position_ms` | Salva il punto d’ascolto della sola lezione audio autorizzata; non completa attività né aggiorna percentuali; `private, no-store` |
 
 Sono task HTML interni; gli endpoint JSON del catalogo dei servizi restano da implementare. Key: 32–64 caratteri alfanumerici/trattino, generata con random_bytes nelle view. Metodo errato 405, token non valido 403, ospite 401, proprietario/parent estraneo 404, vincolo di accesso/finestra 403, conflitto key/payload 409. Non sono accettati user_id, stato, punteggio o percentuali dal browser. Redirect sempre costruiti dal server.
 
@@ -26,7 +27,7 @@ Completamento: primo lock sull’iscrizione, poi ledger di idempotenza; nessun l
 
 Percentuale = completate obbligatorie / totale obbligatorie, arrotondata per difetto; opzionali escluse. Il 100% compare con tutti i requisiti soddisfatti e data server di completamento. Lo stato di accesso resta distinto: `status=active`, `completed_at` valorizzata. Replay non modifica la data di conclusione. La prima conferma manuale valorizza `started_at`; il semplice GET non attribuisce attività, tempo o credito e non genera scritture. Il completamento manuale attesta una conferma dello studente, non la lettura o la presenza. Per le lezioni testuali non vengono attribuiti automaticamente attività o tempo di lettura all’apertura.
 
-La lettura dell’aula usa una query di programma/progressi e un solo corpo selezionato, con limite 5.000 lezioni. HTML filtrato dal core sia nell’authoring sia con filtro anti-XSS alla consegna. Nessun content plugin viene eseguito automaticamente nel testo. View con `private, no-store` e robots noindex/nofollow; configurare Page Cache/CDN esterni per escludere l’aula.
+Il player audio ripristina l’ultimo `resume_ms` confermato per coppia iscrizione/lezione. Il browser salva ogni 12 secondi e su pausa, seek e uscita pagina; una chiusura improvvisa può perdere il tratto non confermato. Il servizio rivalida identità, iscrizione/versione, edizione e tipo lezione a ogni scrittura, serializza sull’iscrizione e non tratta la posizione come prova di completamento. La lettura dell’aula usa una query di programma/progressi e un solo corpo selezionato, con limite 5.000 lezioni. HTML filtrato dal core sia nell’authoring sia con filtro anti-XSS alla consegna. Nessun content plugin viene eseguito automaticamente nel testo. View con `private, no-store` e robots noindex/nofollow; configurare Page Cache/CDN esterni per escludere l’aula.
 
 ## Collaudo e limiti
 

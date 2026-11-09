@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.34-dev — ripresa lezioni audio
+
+- Salva la posizione di ascolto su intervalli di 12 secondi, pausa, seek e uscita pagina; ripristina l’ultimo punto confermato. L’endpoint richiede sessione, CSRF, iscrizione e lezione audio della versione assegnata.
+- La posizione è legata all’iscrizione, non assegna completamenti e non cambia la soglia video. Il completamento audio resta esplicito; il browser può perdere l’ultimo tratto se l’uscita avviene prima dell’invio.
+- **Collaudo manuale Joomla:** riprodurre un audio per almeno 15 secondi, mettere in pausa e ricaricare; verificare il ripristino. Fare seek all’indietro, ricaricare e verificare il nuovo punto. Confermare che ascolto/fine player non completino la lezione senza pulsante. Provare due iscrizioni e negare richieste senza CSRF o con enrollment/lesson non corrispondenti.
+- PR runtime in preparazione; CI e package artifact da verificare prima del merge.
+
+
 ## 0.41.33-dev — lezioni audio autonome
 
 - Aggiunge il tipo lezione Audio con player HTML5 nativo. MP3 e OGG sono validati per estensione, MIME e firma; l’autore carica il file come materiale della lezione. La pubblicazione richiede almeno un audio pronto.

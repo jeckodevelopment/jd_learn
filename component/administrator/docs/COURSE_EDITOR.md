@@ -32,7 +32,7 @@ I tipi di voce di menu Pagina docente e Corsi di un docente consentono rispettiv
 
 Le categorie dei profili preesistenti restano conservate per mantenere ACL e disponibilità già configurate. La scheda docente presenta un flusso senza scelta di categoria. I nuovi profili ricevono un contenitore tecnico predisposto all’installazione.
 
-Le versioni didattiche già assegnate rimangono consultabili dall’amministrazione. Il corso mantiene il proprio storico editoriale Joomla separato dalle assegnazioni didattiche. Revisione editoriale, versione del programma e tentativo di quiz hanno funzioni distinte. La versione 0.41.33-dev aggiunge lezioni Audio MP3/OGG e Documento con allegati protetti; CI standard superata, collaudo Joomla pendente. Non salva la posizione audio e non include trascrizioni. Workflow avanzato, migrazioni e completamento delle integrazioni M10 seguono la roadmap.
+Le versioni didattiche già assegnate rimangono consultabili dall’amministrazione. Il corso mantiene il proprio storico editoriale Joomla separato dalle assegnazioni didattiche. Revisione editoriale, versione del programma e tentativo di quiz hanno funzioni distinte. La versione 0.41.33-dev aggiunge lezioni Audio MP3/OGG e Documento con allegati protetti; CI standard superata, collaudo Joomla pendente. La candidata 0.41.34-dev aggiunge il salvataggio/ripristino della posizione audio; il completamento resta manuale. Trascrizioni non incluse. Workflow avanzato, migrazioni e completamento delle integrazioni M10 seguono la roadmap.
 
 ## Duplicare corso, modulo e lezione
 
