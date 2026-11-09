@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.30-dev — ACL nelle scorciatoie Dashboard
+
+- Issue [#113](https://github.com/jeckodevelopment/jd_learn/issues/113): Banca domande ora richiede anche `jlms.quiz.manage`; Categorie corsi e Campi aggiuntivi richiedono i permessi di destinazione oltre all’accesso a JD Learn.
+- La parte del sottomenu nativo resta da completare; il testbook distingue il comportamento implementato dal collaudo Joomla pendente.
+- **Collaudo manuale Joomla:** gruppo con `core.manage` JD Learn ma senza `jlms.quiz.manage`; verificare assenza della scorciatoia banca domande, diniego dell’URL diretto, e visibilità dei link categorie/campi con permessi mancanti/presenti.
+
 ## 0.41.29-dev — traduzioni delle opzioni componente
 
 - Sostituisce la chiave Joomla mancante `JGLOBAL_HISTORY_OPTIONS` con l’etichetta JD Learn tradotta in italiano e inglese, sia nella tab sia nel gruppo della pagina Opzioni.

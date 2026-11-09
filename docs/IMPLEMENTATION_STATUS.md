@@ -1,6 +1,6 @@
 # Stato attuale di JD Learn
 
-Aggiornato all’**9 novembre 2026**. Main è **0.41.29-dev** dopo il merge della PR [#124](https://github.com/jeckodevelopment/jd_learn/pull/124), che risolve issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115) / AC-134: il titolo della pagina Opzioni e il gruppo Cronologia versioni sono tradotti in italiano e inglese. Tutti e quattro i job CI sono superati nel [run 42533814214](https://github.com/jeckodevelopment/jd_learn/actions/runs/42533814214); il collaudo manuale Joomla AC-134 resta pendente. La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122) integra issue #117 / AC-133: conteggio corsi per docente, link filtrato e filtro Docente nella lista Corsi; CI superata, collaudo manuale pendente. La documentazione AC-134 è nel [testbook](QA_TESTBOOK.md). L’utente ha confermato il collaudo manuale Dashboard l’8 novembre 2026; il prodotto non è pronto per la produzione.
+Aggiornato all’**9 novembre 2026**. Main è **0.41.29-dev** dopo il merge della PR [#124](https://github.com/jeckodevelopment/jd_learn/pull/124), che risolve issue [#115](https://github.com/jeckodevelopment/jd_learn/issues/115) / AC-134. Un candidato 0.41.30-dev aggiunge controlli ACL alle scorciatoie Dashboard per issue #113; non modifica ancora le voci del sottomenu nativo, quindi issue #113 resta parzialmente aperta. La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122) integra issue #117 / AC-133. Collaudi manuali AC-133/134 e delle nuove condizioni ACL restano pendenti. Il prodotto non è pronto per la produzione.
 
 **Controllo del perimetro:** la ricerca roster PR #94 non era nell’elenco precedente delle lacune concordate. È una deviazione di processo; il merge non equivale ad approvazione come requisito stabile. È conservata nel runtime di main e annotata come elemento da riesaminare in [testbook](QA_TESTBOOK.md#pr-94--ricerca-roster-deviazione-di-perimetro-non-gate-di-accettazione). Le prossime implementazioni devono riferirsi a requisiti/scenari e residui già elencati in [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Per le viste backend, seguire la regola di uniformità documentata nel [piano UX](ADMIN_UX_PLAN.md#regola-di-uniformità-delle-viste-joomla).
 
@@ -20,11 +20,11 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Fruizione e progressi core (M03/M09) | 55% |
 | Video e materiali essenziali (M04) | 80% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
-| Usabilità amministrativa e integrazioni Joomla | 84% |
+| Usabilità amministrativa e integrazioni Joomla | 85% |
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **67%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (469/7 = 67%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; tutte le prove Joomla reali restano conteggiate separatamente come pendenti.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (470/7 = 67%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; tutte le prove Joomla reali restano conteggiate separatamente come pendenti.
 
 ## Funzioni presenti e lavoro residuo
 
