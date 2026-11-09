@@ -83,7 +83,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
       <?php if ($this->editable) : ?><button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button" draggable="true" data-drag-handle="lesson" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $lesson->title)) ?>" title="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button><?php endif; ?>
       <div class="jlms-lesson-label">
        <?php if (($this->editable && ($lesson->kind !== 'quiz' || $this->canQuiz)) || (!$this->editable && $this->canMaterials && $lesson->provider_key === 'html5')) : ?><a class="jlms-lesson-title" href="<?= $lessonUrl($lesson) ?>"><?= $this->escape($lesson->title) ?></a><?php else : ?><strong><?= $this->escape($lesson->title) ?></strong><?php endif; ?>
-       <div class="small text-muted"><?= Text::_(match ($lesson->kind) { 'text'=>'COM_JLMS_LESSON_TEXT','video'=>'COM_JLMS_LESSON_VIDEO',default=>'COM_JLMS_LESSON_QUIZ' }) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></div>
+       <div class="small text-muted"><?= Text::_(match ($lesson->kind) { 'text'=>'COM_JLMS_LESSON_TEXT','document'=>'COM_JLMS_LESSON_DOCUMENT','video'=>'COM_JLMS_LESSON_VIDEO',default=>'COM_JLMS_LESSON_QUIZ' }) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></div>
       </div>
       <?php if ($this->editable) : $actions('lesson', $lesson, $position, count($lessons)); endif; ?>
      </li>
@@ -91,6 +91,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     <?php if ($this->editable) : ?><div class="jlms-programme-buttons jlms-add-lesson">
      <a class="btn btn-sm btn-outline-primary" href="<?= $link($view . '&new_lesson=1&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?= Text::_('COM_JLMS_PROGRAMME_ADD_LESSON') ?></a>
      <a class="btn btn-sm btn-outline-secondary" href="<?= $link($view . '&new_lesson=1&lesson_kind=video&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?= Text::_('COM_JLMS_LESSON_VIDEO') ?></a>
+     <a class="btn btn-sm btn-outline-secondary" href="<?= $link($view . '&new_lesson=1&lesson_kind=document&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?= Text::_('COM_JLMS_LESSON_DOCUMENT') ?></a>
      <?php if ($this->canQuiz) : ?><a class="btn btn-sm btn-outline-secondary" href="<?= $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&module_id=' . (int) $module->id) ?>"><?= Text::_('COM_JLMS_QUIZ_NEW') ?></a><?php endif; ?>
     </div><?php endif; ?>
    </div>

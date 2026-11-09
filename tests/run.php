@@ -85,6 +85,19 @@ expect(in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
+    [(object) ['id' => 9, 'module_id' => 3, 'required' => 1, 'kind' => 'document']],
+);
+expect(in_array('COM_JLMS_DOCUMENT_MATERIAL_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist requires a ready attachment for a document lesson');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['id' => 9, 'module_id' => 3, 'required' => 1, 'kind' => 'document']],
+    [(object) ['lesson_id' => 9, 'status' => 'ready', 'state' => 1, 'preview' => 0, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
+);
+expect(!in_array('COM_JLMS_DOCUMENT_MATERIAL_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts a ready lesson attachment');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json' => '{"video_duration_confirmed":true}']],
 );
 expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts confirmed video duration in the publication range');

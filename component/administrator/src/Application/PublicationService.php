@@ -162,6 +162,20 @@ final class PublicationService
                         || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === '') {
                         throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
                     }
+                } elseif ($lesson->kind === 'document') {
+                    if ($lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
+                        || $lesson->media_asset_id !== null || $lesson->duration_ms !== null) {
+                        throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                    }
+                    $materialQuery = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments AS a')
+                        ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
+                        ->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')
+                        ->where('a.state = 1')->where('a.preview = 0')->where("f.status = 'ready'")
+                        ->bind(':version', (int) $version->id, ParameterType::INTEGER)
+                        ->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
+                    if ((int) $this->db->setQuery($materialQuery)->loadResult() < 1) {
+                        throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
+                    }
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);

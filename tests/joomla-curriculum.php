@@ -121,6 +121,9 @@ curriculumExpect((int)$outline['modules'][0]->id===$second,'module ordering pers
 $service->reorder($actor,'lesson',scopeInput()+['id'=>$video,'direction'=>'up']);
 $outline = $service->outline($actor,$course,$version);
 curriculumExpect((int)$outline['lessons'][0]->id===$video,'lesson ordering persisted');
+$document = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Document lesson','kind'=>'document','required'=>'1','body'=>'<p>Read the attached document</p>']);
+$documentRow = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $document)->loadObject();
+curriculumExpect($documentRow->kind==='document' && $documentRow->completion_rule==='manual' && $documentRow->provider_key===null,'document lessons use manual completion and no video source');
 curriculumDenied(fn () => $service->deleteItem($actor,'module',scopeInput()+['id'=>$module,'revision'=>recordRevision('modules',$module),'confirmation'=>'1']),'non-empty module cannot be removed');
 $service->saveModule($actor,scopeInput()+['id'=>$second,'revision'=>recordRevision('modules',$second),'title'=>'Updated module']);
 $secondRevision=recordRevision('modules',$second);
@@ -148,6 +151,6 @@ $curriculumModel=$factory->createModel('Curriculum','Administrator',['ignore_req
 curriculumExpect((int)$curriculumModel->getOutline()['version']->id===$version,'latest draft resolves when version_id is omitted');
 curriculumExpect((bool)$curriculumModel->getForm([],false) && (bool)$curriculumModel->getLessonForm(),'native curriculum forms load');
 $outline=$service->outline($actor,$course,$version);
-curriculumExpect(count($outline['modules'])===1 && count($outline['lessons'])===1,'final outline remains coherent');
+curriculumExpect(count($outline['modules'])===1 && count($outline['lessons'])===2,'final outline remains coherent with the document lesson');
 // Rendering is tested over HTTP, where Joomla initialises its document and toolbar.
 echo json_encode(['curriculum_checks'=>$checks,'status'=>'passed','course_id'=>$course,'version_id'=>$version],JSON_THROW_ON_ERROR).PHP_EOL;
