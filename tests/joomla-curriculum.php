@@ -151,6 +151,6 @@ $curriculumModel=$factory->createModel('Curriculum','Administrator',['ignore_req
 curriculumExpect((int)$curriculumModel->getOutline()['version']->id===$version,'latest draft resolves when version_id is omitted');
 curriculumExpect((bool)$curriculumModel->getForm([],false) && (bool)$curriculumModel->getLessonForm(),'native curriculum forms load');
 $outline=$service->outline($actor,$course,$version);
-curriculumExpect(count($outline['modules'])===1 && count($outline['lessons'])===1,'final outline remains coherent');
+curriculumExpect(count($outline['modules'])===1 && count($outline['lessons'])===2,'final outline remains coherent with the document lesson');
 // Rendering is tested over HTTP, where Joomla initialises its document and toolbar.
 echo json_encode(['curriculum_checks'=>$checks,'status'=>'passed','course_id'=>$course,'version_id'=>$version],JSON_THROW_ON_ERROR).PHP_EOL;
