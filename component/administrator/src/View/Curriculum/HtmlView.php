@@ -26,6 +26,7 @@ final class HtmlView extends BaseHtmlView
     public bool $canDelete = false;
     public array $transitions = [];
     public string $publicationNotice = '';
+    public bool $inReview = false;
     public array $publicationReadiness = ['blockers' => [], 'warnings' => []];
     public array $videoProviders = [];
     public bool $canConfigureVideo = false;
@@ -50,9 +51,11 @@ final class HtmlView extends BaseHtmlView
         $app = Factory::getApplication();
         $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($app->getIdentity());
         $this->canDuplicateCourse = $version && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor, (int) $course->catid);
+        $publication = $app->bootComponent('com_jlms')->getPublicationService();
+        $this->inReview = $publication->isInReview((int) $course->id);
         $locked = ($course->checked_out && (int) $course->checked_out !== (int) $actor->id);
         $locked = $locked || ($version && $version->checked_out && (int) $version->checked_out !== (int) $actor->id);
-        $this->editable = $version && $version->status === 'draft' && !$locked;
+        $this->editable = $version && $version->status === 'draft' && !$locked && !$this->inReview;
         $this->canRestoreProgramme = $version && !$locked && $course->current_version_id !== null
             && (int)$course->current_version_id !== (int)$version->id && in_array($version->status, ['published','retired'], true);
         if ($version) {
@@ -82,7 +85,7 @@ final class HtmlView extends BaseHtmlView
         } elseif (!\Joomla\CMS\Plugin\PluginHelper::isEnabled('workflow', 'publishing')) {
             $this->publicationNotice = 'COM_JLMS_PUBLICATION_PLUGIN_REQUIRED';
         } else {
-            $this->transitions = $app->bootComponent('com_jlms')->getPublicationService()->transitions($app->getIdentity(), (int) $course->id, (int) $version->id);
+            $this->transitions = $publication->transitions($app->getIdentity(), (int) $course->id, (int) $version->id);
             if (!$this->transitions) {
                 $this->publicationNotice = 'COM_JLMS_PUBLICATION_NO_TRANSITIONS';
             }

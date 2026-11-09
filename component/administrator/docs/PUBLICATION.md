@@ -10,7 +10,7 @@ La prima pubblicazione è disponibile ed è stata confermata dall’utente sul p
 4. Nella sezione Pubblicazione premere **Pubblica**. Se il workflow configurato offre più transizioni, selezionare quella desiderata ed eseguirla. Il workflow standard mostra direttamente il nome dell’azione sul pulsante. Verificare sia lo Stato del corso sia quello della versione. Una validazione fallita conserva la bozza e mostra un errore; un salvataggio riuscito delle lezioni non equivale alla pubblicazione.
 5. Verificare catalogo e scheda con categoria, lingua e livello richiesti, poi la fruizione con un account studente avente il livello contenuto. La preassegnazione non concede tale livello.
 
-L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. Restano anteprima studente interattiva, revisione/archivio completi, analisi impatti e migrazioni. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
+L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. La candidata 0.41.41-dev aggiunge il passaggio In revisione nel workflow Joomla: l’invio non cambia stato o versione live; l’authoring della bozza è bloccato fino alla restituzione o approvazione. L’approvazione di un aggiornamento richiede sempre la schermata di impatto. Restano archiviazione completa e anteprima studente interattiva. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
 
 ## Diagnostica
 
@@ -66,3 +66,12 @@ Dal Programma → Versioni selezionare una versione storica e usare **Recupera c
 ## Soglia video della versione
 
 La pubblicazione verifica che la soglia sia un intero valido in centesimi di percentuale (1–10000), con default90% quando manca nei dati legacy supportati. Il form Regole didattiche usa percentuali con massimo due decimali, senza arrotondamento in virgola mobile. Il riepilogo mostra soglia precedente e nuova quando cambiano; l’impronta include le regole e rifiuta conferme superate. Dopo la pubblicazione, ogni iscrizione continua a usare la soglia della versione assegnata; nessun ricalcolo dei completamenti esistenti.
+
+## Workflow di revisione della candidata 0.41.41-dev
+
+1. Con un ruolo autorizzato al cambio stato e alla transizione di invio, aprire Programma della bozza e scegliere **Invia in revisione**.
+2. Per un aggiornamento, verificare che il corso live e gli iscritti correnti continuino a usare la versione precedente. La bozza appare **In revisione** e non è modificabile via interfaccia né tramite le operazioni di authoring del componente.
+3. Un revisore autorizzato può scegliere **Riporta in bozza**; il corso live rimane invariato e la bozza torna modificabile.
+4. Per approvare, scegliere **Approva e pubblica**. La prima versione passa dai validatori autorevoli. Per un aggiornamento, leggere e confermare il riepilogo dell’impatto; una richiesta senza conferma o con contenuti cambiati viene rifiutata.
+
+Il pacchetto aggiorna in modo idempotente il workflow predefinito installato da JD Learn e non sostituisce workflow amministrativi personalizzati. I permessi si assegnano con le ACL native delle transizioni.
