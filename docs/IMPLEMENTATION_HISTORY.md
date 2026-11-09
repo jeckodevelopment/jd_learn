@@ -4,6 +4,7 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 
 | Versione / periodo | Risultato introdotto |
 |---|---|
+| 0.41.42 | PR #159 integrata nel commit `1c42b07f3fb7ec7d605f455dcf431510282ef5f2`: archiviazione/ripristino workflow preservando versione live e accesso esistente; CI 4/4 nel run 42704783478; pacchetto verificato; collaudo Joomla pendente |
 | 0.41.41 | PR #153 integrata nel commit `a754805387b41bd0509f898e15bd380f76a45645`: workflow Joomla In revisione, blocco authoring, restituzione e approvazione preservando la versione live; CI standard 4/4 nel run 42701584797; collaudo Joomla pendente |
 | 0.41.40 | PR #151 integrata nel commit `2dd9d41c2e7496143a009da763fa9738871321c0`: ordine dei collegamenti dashboard, stati sempre visibili per YouTube/Vimeo/Cloudflare Stream/HTML5; CI standard 4/4 nel run 42679096692 (PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri); collaudo Joomla pendente |
 | 0.41.39 | PR #147 integrata nel commit `55ec3d5cc81f9d6756a470d19f123188e37459a4`: accesso amministrativo ai Percorsi formativi dalla dashboard e dal sottomenu con ACL dedicate, guida authoring; CI standard 4/4 superata nel run 42674520291; collaudo Joomla pendente |

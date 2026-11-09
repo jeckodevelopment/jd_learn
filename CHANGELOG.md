@@ -1,3 +1,10 @@
+## 0.41.42-dev — archiviazione e ripristino corsi (PR #159 integrata)
+
+- Estende il workflow Joomla JD Learn con archiviazione e ripristino del corso pubblicato. L’archivio sparisce dal catalogo e non ammette nuove iscrizioni.
+- Versione didattica, iscrizioni esistenti e accesso degli studenti già ammessi sono preservati; il ripristino riporta online la stessa versione.
+- Upgrade del workflow idempotente; prove Joomla d’integrazione per transizioni, catalogo, accesso assegnato e installazioni ripetute.
+- CI standard 4/4 superata nel run 42704783478; merge `1c42b07f3fb7ec7d605f455dcf431510282ef5f2`; pacchetto [JD-Learn-0.41.42-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478/artifacts/13711989978), SHA-256 interno `0e8ab0086a7305829b24f76e5859369213320d8529eda56a9556edaf7f0ad6fb`; collaudo manuale Joomla pendente.
+
 ## 0.41.41-dev — workflow di revisione della versione didattica (PR #153 integrata)
 
 - Estende il workflow Joomla installato da JD Learn con invio In revisione, restituzione e approvazione; l’upgrade è idempotente e non sovrascrive workflow amministrativi personalizzati.
