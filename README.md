@@ -34,7 +34,7 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.43-dev**, PR [
 
 ## Evoluzioni successive alla prima stabile
 
-- **JD Learn Credentials (Open Badges 3.0)**: [specifica funzionale](docs/specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md) per emissione, firma, verifica pubblica sul dominio dell'emittente e condivisione LinkedIn. **Esclusa dalla versione 1.0.0**; sviluppo e avanzamento separati dalla baseline dei 210 requisiti. Nessuna funzionalità Credentials è attualmente dichiarata implementata.
+- **JD Learn Credentials (Open Badges 3.0)**: modulo futuro **nativo in `com_jlms`**, senza installazione di un secondo componente, [specifica funzionale](docs/specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md) e [progettazione tecnica T-001–T-007](docs/specifications/JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md) per emissione, firma, verifica pubblica sul dominio dell'emittente e condivisione LinkedIn. **Esclusa dalla versione 1.0.0**; sviluppo e avanzamento separati dalla baseline dei 210 requisiti. Nessuna funzionalità Credentials è attualmente dichiarata implementata.
 
 ## Specifiche e perimetro
 
