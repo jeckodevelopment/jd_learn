@@ -35,6 +35,8 @@ for tag,expected in {
  ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.ini').read_text()
  matches=re.findall(r'^COM_JLMS_DASHBOARD_INTRO="([^"]*)"$',ini,re.M)
  assert matches==[expected],(tag,matches)
+ for key in ['COM_JLMS_COURSES','COM_JLMS_TEACHERS','COM_JLMS_LESSONS']:
+  assert re.search(rf'^{key}="[^"]+"$',ini,re.M),(tag,key)
 for tag in ['it-IT','en-GB']:
  sys_ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.sys.ini').read_text()
  assert re.findall(r'^COM_JLMS_DASHBOARD_MENU="([^"]*)"$',sys_ini,re.M)==['Dashboard'],tag
