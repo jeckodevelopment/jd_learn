@@ -5,7 +5,7 @@
 - Completa issue #113: `plg_system_jlmsmenu` filtra le voci di JD Learn per le autorizzazioni di Banca domande, Categorie, Campi e Plugin video. Le altre voci JD Learn mantengono il requisito `core.manage` del componente; gli altri menu Joomla non sono modificati.
 - Il pacchetto attiva il plugin alla prima installazione e conserva lo stato scelto dall’amministratore agli aggiornamenti.
 - **Collaudo manuale Joomla:** account con accesso JD Learn ma senza `jlms.quiz.manage`; verificare assenza di Banca domande in sidebar e dashboard e diniego dell’URL diretto. Rimuovere separatamente i permessi `com_jlms.course`, `com_fields`, `com_plugins` e verificare l’assenza rispettiva di Categorie, Campi, Plugin video. Verificare account completo, altri menu Joomla e installazione/upgrade con plugin attivo e disattivato.
-- CI, merge e pacchetto verificato saranno registrati dopo l’esito della pipeline.
+- PR [#128](https://github.com/jeckodevelopment/jd_learn/pull/128) integrata nel commit `26c7ad5264dfbbdbdab9c446162220567df2d30e`; quattro job standard superati nel [run 42594246627](https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627). Pacchetto interno [JD-Learn-0.41.31-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627/artifacts/13663320592), checksum SHA-256 `2212e763bcb10e8089b783586d3ef5a9e68b310fab5f0b2494a4427702619db0`, 514020 byte; artefatto wrapper da estrarre una volta, in scadenza il 23 novembre 2026. CI d’installazione/upgrade superata; collaudo manuale dei ruoli Joomla pendente.
 
 
 ## 0.41.30-dev — ACL nelle scorciatoie Dashboard
