@@ -23,7 +23,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-Le PR #130 e #132 hanno integrato lezioni Documento e Audio. La 0.41.34-dev ha integrato la ripresa audio; proseguire con il prossimo requisito residuo M01/M02, mantenendo in parallelo aperti i collaudi manuali Joomla di documenti/audio, permessi e URL diretti e l’accettazione reale dei quattro provider. Le trascrizioni audio restano non implementate.
+Le PR #130 e #132 hanno integrato lezioni Documento e Audio. La 0.41.34-dev ha integrato la ripresa audio; la candidata 0.41.35-dev tratta i prerequisiti espliciti e l’accesso protetto; mantenere in parallelo aperti i collaudi manuali Joomla di documenti/audio, permessi e URL diretti e l’accettazione reale dei quattro provider. Le trascrizioni audio restano non implementate.
 
 
 La PR #116 ha integrato AC-130 in 0.41.26-dev per la lista docenti secondo le convenzioni Joomla; il collaudo manuale resta da registrare. La PR #120 integra AC-131 in 0.41.27-dev: elenco separato per la banca domande; CI completa superata, collaudo Joomla pendente. La PR #122 integra issue #117 / AC-133 in 0.41.28-dev: conteggio/link corsi docenti, filtro docente e traduzione titolo. La PR #124 integra issue #115 / AC-134 in 0.41.29-dev: titolo della pagina Opzioni e label Cronologia versioni tradotti in IT/EN; collaudo manuale pendente. Non avviare altri ampliamenti quiz.
@@ -62,7 +62,7 @@ La 0.41.9 integrata (PR #70) completa i comandi R-03 per chiudere/aprire le ammi
 
 ### Didattica, versioni e media
 
-Audio/documenti come lezioni autonome; prerequisiti/sequenze/rilascio con validazione dei cicli e dei contenuti irraggiungibili. Il fallback R-05 è stato corretto nella 0.41.5; il test manuale sul sito resta da svolgere. Completamento del versionamento: equivalenze/migrazione esplicita con la propria anteprima di impatto e rivalutazioni quiz senza alterare evidenze congelate. Percorsi aggregati del primo rilascio, senza anticipare attestati di percorso/sequenze fra corsi differiti.
+Prerequisiti espliciti e blocco aula candidati 0.41.35-dev; da completare il collaudo Joomla. Sequenziamento automatico, rilascio per data e controllo di irraggiungibilità. Il fallback R-05 è stato corretto nella 0.41.5; il test manuale sul sito resta da svolgere. Completamento del versionamento: equivalenze/migrazione esplicita con la propria anteprima di impatto e rivalutazioni quiz senza alterare evidenze congelate. Percorsi aggregati del primo rilascio, senza anticipare attestati di percorso/sequenze fra corsi differiti.
 
 La PR #90 integrata rimuove le liste fisse di provider in pubblicazione/fruizione/editor e usa il modulo convenzionale del plugin. L'integrazione di provider ulteriori e la relativa prova end-to-end sono rinviate alla fase 2. Per la prima stabile, collaudare YouTube, Vimeo, Cloudflare Stream e HTML5 con contenuti reali autorizzati su desktop/mobile, inclusi consenso, errori e progressi; una fixture mock non sostituisce queste prove.
 

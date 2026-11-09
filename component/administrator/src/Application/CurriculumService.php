@@ -184,9 +184,20 @@ final class CurriculumService
         if ($versionId && !$version) {
             throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
+        $prerequisites = [];
+        if ($version) {
+            $q = $this->db->createQuery()->select('lesson_id, required_lesson_id')->from('#__jlms_prerequisites')
+                ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('lesson_id, required_lesson_id');
+            $rows = $this->db->setQuery($q, 0, 25001)->loadObjectList();
+            if (count($rows) > 25000) { throw new \DomainException('COM_JLMS_OUTLINE_LIMIT'); }
+            foreach ($rows as $edge) {
+                $prerequisites[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
+            }
+        }
         return ['course' => $course, 'versions' => $versions, 'version' => $version,
             'modules' => $version ? $this->listRows('modules', 'course_version_id', $versionId) : [],
             'lessons' => $version ? $this->listRows('lessons', 'course_version_id', $versionId, 5001) : [],
+            'prerequisites' => $prerequisites,
             'attachments' => $version && $version->status === 'draft' ? $this->publicationAttachments($versionId) : []];
     }
 
@@ -472,7 +483,13 @@ final class CurriculumService
             $fields['source_json'] = json_encode(['_schema' => 1, 'provider' => $source->providerKey,
                 'reference' => $source->reference, 'options' => $source->options], JSON_THROW_ON_ERROR);
         }
-        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof): int {
+        $requiredLessons = $input['required_lesson_ids'] ?? [];
+        if (!is_array($requiredLessons) || !array_is_list($requiredLessons) || count($requiredLessons) > 5000) {
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+        }
+        $requiredLessons = array_map(static fn($value): int => self::id($value), $requiredLessons);
+        if (count(array_unique($requiredLessons)) !== count($requiredLessons)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
+        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof, $requiredLessons): int {
             $version = $this->draft($actor, $courseId, $versionId, $versionRevision);
             $module = $this->row('modules', $moduleId, true);
             if ((int) $module->course_version_id !== $versionId) {
@@ -516,12 +533,49 @@ final class CurriculumService
                     'ordering' => $order, 'source_revision' => 1, 'preview' => 0,
                     'params_json' => '{}', 'fields_snapshot_json' => '{}'], $actor);
             }
+            $this->savePrerequisites($versionId, $id, $requiredLessons);
             if (array_key_exists('com_fields', $input)) {
                 $this->saveLessonCustomFields($actor, $id, $input['com_fields']);
             }
             $this->update('course_versions', $version, [], $actor);
             return $id;
         });
+    }
+
+    /** Replace the prerequisite edges for one lesson and reject references outside this draft or cycles. */
+    private function savePrerequisites(int $versionId, int $lessonId, array $requiredLessons): void
+    {
+        if (in_array($lessonId, $requiredLessons, true)) { throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE'); }
+        $ids = array_map('intval', array_column($this->listRows('lessons', 'course_version_id', $versionId, 5001), 'id'));
+        if (count($ids) > 5000 || !in_array($lessonId, $ids, true)) { throw new \DomainException('COM_JLMS_OUTLINE_LIMIT'); }
+        foreach ($requiredLessons as $requiredId) {
+            if (!in_array($requiredId, $ids, true)) { throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND'); }
+        }
+        $edges = [];
+        $q = $this->db->createQuery()->select('lesson_id, required_lesson_id')->from('#__jlms_prerequisites')
+            ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
+        $existingEdges = $this->db->setQuery($q, 0, 25001)->loadObjectList();
+        if (count($existingEdges) > 25000) { throw new \DomainException('COM_JLMS_OUTLINE_LIMIT'); }
+        foreach ($existingEdges as $edge) {
+            if ((int) $edge->lesson_id !== $lessonId) { $edges[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id; }
+        }
+        $edges[$lessonId] = $requiredLessons;
+        $state = [];
+        $visit = function (int $node) use (&$visit, &$state, $edges): void {
+            if (($state[$node] ?? 0) === 1) { throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE'); }
+            if (($state[$node] ?? 0) === 2) { return; }
+            $state[$node] = 1;
+            foreach ($edges[$node] ?? [] as $parent) { $visit((int) $parent); }
+            $state[$node] = 2;
+        };
+        foreach ($ids as $node) { $visit($node); }
+        $delete = $this->db->createQuery()->delete('#__jlms_prerequisites')->where('lesson_id = :lesson')
+            ->where('course_version_id = :version')->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER);
+        $this->db->setQuery($delete)->execute();
+        foreach ($requiredLessons as $requiredId) {
+            $this->db->insertObject('#__jlms_prerequisites', (object) ['course_version_id' => $versionId,
+                'lesson_id' => $lessonId, 'required_lesson_id' => $requiredId]);
+        }
     }
 
     /** Persist configured lesson fields through Joomla's field model in the same transaction. */

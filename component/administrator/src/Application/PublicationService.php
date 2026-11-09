@@ -116,14 +116,7 @@ final class PublicationService
     private function validateAndFreeze(object $course, object $version, User $actor, array $remoteChecks = []): void
     {
         $versionId = (int) $version->id;
-        // Types/features not yet served by the learner application cannot be published accidentally.
-        foreach (['prerequisites'] as $table) {
-            $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_' . $table))
-                ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
-            if ((int) $this->db->setQuery($q)->loadResult()) {
-                throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
-            }
-        }
+        // Prerequisite edges are a supported learner rule; validate the graph before freezing it.
         $orphan=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
             ->leftJoin('#__jlms_lessons AS l ON l.id=q.lesson_id AND l.course_version_id=q.course_version_id')
             ->where('q.course_version_id = :version')->where("(l.id IS NULL OR l.kind <> 'quiz')")->bind(':version',$versionId,ParameterType::INTEGER);
@@ -234,6 +227,26 @@ final class PublicationService
         if (!$required || in_array(0, array_values($moduleIds), true)) {
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
         }
+        $prerequisiteMap = [];
+        $lessonIds = array_fill_keys(array_map(static fn(array $row): int => (int) $row['id'], $lessons), true);
+        $edgeQuery = $this->db->createQuery()->select('lesson_id, required_lesson_id')->from('#__jlms_prerequisites')
+            ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('lesson_id, required_lesson_id');
+        $edges = $this->db->setQuery($edgeQuery, 0, 25001)->loadObjectList();
+        if (count($edges) > 25000) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+        foreach ($edges as $edge) {
+            if (!isset($lessonIds[(int) $edge->lesson_id]) || !isset($lessonIds[(int) $edge->required_lesson_id])
+                || (int) $edge->lesson_id === (int) $edge->required_lesson_id) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+            $prerequisiteMap[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
+        }
+        $graphState = [];
+        $visitPrerequisite = function (int $node) use (&$visitPrerequisite, &$graphState, $prerequisiteMap): void {
+            if (($graphState[$node] ?? 0) === 1) { throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE'); }
+            if (($graphState[$node] ?? 0) === 2) { return; }
+            $graphState[$node] = 1;
+            foreach ($prerequisiteMap[$node] ?? [] as $parent) { $visitPrerequisite((int) $parent); }
+            $graphState[$node] = 2;
+        };
+        foreach (array_keys($lessonIds) as $node) { $visitPrerequisite((int) $node); }
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
         if (($rules['mode'] ?? '') !== 'learning' || ($rules['sequence_mode'] ?? '') !== 'free'
             || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required'
@@ -257,7 +270,8 @@ final class PublicationService
         CoursePresentation::requireDescription($course);
         $presentation = TeacherProfiles::freeze($this->db, $actor, $course, CoursePresentation::snapshot($course));
         $hash = hash('sha256', json_encode(['_schema' => 1, 'title' => $course->title, 'rules' => $rules,
-            'presentation' => $presentation, 'modules' => $modules, 'lessons' => $lessons, 'attachments' => $attachments], JSON_THROW_ON_ERROR));
+            'presentation' => $presentation, 'modules' => $modules, 'lessons' => $lessons,
+            'prerequisites' => $prerequisiteMap, 'attachments' => $attachments], JSON_THROW_ON_ERROR));
         $now = gmdate('Y-m-d H:i:s');
         $update = (object) ['id' => $versionId, 'status' => 'published', 'title_snapshot' => $course->title,
             'presentation_json' => $presentation, 'structure_hash' => $hash, 'published_at' => $now,

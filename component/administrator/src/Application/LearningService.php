@@ -257,11 +257,30 @@ final class LearningService
         return $lesson;
     }
 
+    /** Every learner-facing route uses the same server-side prerequisite decision. */
+    private function prerequisiteBlocker(int $enrollmentId, int $lessonId): ?object
+    {
+        $q = $this->db->createQuery()->select('required.id, required.title')->from('#__jlms_prerequisites AS r')
+            ->innerJoin('#__jlms_lessons AS required ON required.id = r.required_lesson_id AND required.course_version_id = r.course_version_id')
+            ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id AND p.enrollment_id = :enrollment')
+            ->where('r.lesson_id = :lesson')->where("(p.state IS NULL OR p.state <> 'completed')")
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
+        return $this->db->setQuery($q, 0, 1)->loadObject() ?: null;
+    }
+
+    private function assertPrerequisitesComplete(int $enrollmentId, int $lessonId): void
+    {
+        if ($this->prerequisiteBlocker($enrollmentId, $lessonId)) {
+            throw new \RuntimeException('COM_JLMS_PREREQUISITES_INCOMPLETE', 403);
+        }
+    }
+
     public function quizContext(User $identity, string $language, int $enrollmentId, int $lessonId, bool $lock = false, bool $allowExpiredWindow = false): array
     {
         $actor = $this->freshActor($identity);
         [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock, $allowExpiredWindow);
         $lesson = $this->lesson((int) $version->id, $lessonId);
+        $this->assertPrerequisitesComplete($enrollmentId, $lessonId);
         if ($lesson->kind !== 'quiz') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         return [$actor, $enrollment, $lesson];
     }
@@ -272,6 +291,7 @@ final class LearningService
         $actor = $this->freshActor($identity);
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
         $lesson = $this->lesson((int) $version->id, $lessonId);
+        $this->assertPrerequisitesComplete($enrollmentId, $lessonId);
         if ($lesson->kind !== 'video') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         $courseId = (int) $course->id;
         $q = $this->db->createQuery()->select('l.source_json')->from('#__jlms_lessons AS l')
@@ -288,6 +308,7 @@ final class LearningService
     {
         $actor = $this->freshActor($identity); [$course, $version] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
         $lesson = $this->lesson((int) $version->id, $lessonId);
+        $this->assertPrerequisitesComplete($enrollmentId, $lessonId);
         if ($lesson->kind !== 'audio') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
     }
@@ -297,7 +318,7 @@ final class LearningService
     {
         $actor = $this->freshActor($identity);
         [$course, $version] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
-        if ($lessonId) { $this->lesson((int) $version->id, $lessonId); }
+        if ($lessonId) { $this->lesson((int) $version->id, $lessonId); $this->assertPrerequisitesComplete($enrollmentId, $lessonId); }
         return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
     }
 
@@ -315,8 +336,25 @@ final class LearningService
         if (!$outline) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
+        $blockers = [];
+        $blockerQuery = $this->db->createQuery()->select('r.lesson_id, required.id AS required_id, required.title AS required_title')
+            ->from('#__jlms_prerequisites AS r')->innerJoin('#__jlms_lessons AS required ON required.id = r.required_lesson_id AND required.course_version_id = r.course_version_id')
+            ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id AND p.enrollment_id = :blockerEnrollment')
+            ->where('r.course_version_id = :blockerVersion')->where("(p.state IS NULL OR p.state <> 'completed')")
+            ->bind(':blockerEnrollment', $enrollmentId, ParameterType::INTEGER)->bind(':blockerVersion', $versionId, ParameterType::INTEGER)
+            ->order('r.lesson_id, required.ordering, required.id');
+        foreach ($this->db->setQuery($blockerQuery, 0, 25001)->loadObjectList() as $blocker) {
+            $blockers[(int) $blocker->lesson_id] ??= $blocker;
+        }
+        foreach ($outline as $entry) {
+            $blocker = $blockers[(int) $entry->id] ?? null;
+            $entry->prerequisite_blocked = $blocker !== null;
+            $entry->blocked_by_id = $blocker ? (int) $blocker->required_id : 0;
+            $entry->blocked_by_title = $blocker ? (string) $blocker->required_title : '';
+        }
         $lessonId = $lessonId ?: (int) ($enrollment->last_lesson_id ?: $outline[0]->id);
-        $lesson = $this->lesson($versionId, $lessonId, true);
+        $blocker = $blockers[$lessonId] ?? null;
+        $lesson = $this->lesson($versionId, $lessonId, !$blocker);
         $fieldSnapshot = json_decode((string) ($lesson->fields_snapshot_json ?? '{}'), true, 32, JSON_THROW_ON_ERROR);
         $viewLevels = array_map('intval', $actor->getAuthorisedViewLevels());
         $customFields = [];
@@ -327,7 +365,7 @@ final class LearningService
         }
         $percent = (int) $enrollment->required_total > 0
             ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
-        if ($lesson->kind === 'audio') {
+        if (!$blocker && $lesson->kind === 'audio') {
             $resumeQuery = $this->db->createQuery()->select('resume_ms')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :resumeEnrollment')->where('lesson_id = :resumeLesson')
                 ->bind(':resumeEnrollment', $enrollmentId, ParameterType::INTEGER)
@@ -345,9 +383,11 @@ final class LearningService
         }
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
+                'prerequisite_blocked' => $blocker !== null, 'blocked_by_id' => $blocker ? (int) $blocker->required_id : 0,
+                'blocked_by_title' => $blocker ? (string) $blocker->required_title : '',
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
                 'resume_ms' => (int) ($lesson->resume_ms ?? 0),
-                'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) $lesson->body, 'HTML'),
+                'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) ($lesson->body ?? ''), 'HTML'),
                 'custom_fields' => $customFields],
             'outline' => $outline, 'percent' => $percent, 'completed_at' => $enrollment->completed_at];
     }
@@ -407,6 +447,7 @@ final class LearningService
         $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $key): void {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
             $lesson = $this->lesson((int) $version->id, $lessonId);
+            $this->assertPrerequisitesComplete($enrollmentId, $lessonId);
             if (!in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule !== 'manual') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
             $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
             $q = $this->db->createQuery()->select('state')->from('#__jlms_lesson_progress')
@@ -441,6 +482,7 @@ final class LearningService
         return $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $positionMs): int {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
             $lesson = $this->lesson((int) $version->id, $lessonId);
+            $this->assertPrerequisitesComplete($enrollmentId, $lessonId);
             if ($lesson->kind !== 'audio') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')

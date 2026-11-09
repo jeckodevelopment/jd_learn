@@ -32,7 +32,7 @@ I tipi di voce di menu Pagina docente e Corsi di un docente consentono rispettiv
 
 Le categorie dei profili preesistenti restano conservate per mantenere ACL e disponibilità già configurate. La scheda docente presenta un flusso senza scelta di categoria. I nuovi profili ricevono un contenitore tecnico predisposto all’installazione.
 
-Le versioni didattiche già assegnate rimangono consultabili dall’amministrazione. Il corso mantiene il proprio storico editoriale Joomla separato dalle assegnazioni didattiche. Revisione editoriale, versione del programma e tentativo di quiz hanno funzioni distinte. La versione 0.41.33-dev aggiunge lezioni Audio MP3/OGG e Documento con allegati protetti; CI standard superata, collaudo Joomla pendente. La 0.41.34-dev aggiunge il salvataggio/ripristino della posizione audio; il completamento resta manuale. Trascrizioni non incluse. Workflow avanzato, migrazioni e completamento delle integrazioni M10 seguono la roadmap.
+Le versioni didattiche già assegnate rimangono consultabili dall’amministrazione. Il corso mantiene il proprio storico editoriale Joomla separato dalle assegnazioni didattiche. Revisione editoriale, versione del programma e tentativo di quiz hanno funzioni distinte. La versione 0.41.33-dev aggiunge lezioni Audio MP3/OGG e Documento con allegati protetti; CI standard superata, collaudo Joomla pendente. La 0.41.34-dev aggiunge il salvataggio/ripristino della posizione audio; il completamento resta manuale. Trascrizioni non incluse. Dalla 0.41.35-dev l’editor della lezione consente prerequisiti espliciti fra lezioni della stessa versione; il programma impedisce riferimenti fuori bozza e cicli. Il sequenziamento automatico e il rilascio temporale restano residui. Workflow avanzato, migrazioni e completamento delle integrazioni M10 seguono la roadmap.
 
 ## Duplicare corso, modulo e lezione
 
@@ -97,3 +97,9 @@ I campi correnti com_jlms.course sono preparati dai plugin di tipo e dai layout 
 Le modifiche editoriali compaiono senza ripubblicare il programma e non riscrivono versioni assegnate, progressi o risultati. La 0.41.7 aggiunge il contesto nativo `com_jlms.lesson`: i valori vengono salvati nel gestore Fields con ACL, copiati nelle nuove bozze e congelati alla pubblicazione. L’aula mostra i valori della versione assegnata con escaping e filtro dell’accesso corrente; non sono regole di completamento.
 
 Gli override nativi usano html/layouts/com_jlms/fields/render.php e html/layouts/com_jlms/field/render.php, con fallback com_fields. Tipi/override installati devono preservare escaping, accesso e accessibilità. Le prove automatiche campionano testo, area di testo e lista, non tutti i plugin di terze parti.
+
+## Prerequisiti delle lezioni (0.41.35-dev)
+
+Nel form di una lezione, selezionare in **Prerequisiti della lezione** le attività che lo studente deve completare prima di accedere. Sono selezionabili le altre lezioni della stessa bozza; il salvataggio impedisce l’autopropedeuticità e i cicli. Eliminare un’attività ancora referenziata richiede prima di rimuovere i relativi collegamenti. La regola viene congelata con la versione pubblicata e copiata nelle nuove bozze.
+
+In aula una lezione bloccata mostra il primo prerequisito non completato e un collegamento all’attività; testo, campi, materiali e player non vengono esposti. Anche download, streaming, quiz, ripresa e completamento ricontrollano il prerequisito lato server. Questa versione implementa i collegamenti espliciti anche in navigazione libera; non crea automaticamente una catena e non offre date di rilascio.
