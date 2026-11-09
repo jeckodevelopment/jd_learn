@@ -60,7 +60,11 @@ $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($u
 
 // Same native Installer API used by Joomla's CLI command, with its diagnostic queue preserved.
 $packagePath = realpath($argv[2] ?? '');
+$expectDisabledPlugin = ($argv[3] ?? '') === 'disabled-upgrade';
 if (!$packagePath || !str_ends_with($packagePath,'.zip')) { throw new \RuntimeException('Package ZIP required.'); }
+if ($expectDisabledPlugin) {
+    $db->setQuery("UPDATE #__extensions SET enabled=0 WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->execute();
+}
 $package = \Joomla\CMS\Installer\InstallerHelper::unpack($packagePath, true);
 $installer = new \Joomla\CMS\Installer\Installer();
 $installer->setDatabase($db);
@@ -74,23 +78,18 @@ try {
         throw new \RuntimeException('The package installer did not enable the JD Learn privacy plugin.');
     }
     $menuPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->loadResult();
-    if ($menuPlugin === null || (int) $menuPlugin !== 1) {
-        throw new \RuntimeException('The package installer did not enable the JD Learn menu ACL plugin.');
+    $expectedPluginState = $expectDisabledPlugin ? 0 : 1;
+    if ($menuPlugin === null || (int) $menuPlugin !== $expectedPluginState) {
+        throw new \RuntimeException($expectDisabledPlugin
+            ? 'A JD Learn package upgrade must preserve the administrator plugin state.'
+            : 'The package installer did not enable the JD Learn menu ACL plugin.');
     }
 
-    // Reinstall as an upgrade after an administrator has intentionally disabled the plugin.
-    $db->setQuery("UPDATE #__extensions SET enabled=0 WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->execute();
-    $upgradeInstaller = new \Joomla\CMS\Installer\Installer();
-    $upgradeInstaller->setDatabase($db);
-    if (!$upgradeInstaller->install($package['extractdir'])) {
-        throw new \RuntimeException('JD Learn package upgrade failed after disabling the menu ACL plugin.');
-    }
-    $menuPluginAfterUpgrade = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->loadResult();
-    if ((int) $menuPluginAfterUpgrade !== 0) {
-        throw new \RuntimeException('A JD Learn package upgrade must preserve the administrator plugin state.');
-    }
-
-    echo json_encode(['package_install'=>'passed','menu_acl_plugin_upgrade_state'=>'preserved','messages'=>$app->getMessageQueue()],JSON_THROW_ON_ERROR).PHP_EOL;
+    echo json_encode([
+        'package_install' => 'passed',
+        'menu_acl_plugin_state' => $expectDisabledPlugin ? 'preserved disabled across upgrade' : 'enabled on install',
+        'messages' => $app->getMessageQueue(),
+    ], JSON_THROW_ON_ERROR) . PHP_EOL;
 } finally {
     \Joomla\CMS\Installer\InstallerHelper::cleanupInstall('', $package['extractdir']);
 }
