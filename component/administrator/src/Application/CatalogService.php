@@ -41,9 +41,11 @@ final class CatalogService
         $selected = array_values(array_intersect($availableIds, array_unique(array_map('intval', $requestedLevels))));
         if (!$selected) { $selected = [in_array(1, $availableIds, true) ? 1 : ($availableIds[0] ?? 0)]; }
         $selected = array_values(array_filter($selected));
+        $left = (int) $course->lft;
+        $right = (int) $course->rgt;
         $ancestorsQuery = $this->db->createQuery()->select('id, published, access, language')->from('#__categories')
             ->where('lft <= :left')->where('rgt >= :right')->where('id <> 1')
-            ->bind(':left', (int) $course->lft, ParameterType::INTEGER)->bind(':right', (int) $course->rgt, ParameterType::INTEGER)
+            ->bind(':left', $left, ParameterType::INTEGER)->bind(':right', $right, ParameterType::INTEGER)
             ->order('lft');
         $ancestors = $this->db->setQuery($ancestorsQuery)->loadObjectList();
         $categoryVisible = (int) $course->category_published === 1
