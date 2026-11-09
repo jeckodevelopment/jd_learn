@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
   "name": "com_jlms",
-  "version": "0.41.36",
+  "version": "0.41.37",
   "assets": [
     {
       "name": "com_jlms.site",

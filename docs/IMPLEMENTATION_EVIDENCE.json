@@ -2517,5 +2517,14 @@
       "environment_details": "Non forniti"
     }
   ],
-  "next_candidate": null
+  "next_candidate": {
+    "version": "0.41.37-dev",
+    "scope": "Finestre assolute di disponibilità delle lezioni nel fuso orario del corso; validazione di raggiungibilità in pubblicazione; oscuramento contenuti e protezione endpoint prima/dopo la finestra.",
+    "status": "Implementazione candidata; CI e collaudo Joomla pendenti.",
+    "residual": [
+      "Rilascio relativo a giorni dall’avvio dell’iscrizione (`release_after_days`).",
+      "Interazione con scadenze individuali delle iscrizioni."
+    ],
+    "manual_joomla_acceptance": "pending"
+  }
 }

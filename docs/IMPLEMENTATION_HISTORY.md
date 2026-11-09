@@ -3,6 +3,7 @@
 Questo documento conserva il percorso passato. **Per decidere cosa funziona e cosa manca usare [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)**; per le prossime attività usare [NEXT_STEPS.md](NEXT_STEPS.md).
 
 | Versione / periodo | Risultato introdotto |
+| 0.41.37 | Candidato: finestre assolute di disponibilità delle lezioni, nel fuso del corso; validazione di raggiungibilità e protezione aula/endpoint; rilascio relativo a giorni dall’iscrizione ancora residuo |
 |---|---|
 | 0.41.36 | Candidato: modalità sequenziale per legare le attività obbligatorie nell’ordine del programma; CI e collaudo Joomla da completare |
 | 0.41.35 | PR #136 integrata: prerequisiti espliciti delle lezioni, controllo cicli, blocco protetto e collegamento nell’aula; CI 4/4 superata, collaudo Joomla pendente |

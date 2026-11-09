@@ -127,6 +127,18 @@ pubDenied(fn()=>$publication->transition($guest,$course,$version,pubRevision('co
 $video=$authoring->saveLesson($actor,pubScope()+['id'=>0,'module_id'=>$module,'title'=>'Unsupported video','kind'=>'video','required'=>'0','body'=>'','provider_key'=>'youtube','source_reference'=>'dQw4w9WgXcQ']);
 pubDenied(fn()=>pubTransition(),'unsupported video blocks entire publication');
 $authoring->deleteItem($actor,'lesson',pubScope()+['id'=>$video,'revision'=>1,'confirmation'=>'1']);
+// A required lesson must have a non-empty overlap with the published course window.
+$lessonOpen=gmdate('Y-m-d H:i:s',time()+7200);$courseClose=gmdate('Y-m-d H:i:s',time()+3600);
+$authoring->saveLesson($actor,pubScope()+['id'=>$lesson,'revision'=>1,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text',
+    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>','publish_up'=>$lessonOpen]);
+$writeFixture('#__jlms_courses',(object)['id'=>$course,'publish_down'=>$courseClose],'id');
+$unreachableRejected=false;
+try { $publication->transition($actor,$course,$version,pubRevision('courses',$course),pubRevision('course_versions',$version),(int)$publication->transitions($actor,$course)[0]->id); }
+catch (\DomainException $error) { $unreachableRejected=$error->getMessage()==='COM_JLMS_LESSON_UNREACHABLE'; }
+pubExpect($unreachableRejected,'publication rejects a required lesson outside the course window');
+$writeFixture('#__jlms_courses',(object)['id'=>$course,'publish_down'=>null],'id',true);
+$authoring->saveLesson($actor,pubScope()+['id'=>$lesson,'revision'=>2,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text',
+    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>']);
 // Native plugin veto must roll back frozen version, pointer and edition as one unit.
 $veto = static function ($event): void { if ($event->getArgument('extension')==='com_jlms.course') { $event->setStopTransition(); } };
 $app->getDispatcher()->addListener('onWorkflowBeforeTransition',$veto);

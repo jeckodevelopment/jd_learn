@@ -26,13 +26,17 @@ $currentModule = 0;
   <?php endif; ?>
   <li id="jlms-classroom-lesson-<?= (int) $entry->id ?>" class="jlms-classroom-lesson">
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $entry->id) ?>"<?= (int) $selected->id === (int) $entry->id ? ' aria-current="page"' : '' ?>><?= $this->escape($entry->title) ?></a>
-   <span><?= !empty($entry->prerequisite_blocked) ? Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') : Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL')) ?></span>
+   <span><?php if ($entry->schedule_state === 'upcoming') : ?><?= Text::sprintf('COM_JLMS_LESSON_UPCOMING', $this->escape($entry->schedule_available_at)) ?><?php elseif ($entry->schedule_state === 'closed') : ?><?= Text::_('COM_JLMS_LESSON_CLOSED') ?><?php elseif (!empty($entry->prerequisite_blocked)) : ?><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?><?php else : ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL')) ?><?php endif; ?></span>
   </li>
  <?php endforeach; ?>
  <?php if ($currentModule) : ?></ol></section><?php endif; ?>
  </nav>
  <article id="jlms-lesson-content" class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
-  <?php if (!empty($selected->prerequisite_blocked)) : ?>
+  <?php if (!empty($selected->schedule_blocked)) : ?>
+  <div id="jlms-lesson-schedule-notice" class="alert alert-info" role="status">
+   <?php if ($selected->schedule_state === 'upcoming') : ?><p><?= Text::sprintf('COM_JLMS_LESSON_UPCOMING', $this->escape($selected->schedule_available_at)) ?></p><?php else : ?><p><?= Text::_('COM_JLMS_LESSON_CLOSED') ?></p><?php endif; ?>
+  </div>
+  <?php elseif (!empty($selected->prerequisite_blocked)) : ?>
   <div id="jlms-lesson-prerequisite-notice" class="alert alert-info" role="status">
    <p><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?></p>
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->blocked_by_id) ?>"><?= $this->escape($selected->blocked_by_title) ?></a>

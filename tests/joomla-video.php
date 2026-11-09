@@ -114,6 +114,10 @@ $publication->transition($actor,$course,$version,$cr,$scope()['expected_version_
 $enrollment=$learning->start($student,'en-GB',$course,bin2hex(random_bytes(16)));
 $now=(int)floor(microtime(true)*1000);
 $service=new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db,$learning,$authoring,static function()use(&$now):int{return $now;});
+videoFixtureUpdate('jlms_lessons',(object)['id'=>$lesson,'publish_up'=>gmdate('Y-m-d H:i:s',time()+3600),'publish_down'=>gmdate('Y-m-d H:i:s',time()+7200)]);
+videoDenied(fn()=>$learning->videoContext($student,'en-GB',$enrollment,$lesson),403,'scheduled video source is protected before release');
+videoDenied(fn()=>$service->playback($student,'en-GB',$enrollment,$lesson,true),403,'scheduled video player is protected before release');
+videoFixtureUpdate('jlms_lessons',(object)['id'=>$lesson,'publish_up'=>null,'publish_down'=>null],true);
 videoDenied(fn()=>$service->playback($student,'en-GB',$enrollment,$lesson,false),403,'no consent');
 videoDenied(fn()=>$service->playback($other,'en-GB',$enrollment,$lesson,true),404,'foreign enrollment');
 videoDenied(fn()=>$service->playback(new \Joomla\CMS\User\User(),'en-GB',$enrollment,$lesson,true),401,'guest');

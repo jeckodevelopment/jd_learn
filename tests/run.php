@@ -10,6 +10,7 @@ use Jlms\Component\Jlms\Administrator\Domain\QuizScorer;
 use Jlms\Component\Jlms\Administrator\Domain\AccessPolicy;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 use Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability;
+use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
 use Jlms\Contracts\Video\SourceInput;
 use Jlms\Contracts\Video\SourceNormalizer;
 use Jlms\Contracts\Video\VideoProviderRegistry;
@@ -129,6 +130,14 @@ expect(MaterialAvailability::editor($scheduled['publish_up'], 'Europe/Rome') ===
 expect(MaterialAvailability::validStored($scheduled['publish_up'], $scheduled['publish_down']), 'stored material schedule is publishable');
 expect(MaterialAvailability::validStored($scheduled['publish_up'] . '.000000', $scheduled['publish_down'] . '.000000'), 'MySQL zero-microsecond DATETIME(6) values preserve valid material schedules');
 rejects(static fn () => MaterialAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'material end must be later than its start');
+$lessonWindow = LessonAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T12:00:00', 'Europe/Rome');
+expect($lessonWindow['publish_up'] === '2026-02-02 09:30:00' && $lessonWindow['publish_down'] === '2026-02-02 11:00:00', 'lesson availability is stored as UTC from the course time zone');
+expect(LessonAvailability::editor($lessonWindow['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00', 'lesson schedule editor restores the course-local time');
+expect(LessonAvailability::state('2099-01-01 00:00:00', null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'upcoming', 'future lesson start is marked upcoming');
+expect(LessonAvailability::state(null, '2025-01-01 00:00:00', new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'closed', 'elapsed lesson end is marked closed');
+expect(LessonAvailability::reachable('2026-01-02 00:00:00', null, ['publish_down' => '2026-01-03 00:00:00']), 'required lesson can open within the course window');
+expect(!LessonAvailability::reachable('2026-01-04 00:00:00', null, ['publish_down' => '2026-01-03 00:00:00']), 'required lesson outside course window is unreachable');
+rejects(static fn () => LessonAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'lesson end must be later than its start');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],

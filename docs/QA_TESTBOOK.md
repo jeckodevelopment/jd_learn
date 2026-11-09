@@ -55,6 +55,18 @@ Usare un corso, un autore e uno studente fittizi su Joomla di prova.
 
 **Stato:** PR #138 integrata; CI standard 4/4 superata; collaudo manuale Joomla pendente.
 
+## PR finestre temporali delle lezioni (0.41.37-dev)
+
+Usare un corso fittizio con fuso **Europe/Rome**, una lezione obbligatoria con data di apertura futura e chiusura successiva e uno studente iscritto.
+
+1. Salvare le date dal Programma e riaprire il form: gli orari devono corrispondere al fuso del corso. Intervallo invertito o data locale inesistente nel passaggio DST deve essere rifiutato.
+2. Pubblicare il programma e aprire la lezione prima della data: aula e outline mostrano quando sarà disponibile; contenuto/campi, materiali, player e quiz non sono esposti. Provare URL diretti, completamento e ripresa: devono essere negati e non devono registrare progresso.
+3. Dopo l’apertura verificare accesso e completamento secondo la regola della lezione. Dopo la chiusura, aula e endpoint devono bloccare di nuovo l’accesso.
+4. Verificare che un’attività obbligatoria futura resti nel denominatore del progresso. Una lezione obbligatoria la cui finestra non interseca la disponibilità corso deve bloccare la pubblicazione; una finestra raggiungibile deve essere pubblicabile.
+5. In una nuova versione controllare che le date restino congelate per chi è già assegnato alla versione precedente.
+
+**Stato:** candidato PR 0.41.37-dev; CI e pacchetto da registrare; collaudo manuale Joomla pendente. Il drip relativo a giorni dall’avvio dell’iscrizione non è incluso.
+
 ## Registro PR
 
 ### PR #130 — lezioni-documento
