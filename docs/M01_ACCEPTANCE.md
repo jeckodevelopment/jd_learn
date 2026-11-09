@@ -32,3 +32,6 @@ La pubblicazione e fruizione con YouTube, Vimeo e Cloudflare Stream fanno parte 
 ## Condizione di chiusura
 
 M01 si chiude quando i criteri inclusi nella prima release secondo [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md) sono implementati e collaudati sul build, compresi AC-119–131 e le dipendenze trasversali applicabili. Per i quiz, solo AC-131 è incluso come eccezione amministrativa esplicita; criteri didattici ulteriori e attestati restano differiti. Gli scenari baseline misti vanno separati, non marcati superati senza prova. Nessuna conferma generica sostituisce questi controlli. L'ordine del lavoro è mantenuto solo in [NEXT_STEPS.md](NEXT_STEPS.md).
+
+
+Il candidato 0.41.33-dev introduce lezioni Audio riproducibili da MP3/OGG privati, con conferma manuale. La pubblicazione richiede almeno un audio pronto; il player inoltra richieste Range allo stesso delivery protetto dei materiali e rivalida l’iscrizione a ogni richiesta. CI e collaudo Joomla sono da registrare. Non sono implementati resume della posizione o trascrizione.

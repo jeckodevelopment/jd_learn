@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.41.33-dev — lezioni audio autonome
+
+- Aggiunge il tipo lezione Audio con player HTML5 nativo. MP3 e OGG sono validati per estensione, MIME e firma; l’autore carica il file come materiale della lezione. La pubblicazione richiede almeno un audio pronto.
+- La riproduzione usa lo streaming privato esistente con supporto Range, `inline`, `no-store` e nuova verifica di sessione, iscrizione, versione, lezione, disponibilità e MIME ad ogni richiesta. Non vengono esposte URL pubbliche o asset ID senza autorizzazione.
+- Il completamento è manuale; nessun tracking della posizione audio o trascrizione in questo incremento. Gli allegati audio restano immutabili dopo la pubblicazione.
+- **Collaudo manuale Joomla:** su sito di prova, creare bozza/modulo/lezione Audio, caricare un MP3/OGG nella lezione, tentare pubblicazione senza file (bloccata), caricare e pubblicare (consentita), poi riprodurre/seek e segnare completata da studente iscritto. Verificare diniego anonimo, non iscritto, altra lezione, file revocato e URL diretto; provare anche un WAV o un MP3 rinominato (upload rifiutato).
+- In attesa di CI e collaudo manuale.
+
+
 ## 0.41.32-dev — lezioni-documento
 
 - Aggiunge la tipologia di lezione Documento al programma; il docente associa il file tramite la gestione materiali già esistente, con consegna protetta e controlli di accesso/scansione già applicati agli allegati.
