@@ -20,6 +20,52 @@ final class CatalogService
         return $this->courseQuery($actor, $language, $categoryId, false);
     }
 
+    /** Simulates catalogue/content access for selected Joomla view levels without changing identity or memberships. */
+    public function accessPreview(User $identity, int $courseId, string $language, array $requestedLevels = []): array
+    {
+        $actor = new User((int) $identity->id);
+        $actor->clearAccessRights();
+        $extension = 'com_jlms.course';
+        $q = $this->db->createQuery()->select('c.id, c.title, c.created_by, c.catid, c.state, c.catalog_access, c.content_access, c.language, c.current_version_id, c.admissions_open, c.delivery_enabled, c.publish_up, c.publish_down, cat.lft, cat.rgt, cat.published AS category_published, cat.access AS category_access, cat.language AS category_language')
+            ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid AND cat.extension = :extension')
+            ->where('c.id = :course')->bind(':course', $courseId, ParameterType::INTEGER)->bind(':extension', $extension);
+        $course = $this->db->setQuery($q)->loadObject() ?: throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+        $asset = 'com_jlms.course.' . (int) $course->id;
+        $own = (int) $course->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset);
+        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            || (!$actor->authorise('core.edit', $asset) && !$own)) {
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
+        }
+        $available = $this->db->setQuery($this->db->createQuery()->select('id, title')->from('#__viewlevels')->order('ordering, id'))->loadObjectList();
+        $availableIds = array_map(static fn (object $row): int => (int) $row->id, $available);
+        $selected = array_values(array_intersect($availableIds, array_unique(array_map('intval', $requestedLevels))));
+        if (!$selected) { $selected = [in_array(1, $availableIds, true) ? 1 : ($availableIds[0] ?? 0)]; }
+        $selected = array_values(array_filter($selected));
+        $left = (int) $course->lft;
+        $right = (int) $course->rgt;
+        $ancestorsQuery = $this->db->createQuery()->select('id, published, access, language')->from('#__categories')
+            ->where('lft <= :left')->where('rgt >= :right')->where('id <> 1')
+            ->bind(':left', $left, ParameterType::INTEGER)->bind(':right', $right, ParameterType::INTEGER)
+            ->order('lft');
+        $ancestors = $this->db->setQuery($ancestorsQuery)->loadObjectList();
+        $categoryVisible = (int) $course->category_published === 1
+            && in_array((int) $course->category_access, $selected, true)
+            && ((string) $course->category_language === '*' || (string) $course->category_language === $language);
+        foreach ($ancestors as $category) {
+            if ((int) $category->published !== 1 || !in_array((int) $category->access, $selected, true)
+                || !in_array((string) $category->language, ['*', $language], true)) { $categoryVisible = false; break; }
+        }
+        $now = time();
+        $courseLanguage = in_array((string) $course->language, ['*', $language], true);
+        $catalogVisible = (int) $course->state === 1 && $course->current_version_id !== null
+            && in_array((int) $course->catalog_access, $selected, true) && $categoryVisible && $courseLanguage
+            && (!$course->publish_up || strtotime((string) $course->publish_up) <= $now)
+            && (!$course->publish_down || strtotime((string) $course->publish_down) > $now);
+        $contentAllowed = in_array((int) $course->content_access, $selected, true);
+        return ['levels' => $available, 'selected' => $selected, 'catalog_visible' => $catalogVisible,
+            'content_allowed' => $contentAllowed, 'access_requirements_met' => $catalogVisible && $contentAllowed];
+    }
+
     /** Availability for an existing enrollment is independent of catalog publication. */
     private function courseQuery(User $actor, string $language, int $categoryId, bool $forEnrolledLearner)
     {

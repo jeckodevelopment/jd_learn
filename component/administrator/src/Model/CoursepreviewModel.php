@@ -21,12 +21,16 @@ final class CoursepreviewModel extends BaseModel
         $courseId = $input->getInt('id');
         $versionId = $input->getInt('version_id');
         $lessonId = $input->getInt('lesson_id');
+        $requestedLevels = array_map('intval', (array) $input->get('access_levels', [], 'array'));
         if ($courseId < 1 || $versionId < 1 || $lessonId < 0) {
             throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
         }
 
         try {
             $outline = $service->outline($actor, $courseId, $versionId);
+            $accessPreview = $app->bootComponent('com_jlms')->getCatalogService()->accessPreview(
+                $actor, $courseId, $app->getLanguage()->getTag(), $requestedLevels,
+            );
             $lesson = null;
             if ($lessonId) {
                 $record = $service->lessonForEdit($actor, $courseId, $versionId, $lessonId);
@@ -49,6 +53,7 @@ final class CoursepreviewModel extends BaseModel
         }
 
         $outline['selected'] = $lesson;
+        $outline['access_preview'] = $accessPreview;
 
         return $outline;
     }
