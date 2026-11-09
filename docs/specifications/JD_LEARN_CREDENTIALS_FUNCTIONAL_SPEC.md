@@ -6,9 +6,9 @@
 
 > Questo modulo è esplicitamente **fuori dal perimetro e dai criteri di accettazione della versione 1.0.0**. Non aggiungere i requisiti CRE-* alla matrice dei 210 requisiti della baseline né modificare la percentuale di avanzamento verso la prima stabile. Questa specifica definisce comportamenti attesi, non evidenze di sviluppo o collaudo.
 
-## 1. Scopo e principi
+**Progettazione tecnica collegata:** [JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md](JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md) (decisioni T-001–T-007 del 9 novembre 2026). La progettazione tecnica prevale sulle precedenti ipotesi di separazione in un secondo componente.\n\n## 1. Scopo e principi
 
-Realizzare **JD Learn Credentials**, estensione opzionale integrata con JD Learn e Joomla 6, per emettere, conservare, esportare, pubblicare e verificare credenziali formative secondo **Open Badges 3.0**. Ogni organizzazione deve poter essere emittente sul **proprio dominio**, senza account o licenze obbligatorie di Credly o altri intermediari. Credly costituisce un riferimento *di esperienza utente*, non una dipendenza tecnica.
+Realizzare **JD Learn Credentials**, sottosistema nativo di `com_jlms`, abilitabile e disabilitabile, distribuito nello stesso pacchetto `pkg_jlms` in una release futura, per emettere, conservare, esportare, pubblicare e verificare credenziali formative secondo **Open Badges 3.0**. Ogni organizzazione deve poter essere emittente sul **proprio dominio**, senza account o licenze obbligatorie di Credly o altri intermediari. Credly costituisce un riferimento *di esperienza utente*, non una dipendenza tecnica.
 
 Principi: riusabilità indipendente da nome/dominio/brand, formato standard verificabile anche fuori dalla piattaforma, firma e gestione del ciclo di vita, ACL Joomla granulari, minimizzazione GDPR, frontend localizzabile e personalizzabile con CSS/override; nessuna modifica retroattiva a credenziali già firmate. In ogni installazione è possibile configurare più identità emittenti, con permessi e chiavi distinte, senza presupporre multi-tenancy tra installazioni.
 
@@ -41,7 +41,7 @@ Principi: riusabilità indipendente da nome/dominio/brand, formato standard veri
 
 **CRE-022** Sezione opzionale «Credenziali digitali» nell'editor corso: abilitazione, emittente, modello, modalità automatica/manuale, regola, scadenza, comportamento in caso di nuova versione del corso. Stato del corso e pubblicazione rimangono indipendenti dal badge.
 
-**CRE-023** Criterio automatico minimo: completamento del corso secondo le regole correnti stabilizzate di JD Learn, valutato sul server. Eventuali ulteriori criteri (quiz, punteggi, attività, percorsi) sono evoluzioni esplicite.
+**CRE-023** Motore di criteri configurabile per badge e associazione didattica: completamento di un corso, completamento di un percorso, eventuali quiz/punteggi, attività o combinazioni di condizioni, quando i relativi risultati didattici sono stabili e disponibili. L'idoneità è sempre valutata lato server su snapshot, senza dipendere da eventi browser. Nell'incremento iniziale il criterio corso e l'emissione manuale sono obbligatori; quello di percorso è la prima estensione pianificata al consolidamento della sua semantica di completamento; non mostrare criteri non ancora implementati.
 
 ## 6. Emissione e persistenza
 
@@ -107,13 +107,13 @@ Principi: riusabilità indipendente da nome/dominio/brand, formato standard veri
 
 **CRE-082** Proteggere con vincoli DB le identità e idempotenza; mantenere snapshot, impronte/checksum e prova firmata, storico sostituzioni, versioni, chiavi e riferimenti di verifica. Politiche esplicite per aggiornamento, backup, restore, migrazione e uninstall senza eliminazione implicita delle credenziali.
 
-**CRE-083** Architettura a servizi separati per eligibility, issuance, proof, verification, status, publication, notifications; consumo eventi didattici senza accoppiamento con controller del corso. Package opzionale o plugin/componente complementare con compatibilità chiarita nel progetto tecnico. Se disabilitato, JD Learn deve rimanere operativo.
+**CRE-083** Architettura a servizi interni distinti per eligibility, issuance, proof, verification, status, publication e notifications; consumo eventi didattici senza accoppiamento con controller del corso. **Decisione T-001/T-007: tutto integrato in `com_jlms` e distribuito in `pkg_jlms`; non esiste un componente Credentials separato.** Eventuali plugin di criteri estensivi e task Scheduler necessari sono inclusi nello stesso pacchetto. Se le nuove emissioni sono disabilitate, JD Learn continua a funzionare e le verifiche delle credenziali storiche rimangono disponibili.
 
 ## 12. API e interoperabilità futura
 
 **CRE-090** Per la prima release: endpoint di verifica e download con controlli privacy/ACL, file esportabile standard; test positivo con almeno un verificatore esterno compatibile con la stessa suite.
 
-**CRE-091** Badge Connect API, wallet, badge per competenze o percorsi, importazione di terze parti, sistemi esterni e batch massivi sono incrementi successivi, soggetti a specifiche proprie; nessuna promessa generica di compatibilità con *ogni* wallet.
+**CRE-091** Badge Connect API, wallet, criteri avanzati per competenze, importazione di terze parti, sistemi esterni e batch massivi sono incrementi successivi, soggetti a specifiche proprie; nessuna promessa generica di compatibilità con *ogni* wallet.
 
 ## 13. Requisiti trasversali
 
