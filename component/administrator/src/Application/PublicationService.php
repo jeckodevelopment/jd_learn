@@ -113,7 +113,7 @@ final class PublicationService
             $options = new Registry($transition->options);
             $state = $options->get('publishing');
             $action = (string) $options->get('jlms_action', (string) $state === '1' ? 'publish' : 'unpublish');
-            if (!in_array((string) $state, ['0', '1'], true)) { return false; }
+            if (!in_array((string) $state, ['0', '1', '2'], true)) { return false; }
             if ($version?->status === 'draft') {
                 if ($action === 'review' && (int) $state !== $currentState) { return false; }
                 if ($action === 'return' && ((int) $transition->jlms_source_stage_id !== $reviewStage || (int) $state !== $returnState)) { return false; }
@@ -122,6 +122,12 @@ final class PublicationService
             } elseif ($version && ($version->status !== 'published' || (int) $version->id !== $currentVersionId)) {
                 return false;
             } elseif ($action === 'review' || $action === 'return') {
+                return false;
+            } elseif ($action === 'archive' && ($currentState !== 1 || (int) $state !== 2)) {
+                return false;
+            } elseif ($action === 'restore' && ($currentState !== 2 || (int) $state !== 1)) {
+                return false;
+            } elseif (!in_array($action, ['publish', 'unpublish', 'archive', 'restore'], true)) {
                 return false;
             }
             return $actor->authorise('core.execute.transition', 'com_jlms.transition.' . (int) $transition->id);
@@ -475,6 +481,12 @@ final class PublicationService
             } elseif ($action === 'unpublish' && $version->status === 'published' && (int) $course->current_version_id === $versionId && $state === 0) {
                 // The current teaching version stays immutable; workflow withdrawal
                 // only changes whether a new learner can find or start the course.
+            } elseif ($action === 'archive' && $version->status === 'published'
+                && (int) $course->current_version_id === $versionId && (int) $course->state === 1 && $state === 2) {
+                // Archiving hides the course from discovery while preserving the live version and enrollments.
+            } elseif ($action === 'restore' && $version->status === 'published'
+                && (int) $course->current_version_id === $versionId && (int) $course->state === 2 && $state === 1) {
+                // Restore the same immutable version and its learner history.
             } else {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
             }
