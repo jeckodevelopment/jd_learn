@@ -3,9 +3,9 @@
 Questo documento conserva il percorso passato. **Per decidere cosa funziona e cosa manca usare [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)**; per le prossime attività usare [NEXT_STEPS.md](NEXT_STEPS.md).
 
 | Versione / periodo | Risultato introdotto |
-| 0.41.34-dev | Candidata: ripristino/salvataggio posizione audio; CI e collaudo Joomla da completare |
-| 0.41.33 | Lezioni Audio MP3/OGG con player HTML5, streaming privato e completamento manuale; PR #132 integrata, CI standard superata nel run 42609983073, collaudo Joomla manuale pendente |
 |---|---|
+| 0.41.34 | Ripresa protetta della posizione audio, senza completamento automatico; PR #134 integrata, CI standard 4/4 superata nel run 42613814879, collaudo manuale Joomla pendente |
+| 0.41.33 | Lezioni Audio MP3/OGG con player HTML5, streaming privato e completamento manuale; PR #132 integrata, CI standard superata nel run 42609983073, collaudo Joomla manuale pendente |
 | 0.41.31 | Filtro ACL delle voci sidebar native via plugin di sistema; PR #128 integrata, CI standard superata nel run 42594246627, collaudo Joomla manuale pendente |
 | 0.41.30 | ACL feature-specific nelle scorciatoie dashboard (issue #113, PR #126); CI standard superata; filtraggio del sottomenu nativo e collaudo Joomla ancora aperti |
 | 0.41.29 | Corrette le traduzioni IT/EN della pagina Opzioni: titolo browser e gruppo Cronologia versioni; issue #115 / AC-134, PR #124 integrata, quattro job CI superati; collaudo Joomla manuale aperto |
