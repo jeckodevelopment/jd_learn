@@ -63,6 +63,13 @@ Riferimenti: [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/10
 
 **Stato:** PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), [#110](https://github.com/jeckodevelopment/jd_learn/pull/110) e [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) integrate; tutti i quattro job CI standard superati nel [run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552). L’utente ha comunicato il superamento del collaudo manuale Dashboard in data 8 novembre 2026; non sono stati forniti dettagli aggiuntivi su versione Joomla, browser o account.
 
+**Aggiornamento issue #113 / 0.41.30-dev:** la scorciatoia Banca domande richiede anche `jlms.quiz.manage`; Categorie corsi e Campi aggiuntivi richiedono i rispettivi permessi di gestione e l’accesso al componente JD Learn. Il sottomenu amministrativo nativo non è ancora filtrato per le azioni specifiche: il collaudo della visibilità delle voci sidebar resta aperto.
+
+Per il controllo aggiuntivo, usare un gruppo amministrativo di prova con `core.manage` su JD Learn ma senza `jlms.quiz.manage`, quindi confrontarlo con un account autorizzato:
+
+11. Aprire la dashboard con entrambi gli account. Atteso: **Banca domande** compare soltanto per l’account autorizzato; i link a categorie/campi appaiono solo se sono concessi anche i rispettivi permessi nativi.
+12. Con l’account senza `jlms.quiz.manage`, provare l’URL diretto della banca domande. Atteso: accesso negato dal componente. Verificare inoltre che la sidebar nativa possa ancora mostrare la voce: questa parte resta da completare nell’issue #113.
+
 ### Issue #99 — accesso centralizzato ai campi aggiuntivi
 
 Riferimento: CORE-10 / AC-129 e [issue #99](https://github.com/jeckodevelopment/jd_learn/issues/99). Usare un Joomla 6 di prova con un ruolo che abbia `core.manage` su `com_fields`, e un ruolo di confronto senza tale permesso. La correzione non crea campi o gruppi: verifica solo navigazione e filtro dei contesti nativi.
