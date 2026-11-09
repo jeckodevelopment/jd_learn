@@ -16,7 +16,7 @@ Prima del test annotare: data, versione e checksum del pacchetto, versione/patch
 | Account e permessi usati | Da compilare, senza password |
 | Esito complessivo / evidenze | Da compilare |
 
-## Candidato 0.41.33-dev — lezioni audio autonome
+## PR #132 — lezioni audio autonome
 
 Usare corso e account fittizi su Joomla di prova. Il candidato aggiunge il tipo lezione Audio, file MP3/OGG e riproduzione con URL privata.
 
@@ -25,8 +25,9 @@ Usare corso e account fittizi su Joomla di prova. Il candidato aggiunge il tipo 
 3. Caricare un MP3 o OGG nella gestione materiali della lezione; verificare rifiuto di WAV e di file MP3 rinominati. Pubblicare.
 4. Con studente iscritto, riprodurre e cercare in avanti/indietro, quindi segnare completata; verificare che il progresso persista.
 5. Provare accesso al player da anonimo, utente non iscritto, lezione differente e allegato disattivato; atteso: nessun contenuto. Verificare richieste Range durante seek e risposta privata/no-store.
+6. Impostare una disponibilità futura per l’allegato e verificare che il player non fornisca audio prima dell’inizio.
 
-**Stato:** CI e collaudo manuale Joomla non ancora eseguiti. Non sono inclusi il salvataggio della posizione audio e le trascrizioni.
+**Stato:** PR #132 integrata in 0.41.33-dev nel commit `2d0984bc4adf0ee420eed3cdc7a0356f97813e39`. CI standard superata nel [run 42609983073](https://github.com/jeckodevelopment/jd_learn/actions/runs/42609983073): controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. Artefatto [JD-Learn-0.41.33-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42609983073/artifacts/13669353295), wrapper da estrarre una volta; SHA-256 interno `6e80193338036652f6fa1550da29ae9859bfc8a30bb3b47f354111429de09880`, wrapper `fff003d89ecac607a5a57b7b29972dcd56a3c46cecb2dbc00bcec550aa1073e9`. Nessun collaudo manuale Joomla registrato. Non sono inclusi il salvataggio della posizione audio e le trascrizioni.
 
 ## Registro PR
 

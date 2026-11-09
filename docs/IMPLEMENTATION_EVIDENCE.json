@@ -1,62 +1,62 @@
 {
   "audited_at": "2026-11-09",
   "product": "JD Learn",
-  "version": "0.41.31-dev",
+  "version": "0.41.33-dev",
   "code_baseline": {
-    "tested_head": "db77ef63998f38255036b11130d3577a3e71d7b2",
-    "parent_main_commit": "5399d27fbec54810921c74f4005c5cd4bca13626",
-    "pull_request": 128,
-    "merged_main_commit": "26c7ad5264dfbbdbdab9c446162220567df2d30e"
+    "tested_head": "4d2588ad2b49050756e96cbfbe5f4afc03e6bef4",
+    "parent_main_commit": "211d5851c153e14b7bac65587c08ad44dfe50611",
+    "pull_request": 132,
+    "merged_main_commit": "2d0984bc4adf0ee420eed3cdc7a0356f97813e39"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42594246627,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627",
+    "run_id": 42609983073,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42609983073",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 129082967467,
+        "id": 129135649897,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129083028858,
+        "id": 129135718570,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129083029120,
+        "id": 129135718525,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 129083028916,
+        "id": 129135718594,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #128 integrata nel commit main 26c7ad5. CI standard superata: check leggeri, Joomla 6 su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, Chromium. Verificati installazione pulita e upgrade; il plugin sidebar si attiva alla prima installazione e conserva lo stato disabilitato impostato prima dell’upgrade. Collaudo manuale dei ruoli e degli URL diretti resta pendente."
+    "note": "PR #132 integrata nel commit main 2d0984b. CI standard superata: controlli leggeri, Joomla 6 su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, Chromium. La suite copre installazione/upgrade e flussi esistenti; il collaudo manuale specifico della nuova lezione audio nel sito Joomla resta pendente."
   },
   "package": {
-    "name": "pkg_jlms-0.41.31-dev.zip",
-    "bytes": 514020,
-    "sha256": "2212e763bcb10e8089b783586d3ef5a9e68b310fab5f0b2494a4427702619db0",
+    "name": "pkg_jlms-0.41.33-dev.zip",
+    "bytes": 515747,
+    "sha256": "6e80193338036652f6fa1550da29ae9859bfc8a30bb3b47f354111429de09880",
     "constituents": 9,
     "tables": 42,
     "foreign_keys": 59,
-    "build_source": "Build riproducibile generato nel run CI 42594246627; package interno estratto e verificato dopo il download dell’artefatto.",
-    "artifact_id": 13663320592,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627/artifacts/13663320592",
-    "ci_artifact_archive_sha256": "sha256:bc2677d2e78ea3fd14412188335d1577b728e11be973bfd3b280929f5dbe899b",
-    "artifact_expires_at": "2026-11-23T09:37:15Z",
+    "build_source": "Build riproducibile generato nel run CI 42609983073; package interno estratto e verificato dopo il download dell’artefatto.",
+    "artifact_id": 13669353295,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42609983073/artifacts/13669353295",
+    "ci_artifact_archive_sha256": "sha256:fff003d89ecac607a5a57b7b29972dcd56a3c46cecb2dbc00bcec550aa1073e9",
+    "artifact_expires_at": "2026-11-23T11:38:34Z",
     "wrapper_zip": true,
-    "wrapper_bytes": 513840,
-    "inner_version": "0.41.31-dev"
+    "wrapper_bytes": 515566,
+    "inner_version": "0.41.33-dev"
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -2244,7 +2244,7 @@
       "next_candidate": null
     }
   ],
-  "evidence_scope": "PR #120 / AC-131 integrata e verificata dalla CI completa; il collaudo Joomla reale resta aperto. La dashboard AC-132 è registrata superata secondo la comunicazione dell’utente dell’8 novembre 2026.",
+  "evidence_scope": "PR #132 / M01-M02: lezione audio autonoma, CI standard superata; accettazione Joomla reale aperta. La lezione consente conferma manuale, non memorizza ripresa posizione e non include trascrizioni.",
   "ci_policy_verification": {
     "date": "2026-11-07",
     "pull_request": 48,
@@ -2315,7 +2315,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "0.41.31-dev integrata in main dalla PR #128; CI standard superata nel run 42594246627; collaudo manuale Joomla ACL sidebar/dashboard pendente; issue #113 implementata, accettazione manuale aperta.",
+  "candidate_status": "0.41.33-dev integrata in main dalla PR #132; CI standard superata nel run 42609983073; collaudo manuale Joomla della lezione audio pendente.",
   "previous_verified_release": {
     "version": "0.41.30-dev",
     "package": "pkg_jlms-0.41.30-dev.zip",
@@ -2325,25 +2325,25 @@
     "expires_at": "2026-11-23T08:59:10Z"
   },
   "candidate_increment": {
-    "version": "0.41.31-dev",
-    "scope": "Issue #113 / AC-132: ACL specifiche sulle scorciatoie Dashboard e sulle voci del sottomenu nativo tramite plugin di sistema.",
-    "status": "PR #128 integrata; CI standard superata; collaudo manuale Joomla pendente.",
+    "version": "0.41.33-dev",
+    "scope": "M01/M02: lezione audio MP3/OGG, player HTML5 con streaming privato a Range e completamento manuale.",
+    "status": "PR #132 integrata; CI standard superata; collaudo manuale Joomla pendente.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
-    "version": "0.41.31-dev",
-    "pull_request": 128,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/128",
-    "tested_head": "db77ef63998f38255036b11130d3577a3e71d7b2",
-    "merged_main_commit": "26c7ad5264dfbbdbdab9c446162220567df2d30e",
-    "ci_run_id": 42594246627,
-    "artifact_id": 13663320592,
-    "artifact_name": "JD-Learn-0.41.31-dev",
-    "artifact_sha256": "2212e763bcb10e8089b783586d3ef5a9e68b310fab5f0b2494a4427702619db0",
-    "artifact_size_bytes": 514020,
-    "artifact_wrapper_sha256": "bc2677d2e78ea3fd14412188335d1577b728e11be973bfd3b280929f5dbe899b",
-    "artifact_wrapper_size_bytes": 513840,
-    "artifact_expires_at": "2026-11-23T09:37:15Z",
+    "version": "0.41.33-dev",
+    "pull_request": 132,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/132",
+    "tested_head": "4d2588ad2b49050756e96cbfbe5f4afc03e6bef4",
+    "merged_main_commit": "2d0984bc4adf0ee420eed3cdc7a0356f97813e39",
+    "ci_run_id": 42609983073,
+    "artifact_id": 13669353295,
+    "artifact_name": "JD-Learn-0.41.33-dev",
+    "artifact_sha256": "6e80193338036652f6fa1550da29ae9859bfc8a30bb3b47f354111429de09880",
+    "artifact_size_bytes": 515747,
+    "artifact_wrapper_sha256": "fff003d89ecac607a5a57b7b29972dcd56a3c46cecb2dbc00bcec550aa1073e9",
+    "artifact_wrapper_size_bytes": 515566,
+    "artifact_expires_at": "2026-11-23T11:38:34Z",
     "manual_joomla_acceptance": "pending"
   },
   "artifact_label_fix": {
