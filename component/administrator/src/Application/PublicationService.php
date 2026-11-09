@@ -126,20 +126,23 @@ final class PublicationService
 
     private function stageId(string $title): int
     {
+        $extension = 'com_jlms.course';
         $q = $this->db->createQuery()->select('s.id')->from('#__workflow_stages AS s')
             ->innerJoin('#__workflows AS w ON w.id = s.workflow_id')
             ->where('s.title = :title')->where('w.extension = :extension')
-            ->bind(':title', $title)->bind(':extension', 'com_jlms.course');
+            ->bind(':title', $title)->bind(':extension', $extension);
         return (int) $this->db->setQuery($q)->loadResult();
     }
 
     public function isInReview(int $courseId): bool
     {
+        $extension = 'com_jlms.course';
+        $stageTitle = 'COM_JLMS_IN_REVIEW';
         $q = $this->db->createQuery()->select('COUNT(*)')->from('#__workflow_associations AS a')
             ->innerJoin('#__workflow_stages AS s ON s.id = a.stage_id')
             ->where('a.extension = :extension')->where('a.item_id = :course')->where('s.title = :stage')
-            ->bind(':extension', 'com_jlms.course')->bind(':course', $courseId, ParameterType::INTEGER)
-            ->bind(':stage', 'COM_JLMS_IN_REVIEW');
+            ->bind(':extension', $extension)->bind(':course', $courseId, ParameterType::INTEGER)
+            ->bind(':stage', $stageTitle);
         return (int) $this->db->setQuery($q)->loadResult() > 0;
     }
 

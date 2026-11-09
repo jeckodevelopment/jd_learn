@@ -54,11 +54,13 @@ final class CurriculumService
     {
         $course = $this->row('courses', $courseId, true);
         $this->authorise($actor, $course, $action);
+        $reviewExtension = 'com_jlms.course';
+        $reviewStageTitle = 'COM_JLMS_IN_REVIEW';
         $review = $this->db->createQuery()->select('COUNT(*)')->from('#__workflow_associations AS a')
             ->innerJoin('#__workflow_stages AS s ON s.id = a.stage_id')
             ->where('a.extension = :extension')->where('a.item_id = :course')->where('s.title = :stage')
-            ->bind(':extension', 'com_jlms.course')->bind(':course', $courseId, ParameterType::INTEGER)
-            ->bind(':stage', 'COM_JLMS_IN_REVIEW');
+            ->bind(':extension', $reviewExtension)->bind(':course', $courseId, ParameterType::INTEGER)
+            ->bind(':stage', $reviewStageTitle);
         if ((int) $this->db->setQuery($review)->loadResult() > 0) {
             throw new \DomainException('COM_JLMS_VERSION_IN_REVIEW');
         }

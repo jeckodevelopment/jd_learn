@@ -22,9 +22,10 @@ final class WorkflowInstaller
             }
             return (int) $table->id;
         };
+        $workflowTitle = 'JD Learn';
         $workflowQuery = $db->createQuery()->select('id')->from($db->quoteName('#__workflows'))
             ->where('extension = :extension')->where('title = :title')
-            ->bind(':extension', $extension)->bind(':title', 'JD Learn')->order('id');
+            ->bind(':extension', $extension)->bind(':title', $workflowTitle)->order('id');
         $workflow = (int) $db->setQuery($workflowQuery)->loadResult();
         if ($workflow) {
             $draft = self::stageId($db, $workflow, 'COM_JLMS_DRAFT');
