@@ -9,3 +9,5 @@ Banca domande, composizione e tentativi: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md),
 [Stato aggiornato e prove](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/IMPLEMENTATION_STATUS.md), [priorità residue](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/NEXT_STEPS.md) e [CSS/override](https://github.com/jeckodevelopment/jd_learn/blob/main/docs/FRONTEND_CSS.md) sono mantenuti nella repository a ogni incremento.
 
 - [Dashboard amministrativa](ADMIN_DASHBOARD.md)
+
+- [Percorsi formativi](PATHWAYS.md)

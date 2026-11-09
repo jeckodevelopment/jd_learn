@@ -126,3 +126,12 @@ La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122) integra AC-1
 La PR candidata 0.41.31 implementa il secondo controllo richiesto dall’issue #113 con il plugin di sistema Joomla `plg_system_jlmsmenu`. La sidebar segue i permessi già definiti per le scorciatoie Dashboard: `jlms.quiz.manage` per Banca domande; `core.manage` sull’estensione/context nativo e su JD Learn per Categorie e Campi; `core.manage` su `com_plugins` per Plugin video; `core.manage` su `com_jlms` per le altre voci. Il plugin non modifica le voci non JD Learn. Si attiva al primo install e rispetta lo stato deliberato dall’amministratore durante gli upgrade. L’URL diretto continua a essere autorizzato dal componente o dall’estensione Joomla di destinazione.
 
 **Stato:** PR #128 integrata in 0.41.31-dev nel commit `26c7ad5264dfbbdbdab9c446162220567df2d30e`; CI standard superata nel [run 42594246627](https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627). Il collaudo Joomla manuale resta pendente. L’accettazione AC-132 resta aperta finché non sono registrate le prove su account completi/limitati e URL diretti nel [testbook](QA_TESTBOOK.md#issue-113--acl-della-sidebar-nativa-candidato-04131-dev).
+
+
+## RF-2026-11-09 — accesso e guida per i percorsi formativi
+
+**Origine:** issue #119 segnala che non è chiaro dove e come gestire i Percorsi.
+
+**Perimetro:** collegamento nel sottomenu e nella dashboard JD Learn, entrambi filtrati per `jlms.pathways.manage`; guida amministrativa su authoring, ordinamento e comportamento di accesso. Nessun cambiamento al modello o al flusso pubblico.
+
+**Accettazione:** voce visibile solo ai ruoli autorizzati; URL diretto continua a essere protetto; guida descrive che il percorso non iscrive e non concede accesso ai corsi. Collaudo Joomla manuale pendente nel candidato 0.41.39-dev.

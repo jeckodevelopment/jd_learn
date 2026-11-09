@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.39-dev — accesso amministrativo ai percorsi (candidato)
+
+- Aggiunti la voce Percorsi formativi nel sottomenu JD Learn e la scorciatoia dashboard, entrambi limitati agli utenti con `jlms.pathways.manage`; le categorie dei percorsi rispettano anche le ACL native Joomla.
+- Aggiornato il filtro della sidebar per mostrare/nascondere il collegamento secondo il permesso dedicato.
+- Aggiunta la guida amministrativa dei percorsi e aggiornato il collaudo d’installazione del sottomenu. Il collaudo manuale Joomla resta pendente.
+
+
 ## 0.41.38-dev — rilascio relativo delle lezioni (candidato)
 
 - L’autore può impostare un’attesa di 0–3650 giorni dall’avvio effettivo dell’iscrizione. Il rilascio è calcolato in UTC a giorni di 24 ore; la disponibilità effettiva rispetta insieme `publish_up` assoluto e `release_after_days`, con inizio incluso e chiusura esclusiva.
