@@ -103,7 +103,23 @@ $current = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->l
 editorialExpect($authoring->createDraft($actor, $course, (int) $current->revision) === $draft, 'Opening edit again reuses the working copy');
 $transitions = $publication->transitions($actor, $course, $draft);
 editorialExpect(count($transitions) > 0, 'Working copy has a native publication transition');
-$publication->transition($actor,$course,$draft,(int)$current->revision,$revision(),(int)$transitions[0]->id,$publication->updateImpact($actor,$course,$draft,(int)$transitions[0]->id)['fingerprint']);
+$review = null;
+foreach ($transitions as $transition) {
+    if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'review') { $review = $transition; }
+}
+editorialExpect($review !== null, 'Working copy can enter native review');
+$publication->transition($actor,$course,$draft,(int)$current->revision,$revision(),(int)$review->id);
+editorialExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.$course)->loadResult() === $oldVersion, 'Review keeps the live edition assigned');
+$current = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadObject();
+$transitions = $publication->transitions($actor, $course, $draft);
+$approval = null;
+foreach ($transitions as $transition) {
+    if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'publish') { $approval = $transition; }
+}
+editorialExpect($approval !== null, 'Reviewer has an explicit approval transition');
+$impact = $publication->updateImpact($actor,$course,$draft,(int)$approval->id);
+editorialExpect(is_array($impact) && isset($impact['fingerprint']), 'Versioned approval presents the publication impact');
+$publication->transition($actor,$course,$draft,(int)$current->revision,$revision(),(int)$approval->id,$impact['fingerprint']);
 editorialExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.$course)->loadResult() === $draft, 'Publication activates the edited version');
 editorialExpect($oldRows === $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id='.$oldVersion.' ORDER BY id')->loadAssocList(), 'Published source lessons retain all original data');
 editorialExpect($oldEnrollment === $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id='.$course.' ORDER BY id')->loadAssocList(), 'Existing enrollments and results stay unchanged');
