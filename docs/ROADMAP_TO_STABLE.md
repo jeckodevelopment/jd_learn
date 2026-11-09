@@ -23,7 +23,7 @@ La [mappatura delle fasi](RELEASE_PLAN.json) assegna una volta sola tutti i 210 
 
 ## Evoluzione post-1.0.0 — JD Learn Credentials
 
-Il modulo opzionale **JD Learn Credentials** è documentato nella [specifica funzionale Open Badges 3.0](specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md). Prevede emissione e firma delle credenziali, verifica pubblica sul dominio dell'organizzazione, revoca, area studente e condivisione LinkedIn con URL di verifica. La roadmap del modulo segue incrementi C1–C4 autonomi. **È escluso da JD Learn 1.0.0** e non aggiunge criteri ai 210 requisiti della baseline né modifica i relativi indicatori di avanzamento. La pianificazione di implementazione sarà successiva alla prima stabile.
+Il sottosistema nativo abilitabile **JD Learn Credentials** è documentato nella [specifica funzionale Open Badges 3.0](specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md) e nella [progettazione tecnica T-001–T-007](specifications/JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md). Prevede emissione e firma delle credenziali, verifica pubblica sul dominio dell'organizzazione, revoca, area studente e condivisione LinkedIn con URL di verifica. La roadmap del modulo segue incrementi C1–C4 autonomi. **È escluso da JD Learn 1.0.0** e non aggiunge criteri ai 210 requisiti della baseline né modifica i relativi indicatori di avanzamento. La pianificazione di implementazione sarà successiva alla prima stabile.
 
 ## Criterio di completamento
 
