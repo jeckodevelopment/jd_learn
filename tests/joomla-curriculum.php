@@ -106,6 +106,9 @@ $firstLesson = $service->saveLesson($actor, scopeInput()+['id'=>0,'module_id'=>$
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $firstLesson)->loadObject();
 curriculumExpect($row->completion_rule==='manual' && (int)$row->preview===0,'server derives rules and ignores preview mass assignment');
 curriculumExpect($row->body===\Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'),'body uses the native Joomla content filter');
+$document = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Document lesson','kind'=>'document','required'=>'1','body'=>'<p>Read the attached document</p>']);
+$documentRow = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $document)->loadObject();
+curriculumExpect($documentRow->kind==='document' && $documentRow->completion_rule==='manual' && $documentRow->provider_key===null,'document lessons use manual completion and no video source');
 $video = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Video draft','kind'=>'video',
     'required'=>'0','body'=>'','provider_key'=>'youtube','source_reference'=>'https://youtu.be/dQw4w9WgXcQ']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $video)->loadObject();

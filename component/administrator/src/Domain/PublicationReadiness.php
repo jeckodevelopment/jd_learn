@@ -45,7 +45,17 @@ final class PublicationReadiness
             $moduleCounts[$moduleId]++;
             $required += (int) $lesson->required;
 
-            if (($lesson->kind ?? '') === 'video') {
+            if (($lesson->kind ?? '') === 'document') {
+                $linked = false;
+                foreach ($attachments as $attachment) {
+                    if ((int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
+                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0) {
+                        $linked = true;
+                        break;
+                    }
+                }
+                if (!$linked) { $blockers[] = 'COM_JLMS_DOCUMENT_MATERIAL_REQUIRED'; }
+            } elseif (($lesson->kind ?? '') === 'video') {
                 $lessonParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
                 $duration = (int) ($lesson->duration_ms ?? 0);
                 if ($duration < 1000 || $duration > 28800000

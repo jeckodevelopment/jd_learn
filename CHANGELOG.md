@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.32-dev — lezioni-documento
+
+- Aggiunge la tipologia di lezione Documento al programma; il docente associa il file tramite la gestione materiali già esistente, con consegna protetta e controlli di accesso/scansione già applicati agli allegati.
+- La pubblicazione richiede almeno un allegato pronto, attivo e non di anteprima associato alla lezione. Il completamento resta manuale come per una lezione testuale.
+- **Collaudo manuale Joomla:** creare una bozza con un modulo e una lezione Documento; provare a pubblicare senza allegati (deve essere bloccato), quindi caricare un documento nella gestione materiali della lezione e pubblicare. Con un account studente iscritto, aprire la lezione, scaricare il documento e segnare la lezione completata; verificare che URL/ID del file non siano accessibili da anonimo o da studente non iscritto.
+- In attesa di CI e revisione. La lezione audio autonoma resta il prossimo incremento M01/M02.
+
 ## 0.41.31-dev — permessi specifici nella sidebar nativa
 
 - Completa issue #113: `plg_system_jlmsmenu` filtra le voci di JD Learn per le autorizzazioni di Banca domande, Categorie, Campi e Plugin video. Le altre voci JD Learn mantengono il requisito `core.manage` del componente; gli altri menu Joomla non sono modificati.

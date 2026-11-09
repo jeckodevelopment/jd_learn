@@ -25,6 +25,8 @@ Questa checklist distingue ciò che è già utilizzabile da implementazioni manc
 | Vista docenti | Profili e associazioni esistenti | Rifare l’elenco backend secondo pattern Joomla standard, ispirato a `com_contacts` o agli articoli; elenco/form separati | AC-130: toolbar, ricerca/filtri, ordinamento, paginazione, stati, navigazione, ACL, tastiera/mobile e assenza di categorie docente |
 | Banca domande | Definizioni/revisioni e autorizzazioni esistenti; authoring presente | Vista elenco distinta dal form; azioni crea/duplica/elimina per le domande esistenti, secondo pattern articoli | AC-131: ACL/CSRF/conferme/dipendenze e integrità revisioni/tentativi; nessun nuovo tipo o comportamento quiz |
 
+La PR in preparazione per 0.41.32-dev aggiunge le lezioni-documento basate sugli allegati protetti, con completamento manuale e verifica obbligatoria di almeno un allegato pronto prima della pubblicazione. Il collaudo manuale resta pendente; le lezioni audio autonome sono ancora da implementare.
+
 La pubblicazione e fruizione con YouTube, Vimeo e Cloudflare Stream fanno parte della priorità immediata dei corsi. La nuova prova di recupero usa i tre adapter reali lato server e il trasporto API Stream controllato; non certifica la riproduzione con SDK e account reali.
 
 ## Condizione di chiusura

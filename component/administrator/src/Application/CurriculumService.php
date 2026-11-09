@@ -146,7 +146,7 @@ final class CurriculumService
     /** @return list<object> */
     private function publicationAttachments(int $versionId): array
     {
-        $query = $this->db->createQuery()->select('f.status, f.scan_json, a.preview, a.publish_up, a.publish_down')
+        $query = $this->db->createQuery()->select('f.status, f.scan_json, a.id, a.lesson_id, a.state, a.preview, a.publish_up, a.publish_down')
             ->from($this->db->quoteName('#__jlms_attachments', 'a'))
             ->innerJoin($this->db->quoteName('#__jlms_assets', 'f') . ' ON f.id = a.asset_id')
             ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)
@@ -427,7 +427,7 @@ final class CurriculumService
         $id = self::id($input['id'] ?? 0, true);
         $title = self::title($input['title'] ?? null);
         $kind = $input['kind'] ?? null;
-        if (!in_array($kind, ['text', 'video'], true) || !is_string($input['body'] ?? '')
+        if (!in_array($kind, ['text', 'document', 'video'], true) || !is_string($input['body'] ?? '')
             || strlen($input['body'] ?? '') > 1048576) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
@@ -486,7 +486,7 @@ final class CurriculumService
                 if ((int) $lesson->revision !== self::id($input['revision'] ?? null)) {
                     throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                 }
-                if (!in_array($lesson->kind, ['text', 'video'], true)) {
+                if (!in_array($lesson->kind, ['text', 'document', 'video'], true)) {
                     throw new \DomainException('COM_JLMS_LESSON_KIND_NOT_AVAILABLE');
                 }
                 if ((int) $lesson->module_id !== $moduleId) {

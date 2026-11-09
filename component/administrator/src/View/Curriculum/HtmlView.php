@@ -122,7 +122,8 @@ final class HtmlView extends BaseHtmlView
             $common = ['course_id' => $course->id, 'version_id' => $version->id,
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
-            $lessonData = $common + ['kind' => $app->getInput()->getCmd('lesson_kind') === 'video' ? 'video' : 'text', 'required' => 1];
+            $requestedKind = $app->getInput()->getCmd('lesson_kind');
+            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document'], true) ? $requestedKind : 'text', 'required' => 1];
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) { $this->editorMode = 'lesson'; }
