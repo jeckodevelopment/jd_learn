@@ -28,6 +28,13 @@ final class HtmlView extends BaseHtmlView
         };
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut('COM_JLMS_COURSES', 'icon-book', 'index.php?option=com_jlms&view=courses');
+            if ($actor->authorise('jlms.pathways.manage', 'com_jlms')) {
+                $addShortcut('COM_JLMS_PATHWAYS', 'icon-map-signs', 'index.php?option=com_jlms&view=pathways');
+                if ($actor->authorise('core.manage', 'com_categories')
+                    && $actor->authorise('core.manage', 'com_jlms.pathway')) {
+                    $addShortcut('COM_JLMS_PATHWAY_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.pathway');
+                }
+            }
             if ($actor->authorise('jlms.quiz.manage', 'com_jlms')) {
                 $addShortcut('COM_JLMS_QUESTION_BANK', 'icon-question-circle', 'index.php?option=com_jlms&view=questionbank');
             }

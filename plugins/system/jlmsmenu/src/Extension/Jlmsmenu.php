@@ -41,6 +41,8 @@ final class Jlmsmenu extends CMSPlugin implements SubscriberInterface
             $view = (string) ($query['view'] ?? '');
             $allowed = match ($view) {
                 'questionbank' => $user->authorise('jlms.quiz.manage', 'com_jlms'),
+                'pathways' => $user->authorise('core.manage', 'com_jlms')
+                    && $user->authorise('jlms.pathways.manage', 'com_jlms'),
                 default => $user->authorise('core.manage', 'com_jlms'),
             };
 
