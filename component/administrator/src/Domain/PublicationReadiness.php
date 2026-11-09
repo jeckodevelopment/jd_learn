@@ -45,6 +45,18 @@ final class PublicationReadiness
             $moduleCounts[$moduleId]++;
             $required += (int) $lesson->required;
 
+            if (!LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)) {
+                $blockers[] = 'COM_JLMS_LESSON_SCHEDULE_INVALID';
+            } elseif (($lesson->publish_up ?? null) !== null || ($lesson->publish_down ?? null) !== null) {
+                $warnings[] = 'COM_JLMS_READINESS_LESSON_SCHEDULED';
+            }
+            if ((int) ($lesson->required ?? 0) === 1 && LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)) {
+                $courseWindow = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::read($course);
+                if (!LessonAvailability::reachable($lesson->publish_up ?? null, $lesson->publish_down ?? null, $courseWindow)) {
+                    $blockers[] = 'COM_JLMS_LESSON_UNREACHABLE';
+                }
+            }
+
             if (($lesson->kind ?? '') === 'document') {
                 $linked = false;
                 foreach ($attachments as $attachment) {

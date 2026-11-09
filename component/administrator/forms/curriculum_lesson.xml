@@ -7,6 +7,8 @@
 <field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />
 <field name="kind" type="list" label="COM_JLMS_LESSON_KIND" default="text"><option value="text">COM_JLMS_LESSON_TEXT</option><option value="document">COM_JLMS_LESSON_DOCUMENT</option><option value="audio">COM_JLMS_LESSON_AUDIO</option><option value="video">COM_JLMS_LESSON_VIDEO</option></field>
 <field name="required" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_LESSON_REQUIRED" default="1"><option value="0">JNO</option><option value="1">JYES</option></field>
+<field name="publish_up" type="calendar" label="COM_JLMS_LESSON_PUBLISH_UP" format="%Y-%m-%d %H:%M:%S" translateformat="false" showtime="true" timeformat="24" filter="raw" />
+<field name="publish_down" type="calendar" label="COM_JLMS_LESSON_PUBLISH_DOWN" format="%Y-%m-%d %H:%M:%S" translateformat="false" showtime="true" timeformat="24" filter="raw" />
 <field name="body" type="editor" label="COM_JLMS_LESSON_BODY" filter="\Joomla\CMS\Component\ComponentHelper::filterText" />
 <field name="provider_key" type="list" label="COM_JLMS_VIDEO_PROVIDER" showon="kind:video" />
 <field name="source_reference" type="text" label="COM_JLMS_VIDEO_SOURCE" maxlength="2048" showon="kind:video[AND]provider_key!:html5" />

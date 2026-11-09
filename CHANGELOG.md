@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.37-dev — finestre di disponibilità delle lezioni
+
+- L’autore può impostare «Disponibile dal» e «Disponibile fino al» nel fuso del corso; i valori vengono normalizzati in UTC, validati e inclusi nello snapshot strutturale della versione. Il preflight avvisa sulle finestre pianificate e la pubblicazione rifiuta intervalli invalidi o lezioni obbligatorie irraggiungibili entro le finestre del corso.
+- Aula e outline mostrano la data di rilascio; prima/dopo la finestra corpo, campi, materiali, player, quiz e mutazioni restano protetti anche sugli endpoint diretti. Le lezioni obbligatorie future restano nel denominatore.
+- `release_after_days` relativo all’avvio dell’iscrizione resta non supportato; la verifica di compatibilità con scadenze individuali resta residua.
+- **Comportamenti da testare in Joomla:** impostare sul corso un fuso diverso da UTC, salvare una lezione con apertura futura e chiusura successiva, riaprire il form e verificare gli orari locali; pubblicare; da studente verificare la data visibile senza contenuti/materiali/player e i dinieghi di completamento e URL diretti; dopo l’apertura verificare la fruizione, dopo la chiusura verificare il blocco; tentare una finestra senza sovrapposizione con la disponibilità del corso e verificare che la pubblicazione sia rifiutata. Controllare che il conteggio delle attività obbligatorie non escluda quelle future.
+- Candidato 0.41.37-dev; CI e pacchetto da registrare dopo il merge; accettazione manuale Joomla pendente.
+
 ## 0.41.36-dev — sequenziamento delle attività obbligatorie
 
 - Le regole della bozza consentono di scegliere navigazione libera o sequenziale. In modalità sequenziale, la pubblicazione congela una catena che usa come prerequisito l’attività obbligatoria precedente nell’ordine dei moduli e delle lezioni; i prerequisiti espliciti restano attivi e il grafo combinato è validato contro i cicli.

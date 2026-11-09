@@ -141,9 +141,17 @@ final class PublicationService
                 if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
-                if (($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5') || (int) $lesson->preview !== 0 || $lesson->publish_up !== null
-                    || $lesson->publish_down !== null || $lesson->release_after_days !== null || strlen((string) $lesson->body) > 1048576) {
+                if (($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5') || (int) $lesson->preview !== 0
+                    || $lesson->release_after_days !== null || strlen((string) $lesson->body) > 1048576) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                }
+                if (!\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)) {
+                    throw new \DomainException('COM_JLMS_LESSON_SCHEDULE_INVALID');
+                }
+                if ((int) $lesson->required === 1 && !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::reachable(
+                    $lesson->publish_up, $lesson->publish_down, CourseSchedule::read($course),
+                )) {
+                    throw new \DomainException('COM_JLMS_LESSON_UNREACHABLE');
                 }
                 $lessonFields = $this->snapshotLessonFields($actor, (int) $lesson->id);
                 $lesson->fields_snapshot_json = json_encode(['_schema' => 1, 'fields' => $lessonFields], JSON_THROW_ON_ERROR);
@@ -216,6 +224,7 @@ final class PublicationService
                 $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
                     'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
                     'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'quiz_sha256' => $quizHash, 'duration_ms' => $lesson->duration_ms,
+                    'publish_up' => $lesson->publish_up, 'publish_down' => $lesson->publish_down,
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
                     'fields_sha256' => hash('sha256', $lesson->fields_snapshot_json),
                     'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' => hash('sha256', (string) $lesson->body)];

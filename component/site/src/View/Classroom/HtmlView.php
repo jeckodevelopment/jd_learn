@@ -16,7 +16,7 @@ final class HtmlView extends BaseHtmlView
     {
         $this->item = $this->get('Item');
         $app = \Joomla\CMS\Factory::getApplication();
-        $this->materials = !empty($this->item['lesson']->prerequisite_blocked)
+        $this->materials = (!empty($this->item['lesson']->prerequisite_blocked) || !empty($this->item['lesson']->schedule_blocked))
             ? ['course' => ['items' => [], 'page' => 0, 'total' => 0], 'lesson' => ['items' => [], 'page' => 0, 'total' => 0]]
             : $app->bootComponent('com_jlms')->getMaterialService()->learnerLists($app->getIdentity(),
                 $app->getLanguage()->getTag(), $this->item['enrollment_id'], (int) $this->item['lesson']->id,
@@ -25,7 +25,7 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->setTitle($this->item['title']);
         $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
-        if (empty($this->item['lesson']->prerequisite_blocked) && $this->item['lesson']->kind === 'audio') {
+        if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked) && $this->item['lesson']->kind === 'audio') {
             $this->getDocument()->addScriptOptions('com_jlms.audio', [
                 'enrollment' => (int) $this->item['enrollment_id'],
                 'lesson' => (int) $this->item['lesson']->id,
@@ -37,7 +37,7 @@ final class HtmlView extends BaseHtmlView
             ]);
             $this->getDocument()->getWebAssetManager()->useScript('com_jlms.audio');
         }
-        if (empty($this->item['lesson']->prerequisite_blocked) && $this->item['lesson']->kind === 'video') {
+        if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked) && $this->item['lesson']->kind === 'video') {
             $labels = [];
             foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider', 'youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed'] as $key) {
                 $labels[$key] = \Joomla\CMS\Language\Text::_(implode('_', ['COM', 'JLMS', 'VIDEO', strtoupper($key === 'consent' ? 'consent_required' : $key)]));

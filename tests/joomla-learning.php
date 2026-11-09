@@ -126,8 +126,9 @@ $scope=static function()use($db,$course,$version):array{return ['course_id'=>$co
 $module=$authoring->saveModule($actor,$scope()+['id'=>0,'title'=>'Learning chapter']);
 $lessons=[];
 for($i=1;$i<=4;$i++) {
+ $schedule=$i===2?['publish_up'=>gmdate('Y-m-d H:i:s',time()+3600),'publish_down'=>gmdate('Y-m-d H:i:s',time()+7200)]:[];
  $lessons[]=$authoring->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$module,'title'=>'Learning lesson '.$i,'kind'=>'text',
-  'required'=>$i===4?'0':'1','body'=>'<p>LEARNING_PRIVATE_BODY_'.$i.'</p><img src="x" onerror="alert(1)"><script>alert(2)</script>']);
+  'required'=>$i===4?'0':'1','body'=>'<p>LEARNING_PRIVATE_BODY_'.$i.'</p><img src="x" onerror="alert(1)"><script>alert(2)</script>']+$schedule);
 }
 $cr=(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.$course)->loadResult();
 $publication->transition($actor,$course,$version,$cr,$scope()['expected_version_revision'],(int)$publication->transitions($actor,$course)[0]->id);
@@ -152,6 +153,12 @@ learningDenied(fn()=>$learning->start($student,'en-GB',$otherCourse,$key),409,'s
 learningExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id='.(int)$student->id)->loadResult()===1,'conflicting start rolls back new enrollment');
 $view=$learning->classroom($student,'en-GB',$enrollment);
 learningExpect($view['percent']===0 && str_contains($view['lesson']->body,'LEARNING_PRIVATE_BODY_1'),'authorised student reads first text');
+ $scheduled=$learning->classroom($student,'en-GB',$enrollment,$lessons[1]);
+learningExpect($scheduled['lesson']->schedule_blocked && $scheduled['lesson']->schedule_state==='upcoming'
+    && $scheduled['lesson']->body==='' && $scheduled['lesson']->schedule_available_at!=='', 'future required lesson displays its release time without exposing content');
+learningDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lessons[1],bin2hex(random_bytes(16))),403,'scheduled lesson cannot be completed early');
+learningDenied(fn()=>$learning->resourceContext($student,'en-GB',$enrollment,$lessons[1]),403,'scheduled lesson materials are protected before release');
+fixtureUpdate('jlms_lessons',(object)['id'=>$lessons[1],'publish_up'=>null,'publish_down'=>null],true);
 learningExpect(!str_contains($view['lesson']->body,'<script') && !str_contains($view['lesson']->body,'onerror'),'delivery strips active markup');
 learningDenied(fn()=>$learning->classroom($other,'en-GB',$enrollment),404,'foreign enrollment hidden');
 learningDenied(fn()=>$learning->classroom(new \Joomla\CMS\User\User(),'en-GB',$enrollment),401,'guest classroom rejected');

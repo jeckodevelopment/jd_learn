@@ -10,6 +10,7 @@ use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
+use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
 use Jlms\Contracts\Video\SourceInput;
 use Jlms\Contracts\Video\VideoProviderRegistryInterface;
 
@@ -457,7 +458,8 @@ final class CurriculumService
         $fields = ['module_id' => $moduleId, 'title' => $title, 'kind' => $kind,
             'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
-            'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null];
+            'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
+            'publish_up' => null, 'publish_down' => null];
         if ($kind === 'video' && ($input['provider_key'] ?? '') === 'html5') {
             // HTML5 source/duration are assigned only by LocalVideoService; ignore stale or forged form values.
             $fields['provider_key'] = 'html5';
@@ -496,6 +498,8 @@ final class CurriculumService
         if (count(array_unique($requiredLessons)) !== count($requiredLessons)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
         return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof, $requiredLessons): int {
             $version = $this->draft($actor, $courseId, $versionId, $versionRevision);
+            $course = $this->row('courses', $courseId);
+            $timezone = CourseSchedule::read($course)['timezone'];
             $module = $this->row('modules', $moduleId, true);
             if ((int) $module->course_version_id !== $versionId) {
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
@@ -514,6 +518,9 @@ final class CurriculumService
                 if ((int) $lesson->module_id !== $moduleId) {
                     throw new \DomainException('COM_JLMS_MOVE_MODULE_NOT_AVAILABLE');
                 }
+                $publishUp = $input['publish_up'] ?? LessonAvailability::editor($lesson->publish_up, $timezone);
+                $publishDown = $input['publish_down'] ?? LessonAvailability::editor($lesson->publish_down, $timezone);
+                $fields = array_replace($fields, LessonAvailability::normalize($publishUp, $publishDown, $timezone));
                 if ($fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key === 'html5') {
                     foreach (['source_json', 'media_asset_id', 'duration_ms', 'params_json'] as $field) { $fields[$field] = $lesson->$field; }
                 }
@@ -526,6 +533,7 @@ final class CurriculumService
                 $fields['source_revision'] = (int) $lesson->source_revision + (int) $changedSource;
                 $this->update('lessons', $lesson, $fields, $actor);
             } else {
+                $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ?? null, $input['publish_down'] ?? null, $timezone));
                 $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_lessons'))
                     ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
                 if ((int) $this->db->setQuery($q)->loadResult() >= 5000) {
