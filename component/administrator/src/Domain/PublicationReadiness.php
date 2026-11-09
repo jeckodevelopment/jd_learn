@@ -37,6 +37,7 @@ final class PublicationReadiness
         }
 
         $required = 0;
+        $initialRequired = 0;
         foreach ($lessons as $lesson) {
             $moduleId = (int) $lesson->module_id;
             if (!array_key_exists($moduleId, $moduleCounts)) {
@@ -44,12 +45,15 @@ final class PublicationReadiness
             }
             $moduleCounts[$moduleId]++;
             $required += (int) $lesson->required;
+            if ((int) $lesson->required === 1 && (int) ($lesson->release_after_days ?? 0) === 0) { $initialRequired++; }
 
-            if (!LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)) {
+            if (!LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)
+                || !LessonAvailability::validReleaseDays($lesson->release_after_days ?? null)) {
                 $blockers[] = 'COM_JLMS_LESSON_SCHEDULE_INVALID';
             } elseif (($lesson->publish_up ?? null) !== null || ($lesson->publish_down ?? null) !== null) {
                 $warnings[] = 'COM_JLMS_READINESS_LESSON_SCHEDULED';
             }
+            if ((int) ($lesson->release_after_days ?? 0) > 0) { $warnings[] = 'COM_JLMS_READINESS_LESSON_DRIP'; }
             if ((int) ($lesson->required ?? 0) === 1 && LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)) {
                 $courseWindow = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::read($course);
                 if (!LessonAvailability::reachable($lesson->publish_up ?? null, $lesson->publish_down ?? null, $courseWindow)) {
@@ -83,6 +87,10 @@ final class PublicationReadiness
                     $blockers[] = 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED';
                 }
             }
+        }
+
+        if ($required > 0 && $initialRequired === 0) {
+            $blockers[] = 'COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED';
         }
 
         foreach ($attachments as $attachment) {

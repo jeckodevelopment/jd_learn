@@ -88,6 +88,8 @@ final class ManualEnrollmentService
         $now = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s.u');
         if ($edition->status !== 'open' || ($edition->starts_at !== null && $edition->starts_at > $now) || ($edition->ends_at !== null && $edition->ends_at <= $now)) { throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403); }
         $editionId = (int) $edition->id;
+        $this->learning->assertEnrollmentScheduleReachable($courseId, $versionId, $editionId,
+            $edition->starts_at, $edition->ends_at);
         $q = $this->db->createQuery()->select('id, status')->from('#__jlms_enrollments')->where('user_id = :user')->where('edition_id = :edition')
             ->bind(':user', $userId, ParameterType::INTEGER)->bind(':edition', $editionId, ParameterType::INTEGER);
         $existing = $this->db->setQuery($q)->loadObject();

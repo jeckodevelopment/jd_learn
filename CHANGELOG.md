@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.38-dev — rilascio relativo delle lezioni (candidato)
+
+- L’autore può impostare un’attesa di 0–3650 giorni dall’avvio effettivo dell’iscrizione. Il rilascio è calcolato in UTC a giorni di 24 ore; la disponibilità effettiva rispetta insieme `publish_up` assoluto e `release_after_days`, con inizio incluso e chiusura esclusiva.
+- Prima dell’avvio, corpo, campi, allegati, player, completamento, ripresa e accessi diretti restano protetti. L’aula indica che la lezione sarà disponibile dopo l’avvio e poi mostra la data effettiva. Almeno una lezione obbligatoria deve essere disponibile dal giorno zero.
+- Le iscrizioni automatiche e manuali sono rifiutate quando una lezione obbligatoria non può diventare accessibile prima della chiusura più vicina fra lezione, corso, edizione e iscrizione.
+- **Comportamenti da testare in Joomla:** creare un corso con una lezione obbligatoria iniziale e una seconda lezione con rilascio a 2 giorni; pubblicare e iscrivere uno studente. Prima dell’avvio, verificare avviso senza contenuti e diniego di URL diretti, materiali/player e completamento; avviare il corso e controllare che la seconda lezione mostri la data prevista e resti bloccata; dopo 48 ore verificare accesso e completamento. Combinare il rilascio relativo con apertura/chiusura assoluta e controllare l’intersezione. Impostare tutte le lezioni obbligatorie oltre il giorno zero e verificare il rifiuto di pubblicazione; configurare una scadenza precedente alla data di rilascio e verificare il rifiuto dell’iscrizione. Ripetere l’ammissione automatica e quella manuale e controllare la conservazione dei progressi delle iscrizioni esistenti.
+- CI, merge e pacchetto installabile da completare; collaudo Joomla pendente.
+
 ## 0.41.37-dev — finestre di disponibilità delle lezioni
 
 - L’autore può impostare «Disponibile dal» e «Disponibile fino al» nel fuso del corso; i valori vengono normalizzati in UTC, validati e inclusi nello snapshot strutturale della versione. Il preflight avvisa sulle finestre pianificate e la pubblicazione rifiuta intervalli invalidi o lezioni obbligatorie irraggiungibili entro le finestre del corso.

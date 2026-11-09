@@ -159,6 +159,17 @@ learningExpect($scheduled['lesson']->schedule_blocked && $scheduled['lesson']->s
 learningDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lessons[1],bin2hex(random_bytes(16))),403,'scheduled lesson cannot be completed early');
 learningDenied(fn()=>$learning->resourceContext($student,'en-GB',$enrollment,$lessons[1]),403,'scheduled lesson materials are protected before release');
 fixtureUpdate('jlms_lessons',(object)['id'=>$lessons[1],'publish_up'=>null,'publish_down'=>null],true);
+fixtureUpdate('jlms_lessons',(object)['id'=>$lessons[2],'release_after_days'=>2]);
+$relative=$learning->classroom($student,'en-GB',$enrollment,$lessons[2]);
+learningExpect($relative['lesson']->schedule_state==='awaiting_start' && $relative['lesson']->schedule_after_days===2 && $relative['lesson']->body==='',
+    'relative lesson stays private until the student starts learning');
+learningDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lessons[2],bin2hex(random_bytes(16))),403,'relative lesson cannot be completed before course start');
+fixtureUpdate('jlms_enrollments',(object)['id'=>$enrollment,'started_at'=>gmdate('Y-m-d H:i:s',time()-86400)]);
+$relative=$learning->classroom($student,'en-GB',$enrollment,$lessons[2]);
+learningExpect($relative['lesson']->schedule_state==='upcoming' && $relative['lesson']->schedule_available_at!=='', 'relative lesson shows its course-local release time');
+learningDenied(fn()=>$learning->resourceContext($student,'en-GB',$enrollment,$lessons[2]),403,'relative lesson materials are protected before release');
+fixtureUpdate('jlms_enrollments',(object)['id'=>$enrollment,'started_at'=>null],true);
+fixtureUpdate('jlms_lessons',(object)['id'=>$lessons[2],'release_after_days'=>null],true);
 learningExpect(!str_contains($view['lesson']->body,'<script') && !str_contains($view['lesson']->body,'onerror'),'delivery strips active markup');
 learningDenied(fn()=>$learning->classroom($other,'en-GB',$enrollment),404,'foreign enrollment hidden');
 learningDenied(fn()=>$learning->classroom(new \Joomla\CMS\User\User(),'en-GB',$enrollment),401,'guest classroom rejected');

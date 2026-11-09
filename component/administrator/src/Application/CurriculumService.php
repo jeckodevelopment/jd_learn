@@ -459,7 +459,7 @@ final class CurriculumService
             'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
-            'publish_up' => null, 'publish_down' => null];
+            'publish_up' => null, 'publish_down' => null, 'release_after_days' => null];
         if ($kind === 'video' && ($input['provider_key'] ?? '') === 'html5') {
             // HTML5 source/duration are assigned only by LocalVideoService; ignore stale or forged form values.
             $fields['provider_key'] = 'html5';
@@ -521,6 +521,8 @@ final class CurriculumService
                 $publishUp = $input['publish_up'] ?? LessonAvailability::editor($lesson->publish_up, $timezone);
                 $publishDown = $input['publish_down'] ?? LessonAvailability::editor($lesson->publish_down, $timezone);
                 $fields = array_replace($fields, LessonAvailability::normalize($publishUp, $publishDown, $timezone));
+                $releaseDays = array_key_exists('release_after_days', $input) ? $input['release_after_days'] : $lesson->release_after_days;
+                $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($releaseDays);
                 if ($fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key === 'html5') {
                     foreach (['source_json', 'media_asset_id', 'duration_ms', 'params_json'] as $field) { $fields[$field] = $lesson->$field; }
                 }
@@ -534,6 +536,7 @@ final class CurriculumService
                 $this->update('lessons', $lesson, $fields, $actor);
             } else {
                 $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ?? null, $input['publish_down'] ?? null, $timezone));
+                $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($input['release_after_days'] ?? null);
                 $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_lessons'))
                     ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
                 if ((int) $this->db->setQuery($q)->loadResult() >= 5000) {

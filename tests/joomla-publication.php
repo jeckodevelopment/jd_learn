@@ -139,6 +139,12 @@ pubExpect($unreachableRejected,'publication rejects a required lesson outside th
 $writeFixture('#__jlms_courses',(object)['id'=>$course,'publish_down'=>null],'id',true);
 $authoring->saveLesson($actor,pubScope()+['id'=>$lesson,'revision'=>2,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text',
     'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>','publish_up'=>'','publish_down'=>'']);
+$writeFixture('#__jlms_lessons',(object)['id'=>$lesson,'release_after_days'=>5],'id');
+$dripWithoutEntryRejected=false;
+try { $publication->transition($actor,$course,$version,pubRevision('courses',$course),pubRevision('course_versions',$version),(int)$publication->transitions($actor,$course)[0]->id); }
+catch (\DomainException $error) { $dripWithoutEntryRejected=$error->getMessage()==='COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED'; }
+pubExpect($dripWithoutEntryRejected,'publication rejects a programme with no required day-zero entry lesson');
+$writeFixture('#__jlms_lessons',(object)['id'=>$lesson,'release_after_days'=>null],'id',true);
 // Native plugin veto must roll back frozen version, pointer and edition as one unit.
 $veto = static function ($event): void { if ($event->getArgument('extension')==='com_jlms.course') { $event->setStopTransition(); } };
 $app->getDispatcher()->addListener('onWorkflowBeforeTransition',$veto);
