@@ -32,6 +32,10 @@ Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.42-dev**, con 
 - Amministrazione: [dashboard JD Learn](component/administrator/docs/ADMIN_DASHBOARD.md).
 - Personalizzazioni: [contratto CSS e override](docs/FRONTEND_CSS.md).
 
+## Evoluzioni successive alla prima stabile
+
+- **JD Learn Credentials (Open Badges 3.0)**: [specifica funzionale](docs/specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md) per emissione, firma, verifica pubblica sul dominio dell'emittente e condivisione LinkedIn. **Esclusa dalla versione 1.0.0**; sviluppo e avanzamento separati dalla baseline dei 210 requisiti. Nessuna funzionalità Credentials è attualmente dichiarata implementata.
+
 ## Specifiche e perimetro
 
 La [specifica funzionale 1.5 con addendum approvato l’8 novembre](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md), il [progetto tecnico](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md), le [specifiche di sicurezza e provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md) e i [servizi progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md) definiscono il risultato da raggiungere. Il suffisso `1.0` nei nomi è storico: la versione interna è autorevole. Le specifiche descrivono anche funzioni non ancora implementate; le decisioni sono registrate in [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md).
