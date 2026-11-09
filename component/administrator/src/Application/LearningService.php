@@ -328,6 +328,11 @@ final class LearningService
         $percent = (int) $enrollment->required_total > 0
             ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
         if ($lesson->kind === 'audio') {
+            $resumeQuery = $this->db->createQuery()->select('resume_ms')->from('#__jlms_lesson_progress')
+                ->where('enrollment_id = :resumeEnrollment')->where('lesson_id = :resumeLesson')
+                ->bind(':resumeEnrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':resumeLesson', (int) $lesson->id, ParameterType::INTEGER);
+            $lesson->resume_ms = (int) ($this->db->setQuery($resumeQuery)->loadResult() ?: 0);
             $availableAt = gmdate('Y-m-d H:i:s.u');
             $audioQuery = $this->db->createQuery()->select('a.id, a.title, f.mime_type')->from('#__jlms_attachments AS a')
                 ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')
@@ -341,6 +346,7 @@ final class LearningService
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
+                'resume_ms' => (int) ($lesson->resume_ms ?? 0),
                 'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) $lesson->body, 'HTML'),
                 'custom_fields' => $customFields],
             'outline' => $outline, 'percent' => $percent, 'completed_at' => $enrollment->completed_at];
@@ -424,6 +430,42 @@ final class LearningService
                 $update->completed_at = $enrollment->completed_at ?: $now;
             }
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
+        });
+    }
+
+    /** Persist an audio seek point only; this never grants lesson or course completion. */
+    public function saveAudioResume(User $identity, string $language, int $enrollmentId, int $lessonId, int $positionMs): int
+    {
+        if ($positionMs < 0 || $positionMs > 28800000) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        $actor = $this->freshActor($identity);
+        return $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $positionMs): int {
+            [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
+            $lesson = $this->lesson((int) $version->id, $lessonId);
+            if ($lesson->kind !== 'audio') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+            $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
+                ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':lesson', $lessonId, ParameterType::INTEGER);
+            // Joomla's DatabaseQuery does not expose forUpdate() on supported drivers.
+            $q->setQuery((string) $q . ' FOR UPDATE');
+            $progress = $this->db->setQuery($q)->loadObject();
+            $now = gmdate('Y-m-d H:i:s');
+            if (!$progress) {
+                $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $version->id,
+                    'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision,
+                    'coverage_json' => '[]', 'resume_ms' => $positionMs, 'state' => 'started',
+                    'completed_at' => null, 'last_activity_at' => $now, 'revision' => 1];
+                $this->db->insertObject('#__jlms_lesson_progress', $progress);
+            } else {
+                $this->db->updateObject('#__jlms_lesson_progress', (object) ['enrollment_id' => $enrollmentId,
+                    'lesson_id' => $lessonId, 'resume_ms' => $positionMs, 'last_activity_at' => $now,
+                    'revision' => (int) $progress->revision + 1], ['enrollment_id', 'lesson_id']);
+            }
+            $this->db->updateObject('#__jlms_enrollments', (object) ['id' => $enrollmentId,
+                'started_at' => $enrollment->started_at ?: $now, 'last_activity_at' => $now,
+                'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
+                'modified_by' => (int) $actor->id, 'modified_at' => $now], 'id', true);
+            return $positionMs;
         });
     }
 }

@@ -23,6 +23,18 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->setTitle($this->item['title']);
         $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
+        if ($this->item['lesson']->kind === 'audio') {
+            $this->getDocument()->addScriptOptions('com_jlms.audio', [
+                'enrollment' => (int) $this->item['enrollment_id'],
+                'lesson' => (int) $this->item['lesson']->id,
+                'resumeMs' => (int) ($this->item['lesson']->resume_ms ?? 0),
+                'token' => \Joomla\CMS\Session\Session::getFormToken(),
+                'url' => \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=audio.save&format=json', false),
+                'labels' => ['saved' => \Joomla\CMS\Language\Text::_('COM_JLMS_AUDIO_RESUME_SAVED'),
+                    'error' => \Joomla\CMS\Language\Text::_('COM_JLMS_AUDIO_RESUME_ERROR')],
+            ]);
+            $this->getDocument()->getWebAssetManager()->useScript('com_jlms.audio');
+        }
         if ($this->item['lesson']->kind === 'video') {
             $labels = [];
             foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider', 'youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed'] as $key) {

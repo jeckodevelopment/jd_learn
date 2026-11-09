@@ -23,7 +23,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Primo lavoro da svolgere
 
-Le PR #130 e #132 hanno integrato lezioni Documento e Audio. Il primo passo è il collaudo manuale Joomla del build corrente: account docente e studente, documenti/audio, permessi e URL diretti, installazione e upgrade. Poi proseguire con i residui M01/M02 e completare l’accettazione reale dei quattro provider. La ripresa della posizione audio e le trascrizioni sono requisiti ancora mancanti.
+Le PR #130 e #132 hanno integrato lezioni Documento e Audio. La candidata 0.41.34-dev affronta il resume audio; dopo la sua integrazione proseguire con il prossimo requisito residuo M01/M02, mantenendo in parallelo aperti i collaudi manuali Joomla di documenti/audio, permessi e URL diretti e l’accettazione reale dei quattro provider. Le trascrizioni audio restano non implementate.
 
 
 La PR #116 ha integrato AC-130 in 0.41.26-dev per la lista docenti secondo le convenzioni Joomla; il collaudo manuale resta da registrare. La PR #120 integra AC-131 in 0.41.27-dev: elenco separato per la banca domande; CI completa superata, collaudo Joomla pendente. La PR #122 integra issue #117 / AC-133 in 0.41.28-dev: conteggio/link corsi docenti, filtro docente e traduzione titolo. La PR #124 integra issue #115 / AC-134 in 0.41.29-dev: titolo della pagina Opzioni e label Cronologia versioni tradotti in IT/EN; collaudo manuale pendente. Non avviare altri ampliamenti quiz.
