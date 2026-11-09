@@ -71,3 +71,8 @@ La PR [#122](https://github.com/jeckodevelopment/jd_learn/pull/122), integrata i
 ### AC-134 — traduzioni Opzioni componente (issue #115)
 
 La PR [#124](https://github.com/jeckodevelopment/jd_learn/pull/124), integrata in 0.41.29-dev, sostituisce il titolo del fieldset Joomla non disponibile con una label JD Learn localizzata in italiano e inglese e definisce la chiave di sistema usata da `com_config` per il titolo della pagina Opzioni. I risultati attesi sono “Opzioni cronologia versioni” e “JD Learn: Opzioni” in italiano, “Version History Options” e “JD Learn: Options” in inglese. Non cambia impostazioni o valori. CI standard superata nel run 42533814214. Collaudo manuale: [testbook AC-134](QA_TESTBOOK.md#ac-134--traduzioni-della-pagina-opzioni-issue-115).
+
+
+## Issue #149 — ordinamento dashboard e stato provider
+
+Incremento pianificato in 0.41.40-dev: collegamenti rapidi ordinati per il flusso operativo (Corsi, Percorsi, Categorie corsi, Categorie percorsi, Banca domande, Docenti, Campi, Plugin video). Il riepilogo elenca tutti i provider inclusi e distingue installato/disattivato/non disponibile/da configurare/pronto. La vista è in sola lettura e non mostra configurazioni riservate. Collaudo ruoli, stati e lingue nel testbook; M01/M04 acceptance rimane separata.

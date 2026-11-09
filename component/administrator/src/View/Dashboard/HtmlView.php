@@ -11,6 +11,8 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Factory;
 use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
 use Jlms\Contracts\Video\VideoProviderRegistry;
+use Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus;
+use Joomla\Database\DatabaseInterface;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -30,19 +32,22 @@ final class HtmlView extends BaseHtmlView
             $addShortcut('COM_JLMS_COURSES', 'icon-book', 'index.php?option=com_jlms&view=courses');
             if ($actor->authorise('jlms.pathways.manage', 'com_jlms')) {
                 $addShortcut('COM_JLMS_PATHWAYS', 'icon-map-signs', 'index.php?option=com_jlms&view=pathways');
-                if ($actor->authorise('core.manage', 'com_categories')
-                    && $actor->authorise('core.manage', 'com_jlms.pathway')) {
-                    $addShortcut('COM_JLMS_PATHWAY_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.pathway');
-                }
             }
-            if ($actor->authorise('jlms.quiz.manage', 'com_jlms')) {
-                $addShortcut('COM_JLMS_QUESTION_BANK', 'icon-question-circle', 'index.php?option=com_jlms&view=questionbank');
-            }
-            $addShortcut('COM_JLMS_TEACHERS', 'icon-users', 'index.php?option=com_jlms&view=teachers');
         }
         if ($actor->authorise('core.manage', 'com_categories')
             && $actor->authorise('core.manage', 'com_jlms.course')) {
             $addShortcut('COM_JLMS_COURSE_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.course');
+        }
+        if ($actor->authorise('jlms.pathways.manage', 'com_jlms')
+            && $actor->authorise('core.manage', 'com_categories')
+            && $actor->authorise('core.manage', 'com_jlms.pathway')) {
+            $addShortcut('COM_JLMS_PATHWAY_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.pathway');
+        }
+        if ($actor->authorise('core.manage', 'com_jlms') && $actor->authorise('jlms.quiz.manage', 'com_jlms')) {
+            $addShortcut('COM_JLMS_QUESTION_BANK', 'icon-question-circle', 'index.php?option=com_jlms&view=questionbank');
+        }
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            $addShortcut('COM_JLMS_TEACHERS', 'icon-users', 'index.php?option=com_jlms&view=teachers');
         }
         if ($actor->authorise('core.manage', 'com_fields')
             && $actor->authorise('core.manage', 'com_jlms')) {
@@ -58,7 +63,15 @@ final class HtmlView extends BaseHtmlView
             RegisterVideoProvidersEvent::NAME,
             new RegisterVideoProvidersEvent($registry),
         );
-        $this->providers = $registry->descriptors();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $extensions = $db->getQuery(true)
+            ->select($db->quoteName(['element', 'name', 'enabled']))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+            ->where($db->quoteName('folder') . ' = ' . $db->quote('jlmsvideo'))
+            ->where($db->quoteName('client_id') . ' = 0');
+        $extensionMap = $db->setQuery($extensions)->loadObjectList('element');
+        $this->providers = DashboardProviderStatus::summarize($extensionMap, $registry->descriptors());
         parent::display($tpl);
     }
 }

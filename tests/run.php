@@ -188,6 +188,19 @@ foreach (['https://youtube.com.evil.test/watch?v=dQw4w9WgXcQ', 'https://127.0.0.
 rejects(fn () => SourceNormalizer::normalise('html5', new SourceInput('../../private.mp4')), 'HTML5 physical paths are rejected');
 rejects(fn () => SourceNormalizer::normalise('html5', new SourceInput('https://example.com/video.mp4')), 'HTML5 remote URL is rejected');
 $registry = new VideoProviderRegistry();
+$providerStatuses = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::summarize([
+    'youtube' => (object) ['enabled' => 1, 'name' => 'YouTube'],
+    'vimeo' => (object) ['enabled' => 0, 'name' => 'Vimeo'],
+    'cloudflarestream' => (object) ['enabled' => 1, 'name' => 'Cloudflare Stream'],
+], [
+    new ProviderDescriptor('youtube', 'PLUGIN_YOUTUBE', 1, true),
+    new ProviderDescriptor('cloudflarestream', 'PLUGIN_CF', 1, false),
+]);
+$providerStates = array_column($providerStatuses, 'stateKey', 'key');
+expect($providerStates['youtube'] === 'COM_JLMS_READY', 'dashboard reports configured provider as ready');
+expect($providerStates['vimeo'] === 'COM_JLMS_PROVIDER_DISABLED', 'dashboard reports installed disabled provider');
+expect($providerStates['cloudflarestream'] === 'COM_JLMS_NOT_CONFIGURED', 'dashboard reports provider setup status');
+expect($providerStates['html5'] === 'COM_JLMS_PROVIDER_NOT_INSTALLED', 'dashboard reports missing bundled provider');
 $descriptor = new ProviderDescriptor('example', 'EXAMPLE', 1, false);
 $created = 0;
 $registry->register($descriptor, static function () use (&$created) {
