@@ -60,7 +60,7 @@ final class DashboardService
             elseif ($row->version_status !== 'published' || $row->edition_status !== 'open') { $reason = 'unavailable'; }
             else {
                 $rules = json_decode((string) $row->rules_json, true);
-                if (!is_array($rules) || ($rules['mode'] ?? '') !== 'learning' || ($rules['sequence_mode'] ?? '') !== 'free'
+                if (!is_array($rules) || ($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
                     || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') { $reason = 'unavailable'; }
                 elseif (($row->starts_at !== null && $row->starts_at > $now) || ($row->edition_starts_at !== null && $row->edition_starts_at > $now)) { $reason = 'not_open'; }
                 elseif (($row->ends_at !== null && $row->ends_at <= $now) || ($row->edition_ends_at !== null && $row->edition_ends_at <= $now)) { $reason = 'expired'; }

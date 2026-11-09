@@ -78,7 +78,7 @@ final class ManualEnrollmentService
             ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':course', $courseId, ParameterType::INTEGER);
         $version = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $rules = json_decode($version->rules_json, true);
-        if (!is_array($rules) || ($rules['mode'] ?? '') !== 'learning' || ($rules['sequence_mode'] ?? '') !== 'free'
+        if (!is_array($rules) || ($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
             || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         $code = 'default-v' . (int) $version->version_no;
         $q = $this->db->createQuery()->select('id, revision, starts_at, ends_at, status, capacity')->from('#__jlms_editions')

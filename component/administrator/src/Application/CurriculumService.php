@@ -303,6 +303,11 @@ final class CurriculumService
         $this->transaction(function () use ($actor, $course, $version, $revision, $input): void {
             $record = $this->draft($actor, $course, $version, $revision);
             $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($record->rules_json);
+            $sequenceMode = $input['sequence_mode'] ?? $rules['sequence_mode'];
+            if (!is_string($sequenceMode) || !in_array($sequenceMode, ['free', 'sequential'], true)) {
+                throw new \DomainException('COM_JLMS_INVALID_INPUT');
+            }
+            $rules['sequence_mode'] = $sequenceMode;
             $rules['video_threshold_basis_points'] = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold'] ?? null);
             $this->update('course_versions', $record, ['rules_json'=>json_encode($rules, JSON_THROW_ON_ERROR)], $actor);
         });

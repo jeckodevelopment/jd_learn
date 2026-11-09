@@ -77,13 +77,13 @@ Il comando richiede POST/token Joomla, conferma, identità e permessi correnti, 
 
 ## Regole didattiche e soglia video
 
-Nell’editor del corso la scheda **Regole didattiche** offre **Salva e modifica le regole didattiche**: valida/salva prima la scheda corrente e prepara o riapre la bozza del programma. Dal Programma il collegamento Regole didattiche apre lo stesso editor contestuale, senza un secondo form di lezione o modulo. Sono esplicitate navigazione libera e completamento di tutte le attività obbligatorie, attualmente operative.
+Nell’editor del corso la scheda **Regole didattiche** offre **Salva e modifica le regole didattiche**: valida/salva prima la scheda corrente e prepara o riapre la bozza del programma. Dal Programma il collegamento Regole didattiche apre lo stesso editor contestuale, senza un secondo form di lezione o modulo. Sono disponibili le modalità Libera e Sequenziale e il completamento di tutte le attività obbligatorie. In modalità sequenziale la pubblicazione collega ogni lezione alla precedente obbligatoria nell’ordine del programma.
 
 La soglia video della versione è modificabile da **0,01% a 100%**, massimo due decimali, con predefinita90%. Si applica agli intervalli unici riprodotti dei video tracciati, indipendentemente dal provider supportato. Non misura l’apprendimento e saltare alla fine non completa la lezione. Il salvataggio usa un form Joomla POST/token con permesso corrente, checkout e revisione della bozza; gli errori conservano il valore per correggerlo e le modifiche non salvate usano l’avviso già previsto nell’editor contestuale.
 
 Le versioni pubblicate/storiche sono in sola lettura. Una modifica in bozza non cambia corso attivo, dati promozionali, iscritti o progressi. La pubblicazione aggiornata richiede il normale riepilogo/conferma, che mostra anche soglia precedente e nuova; i nuovi iscritti seguono la versione aggiornata e quelli già assegnati conservano la propria soglia. Un cambiamento successivo al riepilogo lo invalida.
 
-Questo è il sottoinsieme operativo dell’editor regole: sequenze/rilascio/prerequisiti avanzati, modalità consultabile, attestati e soglie specifiche per singola lezione restano residui delle rispettive fasi. Non si mostrano controlli che attivino funzioni ancora non supportate.
+Questo è il sottoinsieme operativo dell’editor regole: il rilascio programmato per data, la modalità consultabile, gli attestati e le soglie specifiche per singola lezione restano residui delle rispettive fasi. Non si mostrano controlli che attivino funzioni ancora non supportate.
 
 ## Durata automatica nell’editor delle lezioni
 

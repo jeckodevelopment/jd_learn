@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.36-dev — sequenziamento delle attività obbligatorie
+
+- Le regole della bozza consentono di scegliere navigazione libera o sequenziale. In modalità sequenziale, la pubblicazione congela una catena che usa come prerequisito l’attività obbligatoria precedente nell’ordine dei moduli e delle lezioni; i prerequisiti espliciti restano attivi e il grafo combinato è validato contro i cicli.
+- L’aula e gli endpoint di contenuti, materiali, player, quiz, completamento e ripresa impediscono l’accesso finché l’attività precedente richiesta non è completata. Dashboard, iscrizioni e percorsi riconoscono la nuova modalità.
+- Il rilascio programmato per data non è incluso.
+- **Comportamenti da testare in Joomla:** creare in bozza tre attività obbligatorie in ordine A/B/C e una facoltativa; scegliere Sequenziale e pubblicare. Da studente verificare che B e C siano bloccate con collegamento all’attività richiesta, che URL diretti/player e completamento siano negati, che completare A sblocchi B e completare B sblocchi C. Verificare che la facoltativa non blocchi l’attività obbligatoria seguente, che la modalità Libera consenta la navigazione salvo prerequisiti espliciti, che gli iscritti esistenti mantengano le regole congelate e che un prerequisito esplicito inverso incompatibile sia rifiutato in pubblicazione.
+- CI e pacchetto installabile: da completare sul candidato PR.
+
 ## 0.41.35-dev — prerequisiti espliciti delle lezioni
 
 - L’autore può collegare una lezione a una o più lezioni richieste nella stessa bozza. Il salvataggio controlla appartenenza alla versione, riferimenti duplicati e cicli; la pubblicazione valida e congela il grafo.

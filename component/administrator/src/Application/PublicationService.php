@@ -238,6 +238,21 @@ final class PublicationService
                 || (int) $edge->lesson_id === (int) $edge->required_lesson_id) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
             $prerequisiteMap[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
         }
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
+        if ($rules['sequence_mode'] === 'sequential') {
+            $sequenceQuery = $this->db->createQuery()->select('l.id, l.required')
+                ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
+                ->where('l.course_version_id = :sequenceVersion')->bind(':sequenceVersion', $versionId, ParameterType::INTEGER)
+                ->order('m.ordering, m.id, l.ordering, l.id');
+            $previousRequired = 0;
+            foreach ($this->db->setQuery($sequenceQuery, 0, 5001)->loadObjectList() as $lesson) {
+                $lessonId = (int) $lesson->id;
+                if ($previousRequired && !in_array($previousRequired, $prerequisiteMap[$lessonId] ?? [], true)) {
+                    $prerequisiteMap[$lessonId][] = $previousRequired;
+                }
+                if ((int) $lesson->required === 1) { $previousRequired = $lessonId; }
+            }
+        }
         $graphState = [];
         $visitPrerequisite = function (int $node) use (&$visitPrerequisite, &$graphState, $prerequisiteMap): void {
             if (($graphState[$node] ?? 0) === 1) { throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE'); }
@@ -247,8 +262,7 @@ final class PublicationService
             $graphState[$node] = 2;
         };
         foreach (array_keys($lessonIds) as $node) { $visitPrerequisite((int) $node); }
-        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
-        if (($rules['mode'] ?? '') !== 'learning' || ($rules['sequence_mode'] ?? '') !== 'free'
+        if (($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
             || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required'
             || $version->fields_snapshot_json !== '{}') {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');

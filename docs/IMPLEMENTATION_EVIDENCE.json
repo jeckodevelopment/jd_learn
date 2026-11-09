@@ -2428,7 +2428,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #136 integrata in main; CI standard 4/4 superata; collaudo manuale Joomla pendente.",
+  "candidate_status": "Candidato 0.41.36-dev: sequenziamento delle attività obbligatorie; CI e collaudo Joomla da completare.",
   "previous_verified_release": {
     "version": "0.41.34-dev",
     "package": "pkg_jlms-0.41.34-dev.zip",
@@ -2438,9 +2438,9 @@
     "expires_at": "2026-11-23T12:07:47Z"
   },
   "candidate_increment": {
-    "version": "0.41.35-dev",
-    "scope": "Prerequisiti espliciti tra lezioni, controllo cicli, blocco server e messaggio aula.",
-    "status": "PR #136 integrata; CI standard superata; collaudo manuale Joomla pendente.",
+    "version": "0.41.36-dev",
+    "scope": "Regole di navigazione libera/sequenziale; catena automatica delle attività obbligatorie in ordine moduli/lezioni, grafo combinato validato e blocchi applicati in aula/endpoint. Rilascio per data escluso.",
+    "status": "Candidato PR; CI e pacchetto da registrare, collaudo manuale Joomla pendente.",
     "manual_joomla_acceptance": "pending"
   },
   "latest_verified_increment": {
