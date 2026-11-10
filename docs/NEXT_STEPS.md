@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **10 novembre 2026**. Main **0.41.45-dev**; PR [#169](https://github.com/jeckodevelopment/jd_learn/pull/169) integra issue #157: toolbar Joomla nativa per le azioni del programma e comandi laterali più leggibili. CI standard 4/4 superata nel [run 42771935666](https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666); [pacchetto installabile](IMPLEMENTATION_STATUS.md). Il collaudo manuale resta pendente. Restano prioritari M01/M02 e l’accettazione reale dei provider. Restano prioritari M01/M02 e l’accettazione reale dei provider.
+Aggiornato al **10 novembre 2026**. Main **0.41.45-dev**; PR [#169](https://github.com/jeckodevelopment/jd_learn/pull/169) integra issue #157: toolbar Joomla nativa per le azioni del programma e comandi laterali più leggibili. CI standard 4/4 superata nel [run 42771935666](https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666); [pacchetto installabile](IMPLEMENTATION_STATUS.md). Il collaudo manuale resta pendente. Restano prioritari M01/M02 e l’accettazione reale dei provider.
 
 ## Priorità per la prima versione stabile
 

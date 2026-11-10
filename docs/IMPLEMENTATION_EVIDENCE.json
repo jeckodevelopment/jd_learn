@@ -1,5 +1,5 @@
-Warning: truncated output (original token count: 28869)
-Total output lines: 2545
+Warning: truncated output (original token count: 28829)
+Total output lines: 2525
 
 {
   "audited_at": "2026-11-10",
@@ -18,30 +18,10 @@ Total output lines: 2545
     "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666",
     "joomla": "6.0.0",
     "jobs": [
-      {
-        "id": 129682938886,
-        "name": "Candidate plan and lightweight checks",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 129682977301,
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 129682939765,
-        "name": "PHP 8.3 / mysql:8.4",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 129682937693,
-        "name": "PHP 8.4 / mariadb:10.6",
-        "status": "completed",
-        "conclusion": "success"
-      }
+      {"id": 129682938886, "name": "Candidate plan and lightweight checks", "status": "completed", "conclusion": "success"},
+      {"id": 129682977301, "name": "Curriculum navigation in Chromium (controlled fixture)", "status": "completed", "conclusion": "success"},
+      {"id": 129682939765, "name": "PHP 8.3 / mysql:8.4", "status": "completed", "conclusion": "success"},
+      {"id": 129682937693, "name": "PHP 8.4 / mariadb:10.6", "status": "completed", "conclusion": "success"}
     ],
     "note": "PR #169 integra issue #157: azioni del programma nella toolbar Joomla e comandi laterali più leggibili. CI standard 4/4 superata; collaudo manuale Joomla pendente."
   },
@@ -911,7 +891,12 @@ Total output lines: 2545
         "jobs": [
           {
             "id": 128503571198,
-      …8869 tokens truncated…b0195fd172797cd8e822bc929d42dd4476ef749",
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+         …8829 tokens truncated…b0195fd172797cd8e822bc929d42dd4476ef749",
         "parent_main_commit": "140242ff02b4200bf908500bc1580e2dc2b67485",
         "pull_request": 51
       },
