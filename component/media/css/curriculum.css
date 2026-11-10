@@ -24,6 +24,11 @@
 #jlms-admin-curriculum .jlms-programme-sidebar { padding: 1rem; background: var(--body-bg, #fff); border: 1px solid var(--border-color, #adb5bd); border-radius: .4rem; }
 #jlms-admin-curriculum .jlms-programme-sidebar details { margin-block: 1rem; }
 #jlms-admin-curriculum .jlms-programme-sidebar summary { cursor: pointer; padding-block: .5rem; }
+#jlms-admin-curriculum .jlms-programme-sidebar form { display: grid; gap: .65rem; margin-block: 1rem; }
+#jlms-admin-curriculum .jlms-programme-sidebar form button { justify-self: start; min-height: 2.5rem; }
+#jlms-admin-curriculum .jlms-programme-sidebar > p { margin-block: 1rem; }
+#jlms-admin-curriculum .jlms-programme-sidebar > details { padding-block: .4rem; border-top: 1px solid var(--border-color, #dee2e6); }
+#jlms-admin-curriculum .jlms-programme-sidebar details form + form { margin-top: 1.25rem; }
 #jlms-admin-curriculum [id^="jlms-module-"], #jlms-admin-curriculum [id^="jlms-lesson-"] { scroll-margin-top: 5rem; }
 @media (max-width: 991px) {
  #jlms-admin-curriculum .jlms-programme-layout { grid-template-columns: minmax(0, 1fr); }

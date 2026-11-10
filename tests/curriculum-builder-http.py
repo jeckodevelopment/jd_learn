@@ -58,6 +58,8 @@ try:
  expect('id="jlms-lesson-form"' not in html and 'id="jlms-module-form"' not in html,'Default outline has no unsolicited editing forms')
  expect('data-drag-handle="module"' in html and 'data-drag-handle="lesson"' in html,'Draft exposes scoped drag handles')
  expect('curriculum.js' in html and 'curriculum.css' in html,'Native WAM loads curriculum assets')
+ toolbar_module=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('new_module')==['1']),None)
+ expect(toolbar_module is not None and parse_qs(urlparse(toolbar_module).query).get('id')==[str(f['course'])],'Editable curriculum exposes a course-scoped add-module action in the Joomla toolbar')
  _,editor=request(link(html,'edit_lesson',f['l1']));edit=form(editor,'lesson.save')
  expect(edit['fields']['jform[id]']==str(f['l1']) and edit['fields']['jform[module_id]']==str(f['m2']),'Lesson title opens its native scoped editor')
  materials=next(x for x in Page(editor).links if parse_qs(urlparse(x).query).get('view')==['materials'] and parse_qs(urlparse(x).query).get('lesson_id')==[str(f['l1'])])
