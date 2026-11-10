@@ -1,8 +1,8 @@
 {
   "date": "2026-11-10",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
-  "runtime_tested_head": "cb1ee4818fdc54cc927e9c33388ddc4183cdb6be",
-  "ci_run": 42910392500,
+  "runtime_tested_head": "0575873486a04dd8df90f07df9d57079fa14823a",
+  "ci_run": 42913999069,
   "counts": {
     "Stato implementazione": {
       "Parziale": 166,
@@ -25,10 +25,10 @@
   },
   "implementation_progress": {
     "percent": 74,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #204/#206/#207/#208 completano incrementi IMP-07 progressivi; il routing SEF con alias porta catalogo/percorsi al 63%; non derivata dalle righe CSV.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #204/#206/#207/#208/#210 completano incrementi IMP-07 progressivi; i filtri per difficoltà e fasce di durata portano catalogo/percorsi al 64%; non derivata dalle righe CSV.",
     "areas": [
       76,
-      63,
+      64,
       77,
       85,
       67,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR #204, #206, #207 e #208 sono integrate; CI #208 4/4. I collaudi Joomla manuali restano pendenti."
+  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR #204, #206, #207, #208 e #210 sono integrate; CI #210 4/4. I collaudi Joomla manuali restano pendenti."
 }
