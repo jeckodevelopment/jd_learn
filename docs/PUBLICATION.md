@@ -2,6 +2,10 @@
 
 La prima pubblicazione è disponibile ed è stata confermata dall’utente sul percorso provato. Questa guida descrive l’uso corrente; per funzioni e collaudi mancanti vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
+## Filtrare il catalogo per tag
+
+Il catalogo e la pagina di una categoria offrono un selettore dei tag Joomla. Il selettore include soltanto tag pubblicati e accessibili associati a corsi visibili all’utente corrente. Selezionando un tag, la lista conserva i normali controlli di accesso e, nelle categorie, resta limitata al ramo selezionato.
+
 ## Procedura amministrativa attuale
 
 1. In **Corsi → Nuovo**, compilare titolo, categoria, lingua, descrizione estesa e livelli di catalogo/contenuto. Le bozze incomplete possono essere salvate, ma la prima pubblicazione richiede una descrizione con testo significativo. Il campo Stato è intenzionalmente disabilitato: il salvataggio non pubblica un programma non validato.
