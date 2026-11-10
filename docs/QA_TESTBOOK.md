@@ -623,9 +623,9 @@ La suite automatica copre una riga scaduta e la cancellazione; il limite massimo
 **CI:** PR [#198] integrata; standard 4/4 superata nel [run 42883180012](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012). [Pacchetto installabile JD-Learn-0.41.53-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012/artifacts/13794578948).
 
 **Esito sito Joomla:** Non eseguito.
-## IMP-07 — URL SEF con alias per corsi, categorie e percorsi (0.41.58-dev)
+## IMP-07 — URL SEF con alias per corsi, categorie e percorsi (0.41.58-dev, PR #208 integrata)
 
-**PR IMP-07 alias — milestone 1.0.0.** Eseguire sul sito Joomla di prova e registrare qui l’esito; i percorsi numerici precedenti devono restare funzionanti.
+PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208), milestone **1.0.0**, integrata con squash nel commit `6b92612254c060c1ef296c0a03661442871ad1cc`. CI standard 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500). Pacchetto [JD-Learn-0.41.58-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500/artifacts/13806778546), wrapper SHA-256 `773fb7cd4e200df599ffd1b858cc5ef60d013c8823780b625024afbb4acec8cb`, ZIP Joomla SHA-256 `7a4d52cdbbd708b523d6d05f29f0b937fcf5094019a6c9e70ab443bd7a28ade3`, disponibile fino al 24 novembre 2026. Eseguire sul sito Joomla di prova e registrare qui l’esito; i percorsi numerici precedenti devono restare funzionanti.
 
 1. Installare il pacchetto candidato su Joomla di prova e predisporre corsi, categorie e percorsi pubblicati con alias parlanti; includere due record con alias uguale in lingue/categorie diverse.
 2. Attivare SEF e URL rewriting. Aprire catalogo, categoria, scheda corso e percorso; verificare che i collegamenti usino segmenti ID-alias (per esempio `42-alias-corso`), che ogni pagina corrisponda al record corretto e che non appaiano ID di un altro tipo di contenuto.
