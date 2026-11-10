@@ -1,3 +1,13 @@
+## PR #187 in corso — retry del salvataggio di avvio (0.41.51-dev)
+
+La matrice CI del candidato è da eseguire; questa procedura Joomla resta pendente.
+
+1. Installare il pacchetto candidato su Joomla 6 di prova. Predisporre un corso pubblicato e uno studente iscritto; aprire una lezione testo/documento accessibile e verificare lo stato visibile “Salvataggio dell’attività…” seguito da “Attività avviata e salvata”, quindi “In corso” nell’indice.
+2. Con gli strumenti di rete del browser, provocare un errore transitorio (timeout/connessione interrotta oppure risposta 503) alla prima chiamata `lesson.begin`; ripristinare la rete durante la finestra di retry. Verificare una sola seconda richiesta, con la stessa chiave `idempotency_key`, esito salvato e una sola riga di progresso `started`.
+3. Lasciare la rete offline per entrambe le richieste. Atteso: al massimo due tentativi e messaggio d’errore; nessun completamento/credito e ricaricando la pagina il flusso può riprovare.
+4. Provare un rifiuto 403 (sessione/token non valido o accesso revocato) e verificare che non sia ripetuto; nessun contenuto riservato viene mostrato o mutato.
+5. Verificare che il completamento manuale successivo conti una sola volta e che l’avvio di una lezione audio/video non azzeri posizione o copertura già acquisita.
+
 ## PR #185 integrata — avvio e ripresa della lezione (0.41.50-dev)
 
 CI standard 4/4 superata nel [run 42839639601](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601). Il pacchetto [0.41.50-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601/artifacts/13776106013) verificato contiene SHA-256 interno `9534346da253c8f953da826d203b3f3509fab0682b09e7d09736e60180e28e83` (542668 byte) e wrapper `461d8dd9c4d8287c15d6dc667821920e25c4c879108f0a3d9a2ac8cea5ec70f6` (542489 byte), con scadenza 24 novembre 2026 15:03 UTC. L’accettazione manuale resta aperta.

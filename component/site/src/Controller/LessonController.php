@@ -27,8 +27,10 @@ final class LessonController extends EnrollmentController
             if (!$this->checkToken('post', false)) { throw new \RuntimeException('JINVALID_TOKEN', 403); }
             $enrollmentId = CurriculumService::id($this->input->post->get('enrollment_id', null, 'RAW'));
             $lessonId = CurriculumService::id($this->input->post->get('lesson_id', null, 'RAW'));
+            $key = $this->input->post->get('idempotency_key', null, 'RAW');
+            if (!is_string($key)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
             $state = $this->app->bootComponent('com_jlms')->getLearningService()->beginLesson(
-                $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $enrollmentId, $lessonId);
+                $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $enrollmentId, $lessonId, $key);
             echo new JsonResponse(['state' => $state], null, false, true);
         } catch (\Throwable $error) {
             $code = (int) $error->getCode(); $key = $error->getMessage();

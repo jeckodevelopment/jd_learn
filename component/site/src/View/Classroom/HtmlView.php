@@ -30,9 +30,11 @@ final class HtmlView extends BaseHtmlView
             $this->getDocument()->addScriptOptions('com_jlms.lessonProgress', [
                 'enrollment' => (int) $this->item['enrollment_id'],
                 'lesson' => (int) $this->item['lesson']->id,
+                'idempotencyKey' => bin2hex(random_bytes(16)),
                 'token' => \Joomla\CMS\Session\Session::getFormToken(),
                 'url' => \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=lesson.begin&format=json', false),
-                'labels' => ['started' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_START_SAVED'),
+                'labels' => ['pending' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_START_PENDING'),
+                    'started' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_START_SAVED'),
                     'error' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_START_ERROR'),
                     'inProgress' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_IN_PROGRESS'),
                     'completed' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_COMPLETED')],

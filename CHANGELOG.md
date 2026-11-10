@@ -1,3 +1,9 @@
+## 0.41.51-dev — retry limitato del salvataggio di avvio (candidato PR #187)
+
+- Aggiunge stato “Salvataggio attività…” e un singolo retry dopo errore di rete/timeout o risposta HTTP 408, 429 o 5xx; timeout per richiesta 8 secondi e pausa 500 ms.
+- Riutilizza la stessa chiave di idempotenza nelle due richieste; gli errori di autorizzazione e gli altri 4xx non vengono ritentati. Nessuna modalità offline o retry continuo.
+- Comportamenti Joomla in [testbook](docs/QA_TESTBOOK.md#pr-187-integrata-retry-del-salvataggio-di-avvio-04151-dev); CI in attesa.
+
 ## 0.41.50-dev — registrazione dell’avvio lezione (PR #185 integrata)
 
 - L’apertura esplicita di una lezione accessibile registra lo stato “in corso” e la destinazione Riprendi tramite POST con token Joomla. Il GET dell’aula resta senza scritture.
