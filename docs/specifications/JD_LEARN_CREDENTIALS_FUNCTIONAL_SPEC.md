@@ -185,3 +185,6 @@ La **prima release funzionalmente completa del modulo** richiede C1+C2+C3. C4 è
 - LinkedIn Add to Profile FAQ: https://www.linkedin.com/help/linkedin/answer/a527099/
 
 **Decisione approvata (9 novembre 2026):** JD Learn Credentials è una futura estensione opzionale di JD Learn, progettata per emettere Open Badges verificabili e condivisibili su LinkedIn, **non inclusa in JD Learn 1.0.0**.
+
+
+**Pianificazione esecutiva:** [21 PR per la release completa, C0–C4, e 3 PR evolutive C5](../CREDENTIALS_IMPLEMENTATION_PLAN.md). La nomenclatura C0–C5 del piano esecutivo prevale sulle precedenti denominazioni degli incrementi della specifica.
