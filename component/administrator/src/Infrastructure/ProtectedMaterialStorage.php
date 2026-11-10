@@ -115,6 +115,17 @@ final class ProtectedMaterialStorage
         return $handle;
     }
 
+    /** Remove only a private immutable blob addressed by its validated storage key. */
+    public function remove(object $asset): bool
+    {
+        if (($asset->storage ?? '') !== 'local' || preg_match('/\A[a-f0-9]{64}\.blob\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
+            return false;
+        }
+        $path = $this->root() . DIRECTORY_SEPARATOR . $asset->storage_key;
+        if (is_link($path)) { return false; }
+        return !file_exists($path) || (is_file($path) && @unlink($path));
+    }
+
     public function scan(object $asset): array
     {
         $config = $this->config();

@@ -295,6 +295,40 @@ final class MaterialService
         return $this->open((int) $link->asset_id);
     }
 
+    /** Remove old assets only after locking and proving they have no owning records. */
+    public function purgeOrphaned(int $limit = 100): array
+    {
+        $limit = max(1, min(100, $limit));
+        $q = $this->db->createQuery()->select('a.id, a.storage, a.storage_key')->from('#__jlms_assets AS a')
+            ->where("a.created_at < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 DAY)")
+            ->where("a.storage = 'local'")
+            ->where('NOT EXISTS (SELECT 1 FROM #__jlms_attachments x WHERE x.asset_id = a.id)')
+            ->where('NOT EXISTS (SELECT 1 FROM #__jlms_lessons x WHERE x.media_asset_id = a.id)')
+            ->where('NOT EXISTS (SELECT 1 FROM #__jlms_certificate_templates x WHERE x.background_asset_id = a.id)')
+            ->where('NOT EXISTS (SELECT 1 FROM #__jlms_certificate_documents x WHERE x.pdf_asset_id = a.id)')
+            ->where('NOT EXISTS (SELECT 1 FROM #__jlms_jobs x WHERE x.result_asset_id = a.id)')
+            ->order('a.id ASC');
+        $q->setQuery((string) $q . ' LIMIT ' . $limit . ' FOR UPDATE');
+        $this->db->transactionStart();
+        $deleted = 0;
+        $failed = 0;
+        try {
+            $assets = $this->db->setQuery($q)->loadObjectList();
+            foreach ($assets as $asset) {
+                if (!$this->storage->remove($asset)) { $failed++; continue; }
+                $delete = $this->db->createQuery()->delete('#__jlms_assets')->where('id = :id')
+                    ->bind(':id', $asset->id, ParameterType::INTEGER);
+                $this->db->setQuery($delete)->execute();
+                $deleted++;
+            }
+            $this->db->transactionCommit();
+        } catch (\Throwable $error) {
+            $this->db->transactionRollback();
+            throw $error;
+        }
+        return ['deleted' => $deleted, 'failed' => $failed, 'has_more' => count($assets) === $limit];
+    }
+
     private function open(int $assetId): array
     {
         if (!(bool) $this->storage->config()->get('material_php_delivery', false)) {

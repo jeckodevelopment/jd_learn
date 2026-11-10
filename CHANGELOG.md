@@ -1,3 +1,9 @@
+## 0.41.54-dev — pulizia programmata dei materiali orfani (IMP-06)
+
+- Aggiunta attività Joomla Scheduler `jlms.materials.cleanup`: elimina in batch limitato asset locali senza riferimenti, più vecchi di 24 ore, e i relativi blob privati. I riferimenti a lezioni, allegati, attestati e job sono esclusi; le sostituzioni immutabili restano conservate.
+- L’attività è disponibile nel plugin `plg_task_jlms`, ma va pianificata dall’amministratore. Non viene creata automaticamente all’installazione.
+- Collaudo automatico di storage e riferimenti previsto nel CI; test manuale Joomla descritto nel testbook.
+
 ## 0.41.53-dev — pulizia limitata delle sessioni video scadute (IMP-05)
 
 - L’avvio autorizzato di una nuova sessione elimina fino a 250 sessioni video scadute usando l’indice di scadenza; le sessioni attive non vengono toccate. La pulizia è opportunistica e non sostituisce un’attività periodica sul sito inattivo.
