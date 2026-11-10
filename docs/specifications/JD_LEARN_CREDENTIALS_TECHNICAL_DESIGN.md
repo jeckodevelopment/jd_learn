@@ -136,9 +136,9 @@ ACL in tutte le mutazioni, token CSRF, SQL parametrico, escaping, protezione ant
 - **C1 — Emittenti, modelli ed emissione:** UI e ACL nel componente, criterio corso/manuale, firma e export; aggiungere percorso quando la semantica di completamento è stabile.
 - **C2 — Verifica e revoca:** route pubbliche, status list, expiry, chiavi, revoca/sostituzione, privacy, test indipendenti.
 - **C3 — Area studente e LinkedIn:** I miei badge, pubblicazione controllata, share/add to profile, email, UX accessibile e traduzioni.
-- **C4 — Opzionale:** estensioni criteri, API Badge Connect, wallet, microcredenziali.
+- **C4 — Collaudo e rilascio:** test end-to-end, prova interoperabilità indipendente, hardening, upgrade e pacchetto unico.\n- **C5 — Opzionale:** estensioni criteri, API Badge Connect, wallet, microcredenziali.
 
-Test obbligatori: unità (criterion/snapshot/idempotenza), concorrenza, integration DB install/upgrade, ACL e URL diretti, firma valida/tampered/canonicalization, status list/revoca in verificatore esterno, key rotation/restore, privacy, scheduled task disabilitato/cron inattivo, browser Joomla reale IT/EN. Ogni PR include «Comportamenti da testare». La prima release funzionale Credentials richiede C1+C2+C3, C4 non è bloccante.
+Test obbligatori: unità (criterion/snapshot/idempotenza), concorrenza, integration DB install/upgrade, ACL e URL diretti, firma valida/tampered/canonicalization, status list/revoca in verificatore esterno, key rotation/restore, privacy, scheduled task disabilitato/cron inattivo, browser Joomla reale IT/EN. Ogni PR include «Comportamenti da testare». La prima release funzionale Credentials richiede C1+C2+C3, C5 non è bloccante.
 
 La CI attuale e l'installabile JD Learn 1.0.0 rimangono senza nuove dipendenze Credentials fino a una successiva decisione di sviluppo. In quella release il codice Credentials e il plugin Scheduler saranno **inclusi nel pacchetto `pkg_jlms`** senza installazioni aggiuntive.
 
