@@ -1,6 +1,6 @@
 # Piano delle Pull Request verso JD Learn 1.0.0
 
-Aggiornato al **10 novembre 2026**. Main **0.41.61-dev** integra le PR #204, #206–#211 per IMP-07. Il candidato **0.41.62-dev** completa i filtri docente/percorso; accettazione Joomla manuale pendente. Main 75% (522/7), candidato 75% (524/7). Questo è il piano operativo per completare la prima versione stabile. Il perimetro funzionale è quello approvato in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md); la tracciabilità puntuale resta in [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e nel catalogo dei test.
+Aggiornato al **10 novembre 2026**. Main **0.41.62-dev** integra le PR #204 e #206–#213 per IMP-07; CI 4/4 nel [run 42923290761](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761). Pacchetto [JD-Learn-0.41.62-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761/artifacts/13811584820), wrapper `003c56dd360cd8a7c375c220a9b1a0ce0c57e6669913a693c63ea6781f032cf2`, ZIP Joomla `e26a39a0c63c3ba07a9851b49b701582d3df8a656ac55c634cd1414ff9412728`; scade il 24 novembre 2026. Avanzamento **75%** (524/7). Collaudo Joomla CAT-01 pendente.
 
 Il piano ha due blocchi in quest’ordine:
 
@@ -19,7 +19,7 @@ Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di 
 - Tutte le PR implementative e di stabilizzazione appartengono alla milestone `1.0.0`. Credentials è un progetto successivo alla 1.0.0 e mantiene la propria nomenclatura e pianificazione separate.
 
 IMP-05 è integrato: PR [#198] ha aggiunto la pulizia batch limitata delle sessioni video scadute; l’accettazione reale dei quattro provider resta un gate manuale. Nessun quinto provider.
-IMP-07 integra filtri per difficoltà/durata (PR #210) e tag (PR #209) in main 0.41.60-dev. La PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integra il layout alternativo griglia/elenco in 0.41.61-dev. Restano filtri docente/percorso e collaudi manuali previsti da CAT-01.
+IMP-07 integra filtri per tag/difficoltà/durata (PR #209/#210), vista griglia/elenco (PR #211) e filtri docente/percorso (PR #213) in main 0.41.62-dev. Restano i collaudi manuali CAT-01 e i residui di lifecycle/associazioni categoria.
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
@@ -73,7 +73,7 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato al 10 novembre 2026: main è **0.41.59-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206, #207, #208 e #210; la CI standard della #210 è 4/4 superata nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **74%** secondo IMPLEMENTATION_STATUS (518/7; area catalogo 64%); il collaudo Joomla resta pendente. IMP-07 prosegue sui filtri catalogo per docente/percorso/tag, sul layout alternativo, sui lifecycle delle categorie e sulla presentazione dei percorsi; l’accettazione Joomla di Finder/SEO/SEF resta pendente.
+Aggiornato al 10 novembre 2026: main è **0.41.62-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206–#213. La CI standard 4/4 è superata nel [run 42923290761](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03/04 hanno i residui documentati nel testbook; IMP-05/06 sono integrati con collaudi manuali aperti. La stima corrente è **75%** (524/7; area catalogo 70%). IMP-07 ha completato i filtri CAT-01 e il layout catalogo; restano lifecycle/associazioni categorie e presentazione percorsi. Accettazione Joomla di Finder/SEO/SEF e CAT-01 resta pendente.
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #208
 
@@ -95,4 +95,4 @@ La PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196) completa un 
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #210
 
-PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) e [#209](https://github.com/jeckodevelopment/jd_learn/pull/209) sono integrate in 0.41.60-dev: filtri pubblici per difficoltà, durata e tag nel catalogo e nelle categorie. La #209 ha CI standard 4/4 nel [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751); accettazione Joomla pendente. La PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integra la vista elenco in 0.41.61-dev; CI standard 4/4. Il candidato successivo aggiunge filtri docente/percorso. Avanzamento main 75% (522/7), candidato 75% (524/7; catalogo 70%).
+PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) e [#209](https://github.com/jeckodevelopment/jd_learn/pull/209) sono integrate in 0.41.60-dev: filtri pubblici per difficoltà, durata e tag nel catalogo e nelle categorie. La #209 ha CI standard 4/4 nel [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751); accettazione Joomla pendente. La PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integra la vista elenco in 0.41.61-dev; CI standard 4/4. La PR [#213](https://github.com/jeckodevelopment/jd_learn/pull/213) integra filtri docente/percorso in 0.41.62-dev; CI standard 4/4. Avanzamento 75% (524/7; catalogo 70%).
