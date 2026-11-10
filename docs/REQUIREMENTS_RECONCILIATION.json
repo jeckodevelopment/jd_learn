@@ -2,7 +2,7 @@
   "date": "2026-11-10",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
   "runtime_tested_head": "b4fadf1d5e715375875973b07aa73b69b3530894",
-  "ci_run": 42898585659,
+  "ci_run": 42901417240,
   "counts": {
     "Stato implementazione": {
       "Parziale": 166,

@@ -12,10 +12,10 @@
 - Pacchetto installabile [JD-Learn-0.41.55-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659/artifacts/13802930146), wrapper ZIP SHA-256 `48af954a9fa682519e5a6c8121ef97d22b17bd37004f9969e1e8c59c694e66e1`, scade il 24 novembre 2026. Estrarre il wrapper ZIP per ottenere il pacchetto da installare in Joomla.
 - Il collaudo manuale Joomla resta pendente; procedura in [testbook](docs/QA_TESTBOOK.md#imp-07--smart-search-del-catalogo-jd-learn-04155-dev-pr-204-integrata).
 
-## Riconciliazione requisiti — 10 novembre 2026 (runtime 0.41.55-dev, merge IMP-07)
+## Riconciliazione requisiti — 10 novembre 2026 (runtime 0.41.56-dev, merge IMP-07)
 
 - Riconciliati tutti i 210 ID senza alterare descrizioni/scenari/perimetro baseline: implementazione, esecuzione automatica con copertura, accettazione Joomla, perimetro 1.0.0/fase 2, PR/commit e residui separati.
-- 14 implementazioni completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate; nessuna accettazione integrale. 133 righe core, 40 miste, 37 fase 2. Il 73% resta la precedente stima per sette aree, non una percentuale ricavata contando righe.
+- 14 implementazioni completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate; nessuna accettazione integrale. 133 righe core, 40 miste, 37 fase 2. Il 73% deriva dalla media aggiornata delle sette aree (513/7), non dal conteggio delle righe.
 - Verificatore e sei regressioni impediscono confusione tra CI, codice e accettazione; riepilogo JSON controllato contro il CSV. Ricostruzione del pacchetto: SHA-256 invariato `2a3b87ab7669e2d41e830b2c1bddb7d41668260278916f85510aac9cf12024a6`.
 
 ## 0.41.54-dev — pulizia programmata dei materiali orfani (IMP-06)
