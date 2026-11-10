@@ -67,3 +67,8 @@ La release è candidata solo quando:
 ## Stato iniziale del piano
 
 Main è **0.41.52-dev** secondo [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md). La PR #192 chiude STAB-03 sull’issue #172; l’accettazione manuale resta pendente. La ricognizione IMP-01 nella PR #176 ha mappato il perimetro esistente e aggiunto al testbook le procedure AC-121–125; i collaudi M01 restano aperti. IMP-02 è implementato e attende accettazione Joomla. La PR [#177](https://github.com/jeckodevelopment/jd_learn/pull/177) avvia IMP-03 con preview video read-only, ACL rivalidata e nessuna telemetria; documenti, audio e quiz non sono simulati, quindi l’attività prosegue. La stima complessiva corrente è 73%, con collaudi manuali distinti. PR #190 integra il programma aula comprimibile su smartphone per STU-02; PR #192 corregge il fuso globale dei nuovi corsi. Entrambe hanno CI standard 4/4 superata e collaudo Joomla pendente.
+
+
+## Aggiornamento 10 novembre 2026 — STAB-02
+
+La PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194) integra i filtri e l’intestazione della Banca domande per le issue #155/#156, milestone **1.0.0**. CI 4/4 superata; collaudo Joomla manuale ancora pendente. Avanzamento globale: **73%**.
