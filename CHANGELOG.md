@@ -1,8 +1,15 @@
-## 0.41.55-dev — integrazione Smart Search (IMP-07, candidata)
+## 0.41.55-dev — Smart Search catalogo (IMP-07, PR #204)
 
-- Aggiunge `plg_finder_jlms` al pacchetto base. Smart Search riceve solo titolo e sommario promozionale delle schede corso pubbliche idonee; corsi ad accesso ristretto, finestre pianificate, programma, lezioni e dati personali sono esclusi.
-- Aggiorna l’indice su modifiche/stati di corsi e categorie JD Learn; categoria e lingua sono disponibili come tassonomie Finder. L’installazione iniziale abilita il plugin, gli aggiornamenti rispettano la preferenza salvata.
-- PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) aperta per review, milestone `1.0.0`. Collaudo Joomla richiesto nel [testbook](docs/QA_TESTBOOK.md#imp-07--smart-search-del-catalogo-jd-learn-04155-dev-pr-204-in-review); CI standard 4/4 superata nel [run 42895021649](https://github.com/jeckodevelopment/jd_learn/actions/runs/42895021649) sul commit candidato; artefatto candidato disponibile fino al 24 novembre 2026. Collaudo manuale Joomla pendente.
+- Integrato il plugin Finder `plg_finder_jlms`: indice limitato a titolo e sommario delle schede pubbliche idonee, con lingua/categorie e aggiornamento al cambio di corso o categoria.
+- Esclusi contenuti non pubblicati, programmati, riservati, senza versione attiva o collocati in categorie non pubbliche. Nessun programma, lezione, media, dato personale o campo privato entra nell’indice.
+- CI sul commit pre-sync 4/4 nel [run 42895021649](https://github.com/jeckodevelopment/jd_learn/actions/runs/42895021649); il merge della base 0.41.54 richiede una nuova esecuzione CI prima dell’integrazione. Il collaudo Joomla resta pendente; procedura in [testbook](docs/QA_TESTBOOK.md#imp-07--smart-search-del-catalogo-jd-learn-04155-dev-pr-204-in-review).
+- Pacchetto aggiornato in preparazione dalla CI sul commit sincronizzato.
+
+## Riconciliazione requisiti — 10 novembre 2026 (runtime 0.41.54-dev invariato)
+
+- Riconciliati tutti i 210 ID senza alterare descrizioni/scenari/perimetro baseline: implementazione, esecuzione automatica con copertura, accettazione Joomla, perimetro 1.0.0/fase 2, PR/commit e residui separati.
+- 14 implementazioni completate nel sottoinsieme core esplicito, 165 parziali, 31 non iniziate; nessuna accettazione integrale. 133 righe core, 40 miste, 37 fase 2. Il 73% resta la precedente stima per sette aree, non una percentuale ricavata contando righe.
+- Verificatore e sei regressioni impediscono confusione tra CI, codice e accettazione; riepilogo JSON controllato contro il CSV. Ricostruzione del pacchetto: SHA-256 invariato `2a3b87ab7669e2d41e830b2c1bddb7d41668260278916f85510aac9cf12024a6`.
 
 ## 0.41.54-dev — pulizia programmata dei materiali orfani (IMP-06)
 

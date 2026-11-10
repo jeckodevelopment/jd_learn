@@ -41,3 +41,7 @@ M01 si chiude quando i criteri inclusi nella prima release secondo [RELEASE_SCOP
 
 
 La versione 0.41.33-dev introduce lezioni Audio riproducibili da MP3/OGG privati, con conferma manuale. La pubblicazione richiede almeno un audio pronto; il player inoltra richieste Range allo stesso delivery protetto dei materiali e rivalida l’iscrizione a ogni richiesta. CI standard superata nel run 42609983073; collaudo Joomla da registrare. Non sono implementati resume della posizione o trascrizione.
+
+## Lettura della riconciliazione del 10 novembre 2026
+
+La [matrice riconciliata](REQUIREMENTS_STATUS.csv) distingue implementazione, test automatici e accettazione Joomla secondo la [guida](REQUIREMENTS_STATUS_GUIDE.md). Il completamento implementativo di AUT-02/AUT-05 e dei sottoinsiemi core indicati non chiude M01. CORE-20/SCR-13 conservano soltanto il riscontro manuale parziale AC-132; nessuna accettazione integrale è acquisita. I residui di codice e i collaudi restano in colonne distinte, senza includere attestati o nuovi flussi quiz nei gate della 1.0.0.

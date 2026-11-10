@@ -64,7 +64,7 @@
     "Patch corrente Joomla non verificata",
     "Recovery/backup completo non verificato"
   ],
-  "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+  "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
     {
       "audited_at": "2026-11-10",
