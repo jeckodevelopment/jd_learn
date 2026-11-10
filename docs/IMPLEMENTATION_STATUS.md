@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.51-dev** (PR #187); candidato **0.41.52-dev** (PR #190) rende comprimibile l’indice aula su smartphone. CI del candidato in attesa; pacchetto verificato 0.41.51-dev disponibile. Collaudi manuali Joomla/provider pendenti.
+Aggiornato al **10 novembre 2026**. Main **0.41.52-dev** integra la PR [#190](https://github.com/jeckodevelopment/jd_learn/pull/190); CI standard 4/4 e pacchetto verificati. Collaudi manuali Joomla/provider pendenti; vedere [testbook](QA_TESTBOOK.md#pr-190--indice-aula-su-smartphone).
 
 IMP-04 / PR #181 integra apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -14,7 +14,7 @@ La PR [#136](https://github.com/jeckodevelopment/jd_learn/pull/136) abilita prer
 L’addendum requisiti dell’8 novembre aggiunge AC-129–134 per accesso a com_fields, viste docenti/banca domande e dashboard. AC-129 è implementato dalla PR #104; AC-132 è implementato dalla PR #108 e corretto dalla PR #110. AC-130 è implementato dalla PR #116; AC-131 è implementato dalla PR #120 in main 0.41.27-dev: elenco e form banca domande separati, con azioni amministrative circoscritte e CI completa superata. Il collaudo manuale AC-132 Dashboard è superato secondo conferma utente; AC-129 e AC-130 restano da collaudare manualmente; AC-133 è integrata nella 0.41.28-dev dalla PR #122 e il relativo collaudo manuale resta nel testbook. Issue #115 / AC-134 è integrata dalla PR #124 in 0.41.29-dev: titolo della pagina Opzioni e label Cronologia versioni tradotti in IT/EN; CI superata, collaudo manuale pendente. L’eccezione quiz è limitata alla gestione amministrativa descritta.
 
 
-La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i percorsi già descritti nella tabella sotto. Main 0.41.51-dev include il retry limitato dell’avvio (PR #187) e l’avvio esplicito e la ripresa dell’ultima lezione aperta (PR #185) e la soglia video per lezione (PR #183); 0.41.44-dev includeva il default del fuso globale per nuovi corsi (PR #167), revisione, archivio/ripristino nel workflow editoriale e preview livelli in sola lettura (PR #153, #159, #162) e l’accesso amministrativo ai Percorsi della PR #147; main 0.41.38-dev include le lezioni Documento (#130), Audio (#132), la ripresa posizione (#134) e i prerequisiti espliciti (#136); la 0.41.36-dev integrata dalla PR #138 aggiunge il sequenziamento delle attività obbligatorie. La CI standard della #132 è superata nei due stack PHP/database, Chromium e controlli leggeri. Il collaudo manuale Joomla di entrambe le tipologie resta pendente. Le lezioni audio usano streaming MP3/OGG protetto, completamento manuale e allegati immutabili; la 0.41.34-dev salva e ripristina la posizione audio; trascrizioni restano mancanti. Il completamento è manuale e il preflight/pubblicazione richiede un allegato pronto. La CI standard è superata; il test sul sito Joomla resta pendente. Main include anche i percorsi formativi della 0.41.17. Per dettagli cronologici delle PR e verifiche, consultare [CHANGELOG.md](../CHANGELOG.md) e il [testbook manuale](QA_TESTBOOK.md). Il collaudo Joomla reale resta da registrare per i flussi runtime; la CI non equivale ad accettazione.
+La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i percorsi già descritti nella tabella sotto. Main 0.41.52-dev integra indice aula responsive per smartphone (PR #190), retry limitato dell’avvio (PR #187), avvio esplicito e ripresa dell’ultima lezione aperta (PR #185) e soglia video per lezione (PR #183); 0.41.44-dev includeva il default del fuso globale per nuovi corsi (PR #167), revisione, archivio/ripristino nel workflow editoriale e preview livelli in sola lettura (PR #153, #159, #162) e l’accesso amministrativo ai Percorsi della PR #147; main 0.41.38-dev include le lezioni Documento (#130), Audio (#132), la ripresa posizione (#134) e i prerequisiti espliciti (#136); la 0.41.36-dev integrata dalla PR #138 aggiunge il sequenziamento delle attività obbligatorie. La CI standard della #132 è superata nei due stack PHP/database, Chromium e controlli leggeri. Il collaudo manuale Joomla di entrambe le tipologie resta pendente. Le lezioni audio usano streaming MP3/OGG protetto, completamento manuale e allegati immutabili; la 0.41.34-dev salva e ripristina la posizione audio; trascrizioni restano mancanti. Il completamento è manuale e il preflight/pubblicazione richiede un allegato pronto. La CI standard è superata; il test sul sito Joomla resta pendente. Main include anche i percorsi formativi della 0.41.17. Per dettagli cronologici delle PR e verifiche, consultare [CHANGELOG.md](../CHANGELOG.md) e il [testbook manuale](QA_TESTBOOK.md). Il collaudo Joomla reale resta da registrare per i flussi runtime; la CI non equivale ad accettazione.
 
 ## Avanzamento stimato verso la prima versione stabile
 
@@ -24,14 +24,14 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
 | Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 57% |
-| Fruizione e progressi core (M03/M09) | 75% |
+| Fruizione e progressi core (M03/M09) | 76% |
 | Video e materiali essenziali (M04) | 83% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 91% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **72%** |
+| **Avanzamento complessivo stimato** | **73%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (507/7 = 72,43%, arrotondato al 72%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (508/7 = 72,57%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 ## Funzioni presenti e lavoro residuo
 

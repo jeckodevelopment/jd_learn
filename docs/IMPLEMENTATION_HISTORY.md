@@ -1,7 +1,7 @@
-## 0.41.52-dev — indice aula comprimibile su smartphone (candidato PR #190)
+## 0.41.52-dev — indice aula comprimibile su smartphone (PR #190 integrata)
 
 - Il programma didattico resta sempre disponibile; sugli schermi stretti parte chiuso e si apre con un pulsante tradotto IT/EN con stato `aria-expanded`. Desktop lo mantiene aperto; senza JS la navigazione resta visibile.
-- Aggiunto test DOM per apertura/chiusura e variazione viewport. Collaudo Joomla in attesa della CI e dell’integrazione.
+- Aggiunto test DOM per apertura/chiusura e variazione viewport. PR #190 integrata nel commit `6be07e359bf56935470aa58285fb03e92419b86e`; CI standard 4/4 superata nel [run 42860617351](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351). Pacchetto [JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351/artifacts/13784608215), SHA-256 interno `278d260dddbdcdda305fff7456943d5ee43a15d042c94e1c3d901fe9f166c332`, wrapper `6214644bc36d91e60cb7da5b9d31f9216e3e53c8492eba1a5ea3ac5fa4962ddd`; collaudo Joomla pendente.
 
 ## 0.41.51-dev — retry limitato del salvataggio di avvio (PR #187 integrata)
 
