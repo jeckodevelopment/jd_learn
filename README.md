@@ -1,8 +1,8 @@
 # JD Learn
 
-Sistema e-learning per Joomla 6 di Jecko Development. **Candidato 0.41.44-dev** per issue #154 (fuso predefinito dei nuovi corsi dal fuso globale del sito), in revisione; **main 0.41.43-dev**, PR [#162](https://github.com/jeckodevelopment/jd_learn/pull/162) integrata: anteprima in sola lettura dei livelli di accesso Joomla, con separazione tra visibilità catalogo e accesso ai contenuti. [Scarica JD-Learn-0.41.43-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795) (archivio Actions da estrarre una volta; SHA-256 ZIP Joomla interno `39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738`; wrapper `180213ed6f86fd3d796c98a1e76a41e282e7a54508a51ddb368da0e7c44b5492`; scade il 23 novembre 2026).
+Sistema e-learning per Joomla 6 di Jecko Development. **Main 0.41.44-dev**, PR [#167](https://github.com/jeckodevelopment/jd_learn/pull/167) integrata: i nuovi corsi usano come fuso iniziale quello globale del sito Joomla. CI standard 4/4 superata nel [run 42769089189](https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189). [Scarica JD-Learn-0.41.44-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189/artifacts/13740848347) (archivio Actions da estrarre una volta; SHA-256 ZIP Joomla interno `e68934ff0b4257d6defd8ed9e28762eb526c9f3a2d0999c315536534658a4458`; SHA-256 wrapper `f4d0ca0bc889bdbe03cd60b8e8b91984ef060d65ab2c66ccd2a901b6165d4796`; scade il 24 novembre 2026). Collaudo manuale Joomla ancora pendente.
 
-**Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/documento/audio/video/quiz sono disponibili nei flussi implementati; collaudi manuali di release ancora aperti, inclusi il rilascio relativo della 0.41.38-dev, l’authoring Percorsi della 0.41.39-dev e la dashboard provider 0.41.40-dev e il workflow editoriale e anteprima accessi 0.41.43-dev. Resta da completare l’anteprima studente interattiva, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
+**Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/documento/audio/video/quiz sono disponibili nei flussi implementati; collaudi manuali di release ancora aperti, inclusi il rilascio relativo della 0.41.38-dev, l’authoring Percorsi della 0.41.39-dev e la dashboard provider 0.41.40-dev e il workflow editoriale e anteprima accessi 0.41.43-dev e default del fuso sito 0.41.44-dev. Resta da completare l’anteprima studente interattiva, le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
 
 ## Orientarsi nella documentazione
 
@@ -46,7 +46,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto 0.41.43-dev contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto 0.41.44-dev contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
 
 ```sh
 python3 tools/build.py
