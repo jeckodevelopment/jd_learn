@@ -34,12 +34,12 @@ Risposta: MIME validato, Content-Disposition attachment con nome ASCII e filenam
 
 Backend: POST con token per `material.upload`, `material.save`, `material.delete`, `material.scan`; GET/HEAD `material.download` con course_id/version_id/id per revisione da parte del gestore. Tutte le azioni richiedono core.manage e jlms.materials.manage sull’asset del corso, parent corretti e revisione della versione. Mutazioni didattiche soltanto in bozza, lock corso→versione; scan/copia/validazione fuori transazione. Si tratta di task HTML/raw, non delle API JSON ancora pianificate.
 
-Nella scheda pubblica #jlms-course-materials informa dell’esistenza dell’area riservata senza leggere titoli o URL dei file. L’aula mostra liste distinte, paginate, di materiali del corso e della lezione corrente. File in staging/quarantena/rifiutati non sono scaricabili. Nessuna preview pubblica o inline nel flusso attuale. Download e file facoltativi non attribuiscono progresso, non generano attestati/email e non creano un registro permanente dei download.
+Nella scheda pubblica #jlms-course-materials informa dell’esistenza dell’area riservata senza leggere titoli o URL dei file. L’aula mostra liste distinte, paginate, di materiali del corso e della lezione corrente. File in staging/quarantena/rifiutati non sono scaricabili. La preview studente del sito non espone inline gli allegati in questo flusso; il candidato 0.41.47-dev aggiunge soltanto l’anteprima editoriale read-only per documenti e audio, con ACL e disponibilità rivalidate. Download e file facoltativi non attribuiscono progresso, non generano attestati/email e non creano un registro permanente dei download.
 
 ## Collaudo e limiti
 
 `tests/material-policy.php` verifica formati, nomi, MIME/firme, struttura Office, macro, traversal e limiti degli archivi. `tests/materials-http.py` usa upload multipart reali, core login, sostituzioni, quarantena e simulatore ClamAV, pubblicazione, download/range/HEAD, revoca con sessione aperta, integrità del blob e nessun credito per i download. `tests/materials-fixture.php retained` controlla che i collegamenti restino dopo l’aggiornamento del pacchetto. Consultare le Actions effettive della PR per gli esiti.
 
-Restano: offload/server storage, worker cleanup/reference scanner, riuso libreria asset, preview esplicite, date/release nell’editor, clonazione/versioni complete, Action Logs/Privacy/Finder e collaudo di carico/accessibilità. Build di sviluppo, soltanto siti effimeri di prova senza dati reali.
+Restano: offload/server storage, worker cleanup/reference scanner, riuso libreria asset, riuso libreria asset, lifecycle e date/release nell’editor, clonazione/versioni complete, Action Logs/Privacy/Finder e collaudo di carico/accessibilità. Build di sviluppo, soltanto siti effimeri di prova senza dati reali.
 
 Riferimento primario per framing, INSTREAM e risposte del daemon: [ClamD Protocol](https://docs.clamav.net/manual/Usage/ClamdProtocol.html).

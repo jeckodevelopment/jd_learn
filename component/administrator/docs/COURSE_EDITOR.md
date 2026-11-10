@@ -2,7 +2,7 @@
 
 ## Anteprima editoriale
 
-Dal programma aprire **Anteprima editoriale** per leggere il testo e navigare il corso con una selezione simulata dei livelli di accesso. Le lezioni video possono essere riprodotte in sola lettura: l’endpoint verifica nuovamente i permessi dell’editor e non crea iscrizioni, sessioni, tentativi o progressi. I video esterni rispettano la policy privacy configurata; la consegna dei video HTML5 locali resta protetta e limitata a editor con permesso sui materiali. Le lezioni documento, audio e quiz sono indicate ma non simulate in questa preview. Per la procedura di prova vedere [testbook progetto](../../docs/QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
+Dal programma aprire **Anteprima editoriale** per leggere il testo e navigare il corso con una selezione simulata dei livelli di accesso. Le lezioni video possono essere riprodotte in sola lettura: l’endpoint verifica nuovamente i permessi dell’editor e non crea iscrizioni, sessioni, tentativi o progressi. I video esterni rispettano la policy privacy configurata; la consegna dei video HTML5 locali resta protetta e limitata a editor con permesso sui materiali. Nel candidato 0.41.47-dev, le lezioni Documento mostrano gli allegati pronti e le lezioni Audio consentono la riproduzione MP3/OGG e l’apertura degli allegati, sempre senza registrare attività. Le interazioni quiz restano non simulate. Per la procedura di prova vedere [testbook progetto](../../docs/QA_TESTBOOK.md#imp-03--preview-editoriale-di-documenti-e-audio-candidato-04147-dev).
 
 ## Modificare i dati del corso
 

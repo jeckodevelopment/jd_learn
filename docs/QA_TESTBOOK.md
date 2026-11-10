@@ -455,6 +455,18 @@ Requisiti: AUT-02, AUT-03, STU-02, SCR-06–08; AC-20, AC-80, AC-86, AC-119–12
 2. Aprire una lezione testuale e poi ciascuna lezione video. Atteso: testo e navigazione sono visibili; il player video carica solo dopo l’apertura della lezione. Avviare, mettere in pausa e cercare in avanti/indietro. Per provider esterni, provare anche la policy bloccata, embed e consenso del sito: nessuna richiesta esterna deve partire prima che la policy consenta la riproduzione.
 3. Prima e dopo la riproduzione, confrontare roster, iscrizioni, tentativi, sessioni e progresso della lezione/corso: nessun valore deve essere creato o cambiato. Nel player deve apparire un messaggio che dichiara che il progresso non viene salvato.
 4. Provare un account senza permesso di modifica corso/materiali e poi revocare il permesso durante la sessione. Anteprima e richieste dirette POST del descrittore/GET del video devono essere negate; URL alterate con corso, versione, lezione o revisione non correlati non devono restituire media.
-5. Aprire una lezione documento, audio o quiz. Atteso: l’attività è indicata come anteprima read-only non simulata; non vengono avviati download, playback o tentativi.
+5. Aprire una lezione quiz. Atteso: l’attività è indicata come anteprima read-only non simulata; non viene creato alcun tentativo.
+
+**Esito sito Joomla:** Non eseguito.
+
+## IMP-03 — preview editoriale di documenti e audio (candidato 0.41.47-dev)
+
+Riferimenti: AUT-02/03, STU-02, MAT-01/02; AC-20, AC-27–31, AC-80, AC-86, AC-93, AC-97–103, AC-119–127. Eseguire su Joomla 6 eliminabile, con un editor autorizzato alla gestione del corso e dei materiali; predisporre una lezione Documento e una Audio nella bozza, PDF, DOCX/TXT, immagine e MP3/OGG in stato pronto, oltre a un allegato non disponibile (quarantena, non pubblicato o con data futura/scaduta). Conservare conteggi iniziali di iscrizioni, sessioni, tentativi e progressi.
+
+1. Aprire **Programma → Anteprima editoriale** sulla lezione Documento. Atteso: elenco separato di materiali del corso e della lezione, con titolo, descrizione, tipo e dimensione; PDF, immagini e testo ammessi si aprono inline in una nuova scheda, gli altri file vengono scaricati. File in quarantena/non pronto, disabilitati, contrassegnati preview o fuori finestra non compaiono e non sono serviti.
+2. Aprire la lezione Audio. Atteso: player HTML5 per MP3/OGG della lezione, con seek/ripresa HTTP Range; gli allegati rimanenti sono consultabili secondo il tipo file. Un file audio di formato diverso non deve essere riprodotto dall’anteprima.
+3. Provare URL dirette con GET e HEAD per un allegato valido. Cambiare a turno course, version, lesson e attachment ID, includendo una lezione di un altro corso/versione e un attachment collegato a un’altra lezione. Atteso: nessun file viene restituito per relazioni non corrispondenti.
+4. Ripetere con un account privo di gestione materiali e dopo la revoca del permesso nella sessione. Atteso: accesso negato anche sull’endpoint diretto. Verificare che l’endpoint non accetti POST o altri metodi.
+5. Prima e dopo preview/download/riproduzione, confrontare iscrizioni, sessioni, tentativi e progresso: devono restare invariati. La lezione quiz deve continuare a mostrare solo il placeholder read-only, senza tentativi.
 
 **Esito sito Joomla:** Non eseguito.
