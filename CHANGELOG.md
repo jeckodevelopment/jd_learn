@@ -1,3 +1,9 @@
+## 0.41.50-dev — registrazione dell’avvio lezione (candidato PR #185)
+
+- L’apertura esplicita di una lezione accessibile registra lo stato “in corso” e la destinazione Riprendi tramite POST con token Joomla. Il GET dell’aula resta senza scritture.
+- Nessun completamento, credito o aumento di percentuale viene attribuito; il completamento manuale aggiorna la riga esistente senza duplicarla.
+- Collaudo Joomla nel [testbook](docs/QA_TESTBOOK.md#pr-185-in-corso--avvio-e-ripresa-della-lezione-04150-dev); CI in attesa.
+
 ## 0.41.49-dev — soglia video configurabile per lezione (PR #183 integrata)
 
 - Aggiunta una soglia facoltativa per ogni lezione video: campo vuoto eredita quella della versione, valore impostato prevale per la singola lezione.

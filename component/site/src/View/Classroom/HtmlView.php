@@ -25,6 +25,20 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->setTitle($this->item['title']);
         $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
+        if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked)
+            && in_array($this->item['lesson']->kind, ['text', 'document', 'audio', 'video'], true)) {
+            $this->getDocument()->addScriptOptions('com_jlms.lessonProgress', [
+                'enrollment' => (int) $this->item['enrollment_id'],
+                'lesson' => (int) $this->item['lesson']->id,
+                'token' => \Joomla\CMS\Session\Session::getFormToken(),
+                'url' => \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=lesson.begin&format=json', false),
+                'labels' => ['started' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_START_SAVED'),
+                    'error' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_START_ERROR'),
+                    'inProgress' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_IN_PROGRESS'),
+                    'completed' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSON_COMPLETED')],
+            ]);
+            $this->getDocument()->getWebAssetManager()->useScript('com_jlms.lessonProgress');
+        }
         if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked) && $this->item['lesson']->kind === 'audio') {
             $this->getDocument()->addScriptOptions('com_jlms.audio', [
                 'enrollment' => (int) $this->item['enrollment_id'],

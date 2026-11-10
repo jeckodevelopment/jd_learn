@@ -562,18 +562,25 @@ final class LearningService
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
             if (!in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule !== 'manual') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
             $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
-            $q = $this->db->createQuery()->select('state')->from('#__jlms_lesson_progress')
+            $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
-            if ($this->db->setQuery($q)->loadResult() === 'completed') {
+            $q->setQuery((string) $q . ' FOR UPDATE');
+            $existing = $this->db->setQuery($q)->loadObject();
+            if ($existing && $existing->state === 'completed') {
                 return;
             }
             $now = gmdate('Y-m-d H:i:s');
-            $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $version->id,
-                'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision, 'coverage_json' => '[]',
-                'state' => 'completed', 'completed_at' => $now, 'last_activity_at' => $now, 'revision' => 1];
-            // No other lesson-progress writer exists in this increment; the enrollment lock serialises all completions.
-            $this->db->insertObject('#__jlms_lesson_progress', $progress);
+            if ($existing) {
+                $this->db->updateObject('#__jlms_lesson_progress', (object) ['enrollment_id' => $enrollmentId,
+                    'lesson_id' => $lessonId, 'state' => 'completed', 'completed_at' => $now,
+                    'last_activity_at' => $now, 'revision' => (int) $existing->revision + 1], ['enrollment_id', 'lesson_id']);
+            } else {
+                $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $version->id,
+                    'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision, 'coverage_json' => '[]',
+                    'state' => 'completed', 'completed_at' => $now, 'last_activity_at' => $now, 'revision' => 1];
+                $this->db->insertObject('#__jlms_lesson_progress', $progress);
+            }
             $total = (int) $enrollment->completed_total + (int) $lesson->required;
             $update = (object) ['id' => $enrollmentId, 'completed_total' => $total,
                 'started_at' => $enrollment->started_at ?: $now, 'completed_at' => $enrollment->completed_at,
@@ -583,6 +590,43 @@ final class LearningService
                 $update->completed_at = $enrollment->completed_at ?: $now;
             }
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
+        });
+    }
+
+    /** Record an explicitly opened lesson without granting completion or progress credit. */
+    public function beginLesson(User $identity, string $language, int $enrollmentId, int $lessonId): string
+    {
+        $actor = $this->freshActor($identity);
+        return $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId): string {
+            [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
+            $lesson = $this->lesson((int) $version->id, $lessonId);
+            $this->assertLessonAvailable($lesson, $enrollment);
+            $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
+            if (!in_array($lesson->kind, ['text', 'document', 'audio', 'video'], true)) {
+                throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+            }
+
+            $now = gmdate('Y-m-d H:i:s');
+            $query = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
+                ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':lesson', $lessonId, ParameterType::INTEGER);
+            $query->setQuery((string) $query . ' FOR UPDATE');
+            $progress = $this->db->setQuery($query)->loadObject();
+            if (!$progress) {
+                $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $version->id,
+                    'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision,
+                    'coverage_json' => '[]', 'covered_ms' => 0, 'resume_ms' => 0, 'state' => 'started',
+                    'completed_at' => null, 'last_activity_at' => $now, 'revision' => 1];
+                $this->db->insertObject('#__jlms_lesson_progress', $progress);
+            }
+            // Do not revise an existing progress row on page load: a concurrent video session
+            // captures this revision and must not be invalidated by the non-credit start receipt.
+            $this->db->updateObject('#__jlms_enrollments', (object) ['id' => $enrollmentId,
+                'started_at' => $enrollment->started_at ?: $now, 'last_activity_at' => $now,
+                'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
+                'modified_by' => (int) $actor->id, 'modified_at' => $now], 'id', true);
+            return (string) $progress->state;
         });
     }
 
