@@ -1,10 +1,10 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **10 novembre 2026**. Main **0.41.46-dev**; PR [#177](https://github.com/jeckodevelopment/jd_learn/pull/177) ha integrato la preview video read-only. Il candidato **0.41.47-dev** completa la preview di documenti e audio senza effetti persistenti; resta esclusa la simulazione interattiva dei quiz. Collaudo Joomla di video, audio, allegati, ACL e policy ancora pendente.
+Aggiornato al **10 novembre 2026**. Main **0.41.47-dev**; PR [#179](https://github.com/jeckodevelopment/jd_learn/pull/179) completa IMP-03 per video, documenti e audio in sola lettura. CI standard 4/4 superata nel [run 42804753192](https://github.com/jeckodevelopment/jd_learn/actions/runs/42804753192). Collaudo Joomla di preview, allegati, ACL e policy ancora pendente.
 
 Il piano operativo delle PR, con identificativi stabili, requisiti associati e fase di stabilizzazione successiva, è in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md). In caso di differenze, il perimetro approvato in RELEASE_SCOPE.md e RELEASE_SCOPE_MATRIX.md prevale; questa pagina conserva l’ordine operativo e lo stato corrente.
 
-**IMP-01 completato come ricognizione di implementazione (PR documentale):** per AUT-01/AUT-04/AUT-05, CORE-10, SCR-13 e AC-119–129 non è stata individuata una lacuna runtime concreta da correggere senza eseguire il collaudo Joomla. Le procedure AC-121–125 sono nel testbook e i relativi collaudi restano aperti. IMP-02 è implementato, con accettazione Joomla pendente. PR #177 ha avviato IMP-03; il candidato 0.41.47 completa la preview read-only di documenti/audio. Le interazioni quiz restano intenzionalmente non simulate nel primo rilascio. Dopo l’integrazione di questo candidato, proseguire con IMP-04 secondo il piano.
+**IMP-01 completato come ricognizione di implementazione (PR documentale):** per AUT-01/AUT-04/AUT-05, CORE-10, SCR-13 e AC-119–129 non è stata individuata una lacuna runtime concreta da correggere senza eseguire il collaudo Joomla. Le procedure AC-121–125 sono nel testbook e i relativi collaudi restano aperti. IMP-02 è implementato, con accettazione Joomla pendente. PR #177 e #179 completano la preview editoriale read-only per video, documenti e audio (0.41.47-dev). Le interazioni quiz restano intenzionalmente non simulate nel primo rilascio. Proseguire con IMP-04 secondo il piano.
 
 ## Priorità per la prima versione stabile
 
@@ -27,7 +27,7 @@ Privacy, ACL, sicurezza, accessibilità, lingue e conservazione dati si applican
 
 ## Stato operativo
 
-La PR #177/0.41.46-dev ha avviato IMP-03 con video read-only. Il candidato 0.41.47-dev completa la preview editoriale di documenti e audio, rivalidando permessi, relazioni e stato dei file; le interazioni quiz restano fuori dal perimetro. Dopo questa integrazione il prossimo incremento funzionale segue IMP-04: completamento della fruizione core e coerenza dei progressi non quiz. I collaudi manuali audio/documenti, video e permessi restano nel testbook, indipendentemente dall’esito CI.
+Le PR #177/0.41.46-dev e #179/0.41.47-dev completano IMP-03 con preview editoriale read-only per video, documenti e audio, rivalidando permessi, relazioni e stato dei file; le interazioni quiz restano fuori dal perimetro. Il prossimo incremento funzionale segue IMP-04: completamento della fruizione core e coerenza dei progressi non quiz. I collaudi manuali audio/documenti, video e permessi restano nel testbook, indipendentemente dall’esito CI.
 
 Le PR #130 e #132 hanno già introdotto le lezioni Documento e Audio; la ripresa audio è nella 0.41.34-dev e i prerequisiti protetti nella 0.41.35-dev. Le trascrizioni audio, i quiz didattici avanzati e le funzioni riportate come fase 2 non vanno anticipate. I residui di M01/M02 e le accettazioni Joomla si seguono tramite le righe correnti di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md).
 
