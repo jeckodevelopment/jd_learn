@@ -16,6 +16,9 @@ final readonly class PlaybackContext
         public string $authorisationGrant,
         public \DateTimeImmutable $now,
         public ?\DateTimeImmutable $accessExpiresAt = null,
+        public bool $preview = false,
+        public int $courseId = 0,
+        public int $versionId = 0,
     ) {
     }
 }

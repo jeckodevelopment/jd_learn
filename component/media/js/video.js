@@ -12,8 +12,8 @@ export class VideoLesson {
       else { this.stop(true); this.message(this.config.policy === 'click' ? 'policy' : 'consent'); }
     };
     this.onPageShow = event => { if (event.persisted) this.start(); };
-    this.onVisibility = () => { if (document.hidden) { this.player?.pause(); this.record('pause').then(() => this.flush()); } };
-    this.onPageHide = () => { this.player?.pause(); this.flush(true); this.stop(false); };
+    this.onVisibility = () => { if (document.hidden) { this.player?.pause(); if (!this.config.preview) this.record('pause').then(() => this.flush()); } };
+    this.onPageHide = () => { this.player?.pause(); if (!this.config.preview) this.flush(true); this.stop(false); };
     this.onOffline = () => { this.player?.pause(); this.message('offline'); };
     window.addEventListener('jlms:consent-changed', this.onConsent);
     window.addEventListener('pagehide', this.onPageHide);
@@ -27,6 +27,15 @@ export class VideoLesson {
   }
   message(key) { this.status.textContent = this.config.labels[key] || this.config.labels.error; }
   async request(task, values, keepalive = false) {
+    if (this.config.preview) {
+      const body = new URLSearchParams({course_id: this.config.course, version_id: this.config.version,
+        lesson_id: this.config.lesson, [this.config.token]: '1'});
+      const response = await this.transport(this.config.previewUrl, {method: 'POST', body,
+        credentials: 'same-origin', cache: 'no-store', keepalive, headers: {'Accept': 'application/json'}});
+      const json = await response.json();
+      if (!response.ok || json.success !== true) { const error = new Error('request'); error.status = response.status; throw error; }
+      return json.data;
+    }
     const body = new URLSearchParams({...values, enrollment_id: this.config.enrollment,
       lesson_id: this.config.lesson, [this.config.token]: '1'});
     const response = await this.transport(this.config.urls[task], {method: 'POST', body,
@@ -45,29 +54,29 @@ export class VideoLesson {
     this.message('loading');
     try {
       const grant = await this.request('playback', {consent: '1'});
-      if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
+      if (!this.allowed() || generation !== this.generation) { if (!this.config.preview) await this.request('close', {session_id: grant.session_id}); return; }
       // The PHP registry validates keys; Joomla plugins provide this conventional module path.
       if (grant.provider !== this.config.provider || !/^[a-z][a-z0-9_]{1,63}$/.test(grant.provider)) throw new Error('provider');
-      this.session = grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
+      this.session = this.config.preview ? null : grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
       this.started = performance.now(); this.previous = null; this.aborter = new AbortController();
       failure = 'startup_module';
       const moduleUrl = new URL(`../../plg_jlmsvideo_${grant.provider}/js/player.js`, import.meta.url);
       moduleUrl.search = new URL(import.meta.url).search;
       const adapter = await this.importer(moduleUrl.href);
-      if (!this.allowed() || generation !== this.generation) { await this.request('close', {session_id: grant.session_id}); return; }
+      if (!this.allowed() || generation !== this.generation) { if (!this.config.preview) await this.request('close', {session_id: grant.session_id}); return; }
       this.adapter = adapter; this.stopped = false;
       failure = 'startup_provider';
       const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => {
         if (event === 'error') { this.message(providerErrors.has(reason) ? reason : 'startup_provider'); this.stop(false); }
-        else this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
+        else if (!this.config.preview) this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
       }, this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player;
-      if (grant.resume_ms) await player.seek(grant.resume_ms);
-      await this.record('seeked');
+      if (!this.config.preview && grant.resume_ms) await player.seek(grant.resume_ms);
+      if (!this.config.preview) await this.record('seeked');
       if (this.stopped || generation !== this.generation) return;
-      this.sampler = setInterval(() => this.record('position'), 1000);
-      this.schedule(); this.scheduleRenew(); this.message('ready');
+      if (!this.config.preview) { this.sampler = setInterval(() => this.record('position'), 1000); this.schedule(); this.scheduleRenew(); }
+      this.message('ready');
     } catch (error) {
       if (generation === this.generation) {
         this.message(error.status === 401 || error.status === 403 || error.status === 404 ? 'denied' : providerErrors.has(error.message) ? error.message : failure);

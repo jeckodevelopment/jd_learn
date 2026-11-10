@@ -124,4 +124,32 @@ final class LocalVideoService
         unset($delivery['path']);
         return $delivery + ['size' => (int) $asset->byte_size, 'name' => 'video.mp4', 'mime' => 'video/mp4', 'etag' => '"' . $asset->sha256 . '"', 'inline' => true];
     }
+
+    /** Read-only media preview; every request rechecks the current course editor ACL. */
+    public function previewDelivery(User $identity, int $courseId, int $versionId, int $lessonId, int $sourceRevision): array
+    {
+        $actor = CourseEditorAccess::fresh($identity);
+        $course = $this->row('courses', $courseId);
+        if (!CourseEditorAccess::canEdit($actor, $course) || !$actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $courseId)) {
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+        }
+        $version = $this->row('course_versions', $versionId);
+        $lesson = $this->row('lessons', $lessonId);
+        if ((int) $version->course_id !== $courseId || (int) $lesson->course_version_id !== $versionId
+            || $lesson->kind !== 'video' || $lesson->provider_key !== 'html5' || (int) $lesson->source_revision !== $sourceRevision) {
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        $asset = $this->assertReady($lesson); $delivery = $this->storage->delivery($asset);
+        if ($delivery['mode'] === 'php_bounded') {
+            $handle = @fopen($delivery['path'], 'rb'); $stat = $handle ? fstat($handle) : false;
+            if (!$stat || $stat['size'] !== (int) $asset->byte_size || ($stat['mode'] & 0170000) !== 0100000) {
+                if (is_resource($handle)) { fclose($handle); }
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
+            $delivery['handle'] = $handle;
+        }
+        unset($delivery['path']);
+        return $delivery + ['size' => (int) $asset->byte_size, 'name' => 'video.mp4', 'mime' => 'video/mp4',
+            'etag' => '"' . $asset->sha256 . '"', 'inline' => true];
+    }
 }

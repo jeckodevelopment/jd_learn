@@ -23,6 +23,21 @@ final class MediaController extends BaseController
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405); }
         try {
+            if ($this->input->getBool('preview')) {
+                $ids = [];
+                foreach (['course_id', 'version_id', 'lesson_id', 'source_revision'] as $key) {
+                    try { $ids[] = CurriculumService::id($this->input->get($key, null, 'RAW')); }
+                    catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+                }
+                $file = $this->app->bootComponent('com_jlms')->getLocalVideoService()->previewDelivery($this->app->getIdentity(), ...$ids);
+                if ($file['mode'] === 'php_bounded') { MaterialDownload::send($this->app, $file); return; }
+                $this->app->setHeader('Content-Type', 'video/mp4', true);
+                $this->app->setHeader('Content-Disposition', 'inline; filename="video.mp4"', true);
+                $this->app->setHeader('X-Content-Type-Options', 'nosniff', true);
+                $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+                $this->app->setHeader('X-Accel-Redirect', $file['internal_uri'], true);
+                $this->app->getSession()->close(); $this->app->sendHeaders(); $this->app->close();
+            }
             $ids = [];
             foreach (['enrollment_id', 'lesson_id', 'source_revision'] as $key) {
                 try { $ids[] = CurriculumService::id($this->input->get($key, null, 'RAW')); }

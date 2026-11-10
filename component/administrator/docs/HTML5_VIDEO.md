@@ -59,3 +59,8 @@ Il player normalizza eventi HTMLMediaElement nel protocollo video comune. Copert
 La pipeline usa MP4 generati localmente, ffprobe reale, login/upload/range HTTP, quarantena/disponibilità e Nginx reale. I test JavaScript usano un doppio dell'elemento video: non provano decoder, controlli nativi e buffering nei browser reali. Test desktop/mobile, accessibilità completa, scanner antivirus reale, audit dipendenze, patch Joomla corrente e carico300/500studenti rimangono da eseguire. Non sono inclusi file di utenti o video reali nel repository.
 
 Fonti primarie: [ffprobe](https://ffmpeg.org/ffprobe-all.html), [protocolli FFmpeg](https://ffmpeg.org/ffmpeg-protocols.html), [Nginx internal](https://nginx.org/en/docs/http/ngx_http_core_module.html#internal), [Nginx X-Accel-Redirect](https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html).
+
+
+### Preview editoriale read-only
+
+L’anteprima amministrativa può riprodurre una lezione HTML5 senza enrollment: il descrittore contiene un URL same-origin con corso/versione/lezione/revisione, e ogni richiesta media rivalida ACL di modifica corso e gestione materiali, relazione tra record, stato asset e hash. Questo percorso non apre sessioni di progresso né accredita completamenti. Non confondere la capability di preview con autorizzazione all’accesso aula.
