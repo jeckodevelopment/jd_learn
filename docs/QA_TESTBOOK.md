@@ -562,6 +562,18 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
 
 
+## IMP-06 — pulizia programmata dei materiali orfani (0.41.54-dev)
+
+Riferimenti: MAT-02/03/05/06, DAT-04, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. La guida è in [MATERIALS.md](MATERIALS.md). Sul sito di prova verificare che il plugin Task - JD Learn sia abilitato.
+
+1. Caricare un allegato valido nella bozza e sostituirlo con un nuovo file. Verificare che il contenuto precedente non venga sovrascritto; entrambi i file devono essere privati e serviti solo tramite i controlli Joomla.
+2. Creare da Sistema → Attività pianificate un’attività “JD Learn: pulisci i file materiali orfani”, limite `100`, e avviarla manualmente. Atteso: record e file ancora usati da corsi/lezioni restano disponibili.
+3. Verificare nel log dell’attività conteggio rimozioni, errori ed eventuale lavoro residuo; nessuna attività viene creata automaticamente dall’upgrade.
+
+Il CI genera un asset fittizio non referenziato più vecchio di 24 ore e verifica la rimozione del record e del blob tramite la routine nativa Scheduler, mantenendo intatti gli allegati collegati.
+
+**Esito sito Joomla:** Non eseguito.
+
 ## IMP-05 — pulizia opportunistica delle sessioni video (0.41.53-dev)
 
 Riferimenti: VID-03/04, PBASE-01/04; AC-25, AC-27–31, AC-91, AC-95, AC-97–103. Su Joomla 6 di prova usare una lezione video disponibile, un’iscrizione autorizzata e uno dei quattro provider già configurati.

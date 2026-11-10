@@ -94,6 +94,34 @@ if ($mode === 'retained') {
     fclose($download['handle']);
     echo json_encode(['materials_upgrade'=>'passed','attachments'=>$count],JSON_THROW_ON_ERROR).PHP_EOL;exit(0);
 }
+if ($mode === 'cleanup') {
+    $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
+    $params = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+    $rootPath = (string) $params->get('material_storage_root', '');
+    $key = bin2hex(random_bytes(32)) . '.blob';
+    $blob = $rootPath . DIRECTORY_SEPARATOR . $key;
+    if ($rootPath === '' || !is_dir($rootPath) || file_put_contents($blob, 'orphan-fixture') === false) { throw new \RuntimeException('Private material storage is not configured.'); }
+    chmod($blob, 0600);
+    $now = gmdate('Y-m-d H:i:s');
+    $asset = (object)['storage'=>'local','storage_key'=>$key,'sha256'=>hash_file('sha256',$blob),'byte_size'=>filesize($blob),
+        'mime_type'=>'text/plain','original_name'=>'orphan.txt','asset_revision'=>1,'status'=>'ready','scan_json'=>'{}',
+        'created_by'=>$userId,'created_at'=>gmdate('Y-m-d H:i:s',time()-172800),'modified_by'=>$userId,'modified_at'=>$now];
+    $db->insertObject('#__jlms_assets',$asset,'id');
+    $app->bootComponent('com_scheduler');
+    $options=\Joomla\Component\Scheduler\Administrator\Helper\SchedulerHelper::getTaskOptions();
+    $option=$options->findOption('jlms.materials.cleanup');
+    if ($option===null) { throw new \RuntimeException('Native scheduler does not expose the material cleanup routine.'); }
+    $record=(object)['id'=>0,'type'=>'jlms.materials.cleanup','params'=>'{"limit":100}','taskOption'=>$option];
+    $task=new \Joomla\Component\Scheduler\Administrator\Task\Task($record);
+    $event=new \Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent('onExecuteTask',['subject'=>$task,'params'=>(object)['limit'=>100]]);
+    $app->getDispatcher()->dispatch('onExecuteTask',$event);
+    $remaining=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id='.(int)$asset->id)->loadResult();
+    $attached=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id='.(int)$fixture['version_id'])->loadResult();
+    if (($event->getResultSnapshot()['status']??null)!==\Joomla\Component\Scheduler\Administrator\Task\Status::OK || $remaining!==0 || is_file($blob) || $attached<1) {
+        throw new \RuntimeException('Scheduled cleanup must delete only the stale unreferenced asset and private blob.');
+    }
+    echo "material cleanup passed\n"; exit(0);
+}
 if ($mode === 'inspect') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     $rows = $db->setQuery('SELECT a.id, a.title, a.lesson_id, a.asset_id, f.status, f.storage_key, f.sha256, f.scan_json FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id='.(int)$fixture['version_id'].' ORDER BY a.id')->loadAssocList();

@@ -12,7 +12,10 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
 {
     use TaskPluginTrait;
     protected $autoloadLanguage=true;
-    protected const TASKS_MAP=['jlms.quiz.expire'=>['langConstPrefix'=>'PLG_TASK_JLMS_EXPIRE','form'=>'expire','method'=>'expireQuizzes']];
+    protected const TASKS_MAP=[
+        'jlms.quiz.expire'=>['langConstPrefix'=>'PLG_TASK_JLMS_EXPIRE','form'=>'expire','method'=>'expireQuizzes'],
+        'jlms.materials.cleanup'=>['langConstPrefix'=>'PLG_TASK_JLMS_CLEANUP','form'=>'expire','method'=>'cleanupMaterials'],
+    ];
     public static function getSubscribedEvents():array
     {
         return ['onTaskOptionsList'=>'advertiseRoutines','onExecuteTask'=>'standardRoutineHandler','onContentPrepareForm'=>'enhanceTaskItemForm'];
@@ -22,6 +25,13 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
         $params=$event->getArgument('params');
         $result=$this->getApplication()->bootComponent('com_jlms')->getQuizAttemptService()->expireDue((int)($params->limit??100));
         $this->logTask('Quiz expiry: closed='.$result['closed'].'; failed='.$result['failed'].'; more='.(int)$result['has_more']);
+        return $result['failed']?Status::KNOCKOUT:Status::OK;
+    }
+    protected function cleanupMaterials(ExecuteTaskEvent $event):int
+    {
+        $params=$event->getArgument('params');
+        $result=$this->getApplication()->bootComponent('com_jlms')->getMaterialService()->purgeOrphaned((int)($params->limit??100));
+        $this->logTask('Material cleanup: deleted='.$result['deleted'].'; failed='.$result['failed'].'; more='.(int)$result['has_more']);
         return $result['failed']?Status::KNOCKOUT:Status::OK;
     }
 }
