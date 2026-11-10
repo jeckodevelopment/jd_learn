@@ -6,6 +6,8 @@
 
 > Questo modulo è esplicitamente **fuori dal perimetro e dai criteri di accettazione della versione 1.0.0**. Non aggiungere i requisiti CRE-* alla matrice dei 210 requisiti della baseline né modificare la percentuale di avanzamento verso la prima stabile. Questa specifica definisce comportamenti attesi, non evidenze di sviluppo o collaudo.
 
+**Addendum vincolante:** [decisioni T-008–T-015 e scenari AC-CRE-027–036](../CREDENTIALS_DECISIONS_T008_T015.md); prevale sulle formulazioni precedenti per badge multipli, percorsi, policy di pubblicazione e re-emissione.
+
 **Progettazione tecnica collegata:** [JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md](JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md) (decisioni T-001–T-007 del 9 novembre 2026). La progettazione tecnica prevale sulle precedenti ipotesi di separazione in un secondo componente.
 
 ## 1. Scopo e principi
