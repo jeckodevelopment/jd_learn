@@ -1,6 +1,6 @@
 # Come leggere `REQUIREMENTS_STATUS.csv`
 
-Ricognizione iniziale del **10 novembre 2026** sulla baseline main `70c9dff` / runtime **0.41.54-dev**; matrice aggiornata dopo il merge IMP-07 su main `5018d89` / runtime **0.41.55-dev**. I 210 ID, descrizioni, scenari e perimetri originari restano invariati. Il perimetro baseline (209 “Rilascio 1”, NOT-03 differito) è storico: non coincide con il sottoinsieme oggi approvato per la **1.0.0**.
+Ricognizione iniziale del **10 novembre 2026** sulla baseline main `70c9dff` / runtime **0.41.54-dev**; matrice aggiornata dopo i merge IMP-07 su main `cc5af16` / runtime **0.41.56-dev**. I 210 ID, descrizioni, scenari e perimetri originari restano invariati. Il perimetro baseline (209 “Rilascio 1”, NOT-03 differito) è storico: non coincide con il sottoinsieme oggi approvato per la **1.0.0**.
 
 | Dimensione | Conteggio | Significato |
 |---|---:|---|
@@ -40,4 +40,4 @@ Perimetro 1.0.0, Criteri 1.0.0 e Criteri fase 2 applicano [RELEASE_SCOPE.md](REL
 
 Ogni incremento aggiorna righe, fonti, PR/commit, esecuzione dei test e limiti, insieme al riepilogo JSON. `tools/check.py` verifica baseline immutata, fonti presenti, stati indipendenti, evidenze e conteggi. `tests/requirements-status.py` impedisce accettazione dedotta dalla CI, completamento con residui di codice e fase 2 trasformata in gate core.
 
-Avanzamento **73% stimato**: media delle sette aree di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), 512/7, fase 2 esclusa. Il Finder integrato porta l’area catalogo dal 57% al 58%; la media arrotondata resta 73%. Non si assegna un peso arbitrario del 50% a Parziale e non si usa 14/210 come avanzamento. La settima area comprende preparazione/verifica del rilascio: è una stima storica per aree, non una misura di codice scritto o di accettazione Joomla.
+Avanzamento **73% stimato**: media delle sette aree di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), 513/7, fase 2 esclusa. Il Finder integrato porta l’area catalogo dal 57% al 59%; la media arrotondata resta 73%. Non si assegna un peso arbitrario del 50% a Parziale e non si usa 14/210 come avanzamento. La settima area comprende preparazione/verifica del rilascio: è una stima storica per aree, non una misura di codice scritto o di accettazione Joomla.

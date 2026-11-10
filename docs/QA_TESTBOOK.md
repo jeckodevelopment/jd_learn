@@ -1,4 +1,4 @@
-## IMP-07 — Ricerca e ordinamento del catalogo (0.41.56-dev, PR #206)
+## IMP-07 — Ricerca e ordinamento del catalogo (0.41.56-dev, PR #206 integrata)
 
 La PR aggiunge ricerca su titolo/sommario e ordinamento recenti/titolo, nel catalogo completo e dentro una categoria. Verificare sul sito Joomla 6 di prova con corsi pubblici e contenuti riservati di fixture.
 
@@ -9,7 +9,7 @@ La PR aggiunge ricerca su titolo/sommario e ordinamento recenti/titolo, nel cata
 5. Aprire una categoria con discendenti, cercare un corso appartenente a un discendente, cambiare ordinamento e paginare; verificare che la ricerca resti limitata alla categoria e ai discendenti.
 6. Provare caratteri speciali e stringhe con virgolette; nessun errore SQL o allargamento ai contenuti protetti.
 
-La CI verifica il rendering HTTP e l’isolamento dei termini di ricerca in fixture Joomla. L’accettazione sul sito reale resta da registrare separatamente.
+La PR #206 è stata integrata nel commit `cc5af168e5b42aff0b30db2e051acecd86806b9c`; CI standard 4/4 superata nel [run 42901417240](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240). [Pacchetto installabile JD-Learn-0.41.56-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500), wrapper SHA-256 `3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2`, disponibile fino al 24 novembre 2026. Estrarre il wrapper per ottenere lo ZIP Joomla. La CI verifica il rendering HTTP e l’isolamento dei termini di ricerca in fixture; l’accettazione sul sito reale resta da registrare separatamente.
 
 ## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR #204 integrata)
 

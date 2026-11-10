@@ -1,8 +1,8 @@
-## 0.41.56-dev — ricerca e ordinamento del catalogo (IMP-07, PR #206)
+## 0.41.56-dev — ricerca e ordinamento del catalogo (IMP-07, PR #206 integrata)
 
-- In lavorazione: aggiunge ricerca case-insensitive su titolo e sommario promozionale, ordinamento per più recenti o titolo, anche nella vista categoria.
+- Aggiunge ricerca case-insensitive su titolo e sommario promozionale, ordinamento per più recenti o titolo, anche nella vista categoria.
 - La ricerca usa parametri SQL associati, mantiene il perimetro di accesso e non interroga programma, lezioni o dati personali; i controlli sono tradotti IT/EN e accessibili da tastiera.
-- Collaudo Joomla richiesto: ricerca titolo/sommario, termine riservato assente, filtro categoria e ordinamenti. Procedura in [testbook](docs/QA_TESTBOOK.md#imp-07--ricerca-e-ordinamento-del-catalogo-04156-dev-pr-206). CI sulla base 0.41.55-dev in attesa.
+- PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) integrata nel commit `cc5af168e5b42aff0b30db2e051acecd86806b9c`; CI standard 4/4 superata nel [run 42901417240](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240). [Pacchetto installabile JD-Learn-0.41.56-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500), wrapper SHA-256 `3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2`, scade il 24 novembre 2026. Collaudo Joomla pendente: ricerca titolo/sommario, termine riservato assente, filtro categoria e ordinamenti. Procedura in [testbook](docs/QA_TESTBOOK.md#imp-07--ricerca-e-ordinamento-del-catalogo-04156-dev-pr-206-integrata).
 
 ## 0.41.55-dev — Smart Search catalogo (IMP-07, PR #204)
 

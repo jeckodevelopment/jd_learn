@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.55-dev**; candidata **0.41.56-dev** con ricerca e ordinamento catalogo nella [PR #206](https://github.com/jeckodevelopment/jd_learn/pull/206). Main integra la PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) (IMP-07) nel commit `5018d895e52727be29cedb31f4f93b5245ef346a`. CI standard 4/4 superata nel [run 42898585659](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659); pacchetto installabile [JD-Learn-0.41.55-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659/artifacts/13802930146), wrapper ZIP SHA-256 `48af954a9fa682519e5a6c8121ef97d22b17bd37004f9969e1e8c59c694e66e1`, disponibile fino al 24 novembre 2026. Estrarre il wrapper per ottenere lo ZIP da installare in Joomla. Il collaudo sul sito Joomla di prova resta pendente. Main include inoltre le PR #190, #192, #194, #196, #198 e [#202](https://github.com/jeckodevelopment/jd_learn/pull/202).
+Aggiornato al **10 novembre 2026**. Main **0.41.56-dev** integra IMP-07: PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) Smart Search e PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) ricerca/ordinamento catalogo; merge #206 `cc5af168e5b42aff0b30db2e051acecd86806b9c`. CI standard 4/4 superata nel [run 42901417240](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240). [Pacchetto installabile JD-Learn-0.41.56-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500), wrapper ZIP SHA-256 `3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2`, disponibile fino al 24 novembre 2026: estrarre il wrapper per ottenere lo ZIP Joomla. Collaudo manuale Joomla pendente. Avanzamento stimato verso la 1.0.0: **73%** (513/7).
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -18,14 +18,14 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima seguente descrive main 0.41.55-dev integrato; la candidata PR #206/0.41.56-dev non è conteggiata fino al merge.
+La stima seguente descrive main 0.41.56-dev integrato, inclusi Finder, ricerca e ordinamento catalogo; i collaudi Joomla restano separati.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
-| Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 58% |
+| Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 59% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 85% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
@@ -33,9 +33,9 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **73%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (512/7 = 73,14%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (513/7 = 73,29%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-La PR #206/0.41.56-dev completa ricerca e ordinamento per titolo/sommario nel catalogo; è candidata e non inclusa nella stima del main. IMP-07 / PR #204 è integrata in 0.41.55-dev: il plugin Finder indicizza solo schede pubbliche idonee e mantiene lingua/categorie; CI standard 4/4 superata, collaudo Joomla pendente. La stima include un incremento dell’area catalogo da 57% a 58%; il valore complessivo arrotondato resta 73%. IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
+IMP-07 comprende la PR #204 (Smart Search, 0.41.55-dev) e la PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) (ricerca titolo/sommario e ordinamento, 0.41.56-dev); CI 4/4 superata, collaudo Joomla pendente. La stima include il catalogo al 59%; il valore complessivo arrotondato resta 73%. Pacchetto: [JD-Learn-0.41.56-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500). IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -83,7 +83,7 @@ Seguire l’ordine e i confini già approvati in [NEXT_STEPS.md](NEXT_STEPS.md),
 
 ## Perimetro e tracciabilità
 
-La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) conservano la baseline storica: 209 requisiti originariamente del rilascio 1 e uno differito. La riconciliazione del 10 novembre distingue 133 righe interamente core, 40 miste e 37 di fase 2; implementazione: 14 completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate. Verifica automatica: 169 esiti superati con copertura parziale e 41 senza esecuzione specifica. Accettazione Joomla: 2 parziali, 208 non eseguite integralmente, 0 integrali. Metodo e limiti nella [guida](REQUIREMENTS_STATUS_GUIDE.md); conteggi verificabili in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La ricognizione non aggiunge funzionalità: stima per aree invariata al 73%. Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
+La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) conservano la baseline storica: 209 requisiti originariamente del rilascio 1 e uno differito. La riconciliazione del 10 novembre distingue 133 righe interamente core, 40 miste e 37 di fase 2; implementazione: 14 completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate. Verifica automatica: 169 esiti superati con copertura parziale e 41 senza esecuzione specifica. Accettazione Joomla: 2 parziali, 208 non eseguite integralmente, 0 integrali. Metodo e limiti nella [guida](REQUIREMENTS_STATUS_GUIDE.md); conteggi verificabili in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La ricognizione non aggiunge funzionalità: stima per aree aggiornata al 73% (513/7). Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
 Schema attuale: **42 tabelle / 59 FK**; 9 estensioni nel pacchetto 0.41.44-dev. Questi conteggi descrivono l'architettura, non l'avanzamento.
 

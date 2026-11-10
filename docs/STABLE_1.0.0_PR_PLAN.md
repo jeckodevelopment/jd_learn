@@ -22,7 +22,7 @@ IMP-05 è in corso: PR [#198] ha integrato la pulizia batch limitata delle sessi
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
-IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. La candidata successiva PR #206 (0.41.56-dev) aggiunge ricerca su titolo/sommario e ordinamento nella vista Catalogo e Categoria; restano i residui SEO/catalogo/percorsi e il relativo collaudo Joomla.
+IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) integra ricerca su titolo/sommario e ordinamento per Catalogo e Categoria in 0.41.56-dev; restano i residui SEO/catalogo/percorsi e l’accettazione Joomla.
 
 ## Blocco IMP — implementazione
 
@@ -72,7 +72,7 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato al 10 novembre 2026: main è **0.41.55-dev** e include le PR #190, #192, #194, #196, #198, #202 e #204; la CI standard della #204 è 4/4 superata nel [run 42898585659](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **73%** secondo IMPLEMENTATION_STATUS (512/7; area catalogo 58%); il collaudo Joomla resta pendente. IMP-07 continua per i residui SEO, catalogo e percorsi.
+Aggiornato al 10 novembre 2026: main è **0.41.56-dev** e include le PR #190, #192, #194, #196, #198, #202, #204 e #206; la CI standard della #206 è 4/4 superata nel [run 42901417240](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **73%** secondo IMPLEMENTATION_STATUS (513/7; area catalogo 59%); il collaudo Joomla resta pendente. IMP-07 continua per i residui SEO, catalogo e percorsi.
 
 ## Aggiornamento 10 novembre 2026 — STAB-02
 
