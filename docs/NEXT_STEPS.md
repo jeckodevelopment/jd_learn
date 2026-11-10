@@ -2,6 +2,8 @@
 
 Aggiornato al **10 novembre 2026**. Main **0.41.45-dev**; PR [#169](https://github.com/jeckodevelopment/jd_learn/pull/169) integra issue #157: toolbar Joomla nativa per le azioni del programma e comandi laterali più leggibili. CI standard 4/4 superata nel [run 42771935666](https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666); [pacchetto installabile](IMPLEMENTATION_STATUS.md). Il collaudo manuale resta pendente. Restano prioritari M01/M02 e l’accettazione reale dei provider.
 
+Il piano operativo delle PR, con identificativi stabili, requisiti associati e fase di stabilizzazione successiva, è in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md). In caso di differenze, il perimetro approvato in RELEASE_SCOPE.md e RELEASE_SCOPE_MATRIX.md prevale; questa pagina conserva l’ordine operativo e lo stato corrente.
+
 ## Priorità per la prima versione stabile
 
 Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Le richieste nuove sono registrate in [REQUIREMENTS_CHANGES.md](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native) e negli scenari AC-129–134. La gestione amministrativa minima AC-131 è l’eccezione esplicita alla sospensione delle nuove funzionalità quiz; i criteri didattici rimanenti di fase 2 non sono gate della prima stabile.
