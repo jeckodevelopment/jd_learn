@@ -470,3 +470,16 @@ Riferimenti: AUT-02/03, STU-02, MAT-01/02; AC-20, AC-27–31, AC-80, AC-86, AC-9
 5. Prima e dopo preview/download/riproduzione, confrontare iscrizioni, sessioni, tentativi e progresso: devono restare invariati. La lezione quiz deve continuare a mostrare solo il placeholder read-only, senza tentativi.
 
 **Esito sito Joomla:** Non eseguito.
+
+
+## IMP-04 — apertura protetta inline di PDF e immagini nell’aula (candidato 0.41.48-dev)
+
+Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su Joomla 6 di prova predisporre un’iscrizione attiva e lezioni disponibili con PDF, JPEG/PNG/WebP, DOCX, CSV, ZIP e un file non pronto; conservare lo stato iniziale di progressi e iscrizioni.
+
+1. In aula verificare che PDF e immagini mostrino **Apri nel browser** e **Scarica file**; DOCX, CSV e ZIP devono mostrare solo il download.
+2. Aprire PDF e immagini: risposta inline in nuova scheda con `nosniff`, cache privata e senza contenuti eseguibili; provare anche Range su PDF. Il download alternativo deve continuare a funzionare.
+3. Alterare attachment ID/enrollment ID e ripetere dopo revoca accesso, sospensione, chiusura finestra o blocco prerequisito della lezione. L’endpoint inline deve negare il file senza rivelare contenuto.
+4. Richiedere l’endpoint inline per DOCX/CSV/ZIP o asset in quarantena: deve essere negato; il normale endpoint di download resta soggetto ai controlli esistenti. Metodi diversi da GET/HEAD devono essere rifiutati.
+5. Confrontare progressi e iscrizione prima/dopo vista inline e download: nessuna apertura o scaricamento attribuisce completamento.
+
+**Esito sito Joomla:** Non eseguito.

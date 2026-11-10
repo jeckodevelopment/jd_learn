@@ -1,3 +1,9 @@
+## 0.41.48-dev — apertura inline protetta di PDF e immagini (candidato PR)
+
+- Nell’aula aggiunge **Apri nel browser** per PDF e immagini JPEG/PNG/WebP, mantenendo il download separato. L’endpoint applica nuovamente accesso all’iscrizione, disponibilità e relazioni del materiale e ammette solo i MIME passivi consentiti.
+- La visualizzazione resta read-only: non cambia iscrizione, progresso o completamento. Gli altri formati continuano a essere scaricabili ma non sono serviti inline.
+- **Collaudo manuale Joomla** descritto nel [testbook](docs/QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-candidato-04148-dev). CI e merge pendenti.
+
 ## 0.41.47-dev — preview editoriale di documenti e audio (PR #179 integrata)
 
 - Estende IMP-03 alle lezioni documento/audio: mostra allegati di corso e lezione pronti, rispetta stato e finestre di pubblicazione e rivalida ACL prima della consegna. PDF, immagini e testo consentiti possono aprirsi inline; altri documenti restano download. MP3/OGG sono riprodotti con il player HTML5 nativo.

@@ -259,6 +259,18 @@ final class MaterialService
         return $this->open((int) $link->asset_id);
     }
 
+    /** Return only passive document/image formats for an authorised in-browser view. */
+    public function inlinePreview(User $actor, string $language, int $enrollmentId, int $id): array
+    {
+        $file = $this->download($actor, $language, $enrollmentId, $id);
+        if (!in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) {
+            fclose($file['handle']);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        $file['inline'] = true;
+        return $file;
+    }
+
     public function audioDownload(User $actor, string $language, int $enrollmentId, int $lessonId, int $id): array
     {
         $actor = $this->learning->freshActor($actor); $link = $this->row('attachments', $id);
