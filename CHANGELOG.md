@@ -1,3 +1,9 @@
+## 0.41.59-dev — filtro tag nel catalogo pubblico (IMP-07)
+
+- Aggiunge filtro per tag Joomla nel catalogo e nelle pagine categoria.
+- Elenca solo tag pubblicati/accessibili associati a corsi che l’utente può già vedere; query con parametri associati e scope di categoria preservato.
+- Collaudi automatici HTTP e istruzioni manuali registrati in `docs/QA_TESTBOOK.md`.
+
 ## 0.41.58-dev — URL SEF con alias per catalogo e percorsi (IMP-07, PR #208 integrata)
 
 - Genera segmenti Joomla ID-alias per corsi, categorie e percorsi; conserva il parsing degli URL numerici storici e usa query parametrizzate.
