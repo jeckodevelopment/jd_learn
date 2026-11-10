@@ -1,3 +1,15 @@
+## PR #194 integrata — filtri della banca domande
+
+PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194), milestone **1.0.0**, aggiunge i controlli Ricerca, Categoria, Stato e Lingua e corregge l’intestazione Azioni. CI standard 4/4 superata nel [run 42873607501](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501). Collaudo manuale pendente.
+
+1. Aprire JD Learn → Banca domande come amministratore autorizzato.
+2. Verificare i quattro controlli; filtrare singolarmente, poi combinarli. Usare Pulisci.
+3. Verificare risultati, paginazione e ordinamento.
+4. Verificare **Azioni** in italiano e **Actions** in inglese, senza placeholder.
+5. Con un ruolo senza `jlms.quiz.manage`, verificare che l’accesso sia negato.
+
+[Pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501/artifacts/13791570779).
+
 ## PR #192 integrata — default “Usa globali” per il fuso del corso
 
 Issue [#172](https://github.com/jeckodevelopment/jd_learn/issues/172) corretta: il campo Timezone nativo Joomla offre e seleziona “Usa globali” per un nuovo corso. Il salvataggio risolve l’opzione nel fuso IANA di Configurazione globale; corsi esistenti e date UTC restano invariati. PR [#192](https://github.com/jeckodevelopment/jd_learn/pull/192), merge commit `64ae66454c7d2a64a3237f1f7f12b2d9174f95ae`.
