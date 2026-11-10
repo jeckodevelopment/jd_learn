@@ -560,3 +560,17 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 **Esito sito Joomla:** Non eseguito.
 
 Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
+
+
+## IMP-05 — pulizia opportunistica delle sessioni video (0.41.53-dev)
+
+Riferimenti: VID-03/04, PBASE-01/04; AC-25, AC-27–31, AC-91, AC-95, AC-97–103. Su Joomla 6 di prova usare una lezione video disponibile, un’iscrizione autorizzata e uno dei quattro provider già configurati.
+
+1. Aprire il video e avviare la riproduzione; verificare che si crei la sessione e che il salvataggio posizione funzioni.
+2. Con una sessione precedente scaduta, aprire di nuovo il video: il player deve avviarsi e la riga scaduta deve essere rimossa; le sessioni attive e i progressi esistenti devono restare invariati.
+3. Ripetere con provider esterno e HTML5 locale, con accesso autorizzato e poi revocato: il purge avviene solo dopo l’autorizzazione e la revoca continua a impedire l’avvio.
+4. Verificare che nessuna sessione attiva venga eliminata e che una nuova sessione non attribuisca credito finché non arrivano intervalli validi.
+
+La suite automatica copre una riga scaduta e la cancellazione; il limite massimo 250 è verificato nel codice. La pulizia è opportunistica, quindi l’eliminazione completa in assenza di nuovi avvii rimane un’attività periodica futura.
+
+**Esito sito Joomla:** Non eseguito.
