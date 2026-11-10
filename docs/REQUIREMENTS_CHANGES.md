@@ -140,3 +140,10 @@ La PR candidata 0.41.31 implementa il secondo controllo richiesto dall’issue #
 ## RF 2026-11-09 — dashboard provider (issue #149)
 
 La dashboard amministrativa presenta in ordine i collegamenti rapidi concordati: Corsi, Percorsi formativi, Categorie corsi, Categorie dei percorsi, Banca domande, Docenti, Campi aggiuntivi e Plugin video. Il riepilogo provider elenca le quattro estensioni incluse anche se disattivate e comunica stato installazione/attivazione/disponibilità/configurazione senza dati segreti. I permessi nativi restano invariati. Criterio verificabile: ordine e visibilità dei link, stati aggiornati dopo modifica plugin/configurazione e traduzioni IT/EN. Il collaudo è in QA_TESTBOOK.md; nessun ampliamento al perimetro didattico.
+
+
+## RF-2026-11-10 — selezione del fuso globale nell’editor corso
+
+**Origine:** issue [#172](https://github.com/jeckodevelopment/jd_learn/issues/172), che rileva Abidjan nel selettore invece dell’uso della configurazione globale Joomla.
+
+**Criterio:** per un nuovo corso, la form mostra e seleziona **Usa globali**; il modello interpreta le date col fuso IANA di configurazione globale e lo persiste al salvataggio. Corsi esistenti con fuso esplicito, date UTC e cronologia restano invariati. La PR [#192](https://github.com/jeckodevelopment/jd_learn/pull/192) implementa la correzione; CI standard 4/4 superata. Il test manuale Joomla è pendente e registrato nel [testbook](QA_TESTBOOK.md#pr-192--fuso-globale-per-nuovi-corsi).
