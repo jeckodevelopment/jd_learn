@@ -2,7 +2,8 @@
 
 **Versione 0.1 · 9 novembre 2026 · Decisioni architetturali approvate T-001–T-007**  
 **Stato:** progettazione preliminare, nessun codice implementato. **Rilascio: successivo alla 1.0.0.**  
-**Specifica funzionale:** [JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md](JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md)
+**Specifica funzionale:** [JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md](JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md)  
+**Decisioni aggiuntive approvate:** [T-008–T-015](../CREDENTIALS_DECISIONS_T008_T015.md) — badge multipli, percorsi, pubblicazione, emittenti e continuità.
 
 > Questa progettazione non modifica il perimetro o il calcolo di avanzamento di JD Learn 1.0.0, né i suoi 210 requisiti della baseline. I dettagli delle interfacce crittografiche, degli schema fisici e delle suite vanno verificati con un PoC prima di essere considerati implementativi definitivi.
 
