@@ -39,3 +39,8 @@ Il player audio ripristina l’ultimo `resume_ms` confermato per coppia iscrizio
 `tests/joomla-learning.php`: processo reale Joomla, utenti fixture core, ownership, parent, retry, revoca/ripristino, account bloccato, sospensione, finestre e capienza/edizione, precisione percentuali e due processi PHP sincronizzati per completamenti duplicati/distinti. `tests/learning-http.py`: login com_users, token, avvio, consultazione, completamento, revoca di gruppo dopo login mantenendo la stessa sessione, ripristino e accesso di altro utente. I risultati effettivi sono nelle Actions della PR; l’esistenza dei test non è un esito.
 
 Dashboard personale, richiesta/approvazione/manuale/import, gestione amministrativa di sospensioni/proroghe, notifiche, privacy/actionlog/Finder, player video/materiali, quiz e attestati restano da completare. Questa build è destinata a siti effimeri di collaudo, senza dati reali. Nessuna misura di carico 300/500 è ancora dichiarata superata.
+
+
+## Ripresa e retry della posizione audio (0.41.52-dev, PR #196)
+
+La richiesta `audio.save` resta un POST JSON protetto da token e controllo proprietario. Se la rete fallisce o il server risponde 408, 429 o 5xx, il client ripete una sola volta la stessa posizione. Errori permanenti vengono mostrati senza loop; una posizione successiva può superare quella fallita. Questo stato serve soltanto alla ripresa e non completa l’attività né modifica la percentuale. Collaudo manuale in [testbook](QA_TESTBOOK.md#pr-196-integrata--retry-del-progresso-audio).
