@@ -120,7 +120,9 @@ final class Provider extends AbstractFoundationProvider
 
     public function createPlaybackDescriptor(VideoSource $source, PlaybackContext $context): PlaybackDescriptor
     {
-        if ($context->userId < 1 || $context->enrollmentId < 1 || $context->lessonId < 1 || $context->authorisationGrant === '') {
+        if ($context->userId < 1 || $context->lessonId < 1
+            || ($context->preview ? ($context->enrollmentId !== 0 || $context->courseId < 1 || $context->versionId < 1)
+                : ($context->enrollmentId < 1 || $context->authorisationGrant === ''))) {
             throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
         }
         $this->fetchMetadata($source, new MetadataContext($context->userId, $context->locale, true));

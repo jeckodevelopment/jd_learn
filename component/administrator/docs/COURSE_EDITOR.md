@@ -1,5 +1,9 @@
 # Gestione dei corsi
 
+## Anteprima editoriale
+
+Dal programma aprire **Anteprima editoriale** per leggere il testo e navigare il corso con una selezione simulata dei livelli di accesso. Le lezioni video possono essere riprodotte in sola lettura: l’endpoint verifica nuovamente i permessi dell’editor e non crea iscrizioni, sessioni, tentativi o progressi. I video esterni rispettano la policy privacy configurata; la consegna dei video HTML5 locali resta protetta e limitata a editor con permesso sui materiali. Le lezioni documento, audio e quiz sono indicate ma non simulate in questa preview. Per la procedura di prova vedere [testbook progetto](../../docs/QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
+
 ## Modificare i dati del corso
 
 Aprire Corsi → Modifica, cambiare titolo, descrizioni, immagine, docenti, accessi o calendario e scegliere Salva oppure Salva e chiudi. Il corso pubblicato resta pubblicato. Le correzioni editoriali aggiornano la scheda pubblica e vengono registrate nello storico Joomla.

@@ -445,3 +445,16 @@ Riferimenti: AUT-04/05, CORE-01/04/10/16, LIFE-02 ed EDGE-11. Usare un’istanza
 4. Verificare che le categorie tecniche restino utilizzabili per compatibilità ma non diventino obbligatorie nell’authoring.
 
 **Esito sito Joomla:** Non eseguito. Eseguire solo su installazione eliminabile; non usare dati di produzione.
+
+
+## IMP-03 — preview video in sola lettura (0.41.46-dev)
+
+Requisiti: AUT-02, AUT-03, STU-02, SCR-06–08; AC-20, AC-80, AC-86, AC-119–127. La procedura copre la riproduzione video e i confini read-only di questo incremento; non chiude la preview interattiva completa (documenti, audio e interazioni quiz restano non simulati).
+
+1. Su Joomla 6 di prova, accedere come editor autorizzato e aprire **Programma → Anteprima editoriale** per una versione bozza e una pubblicata contenenti testo e video. Se disponibili, predisporre un video locale HTML5 e video YouTube/Vimeo/Cloudflare Stream.
+2. Aprire una lezione testuale e poi ciascuna lezione video. Atteso: testo e navigazione sono visibili; il player video carica solo dopo l’apertura della lezione. Avviare, mettere in pausa e cercare in avanti/indietro. Per provider esterni, provare anche la policy bloccata, embed e consenso del sito: nessuna richiesta esterna deve partire prima che la policy consenta la riproduzione.
+3. Prima e dopo la riproduzione, confrontare roster, iscrizioni, tentativi, sessioni e progresso della lezione/corso: nessun valore deve essere creato o cambiato. Nel player deve apparire un messaggio che dichiara che il progresso non viene salvato.
+4. Provare un account senza permesso di modifica corso/materiali e poi revocare il permesso durante la sessione. Anteprima e richieste dirette POST del descrittore/GET del video devono essere negate; URL alterate con corso, versione, lezione o revisione non correlati non devono restituire media.
+5. Aprire una lezione documento, audio o quiz. Atteso: l’attività è indicata come anteprima read-only non simulata; non vengono avviati download, playback o tentativi.
+
+**Esito sito Joomla:** Non eseguito.

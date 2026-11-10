@@ -58,7 +58,13 @@ foreach ($this->preview['lessons'] as $entry) {
         <article id="jlms-course-preview-lesson">
             <h2><?= $this->escape($lesson->title) ?></h2>
             <?= $lesson->body /* Filtered with a strict tag allowlist and no attributes. */ ?>
-            <?php if ($lesson->kind !== 'text') : ?>
+            <?php if ($lesson->kind === 'video') : ?>
+                <section id="jlms-video-region" aria-labelledby="jlms-preview-lesson-title">
+                    <h3 id="jlms-preview-lesson-title"><?= $this->escape($lesson->title) ?></h3>
+                    <p id="jlms-player-status" role="status" aria-live="polite"></p>
+                    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($lesson->title) ?>"></div>
+                </section>
+            <?php elseif ($lesson->kind !== 'text') : ?>
                 <p><?= Text::_('COM_JLMS_COURSE_PREVIEW_ACTIVITY') ?></p>
             <?php endif; ?>
         </article>

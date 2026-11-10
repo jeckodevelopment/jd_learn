@@ -23,12 +23,17 @@ final class Provider extends AbstractFoundationProvider
     }
     public function createPlaybackDescriptor(VideoSource $source, PlaybackContext $context): PlaybackDescriptor
     {
-        if (!$this->enabled || $source->providerKey !== 'html5' || $context->userId < 1 || $context->enrollmentId < 1 || $context->lessonId < 1 || $context->authorisationGrant === '') {
+        if (!$this->enabled || $source->providerKey !== 'html5' || $context->userId < 1 || $context->lessonId < 1
+            || ($context->preview ? ($context->enrollmentId !== 0 || $context->courseId < 1 || $context->versionId < 1)
+                : ($context->enrollmentId < 1 || $context->authorisationGrant === ''))) {
             throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
         }
         $this->normaliseSource(new SourceInput($source->reference));
-        $url = \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=media.stream&format=raw&enrollment_id=' . $context->enrollmentId
-            . '&lesson_id=' . $context->lessonId . '&source_revision=' . $source->revision, false);
+        $url = $context->preview
+            ? \Joomla\CMS\Router\Route::link('site', 'index.php?option=com_jlms&task=media.stream&format=raw&preview=1&course_id=' . $context->courseId
+                . '&version_id=' . $context->versionId . '&lesson_id=' . $context->lessonId . '&source_revision=' . $source->revision, false)
+            : \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=media.stream&format=raw&enrollment_id=' . $context->enrollmentId
+                . '&lesson_id=' . $context->lessonId . '&source_revision=' . $source->revision, false);
         return new PlaybackDescriptor('html5', $source->revision, $this->getFrontendAdapterAsset(), ['url' => $url, 'autoplay' => false, 'preload' => 'metadata'], $this->getCapabilities($source));
     }
 }

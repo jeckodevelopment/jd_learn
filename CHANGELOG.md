@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.46-dev — riproduzione video nella preview editoriale (in lavorazione)
+
+- Aggiunge descrittori video in sola lettura nella preview amministrativa, con autorizzazione editoriale rivalidata e consegna HTML5 locale protetta. Il player non crea sessioni, non invia telemetria e non salva progressi o tentativi.
+- Aggiorna i messaggi IT/EN per distinguere la riproduzione video dalle attività non simulate (documenti, audio e quiz).
+- Collaudo manuale Joomla richiesto per provider, consenso, revoca ACL e assenza di effetti sullo stato studente; vedi [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
+
+
 ## 0.41.45-dev — vista del programma didattico allineata alla toolbar Joomla (PR #169 integrata)
 
 - Le azioni principali del programma sono disponibili nella toolbar nativa, con URL contestuali al corso e visibilità condizionata ai permessi già verificati.
