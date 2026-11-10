@@ -501,3 +501,7 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 5. Confrontare progressi e iscrizione prima/dopo vista inline e download: nessuna apertura o scaricamento attribuisce completamento.
 
 **Esito sito Joomla:** Non eseguito.
+
+### Run CI preliminare PR #185
+
+Il run iniziale `42839337595` ha completato con successo solo i controlli leggeri; i job PHP/database e Chromium sono stati saltati perché l’evento PR è stato valutato mentre era in stato draft. Dopo il passaggio a ready for review, un nuovo evento `synchronize` esegue la matrice standard. Non considerare il run preliminare come accettazione runtime.
