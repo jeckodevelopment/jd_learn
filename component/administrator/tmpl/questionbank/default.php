@@ -25,7 +25,7 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScrip
    <th scope="col" class="d-none d-sm-table-cell"><?= HTMLHelper::_('searchtools.sort','JSTATUS','q.state',$this->state->get('list.direction','ASC'),$this->state->get('list.ordering','r.prompt')) ?></th>
    <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort','JGRID_HEADING_LANGUAGE','q.language',$this->state->get('list.direction','ASC'),$this->state->get('list.ordering','r.prompt')) ?></th>
    <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort','JGRID_HEADING_ID','q.id',$this->state->get('list.direction','ASC'),$this->state->get('list.ordering','r.prompt')) ?></th>
-   <th scope="col" class="text-end"><?= Text::_('JACTIONS') ?></th>
+   <th scope="col" class="text-end"><?= Text::_('COM_JLMS_QUESTION_ACTIONS') ?></th>
   </tr></thead>
   <tbody>
   <?php foreach ($this->bank['items'] as $row) : $id=(int)$row->id; $inUse=(bool)$row->in_use; ?>
