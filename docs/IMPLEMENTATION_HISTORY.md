@@ -1,3 +1,7 @@
+## 0.41.52-dev — retry della posizione audio (PR #196)
+
+La PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196) aggiunge un retry massimo di una volta per errori transitori durante il salvataggio della posizione audio; mantiene lo stesso body, evita loop sugli errori permanenti e conserva il punto non salvato fino al prossimo evento. Nessun completamento o credito di progresso viene attribuito. CI standard 4/4 superata nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). Collaudo Joomla manuale pendente.
+
 ## 0.41.52-dev — filtri della banca domande (PR #194)
 
 La PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194) risolve le issue #155/#156: filtri visibili per ricerca, categoria, stato e lingua, con intestazione Azioni/Actions tradotta. ACL invariata. CI 4/4 superata nel [run](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501); collaudo manuale Joomla pendente nel [testbook](QA_TESTBOOK.md#pr-194-integrata--filtri-della-banca-domande).
