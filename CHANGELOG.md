@@ -1,3 +1,10 @@
+## 0.41.58-dev — URL SEF con alias per catalogo e percorsi (IMP-07, PR #208 integrata)
+
+- Genera segmenti Joomla ID-alias per corsi, categorie e percorsi; conserva il parsing degli URL numerici storici e usa query parametrizzate.
+- Il canonical delle viste pubbliche indica l’URL SEF con alias o il menu nativo dedicato; gli ID distinguono alias ripetuti tra lingue e contenitori.
+- PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208) integrata con squash nel commit `6b92612254c060c1ef296c0a03661442871ad1cc`; CI standard 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500).
+- Pacchetto installabile [JD-Learn-0.41.58-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500/artifacts/13806778546), wrapper SHA-256 `773fb7cd4e200df599ffd1b858cc5ef60d013c8823780b625024afbb4acec8cb`, ZIP Joomla SHA-256 `7a4d52cdbbd708b523d6d05f29f0b937fcf5094019a6c9e70ab443bd7a28ade3`; scade il 24 novembre 2026. Collaudo Joomla manuale pendente nel [testbook](docs/QA_TESTBOOK.md#imp-07--url-sef-con-alias-per-corsi-categorie-e-percorsi).
+
 ## 0.41.57-dev — metadati SEO/social pubblici (IMP-07, PR #207 integrata)
 
 - Aggiunge canonical URL e metadati Open Graph/Twitter per schede corso, categorie e percorsi visibili agli ospiti; per le schede corso usa titolo/descrizione SEO e immagine promozionale locale già configurati.
