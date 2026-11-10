@@ -198,8 +198,15 @@ final class VideoProgressService
                     $telemetry['intervals'], min(\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::MAX, (int)$lesson->duration_ms + \Jlms\Component\Jlms\Administrator\Domain\VideoDuration::tolerance((int)$lesson->duration_ms)));
             } catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 422); }
             $covered = Coverage::coveredMs($coverage);
-            $rules = json_decode($version->rules_json, true, 16, JSON_THROW_ON_ERROR);
-            $completed = Coverage::isComplete(min($covered, $reportedDuration), $reportedDuration, (int) ($rules['video_threshold_basis_points'] ?? 9000));
+            $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
+            $lessonParams = json_decode((string)$lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
+            $threshold = $rules['video_threshold_basis_points'];
+            if (array_key_exists('video_threshold_basis_points', $lessonParams)) {
+                $override = $lessonParams['video_threshold_basis_points'];
+                if (!is_int($override) || $override < 1 || $override > 10000) { throw new \RuntimeException('COM_JLMS_PUBLICATION_UNSUPPORTED', 422); }
+                $threshold = $override;
+            }
+            $completed = Coverage::isComplete(min($covered, $reportedDuration), $reportedDuration, $threshold);
             $newCompletion = $completed && $progress->state !== 'completed';
             $resumeConflict = (int) $progress->revision !== $state['progress_revision'];
             $progress->coverage_json = json_encode($coverage, JSON_THROW_ON_ERROR);

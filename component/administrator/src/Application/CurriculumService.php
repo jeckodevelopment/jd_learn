@@ -468,7 +468,7 @@ final class CurriculumService
         $fields = ['module_id' => $moduleId, 'title' => $title, 'kind' => $kind,
             'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
-            'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
+            'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null, 'params_json' => '{}',
             'publish_up' => null, 'publish_down' => null, 'release_after_days' => null];
         if ($kind === 'video' && ($input['provider_key'] ?? '') === 'html5') {
             // HTML5 source/duration are assigned only by LocalVideoService; ignore stale or forged form values.
@@ -500,13 +500,20 @@ final class CurriculumService
             $fields['source_json'] = json_encode(['_schema' => 1, 'provider' => $source->providerKey,
                 'reference' => $source->reference, 'options' => $source->options], JSON_THROW_ON_ERROR);
         }
+        $thresholdSubmitted = array_key_exists('video_threshold_percent', $input);
+        $threshold = null;
+        if ($kind === 'video' && $thresholdSubmitted && (string)$input['video_threshold_percent'] !== '') {
+            $threshold = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold_percent']);
+        } elseif ($kind !== 'video' && $thresholdSubmitted && (string)$input['video_threshold_percent'] !== '') {
+            throw new \DomainException('COM_JLMS_INVALID_INPUT');
+        }
         $requiredLessons = $input['required_lesson_ids'] ?? [];
         if (!is_array($requiredLessons) || !array_is_list($requiredLessons) || count($requiredLessons) > 5000) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $requiredLessons = array_map(static fn($value): int => self::id($value), $requiredLessons);
         if (count(array_unique($requiredLessons)) !== count($requiredLessons)) { throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT'); }
-        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof, $requiredLessons): int {
+        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof, $requiredLessons, $thresholdSubmitted, $threshold): int {
             $version = $this->draft($actor, $courseId, $versionId, $versionRevision);
             $course = $this->row('courses', $courseId);
             $timezone = CourseSchedule::read($course)['timezone'];
@@ -540,11 +547,21 @@ final class CurriculumService
                     && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson->source_json === $fields['source_json']) {
                     $fields['duration_ms'] = $lesson->duration_ms; $fields['params_json'] = $lesson->params_json;
                 }
+                if ($fields['kind'] === 'video' && $thresholdSubmitted) {
+                    $params = json_decode((string)$fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
+                    if (!is_array($params)) { $params = []; }
+                    if ($threshold === null) { unset($params['video_threshold_basis_points']); }
+                    else { $params['video_threshold_basis_points'] = $threshold; }
+                    $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
+                } elseif ($fields['kind'] !== 'video') {
+                    $fields['params_json'] = '{}';
+                }
                 $changedSource = $lesson->kind !== $fields['kind'] || $lesson->provider_key !== $fields['provider_key']
                     || $lesson->source_json !== $fields['source_json'] || $lesson->duration_ms != $fields['duration_ms'];
                 $fields['source_revision'] = (int) $lesson->source_revision + (int) $changedSource;
                 $this->update('lessons', $lesson, $fields, $actor);
             } else {
+                if ($kind === 'video' && $threshold !== null) { $fields['params_json'] = json_encode(['video_threshold_basis_points'=>$threshold], JSON_THROW_ON_ERROR); }
                 $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ?? null, $input['publish_down'] ?? null, $timezone));
                 $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($input['release_after_days'] ?? null);
                 $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_lessons'))
