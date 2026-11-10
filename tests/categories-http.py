@@ -13,9 +13,10 @@ config=root/'configuration.php'; original=config.read_text(); base='http://127.0
 log=open(root.parent/'categories-http.log','w+'); server=None; checks=0
 class Page(HTMLParser):
  def __init__(self,text):
-  super().__init__(convert_charrefs=True);self.links=[];self.forms=[];self.form=None;self.anchor=None;self.ids=[];self.feed(text)
+  super().__init__(convert_charrefs=True);self.links=[];self.forms=[];self.form=None;self.anchor=None;self.ids=[];self.head_links=[];self.feed(text)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if tag=='link':self.head_links.append(a)
   if 'id' in a:self.ids.append(a['id'])
   if tag=='a' and 'href' in a:self.anchor=a|{'text':''};self.links.append(self.anchor)
   if tag=='form':self.form={'action':a.get('action',''),'fields':{}};self.forms.append(self.form)
@@ -55,9 +56,15 @@ try:
   expect('id="jlms-category"' in menu_page and 'Taxonomy English' in menu_page,'native category menu opens correct view')
   url,page=get('/index.php?option=com_jlms&view=category&id='+str(f['en'])+'&lang=en')
   parsed=Page(page)
+  if sef:
+   canonical=next((link.get('href','') for link in parsed.head_links if link.get('rel')=='canonical'),'')
+   expect('taxonomy-en' in canonical or 'taxonomy-menu-category-en' in canonical,'legacy numeric category URL publishes its category or dedicated menu alias as canonical')
   expect(all(x in parsed.ids for x in ['jlms-category','jlms-category-description','jlms-subcategories','jlms-category-courses']),'category CSS regions present')
   expect(len(parsed.ids)==len(set(parsed.ids)),'public view has no duplicate IDs')
   expect('taxonomy-visible-course' in page and 'PRIVATE_CATEGORY_LESSON' not in page and 'HIDDEN_TAXONOMY_' not in page and 'WRONG_LANGUAGE_TAXONOMY_CHILD' not in page,'course cards and children obey access/language without protected bodies')
+  if sef:
+   course_link=next((a['href'] for a in parsed.links if 'taxonomy-visible-course' in a['text'].lower().replace(' ','-')), '')
+   expect('taxonomy-visible-course' in course_link,'public course link uses its alias segment')
   expect('<script>UNSAFE_CATEGORY_SCRIPT' not in page,'native description rendered as escaped text')
   next_link=next((a['href'] for a in parsed.links if 'subcategories_limitstart=20' in a['href']),None)
   expect(next_link is not None,'child pagination uses independent native prefix')

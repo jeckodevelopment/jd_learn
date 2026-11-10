@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" method="upgrade">
- <name>COM_JLMS</name><author>Jecko Development</author><version>0.41.57</version>
+ <name>COM_JLMS</name><author>Jecko Development</author><version>0.41.58</version>
  <description>COM_JLMS_XML_DESCRIPTION</description><namespace path="src">Jlms\Component\Jlms</namespace>
  <scriptfile>script.php</scriptfile>
  <files folder="site"><folder>forms</folder><folder>src</folder><folder>tmpl</folder><folder>language</folder></files>
