@@ -1,4 +1,6 @@
-## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #210 candidata)
+## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #210 integrata)
+
+PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210), milestone **1.0.0**, integrata con squash nel commit `e5d0bae954c099c8522db57c30b1e32882b468ee`. CI standard 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). Pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper SHA-256 `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP Joomla SHA-256 `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`, disponibile fino al 24 novembre 2026.
 
 Riferimenti: CAT-01/CAT-04, AC-41/AC-85. Verificare su Joomla 6 di prova con almeno quattro corsi pubblicati, nelle categorie accessibili: uno principiante da45minuti, uno avanzato da90minuti, uno intermedio oltre120minuti e uno senza durata stimata. Predisporre anche un account con accesso limitato e una categoria con corsi discendenti.
 
