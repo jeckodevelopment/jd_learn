@@ -27,3 +27,8 @@ Override nativi `templates/NOME/html/com_jlms/categories/default.php` e `categor
 Le letture usano query paginabili sulle categorie native con filtro degli antenati, senza caricare tutto l'albero o eseguire una query per ciascun figlio. Non viene introdotto un lock di lettura comune agli studenti. Il Pathway è limitato a100 antenati e rifiuta strutture più profonde. Nessun conteggio del contenuto didattico protetto. Il benchmark300/500 studenti rimane da eseguire.
 
 La CI verifica API/form/associazioni native, sezioni separate, antenati, spostamenti reali, paginazione, viste HTTP, descrizioni, selettore lingua e fallback con SEF0/1, e conservazione al reinstall dalla0.14. Gli esiti effettivi sono nelle Actions della PR #15. La copertura completa di rimozione/ripristino, alias/breadcrumbs per ogni tipo di menu, override lingua e browser/accessibilità rimane parziale; CORE-01, CORE-07 e CORE-13 non sono dichiarati completi.
+
+
+## Filtro tag nelle categorie pubbliche
+
+Nelle pagine categoria il catalogo dei corsi discendenti può essere filtrato per tag Joomla. Sono mostrati soltanto tag pubblicati e accessibili collegati a corsi già visibili all'utente; il filtro non espande il ramo categoria e non rende accessibili corsi riservati.
