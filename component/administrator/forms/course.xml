@@ -38,7 +38,7 @@
   <field name="presentation_seo_description" type="textarea" label="COM_JLMS_COURSE_SEO_DESCRIPTION" rows="3" maxlength="500" filter="raw" />
  </fieldset>
  <fieldset name="calendar" label="COM_JLMS_CALENDAR">
-  <field name="calendar_timezone" type="timezone" label="COM_JLMS_CALENDAR_ZONE" description="COM_JLMS_CALENDAR_HELP" default="UTC" filter="raw" />
+  <field name="calendar_timezone" type="timezone" label="COM_JLMS_CALENDAR_ZONE" description="COM_JLMS_CALENDAR_HELP" default="" filter="raw"><option value="">COM_JLMS_CALENDAR_USE_GLOBAL</option></field>
   <field name="calendar_publish_up" type="calendar" label="COM_JLMS_CALENDAR_PUBLISH_UP" format="%Y-%m-%d %H:%M:%S" translateformat="false" showtime="true" timeformat="24" filter="raw" />
   <field name="calendar_publish_down" type="calendar" label="COM_JLMS_CALENDAR_PUBLISH_DOWN" format="%Y-%m-%d %H:%M:%S" translateformat="false" showtime="true" timeformat="24" filter="raw" />
   <field name="calendar_starts_at" type="calendar" label="COM_JLMS_CALENDAR_START" format="%Y-%m-%d %H:%M:%S" translateformat="false" showtime="true" timeformat="24" filter="raw" />
