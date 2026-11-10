@@ -795,3 +795,8 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Matrice dei210requisiti con descrizione/perimetro/scenari baseline preservati, sorgenti e prove parziali distinti dai criteri residui; nessuna accettazione completa dedotta dalla CI.
 - Registro delle differenze aperte (preassegnazione senza livello, provider aggiuntivi, ritiro/erogazione, ID pagina e fallback di ripresa), evidenze del build0.19 e piano esecutivo residuo.
 - Note storiche conservate separatamente e controllo di coerenza documentale nella verifica strutturale. Nessuna modifica al codice distribuito o al pacchetto0.19.
+## 0.41.58-dev — URL SEF con alias per catalogo e percorsi (IMP-07)
+
+- Genera segmenti Joomla nel formato `id:alias` per corsi, categorie e percorsi; mantiene il parsing degli URL numerici esistenti e usa il database Joomla con parametri associati.
+- Il canonical delle viste pubbliche risolve al percorso SEF con alias. Restano gli ID per disambiguare alias ripetuti tra lingue e contenitori.
+- PR IMP-07 in preparazione per la milestone **1.0.0**. Collaudo Joomla manuale in [testbook](docs/QA_TESTBOOK.md#imp-07--url-sef-con-alias-per-corsi-categorie-e-percorsi).

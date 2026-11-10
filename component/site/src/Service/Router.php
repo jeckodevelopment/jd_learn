@@ -11,9 +11,15 @@ use Joomla\CMS\Component\Router\RouterViewConfiguration;
 use Joomla\CMS\Component\Router\Rules\MenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
 use Joomla\CMS\Component\Router\Rules\NomenuRules;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 final class Router extends RouterView
 {
+    /** @var array<string, string> */
+    private static array $aliasCache = [];
+
     public function __construct(SiteApplication $app, AbstractMenu $menu)
     {
         $courses = new RouterViewConfiguration('courses');
@@ -56,11 +62,11 @@ final class Router extends RouterView
     public function getTeacherSegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
     public function getTeacherId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
 
-    public function getCategorySegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
-    public function getCategoryId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
+    public function getCategorySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__categories', (int) $id, true)]; }
+    public function getCategoryId($segment, $query): int { return $this->segmentId($segment); }
 
-    public function getPathwaySegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
-    public function getPathwayId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
+    public function getPathwaySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__jlms_pathways', (int) $id)]; }
+    public function getPathwayId($segment, $query): int { return $this->segmentId($segment); }
 
     public function getQuizSegment($id, $query): array { return [(int)$id => (string)(int)$id]; }
     public function getQuizId($segment, $query): int { return ctype_digit((string)$segment) ? (int)$segment : 0; }
@@ -77,11 +83,36 @@ final class Router extends RouterView
 
     public function getCourseSegment($id, $query): array
     {
-        return [(int) $id => (string) (int) $id];
+        return [(int) $id => $this->itemSegment('#__jlms_courses', (int) $id)];
     }
 
     public function getCourseId($segment, $query): int
     {
-        return ctype_digit((string) $segment) ? (int) $segment : 0;
+        return $this->segmentId($segment);
+    }
+
+    private function itemSegment(string $table, int $id, bool $courseCategory = false): string
+    {
+        if ($id < 1) { return (string) $id; }
+        $cacheKey = $table . ':' . $id;
+        if (!array_key_exists($cacheKey, self::$aliasCache)) {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()->select($db->quoteName('alias'))->from($db->quoteName($table))
+                ->where($db->quoteName('id') . ' = :id')->bind(':id', $id, ParameterType::INTEGER);
+            if ($courseCategory) {
+                $extension = 'com_jlms.course';
+                $query->where($db->quoteName('extension') . ' = :extension')->bind(':extension', $extension);
+            }
+            self::$aliasCache[$cacheKey] = (string) ($db->setQuery($query)->loadResult() ?: '');
+        }
+
+        $alias = self::$aliasCache[$cacheKey];
+        return $alias === '' ? (string) $id : $id . ':' . $alias;
+    }
+
+    private function segmentId($segment): int
+    {
+        if (preg_match('/^(\d+)(?::.*)?$/uD', (string) $segment, $matches) !== 1) { return 0; }
+        return (int) $matches[1];
     }
 }
