@@ -1,5 +1,9 @@
 # Registro delle modifiche ai requisiti
 
+## STAB-02 — Banca domande: filtri e intestazione azioni (PR #194)
+
+Le issue #155 e #156 sono risolte: Ricerca, Categoria, Stato e Lingua sono visibili e combinabili; l’ultima colonna mostra Azioni/Actions. ACL invariata. CI 4/4 superata; collaudo Joomla manuale pendente nel [testbook](QA_TESTBOOK.md#pr-194-integrata--filtri-della-banca-domande).
+
 ## RF-2026-11-08-C — dashboard amministrativa di accesso alle funzioni
 
 **Origine e autorizzazione:** richiesta del committente tramite [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/105). All'apertura del backend JD Learn il componente deve mostrare una dashboard di navigazione con icone e accessi alle funzioni già operative.
