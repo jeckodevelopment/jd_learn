@@ -12,7 +12,17 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScrip
  <p class="alert alert-info"><?= Text::_('COM_JLMS_QUIZ_AUTHORING_NOTICE') ?></p>
  <form action="<?= Route::_('index.php') ?>" method="get" id="adminForm" name="adminForm">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="questionbank">
+  <?php if ($this->filterForm) : ?>
   <?= LayoutHelper::render('joomla.searchtools.default',['view'=>$this]) ?>
+  <?php else : ?>
+  <div class="js-stools-container-bar row g-2 align-items-end mb-3">
+   <div class="col-md-4"><label class="form-label" for="filter_search"><?= Text::_('COM_JLMS_QUESTION_SEARCH') ?></label><input class="form-control" type="search" id="filter_search" name="filter[search]" value="<?= $this->escape((string)$this->state->get('filter.search','')) ?>" maxlength="200"></div>
+   <div class="col-md-2"><label class="form-label" for="filter_catid"><?= Text::_('JCATEGORY') ?></label><select class="form-select" id="filter_catid" name="filter[catid]"><option value=""><?= Text::_('JOPTION_SELECT_CATEGORY') ?></option><?php foreach ($this->questionCategories as $category) : ?><option value="<?= (int)$category->id ?>" <?= (string)$this->state->get('filter.catid','')===(string)$category->id?'selected':'' ?>><?= $this->escape($category->title) ?></option><?php endforeach; ?></select></div>
+   <div class="col-md-2"><label class="form-label" for="filter_published"><?= Text::_('JSTATUS') ?></label><select class="form-select" id="filter_published" name="filter[published]"><option value=""><?= Text::_('JOPTION_SELECT_PUBLISHED') ?></option><option value="1" <?= (string)$this->state->get('filter.published','')==='1'?'selected':'' ?>><?= Text::_('JPUBLISHED') ?></option><option value="0" <?= (string)$this->state->get('filter.published','')==='0'?'selected':'' ?>><?= Text::_('JUNPUBLISHED') ?></option></select></div>
+   <div class="col-md-2"><label class="form-label" for="filter_language"><?= Text::_('JGRID_HEADING_LANGUAGE') ?></label><select class="form-select" id="filter_language" name="filter[language]"><option value=""><?= Text::_('JOPTION_SELECT_LANGUAGE') ?></option><option value="*" <?= (string)$this->state->get('filter.language','')==='*'?'selected':'' ?>><?= Text::_('JALL') ?></option><option value="it-IT" <?= (string)$this->state->get('filter.language','')==='it-IT'?'selected':'' ?>>Italiano</option><option value="en-GB" <?= (string)$this->state->get('filter.language','')==='en-GB'?'selected':'' ?>>English</option></select></div>
+   <div class="col-md-2 d-flex gap-2"><button class="btn btn-primary" type="submit"><?= Text::_('JSEARCH_FILTER_SUBMIT') ?></button><a class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=questionbank') ?>"><?= Text::_('JSEARCH_FILTER_CLEAR') ?></a></div>
+  </div>
+  <?php endif; ?>
  </form>
  <?php if (!$this->bank['items']) : ?>
   <p class="alert alert-info"><?= Text::_('JGLOBAL_NO_MATCHING_RESULTS') ?></p>
