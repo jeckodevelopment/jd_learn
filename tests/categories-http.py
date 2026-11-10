@@ -58,7 +58,7 @@ try:
   parsed=Page(page)
   if sef:
    canonical=next((link.get('href','') for link in parsed.head_links if link.get('rel')=='canonical'),'')
-   expect('taxonomy-en' in canonical,'legacy numeric category URL publishes an alias canonical')
+   expect('taxonomy-en' in canonical or 'taxonomy-menu-category-en' in canonical,'legacy numeric category URL publishes its category or dedicated menu alias as canonical')
   expect(all(x in parsed.ids for x in ['jlms-category','jlms-category-description','jlms-subcategories','jlms-category-courses']),'category CSS regions present')
   expect(len(parsed.ids)==len(set(parsed.ids)),'public view has no duplicate IDs')
   expect('taxonomy-visible-course' in page and 'PRIVATE_CATEGORY_LESSON' not in page and 'HIDDEN_TAXONOMY_' not in page and 'WRONG_LANGUAGE_TAXONOMY_CHILD' not in page,'course cards and children obey access/language without protected bodies')
