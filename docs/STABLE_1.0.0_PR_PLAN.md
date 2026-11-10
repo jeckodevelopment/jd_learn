@@ -18,7 +18,8 @@ Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di 
 - Non introdurre requisiti non approvati. Quiz didattici avanzati, attestati, report/KPI avanzati, export/import CSV, operazioni massive e ulteriori provider video restano fuori da questo rilascio. Restano incluse la gestione essenziale degli iscritti e l’eccezione amministrativa AC-131 per la banca domande.
 - Tutte le PR implementative e di stabilizzazione appartengono alla milestone `1.0.0`. Credentials è un progetto successivo alla 1.0.0 e mantiene la propria nomenclatura e pianificazione separate.
 
-IMP-05 è in corso: PR [#198] ha integrato la pulizia batch limitata delle sessioni video scadute. Restano l’accettazione reale dei quattro provider e gli eventuali residui implementativi confermati; non si introduce un quinto provider.
+IMP-05 è integrato: PR [#198] ha aggiunto la pulizia batch limitata delle sessioni video scadute; l’accettazione reale dei quattro provider resta un gate manuale. Nessun quinto provider.
+IMP-07 prosegue con il filtro tag per i soli corsi visibili; restano gli altri filtri e il layout alternativo previsti da CAT-01 e i collaudi manuali.
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
@@ -72,7 +73,7 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato al 10 novembre 2026: main è **0.41.57-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206 e #207; la CI standard della #207 è 4/4 superata nel [run 42905972598](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **74%** secondo IMPLEMENTATION_STATUS (516/7; area catalogo 62%); il collaudo Joomla resta pendente. IMP-07 continua per i residui SEO, catalogo e percorsi.
+Aggiornato al 10 novembre 2026: main è **0.41.57-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206 e #207; la CI standard della #207 è 4/4 superata nel [run 42905972598](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **74%** secondo IMPLEMENTATION_STATUS (516/7; area catalogo 62%); il collaudo Joomla resta pendente. IMP-07 continua per il filtro tag, gli altri filtri/layout CAT-01 e la verifica dei residui lifecycle categorie/percorsi; collaudi Finder/SEO/SEF manuali pendenti.
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #207
 
