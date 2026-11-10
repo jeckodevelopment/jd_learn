@@ -2544,7 +2544,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #187 integrata in main; CI standard 4/4 superata, pacchetto verificato; collaudo manuale Joomla pendente.",
+  "candidate_status": "PR #190 in preparazione: menu del programma aula comprimibile su mobile, requisito STU-02; CI non ancora avviata. Ultimo pacchetto verificato: 0.41.51-dev.",
   "previous_verified_release": {
     "version": "0.41.50-dev",
     "pull_request": 185,
@@ -2553,22 +2553,12 @@
     "package_sha256": "9534346da253c8f953da826d203b3f3509fab0682b09e7d09736e60180e28e83"
   },
   "candidate_increment": {
-    "version": "0.41.51-dev",
-    "scope": "IMP-04 / STU-03 / PRO-06: messaggio di salvataggio e un solo retry per errori di rete/timeout/408/429/5xx nel POST lesson.begin; stessa idempotency key, timeout 8 s, backoff 500 ms; 4xx non transitori senza retry.",
-    "status": "PR #187 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.52-dev",
+    "scope": "IMP-04 / STU-02: indice aula comprimibile su viewport <=48rem con pulsante IT/EN accessibile; desktop e fallback senza JavaScript mantengono la navigazione visibile.",
+    "status": "Candidato PR #190 in preparazione; CI e pacchetto 0.41.52-dev in attesa.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 187,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/187",
-    "merged_main_commit": "68c984ecb195a66bc7a3b236cffa810cf784ec60",
-    "ci_run_id": 42845258898,
-    "artifact_id": 13779340061,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898/artifacts/13779340061",
-    "artifact_sha256": "75e5ede2387cc29e48ab43fcd09bc5ecf125d5816db9eeb638c1387bc311529f",
-    "package_sha256": "1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab",
-    "package_size_bytes": 543065,
-    "artifact_size_bytes": 542904,
-    "artifact_expires_at": "2026-11-24T15:36:18Z",
-    "tested_head": "d429ccf0998ff7256c8c6437dbe51bbf22bfbdfd"
+    "pull_request": 190,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/190"
   },
   "latest_verified_increment": {
     "version": "0.41.51-dev",
@@ -2589,8 +2579,8 @@
     "tested_head": "d429ccf0998ff7256c8c6437dbe51bbf22bfbdfd"
   },
   "next_candidate": {
-    "priority": "Completare i residui IMP-04 della fruizione e dei progressi; poi IMP-05 sui quattro provider video esistenti.",
-    "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md. Fase 2 esclusa."
+    "priority": "Completare i residui IMP-04 di fruizione/progressi; poi IMP-05 per i quattro provider video esistenti.",
+    "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
   },
-  "current_status": "Main 0.41.51-dev (PR #187); CI standard 4/4 e pacchetto verificati; collaudi manuali Joomla/provider pendenti."
+  "current_status": "Main 0.41.51-dev; candidato 0.41.52-dev (PR #190) per navigazione mobile aula. CI e manuale Joomla del candidato pendenti."
 }
