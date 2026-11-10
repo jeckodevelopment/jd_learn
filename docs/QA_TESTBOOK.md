@@ -1,3 +1,14 @@
+## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR in preparazione)
+
+Collaudo manuale Joomla sul sito di prova richiesto prima di chiudere IMP-07; la CI non sostituisce queste prove.
+
+1. Installare il pacchetto candidato su Joomla 6 di prova con `com_finder` attivo. Verificare **Estensioni → Plugin**: `Smart Search - JD Learn` è abilitato alla prima installazione e resta nello stato scelto durante un aggiornamento.
+2. Predisporre corsi con titolo/sommario univoci: pubblicato in categoria pubblica, non pubblicato, catalogo con livello registrato, categoria privata, antenato non pubblicato, lingua differente, senza versione pubblicata, e pubblicato con `publish_up`/`publish_down` configurato. Predisporre anche un corso pubblico con titolo e sommario promozionale.
+3. In **Componenti → Smart Search → Indice**, avviare l’indicizzazione e verificare che risultino soltanto i corsi pubblici idonei. Cercare dal sito il titolo univoco: il link apre la scheda corso e mostra solo titolo/sommario; nessuna lezione o informazione privata compare nel risultato.
+4. Modificare titolo e sommario del corso pubblico, reindicizzare, quindi verificare i nuovi termini e l’assenza dei precedenti. Ritirare/pubblicare un corso e verificare rispettivamente rimozione/ricomparsa del risultato.
+5. Cambiare accesso, stato o lingua di una categoria/antenato; spostare una categoria con corsi dentro/fuori. Dopo aggiornamento indice, verificare le nuove regole sulle schede discendenti.
+6. Ripetere in IT e EN con filtro lingua attivo. Verificare che corsi incompatibili con la lingua categoria non compaiano e che i corsi con finestra programmata restino esclusi.
+
 ## PR #196 integrata — retry del progresso audio
 
 PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196), milestone **1.0.0**, introduce un retry singolo dello stesso salvataggio per errori di rete, timeout, 408, 429 e 5xx. Gli errori permanenti non vengono riprovati. Il progresso audio non completa la lezione né aumenta la percentuale; la conferma esplicita resta necessaria. CI 4/4 nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). Collaudo manuale pendente.

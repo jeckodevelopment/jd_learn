@@ -22,6 +22,8 @@ IMP-05 è in corso: PR [#198] ha integrato la pulizia batch limitata delle sessi
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
+IMP-07 è in preparazione su 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie. La stima di main resta quella pubblicata in IMPLEMENTATION_STATUS fino al merge.
+
 ## Blocco IMP — implementazione
 
 | Ordine | ID / priorità | Titolo e perimetro della PR | Requisiti e scenari | Dipendenze / uscita |
@@ -68,10 +70,9 @@ La release è candidata solo quando:
 4. Il pacchetto finale è installabile, aggiornabile e accompagnato da checksum, changelog e guide aggiornate.
 5. Nessuna funzione di fase 2 o Credentials viene conteggiata come requisito della 1.0.0.
 
-## Stato iniziale del piano
+## Stato corrente del piano
 
-Main è **0.41.52-dev** secondo [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md). La PR #192 chiude STAB-03 sull’issue #172; l’accettazione manuale resta pendente. La ricognizione IMP-01 nella PR #176 ha mappato il perimetro esistente e aggiunto al testbook le procedure AC-121–125; i collaudi M01 restano aperti. IMP-02 è implementato e attende accettazione Joomla. La PR [#177](https://github.com/jeckodevelopment/jd_learn/pull/177) avvia IMP-03 con preview video read-only, ACL rivalidata e nessuna telemetria; documenti, audio e quiz non sono simulati, quindi l’attività prosegue. La stima complessiva corrente è 73%, con collaudi manuali distinti. PR #190 integra il programma aula comprimibile su smartphone per STU-02; PR #192 corregge il fuso globale dei nuovi corsi. Entrambe hanno CI standard 4/4 superata e collaudo Joomla pendente.
-
+Aggiornato al 10 novembre 2026: main è **0.41.54-dev** e include le PR #190, #192, #194, #196, #198 e #202; la CI standard della #202 è 4/4 superata. IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **73%** secondo IMPLEMENTATION_STATUS, senza conteggiare candidate non integrate. **IMP-07** è il prossimo incremento e si prepara su 0.41.55-dev con plugin Finder per il solo catalogo pubblico.
 
 ## Aggiornamento 10 novembre 2026 — STAB-02
 

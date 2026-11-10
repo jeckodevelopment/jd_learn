@@ -1,3 +1,9 @@
+## 0.41.55-dev — integrazione Smart Search (IMP-07, candidata)
+
+- Aggiunge `plg_finder_jlms` al pacchetto base. Smart Search riceve solo titolo e sommario promozionale delle schede corso pubbliche idonee; corsi ad accesso ristretto, finestre pianificate, programma, lezioni e dati personali sono esclusi.
+- Aggiorna l’indice su modifiche/stati di corsi e categorie JD Learn; categoria e lingua sono disponibili come tassonomie Finder. L’installazione iniziale abilita il plugin, gli aggiornamenti rispettano la preferenza salvata.
+- PR IMP-07 in preparazione, milestone prevista `1.0.0`. Collaudo Joomla richiesto nel [testbook](docs/QA_TESTBOOK.md#imp-07--smart-search-del-catalogo-jd-learn-04155-dev-pr-in-preparazione); CI non ancora eseguita sulla PR.
+
 ## 0.41.54-dev — pulizia programmata dei materiali orfani (IMP-06)
 
 - Aggiunta attività Joomla Scheduler `jlms.materials.cleanup`: elimina in batch limitato asset locali senza riferimenti, più vecchi di 24 ore, e i relativi blob privati. I riferimenti a lezioni, allegati, attestati e job sono esclusi; le sostituzioni immutabili restano conservate.

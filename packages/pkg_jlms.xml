@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="package" method="upgrade">
- <name>JD Learn</name><packagename>jlms</packagename><author>Jecko Development</author><version>0.41.54</version>
+ <name>JD Learn</name><packagename>jlms</packagename><author>Jecko Development</author><version>0.41.55</version>
  <description>JD Learn — development foundation</description><blockChildUninstall>true</blockChildUninstall>
  <files folder="constituents">
   <file type="library" id="jlms">lib_jlms.zip</file>
@@ -12,5 +12,6 @@
   <file type="plugin" id="jdlearn" group="privacy">plg_privacy_jdlearn.zip</file>
   <file type="plugin" id="jlms" group="task">plg_task_jlms.zip</file>
   <file type="plugin" id="jlmsmenu" group="system">plg_system_jlmsmenu.zip</file>
+  <file type="plugin" id="jlms" group="finder">plg_finder_jlms.zip</file>
  </files>
 </extension>

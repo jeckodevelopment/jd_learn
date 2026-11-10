@@ -18,6 +18,8 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
+La stima seguente descrive main 0.41.54-dev integrato; la candidata IMP-07/0.41.55-dev non è ancora conteggiata.
+
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
@@ -33,7 +35,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 
 Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (511/7 = 73,00%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
+IMP-07 è in preparazione su un branch 0.41.55-dev: il plugin Finder indicizza la sola scheda pubblica e mantiene indice/lingua/categorie; non è incluso nella stima main del 73% fino al merge. IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
 
 ## Funzioni presenti e lavoro residuo
 
