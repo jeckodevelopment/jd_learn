@@ -2,7 +2,7 @@
 
 - Aggiunge `plg_finder_jlms` al pacchetto base. Smart Search riceve solo titolo e sommario promozionale delle schede corso pubbliche idonee; corsi ad accesso ristretto, finestre pianificate, programma, lezioni e dati personali sono esclusi.
 - Aggiorna l’indice su modifiche/stati di corsi e categorie JD Learn; categoria e lingua sono disponibili come tassonomie Finder. L’installazione iniziale abilita il plugin, gli aggiornamenti rispettano la preferenza salvata.
-- PR IMP-07 in preparazione, milestone prevista `1.0.0`. Collaudo Joomla richiesto nel [testbook](docs/QA_TESTBOOK.md#imp-07--smart-search-del-catalogo-jd-learn-04155-dev-pr-in-preparazione); CI non ancora eseguita sulla PR.
+- PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) aperta per review, milestone `1.0.0`. Collaudo Joomla richiesto nel [testbook](docs/QA_TESTBOOK.md#imp-07--smart-search-del-catalogo-jd-learn-04155-dev-pr-in-preparazione); CI non ancora eseguita sulla PR.
 
 ## 0.41.54-dev — pulizia programmata dei materiali orfani (IMP-06)
 

@@ -14,7 +14,7 @@ Le viste alimentano il Pathway nativo con antenati visibili e categoria corrente
 
 ## Smart Search
 
-Il plugin opzionale `plg_finder_jlms` aggiunge a Joomla Smart Search solo schede promozionali di corsi pubblicati con versione attiva, accesso catalogo pubblico e categorie/antenati pubblici e pubblicati. Lingua e tassonomia categoria sono mantenute nell’indice; le modifiche a corsi e categorie ricalcolano l’indice. Sono esclusi corsi con accesso ristretto o finestra di pubblicazione programmata, non pubblicati o senza versione attiva. Sono indicizzati titolo e sommario promozionale: programma, lezioni, media, campi privati, progressi e dati personali non vengono inviati al Finder. L’integrazione opera con `com_finder` attivo; l’indicizzazione iniziale o una ricostruzione completa si esegue da Componenti → Smart Search → Indice.
+Il plugin incluso `plg_finder_jlms` aggiunge a Joomla Smart Search solo schede promozionali di corsi pubblicati con versione attiva, accesso catalogo pubblico e categorie/antenati pubblici e pubblicati. Lingua e tassonomia categoria sono mantenute nell’indice; le modifiche a corsi e categorie ricalcolano l’indice. Sono esclusi corsi con accesso ristretto o finestra di pubblicazione programmata, non pubblicati o senza versione attiva. Sono indicizzati titolo e sommario promozionale: programma, lezioni, media, campi privati, progressi e dati personali non vengono inviati al Finder. L’integrazione opera con `com_finder` attivo; l’indicizzazione iniziale o una ricostruzione completa si esegue da Componenti → Smart Search → Indice.
 
 ## Accesso corrente e lingua
 

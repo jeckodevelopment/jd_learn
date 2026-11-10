@@ -1,4 +1,4 @@
-## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR in preparazione)
+## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR #204 in review)
 
 Collaudo manuale Joomla sul sito di prova richiesto prima di chiudere IMP-07; la CI non sostituisce queste prove.
 
