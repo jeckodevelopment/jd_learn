@@ -1,10 +1,37 @@
 #!/usr/bin/env python3
 """Check traceability/documentation consistency, not functional requirement acceptance."""
 from pathlib import Path
-import csv,json,re,xml.etree.ElementTree as E
+import csv,json,re,collections,xml.etree.ElementTree as E
 ROOT=Path(__file__).resolve().parents[1]
 def read_csv(path):
  with (ROOT/path).open(encoding='utf-8-sig',newline='')as stream:return list(csv.DictReader(stream))
+def check_reconciliation(rows,evidence):
+ """Implementation, automated execution and human acceptance are independent axes."""
+ for row in rows:
+  key=row['Requisito'];state=row['Stato implementazione'];scope=row['Perimetro 1.0.0']
+  assert state in ['Non iniziata','Parziale','Completata'],(key,'Invalid implementation state')
+  assert scope in ['1.0.0','Misto','Fase 2'],(key,'Invalid release scope')
+  for field in ['Criteri 1.0.0','Criteri fase 2','PR implementazione','Commit riscontrato','Residui implementativi 1.0.0','Verifiche residue 1.0.0','Residui fase 2','Evidenza accettazione Joomla']:
+   assert row[field].strip(),(key,'Missing reconciliation field',field)
+  assert row['Verifica automatica']in['Non eseguita','Superata','Fallita'],key
+  assert row['Copertura automatica']in['Nessuna','Parziale','Completa'],key
+  assert row['Accettazione Joomla']in['Non eseguita','Parziale','Superata','Fallita'],key
+  if scope=='Fase 2':assert row['Criteri 1.0.0']=='Non incluso.'and row['Residui implementativi 1.0.0'].startswith('Non applicabile'),(key,'Phase two is not a core gate')
+  if state=='Completata':
+   assert row['Fonti implementazione']and row['PR implementazione'].startswith('https://github.com/jeckodevelopment/jd_learn/pull/'),(key,'Completion needs implementation evidence')
+   assert row['Residui implementativi 1.0.0'].startswith('Nessuno'),(key,'Completed implementation has residual code work')
+  if row['Verifica automatica']=='Superata':
+   assert row['Fonti test parziali']and row['Copertura automatica']!='Nessuna',key
+   assert row['Evidenza automatica']==evidence['ci']['url'],(key,'Unregistered CI evidence')
+  if row['Verifica automatica']=='Non eseguita':assert row['Copertura automatica']=='Nessuna',key
+  if row['Accettazione Joomla']=='Superata':
+   assert key in evidence['full_requirement_acceptance'],(key,'No full human acceptance report')
+  if row['Criteri completi superati']=='Sì':assert row['Accettazione Joomla']=='Superata'and state=='Completata',key
+ summary=json.loads((ROOT/'docs/REQUIREMENTS_RECONCILIATION.json').read_text())
+ for field,counts in summary['counts'].items():
+  assert dict(collections.Counter(r[field]for r in rows))==counts,('Reconciliation summary drift',field)
+ progress=summary['implementation_progress']
+ assert round(sum(progress['areas'])/len(progress['areas']))==progress['percent'], 'Progress arithmetic drift'
 def check_status():
  baseline=read_csv('docs/specifications/Matrice_requisiti_test_LMS_1.0.csv')
  rows=read_csv('docs/REQUIREMENTS_STATUS.csv')
@@ -18,7 +45,6 @@ def check_status():
   assert row['Perimetro baseline']==original['Perimetro'],(key,'Scope drift')
   assert row['Descrizione baseline']==original['Descrizione'],(key,'Description drift')
   assert row['Scenari previsti']==original['Test previsti'],(key,'Acceptance-plan drift')
-  assert row['Stato implementazione']in['In corso','Da implementare','Completato'],key
   assert row['Verifica parziale']in['CI parziale','Solo riscontro documentale','Non eseguita'],key
   assert row['Criteri completi superati']in['Sì','No'],key
   assert row['Criteri residui']and row['Evidenza e limiti'],(key,'Missing residual/evidence')
@@ -26,12 +52,12 @@ def check_status():
   tests=[p.strip()for p in row['Fonti test parziali'].split(';')if p.strip()]
   for path in sources+tests:
    assert not Path(path).is_absolute()and'..'not in Path(path).parts and(ROOT/path).is_file(),(key,'Missing source',path)
-  if row['Stato implementazione']=='In corso':assert sources,(key,'No source for partial implementation')
+  if row['Stato implementazione']in['Parziale','Completata']:assert sources,(key,'No implementation source')
   if row['Verifica parziale']=='CI parziale':assert tests,(key,'No partial test reference')
   else:assert not tests,(key,'Test references require an explicit partial verification label')
   if row['Criteri completi superati']=='Sì':
    assert key in accepted and(ROOT/accepted[key]['report']).is_file(),(key,'No complete acceptance report')
-  if row['Stato implementazione']=='Completato':assert row['Criteri completi superati']=='Sì',key
+ check_reconciliation(rows,evidence)
  plan=json.loads((ROOT/'docs/RELEASE_PLAN.json').read_text())
  phases=plan['milestones']
  assert len({p['id']for p in phases})==len(phases),'Duplicate release phase'

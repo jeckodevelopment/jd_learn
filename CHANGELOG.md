@@ -1,3 +1,9 @@
+## Riconciliazione requisiti — 10 novembre 2026 (runtime 0.41.54-dev invariato)
+
+- Riconciliati tutti i 210 ID senza alterare descrizioni/scenari/perimetro baseline: implementazione, esecuzione automatica con copertura, accettazione Joomla, perimetro 1.0.0/fase 2, PR/commit e residui separati.
+- 14 implementazioni completate nel sottoinsieme core esplicito, 165 parziali, 31 non iniziate; nessuna accettazione integrale. 133 righe core, 40 miste, 37 fase 2. Il 73% resta la precedente stima per sette aree, non una percentuale ricavata contando righe.
+- Verificatore e sei regressioni impediscono confusione tra CI, codice e accettazione; riepilogo JSON controllato contro il CSV. Ricostruzione del pacchetto: SHA-256 invariato `2a3b87ab7669e2d41e830b2c1bddb7d41668260278916f85510aac9cf12024a6`.
+
 ## 0.41.54-dev — pulizia programmata dei materiali orfani (IMP-06)
 
 - Aggiunta attività Joomla Scheduler `jlms.materials.cleanup`: elimina in batch limitato asset locali senza riferimenti, più vecchi di 24 ore, e i relativi blob privati. I riferimenti a lezioni, allegati, attestati e job sono esclusi; le sostituzioni immutabili restano conservate.

@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-10",
+  "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
+  "runtime_tested_head": "e38f15538ea02d35f321ab019147df09f36fc18e",
+  "ci_run": 42886192087,
+  "counts": {
+    "Stato implementazione": {
+      "Parziale": 165,
+      "Completata": 14,
+      "Non iniziata": 31
+    },
+    "Perimetro 1.0.0": {
+      "1.0.0": 133,
+      "Misto": 40,
+      "Fase 2": 37
+    },
+    "Accettazione Joomla": {
+      "Non eseguita": 208,
+      "Parziale": 2
+    },
+    "Verifica automatica": {
+      "Superata": 169,
+      "Non eseguita": 41
+    }
+  },
+  "implementation_progress": {
+    "percent": 73,
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; non derivata dalle righe CSV.",
+    "areas": [
+      76,
+      57,
+      77,
+      85,
+      67,
+      91,
+      58
+    ]
+  },
+  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR ricostruite da riferimenti esistenti e storia delle fonti: non certificano da sole ogni criterio."
+}
