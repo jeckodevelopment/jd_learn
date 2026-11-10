@@ -2544,7 +2544,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "Nessun candidato aperto: PR #185 integrata in main 0.41.50-dev; CI standard 4/4 e pacchetto installabile verificati. Collaudo manuale Joomla pendente.",
+  "candidate_status": "PR #187 in preparazione: retry limitato e idempotente del salvataggio di avvio in 0.41.51-dev; CI in attesa. Ultimo pacchetto verificato: 0.41.50-dev.",
   "previous_verified_release": {
     "version": "0.41.45-dev",
     "scope": "Issue #157: toolbar nativa per le azioni del programma didattico e pannello laterale più leggibile.",
@@ -2588,16 +2588,12 @@
     ]
   },
   "candidate_increment": {
-    "version": "0.41.50-dev",
-    "scope": "IMP-04 / PRO-01 / STU-02: registrazione esplicita dell’avvio di lezioni accessibili come started, aggiornamento di last_lesson_id per Riprendi senza credito; POST CSRF, GET aula read-only.",
-    "status": "PR #185 integrata; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
+    "version": "0.41.51-dev",
+    "scope": "IMP-04 / STU-03 / PRO-06: messaggio di salvataggio e un solo retry per errori di rete/timeout/408/429/5xx nel POST lesson.begin; stessa idempotency key, timeout 8 s, backoff 500 ms; 4xx non transitori senza retry.",
+    "status": "Candidato PR #187 in preparazione; CI standard in attesa; ultimo pacchetto verificato resta 0.41.50-dev.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 185,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/185",
-    "ci_run_id": 42839639601,
-    "artifact_id": 13776106013,
-    "tested_head": "d217dc768c28b7cb78c6097812584b7fe0ff324b",
-    "merged_main_commit": "de93c1290e89a5048a5cf6e16c0b15f719580322"
+    "pull_request": 187,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/187"
   },
   "latest_verified_increment": {
     "version": "0.41.50-dev",
@@ -2646,7 +2642,7 @@
     ]
   },
   "next_candidate": {
-    "priority": "Completare i residui IMP-04 di fruizione e progressi; dopo, IMP-05 per i quattro provider video.",
+    "priority": "Completare gli altri residui IMP-04 di fruizione e progressi; dopo, IMP-05 per i quattro provider video.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md. Fase 2 esclusa."
   },
   "current_status": "Main 0.41.50-dev (PR #185); CI standard e pacchetto verificati; collaudi manuali Joomla/provider pendenti."

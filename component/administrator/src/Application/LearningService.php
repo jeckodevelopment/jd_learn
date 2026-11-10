@@ -594,10 +594,11 @@ final class LearningService
     }
 
     /** Record an explicitly opened lesson without granting completion or progress credit. */
-    public function beginLesson(User $identity, string $language, int $enrollmentId, int $lessonId): string
+    public function beginLesson(User $identity, string $language, int $enrollmentId, int $lessonId, string $key): string
     {
+        self::key($key);
         $actor = $this->freshActor($identity);
-        return $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId): string {
+        return $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $key): string {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
             $lesson = $this->lesson((int) $version->id, $lessonId);
             $this->assertLessonAvailable($lesson, $enrollment);
@@ -605,6 +606,8 @@ final class LearningService
             if (!in_array($lesson->kind, ['text', 'document', 'audio', 'video'], true)) {
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
+            $this->ledger($actor, 'lesson.begin', $key,
+                ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
 
             $now = gmdate('Y-m-d H:i:s');
             $query = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
