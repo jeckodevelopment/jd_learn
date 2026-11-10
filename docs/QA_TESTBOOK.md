@@ -1,4 +1,4 @@
-## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #209 candidata)
+## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #210 candidata)
 
 Riferimenti: CAT-01/CAT-04, AC-41/AC-85. Verificare su Joomla 6 di prova con almeno quattro corsi pubblicati, nelle categorie accessibili: uno principiante da45minuti, uno avanzato da90minuti, uno intermedio oltre120minuti e uno senza durata stimata. Predisporre anche un account con accesso limitato e una categoria con corsi discendenti.
 
