@@ -21,6 +21,8 @@ use Joomla\CMS\Router\Route;
    <input id="jlms-category-catalog-search" type="search" name="filter[search]" value="<?= $this->escape($this->search) ?>" maxlength="100">
    <label for="jlms-category-catalog-order"><?= Text::_('COM_JLMS_CATALOG_ORDER') ?></label>
    <select id="jlms-category-catalog-order" name="filter[order]"><option value="recent"<?= $this->order === 'recent' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_RECENT') ?></option><option value="title"<?= $this->order === 'title' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_TITLE') ?></option></select>
+   <label for="jlms-category-catalog-tag"><?= Text::_('COM_JLMS_CATALOG_TAG') ?></label>
+   <select id="jlms-category-catalog-tag" name="filter[tag_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) : ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php endforeach; ?></select>
    <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
   </form>
   <div id="jlms-category-course-grid" class="jlms-course-grid"><?php foreach ($this->items as $item) : ?>
