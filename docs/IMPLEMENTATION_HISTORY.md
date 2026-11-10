@@ -1,3 +1,8 @@
+## 0.41.51-dev — retry limitato del salvataggio di avvio (PR #187 integrata)
+
+- Il browser mostra lo stato di salvataggio e ripete una sola volta il POST `lesson.begin` per rete/timeout o HTTP 408, 429 e 5xx. Riutilizza la stessa chiave idempotente, con timeout 8 s e pausa 500 ms; gli altri 4xx non vengono ritentati. Non attribuisce completamento o credito e non promette funzionamento offline.
+- PR #187 integrata nel commit `68c984ecb195a66bc7a3b236cffa810cf784ec60`; CI standard 4/4 superata nel [run 42845258898](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898). Pacchetto [JD-Learn-0.41.51-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898/artifacts/13779340061), SHA-256 interno `1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab`, wrapper `75e5ede2387cc29e48ab43fcd09bc5ecf125d5816db9eeb638c1387bc311529f`; collaudo Joomla pendente.
+
 ## 0.41.50-dev — avvio e ripresa della lezione (PR #185 integrata)
 
 - L’apertura esplicita di una lezione accessibile salva lo stato `started` tramite POST con token Joomla e aggiorna la destinazione Riprendi; il GET aula resta read-only.
