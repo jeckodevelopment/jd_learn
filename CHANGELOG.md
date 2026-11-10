@@ -1,8 +1,8 @@
-## 0.41.49-dev — soglia video configurabile per lezione (candidato)
+## 0.41.49-dev — soglia video configurabile per lezione (PR #183 integrata)
 
 - Aggiunta una soglia facoltativa per ogni lezione video: campo vuoto eredita quella della versione, valore impostato prevale per la singola lezione.
 - La soglia è salvata nei parametri della lezione, inclusa nel confronto del programma, validata al salvataggio/pubblicazione e usata nel calcolo di completamento. Le versioni assegnate restano immutabili.
-- Collaudo Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#pr-in-corso--soglia-video-per-lezione-04149-dev); CI e pacchetto candidati in attesa.
+- CI standard 4/4 superata nel [run 42830117573](https://github.com/jeckodevelopment/jd_learn/actions/runs/42830117573); merge `4ef19dd8b5ebe4d6eddb1f127a5864929b457297`. Pacchetto [JD-Learn-0.41.49-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42830117573/artifacts/13770693036), SHA-256 interno `46db03c8214873bbd2d266f067585458ebec059e3abbaf2fe29d9e38be1635bb`; collaudo manuale Joomla pendente nel [testbook](docs/QA_TESTBOOK.md#pr-183-integrata--soglia-video-per-lezione-04149-dev).
 
 ## 0.41.48-dev — apertura inline protetta di PDF e immagini (PR #181 integrata)
 
