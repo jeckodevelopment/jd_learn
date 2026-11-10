@@ -1,8 +1,8 @@
-## 0.41.50-dev — registrazione dell’avvio lezione (candidato PR #185)
+## 0.41.50-dev — registrazione dell’avvio lezione (PR #185 integrata)
 
 - L’apertura esplicita di una lezione accessibile registra lo stato “in corso” e la destinazione Riprendi tramite POST con token Joomla. Il GET dell’aula resta senza scritture.
 - Nessun completamento, credito o aumento di percentuale viene attribuito; il completamento manuale aggiorna la riga esistente senza duplicarla.
-- Collaudo Joomla nel [testbook](docs/QA_TESTBOOK.md#pr-185-in-corso--avvio-e-ripresa-della-lezione-04150-dev); CI in attesa.
+- PR #185 integrata nel commit `de93c1290e89a5048a5cf6e16c0b15f719580322`; CI standard 4/4 superata nel [run 42839639601](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601). Pacchetto [JD-Learn-0.41.50-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601/artifacts/13776106013), SHA-256 interno `9534346da253c8f953da826d203b3f3509fab0682b09e7d09736e60180e28e83`, wrapper `461d8dd9c4d8287c15d6dc667821920e25c4c879108f0a3d9a2ac8cea5ec70f6`; collaudo manuale Joomla pendente nel [testbook](docs/QA_TESTBOOK.md#pr-185-integrata--avvio-e-ripresa-della-lezione-04150-dev).
 
 ## 0.41.49-dev — soglia video configurabile per lezione (PR #183 integrata)
 

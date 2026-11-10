@@ -1,6 +1,8 @@
-## PR #185 in corso — avvio e ripresa della lezione (0.41.50-dev)
+## PR #185 integrata — avvio e ripresa della lezione (0.41.50-dev)
 
-1. Installare il candidato su Joomla 6 di prova. Creare un corso pubblicato con due lezioni obbligatorie testo/documento, iscrivere uno studente e aprire la seconda lezione senza premere “Segna come completata”.
+CI standard 4/4 superata nel [run 42839639601](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601). Il pacchetto [0.41.50-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601/artifacts/13776106013) verificato contiene SHA-256 interno `9534346da253c8f953da826d203b3f3509fab0682b09e7d09736e60180e28e83` (542668 byte) e wrapper `461d8dd9c4d8287c15d6dc667821920e25c4c879108f0a3d9a2ac8cea5ec70f6` (542489 byte), con scadenza 24 novembre 2026 15:03 UTC. L’accettazione manuale resta aperta.
+
+1. Installare il pacchetto su Joomla 6 di prova. Creare un corso pubblicato con due lezioni obbligatorie testo/documento, iscrivere uno studente e aprire la seconda lezione senza premere “Segna come completata”.
 2. Verificare che lo stato della seconda lezione diventi “In corso”, l’avanzamento del corso resti 0% e la lezione non risulti completata. Ricaricare l’aula e verificare la persistenza dello stato.
 3. Tornare alla Dashboard, usare “Riprendi” e verificare che riapra l’ultima lezione aperta ancora disponibile. Ripetere con altro browser/dispositivo sullo stesso account.
 4. Premere “Segna come completata”: la stessa attività passa a completata, avanza il corso una sola volta e non genera conflitti o righe duplicate. Verificare anche una lezione audio/video, per cui il player continua a salvare posizione/copertura senza cambiare la regola di completamento.
@@ -501,7 +503,3 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 5. Confrontare progressi e iscrizione prima/dopo vista inline e download: nessuna apertura o scaricamento attribuisce completamento.
 
 **Esito sito Joomla:** Non eseguito.
-
-### Run CI preliminare PR #185
-
-Il run iniziale `42839337595` ha completato con successo solo i controlli leggeri; i job PHP/database e Chromium sono stati saltati perché l’evento PR è stato valutato mentre era in stato draft. Dopo il passaggio a ready for review, un nuovo evento `synchronize` esegue la matrice standard. Non considerare il run preliminare come accettazione runtime.
