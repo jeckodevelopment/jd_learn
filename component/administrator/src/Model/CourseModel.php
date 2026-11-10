@@ -45,6 +45,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $item = parent::getItem($pk);
         if ($item) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item, $this->siteTimezone()) as $key=>$value) { $item->$key=$value; }
+            // Keep the editor on Joomla's global option for a new course; the site IANA zone
+            // is still used above to interpret/display dates and is persisted on save.
+            if (empty($item->id)) { $item->calendar_timezone = ''; }
         }
         if ($item && !empty($item->id)) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($item->params_json) ?? [] as $field => $value) {
@@ -82,7 +85,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $form->load($xml, false);
         }
         parent::preprocessForm($form, $data, $group);
-        $form->setFieldAttribute('calendar_timezone', 'default', $this->siteTimezone());
+        $form->setFieldAttribute('calendar_timezone', 'default', '');
     }
 
     private function associationMembers(int $id): array
@@ -302,7 +305,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             );
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { unset($data['presentation_' . $field]); }
             if ($presentation !== null) { $data['params_json'] = $presentation; }
-            $calendar=\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data,$record ?? (object) [],$data['params_json'] ?? $record->params_json ?? '{}',Factory::getApplication()->getIdentity()->getTimezone()->getName());
+            if (($data['calendar_timezone'] ?? null) === '') { $data['calendar_timezone'] = $this->siteTimezone(); }
+            $calendar=\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data,$record ?? (object) [],$data['params_json'] ?? $record->params_json ?? '{}',$this->siteTimezone());
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { unset($data[$field]); }
             $data=array_replace($data,$calendar);
             if ($copySource !== null) {
