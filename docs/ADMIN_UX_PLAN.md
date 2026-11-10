@@ -14,7 +14,7 @@ La PR #68 è integrata in main nella 0.41.8-dev. La schermata iniziale mette in 
 
 ### Issue #157 — programma didattico e convenzioni Joomla
 
-Il candidato 0.41.45-dev sposta nella toolbar nativa le azioni principali (aggiunta modulo, campi lezione, regole didattiche e anteprima), mantenendo ACL e corso/versione selezionati. La vista mantiene il programma specifico richiesto ma migliora gli spazi tra controlli e form nel pannello laterale. CI HTTP controlla che l’azione di aggiunta modulo sia presente solo nel programma editabile e resti legata al corso corrente. Resta il collaudo Joomla manuale di toolbar, permessi, tastiera e viewport mobile.
+La PR [#169](https://github.com/jeckodevelopment/jd_learn/pull/169), integrata in 0.41.45-dev, sposta nella toolbar nativa le azioni principali (aggiunta modulo, campi lezione, regole didattiche e anteprima), mantenendo ACL e corso/versione selezionati. La vista mantiene il programma specifico richiesto ma migliora gli spazi tra controlli e form nel pannello laterale. CI HTTP controlla che l’azione di aggiunta modulo sia presente solo nel programma editabile e resti legata al corso corrente. CI standard superata nel run [42771935666](https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666); resta il collaudo Joomla manuale di toolbar, permessi, tastiera e viewport mobile.
 
 ## Issue #105 — dashboard di navigazione amministrativa
 

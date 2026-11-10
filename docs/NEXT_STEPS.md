@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **10 novembre 2026**. Main **0.41.44-dev**; candidato **0.41.45-dev** per issue #157: toolbar Joomla nativa per le azioni del programma e comandi laterali più leggibili. La PR include collaudo manuale da svolgere in Joomla. Main PR [#167](https://github.com/jeckodevelopment/jd_learn/pull/167) integrata nel commit `43d87a52320dc7e6bbd0d6f3f55371bdacd4c8c7`; CI standard 4/4 superata nel [run 42769089189](https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189); [pacchetto installabile](IMPLEMENTATION_STATUS.md). Il fuso globale Joomla è il default dei nuovi corsi; l’autore può sceglierne un altro. Il collaudo manuale resta pendente. Restano prioritari M01/M02 e l’accettazione reale dei provider.
+Aggiornato al **10 novembre 2026**. Main **0.41.45-dev**; PR [#169](https://github.com/jeckodevelopment/jd_learn/pull/169) integra issue #157: toolbar Joomla nativa per le azioni del programma e comandi laterali più leggibili. CI standard 4/4 superata nel [run 42771935666](https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666); [pacchetto installabile](IMPLEMENTATION_STATUS.md). Il collaudo manuale resta pendente. Restano prioritari M01/M02 e l’accettazione reale dei provider.
 
 ## Priorità per la prima versione stabile
 
