@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.41.45-dev — vista del programma didattico allineata alla toolbar Joomla (issue #157, in sviluppo)
+## 0.41.45-dev — vista del programma didattico allineata alla toolbar Joomla (PR #169 integrata)
 
 - Le azioni principali del programma sono disponibili nella toolbar nativa, con URL contestuali al corso e visibilità condizionata ai permessi già verificati.
 - Il pannello laterale separa visivamente moduli, moduli di form e comandi, migliorando spaziatura e leggibilità sui viewport stretti.
