@@ -1,8 +1,10 @@
-## 0.41.47-dev — preview editoriale di documenti e audio (candidato PR)
+## 0.41.47-dev — preview editoriale di documenti e audio (PR #179 integrata)
 
 - Estende IMP-03 alle lezioni documento/audio: mostra allegati di corso e lezione pronti, rispetta stato e finestre di pubblicazione e rivalida ACL prima della consegna. PDF, immagini e testo consentiti possono aprirsi inline; altri documenti restano download. MP3/OGG sono riprodotti con il player HTML5 nativo.
 - La preview non crea iscrizioni, sessioni, tentativi o progressi. Le interazioni quiz restano fuori da questa preview.
-- Collaudo Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#imp-03--preview-editoriale-di-documenti-e-audio-candidato-04147-dev). PR e CI non ancora completate.
+- PR #179 integrata nel commit `1b957f22e5ceeccb7aa5b387d5018011a8ec20db`; CI standard 4/4 superata sul commit `2c7c6b03a33bca5a4c6b65aa214b5da7613c04ca` nel [run 42804753192](https://github.com/jeckodevelopment/jd_learn/actions/runs/42804753192).
+- Pacchetto Actions [JD-Learn-0.41.47-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42804753192/artifacts/13758745162): wrapper ZIP da estrarre una volta; SHA-256 interno `cf204d5ac6366e7a509892ad47f5d30841e87d49737f5323f56b0a5a0c90c6d6` (539512 byte), wrapper `e1cb2a2a8b3940d1b53d1974e2b2cc45a25975d5889b7b46aed4018307c7fc19` (539324 byte), scadenza 24 novembre 2026.
+- Collaudo manuale Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#imp-03--preview-editoriale-di-documenti-e-audio-04147-dev); resta pendente.
 
 # Changelog
 

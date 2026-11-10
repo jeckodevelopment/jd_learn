@@ -1,58 +1,59 @@
 {
   "audited_at": "2026-11-10",
   "product": "JD Learn",
-  "version": "0.41.46-dev",
+  "version": "0.41.47-dev",
   "code_baseline": {
-    "tested_head": "1874616ab2d192b92875071212099481f9fc21c7",
-    "parent_main_commit": "2d6cb8088db8ca2aa1351f5dc734e48ff9eb545f",
-    "pull_request": 177,
-    "merged_main_commit": "b80aead8792b549823538883c3c88080d614ae4f"
+    "tested_head": "2c7c6b03a33bca5a4c6b65aa214b5da7613c04ca",
+    "parent_main_commit": "a138aac09f1167091ad0d2dee65ab85ce2b67f80",
+    "pull_request": 179,
+    "merged_main_commit": "1b957f22e5ceeccb7aa5b387d5018011a8ec20db"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42800028533,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533",
+    "run_id": 42804753192,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42804753192",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 129774855711,
+        "id": 129790932597,
         "name": "Candidate plan and lightweight checks",
         "conclusion": "success",
         "status": "completed"
       },
       {
-        "id": 129774934255,
+        "id": 129791009333,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "conclusion": "success",
         "status": "completed"
       },
       {
-        "id": 129774934348,
+        "id": 129791009520,
         "name": "PHP 8.3 / mysql:8.4",
         "conclusion": "success",
         "status": "completed"
       },
       {
-        "id": 129774934269,
+        "id": 129791009431,
         "name": "PHP 8.4 / mariadb:10.6",
         "conclusion": "success",
         "status": "completed"
       }
     ],
-    "note": "PR #177 integra il playback video read-only in anteprima, con ACL rivalidata e senza enrollment/sessioni/tentativi/progressi. CI standard 4/4 superata; collaudo manuale Joomla pendente."
+    "note": "PR #179 completa la preview editoriale read-only per audio MP3/OGG e allegati delle lezioni documento/audio, con ACL e disponibilità rivalidate. CI standard 4/4 superata; collaudo manuale Joomla pendente. Le interazioni quiz non sono simulate."
   },
   "package": {
-    "artifact_id": 13755751590,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533/artifacts/13755751590",
-    "artifact_name": "JD-Learn-0.41.46-dev",
-    "installable_package": "pkg_jlms-0.41.46-dev.zip",
-    "sha256": "ccbaff840cf94a5829de32b9efea90b7c83fe0565e77c50f16bf124bbe69f94b",
-    "artifact_sha256": "8647a6a99551b19d793d83eedcddb14401c137888df046566f0c980601e70353",
-    "size_bytes": 538172,
-    "artifact_size_bytes": 537983,
-    "expires_at": "2026-11-24T10:37:17Z",
-    "wrapper_zip": true
+    "artifact_id": 13758745162,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42804753192/artifacts/13758745162",
+    "artifact_name": "JD-Learn-0.41.47-dev",
+    "installable_package": "pkg_jlms-0.41.47-dev.zip",
+    "sha256": "cf204d5ac6366e7a509892ad47f5d30841e87d49737f5323f56b0a5a0c90c6d6",
+    "artifact_sha256": "e1cb2a2a8b3940d1b53d1974e2b2cc45a25975d5889b7b46aed4018307c7fc19",
+    "size_bytes": 539512,
+    "artifact_size_bytes": 539324,
+    "expires_at": "2026-11-24T11:11:17Z",
+    "wrapper_zip": true,
+    "build_source": "Build riproducibile CI; ZIP interno estratto, SHA-256 e versione 0.41.47 verificati contro il pacchetto locale."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -65,6 +66,65 @@
   ],
   "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-10",
+      "product": "JD Learn",
+      "version": "0.41.46-dev",
+      "code_baseline": {
+        "tested_head": "1874616ab2d192b92875071212099481f9fc21c7",
+        "parent_main_commit": "2d6cb8088db8ca2aa1351f5dc734e48ff9eb545f",
+        "pull_request": 177,
+        "merged_main_commit": "b80aead8792b549823538883c3c88080d614ae4f"
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 42800028533,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 129774855711,
+            "name": "Candidate plan and lightweight checks",
+            "conclusion": "success",
+            "status": "completed"
+          },
+          {
+            "id": 129774934255,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "conclusion": "success",
+            "status": "completed"
+          },
+          {
+            "id": 129774934348,
+            "name": "PHP 8.3 / mysql:8.4",
+            "conclusion": "success",
+            "status": "completed"
+          },
+          {
+            "id": 129774934269,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "conclusion": "success",
+            "status": "completed"
+          }
+        ],
+        "note": "PR #177 integra il playback video read-only in anteprima, con ACL rivalidata e senza enrollment/sessioni/tentativi/progressi. CI standard 4/4 superata; collaudo manuale Joomla pendente."
+      },
+      "package": {
+        "artifact_id": 13755751590,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533/artifacts/13755751590",
+        "artifact_name": "JD-Learn-0.41.46-dev",
+        "installable_package": "pkg_jlms-0.41.46-dev.zip",
+        "sha256": "ccbaff840cf94a5829de32b9efea90b7c83fe0565e77c50f16bf124bbe69f94b",
+        "artifact_sha256": "8647a6a99551b19d793d83eedcddb14401c137888df046566f0c980601e70353",
+        "size_bytes": 538172,
+        "artifact_size_bytes": 537983,
+        "expires_at": "2026-11-24T10:37:17Z",
+        "wrapper_zip": true
+      },
+      "superseded_by": "PR #179 / 0.41.47-dev",
+      "manual_joomla_acceptance": "pending"
+    },
     {
       "audited_at": "2026-11-09",
       "product": "JD Learn",
