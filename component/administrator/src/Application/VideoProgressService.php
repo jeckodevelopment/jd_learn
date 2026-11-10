@@ -67,11 +67,13 @@ final class VideoProgressService
         $query = $this->db->createQuery()->select('id')->from('#__jlms_progress_sessions')
             ->where('expires_at <= :now')->bind(':now', self::date($now))
             ->order('expires_at, id')->setLimit(250);
-        $ids = $this->db->setQuery($query)->loadColumn();
+        $this->db->setQuery($query);
+        $ids = $this->db->loadColumn();
         if (!$ids) { return; }
 
+        $quotedIds = array_map(fn ($id): string => $this->db->quote((string) $id), $ids);
         $delete = $this->db->createQuery()->delete($this->db->quoteName('#__jlms_progress_sessions'))
-            ->whereIn('id', array_map('strval', $ids));
+            ->where('id IN (' . implode(',', $quotedIds) . ')');
         $this->db->setQuery($delete)->execute();
     }
 
