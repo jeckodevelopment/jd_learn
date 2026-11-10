@@ -2594,5 +2594,5 @@
     "priority": "Completare i residui IMP-04 di fruizione/progressi; poi IMP-05 per i quattro provider video esistenti.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
   },
-  "current_status": "Main 0.41.52-dev (PR #190); CI standard 4/4 e pacchetto verificati; collaudo manuale Joomla/provider pendente."
+  "current_status": "Main 0.41.52-dev (PR #190); CI standard 4/4 e pacchetto verificati; avanzamento stimato 73%; collaudo manuale Joomla/provider pendente."
 }
