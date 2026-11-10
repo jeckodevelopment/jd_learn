@@ -29,9 +29,9 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 91% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **72%** |
+| **Avanzamento complessivo stimato** | **73%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (508/7 = 72,57%, arrotondato al 72%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (508/7 = 72,57%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 ## Funzioni presenti e lavoro residuo
 
