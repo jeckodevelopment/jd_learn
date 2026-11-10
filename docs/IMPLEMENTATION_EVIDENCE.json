@@ -2404,122 +2404,70 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #167 integrata in main 0.41.44-dev; CI standard 4/4 superata nel run 42769089189; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
+  "candidate_status": "PR #169 integrata in main 0.41.45-dev; CI standard 4/4 superata nel run 42771935666; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
   "previous_verified_release": {
-    "version": "0.41.34-dev",
-    "package": "pkg_jlms-0.41.34-dev.zip",
-    "sha256": "972b74d91132503634538d2eec68edb149cee7e89fa00b438255ccbd1981f9f1",
-    "artifact_id": 13671314050,
-    "run_id": 42613814879,
-    "expires_at": "2026-11-23T12:07:47Z"
+    "version": "0.41.44-dev",
+    "package": "pkg_jlms-0.41.44-dev.zip",
+    "sha256": "e68934ff0b4257d6defd8ed9e28762eb526c9f3a2d0999c315536534658a4458",
+    "artifact_id": 13740848347,
+    "run_id": 42769089189,
+    "expires_at": "2026-11-24T06:35:45Z"
   },
   "candidate_increment": {
-    "version": "0.41.44-dev",
-    "scope": "Issue #154: default del fuso dei nuovi corsi dal valore globale Joomla; scelta per-corso e fusi dei corsi esistenti conservati.",
-    "status": "Integrata in main; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
+    "version": "0.41.45-dev",
+    "scope": "Issue #157: toolbar nativa per le azioni del programma didattico e pannello laterale più leggibile.",
+    "status": "PR #169 integrata; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 167,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/167",
-    "ci_run_id": 42769089189,
-    "artifact_id": 13740848347,
-    "artifact_name": "JD-Learn-0.41.44-dev",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189/artifacts/13740848347",
-    "artifact_sha256": "f4d0ca0bc889bdbe03cd60b8e8b91984ef060d65ab2c66ccd2a901b6165d4796",
-    "artifact_wrapper_sha256": "f4d0ca0bc889bdbe03cd60b8e8b91984ef060d65ab2c66ccd2a901b6165d4796",
-    "package_sha256": "e68934ff0b4257d6defd8ed9e28762eb526c9f3a2d0999c315536534658a4458",
-    "package_size_bytes": 534662,
-    "artifact_size_bytes": 534486,
-    "artifact_expires_at": "2026-11-24T06:35:45Z",
-    "tested_head": "5cd45ba51ab5da61e0787bb7175373c69e620a6a",
-    "parent_main_commit": "6d32616f013279234ea5ca9f74ecfd422291097b",
-    "merged_main_commit": "43d87a52320dc7e6bbd0d6f3f55371bdacd4c8c7",
+    "pull_request": 169,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/169",
+    "ci_run_id": 42771935666,
+    "artifact_id": 13742766077,
+    "artifact_name": "JD-Learn-0.41.45-dev",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666/artifacts/13742766077",
+    "artifact_sha256": "8a1ea9650e544bbb5057a529946fa049039170844dbefdead9b1158e76c3cd9b",
+    "package_sha256": "8066c427d31b15eede05199f4b7c74e3da6cc251235772453cd9cb117dc878a5",
+    "package_size_bytes": 534811,
+    "artifact_size_bytes": 534634,
+    "artifact_expires_at": "2026-11-24T07:05:43Z",
+    "tested_head": "4f5e1a6ed91ae493d7c05d1a5ffb692962cf48f5",
+    "parent_main_commit": "1eb59b4330657e320110cb8cf2e8eebe11a02cb2",
+    "merged_main_commit": "85ba2575696a05682070d6d6b486e9d812239bc0",
     "ci_jobs": [
-      {
-        "id": 129672400895,
-        "name": "Candidate plan and lightweight checks",
-        "conclusion": "success"
-      },
-      {
-        "id": 129672449987,
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
-        "conclusion": "success"
-      },
-      {
-        "id": 129672450093,
-        "name": "PHP 8.3 / mysql:8.4",
-        "conclusion": "success"
-      },
-      {
-        "id": 129672450021,
-        "name": "PHP 8.4 / mariadb:10.6",
-        "conclusion": "success"
-      }
+      {"id": 129682938886, "name": "Candidate plan and lightweight checks", "conclusion": "success"},
+      {"id": 129682977301, "name": "Curriculum navigation in Chromium (controlled fixture)", "conclusion": "success"},
+      {"id": 129682939765, "name": "PHP 8.3 / mysql:8.4", "conclusion": "success"},
+      {"id": 129682937693, "name": "PHP 8.4 / mariadb:10.6", "conclusion": "success"}
     ]
   },
   "latest_verified_increment": {
-    "version": "0.41.44-dev",
-    "scope": "Issue #154: default del fuso dei nuovi corsi dal valore globale Joomla; scelta per-corso e fusi dei corsi esistenti conservati.",
+    "version": "0.41.45-dev",
+    "scope": "Issue #157: toolbar nativa per le azioni del programma didattico e pannello laterale più leggibile.",
     "status": "Integrata in main; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 167,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/167",
-    "ci_run_id": 42769089189,
-    "artifact_id": 13740848347,
-    "artifact_name": "JD-Learn-0.41.44-dev",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189/artifacts/13740848347",
-    "artifact_sha256": "f4d0ca0bc889bdbe03cd60b8e8b91984ef060d65ab2c66ccd2a901b6165d4796",
-    "artifact_wrapper_sha256": "f4d0ca0bc889bdbe03cd60b8e8b91984ef060d65ab2c66ccd2a901b6165d4796",
-    "package_sha256": "e68934ff0b4257d6defd8ed9e28762eb526c9f3a2d0999c315536534658a4458",
-    "package_size_bytes": 534662,
-    "artifact_size_bytes": 534486,
-    "artifact_expires_at": "2026-11-24T06:35:45Z",
-    "tested_head": "5cd45ba51ab5da61e0787bb7175373c69e620a6a",
-    "parent_main_commit": "6d32616f013279234ea5ca9f74ecfd422291097b",
-    "merged_main_commit": "43d87a52320dc7e6bbd0d6f3f55371bdacd4c8c7",
+    "pull_request": 169,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/169",
+    "ci_run_id": 42771935666,
+    "artifact_id": 13742766077,
+    "artifact_name": "JD-Learn-0.41.45-dev",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666/artifacts/13742766077",
+    "artifact_sha256": "8a1ea9650e544bbb5057a529946fa049039170844dbefdead9b1158e76c3cd9b",
+    "package_sha256": "8066c427d31b15eede05199f4b7c74e3da6cc251235772453cd9cb117dc878a5",
+    "package_size_bytes": 534811,
+    "artifact_size_bytes": 534634,
+    "artifact_expires_at": "2026-11-24T07:05:43Z",
+    "tested_head": "4f5e1a6ed91ae493d7c05d1a5ffb692962cf48f5",
+    "parent_main_commit": "1eb59b4330657e320110cb8cf2e8eebe11a02cb2",
+    "merged_main_commit": "85ba2575696a05682070d6d6b486e9d812239bc0",
     "ci_jobs": [
-      {
-        "id": 129672400895,
-        "name": "Candidate plan and lightweight checks",
-        "conclusion": "success"
-      },
-      {
-        "id": 129672449987,
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
-        "conclusion": "success"
-      },
-      {
-        "id": 129672450093,
-        "name": "PHP 8.3 / mysql:8.4",
-        "conclusion": "success"
-      },
-      {
-        "id": 129672450021,
-        "name": "PHP 8.4 / mariadb:10.6",
-        "conclusion": "success"
-      }
+      {"id": 129682938886, "name": "Candidate plan and lightweight checks", "conclusion": "success"},
+      {"id": 129682977301, "name": "Curriculum navigation in Chromium (controlled fixture)", "conclusion": "success"},
+      {"id": 129682939765, "name": "PHP 8.3 / mysql:8.4", "conclusion": "success"},
+      {"id": 129682937693, "name": "PHP 8.4 / mariadb:10.6", "conclusion": "success"}
     ]
   },
-  "artifact_label_fix": {
-    "pull_request": 76,
-    "merged_main_commit": "de0134ce39148a84dc7b94c9c408983a18fed503",
-    "tested_head": "26148b24ba900232e9228459bb9084823d3b5e3c",
-    "ci_run_id": 42439956364,
-    "artifact_name": "JD-Learn-0.41.10-dev",
-    "artifact_id": 13601830152
-  },
-  "user_reported_manual_results": [
-    {
-      "requirement": "AC-132",
-      "area": "Dashboard amministrativa e relativo accesso menu",
-      "status": "passed",
-      "reported_at": "2026-11-08",
-      "report": "L’utente ha comunicato in chat il superamento del collaudo manuale della dashboard.",
-      "environment_details": "Non forniti"
-    }
-  ],
   "next_candidate": {
-    "priority": "Issue #157: rendere più usabile la vista amministrativa del programma didattico seguendo i pattern di Joomla e il piano UX; poi continuare i residui M01/M02 e i collaudi dei quattro provider base.",
-    "status": "Issue in milestone 1.0.0; seguire docs/NEXT_STEPS.md. Fase 2 esclusa."
+    "priority": "Proseguire i residui M01/M02 della gestione corsi pubblicati, programma e materiali; mantenere in parallelo i collaudi manuali aperti e l’accettazione reale dei quattro provider base.",
+    "status": "Seguire docs/NEXT_STEPS.md e la milestone 1.0.0. Fase 2 esclusa."
   },
-  "current_status": "PR #167 integrata in main 0.41.44-dev; CI standard 4/4 superata nel run 42769089189; pacchetto installabile verificato; collaudo manuale Joomla pendente."
+  "current_status": "PR #169 integrata in main 0.41.45-dev; CI standard 4/4 superata nel run 42771935666; pacchetto installabile verificato; collaudo manuale Joomla pendente."
 }
