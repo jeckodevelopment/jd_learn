@@ -1,4 +1,4 @@
-# Categorie pubbliche e multilingua — incremento 0.15
+# Categorie pubbliche e multilingua
 
 Le categorie dei corsi rimangono record nativi `com_categories`, estensione `com_jlms.course`. Il pacchetto registra il tipo `com_jlms.course.category` nel gestore Associazioni multilingua. Il form e il salvataggio delle traduzioni sono quelli del modello categorie Joomla; i legami usano il contesto core `com_categories.item`. Non vengono introdotte tassonomie, tabelle o editor paralleli.
 
@@ -8,9 +8,13 @@ Creare le categorie dal gestore Joomla con gerarchia, ordinamento, stato, lingua
 
 Il gestore Menu dispone ora di due tipi: **Categorie dei corsi**, con categoria superiore facoltativa, e **Categoria dei corsi**, con categoria obbligatoria. Il catalogo e le schede corso collegano la pagina della rispettiva categoria. `view=categories` elenca i figli immediati della radice; `parent_id` seleziona un ramo. `view=category&id=…` mostra descrizione, figli immediati e corsi pubblici della categoria e dei suoi discendenti visibili.
 
-L'elenco principale usa la paginazione Joomla, con limite massimo100. Nella scheda categoria i corsi usano la paginazione del catalogo; i figli hanno pagine da20 e parametro separato `subcategories_limitstart`. I totali contano soltanto record visibili. Le categorie vuote visibili vengono mostrate; non vengono indicati conteggi globali di figli o corsi nascosti. La descrizione nativa è resa come testo con escaping, senza eseguire HTML o plugin contenuto. La resa ricca del contenuto categoria resta fuori da questo incremento.
+L'elenco principale usa la paginazione Joomla, con limite massimo100. Nella scheda categoria i corsi usano la paginazione del catalogo; i figli hanno pagine da20 e parametro separato `subcategories_limitstart`. I totali contano soltanto record visibili. Le categorie vuote visibili vengono mostrate; non vengono indicati conteggi globali di figli o corsi nascosti. La descrizione nativa è resa come testo con escaping, senza eseguire HTML o plugin contenuto. La resa ricca del contenuto categoria resta fuori da il flusso descritto. Catalogo e lista corsi della categoria offrono anche filtri per difficoltà (principiante, intermedio, avanzato) e durata stimata (meno di 30, 30–60, 61–120, oltre 120 minuti). Le opzioni sono validate con allowlist; le query filtrano i soli metadati promozionali salvati sul corso. Corsi senza durata stimata non compaiono nei risultati di un filtro durata. Il candidato 0.41.60-dev aggiunge inoltre un filtro per tag Joomla: opzioni e risultati includono solo tag pubblicati/accessibili collegati a corsi visibili, mantenendo il ramo categoria. Ricerca, ordinamento, categoria, difficoltà, durata e paginazione restano applicati insieme.
 
-Le viste alimentano il Pathway nativo con antenati visibili e categoria corrente; per mostrarlo pubblicare il modulo Breadcrumbs del template. I segmenti categoria sono numerici e funzionano con SEF attivo/disattivo. Alias completi nei percorsi, canonicalizzazione dei vecchi slug e copertura SEO generale restano da completare.
+Le viste alimentano il Pathway nativo con antenati visibili e categoria corrente; per mostrarlo pubblicare il modulo Breadcrumbs del template. La PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208) integra segmenti SEF formati da ID e alias (ad esempio `42-alias-corso`) per corsi, categorie e percorsi; i segmenti numerici già pubblicati restano validi e il canonical indica il percorso con alias. Gli ID nei segmenti evitano ambiguità fra lingue e record con alias omonimi. La PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) aggiunge canonical, Open Graph e Twitter alle viste pubbliche. Gli URL numerici restano compatibili; i collaudi delle due funzioni sono documentati nel testbook.
+
+## Smart Search
+
+Il plugin incluso `plg_finder_jlms` aggiunge a Joomla Smart Search solo schede promozionali di corsi pubblicati con versione attiva, accesso catalogo pubblico e categorie/antenati pubblici e pubblicati. Lingua e tassonomia categoria sono mantenute nell’indice; le modifiche a corsi e categorie ricalcolano l’indice. Sono esclusi corsi con accesso ristretto o finestra di pubblicazione programmata, non pubblicati o senza versione attiva. Sono indicizzati titolo e sommario promozionale: programma, lezioni, media, campi privati, progressi e dati personali non vengono inviati al Finder. L’integrazione opera con `com_finder` attivo; l’indicizzazione iniziale o una ricostruzione completa si esegue da Componenti → Smart Search → Indice.
 
 ## Accesso corrente e lingua
 
@@ -26,9 +30,4 @@ Override nativi `templates/NOME/html/com_jlms/categories/default.php` e `categor
 
 Le letture usano query paginabili sulle categorie native con filtro degli antenati, senza caricare tutto l'albero o eseguire una query per ciascun figlio. Non viene introdotto un lock di lettura comune agli studenti. Il Pathway è limitato a100 antenati e rifiuta strutture più profonde. Nessun conteggio del contenuto didattico protetto. Il benchmark300/500 studenti rimane da eseguire.
 
-La CI verifica API/form/associazioni native, sezioni separate, antenati, spostamenti reali, paginazione, viste HTTP, descrizioni, selettore lingua e fallback con SEF0/1, e conservazione al reinstall dalla0.14. Gli esiti effettivi sono nelle Actions della PR #15. La copertura completa di rimozione/ripristino, alias/breadcrumbs per ogni tipo di menu, override lingua e browser/accessibilità rimane parziale; CORE-01, CORE-07 e CORE-13 non sono dichiarati completi.
-
-
-## Filtro tag nelle categorie pubbliche
-
-Nelle pagine categoria il catalogo dei corsi discendenti può essere filtrato per tag Joomla. Sono mostrati soltanto tag pubblicati e accessibili collegati a corsi già visibili all'utente; il filtro non espande il ramo categoria e non rende accessibili corsi riservati.
+La CI verifica API/form/associazioni native, sezioni separate, antenati, spostamenti reali, paginazione, viste HTTP, descrizioni, selettore lingua e fallback con SEF0/1, e conservazione al reinstall dalla0.14. Gli esiti effettivi sono nelle Actions della PR #15. La copertura completa di rimozione/ripristino, combinazioni breadcrumbs/menu, override lingua e browser/accessibilità rimane parziale; CORE-01, CORE-07 e CORE-13 non sono dichiarati completi.

@@ -21,6 +21,8 @@ final class HtmlView extends BaseHtmlView
     public string $order = 'recent';
     public int $tagId = 0;
     public array $tags = [];
+public string $difficulty = '';
+    public string $duration = '';
 
     public function display($tpl = null)
     {
@@ -31,6 +33,8 @@ final class HtmlView extends BaseHtmlView
         $this->order = $this->getModel()->getOrder();
         $this->tagId = $this->getModel()->getTagId();
         $this->tags = $this->getModel()->getTags();
+$this->difficulty = $this->getModel()->getDifficulty();
+        $this->duration = $this->getModel()->getDuration();
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
         $app = Factory::getApplication();
         $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);

@@ -1,8 +1,13 @@
-## 0.41.59-dev — filtro tag nel catalogo pubblico (IMP-07)
+## 0.41.60-dev — filtro tag nel catalogo pubblico (IMP-07, PR #209 candidata)
 
-- Aggiunge filtro per tag Joomla nel catalogo e nelle pagine categoria.
-- Elenca solo tag pubblicati/accessibili associati a corsi che l’utente può già vedere; query con parametri associati e scope di categoria preservato.
-- Collaudi automatici HTTP e istruzioni manuali registrati in `docs/QA_TESTBOOK.md`.
+- Aggiunge il filtro per tag Joomla nel catalogo e nelle pagine categoria, combinabile con difficoltà, durata, ricerca e ordinamento.
+- Elenca solo tag pubblicati/accessibili associati a corsi visibili; conserva il perimetro dei discendenti della categoria.
+- CI standard e pacchetto saranno registrati dopo la verifica del candidato. Collaudo Joomla: vedere `docs/QA_TESTBOOK.md`.
+
+## 0.41.59-dev — filtri core del catalogo (CAT-01, PR #210 integrata)
+
+- Aggiunge filtri pubblici per difficoltà e fasce di durata stimata al catalogo e alle categorie; ricerca, ordinamento, categoria e paginazione si combinano.
+- Valori limitati a opzioni previste e query sui soli metadati promozionali. CI standard 4/4 superata nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069); pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959). Collaudo Joomla ancora da eseguire.
 
 ## 0.41.58-dev — URL SEF con alias per catalogo e percorsi (IMP-07, PR #208 integrata)
 

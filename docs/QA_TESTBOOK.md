@@ -1,17 +1,24 @@
-## IMP-07 — filtro tag nel catalogo pubblico
+## IMP-07 — filtro tag nel catalogo pubblico (0.41.60-dev, PR #209 candidata)
 
-La PR aggiunge il filtro per tag al catalogo generale e alle liste di una categoria. Le opzioni provengono solo da tag pubblicati e accessibili associati a corsi visibili all’utente; il filtro applica gli stessi controlli di accesso dei tag e non cambia la visibilità dei corsi.
+Riferimenti: CAT-01, AC-41 e AC-85. Installare il pacchetto candidato su Joomla 6; predisporre corsi pubblicati con tag pubblici, tag con accesso differenziato e corsi privati o in categorie non visibili.
 
-**Comportamenti da testare sul sito Joomla di prova**
+1. Da ospite, verificare catalogo e pagine categoria: selettore tag presente e tradotto; elenco limitato ai tag pubblicati/accessibili associati ai corsi visibili.
+2. Selezionare un tag e verificare che i risultati contengano solo corsi visibili associati; categoria deve restare limitata al ramo corrente.
+3. Accedere con utente autorizzato e verificare che compaiano solo tag aggiuntivi accessibili e i relativi corsi permessi.
+4. Combinare tag, difficoltà, durata, ricerca e ordinamento; paginazione e selezioni devono restare coerenti. Provare ID inesistente e SEF attivo/disattivo.
+5. Verificare IT/EN. Il filtro non deve esporre titoli, descrizioni o conteggi di corsi nascosti.
 
-1. Aggiornare JD Learn al pacchetto della PR e associare tag differenti a corsi pubblici, a un corso riservato agli utenti registrati e a un corso in una categoria privata.
-2. Da ospite, aprire il catalogo e verificare che il selettore mostri solo tag dei corsi pubblici visibili. Selezionare i tag e verificare che compaiano soltanto i corsi associati.
-3. Aprire una categoria pubblica con corsi diretti e discendenti; filtrare per tag e verificare che la lista resti limitata a quella categoria e ai discendenti.
-4. Accedere con un utente autorizzato ai corsi riservati e verificare che i tag siano disponibili solo entro il suo perimetro.
-5. Provare un ID tag inesistente e una ricerca combinata con tag, ordinamento e paginazione; l’ID inesistente non deve mostrare corsi e gli altri filtri devono conservarsi.
-6. Ripetere in IT/EN e con SEF attivo/disattivo; nessun contenuto di lezione o dato privato deve emergere.
+## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #210 candidata)
 
-CI controlla la presenza dei selettori in catalogo/categoria e il risultato vuoto con ID tag inesistente. Il collaudo manuale sopra resta necessario.
+Riferimenti: CAT-01/CAT-04, AC-41/AC-85. Verificare su Joomla 6 di prova con almeno quattro corsi pubblicati, nelle categorie accessibili: uno principiante da45minuti, uno avanzato da90minuti, uno intermedio oltre120minuti e uno senza durata stimata. Predisporre anche un account con accesso limitato e una categoria con corsi discendenti.
+
+1. Aprire il catalogo da ospite e come account autorizzato. Atteso: i filtri difficoltà e durata sono disponibili con label tradotte in italiano/inglese.
+2. Selezionare principiante e fascia30–60minuti: deve restare solo il corso principiante da45minuti. Selezionare avanzato o oltre120minuti e verificare i rispettivi corsi; le schede senza durata non devono comparire quando una fascia è attiva.
+3. Aggiungere ricerca e ordinamento, poi impostare un filtro dalla pagina di una categoria: risultati e paginazione devono rispettare tutti i filtri e restare nel ramo categoria selezionato.
+4. Ripetere con un corso o categoria non visibile all’account limitato: il filtro non deve rivelare titoli, riassunti o conteggi dei corsi esclusi.
+5. Inviare manualmente valori non previsti per difficoltà e durata: il catalogo deve restare integro e trattarli come filtri assenti.
+
+**Esito sito Joomla:** Non eseguito.
 
 ## IMP-07 — metadati SEO e social pubblici (0.41.57-dev, PR #207 integrata)
 
@@ -638,9 +645,9 @@ La suite automatica copre una riga scaduta e la cancellazione; il limite massimo
 **CI:** PR [#198] integrata; standard 4/4 superata nel [run 42883180012](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012). [Pacchetto installabile JD-Learn-0.41.53-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012/artifacts/13794578948).
 
 **Esito sito Joomla:** Non eseguito.
-## IMP-07 — URL SEF con alias per corsi, categorie e percorsi (0.41.58-dev)
+## IMP-07 — URL SEF con alias per corsi, categorie e percorsi (0.41.58-dev, PR #208 integrata)
 
-**PR IMP-07 alias — milestone 1.0.0.** Eseguire sul sito Joomla di prova e registrare qui l’esito; i percorsi numerici precedenti devono restare funzionanti.
+PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208), milestone **1.0.0**, integrata con squash nel commit `6b92612254c060c1ef296c0a03661442871ad1cc`. CI standard 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500). Pacchetto [JD-Learn-0.41.58-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500/artifacts/13806778546), wrapper SHA-256 `773fb7cd4e200df599ffd1b858cc5ef60d013c8823780b625024afbb4acec8cb`, ZIP Joomla SHA-256 `7a4d52cdbbd708b523d6d05f29f0b937fcf5094019a6c9e70ab443bd7a28ade3`, disponibile fino al 24 novembre 2026. Eseguire sul sito Joomla di prova e registrare qui l’esito; i percorsi numerici precedenti devono restare funzionanti.
 
 1. Installare il pacchetto candidato su Joomla di prova e predisporre corsi, categorie e percorsi pubblicati con alias parlanti; includere due record con alias uguale in lingue/categorie diverse.
 2. Attivare SEF e URL rewriting. Aprire catalogo, categoria, scheda corso e percorso; verificare che i collegamenti usino segmenti ID-alias (per esempio `42-alias-corso`), che ogni pagina corrisponda al record corretto e che non appaiano ID di un altro tipo di contenuto.
