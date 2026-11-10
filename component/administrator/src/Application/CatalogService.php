@@ -19,10 +19,14 @@ final class CatalogService
     {
         $query = $this->courseQuery($actor, $language, $categoryId, false);
         if ($tagId > 0) {
+            $tagActor = (int) $actor->id ? new User((int) $actor->id) : $actor;
+            $tagActor->clearAccessRights();
+            $levels = $tagActor->block ? [0] : array_map('intval', $tagActor->getAuthorisedViewLevels());
+            $levels = $levels ?: [0];
             $tagMap = $this->db->createQuery()->select('1')->from('#__contentitem_tag_map AS tag_map')
                 ->innerJoin('#__tags AS tag ON tag.id = tag_map.tag_id')
                 ->where('tag_map.content_item_id = c.id')->where('tag_map.type_alias = :courseTagAlias')
-                ->where('tag.id = :catalogTagId')->where('tag.published = 1');
+                ->where('tag.id = :catalogTagId')->where('tag.published = 1')->whereIn('tag.access', $levels);
             $query->where('EXISTS (' . $tagMap . ')')
                 ->bind(':courseTagAlias', 'com_jlms.course')
                 ->bind(':catalogTagId', $tagId, ParameterType::INTEGER);
@@ -33,11 +37,15 @@ final class CatalogService
     /** Returns published tags attached to courses already visible to this actor. */
     public function publicTags(User $actor, string $language, int $categoryId = 0): array
     {
+        $tagActor = (int) $actor->id ? new User((int) $actor->id) : $actor;
+        $tagActor->clearAccessRights();
+        $levels = $tagActor->block ? [0] : array_map('intval', $tagActor->getAuthorisedViewLevels());
+        $levels = $levels ?: [0];
         $query = $this->courseQuery($actor, $language, $categoryId, false)
             ->clear('select')->select('DISTINCT tag.id, tag.title')
             ->innerJoin('#__contentitem_tag_map AS tag_map ON tag_map.content_item_id = c.id AND tag_map.type_alias = :courseTagAlias')
             ->innerJoin('#__tags AS tag ON tag.id = tag_map.tag_id')
-            ->where('tag.published = 1')
+            ->where('tag.published = 1')->whereIn('tag.access', $levels)
             ->order('tag.title, tag.id')
             ->bind(':courseTagAlias', 'com_jlms.course');
         return $this->db->setQuery($query, 0, 500)->loadObjectList();
