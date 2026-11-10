@@ -19,7 +19,9 @@ final class HtmlView extends BaseHtmlView
     public $childrenPagination;
     public string $search = '';
     public string $order = 'recent';
-    public string $difficulty = '';
+    public int $tagId = 0;
+    public array $tags = [];
+public string $difficulty = '';
     public string $duration = '';
 
     public function display($tpl = null)
@@ -29,7 +31,9 @@ final class HtmlView extends BaseHtmlView
         $this->pagination = $this->get('Pagination');
         $this->search = $this->getModel()->getSearch();
         $this->order = $this->getModel()->getOrder();
-        $this->difficulty = $this->getModel()->getDifficulty();
+        $this->tagId = $this->getModel()->getTagId();
+        $this->tags = $this->getModel()->getTags();
+$this->difficulty = $this->getModel()->getDifficulty();
         $this->duration = $this->getModel()->getDuration();
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
         $app = Factory::getApplication();

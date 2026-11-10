@@ -57,6 +57,14 @@ try:
    time.sleep(.2)
  else:raise RuntimeError('Test HTTP server did not become ready')
  if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
+ if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[tag_id]"' not in html:
+  raise RuntimeError('Public catalog search, order and tag controls did not render')
+ _,all_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'0'}))
+ if 'Publication fixture' not in all_tag_html:
+  raise RuntimeError('The all-tags selection must preserve the unfiltered public catalog')
+ _,invalid_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'2147483647'}))
+ if 'Publication fixture' in invalid_tag_html:
+  raise RuntimeError('An unknown tag must not broaden the public catalog result')
  if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[difficulty]"' not in html or 'name="filter[duration]"' not in html:
   raise RuntimeError('Public catalog search, order and core filters did not render')
  search_url,search_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[search]':'Publication fixture','filter[order]':'title'}))
@@ -78,6 +86,8 @@ try:
  if category_url:
   category_query=urlencode({'filter[search]':'Publication fixture','filter[order]':'title','filter[difficulty]':'beginner','filter[duration]':'30-60'})
   _,category_search=get(category_url+('&' if '?' in category_url else '?')+category_query)
+  if 'Publication fixture' not in category_search or 'id="jlms-category-catalog-filters"' not in category_search or 'name="filter[tag_id]"' not in category_search:
+   raise RuntimeError('Category-scoped search and tag controls did not preserve their category')
   if 'Publication fixture' not in category_search or 'id="jlms-category-catalog-filters"' not in category_search or 'value="beginner" selected' not in category_search or 'value="30-60" selected' not in category_search:
    raise RuntimeError('Category-scoped catalog search did not preserve its category')
  _,invalid_filter_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'beginner\' OR 1=1 --','filter[duration]':'0 OR 1=1'}))

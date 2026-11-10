@@ -1,3 +1,9 @@
+## 0.41.60-dev — filtro tag nel catalogo pubblico (IMP-07, PR #209 candidata)
+
+- Aggiunge il filtro per tag Joomla nel catalogo e nelle pagine categoria, combinabile con difficoltà, durata, ricerca e ordinamento.
+- Le opzioni mostrano soltanto tag pubblicati/accessibili associati a corsi visibili; il filtro mantiene il ramo categoria e non rivela corsi riservati.
+- Collaudi automatici e pacchetto saranno registrati dopo la CI della PR. Collaudo Joomla: vedere il [testbook](docs/QA_TESTBOOK.md#imp-07--filtro-tag-nel-catalogo-pubblico-04160-dev-pr-209-candidata).
+
 ## 0.41.59-dev — filtri core del catalogo (CAT-01, PR #210 integrata)
 
 - Aggiunge filtri pubblici per difficoltà e fasce di durata stimata al catalogo e alla lista corsi delle categorie; ricerca, ordine, categoria e paginazione si combinano.

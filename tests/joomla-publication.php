@@ -102,6 +102,7 @@ function pubTransition(?int $expectedCourse = null): void {
     $publication->transition($actor,$course,$version,$expectedCourse ?? pubRevision('courses',$course),pubRevision('course_versions',$version),(int)$choices[0]->id);
 }
 $guest = new \Joomla\CMS\User\User();
+pubExpect($catalog->publicTags($guest, 'en-GB', $catid) === [], 'public tag choices exclude courses that are still drafts');
 $hidden = static function () use ($catalog,$guest,$course): bool {
     try { $catalog->course($guest,'en-GB',$course); } catch (\RuntimeException $error) { return $error->getCode()===404; }
     return false;
