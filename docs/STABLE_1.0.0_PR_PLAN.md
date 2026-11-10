@@ -22,7 +22,7 @@ IMP-05 è in corso: PR [#198] ha integrato la pulizia batch limitata delle sessi
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
-IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) integra ricerca su titolo/sommario e ordinamento in 0.41.56-dev. PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) integra metadati canonical/social pubblici in 0.41.57-dev, merge `32215c493fe1d7a2bf99871b5f93087a842563bd`, CI 4/4 nel run 42905972598; restano alias/canonicalizzazione storica, altri residui catalogo/percorsi e accettazione Joomla.
+IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) integra ricerca su titolo/sommario e ordinamento in 0.41.56-dev. PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) integra metadati canonical/social pubblici in 0.41.57-dev. PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208) integra alias SEF per corsi, categorie e percorsi in 0.41.58-dev, merge `6b92612254c060c1ef296c0a03661442871ad1cc`, CI 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500); restano lifecycle categorie, presentazione catalogo/percorsi e accettazione Joomla.
 
 ## Blocco IMP — implementazione
 
@@ -72,7 +72,11 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato al 10 novembre 2026: main è **0.41.57-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206 e #207; la CI standard della #207 è 4/4 superata nel [run 42905972598](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **74%** secondo IMPLEMENTATION_STATUS (516/7; area catalogo 62%); il collaudo Joomla resta pendente. IMP-07 continua per i residui SEO, catalogo e percorsi.
+Aggiornato al 10 novembre 2026: main è **0.41.58-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206, #207 e #208; la CI standard della #208 è 4/4 superata nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **74%** secondo IMPLEMENTATION_STATUS (517/7; area catalogo 63%); il collaudo Joomla resta pendente. IMP-07 prosegue sui lifecycle delle categorie, sulla presentazione del catalogo e dei percorsi e sull’accettazione Joomla di Finder/SEO/SEF.
+
+## Aggiornamento 10 novembre 2026 — IMP-07 / PR #208
+
+PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208) integrata in 0.41.58-dev: alias SEF ID-alias per corsi, categorie e percorsi, compatibile con percorsi numerici precedenti. CI standard 4/4; collaudo Joomla pendente nel testbook. Pacchetto [JD-Learn-0.41.58-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500/artifacts/13806778546), wrapper `773fb7cd4e200df599ffd1b858cc5ef60d013c8823780b625024afbb4acec8cb`, ZIP `7a4d52cdbbd708b523d6d05f29f0b937fcf5094019a6c9e70ab443bd7a28ade3`. Avanzamento stimato: **74%** (517/7).
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #207
 
