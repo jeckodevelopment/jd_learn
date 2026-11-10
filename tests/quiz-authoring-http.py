@@ -50,8 +50,8 @@ try:
  bank='/administrator/index.php?option=com_jlms&view=questionbank'
  _,b,_=request(admin,bank);bank_html=b.decode()
  expect('id="jlms-question-list"'in bank_html and'PRIVATE_QUIZ_PROMPT_V2'in bank_html and'id="jlms-question-form"'not in bank_html,'native question list is separate from its editor')
- for field in ['filter[search]','filter[published]','filter[catid]','filter[language]']:
-  expect(f'name="{field}"' in bank_html,'question bank renders Joomla Search Tools field '+field)
+ for field in ['search','published','catid','language']:
+  expect(f'id="filter_{field}"' in bank_html,'question bank renders Joomla Search Tools field '+field)
  expect('Actions for: %s' not in bank_html and '<th scope="col" class="text-end">Actions</th>' in bank_html,'question action heading uses a plain translated label')
  filtered=bank+'&'+urlencode({'filter[search]':'id:'+str(f['question_id']),'filter[published]':'1','filter[catid]':str(f['category_id']),'filter[language]':'*'})
  _,filtered_html,_=request(admin,filtered)
