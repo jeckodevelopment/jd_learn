@@ -72,3 +72,8 @@ Main è **0.41.52-dev** secondo [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS
 ## Aggiornamento 10 novembre 2026 — STAB-02
 
 La PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194) integra i filtri e l’intestazione della Banca domande per le issue #155/#156, milestone **1.0.0**. CI 4/4 superata; collaudo Joomla manuale ancora pendente. Avanzamento globale: **73%**.
+
+
+## Aggiornamento 10 novembre 2026 — IMP-04 / progresso audio
+
+La PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196) completa un residuo di recupero/ripresa audio: retry limitato e singolo per errori transitori, errore permanente visibile, nessun effetto sul completamento o sulla percentuale. CI 4/4; collaudo Joomla pendente nel [testbook](QA_TESTBOOK.md#pr-196-integrata--retry-del-progresso-audio). Proseguire con gli altri residui IMP-04 e IMP-05 secondo il piano.

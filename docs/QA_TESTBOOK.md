@@ -1,3 +1,15 @@
+## PR #196 integrata — retry del progresso audio
+
+PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196), milestone **1.0.0**, introduce un retry singolo dello stesso salvataggio per errori di rete, timeout, 408, 429 e 5xx. Gli errori permanenti non vengono riprovati. Il progresso audio non completa la lezione né aumenta la percentuale; la conferma esplicita resta necessaria. CI 4/4 nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). Collaudo manuale pendente.
+
+1. Avviare una lezione audio, attendere il salvataggio e ricaricare: la ripresa deve partire dal punto registrato.
+2. Mettere in pausa e spostare il cursore; verificare salvataggio e ripresa della posizione aggiornata.
+3. Simulare rete/5xx: il client deve ritentare una volta lo stesso punto e mostrare il salvataggio se riuscito.
+4. Simulare 403: nessun retry ripetuto, errore visibile, nessun cambiamento di completamento o percentuale.
+5. Arrivare alla fine dell’audio: la lezione deve richiedere ancora la conferma esplicita.
+
+[Pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523/artifacts/13793090250), disponibile fino al 24 novembre 2026.
+
 ## PR #194 integrata — filtri della banca domande
 
 PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194), milestone **1.0.0**, aggiunge i controlli Ricerca, Categoria, Stato e Lingua e corregge l’intestazione Azioni. CI standard 4/4 superata nel [run 42873607501](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501). Collaudo manuale pendente.

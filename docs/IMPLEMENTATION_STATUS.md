@@ -1,6 +1,6 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.52-dev** integra le PR [#190](https://github.com/jeckodevelopment/jd_learn/pull/190), [#192](https://github.com/jeckodevelopment/jd_learn/pull/192) e [#194](https://github.com/jeckodevelopment/jd_learn/pull/194). La PR #194 corregge i filtri visibili della Banca domande e l’intestazione Azioni. CI standard 4/4 superata nel [run 42873607501](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501). [Pacchetto installabile JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501/artifacts/13791570779); SHA-256 artefatto 03bb37d27a81eeb654cda6555cdb385cb4d6c7f745d05a1a13ce9c49df36219. I collaudi manuali Joomla restano da svolgere.
+Aggiornato al **10 novembre 2026**. Main **0.41.52-dev** integra le PR #190, #192, #194 e [#196](https://github.com/jeckodevelopment/jd_learn/pull/196). La #196 aggiunge il retry limitato del salvataggio posizione nelle lezioni audio. CI standard 4/4 superata nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). [Pacchetto installabile JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523/artifacts/13793090250); SHA-256 artefatto 4bcb98274e49cb8254c7f401e01c70c0969bab5aafa84089cc8600730ccdada3. I collaudi manuali Joomla restano da svolgere.
 
-IMP-04 / PR #181 integra apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
+IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
 
 PR #192 corregge issue #172: il selettore del nuovo corso mostra “Usa globali” e salva il fuso IANA globale, mantenendo intatti i fusi espliciti dei corsi esistenti. La 0.41.43-dev integra la simulazione dei livelli nella preview editoriale; la 0.41.44-dev risolve l’issue #154 e imposta il fuso globale Joomla come default per nuovi corsi. La 0.41.45-dev integra la toolbar Joomla per il programma didattico (issue #157, PR #169). La simulazione non modifica gruppi, iscrizioni, stato/versione del corso o progressi. Il test manuale per entrambe resta registrato nel [testbook](QA_TESTBOOK.md).
@@ -24,14 +24,14 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
 | Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 57% |
-| Fruizione e progressi core (M03/M09) | 76% |
+| Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 83% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 91% |
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **73%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (508/7 = 72,57%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (509/7 = 72,71%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 ## Funzioni presenti e lavoro residuo
 
