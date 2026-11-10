@@ -18,6 +18,8 @@ Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di 
 - Non introdurre requisiti non approvati. Quiz didattici avanzati, attestati, report/KPI avanzati, export/import CSV, operazioni massive e ulteriori provider video restano fuori da questo rilascio. Restano incluse la gestione essenziale degli iscritti e l’eccezione amministrativa AC-131 per la banca domande.
 - Tutte le PR implementative e di stabilizzazione appartengono alla milestone `1.0.0`. Credentials è un progetto successivo alla 1.0.0 e mantiene la propria nomenclatura e pianificazione separate.
 
+IMP-05 è in corso: PR [#198] ha integrato la pulizia batch limitata delle sessioni video scadute. Restano l’accettazione reale dei quattro provider e gli eventuali residui implementativi confermati; non si introduce un quinto provider.
+
 ## Blocco IMP — implementazione
 
 | Ordine | ID / priorità | Titolo e perimetro della PR | Requisiti e scenari | Dipendenze / uscita |

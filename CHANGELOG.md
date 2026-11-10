@@ -2,6 +2,7 @@
 
 - L’avvio autorizzato di una nuova sessione elimina fino a 250 sessioni video scadute usando l’indice di scadenza; le sessioni attive non vengono toccate. La pulizia è opportunistica e non sostituisce un’attività periodica sul sito inattivo.
 - Aggiunta prova d’integrazione Joomla per la rimozione di una riga scaduta. Nessuna modifica a progresso, accessi o provider.
+- PR [#198] integrata nel commit `df98bb5cfd8d7056643e786eedc9bab0804d9d53`; CI standard 4/4 superata nel [run 42883180012](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012). Pacchetto installabile [JD-Learn-0.41.53-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012/artifacts/13794578948), SHA-256 ZIP `e8ac53685a7b2189f23373b6048a3342987112c0f15d15637a329e67e51a69c7`, artefatto `f30f0475571a2240fabb03eaee7b0280b78d0b8154b6a7a46ce4c976984b5815`; dimensioni rispettive 545.191 e 545.042 byte, scadenza 24 novembre 2026.
 - Collaudo manuale Joomla richiesto: avvio di un video dopo la scadenza di una sessione precedente; verificare che il player parta normalmente e che la nuova sessione salvi la posizione.
 
 ## 0.41.52-dev — retry del progresso audio (PR #196 integrata)
