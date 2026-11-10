@@ -32,7 +32,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
 
     public function getForm($data = [], $loadData = true)
     {
-        return $this->loadForm('com_jlms.course', 'course', ['control' => 'jform', 'load_data' => $loadData]);
+        $form = $this->loadForm('com_jlms.course', 'course', ['control' => 'jform', 'load_data' => $loadData]);
+        if ($form) {
+            $form->setFieldAttribute('calendar_timezone', 'default', $this->siteTimezone());
+        }
+        return $form;
     }
 
     protected function loadFormData()
@@ -44,7 +48,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $item = parent::getItem($pk);
         if ($item) {
-            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item,Factory::getApplication()->getIdentity()->getTimezone()->getName()) as $key=>$value) { $item->$key=$value; }
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item, $this->siteTimezone()) as $key=>$value) { $item->$key=$value; }
         }
         if ($item && !empty($item->id)) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($item->params_json) ?? [] as $field => $value) {
@@ -59,6 +63,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
         }
         return $item;
+    }
+
+    private function siteTimezone(): string
+    {
+        return (string) Factory::getApplication()->getConfig()->get('offset', 'UTC');
     }
 
     protected function preprocessForm(\Joomla\CMS\Form\Form $form, $data, $group = 'content')

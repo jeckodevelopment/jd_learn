@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.44-dev — fuso predefinito dei corsi dalla configurazione globale (issue #154, in revisione)
+
+- Il fuso orario iniziale di un nuovo corso usa il valore globale del sito Joomla; l’autore può selezionare e salvare un fuso diverso. I corsi esistenti mantengono il proprio fuso.
+- Aggiunta una prova Joomla d’integrazione per il default globale e la selezione nel form; collaudo manuale reale ancora pendente.
+- PR assegnata alla milestone `1.0.0`; esiti CI e pacchetto installabile saranno registrati dopo la verifica del candidato.
+
 ## 0.41.43-dev — anteprima dei livelli di accesso (PR #162 integrata)
 
 - La preview editoriale consente di simulare viewing access level Joomla e distingue visibilità di catalogo, accesso ai contenuti e requisito combinato. La simulazione è read-only e non modifica identità, iscrizioni, corso o progressi.
