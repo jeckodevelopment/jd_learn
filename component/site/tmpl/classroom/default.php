@@ -85,6 +85,10 @@ $currentModule = 0;
   <article id="jlms-material-<?= (int) $file->id ?>" class="jlms-material">
    <h4 class="jlms-material__title"><?= $this->escape($file->title) ?></h4><p><?= $this->escape($file->description ?? '') ?></p>
    <p class="jlms-material__meta"><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
+   <?php if (in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) : ?>
+    <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>
+    <a class="jlms-material__preview" target="_blank" rel="noopener" href="<?= Route::_($inlineUrl) ?>"><?= Text::_('COM_JLMS_VIEW_INLINE') ?></a>
+   <?php endif; ?>
    <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.download&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
   </article>
  <?php endforeach; ?>
