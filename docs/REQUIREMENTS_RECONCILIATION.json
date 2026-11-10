@@ -1,8 +1,8 @@
 {
   "date": "2026-11-10",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
-  "runtime_tested_head": "421618d693a502db872415eb4d3c53aed4b220d2",
-  "ci_run": 42886192087,
+  "runtime_tested_head": "3c0b967a4407e832e571c76e2ec377c7deca57b8",
+  "ci_run": 42898585659,
   "counts": {
     "Stato implementazione": {
       "Parziale": 166,
@@ -25,10 +25,10 @@
   },
   "implementation_progress": {
     "percent": 73,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; non derivata dalle righe CSV.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; il Finder IMP-07 porta il catalogo dal 57% al 58%; non derivata dalle righe CSV.",
     "areas": [
       76,
-      57,
+      58,
       77,
       85,
       67,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR ricostruite da riferimenti esistenti e storia delle fonti: non certificano da sole ogni criterio. PR #204 è inclusa nella candidata IMP-07; CORE-14 resta implementazione parziale e accettazione Joomla non eseguita."
+  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR ricostruite da riferimenti esistenti e storia delle fonti: non certificano da sole ogni criterio. PR #204 è integrata; CORE-14 resta implementazione parziale, con CI specifica e accettazione Joomla non eseguite."
 }

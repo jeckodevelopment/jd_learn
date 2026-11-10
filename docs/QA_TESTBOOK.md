@@ -1,6 +1,6 @@
-## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR #204)
+## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR #204 integrata)
 
-La CI standard 4/4 del commit precedente alla sincronizzazione è nel [run 42895021649](https://github.com/jeckodevelopment/jd_learn/actions/runs/42895021649). La base è stata aggiornata con main; eseguire la CI sul nuovo commit e ripetere il collaudo manuale Joomla sul sito di prova prima di chiudere IMP-07. La CI non sostituisce queste prove.
+La PR #204 è stata integrata nel commit `5018d895e52727be29cedb31f4f93b5245ef346a`. CI standard 4/4 superata nel [run 42898585659](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659). Il collaudo manuale Joomla sul sito di prova resta richiesto prima di chiudere IMP-07; la CI non sostituisce queste prove. Pacchetto installabile [JD-Learn-0.41.55-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659/artifacts/13802930146), wrapper ZIP SHA-256 `48af954a9fa682519e5a6c8121ef97d22b17bd37004f9969e1e8c59c694e66e1`, disponibile fino al 24 novembre 2026. Estrarre il wrapper per ottenere il pacchetto Joomla.
 
 1. Installare il pacchetto candidato su Joomla 6 di prova con `com_finder` attivo. Verificare **Estensioni → Plugin**: `Smart Search - JD Learn` è abilitato alla prima installazione e resta nello stato scelto durante un aggiornamento.
 2. Predisporre corsi con titolo/sommario univoci: pubblicato in categoria pubblica, non pubblicato, catalogo con livello registrato, categoria privata, antenato non pubblicato, lingua differente, senza versione pubblicata, e pubblicato con `publish_up`/`publish_down` configurato. Predisporre anche un corso pubblico con titolo e sommario promozionale.

@@ -1,12 +1,12 @@
 # Come leggere `REQUIREMENTS_STATUS.csv`
 
-Ricognizione del **10 novembre 2026**, baseline main `70c9dff` / runtime **0.41.54-dev**. I 210 ID, descrizioni, scenari e perimetri originari restano invariati. Il perimetro baseline (209 “Rilascio 1”, NOT-03 differito) è storico: non coincide con il sottoinsieme oggi approvato per la **1.0.0**.
+Ricognizione iniziale del **10 novembre 2026** sulla baseline main `70c9dff` / runtime **0.41.54-dev**; matrice aggiornata dopo il merge IMP-07 su main `5018d89` / runtime **0.41.55-dev**. I 210 ID, descrizioni, scenari e perimetri originari restano invariati. Il perimetro baseline (209 “Rilascio 1”, NOT-03 differito) è storico: non coincide con il sottoinsieme oggi approvato per la **1.0.0**.
 
 | Dimensione | Conteggio | Significato |
 |---|---:|---|
 | Implementazione completata | 14 | Nessun residuo di codice identificato nel sottoinsieme core esplicitato |
-| Implementazione parziale | 165 | Codice/documentazione presente, con delta o completezza puntuale ancora da riscontrare |
-| Implementazione non iniziata | 31 | Percorso specifico non disponibile; uno schema non è una funzione |
+| Implementazione parziale | 166 | Codice/documentazione presente, con delta o completezza puntuale ancora da riscontrare |
+| Implementazione non iniziata | 30 | Percorso specifico non disponibile; uno schema non è una funzione |
 | Interamente 1.0.0 | 133 | Criteri baseline inclusi |
 | Misto | 40 | Sottoinsieme core e criteri differiti distinti nella stessa riga |
 | Interamente fase 2 | 37 | Non entra nei gate/denominatori core |
@@ -32,7 +32,7 @@ I conteggi comprendono anche il codice esistente in fase 2; non sono una percent
 
 Perimetro 1.0.0, Criteri 1.0.0 e Criteri fase 2 applicano [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). I trasversali restano obbligatori sui flussi inclusi. AC-131 è la sola eccezione amministrativa alla sospensione quiz. Quinto provider, import/batch, attestati e KPI non diventano gate core. Per CAT-03/SCR-04 non è introdotto un rinvio.
 
-**PR implementazione** raccoglie PR integrate già citate nelle evidenze e PR associate ai commit che modificano le fonti. **Commit riscontrato** identifica l’ultima modifica delle fonti nella baseline: non è necessariamente la PR originaria della funzione, né prova ogni criterio. Una ricostruzione mancante è dichiarata. La PR #204 Finder è aperta alla ricognizione ed è esclusa dagli stati di main.
+**PR implementazione** raccoglie PR integrate già citate nelle evidenze e PR associate ai commit che modificano le fonti. **Commit riscontrato** identifica l’ultima modifica delle fonti nella baseline: non è necessariamente la PR originaria della funzione, né prova ogni criterio. Una ricostruzione mancante è dichiarata. La PR #204 Finder è integrata; CORE-14 è ora parziale per implementazione, mentre la verifica automatica specifica e l’accettazione Joomla restano non eseguite.
 
 **Residui implementativi 1.0.0** indica codice/documentazione da completare oppure un riscontro puntuale ancora necessario. **Verifiche residue 1.0.0** conserva scenari, prove Joomla/provider/browser, benchmark e limiti della precedente evidenza, da applicare al solo core; i riferimenti storici possono citare funzionalità ormai presenti, che non vanno reimplementate. **Residui fase 2** mantiene distinto il lavoro rinviato. **Criteri residui** riepiloga le tre colonne, senza aggiungere un backlog.
 
@@ -40,4 +40,4 @@ Perimetro 1.0.0, Criteri 1.0.0 e Criteri fase 2 applicano [RELEASE_SCOPE.md](REL
 
 Ogni incremento aggiorna righe, fonti, PR/commit, esecuzione dei test e limiti, insieme al riepilogo JSON. `tools/check.py` verifica baseline immutata, fonti presenti, stati indipendenti, evidenze e conteggi. `tests/requirements-status.py` impedisce accettazione dedotta dalla CI, completamento con residui di codice e fase 2 trasformata in gate core.
 
-Avanzamento **73% stimato**: media delle sette aree di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), 511/7, fase 2 esclusa. Questa PR non aggiunge funzioni e non aumenta la stima. Non si assegna un peso arbitrario del 50% a Parziale e non si usa 14/210 come avanzamento. La settima area comprende preparazione/verifica del rilascio: è una stima storica per aree, non una misura di codice scritto o di accettazione Joomla.
+Avanzamento **73% stimato**: media delle sette aree di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), 512/7, fase 2 esclusa. Il Finder integrato porta l’area catalogo dal 57% al 58%; la media arrotondata resta 73%. Non si assegna un peso arbitrario del 50% a Parziale e non si usa 14/210 come avanzamento. La settima area comprende preparazione/verifica del rilascio: è una stima storica per aree, non una misura di codice scritto o di accettazione Joomla.
