@@ -93,6 +93,44 @@ final class MaterialService
             'schedule_timezone' => CourseSchedule::read($course)['timezone']];
     }
 
+    /** Available course/lesson files for an authorised, non-enrolled editorial preview. */
+    public function previewLists(User $identity, int $courseId, int $versionId, int $lessonId): array
+    {
+        $this->author($identity, $courseId, $versionId);
+        $lesson = $this->row('lessons', $lessonId);
+        if ((int) $lesson->course_version_id !== $versionId || !in_array($lesson->kind, ['document', 'audio'], true)) {
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        return ['course' => $this->listing($versionId, null, 0, false),
+            'lesson' => $this->listing($versionId, $lessonId, 0, false)];
+    }
+
+    /** Serve only an attachment linked to this course version and the selected lesson/course. */
+    public function previewDownload(User $identity, int $courseId, int $versionId, int $lessonId, int $attachmentId): array
+    {
+        $this->author($identity, $courseId, $versionId);
+        $lesson = $this->row('lessons', $lessonId);
+        $link = $this->row('attachments', $attachmentId);
+        if ((int) $lesson->course_version_id !== $versionId || !in_array($lesson->kind, ['document', 'audio'], true)
+            || (int) $link->course_version_id !== $versionId
+            || ($link->lesson_id !== null && (int) $link->lesson_id !== $lessonId)
+            || (int) $link->state !== 1 || (int) $link->preview !== 0) {
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        $now = gmdate('Y-m-d H:i:s');
+        if (($link->publish_up !== null && $link->publish_up > $now) || ($link->publish_down !== null && $link->publish_down <= $now)) {
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        $file = $this->open((int) $link->asset_id);
+        if ($lesson->kind === 'audio' && !in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) {
+            fclose($file['handle']);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        $file['inline'] = $lesson->kind === 'audio'
+            || in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true);
+        return $file;
+    }
+
     /** Uploaded binary is validated/scanned before the short authoring transaction. */
     public function upload(User $identity, int $courseId, int $versionId, int $lessonId, int $expected, string $title,
         string $description, array $upload, int $replaceId = 0, mixed $publishUp = null, mixed $publishDown = null): int
@@ -214,7 +252,7 @@ final class MaterialService
         if ((int) $link->course_version_id !== $context['version_id'] || (int) $link->state !== 1 || (int) $link->preview !== 0) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
-        $now = gmdate('Y-m-d H:i:s.u');
+        $now = gmdate('Y-m-d H:i:s');
         if (($link->publish_up !== null && $link->publish_up > $now) || ($link->publish_down !== null && $link->publish_down <= $now)) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
@@ -227,7 +265,7 @@ final class MaterialService
         $context = $this->learning->audioLessonContext($actor, $language, $enrollmentId, $lessonId);
         if ((int) $link->course_version_id !== $context['version_id'] || (int) $link->lesson_id !== $lessonId
             || (int) $link->state !== 1 || (int) $link->preview !== 0) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
-        $now = gmdate('Y-m-d H:i:s.u');
+        $now = gmdate('Y-m-d H:i:s');
         if (($link->publish_up !== null && $link->publish_up > $now) || ($link->publish_down !== null && $link->publish_down <= $now)) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }

@@ -79,6 +79,10 @@ final class CoursepreviewModel extends BaseModel
                     'provider_key' => $record->provider_key,
                     'body' => $filter->clean((string) $record->body, 'html'),
                 ];
+                if (in_array($record->kind, ['document', 'audio'], true)) {
+                    $lesson->preview_materials = $app->bootComponent('com_jlms')->getMaterialService()
+                        ->previewLists($actor, $courseId, $versionId, $lessonId);
+                }
             }
         } catch (\DomainException $error) {
             $denied = $error->getMessage() === 'JERROR_ALERTNOAUTHOR';

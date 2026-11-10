@@ -1,3 +1,9 @@
+## 0.41.47-dev — preview editoriale di documenti e audio (candidato PR)
+
+- Estende IMP-03 alle lezioni documento/audio: mostra allegati di corso e lezione pronti, rispetta stato e finestre di pubblicazione e rivalida ACL prima della consegna. PDF, immagini e testo consentiti possono aprirsi inline; altri documenti restano download. MP3/OGG sono riprodotti con il player HTML5 nativo.
+- La preview non crea iscrizioni, sessioni, tentativi o progressi. Le interazioni quiz restano fuori da questa preview.
+- Collaudo Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#imp-03--preview-editoriale-di-documenti-e-audio-candidato-04147-dev). PR e CI non ancora completate.
+
 # Changelog
 
 ## 0.41.46-dev — riproduzione video nella preview editoriale (PR #177 integrata)
