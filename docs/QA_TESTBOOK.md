@@ -628,7 +628,7 @@ La suite automatica copre una riga scaduta e la cancellazione; il limite massimo
 **PR IMP-07 alias — milestone 1.0.0.** Eseguire sul sito Joomla di prova e registrare qui l’esito; i percorsi numerici precedenti devono restare funzionanti.
 
 1. Installare il pacchetto candidato su Joomla di prova e predisporre corsi, categorie e percorsi pubblicati con alias parlanti; includere due record con alias uguale in lingue/categorie diverse.
-2. Attivare SEF e URL rewriting. Aprire catalogo, categoria, scheda corso e percorso; verificare che i collegamenti usino segmenti `id:alias`, che ogni pagina corrisponda al record corretto e che non appaiano ID di un altro tipo di contenuto.
+2. Attivare SEF e URL rewriting. Aprire catalogo, categoria, scheda corso e percorso; verificare che i collegamenti usino segmenti ID-alias (per esempio `42-alias-corso`), che ogni pagina corrisponda al record corretto e che non appaiano ID di un altro tipo di contenuto.
 3. Aprire gli stessi record con i vecchi URL numerici; verificare che continuino a rispondere e che le pagine pubbliche espongano come canonical l’URL SEF con alias.
 4. Cambiare lingua con associazioni valide e verificare che il link porti al record tradotto e al suo alias. Con un’associazione assente, verificare il fallback lingua già previsto.
 5. Disattivare SEF e verificare URL query tradizionali, navigazione e menu nativi. Riattivare SEF e verificare breadcrumb, paginazione/filtri e link di ritorno.
