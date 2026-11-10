@@ -1,3 +1,9 @@
+## 0.41.52-dev — retry del progresso audio (PR #196 integrata)
+
+- Gli errori temporanei di rete, timeout, HTTP 408/429 e 5xx ritentano una sola volta il salvataggio della stessa posizione audio. Gli errori permanenti non generano retry; il punto fallito resta disponibile per il successivo evento del player. Completamento e percentuale non cambiano.
+- CI standard 4/4 superata nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). [Pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523/artifacts/13793090250).
+- Collaudo Joomla pendente: ripresa, pausa/seek, errore transitorio e permanente, nessun completamento automatico. [Testbook](docs/QA_TESTBOOK.md#pr-196-integrata--retry-del-progresso-audio).
+
 ## 0.41.52-dev — filtri della banca domande (PR #194 integrata)
 
 - La vista Banca domande mostra i filtri Ricerca, Categoria, Stato e Lingua; consente combinazioni e mostra l’intestazione Azioni/Actions.
