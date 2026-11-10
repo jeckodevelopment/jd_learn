@@ -1,8 +1,8 @@
-## 0.41.60-dev — filtro tag nel catalogo pubblico (IMP-07, PR #209 candidata)
+## 0.41.60-dev — filtro tag nel catalogo pubblico (IMP-07, PR #209 integrata)
 
 - Aggiunge il filtro per tag Joomla nel catalogo e nelle pagine categoria, combinabile con difficoltà, durata, ricerca e ordinamento.
 - Le opzioni mostrano soltanto tag pubblicati/accessibili associati a corsi visibili; il filtro mantiene il ramo categoria e non rivela corsi riservati.
-- Collaudi automatici e pacchetto saranno registrati dopo la CI della PR. Collaudo Joomla: vedere il [testbook](docs/QA_TESTBOOK.md#imp-07--filtro-tag-nel-catalogo-pubblico-04160-dev-pr-209-candidata).
+- PR [#209](https://github.com/jeckodevelopment/jd_learn/pull/209) integrata con squash nel commit `66b9488009378ba7b7e7d77204bf33b904028e0e`, milestone **1.0.0**; CI standard 4/4 nel [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751). Pacchetto [JD-Learn-0.41.60-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751/artifacts/13810143951), wrapper SHA-256 `fda316f972196e9990d57e27a0d8be632eeda51afdfaa99bf846aca803d5d994`, disponibile fino al 24 novembre 2026. Il checksum ZIP installabile verificato in CI è registrato nel log del job di build; accettazione Joomla manuale pendente. Testbook aggiornato.
 
 ## 0.41.59-dev — filtri core del catalogo (CAT-01, PR #210 integrata)
 
@@ -820,3 +820,8 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Genera segmenti Joomla nel formato ID-alias per corsi, categorie e percorsi; mantiene il parsing degli URL numerici esistenti e usa il database Joomla con parametri associati.
 - Il canonical delle viste pubbliche risolve al percorso SEF con alias. Restano gli ID per disambiguare alias ripetuti tra lingue e contenitori.
 - PR IMP-07 in preparazione per la milestone **1.0.0**. Collaudo Joomla manuale in [testbook](docs/QA_TESTBOOK.md#imp-07--url-sef-con-alias-per-corsi-categorie-e-percorsi).
+## 0.41.61-dev — vista elenco del catalogo (IMP-07, PR in preparazione)
+
+- Consente di passare dalla griglia all’elenco nel catalogo corsi e nella pagina di una categoria; selezione tramite filtro allowlist e mantenuta nell’URL insieme agli altri filtri.
+- La vista elenco si adatta agli schermi stretti e usa le stesse schede e gli stessi risultati autorizzati della griglia.
+- Collaudi automatizzati nel test HTTP della CI; accettazione Joomla manuale pendente. Procedura nel [testbook](docs/QA_TESTBOOK.md#imp-07--vista-elenco-del-catalogo-04161-dev).

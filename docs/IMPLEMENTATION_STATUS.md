@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.59-dev** integra PR #210; CI standard 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). La PR #209 candidata porta il filtro tag in **0.41.60-dev**. Pacchetto main [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper SHA-256 `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP Joomla SHA-256 `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`. Collaudi Joomla pendenti. Avanzamento main 74% (518/7); stima dopo merge 74% (520/7).
+Aggiornato al **10 novembre 2026**. Main **0.41.60-dev** integra PR #209 e #210 (CI standard 4/4, [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751)). Il candidato **0.41.61-dev** aggiunge la vista elenco al catalogo/categorie. Avanzamento main **74%** (520/7); stima con il candidato **75%** (522/7). Collaudi Joomla manuali pendenti.
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -18,24 +18,24 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima seguente descrive main 0.41.59-dev e il candidato 0.41.60-dev con filtro tag; include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias e filtri per difficoltà/durata; i collaudi Joomla restano separati.
+La stima seguente descrive main 0.41.60-dev e il candidato 0.41.61-dev; main include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias e filtri per tag, difficoltà e durata. Il candidato aggiunge la vista elenco oltre alla griglia. I collaudi Joomla restano separati.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
-| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 66% |
+| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 68% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 85% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 91% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **74%** |
+| **Avanzamento complessivo stimato** | **75%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (520/7 = 74,29%, arrotondato al 74%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (522/7 = 74,57%, arrotondato al 75%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-07 comprende le PR #204 Finder, #206 ricerca/ordinamento, #207 metadati canonical/social, #208 URL SEF con alias e #210 filtri di difficoltà/durata; la PR #209 candidata aggiunge il filtro tag. CI standard #210 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069); collaudi Joomla pendenti. Dopo il merge della #209 l’area catalogo sarà stimata al 66% e l’avanzamento complessivo al 74% (520/7). Pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper SHA-256 `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP Joomla SHA-256 `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`. IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
+IMP-07 comprende le PR #204 Finder, #206 ricerca/ordinamento, #207 metadati canonical/social, #208 URL SEF, #209 filtro tag e #210 filtri difficoltà/durata; la PR in preparazione aggiunge la vista elenco. Il catalogo è stimato al 68%; avanzamento complessivo 75% (522/7), stima arrotondata; filtri docente/percorso e collaudi Joomla restano aperti.
 
 ## Funzioni presenti e lavoro residuo
 
