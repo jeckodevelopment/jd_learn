@@ -16,12 +16,16 @@ final class HtmlView extends BaseHtmlView
     public array $children = [];
     public $pagination;
     public $childrenPagination;
+    public string $search = '';
+    public string $order = 'recent';
 
     public function display($tpl = null)
     {
         $this->category = $this->getModel()->getCategory();
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
+        $this->search = $this->getModel()->getSearch();
+        $this->order = $this->getModel()->getOrder();
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
         $app = Factory::getApplication();
         $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);

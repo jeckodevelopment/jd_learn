@@ -15,6 +15,14 @@ use Joomla\CMS\Router\Route;
   <nav id="jlms-subcategories-pagination" aria-label="<?= Text::_('COM_JLMS_SUBCATEGORIES') ?>"><?= $this->childrenPagination->getPagesLinks() ?></nav>
  </section>
  <section id="jlms-category-courses"><h2><?= Text::_('COM_JLMS_COURSES') ?></h2><p><?= Text::_('COM_JLMS_CATEGORY_DESCENDANT_COURSES') ?></p>
+  <form id="jlms-category-catalog-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $this->category->id) ?>">
+   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="category"><input type="hidden" name="id" value="<?= (int) $this->category->id ?>">
+   <label for="jlms-category-catalog-search"><?= Text::_('COM_JLMS_CATALOG_SEARCH') ?></label>
+   <input id="jlms-category-catalog-search" type="search" name="filter[search]" value="<?= $this->escape($this->search) ?>" maxlength="100">
+   <label for="jlms-category-catalog-order"><?= Text::_('COM_JLMS_CATALOG_ORDER') ?></label>
+   <select id="jlms-category-catalog-order" name="filter[order]"><option value="recent"<?= $this->order === 'recent' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_RECENT') ?></option><option value="title"<?= $this->order === 'title' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_TITLE') ?></option></select>
+   <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
+  </form>
   <div id="jlms-category-course-grid" class="jlms-course-grid"><?php foreach ($this->items as $item) : ?>
    <article id="jlms-course-card-<?= (int) $item->id ?>" class="jlms-course-card" data-course-id="<?= (int) $item->id ?>">
     <h3 class="jlms-course-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h3>

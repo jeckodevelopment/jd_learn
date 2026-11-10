@@ -12,12 +12,16 @@ final class HtmlView extends BaseHtmlView
     public array $items = [];
     public $pagination;
     public int $categoryId = 0;
+    public string $search = '';
+    public string $order = 'recent';
 
     public function display($tpl = null)
     {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
+        $this->search = $this->getModel()->getSearch();
+        $this->order = $this->getModel()->getOrder();
         if ($this->get('Errors')) {
             throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
         }

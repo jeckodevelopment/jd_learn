@@ -22,7 +22,7 @@ IMP-05 è in corso: PR [#198] ha integrato la pulizia batch limitata delle sessi
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
-IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. Restano i residui SEO/catalogo/percorsi di IMP-07.
+IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. La candidata successiva PR #206 (0.41.56-dev) aggiunge ricerca su titolo/sommario e ordinamento nella vista Catalogo e Categoria; restano i residui SEO/catalogo/percorsi e il relativo collaudo Joomla.
 
 ## Blocco IMP — implementazione
 

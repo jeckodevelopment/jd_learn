@@ -1,3 +1,16 @@
+## IMP-07 — Ricerca e ordinamento del catalogo (0.41.56-dev, PR #206)
+
+La PR aggiunge ricerca su titolo/sommario e ordinamento recenti/titolo, nel catalogo completo e dentro una categoria. Verificare sul sito Joomla 6 di prova con corsi pubblici e contenuti riservati di fixture.
+
+1. Installare il pacchetto candidato. Aprire Catalogo corsi e verificare i controlli “Cerca nei corsi” e “Ordina per” in italiano; ripetere con lingua inglese.
+2. Cercare una parola univoca nel titolo e poi una nel sommario promozionale; verificare che compaiano solo le schede pubbliche accessibili.
+3. Usare un termine presente solo in una lezione o in un campo privato: nessun corso deve comparire per quel termine.
+4. Ordinare per “Titolo” e per “Più recenti”; verificare ordine stabile e che paginazione e selezione restino coerenti.
+5. Aprire una categoria con discendenti, cercare un corso appartenente a un discendente, cambiare ordinamento e paginare; verificare che la ricerca resti limitata alla categoria e ai discendenti.
+6. Provare caratteri speciali e stringhe con virgolette; nessun errore SQL o allargamento ai contenuti protetti.
+
+La CI verifica il rendering HTTP e l’isolamento dei termini di ricerca in fixture Joomla. L’accettazione sul sito reale resta da registrare separatamente.
+
 ## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR #204 integrata)
 
 La PR #204 è stata integrata nel commit `5018d895e52727be29cedb31f4f93b5245ef346a`. CI standard 4/4 superata nel [run 42898585659](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659). Il collaudo manuale Joomla sul sito di prova resta richiesto prima di chiudere IMP-07; la CI non sostituisce queste prove. Pacchetto installabile [JD-Learn-0.41.55-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659/artifacts/13802930146), wrapper ZIP SHA-256 `48af954a9fa682519e5a6c8121ef97d22b17bd37004f9969e1e8c59c694e66e1`, disponibile fino al 24 novembre 2026. Estrarre il wrapper per ottenere il pacchetto Joomla.
