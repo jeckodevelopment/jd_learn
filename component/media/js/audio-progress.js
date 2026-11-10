@@ -10,23 +10,43 @@ if (config && player) {
 
   const position = () => Math.max(0, Math.floor(player.currentTime * 1000));
   const setStatus = key => { if (status) status.textContent = config.labels?.[key] || ''; };
+  const wait = ms => new Promise(resolve => globalThis.setTimeout(resolve, ms));
+  const retryable = error => !error.status || error.status === 408 || error.status === 429 || error.status >= 500;
 
-  const flush = async keepalive => {
+  const send = async (value, keepalive, attempt = 0) => {
+    const body = new URLSearchParams({ enrollment_id: String(config.enrollment), lesson_id: String(config.lesson),
+      position_ms: String(value), [config.token]: '1' });
+    try {
+      const response = await fetch(config.url, { method: 'POST', body, credentials: 'same-origin', cache: 'no-store',
+        keepalive, headers: { Accept: 'application/json' } });
+      let result;
+      try { result = await response.json(); } catch { throw new Error('invalid-response'); }
+      if (!response.ok || result.success !== true) {
+        const error = new Error('audio-progress');
+        error.status = response.status;
+        throw error;
+      }
+      lastSent = value;
+      setStatus('saved');
+    } catch (error) {
+      if (!keepalive && attempt === 0 && retryable(error)) {
+        await wait(500);
+        return send(value, keepalive, 1);
+      }
+      // Retain the failed point for the next player event, but don't create a retry loop.
+      if (queued === null) queued = value;
+      setStatus('error');
+    }
+  };
+
+  const flush = keepalive => {
     if (request || queued === null) return request;
     const value = queued;
     queued = null;
     if (value === lastSent) return;
-    const body = new URLSearchParams({ enrollment_id: String(config.enrollment), lesson_id: String(config.lesson),
-      position_ms: String(value), [config.token]: '1' });
-    request = fetch(config.url, { method: 'POST', body, credentials: 'same-origin', cache: 'no-store',
-      keepalive, headers: { Accept: 'application/json' } }).then(async response => {
-      const result = await response.json();
-      if (!response.ok || result.success !== true) throw new Error('audio-progress');
-      lastSent = value;
-      setStatus('saved');
-    }).catch(() => setStatus('error')).finally(() => {
+    request = send(value, keepalive).finally(() => {
       request = null;
-      if (queued !== null) void flush(keepalive);
+      if (queued !== null && queued !== value) void flush(keepalive);
     });
     return request;
   };
