@@ -1,6 +1,6 @@
-## PR #190 — indice aula su smartphone (candidato 0.41.52-dev)
+## PR #190 integrata — indice aula su smartphone (0.41.52-dev)
 
-La procedura manuale va eseguita su Joomla 6 quando il pacchetto 0.41.52-dev sarà disponibile.
+CI standard 4/4 superata nel [run 42860617351](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351). Il [pacchetto 0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351/artifacts/13784608215) contiene il runtime verificato (SHA-256 interno `278d260dddbdcdda305fff7456943d5ee43a15d042c94e1c3d901fe9f166c332`, wrapper `6214644bc36d91e60cb7da5b9d31f9216e3e53c8492eba1a5ea3ac5fa4962ddd`; scade il 24 novembre 2026 alle 17:06 UTC). La procedura manuale seguente resta pendente.
 
 1. Aprire da smartphone (viewport 375 px) un corso pubblicato con più moduli e lezioni; aprire una lezione accessibile. Atteso: il programma inizia chiuso e il contenuto della lezione appare senza scorrere l’intero indice.
 2. Attivare “Mostra programma”. Atteso: si espande l’indice, il controllo cambia in “Nascondi programma” e aria-expanded passa a true; attivarlo di nuovo lo chiude. Verificare navigazione da tastiera e focus visibile.
