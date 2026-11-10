@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.59-dev** integra ricerca, ordinamento, filtri per difficoltà e durata, Finder, metadati SEO/social e URL SEF (PR #204, #206–#208 e #210). La CI standard 4/4 è superata nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). Pacchetto installabile [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), disponibile fino al 24 novembre 2026. La PR #209 propone il filtro tag in **0.41.60-dev**; il collaudo Joomla manuale resta pendente. Avanzamento verso la 1.0.0: **74%** (521/7, media delle sette aree; collaudo manuale separato).
+Aggiornato al **10 novembre 2026**. Main **0.41.59-dev** integra IMP-07: PR #204 Finder, #206 ricerca/ordinamento, #207 metadati SEO/social, #208 URL SEF con alias e #210 filtri per difficoltà/durata. CI standard 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). Pacchetto installabile [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper SHA-256 `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP Joomla SHA-256 `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`, disponibile fino al 24 novembre 2026. Collaudi Joomla manuali pendenti. La PR #209 candidata porta il catalogo al 66%; dopo il merge la stima sarà **74%** (520/7). Main attuale: **74%** (518/7).
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -18,14 +18,14 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima seguente descrive main 0.41.59-dev con filtri per difficoltà e durata; candidato 0.41.60-dev con filtro tag, inclusi Finder, ricerca/ordinamento, metadati SEO/social e URL SEF con alias; i collaudi Joomla restano separati.
+La stima seguente descrive main 0.41.59-dev e il candidato 0.41.60-dev con filtro tag; include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias e filtri per difficoltà/durata; i collaudi Joomla restano separati.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
-| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 67% |
+| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 66% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 85% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
@@ -33,9 +33,9 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **74%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (521/7 = 74,43%, arrotondato al 74%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (520/7 = 74,29%, arrotondato al 74%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-07 comprende le PR #204 Finder, #206 ricerca/ordinamento, #207 metadati canonical/social, #208 URL SEF con alias e compatibilità numerica e #210 filtri per difficoltà/durata; la PR #209 candidata aggiunge il filtro tag. CI standard 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500); collaudo Joomla pendente. Area catalogo al 67%, avanzamento complessivo al 74%. Main 0.41.59-dev: pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), CI 4/4. Candidato 0.41.60-dev: filtro tag nella PR #209; CI da eseguire. IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
+IMP-07 comprende le PR #204 Finder, #206 ricerca/ordinamento, #207 metadati canonical/social, #208 URL SEF con alias e #210 filtri di difficoltà/durata; la PR #209 candidata aggiunge il filtro tag. CI standard #210 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069); collaudi Joomla pendenti. Dopo il merge della #209 l’area catalogo sarà stimata al 66% e l’avanzamento complessivo al 74% (520/7). Pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper SHA-256 `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP Joomla SHA-256 `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`. IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -83,7 +83,7 @@ Seguire l’ordine e i confini già approvati in [NEXT_STEPS.md](NEXT_STEPS.md),
 
 ## Perimetro e tracciabilità
 
-La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) conservano la baseline storica: 209 requisiti originariamente del rilascio 1 e uno differito. La riconciliazione del 10 novembre distingue 133 righe interamente core, 40 miste e 37 di fase 2; implementazione: 14 completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate. Verifica automatica: 169 esiti superati con copertura parziale e 41 senza esecuzione specifica. Accettazione Joomla: 2 parziali, 208 non eseguite integralmente, 0 integrali. Metodo e limiti nella [guida](REQUIREMENTS_STATUS_GUIDE.md); conteggi verificabili in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La ricognizione non aggiunge funzionalità: stima per aree aggiornata al 74% (517/7). Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
+La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) conservano la baseline storica: 209 requisiti originariamente del rilascio 1 e uno differito. La riconciliazione del 10 novembre distingue 133 righe interamente core, 40 miste e 37 di fase 2; implementazione: 14 completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate. Verifica automatica: 169 esiti superati con copertura parziale e 41 senza esecuzione specifica. Accettazione Joomla: 2 parziali, 208 non eseguite integralmente, 0 integrali. Metodo e limiti nella [guida](REQUIREMENTS_STATUS_GUIDE.md); conteggi verificabili in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La ricognizione non aggiunge funzionalità: stima per aree aggiornata al 74% (518/7). Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
 Schema attuale: **42 tabelle / 59 FK**; 9 estensioni nel pacchetto 0.41.44-dev. Questi conteggi descrivono l'architettura, non l'avanzamento.
 

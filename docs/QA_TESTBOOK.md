@@ -2,13 +2,15 @@
 
 Riferimenti: CAT-01, AC-41 e AC-85. Installare il pacchetto candidato su Joomla 6; predisporre corsi pubblicati con tag pubblici, tag con accesso differenziato e corsi privati o in categorie non visibili.
 
-1. Da ospite, verificare catalogo e pagine categoria: selettore tag presente e tradotto; elenco limitato ai tag pubblicati/accessibili associati ai corsi visibili.
-2. Selezionare un tag e verificare che i risultati contengano solo corsi visibili associati; categoria deve restare limitata al ramo corrente.
-3. Accedere con utente autorizzato e verificare che compaiano solo tag aggiuntivi accessibili e i relativi corsi permessi.
-4. Combinare tag, difficoltà, durata, ricerca e ordinamento; paginazione e selezioni devono restare coerenti. Provare ID inesistente e SEF attivo/disattivo.
-5. Verificare IT/EN. Il filtro non deve esporre titoli, descrizioni o conteggi di corsi nascosti.
+1. Da ospite, verificare catalogo e pagine categoria: il selettore mostra solo tag pubblicati/accessibili collegati a corsi visibili.
+2. Filtrare per tag nel catalogo e in una categoria con corsi diretti e discendenti: mostrare solo corsi associati, mantenendo il ramo categoria.
+3. Accedere con un utente autorizzato e verificare che compaiano i tag aggiuntivi consentiti e solo i corsi per cui ha accesso.
+4. Combinare tag, difficoltà, durata, ricerca, ordinamento e paginazione; un ID tag inesistente non deve allargare i risultati.
+5. Ripetere IT/EN e SEF attivo/disattivo; non devono comparire titoli, riassunti o conteggi di corsi nascosti.
 
-## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #210 candidata)
+## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #210 integrata)
+
+PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210), milestone **1.0.0**, integrata con squash nel commit `e5d0bae954c099c8522db57c30b1e32882b468ee`. CI standard 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). Pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper SHA-256 `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP Joomla SHA-256 `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`, disponibile fino al 24 novembre 2026.
 
 Riferimenti: CAT-01/CAT-04, AC-41/AC-85. Verificare su Joomla 6 di prova con almeno quattro corsi pubblicati, nelle categorie accessibili: uno principiante da45minuti, uno avanzato da90minuti, uno intermedio oltre120minuti e uno senza durata stimata. Predisporre anche un account con accesso limitato e una categoria con corsi discendenti.
 

@@ -19,11 +19,11 @@ Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di 
 - Tutte le PR implementative e di stabilizzazione appartengono alla milestone `1.0.0`. Credentials è un progetto successivo alla 1.0.0 e mantiene la propria nomenclatura e pianificazione separate.
 
 IMP-05 è integrato: PR [#198] ha aggiunto la pulizia batch limitata delle sessioni video scadute; l’accettazione reale dei quattro provider resta un gate manuale. Nessun quinto provider.
-IMP-07 integra i filtri per difficoltà/durata (PR #210); la PR #209 propone il filtro tag limitato ai corsi visibili. Dopo questi incrementi restano filtri docente/percorso, layout alternativo e collaudi manuali previsti da CAT-01.
+IMP-07 integra filtri per difficoltà/durata (PR #210); la PR #209 candidata aggiunge il filtro tag limitato ai corsi visibili in 0.41.60-dev. Dopo questi incrementi restano filtri docente/percorso, layout alternativo e collaudi manuali previsti da CAT-01.
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
-IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) integra ricerca su titolo/sommario e ordinamento in 0.41.56-dev. PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) integra metadati canonical/social pubblici in 0.41.57-dev. PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208) integra alias SEF per corsi, categorie e percorsi in 0.41.58-dev, merge `6b92612254c060c1ef296c0a03661442871ad1cc`, CI 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500); restano lifecycle categorie, presentazione catalogo/percorsi e accettazione Joomla.
+IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è integrata in 0.41.55-dev: Smart Search indicizza esclusivamente titolo/sommario delle schede pubbliche idonee e aggiorna l’indice per corsi e categorie; CI standard 4/4 superata, collaudo Joomla pendente. PR [#206](https://github.com/jeckodevelopment/jd_learn/pull/206) integra ricerca su titolo/sommario e ordinamento in 0.41.56-dev. PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) integra metadati canonical/social pubblici in 0.41.57-dev. PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208) integra alias SEF per corsi, categorie e percorsi in 0.41.58-dev, merge `6b92612254c060c1ef296c0a03661442871ad1cc`, CI 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500); la PR #210 completa filtri difficoltà/durata in 0.41.59-dev (CI standard 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069)); restano filtri docente/percorso/tag, layout catalogo, lifecycle categorie e accettazione Joomla.
 
 ## Blocco IMP — implementazione
 
@@ -73,7 +73,7 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato al 10 novembre 2026: main è **0.41.58-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206, #207 e #208; la CI standard della #208 è 4/4 superata nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **74%** secondo IMPLEMENTATION_STATUS (517/7; area catalogo 63%); il collaudo Joomla resta pendente. IMP-07 prosegue sui lifecycle delle categorie, sulla presentazione del catalogo e dei percorsi e sull’accettazione Joomla di Finder/SEO/SEF.
+Aggiornato al 10 novembre 2026: main è **0.41.59-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206, #207, #208 e #210; la CI standard della #210 è 4/4 superata nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03 e IMP-04 hanno i residui documentati nel testbook; IMP-05 e IMP-06 sono integrati e hanno ancora collaudi manuali aperti. La stima corrente è **74%** secondo IMPLEMENTATION_STATUS (518/7; area catalogo 64%); il collaudo Joomla resta pendente. IMP-07 prosegue sui filtri catalogo per docente/percorso/tag, sul layout alternativo, sui lifecycle delle categorie e sulla presentazione dei percorsi; l’accettazione Joomla di Finder/SEO/SEF resta pendente.
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #208
 
@@ -91,3 +91,8 @@ La PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194) integra i fi
 ## Aggiornamento 10 novembre 2026 — IMP-04 / progresso audio
 
 La PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196) completa un residuo di recupero/ripresa audio: retry limitato e singolo per errori transitori, errore permanente visibile, nessun effetto sul completamento o sulla percentuale. CI 4/4; collaudo Joomla pendente nel [testbook](QA_TESTBOOK.md#pr-196-integrata--retry-del-progresso-audio). Proseguire con gli altri residui IMP-04 e IMP-05 secondo il piano.
+
+
+## Aggiornamento 10 novembre 2026 — IMP-07 / PR #210
+
+PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) integrata in 0.41.59-dev: filtri pubblici per difficoltà e fasce di durata stimata nel catalogo e nelle categorie. CI standard 4/4; collaudo Joomla pendente nel testbook. Pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`. Avanzamento stimato: **74%** (518/7; catalogo 64%).
