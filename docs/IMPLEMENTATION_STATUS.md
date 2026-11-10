@@ -25,7 +25,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
-| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 65% |
+| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 67% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 85% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
