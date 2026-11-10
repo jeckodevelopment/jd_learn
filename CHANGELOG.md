@@ -1,10 +1,11 @@
 # Changelog
 
-## 0.41.44-dev — fuso predefinito dei corsi dalla configurazione globale (issue #154, in revisione)
+## 0.41.44-dev — fuso predefinito dei corsi dalla configurazione globale (PR #167 integrata)
 
-- Il fuso orario iniziale di un nuovo corso usa il valore globale del sito Joomla; l’autore può selezionare e salvare un fuso diverso. I corsi esistenti mantengono il proprio fuso.
-- Aggiunta una prova Joomla d’integrazione per il default globale e la selezione nel form; collaudo manuale reale ancora pendente.
-- PR assegnata alla milestone `1.0.0`; esiti CI e pacchetto installabile saranno registrati dopo la verifica del candidato.
+- Risolve issue #154: un nuovo corso eredita il fuso impostato nella configurazione globale del sito Joomla. L’autore può scegliere e conservare un fuso diverso; i corsi già esistenti non vengono reinterpretati.
+- Aggiunta la prova Joomla d’integrazione sul valore globale e sulla selezione del form. Il collaudo manuale reale resta pendente.
+- PR [#167](https://github.com/jeckodevelopment/jd_learn/pull/167) integrata in `43d87a52320dc7e6bbd0d6f3f55371bdacd4c8c7` nella milestone `1.0.0`; CI standard 4/4 superata nel [run 42769089189](https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189).
+- Pacchetto [JD-Learn-0.41.44-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189/artifacts/13740848347), wrapper ZIP da estrarre una volta, checksum interno `e68934ff0b4257d6defd8ed9e28762eb526c9f3a2d0999c315536534658a4458` (534662 byte), checksum wrapper `f4d0ca0bc889bdbe03cd60b8e8b91984ef060d65ab2c66ccd2a901b6165d4796`; scade il 24 novembre 2026.
 
 ## 0.41.43-dev — anteprima dei livelli di accesso (PR #162 integrata)
 
