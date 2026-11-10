@@ -1,6 +1,6 @@
-## IMP-07 — metadati SEO e social pubblici (0.41.57-dev)
+## IMP-07 — metadati SEO e social pubblici (0.41.57-dev, PR #207 integrata)
 
-**PR IMP-07 SEO — milestone 1.0.0.** Collaudo manuale sul sito Joomla di prova richiesto; l’esito va registrato qui dopo la prova.
+PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207), milestone **1.0.0**, integrata con squash nel commit `32215c493fe1d7a2bf99871b5f93087a842563bd`. CI standard 4/4 nel [run 42905972598](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598). Pacchetto [JD-Learn-0.41.57-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462), wrapper SHA-256 `f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de`, ZIP Joomla SHA-256 `7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921`, disponibile fino al 24 novembre 2026. Collaudo manuale sul sito Joomla di prova richiesto; l’esito va registrato qui dopo la prova.
 
 1. Installare il pacchetto candidato su Joomla di prova e creare una scheda corso pubblica con titolo SEO, descrizione SEO e immagine promozionale locale; creare anche un corso con catalogo pubblico ma contenuto riservato, una categoria pubblica e una categoria accessibile solo agli utenti registrati, e un percorso pubblico.
 2. Aprire la scheda pubblica e verificare nel sorgente HTML titolo/descrizione, `og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `twitter:card`, `twitter:title`, `twitter:description` e `twitter:image`. L’immagine deve essere un URL assoluto del sito.

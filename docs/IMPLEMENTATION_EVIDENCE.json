@@ -1,59 +1,59 @@
 {
   "audited_at": "2026-11-10",
   "product": "JD Learn",
-  "version": "0.41.56-dev",
+  "version": "0.41.57-dev",
   "code_baseline": {
-    "tested_head": "b4fadf1d5e715375875973b07aa73b69b3530894",
-    "parent_main_commit": "91ee56774585733d0c7177856a328ddb88971865",
-    "pull_request": 206,
-    "merged_main_commit": "cc5af168e5b42aff0b30db2e051acecd86806b9c"
+    "tested_head": "2c34b8da262cad293d609ae90c70b974218311d5",
+    "parent_main_commit": "34b6d2710537e4d21670855180a9d3ae5e40d2fc",
+    "pull_request": 207,
+    "merged_main_commit": "32215c493fe1d7a2bf99871b5f93087a842563bd"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42901417240,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240",
+    "run_id": 42905972598,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130128055261,
+        "id": 130143926254,
         "name": "Candidate plan and lightweight checks",
-        "conclusion": "success",
-        "status": "completed"
+        "status": "completed",
+        "conclusion": "success"
       },
       {
-        "id": 130128148271,
+        "id": 130144012584,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
-        "conclusion": "success",
-        "status": "completed"
+        "status": "completed",
+        "conclusion": "success"
       },
       {
-        "id": 130128148317,
+        "id": 130144012715,
         "name": "PHP 8.3 / mysql:8.4",
-        "conclusion": "success",
-        "status": "completed"
+        "status": "completed",
+        "conclusion": "success"
       },
       {
-        "id": 130128148240,
+        "id": 130144012608,
         "name": "PHP 8.4 / mariadb:10.6",
-        "conclusion": "success",
-        "status": "completed"
+        "status": "completed",
+        "conclusion": "success"
       }
     ],
-    "note": "PR #206: CI standard 4/4 superata; include i controlli documentali, fixture HTTP catalogo, entrambi gli stack PHP/database e Chromium. Collaudo manuale Joomla sul sito reale pendente."
+    "note": "PR #207: CI standard 4/4 superata; controlli documentali, integrazioni complete sui due stack PHP/database e Chromium. Accettazione manuale Joomla pendente."
   },
   "package": {
-    "artifact_id": 13803875500,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500",
-    "artifact_name": "JD-Learn-0.41.56-dev",
-    "installable_package": "pkg_jlms-0.41.56-dev.zip",
-    "sha256": "6649cc5fd585b07a6fce0ec788eb70f06070045a00888799571a47bc2b58cf3f",
-    "artifact_sha256": "3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2",
-    "size_bytes": 551465,
-    "artifact_size_bytes": 551211,
-    "expires_at": "2026-11-24T21:09:12Z",
+    "artifact_id": 13804558462,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462",
+    "artifact_name": "JD-Learn-0.41.57-dev",
+    "installable_package": "pkg_jlms-0.41.57-dev.zip",
+    "sha256": "7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921",
+    "artifact_sha256": "f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de",
+    "size_bytes": 552635,
+    "artifact_size_bytes": 552379,
+    "expires_at": "2026-11-24T21:36:47Z",
     "wrapper_zip": true,
-    "build_source": "CI standard su PR #206, build riproducibile e upgrade Joomla; SHA interno rilevato dal log CI."
+    "build_source": "CI standard PR #207, build riproducibile e upgrade Joomla; SHA-256 interno e wrapper rilevati dai log CI."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -2471,6 +2471,25 @@
         }
       ],
       "next_candidate": null
+    },
+    {
+      "version": "0.41.56-dev",
+      "scope": "IMP-07: ricerca su titolo/sommario promozionale e ordinamento per titolo/recenti nel catalogo e nella vista categoria.",
+      "status": "PR #206 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+      "manual_joomla_acceptance": "pending",
+      "pull_request": 206,
+      "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/206",
+      "tested_head": "b4fadf1d5e715375875973b07aa73b69b3530894",
+      "parent_main_commit": "91ee56774585733d0c7177856a328ddb88971865",
+      "merged_main_commit": "cc5af168e5b42aff0b30db2e051acecd86806b9c",
+      "ci_run_id": 42901417240,
+      "artifact_id": 13803875500,
+      "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500",
+      "artifact_sha256": "3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2",
+      "package_sha256": "6649cc5fd585b07a6fce0ec788eb70f06070045a00888799571a47bc2b58cf3f",
+      "package_size_bytes": 551465,
+      "artifact_size_bytes": 551211,
+      "artifact_expires_at": "2026-11-24T21:09:12Z"
     }
   ],
   "evidence_scope": "Prerequisiti espliciti; sequenziamento automatico e rilascio per data non inclusi. Test manuale Joomla ancora pendente.",
@@ -2544,7 +2563,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #206 integrata in main; CI standard 4/4 e pacchetto verificati; collaudo manuale Joomla pendente.",
+  "candidate_status": "PR #207 integrata in main; CI standard 4/4 e pacchetto verificati; accettazione manuale Joomla pendente.",
   "previous_verified_release": {
     "version": "0.41.51-dev",
     "pull_request": 187,
@@ -2553,46 +2572,46 @@
     "package_sha256": "1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab"
   },
   "candidate_increment": {
-    "version": "0.41.56-dev",
-    "scope": "IMP-07: ricerca su titolo/sommario promozionale e ordinamento per titolo/recenti nel catalogo e nella vista categoria.",
-    "status": "PR #206 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.57-dev",
+    "scope": "IMP-07: metadati canonical, Open Graph e Twitter nelle viste pubbliche corso/categoria/percorso; noindex per catalogo/contenuti non accessibili agli ospiti.",
+    "status": "PR #207 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 206,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/206",
-    "tested_head": "b4fadf1d5e715375875973b07aa73b69b3530894",
-    "parent_main_commit": "91ee56774585733d0c7177856a328ddb88971865",
-    "merged_main_commit": "cc5af168e5b42aff0b30db2e051acecd86806b9c",
-    "ci_run_id": 42901417240,
-    "artifact_id": 13803875500,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500",
-    "artifact_sha256": "3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2",
-    "package_sha256": "6649cc5fd585b07a6fce0ec788eb70f06070045a00888799571a47bc2b58cf3f",
-    "package_size_bytes": 551465,
-    "artifact_size_bytes": 551211,
-    "artifact_expires_at": "2026-11-24T21:09:12Z"
+    "pull_request": 207,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/207",
+    "tested_head": "2c34b8da262cad293d609ae90c70b974218311d5",
+    "parent_main_commit": "34b6d2710537e4d21670855180a9d3ae5e40d2fc",
+    "merged_main_commit": "32215c493fe1d7a2bf99871b5f93087a842563bd",
+    "ci_run_id": 42905972598,
+    "artifact_id": 13804558462,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462",
+    "artifact_sha256": "f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de",
+    "package_sha256": "7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921",
+    "package_size_bytes": 552635,
+    "artifact_size_bytes": 552379,
+    "artifact_expires_at": "2026-11-24T21:36:47Z"
   },
   "latest_verified_increment": {
-    "version": "0.41.56-dev",
-    "scope": "IMP-07: ricerca su titolo/sommario promozionale e ordinamento per titolo/recenti nel catalogo e nella vista categoria.",
-    "status": "PR #206 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.57-dev",
+    "scope": "IMP-07: metadati canonical, Open Graph e Twitter nelle viste pubbliche corso/categoria/percorso; noindex per catalogo/contenuti non accessibili agli ospiti.",
+    "status": "PR #207 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 206,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/206",
-    "tested_head": "b4fadf1d5e715375875973b07aa73b69b3530894",
-    "parent_main_commit": "91ee56774585733d0c7177856a328ddb88971865",
-    "merged_main_commit": "cc5af168e5b42aff0b30db2e051acecd86806b9c",
-    "ci_run_id": 42901417240,
-    "artifact_id": 13803875500,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500",
-    "artifact_sha256": "3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2",
-    "package_sha256": "6649cc5fd585b07a6fce0ec788eb70f06070045a00888799571a47bc2b58cf3f",
-    "package_size_bytes": 551465,
-    "artifact_size_bytes": 551211,
-    "artifact_expires_at": "2026-11-24T21:09:12Z"
+    "pull_request": 207,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/207",
+    "tested_head": "2c34b8da262cad293d609ae90c70b974218311d5",
+    "parent_main_commit": "34b6d2710537e4d21670855180a9d3ae5e40d2fc",
+    "merged_main_commit": "32215c493fe1d7a2bf99871b5f93087a842563bd",
+    "ci_run_id": 42905972598,
+    "artifact_id": 13804558462,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462",
+    "artifact_sha256": "f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de",
+    "package_sha256": "7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921",
+    "package_size_bytes": 552635,
+    "artifact_size_bytes": 552379,
+    "artifact_expires_at": "2026-11-24T21:36:47Z"
   },
   "next_candidate": {
-    "priority": "Proseguire IMP-07 con i residui SEO/catalogo/percorsi e registrare i collaudi manuali Finder e catalogo; quindi seguire IMP-08 come da piano.",
+    "priority": "Completare i residui IMP-07 (alias/canonicalizzazione storica e percorsi) e registrare i collaudi Joomla Finder/SEO; quindi seguire IMP-08 secondo il piano.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
   },
-  "current_status": "Main 0.41.56-dev (PR #204 e #206); CI standard 4/4 e pacchetto installabile verificati; avanzamento stimato 73% (513/7; catalogo 59%); collaudi Joomla manuali pendenti."
+  "current_status": "Main 0.41.57-dev (PR #204, #206 e #207); CI standard 4/4 e pacchetto installabile verificati; avanzamento stimato 74% (516/7; catalogo 62%); collaudi Joomla manuali pendenti."
 }

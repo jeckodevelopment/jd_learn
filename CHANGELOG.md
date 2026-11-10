@@ -1,8 +1,9 @@
-## 0.41.57-dev — metadati SEO/social pubblici (IMP-07)
+## 0.41.57-dev — metadati SEO/social pubblici (IMP-07, PR #207 integrata)
 
 - Aggiunge canonical URL e metadati Open Graph/Twitter per schede corso, categorie e percorsi visibili agli ospiti; per le schede corso usa titolo/descrizione SEO e immagine promozionale locale già configurati.
-- Le pagine con accesso catalogo/contenuto non disponibile agli ospiti e le viste percorso autenticate ricevono `noindex, nofollow`; nessun URL di immagine remoto viene pubblicato.
-- PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) aperta e assegnata alla milestone **1.0.0**. Collaudo Joomla manuale da eseguire secondo [testbook](docs/QA_TESTBOOK.md#imp-07--metadati-seo-e-social-pubblici).
+- Le pagine con accesso catalogo/contenuto non disponibile agli ospiti e le viste percorso autenticate ricevono `noindex, nofollow`; le immagini social puntano a media locali.
+- PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) integrata con squash nel commit `32215c493fe1d7a2bf99871b5f93087a842563bd`; CI standard 4/4 superata nel [run 42905972598](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598).
+- Pacchetto installabile [JD-Learn-0.41.57-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462), checksum wrapper SHA-256 `f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de`; checksum ZIP Joomla `7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921`. Il wrapper scade il 24 novembre 2026: estrarlo per ottenere lo ZIP Joomla. Collaudo manuale ancora pendente; procedura nel [testbook](docs/QA_TESTBOOK.md#imp-07--metadati-seo-e-social-pubblici).
 
 ## 0.41.56-dev — ricerca e ordinamento del catalogo (IMP-07, PR #206 integrata)
 

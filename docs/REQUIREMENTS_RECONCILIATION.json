@@ -1,8 +1,8 @@
 {
   "date": "2026-11-10",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
-  "runtime_tested_head": "b4fadf1d5e715375875973b07aa73b69b3530894",
-  "ci_run": 42901417240,
+  "runtime_tested_head": "2c34b8da262cad293d609ae90c70b974218311d5",
+  "ci_run": 42905972598,
   "counts": {
     "Stato implementazione": {
       "Parziale": 166,
@@ -24,11 +24,11 @@
     }
   },
   "implementation_progress": {
-    "percent": 73,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #204 e #206 portano il catalogo dal 57% al 59%; non derivata dalle righe CSV.",
+    "percent": 74,
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #204/#206 portano il catalogo al 59%, PR #207 aggiunge i metadati SEO/social pubblici e porta l’area al 62%; non derivata dalle righe CSV.",
     "areas": [
       76,
-      59,
+      62,
       77,
       85,
       67,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR ricostruite da riferimenti esistenti e storia delle fonti: non certificano da sole ogni criterio. PR #204 e #206 sono integrate; collaudi Joomla ancora pendenti."
+  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR #204, #206 e #207 sono integrate; CI #207 4/4. I collaudi Joomla manuali restano pendenti."
 }

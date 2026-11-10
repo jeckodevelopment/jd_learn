@@ -1,6 +1,6 @@
 # Come leggere `REQUIREMENTS_STATUS.csv`
 
-Ricognizione iniziale del **10 novembre 2026** sulla baseline main `70c9dff` / runtime **0.41.54-dev**; matrice aggiornata dopo i merge IMP-07 su main `cc5af16` / runtime **0.41.56-dev**. I 210 ID, descrizioni, scenari e perimetri originari restano invariati. Il perimetro baseline (209 “Rilascio 1”, NOT-03 differito) è storico: non coincide con il sottoinsieme oggi approvato per la **1.0.0**.
+Ricognizione iniziale del **10 novembre 2026** sulla baseline main `70c9dff` / runtime **0.41.54-dev**; matrice aggiornata dopo il merge IMP-07 #207 su main `{commit[:7]}` / runtime **0.41.57-dev**. I 210 ID, descrizioni, scenari e perimetri originari restano invariati. Il perimetro baseline (209 “Rilascio 1”, NOT-03 differito) è storico: non coincide con il sottoinsieme oggi approvato per la **1.0.0**.
 
 | Dimensione | Conteggio | Significato |
 |---|---:|---|
@@ -22,7 +22,7 @@ I conteggi comprendono anche il codice esistente in fase 2; non sono una percent
 
 **Stato implementazione** usa Non iniziata / Parziale / Completata. Completata riguarda esclusivamente i **Criteri 1.0.0** dichiarati quando il requisito è misto; non dichiara conclusa la parte di fase 2. Non richiede un collaudo manuale superato. In assenza di riscontro puntuale si mantiene Parziale anche quando non è stata individuata una nuova lacuna runtime concreta: non si inventa lavoro né si deduce completezza dalla sola presenza di un servizio.
 
-**Verifica automatica** usa Non eseguita / Superata / Fallita, con copertura ed esecuzione. Le 169 righe Superata hanno tutte copertura **Parziale**: fonti di test e [CI standard #206](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240), sui due stack PHP/database e fixture Chromium. La CI #206 è l’ultima esecuzione della suite completa; la copertura delle righe resta parziale e non costituisce accettazione integrale dei requisiti. Test citato, scenario previsto e scenario integralmente superato sono informazioni diverse.
+**Verifica automatica** usa Non eseguita / Superata / Fallita, con copertura ed esecuzione. Le 169 righe Superata hanno tutte copertura **Parziale**: fonti di test e [CI standard #207](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598), sui due stack PHP/database e fixture Chromium. La CI #207 è l’ultima esecuzione della suite completa; la copertura delle righe resta parziale e non costituisce accettazione integrale dei requisiti. Test citato, scenario previsto e scenario integralmente superato sono informazioni diverse.
 
 **Accettazione Joomla** usa Non eseguita / Parziale / Superata / Fallita. La conferma AC-132 non accetta CORE-20 o SCR-13 integralmente e non si estende alle modifiche successive. Procedure/esiti sono nel [testbook](QA_TESTBOOK.md); una CI verde non li trasforma in superati.
 
@@ -32,7 +32,7 @@ I conteggi comprendono anche il codice esistente in fase 2; non sono una percent
 
 Perimetro 1.0.0, Criteri 1.0.0 e Criteri fase 2 applicano [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). I trasversali restano obbligatori sui flussi inclusi. AC-131 è la sola eccezione amministrativa alla sospensione quiz. Quinto provider, import/batch, attestati e KPI non diventano gate core. Per CAT-03/SCR-04 non è introdotto un rinvio.
 
-**PR implementazione** raccoglie PR integrate già citate nelle evidenze e PR associate ai commit che modificano le fonti. **Commit riscontrato** identifica l’ultima modifica delle fonti nella baseline: non è necessariamente la PR originaria della funzione, né prova ogni criterio. Una ricostruzione mancante è dichiarata. La PR #204 Finder è integrata; CORE-14 è ora parziale per implementazione, mentre la verifica automatica specifica e l’accettazione Joomla restano non eseguite.
+**PR implementazione** raccoglie PR integrate già citate nelle evidenze e PR associate ai commit che modificano le fonti. **Commit riscontrato** identifica l’ultima modifica delle fonti nella baseline: non è necessariamente la PR originaria della funzione, né prova ogni criterio. Una ricostruzione mancante è dichiarata. Le PR #204 Finder e #207 metadati canonical/social sono integrate; CORE-14 è ora parziale per implementazione, mentre la verifica automatica specifica e l’accettazione Joomla restano non eseguite.
 
 **Residui implementativi 1.0.0** indica codice/documentazione da completare oppure un riscontro puntuale ancora necessario. **Verifiche residue 1.0.0** conserva scenari, prove Joomla/provider/browser, benchmark e limiti della precedente evidenza, da applicare al solo core; i riferimenti storici possono citare funzionalità ormai presenti, che non vanno reimplementate. **Residui fase 2** mantiene distinto il lavoro rinviato. **Criteri residui** riepiloga le tre colonne, senza aggiungere un backlog.
 
@@ -40,4 +40,4 @@ Perimetro 1.0.0, Criteri 1.0.0 e Criteri fase 2 applicano [RELEASE_SCOPE.md](REL
 
 Ogni incremento aggiorna righe, fonti, PR/commit, esecuzione dei test e limiti, insieme al riepilogo JSON. `tools/check.py` verifica baseline immutata, fonti presenti, stati indipendenti, evidenze e conteggi. `tests/requirements-status.py` impedisce accettazione dedotta dalla CI, completamento con residui di codice e fase 2 trasformata in gate core.
 
-Avanzamento **73% stimato**: media delle sette aree di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), 513/7, fase 2 esclusa. Il Finder integrato porta l’area catalogo dal 57% al 59%; la media arrotondata resta 73%. Non si assegna un peso arbitrario del 50% a Parziale e non si usa 14/210 come avanzamento. La settima area comprende preparazione/verifica del rilascio: è una stima storica per aree, non una misura di codice scritto o di accettazione Joomla.
+Avanzamento **74% stimato**: media delle sette aree di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), 516/7, fase 2 esclusa. Il Finder, ricerca/ordinamento e metadati SEO/social pubblici hanno portato l’area catalogo al 62%. I collaudi manuali restano separati. Non si assegna un peso arbitrario del 50% a Parziale e non si usa 14/210 come avanzamento. La settima area comprende preparazione/verifica del rilascio: è una stima storica per aree, non una misura di codice scritto o di accettazione Joomla.
