@@ -1,3 +1,18 @@
+## IMP-07 — filtro tag nel catalogo pubblico
+
+La PR aggiunge il filtro per tag al catalogo generale e alle liste di una categoria. Le opzioni provengono solo da tag pubblicati e accessibili associati a corsi visibili all’utente; il filtro applica gli stessi controlli di accesso dei tag e non cambia la visibilità dei corsi.
+
+**Comportamenti da testare sul sito Joomla di prova**
+
+1. Aggiornare JD Learn al pacchetto della PR e associare tag differenti a corsi pubblici, a un corso riservato agli utenti registrati e a un corso in una categoria privata.
+2. Da ospite, aprire il catalogo e verificare che il selettore mostri solo tag dei corsi pubblici visibili. Selezionare i tag e verificare che compaiano soltanto i corsi associati.
+3. Aprire una categoria pubblica con corsi diretti e discendenti; filtrare per tag e verificare che la lista resti limitata a quella categoria e ai discendenti.
+4. Accedere con un utente autorizzato ai corsi riservati e verificare che i tag siano disponibili solo entro il suo perimetro.
+5. Provare un ID tag inesistente e una ricerca combinata con tag, ordinamento e paginazione; l’ID inesistente non deve mostrare corsi e gli altri filtri devono conservarsi.
+6. Ripetere in IT/EN e con SEF attivo/disattivo; nessun contenuto di lezione o dato privato deve emergere.
+
+CI controlla la presenza dei selettori in catalogo/categoria e il risultato vuoto con ID tag inesistente. Il collaudo manuale sopra resta necessario.
+
 ## IMP-07 — metadati SEO e social pubblici (0.41.57-dev, PR #207 integrata)
 
 PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207), milestone **1.0.0**, integrata con squash nel commit `32215c493fe1d7a2bf99871b5f93087a842563bd`. CI standard 4/4 nel [run 42905972598](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598). Pacchetto [JD-Learn-0.41.57-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462), wrapper SHA-256 `f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de`, ZIP Joomla SHA-256 `7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921`, disponibile fino al 24 novembre 2026. Collaudo manuale sul sito Joomla di prova richiesto; l’esito va registrato qui dopo la prova.
