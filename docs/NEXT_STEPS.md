@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.51-dev** integra la PR [#187](https://github.com/jeckodevelopment/jd_learn/pull/187), che aggiunge retry idempotente limitato all’avvio. CI standard 4/4 superata nel [run 42845258898](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898). Pacchetto verificato [JD-Learn-0.41.51-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898/artifacts/13779340061), SHA-256 interno `1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab`; collaudo manuale Joomla/provider reali pendente; vedere [testbook](QA_TESTBOOK.md#pr-187-integrata--retry-del-salvataggio-di-avvio-04151-dev).
+Aggiornato al **10 novembre 2026**. Main **0.41.51-dev** integra la PR #187. Candidato [PR #190](https://github.com/jeckodevelopment/jd_learn/pull/190), **0.41.52-dev**, riduce l’ingombro dell’indice aula su smartphone. L’ultimo pacchetto verificato resta 0.41.51-dev (run 42845258898, CI 4/4); il testbook descrive la prova manuale.
 
 
 

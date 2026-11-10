@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.51-dev** (PR #187); CI standard 4/4 superata e pacchetto installabile verificato. Collaudi manuali Joomla/provider pendenti.
+Aggiornato al **10 novembre 2026**. Main **0.41.51-dev** (PR #187); candidato **0.41.52-dev** (PR #190) rende comprimibile l’indice aula su smartphone. CI del candidato in attesa; pacchetto verificato 0.41.51-dev disponibile. Collaudi manuali Joomla/provider pendenti.
 
 IMP-04 / PR #181 integra apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -24,14 +24,14 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
 | Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 57% |
-| Fruizione e progressi core (M03/M09) | 74% |
+| Fruizione e progressi core (M03/M09) | 75% |
 | Video e materiali essenziali (M04) | 83% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 91% |
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **72%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (506/7 = 72,29%, arrotondato al 72%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (507/7 = 72,43%, arrotondato al 72%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 ## Funzioni presenti e lavoro residuo
 

@@ -1,3 +1,8 @@
+## 0.41.52-dev — indice aula comprimibile su smartphone (candidato PR #190)
+
+- Aggiunge in aula un comando tradotto e accessibile per mostrare/nascondere il programma didattico sotto 48rem; desktop mantiene l’indice visibile. Senza JavaScript il programma resta disponibile.
+- Collaudo previsto in [testbook](docs/QA_TESTBOOK.md#pr-190--indice-aula-su-smartphone).
+
 ## 0.41.51-dev — retry limitato del salvataggio di avvio (PR #187 integrata)
 
 - Aggiunge stato “Salvataggio attività…” e un singolo retry dopo errore di rete/timeout o risposta HTTP 408, 429 o 5xx; timeout per richiesta 8 secondi e pausa 500 ms.

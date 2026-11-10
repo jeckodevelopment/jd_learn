@@ -25,6 +25,7 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->setTitle($this->item['title']);
         $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
+        $this->getDocument()->getWebAssetManager()->useScript('com_jlms.classroomOutline');
         if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked)
             && in_array($this->item['lesson']->kind, ['text', 'document', 'audio', 'video'], true)) {
             $this->getDocument()->addScriptOptions('com_jlms.lessonProgress', [

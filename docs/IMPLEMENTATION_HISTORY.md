@@ -1,3 +1,8 @@
+## 0.41.52-dev — indice aula comprimibile su smartphone (candidato PR #190)
+
+- Il programma didattico resta sempre disponibile; sugli schermi stretti parte chiuso e si apre con un pulsante tradotto IT/EN con stato `aria-expanded`. Desktop lo mantiene aperto; senza JS la navigazione resta visibile.
+- Aggiunto test DOM per apertura/chiusura e variazione viewport. Collaudo Joomla in attesa della CI e dell’integrazione.
+
 ## 0.41.51-dev — retry limitato del salvataggio di avvio (PR #187 integrata)
 
 - Il browser mostra lo stato di salvataggio e ripete una sola volta il POST `lesson.begin` per rete/timeout o HTTP 408, 429 e 5xx. Riutilizza la stessa chiave idempotente, con timeout 8 s e pausa 500 ms; gli altri 4xx non vengono ritentati. Non attribuisce completamento o credito e non promette funzionamento offline.

@@ -18,6 +18,7 @@ $currentModule = 0;
   <?php if ($item['completed_at']) : ?><p id="jlms-course-completed" role="status"><?= Text::_('COM_JLMS_LEARNING_COMPLETED') ?></p><?php endif; ?>
  </section>
  <div id="jlms-classroom-layout" class="jlms-classroom-layout">
+ <button id="jlms-classroom-outline-toggle" class="jlms-classroom-outline-toggle" type="button" aria-controls="jlms-classroom-outline" aria-expanded="true" data-show-label="<?= $this->escape(Text::_('COM_JLMS_SHOW_CURRICULUM')) ?>" data-hide-label="<?= $this->escape(Text::_('COM_JLMS_HIDE_CURRICULUM')) ?>" hidden><?= Text::_('COM_JLMS_SHOW_CURRICULUM') ?></button>
  <nav id="jlms-classroom-outline" aria-label="<?= Text::_('COM_JLMS_CURRICULUM') ?>">
  <?php foreach ($item['outline'] as $entry) : ?>
   <?php if ((int) $entry->module_id !== $currentModule) : ?>
