@@ -6,7 +6,15 @@ use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 final class QuestionbankModel extends ListModel
 {
-    public function getFilterForm($data = [], $loadData = true) { return $this->loadForm('com_jlms.filter_questionbank','filter_questionbank',['control'=>'filter','load_data'=>false]); }
+    public function getFilterForm($data = [], $loadData = true)
+    {
+        return $this->loadForm(
+            'com_jlms.filter_questionbank',
+            JPATH_COMPONENT_ADMINISTRATOR . '/forms/filter_questionbank.xml',
+            ['control' => 'filter', 'load_data' => false]
+        );
+    }
+
     public function getBank(): array
     {
         $app=Factory::getApplication();$input=$app->getInput();$filters=$input->get('filter',[],'array');

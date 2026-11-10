@@ -48,7 +48,14 @@ try:
  page=Page(b.decode());form=next(x for x in page.forms if 'username'in x['fields']and'passwd'in x['fields'])
  request(admin,urljoin(urljoin(u,page.base or ''),form['action']),fields=form['fields']|{'username':'cioperator','passwd':'Ci-only-Long-Password-2026'})
  bank='/administrator/index.php?option=com_jlms&view=questionbank'
- _,b,_=request(admin,bank);expect('id="jlms-question-list"'in b.decode()and'PRIVATE_QUIZ_PROMPT_V2'in b.decode()and'id="jlms-question-form"'not in b.decode(),'native question list is separate from its editor')
+ _,b,_=request(admin,bank);bank_html=b.decode()
+ expect('id="jlms-question-list"'in bank_html and'PRIVATE_QUIZ_PROMPT_V2'in bank_html and'id="jlms-question-form"'not in bank_html,'native question list is separate from its editor')
+ for field in ['search','published','catid','language']:
+  expect(f'id="filter_{field}"' in bank_html,'question bank renders Joomla Search Tools field '+field)
+ expect('Actions for: %s' not in bank_html and '<th scope="col" class="text-end">Actions</th>' in bank_html,'question action heading uses a plain translated label')
+ filtered=bank+'&'+urlencode({'filter[search]':'id:'+str(f['question_id']),'filter[published]':'1','filter[catid]':str(f['category_id']),'filter[language]':'*'})
+ _,filtered_html,_=request(admin,filtered)
+ expect('PRIVATE_QUIZ_PROMPT_V2' in filtered_html.decode() and 'PRIVATE_QUIZ_PROMPT_V1' not in filtered_html.decode(),'question bank applies combined search, state, category and language filters')
  request(admin,'/administrator/index.php?option=com_jlms&task=questionbank.save',expected=405)
  new_question='/administrator/index.php?option=com_jlms&view=question'
  u,form=form_page(new_question,'adminForm');fields={k:v for k,v in form['fields'].items()if'options'not in k}
