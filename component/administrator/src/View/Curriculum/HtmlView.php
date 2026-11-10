@@ -179,11 +179,14 @@ final class HtmlView extends BaseHtmlView
                         $customFields[$customField->name] = $customField->value;
                     }
                     $source = $lesson->source_json ? json_decode($lesson->source_json, true, 32, JSON_THROW_ON_ERROR) : [];
+                    $lessonParams = json_decode((string)$lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
+                    $lessonThreshold = is_array($lessonParams) && is_int($lessonParams['video_threshold_basis_points'] ?? null)
+                        ? \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($lessonParams['video_threshold_basis_points']) : '';
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
-                        'duration_mode'=>'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
+                        'video_threshold_percent'=>$lessonThreshold, 'duration_mode'=>'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
                         'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0',
                         'required_lesson_ids' => $this->outline['prerequisites'][(int) $lesson->id] ?? [],
                         'publish_up' => LessonAvailability::editor($lesson->publish_up, CourseSchedule::read($course)['timezone']),
@@ -207,7 +210,7 @@ final class HtmlView extends BaseHtmlView
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
-                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days']));
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','video_threshold_percent','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days']));
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }

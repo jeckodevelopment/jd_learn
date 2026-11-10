@@ -1,3 +1,9 @@
+## 0.41.49-dev — soglia video configurabile per lezione (candidato)
+
+- Aggiunta una soglia facoltativa per ogni lezione video: campo vuoto eredita quella della versione, valore impostato prevale per la singola lezione.
+- La soglia è salvata nei parametri della lezione, inclusa nel confronto del programma, validata al salvataggio/pubblicazione e usata nel calcolo di completamento. Le versioni assegnate restano immutabili.
+- Collaudo Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#pr-in-corso--soglia-video-per-lezione-04149-dev); CI e pacchetto candidati in attesa.
+
 ## 0.41.48-dev — apertura inline protetta di PDF e immagini (PR #181 integrata)
 
 - Nell’aula aggiunge **Apri nel browser** per PDF e immagini JPEG/PNG/WebP, mantenendo il download separato. L’endpoint applica nuovamente accesso all’iscrizione, disponibilità e relazioni del materiale e ammette solo i MIME passivi consentiti.

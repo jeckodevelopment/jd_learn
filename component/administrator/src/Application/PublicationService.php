@@ -253,6 +253,10 @@ final class PublicationService
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
+                    if (!is_array($params) || (array_key_exists('video_threshold_basis_points', $params)
+                        && (!is_int($params['video_threshold_basis_points']) || $params['video_threshold_basis_points'] < 1 || $params['video_threshold_basis_points'] > 10000))) {
+                        throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                    }
                     if (!is_string($lesson->provider_key) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key)
                         || $lesson->completion_rule !== 'video_coverage') {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');

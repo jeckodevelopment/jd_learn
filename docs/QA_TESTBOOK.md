@@ -1,3 +1,11 @@
+## PR in corso — soglia video per lezione (0.41.49-dev)
+
+1. In Joomla di prova, creare una bozza con soglia di versione al 75% e due lezioni video. Lasciare vuota la soglia della prima e impostare 50% sulla seconda. Salvare entrambe, riaprire il Programma e verificare che il valore esplicito sia mostrato e la prima resti vuota (eredita).
+2. Impostare valori limite 0,01% e 100% e salvare; verificare che valori 0, 100,01 e più di due decimali siano rifiutati mantenendo i dati già salvati.
+3. Pubblicare e iscrivere uno studente di prova. Verificare che la prima lezione applichi il 75% e la seconda il 50% del video visto, anche se entrambe usano lo stesso provider.
+4. Modificare la soglia in una nuova versione e pubblicarla: lo studente già iscritto mantiene la versione e la soglia originali; una nuova iscrizione riceve i nuovi valori.
+5. Verificare che una lezione non video non esponga la soglia e che una richiesta alterata che provi a salvarla su testo/audio/documento venga respinta senza modifiche.
+
 Warning: truncated output (original token count: 14491)
 Total output lines: 515
 
