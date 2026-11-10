@@ -125,6 +125,6 @@ class CoursesModel extends ListModel
         if (!$ids) { return []; }
         $query = $component->getPathwayService()->query($app->getIdentity(), $app->getLanguage()->getTag());
         $query->whereIn('p.id', $ids);
-        return $app->getDatabase()->setQuery($query, 0, 500)->loadObjectList('id');
+        return $this->getDatabase()->setQuery($query, 0, 500)->loadObjectList('id');
     }
 }
