@@ -1,8 +1,10 @@
-## 0.41.48-dev — apertura inline protetta di PDF e immagini (candidato PR)
+## 0.41.48-dev — apertura inline protetta di PDF e immagini (PR #181 integrata)
 
 - Nell’aula aggiunge **Apri nel browser** per PDF e immagini JPEG/PNG/WebP, mantenendo il download separato. L’endpoint applica nuovamente accesso all’iscrizione, disponibilità e relazioni del materiale e ammette solo i MIME passivi consentiti.
 - La visualizzazione resta read-only: non cambia iscrizione, progresso o completamento. Gli altri formati continuano a essere scaricabili ma non sono serviti inline.
-- **Collaudo manuale Joomla** descritto nel [testbook](docs/QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-candidato-04148-dev). CI e merge pendenti.
+- PR #181 integrata nel commit `06ac78d277c8b7656d1cd635c88441ef74eef6be`; CI standard 4/4 superata sul commit `eacca4b25f5489a75481989d51cb242d6cc5f460` nel [run 42807134904](https://github.com/jeckodevelopment/jd_learn/actions/runs/42807134904).
+- Pacchetto Actions [JD-Learn-0.41.48-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42807134904/artifacts/13758379615): wrapper ZIP da estrarre una volta; SHA-256 interno `c1cae9dc3f5fe084a61880f8e4ead4df7f84564d7343631a2dc4147f6d0897c5` (539797 byte), wrapper `e879592a674a5f75e8693f9411ff6412683897675a94aa112d8c76baa62a9c0c` (539608 byte), scadenza 24 novembre 2026.
+- Collaudo manuale Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev); resta pendente.
 
 ## 0.41.47-dev — preview editoriale di documenti e audio (PR #179 integrata)
 

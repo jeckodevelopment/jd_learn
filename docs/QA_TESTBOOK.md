@@ -472,7 +472,7 @@ Riferimenti: AUT-02/03, STU-02, MAT-01/02; AC-20, AC-27–31, AC-80, AC-86, AC-9
 **Esito sito Joomla:** Non eseguito.
 
 
-## IMP-04 — apertura protetta inline di PDF e immagini nell’aula (candidato 0.41.48-dev)
+## IMP-04 — apertura protetta inline di PDF e immagini nell’aula (0.41.48-dev)
 
 Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su Joomla 6 di prova predisporre un’iscrizione attiva e lezioni disponibili con PDF, JPEG/PNG/WebP, DOCX, CSV, ZIP e un file non pronto; conservare lo stato iniziale di progressi e iscrizioni.
 
