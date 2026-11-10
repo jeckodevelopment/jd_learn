@@ -12,6 +12,10 @@ La PR #68 è integrata in main nella 0.41.8-dev. La schermata iniziale mette in 
 
 ## Risultato richiesto
 
+### Issue #157 — programma didattico e convenzioni Joomla
+
+Il candidato 0.41.45-dev sposta nella toolbar nativa le azioni principali (aggiunta modulo, campi lezione, regole didattiche e anteprima), mantenendo ACL e corso/versione selezionati. La vista mantiene il programma specifico richiesto ma migliora gli spazi tra controlli e form nel pannello laterale. CI HTTP controlla che l’azione di aggiunta modulo sia presente solo nel programma editabile e resti legata al corso corrente. Resta il collaudo Joomla manuale di toolbar, permessi, tastiera e viewport mobile.
+
 ## Issue #105 — dashboard di navigazione amministrativa
 
 La dashboard esistente diventa l'ingresso predefinito del componente. Presenta riquadri con icone per Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video. Le PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108) e [#110](https://github.com/jeckodevelopment/jd_learn/pull/110) integrano requisito e correzioni; la PR [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) integra **Dashboard** come prima voce figlia nella sidebar. La PR [#126](https://github.com/jeckodevelopment/jd_learn/pull/126) integra in 0.41.30-dev i permessi specifici per i riquadri Banca domande, Categorie e Campi; CI standard superata. La PR #128 integra in 0.41.31-dev il plugin di sistema `plg_system_jlmsmenu`: il sottomenu filtra Banca domande, Categorie, Campi e Plugin video per le rispettive autorizzazioni senza modificare il menu Joomla non JD Learn; l’installazione attiva il plugin e gli upgrade preservano lo stato scelto dall’amministratore. CI standard superata nel run 42594246627; collaudo manuale Joomla dei ruoli pendente. La verifica manuale di ruoli, tastiera, responsive, ordine del menu, root menu e URL resta nello [scenario AC-132 e nel testbook](QA_TESTBOOK.md#issue-105--dashboard-amministrativa).

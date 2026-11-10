@@ -248,6 +248,16 @@ final class HtmlView extends BaseHtmlView
             if (!$this->selectedItem) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
         }
         ToolbarHelper::title(Text::_('COM_JLMS_CURRICULUM'), 'graduation-cap');
+        if ($this->editable) {
+            ToolbarHelper::link('index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&new_module=1#jlms-module-form', 'COM_JLMS_PROGRAMME_ADD_MODULE', 'plus');
+        }
+        if ($this->canManageFields) {
+            ToolbarHelper::link('index.php?option=com_fields&view=fields&context=com_jlms.lesson', 'COM_JLMS_LESSON_FIELDS_MANAGE', 'list');
+        }
+        if ($version) {
+            ToolbarHelper::link('index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&edit_rules=1#jlms-teaching-rules', 'COM_JLMS_TEACHING_RULES', 'sliders-h');
+            ToolbarHelper::link('index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id, 'COM_JLMS_COURSE_PREVIEW', 'eye');
+        }
         parent::display($tpl);
     }
 }

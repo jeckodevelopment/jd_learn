@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.41.45-dev — vista del programma didattico allineata alla toolbar Joomla (issue #157, in sviluppo)
+
+- Le azioni principali del programma sono disponibili nella toolbar nativa, con URL contestuali al corso e visibilità condizionata ai permessi già verificati.
+- Il pannello laterale separa visivamente moduli, moduli di form e comandi, migliorando spaziatura e leggibilità sui viewport stretti.
+- Aggiunta una verifica HTTP per l’azione contestuale di aggiunta modulo. Collaudo manuale Joomla ancora da eseguire; la checklist è in `docs/QA_TESTBOOK.md`.
+
 ## 0.41.44-dev — fuso predefinito dei corsi dalla configurazione globale (PR #167 integrata)
 
 - Risolve issue #154: un nuovo corso eredita il fuso impostato nella configurazione globale del sito Joomla. L’autore può scegliere e conservare un fuso diverso; i corsi già esistenti non vengono reinterpretati.
