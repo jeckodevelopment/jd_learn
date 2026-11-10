@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.51-dev** integra la PR #187. Candidato [PR #190](https://github.com/jeckodevelopment/jd_learn/pull/190), **0.41.52-dev**, riduce l’ingombro dell’indice aula su smartphone. L’ultimo pacchetto verificato resta 0.41.51-dev (run 42845258898, CI 4/4); il testbook descrive la prova manuale.
+Aggiornato al **10 novembre 2026**. Main **0.41.52-dev** integra la PR [#190](https://github.com/jeckodevelopment/jd_learn/pull/190). CI standard 4/4 superata nel [run 42860617351](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351); pacchetto verificato [JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351/artifacts/13784608215), SHA-256 interno `278d260dddbdcdda305fff7456943d5ee43a15d042c94e1c3d901fe9f166c332`. Collaudo manuale Joomla/provider reali pendente.
 
 
 
