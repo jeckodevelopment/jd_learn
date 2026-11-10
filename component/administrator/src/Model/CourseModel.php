@@ -32,11 +32,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
 
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm('com_jlms.course', 'course', ['control' => 'jform', 'load_data' => $loadData]);
-        if ($form) {
-            $form->setFieldAttribute('calendar_timezone', 'default', $this->siteTimezone());
-        }
-        return $form;
+        return $this->loadForm('com_jlms.course', 'course', ['control' => 'jform', 'load_data' => $loadData]);
     }
 
     protected function loadFormData()
@@ -86,6 +82,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $form->load($xml, false);
         }
         parent::preprocessForm($form, $data, $group);
+        $form->setFieldAttribute('calendar_timezone', 'default', $this->siteTimezone());
     }
 
     private function associationMembers(int $id): array
