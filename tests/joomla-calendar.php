@@ -92,7 +92,7 @@ scheduleExpect($newCourseForm->getField('calendar_timezone')->value === '', 'New
 scheduleExpect(in_array('', array_map(static fn($option) => (string) $option->value, $newCourseForm->getField('calendar_timezone')->getOptions()), true), 'Global timezone option is rendered by the native Joomla field');
 $siteConfig->set('offset', $previousOffset);
 $base=['id'=>0,'revision'=>1,'title'=>'Calendar course fixture','alias'=>'calendar-course-fixture','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Calendar fixture'];
-$values=['calendar_timezone'=>'Europe/Rome','calendar_publish_up'=>'2000-01-01 01:00:00','calendar_publish_down'=>'2099-01-01 01:00:00','calendar_starts_at'=>'2000-01-01 01:00:00','calendar_ends_at'=>'2099-01-01 01:00:00'];
+$values=['calendar_timezone'=>'','calendar_publish_up'=>'2000-01-01 01:00:00','calendar_publish_down'=>'2099-01-01 01:00:00','calendar_starts_at'=>'2000-01-01 01:00:00','calendar_ends_at'=>'2099-01-01 01:00:00'];
 scheduleExpect($model->save($base+$values+['publish_up'=>'2200-01-01 00:00:00','params_json'=>'{"injected":true}']),'Typed calendar saved with mass assignment ignored');
 $course=(int)$model->getState('course.id');$item=$model->getItem($course);
 scheduleExpect(str_starts_with($item->publish_up,'2000-01-01 00:00:00')&&$item->calendar_publish_up===$values['calendar_publish_up']&&$item->calendar_timezone==='Europe/Rome','UTC persisted and editor round-trips local values');
