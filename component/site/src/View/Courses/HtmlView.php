@@ -14,6 +14,8 @@ final class HtmlView extends BaseHtmlView
     public int $categoryId = 0;
     public string $search = '';
     public string $order = 'recent';
+    public int $tagId = 0;
+    public array $tags = [];
 
     public function display($tpl = null)
     {
@@ -22,6 +24,8 @@ final class HtmlView extends BaseHtmlView
         $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
         $this->search = $this->getModel()->getSearch();
         $this->order = $this->getModel()->getOrder();
+        $this->tagId = $this->getModel()->getTagId();
+        $this->tags = $this->getModel()->getTags();
         if ($this->get('Errors')) {
             throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
         }
