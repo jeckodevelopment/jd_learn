@@ -9,6 +9,7 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Router\Route;
 use Jlms\Component\Jlms\Administrator\Application\CourseSchedule;
 use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
 
@@ -249,14 +250,14 @@ final class HtmlView extends BaseHtmlView
         }
         ToolbarHelper::title(Text::_('COM_JLMS_CURRICULUM'), 'graduation-cap');
         if ($this->editable) {
-            ToolbarHelper::link('index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&new_module=1#jlms-module-form', 'COM_JLMS_PROGRAMME_ADD_MODULE', 'plus');
+            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&new_module=1#jlms-module-form'), 'COM_JLMS_PROGRAMME_ADD_MODULE', 'plus');
         }
         if ($this->canManageFields) {
-            ToolbarHelper::link('index.php?option=com_fields&view=fields&context=com_jlms.lesson', 'COM_JLMS_LESSON_FIELDS_MANAGE', 'list');
+            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_fields&view=fields&context=com_jlms.lesson'), 'COM_JLMS_LESSON_FIELDS_MANAGE', 'list');
         }
         if ($version) {
-            ToolbarHelper::link('index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&edit_rules=1#jlms-teaching-rules', 'COM_JLMS_TEACHING_RULES', 'sliders-h');
-            ToolbarHelper::link('index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id, 'COM_JLMS_COURSE_PREVIEW', 'eye');
+            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&edit_rules=1#jlms-teaching-rules'), 'COM_JLMS_TEACHING_RULES', 'sliders-h');
+            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id), 'COM_JLMS_COURSE_PREVIEW', 'eye');
         }
         parent::display($tpl);
     }
