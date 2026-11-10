@@ -14,7 +14,7 @@ class EnrollmentController extends BaseController
 {
     public function execute($task)
     {
-        $allowed = static::class === self::class ? ['start', 'resume'] : ['complete'];
+        $allowed = static::class === self::class ? ['start', 'resume'] : ['complete', 'begin'];
         if (!in_array(strtolower($task), $allowed, true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }

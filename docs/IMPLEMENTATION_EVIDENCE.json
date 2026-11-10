@@ -2544,7 +2544,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #183 integrata in main 0.41.49-dev; CI standard 4/4 superata; pacchetto installabile verificato; collaudo manuale Joomla e provider reali pendente.",
+  "candidate_status": "PR #185 aperta: registrazione dello stato started e dell’ultima lezione aperta; CI e pacchetto 0.41.50-dev in attesa; ultimo pacchetto verificato 0.41.49-dev.",
   "previous_verified_release": {
     "version": "0.41.45-dev",
     "scope": "Issue #157: toolbar nativa per le azioni del programma didattico e pannello laterale più leggibile.",
@@ -2588,46 +2588,12 @@
     ]
   },
   "candidate_increment": {
-    "version": "0.41.49-dev",
-    "scope": "IMP-04 / PRO-04, D-05: override opzionale della soglia video per lezione con ereditarietà dalla versione, persistenza nel programma pubblicato e completamento su copertura specifica.",
-    "status": "PR #183 integrata; CI standard 4/4 superata; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
+    "version": "0.41.50-dev",
+    "scope": "IMP-04 / PRO-01 / STU-02: registrazione esplicita dell’avvio di lezioni accessibili come started, aggiornamento di last_lesson_id per Riprendi senza credito; POST CSRF, GET aula read-only.",
+    "status": "PR #185 aperta; controlli leggeri e CI standard in attesa; ultimo pacchetto verificato resta 0.41.49-dev.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 183,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/183",
-    "ci_run_id": 42830117573,
-    "artifact_id": 13770693036,
-    "artifact_name": "JD-Learn-0.41.49-dev",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42830117573/artifacts/13770693036",
-    "artifact_sha256": "855a46aef8fad981013fe677f16341e3cf5c81c676f28381e7c58b117b35d965",
-    "package_sha256": "46db03c8214873bbd2d266f067585458ebec059e3abbaf2fe29d9e38be1635bb",
-    "package_size_bytes": 540492,
-    "artifact_size_bytes": 540308,
-    "artifact_expires_at": "2026-11-24T14:07:08Z",
-    "tested_head": "0b62f8e3505bbc23d4936cf205d9deeaf9a4d4a1",
-    "parent_main_commit": "9e5a0c28055659fea939845055f869ac0b9fc520",
-    "merged_main_commit": "4ef19dd8b5ebe4d6eddb1f127a5864929b457297",
-    "ci_jobs": [
-      {
-        "id": 129877698701,
-        "name": "Candidate plan and lightweight checks",
-        "conclusion": "success"
-      },
-      {
-        "id": 129877770173,
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
-        "conclusion": "success"
-      },
-      {
-        "id": 129877770257,
-        "name": "PHP 8.3 / mysql:8.4",
-        "conclusion": "success"
-      },
-      {
-        "id": 129877770239,
-        "name": "PHP 8.4 / mariadb:10.6",
-        "conclusion": "success"
-      }
-    ]
+    "pull_request": 185,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/185"
   },
   "latest_verified_increment": {
     "version": "0.41.49-dev",
@@ -2672,8 +2638,8 @@
     ]
   },
   "next_candidate": {
-    "priority": "Proseguire IMP-04 con i residui di completamento/ripresa e coerenza del progresso; poi IMP-05 per chiudere il contratto e collaudare i quattro provider video; affiancare i collaudi Joomla aperti.",
+    "priority": "Completare i residui IMP-04 di fruizione e progressi; dopo, IMP-05 per i quattro provider video.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md. Fase 2 esclusa."
   },
-  "current_status": "PR #183 integrata in main 0.41.49-dev; CI standard 4/4 superata nel run 42830117573; pacchetto installabile verificato; collaudo manuale Joomla e provider reali pendente."
+  "current_status": "Main 0.41.49-dev (PR #183); candidato PR #185 / 0.41.50-dev in verifica; ultimo pacchetto verificato #183; collaudi manuali Joomla pendenti."
 }
