@@ -1,4 +1,10 @@
-## 0.41.49-dev — soglia video configurabile per lezione (PR #183)
+## 0.41.50-dev — avvio e ripresa della lezione (PR #185 integrata)
+
+- L’apertura esplicita di una lezione accessibile salva lo stato `started` tramite POST con token Joomla e aggiorna la destinazione Riprendi; il GET aula resta read-only.
+- L’avvio non attribuisce completamento o percentuale; il completamento manuale aggiorna la riga esistente. Il POST non incrementa la revisione di una riga video già aperta, preservando sessioni di riproduzione concorrenti.
+- PR #185 integrata nel commit `de93c1290e89a5048a5cf6e16c0b15f719580322`; CI standard 4/4 superata nel [run 42839639601](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601). Pacchetto [JD-Learn-0.41.50-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601/artifacts/13776106013), SHA-256 interno `9534346da253c8f953da826d203b3f3509fab0682b09e7d09736e60180e28e83`, wrapper `461d8dd9c4d8287c15d6dc667821920e25c4c879108f0a3d9a2ac8cea5ec70f6`; collaudo Joomla pendente.
+
+## 0.41.49-dev — soglia video configurabile per lezione (PR #183 integrata)
 
 - Soglia facoltativa per singola lezione video; campo vuoto eredita la regola della versione, valore esplicito sovrascrive solo la lezione. Persistenza immutabile nelle versioni assegnate e uso nel calcolo del completamento.
 - CI standard 4/4 superata nel run 42830117573 sul candidato `0b62f8e3505bbc23d4936cf205d9deeaf9a4d4a1`; merge `4ef19dd8b5ebe4d6eddb1f127a5864929b457297`.
