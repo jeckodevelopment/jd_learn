@@ -820,8 +820,8 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Genera segmenti Joomla nel formato ID-alias per corsi, categorie e percorsi; mantiene il parsing degli URL numerici esistenti e usa il database Joomla con parametri associati.
 - Il canonical delle viste pubbliche risolve al percorso SEF con alias. Restano gli ID per disambiguare alias ripetuti tra lingue e contenitori.
 - PR IMP-07 in preparazione per la milestone **1.0.0**. Collaudo Joomla manuale in [testbook](docs/QA_TESTBOOK.md#imp-07--url-sef-con-alias-per-corsi-categorie-e-percorsi).
-## 0.41.61-dev — vista elenco del catalogo (IMP-07, PR in preparazione)
+## 0.41.61-dev — vista elenco del catalogo (IMP-07, PR #211 integrata)
 
 - Consente di passare dalla griglia all’elenco nel catalogo corsi e nella pagina di una categoria; selezione tramite filtro allowlist e mantenuta nell’URL insieme agli altri filtri.
 - La vista elenco si adatta agli schermi stretti e usa le stesse schede e gli stessi risultati autorizzati della griglia.
-- Collaudi automatizzati nel test HTTP della CI; accettazione Joomla manuale pendente. Procedura nel [testbook](docs/QA_TESTBOOK.md#imp-07--vista-elenco-del-catalogo-04161-dev).
+- PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integrata con squash nel commit `ca6fecc685902c60527ea4d74f436f87ce9f4d12`, milestone **1.0.0**; CI standard 4/4 nel [run 42920368304](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304). Pacchetto [JD-Learn-0.41.61-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304/artifacts/13811701431), wrapper SHA-256 `e99f8024ae32bc221234262697dad8a196673994cafbcc7a32493c2dce500d12`, ZIP Joomla SHA-256 `cc7df8c79e4e3dc8717337df4d427eb43f1b15b61618ee9233aefd92c8201174`, disponibile fino al 24 novembre 2026. Collaudo Joomla manuale pendente nel [testbook](docs/QA_TESTBOOK.md#imp-07--vista-elenco-del-catalogo-04161-dev).

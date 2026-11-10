@@ -1,6 +1,6 @@
 # Piano delle Pull Request verso JD Learn 1.0.0
 
-Aggiornato al **10 novembre 2026**. Main **0.41.60-dev** integra le PR #204, #206–#210 per IMP-07; CI 4/4 nel [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751). Il candidato **0.41.61-dev** aggiunge la vista alternativa griglia/elenco. Filtri docente/percorso e collaudo Joomla restano da completare. Questo è il piano operativo per completare la prima versione stabile. Il perimetro funzionale è quello approvato in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md); la tracciabilità puntuale resta in [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e nel catalogo dei test.
+Aggiornato al **10 novembre 2026**. Main **0.41.61-dev** integra le PR #204, #206–#211 per IMP-07; CI standard 4/4 nel [run 42920368304](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304). Pacchetto [JD-Learn-0.41.61-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304/artifacts/13811701431), wrapper SHA-256 `e99f8024ae32bc221234262697dad8a196673994cafbcc7a32493c2dce500d12`, ZIP Joomla SHA-256 `cc7df8c79e4e3dc8717337df4d427eb43f1b15b61618ee9233aefd92c8201174`; disponibile fino al 24 novembre. Avanzamento **75%** (522/7); filtri docente/percorso e collaudo Joomla restano da completare. Questo è il piano operativo per completare la prima versione stabile. Il perimetro funzionale è quello approvato in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md); la tracciabilità puntuale resta in [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e nel catalogo dei test.
 
 Il piano ha due blocchi in quest’ordine:
 
@@ -19,7 +19,7 @@ Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di 
 - Tutte le PR implementative e di stabilizzazione appartengono alla milestone `1.0.0`. Credentials è un progetto successivo alla 1.0.0 e mantiene la propria nomenclatura e pianificazione separate.
 
 IMP-05 è integrato: PR [#198] ha aggiunto la pulizia batch limitata delle sessioni video scadute; l’accettazione reale dei quattro provider resta un gate manuale. Nessun quinto provider.
-IMP-07 integra filtri per difficoltà/durata (PR #210) e tag (PR #209) in main 0.41.60-dev. La PR in preparazione aggiunge il layout alternativo griglia/elenco. Dopo questo incremento restano filtri docente/percorso e collaudi manuali previsti da CAT-01.
+IMP-07 integra filtri per difficoltà/durata (PR #210) e tag (PR #209) in main 0.41.60-dev. La PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integra il layout alternativo griglia/elenco in 0.41.61-dev. Restano filtri docente/percorso e collaudi manuali previsti da CAT-01.
 
 IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
@@ -95,4 +95,4 @@ La PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196) completa un 
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #210
 
-PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) e [#209](https://github.com/jeckodevelopment/jd_learn/pull/209) sono integrate in 0.41.60-dev: filtri pubblici per difficoltà, durata e tag nel catalogo e nelle categorie. La #209 ha CI standard 4/4 nel [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751); accettazione Joomla pendente. La PR in preparazione per 0.41.61-dev aggiunge vista elenco. Avanzamento main stimato: **74%** (520/7; catalogo 66%); candidato: **75%** (522/7; catalogo 68%).
+PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) e [#209](https://github.com/jeckodevelopment/jd_learn/pull/209) sono integrate in 0.41.60-dev: filtri pubblici per difficoltà, durata e tag nel catalogo e nelle categorie. La #209 ha CI standard 4/4 nel [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751); accettazione Joomla pendente. La PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integra la vista elenco in 0.41.61-dev; CI standard 4/4. Avanzamento stimato: **75%** (522/7; catalogo 68%).
