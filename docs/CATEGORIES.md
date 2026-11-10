@@ -10,7 +10,7 @@ Il gestore Menu dispone ora di due tipi: **Categorie dei corsi**, con categoria 
 
 L'elenco principale usa la paginazione Joomla, con limite massimo100. Nella scheda categoria i corsi usano la paginazione del catalogo; i figli hanno pagine da20 e parametro separato `subcategories_limitstart`. I totali contano soltanto record visibili. Le categorie vuote visibili vengono mostrate; non vengono indicati conteggi globali di figli o corsi nascosti. La descrizione nativa è resa come testo con escaping, senza eseguire HTML o plugin contenuto. La resa ricca del contenuto categoria resta fuori da il flusso descritto.
 
-Le viste alimentano il Pathway nativo con antenati visibili e categoria corrente; per mostrarlo pubblicare il modulo Breadcrumbs del template. I segmenti categoria sono numerici e funzionano con SEF attivo/disattivo. Alias completi nei percorsi, canonicalizzazione dei vecchi slug e copertura SEO generale restano da completare.
+Le viste alimentano il Pathway nativo con antenati visibili e categoria corrente; per mostrarlo pubblicare il modulo Breadcrumbs del template. I segmenti categoria sono numerici e funzionano con SEF attivo/disattivo. Alias completi nei percorsi e canonicalizzazione dei vecchi slug restano da completare. La PR IMP-07 sui metadati pubblici aggiunge canonical, Open Graph e Twitter alle viste pubbliche; l’accettazione Joomla è documentata nel testbook.
 
 ## Smart Search
 

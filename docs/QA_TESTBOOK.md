@@ -1,3 +1,14 @@
+## IMP-07 — metadati SEO e social pubblici (0.41.57-dev)
+
+**PR IMP-07 SEO — milestone 1.0.0.** Collaudo manuale sul sito Joomla di prova richiesto; l’esito va registrato qui dopo la prova.
+
+1. Installare il pacchetto candidato su Joomla di prova e creare una scheda corso pubblica con titolo SEO, descrizione SEO e immagine promozionale locale; creare anche un corso con catalogo pubblico ma contenuto riservato, una categoria pubblica e una categoria accessibile solo agli utenti registrati, e un percorso pubblico.
+2. Aprire la scheda pubblica e verificare nel sorgente HTML titolo/descrizione, `og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `twitter:card`, `twitter:title`, `twitter:description` e `twitter:image`. L’immagine deve essere un URL assoluto del sito.
+3. Aprire categoria e percorso pubblici: verificare canonical assoluto, titolo e descrizione social coerenti con la pagina, senza duplicati di meta tag.
+4. Aprire scheda corso con catalogo o contenuto non accessibile agli ospiti e la categoria privata: verificare `robots=noindex, nofollow` e assenza di canonical/preview social che li promuovano come contenuti pubblici. Accedere poi da utente autorizzato: i contenuti restano consultabili, ma non devono diventare indicizzabili.
+5. Aprire un percorso da utente autenticato: verificare `robots=noindex, nofollow` e assenza di metadati social/canonical.
+6. Ripetere con SEF attivo e disattivo e in IT/EN; verificare che canonical sia assoluto, stabile e privo di parametri di ricerca, filtro o paginazione.
+
 ## IMP-07 — Ricerca e ordinamento del catalogo (0.41.56-dev, PR #206 integrata)
 
 La PR aggiunge ricerca su titolo/sommario e ordinamento recenti/titolo, nel catalogo completo e dentro una categoria. Verificare sul sito Joomla 6 di prova con corsi pubblici e contenuti riservati di fixture.
