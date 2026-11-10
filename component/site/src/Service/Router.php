@@ -112,7 +112,7 @@ final class Router extends RouterView
 
     private function segmentId($segment): int
     {
-        if (preg_match('/^(\d+)(?::.*)?$/uD', (string) $segment, $matches) !== 1) { return 0; }
+        if (preg_match('/^(\d+)(?:(?::|-).*)?$/uD', (string) $segment, $matches) !== 1) { return 0; }
         return (int) $matches[1];
     }
 }
