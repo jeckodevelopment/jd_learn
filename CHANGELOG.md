@@ -1,3 +1,9 @@
+## 0.41.56-dev — ricerca e ordinamento del catalogo (IMP-07, PR #206)
+
+- In lavorazione: aggiunge ricerca case-insensitive su titolo e sommario promozionale, ordinamento per più recenti o titolo, anche nella vista categoria.
+- La ricerca usa parametri SQL associati, mantiene il perimetro di accesso e non interroga programma, lezioni o dati personali; i controlli sono tradotti IT/EN e accessibili da tastiera.
+- Collaudo Joomla richiesto: ricerca titolo/sommario, termine riservato assente, filtro categoria e ordinamenti. Procedura in [testbook](docs/QA_TESTBOOK.md#imp-07--ricerca-e-ordinamento-del-catalogo-04156-dev-pr-206). CI sulla base 0.41.55-dev in attesa.
+
 ## 0.41.55-dev — Smart Search catalogo (IMP-07, PR #204)
 
 - Integrato il plugin Finder `plg_finder_jlms`: indice limitato a titolo e sommario delle schede pubbliche idonee, con lingua/categorie e aggiornamento al cambio di corso o categoria.
