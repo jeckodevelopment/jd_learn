@@ -98,6 +98,7 @@ $course=(int)$model->getState('course.id');$item=$model->getItem($course);
 scheduleExpect(str_starts_with($item->publish_up,'2000-01-01 00:00:00')&&$item->calendar_publish_up===$values['calendar_publish_up']&&$item->calendar_timezone==='Europe/Rome','UTC persisted and editor round-trips local values');
 scheduleExpect(!str_contains($item->params_json,'injected'),'Raw calendar JSON not accepted');
 $siteConfig->set('offset', $previousOffset);
+$values['calendar_timezone'] = 'Europe/Rome';
 $edit=array_replace($base,['id'=>$course]);
 scheduleExpect($model->save($edit),'Legacy client can save without calendar fields');
 $before=$model->getItem($course);scheduleExpect($before->calendar_starts_at===$values['calendar_starts_at'],'Old client retains calendar');
