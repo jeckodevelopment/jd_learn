@@ -1,6 +1,6 @@
-## IMP-07 — filtri docente e percorso nel catalogo (0.41.62-dev, PR in preparazione)
+## IMP-07 — filtri docente e percorso nel catalogo (0.41.62-dev, PR #213 integrata)
 
-Riferimenti: CAT-01, AC-41 e AC-85. Su Joomla 6 di prova predisporre corsi pubblici con docenti pubblici e percorsi pubblicati; aggiungere profili o percorsi con accesso limitato collegati a corsi accessibili.
+PR [#213](https://github.com/jeckodevelopment/jd_learn/pull/213), milestone **1.0.0**. CI standard 4/4 nel [run 42923290761](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761); pacchetto [JD-Learn-0.41.62-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761/artifacts/13811584820), checksum wrapper `003c56dd360cd8a7c375c220a9b1a0ce0c57e6669913a693c63ea6781f032cf2`, checksum ZIP Joomla `e26a39a0c63c3ba07a9851b49b701582d3df8a656ac55c634cd1414ff9412728`. Riferimenti: CAT-01, AC-41 e AC-85. Su Joomla 6 di prova predisporre corsi pubblici con docenti pubblici e percorsi pubblicati; aggiungere profili o percorsi con accesso limitato collegati a corsi accessibili.
 
 1. Da ospite, verificare nel catalogo e nella pagina categoria i filtri Docente e Percorso. Le opzioni devono includere solo profili/percorsi pubblici associati a corsi visibili nel contesto.
 2. Selezionare un docente: devono restare i corsi pubblici a lui assegnati. Ripetere selezionando un percorso: mostrare solo i corsi visibili associati al percorso.

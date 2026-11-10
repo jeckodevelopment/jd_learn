@@ -11,36 +11,36 @@
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42913999069,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069",
+    "run_id": 42923290761,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130171578543,
+        "id": 130203253854,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130171662865,
+        "id": 130203327705,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130171662871,
+        "id": 130203327646,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130171662946,
+        "id": 130203327664,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #210: CI standard 4/4 superata; controlli documentali, query/render catalogo via HTTP, entrambi gli stack PHP/database e Chromium. Accettazione manuale Joomla pendente."
+    "note": "PR #213: CI standard 4/4 superata; filtri docente/percorso nel catalogo/categorie, test HTTP, upgrade pacchetto e Chromium. Collaudo manuale Joomla pendente."
   },
   "package": {
     "artifact_id": 13807843959,
