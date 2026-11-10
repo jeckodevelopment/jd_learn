@@ -1,8 +1,8 @@
-## 0.41.59-dev — filtri core del catalogo (CAT-01, PR #210 candidata)
+## 0.41.59-dev — filtri core del catalogo (CAT-01, PR #210 integrata)
 
 - Aggiunge filtri pubblici per difficoltà e fasce di durata stimata al catalogo e alla lista corsi delle categorie; ricerca, ordine, categoria e paginazione si combinano.
 - I valori inviati sono limitati a opzioni previste; i filtri leggono solo i metadati promozionali del corso.
-- PR #210 candidata alla milestone **1.0.0**. CI in corso; pacchetto e checksum verranno registrati dopo la verifica del candidato.
+- PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) integrata con squash nel commit `e5d0bae954c099c8522db57c30b1e32882b468ee`; milestone **1.0.0**; CI standard 4/4 nel [run 42913999069](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069). Pacchetto [JD-Learn-0.41.59-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959), wrapper SHA-256 `c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c`, ZIP Joomla SHA-256 `f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc`; scade il 24 novembre 2026. Collaudo manuale Joomla pendente nel [testbook](docs/QA_TESTBOOK.md#imp-07--filtri-di-difficolta-e-durata-del-catalogo).
 - Collaudo Joomla: vedere [testbook](docs/QA_TESTBOOK.md#imp-07--filtri-di-difficolta-e-durata-del-catalogo).
 
 ## 0.41.58-dev — URL SEF con alias per catalogo e percorsi (IMP-07, PR #208 integrata)
@@ -66,7 +66,7 @@
 
 ## 0.41.52-dev — indice aula comprimibile su smartphone e default fuso globale (PR #190/#192 integrate)
 
-- PR #192 corregge issue #172: il nuovo corso mostra l’opzione “Usa globali” nel campo Timezone nativo; al salvataggio usa il fuso globale IANA del sito. Fusi espliciti, date UTC e corsi esistenti invariati. CI standard 4/4 superata nel [run ${run}](https://github.com/jeckodevelopment/jd_learn/actions/runs/${run}); pacchetto installabile [JD-Learn-0.41.52-dev](${link}), SHA-256 interno `${inner}`, wrapper `${outer}`. Collaudo Joomla manuale pendente in [testbook](docs/QA_TESTBOOK.md#pr-192--fuso-globale-per-nuovi-corsi).
+- PR #192 corregge issue #172: il nuovo corso mostra l’opzione “Usa globali” nel campo Timezone nativo; al salvataggio usa il fuso globale IANA del sito. Fusi espliciti, date UTC e corsi esistenti invariati. CI standard 4/4 superata nel [run 42865678167](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167); pacchetto installabile [JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167/artifacts/13787890952), checksum e procedura manuale nel testbook. Collaudo Joomla manuale pendente in [testbook](docs/QA_TESTBOOK.md#pr-192--fuso-globale-per-nuovi-corsi).
 
 
 - Aggiunge in aula un comando tradotto e accessibile per mostrare/nascondere il programma didattico sotto 48rem; desktop mantiene l’indice visibile. Senza JavaScript il programma resta disponibile.
