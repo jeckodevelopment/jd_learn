@@ -4,6 +4,8 @@ Aggiornato al **10 novembre 2026**. Main **0.41.45-dev**; PR [#169](https://gith
 
 Il piano operativo delle PR, con identificativi stabili, requisiti associati e fase di stabilizzazione successiva, è in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md). In caso di differenze, il perimetro approvato in RELEASE_SCOPE.md e RELEASE_SCOPE_MATRIX.md prevale; questa pagina conserva l’ordine operativo e lo stato corrente.
 
+**IMP-01 completato come ricognizione di implementazione (PR documentale):** per AUT-01/AUT-04/AUT-05, CORE-10, SCR-13 e AC-119–129 non è stata individuata una lacuna runtime concreta da correggere senza eseguire il collaudo Joomla. Le procedure mancanti AC-121–125 sono ora nel testbook; i relativi esiti restano aperti. Il prossimo incremento è **IMP-02**, dopo il quale si prosegue secondo il piano.
+
 ## Priorità per la prima versione stabile
 
 Il perimetro approvato e la suddivisione dei requisiti sono in [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). Le richieste nuove sono registrate in [REQUIREMENTS_CHANGES.md](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native) e negli scenari AC-129–134. La gestione amministrativa minima AC-131 è l’eccezione esplicita alla sospensione delle nuove funzionalità quiz; i criteri didattici rimanenti di fase 2 non sono gate della prima stabile.
