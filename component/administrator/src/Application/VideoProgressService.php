@@ -61,6 +61,20 @@ final class VideoProgressService
         return $row;
     }
 
+    /** Remove a bounded batch of expired player sessions during an authorised playback start. */
+    private function purgeExpiredSessions(int $now): void
+    {
+        $query = $this->db->createQuery()->select('id')->from('#__jlms_progress_sessions')
+            ->where('expires_at <= :now')->bind(':now', self::date($now))
+            ->order('expires_at, id')->setLimit(250);
+        $ids = $this->db->setQuery($query)->loadColumn();
+        if (!$ids) { return; }
+
+        $delete = $this->db->createQuery()->delete($this->db->quoteName('#__jlms_progress_sessions'))
+            ->whereIn('id', array_map('strval', $ids));
+        $this->db->setQuery($delete)->execute();
+    }
+
     private static function uuid(): string
     {
         $hex = bin2hex(random_bytes(16));
@@ -110,6 +124,7 @@ final class VideoProgressService
             [$actor, , $enrollment, $lesson, $provider] = $this->context($identity, $language, $enrollmentId, $lessonId);
             if (!hash_equals($fingerprint, self::fingerprint($lesson))) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
             $now = ($this->clock)(); $date = self::date($now);
+            $this->purgeExpiredSessions($now);
             $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_progress_sessions')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')->where('expires_at > :now')
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':now', $date);

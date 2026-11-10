@@ -1,3 +1,9 @@
+## 0.41.53-dev — pulizia limitata delle sessioni video scadute (IMP-05)
+
+- L’avvio autorizzato di una nuova sessione elimina fino a 250 sessioni video scadute usando l’indice di scadenza; le sessioni attive non vengono toccate. La pulizia è opportunistica e non sostituisce un’attività periodica sul sito inattivo.
+- Aggiunta prova d’integrazione Joomla per la rimozione di una riga scaduta. Nessuna modifica a progresso, accessi o provider.
+- Collaudo manuale Joomla richiesto: avvio di un video dopo la scadenza di una sessione precedente; verificare che il player parta normalmente e che la nuova sessione salvi la posizione.
+
 ## 0.41.52-dev — retry del progresso audio (PR #196 integrata)
 
 - Gli errori temporanei di rete, timeout, HTTP 408/429 e 5xx ritentano una sola volta il salvataggio della stessa posizione audio. Gli errori permanenti non generano retry; il punto fallito resta disponibile per il successivo evento del player. Completamento e percentuale non cambiano.

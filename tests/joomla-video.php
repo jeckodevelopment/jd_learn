@@ -129,8 +129,14 @@ videoFixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>0,'publish_dow
 [, , , $withdrawnVideo]=$learning->videoContext($student,'en-GB',$enrollment,$lesson);
 videoExpect($withdrawnVideo->access_expires_at===null,'course publication end is not a playback deadline');
 videoDenied(fn()=>$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16))),404,'withdrawn course rejects a new learner');
-$a=$service->playback($student,'en-GB',$enrollment,$lesson,true);$b=$service->playback($student,'en-GB',$enrollment,$lesson,true);
-videoExpect($a['options']['reference']==='dQw4w9WgXcQ' && !isset($a['playback_token']),'safe descriptor');
+$a=$service->playback($student,'en-GB',$enrollment,$lesson,true);
+$expiredSession=(object)['id'=>$a['session_id'],'expires_at'=>gmdate('Y-m-d H:i:s',time()-3600)];
+$db->updateObject('#__jlms_progress_sessions',$expiredSession,'id');
+$b=$service->playback($student,'en-GB',$enrollment,$lesson,true);
+$expiredCount=(int)$db->setQuery($db->createQuery()->select('COUNT(*)')->from('#__jlms_progress_sessions')
+    ->where('id = :id')->bind(':id',$expiredSession->id))->loadResult();
+videoExpect($expiredCount===0,'authorised playback purges expired player sessions');
+videoExpect($b['options']['reference']==='dQw4w9WgXcQ' && !isset($b['playback_token']),'safe descriptor');
 videoFixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>1,'publish_down'=>null],true);
 $event=static fn(int $id,string $type,int $p,int $t,bool $playing=true):array=>['id'=>$id,'type'=>$type,'position_ms'=>$p,'client_ms'=>$t,'rate_milli'=>1000,'playing'=>$playing];
 $batch=json_encode([$event(1,'play',0,0),$event(2,'position',5000,5000)],JSON_THROW_ON_ERROR);$now+=5000;

@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.52-dev** integra le PR #190, #192, #194 e [#196](https://github.com/jeckodevelopment/jd_learn/pull/196). La #196 aggiunge il retry limitato del salvataggio posizione nelle lezioni audio. CI standard 4/4 superata nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). [Pacchetto installabile JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523/artifacts/13793090250); SHA-256 artefatto 4bcb98274e49cb8254c7f401e01c70c0969bab5aafa84089cc8600730ccdada3. I collaudi manuali Joomla restano da svolgere.
+Aggiornato al **10 novembre 2026**. Main **0.41.52-dev** integra le PR #190, #192, #194 e [#196](https://github.com/jeckodevelopment/jd_learn/pull/196); candidato **0.41.53-dev** per la pulizia limitata delle sessioni video scadute. La #196 aggiunge il retry limitato del salvataggio posizione nelle lezioni audio. CI standard 4/4 superata nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). [Pacchetto installabile JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523/artifacts/13793090250); SHA-256 artefatto 4bcb98274e49cb8254c7f401e01c70c0969bab5aafa84089cc8600730ccdada3. I collaudi manuali Joomla restano da svolgere.
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -25,13 +25,15 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Corsi, versioni e programma (M01/M02) | 76% |
 | Catalogo e percorsi formativi (CAT-03/SCR-04/EDGE-04) | 57% |
 | Fruizione e progressi core (M03/M09) | 77% |
-| Video e materiali essenziali (M04) | 83% |
+| Video e materiali essenziali (M04) | 84% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 91% |
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **73%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (509/7 = 72,71%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (510/7 = 72,86%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+
+IMP-05 — primo residuo tecnico: PR candidata 0.41.53 aggiunge la pulizia opportunistica, limitata a 250 righe scadute, all’avvio autorizzato di una sessione video. La prova Joomla d’integrazione automatica è nel test standard; il collaudo manuale con provider/account/browser reali resta un gate distinto. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
 
 ## Funzioni presenti e lavoro residuo
 
