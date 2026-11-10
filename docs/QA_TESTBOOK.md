@@ -657,3 +657,15 @@ PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208), milestone **1.
 4. Cambiare lingua con associazioni valide e verificare che il link porti al record tradotto e al suo alias. Con un’associazione assente, verificare il fallback lingua già previsto.
 5. Disattivare SEF e verificare URL query tradizionali, navigazione e menu nativi. Riattivare SEF e verificare breadcrumb, paginazione/filtri e link di ritorno.
 6. Modificare un alias nel gestore Joomla; verificare che il nuovo alias generi il link successivo e che il vecchio segmento numerico continui a identificare il record.
+## IMP-07 — vista elenco del catalogo (0.41.61-dev, PR in preparazione)
+
+Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova; usare corsi pubblici e una categoria visibile.
+
+1. Aprire il catalogo e verificare che la selezione Visualizzazione proponga Griglia ed Elenco, con etichette corrette in italiano e inglese.
+2. Selezionare Elenco e applicare. Atteso: le schede sono disposte in righe, la scelta resta selezionata e l’URL conserva gli altri filtri attivi.
+3. Combinare Elenco con ricerca, tag, difficoltà, durata e ordinamento; i risultati e la paginazione devono rimanere coerenti con i filtri.
+4. Ripetere nella pagina di una categoria con corsi diretti e discendenti. La vista scelta non deve rimuovere il contesto categoria.
+5. Restringere la finestra sotto 640 px: titolo, link e sommario devono rimanere leggibili senza overflow orizzontale. Verificare la navigazione da tastiera dei controlli.
+6. Inviare `filter[layout]=unexpected`: deve essere usata la griglia predefinita. Verificare che nessun corso non autorizzato appaia in entrambe le viste.
+
+**Esito sito Joomla:** Non eseguito.

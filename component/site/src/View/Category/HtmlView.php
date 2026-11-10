@@ -23,6 +23,7 @@ final class HtmlView extends BaseHtmlView
     public array $tags = [];
 public string $difficulty = '';
     public string $duration = '';
+    public string $layout = 'grid';
 
     public function display($tpl = null)
     {
@@ -35,6 +36,7 @@ public string $difficulty = '';
         $this->tags = $this->getModel()->getTags();
 $this->difficulty = $this->getModel()->getDifficulty();
         $this->duration = $this->getModel()->getDuration();
+        $this->layout = $this->getModel()->getLayout();
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
         $app = Factory::getApplication();
         $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);

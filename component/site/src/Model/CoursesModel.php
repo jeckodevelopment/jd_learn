@@ -25,6 +25,8 @@ class CoursesModel extends ListModel
         $this->setState('filter.difficulty', is_string($difficulty) && in_array($difficulty, ['beginner', 'intermediate', 'advanced'], true) ? $difficulty : '');
         $duration = $filter['duration'] ?? '';
         $this->setState('filter.duration', is_string($duration) && in_array($duration, ['under-30', '30-60', '61-120', 'over-120'], true) ? $duration : '');
+        $layout = $filter['layout'] ?? 'grid';
+        $this->setState('filter.layout', is_string($layout) && in_array($layout, ['grid', 'list'], true) ? $layout : 'grid');
     }
 
     protected function getListQuery()
@@ -89,5 +91,10 @@ class CoursesModel extends ListModel
     public function getDuration(): string
     {
         return (string) $this->getState('filter.duration');
+    }
+
+    public function getLayout(): string
+    {
+        return (string) $this->getState('filter.layout');
     }
 }

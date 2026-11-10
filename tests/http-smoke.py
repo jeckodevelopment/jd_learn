@@ -65,8 +65,14 @@ try:
  _,invalid_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'2147483647'}))
  if 'Publication fixture' in invalid_tag_html:
   raise RuntimeError('An unknown tag must not broaden the public catalog result')
- if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[difficulty]"' not in html or 'name="filter[duration]"' not in html:
+ if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[difficulty]"' not in html or 'name="filter[duration]"' not in html or 'name="filter[layout]"' not in html or 'data-layout="grid"' not in html:
   raise RuntimeError('Public catalog search, order and core filters did not render')
+ _,list_layout=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[layout]':'list'}))
+ if 'data-layout="list"' not in list_layout or 'jlms-course-grid--list' not in list_layout:
+  raise RuntimeError('Public catalog list layout did not render')
+ _,invalid_layout=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[layout]':'unexpected'}))
+ if 'data-layout="grid"' not in invalid_layout:
+  raise RuntimeError('Unsupported catalog layouts must fall back to the grid')
  search_url,search_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[search]':'Publication fixture','filter[order]':'title'}))
  if 'Publication fixture' not in search_html or 'value="title" selected' not in search_html:
   raise RuntimeError('Public catalog title/summary search and title ordering did not apply')
@@ -90,6 +96,9 @@ try:
    raise RuntimeError('Category-scoped search and tag controls did not preserve their category')
   if 'Publication fixture' not in category_search or 'id="jlms-category-catalog-filters"' not in category_search or 'value="beginner" selected' not in category_search or 'value="30-60" selected' not in category_search:
    raise RuntimeError('Category-scoped catalog search did not preserve its category')
+  _,category_list=get(category_url+('&' if '?' in category_url else '?')+urlencode({'filter[layout]':'list'}))
+  if 'data-layout="list"' not in category_list or 'jlms-course-grid--list' not in category_list:
+   raise RuntimeError('Category course list layout did not render')
  _,invalid_filter_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'beginner\' OR 1=1 --','filter[duration]':'0 OR 1=1'}))
  if 'Publication fixture' not in invalid_filter_html:
   raise RuntimeError('Invalid catalog filter values must be ignored safely')
