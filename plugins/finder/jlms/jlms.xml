@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="finder" method="upgrade">
+ <name>PLG_FINDER_JLMS</name><author>Jecko Development</author><version>0.1.0</version>
+ <description>PLG_FINDER_JLMS_XML_DESCRIPTION</description>
+ <namespace path="src">Jlms\Plugin\Finder\Jlms</namespace>
+ <scriptfile>installer.php</scriptfile>
+ <files><filename>installer.php</filename><folder plugin="jlms">services</folder><folder>src</folder><folder>language</folder></files>
+ <languages>
+  <language tag="it-IT">language/it-IT/plg_finder_jlms.sys.ini</language>
+  <language tag="it-IT">language/it-IT/plg_finder_jlms.ini</language>
+  <language tag="en-GB">language/en-GB/plg_finder_jlms.sys.ini</language>
+  <language tag="en-GB">language/en-GB/plg_finder_jlms.ini</language>
+ </languages>
+</extension>

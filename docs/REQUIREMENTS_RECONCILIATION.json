@@ -1,13 +1,13 @@
 {
   "date": "2026-11-10",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
-  "runtime_tested_head": "e38f15538ea02d35f321ab019147df09f36fc18e",
+  "runtime_tested_head": "421618d693a502db872415eb4d3c53aed4b220d2",
   "ci_run": 42886192087,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 165,
+      "Parziale": 166,
       "Completata": 14,
-      "Non iniziata": 31
+      "Non iniziata": 30
     },
     "Perimetro 1.0.0": {
       "1.0.0": 133,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR ricostruite da riferimenti esistenti e storia delle fonti: non certificano da sole ogni criterio."
+  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR ricostruite da riferimenti esistenti e storia delle fonti: non certificano da sole ogni criterio. PR #204 è inclusa nella candidata IMP-07; CORE-14 resta implementazione parziale e accettazione Joomla non eseguita."
 }

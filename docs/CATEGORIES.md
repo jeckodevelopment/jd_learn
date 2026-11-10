@@ -12,6 +12,10 @@ L'elenco principale usa la paginazione Joomla, con limite massimo100. Nella sche
 
 Le viste alimentano il Pathway nativo con antenati visibili e categoria corrente; per mostrarlo pubblicare il modulo Breadcrumbs del template. I segmenti categoria sono numerici e funzionano con SEF attivo/disattivo. Alias completi nei percorsi, canonicalizzazione dei vecchi slug e copertura SEO generale restano da completare.
 
+## Smart Search
+
+Il plugin incluso `plg_finder_jlms` aggiunge a Joomla Smart Search solo schede promozionali di corsi pubblicati con versione attiva, accesso catalogo pubblico e categorie/antenati pubblici e pubblicati. Lingua e tassonomia categoria sono mantenute nell’indice; le modifiche a corsi e categorie ricalcolano l’indice. Sono esclusi corsi con accesso ristretto o finestra di pubblicazione programmata, non pubblicati o senza versione attiva. Sono indicizzati titolo e sommario promozionale: programma, lezioni, media, campi privati, progressi e dati personali non vengono inviati al Finder. L’integrazione opera con `com_finder` attivo; l’indicizzazione iniziale o una ricostruzione completa si esegue da Componenti → Smart Search → Indice.
+
 ## Accesso corrente e lingua
 
 Il servizio catalogo rilegge l'utente Joomla e i livelli di accesso e verifica sezione, stato, lingua e accesso della categoria e di tutti gli antenati. Un URL diretto a un ramo non visibile risponde404; la radice globale Joomla non è una categoria pubblica del componente. La lista corsi mantiene il filtro promozionale distinto dal livello dei contenuti. Le descrizioni delle lezioni e i media privati non fanno parte della risposta.

@@ -1,3 +1,10 @@
+## 0.41.55-dev — Smart Search catalogo (IMP-07, PR #204)
+
+- Integrato il plugin Finder `plg_finder_jlms`: indice limitato a titolo e sommario delle schede pubbliche idonee, con lingua/categorie e aggiornamento al cambio di corso o categoria.
+- Esclusi contenuti non pubblicati, programmati, riservati, senza versione attiva o collocati in categorie non pubbliche. Nessun programma, lezione, media, dato personale o campo privato entra nell’indice.
+- CI sul commit pre-sync 4/4 nel [run 42895021649](https://github.com/jeckodevelopment/jd_learn/actions/runs/42895021649); il merge della base 0.41.54 richiede una nuova esecuzione CI prima dell’integrazione. Il collaudo Joomla resta pendente; procedura in [testbook](docs/QA_TESTBOOK.md#imp-07--smart-search-del-catalogo-jd-learn-04155-dev-pr-204-in-review).
+- Pacchetto aggiornato in preparazione dalla CI sul commit sincronizzato.
+
 ## Riconciliazione requisiti — 10 novembre 2026 (runtime 0.41.54-dev invariato)
 
 - Riconciliati tutti i 210 ID senza alterare descrizioni/scenari/perimetro baseline: implementazione, esecuzione automatica con copertura, accettazione Joomla, perimetro 1.0.0/fase 2, PR/commit e residui separati.

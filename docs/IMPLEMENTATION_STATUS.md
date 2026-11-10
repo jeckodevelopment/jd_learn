@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.54-dev** integra le PR #190, #192, #194, #196, #198 e [#202](https://github.com/jeckodevelopment/jd_learn/pull/202); IMP-06 aggiunge la pulizia Scheduler limitata dei materiali locali orfani. CI standard 4/4 superata nel [run 42886192087](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087). Pacchetto installabile [JD-Learn-0.41.54-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087/artifacts/13797460306); SHA-256 artefatto `622501af14e1a9b50a47203c7c641ec0beac1ad7b939589343e68d83274e23b6`; build locale `dist/pkg_jlms-0.41.54-dev.zip` SHA-256 `2a3b87ab7669e2d41e830b2c1bddb7d41668260278916f85510aac9cf12024a6`. Artefatto disponibile fino al 24 novembre 2026; collaudo manuale Joomla pendente.
+Aggiornato al **10 novembre 2026**. Candidata IMP-07 **0.41.55-dev** nella [PR #204](https://github.com/jeckodevelopment/jd_learn/pull/204); CI 4/4 superata nel [run 42895021649](https://github.com/jeckodevelopment/jd_learn/actions/runs/42895021649), collaudo Joomla pendente; main resta **0.41.54-dev** fino al merge. Main **0.41.54-dev** integra le PR #190, #192, #194, #196, #198 e [#202](https://github.com/jeckodevelopment/jd_learn/pull/202); IMP-06 aggiunge la pulizia Scheduler limitata dei materiali locali orfani. CI standard 4/4 superata nel [run 42886192087](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087). Pacchetto installabile [JD-Learn-0.41.54-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087/artifacts/13797460306); SHA-256 artefatto `622501af14e1a9b50a47203c7c641ec0beac1ad7b939589343e68d83274e23b6`; build locale `dist/pkg_jlms-0.41.54-dev.zip` SHA-256 `2a3b87ab7669e2d41e830b2c1bddb7d41668260278916f85510aac9cf12024a6`. Artefatto disponibile fino al 24 novembre 2026; collaudo manuale Joomla pendente.
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -18,6 +18,8 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
+La stima seguente descrive main 0.41.54-dev integrato; la candidata IMP-07/0.41.55-dev non è ancora conteggiata.
+
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
@@ -33,7 +35,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 
 Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (511/7 = 73,00%, arrotondato al 73%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
+IMP-07 è in review nella PR #204 su 0.41.55-dev: il plugin Finder indicizza la sola scheda pubblica e mantiene indice/lingua/categorie; CI standard 4/4 superata, collaudo Joomla pendente. Non è incluso nella stima main del 73% fino al merge. IMP-05 — PR [#198] integrata: pulizia opportunistica limitata a 250 righe scadute all’avvio autorizzato di una sessione video. IMP-06 — PR [#202] integrata in 0.41.54-dev: attività Scheduler limitata per eliminare asset locali non referenziati da oltre 24 ore. CI standard 4/4, compresi test storage e riferimenti; collaudo manuale Joomla pendente. Le funzionalità non supportate dai singoli provider restano esplicitamente dichiarate nelle capabilities.
 
 ## Funzioni presenti e lavoro residuo
 
