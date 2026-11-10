@@ -66,4 +66,4 @@ La release è candidata solo quando:
 
 ## Stato iniziale del piano
 
-Main è **0.41.45-dev** secondo [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md). Le percentuali e i collaudi restano quelli registrati nello stato attuale. Questo documento non li ricalcola e non dichiara accettati i requisiti ancora in corso. La prossima PR di sviluppo deve partire da IMP-01 dopo aver riconciliato i residui con lo stato aggiornato di `main`.
+Main è **0.41.45-dev** secondo [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md). La ricognizione IMP-01 in PR documentale ha mappato il perimetro esistente senza individuare un difetto runtime concreto; ha aggiunto al testbook le procedure AC-121–125. Il completamento della mappatura non equivale ad accettazione manuale: i collaudi M01 restano aperti. L’avanzamento non cambia per questa PR documentale. La prossima PR implementativa deve partire da IMP-02, riconciliando i residui del ciclo di aggiornamento con lo stato aggiornato di `main`.

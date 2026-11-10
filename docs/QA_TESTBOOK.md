@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 14491)
+Total output lines: 515
+
 ## PR #162 integrata — anteprima dei livelli di accesso (0.41.43-dev)
 
 CI standard 4/4 superata nel [run 42712132178](https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178). Il [pacchetto 0.41.43-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795) contiene il runtime verificato (SHA-256 interno `39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738`); il collaudo Joomla resta aperto.
@@ -184,78 +187,7 @@ PR di correzione e test per PRI-02/CORE-08. La suite prima di questa PR preattiv
 
 ### Issue #113 — ACL della sidebar nativa (PR #128, 0.41.31-dev)
 
-Riferimenti: [issue #113](https://github.com/jeckodevelopment/jd_learn/issues/113), CORE-20 / AC-132. Il plugin `plg_system_jlmsmenu` deve filtrare le voci della sidebar secondo i permessi già applicati alle destinazioni senza cambiare gli altri menu Joomla.
-
-1. Su una Joomla 6 usa e getta, installare il pacchetto pulito. In **Sistema → Gestisci → Plugin**, verificare che **JD Learn - ACL menu amministrativo** sia abilitato.
-2. Con account completo, verificare le voci Dashboard, Corsi, Categorie, Banca domande, Docenti, Campi aggiuntivi e Plugin video.
-3. Con account che ha `core.manage` su `com_jlms` ma non `jlms.quiz.manage`, verificare che Banca domande non compaia in sidebar né dashboard; provare l’URL diretto e verificare il diniego.
-4. Rimuovere a turno i permessi `core.manage` su `com_jlms.course`, `com_fields` e `com_plugins`. Atteso: scompaiono dalla sidebar e dashboard rispettivamente Categorie corsi, Campi aggiuntivi e Plugin video.
-5. Verificare che i menu di Joomla non collegati a JD Learn, incluse le categorie contenuti, restino invariati.
-6. Aggiornare un sito con plugin attivo: deve restare attivo. Disattivarlo e aggiornare di nuovo: deve restare disattivato.
-
-**Stato:** PR #128 integrata in main 0.41.31-dev nel commit `26c7ad5264dfbbdbdab9c446162220567df2d30e`; CI standard superata nel [run 42594246627](https://github.com/jeckodevelopment/jd_learn/actions/runs/42594246627), inclusi test installazione/upgrade e preservazione dello stato plugin. Collaudo sul sito Joomla di prova ancora pendente.
-
-### Issue #105 — dashboard amministrativa
-
-Riferimenti: [issue #105](https://github.com/jeckodevelopment/jd_learn/issues/105), CORE-20, UI-02, SCR-13 e AC-132. La dashboard deve agevolare l'accesso alle sole funzioni già presenti; statistiche e attestati sono fase 2.
-
-1. Su un Joomla 6 di prova, aprire **Componenti → JD Learn**. Atteso: si apre la dashboard, non l'elenco corsi.
-2. Verificare i riquadri con icone per Corsi, Categorie corsi, Docenti, Banca domande, Campi aggiuntivi e Plugin video. Aprire ciascun collegamento; deve arrivare alla relativa gestione nativa e conservare filtri/contesti previsti.
-3. Con un account limitato, verificare che i riquadri senza permesso non compaiano. Provare l'URL diretto: Joomla deve negare l'accesso. Ripetere con account autorizzato per ciascuna destinazione.
-4. Verificare tutte le etichette in italiano e inglese, navigazione da tastiera, focus visibile e griglia su finestra desktop e stretta/mobile.
-5. Espandere **Stato dei provider video**: il riepilogo esistente deve continuare a mostrare provider e configurazione senza diventare un nuovo flusso o requisito.
-6. Verificare che non compaiano riquadri Statistiche o Attestati, rinviati alla fase 2.
-
-**Anomalie rilevate sul pacchetto 0.41.23-dev e correzioni incluse in 0.41.24-dev:** la voce radice **JD Learn** nella sidebar apriva ancora Corsi dopo l'aggiornamento; i riquadri potevano portare a un URL con `&amp;` letterale; l'introduzione mostrava una frase sullo storico didattico non pertinente alla dashboard. Verificare la correzione con queste regressioni:
-
-7. Aggiornare il sito da 0.41.23-dev a 0.41.24-dev. Fare clic sulla voce radice **JD Learn** della sidebar. Atteso: si apre la dashboard; Corsi resta una voce figlia distinta, senza duplicati.
-8. Aprire tutti i sei riquadri. Atteso: ogni indirizzo nel browser contiene parametri separati da `&`, porta alla vista corretta e non contiene il testo letterale `&amp;`.
-9. Verificare l'introduzione in italiano e inglese. Atteso: descrive gli strumenti amministrativi e non mostra «Storico didattico e disponibilità attuale dell’aula sono mostrati separatamente.»
-10. Verificare nel sottomenu laterale di JD Learn che **Dashboard** sia la prima voce, sopra **Corsi**; fare clic e controllare che apra la dashboard. Ripetere in italiano e inglese e dopo l'aggiornamento da 0.41.24-dev.
-
-**Stato:** PR [#108](https://github.com/jeckodevelopment/jd_learn/pull/108), [#110](https://github.com/jeckodevelopment/jd_learn/pull/110) e [#112](https://github.com/jeckodevelopment/jd_learn/pull/112) integrate; tutti i quattro job CI standard superati nel [run 42520306552](https://github.com/jeckodevelopment/jd_learn/actions/runs/42520306552). L’utente ha comunicato il superamento del collaudo manuale Dashboard in data 8 novembre 2026; non sono stati forniti dettagli aggiuntivi su versione Joomla, browser o account.
-
-**Aggiornamento issue #113 / PR #126 integrata in 0.41.30-dev:** la scorciatoia Banca domande richiede anche `jlms.quiz.manage`; Categorie corsi e Campi aggiuntivi richiedono i rispettivi permessi di gestione e l’accesso a JD Learn. CI standard superata nel [run 42589362926](https://github.com/jeckodevelopment/jd_learn/actions/runs/42589362926), quattro job verdi. Il pacchetto [JD-Learn-0.41.30-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42589362926/artifacts/13660408807) contiene il package installabile nel wrapper ZIP da estrarre una volta; checksum SHA-256 interno `5c43dff45c5d121e4f96aa897926e7db8fbf7fec6799406cb7b2a512aab5770c`, 511075 byte; artefatto in scadenza il 23 novembre 2026. Il sottomenu amministrativo nativo non è ancora filtrato per le azioni specifiche: il collaudo della visibilità delle voci sidebar resta aperto.
-
-Per il controllo aggiuntivo, usare un gruppo amministrativo di prova con `core.manage` su JD Learn ma senza `jlms.quiz.manage`, quindi confrontarlo con un account autorizzato:
-
-11. Aprire la dashboard con entrambi gli account. Atteso: **Banca domande** compare soltanto per l’account autorizzato; i link a categorie/campi appaiono solo se sono concessi anche i rispettivi permessi nativi.
-12. Con l’account senza `jlms.quiz.manage`, provare l’URL diretto della banca domande. Atteso: accesso negato dal componente. Verificare inoltre che la sidebar nativa possa ancora mostrare la voce: questa parte resta da completare nell’issue #113.
-
-### Issue #99 — accesso centralizzato ai campi aggiuntivi
-
-Riferimento: CORE-10 / AC-129 e [issue #99](https://github.com/jeckodevelopment/jd_learn/issues/99). Usare un Joomla 6 di prova con un ruolo che abbia `core.manage` su `com_fields`, e un ruolo di confronto senza tale permesso. La correzione non crea campi o gruppi: verifica solo navigazione e filtro dei contesti nativi.
-
-1. Aprire JD Learn → **Campi aggiuntivi** nella sidebar. Atteso: si apre la lista nativa di Joomla `com_fields`, inizialmente nel contesto corsi.
-2. Usare il filtro contesto della lista e scegliere in sequenza Corsi, Docenti e Lezioni. Atteso: il contesto selezionato resta quello della rispettiva entità JD Learn e la lista mostra solo i campi di quel contesto.
-3. Tornare a Corsi e Docenti. Atteso: le liste non mostrano più i link ai campi aggiuntivi né elementi inseriti fuori dalla toolbar; ricerca, filtri e azioni esistenti restano disponibili.
-4. Aprire Programma e verificare che il collegamento contestuale ai campi delle lezioni continui a portare alla lista nativa nel contesto lezioni.
-5. Con il ruolo privo di `core.manage` su `com_fields`, provare la voce sidebar e l'URL diretto. Atteso: Joomla nega la gestione dei campi; non si ottiene accesso cambiando il contesto nell'URL.
-
-**Stato:** PR [#104](https://github.com/jeckodevelopment/jd_learn/pull/104) integrata nel commit `4a924e87c046d076cd48ec2e63d125f5d25657e1`; CI standard superata nel run [42507760027](https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027). Il pacchetto [0.41.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42507760027/artifacts/13628566353) ha SHA-256 interno `2d02d554f134e10087df79cb45fa334b68c9b809b4fa2794b34993d6f817b388`; scade il 22 novembre 2026. Collaudo manuale Joomla ancora da eseguire e registrare.
-
-### AC-129 — accesso ai campi aggiuntivi di corsi, docenti e lezioni (implementato; collaudo manuale pendente)
-
-Riferimento: CORE-10; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native).
-
-1. Da JD Learn, aprire la voce sidebar **Campi aggiuntivi**; la lista Joomla deve aprirsi sui campi corsi.
-2. Usare il filtro contesto per scegliere Corsi, Docenti e Lezioni; ciascuna selezione deve mostrare il contesto corretto.
-3. Verificare che i link non compaiano più negli elenchi Corsi e Docenti e che Programma mantenga l’accesso contestuale alle lezioni.
-4. Con un ruolo senza `core.manage` su `com_fields`, verificare il diniego dalla voce e dall’URL diretto.
-
-**Stato:** PR #104 integrata in main 0.41.22-dev; CI standard superata. Il collaudo manuale è dettagliato nella sezione Issue #99 e resta da registrare.
-
-### AC-130 — vista standard per i docenti (PR #116 integrata in 0.41.26-dev; collaudo Joomla pendente)
-
-Riferimenti: AUT-01, SCR-13; [RF-2026-11-08-B](REQUIREMENTS_CHANGES.md#rf-2026-11-08-b--accesso-e-viste-amministrative-native).
-
-1. Aprire Docenti: deve apparire un elenco, con form di modifica/creazione distinto e accesso a quest’ultimo mediante toolbar/azione standard.
-2. Provare ricerca per titolo e ID (`id:...`), filtro pubblicato/non pubblicato, lingua, ordinamento per titolo/stato/lingua/modifica/ID, paginazione e ritorno all’elenco; controllare che risultati e totali corrispondano ai filtri.
-3. Aprire e salvare un profilo esistente, quindi annullare una modifica: verificare persistenza e annullamento senza cambiare associazioni al corso.
-4. Ripetere con ruoli autorizzati e non autorizzati. Verificare navigazione da tastiera e viewport mobile.
-5. Controllare che nessuna categoria docente sia richiesta o esposta.
-
-**Stato:** PR [#116](https://github.com/jeckodevelopment/jd_learn/pull/116) integrata; tutti i quattro job della [CI standard 42524671164](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164) superati. Il pacchetto [0.41.26-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42524671164/artifacts/13634039771) ha SHA-256 interno `869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5` (503665 byte), disponibile fino al 22 novembre 2026. La lista usa Search Tools e toolbar standard Joomla; il form resta separato e accessibile dal titolo/toolbar. La categoria docente non è esposta. Verificare ACL e ricerca sul sito; il cambio stato del profilo resta disponibile nel form secondo i permessi, senza introdurre azioni massive.
+Riferimenti: [issue #113](https://github.com/jeckodevelopment/jd_learn/issues/113), CORE-20 / AC-132. Il plugin `plg_system_jlmsmenu` deve filtrare le voci della sidebar secondo i permessi già applicati alle destinazioni senza cambiare gli altri menu Jo…2491 tokens truncated…Verificare ACL e ricerca sul sito; il cambio stato del profilo resta disponibile nel form secondo i permessi, senza introdurre azioni massive.
 
 ### AC-131 — elenco separato per la banca domande (PR #120 integrata in 0.41.27-dev; collaudo Joomla pendente)
 
@@ -455,3 +387,61 @@ Prima di unire una PR con comportamento runtime, riportarne qui le istruzioni ma
 4. Usare la toolbar e i form laterali solo da tastiera; verificare focus visibile e spaziatura leggibile a larghezza desktop e mobile, compreso il pannello Joomla compresso.
 
 **Esito sito Joomla:** Non eseguito.
+
+
+## AC-121 — docenti, associazioni e profili preesistenti
+
+Riferimenti: AUT-01, CAT-02, CORE-01/04, LIFE-02; [guida Profili e associazioni docente](../component/administrator/docs/TEACHERS.md).
+
+Precondizioni: Joomla 6 di prova aggiornabile, un corso in bozza e uno pubblicato, un profilo docente nuovo e uno preesistente; account segreteria con permessi di gestione corsi/docenti.
+
+1. Aprire JD Learn → Docenti e creare un profilo. Verificare che non sia richiesta né mostrata una categoria docente; il salvataggio deve usare il profilo senza assegnare gruppi Joomla o permessi all’account collegato.
+2. Modificare un profilo preesistente e associarlo al corso in bozza. Salvare, riaprire il corso e verificare che l’associazione e l’ordine restino invariati.
+3. Modificare l’associazione di un corso pubblicato. La scheda editoriale deve mostrare il dato corrente, mentre la versione didattica e lo snapshot già pubblicati restano invariati.
+4. Ripetere l’aggiornamento dei dati di un profilo tecnico preesistente: categorie tecniche e riferimenti restano conservati e non si trasformano in un flusso di gestione per l’utente.
+
+**Esito sito Joomla:** Non eseguito.
+
+## AC-122 — campi e presentazione pubblica del docente
+
+Riferimenti: CORE-10/04; [guida Profili e associazioni docente](../component/administrator/docs/TEACHERS.md).
+
+1. Da JD Learn → Campi aggiuntivi, selezionare il contesto Docenti (`com_jlms.teacher`). Creare un campo testo, email e un campo di tipo/gruppo disponibile nell’installazione; impostare lingua, accesso e permessi tramite i controlli Joomla.
+2. Compilare presentazione, riferimenti pubblici e campi. Collegare al profilo un account Joomla con email privata distinta.
+3. Aprire la pagina docente e la scheda pubblica di un corso associato come ospite e come utente autorizzato. Atteso: campi e gruppi appaiono solo secondo lingua, pubblicazione, livelli e ACL; l’email privata dell’account non viene esposta automaticamente.
+4. Provare un valore vuoto e un campo non pubblicato: non devono apparire label o contenitori vuoti.
+
+**Esito sito Joomla:** Non eseguito.
+
+## AC-123 — modifica del profilo e revoca dei permessi
+
+Riferimenti: CORE-04/10 e [guida Profili e associazioni docente](../component/administrator/docs/TEACHERS.md). Preparare un docente collegato, un account segreteria e un secondo docente/account senza permessi.
+
+1. Come docente collegato, aprire la pagina profilo e modificare i soli campi autorizzati. Verificare che account collegato, stato, lingua e livello di accesso non cambino.
+2. Come segreteria, modificare gli stessi dati e un campo protetto. Atteso: l’operazione riesce solo con l’ACL corrispondente.
+3. Come altro account, tentare l’URL di modifica del profilo e l’invio POST diretto. Atteso: accesso negato e dati invariati.
+4. Revocare `core.edit.own` o `core.edit.value` e riprovare; il controllo deve applicare la revoca anche dopo una nuova richiesta. Ripetere con dati invalidi e una revisione obsoleta: il form conserva i dati inseriti per correggerli e non sovrascrive la revisione corrente.
+
+**Esito sito Joomla:** Non eseguito.
+
+## AC-124 — menu, SEF, lingue e corsi del docente
+
+Riferimenti: CAT-02, CORE-13 e [guida Profili e associazioni docente](../component/administrator/docs/TEACHERS.md). Preparare due profili e corsi con stato, lingua, categoria e livelli di accesso differenti.
+
+1. Nel gestore menu Joomla creare voci **Pagina docente** e **Corsi di un docente**, selezionando il profilo previsto. Aprire le voci e verificare breadcrumbs, URL SEF, titolo e paginazione.
+2. Ripetere per italiano e inglese, includendo un profilo/corso con lingua specifica e uno `*`. Atteso: profilo e corsi coerenti con il filtro lingua.
+3. Cambiare manualmente l’ID nell’URL e aprire URL SEF dirette per profili non pubblicati o non accessibili. Atteso: nessun dettaglio o corso riservato viene esposto.
+4. Verificare che un corso non visibile non compaia neppure nell’elenco del docente e che il profilo non riveli l’email privata dell’account collegato.
+
+**Esito sito Joomla:** Non eseguito.
+
+## AC-125 — upgrade e conservazione dei dati docente
+
+Riferimenti: AUT-04/05, CORE-01/04/10/16, LIFE-02 ed EDGE-11. Usare un’istanza Joomla usa-e-getta con il pacchetto precedente e dati di prova preesistenti: corso pubblicato, iscrizione/progressi, profilo docente, categoria tecnica, associazioni, campi/valori e revisioni.
+
+1. Registrare prima dell’upgrade gli ID e i valori di corso, profilo, categoria, associazioni, campo e versione didattica. Aggiornare il pacchetto seguendo la normale procedura Joomla.
+2. Dopo l’upgrade confrontare ID e valori registrati; verificare che stato, livello, lingua, campi e associazioni restino validi e che lo storico didattico conservi il docente congelato.
+3. Accedere come studente già iscritto e come nuovo utente: l’upgrade non deve migrare iscrizioni, azzerare progressi o assegnare gruppi/permessi. Le nuove modifiche editoriali non alterano retroattivamente le versioni assegnate.
+4. Verificare che le categorie tecniche restino utilizzabili per compatibilità ma non diventino obbligatorie nell’authoring.
+
+**Esito sito Joomla:** Non eseguito. Eseguire solo su installazione eliminabile; non usare dati di produzione.
