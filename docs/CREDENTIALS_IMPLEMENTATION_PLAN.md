@@ -9,6 +9,7 @@
 
 - [Specifica funzionale Open Badges 3.0](specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md)
 - [Progettazione tecnica T-001–T-007](specifications/JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md)
+- [Addendum T-008–T-015 e scenari AC-CRE-027–036](CREDENTIALS_DECISIONS_T008_T015.md)
 - [Perimetro JD Learn 1.0.0](RELEASE_SCOPE.md)
 - [Politica CI](CI_POLICY.md)
 
@@ -116,7 +117,7 @@ Una PR è un incremento ragionevolmente integrabile, con codice, test, documenta
 
 ## 6. Stato iniziale e criterio di release
 
-**24 attività pianificate, di cui 21 per la prima release completa e 3 evolutive.** Nessuna delle 21 PR runtime è avviata o accettata per effetto dell'approvazione di questo documento. La specifica e la progettazione tecnica esistenti sono documentazione preparatoria, non runtime funzionante.
+**24 attività pianificate, di cui 21 per la prima release completa e 3 evolutive.** Le decisioni T-008–T-015 e i test AC-CRE-027–036 sono assorbiti in queste attività; completamento percorsi e badge multipli sono obbligatori nella prima release. Nessuna delle 21 PR runtime è avviata o accettata per effetto dell'approvazione di questo documento. La specifica e la progettazione tecnica esistenti sono documentazione preparatoria, non runtime funzionante.
 
 **Criterio di successo C4:** un'installazione JD Learn autonoma su Joomla emette automaticamente una credenziale firmata al completamento di un corso/percorso supportato, consente emissioni manuali, download, revoca e verifica pubblica indipendente, e permette allo studente di aggiungerne i riferimenti a LinkedIn. Il tutto senza secondo componente e senza servizi commerciali obbligatori.
 
