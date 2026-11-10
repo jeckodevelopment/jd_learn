@@ -1,3 +1,8 @@
+## 0.41.52-dev — fuso globale del nuovo corso (PR #192)
+
+- Corretto issue #172: la form corso rende selezionabile “Usa globali”; al salvataggio il sito fornisce il fuso IANA, mentre le date UTC e i fusi già scelti restano invariati.
+- PR #192 integrata nel commit `64ae66454c7d2a64a3237f1f7f12b2d9174f95ae`; CI standard 4/4 superata nel [run 42865678167](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167). Pacchetto verificato [JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167/artifacts/13787890952); checksum e procedura manuale nel [testbook](QA_TESTBOOK.md#pr-192--fuso-globale-per-nuovi-corsi).
+
 ## 0.41.52-dev — indice aula comprimibile su smartphone (PR #190 integrata)
 
 - Il programma didattico resta sempre disponibile; sugli schermi stretti parte chiuso e si apre con un pulsante tradotto IT/EN con stato `aria-expanded`. Desktop lo mantiene aperto; senza JS la navigazione resta visibile.
