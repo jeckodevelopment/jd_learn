@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.61-dev** integra le PR #209–#211 (CI standard 4/4 nel [run 42920368304](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304)). Pacchetto [JD-Learn-0.41.61-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304/artifacts/13811701431), wrapper SHA-256 `e99f8024ae32bc221234262697dad8a196673994cafbcc7a32493c2dce500d12`, ZIP Joomla SHA-256 `cc7df8c79e4e3dc8717337df4d427eb43f1b15b61618ee9233aefd92c8201174`, disponibile fino al 24 novembre 2026. Avanzamento stimato 75% (522/7); accettazione Joomla ancora pendente.
+Aggiornato al **10 novembre 2026**. Main **0.41.61-dev** integra le PR #209–#211; candidato **0.41.62-dev** (CI standard 4/4 nel [run 42920368304](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304)). Pacchetto [JD-Learn-0.41.61-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304/artifacts/13811701431), wrapper SHA-256 `e99f8024ae32bc221234262697dad8a196673994cafbcc7a32493c2dce500d12`, ZIP Joomla SHA-256 `cc7df8c79e4e3dc8717337df4d427eb43f1b15b61618ee9233aefd92c8201174`, disponibile fino al 24 novembre 2026. Avanzamento stimato 75% (522/7); accettazione Joomla ancora pendente.
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -18,14 +18,14 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima seguente descrive main 0.41.60-dev e il candidato 0.41.61-dev; main include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias e filtri per tag, difficoltà e durata. Il candidato aggiunge la vista elenco oltre alla griglia. I collaudi Joomla restano separati.
+La stima seguente descrive main 0.41.61-dev e il candidato 0.41.62-dev; main include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias, filtri tag/difficoltà/durata e vista elenco. Il candidato aggiunge filtri per docente e percorso. I collaudi Joomla restano separati.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
-| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 68% |
+| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 70% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 85% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
@@ -33,7 +33,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **75%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (522/7 = 74,57%, arrotondato al 75%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (524/7 = 74,86%, arrotondato al 75%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 IMP-07 comprende le PR #204 Finder, #206 ricerca/ordinamento, #207 metadati canonical/social, #208 URL SEF, #209 filtro tag e #210 filtri difficoltà/durata; la PR in preparazione aggiunge la vista elenco. Il catalogo è stimato al 68%; avanzamento complessivo 75% (522/7), stima arrotondata; filtri docente/percorso e collaudi Joomla restano aperti.
 

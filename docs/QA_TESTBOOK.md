@@ -1,3 +1,15 @@
+## IMP-07 — filtri docente e percorso nel catalogo (0.41.62-dev, PR in preparazione)
+
+Riferimenti: CAT-01, AC-41 e AC-85. Su Joomla 6 di prova predisporre corsi pubblici con docenti pubblici e percorsi pubblicati; aggiungere profili o percorsi con accesso limitato collegati a corsi accessibili.
+
+1. Da ospite, verificare nel catalogo e nella pagina categoria i filtri Docente e Percorso. Le opzioni devono includere solo profili/percorsi pubblici associati a corsi visibili nel contesto.
+2. Selezionare un docente: devono restare i corsi pubblici a lui assegnati. Ripetere selezionando un percorso: mostrare solo i corsi visibili associati al percorso.
+3. Combinare i due filtri con tag, difficoltà, durata, ricerca, ordinamento, vista elenco e paginazione. In una categoria i risultati restano nel ramo della categoria.
+4. Accedere con account a livelli differenti e verificare opzioni e risultati coerenti con le autorizzazioni correnti; non devono trapelare profili, percorsi o corsi privati.
+5. Inviare ID inesistenti o non accessibili per entrambi i filtri: risultati vuoti senza allargare il catalogo. Ripetere in IT/EN, SEF attivo/disattivo e viewport mobile.
+
+**Esito sito Joomla:** Non eseguito.
+
 ## IMP-07 — filtro tag nel catalogo pubblico (0.41.60-dev, PR #209 integrata)
 
 Riferimenti: CAT-01, AC-41 e AC-85. Installare il pacchetto candidato su Joomla 6; predisporre corsi pubblicati con tag pubblici, tag con accesso differenziato e corsi privati o in categorie non visibili.

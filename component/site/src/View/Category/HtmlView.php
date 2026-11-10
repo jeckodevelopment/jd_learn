@@ -24,6 +24,10 @@ final class HtmlView extends BaseHtmlView
 public string $difficulty = '';
     public string $duration = '';
     public string $layout = 'grid';
+    public int $teacherId = 0;
+    public int $pathwayId = 0;
+    public array $teachers = [];
+    public array $pathways = [];
 
     public function display($tpl = null)
     {
@@ -37,6 +41,10 @@ public string $difficulty = '';
 $this->difficulty = $this->getModel()->getDifficulty();
         $this->duration = $this->getModel()->getDuration();
         $this->layout = $this->getModel()->getLayout();
+        $this->teacherId = $this->getModel()->getTeacherId();
+        $this->pathwayId = $this->getModel()->getPathwayId();
+        $this->teachers = $this->getModel()->getTeachers();
+        $this->pathways = $this->getModel()->getPathways();
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
         $app = Factory::getApplication();
         $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);

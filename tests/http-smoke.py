@@ -57,7 +57,7 @@ try:
    time.sleep(.2)
  else:raise RuntimeError('Test HTTP server did not become ready')
  if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
- if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[tag_id]"' not in html:
+ if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[tag_id]"' not in html or 'name="filter[teacher_id]"' not in html or 'name="filter[pathway_id]"' not in html:
   raise RuntimeError('Public catalog search, order and tag controls did not render')
  _,all_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'0'}))
  if 'Publication fixture' not in all_tag_html:
@@ -500,6 +500,18 @@ try:
   pathway_catalog=response.read().decode('utf-8')
  expect('id="jlms-pathways"' in pathway_catalog and 'CI learning pathway' in pathway_catalog,
         'Public pathway catalog renders published pathways')
+ _,pathway_filtered=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[pathway_id]':str(pathways['pathway'])}))
+ if 'Publication fixture' not in pathway_filtered or 'value="'+str(pathways['pathway'])+'" selected' not in pathway_filtered:
+  raise RuntimeError('Public catalog pathway filter did not preserve visible courses and selection')
+ _,teacher_filtered=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[teacher_id]':str(http_teacher_id)}))
+ if 'HTTP first publication' not in teacher_filtered or 'value="'+str(http_teacher_id)+'" selected' not in teacher_filtered:
+  raise RuntimeError('Public catalog teacher filter did not include the assigned visible course')
+ _,invalid_teacher=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[teacher_id]':'2147483647'}))
+ if 'HTTP first publication' in invalid_teacher:
+  raise RuntimeError('Unknown teacher filter must not broaden the public catalog')
+ _,invalid_pathway=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[pathway_id]':'2147483647'}))
+ if 'Publication fixture' in invalid_pathway:
+  raise RuntimeError('Unknown pathway filter must not broaden the public catalog')
  with public_http.open(base+'/index.php?option=com_jlms&view=pathway&id='+str(pathways['pathway']),timeout=15) as response:
   pathway_page=response.read().decode('utf-8')
  expect('id="jlms-pathway"' in pathway_page and 'CI learning pathway' in pathway_page and 'Publication fixture' in pathway_page,
