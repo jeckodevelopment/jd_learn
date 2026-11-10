@@ -19,13 +19,15 @@ class CoursesModel extends ListModel
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
         $order = $filter['order'] ?? 'recent';
         $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title'], true) ? $order : 'recent');
+        $tagId = $filter['tag_id'] ?? 0;
+        $this->setState('filter.tag_id', max(0, is_scalar($tagId) ? (int) $tagId : 0));
     }
 
     protected function getListQuery()
     {
         $app = Factory::getApplication();
         $query = $app->bootComponent('com_jlms')->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag(),
-            (int) $this->getState('filter.category_id'));
+            (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'));
         $search = (string) $this->getState('filter.search');
         if ($search !== '') {
             $titleSearch = '%' . $search . '%';
@@ -45,5 +47,18 @@ class CoursesModel extends ListModel
     public function getOrder(): string
     {
         return (string) $this->getState('filter.order');
+    }
+
+    public function getTagId(): int
+    {
+        return (int) $this->getState('filter.tag_id');
+    }
+
+    public function getTags(): array
+    {
+        $app = Factory::getApplication();
+        return $app->bootComponent('com_jlms')->getCatalogService()->publicTags(
+            $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
+        );
     }
 }
