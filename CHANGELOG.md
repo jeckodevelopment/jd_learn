@@ -2,7 +2,7 @@
 
 - Aggiunta attività Joomla Scheduler `jlms.materials.cleanup`: elimina in batch limitato asset locali senza riferimenti, più vecchi di 24 ore, e i relativi blob privati. I riferimenti a lezioni, allegati, attestati e job sono esclusi; le sostituzioni immutabili restano conservate.
 - L’attività è disponibile nel plugin `plg_task_jlms`, ma va pianificata dall’amministratore. Non viene creata automaticamente all’installazione.
-- Collaudo automatico di storage e riferimenti previsto nel CI; test manuale Joomla descritto nel testbook.
+- PR [#202] integrata nel commit `fc94b715d265306777471a40e1043c9cec204d1b`; CI standard 4/4 superata nel [run 42886192087](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087). Pacchetto [JD-Learn-0.41.54-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087/artifacts/13797460306), SHA-256 artefatto `622501af14e1a9b50a47203c7c641ec0beac1ad7b939589343e68d83274e23b6`, scade il 24 novembre 2026. Test manuale Joomla pendente.
 
 ## 0.41.53-dev — pulizia limitata delle sessioni video scadute (IMP-05)
 
