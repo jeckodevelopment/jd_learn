@@ -1,3 +1,10 @@
+## 0.41.59-dev — filtri core del catalogo (CAT-01, PR #210 candidata)
+
+- Aggiunge filtri pubblici per difficoltà e fasce di durata stimata al catalogo e alla lista corsi delle categorie; ricerca, ordine, categoria e paginazione si combinano.
+- I valori inviati sono limitati a opzioni previste; i filtri leggono solo i metadati promozionali del corso.
+- PR #210 candidata alla milestone **1.0.0**. CI in corso; pacchetto e checksum verranno registrati dopo la verifica del candidato.
+- Collaudo Joomla: vedere [testbook](docs/QA_TESTBOOK.md#imp-07--filtri-di-difficolta-e-durata-del-catalogo).
+
 ## 0.41.58-dev — URL SEF con alias per catalogo e percorsi (IMP-07, PR #208 integrata)
 
 - Genera segmenti Joomla ID-alias per corsi, categorie e percorsi; conserva il parsing degli URL numerici storici e usa query parametrizzate.

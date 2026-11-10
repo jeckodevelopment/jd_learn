@@ -1,3 +1,15 @@
+## IMP-07 — filtri di difficoltà e durata del catalogo (0.41.59-dev, PR #210 candidata)
+
+Riferimenti: CAT-01/CAT-04, AC-41/AC-85. Verificare su Joomla 6 di prova con almeno quattro corsi pubblicati, nelle categorie accessibili: uno principiante da45minuti, uno avanzato da90minuti, uno intermedio oltre120minuti e uno senza durata stimata. Predisporre anche un account con accesso limitato e una categoria con corsi discendenti.
+
+1. Aprire il catalogo da ospite e come account autorizzato. Atteso: i filtri difficoltà e durata sono disponibili con label tradotte in italiano/inglese.
+2. Selezionare principiante e fascia30–60minuti: deve restare solo il corso principiante da45minuti. Selezionare avanzato o oltre120minuti e verificare i rispettivi corsi; le schede senza durata non devono comparire quando una fascia è attiva.
+3. Aggiungere ricerca e ordinamento, poi impostare un filtro dalla pagina di una categoria: risultati e paginazione devono rispettare tutti i filtri e restare nel ramo categoria selezionato.
+4. Ripetere con un corso o categoria non visibile all’account limitato: il filtro non deve rivelare titoli, riassunti o conteggi dei corsi esclusi.
+5. Inviare manualmente valori non previsti per difficoltà e durata: il catalogo deve restare integro e trattarli come filtri assenti.
+
+**Esito sito Joomla:** Non eseguito.
+
 ## IMP-07 — metadati SEO e social pubblici (0.41.57-dev, PR #207 integrata)
 
 PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207), milestone **1.0.0**, integrata con squash nel commit `32215c493fe1d7a2bf99871b5f93087a842563bd`. CI standard 4/4 nel [run 42905972598](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598). Pacchetto [JD-Learn-0.41.57-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462), wrapper SHA-256 `f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de`, ZIP Joomla SHA-256 `7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921`, disponibile fino al 24 novembre 2026. Collaudo manuale sul sito Joomla di prova richiesto; l’esito va registrato qui dopo la prova.

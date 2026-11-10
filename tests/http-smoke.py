@@ -57,20 +57,32 @@ try:
    time.sleep(.2)
  else:raise RuntimeError('Test HTTP server did not become ready')
  if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
- if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html:
-  raise RuntimeError('Public catalog search and order controls did not render')
+ if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[difficulty]"' not in html or 'name="filter[duration]"' not in html:
+  raise RuntimeError('Public catalog search, order and core filters did not render')
  search_url,search_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[search]':'Publication fixture','filter[order]':'title'}))
  if 'Publication fixture' not in search_html or 'value="title" selected' not in search_html:
   raise RuntimeError('Public catalog title/summary search and title ordering did not apply')
+ _,filtered_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'beginner','filter[duration]':'30-60'}))
+ if 'Publication fixture' not in filtered_html or 'value="beginner" selected' not in filtered_html or 'value="30-60" selected' not in filtered_html:
+  raise RuntimeError('Public catalog difficulty and estimated-duration filters did not apply')
+ _,excluded_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'advanced'}))
+ if 'Publication fixture' in excluded_html:
+  raise RuntimeError('Public catalog difficulty filter included a non-matching course')
+ _,duration_excluded_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[duration]':'over-120'}))
+ if 'Publication fixture' in duration_excluded_html:
+  raise RuntimeError('Public catalog duration filter included a non-matching course')
  _,private_term_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[search]':'SECRET_LESSON_BODY'}))
  if 'Publication fixture' in private_term_html:
   raise RuntimeError('Catalog search must not search protected lesson bodies')
  category_url=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('view')==['category']),None)
  if category_url:
-  category_query=urlencode({'filter[search]':'Publication fixture','filter[order]':'title'})
+  category_query=urlencode({'filter[search]':'Publication fixture','filter[order]':'title','filter[difficulty]':'beginner','filter[duration]':'30-60'})
   _,category_search=get(category_url+('&' if '?' in category_url else '?')+category_query)
-  if 'Publication fixture' not in category_search or 'id="jlms-category-catalog-filters"' not in category_search:
+  if 'Publication fixture' not in category_search or 'id="jlms-category-catalog-filters"' not in category_search or 'value="beginner" selected' not in category_search or 'value="30-60" selected' not in category_search:
    raise RuntimeError('Category-scoped catalog search did not preserve its category')
+ _,invalid_filter_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'beginner\' OR 1=1 --','filter[duration]':'0 OR 1=1'}))
+ if 'Publication fixture' not in invalid_filter_html:
+  raise RuntimeError('Invalid catalog filter values must be ignored safely')
  course_links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('view')==['course'] or '/course/' in x]
  if not course_links:raise RuntimeError('Public course link missing')
  for public_course_url in course_links:

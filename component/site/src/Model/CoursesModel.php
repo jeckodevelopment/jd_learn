@@ -19,6 +19,10 @@ class CoursesModel extends ListModel
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
         $order = $filter['order'] ?? 'recent';
         $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title'], true) ? $order : 'recent');
+        $difficulty = $filter['difficulty'] ?? '';
+        $this->setState('filter.difficulty', is_string($difficulty) && in_array($difficulty, ['beginner', 'intermediate', 'advanced'], true) ? $difficulty : '');
+        $duration = $filter['duration'] ?? '';
+        $this->setState('filter.duration', is_string($duration) && in_array($duration, ['under-30', '30-60', '61-120', 'over-120'], true) ? $duration : '');
     }
 
     protected function getListQuery()
@@ -34,6 +38,21 @@ class CoursesModel extends ListModel
                 ->bind(':catalogSearchTitle', $titleSearch)
                 ->bind(':catalogSearchSummary', $summarySearch);
         }
+        $difficulty = (string) $this->getState('filter.difficulty');
+        if ($difficulty !== '') {
+            $query->where("JSON_UNQUOTE(JSON_EXTRACT(c.params_json, '$.presentation.difficulty')) = :catalogDifficulty")
+                ->bind(':catalogDifficulty', $difficulty);
+        }
+        $duration = (string) $this->getState('filter.duration');
+        if ($duration !== '') {
+            $minutes = "CAST(JSON_UNQUOTE(JSON_EXTRACT(c.params_json, '$.presentation.estimated_minutes')) AS UNSIGNED)";
+            match ($duration) {
+                'under-30' => $query->where("$minutes BETWEEN 1 AND 29"),
+                '30-60' => $query->where("$minutes BETWEEN 30 AND 60"),
+                '61-120' => $query->where("$minutes BETWEEN 61 AND 120"),
+                'over-120' => $query->where("$minutes > 120"),
+            };
+        }
         return $query->order($this->getState('filter.order') === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
     }
 
@@ -45,5 +64,15 @@ class CoursesModel extends ListModel
     public function getOrder(): string
     {
         return (string) $this->getState('filter.order');
+    }
+
+    public function getDifficulty(): string
+    {
+        return (string) $this->getState('filter.difficulty');
+    }
+
+    public function getDuration(): string
+    {
+        return (string) $this->getState('filter.duration');
     }
 }
