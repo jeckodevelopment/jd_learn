@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.41.46-dev — riproduzione video nella preview editoriale (in lavorazione)
+## 0.41.46-dev — riproduzione video nella preview editoriale (PR #177 integrata)
 
 - Aggiunge descrittori video in sola lettura nella preview amministrativa, con autorizzazione editoriale rivalidata e consegna HTML5 locale protetta. Il player non crea sessioni, non invia telemetria e non salva progressi o tentativi.
 - Aggiorna i messaggi IT/EN per distinguere la riproduzione video dalle attività non simulate (documenti, audio e quiz).
-- Collaudo manuale Joomla richiesto per provider, consenso, revoca ACL e assenza di effetti sullo stato studente; vedi [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
+- PR #177 integrata nel commit `b80aead8792b549823538883c3c88080d614ae4f`; CI standard 4/4 superata sul commit `1874616ab2d192b92875071212099481f9fc21c7` nel [run 42800028533](https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533).\n- Pacchetto Actions [JD-Learn-0.41.46-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533/artifacts/13755751590): wrapper ZIP da estrarre una volta; SHA-256 interno `ccbaff840cf94a5829de32b9efea90b7c83fe0565e77c50f16bf124bbe69f94b` (538172 byte), wrapper `8647a6a99551b19d793d83eedcddb14401c137888df046566f0c980601e70353` (537983 byte), scadenza 24 novembre 2026.\n- Collaudo manuale Joomla richiesto per provider, consenso, revoca ACL e assenza di effetti sullo stato studente; vedi [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
 
 
 ## 0.41.45-dev — vista del programma didattico allineata alla toolbar Joomla (PR #169 integrata)

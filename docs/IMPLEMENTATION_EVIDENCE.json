@@ -1,37 +1,57 @@
 {
   "audited_at": "2026-11-10",
   "product": "JD Learn",
-  "version": "0.41.45-dev",
+  "version": "0.41.46-dev",
   "code_baseline": {
-    "tested_head": "4f5e1a6ed91ae493d7c05d1a5ffb692962cf48f5",
-    "parent_main_commit": "1eb59b4330657e320110cb8cf2e8eebe11a02cb2",
-    "pull_request": 169,
-    "merged_main_commit": "85ba2575696a05682070d6d6b486e9d812239bc0"
+    "tested_head": "1874616ab2d192b92875071212099481f9fc21c7",
+    "parent_main_commit": "2d6cb8088db8ca2aa1351f5dc734e48ff9eb545f",
+    "pull_request": 177,
+    "merged_main_commit": "b80aead8792b549823538883c3c88080d614ae4f"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42771935666,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666",
+    "run_id": 42800028533,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533",
     "joomla": "6.0.0",
     "jobs": [
-      {"id": 129682938886, "name": "Candidate plan and lightweight checks", "status": "completed", "conclusion": "success"},
-      {"id": 129682977301, "name": "Curriculum navigation in Chromium (controlled fixture)", "status": "completed", "conclusion": "success"},
-      {"id": 129682939765, "name": "PHP 8.3 / mysql:8.4", "status": "completed", "conclusion": "success"},
-      {"id": 129682937693, "name": "PHP 8.4 / mariadb:10.6", "status": "completed", "conclusion": "success"}
+      {
+        "id": 129774855711,
+        "name": "Candidate plan and lightweight checks",
+        "conclusion": "success",
+        "status": "completed"
+      },
+      {
+        "id": 129774934255,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "conclusion": "success",
+        "status": "completed"
+      },
+      {
+        "id": 129774934348,
+        "name": "PHP 8.3 / mysql:8.4",
+        "conclusion": "success",
+        "status": "completed"
+      },
+      {
+        "id": 129774934269,
+        "name": "PHP 8.4 / mariadb:10.6",
+        "conclusion": "success",
+        "status": "completed"
+      }
     ],
-    "note": "PR #169 integra issue #157: azioni del programma nella toolbar Joomla e comandi laterali più leggibili. CI standard 4/4 superata; collaudo manuale Joomla pendente."
+    "note": "PR #177 integra il playback video read-only in anteprima, con ACL rivalidata e senza enrollment/sessioni/tentativi/progressi. CI standard 4/4 superata; collaudo manuale Joomla pendente."
   },
   "package": {
-    "artifact_id": 13742766077,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666/artifacts/13742766077",
-    "artifact_name": "JD-Learn-0.41.45-dev",
-    "installable_package": "pkg_jlms-0.41.45-dev.zip",
-    "sha256": "8066c427d31b15eede05199f4b7c74e3da6cc251235772453cd9cb117dc878a5",
-    "artifact_sha256": "8a1ea9650e544bbb5057a529946fa049039170844dbefdead9b1158e76c3cd9b",
-    "size_bytes": 534811,
-    "artifact_size_bytes": 534634,
-    "expires_at": "2026-11-24T07:05:43Z",
+    "artifact_id": 13755751590,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533/artifacts/13755751590",
+    "artifact_name": "JD-Learn-0.41.46-dev",
+    "installable_package": "pkg_jlms-0.41.46-dev.zip",
+    "sha256": "ccbaff840cf94a5829de32b9efea90b7c83fe0565e77c50f16bf124bbe69f94b",
+    "artifact_sha256": "8647a6a99551b19d793d83eedcddb14401c137888df046566f0c980601e70353",
+    "size_bytes": 538172,
+    "artifact_size_bytes": 537983,
+    "expires_at": "2026-11-24T10:37:17Z",
     "wrapper_zip": true
   },
   "full_requirement_acceptance": {},
@@ -2404,42 +2424,8 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #169 integrata in main 0.41.45-dev; CI standard 4/4 superata nel run 42771935666; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
+  "candidate_status": "PR #177 integrata in main 0.41.46-dev; CI standard 4/4 superata nel run 42800028533; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
   "previous_verified_release": {
-    "version": "0.41.44-dev",
-    "package": "pkg_jlms-0.41.44-dev.zip",
-    "sha256": "e68934ff0b4257d6defd8ed9e28762eb526c9f3a2d0999c315536534658a4458",
-    "artifact_id": 13740848347,
-    "run_id": 42769089189,
-    "expires_at": "2026-11-24T06:35:45Z"
-  },
-  "candidate_increment": {
-    "version": "0.41.45-dev",
-    "scope": "Issue #157: toolbar nativa per le azioni del programma didattico e pannello laterale più leggibile.",
-    "status": "PR #169 integrata; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
-    "manual_joomla_acceptance": "pending",
-    "pull_request": 169,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/169",
-    "ci_run_id": 42771935666,
-    "artifact_id": 13742766077,
-    "artifact_name": "JD-Learn-0.41.45-dev",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666/artifacts/13742766077",
-    "artifact_sha256": "8a1ea9650e544bbb5057a529946fa049039170844dbefdead9b1158e76c3cd9b",
-    "package_sha256": "8066c427d31b15eede05199f4b7c74e3da6cc251235772453cd9cb117dc878a5",
-    "package_size_bytes": 534811,
-    "artifact_size_bytes": 534634,
-    "artifact_expires_at": "2026-11-24T07:05:43Z",
-    "tested_head": "4f5e1a6ed91ae493d7c05d1a5ffb692962cf48f5",
-    "parent_main_commit": "1eb59b4330657e320110cb8cf2e8eebe11a02cb2",
-    "merged_main_commit": "85ba2575696a05682070d6d6b486e9d812239bc0",
-    "ci_jobs": [
-      {"id": 129682938886, "name": "Candidate plan and lightweight checks", "conclusion": "success"},
-      {"id": 129682977301, "name": "Curriculum navigation in Chromium (controlled fixture)", "conclusion": "success"},
-      {"id": 129682939765, "name": "PHP 8.3 / mysql:8.4", "conclusion": "success"},
-      {"id": 129682937693, "name": "PHP 8.4 / mariadb:10.6", "conclusion": "success"}
-    ]
-  },
-  "latest_verified_increment": {
     "version": "0.41.45-dev",
     "scope": "Issue #157: toolbar nativa per le azioni del programma didattico e pannello laterale più leggibile.",
     "status": "Integrata in main; CI standard 4/4 superata; pacchetto verificato; collaudo manuale Joomla pendente.",
@@ -2459,15 +2445,115 @@
     "parent_main_commit": "1eb59b4330657e320110cb8cf2e8eebe11a02cb2",
     "merged_main_commit": "85ba2575696a05682070d6d6b486e9d812239bc0",
     "ci_jobs": [
-      {"id": 129682938886, "name": "Candidate plan and lightweight checks", "conclusion": "success"},
-      {"id": 129682977301, "name": "Curriculum navigation in Chromium (controlled fixture)", "conclusion": "success"},
-      {"id": 129682939765, "name": "PHP 8.3 / mysql:8.4", "conclusion": "success"},
-      {"id": 129682937693, "name": "PHP 8.4 / mariadb:10.6", "conclusion": "success"}
+      {
+        "id": 129682938886,
+        "name": "Candidate plan and lightweight checks",
+        "conclusion": "success"
+      },
+      {
+        "id": 129682977301,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "conclusion": "success"
+      },
+      {
+        "id": 129682939765,
+        "name": "PHP 8.3 / mysql:8.4",
+        "conclusion": "success"
+      },
+      {
+        "id": 129682937693,
+        "name": "PHP 8.4 / mariadb:10.6",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "candidate_increment": {
+    "version": "0.41.46-dev",
+    "scope": "IMP-03 parziale: riproduzione video read-only nella preview editoriale, ACL rivalidata, nessun enrollment/sessione/tentativo/progresso; documenti, audio e quiz non simulati.",
+    "status": "PR #177 integrata; CI standard 4/4 superata; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
+    "manual_joomla_acceptance": "pending",
+    "pull_request": 177,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/177",
+    "ci_run_id": 42800028533,
+    "artifact_id": 13755751590,
+    "artifact_name": "JD-Learn-0.41.46-dev",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533/artifacts/13755751590",
+    "artifact_sha256": "8647a6a99551b19d793d83eedcddb14401c137888df046566f0c980601e70353",
+    "package_sha256": "ccbaff840cf94a5829de32b9efea90b7c83fe0565e77c50f16bf124bbe69f94b",
+    "package_size_bytes": 538172,
+    "artifact_size_bytes": 537983,
+    "artifact_expires_at": "2026-11-24T10:37:17Z",
+    "tested_head": "1874616ab2d192b92875071212099481f9fc21c7",
+    "parent_main_commit": "2d6cb8088db8ca2aa1351f5dc734e48ff9eb545f",
+    "merged_main_commit": "b80aead8792b549823538883c3c88080d614ae4f",
+    "ci_jobs": [
+      {
+        "id": 129774855711,
+        "name": "Candidate plan and lightweight checks",
+        "conclusion": "success"
+      },
+      {
+        "id": 129774934255,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "conclusion": "success"
+      },
+      {
+        "id": 129774934348,
+        "name": "PHP 8.3 / mysql:8.4",
+        "conclusion": "success"
+      },
+      {
+        "id": 129774934269,
+        "name": "PHP 8.4 / mariadb:10.6",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "latest_verified_increment": {
+    "version": "0.41.46-dev",
+    "scope": "IMP-03 parziale: riproduzione video read-only nella preview editoriale, ACL rivalidata, nessun enrollment/sessione/tentativo/progresso; documenti, audio e quiz non simulati.",
+    "status": "PR #177 integrata; CI standard 4/4 superata; pacchetto installabile verificato; collaudo manuale Joomla pendente.",
+    "manual_joomla_acceptance": "pending",
+    "pull_request": 177,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/177",
+    "ci_run_id": 42800028533,
+    "artifact_id": 13755751590,
+    "artifact_name": "JD-Learn-0.41.46-dev",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42800028533/artifacts/13755751590",
+    "artifact_sha256": "8647a6a99551b19d793d83eedcddb14401c137888df046566f0c980601e70353",
+    "package_sha256": "ccbaff840cf94a5829de32b9efea90b7c83fe0565e77c50f16bf124bbe69f94b",
+    "package_size_bytes": 538172,
+    "artifact_size_bytes": 537983,
+    "artifact_expires_at": "2026-11-24T10:37:17Z",
+    "tested_head": "1874616ab2d192b92875071212099481f9fc21c7",
+    "parent_main_commit": "2d6cb8088db8ca2aa1351f5dc734e48ff9eb545f",
+    "merged_main_commit": "b80aead8792b549823538883c3c88080d614ae4f",
+    "ci_jobs": [
+      {
+        "id": 129774855711,
+        "name": "Candidate plan and lightweight checks",
+        "conclusion": "success"
+      },
+      {
+        "id": 129774934255,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "conclusion": "success"
+      },
+      {
+        "id": 129774934348,
+        "name": "PHP 8.3 / mysql:8.4",
+        "conclusion": "success"
+      },
+      {
+        "id": 129774934269,
+        "name": "PHP 8.4 / mariadb:10.6",
+        "conclusion": "success"
+      }
     ]
   },
   "next_candidate": {
-    "priority": "Proseguire i residui M01/M02 della gestione corsi pubblicati, programma e materiali; mantenere in parallelo i collaudi manuali aperti e l’accettazione reale dei quattro provider base.",
-    "status": "Seguire docs/NEXT_STEPS.md e la milestone 1.0.0. Fase 2 esclusa."
+    "priority": "Completare IMP-03 per documenti e audio e definire la preview quiz senza tentativi; mantenere in parallelo i collaudi manuali M01/M02/provider di prima release.",
+    "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md. Fase 2 esclusa."
   },
-  "current_status": "PR #169 integrata in main 0.41.45-dev; CI standard 4/4 superata nel run 42771935666; pacchetto installabile verificato; collaudo manuale Joomla pendente."
+  "current_status": "PR #177 integrata in main 0.41.46-dev; CI standard 4/4 superata nel run 42800028533; pacchetto installabile verificato; collaudo manuale Joomla pendente."
 }
