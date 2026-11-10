@@ -32,6 +32,8 @@ Main 0.41.29 include la dashboard e le correzioni (PR #108/#110/#112, issue #105
 
 La PR #65 ha portato i campi nativi delle lezioni nel flusso M01/M02: salvataggio autorizzato, copia in bozza, snapshot immutabile e resa nell’aula. La PR #68 ha completato il restyling previsto della schermata iniziale. Entrambe hanno superato la CI prevista; resta il collaudo nel sito Joomla. Proseguire con gli altri residui M01 indicati in [M01_ACCEPTANCE.md](M01_ACCEPTANCE.md), mantenendo in primo piano aggiornamento di corsi pubblicati, programma e materiali. Verificare che una nuova versione non sposti iscritti o alteri progressi/storico esistenti.
 
+Issue #154 (milestone 1.0.0) è in implementazione: il fuso predefinito di un nuovo corso deve seguire la configurazione globale Joomla del sito, mentre l’autore conserva la possibilità di sceglierne uno diverso. La verifica automatizzata è aggiunta a `tests/joomla-calendar.php`; il collaudo manuale Joomla resta da svolgere dopo l’integrazione.
+
 In parallelo, mantenere i tre provider esterni e i media locali come requisiti core: la [durata automatica e gli scarti video](VIDEO_DURATION_PLAN.md) sono implementati nella linea0.39 ma il collaudo completo con provider/browser/account reali resta necessario. Aggiornare lo stato per ciascun build e distinguere ciò che è implementato da ciò che è accettato.
 
 Dopo il consolidamento di corsi, programma e media, completare l’iscrizione singola e il roster core secondo AC-128. Per la banca domande è autorizzata la sola riorganizzazione amministrativa AC-131; tipi, valutazione e flussi studente restano congelati, insieme ad attestati e reportistica avanzata.

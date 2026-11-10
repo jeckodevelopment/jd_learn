@@ -44,7 +44,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $item = parent::getItem($pk);
         if ($item) {
-            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item,Factory::getApplication()->getIdentity()->getTimezone()->getName()) as $key=>$value) { $item->$key=$value; }
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item, $this->siteTimezone()) as $key=>$value) { $item->$key=$value; }
         }
         if ($item && !empty($item->id)) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($item->params_json) ?? [] as $field => $value) {
@@ -59,6 +59,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
         }
         return $item;
+    }
+
+    private function siteTimezone(): string
+    {
+        return (string) Factory::getApplication()->getConfig()->get('offset', 'UTC');
     }
 
     protected function preprocessForm(\Joomla\CMS\Form\Form $form, $data, $group = 'content')
@@ -77,6 +82,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $form->load($xml, false);
         }
         parent::preprocessForm($form, $data, $group);
+        $form->setFieldAttribute('calendar_timezone', 'default', $this->siteTimezone());
     }
 
     private function associationMembers(int $id): array

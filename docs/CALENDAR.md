@@ -1,6 +1,6 @@
 # Calendario dei corsi
 
-Nell’editor del corso, le impostazioni di pubblicazione e calendario usano la scheda Pubblicazione con controlli Calendar e Timezone nativi Joomla. Scegliere il fuso IANA prima di compilare le date locali nel formato `AAAA-MM-GG HH:MM:SS`. Il valore iniziale segue il fuso dell’utente Joomla/sito; il fuso scelto viene conservato. Il cambio del selettore reinterpreta i valori visualizzati nella form: verificare/convertire le date prima di salvare. Il server salva UTC e non dipende dal fuso del sistema operativo.
+Nell’editor del corso, le impostazioni di pubblicazione e calendario usano la scheda Pubblicazione con controlli Calendar e Timezone nativi Joomla. Per un nuovo corso, il fuso iniziale è quello globale del sito (Configurazione globale → Server → Fuso orario); l’autore può scegliere un diverso fuso IANA, che viene conservato sul corso. Scegliere il fuso prima di compilare le date locali nel formato `AAAA-MM-GG HH:MM:SS`. Il cambio del selettore reinterpreta i valori visualizzati nella form: verificare/convertire le date prima di salvare. Il server salva UTC e non dipende dal fuso del sistema operativo.
 
 Campi facoltativi: inizio/fine pubblicazione e inizio/fine fruizione. Una data vuota non impone il relativo limite. Inizio incluso, fine esclusa; ogni fine deve seguire il proprio inizio. Le finestre devono avere almeno un tratto comune, perché l’accesso corrente dipende anche dalla visibilità del corso. Non vengono corretti automaticamente date impossibili, ore fuori intervallo, input aggiuntivi o fusi sconosciuti.
 

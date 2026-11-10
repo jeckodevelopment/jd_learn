@@ -82,6 +82,14 @@ if (($argv[2]??'')==='retained') {
  echo json_encode(['calendar_retention_checks'=>$checks,'status'=>'passed']).PHP_EOL;exit;
 }
 $model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
+$siteConfig = $app->getConfig();
+$previousOffset = $siteConfig->get('offset', 'UTC');
+$siteConfig->set('offset', 'Europe/Rome');
+$newCourse = $model->getItem(0);
+$newCourseForm = $model->getForm([], true);
+scheduleExpect($newCourse->calendar_timezone === 'Europe/Rome', 'New course defaults to the Joomla site timezone');
+scheduleExpect($newCourseForm->getField('calendar_timezone')->value === 'Europe/Rome', 'New course form selects the Joomla site timezone');
+$siteConfig->set('offset', $previousOffset);
 $base=['id'=>0,'revision'=>1,'title'=>'Calendar course fixture','alias'=>'calendar-course-fixture','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Calendar fixture'];
 $values=['calendar_timezone'=>'Europe/Rome','calendar_publish_up'=>'2000-01-01 01:00:00','calendar_publish_down'=>'2099-01-01 01:00:00','calendar_starts_at'=>'2000-01-01 01:00:00','calendar_ends_at'=>'2099-01-01 01:00:00'];
 scheduleExpect($model->save($base+$values+['publish_up'=>'2200-01-01 00:00:00','params_json'=>'{"injected":true}']),'Typed calendar saved with mass assignment ignored');
