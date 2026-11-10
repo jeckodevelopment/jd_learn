@@ -237,6 +237,7 @@ jobs:
           php tests/joomla-curriculum-builder.php .runtime/joomla
           python3 tests/curriculum-builder-http.py .runtime/joomla
           node tests/curriculum-outline.mjs
+          node tests/classroom-outline.mjs
       - name: Native article-style course list filters, ordering, scoped totals and cache
         run: php tests/joomla-courses-ui.php .runtime/joomla
       - name: Course Search Tools, selected actions, compact editor and save-and-open
