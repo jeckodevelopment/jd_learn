@@ -15,6 +15,7 @@ final class PublicMetadataHelper
         $title = trim($title);
         $description = mb_substr(trim(strip_tags($description)), 0, 300, 'UTF-8');
         $canonical = Uri::root() . ltrim(Route::_($url), '/');
+        $document->setTitle($title);
         $document->addHeadLink($canonical, 'canonical');
 
         if ($title !== '') {

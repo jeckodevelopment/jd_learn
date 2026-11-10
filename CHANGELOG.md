@@ -2,7 +2,7 @@
 
 - Aggiunge canonical URL e metadati Open Graph/Twitter per schede corso, categorie e percorsi visibili agli ospiti; per le schede corso usa titolo/descrizione SEO e immagine promozionale locale già configurati.
 - Le pagine con accesso catalogo/contenuto non disponibile agli ospiti e le viste percorso autenticate ricevono `noindex, nofollow`; nessun URL di immagine remoto viene pubblicato.
-- PR in preparazione per la milestone **1.0.0**. Collaudo Joomla manuale da eseguire secondo [testbook](docs/QA_TESTBOOK.md#imp-07--metadati-seo-e-social-pubblici).
+- PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207) aperta e assegnata alla milestone **1.0.0**. Collaudo Joomla manuale da eseguire secondo [testbook](docs/QA_TESTBOOK.md#imp-07--metadati-seo-e-social-pubblici).
 
 ## 0.41.56-dev — ricerca e ordinamento del catalogo (IMP-07, PR #206 integrata)
 
