@@ -1,4 +1,4 @@
-## IMP-07 — filtro tag nel catalogo pubblico (0.41.60-dev, PR #209 candidata)
+## IMP-07 — filtro tag nel catalogo pubblico (0.41.60-dev, PR #209 integrata)
 
 Riferimenti: CAT-01, AC-41 e AC-85. Installare il pacchetto candidato su Joomla 6; predisporre corsi pubblicati con tag pubblici, tag con accesso differenziato e corsi privati o in categorie non visibili.
 
@@ -657,7 +657,7 @@ PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208), milestone **1.
 4. Cambiare lingua con associazioni valide e verificare che il link porti al record tradotto e al suo alias. Con un’associazione assente, verificare il fallback lingua già previsto.
 5. Disattivare SEF e verificare URL query tradizionali, navigazione e menu nativi. Riattivare SEF e verificare breadcrumb, paginazione/filtri e link di ritorno.
 6. Modificare un alias nel gestore Joomla; verificare che il nuovo alias generi il link successivo e che il vecchio segmento numerico continui a identificare il record.
-## IMP-07 — vista elenco del catalogo (0.41.61-dev, PR in preparazione)
+## IMP-07 — vista elenco del catalogo (0.41.61-dev, PR #211 integrata)
 
 Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova; usare corsi pubblici e una categoria visibile.
 
