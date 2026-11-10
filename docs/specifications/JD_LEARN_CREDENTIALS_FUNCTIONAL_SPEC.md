@@ -6,7 +6,9 @@
 
 > Questo modulo è esplicitamente **fuori dal perimetro e dai criteri di accettazione della versione 1.0.0**. Non aggiungere i requisiti CRE-* alla matrice dei 210 requisiti della baseline né modificare la percentuale di avanzamento verso la prima stabile. Questa specifica definisce comportamenti attesi, non evidenze di sviluppo o collaudo.
 
-**Progettazione tecnica collegata:** [JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md](JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md) (decisioni T-001–T-007 del 9 novembre 2026). La progettazione tecnica prevale sulle precedenti ipotesi di separazione in un secondo componente.\n\n## 1. Scopo e principi
+**Progettazione tecnica collegata:** [JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md](JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md) (decisioni T-001–T-007 del 9 novembre 2026). La progettazione tecnica prevale sulle precedenti ipotesi di separazione in un secondo componente.
+
+## 1. Scopo e principi
 
 Realizzare **JD Learn Credentials**, sottosistema nativo di `com_jlms`, abilitabile e disabilitabile, distribuito nello stesso pacchetto `pkg_jlms` in una release futura, per emettere, conservare, esportare, pubblicare e verificare credenziali formative secondo **Open Badges 3.0**. Ogni organizzazione deve poter essere emittente sul **proprio dominio**, senza account o licenze obbligatorie di Credly o altri intermediari. Credly costituisce un riferimento *di esperienza utente*, non una dipendenza tecnica.
 
@@ -165,9 +167,10 @@ Ogni PR implementativa dovrà indicare in «**Comportamenti da testare**» i cas
 | **C1 — Fondamenta** | Emittenti, modelli, associazione corsi, regole, emissione manuale/automatica, firma, download | Badge firmato e verificabile esternamente |
 | **C2 — Verifica e ciclo di vita** | Verificatore sul dominio dell'emittente, revoca/scadenza, sostituzione, privacy, chiavi | Verifica completa e revoca interoperabile |
 | **C3 — Esperienza studente e LinkedIn** | I miei badge, link e download, Add to Profile, post, anteprima OG, notifiche | Studente pubblica una credenziale con URL verificabile |
-| **C4 — Evoluzioni** | Badge Connect, wallet, competenze, percorsi, import/API avanzate | Nuova specifica e criteri dedicati |
+| **C4 — Collaudo e rilascio** | Test end-to-end, sicurezza, compatibilità e packaging | Release completa verificata su Joomla e con verificatore indipendente |
+| **C5 — Evoluzioni** | Badge Connect, wallet, competenze, import/API avanzate | Nuova specifica e criteri dedicati |
 
-La **prima release funzionalmente completa del modulo** richiede C1+C2+C3. C4 è un'estensione non bloccante. Nessuna data o numero di versione del rilascio futuro sono assegnati.
+La **prima release funzionalmente completa del modulo** richiede C0+C1+C2+C3+C4. C5 è un'estensione non bloccante. Nessuna data o numero di versione del rilascio futuro sono assegnati.
 
 ## 16. Governance e tracciabilità
 
@@ -185,6 +188,5 @@ La **prima release funzionalmente completa del modulo** richiede C1+C2+C3. C4 è
 - LinkedIn Add to Profile FAQ: https://www.linkedin.com/help/linkedin/answer/a527099/
 
 **Decisione approvata (9 novembre 2026):** JD Learn Credentials è una futura estensione opzionale di JD Learn, progettata per emettere Open Badges verificabili e condivisibili su LinkedIn, **non inclusa in JD Learn 1.0.0**.
-
 
 **Pianificazione esecutiva:** [21 PR per la release completa, C0–C4, e 3 PR evolutive C5](../CREDENTIALS_IMPLEMENTATION_PLAN.md). La nomenclatura C0–C5 del piano esecutivo prevale sulle precedenti denominazioni degli incrementi della specifica.
