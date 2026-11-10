@@ -1,6 +1,6 @@
 ## 0.41.53-dev — pulizia delle sessioni video scadute (IMP-05)
 
-La nuova sessione video autorizzata rimuove fino a 250 sessioni scadute, ordinate per scadenza; il limite evita una cancellazione non circoscritta nella richiesta. Il comportamento è coperto dalla suite d’integrazione Joomla. La pulizia periodica resta utile per siti inattivi; collaudo manuale Joomla pendente.
+La nuova sessione video autorizzata rimuove fino a 250 sessioni scadute, ordinate per scadenza; il limite evita una cancellazione non circoscritta nella richiesta. Il comportamento è coperto dalla suite d’integrazione Joomla. PR [#198] integrata nel commit `df98bb5cfd8d7056643e786eedc9bab0804d9d53`; CI standard 4/4 superata nel [run 42883180012](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012). Pacchetto installabile [JD-Learn-0.41.53-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012/artifacts/13794578948), SHA-256 ZIP `e8ac53685a7b2189f23373b6048a3342987112c0f15d15637a329e67e51a69c7` (artefatto `f30f0475571a2240fabb03eaee7b0280b78d0b8154b6a7a46ce4c976984b5815`). La pulizia periodica resta utile per siti inattivi; collaudo manuale Joomla pendente.
 
 ## 0.41.52-dev — retry della posizione audio (PR #196)
 

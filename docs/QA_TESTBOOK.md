@@ -573,4 +573,6 @@ Riferimenti: VID-03/04, PBASE-01/04; AC-25, AC-27–31, AC-91, AC-95, AC-97–10
 
 La suite automatica copre una riga scaduta e la cancellazione; il limite massimo 250 è verificato nel codice. La pulizia è opportunistica, quindi l’eliminazione completa in assenza di nuovi avvii rimane un’attività periodica futura.
 
+**CI:** PR [#198] integrata; standard 4/4 superata nel [run 42883180012](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012). [Pacchetto installabile JD-Learn-0.41.53-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012/artifacts/13794578948).
+
 **Esito sito Joomla:** Non eseguito.
