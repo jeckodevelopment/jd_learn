@@ -1,3 +1,7 @@
+## 0.41.52-dev — filtri della banca domande (PR #194)
+
+La PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194) risolve le issue #155/#156: filtri visibili per ricerca, categoria, stato e lingua, con intestazione Azioni/Actions tradotta. ACL invariata. CI 4/4 superata nel [run](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501); collaudo manuale Joomla pendente nel [testbook](QA_TESTBOOK.md#pr-194-integrata--filtri-della-banca-domande).
+
 ## 0.41.52-dev — fuso globale del nuovo corso (PR #192)
 
 - Corretto issue #172: la form corso rende selezionabile “Usa globali”; al salvataggio il sito fornisce il fuso IANA, mentre le date UTC e i fusi già scelti restano invariati.
