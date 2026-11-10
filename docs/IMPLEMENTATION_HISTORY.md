@@ -1,3 +1,9 @@
+## 0.41.49-dev — soglia video configurabile per lezione (PR #183)
+
+- Soglia facoltativa per singola lezione video; campo vuoto eredita la regola della versione, valore esplicito sovrascrive solo la lezione. Persistenza immutabile nelle versioni assegnate e uso nel calcolo del completamento.
+- CI standard 4/4 superata nel run 42830117573 sul candidato `0b62f8e3505bbc23d4936cf205d9deeaf9a4d4a1`; merge `4ef19dd8b5ebe4d6eddb1f127a5864929b457297`.
+- Pacchetto [JD-Learn-0.41.49-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42830117573/artifacts/13770693036), SHA-256 ZIP interno `46db03c8214873bbd2d266f067585458ebec059e3abbaf2fe29d9e38be1635bb`; collaudo manuale Joomla/provider reali pendente.
+
 ## 0.41.43-dev — anteprima dei livelli di accesso (PR #162 integrata)
 
 - La preview editoriale consente di simulare viewing access level Joomla e distingue visibilità di catalogo, accesso ai contenuti e requisito combinato. La simulazione è read-only e non modifica identità, iscrizioni, corso o progressi.
