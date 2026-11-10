@@ -1,6 +1,6 @@
 # Prossime attività — ordine e condizioni di chiusura
 
-Aggiornato al **10 novembre 2026**. Main **0.41.47-dev**; PR [#179](https://github.com/jeckodevelopment/jd_learn/pull/179) completa IMP-03 per video, documenti e audio in sola lettura. Candidato **0.41.48-dev** avvia IMP-04 con apertura inline protetta di PDF e immagini nell’aula, mantenendo il download e senza attribuire progressi. CI standard 4/4 superata nel [run 42804753192](https://github.com/jeckodevelopment/jd_learn/actions/runs/42804753192). Collaudo Joomla di preview, allegati, ACL e policy ancora pendente.
+Aggiornato al **10 novembre 2026**. Main **0.41.48-dev**; PR [#179](https://github.com/jeckodevelopment/jd_learn/pull/179) completa IMP-03 per video, documenti e audio in sola lettura. PR [#181](https://github.com/jeckodevelopment/jd_learn/pull/181) integra in 0.41.48-dev l’apertura inline protetta di PDF e immagini nell’aula, mantenendo il download e senza attribuire progressi; CI standard 4/4 superata nel [run 42807134904](https://github.com/jeckodevelopment/jd_learn/actions/runs/42807134904). Collaudo Joomla di preview, allegati, ACL e policy ancora pendente.
 
 Il piano operativo delle PR, con identificativi stabili, requisiti associati e fase di stabilizzazione successiva, è in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md). In caso di differenze, il perimetro approvato in RELEASE_SCOPE.md e RELEASE_SCOPE_MATRIX.md prevale; questa pagina conserva l’ordine operativo e lo stato corrente.
 
