@@ -28,9 +28,11 @@ class CoursesModel extends ListModel
             (int) $this->getState('filter.category_id'));
         $search = (string) $this->getState('filter.search');
         if ($search !== '') {
+            $titleSearch = '%' . $search . '%';
+            $summarySearch = '%' . $search . '%';
             $query->where('(c.title LIKE :catalogSearchTitle OR c.summary LIKE :catalogSearchSummary)')
-                ->bind(':catalogSearchTitle', '%' . $search . '%')
-                ->bind(':catalogSearchSummary', '%' . $search . '%');
+                ->bind(':catalogSearchTitle', $titleSearch)
+                ->bind(':catalogSearchSummary', $summarySearch);
         }
         return $query->order($this->getState('filter.order') === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
     }
