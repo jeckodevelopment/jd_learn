@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.61-dev** integra IMP-07, incluse ricerca/ordinamento, SEO/social, alias SEF, filtri tag/difficoltà/durata e vista elenco (PR #204, #206–#211). CI standard 4/4 nel [run 42920368304](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304). Pacchetto [JD-Learn-0.41.61-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304/artifacts/13811701431). Collaudi manuali pendenti. Avanzamento 75% (522/7).
+Aggiornato al **10 novembre 2026**. Main **0.41.61-dev** integra IMP-07, incluse ricerca/ordinamento, SEO/social, alias SEF, filtri tag/difficoltà/durata e vista elenco. Il candidato **0.41.62-dev** aggiunge filtri docente/percorso per catalogo e categorie. Accettazione Joomla pendente. Avanzamento main 75% (522/7), candidato 75% (524/7).
 
 
 

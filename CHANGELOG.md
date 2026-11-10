@@ -1,3 +1,9 @@
+## 0.41.62-dev — filtri docente e percorso nel catalogo (IMP-07, PR in preparazione)
+
+- Aggiunge filtri docente e percorso nel catalogo e nelle viste categoria; opzioni e risultati sono limitati a schede e profili accessibili all’utente.
+- Filtri componibili con tag, difficoltà, durata, ricerca, ordine, vista griglia/elenco e paginazione. Gli ID non validi non allargano i risultati.
+- Collaudo Joomla manuale pendente; vedere il [testbook](docs/QA_TESTBOOK.md#imp-07--filtri-docente-e-percorso-nel-catalogo-04162-dev-pr-in-preparazione).
+
 ## 0.41.60-dev — filtro tag nel catalogo pubblico (IMP-07, PR #209 integrata)
 
 - Aggiunge il filtro per tag Joomla nel catalogo e nelle pagine categoria, combinabile con difficoltà, durata, ricerca e ordinamento.

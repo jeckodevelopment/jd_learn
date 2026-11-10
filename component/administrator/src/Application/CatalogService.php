@@ -15,9 +15,13 @@ final class CatalogService
     {
     }
 
-    public function query(User $actor, string $language, int $categoryId = 0, int $tagId = 0)
+    public function query(User $actor, string $language, int $categoryId = 0, int $tagId = 0, int $teacherId = 0, int $pathwayId = 0)
     {
         $query = $this->courseQuery($actor, $language, $categoryId, false);
+        $filterActor = (int) $actor->id ? new User((int) $actor->id) : $actor;
+        $filterActor->clearAccessRights();
+        $levels = $filterActor->block ? [0] : array_map('intval', $filterActor->getAuthorisedViewLevels());
+        $levels = $levels ?: [0];
         if ($tagId > 0) {
             $courseTagAlias = 'com_jlms.course';
             $tagActor = (int) $actor->id ? new User((int) $actor->id) : $actor;
@@ -32,7 +36,54 @@ final class CatalogService
                 ->bind(':courseTagAlias', $courseTagAlias)
                 ->bind(':catalogTagId', $tagId, ParameterType::INTEGER);
         }
+        if ($teacherId > 0) {
+            $teacher = $teacherId;
+            $assigned = $this->db->createQuery()->select('1')->from('#__jlms_course_teachers AS catalog_teacher')
+                ->where('catalog_teacher.course_id = c.id')->where('catalog_teacher.teacher_id = :catalogTeacherId');
+            $query->where('EXISTS (' . $assigned . ')')->bind(':catalogTeacherId', $teacher, ParameterType::INTEGER);
+        } elseif ($teacherId < 0) {
+            $query->where('1 = 0');
+        }
+        if ($pathwayId > 0) {
+            $pathway = $pathwayId;
+            $assigned = $this->db->createQuery()->select('1')->from('#__jlms_pathway_courses AS catalog_pathway_course')
+                ->where('catalog_pathway_course.course_id = c.id')->where('catalog_pathway_course.pathway_id = :catalogPathwayId')
+                ->where('EXISTS (SELECT 1 FROM #__jlms_pathways AS visible_pathway INNER JOIN #__categories AS visible_pathway_cat ON visible_pathway_cat.id = visible_pathway.catid'
+                    . ' WHERE visible_pathway.id = catalog_pathway_course.pathway_id AND visible_pathway.state = 1'
+                    . ' AND visible_pathway.access IN (' . implode(',', $levels) . ') AND visible_pathway_cat.published = 1'
+                    . ' AND visible_pathway_cat.access IN (' . implode(',', $levels) . ')'
+                    . ' AND (visible_pathway.language = :catalogPathwayAll OR visible_pathway.language = :catalogPathwayLanguage)'
+                    . ' AND (visible_pathway_cat.language = :catalogPathwayCatAll OR visible_pathway_cat.language = :catalogPathwayCatLanguage)'
+                    . ' AND NOT EXISTS (SELECT 1 FROM #__categories AS vp_ancestor WHERE vp_ancestor.lft <= visible_pathway_cat.lft AND vp_ancestor.rgt >= visible_pathway_cat.rgt AND vp_ancestor.id <> 1'
+                    . ' AND (vp_ancestor.extension <> :catalogPathwayExtension OR vp_ancestor.published <> 1 OR vp_ancestor.access NOT IN (' . implode(',', $levels) . ')'
+                    . ' OR (vp_ancestor.language <> :catalogPathwayAncestorAll AND vp_ancestor.language <> :catalogPathwayAncestorLanguage))))');
+            $all = '*'; $extension = 'com_jlms.pathway';
+            $query->where('EXISTS (' . $assigned . ')')->bind(':catalogPathwayId', $pathway, ParameterType::INTEGER)
+                ->bind(':catalogPathwayAll', $all)->bind(':catalogPathwayLanguage', $language)
+                ->bind(':catalogPathwayCatAll', $all)->bind(':catalogPathwayCatLanguage', $language)
+                ->bind(':catalogPathwayExtension', $extension)->bind(':catalogPathwayAncestorAll', $all)->bind(':catalogPathwayAncestorLanguage', $language);
+        } elseif ($pathwayId < 0) {
+            $query->where('1 = 0');
+        }
         return $query;
+    }
+
+    /** Published teacher choices attached to courses visible in this catalog scope. */
+    public function publicTeachers(User $actor, string $language, int $categoryId = 0): array
+    {
+        $query = $this->query($actor, $language, $categoryId)->clear('select')->select('DISTINCT catalog_teacher.teacher_id')
+            ->innerJoin('#__jlms_course_teachers AS catalog_teacher ON catalog_teacher.course_id = c.id');
+        $ids = array_map('intval', $this->db->setQuery($query, 0, 2001)->loadColumn());
+        if (count($ids) > 2000) { $ids = array_slice($ids, 0, 2000); }
+        return TeacherProfiles::available($this->db, $actor, $language, $ids);
+    }
+
+    /** Visible pathways related to one or more courses in this catalog scope. */
+    public function publicPathwayIds(User $actor, string $language, int $categoryId = 0): array
+    {
+        $query = $this->query($actor, $language, $categoryId)->clear('select')->select('DISTINCT catalog_pathway_course.pathway_id')
+            ->innerJoin('#__jlms_pathway_courses AS catalog_pathway_course ON catalog_pathway_course.course_id = c.id');
+        return array_map('intval', $this->db->setQuery($query, 0, 2001)->loadColumn());
     }
 
     /** Returns published tags attached to courses already visible to this actor. */

@@ -27,13 +27,20 @@ class CoursesModel extends ListModel
         $this->setState('filter.duration', is_string($duration) && in_array($duration, ['under-30', '30-60', '61-120', 'over-120'], true) ? $duration : '');
         $layout = $filter['layout'] ?? 'grid';
         $this->setState('filter.layout', is_string($layout) && in_array($layout, ['grid', 'list'], true) ? $layout : 'grid');
+        $this->setState('filter.teacher_id', max(0, is_scalar($filter['teacher_id'] ?? 0) ? (int) ($filter['teacher_id'] ?? 0) : 0));
+        $this->setState('filter.pathway_id', max(0, is_scalar($filter['pathway_id'] ?? 0) ? (int) ($filter['pathway_id'] ?? 0) : 0));
     }
 
     protected function getListQuery()
     {
         $app = Factory::getApplication();
-        $query = $app->bootComponent('com_jlms')->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag(),
-            (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'));
+        $component = $app->bootComponent('com_jlms');
+        $teacherId = (int) $this->getState('filter.teacher_id');
+        if ($teacherId && !isset($this->getTeachers()[$teacherId])) { $teacherId = -1; }
+        $pathwayId = (int) $this->getState('filter.pathway_id');
+        if ($pathwayId && !isset($this->getPathways()[$pathwayId])) { $pathwayId = -1; }
+        $query = $component->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag(),
+            (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'), $teacherId, $pathwayId);
         $search = (string) $this->getState('filter.search');
         if ($search !== '') {
             $titleSearch = '%' . $search . '%';
@@ -96,5 +103,28 @@ class CoursesModel extends ListModel
     public function getLayout(): string
     {
         return (string) $this->getState('filter.layout');
+    }
+
+    public function getTeacherId(): int { return (int) $this->getState('filter.teacher_id'); }
+    public function getPathwayId(): int { return (int) $this->getState('filter.pathway_id'); }
+
+    public function getTeachers(): array
+    {
+        $app = Factory::getApplication();
+        return $app->bootComponent('com_jlms')->getCatalogService()->publicTeachers(
+            $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
+        );
+    }
+
+    public function getPathways(): array
+    {
+        $app = Factory::getApplication(); $component = $app->bootComponent('com_jlms');
+        $ids = $component->getCatalogService()->publicPathwayIds(
+            $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
+        );
+        if (!$ids) { return []; }
+        $query = $component->getPathwayService()->query($app->getIdentity(), $app->getLanguage()->getTag());
+        $query->whereIn('p.id', $ids);
+        return $app->getDatabase()->setQuery($query, 0, 500)->loadObjectList('id');
     }
 }
