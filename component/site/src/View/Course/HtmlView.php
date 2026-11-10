@@ -47,6 +47,9 @@ final class HtmlView extends BaseHtmlView
             );
         } else {
             $this->getDocument()->setTitle((string) $title);
+            if (($presentation['seo_description'] ?? '') !== '') {
+                $this->getDocument()->setDescription((string) $presentation['seo_description']);
+            }
             $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         }
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
