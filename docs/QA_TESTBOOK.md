@@ -1,3 +1,12 @@
+## PR #190 — indice aula su smartphone (candidato 0.41.52-dev)
+
+La procedura manuale va eseguita su Joomla 6 quando il pacchetto 0.41.52-dev sarà disponibile.
+
+1. Aprire da smartphone (viewport 375 px) un corso pubblicato con più moduli e lezioni; aprire una lezione accessibile. Atteso: il programma inizia chiuso e il contenuto della lezione appare senza scorrere l’intero indice.
+2. Attivare “Mostra programma”. Atteso: si espande l’indice, il controllo cambia in “Nascondi programma” e aria-expanded passa a true; attivarlo di nuovo lo chiude. Verificare navigazione da tastiera e focus visibile.
+3. Selezionare una lezione dal programma aperto. Atteso: viene caricata la lezione selezionata e al nuovo caricamento l’indice mobile torna chiuso.
+4. Ridimensionare il viewport oltre 48rem. Atteso: il controllo sparisce e il programma resta visibile nella colonna desktop. Verificare anche la navigazione su corso con lezione bloccata e senza JavaScript: contenuto non autorizzato non viene mostrato e i link del programma restano raggiungibili.
+
 ## PR #187 integrata — retry del salvataggio di avvio (0.41.51-dev)
 
 CI standard 4/4 superata nel [run 42845258898](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898). Il [pacchetto 0.41.51-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898/artifacts/13779340061) contiene il runtime verificato (SHA-256 interno `1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab`); questa procedura Joomla resta pendente.
