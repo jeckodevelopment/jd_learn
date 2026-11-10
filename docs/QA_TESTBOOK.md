@@ -1,3 +1,15 @@
+## PR #192 integrata — default “Usa globali” per il fuso del corso
+
+Issue [#172](https://github.com/jeckodevelopment/jd_learn/issues/172) corretta: il campo Timezone nativo Joomla offre e seleziona “Usa globali” per un nuovo corso. Il salvataggio risolve l’opzione nel fuso IANA di Configurazione globale; corsi esistenti e date UTC restano invariati. PR [#192](https://github.com/jeckodevelopment/jd_learn/pull/192), merge commit `64ae66454c7d2a64a3237f1f7f12b2d9174f95ae`.
+
+CI standard 4/4 superata nel [run 42865678167](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167). Pacchetto [JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167/artifacts/13787890952); wrapper SHA-256 `9b29ce5e6d2e5cc54f857d64080b3dfb45be6ef46dd967248cb04ba20113d3c4` (543923 byte), pacchetto Joomla interno `2a42ae0a50139cf727995b2ab50764d33fe6734ab738a09e6f7cde62aab19ac3` (544064 byte). Scadenza artifact: 24 novembre 2026, 17:34 UTC. Collaudo manuale sul sito Joomla ancora pendente:
+
+1. Impostare **Europe/Rome** in Configurazione globale → Server → Fuso orario.
+2. Aprire JD Learn → Corsi → Nuovo e verificare che il campo fuso mostri **Usa globali**, non Abidjan.
+3. Inserire una data/ora locale, salvare e riaprire: il selettore deve mostrare Europe/Rome e l’orario deve restare invariato.
+4. Cambiare il fuso globale, creare un altro corso e verificare che resti selezionato **Usa globali**; dopo il salvataggio deve risultare il nuovo fuso globale.
+5. Aprire un corso con fuso esplicito e verificare che fuso e date non cambino.
+
 ## PR #190 integrata — indice aula su smartphone (0.41.52-dev)
 
 CI standard 4/4 superata nel [run 42860617351](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351). Il [pacchetto 0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351/artifacts/13784608215) contiene il runtime verificato (SHA-256 interno `278d260dddbdcdda305fff7456943d5ee43a15d042c94e1c3d901fe9f166c332`, wrapper `6214644bc36d91e60cb7da5b9d31f9216e3e53c8492eba1a5ea3ac5fa4962ddd`; scade il 24 novembre 2026 alle 17:06 UTC). La procedura manuale seguente resta pendente.

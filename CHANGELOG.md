@@ -1,4 +1,7 @@
-## 0.41.52-dev — indice aula comprimibile su smartphone (PR #190 integrata)
+## 0.41.52-dev — indice aula comprimibile su smartphone e default fuso globale (PR #190/#192 integrate)
+
+- PR #192 corregge issue #172: il nuovo corso mostra l’opzione “Usa globali” nel campo Timezone nativo; al salvataggio usa il fuso globale IANA del sito. Fusi espliciti, date UTC e corsi esistenti invariati. CI standard 4/4 superata nel [run ${run}](https://github.com/jeckodevelopment/jd_learn/actions/runs/${run}); pacchetto installabile [JD-Learn-0.41.52-dev](${link}), SHA-256 interno `${inner}`, wrapper `${outer}`. Collaudo Joomla manuale pendente in [testbook](docs/QA_TESTBOOK.md#pr-192--fuso-globale-per-nuovi-corsi).
+
 
 - Aggiunge in aula un comando tradotto e accessibile per mostrare/nascondere il programma didattico sotto 48rem; desktop mantiene l’indice visibile. Senza JavaScript il programma resta disponibile.
 - CI standard 4/4 superata nel [run 42860617351](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351); pacchetto [JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351/artifacts/13784608215), SHA-256 interno `278d260dddbdcdda305fff7456943d5ee43a15d042c94e1c3d901fe9f166c332`, wrapper `6214644bc36d91e60cb7da5b9d31f9216e3e53c8492eba1a5ea3ac5fa4962ddd`; collaudo Joomla manuale pendente. Procedura in [testbook](docs/QA_TESTBOOK.md#pr-190--indice-aula-su-smartphone).
