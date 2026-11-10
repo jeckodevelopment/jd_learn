@@ -59,6 +59,9 @@ try:
  if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
  if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[tag_id]"' not in html:
   raise RuntimeError('Public catalog search, order and tag controls did not render')
+ _,all_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'0'}))
+ if 'Publication fixture' not in all_tag_html:
+  raise RuntimeError('The all-tags selection must preserve the unfiltered public catalog')
  _,invalid_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'2147483647'}))
  if 'Publication fixture' in invalid_tag_html:
   raise RuntimeError('An unknown tag must not broaden the public catalog result')
