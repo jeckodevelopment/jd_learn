@@ -90,7 +90,7 @@ $newCourseForm = $model->getForm([], true);
 scheduleExpect($newCourse->calendar_timezone === '', 'New course editor selects the Joomla global timezone option');
 scheduleExpect($newCourseForm->getField('calendar_timezone')->value === '', 'New course form keeps the global timezone option selected');
 $timezoneInput = $newCourseForm->getField('calendar_timezone')->getInput();
-scheduleExpect(str_contains($timezoneInput, 'Usa globali'), 'Global timezone option is rendered by the native Joomla field');
+scheduleExpect(preg_match('/<option(?=[^>]*\\bvalue="")(?=[^>]*\\bselected(?:="selected")?)[^>]*>/i', $timezoneInput) === 1, 'Global timezone option is rendered and selected by the native Joomla field');
 $base=['id'=>0,'revision'=>1,'title'=>'Calendar course fixture','alias'=>'calendar-course-fixture','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','presentation_description'=>'<p>Course presentation for the publication fixture.</p>', 'summary'=>'Calendar fixture'];
 $values=['calendar_timezone'=>'','calendar_publish_up'=>'2000-01-01 01:00:00','calendar_publish_down'=>'2099-01-01 01:00:00','calendar_starts_at'=>'2000-01-01 01:00:00','calendar_ends_at'=>'2099-01-01 01:00:00'];
 scheduleExpect($model->save($base+$values+['publish_up'=>'2200-01-01 00:00:00','params_json'=>'{"injected":true}']),'Typed calendar saved with mass assignment ignored');
