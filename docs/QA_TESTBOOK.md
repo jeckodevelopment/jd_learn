@@ -570,7 +570,7 @@ Riferimenti: MAT-02/03/05/06, DAT-04, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-9
 2. Creare da Sistema → Attività pianificate un’attività “JD Learn: pulisci i file materiali orfani”, limite `100`, e avviarla manualmente. Atteso: record e file ancora usati da corsi/lezioni restano disponibili.
 3. Verificare nel log dell’attività conteggio rimozioni, errori ed eventuale lavoro residuo; nessuna attività viene creata automaticamente dall’upgrade.
 
-Il CI genera un asset fittizio non referenziato più vecchio di 24 ore e verifica la rimozione del record e del blob tramite la routine nativa Scheduler, mantenendo intatti gli allegati collegati.
+La CI standard 4/4 della PR [#202](https://github.com/jeckodevelopment/jd_learn/pull/202) nel [run 42886192087](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087) genera un asset fittizio non referenziato più vecchio di 24 ore e verifica la rimozione del record e del blob tramite la routine nativa Scheduler, mantenendo intatti gli allegati collegati. Pacchetto: [JD-Learn-0.41.54-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087/artifacts/13797460306).
 
 **Esito sito Joomla:** Non eseguito.
 

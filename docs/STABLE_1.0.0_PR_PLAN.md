@@ -20,7 +20,7 @@ Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di 
 
 IMP-05 è in corso: PR [#198] ha integrato la pulizia batch limitata delle sessioni video scadute. Restano l’accettazione reale dei quattro provider e gli eventuali residui implementativi confermati; non si introduce un quinto provider.
 
-IMP-06 è avviata con candidata 0.41.54-dev: pulizia Scheduler a batch degli asset locali orfani dopo 24 ore; protezione delle revisioni ancora referenziate e collaudo sul sito Joomla restano da verificare.
+IMP-06: PR [#202] integrata in 0.41.54-dev con pulizia Scheduler batch degli asset locali orfani dopo 24 ore; CI 4/4 superata. Restano il collaudo sul sito Joomla e gli eventuali residui degli altri lifecycle materiali.
 
 ## Blocco IMP — implementazione
 
