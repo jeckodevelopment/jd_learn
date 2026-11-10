@@ -8,6 +8,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Jlms\Component\Jlms\Site\Helper\CategoryNavigationHelper;
+use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -36,7 +37,24 @@ final class HtmlView extends BaseHtmlView
         $this->children = $model->getItems();
         $this->childrenPagination = $model->getPagination();
         CategoryNavigationHelper::addPath((int) $this->category->id);
-        $this->getDocument()->setTitle($this->category->title);
+        try {
+            $guestCategory = $app->bootComponent('com_jlms')->getCatalogService()->category(
+                Factory::getUser(0), $app->getLanguage()->getTag(), (int) $this->category->id
+            );
+        } catch (\RuntimeException $error) {
+            $guestCategory = null;
+        }
+        if ($guestCategory) {
+            PublicMetadataHelper::apply(
+                $this->getDocument(),
+                (string) $this->category->title,
+                (string) ($this->category->description ?? ''),
+                'index.php?option=com_jlms&view=category&id=' . (int) $this->category->id
+            );
+        } else {
+            $this->getDocument()->setTitle((string) $this->category->title);
+            $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
+        }
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
     }

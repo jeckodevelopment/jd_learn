@@ -6,6 +6,7 @@ namespace Jlms\Component\Jlms\Site\View\Course;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -31,9 +32,25 @@ final class HtmlView extends BaseHtmlView
         }
         $this->hasContentAccess = (bool) $actor->id && !$actor->block && in_array((int) $this->item['course']->content_access, array_map('intval', $actor->getAuthorisedViewLevels()), true);
         $presentation = $this->item['presentation'] ?? [];
-        $this->getDocument()->setTitle(($presentation['seo_title'] ?? '') ?: $this->item['course']->title);
-        if (($presentation['seo_description'] ?? '') !== '') {
-            $this->getDocument()->setDescription($presentation['seo_description']);
+        $title = ($presentation['seo_title'] ?? '') ?: $this->item['course']->title;
+        $guest = Factory::getUser(0);
+        $guestLevels = array_map('intval', $guest->getAuthorisedViewLevels());
+        $discoverable = in_array((int) $this->item['course']->catalog_access, $guestLevels, true)
+            && in_array((int) $this->item['course']->content_access, $guestLevels, true);
+        if ($discoverable) {
+            PublicMetadataHelper::apply(
+                $this->getDocument(),
+                (string) $title,
+                (string) ($presentation['seo_description'] ?? ''),
+                'index.php?option=com_jlms&view=course&id=' . (int) $this->item['course']->id,
+                (string) ($presentation['image'] ?? '')
+            );
+        } else {
+            $this->getDocument()->setTitle((string) $title);
+            if (($presentation['seo_description'] ?? '') !== '') {
+                $this->getDocument()->setDescription((string) $presentation['seo_description']);
+            }
+            $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         }
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
