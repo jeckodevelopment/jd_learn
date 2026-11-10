@@ -1,5 +1,7 @@
 # Backend: accesso e navigazione amministrativa
 
+Aggiornamento 10 novembre 2026: PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194) integra i filtri visibili della Banca domande e la traduzione Azioni/Actions. CI 4/4 superata; collaudo manuale Joomla pendente nel [testbook](QA_TESTBOOK.md#pr-194-integrata--filtri-della-banca-domande).
+
 Richiesta del 7 novembre 2026, **prima parte implementata nella 0.40, verificati nella CI standard42395767098**. Chiarisce CORE-20, CORE-13, UI-02 e SCR-13; non introduce un pannello parallelo al backend Joomla. Collegamento M01/M10. L’editor corsi è già stato semplificato; questo lavoro riguarda anche l’ingresso nel componente e la navigazione persistente.
 
 ## Incremento0.41.4-dev — integrato

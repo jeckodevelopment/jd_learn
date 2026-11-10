@@ -1,3 +1,9 @@
+## 0.41.52-dev — filtri della banca domande (PR #194 integrata)
+
+- La vista Banca domande mostra i filtri Ricerca, Categoria, Stato e Lingua; consente combinazioni e mostra l’intestazione Azioni/Actions.
+- CI standard 4/4 superata nel [run 42873607501](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501). [Pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501/artifacts/13791570779).
+- Collaudo manuale Joomla pendente: filtri singoli e combinati, pulizia, paginazione/ordinamento, intestazione IT/EN e accesso negato ai ruoli non autorizzati. [Testbook](docs/QA_TESTBOOK.md#pr-194-integrata--filtri-della-banca-domande).
+
 ## 0.41.52-dev — indice aula comprimibile su smartphone e default fuso globale (PR #190/#192 integrate)
 
 - PR #192 corregge issue #172: il nuovo corso mostra l’opzione “Usa globali” nel campo Timezone nativo; al salvataggio usa il fuso globale IANA del sito. Fusi espliciti, date UTC e corsi esistenti invariati. CI standard 4/4 superata nel [run ${run}](https://github.com/jeckodevelopment/jd_learn/actions/runs/${run}); pacchetto installabile [JD-Learn-0.41.52-dev](${link}), SHA-256 interno `${inner}`, wrapper `${outer}`. Collaudo Joomla manuale pendente in [testbook](docs/QA_TESTBOOK.md#pr-192--fuso-globale-per-nuovi-corsi).
