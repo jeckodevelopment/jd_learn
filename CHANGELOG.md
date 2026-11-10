@@ -1,8 +1,9 @@
-## 0.41.51-dev — retry limitato del salvataggio di avvio (candidato PR #187)
+## 0.41.51-dev — retry limitato del salvataggio di avvio (PR #187 integrata)
 
 - Aggiunge stato “Salvataggio attività…” e un singolo retry dopo errore di rete/timeout o risposta HTTP 408, 429 o 5xx; timeout per richiesta 8 secondi e pausa 500 ms.
 - Riutilizza la stessa chiave di idempotenza nelle due richieste; gli errori di autorizzazione e gli altri 4xx non vengono ritentati. Nessuna modalità offline o retry continuo.
-- Comportamenti Joomla in [testbook](docs/QA_TESTBOOK.md#pr-187-integrata-retry-del-salvataggio-di-avvio-04151-dev); CI in attesa.
+- CI standard 4/4 superata nel [run 42845258898](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898); pacchetto [JD-Learn-0.41.51-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898/artifacts/13779340061), SHA-256 interno `1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab`, collaudo Joomla manuale pendente.
+- Comportamenti Joomla in [testbook](docs/QA_TESTBOOK.md#pr-187-integrata-retry-del-salvataggio-di-avvio-04151-dev); CI standard 4/4 superata.
 
 ## 0.41.50-dev — registrazione dell’avvio lezione (PR #185 integrata)
 
