@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.65-dev** integra la PR [#219](https://github.com/jeckodevelopment/jd_learn/pull/219): consegna interna Nginx degli allegati. CI standard 4/4 nel [run 43006202795](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795). Pacchetto installabile [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520), wrapper SHA-256 `b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2`, ZIP Joomla SHA-256 `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`, disponibile fino al 25 novembre 2026, ore 10:48 UTC. Estrarre il wrapper una volta per ottenere `pkg_jlms-0.41.65-dev.zip`. Avanzamento **76%** (533/7; M04 89%). Collaudo manuale Joomla dell’offload pendente.
+Aggiornato all’11 novembre 2026. La build candidata **0.41.66-dev** rimuove la dipendenza Nginx introdotta per la consegna degli allegati nella PR #219 e mantiene la consegna protetta tramite PHP, compatibile con Apache/LiteSpeed. CI e pacchetto installabile saranno collegati dopo l’integrazione. Avanzamento implementativo stimato **76%** (M04 89%). Collaudo Joomla manuale del ciclo materiali ancora pendente.
 
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/documento/audio/video/quiz sono disponibili nei flussi implementati; collaudi manuali di release ancora aperti, inclusi il rilascio relativo della 0.41.38-dev, l’authoring Percorsi della 0.41.39-dev e la dashboard provider 0.41.40-dev e il workflow editoriale e anteprima accessi 0.41.43-dev, default del fuso sito 0.41.44-dev e toolbar del programma 0.41.45-dev. La preview editoriale video read-only è integrata; PR #179/0.41.47-dev integra documenti/audio, mentre le interazioni quiz restano escluse; le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
@@ -45,7 +45,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **42 tabelle / 63 FK**. Il pacchetto 0.41.65-dev contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **42 tabelle / 63 FK**. Il pacchetto 0.41.66-dev contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
 
 ```sh
 python3 tools/build.py
