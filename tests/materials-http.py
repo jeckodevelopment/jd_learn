@@ -179,7 +179,7 @@ try:
  # Same-size corruption is detected before returning bytes.
  key=first['storage_key'];original=(private/key).read_bytes();(private/key).write_bytes(b'X'*len(original))
  request(student,download,expected=503);(private/key).write_bytes(original)
- expect(command('cleanup')=='material cleanup passed','Native scheduler removes only old unreferenced material assets and private blobs')
+ expect(command('cleanup')=='material cleanup passed','Native scheduler applies configured retention and preserves newer unreferenced assets')
  print(json.dumps({'materials_http_checks':checks,'status':'passed','ranges':'passed','quarantine':'passed','revocation_same_session':'passed'}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-6000:],file=sys.stderr);raise

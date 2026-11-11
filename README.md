@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.71-dev** integra la PR [#226](https://github.com/jeckodevelopment/jd_learn/pull/226) (merge `1b889ee550a23700071488930b50fbcb0081ad74`), dopo la PR #225. CI standard 4/4 superata nel [run 43079973855](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855). Pacchetto installabile [JD-Learn-0.41.71-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855/artifacts/13885130510), ZIP SHA-256 `3d9dcca6c943da364e6c6f83d6ac45b44f51a8a7a5d34f532da40150b9e21c8f` (artifact wrapper `4ecf79e8fa6d64cc0171412dbc56b4ea26e7ee0f4a48544348fb4a6817e34d33`). La PR aggiunge streaming HTML5 protetto compatibile con Apache/LiteSpeed; test manuale Joomla e benchmark concorrente restano aperti.
+Aggiornato all’11 novembre 2026. Main **0.41.72-dev** integra la PR [#226](https://github.com/jeckodevelopment/jd_learn/pull/226) (merge `1b889ee550a23700071488930b50fbcb0081ad74`), dopo la PR #225. CI standard 4/4 superata nel [run 43079973855](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855). Pacchetto installabile [JD-Learn-0.41.72-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855/artifacts/13885130510), ZIP SHA-256 `3d9dcca6c943da364e6c6f83d6ac45b44f51a8a7a5d34f532da40150b9e21c8f` (artifact wrapper `4ecf79e8fa6d64cc0171412dbc56b4ea26e7ee0f4a48544348fb4a6817e34d33`). La PR aggiunge streaming HTML5 protetto compatibile con Apache/LiteSpeed; test manuale Joomla e benchmark concorrente restano aperti.
 
 
 
@@ -46,7 +46,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **42 tabelle / 63 FK**. Il pacchetto 0.41.71-dev contiene 10 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **42 tabelle / 63 FK**. Il pacchetto 0.41.72-dev contiene 10 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
 
 ```sh
 python3 tools/build.py

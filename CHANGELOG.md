@@ -1,3 +1,10 @@
+## 0.41.72-dev — conservazione configurabile degli asset orfani (IMP-06)
+
+- Aggiunge nelle opzioni Materiali una soglia di conservazione configurabile fra 24 e 8760 ore; il default resta 24 ore.
+- Il cleanup Scheduler continua a elaborare al massimo 100 asset per esecuzione, verifica tutti i riferimenti e rimuove soltanto file locali non referenziati più vecchi della soglia. Valori fuori intervallo vengono limitati lato server.
+- Aggiunge una prova d’integrazione Joomla che configura 48 ore e dimostra che un asset di 96 ore viene rimosso mentre uno di 30 ore e gli allegati referenziati vengono conservati.
+- Collaudo manuale Joomla ancora da eseguire: vedere [testbook IMP-06](docs/QA_TESTBOOK.md#imp-06--periodo-configurabile-per-la-pulizia-degli-asset-locali-orfani-04172-dev).
+
 ## 0.41.71-dev — streaming video HTML5 compatibile con Apache/LiteSpeed (IMP-05)
 
 - PR [#226](https://github.com/jeckodevelopment/jd_learn/pull/226) integrata in main (merge `1b889ee550a23700071488930b50fbcb0081ad74`): stream MP4 privato con PHP a blocchi, controlli Joomla e supporto Range/HEAD; rimosse le configurazioni Nginx.

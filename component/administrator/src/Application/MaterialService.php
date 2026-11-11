@@ -338,8 +338,9 @@ final class MaterialService
     public function purgeOrphaned(int $limit = 100): array
     {
         $limit = max(1, min(100, $limit));
+        $retentionHours = max(24, min(8760, (int) $this->storage->config()->get('material_orphan_retention_hours', 24)));
         $q = $this->db->createQuery()->select('a.id, a.storage, a.storage_key')->from('#__jlms_assets AS a')
-            ->where("a.created_at < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 DAY)")
+            ->where('a.created_at < DATE_SUB(UTC_TIMESTAMP(), INTERVAL ' . $retentionHours . ' HOUR)')
             ->where("a.storage = 'local'")
             ->where('NOT EXISTS (SELECT 1 FROM #__jlms_attachments x WHERE x.asset_id = a.id)')
             ->where('NOT EXISTS (SELECT 1 FROM #__jlms_lessons x WHERE x.media_asset_id = a.id)')
