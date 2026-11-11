@@ -2292,4 +2292,590 @@
         "Nessun audit completo WCAG/ASVS",
         "Nessun collaudo completo dei provider reali",
         "Patch corrente Joomla non verificata",
-        "Recovery/backup completo
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+      "evidence_scope": "Runtime/pacchetto del tested_head; successiva registrazione esterna al pacchetto, confrontata prima del merge. M01 aperto, restyling residuo e collaudi reali distinti dalle prove automatiche.",
+      "ci_policy_verification": {
+        "date": "2026-11-07",
+        "pull_request": 48,
+        "tested_head": "14b3451fa64e49051890889d8b0a8b49b23fb32d",
+        "tree": "54667a3085d58eefefd76ceb5290f90f5cde0072",
+        "draft_run": {
+          "id": 42386414314,
+          "jobs": [
+            {
+              "id": 128444652282,
+              "name": "Candidate plan and lightweight checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444679907,
+              "name": "PHP ${{ matrix.php }} / ${{ matrix.database }}",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "id": 128444680028,
+              "name": "Curriculum navigation in Chromium (controlled fixture)",
+              "status": "completed",
+              "conclusion": "skipped"
+            }
+          ],
+          "scope": "Only lightweight policy/build/structure checks executed; integrations and browser skipped."
+        },
+        "ready_run": {
+          "id": 42386442389,
+          "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42386442389",
+          "jobs": [
+            {
+              "id": 128444737703,
+              "name": "Candidate plan and lightweight checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764016,
+              "name": "Curriculum navigation in Chromium (controlled fixture)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764120,
+              "name": "PHP 8.3 / mysql:8.4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764166,
+              "name": "PHP 8.4 / mariadb:10.6",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "scope": "Standard candidate: PHP8.3/MySQL8.4 and PHP8.4/MariaDB10.6 plus Chromium and lightweight plan."
+        },
+        "local_policy_tests": 8,
+        "local_cli_modes": [
+          "draft",
+          "ready",
+          "manual full"
+        ],
+        "full_matrix": "Available through workflow_dispatch(matrix=full); not executed in this policy increment. Last full runtime matrix remains the application baseline above.",
+        "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
+        "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
+      }
+    },
+    {
+      "audited_at": "2026-11-07",
+      "product": "JD Learn",
+      "version": "0.40.1-dev",
+      "code_baseline": {
+        "tested_head": "03301648017bc218c9c2d7d3fe57af443f703fc1",
+        "tree": "a426f7e21bb8f7ee1f9185f55f16d19ffcfd8674",
+        "parent_main_commit": "a6b694b89a65aa6eacb90a90a49222c1e63891ee",
+        "pull_request": 53
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 42397626415,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42397626415",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 128478307217,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128478345125,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128478345164,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128478345180,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "Quattro job standard superati; intera suite, build riproducibile, installazione Joomla, upgrade0.40→0.40.1 e reinstallazione con storico conservato. Matrice completa non eseguita in questo incremento; nessuna accettazione completa.",
+        "curriculum_outline_checks_per_php_environment": 26,
+        "unsaved_editor_checks_per_php_environment": 20,
+        "browser_fixture_checks": 12,
+        "browser_scope": "Chromium su fixture controllata con viewport desktop/mobile; non collaudo visivo Joomla o integrazione reale TinyMCE.",
+        "publication_impact_native_checks_per_php_environment": 19,
+        "publication_impact_http_checks_per_php_environment": 10,
+        "programme_restore_native_checks_per_php_environment": 153,
+        "programme_restore_http_checks_per_php_environment": 14,
+        "programme_restore_retained_checks_per_php_environment": 1,
+        "programme_restore_provider_scope": "Adapter YouTube/Vimeo reali lato server e API Cloudflare con trasporto controllato, senza credenziali o rete reali; non collaudo della riproduzione SDK/browser/account reali.",
+        "teaching_rules_domain_checks_per_php_environment": 37,
+        "teaching_rules_native_checks_per_php_environment": 21,
+        "teaching_rules_http_checks_per_php_environment": 15,
+        "teaching_rules_retained_checks_per_php_environment": 1,
+        "teaching_rules_scope": "Soglia della versione, form nativo/CSRF/ACL/checkout/CAS, review prima/dopo e stale, telemetria server con soglie assegnate diverse. Non collaudo browser interattivo del nuovo form o provider/SDK reali.",
+        "video_duration_domain_checks_per_php_environment": 17,
+        "video_duration_native_checks_per_php_environment": 22,
+        "video_duration_http_checks_per_php_environment": 11,
+        "video_duration_retained_checks_per_php_environment": 1,
+        "video_metadata_client_checks_per_php_environment": 24,
+        "video_duration_scope": "Metadati e ricevute editoriali, ACL/CSRF/CAS/sorgenti obsolete, denominatore osservato, seek/fine e completamento, form nativi e upgrade. API/SDK con trasporti controllati; nessun nuovo collaudo account/browser/provider reali.",
+        "admin_navigation_http_checks_per_php_environment": 8,
+        "admin_menu_upgrade_checks_per_php_environment": 2,
+        "admin_navigation_scope": "Ingresso corsi e collegamento nativo Plugin video; filtro jlmsvideo, azzeramento di ricerca/stato/elemento precedenti e quattro link di modifica plugin nel documento HTTP. Menu verificato dopo upgrade/reinstallazione senza duplicati. Non collaudo completo con ruoli limitati, sidebar compressa o visivo/mobile."
+      },
+      "package": {
+        "name": "pkg_jlms-0.40.1-dev.zip",
+        "bytes": 442054,
+        "sha256": "89132277d1eb87d5ff1886039faff452f5119aa6af60c35ebe3f0de71ad58f66",
+        "artifact_id": 13584087878,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42397626415/artifacts/13584087878",
+        "constituents": 7,
+        "tables": 41,
+        "foreign_keys": 58
+      },
+      "full_requirement_acceptance": {},
+      "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
+      "excluded_evidence": [
+        "Nessun benchmark300/500",
+        "Nessun audit completo WCAG/ASVS",
+        "Nessun collaudo completo dei provider reali",
+        "Patch corrente Joomla non verificata",
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+      "evidence_scope": "Runtime/pacchetto del tested_head; registrazione successiva soltanto documentale esterna al pacchetto, confrontata prima del merge. La gestione plugin non è una diagnostica della riproduzione; M01 resta aperto.",
+      "ci_policy_verification": {
+        "date": "2026-11-07",
+        "pull_request": 48,
+        "tested_head": "14b3451fa64e49051890889d8b0a8b49b23fb32d",
+        "tree": "54667a3085d58eefefd76ceb5290f90f5cde0072",
+        "draft_run": {
+          "id": 42386414314,
+          "jobs": [
+            {
+              "id": 128444652282,
+              "name": "Candidate plan and lightweight checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444679907,
+              "name": "PHP ${{ matrix.php }} / ${{ matrix.database }}",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "id": 128444680028,
+              "name": "Curriculum navigation in Chromium (controlled fixture)",
+              "status": "completed",
+              "conclusion": "skipped"
+            }
+          ],
+          "scope": "Only lightweight policy/build/structure checks executed; integrations and browser skipped."
+        },
+        "ready_run": {
+          "id": 42386442389,
+          "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42386442389",
+          "jobs": [
+            {
+              "id": 128444737703,
+              "name": "Candidate plan and lightweight checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764016,
+              "name": "Curriculum navigation in Chromium (controlled fixture)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764120,
+              "name": "PHP 8.3 / mysql:8.4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764166,
+              "name": "PHP 8.4 / mariadb:10.6",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "scope": "Standard candidate: PHP8.3/MySQL8.4 and PHP8.4/MariaDB10.6 plus Chromium and lightweight plan."
+        },
+        "local_policy_tests": 8,
+        "local_cli_modes": [
+          "draft",
+          "ready",
+          "manual full"
+        ],
+        "full_matrix": "Available through workflow_dispatch(matrix=full); not executed in this policy increment. Last full runtime matrix remains the application baseline above.",
+        "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
+        "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
+      }
+    },
+    {
+      "audited_at": "2026-11-09",
+      "product": "JD Learn",
+      "version": "0.41.29-dev",
+      "code_baseline": {
+        "tested_head": "0ac1fd7bbe3ba02aa39b3e0874fb8fd15d8ef9f7",
+        "parent_main_commit": "558483bf94d8a04a4c044e318cdec5bc8dadb4f4",
+        "pull_request": 124,
+        "merged_main_commit": "b43453f605395b561deab836ed162e3a00f110ee"
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 42533814214,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42533814214",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 128893605013,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128893647954,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128893647926,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 128893647907,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "PR #124 integrata. Tutti i quattro job standard superati. La suite HTTP Joomla controlla che il titolo della pagina Opzioni sia tradotto e che la label Cronologia versioni compaia nei due punti; collaudo manuale AC-134 ancora pendente."
+      },
+      "package": {
+        "name": "pkg_jlms-0.41.29-dev.zip",
+        "bytes": 510851,
+        "sha256": "7f1810d1d6adb5f4c92ac9237e4bd6c9079932acb6cd9cfd8d3d72ff385bf62b",
+        "constituents": 8,
+        "tables": 42,
+        "foreign_keys": 59,
+        "build_source": "PR #124 testata e integrata; SHA-256 e dimensione interni coincidono nei build riproducibili dei due job PHP CI.",
+        "artifact_id": 13638104439,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42533814214/artifacts/13638104439",
+        "ci_artifact_archive_sha256": "sha256:85fb758814455b8e6cc0841117d07247469a933974af941f2ff7bd70a9157d0b",
+        "artifact_expires_at": "2026-11-22T23:13:53Z",
+        "wrapper_zip": true,
+        "wrapper_bytes": 510782,
+        "inner_version": "0.41.29-dev"
+      },
+      "full_requirement_acceptance": {},
+      "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
+      "excluded_evidence": [
+        "Nessun benchmark300/500",
+        "Nessun audit completo WCAG/ASVS",
+        "Nessun collaudo completo dei provider reali",
+        "Patch corrente Joomla non verificata",
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "In corso indica un sottoinsieme con sorgenti o documentazione riscontrati, non una percentuale. Da implementare indica il percorso specifico ancora assente. Fonti test parziali non sono scenari baseline integralmente superati.",
+      "evidence_scope": "PR #120 / AC-131 integrata e verificata dalla CI completa; il collaudo Joomla reale resta aperto. La dashboard AC-132 è registrata superata secondo la comunicazione dell’utente dell’8 novembre 2026.",
+      "ci_policy_verification": {
+        "date": "2026-11-07",
+        "pull_request": 48,
+        "tested_head": "14b3451fa64e49051890889d8b0a8b49b23fb32d",
+        "tree": "54667a3085d58eefefd76ceb5290f90f5cde0072",
+        "draft_run": {
+          "id": 42386414314,
+          "jobs": [
+            {
+              "id": 128444652282,
+              "name": "Candidate plan and lightweight checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444679907,
+              "name": "PHP ${{ matrix.php }} / ${{ matrix.database }}",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "id": 128444680028,
+              "name": "Curriculum navigation in Chromium (controlled fixture)",
+              "status": "completed",
+              "conclusion": "skipped"
+            }
+          ],
+          "scope": "Only lightweight policy/build/structure checks executed; integrations and browser skipped."
+        },
+        "ready_run": {
+          "id": 42386442389,
+          "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42386442389",
+          "jobs": [
+            {
+              "id": 128444737703,
+              "name": "Candidate plan and lightweight checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764016,
+              "name": "Curriculum navigation in Chromium (controlled fixture)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764120,
+              "name": "PHP 8.3 / mysql:8.4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 128444764166,
+              "name": "PHP 8.4 / mariadb:10.6",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "scope": "Standard candidate: PHP8.3/MySQL8.4 and PHP8.4/MariaDB10.6 plus Chromium and lightweight plan."
+        },
+        "local_policy_tests": 8,
+        "local_cli_modes": [
+          "draft",
+          "ready",
+          "manual full"
+        ],
+        "full_matrix": "Available through workflow_dispatch(matrix=full); not executed in this policy increment. Last full runtime matrix remains the application baseline above.",
+        "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
+        "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
+      },
+      "candidate_status": "0.41.29-dev integrata in main dalla PR #124; CI standard superata; collaudo manuale Joomla AC-134 pendente.",
+      "previous_verified_release": {
+        "version": "0.41.26-dev",
+        "package": "pkg_jlms-0.41.26-dev.zip",
+        "sha256": "869c40a705602af9c1c7e2bd1562e407fce75d38038cefcf67085156c3230ab5",
+        "artifact_id": 13634039771,
+        "run_id": 42524671164,
+        "expires_at": "2026-11-22T21:24:36Z"
+      },
+      "candidate_increment": {
+        "version": "0.41.27-dev",
+        "scope": "AC-131: lista banca domande Search Tools separata dal form; crea/duplica/elimina con ACL/CSRF e controllo dipendenze quiz/tentativi.",
+        "status": "PR #120 integrata; CI standard superata; collaudo manuale Joomla da registrare.",
+        "manual_joomla_acceptance": "pending"
+      },
+      "latest_verified_increment": {
+        "version": "0.41.29-dev",
+        "pull_request": 124,
+        "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/124",
+        "tested_head": "0ac1fd7bbe3ba02aa39b3e0874fb8fd15d8ef9f7",
+        "merged_main_commit": "b43453f605395b561deab836ed162e3a00f110ee",
+        "ci_run_id": 42533814214,
+        "artifact_id": 13638104439,
+        "artifact_name": "JD-Learn-0.41.29-dev",
+        "artifact_sha256": "7f1810d1d6adb5f4c92ac9237e4bd6c9079932acb6cd9cfd8d3d72ff385bf62b",
+        "artifact_size_bytes": 510851,
+        "artifact_expires_at": "2026-11-22T23:13:53Z",
+        "manual_joomla_acceptance": "pending"
+      },
+      "artifact_label_fix": {
+        "pull_request": 76,
+        "merged_main_commit": "de0134ce39148a84dc7b94c9c408983a18fed503",
+        "tested_head": "26148b24ba900232e9228459bb9084823d3b5e3c",
+        "ci_run_id": 42439956364,
+        "artifact_name": "JD-Learn-0.41.10-dev",
+        "artifact_id": 13601830152
+      },
+      "user_reported_manual_results": [
+        {
+          "requirement": "AC-132",
+          "area": "Dashboard amministrativa e relativo accesso menu",
+          "status": "passed",
+          "reported_at": "2026-11-08",
+          "report": "L’utente ha comunicato in chat il superamento del collaudo manuale della dashboard.",
+          "environment_details": "Non forniti"
+        }
+      ],
+      "next_candidate": null
+    },
+    {
+      "version": "0.41.56-dev",
+      "scope": "IMP-07: ricerca su titolo/sommario promozionale e ordinamento per titolo/recenti nel catalogo e nella vista categoria.",
+      "status": "PR #206 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+      "manual_joomla_acceptance": "pending",
+      "pull_request": 206,
+      "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/206",
+      "tested_head": "b4fadf1d5e715375875973b07aa73b69b3530894",
+      "parent_main_commit": "91ee56774585733d0c7177856a328ddb88971865",
+      "merged_main_commit": "cc5af168e5b42aff0b30db2e051acecd86806b9c",
+      "ci_run_id": 42901417240,
+      "artifact_id": 13803875500,
+      "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500",
+      "artifact_sha256": "3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2",
+      "package_sha256": "6649cc5fd585b07a6fce0ec788eb70f06070045a00888799571a47bc2b58cf3f",
+      "package_size_bytes": 551465,
+      "artifact_size_bytes": 551211,
+      "artifact_expires_at": "2026-11-24T21:09:12Z"
+    },
+    {
+      "version": "0.41.57-dev",
+      "scope": "IMP-07: metadati canonical, Open Graph e Twitter nelle viste pubbliche corso/categoria/percorso; noindex per catalogo/contenuti non accessibili agli ospiti.",
+      "status": "PR #207 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+      "manual_joomla_acceptance": "pending",
+      "pull_request": 207,
+      "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/207",
+      "tested_head": "2c34b8da262cad293d609ae90c70b974218311d5",
+      "parent_main_commit": "34b6d2710537e4d21670855180a9d3ae5e40d2fc",
+      "merged_main_commit": "32215c493fe1d7a2bf99871b5f93087a842563bd",
+      "ci_run_id": 42905972598,
+      "artifact_id": 13804558462,
+      "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42905972598/artifacts/13804558462",
+      "artifact_sha256": "f0729b8cfe769f5d7f2065522651bc4b56278c6a4fdb2e29adae4e54be2199de",
+      "package_sha256": "7e078f93ff421c143e7a7c198911e4d38c5c6208c788c5920080fd5d4d642921",
+      "package_size_bytes": 552635,
+      "artifact_size_bytes": 552379,
+      "artifact_expires_at": "2026-11-24T21:36:47Z"
+    }
+  ],
+  "evidence_scope": "Prerequisiti espliciti; sequenziamento automatico e rilascio per data non inclusi. Test manuale Joomla ancora pendente.",
+  "ci_policy_verification": {
+    "date": "2026-11-07",
+    "pull_request": 48,
+    "tested_head": "14b3451fa64e49051890889d8b0a8b49b23fb32d",
+    "tree": "54667a3085d58eefefd76ceb5290f90f5cde0072",
+    "draft_run": {
+      "id": 42386414314,
+      "jobs": [
+        {
+          "id": 128444652282,
+          "name": "Candidate plan and lightweight checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 128444679907,
+          "name": "PHP ${{ matrix.php }} / ${{ matrix.database }}",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "id": 128444680028,
+          "name": "Curriculum navigation in Chromium (controlled fixture)",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "scope": "Only lightweight policy/build/structure checks executed; integrations and browser skipped."
+    },
+    "ready_run": {
+      "id": 42386442389,
+      "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42386442389",
+      "jobs": [
+        {
+          "id": 128444737703,
+          "name": "Candidate plan and lightweight checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 128444764016,
+          "name": "Curriculum navigation in Chromium (controlled fixture)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 128444764120,
+          "name": "PHP 8.3 / mysql:8.4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 128444764166,
+          "name": "PHP 8.4 / mariadb:10.6",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "scope": "Standard candidate: PHP8.3/MySQL8.4 and PHP8.4/MariaDB10.6 plus Chromium and lightweight plan."
+    },
+    "local_policy_tests": 8,
+    "local_cli_modes": [
+      "draft",
+      "ready",
+      "manual full"
+    ],
+    "full_matrix": "Available through workflow_dispatch(matrix=full); not executed in this policy increment. Last full runtime matrix remains the application baseline above.",
+    "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
+    "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
+  },
+  "candidate_status": "PR #215 integrata in main; CI standard 4/4 e pacchetto installabile verificati; accettazione manuale Joomla lifecycle categorie pendente.",
+  "previous_verified_release": {
+    "version": "0.41.51-dev",
+    "pull_request": 187,
+    "ci_run_id": 42845258898,
+    "artifact_id": 13779340061,
+    "package_sha256": "1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab"
+  },
+  "candidate_increment": {
+    "version": "0.41.59-dev",
+    "scope": "IMP-07: filtri pubblici per difficoltà e fasce di durata stimata nel catalogo e nelle categorie; allowlist e query sui soli metadati promozionali.",
+    "status": "PR #210 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "manual_joomla_acceptance": "pending",
+    "pull_request": 210,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/210",
+    "tested_head": "0575873486a04dd8df90f07df9d57079fa14823a",
+    "parent_main_commit": "3e2b32a72432262315b2f5c21751e5e443b035ce",
+    "merged_main_commit": "e5d0bae954c099c8522db57c30b1e32882b468ee",
+    "ci_run_id": 42913999069,
+    "artifact_id": 13807843959,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069/artifacts/13807843959",
+    "artifact_sha256": "c1e9e8e7c3e64daebc4c5162f64695c89b0d3d79a9c41019f5eeee087227644c",
+    "package_sha256": "f22a8a3fb1c87e17f10f0342e6ba6980e5c8882e83dcfec41bab34713b3c41dc",
+    "package_size_bytes": 554709,
+    "artifact_size_bytes": 554457,
+    "artifact_expires_at": "2026-11-24T22:27:14Z"
+  },
+  "latest_verified_increment": {
+    "version": "0.41.65-dev",
+    "scope": "IMP-06: consegna protetta degli allegati delegabile a una location Nginx interna X-Accel-Redirect dopo autorizzazione Joomla, stato scansione, chiave/dimensione e hash; la modalità PHP resta esplicita.",
+    "status": "PR #219 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "manual_joomla_acceptance": "pending",
+    "pull_request": 219,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/219",
+    "tested_head": "124ed457fd4f9f8bf61828c83fc6386839767d34",
+    "parent_main_commit": "ed60f7dbbbd8904a192a053ca170772c181b07c8",
+    "merged_main_commit": "93e7f8a0de84e759b46e6118d9f2ab3a28b5cb61",
+    "ci_run_id": 43006202795,
+    "artifact_id": 13847744520,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520",
+    "artifact_sha256": "b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2",
+    "package_sha256": "f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017",
+    "package_size_bytes": 559447,
+    "artifact_size_bytes": 559214,
+    "artifact_expires_at": "2026-11-25T10:48:20Z"
+  },
+  "next_candidate": {
+    "priority": "Completare i residui IMP-06 con lacune concrete: preview/metadati dei materiali, scansione antivirus reale e conservazione; proseguire con i requisiti core residui secondo il piano. Collaudi manuali materiali/categorie/provider restano separati.",
+    "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
+  },
+  "current_status": "Main 0.41.65-dev (PR #219 integrata); CI standard 4/4 e pacchetto installabile verificati; avanzamento stimato 76% (533/7; M04 89%, catalogo 75%); collaudi Joomla manuali pendenti."
+}
