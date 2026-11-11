@@ -84,7 +84,7 @@ jobs:
       - name: Install test runtime extensions
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends python3 nodejs ffmpeg nginx unzip libpng-dev libonig-dev libxml2-dev libzip-dev
+          apt-get install -y --no-install-recommends python3 nodejs ffmpeg unzip libpng-dev libonig-dev libxml2-dev libzip-dev
           docker-php-ext-install -j2 pdo_mysql mysqli gd mbstring dom simplexml zip
       - name: Lint every PHP source
         run: python3 -c "import pathlib,subprocess; [subprocess.run(['php','-l',str(p)],check=True) for p in pathlib.Path('.').rglob('*.php')]"
@@ -192,7 +192,7 @@ jobs:
         run: python3 tests/materials-http.py .runtime/joomla
       - name: Prepare native MP4 fixture and private local lesson
         run: php tests/html5-fixture.php .runtime/joomla
-      - name: Local MP4 upload, protected Range delivery and real Nginx offload
+      - name: Local MP4 upload, protected PHP Range delivery and authorization
         run: python3 tests/html5-http.py .runtime/joomla
       - name: Install pinned native Italian language pack for multilingual tests
         run: |
