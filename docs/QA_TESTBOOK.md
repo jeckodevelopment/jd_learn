@@ -1,3 +1,15 @@
+## IMP-06 — periodo configurabile per la pulizia degli asset locali orfani (0.41.72-dev)
+
+**Stato:** candidato di sviluppo; la verifica automatica di Joomla Scheduler è aggiornata per distinguere il periodo configurato da una soglia fissa. Accettazione manuale in Joomla ancora da eseguire.
+
+**Comportamenti da testare in Joomla**
+
+1. Apri **Componenti → JD Learn → Opzioni → Materiali**. Verifica che la nuova impostazione abbia default **24 ore**, accetti valori da **24 a 8760** ore e mostri la descrizione in italiano e inglese. Salva 48 ore e riapri le opzioni: il valore deve restare.
+2. Configura storage privato fuori dalla document root e abilita **Task - JD Learn**. Crea manualmente l'attività “JD Learn: pulisci i file materiali orfani” con limite 100.
+3. Avvia l'attività prima che un asset orfano raggiunga 48 ore: il suo blob e record devono restare. Gli allegati ancora referenziati devono restare anche quando sono più vecchi.
+4. Dopo 48 ore, avvia di nuovo l'attività: gli asset locali non referenziati eleggibili possono essere rimossi; file sconosciuti nella cartella, asset referenziati e materiali di versioni pubblicate devono restare intatti.
+5. Imposta il periodo massimo di 8760 ore e verifica che un asset orfano più giovane non venga rimosso da un'esecuzione giornaliera.
+
 ## IMP-07 — Associazioni multilingua dei corsi pubblicati (CORE-07, 0.41.68-dev; PR #223 integrata)
 
 **Stato:** PR [#223](https://github.com/jeckodevelopment/jd_learn/pull/223) integrata nel main per AC-20 e AC-48. Il form nativo può modificare il grafo delle associazioni anche quando i corsi sono pubblicati; le versioni didattiche devono restare immutate. Pacchetto installabile `dist/pkg_jlms-0.41.68-dev.zip` (SHA-256 `ed115844d2de2925f8a087a3a8cdbed646e870bfd529ca31eb3b2dfd1f97a7c0`). Accettazione Joomla manuale da eseguire.

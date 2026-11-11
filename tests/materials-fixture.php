@@ -67,7 +67,7 @@ $factory = $component->getMVCFactory();
 $mode = $argv[2] ?? '';
 if ($mode === 'configure') {
     $changes = json_decode($argv[3] ?? '{}', true, 8, JSON_THROW_ON_ERROR);
-    $allowed = ['material_storage_root', 'material_max_mib', 'material_scan_required', 'material_clamd_socket', 'material_php_delivery'];
+    $allowed = ['material_storage_root', 'material_max_mib', 'material_scan_required', 'material_clamd_socket', 'material_php_delivery', 'material_orphan_retention_hours'];
     if (array_diff(array_keys($changes), $allowed)) { throw new \RuntimeException('Unexpected fixture configuration'); }
     $row = $db->setQuery("SELECT extension_id, params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadObject();
     $row->params = json_encode(array_replace(json_decode($row->params ?: '{}', true), $changes), JSON_THROW_ON_ERROR);
@@ -98,15 +98,20 @@ if ($mode === 'cleanup') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     $params = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
     $rootPath = (string) $params->get('material_storage_root', '');
-    $key = bin2hex(random_bytes(32)) . '.blob';
-    $blob = $rootPath . DIRECTORY_SEPARATOR . $key;
-    if ($rootPath === '' || !is_dir($rootPath) || file_put_contents($blob, 'orphan-fixture') === false) { throw new \RuntimeException('Private material storage is not configured.'); }
-    chmod($blob, 0600);
+    if ($rootPath === '' || !is_dir($rootPath)) { throw new \RuntimeException('Private material storage is not configured.'); }
     $now = gmdate('Y-m-d H:i:s');
-    $asset = (object)['storage'=>'local','storage_key'=>$key,'sha256'=>hash_file('sha256',$blob),'byte_size'=>filesize($blob),
-        'mime_type'=>'text/plain','original_name'=>'orphan.txt','asset_revision'=>1,'status'=>'ready','scan_json'=>'{}',
-        'created_by'=>$userId,'created_at'=>gmdate('Y-m-d H:i:s',time()-172800),'modified_by'=>$userId,'modified_at'=>$now];
-    $db->insertObject('#__jlms_assets',$asset,'id');
+    $createOrphan=static function(int $ageHours)use($db,$rootPath,$userId,$now):array{
+        $key=bin2hex(random_bytes(32)).'.blob';$blob=$rootPath.DIRECTORY_SEPARATOR.$key;
+        if(file_put_contents($blob,'orphan-fixture-'.$ageHours)===false)throw new \RuntimeException('Could not create private cleanup fixture.');
+        chmod($blob,0600);
+        $asset=(object)['storage'=>'local','storage_key'=>$key,'sha256'=>hash_file('sha256',$blob),'byte_size'=>filesize($blob),
+            'mime_type'=>'text/plain','original_name'=>'orphan.txt','asset_revision'=>1,'status'=>'ready','scan_json'=>'{}',
+            'created_by'=>$userId,'created_at'=>gmdate('Y-m-d H:i:s',time()-($ageHours*3600)),'modified_by'=>$userId,'modified_at'=>$now];
+        $db->insertObject('#__jlms_assets',$asset,'id');
+        return [(int)$asset->id,$blob];
+    };
+    [$expiredId,$expiredBlob]=$createOrphan(96);
+    [$retainedId,$retainedBlob]=$createOrphan(30);
     $app->bootComponent('com_scheduler');
     $options=\Joomla\Component\Scheduler\Administrator\Helper\SchedulerHelper::getTaskOptions();
     $option=$options->findOption('jlms.materials.cleanup');
@@ -115,11 +120,15 @@ if ($mode === 'cleanup') {
     $task=new \Joomla\Component\Scheduler\Administrator\Task\Task($record);
     $event=new \Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent('onExecuteTask',['subject'=>$task,'params'=>(object)['limit'=>100]]);
     $app->getDispatcher()->dispatch('onExecuteTask',$event);
-    $remaining=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id='.(int)$asset->id)->loadResult();
+    $expiredRemaining=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id='.$expiredId)->loadResult();
+    $retainedRemaining=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id='.$retainedId)->loadResult();
     $attached=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id='.(int)$fixture['version_id'])->loadResult();
-    if (($event->getResultSnapshot()['status']??null)!==\Joomla\Component\Scheduler\Administrator\Task\Status::OK || $remaining!==0 || is_file($blob) || $attached<1) {
-        throw new \RuntimeException('Scheduled cleanup must delete only the stale unreferenced asset and private blob.');
+    if (($event->getResultSnapshot()['status']??null)!==\Joomla\Component\Scheduler\Administrator\Task\Status::OK
+        || $expiredRemaining!==0 || $retainedRemaining!==1 || is_file($expiredBlob) || !is_file($retainedBlob) || $attached<1) {
+        throw new \RuntimeException('Scheduled cleanup must apply the configured retention window to unreferenced assets.');
     }
+    $db->setQuery('DELETE FROM #__jlms_assets WHERE id='.$retainedId)->execute();
+    @unlink($retainedBlob);
     echo "material cleanup passed\n"; exit(0);
 }
 if ($mode === 'inspect') {

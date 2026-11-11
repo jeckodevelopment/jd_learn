@@ -25,12 +25,12 @@
   },
   "implementation_progress": {
     "percent": 77,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #225 porta il catalogo all’81% con ricollocazione atomica delle dipendenze categoria; PR #226 porta M04 al 90% con streaming HTML5 protetto compatibile con Apache/LiteSpeed; integrazioni Joomla al 92%; 541/7 = 77,29%, arrotondato al 77%. Accettazione manuale Joomla ancora pendente.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #225 porta il catalogo all’81% con ricollocazione atomica delle dipendenze categoria; PR #226 porta M04 al 90% con streaming HTML5 protetto compatibile con Apache/LiteSpeed; integrazioni Joomla al 92%; 542/7 = 77,43%, arrotondato al 77%. Accettazione manuale Joomla ancora pendente.",
     "areas": [
       76,
       81,
       77,
-      90,
+      91,
       67,
       92,
       58

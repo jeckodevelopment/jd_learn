@@ -40,7 +40,7 @@ def request(http,path,fields=None,expected=200,headers=None,method=None,data=Non
  if status!=expected:raise RuntimeError('HTTP '+str(status)+' expected '+str(expected)+' for '+path+'; '+re.sub(r'<[^>]+>',' ',body.decode('utf-8',errors='replace'))[-2000:])
  return url,body,result_headers
 private=root.parent/'private-materials';private.mkdir(mode=0o700,exist_ok=True)
-configure(material_storage_root=str(private),material_php_delivery=1,material_scan_required=0,material_max_mib=20)
+configure(material_storage_root=str(private),material_php_delivery=1,material_scan_required=0,material_max_mib=20,material_orphan_retention_hours=48)
 log=open(root.parent/'materials-http.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
 scanner=None
@@ -179,7 +179,7 @@ try:
  # Same-size corruption is detected before returning bytes.
  key=first['storage_key'];original=(private/key).read_bytes();(private/key).write_bytes(b'X'*len(original))
  request(student,download,expected=503);(private/key).write_bytes(original)
- expect(command('cleanup')=='material cleanup passed','Native scheduler removes only old unreferenced material assets and private blobs')
+ expect(command('cleanup')=='material cleanup passed','Native scheduler applies configured retention and preserves newer unreferenced assets')
  print(json.dumps({'materials_http_checks':checks,'status':'passed','ranges':'passed','quarantine':'passed','revocation_same_session':'passed'}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-6000:],file=sys.stderr);raise
