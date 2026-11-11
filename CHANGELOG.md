@@ -3,7 +3,7 @@
 - Aggiunge un filtro accessibile per titolo o ID ai selettori delle associazioni multilingua dei corsi, utile nei gruppi editoriali numerosi.
 - Mantiene l’elenco autorizzato, il limite esplicito di 2.000 corsi e la convalida server di lingua, ACL, checkout e appartenenza al gruppo.
 - Corregge la guida e le stringhe editoriali: le associazioni dei corsi pubblicati sono modificabili dalla PR #223; programmi, iscrizioni e progressi restano invariati.
-- Comportamenti manuali AC-20/AC-48 da eseguire su Joomla; nessuna accettazione manuale dichiarata.
+- PR [#224](https://github.com/jeckodevelopment/jd_learn/pull/224) integrata in main 0.41.69-dev. Pacchetto SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`; controlli documentali e due stack PHP/database CI superati, Chromium ancora bloccato nel setup runtime. Accettazione manuale AC-20/AC-48 pendente.
 
 ## 0.41.68-dev — associazioni multilingua su corsi pubblicati (IMP-07 / CORE-07)
 
@@ -480,4 +480,4 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Aggiunge un filtro accessibile per titolo o ID ai selettori delle associazioni multilingua dei corsi, utile nei gruppi editoriali numerosi.
 - Mantiene l'elenco autorizzato, il limite esplicito di 2.000 corsi e la convalida server di lingua, ACL, checkout e appartenenza al gruppo.
 - Corregge la guida e le stringhe editoriali: le associazioni dei corsi pubblicati sono modificabili dalla PR #223; programmi, iscrizioni e progressi restano invariati.
-- Comportamenti manuali AC-20/AC-48 da eseguire su Joomla; nessuna accettazione manuale dichiarata.
+- PR [#224](https://github.com/jeckodevelopment/jd_learn/pull/224) integrata in main 0.41.69-dev. Pacchetto SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`; controlli documentali e due stack PHP/database CI superati, Chromium ancora bloccato nel setup runtime. Accettazione manuale AC-20/AC-48 pendente.

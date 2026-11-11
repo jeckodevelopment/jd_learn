@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main 0.41.68-dev include le PR #221–#223; la PR [#224](https://github.com/jeckodevelopment/jd_learn/pull/224) aggiunge ricerca per titolo/ID nelle associazioni e prepara la 0.41.69-dev. Pacchetto candidato `dist/pkg_jlms-0.41.69-dev.zip`, SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`. Avanzamento 77%; collaudo manuale Joomla AC-20/AC-48 pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.69-dev** integra la PR [#224](https://github.com/jeckodevelopment/jd_learn/pull/224) per la ricerca nei selettori multilingua (CORE-07), oltre alle PR #221–#223. Pacchetto installabile [JD-Learn-0.41.69-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43057819152/artifacts/13872631084), SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`. Avanzamento implementativo **77%** (92% integrazioni Joomla; media 536/7 = 76,57%). CI: controlli documentali e stack PHP 8.3/MySQL + PHP 8.4/MariaDB superati; Chromium è ancora bloccato nell’installazione del runtime. Accettazione manuale AC-20/AC-48 pendente.
 
 
 

@@ -12,9 +12,9 @@
 6. Con un utente senza permesso di modifica o con un corso in checkout da un altro operatore, verifica che una richiesta diretta non possa modificare o staccare il gruppo.
 7. Apri la pagina pubblica e verifica che la Language Switcher mostri soltanto traduzioni pubblicate e accessibili; una traduzione non accessibile non deve essere rivelata.
 
-## IMP-07 — Ricerca nei selettori delle traduzioni (CORE-07, 0.41.69-dev; [PR #224](https://github.com/jeckodevelopment/jd_learn/pull/224) aperta)
+## IMP-07 — Ricerca nei selettori delle traduzioni (CORE-07, 0.41.69-dev; [PR #224](https://github.com/jeckodevelopment/jd_learn/pull/224) integrata)
 
-**Stato:** il campo di ricerca filtra localmente i corsi già autorizzati nel selettore per lingua, per titolo o ID. Limite massimo invariato: 2.000 candidati per lingua. La convalida server resta indipendente. Accettazione Joomla manuale da eseguire.
+**Stato:** PR #224 integrata in main 0.41.69-dev. Il campo filtra localmente i corsi autorizzati per titolo o ID; limite: 2.000 candidati per lingua. La convalida server è indipendente. Pacchetto [JD-Learn-0.41.69-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43057819152/artifacts/13872631084) (SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`). CI [#43057819152](https://github.com/jeckodevelopment/jd_learn/actions/runs/43057819152): controlli documentali e suite PHP 8.3/MySQL e PHP 8.4/MariaDB superati; job Chromium bloccato nell’installazione del runtime. Accettazione Joomla manuale ancora da eseguire.
 
 **Comportamenti da testare in Joomla**
 
