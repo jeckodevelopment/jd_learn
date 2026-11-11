@@ -1,0 +1,158 @@
+name: Publish JD Learn release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Stable semantic version, e.g. 1.0.0
+        required: true
+        default: '1.0.0'
+        type: string
+      channel:
+        description: Distribution channel
+        required: true
+        default: stable
+        type: choice
+        options: [stable, prerelease]
+      release_notes:
+        description: Release notes
+        required: true
+        default: Prima versione stabile di JD Learn
+        type: string
+      publish:
+        description: Publish to GitHub Releases and production update site (requires approval)
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: jd-learn-stable-release
+  cancel-in-progress: false
+jobs:
+  prepare:
+    name: Validate and build candidate (no publication)
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      asset: ${{ steps.meta.outputs.asset }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate input and source integrity
+        env:
+          VERSION: ${{ inputs.version }}
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          python3 - <<'PY'
+          import os,re,subprocess
+          version=os.environ['VERSION']
+          assert re.fullmatch(r'[1-9]\d*\.\d+\.\d+',version), 'Stable version X.Y.Z required'
+          assert os.environ['CHANNEL'] in ('stable','prerelease')
+          PY
+      - name: Build immutable stable candidate
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          python3 tools/build.py --release-version "$VERSION"
+          python3 tools/release_feed.py --version "$VERSION" \
+            --zip "dist/pkg_jlms-$VERSION.zip" \
+            --url "https://github.com/jeckodevelopment/jd_learn/releases/download/v$VERSION/pkg_jlms-$VERSION.zip" \
+            --output dist/jdlearn.xml
+          sha256sum "dist/pkg_jlms-$VERSION.zip" > dist/RELEASE_SHA256SUMS.txt
+          python3 -m compileall -q tools/release_feed.py tools/publish_update_feed.py
+      - name: Upload candidate for review (not a public release)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: jd-learn-release-candidate-${{ inputs.version }}
+          path: |
+            dist/pkg_jlms-${{ inputs.version }}.zip
+            dist/RELEASE_SHA256SUMS.txt
+            dist/jdlearn.xml
+          if-no-files-found: error
+          retention-days: 14
+  publish:
+    name: Protected release and production feed update
+    needs: prepare
+    if: inputs.publish == true && inputs.channel == 'stable'
+    environment: jdlearn-release-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Download verified candidate
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: jd-learn-release-candidate-${{ inputs.version }}
+          path: dist
+      - name: Verify candidate and forbid duplicate release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          sha256sum -c dist/RELEASE_SHA256SUMS.txt
+          python3 - <<'PY'
+          import os,zipfile,xml.etree.ElementTree as E
+          version=os.environ['VERSION']
+          with zipfile.ZipFile(f'dist/pkg_jlms-{version}.zip') as z:
+              assert z.testzip() is None
+              assert E.fromstring(z.read('pkg_jlms.xml')).findtext('version')==version
+          assert E.parse('dist/jdlearn.xml').findtext('./update/version')==version
+          PY
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists; refusing to overwrite" >&2
+            exit 1
+          fi
+      - name: Publish immutable GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          NOTES: ${{ inputs.release_notes }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release create "v$VERSION" "dist/pkg_jlms-$VERSION.zip" dist/RELEASE_SHA256SUMS.txt \
+            --target "$GITHUB_SHA" --title "JD Learn $VERSION" --notes "$NOTES"
+      - name: Verify public ZIP URL before promoting update feed
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          python3 - <<'PY'
+          import os,urllib.request,hashlib
+          v=os.environ['VERSION']
+          url=f'https://github.com/jeckodevelopment/jd_learn/releases/download/v{v}/pkg_jlms-{v}.zip'
+          with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'JD-Learn-release-verification'}),timeout=60) as r:
+              assert r.status==200
+              data=r.read()
+          local=open(f'dist/pkg_jlms-{v}.zip','rb').read()
+          assert hashlib.sha256(data).digest()==hashlib.sha256(local).digest(), 'public release asset checksum mismatch'
+          PY
+      - name: Publish feed atomically using SFTP
+        env:
+          JDLEARN_SFTP_HOST: ${{ secrets.JDLEARN_SFTP_HOST }}
+          JDLEARN_SFTP_USER: ${{ secrets.JDLEARN_SFTP_USER }}
+          JDLEARN_SFTP_PORT: ${{ secrets.JDLEARN_SFTP_PORT }}
+          JDLEARN_SFTP_DIRECTORY: ${{ secrets.JDLEARN_SFTP_DIRECTORY }}
+          JDLEARN_SFTP_PRIVATE_KEY: ${{ secrets.JDLEARN_SFTP_PRIVATE_KEY }}
+          JDLEARN_SFTP_KNOWN_HOSTS: ${{ secrets.JDLEARN_SFTP_KNOWN_HOSTS }}
+          JDLEARN_FEED_FILE: dist/jdlearn.xml
+        run: |
+          python3 -m pip install --user 'paramiko==3.5.1'
+          python3 tools/publish_update_feed.py
+      - name: Verify production update feed is readable
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          python3 - <<'PY'
+          import os,urllib.request,xml.etree.ElementTree as E
+          url='https://www.jeckodevelopment.com/updates/jdlearn.xml'
+          with urllib.request.urlopen(url+'?verify='+os.environ['VERSION'],timeout=30) as r:
+              assert r.status==200
+              root=E.fromstring(r.read())
+          assert root.findtext('./update/version')==os.environ['VERSION']
+          PY

@@ -117,3 +117,12 @@ PR [#215](https://github.com/jeckodevelopment/jd_learn/pull/215) completa la pro
 **IMP-10 / gate specifico Update System:** sul sito di prova installare il package precedente, creare dati reali, verificare che Joomla rilevi una release stabile più recente da un feed HTTPS, aggiorni l'**intero** package (compresi i plugin) e preservi dati/configurazioni/progressi. Verificare inoltre casi 404/feed invalido/ZIP mancante/versione incompatibile, rollback da backup, checksum, nessuna esposizione di `-dev` e compatibilità stack Joomla supportati. Registrare le evidenze in `QA_TESTBOOK.md` e `IMPLEMENTATION_EVIDENCE.json` senza anticipare l'esito del collaudo manuale.
 
 **Condizione aggiuntiva del gate 1.0.0:** endpoint produttivo realmente accessibile, asset di release scaricabile e corrispondente al feed, configurazione update site installata automaticamente e aggiornamento Joomla end-to-end superato. Documentare procedura per nuove release, mantenimento degli asset e recupero da aggiornamento fallito. Le percentuali di avanzamento non aumentano per la sola approvazione di questa specifica.
+
+
+### IMP-09 — Pipeline di rilascio automatizzata (preparazione tecnica)
+
+- Implementata la procedura manuale `.github/workflows/release.yml` con parametro versione, canale, note e flag `publish`, **disabilitato per default**: la preparazione del pacchetto e del feed non pubblica la 1.0.0.
+- `tools/build.py --release-version` produce il package ZIP stabile senza cambiare il manifest sorgente; `tools/release_feed.py` genera e verifica il feed XML Joomla con URL GitHub Release e SHA-256; `tools/publish_update_feed.py` esegue trasferimento SFTP con chiave host verificata e sostituzione atomica.
+- L'update site ufficiale è dichiarato nel manifest di `pkg_jlms`; la configurazione produttiva di SFTP e l'effettivo endpoint HTTPS **restano da predisporre e collaudare**. Istruzioni: [RELEASE_PROCEDURE.md](RELEASE_PROCEDURE.md).
+- La procedura di publish reale richiede conferma e protezioni GitHub Environment `jdlearn-release-production`; non eseguire fino al gate IMP-10, con CI completa, prove Joomla e verifica recovery. Il workflow di preparazione non prova da solo la disponibilità produttiva del feed.
+- Requisiti interessati: CORE-22, JOO-01/03, SECDEV-08, REL-01–03, PBASE-04; criteri US-01–06. Lo stato dei requisiti resta **Parziale** finché l'aggiornamento end-to-end e l'hosting non saranno verificati. La percentuale globale non va aumentata automaticamente per il solo workflow.
