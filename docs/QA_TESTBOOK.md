@@ -1,6 +1,6 @@
 ## IMP-05 — configurazione Cloudflare Stream solo API (0.41.73-dev)
 
-**Stato:** pronto per la verifica automatica via PR; accettazione manuale Joomla da eseguire dopo il merge.
+**Stato:** PR [#228](https://github.com/jeckodevelopment/jd_learn/pull/228) integrata in `0.41.73-dev` (merge `d677924aca265f3397be156f7298d614bad330f3`). CI 4/4 nel [run 43091365354](https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354); pacchetto [JD-Learn-0.41.73-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492), SHA ZIP `b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172`. Accettazione manuale Joomla con account Cloudflare reale ancora da eseguire.
 
 **Comportamenti da testare in Joomla**
 
