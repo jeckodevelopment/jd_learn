@@ -173,5 +173,20 @@ foreach(['en-GB'=>$en,'it-IT'=>$it] as $tag=>$categoryId){
     }
 }
 catExpect(count($menus)===4,'native category and category-index menus in both languages');
+// Explicit dependency review and atomic recategorisation preserve the teaching version.
+$moveSource=$saveCategory(['title'=>'Reassignment source','alias'=>'reassignment-source','language'=>'en-GB']);
+$moveTarget=$saveCategory(['title'=>'Reassignment destination','alias'=>'reassignment-destination','language'=>'en-GB']);
+$moveChild=$saveCategory(['title'=>'Reassignment child','alias'=>'reassignment-child','parent_id'=>$moveSource,'language'=>'en-GB']);
+$db->setQuery('UPDATE #__jlms_courses SET catid='.(int)$moveSource.' WHERE id='.(int)$course)->execute();
+$versionBefore=(int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$course)->loadResult();
+$reassignment=$component->getCategoryReassignmentService();
+$inspection=$reassignment->inspect($actor,$moveSource);
+catExpect($inspection['references']['courses']===1 && $inspection['targets']['courses']!==[],'category dependency review counts courses and offers permitted sibling destinations');
+catExpect(!in_array($moveChild,array_map(static fn($target)=>(int)$target->id,$inspection['targets']['courses']),true),'descendant categories are excluded as relocation targets');
+$descendantRejected=false;try{$reassignment->reassign($actor,$moveSource,['courses'=>$moveChild]);}catch(\InvalidArgumentException){$descendantRejected=true;}
+catExpect($descendantRejected,'server rejects a manually submitted descendant destination');
+$reassignment->reassign($actor,$moveSource,['courses'=>$moveTarget]);
+catExpect((int)$db->setQuery('SELECT catid FROM #__jlms_courses WHERE id='.(int)$course)->loadResult()===$moveTarget,'explicit reassignment changes the course category');
+catExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$course)->loadResult()===$versionBefore,'category reassignment keeps the active teaching version');
 file_put_contents($fixturePath,json_encode(compact('en','it','child','hidden','unpublished','wrongLanguage','grandchild','otherSection','course','italianCourse','hiddenCourse','menus')+['description'=>$description($en)],JSON_THROW_ON_ERROR));
 echo json_encode(['native_category_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;

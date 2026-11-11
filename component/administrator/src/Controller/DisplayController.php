@@ -14,7 +14,7 @@ final class DisplayController extends BaseController
     public function display($cachable = false, $urlparams = [])
     {
         $view = $this->input->getCmd('view', 'dashboard');
-        if (!in_array($view, ['dashboard', 'courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'materials', 'questionbank', 'question', 'quiz', 'quiztime', 'quizreview', 'quizextend', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'teachers', 'teacher', 'pathways', 'pathway'], true)) {
+        if (!in_array($view, ['dashboard', 'courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'materials', 'questionbank', 'question', 'quiz', 'quiztime', 'quizreview', 'quizextend', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'teachers', 'teacher', 'pathways', 'pathway', 'categoryreassignment'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::display(false, $urlparams);

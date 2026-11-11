@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" method="upgrade">
- <name>COM_JLMS</name><author>Jecko Development</author><version>0.41.69</version>
+ <name>COM_JLMS</name><author>Jecko Development</author><version>0.41.70</version>
  <description>COM_JLMS_XML_DESCRIPTION</description><namespace path="src">Jlms\Component\Jlms</namespace>
  <scriptfile>script.php</scriptfile>
  <files folder="site"><folder>forms</folder><folder>src</folder><folder>tmpl</folder><folder>language</folder></files>
@@ -12,6 +12,7 @@
    <menu link="option=com_jlms&amp;view=courses">COM_JLMS_COURSES</menu>
    <menu link="option=com_jlms&amp;view=pathways">COM_JLMS_PATHWAYS</menu>
    <menu link="option=com_categories&amp;view=categories&amp;extension=com_jlms.course">COM_JLMS_COURSE_CATEGORIES</menu>
+   <menu link="option=com_jlms&amp;view=categoryreassignment">COM_JLMS_CATEGORY_REASSIGN_TITLE</menu>
    <menu link="option=com_jlms&amp;view=questionbank">COM_JLMS_QUESTION_BANK</menu>
    <menu link="option=com_jlms&amp;view=teachers">COM_JLMS_TEACHERS</menu>
    <menu link="option=com_fields&amp;view=fields&amp;context=com_jlms.course">COM_JLMS_CUSTOM_FIELDS</menu>

@@ -1,3 +1,8 @@
+Aggiornato all’11 novembre 2026. Build candidata **0.41.70-dev** per la PR #225, basata su main 0.41.69-dev. Pacchetto installabile di verifica locale: `dist/pkg_jlms-0.41.70-dev.zip`; artifact CI da collegare dopo l’esecuzione. La PR aggiunge ricollocazione transazionale delle dipendenze categoria; collaudo Joomla pendente.
+
+
+La PR #225 aggiunge **Gestione dipendenze categorie** nel backend: conteggio per sezione e ricollocazione esplicita di corsi, percorsi, docenti e domande verso categorie modificabili dello stesso tipo. Le modifiche al solo `catid` sono atomiche e lasciano invariati record/storici; i corsi ricollocati sono reindicizzati quando Smart Search è attivo. Le FK introdotte dalla PR #215 continuano a impedire eliminazioni premature. Collaudo Joomla da eseguire secondo `docs/QA_TESTBOOK.md`; requisiti: CAT-01, CORE-01, LIFE-02.
+
 Aggiornato all’11 novembre 2026. Main **0.41.69-dev** integra la PR [#224](https://github.com/jeckodevelopment/jd_learn/pull/224) per la ricerca nei selettori multilingua (CORE-07), oltre alle PR #221–#223. Pacchetto installabile [JD-Learn-0.41.69-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43057819152/artifacts/13872631084), SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`. Avanzamento implementativo **77%** (92% integrazioni Joomla; media 536/7 = 76,57%). CI: controlli documentali e stack PHP 8.3/MySQL + PHP 8.4/MariaDB superati; Chromium è ancora bloccato nell’installazione del runtime. Accettazione manuale AC-20/AC-48 pendente.
 
 Il piano ha due blocchi in quest’ordine:

@@ -1,4 +1,5 @@
-Aggiornato all’11 novembre 2026. Main **0.41.69-dev** integra la PR [#224](https://github.com/jeckodevelopment/jd_learn/pull/224) per la ricerca nei selettori multilingua (CORE-07), oltre alle PR #221–#223. Pacchetto installabile [JD-Learn-0.41.69-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43057819152/artifacts/13872631084), SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`. Avanzamento implementativo **77%** (92% integrazioni Joomla; media 536/7 = 76,57%). CI: controlli documentali e stack PHP 8.3/MySQL + PHP 8.4/MariaDB superati; Chromium è ancora bloccato nell’installazione del runtime. Accettazione manuale AC-20/AC-48 pendente.
+Aggiornato all’11 novembre 2026. Build candidata **0.41.70-dev** per la PR #225, basata su main 0.41.69-dev. Pacchetto installabile di verifica locale: `dist/pkg_jlms-0.41.70-dev.zip`; artifact CI da collegare dopo l’esecuzione. La PR aggiunge ricollocazione transazionale delle dipendenze categoria; collaudo Joomla pendente.
+
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -18,14 +19,14 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima seguente descrive la build candidata 0.41.69-dev e mantiene la consegna degli allegati tramite PHP, senza configurazioni specifiche del web server: include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias, filtri tag/difficoltà/durata/docente/percorso, vista elenco e protezione lifecycle categorie (PR #215), oltre al riuso degli asset materiali tra ambiti della stessa bozza (IMP-06, PR #217). I collaudi Joomla restano separati.
+La stima seguente descrive la build candidata 0.41.70-dev e mantiene la consegna degli allegati tramite PHP, senza configurazioni specifiche del web server: include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias, filtri tag/difficoltà/durata/docente/percorso, vista elenco e protezione lifecycle e ricollocazione guidata delle dipendenze categoria (PR #215 e PR #225), oltre al riuso degli asset materiali tra ambiti della stessa bozza (IMP-06, PR #217). I collaudi Joomla restano separati.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
-| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04, CORE-09) | 77% |
+| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04, CORE-09) | 81% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 89% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
@@ -33,9 +34,9 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **77%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (536/7 = 76,57%, arrotondato al 77%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (540/7 = 77,14%, arrotondato al 77%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-07 comprende PR #204, #206–#213 e #215. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la PR #221 corregge la #219 e ripristina il trasferimento PHP degli allegati, compatibile con Apache/LiteSpeed. M04 stimata 89%; CORE-09 integrato dalla PR #222; CORE-07: associazioni dei corsi pubblicati implementate dalla PR #223 e ricerca selector in corso nella #224, portando le integrazioni Joomla al 92%; avanzamento complessivo 77%. Accettazione Joomla di materiali, lifecycle categorie, CAT-01 e SEO/Finder ancora pendente.
+IMP-07 comprende PR #204, #206–#213, #215 e #222–#225. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; la PR #225 aggiunge il riepilogo e la ricollocazione atomica dei riferimenti per corsi, percorsi, docenti e domande, preservando gli storici; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la PR #221 corregge la #219 e ripristina il trasferimento PHP degli allegati, compatibile con Apache/LiteSpeed. M04 stimata 89%; catalogo al 81%; CORE-09 integrato dalla PR #222; CORE-07: associazioni dei corsi pubblicati implementate dalla PR #223 e ricerca selector in corso nella #224, portando le integrazioni Joomla al 92%; avanzamento complessivo 77%. Accettazione Joomla di materiali, lifecycle/ricollocazione categorie, CAT-01 e SEO/Finder ancora pendente.
 
 ## Funzioni presenti e lavoro residuo
 
