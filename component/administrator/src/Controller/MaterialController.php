@@ -67,7 +67,6 @@ final class MaterialController extends BaseController
             $code = in_array($error->getCode(), [400, 401, 403, 404, 409, 413, 416, 422, 503], true) ? $error->getCode() : 400;
             throw new \RuntimeException(Text::_($error->getMessage()), $code);
         }
-        if (getenv('JLMS_TEST_DISPOSABLE') === '1') { error_log('JD Learn disposable material diagnostic: ' . $error::class . ': ' . $error->getMessage()); }
         Log::add('Material mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
         throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
     }

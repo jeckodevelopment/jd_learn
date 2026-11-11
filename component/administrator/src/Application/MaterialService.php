@@ -199,10 +199,11 @@ final class MaterialService
             if ($lessonId > 0 && (int) $this->row('lessons', $lessonId)->course_version_id !== $versionId) {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
+            $sourceAssetId = (int) $source->asset_id;
             $duplicate = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')
                 ->where('course_version_id = :version')->where('asset_id = :asset')
                 ->where('lesson_id ' . ($lessonId ? '= :lesson' : 'IS NULL'))
-                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':asset', (int) $source->asset_id, ParameterType::INTEGER);
+                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':asset', $sourceAssetId, ParameterType::INTEGER);
             if ($lessonId) { $duplicate->bind(':lesson', $lessonId, ParameterType::INTEGER); }
             if ((int) $this->db->setQuery($duplicate)->loadResult() > 0) {
                 throw new \RuntimeException('COM_JLMS_MATERIAL_ALREADY_LINKED', 409);
