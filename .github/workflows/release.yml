@@ -18,6 +18,11 @@ on:
         required: true
         default: Prima versione stabile di JD Learn
         type: string
+      confirmation:
+        description: To publish, type exactly PUBLISH JD LEARN 1.0.0 (replace version)
+        required: false
+        default: ''
+        type: string
       publish:
         description: Publish to GitHub Releases and production update site (requires approval)
         required: true
@@ -62,6 +67,7 @@ jobs:
             --output dist/jdlearn.xml
           sha256sum "dist/pkg_jlms-$VERSION.zip" > dist/RELEASE_SHA256SUMS.txt
           python3 -m compileall -q tools/release_feed.py tools/publish_update_feed.py
+          python3 tests/release-workflow.py
       - name: Upload candidate for review (not a public release)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -85,6 +91,14 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
+      - name: Verify explicit publication authorization
+        env:
+          VERSION: ${{ inputs.version }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+          ENABLED: ${{ secrets.JDLEARN_RELEASE_ENABLED }}
+        run: |
+          test "$ENABLED" = "YES" || { echo "Production release is not enabled by environment secret" >&2; exit 1; }
+          test "$CONFIRMATION" = "PUBLISH JD LEARN $VERSION" || { echo "Explicit release confirmation is missing" >&2; exit 1; }
       - name: Download verified candidate
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
