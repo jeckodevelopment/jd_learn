@@ -1,8 +1,8 @@
 {
   "date": "2026-11-11",
-  "baseline_commit": "5b7e7460dfa637b2847d6231f337b830950887df",
-  "runtime_tested_head": "57d4de3d5c412c9ea65d8cffde4e5170609f6f6c",
-  "ci_run": 43106823340,
+  "baseline_commit": "dbd277605a7eebd18d5d16515853a5f61a40d3f0",
+  "runtime_tested_head": "20278996a3d704c205f40a73fbfe023a866258de",
+  "ci_run": 43110571231,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -25,9 +25,9 @@
   },
   "implementation_progress": {
     "percent": 78,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #233 porta M04 al 94%; stima 545/7 = 77,86%, arrotondata al 78%. L’accettazione manuale Joomla resta pendente e separata.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; IMP-03 esteso dalla PR #235/0.41.77-dev; stima 546/7 = 78,00%, arrotondata al 78%. L’accettazione manuale Joomla resta pendente e separata.",
     "areas": [
-      76,
+      77,
       81,
       77,
       94,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #233 corregge la pubblicazione delle anteprime esplicite degli allegati corso introdotte dalla PR #230: gli allegati corso pronti e validi sono pubblicabili, mentre le anteprime degli allegati lezione restano rifiutate. CI standard 4/4 nel run 43106823340. Il pacchetto 0.41.76-dev corrisponde al commit integrato 5b7e7460dfa637b2847d6231f337b830950887df. Accettazione manuale Joomla pendente."
+  "note": "PR #235 (IMP-03) mostra e consegna in modo protetto gli allegati dell’ambito corso anche durante le lezioni testo/video; i materiali di lezione restano limitati ai contesti Documento/Audio. CI standard 4/4 run 43110571231. Pacchetto 0.41.77-dev, merge dbd277605a7eebd18d5d16515853a5f61a40d3f0, hash interno 22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1, wrapper ZIP (estrazione singola) fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f. Accettazione manuale Joomla pendente."
 }

@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.76-dev** integra le PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) e [#233](https://github.com/jeckodevelopment/jd_learn/pull/233). La candidata **0.41.77-dev** completa un residuo IMP-03 mostrando i materiali corso disponibili nelle lezioni di testo/video in anteprima senza effetti sul progresso. Avanzamento 78%; accettazione Joomla manuale e residui indicati qui sotto restano aperti.
+Aggiornato all’11 novembre 2026. Main **0.41.77-dev** integra la PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) e completa il residuo IMP-03 dei materiali corso in anteprima per le lezioni testo/video. CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231); accettazione manuale Joomla e residui indicati qui sotto restano aperti. Avanzamento 78%; accettazione Joomla manuale e residui indicati qui sotto restano aperti.
 
 
 

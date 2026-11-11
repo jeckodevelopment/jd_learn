@@ -457,6 +457,8 @@ Requisiti: AUT-02, AUT-03, STU-02, SCR-06–08; AC-20, AC-80, AC-86, AC-119–12
 6. Preparare un allegato corso privato pronto, un campione marcato come anteprima pubblica, un file futuro e una lezione di testo e una video. Aprire entrambe le lezioni nell'anteprima editoriale: il solo allegato corso disponibile per gli iscritti deve apparire in ciascuna vista; il campione pubblico e il file futuro non devono comparire. Usare il collegamento del materiale e verificare che il download protetto riesca; alterare corso/versione/lezione/allegato e verificare che non venga restituito un file.
 7. Confrontare iscrizioni, tentativi e progressi prima e dopo l'apertura e il download: devono restare invariati.
 
+**Stato build:** PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) integrata nel commit `dbd277605a7eebd18d5d16515853a5f61a40d3f0`; CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231). Pacchetto [JD-Learn-0.41.77-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810), ZIP interno SHA-256 `22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1`, wrapper SHA-256 `fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f`, scadenza 25 novembre 2026.
+
 **Esito sito Joomla per 0.41.77-dev:** Non eseguito.
 
 **Esito sito Joomla:** Non eseguito.
