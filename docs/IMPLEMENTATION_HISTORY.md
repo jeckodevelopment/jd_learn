@@ -1,6 +1,6 @@
 ## 0.41.79-dev — STAB-04, label compatta dei campi lezione (PR #241)
 
-La [PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241), milestone 1.0.0, accorcia la label del collegamento a `com_fields` per il contesto `com_jlms.lesson`: “Campi aggiuntivi” / “Lesson fields”. ACL e destinazione restano invariate. Accettazione toolbar Joomla e verifica accessibilità/resa ancora da eseguire; nessun avanzamento percentuale attribuito.
+La [PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241), milestone 1.0.0, accorcia la label del collegamento a `com_fields` per il contesto `com_jlms.lesson`: “Campi aggiuntivi” / “Lesson fields”. ACL e destinazione restano invariate. Integrata nel commit `adc3bf5c205590c351ead14c4a086f62235b7078`; CI standard 4/4 nel [run 43116473760](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760). Pacchetto [JD-Learn-0.41.79-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760/artifacts/13899451043), SHA-256 `4c54233651a85f33594fcde84d32f7f31d51bcc82d03f63fead3e189fa270843`, wrapper `a33d99e3742305adfe0964f8e878b8804092d4bf3caa7e125f91d5bfeef02eaa`. Accettazione Joomla e verifica accessibilità/resa ancora da eseguire; avanzamento resta 78%.
 
 ## 0.41.78-dev — STAB-01, traduzione del menu Percorsi (PR #238)
 

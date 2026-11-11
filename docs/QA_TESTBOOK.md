@@ -580,13 +580,15 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 3. Prova guest, utente senza iscrizione, revoca del livello e sospensione dell’iscrizione: nessuno deve ricevere byte dopo il diniego. Verifica GET/HEAD, byte-range, Range non valido e intestazioni private/no-store.
 4. Su un sito aggiornato con vecchio valore `x_accel`, verifica che l’anteprima e la fruizione continuino tramite PHP protetto e che non venga emesso `X-Accel-Redirect`.
 5. Disabilita la consegna e verifica che pubblicazione/streaming siano bloccati. Registra versione Joomla/PHP, web server e dimensione file.
-## STAB-04 — label compatta per i campi lezione (0.41.79-dev, PR #241)
+## STAB-04 — label compatta per i campi lezione (0.41.79-dev, PR #241 integrata)
+
+**Stato:** PR [#241](https://github.com/jeckodevelopment/jd_learn/pull/241) integrata; CI 4/4 nel [run 43116473760](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760). Pacchetto [JD-Learn-0.41.79-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760/artifacts/13899451043), SHA-256 interno `4c54233651a85f33594fcde84d32f7f31d51bcc82d03f63fead3e189fa270843`, wrapper `a33d99e3742305adfe0964f8e878b8804092d4bf3caa7e125f91d5bfeef02eaa` (estrarre una volta; scade il 25 novembre 2026). Accettazione Joomla pendente.
 
 **Issue:** [#173](https://github.com/jeckodevelopment/jd_learn/issues/173). La label lunga è sostituita con “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, sia nel catalogo componente sia in quello di sistema. Il link resta associato al contesto Joomla `com_jlms.lesson` e mantiene i controlli ACL.
 
 **Comportamenti da testare in Joomla**
 
-1. Installa il candidato 0.41.79-dev su un sito Joomla di prova. Apri JD Learn → Programma e verifica che il comando toolbar mostri “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, senza taglio o sovrapposizione a desktop e mobile.
+1. Installa il pacchetto 0.41.79-dev su un sito Joomla di prova. Apri JD Learn → Programma e verifica che il comando toolbar mostri “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, senza taglio o sovrapposizione a desktop e mobile.
 2. Attiva il comando e verifica che apra **Campi aggiuntivi** filtrati per il contesto `com_jlms.lesson`.
 3. Accedi con un utente senza `core.manage` su `com_fields`: il collegamento non deve apparire; un URL diretto non deve concedere accesso.
 4. Verifica tastiera: il comando ha nome accessibile coerente con la label, riceve focus visibile e si attiva con Invio/Spazio.
