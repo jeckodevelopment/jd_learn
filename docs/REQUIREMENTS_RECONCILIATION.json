@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 76,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; la PR candidata #222 implementa CORE-09 (tag Joomla nativi per i corsi), catalogo dal 75% al 77%; 535/7 = 76,43%, arrotondato al 76%. L’accettazione manuale resta pendente.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; la PR #222 integrata implementa CORE-09 (tag Joomla nativi per i corsi), catalogo dal 75% al 77%; 535/7 = 76,43%, arrotondato al 76%. L’accettazione manuale resta pendente.",
     "areas": [
       76,
       77,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 candidata aggiunge tag nativi Joomla ai corsi; CI candidata ancora in correzione e collaudo Joomla manuale pendente."
+  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 integrata aggiunge i tag Joomla nativi ai corsi. Nell’esecuzione CI PR #222, validazione documentale e suite PHP 8.4/MariaDB + PHP 8.3/MySQL sono passate; il job browser è rimasto in installazione del runtime. Collaudo Joomla manuale AC-19/AC-64 pendente."
 }
