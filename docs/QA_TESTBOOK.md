@@ -1,6 +1,6 @@
 ## IMP-07 — Associazioni multilingua dei corsi pubblicati (CORE-07, 0.41.68-dev; PR #223 integrata)
 
-**Stato:** PR [#223](https://github.com/jeckodevelopment/jd_learn/pull/223) integrata nel main per AC-20 e AC-48. Il form nativo può modificare il grafo delle associazioni anche quando i corsi sono pubblicati; le versioni didattiche devono restare immutate. Accettazione Joomla manuale da eseguire.
+**Stato:** PR [#223](https://github.com/jeckodevelopment/jd_learn/pull/223) integrata nel main per AC-20 e AC-48. Il form nativo può modificare il grafo delle associazioni anche quando i corsi sono pubblicati; le versioni didattiche devono restare immutate. Pacchetto installabile `dist/pkg_jlms-0.41.68-dev.zip` (SHA-256 `ed115844d2de2925f8a087a3a8cdbed646e870bfd529ca31eb3b2dfd1f97a7c0`). Accettazione Joomla manuale da eseguire.
 
 **Comportamenti da testare in Joomla**
 
