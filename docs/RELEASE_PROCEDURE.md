@@ -53,3 +53,21 @@ L'account FTP secondario dell'hosting non consente autenticazione SSH. In FileZi
 3. Verificare che il certificato FTPS presentato dall'host configurato sia valido per quel **nome host**. Se FileZilla chiede eccezioni o mostra un certificato non valido, non disabilitare la verifica nel workflow: utilizzare un hostname fornito dal provider con certificato corretto.
 4. Testare prima `publish=false`: crea soltanto un candidato e non tenta connessioni FTP. Una vera prova della connessione va effettuata in modo controllato **senza pubblicare la 1.0.0**, verificando preliminarmente autenticazione FTPS, accesso alla directory, caricamento e rename di file di test, privilegi e comportamento sul rename in presenza di file esistente.
 5. Il feed XML della 1.0.0 non va pubblicato finché le verifiche IMP-10 e l'autorizzazione al rilascio non sono completate.
+
+
+## Verifica di connessione FTPS non distruttiva (pre-release, IMP-09)
+
+Prima di autorizzare la prima release, aprire **Actions → Check JD Learn FTPS access (safe) → Run workflow**, scegliendo la branch `main`. Il job usa i secret già configurati nell'Environment protetto `jdlearn-release-production` e **non** usa `JDLEARN_RELEASE_ENABLED`.
+
+Questa prova:
+- stabilisce una connessione FTP **esplicita** con verifica completa del certificato TLS/hostname, effettua `AUTH TLS` prima del login e richiede `PROT P` per le connessioni dati;
+- accede a `JDLEARN_FTPS_DIRECTORY` (il valore `/` è corretto per un account confinato alla directory web `updates`);
+- crea due file temporanei con nomi casuali `.jdlearn-ftps-probe-*`, rilegge i contenuti, prova a **rinominare sopra un altro file temporaneo già esistente**, verifica il contenuto sostituito e pulisce i file creati;
+- **non crea o modifica** `jdlearn.xml`, non genera release GitHub, non abilita `publish=true`, non modifica i dati Joomla;
+- segnala esito **KO** se il server nega il rename-overwrite (in quel caso la procedura di pubblicazione resta da adeguare: mai cancellare `jdlearn.xml` per aggirare il problema).
+
+L'esito va registrato con URL della run in `QA_TESTBOOK.md`/evidenze di release prima del gate IMP-10. Un risultato positivo verifica connessione e operazioni sul filesystem, **non** dimostra che l'URL pubblico HTTPS ospiti un feed valido né che Joomla installi un update.
+
+Se il job è bloccato per l'approvazione dell'Environment, approvarlo da GitHub: non equivale ad autorizzare la release stabile. In caso di errore certificato, **non** disabilitare la verifica TLS, ma correggere `JDLEARN_FTPS_HOST` usando il nome host effettivamente coperto dal certificato del provider.
+
+**Condizione operativa:** le credenziali dell'utente FTP dedicato devono consentire scrittura e cancellazione *solo* in `updates`. Il job non deve essere usato prima di aver verificato la corretta segregazione dell'account.
