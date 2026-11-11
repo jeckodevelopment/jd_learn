@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.75-dev** integra la PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) per le anteprime pubbliche esplicite degli allegati corso. La candidata **0.41.76-dev** corregge il blocco alla pubblicazione delle versioni con tali allegati e aggiunge copertura HTTP positiva/negativa. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.76-dev** integra le PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) e [#233](https://github.com/jeckodevelopment/jd_learn/pull/233): anteprime pubbliche esplicite degli allegati corso, pubblicabili solo quando pronte e valide, con copertura HTTP positiva/negativa. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
 
 
 

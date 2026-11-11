@@ -484,9 +484,9 @@ Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/datab
 
 ## IMP-06 — anteprima pubblica esplicita dei materiali corso (0.41.76-dev)
 
-**Aggiornamento candidato 0.41.76-dev:** la pubblicazione della versione deve accettare gli allegati corso esplicitamente selezionati come anteprima, se pronti e validi; allegati lezione con flag preview devono restare rifiutati. La suite HTTP automatica ora copre pubblicazione e accesso pubblico/negato.
+**Aggiornamento PR #233, integrata in 0.41.76-dev:** la pubblicazione della versione deve accettare gli allegati corso esplicitamente selezionati come anteprima, se pronti e validi; allegati lezione con flag preview devono restare rifiutati. La suite HTTP automatica ora copre pubblicazione e accesso pubblico/negato.
 
-**Stato build:** PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) integrata nel commit `a01c096321769903c15212aa2b0c420e95245041`; CI standard 4/4 nel [run 43103266860](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860). Pacchetto [JD-Learn-0.41.75-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551), checksum interno nel registro prove. Accettazione manuale ancora non eseguita.
+**Stato build:** PR [#233](https://github.com/jeckodevelopment/jd_learn/pull/233) integrata nel commit `5b7e7460dfa637b2847d6231f337b830950887df`; CI standard 4/4 nel [run 43106823340](https://github.com/jeckodevelopment/jd_learn/actions/runs/43106823340). Pacchetto [JD-Learn-0.41.76-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43106823340/artifacts/13894937008), ZIP interno 569117 byte, wrapper SHA-256 `2a50af30a6bfa349806c38325c0388771e983d9f56495186736375519e077665`; scadenza 2026-11-25T21:56:46Z. Accettazione manuale ancora non eseguita.
 
 Riferimenti: MAT-02/04/08, AC-100/101/103. Usare Joomla 6 di prova eliminabile, un corso pubblicato visibile agli ospiti, una bozza aggiornabile e un account con permesso di gestione materiali. Preparare due allegati corso (PDF innocuo e TXT), un allegato lezione, un file in quarantena e un file con data futura.
 
