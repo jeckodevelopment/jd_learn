@@ -1,8 +1,8 @@
 {
   "date": "2026-11-11",
-  "baseline_commit": "dbd277605a7eebd18d5d16515853a5f61a40d3f0",
-  "runtime_tested_head": "20278996a3d704c205f40a73fbfe023a866258de",
-  "ci_run": 43110571231,
+  "baseline_commit": "6e7d2cb40f8a641e30b391f046b6e4b1d3b09e33",
+  "runtime_tested_head": "6f580b6f88279be7c4672d6526802c3e69150677",
+  "ci_run": 43113528500,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #235 (IMP-03) mostra e consegna in modo protetto gli allegati dell’ambito corso anche durante le lezioni testo/video; i materiali di lezione restano limitati ai contesti Documento/Audio. CI standard 4/4 run 43110571231. Pacchetto 0.41.77-dev, merge dbd277605a7eebd18d5d16515853a5f61a40d3f0, hash interno 22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1, wrapper ZIP (estrazione singola) fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f. Accettazione manuale Joomla pendente."
+  "note": "PR #238 (STAB-01 / issue #150) integra la traduzione IT/EN della voce Percorsi nel menu di sistema Joomla. CI standard 4/4 run 43113528500. Pacchetto 0.41.78-dev, merge 6e7d2cb40f8a641e30b391f046b6e4b1d3b09e33, hash interno 19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1, wrapper ZIP (estrazione singola) 6a029d5283ef897d62869bc8fb88eaf193eb966bab3d61424a04951cae8c9ec5. Accettazione manuale Joomla pendente; avanzamento implementativo invariato 78%."
 }

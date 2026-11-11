@@ -1,6 +1,6 @@
-Aggiornato all’11 novembre 2026. Main **0.41.77-dev** integra la PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) e completa il residuo IMP-03 dei materiali corso in anteprima per le lezioni testo/video. CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231); accettazione manuale Joomla e residui indicati qui sotto restano aperti. Avanzamento 78%; accettazione Joomla manuale e residui indicati qui sotto restano aperti.
+Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) (IMP-03) e [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) (STAB-01). CI standard 4/4 nel [run 43113528500](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500); accettazione Joomla e residui di rilascio restano aperti. Avanzamento 78%.
 
-STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: il candidato 0.41.78-dev aggiunge la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
+STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: la PR #238 / 0.41.78-dev integra la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
 
 
 

@@ -1,16 +1,16 @@
+## 0.41.78-dev — traduzione del menu Percorsi (STAB-01 / PR #238)
+
+- Aggiunta `COM_JLMS_PATHWAYS` ai cataloghi di sistema IT/EN; il menu amministrativo mostra la voce tradotta invece della chiave grezza. Controllo strutturale dedicato.
+- PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) integrata nel commit `6e7d2cb40f8a641e30b391f046b6e4b1d3b09e33`; CI standard 4/4 nel [run 43113528500](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500).
+- Pacchetto [JD-Learn-0.41.78-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500/artifacts/13897377687), SHA-256 interno `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`, wrapper SHA-256 `6a029d5283ef897d62869bc8fb88eaf193eb966bab3d61424a04951cae8c9ec5` (estrarre il wrapper ZIP una volta; scade il 25 novembre 2026).
+- Collaudo manuale Joomla IT/EN, dashboard, ACL e stato dei quattro provider ancora da registrare nel testbook.
+
 ## 0.41.77-dev — materiali corso nell’anteprima editoriale (IMP-03)
 
 - L’anteprima del corso mostra gli allegati dell’ambito corso anche nelle lezioni di testo e video, come nel contesto di fruizione, mantenendo privati i campioni pubblici e i file non disponibili.
 - Il download passa da un endpoint amministrativo protetto dall’autorizzazione editoriale e dalla relazione corso/versione/lezione; materiali associati a una lezione continuano a comparire solo per lezioni Documento/Audio. Nessun progresso o tentativo viene creato.
 - Collaudo Joomla richiesto sul sito di prova: vedere [IMP-03 nel testbook](docs/QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
 - PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) integrata nel commit `dbd277605a7eebd18d5d16515853a5f61a40d3f0`; CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231). Pacchetto [JD-Learn-0.41.77-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810), SHA-256 interno `22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1`, wrapper ZIP da estrarre una volta, SHA-256 `fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f`; scadenza 25 novembre 2026. Collaudo manuale Joomla pendente.
-
-## 0.41.78-dev — traduzione della voce Percorsi formativi nel menu Joomla (STAB-01)
-
-- Aggiunta la stringa `COM_JLMS_PATHWAYS` ai cataloghi di sistema IT/EN, caricati da Joomla per le voci del menu amministrativo; la voce non mostra più la chiave grezza `JD_COM_JLMS_PATHWAYS`.
-- Il controllo strutturale verifica ora anche la traduzione della voce nei due cataloghi di sistema.
-- Collaudo Joomla: in un sito di prova, usa le lingue amministrative italiano e inglese, apri il menu JD Learn e verifica la voce “Percorsi formativi” / “Learning pathways”; aprila e conferma che porta alla vista Percorsi.
-- Correzione mirata dell’issue [#150](https://github.com/jeckodevelopment/jd_learn/issues/150); nessuna modifica alla gestione o ai permessi dei percorsi.
 
 # Changelog
 
