@@ -38,6 +38,8 @@ Metodo: media semplice delle sette aree incluse nella prima versione stabile rip
 
 IMP-07 comprende PR #204, #206–#213, #215 e #222–#225. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; la PR #225 aggiunge il riepilogo e la ricollocazione atomica dei riferimenti per corsi, percorsi, docenti e domande, preservando gli storici; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la PR #221 corregge la #219 per gli allegati e PR #226 sostituisce l’offload Nginx dei video HTML5 con streaming PHP a blocchi, compatibile con Apache/LiteSpeed; M04 stimata 90%; catalogo al 81%; CORE-09 integrato dalla PR #222; CORE-07: associazioni dei corsi pubblicati implementate dalla PR #223 e ricerca selector integrata dalla #224, portando le integrazioni Joomla al 92%; avanzamento complessivo 77%. Accettazione Joomla di materiali, lifecycle/ricollocazione categorie, CAT-01 e SEO/Finder ancora pendente.
 
+La PR per IMP-05 che allinea la configurazione Cloudflare Stream al solo flusso API è in preparazione su 0.41.73-dev: rimuove dal form i controlli di firma locale non implementati, ignora i parametri legacy e aggiunge una verifica del manifest. Collaudo Joomla reale e account provider restano distinti e pendenti.
+
 ## Funzioni presenti e lavoro residuo
 
 “Disponibile” significa che esiste un flusso operativo con prove parziali. Non significa che l'intero requisito sia accettato. “Da implementare” indica una funzione assente, anche quando ne esistono schema o specifiche.
