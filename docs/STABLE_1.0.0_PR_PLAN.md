@@ -1,6 +1,6 @@
 # Piano delle Pull Request verso JD Learn 1.0.0
 
-Aggiornato all’11 novembre 2026. Main **0.41.66-dev** integra la correzione della PR #219 tramite #221, compatibile con Apache/LiteSpeed. La PR candidata `feat/native-course-tags` (0.41.67-dev) implementa CORE-09 per Tag Joomla nativi sui corsi. CI e merge in attesa; pacchetto candidato da produrre dopo il merge. Avanzamento stimato **76%** (catalogo 77%).
+Aggiornato all’11 novembre 2026. Main **0.41.66-dev** integra la correzione della PR #219 tramite #221, compatibile con Apache/LiteSpeed. La PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) implementa CORE-09 per Tag Joomla nativi sui corsi ed è integrata in 0.41.67-dev. Pacchetto installabile `dist/pkg_jlms-0.41.67-dev.zip`, SHA-256 `637e8284dde13f5b3c89398bac21a1aa862236a07619f978f33130dc8ec07ef6`. Avanzamento stimato **76%** (catalogo 77%).
 
 Il piano ha due blocchi in quest’ordine:
 
@@ -19,7 +19,7 @@ Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di 
 - Tutte le PR implementative e di stabilizzazione appartengono alla milestone `1.0.0`. Credentials è un progetto successivo alla 1.0.0 e mantiene la propria nomenclatura e pianificazione separate.
 
 IMP-05 è integrato: PR [#198] ha aggiunto la pulizia batch limitata delle sessioni video scadute; l’accettazione reale dei quattro provider resta un gate manuale. Nessun quinto provider.
-IMP-07 integra filtri per tag/difficoltà/durata (PR #209/#210), vista griglia/elenco (PR #211) e filtri docente/percorso (PR #213) in main 0.41.62-dev. CORE-09 viene implementato nella PR candidata `feat/native-course-tags`: type alias `com_jlms.course`, content type/mapping UCM e campo Tag nativo nel form corso. I filtri esistenti leggono le associazioni Joomla. Accettazione manuale AC-19/AC-64 ancora aperta. Restano inoltre i collaudi manuali CAT-01 e i residui di lifecycle/associazioni categoria.
+IMP-07 integra filtri per tag/difficoltà/durata (PR #209/#210), vista griglia/elenco (PR #211) e filtri docente/percorso (PR #213) in main 0.41.62-dev. CORE-09 è implementato dalla PR #222: type alias `com_jlms.course`, content type/mapping UCM e campo Tag nativo nel form corso. I filtri esistenti leggono le associazioni Joomla. Accettazione manuale AC-19/AC-64 ancora aperta. Restano inoltre i collaudi manuali CAT-01 e i residui di lifecycle/associazioni categoria.
 
 IMP-06: PR #202 integra la pulizia Scheduler batch degli asset locali orfani dopo 24 ore. PR #217 completa il riuso dei materiali tra ambiti della stessa bozza. PR #219 aveva introdotto consegna Nginx per gli allegati; la PR correttiva #221 la rimuove e ripristina il flusso PHP protetto compatibile con Apache/LiteSpeed. Build 0.41.66-dev: `dist/pkg_jlms-0.41.66-dev.zip`, SHA-256 `214e311d5cee72963b3e9d01ba958dfa52088b781c52052761e4f1d74ffdc4af`. Restano preview/metadati, scansione antivirus reale, conservazione completa e accettazione manuale Joomla.
 
