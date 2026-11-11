@@ -412,7 +412,7 @@ try:
   'jform[enrollment_mode]':'auto','jform[summary]':'Created and first published through native HTTP forms'})
  form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
  course_id=int(form['fields']['jform[id]'])
- expect(course_id>0 and 'id="jlms-course-programme-link"' not in h and 'id="jlms-course-programme-summary"' in h,'Saved draft keeps curriculum summary without a duplicate link')
+ expect(course_id>0 and 'id="jlms-course-programme-link"' not in h and 'task="course.programme"' in h,'Saved draft keeps the curriculum action without a duplicate link')
  expect('joomla-field-media' in h and 'jform[presentation_image]' in h,'Native Media Manager field is available in course editor')
  expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-metadata','jlms-course-calendar','jlms-course-publishing','jlms-course-permissions']),'Native course editor exposes general, presentation, access and publication tabs')
  before=fixture()
