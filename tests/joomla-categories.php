@@ -189,5 +189,7 @@ catExpect($descendantRejected,'server rejects a manually submitted descendant de
 $reassignment->reassign($actor,$moveSource,['courses'=>$moveTarget]);
 catExpect((int)$db->setQuery('SELECT catid FROM #__jlms_courses WHERE id='.(int)$course)->loadResult()===$moveTarget,'explicit reassignment changes the course category');
 catExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$course)->loadResult()===$versionBefore,'category reassignment keeps the active teaching version');
+// Restore the shared course fixture for the following HTTP category-view suite.
+$db->setQuery('UPDATE #__jlms_courses SET catid='.(int)$child.' WHERE id='.(int)$course)->execute();
 file_put_contents($fixturePath,json_encode(compact('en','it','child','hidden','unpublished','wrongLanguage','grandchild','otherSection','course','italianCourse','hiddenCourse','menus')+['description'=>$description($en)],JSON_THROW_ON_ERROR));
 echo json_encode(['native_category_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
