@@ -1,3 +1,15 @@
+## IMP-06 — consegna Nginx interna dei materiali (0.41.65-dev)
+
+**Stato:** candidata all'integrazione nella PR #219. La suite `materials-http.py` include Nginx reale, accesso interno, Range, HEAD e rifiuto della conferma non valida. L'accettazione sul sito di prova resta da eseguire.
+
+**Comportamenti da testare in Joomla**
+
+1. In Opzioni componente, imposta la directory privata già usata dai materiali, disabilita la consegna PHP, abilita la consegna Nginx e configura `material_internal_prefix` con una location Nginx `internal` che usa `alias` verso la stessa directory.
+2. Verifica prima la location diretta: `/jlms-private/<chiave>.blob` deve restituire 404 a ospiti e utenti autenticati. Conferma l'opzione solo dopo aver verificato la configurazione effettiva del server.
+3. Da un corso autorizzato, scarica un allegato e apri un PDF/immagine in anteprima. Verifica byte esatti, MIME e `Content-Disposition`; prova anche una richiesta Range e una HEAD. La risposta deve non esporre l'header `X-Accel-Redirect`.
+4. Revoca l'accesso all'utente e ripeti la richiesta: deve essere negata anche con lo stesso cookie/sessione. Disabilita la conferma o configura un prefisso non valido e verifica errore chiuso, senza fallback PHP o URL pubblico.
+5. Ripeti i controlli con consegna PHP esplicita per assicurare che il percorso precedente resti disponibile.
+
 Warning: truncated output (original token count: 20326)
 Total output lines: 696
 

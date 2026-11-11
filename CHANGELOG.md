@@ -1,3 +1,9 @@
+## 0.41.65-dev — consegna Nginx interna dei materiali (IMP-06)
+
+- Aggiunge l'opzione esplicita Nginx `X-Accel-Redirect` per allegati privati; la configurazione deve essere confermata dall'amministratore dopo aver verificato che la location sia `internal`. Il percorso PHP esistente resta disponibile solo se abilitato.
+- Valida l'identità, lo stato di iscrizione e del materiale, la chiave, la dimensione e l'hash prima di delegare il trasferimento. Range e corpo sono gestiti da Nginx; nessun URL pubblico o fallback automatico.
+- Include prove d'integrazione Joomla/Nginx in `tests/materials-http.py` e istruzioni di configurazione in `docs/MATERIALS.md`. Collaudo manuale Joomla pendente; candidata PR #219, CI in corso.
+
 ## 0.41.64-dev — riuso dei materiali nella bozza (IMP-06)
 
 - La gestione Materiali consente di collegare un asset privato esistente ai materiali del corso o a un’altra lezione della stessa versione in bozza, senza duplicare il file.

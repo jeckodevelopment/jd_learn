@@ -67,7 +67,7 @@ $factory = $component->getMVCFactory();
 $mode = $argv[2] ?? '';
 if ($mode === 'configure') {
     $changes = json_decode($argv[3] ?? '{}', true, 8, JSON_THROW_ON_ERROR);
-    $allowed = ['material_storage_root', 'material_max_mib', 'material_scan_required', 'material_clamd_socket', 'material_php_delivery'];
+    $allowed = ['material_storage_root', 'material_max_mib', 'material_scan_required', 'material_clamd_socket', 'material_php_delivery', 'material_x_accel_enabled', 'material_internal_prefix', 'material_internal_confirmed'];
     if (array_diff(array_keys($changes), $allowed)) { throw new \RuntimeException('Unexpected fixture configuration'); }
     $row = $db->setQuery("SELECT extension_id, params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadObject();
     $row->params = json_encode(array_replace(json_decode($row->params ?: '{}', true), $changes), JSON_THROW_ON_ERROR);

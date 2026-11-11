@@ -175,7 +175,34 @@ try:
  request(student,download,headers={'Range':'bytes=0-2'},expected=403)
  subprocess.run(['php',str(learning_script),str(root),'grant',str(fixture['http_user_id']),str(fixture['group_id'])],check=True,capture_output=True)
  request(student,download)
- _,unchanged,_=request(student,classroom);expect(b'value="0"' in unchanged,'Downloading optional files gives no completion credit')
+ # Optional Nginx offload uses an internal-only location after the same Joomla authorization.
+ prefix='/jdlearn-materials-private/'
+ configure(material_php_delivery=0,material_x_accel_enabled=1,material_internal_prefix=prefix,material_internal_confirmed=1)
+ nginx_config=root.parent/'materials-nginx.conf';nginx_log=open(root.parent/'materials-nginx.log','w+')
+ nginx_config.write_text('worker_processes 1; user root; pid '+str(root.parent/'materials-nginx.pid')+'; error_log stderr; events {worker_connections 64;} http {access_log off; proxy_temp_path '+str(root.parent/'materials-nginx-temp')+'; server { listen 127.0.0.1:8096; location / { proxy_pass http://127.0.0.1:8093; proxy_set_header Host 127.0.0.1:8093; proxy_cache off; } location '+prefix+' { internal; alias '+str(private)+'/; types {} default_type application/octet-stream; add_header Cache-Control \"private, no-store\" always; } } }')
+ nginx=subprocess.Popen(['nginx','-c',str(nginx_config),'-g','daemon off;'],stdout=nginx_log,stderr=nginx_log)
+ try:
+  for _ in range(30):
+   try:request(guest,'http://127.0.0.1:8096'+prefix+first['storage_key'],expected=404);break
+   except OSError:
+    if nginx.poll() is not None:raise RuntimeError('Nginx exited')
+    time.sleep(.1)
+  protected_download='http://127.0.0.1:8096'+download
+  _,part,headers=request(student,protected_download,headers={'Range':'bytes=0-2'},expected=206)
+  expect(part==b'NEW' and headers.get('Content-Range','').startswith('bytes 0-2/') and headers.get('X-Accel-Redirect') is None,'Nginx offload serves authorised byte ranges and hides its internal redirect header')
+  _,body,headers=request(student,protected_download,method='HEAD')
+  expect(body==b'' and int(headers.get('Content-Length'))==len(binary),'Nginx offload supports HEAD without a response body')
+  configure(material_internal_prefix='/../escape/',material_internal_confirmed=1)
+  request(student,protected_download,expected=503)
+  configure(material_internal_prefix=prefix,material_internal_confirmed=0)
+  request(student,protected_download,expected=503)
+ finally:
+  nginx.terminate()
+  try:nginx.wait(timeout=5)
+  except subprocess.TimeoutExpired:nginx.kill();nginx.wait()
+  nginx_log.close()
+ configure(material_php_delivery=1,material_x_accel_enabled=0,material_internal_confirmed=0)
+ _,unchanged,_=request(student,classroom);expect(b'value=\"0\"' in unchanged,'Downloading optional files gives no completion credit')
  # Same-size corruption is detected before returning bytes.
  key=first['storage_key'];original=(private/key).read_bytes();(private/key).write_bytes(b'X'*len(original))
  request(student,download,expected=503);(private/key).write_bytes(original)
