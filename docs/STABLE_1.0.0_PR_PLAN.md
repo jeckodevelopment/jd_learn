@@ -1,6 +1,6 @@
 # Piano delle Pull Request verso JD Learn 1.0.0
 
-Aggiornato al **10 novembre 2026**. Main **0.41.62-dev** integra le PR #204 e #206–#213 per IMP-07; CI 4/4 nel [run 42923290761](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761). Pacchetto [JD-Learn-0.41.62-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761/artifacts/13811584820), wrapper `003c56dd360cd8a7c375c220a9b1a0ce0c57e6669913a693c63ea6781f032cf2`, ZIP Joomla `e26a39a0c63c3ba07a9851b49b701582d3df8a656ac55c634cd1414ff9412728`; scade il 24 novembre 2026. Avanzamento **75%** (524/7). Collaudo Joomla CAT-01 pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.63-dev** integra le PR #204, #206–#213 e #215 per IMP-07; CI standard 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654). Pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241), wrapper `dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0`, ZIP Joomla `938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5`; scade il 25 novembre 2026. Avanzamento **76%** (529/7). Lifecycle categorie implementato; collaudo Joomla pendente.
 
 Il piano ha due blocchi in quest’ordine:
 
@@ -73,7 +73,7 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato al 10 novembre 2026: main è **0.41.62-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206–#213. La CI standard 4/4 è superata nel [run 42923290761](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761). IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03/04 hanno i residui documentati nel testbook; IMP-05/06 sono integrati con collaudi manuali aperti. La stima corrente è **75%** (524/7; area catalogo 70%). IMP-07 ha completato i filtri CAT-01 e il layout catalogo; restano lifecycle/associazioni categorie e presentazione percorsi. Accettazione Joomla di Finder/SEO/SEF e CAT-01 resta pendente.
+Aggiornato all’11 novembre 2026: main è **0.41.63-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206–#215. La CI standard 4/4 è superata nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654). Pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241), wrapper `dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0`, ZIP Joomla `938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5`, scade il 25 novembre 2026. IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03/04 hanno i residui documentati nel testbook; IMP-05/06 sono integrati con collaudi manuali aperti. La stima corrente è **76%** (529/7; area catalogo 75%). IMP-07 integra catalogo, URL/SEO/Finder e protezione lifecycle categorie tramite PR #215; resta l’accettazione Joomla di categorie/associazioni, percorsi e Finder/SEO/SEF.
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #208
 
@@ -96,3 +96,8 @@ La PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196) completa un 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #210
 
 PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) e [#209](https://github.com/jeckodevelopment/jd_learn/pull/209) sono integrate in 0.41.60-dev: filtri pubblici per difficoltà, durata e tag nel catalogo e nelle categorie. La #209 ha CI standard 4/4 nel [run 42918303751](https://github.com/jeckodevelopment/jd_learn/actions/runs/42918303751); accettazione Joomla pendente. La PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integra la vista elenco in 0.41.61-dev; CI standard 4/4. La PR [#213](https://github.com/jeckodevelopment/jd_learn/pull/213) integra filtri docente/percorso in 0.41.62-dev; CI standard 4/4. Avanzamento 75% (524/7; catalogo 70%).
+
+
+## Aggiornamento 11 novembre 2026 — IMP-07 / PR #215
+
+PR [#215](https://github.com/jeckodevelopment/jd_learn/pull/215) completa la protezione del lifecycle categorie: FK su corsi, percorsi, docenti e domande; hard-delete impedito finché ci sono riferimenti; cestinamento/ripristino reversibili. CI 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654). Pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241), wrapper SHA-256 `dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0`, ZIP Joomla SHA-256 `938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5`; disponibile fino al 25 novembre 2026. Avanzamento 76% (529/7). Collaudo Joomla pendente nel testbook.

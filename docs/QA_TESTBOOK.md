@@ -1,9 +1,9 @@
 Warning: truncated output (original token count: 20326)
 Total output lines: 696
 
-## IMP-07 — lifecycle sicuro delle categorie (0.41.63-dev)
+## IMP-07 — lifecycle sicuro delle categorie (0.41.63-dev, PR #215 integrata)
 
-**Stato:** collaudo manuale Joomla da eseguire dopo l’installazione del pacchetto aggiornato. La CI copre FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
+**Stato:** CI standard 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); collaudo manuale Joomla da eseguire sul pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
 
 **Comportamenti da testare in Joomla**
 
