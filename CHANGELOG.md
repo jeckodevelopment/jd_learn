@@ -2,7 +2,8 @@
 
 - La gestione Materiali consente di collegare un asset privato esistente ai materiali del corso o a un’altra lezione della stessa versione in bozza, senza duplicare il file.
 - Le associazioni ereditano titolo, descrizione e finestra di disponibilità del sorgente; il riuso ripetuto nello stesso ambito viene rifiutato. Le sostituzioni continuano a creare asset immutabili e le versioni pubblicate restano inalterate.
-- Aggiunta una fixture Joomla/HTTP per riuso, identità dell’asset condiviso e rifiuto dei duplicati. Collaudo manuale Joomla nel [testbook](docs/QA_TESTBOOK.md#imp-06--lifecycle-materiali-e-riuso-in-bozza-04164-dev).
+- PR [#217](https://github.com/jeckodevelopment/jd_learn/pull/217) integrata con squash nel commit `abf82a4053918f823726c84a156d295652c7b72c`, milestone **1.0.0**; CI standard 4/4 nel [run 42983654823](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823).
+- Pacchetto [JD-Learn-0.41.64-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604), wrapper SHA-256 `1045619ab6ba9a47d050afc233ae9e8f124b8ede994f5677a9d921f1e1920986`, ZIP Joomla SHA-256 `f8d318f1dea8b68801bda56ac057bfd3df7dc6d0af93b972131e979196b72484`, disponibile fino al 25 novembre 2026. Estrarre il wrapper una volta per ottenere lo ZIP installabile. Collaudo Joomla manuale pendente nel [testbook](docs/QA_TESTBOOK.md#imp-06--lifecycle-materiali-e-riuso-in-bozza-04164-dev).
 
 Warning: truncated output (original token count: 25233)
 Total output lines: 839
