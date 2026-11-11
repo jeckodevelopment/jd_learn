@@ -14,4 +14,5 @@
   <file type="plugin" id="jlmsmenu" group="system">plg_system_jlmsmenu.zip</file>
   <file type="plugin" id="jlms" group="finder">plg_finder_jlms.zip</file>
  </files>
+ <updateservers><server type="extension" priority="1" name="JD Learn Updates">https://www.jeckodevelopment.com/updates/jdlearn.xml</server></updateservers>
 </extension>
