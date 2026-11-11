@@ -1,6 +1,6 @@
 ## IMP-06 — consegna protetta dei materiali su Apache/LiteSpeed (0.41.66-dev)
 
-**Stato:** correzione candidata della PR #219. Gli allegati usano il flusso PHP protetto del componente e non richiedono Nginx o moduli aggiuntivi. CI e pacchetto saranno collegati dopo il merge; accettazione Joomla da eseguire.
+**Stato:** PR [#221](https://github.com/jeckodevelopment/jd_learn/pull/221) integrata nel main 0.41.66-dev. Il flusso usa PHP protetto e non richiede Nginx o moduli aggiuntivi. Pacchetto installabile: `dist/pkg_jlms-0.41.66-dev.zip` (SHA-256 `214e311d5cee72963b3e9d01ba958dfa52088b781c52052761e4f1d74ffdc4af`). Accettazione Joomla da eseguire.
 
 **Comportamenti da testare in Joomla**
 
