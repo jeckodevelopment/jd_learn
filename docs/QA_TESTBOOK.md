@@ -1,17 +1,14 @@
-## IMP-06 — consegna Nginx interna dei materiali (0.41.65-dev)
+## IMP-06 — consegna protetta dei materiali su Apache/LiteSpeed (0.41.66-dev)
 
-**Stato:** PR [#219](https://github.com/jeckodevelopment/jd_learn/pull/219) integrata con squash nel commit `93e7f8a0de84e759b46e6118d9f2ab3a28b5cb61`, milestone **1.0.0**; CI standard 4/4 nel [run 43006202795](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795). Pacchetto [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520), ZIP Joomla SHA-256 `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`. La suite `materials-http.py` include Nginx reale, accesso interno, Range, HEAD e rifiuto della conferma non valida. L'accettazione sul sito di prova resta da eseguire.
+**Stato:** correzione candidata della PR #219. Gli allegati usano il flusso PHP protetto del componente e non richiedono Nginx o moduli aggiuntivi. CI e pacchetto saranno collegati dopo il merge; accettazione Joomla da eseguire.
 
 **Comportamenti da testare in Joomla**
 
-1. In Opzioni componente, imposta la directory privata già usata dai materiali, disabilita la consegna PHP, abilita la consegna Nginx e configura `material_internal_prefix` con una location Nginx `internal` che usa `alias` verso la stessa directory.
-2. Verifica prima la location diretta: `/jlms-private/<chiave>.blob` deve restituire 404 a ospiti e utenti autenticati. Conferma l'opzione solo dopo aver verificato la configurazione effettiva del server.
-3. Da un corso autorizzato, scarica un allegato e apri un PDF/immagine in anteprima. Verifica byte esatti, MIME e `Content-Disposition`; prova anche una richiesta Range e una HEAD. La risposta deve non esporre l'header `X-Accel-Redirect`.
-4. Revoca l'accesso all'utente e ripeti la richiesta: deve essere negata anche con lo stesso cookie/sessione. Disabilita la conferma o configura un prefisso non valido e verifica errore chiuso, senza fallback PHP o URL pubblico.
-5. Ripeti i controlli con consegna PHP esplicita per assicurare che il percorso precedente resti disponibile.
-
-Warning: truncated output (original token count: 20326)
-Total output lines: 696
+1. In Opzioni componente configura la directory privata dei materiali e abilita la consegna PHP. Non aggiungere location o moduli specifici del web server.
+2. Come studente autorizzato scarica un allegato e apri in anteprima un PDF e un’immagine. Verifica contenuto, MIME e Content-Disposition; il download non deve assegnare progresso alla lezione.
+3. Prova una richiesta Range e HEAD: Range deve restituire solo i byte richiesti; HEAD deve restituire gli header senza corpo.
+4. Revoca il livello di accesso o sospendi l’iscrizione e ripeti la richiesta: il file deve essere negato anche con la sessione già autenticata.
+5. Verifica che un file alterato o di dimensione incoerente non venga servito e che la directory di storage resti fuori dalla document root.
 
 ## IMP-07 — lifecycle sicuro delle categorie (0.41.63-dev, PR #215 integrata)
 
@@ -386,7 +383,7 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
 
 
-## IMP-06 — lifecycle materiali, riuso e offload (0.41.65-dev)
+## IMP-06 — lifecycle e riuso dei materiali (0.41.64-dev)
 
 Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. Su Joomla 6 di prova predisporre un corso con una bozza, almeno due lezioni e un editor con permesso di gestione materiali.
 
@@ -396,7 +393,7 @@ Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, 
 4. Ripetere con una versione pubblicata e con un editor privo del permesso materiali; nessuna modifica/riuso deve essere consentita. Verificare che il corso pubblicato e lo storico assegnato restino invariati.
 5. Eseguire l'attività Scheduler di pulizia: il blob condiviso deve restare finché un collegamento lo referenzia e diventare eleggibile solo quando tutte le associazioni sono state rimosse e sono trascorse 24 ore.
 
-PR [#217](https://github.com/jeckodevelopment/jd_learn/pull/217) integrata nel commit `abf82a4053918f823726c84a156d295652c7b72c`; CI standard 4/4 nel [run 42983654823](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823). La fixture Joomla eliminabile verifica il riuso tramite form amministrativo, il riferimento condiviso allo stesso asset, il rifiuto del secondo collegamento duplicato e il blocco sulle versioni pubblicate. Pacchetto aggiornato [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520): wrapper SHA-256 `b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2`, ZIP Joomla `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`. Il wrapper va estratto una volta. Collaudo manuale Joomla ancora da eseguire.
+PR [#217](https://github.com/jeckodevelopment/jd_learn/pull/217) integrata nel commit `abf82a4053918f823726c84a156d295652c7b72c`; CI standard 4/4 nel [run 42983654823](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823). La fixture Joomla eliminabile verifica il riuso tramite form amministrativo, il riferimento condiviso allo stesso asset, il rifiuto del secondo collegamento duplicato e il blocco sulle versioni pubblicate. Pacchetto della PR #217: [JD-Learn-0.41.64-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604). Il wrapper va estratto una volta. Collaudo manuale Joomla ancora da eseguire.
 
 ## IMP-06 — pulizia programmata dei materiali orfani (0.41.54-dev)
 
