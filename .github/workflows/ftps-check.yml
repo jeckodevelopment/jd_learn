@@ -1,0 +1,32 @@
+name: Check JD Learn FTPS access (safe)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: jdlearn-ftps-diagnostic
+  cancel-in-progress: false
+jobs:
+  probe:
+    name: FTPS connectivity and disposable-file check
+    if: github.ref == 'refs/heads/main'
+    environment: jdlearn-release-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout diagnostic from protected main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Verify offline safety cases
+        run: |
+          python3 tests/ftps-publish.py
+          python3 tests/ftps-live-probe.py
+      - name: Connect with explicit verified FTPS and test disposable files
+        env:
+          JDLEARN_FTPS_HOST: ${{ secrets.JDLEARN_FTPS_HOST }}
+          JDLEARN_FTPS_USER: ${{ secrets.JDLEARN_FTPS_USER }}
+          JDLEARN_FTPS_PASSWORD: ${{ secrets.JDLEARN_FTPS_PASSWORD }}
+          JDLEARN_FTPS_PORT: ${{ secrets.JDLEARN_FTPS_PORT }}
+          JDLEARN_FTPS_DIRECTORY: ${{ secrets.JDLEARN_FTPS_DIRECTORY }}
+        run: python3 tools/check_ftps_connection.py
