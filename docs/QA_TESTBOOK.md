@@ -1,6 +1,6 @@
 ## IMP-06 — scansione materiali con ClamAV reale (0.41.74-dev)
 
-**Stato:** candidata PR per verifica d'integrazione; accettazione manuale Joomla da registrare sul sito di prova.
+**Stato:** PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229) integrata in `0.41.74-dev` (merge `d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c`). CI standard 4/4 nel [run 43094357303](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303); artifact [JD-Learn-0.41.74-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415), wrapper SHA-256 `902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8`. Accettazione manuale Joomla sul sito di prova ancora pendente.
 
 **Comportamenti da testare in Joomla**
 
