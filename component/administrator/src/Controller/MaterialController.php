@@ -1,82 +1,92 @@
-ХшҐyИZћќЦ)мz»bўЏЬ‚™XЫ\™JЭљXЭЭ\\ПLJNВ‚›[Y\ЬXЩH›\ЧЫЫ\Ы™[ќ›\ЧYZ[љ\Э]Ь—ЫЫќ›Ы\ЋВ‚ќ\ЩH›ЫЫ[WУTЧUђЧЫЫќ›Ы\—\ЩPЫЫќ›Ы\ЋВќ\ЩH›ЫЫ[WУTЧ[™ЭXYЩW^Вќ\ЩH›ЫЫ[WУTЧ›Э]\—›Э]NВќ\ЩH›ЫЫ[WУTЧЩЧЩОВќ\ЩH›\ЧЫЫ\Ы™[ќ›\ЧYZ[љ\Э]Ь—\XШ][Ы—Э\њљXЭ[[TЩ\ќљXЩNВќ\ЩH›\ЧЫЫ\Ы™[ќ›\ЧYZ[љ\Э]Ь—[™њ\ЭќXЭ\™WX]\љX[ЭЫ›ШYВ‚™љ[[Ы\ЬИX]\љX[ЫЫќ›Ы\€^[™И\ЩPЫЫќ›Ы\‚ћВ€X›XИќ[Э[Ы€^XЭ]J	\ЪКB€В€Y€
-Z[—Ш\њ^JЭќЫЭЩ\Љ	\ЪКKЙЭ\ШY	Л	Ь™]\ЩIЛ	ЬШ]™IЛ	Щ[]IЛ	ЬШШ[‰Л	ЩЭЫ›ШY	ЧKќYJJHВ€›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ	Т‘T”“Ф—УVSХUФQСWУ“ХС“ХS‘	Л
-NВ€B€™]\›€\™[ќЋ™^XЭ]J	\ЪКNВ€B‚€љ]]Hќ[Э[Ы€\™›Ь›JЭљ[™И	Ь\][ЫЉN€›ЪY€В€Y€
-ЭќЭ\\Љ	\ЛOљ[њ]O™Щ]Y]Щ
+<?php
 
-JHOOH	ФФХ	КHИ›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ^Ћ—К	РУУWТ“TЧУQUСУ“ХРSХСQ	КKJNИB€	ЬЭ[Z]H
-Эљ[™КH[љWЩЩ]
-	ЬЬЭЫX^ЬЪ^™IКNВ€	XЭЬ€HX]Ъ
-ЭќЫЭЩ\ЉЭXњЭЉ	ЬЭ[Z]LJJJHИ	ЩЙИO€LМННNЌ	ЫIИO€LMН‹	ЪЙИO€LЌY][O€HNВ€	ЬЭћ]\ИH
-[ќ
-H
+declare(strict_types=1);
 
-›Ш]
-H	ЬЭ[Z]
-€	XЭЬЉNВ€Y€
-	ЬЭћ]\И€	‰€	\ЛOљ[њ]OњЩ\ќ™\‹O™Щ][ќ
-	РУУ•S•УS‘Х	Л
-H€	ЬЭћ]\КHВ€›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ^Ћ—К	РУУWТ“TЧС’SWФТV‘IКKLКNВ€B€Y€
-I\ЛOЪXЪХЪЩ[Љ	ЬЬЭ	Л[ЩJJHИ›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ^Ћ—К	Т’S•ђSQХТСS—У“ХPСIКKКNИB€ћHВ€	]HH	\ЛOљ[њ]OњЬЭO™Щ]
-	Ъ™›Ь›IЛЧK	Ш\њ^IКNВ€	ЫЭ\њЩRYHЭ\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙШЫЭ\њЩWЪY	ЧHПИќ[
-NВ€	™\њЪ[Ы’YHЭ\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙЭ™\њЪ[Ы—ЪY	ЧHПИќ[
-NВ€	™]љ\Ъ[Ы€HЭ\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙЩ^XЭYЭ™\њЪ[Ы—Ь™]љ\Ъ[Ы‰ЧHПИќ[
-NВ€	Щ\ќљXЩHH	\ЛO\O›ЫЭЫЫ\Ы™[ќ
-	ШЫЫWЪ›\ЙКKO™Щ]X]\љX[Щ\ќљXЩJ
-NВ€Y€
-	Ь\][Ы€OOH	Ь™]\ЩIКHВ€	Щ\ќљXЩKOњ™]\ЩJ	\ЛO\O™Щ]Y[ќ]J
-K	ЫЭ\њЩRY	™\њЪ[Ы’Y	™]љ\Ъ[Ы‹€Э\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙЪY	ЧHПИќ[
-KЭ\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙЭ\™Щ]Ы\ЬЫЫ—ЪY	ЧHПИќYJJNВ€H[ЩZY€
-	Ь\][Ы€OOH	Э\ШY	КHВ€Y€
-Z\ЧЬЭљ[™К	]VЙЭ]IЧHПИќ[
-HZ\ЧЬЭљ[™К	]VЙЩ\ШЬљ\[Ы‰ЧHПИ	ЙКJHВ€›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ	РУУWТ“TЧТS•ђSQТS”U	Л
-NВ€B€	љ[\ИH	\ЛOљ[њ]O™љ[\ЛO™Щ]
-	Ъ™›Ь›IЛЧK	Ш\њ^IКNВ€	Щ\ќљXЩKOќ\ШY
-	\ЛO\O™Щ]Y[ќ]J
-K	ЫЭ\њЩRY	™\њЪ[Ы’Y€Э\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙЫ\ЬЫЫ—ЪY	ЧHПИќYJK	™]љ\Ъ[Ы‹	]VЙЭ]IЧK	]VЙЩ\ШЬљ\[Ы‰ЧHПИ	ЙЛ€	љ[\ЦЙЭ\ШY	ЧHПИЧKЭ\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙЬ™\XЩWЪY	ЧHПИќYJK€	]VЙЬX›\ЪЭ\	ЧHПИќ[	]VЙЬX›\ЪЩЭЫ‰ЧHПИќ[
-NВ€H[ЩHВ€	Щ\ќљXЩKO›]]]J	\ЛO\O™Щ]Y[ќ]J
-K	ЫЭ\њЩRY	™\њЪ[Ы’Y€Э\њљXЭ[[TЩ\ќљXЩNЋљY
-	]VЙЪY	ЧHПИќ[
-K	™]љ\Ъ[Ы‹	Ь\][Ы‹	]JNВ€B€	\ЛOњЩ]™Y\™XЭ
-›Э]NЋ›[љК	ШYZ[љ\Э]Ь‰Л	Ъ[™^њЫЬ[ЫЏXЫЫWЪ›\ЙќљY]П[X]\љX[ЙљYIИ€	ЫЭ\њЩRY€	Йќ™\њЪ[Ы—ЪYIИ€	™\њЪ[Ы’Y[ЩJJNВ€HШ]Ъ
-›ЭШX›H	\њ›ЬЉHИ	\ЛO™Z[\™J	\њ›ЬЉNИB€B‚€љ]]Hќ[Э[Ы€Z[\™J›ЭШX›H	\њ›ЬЉN€™]™\‚€В€	Ы›ЭЫ€HЙРУУWТ“TЧС’SWТS•ђSQ	Л	РУУWТ“TЧС’SWФТV‘IЛ	РУУWТ“TЧФХФђQСWХSђUђRSP“IЛ	РУУWТ“TЧСSU‘T–WСTРP“Q	Л€	РУУWТ“TЧФ‘TУХTђСWУ“ХС“ХS‘	Л	РУУWТ“TЧУPT“’S‘ЧСS’QQ	Л	РУУWТ“TЧУСТS—Ф‘TURT‘Q	Л	РУУWТ“TЧТS•ђSQТS”U	Л€	РУУWТ“TЧУPUT’PSУ“ХФ‘PQIЛ	РУУWТ“TЧУPUT’PSРS‘PQWУS’СQ	Л	РУУWТ“TЧХ‘T”ТSУ—ТSSUUP“IЛ	РУУWТ“TЧФ‘U’TТSУ—РУУ‘“PХ	Л	РУУWТ“TЧУХUS‘WУSRU	Л€	РУУWТ“TЧФђS‘СWТS•ђSQ	Л	РУУWТ“TЧРРSS‘T—ТS•ђSQ	Л	РУУWТ“TЧРРSS‘T—ФђS‘СIЛ	РУУWТ“TЧРРSS‘T—СХ	ЧNВ€Y€
-[—Ш\њ^J	\њ›Ь‹O™Щ]Y\ЬШYЩJ
-K	Ы›ЭЫ‹ќYJJHВ€	ЫЩHH[—Ш\њ^J	\њ›Ь‹O™Щ]ЫЩJ
-KНKЛKLЛM‹Њ‹LЧKќYJHИ	\њ›Ь‹O™Щ]ЫЩJ
-H€В€›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ^Ћ—К	\њ›Ь‹O™Щ]Y\ЬШYЩJ
-JK	ЫЩJNВ€B€Y€
-Щ][ќЉ	Т“TЧХTХСTФФРP“IКHOOH	МIКHИ\њ›Ь—ЫЩК	Т‘X\›€\ЬЬШX›HX]\љX[XYЫ›ЬЭXО€	И€	\њ›ЬЋЋЫ\ЬИ€	О€	И€	\њ›Ь‹O™Щ]Y\ЬШYЩJ
-JNИB€ЩОЋY
-	УX]\љX[]]][Ы€Z[YИЫЬњ™[][ЫЏIИ€љ[Њљ^
-[™ЫWШћ]\К
-JKЩОЋ‘T”“Ф‹	ШЫЫWЪ›\ЙКNВ€›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ^Ћ—К	РУУWТ“TЧФРU‘WСђRSQ	КKL
-NВ€B‚€X›XИќ[Э[Ы€\ШY
+namespace Jlms\Component\Jlms\Administrator\Controller;
 
-N€›ЪYИ	\ЛOњ\™›Ь›J	Э\ШY	КNИB€X›XИќ[Э[Ы€™]\ЩJ
-N€›ЪYИ	\ЛOњ\™›Ь›J	Ь™]\ЩIКNИB€X›XИќ[Э[Ы€Ш]™J
-N€›ЪYИ	\ЛOњ\™›Ь›J	ЬШ]™IКNИB€X›XИќ[Э[Ы€[]J
-N€›ЪYИ	\ЛOњ\™›Ь›J	Щ[]IКNИB€X›XИќ[Э[Ы€ШШ[Љ
-N€›ЪYИ	\ЛOњ\™›Ь›J	ЬШШ[‰КNИB‚€X›XИќ[Э[Ы€ЭЫ›ШY
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Log\Log;
+use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+use Jlms\Component\Jlms\Administrator\Infrastructure\MaterialDownload;
 
-N€›ЪY€В€Y€
-Z[—Ш\њ^JЭќЭ\\Љ	\ЛOљ[њ]O™Щ]Y]Щ
+final class MaterialController extends BaseController
+{
+    public function execute($task)
+    {
+        if (!in_array(strtolower($task), ['upload', 'reuse', 'save', 'delete', 'scan', 'download'], true)) {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
+        return parent::execute($task);
+    }
 
-JKЙССU	Л	ТPQ	ЧKќYJJHВ€›ЭИ™]Иќ[ќ[YQ^Щ\[ЫЉ^Ћ—К	РУУWТ“TЧУQUСУ“ХРSХСQ	КKJNВ€B€ћHВ€	љ[HH	\ЛO\O›ЫЭЫЫ\Ы™[ќ
-	ШЫЫWЪ›\ЙКKO™Щ]X]\љX[Щ\ќљXЩJ
-KOYZ[‘ЭЫ›ШY
-	\ЛO\O™Щ]Y[ќ]J
-K€	\ЛOљ[њ]O™Щ][ќ
-	ШЫЭ\њЩWЪY	Л
-K	\ЛOљ[њ]O™Щ][ќ
-	Э™\њЪ[Ы—ЪY	Л
-K	\ЛOљ[њ]O™Щ][ќ
-	ЪY	Л
-JNВ€X]\љX[ЭЫ›ШYЋњЩ[™
-	\ЛO\	љ[JNВ€HШ]Ъ
-›ЭШX›H	\њ›ЬЉHИ	\ЛO™Z[\™J	\њ›ЬЉNИB€BџB
+    private function perform(string $operation): void
+    {
+        if (strtoupper($this->input->getMethod()) !== 'POST') { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405); }
+        $postLimit = (string) ini_get('post_max_size');
+        $factor = match (strtolower(substr($postLimit, -1))) { 'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1 };
+        $postBytes = (int) ((float) $postLimit * $factor);
+        if ($postBytes > 0 && $this->input->server->getInt('CONTENT_LENGTH', 0) > $postBytes) {
+            throw new \RuntimeException(Text::_('COM_JLMS_FILE_SIZE'), 413);
+        }
+        if (!$this->checkToken('post', false)) { throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403); }
+        try {
+            $data = $this->input->post->get('jform', [], 'array');
+            $courseId = CurriculumService::id($data['course_id'] ?? null);
+            $versionId = CurriculumService::id($data['version_id'] ?? null);
+            $revision = CurriculumService::id($data['expected_version_revision'] ?? null);
+            $service = $this->app->bootComponent('com_jlms')->getMaterialService();
+            if ($operation === 'reuse') {
+                $service->reuse($this->app->getIdentity(), $courseId, $versionId, $revision,
+                    CurriculumService::id($data['id'] ?? null), CurriculumService::id($data['target_lesson_id'] ?? 0, true));
+            } elseif ($operation === 'upload') {
+                if (!is_string($data['title'] ?? null) || !is_string($data['description'] ?? '')) {
+                    throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                }
+                $files = $this->input->files->get('jform', [], 'array');
+                $service->upload($this->app->getIdentity(), $courseId, $versionId,
+                    CurriculumService::id($data['lesson_id'] ?? 0, true), $revision, $data['title'], $data['description'] ?? '',
+                    $files['upload'] ?? [], CurriculumService::id($data['replace_id'] ?? 0, true),
+                    $data['publish_up'] ?? null, $data['publish_down'] ?? null);
+            } else {
+                $service->mutate($this->app->getIdentity(), $courseId, $versionId,
+                    CurriculumService::id($data['id'] ?? null), $revision, $operation, $data);
+            }
+            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=materials&id=' . $courseId . '&version_id=' . $versionId, false));
+        } catch (\Throwable $error) { $this->failure($error); }
+    }
+
+    private function failure(\Throwable $error): never
+    {
+        $known = ['COM_JLMS_FILE_INVALID', 'COM_JLMS_FILE_SIZE', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_DELIVERY_DISABLED',
+            'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_INVALID_INPUT',
+            'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_MATERIAL_ALREADY_LINKED', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_OUTLINE_LIMIT',
+            'COM_JLMS_RANGE_INVALID', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
+        if (in_array($error->getMessage(), $known, true)) {
+            $code = in_array($error->getCode(), [400, 401, 403, 404, 409, 413, 416, 422, 503], true) ? $error->getCode() : 400;
+            throw new \RuntimeException(Text::_($error->getMessage()), $code);
+        }
+        if (getenv('JLMS_TEST_DISPOSABLE') === '1') { error_log('JD Learn disposable material diagnostic: ' . $error::class . ': ' . $error->getMessage()); }
+        Log::add('Material mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+        throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
+    }
+
+    public function upload(): void { $this->perform('upload'); }
+    public function reuse(): void { $this->perform('reuse'); }
+    public function save(): void { $this->perform('save'); }
+    public function delete(): void { $this->perform('delete'); }
+    public function scan(): void { $this->perform('scan'); }
+
+    public function download(): void
+    {
+        if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) {
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+        }
+        try {
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->adminDownload($this->app->getIdentity(),
+                $this->input->getInt('course_id', 0), $this->input->getInt('version_id', 0), $this->input->getInt('id', 0));
+            MaterialDownload::send($this->app, $file);
+        } catch (\Throwable $error) { $this->failure($error); }
+    }
+}
