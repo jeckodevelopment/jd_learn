@@ -497,3 +497,16 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 6. Inviare `filter[layout]=unexpected`: deve essere usata la griglia predefinita. Verificare che nessun corso non autorizzato appaia in entrambe le viste.
 
 **Esito sito Joomla:** Non eseguito.
+
+
+## IMP-05 — consegna HTML5 locale compatibile con Apache/LiteSpeed (0.41.71-dev, PR #226)
+
+**Stato:** candidata. Lo streaming protetto usa il controller Joomla e PHP a blocchi; non richiede Nginx, moduli aggiuntivi o regole server. I vecchi valori `x_accel` vengono migrati al flusso PHP. La CI sul candidato coprirà Range/HEAD, autorizzazione/revoca, storage privato e assenza di header specifici del server. La capacità concorrente non è certificata senza benchmark.
+
+**Comportamenti da testare in Joomla**
+
+1. Aggiorna il componente dal pacchetto precedente su un sito Apache/LiteSpeed standard, abilita il plugin HTML5 e configura directory privata, ffprobe e streaming PHP. Non aggiungere direttive o moduli web server.
+2. Carica un MP4 H.264 valido più grande di 64 MiB (entro il limite configurato e i limiti PHP); pubblica la lezione e avviala da un account iscritto. Verifica riproduzione, richieste Range e assenza di URL/percorso pubblico.
+3. Prova guest, utente senza iscrizione, revoca del livello e sospensione dell’iscrizione: nessuno deve ricevere byte dopo il diniego. Verifica GET/HEAD, byte-range, Range non valido e intestazioni private/no-store.
+4. Su un sito aggiornato con vecchio valore `x_accel`, verifica che l’anteprima e la fruizione continuino tramite PHP protetto e che non venga emesso `X-Accel-Redirect`.
+5. Disabilita la consegna e verifica che pubblicazione/streaming siano bloccati. Registra versione Joomla/PHP, web server e dimensione file.

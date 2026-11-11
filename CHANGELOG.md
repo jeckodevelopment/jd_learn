@@ -1,3 +1,9 @@
+## 0.41.71-dev — streaming video HTML5 compatibile con Apache/LiteSpeed (IMP-05)
+
+- Build candidata della PR #226: stream MP4 privato con PHP a blocchi, controlli Joomla e supporto Range/HEAD; rimosse le configurazioni Nginx.
+- I siti aggiornati con il valore legacy `x_accel` usano il percorso PHP protetto. Le prestazioni concorrenti richiedono benchmark separato.
+- Comportamenti da collaudare nel sito di prova: vedere [testbook IMP-05](docs/QA_TESTBOOK.md#imp-05--consegna-html5-locale-compatibile-con-apachelitespeed-04171-dev-pr-226).
+
 ## 0.41.70-dev — ricollocazione dipendenze categoria (IMP-07 / CAT-01 / CORE-01)
 
 - Aggiunto nel backend un riepilogo dei riferimenti a corsi, percorsi, profili docente e domande, con ricollocazione esplicita verso categorie autorizzate della stessa sezione.

@@ -77,15 +77,10 @@ final class ProtectedVideoStorage
     public function delivery(object $asset): array
     {
         $path = $this->inspect($asset); $mode = $this->config()->get('video_delivery_mode', 'disabled');
-        if ($mode === 'x_accel') {
-            $prefix = (string) $this->config()->get('video_internal_prefix', '');
-            if (!(bool) $this->config()->get('video_internal_confirmed', false) || !preg_match('~\A/(?:[A-Za-z0-9_-]+/)+\z~D', $prefix)) {
-                throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
-            }
-            return ['mode' => $mode, 'internal_uri' => $prefix . $asset->storage_key, 'path' => $path];
-        }
-        if ($mode === 'php_bounded' && (int) $asset->byte_size <= 67108864) {
-            return ['mode' => $mode, 'path' => $path];
+        if ($mode === 'php_bounded' || $mode === 'x_accel') {
+            // Upgrade existing sites from the former offload setting to the
+            // standard PHP streamer; never emit web-server-specific headers.
+            return ['mode' => 'php_bounded', 'path' => $path];
         }
         throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
     }

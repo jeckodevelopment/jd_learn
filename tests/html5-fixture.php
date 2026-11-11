@@ -100,7 +100,7 @@ if($mode!==''){
  }elseif($mode==='delivery'){
   if(!in_array($argv[3]??'', ['disabled','php_bounded','x_accel'],true))throw new \RuntimeException('Bad fixture mode');
   $params=json_decode($db->setQuery("SELECT params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult(),true,32,JSON_THROW_ON_ERROR);
-  $params['video_delivery_mode']=$argv[3];$params['video_internal_prefix']='/jdlearn-private/';$params['video_internal_confirmed']=1;
+  $params['video_delivery_mode']=$argv[3];
   $ext=(object)['extension_id'=>(int)$db->setQuery("SELECT extension_id FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult(),'params'=>json_encode($params,JSON_THROW_ON_ERROR)];
   $db->updateObject('#__extensions',$ext,'extension_id');
  }elseif($mode==='reject' || $mode==='restore'){

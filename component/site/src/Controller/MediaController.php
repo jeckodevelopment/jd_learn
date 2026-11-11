@@ -31,12 +31,7 @@ final class MediaController extends BaseController
                 }
                 $file = $this->app->bootComponent('com_jlms')->getLocalVideoService()->previewDelivery($this->app->getIdentity(), ...$ids);
                 if ($file['mode'] === 'php_bounded') { MaterialDownload::send($this->app, $file); return; }
-                $this->app->setHeader('Content-Type', 'video/mp4', true);
-                $this->app->setHeader('Content-Disposition', 'inline; filename="video.mp4"', true);
-                $this->app->setHeader('X-Content-Type-Options', 'nosniff', true);
-                $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
-                $this->app->setHeader('X-Accel-Redirect', $file['internal_uri'], true);
-                $this->app->getSession()->close(); $this->app->sendHeaders(); $this->app->close();
+                throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
             }
             $ids = [];
             foreach (['enrollment_id', 'lesson_id', 'source_revision'] as $key) {
@@ -45,12 +40,7 @@ final class MediaController extends BaseController
             }
             $file = $this->app->bootComponent('com_jlms')->getLocalVideoService()->delivery($this->app->getIdentity(), $this->app->getLanguage()->getTag(), ...$ids);
             if ($file['mode'] === 'php_bounded') { MaterialDownload::send($this->app, $file); return; }
-            $this->app->setHeader('Content-Type', 'video/mp4', true);
-            $this->app->setHeader('Content-Disposition', 'inline; filename="video.mp4"', true);
-            $this->app->setHeader('X-Content-Type-Options', 'nosniff', true);
-            $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
-            $this->app->setHeader('X-Accel-Redirect', $file['internal_uri'], true);
-            $this->app->getSession()->close(); $this->app->sendHeaders(); $this->app->close();
+            throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
         } catch (\Throwable $error) {
             $key = $error->getMessage(); $code = (int) $error->getCode();
             if (in_array($code, [400,401,403,404,405,409,416,422,503], true) && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {

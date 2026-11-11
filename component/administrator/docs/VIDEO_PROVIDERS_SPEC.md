@@ -255,7 +255,7 @@ Il test connessione non emette token a utenti anonimi e non cambia le impostazio
 | Parametro | Tipo | Obbligo e default | Regola |
 |---|---|---|---|
 | storage_profile_id | ID di configurazione | Obbligatorio | Storage protetto già verificato dal gestore |
-| delivery_mode | enum webserver/storage/php_bounded | Obbligatorio, webserver se disponibile | Fallback PHP esplicito e sottoposto a limiti/collaudo; nessun fallback a file pubblico |
+| delivery_mode | enum applicativo: disabled/php_bounded | Obbligatorio, disabled finché il gestore non abilita lo streaming protetto PHP | Il runtime usa PHP a blocchi compatibile con Apache/LiteSpeed; nessun URL o fallback pubblico. Il valore legacy `x_accel` è migrato al flusso PHP protetto. |
 | video_upload_max_bytes | integer positivo | Configurazione sito | Limitato da hosting e storage; separato dal limite allegati di 20 MiB |
 | allowed_video_formats | allowlist | Default mp4 | MIME/codec effettivi e compatibilità browser verificati; estensione da sola insufficiente |
 | preload | enum none/metadata | Default metadata | Non precaricare l'intero filmato nel catalogo o prima dell'autorizzazione |
