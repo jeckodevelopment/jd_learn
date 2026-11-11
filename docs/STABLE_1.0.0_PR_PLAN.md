@@ -1,6 +1,6 @@
 # Piano delle Pull Request verso JD Learn 1.0.0
 
-Aggiornato all’11 novembre 2026. Main **0.41.66-dev** integra la correzione della PR #219 tramite #221, compatibile con Apache/LiteSpeed. La PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) implementa CORE-09 per Tag Joomla nativi sui corsi ed è integrata in 0.41.67-dev. Pacchetto installabile `dist/pkg_jlms-0.41.67-dev.zip`, SHA-256 `637e8284dde13f5b3c89398bac21a1aa862236a07619f978f33130dc8ec07ef6`. Avanzamento stimato **76%** (catalogo 77%).
+Aggiornato all’11 novembre 2026. Main **0.41.67-dev** integra la PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) per CORE-09 e la correzione della PR #219 tramite #221, compatibile con Apache/LiteSpeed. La PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) implementa CORE-09 per Tag Joomla nativi sui corsi ed è integrata in 0.41.67-dev. Pacchetto installabile `dist/pkg_jlms-0.41.67-dev.zip`, SHA-256 `637e8284dde13f5b3c89398bac21a1aa862236a07619f978f33130dc8ec07ef6`. Avanzamento stimato **76%** (catalogo 77%).
 
 Il piano ha due blocchi in quest’ordine:
 
