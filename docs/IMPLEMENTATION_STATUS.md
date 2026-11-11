@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.67-dev** integra la PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222), che aggiunge i tag Joomla nativi ai corsi e completa il sottoinsieme core di CORE-09. Pacchetto installabile `dist/pkg_jlms-0.41.67-dev.zip`, SHA-256 `637e8284dde13f5b3c89398bac21a1aa862236a07619f978f33130dc8ec07ef6`. Avanzamento implementativo stimato **76%** (catalogo 77%; media 535/7 = 76,43%). Accettazione Joomla manuale pendente. La candidata **0.41.68-dev** implementa il residuo CORE-07 delle associazioni multilingua sui corsi pubblicati (PR candidata #223).
+Aggiornato all’11 novembre 2026. Main **0.41.68-dev** integra la PR [#223](https://github.com/jeckodevelopment/jd_learn/pull/223) (CORE-07: associazioni multilingua dei corsi pubblicati), la #222 (CORE-09) e la correzione #221 di compatibilità Apache/LiteSpeed. Pacchetto `dist/pkg_jlms-0.41.68-dev.zip`, SHA-256 `ed115844d2de2925f8a087a3a8cdbed646e870bfd529ca31eb3b2dfd1f97a7c0`. Avanzamento implementativo stimato **77%** (92% integrazioni Joomla; media 536/7 = 76,57%). Accettazione Joomla manuale AC-20/AC-48 pendente.
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -29,13 +29,13 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 89% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
-| Usabilità amministrativa e integrazioni Joomla | 91% |
+| Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **76%** |
+| **Avanzamento complessivo stimato** | **77%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (535/7 = 76,43%, arrotondato al 76%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (536/7 = 76,57%, arrotondato al 76%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-07 comprende PR #204, #206–#213 e #215. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la correzione della PR #219 rimuove il percorso Nginx per gli allegati. M04 stimata 89%; CORE-09 implementato nella PR candidata (catalogo 77%); avanzamento complessivo 76%. Accettazione Joomla di materiali, lifecycle categorie, CAT-01 e SEO/Finder ancora pendente.
+IMP-07 comprende PR #204, #206–#213 e #215. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la correzione della PR #219 rimuove il percorso Nginx per gli allegati. M04 stimata 89%; CORE-09 integrato dalla PR #222; CORE-07 integrato dalla PR #223 (catalogo 77%; CORE-07 implementato dalla PR #223); avanzamento complessivo 77%. Accettazione Joomla di materiali, lifecycle categorie, CAT-01 e SEO/Finder ancora pendente.
 
 ## Funzioni presenti e lavoro residuo
 
