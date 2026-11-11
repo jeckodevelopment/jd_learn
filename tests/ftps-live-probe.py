@@ -3,9 +3,11 @@
 import importlib.util
 from pathlib import Path
 import ssl
+import sys
 import unittest
 
 source=Path(__file__).resolve().parents[1]/"tools/check_ftps_connection.py"
+sys.path.insert(0,str(source.parent))
 spec=importlib.util.spec_from_file_location("check_ftps_connection",source)
 module=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
