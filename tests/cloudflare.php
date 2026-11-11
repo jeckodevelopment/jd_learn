@@ -23,7 +23,8 @@ $context = new PlaybackContext(1,2,3,'it-IT',0,'grant',$now);
 $metadataContext = new MetadataContext(1,'it-IT',true);
 cfExpect(!(new Provider())->getDescriptor()->configured,'provider closed by default');
 cfExpect($p->getDescriptor()->configured && count($state->calls) === 0,'configuration check performs no HTTP');
-foreach (['account_id'=>'evil/../account','playback_domain'=>'attacker.example','site_host'=>'https://school.example','signing_mode'=>'local_key','token_ttl_seconds'=>10] as $field=>$value) {
+cfExpect((new Provider(array_replace($config,['signing_mode'=>'local_key']),$secret,$transport))->getDescriptor()->configured,'legacy local signing mode is ignored');
+foreach (['account_id'=>'evil/../account','playback_domain'=>'attacker.example','site_host'=>'https://school.example','token_ttl_seconds'=>10] as $field=>$value) {
     cfExpect(!(new Provider(array_replace($config,[$field=>$value]),$secret,$transport))->getDescriptor()->configured,'bad config closed: '.$field);
 }
 $secrets = new \Jlms\Contracts\Security\EnvironmentSecretProvider();

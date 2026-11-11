@@ -27,7 +27,7 @@ final class Provider extends AbstractFoundationProvider
     private function configuration(): array
     {
         $c = $this->config;
-        if ((int) ($c['playback_enabled'] ?? 0) !== 1 || ($c['signing_mode'] ?? 'api_endpoint') !== 'api_endpoint'
+        if ((int) ($c['playback_enabled'] ?? 0) !== 1
             || !preg_match('/\A[a-f0-9]{32}\z/D', (string) ($c['account_id'] ?? ''))
             || !preg_match('/\Acustomer-[a-z0-9]{1,80}\.cloudflarestream\.com\z/D', (string) ($c['playback_domain'] ?? ''))
             || !preg_match('/\A(?=.{1,253}\z)[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\z/D', (string) ($c['site_host'] ?? ''))

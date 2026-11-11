@@ -1,6 +1,6 @@
 # Cloudflare Stream — incremento 0.7
 
-Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token temporanei tramite API. È disabilitato inizialmente, richiede `playback_enabled=1` e la policy di consenso del componente. La modalità `local_key` resta chiusa: nessuna firma locale o libreria JWT viene presentata come implementata. HTML5 resta da realizzare. Il pacchetto è di sviluppo.
+Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token temporanei esclusivamente tramite API. È disabilitato inizialmente e richiede `playback_enabled=1` e la policy di consenso del componente. La firma locale non è implementata: il form Joomla non espone più questa modalità né i campi chiave. Eventuali `signing_mode`, `signing_key_ref` o `signing_key_id` salvati da versioni precedenti sono ignorati; la migrazione al plugin 0.7.1 non richiede modifiche ai video o ai segreti API.
 
 ## Configurazione
 

@@ -1,3 +1,18 @@
+## IMP-05 — configurazione Cloudflare Stream solo API (0.41.73-dev)
+
+**Stato:** pronto per la verifica automatica via PR; accettazione manuale Joomla da eseguire dopo il merge.
+
+**Comportamenti da testare in Joomla**
+
+1. Installa JD Learn 0.41.73-dev sopra una versione precedente con il plugin Cloudflare Stream configurato. Apri **Sistema → Plugin → Cloudflare Stream**: il form non deve mostrare modalità di firma, chiave locale o ID della chiave.
+2. Verifica che playback, account, dominio, hostname, riferimento al token e durata/rinnovo restino disponibili. I parametri legacy di firma salvati non devono impedire il funzionamento API.
+3. Con un account di prova e un video protetto già configurati, verifica pubblicazione/riproduzione/rinnovo dopo consenso. Revoca il consenso e verifica che non venga creato il player.
+4. Ripeti in italiano e inglese. Verifica che il video e il token di riferimento non siano modificati dall'upgrade.
+
+**Esito sito Joomla:** Non eseguito.
+
+---
+
 ## IMP-06 — periodo configurabile per la pulizia degli asset locali orfani (0.41.72-dev)
 
 **Stato:** candidato di sviluppo; la verifica automatica di Joomla Scheduler è aggiornata per distinguere il periodo configurato da una soglia fissa. Accettazione manuale in Joomla ancora da eseguire.

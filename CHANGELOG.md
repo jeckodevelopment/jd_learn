@@ -1,3 +1,10 @@
+# Changelog
+
+## 0.41.73-dev — in preparazione
+
+- Cloudflare Stream: il plugin espone solo la configurazione API effettivamente supportata; i vecchi parametri di firma locale vengono ignorati. Nessuna modifica ai video o ai riferimenti ai token esistenti.
+- Collaudo manuale Joomla richiesto: aggiornamento plugin, controllo dei campi configurabili, riproduzione API con consenso e verifica che la configurazione dei video esistenti resti invariata.
+
 ## 0.41.72-dev — conservazione configurabile degli asset orfani (IMP-06)
 
 - Aggiunge nelle opzioni Materiali una soglia di conservazione configurabile fra 24 e 8760 ore; il default resta 24 ore.

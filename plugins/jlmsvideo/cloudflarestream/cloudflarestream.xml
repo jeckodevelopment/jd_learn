@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="jlmsvideo" method="upgrade">
- <name>PLG_JLMSVIDEO_CLOUDFLARESTREAM</name><author>Jecko Development</author><version>0.7.0</version>
+ <name>PLG_JLMSVIDEO_CLOUDFLARESTREAM</name><author>Jecko Development</author><version>0.7.1</version>
  <description>PLG_JLMSVIDEO_CLOUDFLARESTREAM_DESCRIPTION</description><namespace path="src">Jlms\Plugin\Jlmsvideo\Cloudflarestream</namespace>
  <files><folder plugin="cloudflarestream">services</folder><folder>src</folder><folder>language</folder><folder>docs</folder></files>
  <media destination="plg_jlmsvideo_cloudflarestream" folder="media"><folder>js</folder></media>
@@ -9,10 +9,7 @@
 <field name="metadata_cache_ttl" type="number" label="PLG_JLMSVIDEO_METADATA_TTL" default="3600" min="0" max="86400" filter="integer" />
 <field name="remote_timeout" type="number" label="PLG_JLMSVIDEO_TIMEOUT" default="5" min="1" max="15" filter="integer" /><field name="account_id" type="text" label="PLG_JLMSVIDEO_ACCOUNT" filter="string" />
 <field name="playback_domain" type="text" label="PLG_JLMSVIDEO_PLAYBACK_DOMAIN" filter="string" />
-<field name="signing_mode" type="list" label="PLG_JLMSVIDEO_SIGNING_MODE" default="api_endpoint"><option value="api_endpoint">API</option><option value="local_key">PLG_JLMSVIDEO_LOCAL_KEY</option></field>
 <field name="api_token_ref" type="text" label="PLG_JLMSVIDEO_TOKEN_REF" filter="string" />
-<field name="signing_key_ref" type="text" label="PLG_JLMSVIDEO_SIGNING_KEY_REF" filter="string" />
-<field name="signing_key_id" type="text" label="PLG_JLMSVIDEO_SIGNING_KEY_ID" filter="string" />
 <field name="token_ttl_seconds" type="number" label="PLG_JLMSVIDEO_TOKEN_TTL" default="900" min="60" max="3600" filter="integer" />
 <field name="renew_before_seconds" type="number" label="PLG_JLMSVIDEO_RENEW_BEFORE" default="120" min="1" max="3599" filter="integer" /></fieldset></fields></config>
 </extension>
