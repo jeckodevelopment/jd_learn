@@ -1,6 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.68-dev** integra la PR [#223](https://github.com/jeckodevelopment/jd_learn/pull/223) per CORE-07, la PR #222 per CORE-09 e la correzione #221 alla #219, compatibile con Apache/LiteSpeed. Pacchetto `dist/pkg_jlms-0.41.68-dev.zip`, SHA-256 `ed115844d2de2925f8a087a3a8cdbed646e870bfd529ca31eb3b2dfd1f97a7c0`. Avanzamento stimato **77%** (536/7; integrazioni Joomla 92%); accettazione manuale AC-20/AC-48 pendente.
-
-Aggiornato all’11 novembre 2026. Main **0.41.67-dev** integra la PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) per CORE-09 e la correzione della PR #219 tramite #221, compatibile con Apache/LiteSpeed. La PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) implementa CORE-09 per Tag Joomla nativi sui corsi ed è integrata in 0.41.67-dev.  Pacchetto installabile `dist/pkg_jlms-0.41.67-dev.zip`, SHA-256 `637e8284dde13f5b3c89398bac21a1aa862236a07619f978f33130dc8ec07ef6`. Avanzamento stimato **76%** (catalogo 77%).
+Aggiornato all’11 novembre 2026. Main **0.41.68-dev** integra le PR [#221](https://github.com/jeckodevelopment/jd_learn/pull/221)–[#223](https://github.com/jeckodevelopment/jd_learn/pull/223): correzione di compatibilità Apache/LiteSpeed, tag Joomla nativi (CORE-09) e associazioni multilingua dei corsi pubblicati (CORE-07). Pacchetto installabile `dist/pkg_jlms-0.41.68-dev.zip`, SHA-256 `ed115844d2de2925f8a087a3a8cdbed646e870bfd529ca31eb3b2dfd1f97a7c0`. Avanzamento **77%** (536/7; integrazioni Joomla 92%); accettazione AC-20/AC-48 pendente.
 
 Il piano ha due blocchi in quest’ordine:
 
@@ -73,7 +71,7 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato all’11 novembre 2026: main è **0.41.65-dev** e include le PR #190, #192, #194, #196, #198, #202, #204, #206–#219. CI standard 4/4 nel [run 43006202795](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795); pacchetto [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520), wrapper `b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2`, ZIP Joomla `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`, scade il 25 novembre 2026, ore 10:48 UTC. IMP-01 è stato ricognitivamente mappato; IMP-02 è implementato con accettazione Joomla pendente; IMP-03/04 hanno residui documentati; IMP-05/06 sono integrati con collaudi manuali aperti. Avanzamento **76%** (535/7; M04 89%, catalogo 77%). IMP-06 include riuso materiali (#217); consegna allegati PHP compatibile con Apache/LiteSpeed ripristinata dalla #221; IMP-07 include lifecycle categorie (#215), catalogo/URL/SEO/Finder; collaudi Joomla ancora pendenti.
+Aggiornato all’11 novembre 2026: main **0.41.68-dev** integra le PR #221–#223. Nel run CI [#43049378887](https://github.com/jeckodevelopment/jd_learn/actions/runs/43049378887) controlli documentali e suite PHP 8.3/MySQL e PHP 8.4/MariaDB sono passati; il job browser è ancora bloccato nell’installazione del runtime. Pacchetto installabile `dist/pkg_jlms-0.41.68-dev.zip`, SHA-256 `ed115844d2de2925f8a087a3a8cdbed646e870bfd529ca31eb3b2dfd1f97a7c0`. Avanzamento **77%** (M04 89%, catalogo 77%, integrazioni Joomla 92%). Collaudi manuali Joomla restano aperti.
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #208
 
