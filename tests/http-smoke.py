@@ -428,7 +428,8 @@ try:
   'jform[presentation_prerequisite_text]':'HTTP prior knowledge','jform[presentation_difficulty]':'intermediate','jform[presentation_estimated_minutes]':'75'})
  form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
  expect(form['fields']['jform[presentation_estimated_minutes]']=='75' and 'HTTP extended' in form['fields']['jform[presentation_description]'],'Presentation saved and reopened in native editor')
- programme=next(x for x in Page(h).links if parse_qs(urlparse(x).query).get('view')==['curriculum'])
+ expect('task="course.programme"' in h,'Saved course retains the curriculum action in its Programme tab')
+ programme='/administrator/index.php?option=com_jlms&view=curriculum&id='+str(course_id)
  # Close through the native controller before leaving the editor.
  close_url,close_html=submit(u,form,{'task':'course.save'})
  expect(parse_qs(urlparse(close_url).query).get('view')==['courses'],'Native save and close succeeds with all rendered controls')

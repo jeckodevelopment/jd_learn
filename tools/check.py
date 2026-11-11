@@ -50,6 +50,8 @@ for tag in ['it-IT','en-GB']:
 course_editor=(ROOT/'component/administrator/tmpl/course/edit.php').read_text()
 assert 'jlms-course-programme-link' not in course_editor
 assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
+course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
+assert "ToolbarHelper::custom('course.programme'" in course_view
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
