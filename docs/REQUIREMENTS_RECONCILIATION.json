@@ -24,17 +24,17 @@
     }
   },
   "implementation_progress": {
-    "percent": 76,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; la PR #222 integrata implementa CORE-09 (tag Joomla nativi per i corsi), catalogo dal 75% al 77%; 535/7 = 76,43%, arrotondato al 76%. L’accettazione manuale resta pendente.",
+    "percent": 77,
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #222 integra CORE-09 per i tag nativi; PR #223 integra il sottoinsieme CORE-07 per le associazioni dei corsi pubblicati, area integrazioni Joomla al 92%; 536/7 = 76,57%, arrotondato al 77%. L’accettazione manuale AC-20/AC-48 resta pendente.",
     "areas": [
       76,
       77,
       77,
       89,
       67,
-      91,
+      92,
       58
     ]
   },
-  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 integrata aggiunge i tag Joomla nativi ai corsi. Nell’esecuzione CI PR #222, validazione documentale e suite PHP 8.4/MariaDB + PHP 8.3/MySQL sono passate; il job browser è stato cancellato dopo essere rimasto bloccato nell’installazione del runtime. Collaudo Joomla manuale AC-19/AC-64 pendente."
+  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 integra i tag Joomla nativi per i corsi. PR #223 integra associazioni multilingua dei corsi pubblicati; nel run CI #43049378887 controlli documentali e due suite PHP/database sono passati, il job Chromium è ancora fermo nell’installazione del runtime. Accettazione Joomla manuale AC-20/AC-48 pendente."
 }
