@@ -1,3 +1,7 @@
+## 0.41.75-dev — anteprima pubblica esplicita dei materiali corso (PR #230)
+
+La PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) consente di selezionare esplicitamente gli allegati corso pubblici; il server mostra e consegna soltanto quelli pronti, della versione corrente, nel periodo attivo e per un corso visibile. La CI standard 4/4 è nel [run 43103266860](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860); merge `a01c096321769903c15212aa2b0c420e95245041`. Il pacchetto [JD-Learn-0.41.75-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551) ha SHA-256 interno `1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c` e wrapper `0c8a7dab69680ee9461cd35aaf94b45e19ec854cc9529411952695cda0409119`. Collaudo Joomla pendente.
+
 ## 0.41.54-dev — pulizia programmata degli asset materiali orfani (IMP-06)
 
 La routine Scheduler `jlms.materials.cleanup` elimina batch limitati di asset locali senza riferimenti più vecchi di 24 ore. Le revisioni collegate a lezioni, allegati, attestati e job restano intatte. PR [#202](https://github.com/jeckodevelopment/jd_learn/pull/202) integrata nel commit `fc94b715d265306777471a40e1043c9cec204d1b`; CI standard 4/4 superata nel [run 42886192087](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087). Pacchetto [JD-Learn-0.41.54-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087/artifacts/13797460306). Il collaudo manuale Joomla resta pendente.

@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main verificata **0.41.74-dev** integra la PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229); la candidata **0.41.75-dev** implementa anteprima pubblica esplicita per allegati dell’ambito corso. Build locale candidata SHA-256 `1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c`; collegamento e CI da registrare dopo l’apertura della PR.
+Aggiornato all’11 novembre 2026. Main **0.41.75-dev** integra PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230), con anteprime pubbliche esplicite per materiali corso; CI 4/4 nel [run 43103266860](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860), build e checksum registrati in [IMPLEMENTATION_EVIDENCE.json](IMPLEMENTATION_EVIDENCE.json). Avanzamento 78%; collaudi manuali Joomla e residui indicati qui sotto restano aperti.
 
 
 
