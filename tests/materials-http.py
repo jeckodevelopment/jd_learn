@@ -162,7 +162,7 @@ try:
  preview_path=urlparse(unescape(preview_link.group(1).decode())).path+'?'+urlparse(unescape(preview_link.group(1).decode())).query
  _,preview_body,_=request(admin,preview_path)
  expect(preview_body==b'NEW_PRIVATE_NOTES\n','Course-scope material is delivered through the protected read-only preview endpoint')
- request(admin,'/administrator/index.php?option=com_jlms&task=material.preview&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&lesson_id='+str(fixture['lesson_id'])+'&id='+str(public_files['Lesson handout']['id']),expected=404)
+ request(admin,'/administrator/index.php?option=com_jlms&task=material.preview&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&lesson_id='+str(fixture['lesson_id'])+'&id='+str(lesson_file['id']),expected=404)
  sample=public_files['Public sample'];future_sample=public_files['Future public sample']
  course_path='/index.php?option=com_jlms&view=course&id='+str(fixture['course_id'])
  _,public_page,_=request(guest,course_path)
