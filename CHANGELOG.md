@@ -3,7 +3,7 @@
 - L’anteprima del corso mostra gli allegati dell’ambito corso anche nelle lezioni di testo e video, come nel contesto di fruizione, mantenendo privati i campioni pubblici e i file non disponibili.
 - Il download passa da un endpoint amministrativo protetto dall’autorizzazione editoriale e dalla relazione corso/versione/lezione; materiali associati a una lezione continuano a comparire solo per lezioni Documento/Audio. Nessun progresso o tentativo viene creato.
 - Collaudo Joomla richiesto sul sito di prova: vedere [IMP-03 nel testbook](docs/QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
-- CI, PR e pacchetto da registrare dopo le verifiche del candidato.
+- PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) integrata nel commit `dbd277605a7eebd18d5d16515853a5f61a40d3f0`; CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231). Pacchetto [JD-Learn-0.41.77-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810), SHA-256 interno `22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1`, wrapper ZIP da estrarre una volta, SHA-256 `fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f`; scadenza 25 novembre 2026. Collaudo manuale Joomla pendente.
 
 # Changelog
 

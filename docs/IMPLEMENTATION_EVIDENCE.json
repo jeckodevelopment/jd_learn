@@ -1,59 +1,59 @@
 {
   "audited_at": "2026-11-11",
   "product": "JD Learn",
-  "version": "0.41.75-dev",
+  "version": "0.41.77-dev",
   "code_baseline": {
-    "tested_head": "a9d32032b7fd5980ef8a27ab041d73785ce8a676",
-    "parent_main_commit": "b9d0c23",
-    "pull_request": 230,
-    "merged_main_commit": "a01c096321769903c15212aa2b0c420e95245041"
+    "tested_head": "20278996a3d704c205f40a73fbfe023a866258de",
+    "parent_main_commit": "00d4c25a2f3087280a24dd326f264329e9087db2",
+    "pull_request": 235,
+    "merged_main_commit": "dbd277605a7eebd18d5d16515853a5f61a40d3f0"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43103266860,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860",
+    "run_id": 43110571231,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130799955168,
+        "id": 130825182925,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130800039449,
+        "id": 130825247447,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130800039533,
+        "id": 130825247511,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130800039512,
+        "id": 130825247122,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #230: CI standard 4/4; include suite Joomla/database, upload asset e ClamAV reale nel flusso esistente. Il caso nuovo di preview pubblica non ha ancora accettazione manuale sul sito Joomla."
+    "note": "PR #235 / IMP-03: CI standard 4/4. La suite materiali verifica anteprima e download corso nell’ambito editoriale anche per lezione testo, esclusione del collegamento lezione fuori ambito e assenza di mutazioni didattiche. Accettazione Joomla manuale ancora pendente."
   },
   "package": {
-    "artifact_id": 13892259551,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551",
-    "artifact_name": "JD-Learn-0.41.75-dev",
-    "installable_package": "pkg_jlms-0.41.75-dev.zip",
-    "sha256": "1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c",
-    "artifact_sha256": "0c8a7dab69680ee9461cd35aaf94b45e19ec854cc9529411952695cda0409119",
-    "size_bytes": 569304,
-    "artifact_size_bytes": 569055,
-    "expires_at": "2026-11-25T21:32:33Z",
+    "artifact_id": 13896755810,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810",
+    "artifact_name": "JD-Learn-0.41.77-dev",
+    "installable_package": "pkg_jlms-0.41.77-dev.zip",
+    "sha256": "22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1",
+    "artifact_sha256": "fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f",
+    "size_bytes": 569573,
+    "artifact_size_bytes": 569325,
+    "expires_at": "2026-11-25T22:21:23Z",
     "wrapper_zip": true,
-    "build_source": "Build CI riproducibile sul commit della PR #230: PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, controlli leggeri e Chromium standard 4/4. Hash del pacchetto interno verificato nel log CI; digest wrapper dal log upload artifact."
+    "build_source": "Build CI riproducibile sul commit PR 20278996a3d704c205f40a73fbfe023a866258de; PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, controlli leggeri e Chromium standard 4/4. Hash interno verificato nel log CI; digest wrapper dai metadati artifact."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -66,6 +66,74 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-11",
+      "product": "JD Learn",
+      "version": "0.41.75-dev",
+      "code_baseline": {
+        "tested_head": "a9d32032b7fd5980ef8a27ab041d73785ce8a676",
+        "parent_main_commit": "b9d0c23",
+        "pull_request": 230,
+        "merged_main_commit": "a01c096321769903c15212aa2b0c420e95245041"
+      },
+      "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
+      "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+      "ci": {
+        "run_id": 43103266860,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 130799955168,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 130800039449,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 130800039533,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 130800039512,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "PR #230: CI standard 4/4; include suite Joomla/database, upload asset e ClamAV reale nel flusso esistente. Il caso nuovo di preview pubblica non ha ancora accettazione manuale sul sito Joomla."
+      },
+      "package": {
+        "artifact_id": 13892259551,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551",
+        "artifact_name": "JD-Learn-0.41.75-dev",
+        "installable_package": "pkg_jlms-0.41.75-dev.zip",
+        "sha256": "1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c",
+        "artifact_sha256": "0c8a7dab69680ee9461cd35aaf94b45e19ec854cc9529411952695cda0409119",
+        "size_bytes": 569304,
+        "artifact_size_bytes": 569055,
+        "expires_at": "2026-11-25T21:32:33Z",
+        "wrapper_zip": true,
+        "build_source": "Build CI riproducibile sul commit della PR #230: PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, controlli leggeri e Chromium standard 4/4. Hash del pacchetto interno verificato nel log CI; digest wrapper dal log upload artifact."
+      },
+      "full_requirement_acceptance": {},
+      "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
+      "excluded_evidence": [
+        "Nessun benchmark300/500",
+        "Nessun audit completo WCAG/ASVS",
+        "Nessun collaudo completo dei provider reali",
+        "Patch corrente Joomla non verificata",
+        "Recovery/backup completo non verificato"
+      ],
+      "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md."
+    },
     {
       "audited_at": "2026-11-11",
       "product": "JD Learn",
