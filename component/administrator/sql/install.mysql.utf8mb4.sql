@@ -6,7 +6,7 @@
 CREATE TABLE IF NOT EXISTS `#__jlms_courses` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `asset_id` INT UNSIGNED NOT NULL DEFAULT 0,
-  `catid` INT UNSIGNED NOT NULL,
+  `catid` INT NOT NULL,
   `alias` VARCHAR(180) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `language` VARCHAR(7) NOT NULL DEFAULT '*',
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `#__jlms_editions` (
 CREATE TABLE IF NOT EXISTS `#__jlms_teachers` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` INT UNSIGNED NULL,
-  `catid` INT UNSIGNED NOT NULL,
+  `catid` INT NOT NULL,
   `asset_id` INT UNSIGNED NOT NULL DEFAULT 0,
   `title` VARCHAR(255) NOT NULL,
   `alias` VARCHAR(180) NOT NULL,
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `#__jlms_course_teachers` (
 CREATE TABLE IF NOT EXISTS `#__jlms_pathways` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `asset_id` INT UNSIGNED NOT NULL DEFAULT 0,
-  `catid` INT UNSIGNED NOT NULL,
+  `catid` INT NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `alias` VARCHAR(180) NOT NULL,
   `description` MEDIUMTEXT NULL,
@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `#__jlms_quizzes` (
 CREATE TABLE IF NOT EXISTS `#__jlms_questions` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `asset_id` INT UNSIGNED NOT NULL DEFAULT 0,
-  `catid` INT UNSIGNED NOT NULL,
+  `catid` INT NOT NULL,
   `language` VARCHAR(7) NOT NULL DEFAULT '*',
   `current_revision_id` BIGINT UNSIGNED NULL,
   `state` SMALLINT NOT NULL DEFAULT 0,
@@ -771,3 +771,9 @@ CREATE TABLE IF NOT EXISTS `#__jlms_manual_enrollments` (
   UNIQUE KEY `uq_manual_enrollment` (`enrollment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ALTER TABLE `#__jlms_manual_enrollments` ADD CONSTRAINT `#__jlms_fk_manual_enrollment` FOREIGN KEY (`enrollment_id`, `course_version_id`) REFERENCES `#__jlms_enrollments` (`id`, `course_version_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Native Joomla categories may be removed only after every JD Learn reference is moved.
+ALTER TABLE `#__jlms_courses` ADD CONSTRAINT `#__jlms_fk_course_category` FOREIGN KEY (`catid`) REFERENCES `#__categories` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `#__jlms_pathways` ADD CONSTRAINT `#__jlms_fk_pathway_category` FOREIGN KEY (`catid`) REFERENCES `#__categories` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `#__jlms_teachers` ADD CONSTRAINT `#__jlms_fk_teacher_category` FOREIGN KEY (`catid`) REFERENCES `#__categories` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `#__jlms_questions` ADD CONSTRAINT `#__jlms_fk_question_category` FOREIGN KEY (`catid`) REFERENCES `#__categories` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

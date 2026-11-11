@@ -15,7 +15,7 @@ for p in ROOT.rglob('*.json'):
  if 'dist' not in p.parts:json.loads(p.read_text())
 sql=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
 assert len(re.findall(r'^CREATE TABLE',sql,re.M))==42
-assert len(re.findall(r'ADD CONSTRAINT',sql))==59
+assert len(re.findall(r'ADD CONSTRAINT',sql))==63
 assert not re.search(r'\b(?:DROP TABLE|TRUNCATE TABLE)\b',sql,re.I)
 # Catch undefined component/plugin translation keys, including INI keys assembled in ACL metadata.
 keys=set()
@@ -61,4 +61,4 @@ if package.exists():
 # Keep implementation claims separate from planned acceptance and verify their source references.
 import runpy
 runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
-print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':42,'foreign_keys':59,'structural_checks':'passed'}))
+print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':42,'foreign_keys':63,'structural_checks':'passed'}))

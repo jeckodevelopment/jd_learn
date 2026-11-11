@@ -130,6 +130,14 @@ $createCourse=static function(int $catid,string $tag,string $alias)use($factory,
 };
 $course=$createCourse($child,'en-GB','taxonomy-visible-course');$italianCourse=$createCourse($it,'it-IT','taxonomy-corso-italiano');
 $hiddenCourse=$createCourse($hidden,'en-GB','HIDDEN_TAXONOMY_COURSE');
+$deleteRejected=false;
+try{$db->setQuery('DELETE FROM #__categories WHERE id='.(int)$child)->execute();}
+catch(\Throwable){$deleteRejected=true;}
+catExpect($deleteRejected && (int)$db->setQuery('SELECT COUNT(*) FROM #__categories WHERE id='.(int)$child)->loadResult()===1,'permanent category deletion is restricted while a course references it');
+$update($en,['published'=>-2]);
+catExpect(catHidden($child) && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id='.(int)$course)->loadResult()===1,'trashing a category hides its course without deleting teaching history');
+$update($en,['published'=>1]);
+catExpect(!catHidden($child) && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id='.(int)$course)->loadResult()===1,'restoring a category restores visibility and retains the course');
 $app->getInput()->set('id',$en);
 $app->loadIdentity($guest);
 $categoryModel=$factory->createModel('Category','Site',['ignore_request'=>true]);$categoryModel->setState('filter.category_id',$en);$categoryModel->setState('list.limit',20);$categoryModel->setState('list.start',0);
