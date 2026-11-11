@@ -1,3 +1,9 @@
+## 0.41.68-dev — associazioni multilingua su corsi pubblicati (IMP-07 / CORE-07)
+
+- Abilita i selettori nativi delle associazioni per corsi in bozza valida e pubblicati con versione live.
+- Consente di collegare, staccare e ripristinare traduzioni senza cambiare versioni didattiche, iscrizioni o progressi; ACL, checkout e coerenza delle lingue restano verificati.
+- Aggiorna test automatici, documentazione multilingua e collaudi manuali AC-20/AC-48. Accettazione Joomla manuale pendente.
+
 ## 0.41.67-dev — Tag Joomla nativi per i corsi (IMP-07 / CORE-09)
 
 - Registra i corsi come contenuto taggabile Joomla con type alias `com_jlms.course`, content type UCM e mapping dei campi standard.
