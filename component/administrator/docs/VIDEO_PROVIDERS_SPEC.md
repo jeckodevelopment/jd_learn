@@ -239,9 +239,8 @@ L'account token per eventuali metadati autenticati è una funzione aggiuntiva se
 |---|---|---|---|
 | account_id | stringa | Obbligatorio | Account amministrato dal gestore; formato e corrispondenza verificati dal plugin |
 | playback_domain | hostname HTTPS autorizzato | Obbligatorio | Dominio playback Stream riconosciuto e associato alla configurazione; non endpoint generico arbitrario |
-| signing_mode | enum api_endpoint/local_key | Obbligatorio, api_endpoint | Determina i soli segreti necessari |
+| Firma Cloudflare | Solo API endpoint | Configurazione fissa del plugin | La firma locale non è implementata né configurabile; i parametri legacy vengono ignorati |
 | api_token_ref | riferimento SecretProvider | Obbligatorio in api_endpoint | Nessun valore del token memorizzato nella lezione o esposto nei DTO |
-| signing_key_ref e signing_key_id | riferimento + stringa | Obbligatori in local_key | Chiave server separata e libreria/primitive mantenute; niente JWT creato con algoritmo improvvisato |
 | token_ttl_seconds | integer | Default 900 | Intervallo applicativo 60–3600, ulteriormente limitato dalle scadenze note e capacità effettive |
 | renew_before_seconds | integer | Default 120 | Positivo e minore del TTL; rinnovo solo previa nuova autorizzazione |
 | require_signed_playback | boolean | Fisso true per video riservati | Configurazione remota non verificata/non sicura impedisce di dichiarare il contenuto protetto |
