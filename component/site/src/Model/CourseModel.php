@@ -20,6 +20,8 @@ final class CourseModel extends ItemModel
         $id = (int) ($pk ?? $app->getInput()->getInt('id', 0));
         $item = $app->bootComponent('com_jlms')->getCatalogService()->outline($actor, $app->getLanguage()->getTag(), $id);
         $item['fields'] = \Jlms\Component\Jlms\Site\Helper\CourseFields::prepare($item['course'], $app->getLanguage()->getTag());
+        $item['public_materials'] = $app->bootComponent('com_jlms')->getMaterialService()->publicPreviewList(
+            $id, (int) $item['course']->current_version_id, $app->getInput()->getInt('course_material_page', 0));
         return $item;
     }
 }

@@ -482,6 +482,18 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
 
 
+## IMP-06 — anteprima pubblica esplicita dei materiali corso (0.41.75-dev)
+
+Riferimenti: MAT-02/04/08, AC-100/101/103. Usare Joomla 6 di prova eliminabile, un corso pubblicato visibile agli ospiti, una bozza aggiornabile e un account con permesso di gestione materiali. Preparare due allegati corso (PDF innocuo e TXT), un allegato lezione, un file in quarantena e un file con data futura.
+
+1. Nella bozza caricare PDF e TXT come materiali del corso. Lasciare il PDF privato e selezionare **Disponibile come anteprima pubblica** solo per il TXT; salvare, riaprire e verificare che il valore resti selezionato. Provare l'opzione su un allegato lezione: il salvataggio deve rifiutare la combinazione e non deve renderlo pubblico.
+2. Pubblicare la nuova versione. Da ospite aprire la scheda del corso: la regione **Materiali del corso** deve mostrare solo il TXT, con titolo, descrizione, nome file, MIME e dimensione. Il PDF privato, l'allegato lezione, il file in quarantena e quello fuori finestra non devono apparire.
+3. Aprire il link del TXT e verificare download riuscito. Per PDF/immagine esplicitamente pubblicati verificare apertura inline; per gli altri formati il browser deve ricevere il download. La risposta deve includere cache privata/no-store e `X-Robots-Tag: noindex, nofollow`.
+4. Provare URL dirette per un attachment privato, ID associato a un altro corso/versione, corso non visibile, materiale non pronto, disabilitato o fuori finestra; atteso 404/negato senza contenuto. Ripetere con POST e aspettarsi rifiuto del metodo.
+5. Disabilitare il corso, ritirare la versione corrente oppure disabilitare/scadere il file; riprovare il medesimo link. L'accesso deve cessare senza dipendere dalla pagina già aperta. Collegare un asset esistente alla bozza: il nuovo collegamento deve restare privato finché l'editor non seleziona esplicitamente l'anteprima per l'ambito corso.
+
+**Esito sito Joomla:** Non eseguito.
+
 ## IMP-06 — lifecycle e riuso dei materiali (0.41.64-dev)
 
 Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. Su Joomla 6 di prova predisporre un corso con una bozza, almeno due lezioni e un editor con permesso di gestione materiali.

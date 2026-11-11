@@ -14,8 +14,31 @@ final class AttachmentController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['download', 'audio', 'preview', 'inline'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!in_array(strtolower($task), ['download', 'audio', 'preview', 'inline', 'publicpreview'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
         return parent::execute($task);
+    }
+
+    /** Serve one explicitly published course-level sample after rechecking public catalog visibility. */
+    public function publicpreview(): void
+    {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+        if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405); }
+        try {
+            try { $courseId = CurriculumService::id($this->input->get('course_id', null, 'RAW')); }
+            catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            try { $attachmentId = CurriculumService::id($this->input->get('id', null, 'RAW')); }
+            catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            $component = $this->app->bootComponent('com_jlms');
+            $course = $component->getCatalogService()->course($this->app->getIdentity(), $this->app->getLanguage()->getTag(), $courseId);
+            $file = $component->getMaterialService()->publicPreviewDownload($courseId, (int) $course->current_version_id, $attachmentId);
+            MaterialDownload::send($this->app, $file);
+        } catch (\Throwable $error) {
+            $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
+            if (in_array($error->getMessage(), $known, true)) { throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode()); }
+            Log::add('Public preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
+        }
     }
 
     public function preview(): void

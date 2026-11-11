@@ -6,11 +6,19 @@ Ogni esecuzione esamina al massimo 100 record (parametro `limit`, intervallo 1�
 
 Nella bozza è possibile collegare lo stesso materiale a un altro ambito del corso (corso o lezione) senza caricare una seconda copia. Il collegamento condivide l'asset privato immutabile ma mantiene titolo, descrizione e disponibilità del materiale sorgente; una duplicazione dello stesso asset nello stesso ambito viene rifiutata. La destinazione deve appartenere alla medesima versione in bozza. Il collegamento non modifica corsi già pubblicati e il cleanup conserva l'asset finché almeno un allegato lo usa.
 
+## Anteprima pubblica esplicita
+
+Nel form di un allegato dell'ambito corso, un editor autorizzato può scegliere **Disponibile come anteprima pubblica**. L'opzione è disattivata per default e il server rifiuta l'attivazione per allegati di lezione. La scheda pubblica mostra solo questi allegati, nella versione corrente pubblicata, se lo stato è pubblicato, la scansione è pronta e l'eventuale finestra di disponibilità è aperta. Titolo, descrizione, nome file, tipo e dimensione sono mostrati solo dopo questa scelta. Non vengono esposti gli altri materiali, i percorsi di storage o l'elenco completo degli allegati.
+
+Ogni apertura rivalida la visibilità corrente del corso nel catalogo, la versione e l'allegato esplicitamente pubblicato. I file PDF e le immagini passive ammesse possono aprirsi inline; gli altri formati vengono scaricati. La risposta non viene memorizzata in cache e non è indicizzata. Riutilizzare un asset crea sempre un nuovo collegamento privato: la pubblicazione in anteprima va scelta di nuovo per il collegamento dell'ambito corso. Le versioni assegnate e gli allegati di lezione restano protetti.
+
 La routine interviene solo su asset orfani registrati nel database. La soglia configurabile è un'attesa minima prima della rimozione, non una garanzia di cancellazione all'ora esatta: dipende dall'esecuzione pianificata e dal limite per batch. Non scandisce o cancella file sconosciuti nella directory di storage, non rimuove copie già scaricate dagli utenti e non sostituisce il backup.
 
 ## Collaudo Joomla
 
 Nel sito di prova caricare un materiale in una lezione della bozza e usare **Collega materiale esistente** per renderlo disponibile anche nei materiali del corso o in un'altra lezione. Verificare che il titolo/file siano gli stessi, che il collegamento duplicato nello stesso ambito sia rifiutato, e che rimuovere un collegamento non cancelli l'altro. Sostituire poi il file originale e verificare che i collegamenti esistenti puntino all'asset precedente e non alterino versioni pubblicate. Creare un’attività pianificata con limite `100` e avviarla manualmente: asset ancora referenziati devono restare disponibili. Il CI verifica il percorso di pulizia creando un asset non referenziato oltre la soglia e invocando la routine nativa Scheduler.
+
+Per l'anteprima pubblica, creare o aggiornare una bozza e caricare due materiali del corso, uno lezione, un asset in quarantena e uno con data futura. Lasciare privata la prima risorsa e abilitare l'opzione solo sulla seconda risorsa corso; pubblicare una nuova versione. Da ospite aprire la scheda pubblica: deve apparire soltanto il materiale esplicitamente selezionato, con i metadati previsti e download funzionante. Provare l'URL diretta di un file privato, lezione, quarantena, versione precedente o corso non visibile: nessun file deve essere restituito. Revocare la visibilità del corso o disabilitare/scadere il materiale e ripetere: l'accesso deve cessare immediatamente. Provare anche un upload/riuso lezione con l'opzione attiva: deve essere rifiutato o rimanere privato secondo il controllo del form.
 
 
 ## Scansione antivirus ClamAV
