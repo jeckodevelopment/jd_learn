@@ -123,7 +123,14 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
     [(object) ['status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
 );
-expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist blocks an attachment configured as preview-only');
+expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist accepts a ready course-level public preview attachment');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
+    [(object) ['lesson_id' => 12, 'status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
+);
+expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist rejects public preview on lesson attachments');
 $scheduled = MaterialAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T12:00:00', 'Europe/Rome');
 expect($scheduled === ['publish_up' => '2026-02-02 09:30:00', 'publish_down' => '2026-02-02 11:00:00'], 'material window is stored as UTC using the course time zone');
 expect(MaterialAvailability::editor($scheduled['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00', 'stored material window is shown in the course time zone');
