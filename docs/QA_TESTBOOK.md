@@ -12,6 +12,20 @@
 6. Con un utente senza permesso di modifica o con un corso in checkout da un altro operatore, verifica che una richiesta diretta non possa modificare o staccare il gruppo.
 7. Apri la pagina pubblica e verifica che la Language Switcher mostri soltanto traduzioni pubblicate e accessibili; una traduzione non accessibile non deve essere rivelata.
 
+## IMP-07 — Ricerca nei selettori delle traduzioni (CORE-07, 0.41.69-dev; [PR #224](https://github.com/jeckodevelopment/jd_learn/pull/224) aperta)
+
+**Stato:** il campo di ricerca filtra localmente i corsi già autorizzati nel selettore per lingua, per titolo o ID. Limite massimo invariato: 2.000 candidati per lingua. La convalida server resta indipendente. Accettazione Joomla manuale da eseguire.
+
+**Comportamenti da testare in Joomla**
+
+1. Apri un corso con almeno 20 corsi eleggibili in una lingua di destinazione. Nel campo di ricerca digita una parte del titolo e verifica che restino selezionabili solo le corrispondenze.
+2. Cerca un ID completo e un frammento dell'ID nel titolo visualizzato (#ID); verifica che l'esito corretto sia selezionabile.
+3. Inserisci un testo senza corrispondenze: l'opzione di scollegamento resta disponibile e nessun altro corso deve poter essere scelto.
+4. Cancella il testo, scegli una traduzione e salva; riapri la scheda e verifica la selezione persistente.
+5. Ripeti su due lingue di destinazione nella stessa scheda: il filtro di un campo non deve alterare l'elenco dell'altro.
+6. Verifica che un corso senza permesso di modifica e un corso in checkout da un altro operatore non compaiano fra i candidati, anche cercandone titolo e ID.
+7. Con il filtro attivo salva una modifica alle associazioni; verifica che la validazione server mantenga i controlli su lingua, ACL, checkout e appartenenza a un altro gruppo.
+
 ## IMP-07 — Tag Joomla nativi sui corsi (CORE-09, 0.41.67-dev; PR #222 integrata)
 
 **Stato:** PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) integrata nel main; associazioni registrate con il tipo contenuto `com_jlms.course`. Criteri collegati: CORE-09, AC-19 e AC-64. Pacchetto installabile `dist/pkg_jlms-0.41.67-dev.zip` (SHA-256 `637e8284dde13f5b3c89398bac21a1aa862236a07619f978f33130dc8ec07ef6`). Accettazione manuale in Joomla ancora da eseguire.
