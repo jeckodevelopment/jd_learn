@@ -38,6 +38,7 @@ jobs:
           python3 tools/build.py
           python3 tools/check.py
           python3 tests/release-workflow.py
+          python3 tests/ftps-publish.py
   browser-navigation:
     name: Curriculum navigation in Chromium (controlled fixture)
     needs: plan

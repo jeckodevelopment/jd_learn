@@ -18,6 +18,11 @@ on:
         required: true
         default: Prima versione stabile di JD Learn
         type: string
+      confirmation:
+        description: Type PUBLISH JD LEARN X.Y.Z to authorize real publication
+        required: false
+        type: string
+        default: ''
       publish:
         description: Publish to GitHub Releases and production update site (requires approval)
         required: true
@@ -61,7 +66,8 @@ jobs:
             --url "https://github.com/jeckodevelopment/jd_learn/releases/download/v$VERSION/pkg_jlms-$VERSION.zip" \
             --output dist/jdlearn.xml
           sha256sum "dist/pkg_jlms-$VERSION.zip" > dist/RELEASE_SHA256SUMS.txt
-          python3 -m compileall -q tools/release_feed.py tools/publish_update_feed.py
+          python3 -m compileall -q tools/release_feed.py tools/publish_update_feed_ftps.py
+          python3 tests/ftps-publish.py
       - name: Upload candidate for review (not a public release)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -85,6 +91,14 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
+      - name: Check production authorization before any public release
+        env:
+          VERSION: ${{ inputs.version }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+          RELEASE_ENABLED: ${{ secrets.JDLEARN_RELEASE_ENABLED }}
+        run: |
+          test "$RELEASE_ENABLED" = "YES" || { echo "Production release is not enabled" >&2; exit 1; }
+          test "$CONFIRMATION" = "PUBLISH JD LEARN $VERSION" || { echo "Explicit release confirmation is missing" >&2; exit 1; }
       - name: Download verified candidate
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
@@ -132,18 +146,16 @@ jobs:
           local=open(f'dist/pkg_jlms-{v}.zip','rb').read()
           assert hashlib.sha256(data).digest()==hashlib.sha256(local).digest(), 'public release asset checksum mismatch'
           PY
-      - name: Publish feed atomically using SFTP
+      - name: Publish update feed using verified explicit FTPS
         env:
-          JDLEARN_SFTP_HOST: ${{ secrets.JDLEARN_SFTP_HOST }}
-          JDLEARN_SFTP_USER: ${{ secrets.JDLEARN_SFTP_USER }}
-          JDLEARN_SFTP_PORT: ${{ secrets.JDLEARN_SFTP_PORT }}
-          JDLEARN_SFTP_DIRECTORY: ${{ secrets.JDLEARN_SFTP_DIRECTORY }}
-          JDLEARN_SFTP_PRIVATE_KEY: ${{ secrets.JDLEARN_SFTP_PRIVATE_KEY }}
-          JDLEARN_SFTP_KNOWN_HOSTS: ${{ secrets.JDLEARN_SFTP_KNOWN_HOSTS }}
+          JDLEARN_FTPS_HOST: ${{ secrets.JDLEARN_FTPS_HOST }}
+          JDLEARN_FTPS_USER: ${{ secrets.JDLEARN_FTPS_USER }}
+          JDLEARN_FTPS_PORT: ${{ secrets.JDLEARN_FTPS_PORT }}
+          JDLEARN_FTPS_DIRECTORY: ${{ secrets.JDLEARN_FTPS_DIRECTORY }}
+          JDLEARN_FTPS_PASSWORD: ${{ secrets.JDLEARN_FTPS_PASSWORD }}
           JDLEARN_FEED_FILE: dist/jdlearn.xml
         run: |
-          python3 -m pip install --user 'paramiko==3.5.1'
-          python3 tools/publish_update_feed.py
+          python3 tools/publish_update_feed_ftps.py
       - name: Verify production update feed is readable
         env:
           VERSION: ${{ inputs.version }}
