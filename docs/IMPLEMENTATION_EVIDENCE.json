@@ -1,59 +1,59 @@
 {
   "audited_at": "2026-11-11",
   "product": "JD Learn",
-  "version": "0.41.73-dev",
+  "version": "0.41.74-dev",
   "code_baseline": {
-    "tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
-    "parent_main_commit": "da08e4202c88c32c66427fc8f48dd062cbc34420",
-    "pull_request": 228,
-    "merged_main_commit": "d677924aca265f3397be156f7298d614bad330f3"
+    "tested_head": "220faaba60b47814d890e4b3165ef030e74e0a11",
+    "parent_main_commit": "7b669b0369f4192ac3bc5a558cfba9c67223a377",
+    "pull_request": 229,
+    "merged_main_commit": "d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43091365354,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354",
+    "run_id": 43094357303,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130768976241,
+        "id": 130779243874,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130769045228,
+        "id": 130779314959,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130769045006,
+        "id": 130779315080,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130769045120,
+        "id": 130779314924,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #228: CI standard 4/4 superata; manifest Cloudflare, compatibilità dei parametri legacy, test Joomla e pacchetto verificati. Accettazione manuale con account provider reale ancora pendente."
+    "note": "PR #229: CI standard 4/4; ClamAV reale con database firme aggiornato, file pulito/EICAR e policy quarantine. Accettazione manuale Joomla con server configurato pendente."
   },
   "package": {
-    "artifact_id": 13888777492,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492",
-    "artifact_name": "JD-Learn-0.41.73-dev",
-    "installable_package": "pkg_jlms-0.41.73-dev.zip",
-    "sha256": "b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172",
-    "artifact_sha256": "f3259abb5ce3dad3413da045cbd396967d41c98abd7d756ff82489833276a688",
-    "size_bytes": 567395,
-    "artifact_size_bytes": 567173,
-    "expires_at": "2026-11-25T19:56:41Z",
+    "artifact_id": 13890232415,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415",
+    "artifact_name": "JD-Learn-0.41.74-dev",
+    "installable_package": "pkg_jlms-0.41.74-dev.zip",
+    "sha256": null,
+    "artifact_sha256": "902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8",
+    "size_bytes": null,
+    "artifact_size_bytes": 567200,
+    "expires_at": "2026-11-25T20:16:48Z",
     "wrapper_zip": true,
-    "build_source": "Build riproducibile CI standard PR #228; 4/4 job superati; SHA-256 del pacchetto interno verificato nei log."
+    "build_source": "Build riproducibile CI standard PR #229, 4/4 job superati; artifact SHA-256 wrapper verificato nei metadati GitHub."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -2827,7 +2827,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #228 integrata in main; CI standard 4/4 e pacchetto installabile verificati; accettazione manuale Cloudflare Stream con account reale pendente.",
+  "candidate_status": "PR #229 integrata in main; CI standard 4/4 e integrazione ClamAV reale verificate; accettazione manuale sul sito Joomla pendente.",
   "previous_verified_release": {
     "version": "0.41.51-dev",
     "pull_request": 187,
@@ -2836,46 +2836,46 @@
     "package_sha256": "1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab"
   },
   "candidate_increment": {
-    "version": "0.41.73-dev",
-    "scope": "IMP-05: form Cloudflare Stream limitato alla firma API implementata; parametri legacy della firma locale ignorati, manifest verificato.",
-    "status": "PR #228 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.74-dev",
+    "scope": "IMP-06/SIC-02: verifica ClamAV reale via socket Unix in CI, file pulito ed EICAR; socket assente resta in quarantena.",
+    "status": "PR #229 integrata; CI standard 4/4 superata; package artifact verificato.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 228,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/228",
-    "tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
-    "parent_main_commit": "da08e4202c88c32c66427fc8f48dd062cbc34420",
-    "ci_run_id": 43091365354,
-    "artifact_id": 13888777492,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492",
-    "artifact_sha256": "f3259abb5ce3dad3413da045cbd396967d41c98abd7d756ff82489833276a688",
-    "package_sha256": "b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172",
-    "package_size_bytes": 567395,
-    "artifact_size_bytes": 567173,
-    "artifact_expires_at": "2026-11-25T19:56:41Z",
-    "merged_main_commit": "d677924aca265f3397be156f7298d614bad330f3"
+    "pull_request": 229,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/229",
+    "tested_head": "220faaba60b47814d890e4b3165ef030e74e0a11",
+    "parent_main_commit": "7b669b0369f4192ac3bc5a558cfba9c67223a377",
+    "ci_run_id": 43094357303,
+    "artifact_id": 13890232415,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415",
+    "artifact_sha256": "902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8",
+    "package_sha256": null,
+    "package_size_bytes": null,
+    "artifact_size_bytes": 567200,
+    "artifact_expires_at": "2026-11-25T20:16:48Z",
+    "merged_main_commit": "d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c"
   },
   "latest_verified_increment": {
-    "version": "0.41.73-dev",
-    "scope": "IMP-05: form Cloudflare Stream limitato alla firma API implementata; parametri legacy della firma locale ignorati, manifest verificato.",
-    "status": "PR #228 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.74-dev",
+    "scope": "IMP-06/SIC-02: verifica ClamAV reale via socket Unix in CI, file pulito ed EICAR; socket assente resta in quarantena.",
+    "status": "PR #229 integrata; CI standard 4/4 superata; package artifact verificato.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 228,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/228",
-    "tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
-    "parent_main_commit": "da08e4202c88c32c66427fc8f48dd062cbc34420",
-    "ci_run_id": 43091365354,
-    "artifact_id": 13888777492,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492",
-    "artifact_sha256": "f3259abb5ce3dad3413da045cbd396967d41c98abd7d756ff82489833276a688",
-    "package_sha256": "b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172",
-    "package_size_bytes": 567395,
-    "artifact_size_bytes": 567173,
-    "artifact_expires_at": "2026-11-25T19:56:41Z",
-    "merged_main_commit": "d677924aca265f3397be156f7298d614bad330f3"
+    "pull_request": 229,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/229",
+    "tested_head": "220faaba60b47814d890e4b3165ef030e74e0a11",
+    "parent_main_commit": "7b669b0369f4192ac3bc5a558cfba9c67223a377",
+    "ci_run_id": 43094357303,
+    "artifact_id": 13890232415,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415",
+    "artifact_sha256": "902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8",
+    "package_sha256": null,
+    "package_size_bytes": null,
+    "artifact_size_bytes": 567200,
+    "artifact_expires_at": "2026-11-25T20:16:48Z",
+    "merged_main_commit": "d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c"
   },
   "next_candidate": {
     "priority": "Proseguire con i residui IMP-06: preview/metadati, scansione antivirus end-to-end con ClamAV reale e completamento del ciclo di vita/conservazione. Poi requisiti core residui secondo piano; mantenere distinti i collaudi manuali dei materiali, provider e categorie.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
   },
-  "current_status": "Main 0.41.73-dev (PR #228 integrata, merge d677924aca265f3397be156f7298d614bad330f3); CI candidate 4/4 superata; build installabile verificato; avanzamento stimato 78% (543/7; M04 92%); collaudo manuale Joomla/provider pendente."
+  "current_status": "Main 0.41.74-dev (PR #229 integrata, merge d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c); CI standard 4/4 superata con ClamAV reale; artifact installabile verificato; avanzamento stimato 78% (543/7; M04 92%); accettazione manuale Joomla pendente."
 }
