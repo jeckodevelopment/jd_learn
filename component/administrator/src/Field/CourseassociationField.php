@@ -22,7 +22,7 @@ final class CourseassociationField extends ListField
         $actor->clearAccessRights();
         $language = (string) $this->element['language'];
         $query = $db->createQuery()->select('id, title, created_by, checked_out')->from('#__jlms_courses')
-            ->where('language = :language')->where('((state = 0 AND current_version_id IS NULL) OR id = :selected)')
+            ->where('language = :language')->where('((state = 0 AND current_version_id IS NULL) OR (state = 1 AND current_version_id IS NOT NULL) OR id = :selected)')
             ->bind(':language', $language)->order('id DESC');
         $selected = (int) $this->value;
         $query->bind(':selected', $selected, \Joomla\Database\ParameterType::INTEGER);
