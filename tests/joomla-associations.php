@@ -227,6 +227,12 @@ foreach ([$en,$it,$all] as $course) {
 }
 $app->loadIdentity(new \Joomla\CMS\User\User());
 $links = $helper->getAssociationsForItem($en, 'course');
+$selectorModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
+$selectorItem = $selectorModel->getItem($otherEn);
+$selectorForm = $selectorModel->getForm((array) $selectorItem, false);
+$publishedTargetInput = $selectorForm->getInput('it-IT', 'associations');
+assocExpect(str_contains($publishedTargetInput, 'value="' . $it . '"'), 'published course is offered as an editable translation target');
+
 assocExpect(($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id='.$it.'&lang=it-IT', 'native language switch resolves published course sheet');
 // Joomla treats language access=0 as unrestricted; access=2 must still hide it from guests.
 $language->access=2; $language->store();
@@ -248,7 +254,16 @@ $category->published=1; $db->updateObject('#__categories',$category,'id');
 assocExpect(isset($helper->getAssociationsForItem($en,'course')['it-IT']), 'restored category visibility reflected immediately');
 $app->loadIdentity($actor);
 $baseline = assocRows();
-assocExpect(!assocSave(assocData($en)+['associations'=>['it-IT'=>0]]) && assocRows() === $baseline, 'published translation group immutable in draft editor');
+$livePointers = json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR);
+$versionCount = (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult();
+assocExpect(assocSave(assocData($en)+['associations'=>['it-IT'=>0]]), 'authorized editor can detach a published translation group');
+assocExpect(!(int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult(), 'detaching a published group removes only its native association rows');
+assocExpect(json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR) === $livePointers
+    && (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult() === $versionCount,
+    'published translation graph edits preserve the live teaching pointers and versions');
+assocExpect(assocSave(assocData($en)+['associations'=>['it-IT'=>$it]]), 'authorized editor can relink published translations');
+assocExpect((int) $helper->getAssociations('course', $en)['it-IT']->id === $it, 'native association API resolves the restored published translation');
+assocExpect(assocRows() !== '', 'native association graph remains valid after published relink');
 file_put_contents($fixturePath,json_encode(['en'=>$en,'it'=>$it,'other_en'=>$otherEn,'other_it'=>$otherIt,'all'=>$all,
     'version'=>$versions[$en],'catid'=>$catid,'rows'=>$baseline],JSON_THROW_ON_ERROR));
 echo json_encode(['native_association_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
