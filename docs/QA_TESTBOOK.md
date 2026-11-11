@@ -501,7 +501,7 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 
 ## IMP-05 — consegna HTML5 locale compatibile con Apache/LiteSpeed (0.41.71-dev, PR #226)
 
-**Stato:** candidata. Lo streaming protetto usa il controller Joomla e PHP a blocchi; non richiede Nginx, moduli aggiuntivi o regole server. I vecchi valori `x_accel` vengono migrati al flusso PHP. La CI sul candidato coprirà Range/HEAD, autorizzazione/revoca, storage privato e assenza di header specifici del server. La capacità concorrente non è certificata senza benchmark.
+**Stato:** PR [#226](https://github.com/jeckodevelopment/jd_learn/pull/226) integrata nel merge `1b889ee550a23700071488930b50fbcb0081ad74`. CI 4/4 nel [run 43079973855](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855); pacchetto [JD-Learn-0.41.71-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855/artifacts/13885130510), ZIP SHA-256 `3d9dcca6c943da364e6c6f83d6ac45b44f51a8a7a5d34f532da40150b9e21c8f`, wrapper `4ecf79e8fa6d64cc0171412dbc56b4ea26e7ee0f4a48544348fb4a6817e34d33`. Lo streaming protetto usa PHP a blocchi e non richiede Nginx, moduli aggiuntivi o regole server. I vecchi valori `x_accel` sono serviti via PHP. La capacità concorrente non è certificata senza benchmark.
 
 **Comportamenti da testare in Joomla**
 

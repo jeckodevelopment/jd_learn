@@ -1,59 +1,59 @@
 {
   "audited_at": "2026-11-11",
   "product": "JD Learn",
-  "version": "0.41.70-dev",
+  "version": "0.41.71-dev",
   "code_baseline": {
-    "tested_head": "085d99d26852f44b4bb1194161c4566af7a24612",
-    "parent_main_commit": "ca42871c5c228207fc4b448bff79674eee4effe8",
-    "pull_request": 225,
-    "merged_main_commit": "ca42871c5c228207fc4b448bff79674eee4effe8"
+    "tested_head": "fd1f7996160b79d40f644c92131960ab2c745dab",
+    "parent_main_commit": "fc5ec372d95873948a43cdb0688edeee62dc8f23",
+    "pull_request": 226,
+    "merged_main_commit": "1b889ee550a23700071488930b50fbcb0081ad74"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43075293879,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43075293879",
+    "run_id": 43079973855,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130713409398,
+        "id": 130730012145,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130713482939,
+        "id": 130730249241,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130713483105,
+        "id": 130730249501,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130713483290,
+        "id": 130730249007,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #225: CI standard 4/4 superata; suite di ricollocazione categorie e fixture Chromium superate. Accettazione manuale Joomla ancora pendente."
+    "note": "PR #226: CI standard 4/4 superata; upload e streaming locale MP4, autorizzazione, Range/HEAD e revoca sono testati nei due stack PHP/database; fixture Chromium superato. Accettazione manuale Joomla e benchmark concorrente restano pendenti."
   },
   "package": {
-    "artifact_id": 13881162374,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43075293879/artifacts/13881162374",
-    "artifact_name": "JD-Learn-0.41.70-dev",
-    "installable_package": "pkg_jlms-0.41.70-dev.zip",
-    "sha256": "f83ae9a484e2707795aea7d620276dbcb54f15948c76ac71d4ae5c5ee5f3fd46",
-    "artifact_sha256": "d8d649f4d68a14bb448763e2ff2c97e165eeaeec70b626a3db32bec6fb7d5c7e",
-    "size_bytes": 566649,
-    "artifact_size_bytes": 566422,
-    "expires_at": "2026-11-25T18:15:40Z",
+    "artifact_id": 13885130510,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855/artifacts/13885130510",
+    "artifact_name": "JD-Learn-0.41.71-dev",
+    "installable_package": "pkg_jlms-0.41.71-dev.zip",
+    "sha256": "3d9dcca6c943da364e6c6f83d6ac45b44f51a8a7a5d34f532da40150b9e21c8f",
+    "artifact_sha256": "4ecf79e8fa6d64cc0171412dbc56b4ea26e7ee0f4a48544348fb4a6817e34d33",
+    "size_bytes": 565995,
+    "artifact_size_bytes": 565767,
+    "expires_at": "2026-11-25T18:44:50Z",
     "wrapper_zip": true,
-    "build_source": "CI standard PR #225: build riproducibile e suite completa; ZIP interno e wrapper CI verificati."
+    "build_source": "CI standard PR #226 run 43079973855; build riproducibile e suite 4/4 completata."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -2756,7 +2756,7 @@
       "artifact_expires_at": "2026-11-24T21:36:47Z"
     }
   ],
-  "evidence_scope": "Test automatici completi del candidato PR #225. Accettazione manuale Joomla e test hosting reale restano da eseguire.",
+  "evidence_scope": "Build PR #226 verificata con CI standard 4/4. Accettazione manuale Joomla, benchmark concorrente e capacità produttiva restano da eseguire.",
   "ci_policy_verification": {
     "date": "2026-11-07",
     "pull_request": 48,

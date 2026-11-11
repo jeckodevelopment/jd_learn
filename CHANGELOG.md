@@ -1,8 +1,8 @@
 ## 0.41.71-dev — streaming video HTML5 compatibile con Apache/LiteSpeed (IMP-05)
 
-- Build candidata della PR #226: stream MP4 privato con PHP a blocchi, controlli Joomla e supporto Range/HEAD; rimosse le configurazioni Nginx.
+- PR [#226](https://github.com/jeckodevelopment/jd_learn/pull/226) integrata in main (merge `1b889ee550a23700071488930b50fbcb0081ad74`): stream MP4 privato con PHP a blocchi, controlli Joomla e supporto Range/HEAD; rimosse le configurazioni Nginx.
 - I siti aggiornati con il valore legacy `x_accel` usano il percorso PHP protetto. Le prestazioni concorrenti richiedono benchmark separato.
-- Comportamenti da collaudare nel sito di prova: vedere [testbook IMP-05](docs/QA_TESTBOOK.md#imp-05--consegna-html5-locale-compatibile-con-apachelitespeed-04171-dev-pr-226).
+- CI standard 4/4 superata nel [run 43079973855](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855). Pacchetto [JD-Learn-0.41.71-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43079973855/artifacts/13885130510), ZIP SHA-256 `3d9dcca6c943da364e6c6f83d6ac45b44f51a8a7a5d34f532da40150b9e21c8f`, wrapper `4ecf79e8fa6d64cc0171412dbc56b4ea26e7ee0f4a48544348fb4a6817e34d33`. Test Joomla manuale e benchmark concorrente restano aperti; vedere [testbook IMP-05](docs/QA_TESTBOOK.md#imp-05--consegna-html5-locale-compatibile-con-apachelitespeed-04171-dev-pr-226).
 
 ## 0.41.70-dev — ricollocazione dipendenze categoria (IMP-07 / CAT-01 / CORE-01)
 

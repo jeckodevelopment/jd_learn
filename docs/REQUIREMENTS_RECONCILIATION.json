@@ -1,8 +1,8 @@
 {
   "date": "2026-11-11",
-  "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
-  "runtime_tested_head": "124ed457fd4f9f8bf61828c83fc6386839767d34",
-  "ci_run": 43006202795,
+  "baseline_commit": "1b889ee550a23700071488930b50fbcb0081ad74",
+  "runtime_tested_head": "fd1f7996160b79d40f644c92131960ab2c745dab",
+  "ci_run": 43079973855,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -25,12 +25,12 @@
   },
   "implementation_progress": {
     "percent": 77,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #225 aggiunge la ricollocazione atomica delle dipendenze categoria e porta il catalogo all’81%; PR #222 integra CORE-09 e PR #223–#224 il sottoinsieme CORE-07, area integrazioni Joomla al 92%; 540/7 = 77,14%, arrotondato al 77%. Accettazione manuale Joomla ancora pendente.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #225 porta il catalogo all’81% con ricollocazione atomica delle dipendenze categoria; PR #226 porta M04 al 90% con streaming HTML5 protetto compatibile con Apache/LiteSpeed; integrazioni Joomla al 92%; 541/7 = 77,29%, arrotondato al 77%. Accettazione manuale Joomla ancora pendente.",
     "areas": [
       76,
       81,
       77,
-      89,
+      90,
       67,
       92,
       58
