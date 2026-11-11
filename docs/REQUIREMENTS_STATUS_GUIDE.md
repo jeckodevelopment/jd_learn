@@ -5,8 +5,8 @@ Ricognizione iniziale del **10 novembre 2026** sulla baseline main `70c9dff` / r
 | Dimensione | Conteggio | Significato |
 |---|---:|---|
 | Implementazione completata | 14 | Nessun residuo di codice identificato nel sottoinsieme core esplicitato |
-| Implementazione parziale | 166 | Codice/documentazione presente, con delta o completezza puntuale ancora da riscontrare |
-| Implementazione non iniziata | 30 | Percorso specifico non disponibile; uno schema non è una funzione |
+| Implementazione parziale | 167 | Codice/documentazione presente, con delta o completezza puntuale ancora da riscontrare |
+| Implementazione non iniziata | 29 | Percorso specifico non disponibile; uno schema non è una funzione |
 | Interamente 1.0.0 | 133 | Criteri baseline inclusi |
 | Misto | 40 | Sottoinsieme core e criteri differiti distinti nella stessa riga |
 | Interamente fase 2 | 37 | Non entra nei gate/denominatori core |
