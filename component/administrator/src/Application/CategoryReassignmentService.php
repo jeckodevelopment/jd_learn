@@ -45,7 +45,7 @@ final class CategoryReassignmentService
 
             $counts[$key] = $this->count($reference['table'], $categoryId);
             $query = $this->db->createQuery()
-                ->select('id, title, created_user_id, lft, rgt')
+                ->select('id, title, created_user_id, checked_out, lft, rgt')
                 ->from('#__categories')
                 ->where('extension = :extension')
                 ->where('published <> -2')
@@ -61,8 +61,9 @@ final class CategoryReassignmentService
                 $this->db->loadObjectList(),
                 static function (object $target) use ($actor, $reference): bool {
                     $asset = $reference['extension'] . '.category.' . (int) $target->id;
-                    return $actor->authorise('core.edit', $asset)
-                        || ((int) $target->created_user_id === (int) $actor->id && $actor->authorise('core.edit.own', $asset));
+                    return (empty($target->checked_out) || (int) $target->checked_out === (int) $actor->id)
+                        && ($actor->authorise('core.edit', $asset)
+                            || ((int) $target->created_user_id === (int) $actor->id && $actor->authorise('core.edit.own', $asset)));
                 },
             ));
         }
