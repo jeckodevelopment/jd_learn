@@ -1,6 +1,6 @@
-## IMP-07 — Tag Joomla nativi sui corsi (CORE-09, 0.41.67-dev; PR candidata)
+## IMP-07 — Tag Joomla nativi sui corsi (CORE-09, 0.41.67-dev; PR #222 integrata)
 
-**Stato:** implementazione candidata nella PR; associazioni registrate con il tipo contenuto `com_jlms.course`. Criteri collegati: CORE-09, AC-19 e AC-64. Accettazione manuale in Joomla ancora da eseguire.
+**Stato:** PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) integrata nel main; associazioni registrate con il tipo contenuto `com_jlms.course`. Criteri collegati: CORE-09, AC-19 e AC-64. Accettazione manuale in Joomla ancora da eseguire.
 
 **Comportamenti da testare in Joomla**
 
