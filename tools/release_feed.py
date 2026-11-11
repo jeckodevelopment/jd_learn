@@ -12,7 +12,7 @@ p.add_argument('--version',required=True)
 p.add_argument('--zip',required=True,dest='package')
 p.add_argument('--url',required=True)
 p.add_argument('--output',required=True)
-p.add_argument('--joomla',default=r'6\\.[0-9]+')
+p.add_argument('--joomla',default=r'6\.[0-9]+')
 p.add_argument('--php-minimum',default='8.3')
 args=p.parse_args()
 if not re.fullmatch(r'[1-9]\d*\.\d+\.\d+',args.version):
