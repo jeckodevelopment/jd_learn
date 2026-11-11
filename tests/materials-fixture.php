@@ -100,11 +100,6 @@ if ($mode === 'cleanup') {
     $rootPath = (string) $params->get('material_storage_root', '');
     if ($rootPath === '' || !is_dir($rootPath)) { throw new \RuntimeException('Private material storage is not configured.'); }
     $now = gmdate('Y-m-d H:i:s');
-    $optionsRow=$db->setQuery("SELECT extension_id, params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadObject();
-    $componentParams=json_decode($optionsRow->params?:'{}',true,8,JSON_THROW_ON_ERROR);
-    $componentParams['material_orphan_retention_hours']=48;
-    $optionsRow->params=json_encode($componentParams,JSON_THROW_ON_ERROR);
-    $db->updateObject('#__extensions',$optionsRow,'extension_id');
     $createOrphan=static function(int $ageHours)use($db,$rootPath,$userId,$now):array{
         $key=bin2hex(random_bytes(32)).'.blob';$blob=$rootPath.DIRECTORY_SEPARATOR.$key;
         if(file_put_contents($blob,'orphan-fixture-'.$ageHours)===false)throw new \RuntimeException('Could not create private cleanup fixture.');
