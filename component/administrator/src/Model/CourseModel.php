@@ -54,7 +54,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 if ($field !== '_schema') { $item->{'presentation_' . $field} = $value; }
             }
             $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(),(int) $item->id);
-            $item->tags = new \\Joomla\\CMS\\Helper\\TagsHelper();
+            $item->tags = new \Joomla\CMS\Helper\TagsHelper();
             $item->tags->getTagIds((int) $item->id, 'com_jlms.course');
             $item->associations = [];
             foreach ($this->associationMembers((int) $item->id) as $member) {
@@ -78,7 +78,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             foreach (\Joomla\CMS\Language\LanguageHelper::getContentLanguages(false, false) as $language) {
                 $field = $xml->fields->fieldset->addChild('field');
                 foreach (['name' => $language->lang_code, 'type' => 'Courseassociation',
-                    'addfieldprefix' => 'Jlms\\Component\\Jlms\\Administrator\\Field',
+                    'addfieldprefix' => 'Jlms\Component\Jlms\Administrator\Field',
                     'language' => $language->lang_code, 'label' => $language->title, 'translate_label' => 'false',
                     'filter' => 'integer', 'default' => '0'] as $name => $value) {
                     $field->addAttribute($name, $value);
@@ -254,7 +254,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $this->setCurrentUser($user);
             $copySource = $this->copySource($user);
             if ($copySource !== null && !array_key_exists('tags', $data)) {
-                $tagIds = (new \\Joomla\\CMS\\Helper\\TagsHelper())->getTagIds((int) $copySource->course->id, 'com_jlms.course');
+                $tagIds = (new \Joomla\CMS\Helper\TagsHelper())->getTagIds((int) $copySource->course->id, 'com_jlms.course');
                 $data['tags'] = $tagIds ? explode(',', $tagIds) : [];
             }
             $record = null;
