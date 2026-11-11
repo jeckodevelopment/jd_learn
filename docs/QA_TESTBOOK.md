@@ -1,3 +1,16 @@
+## IMP-07 — Tag Joomla nativi sui corsi (CORE-09, 0.41.67-dev; PR candidata)
+
+**Stato:** implementazione candidata nella PR; associazioni registrate con il tipo contenuto `com_jlms.course`. Criteri collegati: CORE-09, AC-19 e AC-64. Accettazione manuale in Joomla ancora da eseguire.
+
+**Comportamenti da testare in Joomla**
+
+1. Crea due tag pubblicati in Joomla → Tag. Crea un corso in bozza, assegna entrambi i tag e salva; riapri il corso e verifica che le selezioni restino.
+2. Pubblica il corso e verifica che i tag compaiano nelle viste/filtri nativi `com_tags` e nel filtro tag del catalogo JD Learn, rispettando stato, accesso, lingua e ACL del corso.
+3. Rimuovi un tag dal corso, salva e verifica che non risulti più associato né tra i risultati filtrati per quel tag.
+4. Duplica il corso: verifica che i tag siano copiati nel nuovo corso; cambia la selezione nel duplicato e controlla che l’originale non cambi.
+5. Rinomina un tag dal gestore Joomla e verifica che il nuovo nome sia visibile nell’editor, nei filtri e nelle viste tag senza ricreare l’associazione.
+6. Verifica separatamente un corso italiano e uno inglese, e accedi con un utente privo dei permessi di modifica: non deve poter alterare le associazioni con una richiesta diretta.
+
 ## IMP-06 — consegna protetta dei materiali su Apache/LiteSpeed (0.41.66-dev)
 
 **Stato:** PR [#221](https://github.com/jeckodevelopment/jd_learn/pull/221) integrata nel main 0.41.66-dev. Il flusso usa PHP protetto e non richiede Nginx o moduli aggiuntivi. Pacchetto installabile: `dist/pkg_jlms-0.41.66-dev.zip` (SHA-256 `214e311d5cee72963b3e9d01ba958dfa52088b781c52052761e4f1d74ffdc4af`). Accettazione Joomla da eseguire.
