@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 integrata aggiunge i tag Joomla nativi ai corsi. Nell’esecuzione CI PR #222, validazione documentale e suite PHP 8.4/MariaDB + PHP 8.3/MySQL sono passate; il job browser è rimasto in installazione del runtime. Collaudo Joomla manuale AC-19/AC-64 pendente."
+  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 integrata aggiunge i tag Joomla nativi ai corsi. Nell’esecuzione CI PR #222, validazione documentale e suite PHP 8.4/MariaDB + PHP 8.3/MySQL sono passate; il job browser è stato cancellato dopo essere rimasto bloccato nell’installazione del runtime. Collaudo Joomla manuale AC-19/AC-64 pendente."
 }
