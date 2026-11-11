@@ -5,7 +5,8 @@ Total output lines: 839
 
 - Le FK verso categorie Joomla impediscono la cancellazione permanente di categorie ancora usate da corsi, percorsi, docenti o domande.
 - Il cestinamento e il ripristino restano reversibili e non cancellano corsi o storico; la visibilità segue lo stato della categoria.
-- PR in corso; CI e pacchetto saranno registrati dopo l’integrazione.
+- PR [#215](https://github.com/jeckodevelopment/jd_learn/pull/215) integrata con squash nel commit `148a4e4c7fe1a814f8a1bd561cecbb0380c7dd39`, milestone **1.0.0**; CI standard 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654).
+- Pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241), wrapper SHA-256 `dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0`, ZIP Joomla SHA-256 `938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5`, disponibile fino al 25 novembre 2026. Collaudo Joomla manuale nel [testbook](docs/QA_TESTBOOK.md#imp-07--lifecycle-sicuro-delle-categorie-04163-dev).
 
 ## 0.41.62-dev — filtri docente e percorso nel catalogo (IMP-07, PR #213 integrata)
 

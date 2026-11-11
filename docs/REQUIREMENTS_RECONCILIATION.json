@@ -24,11 +24,11 @@
     }
   },
   "implementation_progress": {
-    "percent": 74,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #204/#206/#207/#208/#210 completano incrementi IMP-07 progressivi; i filtri per difficoltà e fasce di durata portano catalogo/percorsi al 64%; non derivata dalle righe CSV.",
+    "percent": 76,
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #215 integra la protezione del lifecycle categorie e porta l’area catalogo dal 70% al 75%; 529/7 = 75,57%, arrotondato al 76%.",
     "areas": [
       76,
-      64,
+      75,
       77,
       85,
       67,

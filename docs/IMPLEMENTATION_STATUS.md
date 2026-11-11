@@ -1,4 +1,4 @@
-Candidato PR: **0.41.63-dev** aggiunge vincoli referenziali per il lifecycle delle categorie. Ancora da integrare e da validare nella CI standard; il main corrente resta 0.41.62-dev. Avanzamento precedente stimato 75% (524/7), con collaudi Joomla manuali pendenti.
+Aggiornato all’11 novembre 2026. Main **0.41.63-dev** integra PR #215; CI standard 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654). Pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241), wrapper SHA-256 `dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0`, ZIP Joomla SHA-256 `938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5`, disponibile fino al 25 novembre 2026. Stima 76% (529/7); collaudo Joomla manuale categorie pendente.
 
 IMP-04 / PR #196 aggiunge retry singolo e idempotente al salvataggio posizione audio dopo errori temporanei; nessun completamento/percentuale cambia. PR #181 integra anche l’apertura inline protetta di PDF e immagini nell’aula, oltre al download. L’endpoint rivalida enrollment, autorizzazione e disponibilità, limita l’inline ai MIME passivi e non attribuisce progresso. Il collaudo manuale è registrato nel [testbook](QA_TESTBOOK.md#imp-04--apertura-protetta-inline-di-pdf-e-immagini-nell-aula-04148-dev).
 
@@ -18,24 +18,24 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima seguente descrive main 0.41.62-dev; include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias, filtri tag/difficoltà/durata/docente/percorso e vista elenco. I collaudi Joomla restano separati.
+La stima seguente descrive main 0.41.63-dev; include Finder, ricerca/ordinamento, metadati SEO/social, URL SEF con alias, filtri tag/difficoltà/durata/docente/percorso, vista elenco e protezione lifecycle categorie. I collaudi Joomla restano separati.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
 |---|---:|
 | Corsi, versioni e programma (M01/M02) | 76% |
-| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 70% |
+| Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04) | 75% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 85% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 91% |
 | Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **75%** |
+| **Avanzamento complessivo stimato** | **76%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (524/7 = 74,86%, arrotondato al 75%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (529/7 = 75,57%, arrotondato al 76%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-07 comprende PR #204 e #206–#213; PR #211 aggiunge la vista elenco, PR #213 i filtri docente/percorso. Il catalogo è stimato al 70%; avanzamento complessivo 75% (524/7), stima arrotondata. Accettazione Joomla CAT-01 ancora pendente.
+IMP-07 comprende PR #204, #206–#213 e #215. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; cestinamento e ripristino conservano i record. Catalogo stimato 75%; avanzamento 76% (529/7). Accettazione Joomla lifecycle categorie, CAT-01 e SEO/Finder ancora pendente.
 
 ## Funzioni presenti e lavoro residuo
 
@@ -47,7 +47,7 @@ IMP-07 comprende PR #204 e #206–#213; PR #211 aggiunge la vista elenco, PR #21
 | Banca domande | Banca a revisioni e composizione quiz esistenti | PR #120 / 0.41.27-dev: elenco Search Tools separato dal form, crea/duplica/elimina e blocco cancellazione per dipendenze quiz/tentativi (AC-131); CI completa superata, collaudo manuale Joomla pendente. Altre nuove funzioni didattiche quiz restano fase 2 |
 | Programma | Moduli e lezioni testo/documento/audio/video/quiz; PR #185/0.41.50-dev integrata: avvio e ripresa registrati senza credito di completamento; PR #187 integrata aggiunge retry limitato dell’avvio; sequenziamento automatico delle attività obbligatorie (0.41.36-dev integrata dalla PR #138); le lezioni-documento riusano gli allegati protetti e richiedono almeno un allegato pronto per la pubblicazione (0.41.32-dev, PR #130, documento con allegato protetto; 0.41.33-dev, PR #132, audio MP3/OGG con player protetto e completamento manuale; CI standard superata, collaudi Joomla pendenti); editor contestuale singolo; duplicazioni autonome di corso/modulo/lezione; spostamento fra moduli della bozza; trascinamento e Su/Giù; recupero input dopo errori e avviso modifiche non salvate; editor delle regole supportate, soglia video e finestre temporali dei materiali della bozza | Trascrizioni audio e collaudo Joomla di rilascio relativo, scadenze individuali, finestre, prerequisiti e sequenziamento |
 | Ciclo editoriale | Bozza, workflow Joomla **In revisione** con invio, blocco authoring, restituzione e approvazione; archiviazione/ripristino senza alterare accessi assegnati (0.41.42-dev, PR #153/#159) e preview editoriale dei livelli di accesso in sola lettura, con esiti separati per catalogo/contenuto (0.41.43-dev, PR #162; CI standard 4/4); precontrollo con blocchi/avvisi distinti nella 0.41.10 e controlli video/materiali nella 0.41.11–0.41.12; aggiornamento in nuova versione immutabile; recupero storico con audit; 0.41.14: migrazione esplicita singola dal roster con mappatura, anteprima/hash, conferma/motivo, trasferimento dei soli completamenti non quiz e provenienza. La fonte resta nello storico; tentativi aperti, destinazione esistente o edizione non disponibile bloccano l’azione | Anteprima editoriale: testo/navigazione, video (PR #177/0.41.46-dev), audio e allegati documento (PR #179/0.41.47-dev); nessun enrollment o progresso; quiz non simulati. Collaudo manuale di workflow, migrazione, preview e casi negativi |
-| Catalogo, categorie e percorsi | Catalogo paginato, categorie/antenati, schede autorizzate, menu/SEF; 0.41.17 aggiunge gestione percorsi ordinati, viste pubbliche, accesso/stato corsi e progresso aggregato, test automatici superati | Collaudo manuale del percorso, SEO/ricerca completi, lifecycle categorie e associazioni pubblicate |
+| Catalogo, categorie e percorsi | Catalogo paginato, categorie/antenati, schede autorizzate, menu/SEF; 0.41.17 aggiunge gestione percorsi ordinati, viste pubbliche, accesso/stato corsi e progresso aggregato, test automatici superati | Collaudo manuale del percorso, SEO/ricerca completi, accettazione del lifecycle categorie e delle associazioni pubblicate |
 | Aula e area personale | Fruizione protetta, progressi persistenti, storico del proprietario, filtri e ripresa autorizzata; fallback R-05 corretto nella 0.41.5; la 0.41.7 rende i campi lezione congelati | Attività dettagliate e collegamento agli attestati; collaudo manuale di ripresa ancora richiesto |
 | Video e audio | Quattro plugin video base: YouTube, Vimeo, Cloudflare Stream e HTML5; registry, controlli di pubblicazione/fruizione, riepilogo plugin e loader asset estendibili senza patch (0.41.15); metadati automatici nell’editor, provenienza/ricevute e tolleranza con denominatore osservato; consenso, copertura/ripresa, soglia video configurabile per versione e per lezione, con default 90%, API/token Stream e MP4 privati con Range/Nginx; lezioni audio MP3/OGG con endpoint privato e player HTML5 (0.41.33-dev) | Collaudo completo di acquisizione/scarti con provider e browser reali (R-06); funzionalità estendibile di un quinto provider (fase 2), sottotitoli/trascrizioni/preferenze complete, firma locale/cache Stream e configurazioni restanti |
 | Materiali | Allegati distinti corso/lezione, upload validato, quarantena/scanner opzionale, storage privato, download autorizzato e apertura inline di PDF/JPEG/PNG/WebP nell’aula (PR #181/0.41.48-dev); preflight coerente con stato/scansione/preview e date iniziali/finali nel fuso del corso (0.41.13 in CI) | Riuso/anteprima/metadati e lifecycle completi, offload, pulizia e conservazione |
