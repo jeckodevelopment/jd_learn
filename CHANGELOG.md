@@ -1,3 +1,10 @@
+## 0.41.79-dev — label compatta per i campi lezione (STAB-04 / PR #241)
+
+- Accorcia la label del collegamento ai campi aggiuntivi delle lezioni: “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, sia nella toolbar Programma sia nei cataloghi di sistema.
+- La destinazione resta la gestione nativa `com_fields` con contesto `com_jlms.lesson`; permessi e visibilità del comando non cambiano.
+- Il controllo strutturale verifica le due traduzioni in entrambi i file lingua.
+- Collaudo Joomla: vedere [STAB-04 nel testbook](docs/QA_TESTBOOK.md#stab-04--label-compatta-per-i-campi-lezione-04179-dev).
+
 ## 0.41.78-dev — traduzione del menu Percorsi (STAB-01 / PR #238)
 
 - Aggiunta `COM_JLMS_PATHWAYS` ai cataloghi di sistema IT/EN; il menu amministrativo mostra la voce tradotta invece della chiave grezza. Controllo strutturale dedicato.

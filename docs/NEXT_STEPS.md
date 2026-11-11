@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) (IMP-03) e [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) (STAB-01). CI standard 4/4 nel [run 43113528500](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500); accettazione Joomla e residui di rilascio restano aperti. Avanzamento 78%.
+Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra le PR #235 e #238; candidato **0.41.79-dev** ([PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241)) per STAB-04 / issue #173 accorcia la label IT/EN dei campi lezione. CI standard 4/4 nel run 43113528500. Accettazione Joomla e residui di rilascio restano aperti. Avanzamento 78%.
 
 STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: la PR #238 / 0.41.78-dev integra la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
 
