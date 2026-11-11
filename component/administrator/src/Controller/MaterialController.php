@@ -72,6 +72,7 @@ final class MaterialController extends BaseController
     }
 
     public function upload(): void { $this->perform('upload'); }
+    public function reuse(): void { $this->perform('reuse'); }
     public function save(): void { $this->perform('save'); }
     public function delete(): void { $this->perform('delete'); }
     public function scan(): void { $this->perform('scan'); }
