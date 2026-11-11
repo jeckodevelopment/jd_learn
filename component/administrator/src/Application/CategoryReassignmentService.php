@@ -31,7 +31,7 @@ final class CategoryReassignmentService
     /** @return array{category:object, references:array<string,int>, targets:array<string,list<object>>} */
     public function inspect(User $actor, int $categoryId): array
     {
-        $source = $this->category($categoryId);
+        $source = $this->category($categoryId, true);
         $this->assertManage($actor, $source, 'core.delete');
         $counts = [];
         $targets = [];
@@ -144,13 +144,16 @@ final class CategoryReassignmentService
         return (int) $this->db->setQuery($query)->loadResult();
     }
 
-    private function category(int $id): object
+    private function category(int $id, bool $allowTrashed = false): object
     {
         if ($id < 2) {
             throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_INVALID_SOURCE');
         }
         $query = $this->db->createQuery()->select('id, title, extension, asset_id, created_user_id, checked_out, lft, rgt')
-            ->from('#__categories')->where('id = :id')->where('published <> -2');
+            ->from('#__categories')->where('id = :id');
+        if (!$allowTrashed) {
+            $query->where('published <> -2');
+        }
         $query->bind(':id', $id, ParameterType::INTEGER);
         $category = $this->db->setQuery($query)->loadObject();
         if (!$category || !str_starts_with((string) $category->extension, 'com_jlms.')) {

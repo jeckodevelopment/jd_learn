@@ -177,11 +177,12 @@ catExpect(count($menus)===4,'native category and category-index menus in both la
 $moveSource=$saveCategory(['title'=>'Reassignment source','alias'=>'reassignment-source','language'=>'en-GB']);
 $moveTarget=$saveCategory(['title'=>'Reassignment destination','alias'=>'reassignment-destination','language'=>'en-GB']);
 $moveChild=$saveCategory(['title'=>'Reassignment child','alias'=>'reassignment-child','parent_id'=>$moveSource,'language'=>'en-GB']);
+$update($moveSource,['published'=>-2]);
 $db->setQuery('UPDATE #__jlms_courses SET catid='.(int)$moveSource.' WHERE id='.(int)$course)->execute();
 $versionBefore=(int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$course)->loadResult();
 $reassignment=$component->getCategoryReassignmentService();
 $inspection=$reassignment->inspect($actor,$moveSource);
-catExpect($inspection['references']['courses']===1 && $inspection['targets']['courses']!==[],'category dependency review counts courses and offers permitted sibling destinations');
+catExpect($inspection['references']['courses']===1 && $inspection['targets']['courses']!==[],'category dependency review includes trashed sources, counts courses and offers permitted sibling destinations');
 catExpect(!in_array($moveChild,array_map(static fn($target)=>(int)$target->id,$inspection['targets']['courses']),true),'descendant categories are excluded as relocation targets');
 $descendantRejected=false;try{$reassignment->reassign($actor,$moveSource,['courses'=>$moveChild]);}catch(\InvalidArgumentException){$descendantRejected=true;}
 catExpect($descendantRejected,'server rejects a manually submitted descendant destination');

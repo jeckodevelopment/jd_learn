@@ -24,8 +24,8 @@ final class HtmlView extends BaseHtmlView
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
         $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()->select('id, title, extension, created_user_id, checked_out, lft, rgt')->from('#__categories')
-            ->where('extension LIKE ' . $db->quote('com_jlms.%'))->where('published <> -2')->order('extension, lft');
+        $query = $db->createQuery()->select('id, title, extension, created_user_id, checked_out, lft, rgt, published')->from('#__categories')
+            ->where('extension LIKE ' . $db->quote('com_jlms.%'))->order('extension, lft');
         $this->categories = array_values(array_filter($db->setQuery($query)->loadObjectList(), static function (object $category) use ($actor): bool {
             $asset = $category->extension . '.category.' . (int) $category->id;
             return $actor->authorise('core.delete', $asset)
