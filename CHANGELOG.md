@@ -1,9 +1,12 @@
 # Changelog
 
-## 0.41.73-dev — in preparazione
+## 0.41.73-dev — configurazione Cloudflare Stream coerente con il flusso API (IMP-05)
 
-- Cloudflare Stream: il plugin espone solo la configurazione API effettivamente supportata; i vecchi parametri di firma locale vengono ignorati. Nessuna modifica ai video o ai riferimenti ai token esistenti.
-- Collaudo manuale Joomla richiesto: aggiornamento plugin, controllo dei campi configurabili, riproduzione API con consenso e verifica che la configurazione dei video esistenti resti invariata.
+- PR [#228](https://github.com/jeckodevelopment/jd_learn/pull/228) integrata in main (merge `d677924aca265f3397be156f7298d614bad330f3`): rimossi dal form i controlli di firma locale non implementati; i parametri legacy vengono ignorati e le configurazioni API esistenti restano valide.
+- Aggiunto controllo Joomla del manifest e prova di compatibilità dei parametri legacy.
+- CI standard 4/4 superata nel [run 43091365354](https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354).
+- Pacchetto [JD-Learn-0.41.73-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492), ZIP interno SHA-256 `b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172`, wrapper `f3259abb5ce3dad3413da045cbd396967d41c98abd7d756ff82489833276a688`.
+- Accettazione Joomla con account Cloudflare e video reali ancora da eseguire.
 
 ## 0.41.72-dev — conservazione configurabile degli asset orfani (IMP-06)
 
