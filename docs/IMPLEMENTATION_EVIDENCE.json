@@ -1,59 +1,59 @@
 {
   "audited_at": "2026-11-11",
   "product": "JD Learn",
-  "version": "0.41.72-dev",
+  "version": "0.41.73-dev",
   "code_baseline": {
-    "tested_head": "3b2deaa662a92c16e5f0e2d7c2219b773a625d19",
-    "parent_main_commit": "d235231d8ce58cabf1ebda6d007bd3fd458f1f11",
-    "pull_request": 227,
-    "merged_main_commit": "d0f038a50ba8b02e2f5f617ca36112e943908c52"
+    "tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
+    "parent_main_commit": "da08e4202c88c32c66427fc8f48dd062cbc34420",
+    "pull_request": 228,
+    "merged_main_commit": "d677924aca265f3397be156f7298d614bad330f3"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43086020318,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43086020318",
+    "run_id": 43091365354,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130750488075,
+        "id": 130768976241,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130750573285,
+        "id": 130769045228,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130750573119,
+        "id": 130769045006,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130750573100,
+        "id": 130769045120,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #227: CI standard 4/4 superata; configurazione retention e cleanup Scheduler verificati nei due stack PHP/database. Collaudo manuale Joomla ancora pendente."
+    "note": "PR #228: CI standard 4/4 superata; manifest Cloudflare, compatibilità dei parametri legacy, test Joomla e pacchetto verificati. Accettazione manuale con account provider reale ancora pendente."
   },
   "package": {
-    "artifact_id": 13886837003,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43086020318/artifacts/13886837003",
-    "artifact_name": "JD-Learn-0.41.72-dev",
-    "installable_package": "pkg_jlms-0.41.72-dev.zip",
-    "sha256": "946e850060f38ed28c546099706997b8d7e3ce19f677cd7f045a0b33aaebea80",
-    "artifact_sha256": "d423c62034aeb86fc9f1cb0bdbcbee92099526a9d31c5ab0e4dde6a93fb73c2c",
-    "size_bytes": 566330,
-    "artifact_size_bytes": 566102,
-    "expires_at": "2026-11-25T19:23:16Z",
+    "artifact_id": 13888777492,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492",
+    "artifact_name": "JD-Learn-0.41.73-dev",
+    "installable_package": "pkg_jlms-0.41.73-dev.zip",
+    "sha256": "b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172",
+    "artifact_sha256": "f3259abb5ce3dad3413da045cbd396967d41c98abd7d756ff82489833276a688",
+    "size_bytes": 567395,
+    "artifact_size_bytes": 567173,
+    "expires_at": "2026-11-25T19:56:41Z",
     "wrapper_zip": true,
-    "build_source": "Build riproducibile CI standard PR #227; 4/4 job superati; SHA-256 del pacchetto interno verificato nei log."
+    "build_source": "Build riproducibile CI standard PR #228; 4/4 job superati; SHA-256 del pacchetto interno verificato nei log."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -2827,7 +2827,7 @@
     "application_package_unchanged": "faceb160a9f323b5bea52b0780573a8be17ed5643199b0a39bd0eb0b8877805d",
     "note": "No functional scope removed. Verify actual candidate/base before merge. The final evidence update changes only repository documentation."
   },
-  "candidate_status": "PR #215 integrata in main; CI standard 4/4 e pacchetto installabile verificati; accettazione manuale Joomla lifecycle categorie pendente.",
+  "candidate_status": "PR #228 integrata in main; CI standard 4/4 e pacchetto installabile verificati; accettazione manuale Cloudflare Stream con account reale pendente.",
   "previous_verified_release": {
     "version": "0.41.51-dev",
     "pull_request": 187,
@@ -2836,46 +2836,46 @@
     "package_sha256": "1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab"
   },
   "candidate_increment": {
-    "version": "0.41.72-dev",
-    "scope": "IMP-06: retention configurabile 24–8760 ore per asset locali orfani; cleanup Scheduler elimina solo asset oltre soglia.",
-    "status": "PR #227 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.73-dev",
+    "scope": "IMP-05: form Cloudflare Stream limitato alla firma API implementata; parametri legacy della firma locale ignorati, manifest verificato.",
+    "status": "PR #228 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 227,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/227",
-    "tested_head": "3b2deaa662a92c16e5f0e2d7c2219b773a625d19",
-    "parent_main_commit": "d235231d8ce58cabf1ebda6d007bd3fd458f1f11",
-    "ci_run_id": 43086020318,
-    "artifact_id": 13886837003,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43086020318/artifacts/13886837003",
-    "artifact_sha256": "d423c62034aeb86fc9f1cb0bdbcbee92099526a9d31c5ab0e4dde6a93fb73c2c",
-    "package_sha256": "946e850060f38ed28c546099706997b8d7e3ce19f677cd7f045a0b33aaebea80",
-    "package_size_bytes": 566330,
-    "artifact_size_bytes": 566102,
-    "artifact_expires_at": "2026-11-25T19:23:16Z",
-    "merged_main_commit": "d0f038a50ba8b02e2f5f617ca36112e943908c52"
+    "pull_request": 228,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/228",
+    "tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
+    "parent_main_commit": "da08e4202c88c32c66427fc8f48dd062cbc34420",
+    "ci_run_id": 43091365354,
+    "artifact_id": 13888777492,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492",
+    "artifact_sha256": "f3259abb5ce3dad3413da045cbd396967d41c98abd7d756ff82489833276a688",
+    "package_sha256": "b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172",
+    "package_size_bytes": 567395,
+    "artifact_size_bytes": 567173,
+    "artifact_expires_at": "2026-11-25T19:56:41Z",
+    "merged_main_commit": "d677924aca265f3397be156f7298d614bad330f3"
   },
   "latest_verified_increment": {
-    "version": "0.41.72-dev",
-    "scope": "IMP-06: retention configurabile 24–8760 ore per asset locali orfani; cleanup Scheduler elimina solo asset oltre soglia.",
-    "status": "PR #227 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.73-dev",
+    "scope": "IMP-05: form Cloudflare Stream limitato alla firma API implementata; parametri legacy della firma locale ignorati, manifest verificato.",
+    "status": "PR #228 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 227,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/227",
-    "tested_head": "3b2deaa662a92c16e5f0e2d7c2219b773a625d19",
-    "parent_main_commit": "d235231d8ce58cabf1ebda6d007bd3fd458f1f11",
-    "ci_run_id": 43086020318,
-    "artifact_id": 13886837003,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43086020318/artifacts/13886837003",
-    "artifact_sha256": "d423c62034aeb86fc9f1cb0bdbcbee92099526a9d31c5ab0e4dde6a93fb73c2c",
-    "package_sha256": "946e850060f38ed28c546099706997b8d7e3ce19f677cd7f045a0b33aaebea80",
-    "package_size_bytes": 566330,
-    "artifact_size_bytes": 566102,
-    "artifact_expires_at": "2026-11-25T19:23:16Z",
-    "merged_main_commit": "d0f038a50ba8b02e2f5f617ca36112e943908c52"
+    "pull_request": 228,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/228",
+    "tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
+    "parent_main_commit": "da08e4202c88c32c66427fc8f48dd062cbc34420",
+    "ci_run_id": 43091365354,
+    "artifact_id": 13888777492,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492",
+    "artifact_sha256": "f3259abb5ce3dad3413da045cbd396967d41c98abd7d756ff82489833276a688",
+    "package_sha256": "b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172",
+    "package_size_bytes": 567395,
+    "artifact_size_bytes": 567173,
+    "artifact_expires_at": "2026-11-25T19:56:41Z",
+    "merged_main_commit": "d677924aca265f3397be156f7298d614bad330f3"
   },
   "next_candidate": {
     "priority": "Proseguire con i residui IMP-06: preview/metadati, scansione antivirus end-to-end con ClamAV reale e completamento del ciclo di vita/conservazione. Poi requisiti core residui secondo piano; mantenere distinti i collaudi manuali dei materiali, provider e categorie.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
   },
-  "current_status": "Main 0.41.72-dev (PR #227 integrata, merge d0f038a50ba8b02e2f5f617ca36112e943908c52); CI candidate 4/4 superata, build installabile verificato; avanzamento stimato 77% (542/7; M04 91%); collaudo manuale Joomla pendente."
+  "current_status": "Main 0.41.73-dev (PR #228 integrata, merge d677924aca265f3397be156f7298d614bad330f3); CI candidate 4/4 superata; build installabile verificato; avanzamento stimato 78% (543/7; M04 92%); collaudo manuale Joomla/provider pendente."
 }
