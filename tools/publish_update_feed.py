@@ -45,7 +45,7 @@ for hostname,keys in hostkeys.items():
     for keytype,key in keys.items():
         ssh.get_host_keys().add(hostname,keytype,key)
 ssh.set_missing_host_key_policy(paramiko.RejectPolicy())
-port=int(os.environ.get('JDLEARN_SFTP_PORT','22'))
+port=int(os.environ.get('JDLEARN_SFTP_PORT') or '22')
 remote=posixpath.join(remote_dir,'jdlearn.xml')
 temporary=remote+'.upload-'+uuid.uuid4().hex
 try:
