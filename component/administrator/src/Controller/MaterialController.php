@@ -15,7 +15,7 @@ final class MaterialController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['upload', 'reuse', 'save', 'delete', 'scan', 'download'], true)) {
+        if (!in_array(strtolower($task), ['upload', 'reuse', 'save', 'delete', 'scan', 'download', 'preview'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -63,7 +63,7 @@ final class MaterialController extends BaseController
             'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_INVALID_INPUT',
             'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_MATERIAL_ALREADY_LINKED', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_OUTLINE_LIMIT',
             'COM_JLMS_PREVIEW_COURSE_SCOPE_ONLY',
-            'COM_JLMS_RANGE_INVALID', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
+            'COM_JLMS_RANGE_INVALID', 'COM_JLMS_METHOD_NOT_ALLOWED', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
         if (in_array($error->getMessage(), $known, true)) {
             $code = in_array($error->getCode(), [400, 401, 403, 404, 409, 413, 416, 422, 503], true) ? $error->getCode() : 400;
             throw new \RuntimeException(Text::_($error->getMessage()), $code);
@@ -86,6 +86,23 @@ final class MaterialController extends BaseController
         try {
             $file = $this->app->bootComponent('com_jlms')->getMaterialService()->adminDownload($this->app->getIdentity(),
                 $this->input->getInt('course_id', 0), $this->input->getInt('version_id', 0), $this->input->getInt('id', 0));
+            MaterialDownload::send($this->app, $file);
+        } catch (\Throwable $error) { $this->failure($error); }
+    }
+
+    public function preview(): void
+    {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) {
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+        }
+        try {
+            $ids = [];
+            foreach (['course_id', 'version_id', 'lesson_id', 'id'] as $key) {
+                try { $ids[] = CurriculumService::id($this->input->get($key, null, 'RAW')); }
+                catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            }
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->previewDownload($this->app->getIdentity(), ...$ids);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) { $this->failure($error); }
     }

@@ -157,12 +157,12 @@ try:
  expect(b'id="jlms-preview-course-materials"' in preview_page and b'Course handout' in preview_page and b'Public sample' not in preview_page and b'Future public sample' not in preview_page,
   'Student-style editorial preview shows available course materials for a text lesson, excluding public-only and future assets')
  public_files={row['title']:row for row in files()}
- preview_link=re.search(rb'href="([^"]*task=attachment\.preview[^"]*)"',preview_page)
+ preview_link=re.search(rb'href="([^"]*task=material\.preview[^"]*)"',preview_page)
  expect(preview_link is not None,'Text lesson preview includes a protected link to its available course material')
  preview_path=urlparse(unescape(preview_link.group(1).decode())).path+'?'+urlparse(unescape(preview_link.group(1).decode())).query
  _,preview_body,_=request(admin,preview_path)
  expect(preview_body==b'NEW_PRIVATE_NOTES\n','Course-scope material is delivered through the protected read-only preview endpoint')
- request(admin,'/index.php?option=com_jlms&task=attachment.preview&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&lesson_id='+str(fixture['lesson_id'])+'&id='+str(public_files['Lesson handout']['id']),expected=404)
+ request(admin,'/administrator/index.php?option=com_jlms&task=material.preview&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&lesson_id='+str(fixture['lesson_id'])+'&id='+str(public_files['Lesson handout']['id']),expected=404)
  sample=public_files['Public sample'];future_sample=public_files['Future public sample']
  course_path='/index.php?option=com_jlms&view=course&id='+str(fixture['course_id'])
  _,public_page,_=request(guest,course_path)

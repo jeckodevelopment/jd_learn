@@ -8,7 +8,7 @@ Nella bozza è possibile collegare lo stesso materiale a un altro ambito del cor
 
 ## Anteprima editoriale in sola lettura
 
-L'anteprima dell'editor mostra gli allegati dell'ambito corso disponibili anche quando è selezionata una lezione di testo o video. I materiali di lezione compaiono soltanto per le lezioni Documento/Audio. L'anteprima esclude campioni marcati per la sola esposizione pubblica, allegati disattivati, asset non pronti e file fuori dalla finestra; il download richiede ancora l'autorizzazione editoriale e rivalida corso, versione, lezione e collegamento. Questa vista non crea iscrizioni, tentativi o progressi. Il relativo collaudo Joomla è nel [testbook IMP-03](QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
+L'anteprima dell'editor mostra gli allegati dell'ambito corso disponibili anche quando è selezionata una lezione di testo o video. I materiali di lezione compaiono soltanto per le lezioni Documento/Audio. L'anteprima esclude campioni marcati per la sola esposizione pubblica, allegati disattivati, asset non pronti e file fuori dalla finestra; il download usa un endpoint amministrativo, richiede l'autorizzazione editoriale e rivalida corso, versione, lezione e collegamento. Questa vista non crea iscrizioni, tentativi o progressi. Il relativo collaudo Joomla è nel [testbook IMP-03](QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
 
 ## Anteprima pubblica esplicita
 

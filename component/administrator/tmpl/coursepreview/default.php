@@ -63,11 +63,11 @@ foreach ($this->preview['lessons'] as $entry) {
                 <section id="jlms-preview-course-materials" class="jlms-material-list">
                     <h3><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h3>
                     <?php foreach ($materials['course']['items'] as $file) : ?>
-                        <?php $url = 'index.php?option=com_jlms&task=attachment.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
+                        <?php $url = 'index.php?option=com_jlms&task=material.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
                         <article class="jlms-material"><h4><?= $this->escape($file->title) ?></h4>
                             <?php if ($file->description !== '') : ?><p><?= $this->escape($file->description) ?></p><?php endif; ?>
                             <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
-                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('site', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
+                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
                         </article>
                     <?php endforeach; ?>
                 </section>
@@ -95,11 +95,11 @@ foreach ($this->preview['lessons'] as $entry) {
                 <?php if ($lessonFiles) : ?><section id="jlms-preview-lesson-materials" class="jlms-material-list">
                     <h3><?= Text::_('COM_JLMS_LESSON_MATERIALS') ?></h3>
                     <?php foreach ($lessonFiles as $file) : if ($lesson->kind === 'audio' && in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true)) { continue; } ?>
-                        <?php $url = 'index.php?option=com_jlms&task=attachment.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
+                        <?php $url = 'index.php?option=com_jlms&task=material.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
                         <article class="jlms-material"><h4><?= $this->escape($file->title) ?></h4>
                             <?php if ($file->description !== '') : ?><p><?= $this->escape($file->description) ?></p><?php endif; ?>
                             <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
-                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('site', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
+                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
                         </article>
                     <?php endforeach; ?>
                 </section><?php endif; ?>
