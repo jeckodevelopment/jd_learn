@@ -5,7 +5,7 @@
 - Corretto il controllo di pubblicazione che trattava l'anteprima esplicita degli allegati corso come un materiale non pronto. Ora una bozza può pubblicare allegati corso selezionati come anteprima se pronti, validi e scansionati quando richiesto; l'anteprima degli allegati lezione resta rifiutata.
 - Estesa la prova HTTP Joomla con pubblicazione, pagina ospite, consegna pubblica, metodi/ID negati, finestra futura e visibilità del corso revocata.
 - Collaudo manuale Joomla richiesto nel sito di prova: vedere [testbook IMP-06](docs/QA_TESTBOOK.md#imp-06--anteprima-pubblica-esplicita-dei-materiali-corso-04176-dev).
-- PR, esito CI e pacchetto verranno registrati dopo la revisione del candidato.
+- PR [#233](https://github.com/jeckodevelopment/jd_learn/pull/233) integrata nel commit `5b7e7460dfa637b2847d6231f337b830950887df`; CI standard 4/4 nel [run 43106823340](https://github.com/jeckodevelopment/jd_learn/actions/runs/43106823340). Pacchetto [JD-Learn-0.41.76-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43106823340/artifacts/13894937008), wrapper SHA-256 `2a50af30a6bfa349806c38325c0388771e983d9f56495186736375519e077665`; collaudo manuale Joomla pendente.
 
 ## 0.41.75-dev — anteprima pubblica esplicita dei materiali corso (IMP-06)
 
