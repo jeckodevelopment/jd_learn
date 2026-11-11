@@ -131,9 +131,15 @@ if ($mode === 'cleanup') {
     @unlink($retainedBlob);
     echo "material cleanup passed\n"; exit(0);
 }
+if ($mode === 'hidden') {
+    $courseId = (int) ($argv[3] ?? 0);
+    if ($courseId < 1) { throw new \RuntimeException('Course id required.'); }
+    $db->setQuery('UPDATE #__jlms_courses SET state = 0 WHERE id = ' . $courseId)->execute();
+    echo "course hidden\n"; exit(0);
+}
 if ($mode === 'inspect') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
-    $rows = $db->setQuery('SELECT a.id, a.title, a.lesson_id, a.asset_id, f.status, f.storage_key, f.sha256, f.scan_json FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id='.(int)$fixture['version_id'].' ORDER BY a.id')->loadAssocList();
+    $rows = $db->setQuery('SELECT a.id, a.title, a.lesson_id, a.preview, a.asset_id, f.status, f.storage_key, f.sha256, f.scan_json FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id='.(int)$fixture['version_id'].' ORDER BY a.id')->loadAssocList();
     $version=$db->setQuery('SELECT status, revision, structure_hash FROM #__jlms_course_versions WHERE id='.(int)$fixture['version_id'])->loadAssoc();
     $foreign=$db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id='.(int)$fixture['foreign_version_id'])->loadAssocList();
     echo json_encode(['files'=>$rows,'version'=>$version,'foreign_files'=>$foreign],JSON_THROW_ON_ERROR).PHP_EOL;exit(0);

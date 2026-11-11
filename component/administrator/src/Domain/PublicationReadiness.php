@@ -95,8 +95,11 @@ final class PublicationReadiness
 
         foreach ($attachments as $attachment) {
             $scan = json_decode((string) ($attachment->scan_json ?? '{}'), true);
+            $preview = (int) ($attachment->preview ?? 0);
+            $lessonId = $attachment->lesson_id ?? null;
             if (($scanRequired && (!is_array($scan) || ($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
-                || ($attachment->status ?? '') !== 'ready' || (int) ($attachment->preview ?? 0) !== 0
+                || ($attachment->status ?? '') !== 'ready' || !in_array($preview, [0, 1], true)
+                || ($preview === 1 && $lessonId !== null)
                 || !MaterialAvailability::validStored($attachment->publish_up ?? null, $attachment->publish_down ?? null)) {
                 $blockers[] = 'COM_JLMS_MATERIAL_NOT_READY';
             }

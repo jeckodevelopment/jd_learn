@@ -357,8 +357,10 @@ final class PublicationService
         foreach ($attachments as $attachment) {
             $scan = json_decode($attachment['scan_json'] ?? '{}', true);
             $scanRequired = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false);
+            $preview = (int) $attachment['preview'];
             if (($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
-                || $attachment['status'] !== 'ready' || (int) $attachment['preview'] !== 0
+                || $attachment['status'] !== 'ready' || !in_array($preview, [0, 1], true)
+                || ($preview === 1 && $attachment['lesson_id'] !== null)
                 || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored($attachment['publish_up'], $attachment['publish_down'])) {
                 throw new \DomainException('COM_JLMS_MATERIAL_NOT_READY');
             }

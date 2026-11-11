@@ -482,7 +482,9 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
 
 
-## IMP-06 — anteprima pubblica esplicita dei materiali corso (0.41.75-dev)
+## IMP-06 — anteprima pubblica esplicita dei materiali corso (0.41.76-dev)
+
+**Aggiornamento candidato 0.41.76-dev:** la pubblicazione della versione deve accettare gli allegati corso esplicitamente selezionati come anteprima, se pronti e validi; allegati lezione con flag preview devono restare rifiutati. La suite HTTP automatica ora copre pubblicazione e accesso pubblico/negato.
 
 **Stato build:** PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) integrata nel commit `a01c096321769903c15212aa2b0c420e95245041`; CI standard 4/4 nel [run 43103266860](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860). Pacchetto [JD-Learn-0.41.75-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551), checksum interno nel registro prove. Accettazione manuale ancora non eseguita.
 

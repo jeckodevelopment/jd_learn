@@ -48,10 +48,10 @@ admin=client();student=client();guest=client()
 def admin_page(course=None,version=None,replace=0):
  course=fixture['course_id'] if course is None else course;version=fixture['version_id'] if version is None else version
  return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version)+'&replace_id='+str(replace))
-def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False,publish_up='',publish_down=''):
+def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False,publish_up='',publish_down='',preview=0):
  url,body,_=admin_page(course,version,replace);html=body.decode();page=Page(html);form=next(f for f in page.forms if f['id']=='jlms-material-upload')
  expect('jform[publish_up]' in html and 'jform[publish_down]' in html and 'datetime-local' in html,'Material form exposes both course-time-zone availability fields')
- fields=dict(form['fields']);fields.update({'jform[title]':title,'jform[description]':'Extra facoltativo','jform[lesson_id]':str(lesson),'jform[replace_id]':str(replace),'jform[publish_up]':publish_up,'jform[publish_down]':publish_down})
+ fields=dict(form['fields']);fields.update({'jform[title]':title,'jform[description]':'Extra facoltativo','jform[lesson_id]':str(lesson),'jform[replace_id]':str(replace),'jform[publish_up]':publish_up,'jform[publish_down]':publish_down,'jform[preview]':str(preview)})
  if invalid_token:
   fields={k:v for k,v in fields.items() if not re.fullmatch('[a-f0-9]{32}',k)}
  boundary='JDMaterial'+uuid.uuid4().hex;parts=[]
@@ -91,6 +91,7 @@ try:
  first=files()[0]
  expect(first['storage_key']!=old_key and (private/old_key).exists() and hashlib.sha256((private/old_key).read_bytes()).hexdigest()==old_hash,'Replacement preserves immutable old blob')
  upload('lesson.txt',b'LESSON_PRIVATE_NOTES\n','Lesson handout',lesson=fixture['lesson_id'])
+ upload('lesson-preview.txt',b'LESSON_PREVIEW_MUST_STAY_PRIVATE\n','Lesson public preview forbidden',lesson=fixture['lesson_id'],preview=1,expected=422)
  lesson_file=next(row for row in files() if row['title']=='Lesson handout')
  reuse_url,reuse_page,_=admin_page();reuse_form=next(f for f in Page(reuse_page.decode()).forms if f['fields'].get('task')=='material.reuse' and f['fields'].get('jform[id]')==str(lesson_file['id']))
  reuse_fields=dict(reuse_form['fields']);reuse_fields['jform[target_lesson_id]']='0'
@@ -144,10 +145,26 @@ try:
  upload('bad-window.txt',b'BAD_WINDOW\n','Invalid window',publish_up='2099-01-02T00:00:00',publish_down='2099-01-01T00:00:00',expected=400)
  expect(set(private.iterdir())==before_invalid and len(files())==before_invalid_links,'An invalid date range is rejected before a blob or link is created')
  upload('scheduled.txt',b'SCHEDULED_PRIVATE\n','Scheduled handout',publish_up='2099-01-01T00:00:00',publish_down='2099-01-02T00:00:00')
+ upload('public-sample.txt',b'PUBLIC_SAMPLE_CONTENT\n','Public sample',preview=1)
+ upload('scheduled-public-sample.txt',b'FUTURE_PUBLIC_SAMPLE\n','Future public sample',preview=1,publish_up='2099-01-01T00:00:00',publish_down='2099-01-02T00:00:00')
  u,b,_=request(admin,'/administrator/index.php?option=com_jlms&view=curriculum&id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id']))
  readiness=b.decode();expect('data-readiness-code="COM_JLMS_READINESS_MATERIAL_SCHEDULED"' in readiness and 'data-readiness-code="COM_JLMS_MATERIAL_NOT_READY"' not in readiness,'A valid material schedule is a readiness notice, not a publication blocker')
  publish()
  _,published,_=admin_page();expect('id="jlms-material-upload"' not in published.decode(),'Published material associations are immutable')
+ public_files={row['title']:row for row in files()}
+ sample=public_files['Public sample'];future_sample=public_files['Future public sample']
+ course_path='/index.php?option=com_jlms&view=course&id='+str(fixture['course_id'])
+ _,public_page,_=request(guest,course_path)
+ expect(b'id="jlms-course-materials"' in public_page and b'Public sample' in public_page and b'Course handout' not in public_page and b'Lesson handout' not in public_page and b'Future public sample' not in public_page,'Guest course page shows only explicitly public, currently available course material')
+ public_url='/index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id='+str(fixture['course_id'])+'&id='
+ _,public_body,public_headers=request(guest,public_url+str(sample['id']))
+ expect(public_body==b'PUBLIC_SAMPLE_CONTENT\n' and 'no-store' in public_headers.get('Cache-Control','') and 'noindex, nofollow' in public_headers.get('X-Robots-Tag',''),'Explicit course preview is downloadable without exposing the private asset path')
+ request(guest,public_url+str(future_sample['id']),expected=404)
+ private_id=public_files['Course handout']['id'];lesson_id=public_files['Lesson handout']['id'];foreign_id=json.loads(command('inspect'))['foreign_files'][0]['id']
+ for forbidden in [private_id,lesson_id,foreign_id]:request(guest,public_url+str(forbidden),expected=404)
+ request(guest,public_url+str(sample['id']),method='POST',expected=405)
+ _,head_body,head_headers=request(guest,public_url+str(sample['id']),method='HEAD')
+ expect(head_body==b'' and head_headers.get('Content-Length')==str(len(b'PUBLIC_SAMPLE_CONTENT\n')),'Public preview HEAD returns metadata without a response body')
  frozen=json.loads(command('inspect'))['version']
  act_material('scan',first['id'])
  expect(json.loads(command('inspect'))['version']==frozen,'Published security rescan preserves teaching hash and revision')
@@ -193,6 +210,9 @@ try:
  key=first['storage_key'];original=(private/key).read_bytes();(private/key).write_bytes(b'X'*len(original))
  request(student,download,expected=503);(private/key).write_bytes(original)
  expect(command('cleanup')=='material cleanup passed','Native scheduler applies configured retention and preserves newer unreferenced assets')
+ command('configure',json.dumps({'material_scan_required':0}))
+ command('hidden',str(fixture['course_id']))
+ request(guest,public_url+str(sample['id']),expected=404)
  print(json.dumps({'materials_http_checks':checks,'status':'passed','ranges':'passed','quarantine':'passed','revocation_same_session':'passed'}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-6000:],file=sys.stderr);raise
