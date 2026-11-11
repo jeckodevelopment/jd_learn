@@ -9,7 +9,9 @@ HTMLHelper::_('behavior.formvalidator');
 $id = (int) $this->item->id;
 ?>
 <form action="<?= Route::_('index.php?option=com_jlms&layout=edit&id=' . $id) ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
- <?php if (!$id) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
+ <section id="jlms-course-publication-help" class="mb-3">
+  <?php if (!$id) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
+ </section>
  <?php if ($this->readOnly) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_COURSE_CHECKED_OUT') ?></p><?php endif; ?>
  <?= HTMLHelper::_('uitab.startTabSet', 'jlms-course-tabs', ['active'=>'jlms-course-general']) ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-general', Text::_('COM_JLMS_COURSE')) ?>
