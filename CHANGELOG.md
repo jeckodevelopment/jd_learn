@@ -1,3 +1,10 @@
+## 0.41.77-dev — materiali corso nell’anteprima editoriale (IMP-03)
+
+- L’anteprima del corso mostra gli allegati dell’ambito corso anche nelle lezioni di testo e video, come nel contesto di fruizione, mantenendo privati i campioni pubblici e i file non disponibili.
+- Il download resta protetto dall’autorizzazione editoriale e dalla relazione corso/versione/lezione; materiali associati a una lezione continuano a comparire solo per lezioni Documento/Audio. Nessun progresso o tentativo viene creato.
+- Collaudo Joomla richiesto sul sito di prova: vedere [IMP-03 nel testbook](docs/QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
+- CI, PR e pacchetto da registrare dopo le verifiche del candidato.
+
 # Changelog
 
 ## 0.41.76-dev — pubblicazione delle anteprime materiali corso (IMP-06)

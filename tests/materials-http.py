@@ -1,9 +1,10 @@
 """Real uploads, immutable attachments, native login, protected ranges and scanner failure policy."""
 from pathlib import Path
 from html.parser import HTMLParser
+from html import unescape
 from urllib.request import build_opener,HTTPCookieProcessor,Request
 from urllib.error import HTTPError
-from urllib.parse import urljoin,urlencode
+from urllib.parse import urljoin,urlencode,urlparse
 from http.cookiejar import CookieJar
 import json,subprocess,sys,os,time,re,uuid,hashlib
 root=Path(sys.argv[1]).resolve()
@@ -151,7 +152,17 @@ try:
  readiness=b.decode();expect('data-readiness-code="COM_JLMS_READINESS_MATERIAL_SCHEDULED"' in readiness and 'data-readiness-code="COM_JLMS_MATERIAL_NOT_READY"' not in readiness,'A valid material schedule is a readiness notice, not a publication blocker')
  publish()
  _,published,_=admin_page();expect('id="jlms-material-upload"' not in published.decode(),'Published material associations are immutable')
+ preview_url='/administrator/index.php?option=com_jlms&view=coursepreview&id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&lesson_id='+str(fixture['lesson_id'])
+ _,preview_page,_=request(admin,preview_url)
+ expect(b'id="jlms-preview-course-materials"' in preview_page and b'Course handout' in preview_page and b'Public sample' not in preview_page and b'Future public sample' not in preview_page,
+  'Student-style editorial preview shows available course materials for a text lesson, excluding public-only and future assets')
  public_files={row['title']:row for row in files()}
+ preview_link=re.search(rb'href="([^"]*task=attachment\.preview[^"]*)"',preview_page)
+ expect(preview_link is not None,'Text lesson preview includes a protected link to its available course material')
+ preview_path=urlparse(unescape(preview_link.group(1).decode())).path+'?'+urlparse(unescape(preview_link.group(1).decode())).query
+ _,preview_body,_=request(admin,preview_path)
+ expect(preview_body==b'NEW_PRIVATE_NOTES\n','Course-scope material is delivered through the protected read-only preview endpoint')
+ request(admin,'/index.php?option=com_jlms&task=attachment.preview&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&lesson_id='+str(fixture['lesson_id'])+'&id='+str(public_files['Lesson handout']['id']),expected=404)
  sample=public_files['Public sample'];future_sample=public_files['Future public sample']
  course_path='/index.php?option=com_jlms&view=course&id='+str(fixture['course_id'])
  _,public_page,_=request(guest,course_path)
