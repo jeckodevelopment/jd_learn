@@ -91,13 +91,22 @@ try:
  first=files()[0]
  expect(first['storage_key']!=old_key and (private/old_key).exists() and hashlib.sha256((private/old_key).read_bytes()).hexdigest()==old_hash,'Replacement preserves immutable old blob')
  upload('lesson.txt',b'LESSON_PRIVATE_NOTES\n','Lesson handout',lesson=fixture['lesson_id'])
+ lesson_file=next(row for row in files() if row['title']=='Lesson handout')
+ reuse_url,reuse_page,_=admin_page();reuse_form=next(f for f in Page(reuse_page.decode()).forms if f['fields'].get('task')=='material.reuse' and f['fields'].get('jform[id]')==str(lesson_file['id']))
+ reuse_fields=dict(reuse_form['fields']);reuse_fields['jform[target_lesson_id]']='0'
+ request(admin,urljoin(reuse_url,reuse_form['action']),fields=reuse_fields)
+ reused=next(row for row in files() if row['id']!=lesson_file['id'] and row['title']=='Lesson handout')
+ expect(reused['lesson_id'] is None and reused['asset_id']==lesson_file['asset_id'],'Reuse links the same private immutable asset into course scope')
+ reuse_url,reuse_page,_=admin_page();reuse_form=next(f for f in Page(reuse_page.decode()).forms if f['fields'].get('task')=='material.reuse' and f['fields'].get('jform[id]')==str(lesson_file['id']))
+ reuse_fields=dict(reuse_form['fields']);reuse_fields['jform[target_lesson_id]']='0'
+ request(admin,urljoin(reuse_url,reuse_form['action']),fields=reuse_fields,expected=409)
  objects=[b'<</Type/Catalog/Pages 2 0 R>>',b'<</Type/Pages/Kids[3 0 R]/Count 1>>',b'<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 200]/Contents 4 0 R>>',b'<</Length 0>>stream\n\nendstream']
  pdf=b'%PDF-1.4\n';offsets=[0]
  for i,obj in enumerate(objects,1):offsets.append(len(pdf));pdf+=str(i).encode()+b' 0 obj\n'+obj+b'\nendobj\n'
  xref=len(pdf);pdf+=b'xref\n0 5\n0000000000 65535 f \n'+b''.join(('%010d 00000 n \n'%o).encode() for o in offsets[1:])+b'trailer<</Size 5/Root 1 0 R>>\nstartxref\n'+str(xref).encode()+b'\n%%EOF\n'
  upload('guida-à.pdf',pdf,'PDF handout',lesson=fixture['lesson_id'])
  upload('foreign.txt',b'FOREIGN_PRIVATE_NOTES\n','Foreign handout',course=fixture['foreign_course_id'],version=fixture['foreign_version_id'])
- expect(len(files())==3,'Course and lesson attachment scopes persisted')
+ expect(len(files())==4,'Course and lesson attachment scopes and explicit reuse persisted')
  expect(command('denied')=='material ACL passed','Material authoring requires its specific permission')
  expect(json.loads(first['scan_json'])['result']=='not_configured','Absent scanner is explicit, never reported clean')
  # Mandatory scanner unavailable: quarantine, admin download blocked and publication refused.
@@ -131,6 +140,8 @@ try:
  expect(json.loads(command('inspect'))['version']==frozen,'Published security rescan preserves teaching hash and revision')
  u,b,_=admin_page();scan_form=next(f for f in Page(b.decode()).forms if f['fields'].get('task')=='material.scan')
  forged=dict(scan_form['fields']);forged.update({'task':'material.save','jform[title]':'Forbidden edit','jform[state]':'1','jform[ordering]':'0'})
+ request(admin,urljoin(u,scan_form['action']),fields=forged,expected=409)
+ forged=dict(scan_form['fields']);forged.update({'task':'material.reuse','jform[target_lesson_id]':'0'})
  request(admin,urljoin(u,scan_form['action']),fields=forged,expected=409)
  # Student access uses native frontend login.
  url,body,_=request(student,'/index.php?option=com_users&view=login');page=Page(body.decode());form=next(f for f in page.forms if 'username' in f['fields'] and 'password' in f['fields'])

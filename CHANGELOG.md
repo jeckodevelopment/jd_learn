@@ -1,3 +1,9 @@
+## 0.41.64-dev — riuso dei materiali nella bozza (IMP-06)
+
+- La gestione Materiali consente di collegare un asset privato esistente ai materiali del corso o a un’altra lezione della stessa versione in bozza, senza duplicare il file.
+- Le associazioni ereditano titolo, descrizione e finestra di disponibilità del sorgente; il riuso ripetuto nello stesso ambito viene rifiutato. Le sostituzioni continuano a creare asset immutabili e le versioni pubblicate restano inalterate.
+- Aggiunta una fixture Joomla/HTTP per riuso, identità dell’asset condiviso e rifiuto dei duplicati. Collaudo manuale Joomla nel [testbook](docs/QA_TESTBOOK.md#imp-06--lifecycle-materiali-e-riuso-in-bozza-04164-dev).
+
 Warning: truncated output (original token count: 25233)
 Total output lines: 839
 

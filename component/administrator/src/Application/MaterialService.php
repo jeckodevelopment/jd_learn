@@ -186,6 +186,44 @@ final class MaterialService
         });
     }
 
+    /** Link an existing private asset to another scope in the same editable course version. */
+    public function reuse(User $identity, int $courseId, int $versionId, int $expected, int $sourceId, int $lessonId): int
+    {
+        return $this->transaction(function () use ($identity, $courseId, $versionId, $expected, $sourceId, $lessonId): int {
+            [$actor, , $version] = $this->author($identity, $courseId, $versionId, true);
+            $this->draft($version, $expected);
+            $source = $this->row('attachments', $sourceId, true);
+            if ((int) $source->course_version_id !== $versionId) {
+                throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            }
+            if ($lessonId > 0 && (int) $this->row('lessons', $lessonId)->course_version_id !== $versionId) {
+                throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            }
+            $duplicate = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')
+                ->where('course_version_id = :version')->where('asset_id = :asset')
+                ->where('lesson_id ' . ($lessonId ? '= :lesson' : 'IS NULL'))
+                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':asset', (int) $source->asset_id, ParameterType::INTEGER);
+            if ($lessonId) { $duplicate->bind(':lesson', $lessonId, ParameterType::INTEGER); }
+            if ((int) $this->db->setQuery($duplicate)->loadResult() > 0) {
+                throw new \RuntimeException('COM_JLMS_MATERIAL_ALREADY_LINKED', 409);
+            }
+            $countQuery = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')->where('course_version_id = :version')
+                ->bind(':version', $versionId, ParameterType::INTEGER);
+            $count = (int) $this->db->setQuery($countQuery)->loadResult();
+            if ($count >= 1000) { throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409); }
+            $now = gmdate('Y-m-d H:i:s');
+            $link = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
+                'asset_id' => (int) $source->asset_id, 'title' => $source->title, 'description' => $source->description,
+                'ordering' => $count, 'state' => (int) $source->state, 'preview' => (int) $source->preview,
+                'publish_up' => $source->publish_up, 'publish_down' => $source->publish_down,
+                'revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
+                'created_at' => $now, 'modified_at' => $now];
+            $this->db->insertObject('#__jlms_attachments', $link, 'id');
+            $this->touch($version, $actor);
+            return (int) $link->id;
+        });
+    }
+
     public function mutate(User $identity, int $courseId, int $versionId, int $id, int $expected, string $operation, array $input): void
     {
         $scan = [];
