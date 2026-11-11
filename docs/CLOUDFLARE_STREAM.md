@@ -1,6 +1,6 @@
 # Cloudflare Stream
 
-Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token temporanei tramite API. È disabilitato inizialmente, richiede `playback_enabled=1` e la policy di consenso del componente. La modalità `local_key` resta chiusa: nessuna firma locale o libreria JWT viene presentata come implementata. HTML5 resta da realizzare. Il pacchetto è di sviluppo.
+Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token temporanei esclusivamente tramite API. È disabilitato inizialmente e richiede `playback_enabled=1` e la policy di consenso del componente. La firma locale non è implementata: il form Joomla non espone più questa modalità né i campi chiave. Eventuali `signing_mode`, `signing_key_ref` o `signing_key_id` salvati da versioni precedenti sono ignorati; la migrazione al plugin 0.7.1 non richiede modifiche ai video o ai segreti API. Il provider HTML5 per i video MP4 locali è documentato separatamente in `HTML5_VIDEO.md`.
 
 ## Configurazione
 
@@ -9,7 +9,6 @@ Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token
 | `account_id` | Account Cloudflare, 32 caratteri esadecimali minuscoli |
 | `playback_domain` | Host esatto `customer-CODICE.cloudflarestream.com`, senza schema/path/porta |
 | `site_host` | Host del sito, es. `learning.example.org`; deve essere autorizzato esattamente nel video |
-| `signing_mode` | `api_endpoint` nel flusso attuale |
 | `api_token_ref` | Solo un riferimento `env:JLMS_SECRET_NOME`, mai il token API |
 | `token_ttl_seconds` | 60–3600, default900; ulteriormente ridotto dalle scadenze didattiche note |
 | `renew_before_seconds` | Positivo e inferiore al TTL, default120 |
@@ -19,7 +18,7 @@ Il gestore dell'hosting deve iniettare la variabile nell'ambiente **del processo
 
 La credenziale deve poter leggere i dettagli del video ed emettere token Stream per l'account configurato. Assegnare soltanto i permessi effettivamente richiesti dagli endpoint utilizzati: verificare nella configurazione Cloudflare i permessi dell'account, senza usare una Global API Key. La UI diagnostica dedicata, i connettori per vault esterni e il test di connessione autonomo restano da completare.
 
-Sul video Cloudflare impostare `requireSignedURLs=true` e `allowedOrigins` contenente l'hostname esatto del sito. Liste vuote, wildcard `*`, host assente e wildcard di sottodominio non sono accettati da il flusso descritto. Il plugin non abilita automaticamente queste protezioni. Il server verifica UID/account, video pronto, durata e hostname HLS associato alla configurazione. Il dominio non è scelto dall'autore e nessun endpoint arbitrario viene richiesto.
+Sul video Cloudflare impostare `requireSignedURLs=true` e `allowedOrigins` contenente l'hostname esatto del sito. Liste vuote, wildcard `*`, host assente e wildcard di sottodominio non sono accettati da questo incremento. Il plugin non abilita automaticamente queste protezioni. Il server verifica UID/account, video pronto, durata e hostname HLS associato alla configurazione. Il dominio non è scelto dall'autore e nessun endpoint arbitrario viene richiesto.
 
 ## Pubblicazione e rilascio
 
@@ -52,6 +51,6 @@ Capacità dichiarate: posizione, durata, seek, playback a scadenza. Download, so
 
 Test automatizzati con risposte API e SDK simulati: privacy/origini/account, limiti token, revoca durante risposta remota, rinnovo, expiry, conservazione progressi e assenza di lock di scrittura durante la rete. Nessuna chiave reale o chiamata Cloudflare viene utilizzata in CI. Queste prove non sostituiscono un collaudo con account/video reali, credenziali ruotate, link pubblico effettivamente negato, browser mobile/desktop e CSP/CMP.
 
-La modalità API fa due richieste per rilascio/rinnovo e una lettura per lezione alla prima pubblicazione. Nessuna cache dei metadati viene usata nel flusso attuale; il parametro storico `metadata_cache_ttl` non cambia tale comportamento. Carichi elevati richiedono verifica dei limiti Cloudflare e collaudo: la firma locale e una cache verificata rimangono attività successive. Non è stato eseguito il benchmark300/500 studenti né certificata la patch Joomla corrente.
+La modalità API fa due richieste per rilascio/rinnovo e una lettura per lezione alla prima pubblicazione. Nessuna cache dei metadati viene usata in questo incremento; il parametro storico `metadata_cache_ttl` non cambia tale comportamento. Carichi elevati richiedono verifica dei limiti Cloudflare e collaudo: la firma locale e una cache verificata rimangono attività successive. Non è stato eseguito il benchmark300/500 studenti né certificata la patch Joomla corrente.
 
 Fonti primarie: [protezione Stream](https://developers.cloudflare.com/stream/viewing-videos/securing-your-stream/), [dettagli video](https://developers.cloudflare.com/api/resources/stream/methods/get/), [token API](https://developers.cloudflare.com/api/resources/stream/subresources/token/methods/create/), [Stream Player API](https://developers.cloudflare.com/stream/viewing-videos/using-the-stream-player/using-the-player-api/).
