@@ -484,6 +484,8 @@ Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/datab
 
 ## IMP-06 — anteprima pubblica esplicita dei materiali corso (0.41.75-dev)
 
+**Stato build:** PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) integrata nel commit `a01c096321769903c15212aa2b0c420e95245041`; CI standard 4/4 nel [run 43103266860](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860). Pacchetto [JD-Learn-0.41.75-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551), checksum interno nel registro prove. Accettazione manuale ancora non eseguita.
+
 Riferimenti: MAT-02/04/08, AC-100/101/103. Usare Joomla 6 di prova eliminabile, un corso pubblicato visibile agli ospiti, una bozza aggiornabile e un account con permesso di gestione materiali. Preparare due allegati corso (PDF innocuo e TXT), un allegato lezione, un file in quarantena e un file con data futura.
 
 1. Nella bozza caricare PDF e TXT come materiali del corso. Lasciare il PDF privato e selezionare **Disponibile come anteprima pubblica** solo per il TXT; salvare, riaprire e verificare che il valore resti selezionato. Provare l'opzione su un allegato lezione: il salvataggio deve rifiutare la combinazione e non deve renderlo pubblico.

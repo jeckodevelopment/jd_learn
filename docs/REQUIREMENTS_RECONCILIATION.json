@@ -1,8 +1,8 @@
 {
   "date": "2026-11-11",
-  "baseline_commit": "d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c",
-  "runtime_tested_head": "220faaba60b47814d890e4b3165ef030e74e0a11",
-  "ci_run": 43094357303,
+  "baseline_commit": "a01c096321769903c15212aa2b0c420e95245041",
+  "runtime_tested_head": "a9d32032b7fd5980ef8a27ab041d73785ce8a676",
+  "ci_run": 43103266860,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -25,16 +25,16 @@
   },
   "implementation_progress": {
     "percent": 78,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #228 porta M04 al 92%; PR #229 completa la verifica ClamAV reale senza cambiare le funzionalità runtime, quindi la stima resta 543/7 = 77,57%, arrotondata al 78%. Accettazione manuale Joomla ancora pendente.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #230 porta M04 al 93%; stima 544/7 = 77,71%, arrotondata al 78%. L’accettazione manuale Joomla resta pendente e separata.",
     "areas": [
       76,
       81,
       77,
-      92,
+      93,
       67,
       92,
       58
     ]
   },
-  "note": "PR #229 integra nel CI standard un demone ClamAV reale con firme aggiornate, file pulito, EICAR e test della quarantena. Run 43094357303 4/4; configurazione e accettazione Joomla su sito reale restano pendenti."
+  "note": "PR #230 aggiunge anteprime pubbliche esplicite per allegati del corso con rivalidazione di corso, versione, stato e finestra; CI standard 4/4 nel run 43103266860. Il pacchetto 0.41.75-dev corrisponde al commit integrato a01c096321769903c15212aa2b0c420e95245041. Accettazione manuale Joomla pendente."
 }

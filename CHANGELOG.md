@@ -5,7 +5,9 @@
 - L'editor può marcare un singolo allegato dell'ambito corso come anteprima pubblica; il default resta privato e il server rifiuta il flag sugli allegati di lezione.
 - La scheda corso mostra soltanto anteprime della versione corrente pubblicata, pronte, attive e nel periodo configurato. La consegna revalida corso/catalogo/allegato, usa cache privata/no-store e non indicizza il file.
 - Gli asset riutilizzati generano collegamenti privati. Aggiunta la procedura di collaudo Joomla in `docs/QA_TESTBOOK.md`; accettazione manuale ancora pendente.
-- CI e pacchetto installabile vengono registrati dopo la verifica della PR.
+- PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) integrata nel commit `a01c096321769903c15212aa2b0c420e95245041`; CI standard 4/4 nel [run 43103266860](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860).
+- Pacchetto [JD-Learn-0.41.75-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551), ZIP interno SHA-256 `1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c`; wrapper `0c8a7dab69680ee9461cd35aaf94b45e19ec854cc9529411952695cda0409119`, scadenza 2026-11-25T21:32:33Z.
+- Collaudo manuale della preview su Joomla resta pendente.
 
 ## 0.41.74-dev — scansione materiali verificata con ClamAV reale (IMP-06)
 

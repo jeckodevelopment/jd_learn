@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main verificata **0.41.74-dev** integra la PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229); la candidata **0.41.75-dev** aggiunge l’anteprima pubblica esplicita dei soli allegati dell’ambito corso. Build locale candidata `dist/pkg_jlms-0.41.75-dev.zip`, SHA-256 `1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c`; CI, PR e pacchetto post-merge da registrare. Accettazione manuale Joomla pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.75-dev** integra la PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230), anteprima pubblica esplicita per allegati del corso. Pacchetto installabile [JD-Learn-0.41.75-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551), SHA-256 interno `1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c`; CI standard 4/4 e merge `a01c096321769903c15212aa2b0c420e95245041`. Avanzamento implementativo **78%** (544/7 = 77,71%); accettazione manuale Joomla pendente.
 
 
 
