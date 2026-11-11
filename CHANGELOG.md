@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.74-dev — in preparazione
+
+- CI installa ClamAV con firme aggiornate e collauda il flusso materiali reale con file pulito, EICAR, socket indisponibile e quarantena.
+- La scansione obbligatoria usa il socket locale ClamAV; un esito infetto blocca fruizione/pubblicazione, un errore lascia il file in quarantena.
+- Collaudo manuale Joomla richiesto: configurazione socket nel sito, file innocuo, EICAR in sito usa-e-getta e comportamento a scanner spento.
+
+# Changelog
+
 ## 0.41.73-dev — configurazione Cloudflare Stream coerente con il flusso API (IMP-05)
 
 - PR [#228](https://github.com/jeckodevelopment/jd_learn/pull/228) integrata in main (merge `d677924aca265f3397be156f7298d614bad330f3`): rimossi dal form i controlli di firma locale non implementati; i parametri legacy vengono ignorati e le configurazioni API esistenti restano valide.
