@@ -1,8 +1,8 @@
 {
   "date": "2026-11-11",
-  "baseline_commit": "1b889ee550a23700071488930b50fbcb0081ad74",
-  "runtime_tested_head": "fd1f7996160b79d40f644c92131960ab2c745dab",
-  "ci_run": 43079973855,
+  "baseline_commit": "d677924aca265f3397be156f7298d614bad330f3",
+  "runtime_tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
+  "ci_run": 43091365354,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -19,22 +19,22 @@
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 168,
-      "Non eseguita": 42
+      "Superata": 169,
+      "Non eseguita": 41
     }
   },
   "implementation_progress": {
-    "percent": 77,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #225 porta il catalogo all’81% con ricollocazione atomica delle dipendenze categoria; PR #226 porta M04 al 90% con streaming HTML5 protetto compatibile con Apache/LiteSpeed; integrazioni Joomla al 92%; 542/7 = 77,43%, arrotondato al 77%. Accettazione manuale Joomla ancora pendente.",
+    "percent": 78,
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #228 completa la configurazione API Cloudflare coerente con il provider, portando M04 al 92%; 543/7 = 77,57%, arrotondato al 78%. Accettazione manuale Joomla ancora pendente.",
     "areas": [
       76,
       81,
       77,
-      91,
+      92,
       67,
       92,
       58
     ]
   },
-  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 integra i tag Joomla nativi per i corsi. PR #223 integra associazioni multilingua dei corsi pubblicati; nel run CI #43049378887 controlli documentali e due suite PHP/database sono passati, il job Chromium è ancora fermo nell’installazione del runtime. Accettazione Joomla manuale AC-20/AC-48 pendente."
+  "note": "PR #228 allinea la configurazione Cloudflare Stream al supporto API effettivo e ignora i parametri legacy di firma locale. CI standard 4/4 nel run 43091365354; test Joomla con account provider reale e accettazione manuale restano pendenti."
 }
