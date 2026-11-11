@@ -6,17 +6,17 @@ Stato: **workflow predisposto, NON autorizzato a pubblicare 1.0.0 fino al gate I
 
 1. Validare la compatibilità della release con la matrice Joomla/PHP approvata; attualmente il generatore usa **Joomla 6.x e PHP minimo 8.3** come default tecnico da verificare rispetto ai target effettivi. Se serve una matrice diversa modificarla esplicitamente, non aumentare arbitrariamente il supporto.
 2. Preparare il percorso HTTPS pubblico `https://www.jeckodevelopment.com/updates/jdlearn.xml`, con directory FTP/SFTP remota **già creata**, configurazione del server web Apache/LiteSpeed standard e corretta esposizione di XML statico.
-3. Configurare in GitHub **Settings → Environments → jdlearn-release-production**: required reviewers, restrizione alla branch `main`, protezione dagli accessi non autorizzati. **Senza protezioni di environment il flag publish=true comporta la pubblicazione reale**.
+3. Configurare in GitHub **Settings → Environments → jdlearn-release-production**: required reviewers, restrizione alla branch `main`, protezione dagli accessi non autorizzati. Configurare inoltre il secret di environment `JDLEARN_RELEASE_ENABLED` con il valore esatto `YES` **soltanto dopo il completamento del gate IMP-10**. Il workflow fallisce prima di qualunque pubblicazione se il secret manca. L'approvazione dell'environment rimane obbligatoria come controllo organizzativo.
 4. Inserire i seguenti *environment secrets* (mai committare valori o stamparli nei log): `JDLEARN_SFTP_HOST`, `JDLEARN_SFTP_USER`, `JDLEARN_SFTP_PORT` (facoltativo, valore 22), `JDLEARN_SFTP_DIRECTORY` (percorso assoluto remoto della directory updates), `JDLEARN_SFTP_PRIVATE_KEY` (chiave privata senza passphrase per un utente dedicato con accesso minimo) e `JDLEARN_SFTP_KNOWN_HOSTS` (riga di host key verificata fuori banda; non usare StrictHostKeyChecking=no).
 5. L'hosting SFTP deve implementare l'estensione **posix-rename** per la sostituzione atomica: se assente, il deploy fallisce senza cancellare il vecchio feed. Verificare capacità e permessi sul server reale.
 6. Verificare con prove Joomla reali il package name `pkg_jlms`, il feed, la compatibilità e l'update. Registrare i risultati in `QA_TESTBOOK.md` e `IMPLEMENTATION_EVIDENCE.json`. Prima di aprire la produzione, eseguire il CI completo e l'upgrade/restore manuale previsti da IMP-10.
 
 ## Avvio del workflow
 
-Da GitHub → Actions → **Publish JD Learn release** → Run workflow, selezionare branch `main`, versione (default `1.0.0`), canale (`stable` o `prerelease`), note di rilascio (default `Prima versione stabile di JD Learn`) e flag **publish**.
+Da GitHub → Actions → **Publish JD Learn release** → Run workflow, selezionare branch `main`, versione (default `1.0.0`), canale (`stable` o `prerelease`), note di rilascio (default `Prima versione stabile di JD Learn`) flag **publish** e campo **confirmation**. Per autorizzare una produzione reale occorrono `publish=true`, canale `stable`, secret `JDLEARN_RELEASE_ENABLED=YES` e conferma testuale `PUBLISH JD LEARN X.Y.Z` corrispondente alla versione.
 
 - **publish=false (default, sicuro):** viene creato il candidato ZIP stabile con versione incorporata nel manifest package, SHA-256 e file `jdlearn.xml` da esaminare come artifact GitHub Actions. **Non** crea tag, GitHub Release né deploy.
-- **publish=true + channel=stable:** dopo il gate dell'environment, verifica l'artifact e l'assenza di una release con lo stesso tag, pubblica su GitHub Releases `vX.Y.Z`, controlla che l'asset ZIP sia scaricabile e coerente con il checksum, quindi carica via SFTP il feed generato, usando rename atomico. Infine rilegge il feed sull'endpoint HTTPS pubblico e verifica la versione.
+- **publish=true + channel=stable:** dopo il gate dell'environment e la conferma esplicita, verifica l'artifact e l'assenza di una release con lo stesso tag, pubblica su GitHub Releases `vX.Y.Z`, controlla che l'asset ZIP sia scaricabile e coerente con il checksum, quindi carica via SFTP il feed generato, usando rename atomico. Infine rilegge il feed sull'endpoint HTTPS pubblico e verifica la versione.
 - **channel=prerelease:** soltanto build/artifact, anche se si è selezionato publish=true. Questo workflow non distribuisce prerelease; non modifica il canale Joomla stabile.
 - **branch diversa da main:** il workflow non esegue la build. Il CI della PR verifica il codice normalmente.
 
@@ -43,3 +43,7 @@ Nel sito Joomla di prova: installazione iniziale e registrazione dell'Update Sit
 - Script: `tools/build.py`, `tools/release_feed.py`, `tools/publish_update_feed.py`
 - Specifica: `docs/JOOMLA_UPDATE_SERVER_1.0.md`
 - Piano: `docs/STABLE_1.0.0_PR_PLAN.md`
+
+## Verifiche di preparazione prima di configurare i segreti
+
+La PR di rilascio dispone già di test offline che generano lo ZIP e il feed senza pubblicazione. Nell'account GitHub collegato a questo progetto non sono disponibili azioni per configurare gli Environments/secrets né per avviare manualmente un workflow: l'operatore deve completare queste configurazioni nella UI di GitHub. La presenza della pipeline nel repository non prova la raggiungibilità dell'endpoint: effettuare un GET HTTP reale e registrare il risultato. Se l'endpoint non esiste, predisporre la directory `updates` sull'hosting; non pubblicare un file con versione 1.0.0 prima del rilascio ufficiale.

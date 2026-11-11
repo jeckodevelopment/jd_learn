@@ -126,3 +126,8 @@ PR [#215](https://github.com/jeckodevelopment/jd_learn/pull/215) completa la pro
 - L'update site ufficiale è dichiarato nel manifest di `pkg_jlms`; la configurazione produttiva di SFTP e l'effettivo endpoint HTTPS **restano da predisporre e collaudare**. Istruzioni: [RELEASE_PROCEDURE.md](RELEASE_PROCEDURE.md).
 - La procedura di publish reale richiede conferma e protezioni GitHub Environment `jdlearn-release-production`; non eseguire fino al gate IMP-10, con CI completa, prove Joomla e verifica recovery. Il workflow di preparazione non prova da solo la disponibilità produttiva del feed.
 - Requisiti interessati: CORE-22, JOO-01/03, SECDEV-08, REL-01–03, PBASE-04; criteri US-01–06. Lo stato dei requisiti resta **Parziale** finché l'aggiornamento end-to-end e l'hosting non saranno verificati. La percentuale globale non va aumentata automaticamente per il solo workflow.
+
+
+### IMP-09 — Ulteriore gate di autorizzazione produzione (11 novembre 2026)
+
+Il workflow manuale `release.yml` aggiunge prima di qualunque pubblicazione un controllo **fail-closed**: serve il secret dell'environment `jdlearn-release-production` denominato `JDLEARN_RELEASE_ENABLED` con valore `YES`, oltre alla conferma testuale `PUBLISH JD LEARN X.Y.Z` per la versione richiesta. Il flag `publish` resta `false` per default. Le istruzioni sono in [RELEASE_PROCEDURE.md](RELEASE_PROCEDURE.md). L'endpoint di produzione, i secret, le protezioni dell'environment e il collaudo Joomla restano pendenti e non autorizzano il rilascio 1.0.0.
