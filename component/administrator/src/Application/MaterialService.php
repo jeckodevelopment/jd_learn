@@ -98,6 +98,7 @@ final class MaterialService
     {
         $page = max(0, min(10000, $page));
         $now = gmdate('Y-m-d H:i:s');
+        $published = 'published';
         $query = $this->db->createQuery()->from('#__jlms_attachments AS a')
             ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
@@ -106,7 +107,7 @@ final class MaterialService
             ->where("f.status = 'ready'")
             ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
-            ->bind(':published', 'published')->bind(':nowUp', $now)->bind(':nowDown', $now);
+            ->bind(':published', $published)->bind(':nowUp', $now)->bind(':nowDown', $now);
         $total = (int) $this->db->setQuery((clone $query)->select('COUNT(*)'))->loadResult();
         $items = $this->db->setQuery((clone $query)->select('a.id, a.title, a.description, a.ordering, a.publish_up, a.publish_down, f.original_name, f.mime_type, f.byte_size')
             ->order('a.ordering, a.id'), $page * 20, 20)->loadObjectList();
@@ -116,6 +117,8 @@ final class MaterialService
     /** Public access is additionally gated by CatalogService in the site controller. */
     public function publicPreviewDownload(int $courseId, int $versionId, int $attachmentId): array
     {
+        $published = 'published';
+        $now = gmdate('Y-m-d H:i:s');
         $query = $this->db->createQuery()->select('a.*, f.status AS asset_status, f.original_name, f.mime_type, f.byte_size')
             ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
@@ -124,8 +127,8 @@ final class MaterialService
             ->where('a.preview = 1 AND a.state = 1')->where("f.status = 'ready'")
             ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
-            ->bind(':id', $attachmentId, ParameterType::INTEGER)->bind(':published', 'published')
-            ->bind(':nowUp', gmdate('Y-m-d H:i:s'))->bind(':nowDown', gmdate('Y-m-d H:i:s'));
+            ->bind(':id', $attachmentId, ParameterType::INTEGER)->bind(':published', $published)
+            ->bind(':nowUp', $now)->bind(':nowDown', $now);
         $link = $this->db->setQuery($query)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $file = $this->open((int) $link->asset_id);
         $file['inline'] = in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true);

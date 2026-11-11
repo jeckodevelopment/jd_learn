@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main verificata **0.41.74-dev** integra la PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229); la candidata **0.41.75-dev** aggiunge l’anteprima pubblica esplicita dei soli allegati dell’ambito corso. Build locale candidata `dist/pkg_jlms-0.41.75-dev.zip`, SHA-256 `2efc454d7310af50d343b581b4b31b72bb7b05e076d214ab71003ee8c6cd6027`; CI, PR e pacchetto post-merge da registrare. Accettazione manuale Joomla pendente.
+Aggiornato all’11 novembre 2026. Main verificata **0.41.74-dev** integra la PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229); la candidata **0.41.75-dev** aggiunge l’anteprima pubblica esplicita dei soli allegati dell’ambito corso. Build locale candidata `dist/pkg_jlms-0.41.75-dev.zip`, SHA-256 `1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c`; CI, PR e pacchetto post-merge da registrare. Accettazione manuale Joomla pendente.
 
 
 
