@@ -1,4 +1,4 @@
-Aggiornato al **10 novembre 2026**. Main **0.41.62-dev** integra le PR #209–#213 (CI standard 4/4 nel [run 42923290761](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761)). Pacchetto installabile [JD-Learn-0.41.62-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42923290761/artifacts/13811584820), wrapper SHA-256 `003c56dd360cd8a7c375c220a9b1a0ce0c57e6669913a693c63ea6781f032cf2`, ZIP Joomla SHA-256 `e26a39a0c63c3ba07a9851b49b701582d3df8a656ac55c634cd1414ff9412728`, disponibile fino al 24 novembre 2026. Collaudi Joomla manuali pendenti. Avanzamento verso 1.0.0 **75%** (524/7).
+Aggiornamento in preparazione PR: candidato **0.41.63-dev** introduce vincoli referenziali per il lifecycle delle categorie. La versione integrata resta 0.41.62-dev; l’ultimo pacchetto e i collaudi sono nel changelog. Avanzamento precedente 75% (524/7).
 
 
 **Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/documento/audio/video/quiz sono disponibili nei flussi implementati; collaudi manuali di release ancora aperti, inclusi il rilascio relativo della 0.41.38-dev, l’authoring Percorsi della 0.41.39-dev e la dashboard provider 0.41.40-dev e il workflow editoriale e anteprima accessi 0.41.43-dev, default del fuso sito 0.41.44-dev e toolbar del programma 0.41.45-dev. La preview editoriale video read-only è integrata; PR #179/0.41.47-dev integra documenti/audio, mentre le interazioni quiz restano escluse; le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
@@ -45,7 +45,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **42 tabelle / 59 FK**. Il pacchetto 0.41.50-dev contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **42 tabelle / 63 FK**. Il pacchetto 0.41.63-dev contiene 9 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
 
 ```sh
 python3 tools/build.py
