@@ -412,7 +412,7 @@ try:
   'jform[enrollment_mode]':'auto','jform[summary]':'Created and first published through native HTTP forms'})
  form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
  course_id=int(form['fields']['jform[id]'])
- expect(course_id>0 and 'id="jlms-course-programme-link"' in h,'Saved draft offers curriculum/publication navigation')
+ expect(course_id>0 and 'id="jlms-course-programme-link"' not in h and 'task="course.programme"' in h,'Saved draft keeps the curriculum action without a duplicate link')
  expect('joomla-field-media' in h and 'jform[presentation_image]' in h,'Native Media Manager field is available in course editor')
  expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-metadata','jlms-course-calendar','jlms-course-publishing','jlms-course-permissions']),'Native course editor exposes general, presentation, access and publication tabs')
  before=fixture()
@@ -428,7 +428,8 @@ try:
   'jform[presentation_prerequisite_text]':'HTTP prior knowledge','jform[presentation_difficulty]':'intermediate','jform[presentation_estimated_minutes]':'75'})
  form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
  expect(form['fields']['jform[presentation_estimated_minutes]']=='75' and 'HTTP extended' in form['fields']['jform[presentation_description]'],'Presentation saved and reopened in native editor')
- programme=next(x for x in Page(h).links if parse_qs(urlparse(x).query).get('view')==['curriculum'])
+ expect('task="course.programme"' in h,'Saved course retains the curriculum action in its Programme tab')
+ programme='/administrator/index.php?option=com_jlms&view=curriculum&id='+str(course_id)
  # Close through the native controller before leaving the editor.
  close_url,close_html=submit(u,form,{'task':'course.save'})
  expect(parse_qs(urlparse(close_url).query).get('view')==['courses'],'Native save and close succeeds with all rendered controls')

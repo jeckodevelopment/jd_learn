@@ -46,6 +46,12 @@ for tag in ['it-IT','en-GB']:
  assert re.findall(r'^COM_JLMS_PATHWAYS="([^"]*)"$',sys_ini,re.M)==[pathway_title],tag
  lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
  assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',sys_ini,re.M)==[lesson_label],(tag,'com_jlms.sys.ini lesson fields label')
+# The course editor exposes the curriculum action once, through its native toolbar.
+course_editor=(ROOT/'component/administrator/tmpl/course/edit.php').read_text()
+assert 'jlms-course-programme-link' not in course_editor
+assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
+course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
+assert "ToolbarHelper::custom('course.programme'" in course_view
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():

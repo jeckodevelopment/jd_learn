@@ -614,3 +614,18 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 **Esito sito Joomla:** Non eseguito.
 
 ---
+
+
+## STAB-05 — un solo accesso al Programma nell’editor corso (0.41.80-dev, issue #200)
+
+**Stato:** PR #243 candidata alla milestone 1.0.0. Rimuove il link duplicato dal corpo dell’editor; l’azione della toolbar e la scheda Programma restano disponibili. CI e accettazione manuale Joomla da completare.
+
+**Comportamenti da testare in Joomla**
+
+1. Installare il pacchetto candidato 0.41.80-dev su un sito Joomla di prova e accedere con un utente autorizzato a modificare corsi.
+2. Aprire un corso esistente in **Componenti → JD Learn → Corsi → Modifica**. Verificare che sotto la toolbar non ci sia un secondo pulsante “Programma didattico” e che la toolbar mostri una sola azione **Salva e apri programma**.
+3. Aprire la scheda **Programma**: riepilogo dei moduli e comando **Salva e apri programma** restano disponibili. Usare la toolbar e verificare che il salvataggio apra il programma corretto.
+4. Aprire un nuovo corso: l’avviso che richiede il primo salvataggio deve restare visibile; dopo il salvataggio la toolbar deve aprire il programma senza link duplicati.
+5. Ripetere in italiano e inglese e con un utente in sola lettura; non deve apparire un’azione di modifica non autorizzata.
+
+**Esito sito Joomla:** Non eseguito.
