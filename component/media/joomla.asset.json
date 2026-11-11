@@ -94,6 +94,17 @@
       "dependencies": [
         "core"
       ]
+    },
+    {
+      "name": "com_jlms.courseAssociations",
+      "type": "script",
+      "uri": "com_jlms/course-associations.js",
+      "attributes": {
+        "type": "module"
+      },
+      "dependencies": [
+        "core"
+      ]
     }
   ]
 }
