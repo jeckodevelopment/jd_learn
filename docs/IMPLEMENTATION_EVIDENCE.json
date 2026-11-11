@@ -1,59 +1,59 @@
 {
   "audited_at": "2026-11-11",
   "product": "JD Learn",
-  "version": "0.41.63-dev",
+  "version": "0.41.64-dev",
   "code_baseline": {
-    "tested_head": "99537924145df2db5b273d283e61546d9a0f9b98",
-    "parent_main_commit": "d1e5b471baa488bf49d4229623ce68a0f1ace6be",
-    "pull_request": 215,
-    "merged_main_commit": "148a4e4c7fe1a814f8a1bd561cecbb0380c7dd39"
+    "tested_head": "ee56bea3255d2c89d56ce78dffa6b5656b49c805",
+    "parent_main_commit": "9078fe205780eb359ac79d853ec345e2a089080e",
+    "pull_request": 217,
+    "merged_main_commit": "abf82a4053918f823726c84a156d295652c7b72c"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 42978021654,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654",
+    "run_id": 42983654823,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130381573692,
+        "id": 130399660800,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130381621463,
+        "id": 130399719085,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130381621934,
+        "id": 130399719182,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130381621447,
+        "id": 130399719158,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #215: CI standard 4/4 superata; FK lifecycle categorie, installazione/upgrade pacchetto, test categorie e Chromium. Collaudo manuale Joomla ancora pendente."
+    "note": "PR #217: CI standard 4/4 superata; fixture Joomla verifica riuso asset materiali tra ambiti della bozza, asset_id condiviso, duplicato rifiutato e versioni pubblicate immutabili. Collaudo manuale Joomla ancora pendente."
   },
   "package": {
-    "artifact_id": 13835639241,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241",
-    "artifact_name": "JD-Learn-0.41.63-dev",
-    "installable_package": "pkg_jlms-0.41.63-dev.zip",
-    "sha256": "938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5",
-    "artifact_sha256": "dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0",
-    "size_bytes": 557979,
-    "artifact_size_bytes": 557722,
-    "expires_at": "2026-11-25T07:18:51Z",
+    "artifact_id": 13838677604,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604",
+    "artifact_name": "JD-Learn-0.41.64-dev",
+    "installable_package": "pkg_jlms-0.41.64-dev.zip",
+    "sha256": "f8d318f1dea8b68801bda56ac057bfd3df7dc6d0af93b972131e979196b72484",
+    "artifact_sha256": "1045619ab6ba9a47d050afc233ae9e8f124b8ede994f5677a9d921f1e1920986",
+    "size_bytes": 558808,
+    "artifact_size_bytes": 558542,
+    "expires_at": "2026-11-25T08:05:14Z",
     "wrapper_zip": true,
-    "build_source": "CI standard PR #215, build riproducibile e upgrade Joomla; checksum package e digest wrapper verificati nel log Actions."
+    "build_source": "CI standard PR #217, build riproducibile, suite Joomla e upgrade dati; checksum ZIP interno e digest wrapper verificati nel log Actions."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -66,6 +66,61 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "audited_at": "2026-11-11",
+      "version": "0.41.63-dev",
+      "code_baseline": {
+        "tested_head": "99537924145df2db5b273d283e61546d9a0f9b98",
+        "parent_main_commit": "d1e5b471baa488bf49d4229623ce68a0f1ace6be",
+        "pull_request": 215,
+        "merged_main_commit": "148a4e4c7fe1a814f8a1bd561cecbb0380c7dd39"
+      },
+      "ci": {
+        "run_id": 42978021654,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654",
+        "joomla": "6.0.0",
+        "jobs": [
+          {
+            "id": 130381573692,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 130381621463,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 130381621934,
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 130381621447,
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ],
+        "note": "PR #215: CI standard 4/4 superata; FK lifecycle categorie, installazione/upgrade pacchetto, test categorie e Chromium. Collaudo manuale Joomla ancora pendente."
+      },
+      "package": {
+        "artifact_id": 13835639241,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241",
+        "artifact_name": "JD-Learn-0.41.63-dev",
+        "installable_package": "pkg_jlms-0.41.63-dev.zip",
+        "sha256": "938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5",
+        "artifact_sha256": "dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0",
+        "size_bytes": 557979,
+        "artifact_size_bytes": 557722,
+        "expires_at": "2026-11-25T07:18:51Z",
+        "wrapper_zip": true,
+        "build_source": "CI standard PR #215, build riproducibile e upgrade Joomla; checksum package e digest wrapper verificati nel log Actions."
+      }
+    },
     {
       "audited_at": "2026-11-10",
       "product": "JD Learn",
@@ -2610,27 +2665,27 @@
     "artifact_expires_at": "2026-11-24T22:27:14Z"
   },
   "latest_verified_increment": {
-    "version": "0.41.63-dev",
-    "scope": "IMP-07: vincoli referenziali impediscono la cancellazione permanente di categorie usate da corsi, percorsi, docenti e domande; cestinamento/ripristino conservano i record.",
-    "status": "PR #215 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
+    "version": "0.41.64-dev",
+    "scope": "IMP-06: riuso di materiali esistenti fra ambiti del corso e lezioni nella stessa bozza, senza duplicare asset privati; mantiene stato/finestra e non modifica versioni pubblicate.",
+    "status": "PR #217 integrata; CI standard 4/4 superata; pacchetto installabile verificato.",
     "manual_joomla_acceptance": "pending",
-    "pull_request": 215,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/215",
-    "tested_head": "99537924145df2db5b273d283e61546d9a0f9b98",
-    "parent_main_commit": "d1e5b471baa488bf49d4229623ce68a0f1ace6be",
-    "merged_main_commit": "148a4e4c7fe1a814f8a1bd561cecbb0380c7dd39",
-    "ci_run_id": 42978021654,
-    "artifact_id": 13835639241,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241",
-    "artifact_sha256": "dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0",
-    "package_sha256": "938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5",
-    "package_size_bytes": 557979,
-    "artifact_size_bytes": 557722,
-    "artifact_expires_at": "2026-11-25T07:18:51Z"
+    "pull_request": 217,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/217",
+    "tested_head": "ee56bea3255d2c89d56ce78dffa6b5656b49c805",
+    "parent_main_commit": "9078fe205780eb359ac79d853ec345e2a089080e",
+    "merged_main_commit": "abf82a4053918f823726c84a156d295652c7b72c",
+    "ci_run_id": 42983654823,
+    "artifact_id": 13838677604,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604",
+    "artifact_sha256": "1045619ab6ba9a47d050afc233ae9e8f124b8ede994f5677a9d921f1e1920986",
+    "package_sha256": "f8d318f1dea8b68801bda56ac057bfd3df7dc6d0af93b972131e979196b72484",
+    "package_size_bytes": 558808,
+    "artifact_size_bytes": 558542,
+    "artifact_expires_at": "2026-11-25T08:05:14Z"
   },
   "next_candidate": {
-    "priority": "Proseguire con i residui IMP-06 (lifecycle materiali) e IMP-09/IMP-10 secondo il piano; verificare snapshot/campi, retention/audit, accessibilità e preparazione del rilascio. Il collaudo manuale Joomla delle categorie e i provider reali resta una verifica separata.",
+    "priority": "Proseguire con i residui IMP-06: preview/metadati/offload/scansione reale/conservazione; quindi snapshot/campi pertinenti, retention/audit, accessibilità e preparazione release. Collaudi manuali materiali/categorie/provider restano separati.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
   },
-  "current_status": "Main 0.41.63-dev (PR #215 integrata); CI standard 4/4 e pacchetto installabile verificati; avanzamento stimato 76% (529/7; catalogo 75%); collaudi Joomla manuali pendenti."
+  "current_status": "Main 0.41.64-dev (PR #217 integrata); CI standard 4/4 e pacchetto installabile verificati; avanzamento stimato 76% (531/7; M04 87%, catalogo 75%); collaudi Joomla manuali pendenti."
 }

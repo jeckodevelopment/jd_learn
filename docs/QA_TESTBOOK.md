@@ -3,7 +3,7 @@ Total output lines: 696
 
 ## IMP-07 — lifecycle sicuro delle categorie (0.41.63-dev, PR #215 integrata)
 
-**Stato:** CI standard 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); collaudo manuale Joomla da eseguire sul pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
+**Stato:** CI PR #215 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); eseguire la prova manuale categorie sul pacchetto aggiornato [JD-Learn-0.41.64-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
 
 **Comportamenti da testare in Joomla**
 
@@ -384,7 +384,7 @@ Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, 
 4. Ripetere con una versione pubblicata e con un editor privo del permesso materiali; nessuna modifica/riuso deve essere consentita. Verificare che il corso pubblicato e lo storico assegnato restino invariati.
 5. Eseguire l'attività Scheduler di pulizia: il blob condiviso deve restare finché un collegamento lo referenzia e diventare eleggibile solo quando tutte le associazioni sono state rimosse e sono trascorse 24 ore.
 
-La CI usa una fixture Joomla eliminabile per verificare il riuso tramite il form amministrativo, il riferimento condiviso allo stesso asset e il rifiuto del secondo collegamento duplicato.
+PR [#217](https://github.com/jeckodevelopment/jd_learn/pull/217) integrata nel commit `abf82a4053918f823726c84a156d295652c7b72c`; CI standard 4/4 nel [run 42983654823](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823). La fixture Joomla eliminabile verifica il riuso tramite form amministrativo, il riferimento condiviso allo stesso asset, il rifiuto del secondo collegamento duplicato e il blocco sulle versioni pubblicate. Pacchetto [JD-Learn-0.41.64-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604): wrapper SHA-256 `1045619ab6ba9a47d050afc233ae9e8f124b8ede994f5677a9d921f1e1920986`, ZIP Joomla `f8d318f1dea8b68801bda56ac057bfd3df7dc6d0af93b972131e979196b72484`. Il wrapper va estratto una volta. Collaudo manuale Joomla ancora da eseguire.
 
 ## IMP-06 — pulizia programmata dei materiali orfani (0.41.54-dev)
 

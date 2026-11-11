@@ -1,8 +1,8 @@
 {
   "date": "2026-11-10",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
-  "runtime_tested_head": "0575873486a04dd8df90f07df9d57079fa14823a",
-  "ci_run": 42913999069,
+  "runtime_tested_head": "ee56bea3255d2c89d56ce78dffa6b5656b49c805",
+  "ci_run": 42983654823,
   "counts": {
     "Stato implementazione": {
       "Parziale": 166,
@@ -25,16 +25,16 @@
   },
   "implementation_progress": {
     "percent": 76,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #215 integra la protezione del lifecycle categorie e porta l’area catalogo dal 70% al 75%; 529/7 = 75,57%, arrotondato al 76%.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #217 completa un residuo concreto del ciclo dei materiali (riuso degli asset in bozza), area M04 dall’85% all’87%; 531/7 = 75,86%, arrotondato al 76%.",
     "areas": [
       76,
       75,
       77,
-      85,
+      87,
       67,
       91,
       58
     ]
   },
-  "note": "Completata riguarda il sottoinsieme core esplicito, mai accettazione. PR #204, #206, #207, #208 e #210 sono integrate; CI #210 4/4. I collaudi Joomla manuali restano pendenti."
+  "note": "PR #217 integra il riuso materiali tra ambiti della stessa bozza con CI standard 4/4. Completata riguarda il sottoinsieme core esplicito, mai accettazione. I collaudi Joomla manuali restano pendenti."
 }
