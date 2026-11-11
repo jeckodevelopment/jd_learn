@@ -2,7 +2,7 @@
 
 - Registra i corsi come contenuto taggabile Joomla con type alias `com_jlms.course`, content type UCM e mapping dei campi standard.
 - Aggiunge il campo Tag nativo nell’editor corso; salva le associazioni, mantiene i tag nella duplicazione e collega le viste `com_tags` ai filtri già disponibili nel catalogo.
-- Aggiorna la documentazione e il testbook con i comportamenti manuali per AC-19 e AC-64. Build candidata; accettazione Joomla manuale ancora da eseguire.
+- Aggiorna la documentazione e il testbook con i comportamenti manuali per AC-19 e AC-64. Integrata nella PR #222 in 0.41.67-dev. Accettazione Joomla manuale ancora da eseguire.
 
 ## 0.41.66-dev — consegna materiali compatibile con Apache/LiteSpeed (IMP-06)
 
