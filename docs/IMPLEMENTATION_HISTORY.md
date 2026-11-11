@@ -1,3 +1,7 @@
+## 0.41.78-dev — STAB-01, traduzione del menu Percorsi (PR #238)
+
+PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) aggiunge `COM_JLMS_PATHWAYS` ai cataloghi amministrativi IT/EN e protegge le traduzioni con un controllo automatico. CI standard 4/4 nel [run 43113528500](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500); merge `6e7d2cb40f8a641e30b391f046b6e4b1d3b09e33`. Pacchetto [JD-Learn-0.41.78-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500/artifacts/13897377687), ZIP interno SHA-256 `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`, wrapper `6a029d5283ef897d62869bc8fb88eaf193eb966bab3d61424a04951cae8c9ec5`. Accettazione Joomla menu/dashboard ancora da eseguire; avanzamento resta 78%.
+
 ## 0.41.77-dev — materiali corso nell’anteprima editoriale (PR #235)
 
 La PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) estende l’anteprima read-only a lezioni testo/video: mostra gli allegati corso pronti e attivi ed esclude campioni pubblici e file fuori finestra. Il download resta nella sessione amministrativa, protetto da ACL e da controlli su corso/versione/lezione. CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231); merge `dbd277605a7eebd18d5d16515853a5f61a40d3f0`. Pacchetto [JD-Learn-0.41.77-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810), SHA-256 interno `22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1`, wrapper `fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f`. Accettazione manuale Joomla pendente.
@@ -115,9 +119,6 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 Il [changelog](../CHANGELOG.md) contiene i dettagli per versione. Il [registro dei requisiti](REQUIREMENTS_CHANGES.md) descrive le variazioni del risultato richiesto, non le implementazioni. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) identifica il build corrente verificato e mantiene i record storici precedenti.
 
 Le vecchie indicazioni “mancante”, “da verificare” o “prossimo incremento” nelle fotografie storiche descrivono soltanto il momento in cui furono scritte. Le versioni precedenti dei riepiloghi rimangono disponibili nella cronologia Git, senza copiarle nei documenti correnti.
-## 0.41.78-dev — STAB-01, traduzione del menu Percorsi
-
 - Aggiunta `COM_JLMS_PATHWAYS` nei cataloghi amministrativi di sistema IT/EN per correggere l’issue #150.
 - Verifica strutturale estesa per proteggere la presenza della chiave in entrambe le lingue.
 - Accettazione manuale dashboard/menu Joomla ancora da eseguire; nessun avanzamento percentuale attribuito prima del collaudo.
-

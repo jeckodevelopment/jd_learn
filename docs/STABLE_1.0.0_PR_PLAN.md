@@ -58,7 +58,7 @@ Le issue sotto risultano aperte su GitHub alla data del piano. Prima di aprire l
 
 | Ordine | ID / priorità | Issue | Perimetro della correzione e uscita |
 |---:|---|---|---|
-| 1 | **STAB-01 · P1 · traduzione implementata, accettazione pendente** | [#149](https://github.com/jeckodevelopment/jd_learn/issues/149), [#150](https://github.com/jeckodevelopment/jd_learn/issues/150) | L’ordine dashboard e il riepilogo dei quattro provider dell’issue #149 risultano già implementati. La correzione isolata per #150 aggiunge `COM_JLMS_PATHWAYS` ai cataloghi di sistema IT/EN; resta il collaudo Joomla di menu, ordine, stati provider, ruoli e URL dirette. |
+| 1 | **STAB-01 · P1 · implementato da PR #238, accettazione pendente** | [#149](https://github.com/jeckodevelopment/jd_learn/issues/149), [#150](https://github.com/jeckodevelopment/jd_learn/issues/150) | L’ordine dashboard e il riepilogo dei quattro provider dell’issue #149 risultano già implementati. La correzione isolata per #150 aggiunge `COM_JLMS_PATHWAYS` ai cataloghi di sistema IT/EN; resta il collaudo Joomla di menu, ordine, stati provider, ruoli e URL dirette. |
 | 2 | **STAB-02 · P1** | [#155](https://github.com/jeckodevelopment/jd_learn/issues/155), [#156](https://github.com/jeckodevelopment/jd_learn/issues/156) | Verificare filtri Search Tools della banca domande e label della colonna Azioni. Correggere come PR unica solo se riguarda la stessa vista e lo stesso ciclo di collaudo. Conservare i confini AC-131: nessun ampliamento didattico quiz. |
 | 3 | **STAB-03 · P1 · completato** | [#172](https://github.com/jeckodevelopment/jd_learn/issues/172), [PR #192](https://github.com/jeckodevelopment/jd_learn/pull/192) | Corretto il selettore del fuso globale per nuovi corsi; risoluzione nel fuso IANA del sito al salvataggio. CI 4/4; collaudo Joomla pendente nel testbook. |
 | 4 | **STAB-04 · P2** | [#173](https://github.com/jeckodevelopment/jd_learn/issues/173) | Accorciare la label “Gestisci campi aggiuntivi delle lezioni” in “Campi aggiuntivi” e verificare lingue, accessibilità e resa nella toolbar. |
@@ -108,6 +108,10 @@ PR [#210](https://github.com/jeckodevelopment/jd_learn/pull/210) e [#209](https:
 PR [#215](https://github.com/jeckodevelopment/jd_learn/pull/215) completa la protezione del lifecycle categorie: FK su corsi, percorsi, docenti e domande; hard-delete impedito finché ci sono riferimenti; cestinamento/ripristino reversibili. CI 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654). Pacchetto [JD-Learn-0.41.63-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654/artifacts/13835639241), wrapper SHA-256 `dfcfab154b2425a1c862a3680315aecb9c633abdab249c6f7c66af93e0a9feb0`, ZIP Joomla SHA-256 `938a623037eeaba7cdb0c5f70e6aa159f9926e6b84bfbc88e856e7c285b8bdd5`; disponibile fino al 25 novembre 2026. Avanzamento 76% (529/7). Collaudo Joomla pendente nel testbook.
 
 
+## Aggiornamento 11 novembre 2026 — STAB-01 / PR #238
+
+La PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) integra la traduzione IT/EN del menu Percorsi in 0.41.78-dev; CI standard 4/4 nel [run 43113528500](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500); merge `6e7d2cb40f8a641e30b391f046b6e4b1d3b09e33`. Pacchetto [JD-Learn-0.41.78-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500/artifacts/13897377687), SHA-256 interno `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`, wrapper `6a029d5283ef897d62869bc8fb88eaf193eb966bab3d61424a04951cae8c9ec5` (estrazione singola; scade il 25 novembre 2026). Collaudo Joomla pendente; avanzamento 78%.
+
 ## Integrazione piano — Update Server Joomla / JED (11 novembre 2026)
 
 **Ricognizione:** la funzionalità è già inclusa in **CORE-22** e nel residuo **IMP-09**, con verifica finale in **IMP-10**; la matrice `docs/REQUIREMENTS_STATUS.csv` la registra ancora **Parziale** (update server/firma mancanti). **Non creare un requisito duplicato né una nuova fase:** eseguire una PR tecnica dedicata nel blocco IMP-09, prima del gate IMP-10, associata alla milestone GitHub **1.0.0**.
@@ -126,8 +130,3 @@ PR [#215](https://github.com/jeckodevelopment/jd_learn/pull/215) completa la pro
 - L'update site ufficiale è dichiarato nel manifest di `pkg_jlms`; la configurazione produttiva di SFTP e l'effettivo endpoint HTTPS **restano da predisporre e collaudare**. Istruzioni: [RELEASE_PROCEDURE.md](RELEASE_PROCEDURE.md).
 - La procedura di publish reale richiede conferma e protezioni GitHub Environment `jdlearn-release-production`; non eseguire fino al gate IMP-10, con CI completa, prove Joomla e verifica recovery. Il workflow di preparazione non prova da solo la disponibilità produttiva del feed.
 - Requisiti interessati: CORE-22, JOO-01/03, SECDEV-08, REL-01–03, PBASE-04; criteri US-01–06. Lo stato dei requisiti resta **Parziale** finché l'aggiornamento end-to-end e l'hosting non saranno verificati. La percentuale globale non va aumentata automaticamente per il solo workflow.
-
-
-### IMP-09 — Ulteriore gate di autorizzazione produzione (11 novembre 2026)
-
-Il workflow manuale `release.yml` aggiunge prima di qualunque pubblicazione un controllo **fail-closed**: serve il secret dell'environment `jdlearn-release-production` denominato `JDLEARN_RELEASE_ENABLED` con valore `YES`, oltre alla conferma testuale `PUBLISH JD LEARN X.Y.Z` per la versione richiesta. Il flag `publish` resta `false` per default. Le istruzioni sono in [RELEASE_PROCEDURE.md](RELEASE_PROCEDURE.md). L'endpoint di produzione, i secret, le protezioni dell'environment e il collaudo Joomla restano pendenti e non autorizzano il rilascio 1.0.0.
