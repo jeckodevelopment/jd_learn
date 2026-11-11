@@ -115,3 +115,9 @@ Questo documento conserva il percorso passato. **Per decidere cosa funziona e co
 Il [changelog](../CHANGELOG.md) contiene i dettagli per versione. Il [registro dei requisiti](REQUIREMENTS_CHANGES.md) descrive le variazioni del risultato richiesto, non le implementazioni. Il [registro delle prove](IMPLEMENTATION_EVIDENCE.json) identifica il build corrente verificato e mantiene i record storici precedenti.
 
 Le vecchie indicazioni “mancante”, “da verificare” o “prossimo incremento” nelle fotografie storiche descrivono soltanto il momento in cui furono scritte. Le versioni precedenti dei riepiloghi rimangono disponibili nella cronologia Git, senza copiarle nei documenti correnti.
+## 0.41.78-dev — STAB-01, traduzione del menu Percorsi
+
+- Aggiunta `COM_JLMS_PATHWAYS` nei cataloghi amministrativi di sistema IT/EN per correggere l’issue #150.
+- Verifica strutturale estesa per proteggere la presenza della chiave in entrambe le lingue.
+- Accettazione manuale dashboard/menu Joomla ancora da eseguire; nessun avanzamento percentuale attribuito prima del collaudo.
+

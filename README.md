@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.77-dev** integra le PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230), [#233](https://github.com/jeckodevelopment/jd_learn/pull/233) e [#235](https://github.com/jeckodevelopment/jd_learn/pull/235): anteprime pubbliche esplicite degli allegati corso e materiali corso disponibili anche nell’anteprima editoriale delle lezioni di testo/video. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.77-dev** integra le PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230), [#233](https://github.com/jeckodevelopment/jd_learn/pull/233) e [#235](https://github.com/jeckodevelopment/jd_learn/pull/235): anteprime pubbliche esplicite degli allegati corso e materiali corso disponibili anche nell’anteprima editoriale delle lezioni di testo/video. Candidato **0.41.78-dev** per STAB-01 corregge la traduzione IT/EN del menu Percorsi. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
 
 
 
