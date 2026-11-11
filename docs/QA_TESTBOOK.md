@@ -364,4 +364,85 @@ Riferimenti: AUT-02/03, STU-02, MAT-01/02; AC-20, AC-27–31, AC-80, AC-86, AC-9
 
 1. Aprire **Programma → Anteprima editoriale** sulla lezione Documento. Atteso: elenco separato di materiali del corso e della lezione, con titolo, descrizione, tipo e dimensione; PDF, immagini e testo ammessi si aprono inline in una nuova scheda, gli altri file vengono scaricati. File in quarantena/non pronto, disabilitati, contrassegnati preview o fuori finestra non compaiono e non sono serviti.
 2. Aprire la lezione Audio. Atteso: player HTML5 per MP3/OGG della lezione, con seek/ripresa HTTP Range; gli allegati rimanenti sono consultabili secondo il tipo file. Un file audio di formato diverso non deve essere riprodotto dall’anteprima.
-3. Provare URL dirette con GET e HEAD per un allegato valido. Cambiare a turno course, version, lesson e attachment ID, includendo una lezione di un altro corso/versione e un attachment collegato a un’a
+3. Provare URL dirette con GET e HEAD per un allegato valido. Cambiare a turno course, version, lesson e attachment ID, includendo una lezione di un altro corso/versione e un attachment collegato a un’altra lezione. Atteso: nessun file viene restituito per relazioni non corrispondenti.
+4. Ripetere con un account privo di gestione materiali e dopo la revoca del permesso nella sessione. Atteso: accesso negato anche sull’endpoint diretto. Verificare che l’endpoint non accetti POST o altri metodi.
+5. Prima e dopo preview/download/riproduzione, confrontare iscrizioni, sessioni, tentativi e progresso: devono restare invariati. La lezione quiz deve continuare a mostrare solo il placeholder read-only, senza tentativi.
+
+**Esito sito Joomla:** Non eseguito.
+
+
+## IMP-04 — apertura protetta inline di PDF e immagini nell’aula (0.41.48-dev)
+
+Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su Joomla 6 di prova predisporre un’iscrizione attiva e lezioni disponibili con PDF, JPEG/PNG/WebP, DOCX, CSV, ZIP e un file non pronto; conservare lo stato iniziale di progressi e iscrizioni.
+
+1. In aula verificare che PDF e immagini mostrino **Apri nel browser** e **Scarica file**; DOCX, CSV e ZIP devono mostrare solo il download.
+2. Aprire PDF e immagini: risposta inline in nuova scheda con `nosniff`, cache privata e senza contenuti eseguibili; provare anche Range su PDF. Il download alternativo deve continuare a funzionare.
+3. Alterare attachment ID/enrollment ID e ripetere dopo revoca accesso, sospensione, chiusura finestra o blocco prerequisito della lezione. L’endpoint inline deve negare il file senza rivelare contenuto.
+4. Richiedere l’endpoint inline per DOCX/CSV/ZIP o asset in quarantena: deve essere negato; il normale endpoint di download resta soggetto ai controlli esistenti. Metodi diversi da GET/HEAD devono essere rifiutati.
+5. Confrontare progressi e iscrizione prima/dopo vista inline e download: nessuna apertura o scaricamento attribuisce completamento.
+
+**Esito sito Joomla:** Non eseguito.
+
+Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
+
+
+## IMP-06 — lifecycle materiali, riuso e offload (0.41.65-dev)
+
+Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. Su Joomla 6 di prova predisporre un corso con una bozza, almeno due lezioni e un editor con permesso di gestione materiali.
+
+1. Caricare un allegato nella prima lezione e selezionare **Collega materiale esistente** verso materiali del corso. Atteso: il nuovo collegamento compare in entrambi gli ambiti e usa lo stesso file; nessuna seconda copia viene caricata.
+2. Collegare lo stesso file a una seconda lezione, poi provare a collegarlo di nuovo allo stesso ambito. Atteso: i due ambiti validi lo rendono disponibile senza duplicati locali; la ripetizione viene rifiutata con un messaggio comprensibile.
+3. Rimuovere il collegamento da un ambito. Atteso: il materiale resta utilizzabile nell'altro. Sostituire il file nel collegamento originale: gli altri collegamenti continuano a riferirsi al vecchio asset immutabile.
+4. Ripetere con una versione pubblicata e con un editor privo del permesso materiali; nessuna modifica/riuso deve essere consentita. Verificare che il corso pubblicato e lo storico assegnato restino invariati.
+5. Eseguire l'attività Scheduler di pulizia: il blob condiviso deve restare finché un collegamento lo referenzia e diventare eleggibile solo quando tutte le associazioni sono state rimosse e sono trascorse 24 ore.
+
+PR [#217](https://github.com/jeckodevelopment/jd_learn/pull/217) integrata nel commit `abf82a4053918f823726c84a156d295652c7b72c`; CI standard 4/4 nel [run 42983654823](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823). La fixture Joomla eliminabile verifica il riuso tramite form amministrativo, il riferimento condiviso allo stesso asset, il rifiuto del secondo collegamento duplicato e il blocco sulle versioni pubblicate. Pacchetto aggiornato [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520): wrapper SHA-256 `b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2`, ZIP Joomla `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`. Il wrapper va estratto una volta. Collaudo manuale Joomla ancora da eseguire.
+
+## IMP-06 — pulizia programmata dei materiali orfani (0.41.54-dev)
+
+Riferimenti: MAT-02/03/05/06, DAT-04, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. La guida è in [MATERIALS.md](MATERIALS.md). Sul sito di prova verificare che il plugin Task - JD Learn sia abilitato.
+
+1. Caricare un allegato valido nella bozza e sostituirlo con un nuovo file. Verificare che il contenuto precedente non venga sovrascritto; entrambi i file devono essere privati e serviti solo tramite i controlli Joomla.
+2. Creare da Sistema → Attività pianificate un’attività “JD Learn: pulisci i file materiali orfani”, limite `100`, e avviarla manualmente. Atteso: record e file ancora usati da corsi/lezioni restano disponibili.
+3. Verificare nel log dell’attività conteggio rimozioni, errori ed eventuale lavoro residuo; nessuna attività viene creata automaticamente dall’upgrade.
+
+La CI standard 4/4 della PR [#202](https://github.com/jeckodevelopment/jd_learn/pull/202) nel [run 42886192087](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087) genera un asset fittizio non referenziato più vecchio di 24 ore e verifica la rimozione del record e del blob tramite la routine nativa Scheduler, mantenendo intatti gli allegati collegati. Pacchetto: [JD-Learn-0.41.54-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42886192087/artifacts/13797460306).
+
+**Esito sito Joomla:** Non eseguito.
+
+## IMP-05 — pulizia opportunistica delle sessioni video (0.41.53-dev)
+
+Riferimenti: VID-03/04, PBASE-01/04; AC-25, AC-27–31, AC-91, AC-95, AC-97–103. Su Joomla 6 di prova usare una lezione video disponibile, un’iscrizione autorizzata e uno dei quattro provider già configurati.
+
+1. Aprire il video e avviare la riproduzione; verificare che si crei la sessione e che il salvataggio posizione funzioni.
+2. Con una sessione precedente scaduta, aprire di nuovo il video: il player deve avviarsi e la riga scaduta deve essere rimossa; le sessioni attive e i progressi esistenti devono restare invariati.
+3. Ripetere con provider esterno e HTML5 locale, con accesso autorizzato e poi revocato: il purge avviene solo dopo l’autorizzazione e la revoca continua a impedire l’avvio.
+4. Verificare che nessuna sessione attiva venga eliminata e che una nuova sessione non attribuisca credito finché non arrivano intervalli validi.
+
+La suite automatica copre una riga scaduta e la cancellazione; il limite massimo 250 è verificato nel codice. La pulizia è opportunistica, quindi l’eliminazione completa in assenza di nuovi avvii rimane un’attività periodica futura.
+
+**CI:** PR [#198] integrata; standard 4/4 superata nel [run 42883180012](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012). [Pacchetto installabile JD-Learn-0.41.53-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42883180012/artifacts/13794578948).
+
+**Esito sito Joomla:** Non eseguito.
+## IMP-07 — URL SEF con alias per corsi, categorie e percorsi (0.41.58-dev, PR #208 integrata)
+
+PR [#208](https://github.com/jeckodevelopment/jd_learn/pull/208), milestone **1.0.0**, integrata con squash nel commit `6b92612254c060c1ef296c0a03661442871ad1cc`. CI standard 4/4 nel [run 42910392500](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500). Pacchetto [JD-Learn-0.41.58-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42910392500/artifacts/13806778546), wrapper SHA-256 `773fb7cd4e200df599ffd1b858cc5ef60d013c8823780b625024afbb4acec8cb`, ZIP Joomla SHA-256 `7a4d52cdbbd708b523d6d05f29f0b937fcf5094019a6c9e70ab443bd7a28ade3`, disponibile fino al 24 novembre 2026. Eseguire sul sito Joomla di prova e registrare qui l’esito; i percorsi numerici precedenti devono restare funzionanti.
+
+1. Installare il pacchetto candidato su Joomla di prova e predisporre corsi, categorie e percorsi pubblicati con alias parlanti; includere due record con alias uguale in lingue/categorie diverse.
+2. Attivare SEF e URL rewriting. Aprire catalogo, categoria, scheda corso e percorso; verificare che i collegamenti usino segmenti ID-alias (per esempio `42-alias-corso`), che ogni pagina corrisponda al record corretto e che non appaiano ID di un altro tipo di contenuto.
+3. Aprire gli stessi record con i vecchi URL numerici; verificare che continuino a rispondere e che le pagine pubbliche espongano come canonical l’URL SEF con alias.
+4. Cambiare lingua con associazioni valide e verificare che il link porti al record tradotto e al suo alias. Con un’associazione assente, verificare il fallback lingua già previsto.
+5. Disattivare SEF e verificare URL query tradizionali, navigazione e menu nativi. Riattivare SEF e verificare breadcrumb, paginazione/filtri e link di ritorno.
+6. Modificare un alias nel gestore Joomla; verificare che il nuovo alias generi il link successivo e che il vecchio segmento numerico continui a identificare il record.
+## IMP-07 — vista elenco del catalogo (0.41.61-dev, PR #211 integrata)
+
+Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova; usare corsi pubblici e una categoria visibile.
+
+1. Aprire il catalogo e verificare che la selezione Visualizzazione proponga Griglia ed Elenco, con etichette corrette in italiano e inglese.
+2. Selezionare Elenco e applicare. Atteso: le schede sono disposte in righe, la scelta resta selezionata e l’URL conserva gli altri filtri attivi.
+3. Combinare Elenco con ricerca, tag, difficoltà, durata e ordinamento; i risultati e la paginazione devono rimanere coerenti con i filtri.
+4. Ripetere nella pagina di una categoria con corsi diretti e discendenti. La vista scelta non deve rimuovere il contesto categoria.
+5. Restringere la finestra sotto 640 px: titolo, link e sommario devono rimanere leggibili senza overflow orizzontale. Verificare la navigazione da tastiera dei controlli.
+6. Inviare `filter[layout]=unexpected`: deve essere usata la griglia predefinita. Verificare che nessun corso non autorizzato appaia in entrambe le viste.
+
+**Esito sito Joomla:** Non eseguito.

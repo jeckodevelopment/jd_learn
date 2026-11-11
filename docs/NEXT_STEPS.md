@@ -91,4 +91,9 @@ Audit sicurezza con analisi statica/stile/scansioni e risultati motivati. Carico
 
 **Accettazione:** nessun obbligo di rilascio senza esito, anomalie con decisione esplicita, report reale delle prestazioni e guide/ZIP/checksum/aggiornamenti completi. Vendita e abbonamenti restano esterni; compiti/live/SCORM/xAPI/LTI mantengono le rispettive fasi differite.
 
-La0.41.7 (PR #65, CI standard superata) completa il primo flusso dei campi didattici lezione: valori autorizzati copiati nelle bozze, snapshot alla pubblicazione, accesso corrente e resa nell’aula. Restano il collaudo sul sito Joomla, il supporto/accettazione di tutti i tipi e plugin e il ripristino
+La0.41.7 (PR #65, CI standard superata) completa il primo flusso dei campi didattici lezione: valori autorizzati copiati nelle bozze, snapshot alla pubblicazione, accesso corrente e resa nell’aula. Restano il collaudo sul sito Joomla, il supporto/accettazione di tutti i tipi e plugin e il ripristino dei valori tramite Content History (CORE-10); non confondere i campi editoriali correnti con lo storico assegnato.
+
+
+## Percorsi formativi (AC-79 / issue #119)
+
+Il CRUD amministrativo e le viste pubbliche erano già implementati. La PR [#147](https://github.com/jeckodevelopment/jd_learn/pull/147) in 0.41.39-dev integra l’accesso dal sottomenu/dashboard con ACL `jlms.pathways.manage`, i test HTTP e d’installazione e la guida operativa. CI standard 4/4 superata; resta il collaudo manuale Joomla: creazione/ordinamento/pubblicazione, vista pubblica/progressi e verifica dei ruoli con/senza permesso.
