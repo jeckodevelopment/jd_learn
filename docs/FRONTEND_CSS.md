@@ -35,7 +35,7 @@ Scheda pubblica: `jlms-course-login` per ospiti, `jlms-start-form` per accesso a
 
 ## Materiali protetti
 
-Regioni: `jlms-course-materials` nella scheda (nessun metadato protetto); `jlms-classroom-course-materials` e `jlms-lesson-resources` nell’aula, raggruppate da `jlms-material-groups`. Ripetizioni `jlms-material-{attachmentId}` e classi `.jlms-material`, `.jlms-material__title`, `.jlms-material__meta`, `.jlms-material__action`, `.jlms-material-list`. Ogni ambito ha paginazione distinta (`course_material_page`, `lesson_material_page`). Override `course/default.php` e `classroom/default.php` nativi; mantenere i link del componente con enrollment_id, mai un URL filesystem/storage diretto. Le classi e variabili WAM rimangono compatibili con 0.4.
+Regioni: `jlms-course-materials` nella scheda appare solo quando esistono allegati di anteprima pubblica espliciti; descrizione e metadati sono limitati a quei file. `jlms-classroom-course-materials` e `jlms-lesson-resources` nell’aula, raggruppate da `jlms-material-groups`. Ripetizioni `jlms-material-{attachmentId}` e classi `.jlms-material`, `.jlms-material__title`, `.jlms-material__meta`, `.jlms-material__action`, `.jlms-material-list`. Ogni ambito ha paginazione distinta (`course_material_page`, `lesson_material_page`). Override `course/default.php` e `classroom/default.php` nativi; mantenere i link del componente con enrollment_id, mai un URL filesystem/storage diretto. Le classi e variabili WAM rimangono compatibili con 0.4.
 
 ## Player video
 

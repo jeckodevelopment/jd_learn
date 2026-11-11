@@ -28,7 +28,7 @@ final class HtmlView extends BaseHtmlView
         }
         $this->form->setField($field);
         $data = ['course_id' => $this->item['course']->id, 'version_id' => $this->item['version']->id,
-            'expected_version_revision' => $this->item['version']->revision, 'replace_id' => 0];
+            'expected_version_revision' => $this->item['version']->revision, 'replace_id' => 0, 'preview' => 0];
         $data['publish_up'] = '';
         $data['publish_down'] = '';
         $selectedLesson = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('lesson_id');
@@ -40,7 +40,7 @@ final class HtmlView extends BaseHtmlView
         if ($replaceId) {
             foreach ($this->item['files']['items'] as $file) {
                 if ((int) $file->id === $replaceId && $this->item['version']->status === 'draft') {
-                    $data = array_replace($data, ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id,
+                    $data = array_replace($data, ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id, 'preview' => (int) $file->preview,
                         'publish_up' => \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_up, $this->item['schedule_timezone']),
                         'publish_down' => \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_down, $this->item['schedule_timezone'])]);
                     $data['replace_id'] = $replaceId;

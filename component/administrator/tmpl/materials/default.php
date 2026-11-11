@@ -34,7 +34,7 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
  <?php foreach ($item['files']['items'] as $file) : ?>
  <section class="jlms-admin-material" data-attachment-id="<?= (int) $file->id ?>">
   <h2><?= $this->escape($file->title) ?></h2>
-  <p><?= $this->escape($file->original_name) ?> · <?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B · <?= $this->escape($file->status) ?> · ID <?= (int) $file->id ?> · <?= $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
+  <p><?= $this->escape($file->original_name) ?> · <?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B · <?= $this->escape($file->status) ?> · <?= Text::_((int) $file->preview === 1 ? 'COM_JLMS_MATERIAL_PUBLIC_PREVIEW' : 'COM_JLMS_MATERIAL_PRIVATE') ?> · ID <?= (int) $file->id ?> · <?= $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
   <?php if ($file->status === 'ready') : ?><a href="<?= $link('index.php?option=com_jlms&task=material.download&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&id=' . (int) $file->id) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a><?php endif; ?>
   <?php if ($editable) : ?>
   <a class="btn btn-secondary" href="<?= $link($base . '&page=' . (int) $item['files']['page'] . '&replace_id=' . (int) $file->id) ?>#jlms-material-upload"><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></a>
@@ -43,6 +43,7 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
    <label><?= Text::_('JGLOBAL_TITLE') ?><input type="text" name="jform[title]" value="<?= $this->escape($file->title) ?>" maxlength="255" required></label>
    <label><?= Text::_('JGLOBAL_DESCRIPTION') ?><textarea name="jform[description]" maxlength="4096"><?= $this->escape($file->description ?? '') ?></textarea></label>
    <label><?= Text::_('JSTATUS') ?><select name="jform[state]"><option value="1"<?= (int) $file->state === 1 ? ' selected' : '' ?>><?= Text::_('JPUBLISHED') ?></option><option value="0"<?= (int) $file->state === 0 ? ' selected' : '' ?>><?= Text::_('JUNPUBLISHED') ?></option></select></label>
+   <label><?= Text::_('COM_JLMS_MATERIAL_PUBLIC_PREVIEW') ?><select name="jform[preview]"><option value="0"<?= (int) $file->preview === 0 ? ' selected' : '' ?>><?= Text::_('JNO') ?></option><option value="1"<?= (int) $file->preview === 1 ? ' selected' : '' ?>><?= Text::_('JYES') ?></option></select></label>
    <label><?= Text::_('JFIELD_ORDERING_LABEL') ?><input type="number" name="jform[ordering]" value="<?= (int) $file->ordering ?>" min="0" max="99999"></label>
    <label><?= Text::_('COM_JLMS_CALENDAR_PUBLISH_UP') ?><input type="datetime-local" step="1" name="jform[publish_up]" value="<?= $this->escape($file->publish_up_editor) ?>"></label>
    <label><?= Text::_('COM_JLMS_CALENDAR_PUBLISH_DOWN') ?><input type="datetime-local" step="1" name="jform[publish_down]" value="<?= $this->escape($file->publish_down_editor) ?>"></label>

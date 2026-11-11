@@ -93,6 +93,45 @@ final class MaterialService
             'schedule_timezone' => CourseSchedule::read($course)['timezone']];
     }
 
+    /** Explicitly published course-level samples for the current published version only. */
+    public function publicPreviewList(int $courseId, int $versionId, int $page = 0): array
+    {
+        $page = max(0, min(10000, $page));
+        $now = gmdate('Y-m-d H:i:s');
+        $query = $this->db->createQuery()->from('#__jlms_attachments AS a')
+            ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
+            ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
+            ->innerJoin('#__jlms_courses AS c ON c.id = v.course_id AND c.current_version_id = v.id AND c.state = 1')
+            ->where('a.course_version_id = :version')->where('a.lesson_id IS NULL')->where('a.preview = 1 AND a.state = 1')
+            ->where("f.status = 'ready'")
+            ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
+            ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
+            ->bind(':published', 'published')->bind(':nowUp', $now)->bind(':nowDown', $now);
+        $total = (int) $this->db->setQuery((clone $query)->select('COUNT(*)'))->loadResult();
+        $items = $this->db->setQuery((clone $query)->select('a.id, a.title, a.description, a.ordering, a.publish_up, a.publish_down, f.original_name, f.mime_type, f.byte_size')
+            ->order('a.ordering, a.id'), $page * 20, 20)->loadObjectList();
+        return ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => 20];
+    }
+
+    /** Public access is additionally gated by CatalogService in the site controller. */
+    public function publicPreviewDownload(int $courseId, int $versionId, int $attachmentId): array
+    {
+        $query = $this->db->createQuery()->select('a.*, f.status AS asset_status, f.original_name, f.mime_type, f.byte_size')
+            ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
+            ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
+            ->innerJoin('#__jlms_courses AS c ON c.id = v.course_id AND c.current_version_id = v.id AND c.state = 1')
+            ->where('a.id = :id')->where('a.course_version_id = :version')->where('a.lesson_id IS NULL')
+            ->where('a.preview = 1 AND a.state = 1')->where("f.status = 'ready'")
+            ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
+            ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
+            ->bind(':id', $attachmentId, ParameterType::INTEGER)->bind(':published', 'published')
+            ->bind(':nowUp', gmdate('Y-m-d H:i:s'))->bind(':nowDown', gmdate('Y-m-d H:i:s'));
+        $link = $this->db->setQuery($query)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $file = $this->open((int) $link->asset_id);
+        $file['inline'] = in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true);
+        return $file;
+    }
+
     /** Available course/lesson files for an authorised, non-enrolled editorial preview. */
     public function previewLists(User $identity, int $courseId, int $versionId, int $lessonId): array
     {
@@ -133,11 +172,14 @@ final class MaterialService
 
     /** Uploaded binary is validated/scanned before the short authoring transaction. */
     public function upload(User $identity, int $courseId, int $versionId, int $lessonId, int $expected, string $title,
-        string $description, array $upload, int $replaceId = 0, mixed $publishUp = null, mixed $publishDown = null): int
+        string $description, array $upload, int $replaceId = 0, mixed $publishUp = null, mixed $publishDown = null, mixed $preview = 0): int
     {
         [, $course, $version] = $this->author($identity, $courseId, $versionId);
         $this->draft($version, $expected);
         $availability = MaterialAvailability::normalize($publishUp, $publishDown, CourseSchedule::read($course)['timezone']);
+        if (!in_array((string) $preview, ['0', '1'], true)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        $preview = (int) $preview;
+        if ($preview === 1 && $lessonId > 0) { throw new \RuntimeException('COM_JLMS_PREVIEW_COURSE_SCOPE_ONLY', 422); }
         if (in_array($upload['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
@@ -152,7 +194,7 @@ final class MaterialService
         $staged = $this->storage->stage($upload['tmp_name'], $upload['name']);
         $scan = $this->storage->scan((object) $staged);
         // A failed concurrent save may leave an unreferenced private blob; never delete a referenced blob speculatively.
-        return $this->transaction(function () use ($identity, $courseId, $versionId, $lessonId, $expected, $title, $description, $staged, $scan, $replaceId, $availability): int {
+        return $this->transaction(function () use ($identity, $courseId, $versionId, $lessonId, $expected, $title, $description, $staged, $scan, $replaceId, $availability, $preview): int {
             [$actor, , $version] = $this->author($identity, $courseId, $versionId, true);
             $this->draft($version, $expected);
             $now = gmdate('Y-m-d H:i:s');
@@ -165,7 +207,7 @@ final class MaterialService
                     throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 }
                 $update = (object) ['id' => $replaceId, 'asset_id' => (int) $asset->id, 'title' => trim($title),
-                    'description' => $description, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
+                    'description' => $description, 'preview' => $preview, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
                     'revision' => (int) $attachment->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');
                 $id = $replaceId;
@@ -176,7 +218,7 @@ final class MaterialService
                 if ($count >= 1000) { throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409); }
                 $attachment = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
                     'asset_id' => (int) $asset->id, 'title' => trim($title), 'description' => $description, 'ordering' => $count,
-                    'state' => 1, 'preview' => 0, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
+                    'state' => 1, 'preview' => $preview, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
                     'revision' => 1, 'created_by' => (int) $actor->id,
                     'modified_by' => (int) $actor->id, 'created_at' => $now, 'modified_at' => $now];
                 $this->db->insertObject('#__jlms_attachments', $attachment, 'id'); $id = (int) $attachment->id;
@@ -215,7 +257,7 @@ final class MaterialService
             $now = gmdate('Y-m-d H:i:s');
             $link = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
                 'asset_id' => (int) $source->asset_id, 'title' => $source->title, 'description' => $source->description,
-                'ordering' => $count, 'state' => (int) $source->state, 'preview' => (int) $source->preview,
+                'ordering' => $count, 'state' => (int) $source->state, 'preview' => 0,
                 'publish_up' => $source->publish_up, 'publish_down' => $source->publish_down,
                 'revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
                 'created_at' => $now, 'modified_at' => $now];
@@ -254,20 +296,22 @@ final class MaterialService
             } elseif ($operation === 'save') {
                 $title = $input['title'] ?? null;
                 $description = $input['description'] ?? '';
-                foreach (['state', 'ordering'] as $field) {
+                foreach (['state', 'ordering', 'preview'] as $field) {
                     if (isset($input[$field]) && !is_int($input[$field]) && !is_string($input[$field])) {
                         throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                     }
                 }
                 $state = (string) ($input['state'] ?? '1');
                 $order = (string) ($input['ordering'] ?? '0');
+                $preview = (string) ($input['preview'] ?? '0');
                 if (!is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1
                     || !is_string($description) || strlen($description) > 4096 || !in_array($state, ['0', '1'], true)
-                    || !ctype_digit($order) || strlen($order) > 5) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+                    || !in_array($preview, ['0', '1'], true) || !ctype_digit($order) || strlen($order) > 5) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+                if ($preview === '1' && $link->lesson_id !== null) { throw new \RuntimeException('COM_JLMS_PREVIEW_COURSE_SCOPE_ONLY', 422); }
                 $availability = array_key_exists('publish_up', $input) || array_key_exists('publish_down', $input)
                     ? MaterialAvailability::normalize($input['publish_up'] ?? $link->publish_up, $input['publish_down'] ?? $link->publish_down, CourseSchedule::read($course)['timezone'])
                     : ['publish_up' => $link->publish_up, 'publish_down' => $link->publish_down];
-                $update = (object) ['id' => $id, 'title' => trim($title), 'description' => $description, 'state' => (int) $state,
+                $update = (object) ['id' => $id, 'title' => trim($title), 'description' => $description, 'state' => (int) $state, 'preview' => (int) $preview,
                     'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
                     'ordering' => (int) $order, 'revision' => (int) $link->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');

@@ -68,6 +68,16 @@ foreach ([1, 2, 3] as $position) {
    <?php endforeach; ?></ol>
   </section>
  <?php endforeach; ?></section>
-<section id="jlms-course-materials"><h2><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h2><p><?= Text::_('COM_JLMS_MATERIALS_PRIVATE') ?></p></section>
+<?php if (!empty($this->item['public_materials']['items'])) : ?><section id="jlms-course-materials"><h2><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h2>
+ <ul class="jlms-material-list"><?php foreach ($this->item['public_materials']['items'] as $material) : ?><li id="jlms-material-<?= (int) $material->id ?>" class="jlms-material">
+  <span class="jlms-material__title"><?= $this->escape($material->title) ?></span>
+  <?php if (trim((string) $material->description) !== '') : ?><p class="jlms-material__meta"><?= nl2br($this->escape($material->description)) ?></p><?php endif; ?>
+  <span class="jlms-material__meta"><?= $this->escape($material->original_name) ?> · <?= $this->escape($material->mime_type) ?> · <?= number_format((int) $material->byte_size / 1048576, 2) ?> MiB</span>
+  <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id=' . (int) $course->id . '&id=' . (int) $material->id) ?>"><?= Text::_('COM_JLMS_MATERIAL_PREVIEW_DOWNLOAD') ?></a>
+ </li><?php endforeach; ?></ul>
+ <?php if ($this->item['public_materials']['page'] > 0 || ($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) : ?><nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
+  <?php if ($this->item['public_materials']['page'] > 0) : ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id . '&course_material_page=' . ($this->item['public_materials']['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php endif; ?>
+  <?php if (($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) : ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id . '&course_material_page=' . ($this->item['public_materials']['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?>
+ </nav><?php endif; ?></section><?php endif; ?>
  <a id="jlms-course-back" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
 </article>

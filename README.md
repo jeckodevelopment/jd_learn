@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.74-dev** integra la PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229) (merge `d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c`), dopo la PR #228. CI standard 4/4 superata nel [run 43094357303](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303). Pacchetto installabile [JD-Learn-0.41.74-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415); SHA-256 dell'artifact wrapper `902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8`. La PR aggiunge test end-to-end con ClamAV reale; accettazione manuale Joomla resta da eseguire.
+Aggiornato all’11 novembre 2026. Main verificata **0.41.74-dev** integra la PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229); la candidata **0.41.75-dev** aggiunge l’anteprima pubblica esplicita dei soli allegati dell’ambito corso. Build locale candidata `dist/pkg_jlms-0.41.75-dev.zip`, SHA-256 `2efc454d7310af50d343b581b4b31b72bb7b05e076d214ab71003ee8c6cd6027`; CI, PR e pacchetto post-merge da registrare. Accettazione manuale Joomla pendente.
 
 
 

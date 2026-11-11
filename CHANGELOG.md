@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.75-dev — anteprima pubblica esplicita dei materiali corso (IMP-06)
+
+- L'editor può marcare un singolo allegato dell'ambito corso come anteprima pubblica; il default resta privato e il server rifiuta il flag sugli allegati di lezione.
+- La scheda corso mostra soltanto anteprime della versione corrente pubblicata, pronte, attive e nel periodo configurato. La consegna revalida corso/catalogo/allegato, usa cache privata/no-store e non indicizza il file.
+- Gli asset riutilizzati generano collegamenti privati. Aggiunta la procedura di collaudo Joomla in `docs/QA_TESTBOOK.md`; accettazione manuale ancora pendente.
+- CI e pacchetto installabile vengono registrati dopo la verifica della PR.
+
 ## 0.41.74-dev — scansione materiali verificata con ClamAV reale (IMP-06)
 
 - PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229) integrata in main (merge `d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c`): il job PHP 8.3 installa ClamAV, aggiorna le firme e prova il flusso reale via socket Unix con file pulito ed EICAR. PHP 8.4 mantiene anche il fixture di protocollo.
