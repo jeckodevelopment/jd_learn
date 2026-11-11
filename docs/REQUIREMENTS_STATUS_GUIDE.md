@@ -1,6 +1,6 @@
 # Come leggere `REQUIREMENTS_STATUS.csv`
 
-Ricognizione iniziale del **10 novembre 2026** sulla baseline main `70c9dff` / runtime **0.41.54-dev**; matrice aggiornata dopo il merge IMP-07 #210 su main `e5d0bae` / runtime **0.41.59-dev**. I 210 ID, descrizioni, scenari e perimetri originari restano invariati. Il perimetro baseline (209 “Rilascio 1”, NOT-03 differito) è storico: non coincide con il sottoinsieme oggi approvato per la **1.0.0**.
+Ricognizione iniziale del **10 novembre 2026** sulla baseline main. Matrice aggiornata dopo PR #229 su main `d02aece` / runtime **0.41.74-dev**; la suite completa con ClamAV reale è verificata, mentre l'accettazione manuale del sito resta distinta. I 210 ID, descrizioni, scenari e perimetri originari restano invariati.
 
 | Dimensione | Conteggio | Significato |
 |---|---:|---|
