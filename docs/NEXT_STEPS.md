@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main 0.41.67-dev integra la PR #222 (CORE-09) e la correzione Apache/LiteSpeed #221. La prossima PR candidata `feat/published-course-associations` copre il residuo IMP-07/CORE-07: associazioni native tra corsi pubblicati, mantenendo versioni e progressi. CI e merge in attesa; accettazione AC-20/AC-48 da eseguire nel sito Joomla.
+Aggiornato all’11 novembre 2026. Main 0.41.68-dev integra la PR #223 (CORE-07: associazioni multilingua dei corsi pubblicati), la #222 (CORE-09) e la correzione Apache/LiteSpeed #221. Pacchetto installabile `dist/pkg_jlms-0.41.68-dev.zip`, SHA-256 `ed115844d2de2925f8a087a3a8cdbed646e870bfd529ca31eb3b2dfd1f97a7c0`. Avanzamento **77%**; accettazione manuale AC-20/AC-48 e scenari dei tag ancora pendenti. Proseguire con i residui IMP-07 e poi IMP-08/09 secondo il piano.
 
 
 
