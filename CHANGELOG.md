@@ -1,3 +1,9 @@
+## 0.41.70-dev — ricollocazione dipendenze categoria (IMP-07 / CAT-01 / CORE-01)
+
+- Aggiunto nel backend un riepilogo dei riferimenti a corsi, percorsi, profili docente e domande, con ricollocazione esplicita verso categorie autorizzate della stessa sezione.
+- Aggiornamento atomico del solo riferimento categoria; versioni didattiche, iscrizioni, progressi e risultati restano invariati. Se Finder è attivo, i corsi spostati vengono reindicizzati.
+- Guida e scenari Joomla aggiornati in `docs/CATEGORIES.md` e `docs/QA_TESTBOOK.md`. Il collaudo manuale Joomla resta pendente.
+
 ## 0.41.69-dev — ricerca nei selettori delle traduzioni (IMP-07 / CORE-07)
 
 - Aggiunge un filtro accessibile per titolo o ID ai selettori delle associazioni multilingua dei corsi, utile nei gruppi editoriali numerosi.

@@ -51,6 +51,19 @@
 4. Revoca il livello di accesso o sospendi l’iscrizione e ripeti la richiesta: il file deve essere negato anche con la sessione già autenticata.
 5. Verifica che un file alterato o di dimensione incoerente non venga servito e che la directory di storage resti fuori dalla document root.
 
+## IMP-07 — ricollocazione esplicita delle dipendenze categoria (0.41.70-dev)
+
+Riferimenti: CAT-01, CORE-01, LIFE-02. Il nuovo strumento backend esamina i riferimenti alle categorie e permette di ricollocare i record in categorie destinatarie della stessa sezione prima della rimozione. Verificare in Joomla 6 di prova con categorie dedicate a corsi, percorsi, docenti e domande. Per la prova sui corsi usare un corso pubblicato con versione attiva, iscrizione/progresso e associazione multilingua.
+
+**Comportamenti da testare in Joomla**
+
+1. Apri JD Learn → Gestione dipendenze categorie, seleziona una categoria con record collegati e verifica conteggi e destinazioni consentite.
+2. Verifica che le destinazioni appartengano alla stessa sezione, non includano la sorgente o sue discendenti e rispettino i permessi dell’operatore.
+3. Ricolloca record in ciascuna delle quattro sezioni. Verifica che i riferimenti cambino categoria e che record, storici, versioni, iscrizioni, progressi, tentativi e risultati restino invariati.
+4. Per i corsi, verifica in Smart Search che gli elementi idonei riflettano la nuova categoria; ripeti anche con Finder disattivato.
+5. Modifica i dati mentre la pagina di ricollocazione è aperta e riprova l’operazione: deve essere annullata integralmente se i conteggi non coincidono più.
+6. Dopo la ricollocazione elimina la sorgente dal gestore Categorie nativo. Ripeti con categorie in checkout, destinazioni non autorizzate, destinazioni di altro tipo, nessun target scelto e una categoria con discendenti; nessuna operazione parziale o eliminazione implicita deve verificarsi.
+
 ## IMP-07 — lifecycle sicuro delle categorie (0.41.63-dev, PR #215 integrata)
 
 **Stato:** CI PR #215 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); eseguire la prova manuale categorie sul pacchetto aggiornato [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.

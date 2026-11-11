@@ -24,6 +24,10 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
             'com_jlms.lesson' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSONS')];
     }
 
+    private \Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService $categoryReassignmentService;
+    public function setCategoryReassignmentService(\Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService $service): void { $this->categoryReassignmentService = $service; }
+    public function getCategoryReassignmentService(): \Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService { return $this->categoryReassignmentService; }
+
     private \Jlms\Component\Jlms\Administrator\Application\DashboardService $dashboardService;
     public function setDashboardService(\Jlms\Component\Jlms\Administrator\Application\DashboardService $service): void { $this->dashboardService = $service; }
     public function getDashboardService(): \Jlms\Component\Jlms\Administrator\Application\DashboardService { return $this->dashboardService; }

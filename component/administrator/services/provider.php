@@ -49,6 +49,7 @@ return new class () implements ServiceProviderInterface {
                 },
             );
         });
+        $container->set(\Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService($c->get(DatabaseInterface::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\CatalogService($c->get(DatabaseInterface::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\LearningService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\LearningService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class, static fn () => new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn () => ComponentHelper::getParams('com_jlms')));
@@ -78,6 +79,7 @@ return new class () implements ServiceProviderInterface {
             $component->setAssociationExtension(new \Jlms\Component\Jlms\Administrator\Helper\AssociationsHelper());
             $component->setMVCFactory($container->get(MVCFactoryInterface::class));
             $component->setCurriculumService($container->get(CurriculumService::class));
+            $component->setCategoryReassignmentService($container->get(\Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService::class));
             $component->setPublicationService($container->get(PublicationService::class));
             $component->setCatalogService($container->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class));
             $component->setDashboardService($container->get(\Jlms\Component\Jlms\Administrator\Application\DashboardService::class));

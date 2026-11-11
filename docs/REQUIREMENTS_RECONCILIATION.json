@@ -25,10 +25,10 @@
   },
   "implementation_progress": {
     "percent": 77,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #222 integra CORE-09 per i tag nativi; PR #223 integra il sottoinsieme CORE-07 per le associazioni dei corsi pubblicati, area integrazioni Joomla al 92%; 536/7 = 76,57%, arrotondato al 77%. L’accettazione manuale AC-20/AC-48 resta pendente.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #225 aggiunge la ricollocazione atomica delle dipendenze categoria e porta il catalogo all’81%; PR #222 integra CORE-09 e PR #223–#224 il sottoinsieme CORE-07, area integrazioni Joomla al 92%; 540/7 = 77,14%, arrotondato al 77%. Accettazione manuale Joomla ancora pendente.",
     "areas": [
       76,
-      77,
+      81,
       77,
       89,
       67,
