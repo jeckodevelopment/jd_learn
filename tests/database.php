@@ -10,7 +10,7 @@ if (!$dsn || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 }
 $db = new \PDO($dsn, getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 $prefix = 'ci_';
-$db->exec('CREATE TABLE `ci_categories` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`)) ENGINE=InnoDB');
+$db->exec('CREATE TABLE `ci_categories` (`id` INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`)) ENGINE=InnoDB');
 $db->exec('INSERT INTO `ci_categories` (`id`) VALUES (1)');
 $sql = file_get_contents(dirname(__DIR__) . '/component/administrator/sql/install.mysql.utf8mb4.sql');
 $sql = str_replace('#__', $prefix, preg_replace('/--[^\n]*/', '', $sql));
