@@ -6,7 +6,7 @@
     "tested_head": "3b2deaa662a92c16e5f0e2d7c2219b773a625d19",
     "parent_main_commit": "d235231d8ce58cabf1ebda6d007bd3fd458f1f11",
     "pull_request": 227,
-    "merged_main_commit": null
+    "merged_main_commit": "d0f038a50ba8b02e2f5f617ca36112e943908c52"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
@@ -2851,7 +2851,8 @@
     "package_sha256": "946e850060f38ed28c546099706997b8d7e3ce19f677cd7f045a0b33aaebea80",
     "package_size_bytes": 566330,
     "artifact_size_bytes": 566102,
-    "artifact_expires_at": "2026-11-25T19:23:16Z"
+    "artifact_expires_at": "2026-11-25T19:23:16Z",
+    "merged_main_commit": "d0f038a50ba8b02e2f5f617ca36112e943908c52"
   },
   "latest_verified_increment": {
     "version": "0.41.72-dev",
@@ -2869,11 +2870,12 @@
     "package_sha256": "946e850060f38ed28c546099706997b8d7e3ce19f677cd7f045a0b33aaebea80",
     "package_size_bytes": 566330,
     "artifact_size_bytes": 566102,
-    "artifact_expires_at": "2026-11-25T19:23:16Z"
+    "artifact_expires_at": "2026-11-25T19:23:16Z",
+    "merged_main_commit": "d0f038a50ba8b02e2f5f617ca36112e943908c52"
   },
   "next_candidate": {
     "priority": "Proseguire con i residui IMP-06: preview/metadati, scansione antivirus end-to-end con ClamAV reale e completamento del ciclo di vita/conservazione. Poi requisiti core residui secondo piano; mantenere distinti i collaudi manuali dei materiali, provider e categorie.",
     "status": "Seguire docs/NEXT_STEPS.md e docs/STABLE_1.0.0_PR_PLAN.md; fase 2 esclusa."
   },
-  "current_status": "Main 0.41.72-dev dopo PR #227; CI standard 4/4 e pacchetto installabile verificati; avanzamento stimato 77% (542/7; M04 91%); collaudo manuale Joomla pendente."
+  "current_status": "Main 0.41.72-dev (PR #227 integrata, merge d0f038a50ba8b02e2f5f617ca36112e943908c52); CI candidate 4/4 superata, build installabile verificato; avanzamento stimato 77% (542/7; M04 91%); collaudo manuale Joomla pendente."
 }
