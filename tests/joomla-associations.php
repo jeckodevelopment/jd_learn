@@ -263,7 +263,7 @@ assocExpect(json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms
     'published translation graph edits preserve the live teaching pointers and versions');
 assocExpect(assocSave(assocData($en)+['associations'=>['it-IT'=>$it]]), 'authorized editor can relink published translations');
 assocExpect((int) $helper->getAssociations('course', $en)['it-IT']->id === $it, 'native association API resolves the restored published translation');
-assocExpect(assocRows() !== '', 'native association graph remains valid after published relink');
+assocExpect((int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult() === 2, 'native association graph remains valid after published relink');
 file_put_contents($fixturePath,json_encode(['en'=>$en,'it'=>$it,'other_en'=>$otherEn,'other_it'=>$otherIt,'all'=>$all,
     'version'=>$versions[$en],'catid'=>$catid,'rows'=>$baseline],JSON_THROW_ON_ERROR));
 echo json_encode(['native_association_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
