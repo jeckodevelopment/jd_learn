@@ -67,6 +67,18 @@ $factory = $component->getMVCFactory();
 
 
 
+$cloudflareManifest = simplexml_load_file(dirname(__DIR__) . '/plugins/jlmsvideo/cloudflarestream/cloudflarestream.xml');
+if (!$cloudflareManifest) {
+    throw new \\RuntimeException('Cloudflare Stream plugin manifest is invalid.');
+}
+$cloudflareFields = [];
+foreach ($cloudflareManifest->config->fields->fieldset->field as $field) {
+    $cloudflareFields[(string) $field['name']] = $field;
+}
+if (isset($cloudflareFields['signing_key_ref']) || isset($cloudflareFields['signing_key_id'])
+    || isset($cloudflareFields['signing_mode'])) {
+    throw new \\RuntimeException('Cloudflare Stream must expose only the implemented API signing configuration.');
+}
 $checks=0;
 function videoExpect(bool $value,string $message): void { global $checks; if (!$value) throw new \RuntimeException($message); $checks++; }
 function videoDenied(callable $work,int $code,string $message): void {
