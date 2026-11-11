@@ -17,7 +17,7 @@ final class CourseTable extends Table implements TaggableTableInterface
 {
     use TaggableTableTrait;
 
-    public string $typeAlias = 'com_jlms.course';
+    public $typeAlias = 'com_jlms.course';
 
     public function getTypeAlias(): string { return $this->typeAlias; }
 
