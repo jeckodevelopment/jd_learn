@@ -1,59 +1,59 @@
 {
   "audited_at": "2026-11-11",
   "product": "JD Learn",
-  "version": "0.41.70-dev",
+  "version": "0.41.65-dev",
   "code_baseline": {
-    "tested_head": "085d99d26852f44b4bb1194161c4566af7a24612",
-    "parent_main_commit": "ca42871c5c228207fc4b448bff79674eee4effe8",
-    "pull_request": 225,
-    "merged_main_commit": "ca42871c5c228207fc4b448bff79674eee4effe8"
+    "tested_head": "124ed457fd4f9f8bf61828c83fc6386839767d34",
+    "parent_main_commit": "ed60f7dbbbd8904a192a053ca170772c181b07c8",
+    "pull_request": 219,
+    "merged_main_commit": "93e7f8a0de84e759b46e6118d9f2ab3a28b5cb61"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43075293879,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43075293879",
+    "run_id": 43006202795,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130713409398,
+        "id": 130474188939,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130713482939,
+        "id": 130474247973,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 130474248077,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130713483105,
+        "id": 130474247942,
         "name": "PHP 8.4 / mariadb:10.6",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 130713483290,
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #225: CI standard 4/4 superata; suite di ricollocazione categorie e fixture Chromium superate. Accettazione manuale Joomla ancora pendente."
+    "note": "PR #219: CI standard 4/4; suite materiali verifica trasferimento Range/HEAD con Nginx reale, accesso diretto negato, prefisso non valido fail-closed e conservazione della consegna PHP esistente. Collaudo manuale Joomla ancora pendente."
   },
   "package": {
-    "artifact_id": 13881162374,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43075293879/artifacts/13881162374",
-    "artifact_name": "JD-Learn-0.41.70-dev",
-    "installable_package": "pkg_jlms-0.41.70-dev.zip",
-    "sha256": "f83ae9a484e2707795aea7d620276dbcb54f15948c76ac71d4ae5c5ee5f3fd46",
-    "artifact_sha256": "d8d649f4d68a14bb448763e2ff2c97e165eeaeec70b626a3db32bec6fb7d5c7e",
-    "size_bytes": 566649,
-    "artifact_size_bytes": 566422,
-    "expires_at": "2026-11-25T18:15:40Z",
+    "artifact_id": 13847744520,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520",
+    "artifact_name": "JD-Learn-0.41.65-dev",
+    "installable_package": "pkg_jlms-0.41.65-dev.zip",
+    "sha256": "f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017",
+    "artifact_sha256": "b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2",
+    "size_bytes": 559447,
+    "artifact_size_bytes": 559214,
+    "expires_at": "2026-11-25T10:48:20Z",
     "wrapper_zip": true,
-    "build_source": "CI standard PR #225: build riproducibile e suite completa; ZIP interno e wrapper CI verificati."
+    "build_source": "CI standard PR #219: build riproducibile, suite Joomla/HTTP/Nginx e upgrade dati; checksum ZIP interno e digest wrapper verificati nel log Actions."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -2756,7 +2756,7 @@
       "artifact_expires_at": "2026-11-24T21:36:47Z"
     }
   ],
-  "evidence_scope": "Test automatici completi del candidato PR #225. Accettazione manuale Joomla e test hosting reale restano da eseguire.",
+  "evidence_scope": "Prerequisiti espliciti; sequenziamento automatico e rilascio per data non inclusi. Test manuale Joomla ancora pendente.",
   "ci_policy_verification": {
     "date": "2026-11-07",
     "pull_request": 48,
