@@ -234,7 +234,7 @@ $selectorItem = $selectorModel->getItem($otherEn);
 $selectorForm = $selectorModel->getForm((array) $selectorItem, false);
 $publishedTargetInput = $selectorForm->getInput('it-IT', 'associations');
 assocExpect(str_contains($publishedTargetInput, 'value="' . $it . '"'), 'published course is offered as an editable translation target');
-$app->loadIdentity(new \\Joomla\\CMS\\User\\User());
+$app->loadIdentity(new \Joomla\CMS\User\User());
 // Joomla treats language access=0 as unrestricted; access=2 must still hide it from guests.
 $language->access=2; $language->store();
 assocExpect($helper->getAssociationsForItem($en,'course') === [], 'restricted content language omitted for guest');
