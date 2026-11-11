@@ -2,7 +2,8 @@
 
 - Aggiunge l'opzione esplicita Nginx `X-Accel-Redirect` per allegati privati; la configurazione deve essere confermata dall'amministratore dopo aver verificato che la location sia `internal`. Il percorso PHP esistente resta disponibile solo se abilitato.
 - Valida l'identità, lo stato di iscrizione e del materiale, la chiave, la dimensione e l'hash prima di delegare il trasferimento. Range e corpo sono gestiti da Nginx; nessun URL pubblico o fallback automatico.
-- Include prove d'integrazione Joomla/Nginx in `tests/materials-http.py` e istruzioni di configurazione in `docs/MATERIALS.md`. Collaudo manuale Joomla pendente; candidata PR #219, CI in corso.
+- PR [#219](https://github.com/jeckodevelopment/jd_learn/pull/219) integrata con squash nel commit `93e7f8a0de84e759b46e6118d9f2ab3a28b5cb61`, milestone **1.0.0**; CI standard 4/4 nel [run 43006202795](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795).
+- Pacchetto [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520), wrapper SHA-256 `b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2`, ZIP Joomla SHA-256 `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`, disponibile fino al 25 novembre 2026 alle 10:48 UTC. Collaudo manuale Joomla nel [testbook](docs/QA_TESTBOOK.md#imp-06--consegna-nginx-interna-dei-materiali-04165-dev).
 
 ## 0.41.64-dev — riuso dei materiali nella bozza (IMP-06)
 

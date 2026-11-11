@@ -1,6 +1,6 @@
 ## IMP-06 — consegna Nginx interna dei materiali (0.41.65-dev)
 
-**Stato:** candidata all'integrazione nella PR #219. La suite `materials-http.py` include Nginx reale, accesso interno, Range, HEAD e rifiuto della conferma non valida. L'accettazione sul sito di prova resta da eseguire.
+**Stato:** PR [#219](https://github.com/jeckodevelopment/jd_learn/pull/219) integrata con squash nel commit `93e7f8a0de84e759b46e6118d9f2ab3a28b5cb61`, milestone **1.0.0**; CI standard 4/4 nel [run 43006202795](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795). Pacchetto [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520), ZIP Joomla SHA-256 `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`. La suite `materials-http.py` include Nginx reale, accesso interno, Range, HEAD e rifiuto della conferma non valida. L'accettazione sul sito di prova resta da eseguire.
 
 **Comportamenti da testare in Joomla**
 
@@ -15,7 +15,7 @@ Total output lines: 696
 
 ## IMP-07 — lifecycle sicuro delle categorie (0.41.63-dev, PR #215 integrata)
 
-**Stato:** CI PR #215 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); eseguire la prova manuale categorie sul pacchetto aggiornato [JD-Learn-0.41.64-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
+**Stato:** CI PR #215 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); eseguire la prova manuale categorie sul pacchetto aggiornato [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
 
 **Comportamenti da testare in Joomla**
 
@@ -386,7 +386,7 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
 
 
-## IMP-06 — lifecycle materiali e riuso in bozza (0.41.64-dev)
+## IMP-06 — lifecycle materiali, riuso e offload (0.41.65-dev)
 
 Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. Su Joomla 6 di prova predisporre un corso con una bozza, almeno due lezioni e un editor con permesso di gestione materiali.
 
@@ -396,7 +396,7 @@ Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, 
 4. Ripetere con una versione pubblicata e con un editor privo del permesso materiali; nessuna modifica/riuso deve essere consentita. Verificare che il corso pubblicato e lo storico assegnato restino invariati.
 5. Eseguire l'attività Scheduler di pulizia: il blob condiviso deve restare finché un collegamento lo referenzia e diventare eleggibile solo quando tutte le associazioni sono state rimosse e sono trascorse 24 ore.
 
-PR [#217](https://github.com/jeckodevelopment/jd_learn/pull/217) integrata nel commit `abf82a4053918f823726c84a156d295652c7b72c`; CI standard 4/4 nel [run 42983654823](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823). La fixture Joomla eliminabile verifica il riuso tramite form amministrativo, il riferimento condiviso allo stesso asset, il rifiuto del secondo collegamento duplicato e il blocco sulle versioni pubblicate. Pacchetto [JD-Learn-0.41.64-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823/artifacts/13838677604): wrapper SHA-256 `1045619ab6ba9a47d050afc233ae9e8f124b8ede994f5677a9d921f1e1920986`, ZIP Joomla `f8d318f1dea8b68801bda56ac057bfd3df7dc6d0af93b972131e979196b72484`. Il wrapper va estratto una volta. Collaudo manuale Joomla ancora da eseguire.
+PR [#217](https://github.com/jeckodevelopment/jd_learn/pull/217) integrata nel commit `abf82a4053918f823726c84a156d295652c7b72c`; CI standard 4/4 nel [run 42983654823](https://github.com/jeckodevelopment/jd_learn/actions/runs/42983654823). La fixture Joomla eliminabile verifica il riuso tramite form amministrativo, il riferimento condiviso allo stesso asset, il rifiuto del secondo collegamento duplicato e il blocco sulle versioni pubblicate. Pacchetto aggiornato [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520): wrapper SHA-256 `b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2`, ZIP Joomla `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`. Il wrapper va estratto una volta. Collaudo manuale Joomla ancora da eseguire.
 
 ## IMP-06 — pulizia programmata dei materiali orfani (0.41.54-dev)
 
