@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra la PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238). Candidato **0.41.79-dev** per STAB-04 accorcia la label dei campi aggiuntivi delle lezioni in IT/EN senza modificare ACL o destinazione. Avanzamento verso 1.0.0 **78%**; accettazione Joomla pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra la PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238). Candidato **0.41.79-dev** ([PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241)) per STAB-04 accorcia la label dei campi aggiuntivi delle lezioni in IT/EN senza modificare ACL o destinazione. Avanzamento verso 1.0.0 **78%**; accettazione Joomla pendente.
 
 
 

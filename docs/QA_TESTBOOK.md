@@ -580,7 +580,7 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 3. Prova guest, utente senza iscrizione, revoca del livello e sospensione dell’iscrizione: nessuno deve ricevere byte dopo il diniego. Verifica GET/HEAD, byte-range, Range non valido e intestazioni private/no-store.
 4. Su un sito aggiornato con vecchio valore `x_accel`, verifica che l’anteprima e la fruizione continuino tramite PHP protetto e che non venga emesso `X-Accel-Redirect`.
 5. Disabilita la consegna e verifica che pubblicazione/streaming siano bloccati. Registra versione Joomla/PHP, web server e dimensione file.
-## STAB-04 — label compatta per i campi lezione (0.41.79-dev)
+## STAB-04 — label compatta per i campi lezione (0.41.79-dev, PR #241)
 
 **Issue:** [#173](https://github.com/jeckodevelopment/jd_learn/issues/173). La label lunga è sostituita con “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, sia nel catalogo componente sia in quello di sistema. Il link resta associato al contesto Joomla `com_jlms.lesson` e mantiene i controlli ACL.
 

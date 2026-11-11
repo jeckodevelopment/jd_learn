@@ -1,4 +1,4 @@
-## 0.41.79-dev — label compatta per i campi lezione (STAB-04)
+## 0.41.79-dev — label compatta per i campi lezione (STAB-04 / PR #241)
 
 - Accorcia la label del collegamento ai campi aggiuntivi delle lezioni: “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, sia nella toolbar Programma sia nei cataloghi di sistema.
 - La destinazione resta la gestione nativa `com_fields` con contesto `com_jlms.lesson`; permessi e visibilità del comando non cambiano.

@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra la PR #238; candidato **0.41.79-dev** per STAB-04 / issue #173 accorcia la label dei campi lezione IT/EN. CI main 4/4 nel run 43113528500; pacchetto JD-Learn-0.41.78-dev, hash interno `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`. Accettazione Joomla pendente; avanzamento 78%.
+Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra la PR #238; candidato **0.41.79-dev** ([PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241)) per STAB-04 / issue #173 accorcia la label dei campi lezione IT/EN. CI main 4/4 nel run 43113528500; pacchetto JD-Learn-0.41.78-dev, hash interno `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`. Accettazione Joomla pendente; avanzamento 78%.
 
 La PR #238 / 0.41.78-dev corregge STAB-01 / issue #150: `COM_JLMS_PATHWAYS` è ora presente nei cataloghi IT/EN di sistema per il menu backend. L’ordinamento dashboard e il riepilogo stato provider richiesti dall’issue #149 sono già implementati; accettazione Joomla di entrambi resta da registrare.
 
