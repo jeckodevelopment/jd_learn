@@ -23,6 +23,13 @@
 
 # Changelog
 
+## 0.41.80-dev — rimozione del collegamento Programma duplicato (STAB-05 / issue #200)
+
+- Rimosso il collegamento al Programma ripetuto nel corpo della scheda editor corso; resta l’azione **Salva e apri programma** nella toolbar e la scheda Programma continua a mostrare il riepilogo.
+- Aggiornata la guida editoriale e aggiunti i passi di collaudo manuale Joomla nel testbook.
+- PR #243, milestone 1.0.0; CI e pacchetto candidato in attesa.
+
+
 ## 0.41.76-dev — pubblicazione delle anteprime materiali corso (IMP-06)
 
 - Corretto il controllo di pubblicazione che trattava l'anteprima esplicita degli allegati corso come un materiale non pronto. Ora una bozza può pubblicare allegati corso selezionati come anteprima se pronti, validi e scansionati quando richiesto; l'anteprima degli allegati lezione resta rifiutata.
@@ -238,6 +245,13 @@ Total output lines: 839
 - Collaudo manuale Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#imp-03--preview-editoriale-di-documenti-e-audio-04147-dev); resta pendente.
 
 # Changelog
+
+## 0.41.80-dev — rimozione del collegamento Programma duplicato (STAB-05 / issue #200)
+
+- Rimosso il collegamento al Programma ripetuto nel corpo della scheda editor corso; resta l’azione **Salva e apri programma** nella toolbar e la scheda Programma continua a mostrare il riepilogo.
+- Aggiornata la guida editoriale e aggiunti i passi di collaudo manuale Joomla nel testbook.
+- PR #243, milestone 1.0.0; CI e pacchetto candidato in attesa.
+
 
 ## 0.41.46-dev — riproduzione video nella preview editoriale (PR #177 integrata)
 

@@ -9,12 +9,7 @@ HTMLHelper::_('behavior.formvalidator');
 $id = (int) $this->item->id;
 ?>
 <form action="<?= Route::_('index.php?option=com_jlms&layout=edit&id=' . $id) ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
- <section id="jlms-course-publication-help" class="mb-3" aria-labelledby="jlms-course-publication-heading">
-  <h2 id="jlms-course-publication-heading" class="visually-hidden"><?= Text::_('COM_JLMS_CURRICULUM') ?></h2>
-  <?php if ($id) : ?>
-   <a id="jlms-course-programme-link" class="btn btn-secondary" href="<?= Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . $id) ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
-  <?php else : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
- </section>
+ <?php if (!$id) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
  <?php if ($this->readOnly) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_COURSE_CHECKED_OUT') ?></p><?php endif; ?>
  <?= HTMLHelper::_('uitab.startTabSet', 'jlms-course-tabs', ['active'=>'jlms-course-general']) ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-general', Text::_('COM_JLMS_COURSE')) ?>

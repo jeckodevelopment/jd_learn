@@ -126,3 +126,8 @@ Le vecchie indicazioni “mancante”, “da verificare” o “prossimo increme
 - Aggiunta `COM_JLMS_PATHWAYS` nei cataloghi amministrativi di sistema IT/EN per correggere l’issue #150.
 - Verifica strutturale estesa per proteggere la presenza della chiave in entrambe le lingue.
 - Accettazione manuale dashboard/menu Joomla ancora da eseguire; nessun avanzamento percentuale attribuito prima del collaudo.
+
+
+## 12 novembre 2026 — STAB-05 / PR #243 candidata
+
+La candidata 0.41.80-dev risolve l’issue #200 togliendo il link duplicato al Programma dall’editor corso; l’azione della toolbar resta il percorso di apertura, insieme alla scheda di riepilogo. PR assegnata alla milestone 1.0.0. Collaudo Joomla e CI in attesa.
