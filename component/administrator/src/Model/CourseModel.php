@@ -150,7 +150,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 || ($item->checked_out && (int) $item->checked_out !== (int) $actor->id)) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
-            if ((int) $item->state !== 0 || $item->current_version_id !== null) {
+            if (!(((int) $item->state === 0 && $item->current_version_id === null)
+                || ((int) $item->state === 1 && $item->current_version_id !== null))) {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
             }
             $tag = array_search($target, $targets, true);
