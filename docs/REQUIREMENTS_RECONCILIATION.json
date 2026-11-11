@@ -1,8 +1,8 @@
 {
   "date": "2026-11-11",
-  "baseline_commit": "d677924aca265f3397be156f7298d614bad330f3",
-  "runtime_tested_head": "d6875cb5c9992f6964ead3366190bfec8cff0cbb",
-  "ci_run": 43091365354,
+  "baseline_commit": "d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c",
+  "runtime_tested_head": "220faaba60b47814d890e4b3165ef030e74e0a11",
+  "ci_run": 43094357303,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 78,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #228 completa la configurazione API Cloudflare coerente con il provider, portando M04 al 92%; 543/7 = 77,57%, arrotondato al 78%. Accettazione manuale Joomla ancora pendente.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #228 porta M04 al 92%; PR #229 completa la verifica ClamAV reale senza cambiare le funzionalità runtime, quindi la stima resta 543/7 = 77,57%, arrotondata al 78%. Accettazione manuale Joomla ancora pendente.",
     "areas": [
       76,
       81,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #228 allinea la configurazione Cloudflare Stream al supporto API effettivo e ignora i parametri legacy di firma locale. CI standard 4/4 nel run 43091365354; test Joomla con account provider reale e accettazione manuale restano pendenti."
+  "note": "PR #229 integra nel CI standard un demone ClamAV reale con firme aggiornate, file pulito, EICAR e test della quarantena. Run 43094357303 4/4; configurazione e accettazione Joomla su sito reale restano pendenti."
 }
