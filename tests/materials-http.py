@@ -187,7 +187,7 @@ try:
    except OSError:
     if nginx.poll() is not None:raise RuntimeError('Nginx exited')
     time.sleep(.1)
-  protected_download=download.replace(':8093',':8096')
+  protected_download='http://127.0.0.1:8096'+download
   _,part,headers=request(student,protected_download,headers={'Range':'bytes=0-2'},expected=206)
   expect(part==b'NEW' and headers.get('Content-Range','').startswith('bytes 0-2/') and headers.get('X-Accel-Redirect') is None,'Nginx offload serves authorised byte ranges and hides its internal redirect header')
   _,body,headers=request(student,protected_download,method='HEAD')
