@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra la PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238). Candidato **0.41.79-dev** ([PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241)) per STAB-04 accorcia la label dei campi aggiuntivi delle lezioni in IT/EN senza modificare ACL o destinazione. Avanzamento verso 1.0.0 **78%**; accettazione Joomla pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.79-dev** integra la [PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241) per la label IT/EN dei campi lezione. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente. [Pacchetto 0.41.79-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760/artifacts/13899451043), SHA-256 interno `4c54233651a85f33594fcde84d32f7f31d51bcc82d03f63fead3e189fa270843`, wrapper ZIP da estrarre una volta; scade il 25 novembre 2026.
 
 
 

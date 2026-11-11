@@ -3,6 +3,8 @@
 - Accorcia la label del collegamento ai campi aggiuntivi delle lezioni: “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, sia nella toolbar Programma sia nei cataloghi di sistema.
 - La destinazione resta la gestione nativa `com_fields` con contesto `com_jlms.lesson`; permessi e visibilità del comando non cambiano.
 - Il controllo strutturale verifica le due traduzioni in entrambi i file lingua.
+- PR [#241](https://github.com/jeckodevelopment/jd_learn/pull/241), milestone 1.0.0, integrata nel commit `adc3bf5c205590c351ead14c4a086f62235b7078`; CI standard 4/4 nel [run 43116473760](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760).
+- Pacchetto [JD-Learn-0.41.79-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760/artifacts/13899451043), SHA-256 interno `4c54233651a85f33594fcde84d32f7f31d51bcc82d03f63fead3e189fa270843`, wrapper `a33d99e3742305adfe0964f8e878b8804092d4bf3caa7e125f91d5bfeef02eaa` (estrarre una volta; scade il 25 novembre 2026). Accettazione Joomla pendente.
 - Collaudo Joomla: vedere [STAB-04 nel testbook](docs/QA_TESTBOOK.md#stab-04--label-compatta-per-i-campi-lezione-04179-dev).
 
 ## 0.41.78-dev — traduzione del menu Percorsi (STAB-01 / PR #238)
