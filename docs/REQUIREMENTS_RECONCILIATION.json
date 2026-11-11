@@ -1,8 +1,8 @@
 {
   "date": "2026-11-10",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
-  "runtime_tested_head": "ee56bea3255d2c89d56ce78dffa6b5656b49c805",
-  "ci_run": 42983654823,
+  "runtime_tested_head": "124ed457fd4f9f8bf61828c83fc6386839767d34",
+  "ci_run": 43006202795,
   "counts": {
     "Stato implementazione": {
       "Parziale": 166,
@@ -25,12 +25,12 @@
   },
   "implementation_progress": {
     "percent": 76,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #217 completa un residuo concreto del ciclo dei materiali (riuso degli asset in bozza), area M04 dall’85% all’87%; 531/7 = 75,86%, arrotondato al 76%.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #219 completa il residuo di consegna offload dei materiali via Nginx dopo verifica di autorizzazione e hash, area M04 dall’87% all’89%; 533/7 = 76,14%, arrotondato al 76%.",
     "areas": [
       76,
       75,
       77,
-      87,
+      89,
       67,
       91,
       58

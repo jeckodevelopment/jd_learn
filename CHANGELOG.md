@@ -2,7 +2,8 @@
 
 - Aggiunge l'opzione esplicita Nginx `X-Accel-Redirect` per allegati privati; la configurazione deve essere confermata dall'amministratore dopo aver verificato che la location sia `internal`. Il percorso PHP esistente resta disponibile solo se abilitato.
 - Valida l'identità, lo stato di iscrizione e del materiale, la chiave, la dimensione e l'hash prima di delegare il trasferimento. Range e corpo sono gestiti da Nginx; nessun URL pubblico o fallback automatico.
-- Include prove d'integrazione Joomla/Nginx in `tests/materials-http.py` e istruzioni di configurazione in `docs/MATERIALS.md`. Collaudo manuale Joomla pendente; candidata PR #219, CI in corso.
+- PR [#219](https://github.com/jeckodevelopment/jd_learn/pull/219) integrata con squash nel commit `93e7f8a0de84e759b46e6118d9f2ab3a28b5cb61`, milestone **1.0.0**; CI standard 4/4 nel [run 43006202795](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795).
+- Pacchetto [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520), wrapper SHA-256 `b0aac9e71f221b5ef601579c3fe8e8789135157e748f0236f74c25bbaa1a95f2`, ZIP Joomla SHA-256 `f0f8fa201c2b79d041cbe4a3d52fbb3f2a444a2ba37a2dc0e6fd4c1fb1c26017`, disponibile fino al 25 novembre 2026 alle 10:48 UTC. Collaudo manuale Joomla nel [testbook](docs/QA_TESTBOOK.md#imp-06--consegna-nginx-interna-dei-materiali-04165-dev).
 
 ## 0.41.64-dev — riuso dei materiali nella bozza (IMP-06)
 
@@ -352,107 +353,4 @@ Total output lines: 839
 
 ## 0.8.0-dev
 
-- HTML5 con upload MP4/H.264/AAC per lezione, durata/codec rilevati da ffprobe e asset privati immutabili.
-- Quarantena e rescan con policy antivirus condivisa; nessuna assegnazione arbitraria di asset o sostituzione di video pubblicati.
-- Consegna GET/HEAD/Range con accesso Joomla corrente, PHP limitato a64MiB oppure offload Nginx interno, senza fallback pubblico.
-- Player nativo con progressi comuni e nessuna dipendenza dal consenso ai provider esterni; nuove regioni admin documentate.
-- Verifica HTTP con ffprobe e Nginx reali; browser decoder, carico, altri codec/storage e cleanup ancora da completare.
-
-## 0.7.0-dev
-
-- Cloudflare Stream opt-in in modalità API: segreti server via riferimenti ambiente, verifica remota di privacy/account/dominio/origini e token temporanei senza download.
-- Scadenza limitata dalle finestre didattiche note; rinnovo con nuovo controllo Joomla, generazione per sessione e conservazione progressi/posizione.
-- Chiamate provider fuori dai lock di scrittura e nuova autorizzazione prima della consegna; nessuna chiamata API durante i salvataggi del progresso.
-- Adapter SDK Stream, messaggi di rinnovo e test API/SDK simulati, accesso revocato durante risposta e upgrade dalla0.6.
-- Firma locale, HTML5, diagnostica autonoma, cache e collaudo reale provider/carico restano da completare.
-
-## 0.6.0-dev
-
-- Player YouTube/Vimeo opt-in tramite plugin Joomla, SDK ufficiali caricati dopo consenso e grant server.
-- Pubblicazione video con durata verificata e snapshot immutabile; aula con nuove regioni CSS e materiali corso/lezione.
-- Sessioni, sequenze e replay, copertura unica, budget temporale server, resume concorrente e controllo ACL corrente.
-- Test dominio, integrazione Joomla/database, endpoint HTTP e mock del trasporto browser; upgrade da 0.5 con storico conservato.
-- Cloudflare Stream/HTML5, metadati remoti, prove SDK reali e test di carico restano da completare.
-
-## 0.5.0-dev
-
-- Materiali di corso/versione e lezione: upload, metadati, ordine, sostituzione immutabile e rimozione del collegamento in bozza.
-- Storage fuori webroot, allowlist e controlli MIME/firme/archivi bounded, quarantena e scansione ClamAV opzionale via socket locale.
-- Download con accesso corrente, ownership/parent, SHA256, attachment/nosniff/no-store e Range/HEAD; materiali facoltativi senza credito didattico.
-- Pubblicazione include hash dei materiali e richiede asset pronti; nuove regioni CSS e override documentati.
-- Offload, cleanup, preview e riuso asset ancora da completare.
-
-## 0.4.0-dev
-
-- Iscrizione automatica/ripresa e aula per lezioni di testo, con login nativo Joomla.
-- Completamento idempotente e transazioni per iscrizione, contatori obbligatori e data di conclusione separata dallo stato di accesso.
-- Identità e livelli aggiornati dal core a ogni richiesta, anche dopo revoca con sessione aperta.
-- Test con processi concorrenti, revoca/ripristino, ownership, CSRF e flusso HTTP studente.
-- Modalità approvazione, player/materiali, quiz, attestati e integrazioni restanti ancora in sviluppo.
-
-## 0.3.0-dev
-
-- Pubblicazione validata dei corsi di testo tramite workflow e plugin Publishing Joomla; transazione unica, versione immutabile, hash ed edizione iniziale.
-- Catalogo paginato e scheda pubblica con programma, filtro categoria/discendenti, autorizzazioni correnti e nuovi ID CSS.
-- Test integrativi workflow/veto/immutabilità/visibilità e rendering HTTP; risultati effettivi nella PR.
-- Video, materiali, iscrizioni e fruizione studenti ancora in sviluppo.
-
-## 0.2.0-dev — 31 ottobre 2026
-
-- Aggiunti servizio applicativo DI, prima bozza didattica, editor del programma e comandi MVC nativi.
-- Implementati moduli e lezioni testo/video, obbligatorietà, modifica, riordino e rimozione con controlli delle dipendenze.
-- Controlli centralizzati di ACL, parent, revisione aggregata/elemento e immutabilità delle versioni pubblicate; query e transazioni brevi.
-- Integrazione editor/filtro HTML core, provider dal registro estensibile e normalizzazione delle sorgenti.
-- Nuovi test integrativi e HTTP del flusso completo. Nessuna pubblicazione o fruizione studenti ancora attiva.
-
-## 0.1.0-dev — 31 ottobre 2026
-
-Primo incremento di sviluppo, non release del sistema e-learning completo.
-
-- Importate le specifiche funzionali, tecniche, sicurezza/provider, servizi/endpoint e matrici di collaudo concordate.
-- Aggiunti package Joomla, libreria contratti, componente MVC, schema37tabelle/53FK e installer conservativo con verifiche dello schema trattenuto.
-- Implementata gestione dei corsi in bozza con categorie, livelli, lingua, asset ACL, check-in/out e controllo delle revisioni.
-- Inclusi i quattro plugin video con registrazione lazy e validazione locale delle sorgenti; riproduzione esplicitamente non disponibile.
-- Aggiunte regole dominio iniziali, traduzioni, WAM, prime regioni CSS pubbliche e guida agli override.
-- Predisposte build riproducibile e CI PHP8.3/8.4, MySQL8.4/MariaDB10.6, installazione/aggiornamento Joomla, test MVC e rendering HTTP.
-- Pubblicazione, fruizione, quiz persistenti, attestati e integrazioni rimanenti restano nello stato documentato in IMPLEMENTATION_STATUS.md.
-
-## Requisiti — 7 novembre 2026: durata video
-
-- Registrata come prossima priorità R-06 l’acquisizione automatica della durata dai provider/file, con inserimento manuale di ripiego e gestione coerente degli scarti player/server.
-- Aggiornati piano, limiti attuali, checklist e tracciabilità; runtime/pacchetto0.38 invariati. La funzione esterna completa è ancora da implementare.
-
-## Processo e roadmap — 7 novembre 2026
-
-- PR in bozza con controlli leggeri; integrazioni per il candidato pronto, due coppie PHP/database e Chromium. Matrice completa disponibile manualmente prima di milestone/rilascio o interventi di compatibilità; nessuna rimozione di scenari dalla suite.
-- Restyling del backend/ingresso e menu amministrativo JD Learn nella sidebar nativa pianificati in M01/M10, con verifica ACL, installazione/upgrade e navigazione accessibile. Non ancora implementati.
-- Versione applicativa e pacchetto0.37 invariati.
-
-## Documentazione — 5 novembre 2026
-
-- Consolidato lo stato attuale per funzionalità; separati piano residuo, perimetro delle fasi e cronologia.
-- Allineati matrice, problemi aperti, prove del build e guide alla 0.34.1; distinte funzioni assenti e collaudi pendenti.
-- Nessuna modifica del runtime, della versione o dei criteri di accettazione.
-
-## Requisiti funzionali1.3 —4novembre2026
-
-- Recepita esplicitamente la richiesta di aggiornamento dei corsi pubblicati con storico Joomla e gestione semplificata dei docenti, campi nativi e viste di menu.
-- Aggiornate specifica funzionale/tecnica, matrice e catalogo con AC-119–125, registro della modifica e criteri residui M01; nessun requisito dichiarato completo per effetto dell’aggiornamento documentale.
-- Pacchetto runtime invariato0.31.0-dev; verifiche della PR38 registrate separatamente dai nuovi criteri di accettazione.
-
-## Riallineamento documentale della baseline0.19
-
-- Riepilogo/README aggiornati ai flussi realmente presenti, schema41tabelle/58FK e integrazioni core ancora mancanti.
-- Matrice dei210requisiti con descrizione/perimetro/scenari baseline preservati, sorgenti e prove parziali distinti dai criteri residui; nessuna accettazione completa dedotta dalla CI.
-- Registro delle differenze aperte (preassegnazione senza livello, provider aggiuntivi, ritiro/erogazione, ID pagina e fallback di ripresa), evidenze del build0.19 e piano esecutivo residuo.
-- Note storiche conservate separatamente e controllo di coerenza documentale nella verifica strutturale. Nessuna modifica al codice distribuito o al pacchetto0.19.
-## 0.41.58-dev — URL SEF con alias per catalogo e percorsi (IMP-07)
-
-- Genera segmenti Joomla nel formato ID-alias per corsi, categorie e percorsi; mantiene il parsing degli URL numerici esistenti e usa il database Joomla con parametri associati.
-- Il canonical delle viste pubbliche risolve al percorso SEF con alias. Restano gli ID per disambiguare alias ripetuti tra lingue e contenitori.
-- PR IMP-07 in preparazione per la milestone **1.0.0**. Collaudo Joomla manuale in [testbook](docs/QA_TESTBOOK.md#imp-07--url-sef-con-alias-per-corsi-categorie-e-percorsi).
-## 0.41.61-dev — vista elenco del catalogo (IMP-07, PR #211 integrata)
-
-- Consente di passare dalla griglia all’elenco nel catalogo corsi e nella pagina di una categoria; selezione tramite filtro allowlist e mantenuta nell’URL insieme agli altri filtri.
-- La vista elenco si adatta agli schermi stretti e usa le stesse schede e gli stessi risultati autorizzati della griglia.
-- PR [#211](https://github.com/jeckodevelopment/jd_learn/pull/211) integrata con squash nel commit `ca6fecc685902c60527ea4d74f436f87ce9f4d12`, milestone **1.0.0**; CI standard 4/4 nel [run 42920368304](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304). Pacchetto [JD-Learn-0.41.61-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42920368304/artifacts/13811701431), wrapper SHA-256 `e99f8024ae32bc221234262697dad8a196673994cafbcc7a32493c2dce500d12`, ZIP Joomla SHA-256 `cc7df8c79e4e3dc8717337df4d427eb43f1b15b61618ee9233aefd92c8201174`, disponibile fino al 24 novembre 2026. Collaudo Joomla manuale pendente nel [testbook](docs/QA_TESTBOOK.md#imp-07--vista-elenco-del-catalogo-04161-dev).
+- HTML5 con upload MP4/H.264/AAC per lezione, durata/code
