@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Build candidata **0.41.70-dev** per la PR #225, basata su main 0.41.69-dev. Pacchetto installabile di verifica locale: `dist/pkg_jlms-0.41.70-dev.zip` (SHA-256 `aaacf21572e7b3365078a8e4a14be839f107f357570ff169eb7f219e5d2ca3cc`); artifact CI da collegare dopo l’esecuzione. La PR aggiunge ricollocazione transazionale delle dipendenze categoria; collaudo Joomla pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.70-dev** integra la PR [#225](https://github.com/jeckodevelopment/jd_learn/pull/225) (merge `ca42871c5c228207fc4b448bff79674eee4effe8`). CI standard 4/4 superata nel [run 43075293879](https://github.com/jeckodevelopment/jd_learn/actions/runs/43075293879). Pacchetto installabile [JD-Learn-0.41.70-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43075293879/artifacts/13881162374), ZIP SHA-256 `f83ae9a484e2707795aea7d620276dbcb54f15948c76ac71d4ae5c5ee5f3fd46` (artifact wrapper `d8d649f4d68a14bb448763e2ff2c97e165eeaeec70b626a3db32bec6fb7d5c7e`). La PR aggiunge la ricollocazione atomica delle dipendenze categoria; accettazione manuale Joomla ancora pendente.
 
 
 
@@ -46,7 +46,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **42 tabelle / 63 FK**. Il pacchetto 0.41.69-dev contiene 10 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **42 tabelle / 63 FK**. Il pacchetto 0.41.70-dev contiene 10 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
 
 ```sh
 python3 tools/build.py

@@ -66,7 +66,7 @@ Riferimenti: CAT-01, CORE-01, LIFE-02. Il nuovo strumento backend esamina i rife
 
 ## IMP-07 — lifecycle sicuro delle categorie (0.41.63-dev, PR #215 integrata)
 
-**Stato:** CI PR #215 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); eseguire la prova manuale categorie sul pacchetto aggiornato [JD-Learn-0.41.65-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43006202795/artifacts/13847744520). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
+**Stato:** CI PR #215 4/4 nel [run 42978021654](https://github.com/jeckodevelopment/jd_learn/actions/runs/42978021654); eseguire la prova manuale lifecycle/ricollocazione categorie sul pacchetto [JD-Learn-0.41.70-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43075293879/artifacts/13881162374). La CI verifica FK su corsi, percorsi, docenti e domande, rifiuto della cancellazione permanente con riferimenti e conservazione del corso durante cestinamento/ripristino.
 
 **Comportamenti da testare in Joomla**
 
