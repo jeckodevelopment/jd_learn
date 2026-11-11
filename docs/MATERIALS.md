@@ -6,6 +6,10 @@ Ogni esecuzione esamina al massimo 100 record (parametro `limit`, intervallo 1�
 
 Nella bozza è possibile collegare lo stesso materiale a un altro ambito del corso (corso o lezione) senza caricare una seconda copia. Il collegamento condivide l'asset privato immutabile ma mantiene titolo, descrizione e disponibilità del materiale sorgente; una duplicazione dello stesso asset nello stesso ambito viene rifiutata. La destinazione deve appartenere alla medesima versione in bozza. Il collegamento non modifica corsi già pubblicati e il cleanup conserva l'asset finché almeno un allegato lo usa.
 
+## Anteprima editoriale in sola lettura
+
+L'anteprima dell'editor mostra gli allegati dell'ambito corso disponibili anche quando è selezionata una lezione di testo o video. I materiali di lezione compaiono soltanto per le lezioni Documento/Audio. L'anteprima esclude campioni marcati per la sola esposizione pubblica, allegati disattivati, asset non pronti e file fuori dalla finestra; il download usa un endpoint amministrativo, richiede l'autorizzazione editoriale e rivalida corso, versione, lezione e collegamento. Questa vista non crea iscrizioni, tentativi o progressi. Il relativo collaudo Joomla è nel [testbook IMP-03](QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
+
 ## Anteprima pubblica esplicita
 
 Nel form di un allegato dell'ambito corso, un editor autorizzato può scegliere **Disponibile come anteprima pubblica**. L'opzione è disattivata per default e il server rifiuta l'attivazione per allegati di lezione. Una versione può essere pubblicata con questi allegati selezionati se sono pronti, validi e scansionati quando la scansione è obbligatoria; allegati non pronti bloccano comunque la pubblicazione. La scheda pubblica mostra solo questi allegati della versione corrente, se la versione è pubblicata, lo stato è attivo, la scansione è pronta e l'eventuale finestra di disponibilità è aperta. Titolo, descrizione, nome file, tipo e dimensione sono mostrati solo dopo questa scelta. Non vengono esposti gli altri materiali, i percorsi di storage o l'elenco completo degli allegati.

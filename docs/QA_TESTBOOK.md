@@ -452,6 +452,13 @@ Requisiti: AUT-02, AUT-03, STU-02, SCR-06–08; AC-20, AC-80, AC-86, AC-119–12
 4. Provare un account senza permesso di modifica corso/materiali e poi revocare il permesso durante la sessione. Anteprima e richieste dirette POST del descrittore/GET del video devono essere negate; URL alterate con corso, versione, lezione o revisione non correlati non devono restituire media.
 5. Aprire una lezione quiz. Atteso: l’attività è indicata come anteprima read-only non simulata; non viene creato alcun tentativo.
 
+**Aggiornamento 0.41.77-dev (IMP-03):** l'anteprima include ora i materiali dell'ambito corso anche mentre si visualizzano lezioni di testo o video. I file devono essere pronti, attivi, nella finestra di disponibilità e non marcati come soli campioni pubblici. I materiali associati a una lezione restano limitati alle lezioni Documento/Audio.
+
+6. Preparare un allegato corso privato pronto, un campione marcato come anteprima pubblica, un file futuro e una lezione di testo e una video. Aprire entrambe le lezioni nell'anteprima editoriale: il solo allegato corso disponibile per gli iscritti deve apparire in ciascuna vista; il campione pubblico e il file futuro non devono comparire. Usare il collegamento del materiale e verificare che il download protetto riesca; alterare corso/versione/lezione/allegato e verificare che non venga restituito un file.
+7. Confrontare iscrizioni, tentativi e progressi prima e dopo l'apertura e il download: devono restare invariati.
+
+**Esito sito Joomla per 0.41.77-dev:** Non eseguito.
+
 **Esito sito Joomla:** Non eseguito.
 
 ## IMP-03 — preview editoriale di documenti e audio (0.41.47-dev)

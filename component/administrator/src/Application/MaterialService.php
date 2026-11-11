@@ -135,16 +135,18 @@ final class MaterialService
         return $file;
     }
 
-    /** Available course/lesson files for an authorised, non-enrolled editorial preview. */
+    /** Available course files for any lesson and lesson files for document/audio editorial previews. */
     public function previewLists(User $identity, int $courseId, int $versionId, int $lessonId): array
     {
         $this->author($identity, $courseId, $versionId);
         $lesson = $this->row('lessons', $lessonId);
-        if ((int) $lesson->course_version_id !== $versionId || !in_array($lesson->kind, ['document', 'audio'], true)) {
+        if ((int) $lesson->course_version_id !== $versionId) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
-        return ['course' => $this->listing($versionId, null, 0, false),
-            'lesson' => $this->listing($versionId, $lessonId, 0, false)];
+        $lessonItems = in_array($lesson->kind, ['document', 'audio'], true)
+            ? $this->listing($versionId, $lessonId, 0, false)
+            : ['items' => [], 'total' => 0, 'page' => 0, 'limit' => 20];
+        return ['course' => $this->listing($versionId, null, 0, false), 'lesson' => $lessonItems];
     }
 
     /** Serve only an attachment linked to this course version and the selected lesson/course. */
@@ -153,9 +155,10 @@ final class MaterialService
         $this->author($identity, $courseId, $versionId);
         $lesson = $this->row('lessons', $lessonId);
         $link = $this->row('attachments', $attachmentId);
-        if ((int) $lesson->course_version_id !== $versionId || !in_array($lesson->kind, ['document', 'audio'], true)
+        if ((int) $lesson->course_version_id !== $versionId
             || (int) $link->course_version_id !== $versionId
             || ($link->lesson_id !== null && (int) $link->lesson_id !== $lessonId)
+            || ($link->lesson_id !== null && !in_array($lesson->kind, ['document', 'audio'], true))
             || (int) $link->state !== 1 || (int) $link->preview !== 0) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
@@ -164,11 +167,11 @@ final class MaterialService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $file = $this->open((int) $link->asset_id);
-        if ($lesson->kind === 'audio' && !in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) {
+        if ($link->lesson_id !== null && $lesson->kind === 'audio' && !in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) {
             fclose($file['handle']);
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
-        $file['inline'] = $lesson->kind === 'audio'
+        $file['inline'] = $link->lesson_id !== null && $lesson->kind === 'audio'
             || in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true);
         return $file;
     }

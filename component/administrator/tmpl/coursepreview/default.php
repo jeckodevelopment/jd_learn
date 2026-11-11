@@ -58,6 +58,20 @@ foreach ($this->preview['lessons'] as $entry) {
         <article id="jlms-course-preview-lesson">
             <h2><?= $this->escape($lesson->title) ?></h2>
             <?= $lesson->body /* Filtered with a strict tag allowlist and no attributes. */ ?>
+            <?php $materials = $lesson->preview_materials ?? ['course' => ['items' => []], 'lesson' => ['items' => []]]; ?>
+            <?php if (!empty($materials['course']['items'])) : ?>
+                <section id="jlms-preview-course-materials" class="jlms-material-list">
+                    <h3><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h3>
+                    <?php foreach ($materials['course']['items'] as $file) : ?>
+                        <?php $url = 'index.php?option=com_jlms&task=material.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
+                        <article class="jlms-material"><h4><?= $this->escape($file->title) ?></h4>
+                            <?php if ($file->description !== '') : ?><p><?= $this->escape($file->description) ?></p><?php endif; ?>
+                            <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
+                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
+                        </article>
+                    <?php endforeach; ?>
+                </section>
+            <?php endif; ?>
             <?php if ($lesson->kind === 'video') : ?>
                 <section id="jlms-video-region" aria-labelledby="jlms-preview-lesson-title">
                     <h3 id="jlms-preview-lesson-title"><?= $this->escape($lesson->title) ?></h3>
@@ -65,7 +79,6 @@ foreach ($this->preview['lessons'] as $entry) {
                     <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($lesson->title) ?>"></div>
                 </section>
             <?php elseif (in_array($lesson->kind, ['document', 'audio'], true)) : ?>
-                <?php $materials = $lesson->preview_materials ?? ['course' => ['items' => []], 'lesson' => ['items' => []]]; ?>
                 <p class="alert alert-info" role="status"><?= Text::_('COM_JLMS_COURSE_PREVIEW_MEDIA_READY') ?></p>
                 <?php if ($lesson->kind === 'audio') : ?>
                     <?php $audioFiles = array_values(array_filter($materials['lesson']['items'] ?? [], static fn ($file): bool => in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true))); ?>
@@ -78,21 +91,18 @@ foreach ($this->preview['lessons'] as $entry) {
                         </audio><?php else : ?><p><?= Text::_('COM_JLMS_NO_MATERIALS') ?></p><?php endif; ?>
                     </section>
                 <?php endif; ?>
-                <div id="jlms-preview-materials">
-                    <?php foreach (['course' => 'COM_JLMS_COURSE_MATERIALS', 'lesson' => 'COM_JLMS_LESSON_MATERIALS'] as $scope => $label) : ?>
-                        <?php $files = $materials[$scope]['items'] ?? []; if (!$files) { continue; } ?>
-                        <section class="jlms-material-list"><h3><?= Text::_($label) ?></h3>
-                            <?php foreach ($files as $file) : if ($lesson->kind === 'audio' && $scope === 'lesson' && in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true)) { continue; } ?>
-                                <?php $url = 'index.php?option=com_jlms&task=attachment.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
-                                <article class="jlms-material"><h4><?= $this->escape($file->title) ?></h4>
-                                    <?php if ($file->description !== '') : ?><p><?= $this->escape($file->description) ?></p><?php endif; ?>
-                                    <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
-                                    <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('site', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
-                                </article>
-                            <?php endforeach; ?>
-                        </section>
+                <?php $lessonFiles = $materials['lesson']['items'] ?? []; ?>
+                <?php if ($lessonFiles) : ?><section id="jlms-preview-lesson-materials" class="jlms-material-list">
+                    <h3><?= Text::_('COM_JLMS_LESSON_MATERIALS') ?></h3>
+                    <?php foreach ($lessonFiles as $file) : if ($lesson->kind === 'audio' && in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true)) { continue; } ?>
+                        <?php $url = 'index.php?option=com_jlms&task=material.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
+                        <article class="jlms-material"><h4><?= $this->escape($file->title) ?></h4>
+                            <?php if ($file->description !== '') : ?><p><?= $this->escape($file->description) ?></p><?php endif; ?>
+                            <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
+                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
+                        </article>
                     <?php endforeach; ?>
-                </div>
+                </section><?php endif; ?>
             <?php elseif ($lesson->kind !== 'text') : ?>
                 <p><?= Text::_('COM_JLMS_COURSE_PREVIEW_ACTIVITY') ?></p>
             <?php endif; ?>
