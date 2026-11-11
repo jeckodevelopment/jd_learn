@@ -1,4 +1,4 @@
-"""Native MP4 upload and Joomla access checks; byte delivery tested through real Nginx."""
+"""Native MP4 upload and Joomla access checks using protected PHP byte delivery."""
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.request import build_opener,HTTPCookieProcessor,Request
@@ -41,7 +41,7 @@ def request(http,path,fields=None,expected=200,headers=None,method=None,data=Non
 
 log=open(root.parent/'html5-http.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
-nginx=None;scanner=None
+scanner=None
 admin=client();student=client();guest=client()
 source=root.parent/'html5-source.mp4';replacement=root.parent/'html5-replacement.mp4';unsupported=root.parent/'html5-unsupported.mp4'
 for path,color,codec in [(source,'black','libx264'),(replacement,'blue','libx264'),(unsupported,'red','mpeg4')]:
@@ -129,20 +129,15 @@ try:
  request(student,media,headers={'Range':'bytes=0-1,4-5'},expected=416)
  request(student,media,fields={},expected=405)
  command('reject');request(student,media,expected=503);command('restore')
- command('delivery','disabled');request(student,media,expected=503);command('delivery','x_accel')
- # Nginx consumes X-Accel-Redirect and serves the bytes from an internal-only directory.
- nginx_config=root.parent/'html5-nginx.conf'
- nginx_config.write_text('worker_processes 1; user root; pid '+str(root.parent/'html5-nginx.pid')+'; error_log stderr; events {worker_connections 64;} http {access_log off; proxy_temp_path '+str(root.parent/'nginx-temp')+'; server { listen 127.0.0.1:8094; location / { proxy_pass http://127.0.0.1:8093; proxy_set_header Host 127.0.0.1:8093; proxy_cache off; } location /jdlearn-private/ { internal; alias '+fixture['video_root']+'/; types {} default_type video/mp4; add_header Cache-Control "private, no-store" always; } } }')
- nginx=subprocess.Popen(['nginx','-c',str(nginx_config),'-g','daemon off;'],stdout=log,stderr=log)
- for _ in range(30):
-  try:request(guest,'http://127.0.0.1:8094/jdlearn-private/'+new_key,expected=404);break
-  except OSError:
-   if nginx.poll() is not None:raise RuntimeError('Nginx exited')
-   time.sleep(.1)
- protected=urljoin(base,media).replace(':8093',':8094')
+ command('delivery','disabled');request(student,media,expected=503);command('delivery','php_bounded')
+ protected=urljoin(base,media)
  _,body,headers=request(student,protected,headers={'Range':'bytes=32-63'},expected=206)
- expect(body==movie[32:64]and headers.get('X-Accel-Redirect')is None,'real Nginx offload returns exact bytes and consumes the internal header')
- _,body,_=request(student,protected,method='HEAD');expect(body==b'','Nginx HEAD sends no body')
+ expect(body==movie[32:64]and headers.get('X-Accel-Redirect')is None,'protected PHP streaming returns exact bytes without web-server-specific headers')
+ command('delivery','x_accel')
+ _,body,headers=request(student,media,headers={'Range':'bytes=32-63'},expected=206)
+ expect(body==movie[32:64]and headers.get('X-Accel-Redirect')is None,'legacy delivery settings upgrade to protected PHP streaming')
+ command('delivery','php_bounded')
+ _,body,_=request(student,protected,method='HEAD');expect(body==b'','protected PHP HEAD sends no body')
  subprocess.run(['php',str(Path(__file__).with_name('joomla-learning.php')),str(root),'revoke',str(fixture['http_user_id']),str(fixture['group_id'])],check=True,capture_output=True)
  request(student,protected,headers={'Range':'bytes=64-95'},expected=403)
  subprocess.run(['php',str(Path(__file__).with_name('joomla-learning.php')),str(root),'grant',str(fixture['http_user_id']),str(fixture['group_id'])],check=True,capture_output=True)
@@ -155,11 +150,11 @@ try:
  payload|={'sequence':2,'events_json':json.dumps([{'id':2,'type':'play','position_ms':0,'client_ms':1,'rate_milli':1000,'playing':True},{'id':3,'type':'position','position_ms':9000,'client_ms':9001,'rate_milli':1000,'playing':True}])}
  _,body,_=request(student,config['urls']['save'],fields=payload);done=json.loads(body)['data'];expect(done['lesson_completed']and done['course_percent']==100,'HTML5 uses the same server-validated 90 percent completion rule')
  expect(state()['version']['structure_hash']==stamp,'playback never changes frozen teaching content')
- print(json.dumps({'html5_http_checks':checks,'status':'passed','real_nginx_offload':'passed','probe':'real ffprobe','browser_playback':'not exercised'}))
+ print(json.dumps({'html5_http_checks':checks,'status':'passed','protected_php_streaming':'passed','probe':'real ffprobe','browser_playback':'not exercised'}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-8000:],file=sys.stderr);raise
 finally:
- for process in [nginx,server,scanner]:
+ for process in [server,scanner]:
   if process is None:continue
   process.terminate()
   try:process.wait(timeout=5)
