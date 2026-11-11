@@ -2,7 +2,7 @@
 
 - Rimuove dalla consegna degli allegati la dipendenza opzionale da Nginx introdotta nella PR #219. I materiali privati vengono trasmessi dal componente PHP dopo i controlli Joomla e di integrità; non occorre configurare moduli o location specifiche del web server.
 - Aggiorna la documentazione e le prove manuali per verificare download, anteprima, richieste Range/HEAD e revoca dell’accesso in un ambiente Joomla standard.
-- Correzione di compatibilità della 0.41.65-dev; i dettagli della PR #219 restano nella cronologia Git.
+- PR [#221](https://github.com/jeckodevelopment/jd_learn/pull/221) integrata in 0.41.66-dev; pacchetto ricostruito dopo il merge, SHA-256 `214e311d5cee72963b3e9d01ba958dfa52088b781c52052761e4f1d74ffdc4af`.
 
 ## 0.41.64-dev — riuso dei materiali nella bozza (IMP-06)
 
