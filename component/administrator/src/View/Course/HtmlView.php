@@ -36,6 +36,8 @@ final class HtmlView extends BaseHtmlView
         if (!$this->form) {
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
+        $this->getDocument()->getWebAssetManager()->getRegistry()->addExtensionRegistryFile('com_jlms');
+        $this->getDocument()->getWebAssetManager()->useScript('com_jlms.courseAssociations');
         ToolbarHelper::title(Text::_('COM_JLMS_COURSE'), 'graduation-cap');
         $this->checkedOutByOther=$id>0 && $this->item->checked_out && (int)$this->item->checked_out!==(int)$actor->id;
         $asset=$id>0?'com_jlms.course.'.$id:'com_jlms';

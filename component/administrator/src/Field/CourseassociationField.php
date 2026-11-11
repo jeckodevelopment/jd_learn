@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 
@@ -14,6 +15,21 @@ use Joomla\Database\DatabaseInterface;
 final class CourseassociationField extends ListField
 {
     protected $type = 'Courseassociation';
+
+    protected function getInput(): string
+    {
+        $searchId = $this->id . '-search';
+        $label = htmlspecialchars(Text::_('COM_JLMS_ASSOCIATIONS'), ENT_QUOTES, 'UTF-8');
+        $placeholder = htmlspecialchars(Text::_('JSEARCH_FILTER'), ENT_QUOTES, 'UTF-8');
+        $id = htmlspecialchars($searchId, ENT_QUOTES, 'UTF-8');
+
+        return '<div class="jlms-association-picker">'
+            . '<label class="visually-hidden" for="' . $id . '">' . $label . '</label>'
+            . '<input id="' . $id . '" type="search" class="form-control mb-2" data-jlms-association-search '
+            . 'autocomplete="off" placeholder="' . $placeholder . '">'
+            . parent::getInput()
+            . '</div>';
+    }
 
     protected function getOptions()
     {
