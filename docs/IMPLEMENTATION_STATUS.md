@@ -33,9 +33,9 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Collaudo e preparazione release (M10–M12) | 58% |
 | **Avanzamento complessivo stimato** | **77%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (536/7 = 76,57%, arrotondato al 76%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (536/7 = 76,57%, arrotondato al 77%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
-IMP-07 comprende PR #204, #206–#213 e #215. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la correzione della PR #219 rimuove il percorso Nginx per gli allegati. M04 stimata 89%; CORE-09 integrato dalla PR #222; CORE-07 integrato dalla PR #223 (catalogo 77%; CORE-07 implementato dalla PR #223); avanzamento complessivo 77%. Accettazione Joomla di materiali, lifecycle categorie, CAT-01 e SEO/Finder ancora pendente.
+IMP-07 comprende PR #204, #206–#213 e #215. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la correzione della PR #219 rimuove il percorso Nginx per gli allegati. M04 stimata 89%; CORE-09 integrato dalla PR #222; CORE-07 integrato dalla PR #223, portando le integrazioni Joomla al 92%; avanzamento complessivo 77%. Accettazione Joomla di materiali, lifecycle categorie, CAT-01 e SEO/Finder ancora pendente.
 
 ## Funzioni presenti e lavoro residuo
 
