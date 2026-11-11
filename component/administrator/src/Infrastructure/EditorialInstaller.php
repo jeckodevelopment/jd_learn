@@ -52,7 +52,7 @@ final class EditorialInstaller
             } else {
                 continue;
             }
-            if (!$record->check() || !$record->store()) { throw new \\RuntimeException('JD Learn content type setup failed'); }
+            if (!$record->check() || !$record->store()) { throw new \RuntimeException('JD Learn content type setup failed'); }
         }
     }
 }
