@@ -10,6 +10,8 @@ if (!$dsn || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 }
 $db = new \PDO($dsn, getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 $prefix = 'ci_';
+$db->exec('CREATE TABLE `ci_categories` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`)) ENGINE=InnoDB');
+$db->exec('INSERT INTO `ci_categories` (`id`) VALUES (1)');
 $sql = file_get_contents(dirname(__DIR__) . '/component/administrator/sql/install.mysql.utf8mb4.sql');
 $sql = str_replace('#__', $prefix, preg_replace('/--[^\n]*/', '', $sql));
 foreach (explode(';', $sql) as $query) {
@@ -22,7 +24,7 @@ if ((int) $tables !== 42) {
     throw new \RuntimeException('Schema table count mismatch');
 }
 $constraints = $db->query("SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_TYPE='FOREIGN KEY'")->fetchColumn();
-if ((int) $constraints !== 59) {
+if ((int) $constraints !== 63) {
     throw new \RuntimeException('Schema foreign key count mismatch');
 }
 $db->beginTransaction();
@@ -48,6 +50,7 @@ function constraintRejects(callable $work): void
 }
 $audit = ['created_at' => $now, 'modified_at' => $now];
 $course = insertRow($db, 'courses', $audit + ['catid'=>1,'alias'=>'test','title'=>'Test','catalog_access'=>1,'content_access'=>2,'params_json'=>'{}']);
+constraintRejects(fn () => $db->exec('DELETE FROM `ci_categories` WHERE `id`=1'));
 $version = insertRow($db, 'course_versions', $audit + ['course_id'=>$course,'version_no'=>1,'title_snapshot'=>'Test','rules_json'=>'{}','presentation_json'=>'{}','fields_snapshot_json'=>'{}']);
 $other = insertRow($db, 'course_versions', $audit + ['course_id'=>$course,'version_no'=>2,'title_snapshot'=>'Other','rules_json'=>'{}','presentation_json'=>'{}','fields_snapshot_json'=>'{}']);
 $module = insertRow($db, 'modules', $audit + ['course_version_id'=>$version,'logical_key'=>'11111111-1111-4111-8111-111111111111','title'=>'Module','ordering'=>0,'params_json'=>'{}']);
@@ -72,4 +75,4 @@ constraintRejects(fn () => insertRow($db,'manual_enrollments',$manual));
 $manual['course_version_id']=$version;insertRow($db,'manual_enrollments',$manual);$manual['enrollment_id']=null;$manual['course_version_id']=null;
 constraintRejects(fn () => insertRow($db,'manual_enrollments',$manual));
 $db->rollBack();
-echo json_encode(['database'=>$db->getAttribute(\PDO::ATTR_SERVER_VERSION),'tables'=>(int)$tables,'foreign_keys'=>(int)$constraints,'integrity_cases'=>7,'status'=>'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode(['database'=>$db->getAttribute(\PDO::ATTR_SERVER_VERSION),'tables'=>(int)$tables,'foreign_keys'=>(int)$constraints,'integrity_cases'=>8,'status'=>'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
