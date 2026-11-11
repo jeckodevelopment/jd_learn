@@ -40,6 +40,8 @@ for tag,expected in {
 for tag in ['it-IT','en-GB']:
  sys_ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.sys.ini').read_text()
  assert re.findall(r'^COM_JLMS_DASHBOARD_MENU="([^"]*)"$',sys_ini,re.M)==['Dashboard'],tag
+ pathway_title='Percorsi formativi' if tag=='it-IT' else 'Learning pathways'
+ assert re.findall(r'^COM_JLMS_PATHWAYS="([^"]*)"$',sys_ini,re.M)==[pathway_title],tag
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():

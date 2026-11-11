@@ -580,3 +580,19 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 3. Prova guest, utente senza iscrizione, revoca del livello e sospensione dell’iscrizione: nessuno deve ricevere byte dopo il diniego. Verifica GET/HEAD, byte-range, Range non valido e intestazioni private/no-store.
 4. Su un sito aggiornato con vecchio valore `x_accel`, verifica che l’anteprima e la fruizione continuino tramite PHP protetto e che non venga emesso `X-Accel-Redirect`.
 5. Disabilita la consegna e verifica che pubblicazione/streaming siano bloccati. Registra versione Joomla/PHP, web server e dimensione file.
+## STAB-01 — traduzione del menu Percorsi formativi (0.41.78-dev)
+
+**Issue:** [#150](https://github.com/jeckodevelopment/jd_learn/issues/150). La voce amministrativa usava una stringa di sistema non tradotta, anche se il titolo della vista Percorsi era già localizzato. La patch aggiunge `COM_JLMS_PATHWAYS` ai cataloghi di sistema italiano e inglese. L’ordine della dashboard e il riepilogo provider dell’issue #149 sono già implementati; verificarli nello stesso passaggio di accettazione.
+
+**Comportamenti da testare in Joomla**
+
+1. Installa il candidato 0.41.78-dev su un sito Joomla usa-e-getta; accedi come Super User con lingua amministrativa italiana e apri il menu JD Learn. La voce deve apparire come “Percorsi formativi”, senza chiavi `JD_COM_JLMS_*` visibili.
+2. Apri la voce: deve portare alla gestione Percorsi e il titolo pagina deve essere tradotto.
+3. Imposta inglese come lingua amministrativa e ripeti: la voce deve essere “Learning pathways”.
+4. Verifica l’ordine dashboard: Corsi, Percorsi formativi, Categorie corsi, Categorie percorsi, Banca domande, Docenti, Campi aggiuntivi, Plugin video (solo le voci consentite dai permessi dell’utente).
+5. Espandi lo stato provider: ciascuno dei quattro plugin deve essere indicato come configurato, non configurato, disattivato o mancante secondo il suo stato reale; non devono comparire segreti o impostazioni sensibili.
+
+**Esito sito Joomla:** Non eseguito.
+
+---
+
