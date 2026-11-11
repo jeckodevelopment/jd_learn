@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.75-dev** integra la PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230), anteprima pubblica esplicita per allegati del corso. Pacchetto installabile [JD-Learn-0.41.75-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43103266860/artifacts/13892259551), SHA-256 interno `1d7f0463ee2438ddb1d74bb98a13c116b85bf8570fd5d44092bd09b198f3349c`; CI standard 4/4 e merge `a01c096321769903c15212aa2b0c420e95245041`. Avanzamento implementativo **78%** (544/7 = 77,71%); accettazione manuale Joomla pendente.
+Aggiornato all’11 novembre 2026. Main **0.41.75-dev** integra la PR [#230](https://github.com/jeckodevelopment/jd_learn/pull/230) per le anteprime pubbliche esplicite degli allegati corso. La candidata **0.41.76-dev** corregge il blocco alla pubblicazione delle versioni con tali allegati e aggiunge copertura HTTP positiva/negativa. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
 
 
 

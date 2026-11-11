@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.76-dev — pubblicazione delle anteprime materiali corso (IMP-06)
+
+- Corretto il controllo di pubblicazione che trattava l'anteprima esplicita degli allegati corso come un materiale non pronto. Ora una bozza può pubblicare allegati corso selezionati come anteprima se pronti, validi e scansionati quando richiesto; l'anteprima degli allegati lezione resta rifiutata.
+- Estesa la prova HTTP Joomla con pubblicazione, pagina ospite, consegna pubblica, metodi/ID negati, finestra futura e visibilità del corso revocata.
+- Collaudo manuale Joomla richiesto nel sito di prova: vedere [testbook IMP-06](docs/QA_TESTBOOK.md#imp-06--anteprima-pubblica-esplicita-dei-materiali-corso-04176-dev).
+- PR, esito CI e pacchetto verranno registrati dopo la revisione del candidato.
+
 ## 0.41.75-dev — anteprima pubblica esplicita dei materiali corso (IMP-06)
 
 - L'editor può marcare un singolo allegato dell'ambito corso come anteprima pubblica; il default resta privato e il server rifiuta il flag sugli allegati di lezione.
