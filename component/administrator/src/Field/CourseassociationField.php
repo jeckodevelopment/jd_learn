@@ -19,8 +19,8 @@ final class CourseassociationField extends ListField
     protected function getInput(): string
     {
         $searchId = $this->id . '-search';
-        $label = htmlspecialchars(Text::_('COM_JLMS_ASSOCIATION_SEARCH'), ENT_QUOTES, 'UTF-8');
-        $placeholder = htmlspecialchars(Text::_('COM_JLMS_ASSOCIATION_SEARCH_PLACEHOLDER'), ENT_QUOTES, 'UTF-8');
+        $label = htmlspecialchars(Text::_('COM_JLMS_ASSOCIATIONS'), ENT_QUOTES, 'UTF-8');
+        $placeholder = htmlspecialchars(Text::_('JSEARCH_FILTER'), ENT_QUOTES, 'UTF-8');
         $id = htmlspecialchars($searchId, ENT_QUOTES, 'UTF-8');
 
         return '<div class="jlms-association-picker">'
