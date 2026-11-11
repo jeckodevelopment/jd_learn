@@ -1,12 +1,12 @@
 # Changelog
 
-## 0.41.74-dev — in preparazione
+## 0.41.74-dev — scansione materiali verificata con ClamAV reale (IMP-06)
 
-- CI installa ClamAV con firme aggiornate e collauda il flusso materiali reale con file pulito, EICAR, socket indisponibile e quarantena.
-- La scansione obbligatoria usa il socket locale ClamAV; un esito infetto blocca fruizione/pubblicazione, un errore lascia il file in quarantena.
-- Collaudo manuale Joomla richiesto: configurazione socket nel sito, file innocuo, EICAR in sito usa-e-getta e comportamento a scanner spento.
-
-# Changelog
+- PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229) integrata in main (merge `d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c`): il job PHP 8.3 installa ClamAV, aggiorna le firme e prova il flusso reale via socket Unix con file pulito ed EICAR. PHP 8.4 mantiene anche il fixture di protocollo.
+- File puliti passano a `ready`; EICAR viene rifiutato; socket indisponibile mantiene la quarantena. Il codice non dichiara una certificazione del server o delle definizioni di produzione.
+- CI standard 4/4 superata nel [run 43094357303](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303).
+- Pacchetto [JD-Learn-0.41.74-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415); wrapper SHA-256 `902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8`, scadenza artifact 2026-11-25T20:16:48Z.
+- Accettazione manuale Joomla e configurazione dello scanner sul sito restano pendenti.
 
 ## 0.41.73-dev — configurazione Cloudflare Stream coerente con il flusso API (IMP-05)
 
