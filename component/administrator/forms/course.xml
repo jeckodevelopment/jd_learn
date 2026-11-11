@@ -8,6 +8,7 @@
   <field name="alias" type="text" label="JFIELD_ALIAS_LABEL" maxlength="180" filter="string" />
   <field name="catid" type="Coursecategory" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" published="0,1,2" extension="com_jlms.course" label="JCATEGORY" required="true" filter="integer" />
   <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" default="*"><option value="*">JALL</option></field>
+  <field name="tags" type="tag" label="COM_JLMS_COURSE_TAGS" description="COM_JLMS_COURSE_TAGS_DESC" multiple="true" />
   <field name="summary" type="textarea" label="COM_JLMS_COURSE_SUMMARY" description="COM_JLMS_COURSE_SUMMARY_LIMIT" filter="string" rows="4" />
  </fieldset>
  <fieldset name="presentation" label="COM_JLMS_COURSE_PRESENTATION">
