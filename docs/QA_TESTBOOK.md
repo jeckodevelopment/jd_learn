@@ -374,6 +374,18 @@ Riferimenti: LES-01, MAT-04/05, STU-02; AC-27–31, AC-43–44, AC-89, AC-95. Su
 Run preliminare CI della PR #187: il job leggero è riuscito, ma i job PHP/database e Chromium sono risultati `skipped` sul primo evento ready. Il candidato non è considerato verificato finché un nuovo run non esegue la matrice runtime standard.
 
 
+## IMP-06 — lifecycle materiali e riuso in bozza (0.41.64-dev)
+
+Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. Su Joomla 6 di prova predisporre un corso con una bozza, almeno due lezioni e un editor con permesso di gestione materiali.
+
+1. Caricare un allegato nella prima lezione e selezionare **Collega materiale esistente** verso materiali del corso. Atteso: il nuovo collegamento compare in entrambi gli ambiti e usa lo stesso file; nessuna seconda copia viene caricata.
+2. Collegare lo stesso file a una seconda lezione, poi provare a collegarlo di nuovo allo stesso ambito. Atteso: i due ambiti validi lo rendono disponibile senza duplicati locali; la ripetizione viene rifiutata con un messaggio comprensibile.
+3. Rimuovere il collegamento da un ambito. Atteso: il materiale resta utilizzabile nell'altro. Sostituire il file nel collegamento originale: gli altri collegamenti continuano a riferirsi al vecchio asset immutabile.
+4. Ripetere con una versione pubblicata e con un editor privo del permesso materiali; nessuna modifica/riuso deve essere consentita. Verificare che il corso pubblicato e lo storico assegnato restino invariati.
+5. Eseguire l'attività Scheduler di pulizia: il blob condiviso deve restare finché un collegamento lo referenzia e diventare eleggibile solo quando tutte le associazioni sono state rimosse e sono trascorse 24 ore.
+
+La CI usa una fixture Joomla eliminabile per verificare il riuso tramite il form amministrativo, il riferimento condiviso allo stesso asset e il rifiuto del secondo collegamento duplicato.
+
 ## IMP-06 — pulizia programmata dei materiali orfani (0.41.54-dev)
 
 Riferimenti: MAT-02/03/05/06, DAT-04, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. La guida è in [MATERIALS.md](MATERIALS.md). Sul sito di prova verificare che il plugin Task - JD Learn sia abilitato.
