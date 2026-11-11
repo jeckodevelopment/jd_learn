@@ -52,10 +52,12 @@ final class CategoryReassignmentService
                 ->where('id <> :source')
                 ->where('(lft < :sourceLft OR rgt > :sourceRgt)')
                 ->order('lft, title');
+            $sourceLft = (int) $source->lft;
+            $sourceRgt = (int) $source->rgt;
             $query->bind(':extension', $reference['extension'])
                 ->bind(':source', $categoryId, ParameterType::INTEGER)
-                ->bind(':sourceLft', (int) $source->lft, ParameterType::INTEGER)
-                ->bind(':sourceRgt', (int) $source->rgt, ParameterType::INTEGER);
+                ->bind(':sourceLft', $sourceLft, ParameterType::INTEGER)
+                ->bind(':sourceRgt', $sourceRgt, ParameterType::INTEGER);
             $this->db->setQuery($query);
             $targets[$key] = array_values(array_filter(
                 $this->db->loadObjectList(),
@@ -116,8 +118,10 @@ final class CategoryReassignmentService
                     ->update($this->db->quoteName($item['table']))
                     ->set($this->db->quoteName('catid') . ' = :target')
                     ->where($this->db->quoteName('catid') . ' = :source');
-                $query->bind(':target', $item['target'], ParameterType::INTEGER)
-                    ->bind(':source', $categoryId, ParameterType::INTEGER);
+                $targetId = $item['target'];
+                $sourceId = $categoryId;
+                $query->bind(':target', $targetId, ParameterType::INTEGER)
+                    ->bind(':source', $sourceId, ParameterType::INTEGER);
                 $this->db->setQuery($query)->execute();
                 if ($this->db->getAffectedRows() !== $item['expected']) {
                     throw new \RuntimeException('COM_JLMS_CATEGORY_REASSIGN_STALE');
