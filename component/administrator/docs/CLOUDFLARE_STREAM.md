@@ -1,6 +1,6 @@
 # Cloudflare Stream — incremento 0.7
 
-Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token temporanei esclusivamente tramite API. È disabilitato inizialmente e richiede `playback_enabled=1` e la policy di consenso del componente. La firma locale non è implementata: il form Joomla non espone più questa modalità né i campi chiave. Eventuali `signing_mode`, `signing_key_ref` o `signing_key_id` salvati da versioni precedenti sono ignorati; la migrazione al plugin 0.7.1 non richiede modifiche ai video o ai segreti API.
+Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token temporanei esclusivamente tramite API. È disabilitato inizialmente e richiede `playback_enabled=1` e la policy di consenso del componente. La firma locale non è implementata: il form Joomla non espone più questa modalità né i campi chiave. Eventuali `signing_mode`, `signing_key_ref` o `signing_key_id` salvati da versioni precedenti sono ignorati; la migrazione al plugin 0.7.1 non richiede modifiche ai video o ai segreti API. Il provider HTML5 per i video MP4 locali è documentato separatamente in `HTML5_VIDEO.md`.
 
 ## Configurazione
 
@@ -9,7 +9,6 @@ Il plugin base `plg_jlmsvideo_cloudflarestream` supporta video on demand e token
 | `account_id` | Account Cloudflare, 32 caratteri esadecimali minuscoli |
 | `playback_domain` | Host esatto `customer-CODICE.cloudflarestream.com`, senza schema/path/porta |
 | `site_host` | Host del sito, es. `learning.example.org`; deve essere autorizzato esattamente nel video |
-| `signing_mode` | `api_endpoint` in questo incremento |
 | `api_token_ref` | Solo un riferimento `env:JLMS_SECRET_NOME`, mai il token API |
 | `token_ttl_seconds` | 60–3600, default900; ulteriormente ridotto dalle scadenze didattiche note |
 | `renew_before_seconds` | Positivo e inferiore al TTL, default120 |
