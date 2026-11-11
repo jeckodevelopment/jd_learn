@@ -1,3 +1,17 @@
+## IMP-07 — Associazioni multilingua dei corsi pubblicati (CORE-07, 0.41.68-dev; PR candidata)
+
+**Stato:** candidata PR per AC-20 e AC-48. Il form nativo può modificare il grafo delle associazioni anche quando i corsi sono pubblicati; le versioni didattiche devono restare immutate. Accettazione Joomla manuale da eseguire.
+
+**Comportamenti da testare in Joomla**
+
+1. Abilita il plugin Language Filter e crea/pubblica due corsi, uno `en-GB` e uno `it-IT`, ciascuno con una versione didattica, materiali e progresso di un iscritto.
+2. Nel form del corso inglese collega la traduzione italiana; salva e riapri entrambi i corsi per verificare il collegamento reciproco e i selettori lingua.
+3. Rimuovi e poi ripristina il collegamento da un corso pubblicato. Verifica nel selettore di un altro corso che i corsi pubblicati siano selezionabili.
+4. Controlla che dopo ogni modifica gli ID delle versioni live, il programma, gli iscritti e i progressi siano invariati.
+5. Prova lingua duplicata, lingua `*`, target archiviato/non valido e target collegato a un altro gruppo: il salvataggio deve rifiutare o lasciare il grafo esistente coerente.
+6. Con un utente senza permesso di modifica o con un corso in checkout da un altro operatore, verifica che una richiesta diretta non possa modificare o staccare il gruppo.
+7. Apri la pagina pubblica e verifica che la Language Switcher mostri soltanto traduzioni pubblicate e accessibili; una traduzione non accessibile non deve essere rivelata.
+
 ## IMP-07 — Tag Joomla nativi sui corsi (CORE-09, 0.41.67-dev; PR #222 integrata)
 
 **Stato:** PR [#222](https://github.com/jeckodevelopment/jd_learn/pull/222) integrata nel main; associazioni registrate con il tipo contenuto `com_jlms.course`. Criteri collegati: CORE-09, AC-19 e AC-64. Pacchetto installabile `dist/pkg_jlms-0.41.67-dev.zip` (SHA-256 `637e8284dde13f5b3c89398bac21a1aa862236a07619f978f33130dc8ec07ef6`). Accettazione manuale in Joomla ancora da eseguire.
