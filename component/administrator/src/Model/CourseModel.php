@@ -54,6 +54,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 if ($field !== '_schema') { $item->{'presentation_' . $field} = $value; }
             }
             $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(),(int) $item->id);
+            $item->tags = new \\Joomla\\CMS\\Helper\\TagsHelper();
+            $item->tags->getTagIds((int) $item->id, 'com_jlms.course');
             $item->associations = [];
             foreach ($this->associationMembers((int) $item->id) as $member) {
                 if ((int) $member->id !== (int) $item->id) {
@@ -233,7 +235,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $db = $this->getDatabase();
         $this->associationWrite = false;
-        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids', 'com_fields'];
+        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
         $allowed=array_merge($allowed,\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
         $data = array_intersect_key($data, array_flip($allowed));
@@ -251,6 +253,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             if ($user->guest || $user->block || !$user->authorise('core.manage','com_jlms')) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
             $this->setCurrentUser($user);
             $copySource = $this->copySource($user);
+            if ($copySource !== null && !array_key_exists('tags', $data)) {
+                $tagIds = (new \\Joomla\\CMS\\Helper\\TagsHelper())->getTagIds((int) $copySource->course->id, 'com_jlms.course');
+                $data['tags'] = $tagIds ? explode(',', $tagIds) : [];
+            }
             $record = null;
             if ($id > 0) {
                 $q = $db->createQuery()->select('*')->from($db->quoteName('#__jlms_courses'))
