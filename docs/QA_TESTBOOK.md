@@ -580,6 +580,21 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 3. Prova guest, utente senza iscrizione, revoca del livello e sospensione dell’iscrizione: nessuno deve ricevere byte dopo il diniego. Verifica GET/HEAD, byte-range, Range non valido e intestazioni private/no-store.
 4. Su un sito aggiornato con vecchio valore `x_accel`, verifica che l’anteprima e la fruizione continuino tramite PHP protetto e che non venga emesso `X-Accel-Redirect`.
 5. Disabilita la consegna e verifica che pubblicazione/streaming siano bloccati. Registra versione Joomla/PHP, web server e dimensione file.
+## STAB-04 — label compatta per i campi lezione (0.41.79-dev)
+
+**Issue:** [#173](https://github.com/jeckodevelopment/jd_learn/issues/173). La label lunga è sostituita con “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, sia nel catalogo componente sia in quello di sistema. Il link resta associato al contesto Joomla `com_jlms.lesson` e mantiene i controlli ACL.
+
+**Comportamenti da testare in Joomla**
+
+1. Installa il candidato 0.41.79-dev su un sito Joomla di prova. Apri JD Learn → Programma e verifica che il comando toolbar mostri “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, senza taglio o sovrapposizione a desktop e mobile.
+2. Attiva il comando e verifica che apra **Campi aggiuntivi** filtrati per il contesto `com_jlms.lesson`.
+3. Accedi con un utente senza `core.manage` su `com_fields`: il collegamento non deve apparire; un URL diretto non deve concedere accesso.
+4. Verifica tastiera: il comando ha nome accessibile coerente con la label, riceve focus visibile e si attiva con Invio/Spazio.
+
+**Esito sito Joomla:** Non eseguito.
+
+---
+
 ## STAB-01 — traduzione del menu Percorsi formativi (0.41.78-dev), PR #238 integrata
 
 **Stato:** PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) integrata; CI 4/4 nel [run 43113528500](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500). Pacchetto [JD-Learn-0.41.78-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500/artifacts/13897377687), SHA-256 interno `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`, wrapper `6a029d5283ef897d62869bc8fb88eaf193eb966bab3d61424a04951cae8c9ec5` (estrarre una volta; scadenza 25 novembre 2026). Accettazione manuale Joomla pendente.

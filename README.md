@@ -1,4 +1,4 @@
-Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra la PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) per la traduzione IT/EN del menu Percorsi; la PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) completa i materiali corso nell’anteprima editoriale. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente. [Pacchetto 0.41.78-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500/artifacts/13897377687), SHA-256 interno `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`; wrapper ZIP da estrarre una volta, scadenza 25 novembre 2026.
+Aggiornato all’11 novembre 2026. Main **0.41.78-dev** integra la PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238). Candidato **0.41.79-dev** per STAB-04 accorcia la label dei campi aggiuntivi delle lezioni in IT/EN senza modificare ACL o destinazione. Avanzamento verso 1.0.0 **78%**; accettazione Joomla pendente.
 
 
 

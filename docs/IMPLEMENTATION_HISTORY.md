@@ -1,3 +1,7 @@
+## 0.41.79-dev — STAB-04, label compatta dei campi lezione
+
+Il candidato accorcia la label del collegamento a `com_fields` per il contesto `com_jlms.lesson`: “Campi aggiuntivi” / “Lesson fields”. ACL e destinazione restano invariate. Accettazione toolbar Joomla e verifica accessibilità/resa ancora da eseguire; nessun avanzamento percentuale attribuito.
+
 ## 0.41.78-dev — STAB-01, traduzione del menu Percorsi (PR #238)
 
 PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) aggiunge `COM_JLMS_PATHWAYS` ai cataloghi amministrativi IT/EN e protegge le traduzioni con un controllo automatico. CI standard 4/4 nel [run 43113528500](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500); merge `6e7d2cb40f8a641e30b391f046b6e4b1d3b09e33`. Pacchetto [JD-Learn-0.41.78-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43113528500/artifacts/13897377687), ZIP interno SHA-256 `19931c7606ae274ca12291e713bddc09a8c946bed3f83f7d3cad1b48db7b53f1`, wrapper `6a029d5283ef897d62869bc8fb88eaf193eb966bab3d61424a04951cae8c9ec5`. Accettazione Joomla menu/dashboard ancora da eseguire; avanzamento resta 78%.

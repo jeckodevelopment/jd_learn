@@ -37,11 +37,15 @@ for tag,expected in {
  assert matches==[expected],(tag,matches)
  for key in ['COM_JLMS_COURSES','COM_JLMS_TEACHERS','COM_JLMS_LESSONS']:
   assert re.search(rf'^{key}="[^"]+"$',ini,re.M),(tag,key)
+ lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
+ assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',ini,re.M)==[lesson_label],(tag,'com_jlms.ini lesson fields label')
 for tag in ['it-IT','en-GB']:
  sys_ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.sys.ini').read_text()
  assert re.findall(r'^COM_JLMS_DASHBOARD_MENU="([^"]*)"$',sys_ini,re.M)==['Dashboard'],tag
  pathway_title='Percorsi formativi' if tag=='it-IT' else 'Learning pathways'
  assert re.findall(r'^COM_JLMS_PATHWAYS="([^"]*)"$',sys_ini,re.M)==[pathway_title],tag
+ lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
+ assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',sys_ini,re.M)==[lesson_label],(tag,'com_jlms.sys.ini lesson fields label')
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
