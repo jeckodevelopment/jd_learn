@@ -115,29 +115,6 @@ final class ProtectedMaterialStorage
         return $handle;
     }
 
-    /** Deliver an authorised immutable asset through the internal Nginx location, or bounded PHP. */
-    public function delivery(object $asset): array
-    {
-        if (($asset->storage ?? '') !== 'local' || preg_match('/\\A[a-f0-9]{64}\\.blob\\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
-        }
-        $key = (string) $asset->storage_key;
-        if ((bool) $this->config()->get('material_x_accel_enabled', false)) {
-            $prefix = (string) $this->config()->get('material_internal_prefix', '');
-            if (!(bool) $this->config()->get('material_internal_confirmed', false)
-                || !preg_match('~\\A/(?:[A-Za-z0-9_-]+/)+\\z~D', $prefix)) {
-                throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
-            }
-            $handle = $this->open($asset);
-            fclose($handle);
-            return ['internal_uri' => $prefix . $key];
-        }
-        if (!(bool) $this->config()->get('material_php_delivery', false)) {
-            throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
-        }
-        return ['handle' => $this->open($asset)];
-    }
-
     /** Remove only a private immutable blob addressed by its validated storage key. */
     public function remove(object $asset): bool
     {

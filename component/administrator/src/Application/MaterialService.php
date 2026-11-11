@@ -123,7 +123,7 @@ final class MaterialService
         }
         $file = $this->open((int) $link->asset_id);
         if ($lesson->kind === 'audio' && !in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) {
-            if (isset($file['handle']) && is_resource($file['handle'])) { fclose($file['handle']); }
+            fclose($file['handle']);
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $file['inline'] = $lesson->kind === 'audio'
@@ -303,7 +303,7 @@ final class MaterialService
     {
         $file = $this->download($actor, $language, $enrollmentId, $id);
         if (!in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) {
-            if (isset($file['handle']) && is_resource($file['handle'])) { fclose($file['handle']); }
+            fclose($file['handle']);
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $file['inline'] = true;
@@ -321,7 +321,7 @@ final class MaterialService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $file = $this->open((int) $link->asset_id);
-        if (!in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) { if (isset($file['handle']) && is_resource($file['handle'])) { fclose($file['handle']); } throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        if (!in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) { fclose($file['handle']); throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
         $file['inline'] = true;
         return $file;
     }
@@ -370,6 +370,9 @@ final class MaterialService
 
     private function open(int $assetId): array
     {
+        if (!(bool) $this->storage->config()->get('material_php_delivery', false)) {
+            throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
+        }
         $asset = $this->row('assets', $assetId);
         if ($asset->status !== 'ready') { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
         if ((bool) $this->storage->config()->get('material_scan_required', false)) {
@@ -378,7 +381,7 @@ final class MaterialService
                 throw new \RuntimeException('COM_JLMS_MATERIAL_NOT_READY', 503);
             }
         }
-        return $this->storage->delivery($asset) + ['size' => (int) $asset->byte_size,
+        return ['handle' => $this->storage->open($asset), 'size' => (int) $asset->byte_size,
             'name' => $asset->original_name, 'mime' => $asset->mime_type, 'etag' => '"' . $asset->sha256 . '"'];
     }
 }

@@ -11,29 +11,10 @@ final class MaterialDownload
     /** Authorisation and opening the immutable file must precede this method. */
     public static function send(CMSApplicationInterface $app, array $file): void
     {
-        $method = strtoupper($app->getInput()->getMethod());
-        if (!in_array($method, ['GET', 'HEAD'], true)) { throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405); }
-        if (isset($file['internal_uri'])) {
-            if (preg_match('~\\A/(?:[A-Za-z0-9_-]+/)+[a-f0-9]{64}\\.blob\\z~D', (string) $file['internal_uri']) !== 1) {
-                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
-            }
-            MaterialFilePolicy::name($file['name']);
-            $ascii = preg_replace('/[^A-Za-z0-9._-]/', '_', (string) iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $file['name'])) ?: 'download';
-            $app->setHeader('Content-Type', $file['mime'], true);
-            $app->setHeader('Content-Disposition', (($file['inline'] ?? false) === true ? 'inline' : 'attachment') . '; filename="' . $ascii . '"; filename*=UTF-8\'\'' . rawurlencode($file['name']), true);
-            $app->setHeader('Accept-Ranges', 'bytes', true);
-            $app->setHeader('ETag', $file['etag'], true);
-            $app->setHeader('X-Content-Type-Options', 'nosniff', true);
-            $app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
-            $app->setHeader('Cache-Control', 'private, no-store', true);
-            $app->setHeader('X-Accel-Redirect', $file['internal_uri'], true);
-            $app->getSession()->close();
-            $app->sendHeaders();
-            $app->close();
-            return;
-        }
         $handle = $file['handle'];
         try {
+            $method = strtoupper($app->getInput()->getMethod());
+            if (!in_array($method, ['GET', 'HEAD'], true)) { throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405); }
             $size = $file['size']; $start = 0; $end = $size - 1; $status = 200;
             $range = $app->getInput()->server->getString('HTTP_RANGE', '');
             $ifRange = $app->getInput()->server->getString('HTTP_IF_RANGE', '');
