@@ -104,3 +104,8 @@ I campi correnti del contesto `com_jlms.course` sono preparati dai plugin di tip
 Una modifica editoriale aggiorna la scheda senza dover ripubblicare il programma. Questi valori correnti non definiscono regole, soglie, risultati o diritto di accesso e non vengono inseriti retroattivamente nelle versioni degli iscritti. I campi pertinenti alla fruizione richiedono ancora il proprio snapshot: non usare campi editoriali live come regole didattiche.
 
 Sono usati `fields.render` e `field.render` di Joomla. Gli override del template possono essere definiti sotto `html/layouts/com_jlms/fields/render.php` e `html/layouts/com_jlms/field/render.php`, con fallback ai layout com_fields. Plugin di tipo e override installati sono codice del sito: devono mantenere escaping, ACL e accessibilità. Le prove campionano testo, area di testo e lista; non certificano ogni plugin di terze parti o tutte le combinazioni multilingua.
+
+
+## Tag Joomla nativi dei corsi (0.41.67-dev)
+
+Il form del corso usa il campo nativo **Tag** di Joomla. Seleziona uno o più tag pubblicati dal gestore Tag: l’associazione viene salvata nel contesto `com_jlms.course` e resa disponibile sia ai filtri del catalogo JD Learn sia alle viste e ai filtri di `com_tags`. Non è richiesta una mappatura manuale o un’estensione specifica del web server. Quando duplichi un corso, i tag vengono copiati solo se il nuovo corso non riceve una selezione esplicita; modificare i tag sul duplicato non modifica l’originale. Le autorizzazioni sono quelle applicate dal form Joomla e dai permessi del corso.

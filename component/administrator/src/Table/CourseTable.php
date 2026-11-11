@@ -10,9 +10,17 @@ use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Tag\TaggableTableInterface;
+use Joomla\CMS\Tag\TaggableTableTrait;
 
-final class CourseTable extends Table
+final class CourseTable extends Table implements TaggableTableInterface
 {
+    use TaggableTableTrait;
+
+    public $typeAlias = 'com_jlms.course';
+
+    public function getTypeAlias(): string { return $this->typeAlias; }
+
     protected $_supportNullValue = true;
     protected bool $stableAssetRequired = false;
     private int $preparedAsset = 0;

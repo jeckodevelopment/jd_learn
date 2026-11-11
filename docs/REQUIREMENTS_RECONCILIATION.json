@@ -1,13 +1,13 @@
 {
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "baseline_commit": "70c9dffe403a2fccdaec19eb92d66b2585bc399d",
   "runtime_tested_head": "124ed457fd4f9f8bf61828c83fc6386839767d34",
   "ci_run": 43006202795,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 166,
+      "Parziale": 167,
       "Completata": 14,
-      "Non iniziata": 30
+      "Non iniziata": 29
     },
     "Perimetro 1.0.0": {
       "1.0.0": 133,
@@ -25,10 +25,10 @@
   },
   "implementation_progress": {
     "percent": 76,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #219 completa il residuo di consegna offload dei materiali via Nginx dopo verifica di autorizzazione e hash, area M04 dall’87% all’89%; 533/7 = 76,14%, arrotondato al 76%.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; la PR candidata #222 implementa CORE-09 (tag Joomla nativi per i corsi), catalogo dal 75% al 77%; 535/7 = 76,43%, arrotondato al 76%. L’accettazione manuale resta pendente.",
     "areas": [
       76,
-      75,
+      77,
       77,
       89,
       67,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #217 integra il riuso materiali tra ambiti della stessa bozza con CI standard 4/4. Completata riguarda il sottoinsieme core esplicito, mai accettazione. I collaudi Joomla manuali restano pendenti."
+  "note": "PR #221 corregge la consegna allegati della #219 e mantiene il flusso PHP compatibile con Apache/LiteSpeed. PR #222 candidata aggiunge tag nativi Joomla ai corsi; CI candidata ancora in correzione e collaudo Joomla manuale pendente."
 }
