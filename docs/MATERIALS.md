@@ -11,3 +11,10 @@ La routine interviene solo su asset orfani registrati nel database. La soglia co
 ## Collaudo Joomla
 
 Nel sito di prova caricare un materiale in una lezione della bozza e usare **Collega materiale esistente** per renderlo disponibile anche nei materiali del corso o in un'altra lezione. Verificare che il titolo/file siano gli stessi, che il collegamento duplicato nello stesso ambito sia rifiutato, e che rimuovere un collegamento non cancelli l'altro. Sostituire poi il file originale e verificare che i collegamenti esistenti puntino all'asset precedente e non alterino versioni pubblicate. Creare un’attività pianificata con limite `100` e avviarla manualmente: asset ancora referenziati devono restare disponibili. Il CI verifica il percorso di pulizia creando un asset non referenziato oltre la soglia e invocando la routine nativa Scheduler.
+
+
+## Scansione antivirus ClamAV
+
+Se l'amministratore rende obbligatoria la scansione, JD Learn invia il blob al demone ClamAV configurato tramite socket Unix locale usando il protocollo INSTREAM. Solo l'esito `clean` porta il file in stato pronto; una firma rilevata lo rifiuta e un socket non disponibile lascia l'asset in quarantena. L'esito viene registrato con engine e risultato, senza salvare il contenuto del file nei log. Il test CI usa ClamAV reale e il file di prova EICAR; non è una certificazione antivirus del server di produzione, che deve mantenere aggiornate le definizioni.
+
+Per il collaudo sul sito di prova, abilita **Scansione antivirus obbligatoria**, imposta il socket Unix locale di ClamAV, carica un file innocuo e verifica l'esito pulito. Usa poi il file di test EICAR solo su un sito/dispositivo usa-e-getta: il sistema deve rifiutarlo, impedirne download e pubblicazione. Arresta il demone e prova un altro caricamento: deve restare in quarantena e non essere fruibile.

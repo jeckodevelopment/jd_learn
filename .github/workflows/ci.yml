@@ -188,6 +188,34 @@ jobs:
         run: php tests/joomla-cloudflare.php .runtime/joomla
       - name: Prepare disposable material course drafts
         run: php tests/materials-fixture.php .runtime/joomla
+      - name: Start real ClamAV scanner for materials integration
+        if: matrix.php == '8.3'
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends clamav-daemon clamav-freshclam
+          freshclam --datadir=/var/lib/clamav
+          install -d -o clamav -g clamav -m 0750 /run/clamav-jdlearn
+          cat > /tmp/jdlearn-clamd.conf <<'EOF'
+          LogFile /tmp/jdlearn-clamd.log
+          LogTime yes
+          PidFile /run/clamav-jdlearn/clamd.pid
+          DatabaseDirectory /var/lib/clamav
+          LocalSocket /run/clamav-jdlearn/clamd.sock
+          LocalSocketMode 660
+          User clamav
+          Foreground yes
+          StreamMaxLength 30M
+          MaxThreads 2
+          ReadTimeout 30
+          CommandReadTimeout 30
+          EOF
+          clamd --config-file=/tmp/jdlearn-clamd.conf >/tmp/jdlearn-clamd.out 2>&1 &
+          for attempt in $(seq 1 60); do
+            if [ -S /run/clamav-jdlearn/clamd.sock ]; then break; fi
+            sleep 1
+          done
+          test -S /run/clamav-jdlearn/clamd.sock
+          echo 'JLMS_REAL_CLAMD_SOCKET=/run/clamav-jdlearn/clamd.sock' >> "$GITHUB_ENV"
       - name: Protected material uploads, scanner, immutable files and HTTP ranges
         run: python3 tests/materials-http.py .runtime/joomla
       - name: Prepare native MP4 fixture and private local lesson

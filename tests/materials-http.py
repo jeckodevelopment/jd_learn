@@ -118,14 +118,27 @@ try:
  _,failed,_=publish();expect('jlms-material-upload' not in failed.decode() and 'material' in failed.decode().lower(),'Publication validation returns curriculum response')
  # The curriculum controller uses an error message + redirect, so check the draft upload form remains available.
  _,draft,_=admin_page();expect('id="jlms-material-upload"' in draft.decode(),'Quarantined files prevent version publication')
- socket=str(root.parent/'clamd.sock')
- scanner=subprocess.Popen([sys.executable,str(Path(__file__).with_name('clamd-fixture.py')),socket],stdout=subprocess.PIPE,text=True)
- if scanner.stdout.readline().strip()!='ready':raise RuntimeError('Scanner protocol fixture failed')
+ real_socket=os.environ.get('JLMS_REAL_CLAMD_SOCKET')
+ scanner=None
+ if real_socket:
+  socket=real_socket
+  if not Path(socket).is_socket():raise RuntimeError('Real ClamAV socket unavailable')
+ else:
+  socket=str(root.parent/'clamd.sock')
+  scanner=subprocess.Popen([sys.executable,str(Path(__file__).with_name('clamd-fixture.py')),socket],stdout=subprocess.PIPE,text=True)
+  if scanner.stdout.readline().strip()!='ready':raise RuntimeError('Scanner protocol fixture failed')
  configure(material_clamd_socket=socket)
  for row in files():act_material('scan',row['id'])
  expect(all(row['status']=='ready' for row in files()),'Clean scanner result promotes assets')
- upload('infected.txt',b'FIXTURE_INFECTED\n','Blocked handout')
- infected=files()[-1];expect(infected['status']=='rejected','Positive scanner result blocks asset')
+ expect(all(json.loads(row['scan_json']).get('engine')=='clamd' and json.loads(row['scan_json']).get('result')=='clean' for row in files()),'Clean files report real scanner result')
+ if real_socket:
+  eicar=b'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'
+  upload('eicar.txt',eicar,'Blocked handout')
+  infected=files()[-1]
+  expect(infected['status']=='rejected' and json.loads(infected['scan_json']).get('result')=='infected','Real ClamAV EICAR signature blocks asset')
+ else:
+  upload('infected.txt',b'FIXTURE_INFECTED\\n','Blocked handout')
+  infected=files()[-1];expect(infected['status']=='rejected','Positive scanner fixture blocks asset')
  act_material('delete',infected['id'])
  before_invalid=set(private.iterdir());before_invalid_links=len(files())
  upload('bad-window.txt',b'BAD_WINDOW\n','Invalid window',publish_up='2099-01-02T00:00:00',publish_down='2099-01-01T00:00:00',expected=400)

@@ -1,3 +1,21 @@
+## IMP-06 — scansione materiali con ClamAV reale (0.41.74-dev)
+
+**Stato:** candidata PR per verifica d'integrazione; accettazione manuale Joomla da registrare sul sito di prova.
+
+**Comportamenti da testare in Joomla**
+
+1. In un sito di prova, configura ClamAV con socket Unix locale e attiva **Componenti → JD Learn → Opzioni → Materiali → Scansione antivirus obbligatoria**.
+2. Carica un file innocuo in una bozza e verifica che il risultato ClamAV sia `clean`, lo stato diventi pronto e l'asset possa essere usato dal preflight.
+3. Solo in un ambiente usa-e-getta, carica il file di test EICAR come allegato. Verifica che sia rifiutato e che download e pubblicazione restino bloccati; elimina il record rifiutato.
+4. Ferma ClamAV e carica un altro file: deve restare in quarantena. Riavvia il servizio, avvia la scansione dalla gestione materiali e verifica che il file innocuo diventi pronto.
+5. Ripeti con interfaccia italiana e inglese, controllando che i messaggi distinguano esito infetto e scanner indisponibile.
+
+La CI standard usa ClamAV reale, firme aggiornate e EICAR; la suite resta distinta dal collaudo sul server Joomla.
+
+**Esito sito Joomla:** Non eseguito.
+
+---
+
 ## IMP-05 — configurazione Cloudflare Stream solo API (0.41.73-dev)
 
 **Stato:** PR [#228](https://github.com/jeckodevelopment/jd_learn/pull/228) integrata in `0.41.73-dev` (merge `d677924aca265f3397be156f7298d614bad330f3`). CI 4/4 nel [run 43091365354](https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354); pacchetto [JD-Learn-0.41.73-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43091365354/artifacts/13888777492), SHA ZIP `b3f577a3760a5884290a9dcb52ad09a10aaf3fd2d04d521408f1574f31c83172`. Accettazione manuale Joomla con account Cloudflare reale ancora da eseguire.
