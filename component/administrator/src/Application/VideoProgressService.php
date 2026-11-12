@@ -217,7 +217,9 @@ final class VideoProgressService
             $hash = hash('sha256', json_encode([$sourceRevision, $reportedDuration, $events], JSON_THROW_ON_ERROR));
             if ($sequence === (int) $session->sequence_no) {
                 if (!hash_equals((string) $session->last_batch_hash, $hash)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
-                return self::result($progress, $enrollment, $sequence + 1, true);
+                $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
+                $resumeConflict = (int) $progress->revision !== (int) $state['progress_revision'];
+                return self::result($progress, $enrollment, $sequence + 1, true, $resumeConflict);
             }
             if ($sequence !== (int) $session->sequence_no + 1) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
             $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);

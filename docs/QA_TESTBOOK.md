@@ -797,3 +797,16 @@ Requisiti: PRO-06, STU-03; AC-07, AC-37, AC-81, AC-91. PR [#280](https://github.
 5. Ripetere con due sessioni sulla stessa lezione e verificare che chiudere una sessione non chiuda né invalidi l’altra.
 
 La regressione automatica d’integrazione in `tests/joomla-video.php` copre due batch consecutivi da una sessione obsoleta ed è passata nella CI standard 4/4. Accettazione live Joomla: Non eseguita.
+
+## IMP-04 — replay del batch video obsoleto (0.53.0-dev)
+
+Requisito: PRO-06; AC-07, AC-37, AC-81, AC-91.
+
+**Comportamenti da testare in Joomla**
+
+1. Avviare una lezione video nello stesso account da due browser.
+2. Salvare un punto più recente nel browser A, quindi inviare un batch dalla sessione precedente del browser B.
+3. Ritentare identico il batch di B. Il server deve riconoscerlo come replay idempotente, restituire il conflitto di ripresa e mantenere invariati resume e copertura già registrati.
+4. Inviare il batch successivo da B: la ripresa deve restare sul punto di A.
+
+La regressione automatica è aggiunta a `tests/joomla-video.php`; accettazione live: Non eseguita.
