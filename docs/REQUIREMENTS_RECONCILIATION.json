@@ -25,12 +25,12 @@
   },
   "implementation_progress": {
     "percent": 81,
-    "method": "Media semplice delle sette aree: (81+81+77+98+68+92+70)/7 = 81,00%, arrotondata all’81%. PR #276 completa il passaggio della preferenza caption iniziale YouTube/Cloudflare STU-05. Accettazione Joomla provider e IMP-10 restano aperti.",
+    "method": "Media semplice delle sette aree: (81+81+77+99+68+92+70)/7 = 81,14%, arrotondata all’81%. PR #278 completa il controllo delle capabilities minime per posizione, durata e seek in pubblicazione e playback; accettazione live dei provider e IMP-10 restano aperti.",
     "areas": [
       81,
       81,
       77,
-      98,
+      99,
       68,
       92,
       70
