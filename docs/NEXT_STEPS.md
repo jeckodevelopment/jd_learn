@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main 0.55.0-dev integra la PR #287 per gli stati localizzati di salvataggio video (IMP-04/STU-03); avanzamento 82% (81,57%; M03 79%). Proseguire con i residui implementativi prioritari di IMP-04/05 elencati nella matrice e con i collaudi Joomla live. Il gate IMP-10 resta separato. Pacchetto installabile e checksum sono registrati in README.md e IMPLEMENTATION_EVIDENCE.json.
+Aggiornato al 12 novembre 2026. Main 0.55.0-dev integra PR #287 per gli stati di salvataggio/conferma del video; avanzamento 82% (81,57%). La prossima implementazione prioritaria è aggiungere lo stato “Salvataggio in corso” al salvataggio della posizione audio, completando la coerenza richiesta da STU-03. Poi continuare con i residui IMP-04/05 della matrice. Accettazione multi-browser e gate IMP-10 restano separati; pacchetto e checksum sono in README.md e IMPLEMENTATION_EVIDENCE.json.
 
 
 
