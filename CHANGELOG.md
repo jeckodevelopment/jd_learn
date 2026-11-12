@@ -1,3 +1,10 @@
+## 0.56.1-dev — Notifiche email core con coda Joomla (PR in preparazione)
+
+- Collega la conferma dell'iscrizione automatica e il completamento corso ai template Mail Templates introdotti in 0.56.0-dev.
+- Aggiunge una coda persistente con chiave univoca evento, invio tramite attività pianificata Joomla, retry progressivo limitato e pulizia dei dati personali a consegna confermata.
+- Se la consegna SMTP ha esito incerto, il messaggio resta in stato `sending` e non viene reinviato automaticamente; le richieste in approvazione, gli inserimenti manuali/import, gli attestati e i promemoria restano fuori da questo incremento.
+- Pacchetto locale di sviluppo generato: `pkg_jlms-0.56.1-dev.zip`, SHA-256 `5d0801f3d630d7d3c4d5c61c8159c10afa94b3a38a8ef3c2313bf637d4d2521c`. CI e percentuale aggiornata dopo il merge.
+
 ## 0.56.0-dev — CORE-18: template email nativi Joomla (PR #288 integrata)
 
 - PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288), merge `9ea5725c1b1784d9ae59a91339d8b3dcb83d1144`, milestone 1.0.0. Registra template per richiesta, conferma iscrizione e completamento corso nel gestore Joomla; gli aggiornamenti preservano testo e traduzioni personalizzati.

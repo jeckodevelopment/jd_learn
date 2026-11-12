@@ -258,7 +258,8 @@ final class VideoProgressService
             if ($progress->completed_at !== null) { $q->bind(':completed', $progress->completed_at); }
             $this->db->setQuery($q)->execute();
             $total = (int) $enrollment->completed_total + ($newCompletion ? (int) $lesson->required : 0);
-            if ($total >= (int) $enrollment->required_total && (int) $enrollment->required_total > 0) {
+            $newCourseCompletion = $enrollment->completed_at === null && $total >= (int) $enrollment->required_total && (int) $enrollment->required_total > 0;
+            if ($newCourseCompletion) {
                 $enrollment->completed_at = $enrollment->completed_at ?: self::date($now);
             }
             $enrollment->completed_total = $total;
@@ -266,6 +267,18 @@ final class VideoProgressService
                 'last_activity_at' => self::date($now), 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
                 'modified_at' => self::date($now), 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
+            if ($newCourseCompletion) {
+                $courseId = (int) $version->course_id;
+                $q = $this->db->createQuery()->select('c.title, c.language')->from('#__jlms_courses AS c')->where('c.id = :id')
+                    ->bind(':id', $courseId, ParameterType::INTEGER);
+                $course = $this->db->setQuery($q)->loadObject();
+                $name = trim((string) $actor->name);
+                (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
+                    hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
+                    (string) ($actor->getParam('language', '') ?: $course->language), (string) $actor->email, $name,
+                    ['NAME' => $name, 'COURSE' => (string) $course->title, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+                );
+            }
             $telemetry['state']['progress_revision'] = $resumeConflict
                 ? (int) $state['progress_revision']
                 : (int) $progress->revision;
