@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "d9935f8b0e84ff1200d42b448491a80dba8a40e2",
-  "ci_run": 43256423443,
+  "runtime_tested_head": "ac0d369e67a5cdf2bcc95415d6a4dd39bad5c2e4",
+  "ci_run": 43289138110,
   "counts": {
     "Stato implementazione": {
       "Parziale": 169,
@@ -24,17 +24,17 @@
     }
   },
   "implementation_progress": {
-    "percent": 81,
-    "method": "Media semplice delle sette aree: (82+81+78+99+68+92+70)/7 = 81,43%, arrotondata all’81%. PR #284 / AUT-03 integra l’avviso non bloccante sulla durata non verificata dei video in sola consultazione; il blocco in apprendimento resta invariato. Accettazione Joomla manuale e altri residui IMP-04 restano aperti.",
+    "percent": 82,
+    "method": "Media semplice delle sette aree: (82+81+79+99+68+92+70)/7 = 81,57%, arrotondata all’82%. PR #287 / IMP-04-STU-03 integra gli indicatori localizzati di invio e conferma del salvataggio video; il collaudo Joomla, gli altri residui IMP-04/05 e IMP-10 restano aperti.",
     "areas": [
       82,
       81,
-      78,
+      79,
       99,
       68,
       92,
       70
     ]
   },
-  "note": "Main 0.54.0-dev include PR #284, merge 04704621f64a7ee712743f98037dfe31d7a4606f. CI standard 4/4: run 43256423443. Pacchetto installabile artifact 13961114324; SHA-256 ZIP bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12; accettazione Joomla manuale pendente."
+  "note": "Main 0.55.0-dev include PR #287, merge 2af8994271d95f3c41b3e5f813ba2222794265c5. CI standard 4/4: run 43289138110. Il collaudo Joomla manuale resta pendente."
 }
