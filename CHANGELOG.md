@@ -1,3 +1,11 @@
+## 0.56.3-dev — Notifiche sospensione e riattivazione iscrizione (PR #297 integrata)
+
+- Registra template Joomla per sospensione e riattivazione dell’accesso al corso.
+- Accoda i messaggi nella transazione della modifica di stato, applicando preferenze globali/per corso; la chiave evento deduplica i replay.
+- PR [#297](https://github.com/jeckodevelopment/jd_learn/pull/297) integrata nel merge `18d916075ac9580f442c7ec85a45c9c82c6e9642`, milestone 1.0.0; CI standard 4/4 nel [run 43307181190](https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190).
+- Pacchetto [JD-Learn-0.56.3-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190/artifacts/13983759363), SHA-256 ZIP `8c3d5e0de6935f67cf93e1b7caf3a27e7d10d61d26c20450f5d9ace1cc6cdee0`; digest wrapper `7177c5d117d83bc41725845bfbde05ba40a497adae2d8c1ef373e1264df70e4a` (scade il 26 novembre 2026).
+- Progressione ricalcolata: 66,39% (66% arrotondato); email 28,5%, attestati essenziali 0%. Collaudo manuale Joomla/SMTP pendente.
+
 ## 0.56.3-dev — Notifiche sospensione e riattivazione iscrizione (in sviluppo)
 
 - Registra template Joomla per sospensione e riattivazione dell’accesso al corso.
