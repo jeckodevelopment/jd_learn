@@ -27,34 +27,8 @@
   "ci": {
     "run_id": 43256423443,
     "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443",
-    "joomla": "6.0.0",
-    "jobs": [
-      {
-        "id": 131315768298,
-        "name": "Candidate plan and lightweight checks",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 131315882491,
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 131315882522,
-        "name": "PHP 8.3 / mysql:8.4",
-        "status": "completed",
-        "conclusion": "success"
-      },
-      {
-        "id": 131315882591,
-        "name": "PHP 8.4 / mariadb:10.6",
-        "status": "completed",
-        "conclusion": "success"
-      }
-    ],
-    "note": "PR #284 / IMP-04-AUT-03: CI standard 4/4. Il preflight segnala la durata video non verificata solo in consultazione come warning; in apprendimento resta blocker."
+    "status": "passed",
+    "standard_jobs": 4
   },
   "package": {
     "artifact_id": 13961114324,
@@ -66,8 +40,7 @@
     "size_bytes": 580148,
     "artifact_size_bytes": 579936,
     "expires_at": "2026-11-26T16:18:16Z",
-    "wrapper_zip": true,
-    "build_source": "CI standard sulla head d9935f8b0e84ff1200d42b448491a80dba8a40e2 della PR #284, integrata nel merge 04704621f64a7ee712743f98037dfe31d7a4606f. SHA-256 ZIP installabile riconfermato dall’artefatto CI."
+    "wrapper_zip": true
   },
   "release_process": {
     "issue": 160,
@@ -13028,6 +13001,6 @@
     "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/284",
     "merged_commit": "04704621f64a7ee712743f98037dfe31d7a4606f",
     "manual_acceptance": "Pending; test the consultation-video duration warning and unchanged learning-mode blocker per docs/QA_TESTBOOK.md.",
-    "progress_estimate": "81.43% exact (81% reported); M01/M02 82%, M03 78%, M04 99%. Remaining AUT-03 warnings, other IMP-04 work and Joomla acceptance remain open."
+    "progress_estimate": "81.43% exact (81% reported); M01/M02 82%, M03 78%, M04 99%."
   }
 }
