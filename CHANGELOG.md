@@ -1,3 +1,9 @@
+## 0.56.2-dev — Preferenze notifiche email per sito e corso (in sviluppo)
+
+- Aggiunge opzioni globali per abilitare o disabilitare conferme di iscrizione automatica e email di completamento.
+- Aggiunge override per corso: eredita dall'impostazione globale, abilita o disabilita l'evento. Le preferenze sono salvate in `params_json` senza migrazioni DB e valutate alla transizione, prima dell'accodamento.
+- Aggiorna le guide dopo l'integrazione.
+
 ## 0.56.1-dev — Notifiche email core con coda Joomla (PR #291 integrata)
 
 - Collega la conferma dell'iscrizione automatica e il completamento corso ai template Mail Templates introdotti in 0.56.0-dev.

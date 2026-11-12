@@ -19,6 +19,12 @@ La PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291), integrata i
 Per il collaudo manuale vedere [QA_TESTBOOK.md](QA_TESTBOOK.md#imp-09--core-18-template-email-joomla).
 
 
+## Preferenze per le notifiche attualmente collegate
+
+La candidata 0.56.2-dev aggiunge due impostazioni globali in configurazione JD Learn (conferma iscrizione automatica e completamento) e override per corso con tre opzioni: usa impostazione globale, abilita, disabilita. L'override del corso prevale sul valore globale; se impostato su eredita, vale il valore del sito. La decisione è applicata quando si verifica la transizione e prima di inserire l'email in coda.
+
+Queste preferenze coprono soltanto i due eventi già collegati. Non attivano eventi mancanti e non forniscono ancora impostazioni per richieste, sospensione/riattivazione o modifiche delle lezioni.
+
 ## Requisiti approvati per la 1.0.0 (12 novembre 2026)
 
 La registrazione dei template nella PR #288 e la coda dei due eventi core nella #291 sono **solo una parte implementata**, non l'intero sistema di notifiche. Sono approvati i requisiti MAIL-01–MAIL-10 e la sequenza IMP-09-MAIL-A/B/C/D del [piano PR](STABLE_1.0.0_PR_PLAN.md#approvazione-funzionale-12-novembre-2026--mail-templates-e-notifiche-100). Copertura stimata: MAIL-01 100%; MAIL-02 25%; MAIL-03/04/05/06/07/08 0%; MAIL-09 70%; MAIL-10 25%. Media dell'area: 22%. Le stime misurano l'implementazione, non l'accettazione Joomla.
