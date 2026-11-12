@@ -39,8 +39,8 @@ export async function create(container, descriptor, emit, signal) {
   clearTimeout(readyTimer);
   return {
     playbackRates: async () => {
-      try { await player.setPlaybackRate(1); return [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]; }
-      catch { return [1]; }
+      try { await player.setPlaybackRate(1.25); await player.setPlaybackRate(1); return [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]; }
+      catch { try { await player.setPlaybackRate(1); } catch {} return [1]; }
     },
     setPlaybackRate: rate => player.setPlaybackRate(rate),
     sample: async () => {
