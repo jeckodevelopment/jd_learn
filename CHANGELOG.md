@@ -1,5 +1,7 @@
 ## 0.47.0-dev — modalità corso di sola consultazione (IMP-02 / AUT-03)
 
+- PR [#270](https://github.com/jeckodevelopment/jd_learn/pull/270), milestone 1.0.0, integrata nel commit `0a1294e491e0aa531aeca776911674fc701ddff4`; CI standard 4/4 nel [run 43207411958](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958). Package [JD-Learn-0.47.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958/artifacts/13939861423), SHA-256 interno `e65ceefa13de8ec577a84d8284ec3a09012cb6e2950351674dec9af6ed4c009f`, wrapper `7721896ba521c4ba8cfbb836023af16d752df3b2c40890000fe1cb29e22cc6a0`; scade il 26 novembre 2026.
+
 - Aggiunta una modalità esplicita per pubblicare corsi con sole lezioni facoltative. La modalità standard continua a richiedere attività obbligatorie.
 - I corsi di consultazione non accettano quiz, prerequisiti o sequenziamento e non attribuiscono completamenti o percentuali; dashboard e percorsi indicano che il progresso non si applica.
 - Aggiornati il preflight, la validazione autorevole, le guide e le regressioni automatiche. Accettazione manuale Joomla ancora da eseguire.

@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
-  "baseline_commit": "d41111e229ced8460ff9e30a0baa24f2094c4e60",
-  "runtime_tested_head": "2b6c99529d8613dd2b9b40d321a6838bed052b4a",
-  "ci_run": 43196626438,
+  "baseline_commit": "0a1294e491e0aa531aeca776911674fc701ddff4",
+  "runtime_tested_head": "43c4f2a25b56331e49198df1ce222ec581a56692",
+  "ci_run": 43207411958,
   "counts": {
     "Stato implementazione": {
       "Parziale": 169,
@@ -19,15 +19,15 @@
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 170,
-      "Non eseguita": 40
+      "Superata": 171,
+      "Non eseguita": 39
     }
   },
   "implementation_progress": {
-    "percent": 80,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #264 porta M06/M09 al 68%, PR #266 porta M01/M02 da 77% a 78% per lo snapshot dei campi corso: (78+81+77+97+68+92+70)/7 = 80,43%, arrotondata a 80%. Accettazione manuale Joomla e gate IMP-10 restano separati.",
+    "percent": 81,
+    "method": "Media semplice delle sette aree: (79+81+77+97+68+92+70)/7 = 80,57%, arrotondata a 81%. PR #270 porta M01/M02 al 79% con la modalità esplicita di consultazione. Collaudo Joomla e gate IMP-10 restano separati.",
     "areas": [
-      78,
+      79,
       81,
       77,
       97,
