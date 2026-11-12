@@ -1,3 +1,13 @@
+# Changelog
+
+## 0.41.80-dev — rimozione del collegamento Programma duplicato (STAB-05 / issue #200)
+
+- Rimosso il collegamento “Programma didattico” duplicato dal contenuto dell’editor; restano l’azione toolbar e il riepilogo nella scheda Programma.
+- Aggiornato il test HTTP perché verifichi l’assenza del link duplicato e conservi l’accesso al Programma.
+- PR [#244](https://github.com/jeckodevelopment/jd_learn/pull/244), milestone 1.0.0, integrata nel commit `ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62`; CI standard 4/4 nel [run 43121346817](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817).
+- Pacchetto [JD-Learn-0.41.80-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817/artifacts/13900597900), SHA-256 interno `5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a`, wrapper `c82f72b0c1728bf7bda492c368e5581a3768133ad1ce06e6c9c3f9e50c65b2c7` da estrarre una volta; scade il 25 novembre 2026.
+- Collaudo manuale Joomla pendente: vedere [STAB-05 nel testbook](docs/QA_TESTBOOK.md#stab-05--un-solo-accesso-al-programma-nell-editor-corso-04180-dev-issue-200).
+
 ## 0.41.79-dev — label compatta per i campi lezione (STAB-04 / PR #241)
 
 - Accorcia la label del collegamento ai campi aggiuntivi delle lezioni: “Campi aggiuntivi” in italiano e “Lesson fields” in inglese, sia nella toolbar Programma sia nei cataloghi di sistema.
@@ -21,13 +31,7 @@
 - Collaudo Joomla richiesto sul sito di prova: vedere [IMP-03 nel testbook](docs/QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).
 - PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235) integrata nel commit `dbd277605a7eebd18d5d16515853a5f61a40d3f0`; CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231). Pacchetto [JD-Learn-0.41.77-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810), SHA-256 interno `22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1`, wrapper ZIP da estrarre una volta, SHA-256 `fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f`; scadenza 25 novembre 2026. Collaudo manuale Joomla pendente.
 
-# Changelog
 
-## 0.41.80-dev — rimozione del collegamento Programma duplicato (STAB-05 / issue #200)
-
-- Rimosso il collegamento al Programma ripetuto nel corpo della scheda editor corso; resta l’azione **Salva e apri programma** nella toolbar e la scheda Programma continua a mostrare il riepilogo.
-- Aggiornata la guida editoriale e aggiunti i passi di collaudo manuale Joomla nel testbook.
-- PR #243, milestone 1.0.0; CI e pacchetto candidato in attesa.
 
 
 ## 0.41.76-dev — pubblicazione delle anteprime materiali corso (IMP-06)
@@ -244,13 +248,7 @@ Total output lines: 839
 - Pacchetto Actions [JD-Learn-0.41.47-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42804753192/artifacts/13758745162): wrapper ZIP da estrarre una volta; SHA-256 interno `cf204d5ac6366e7a509892ad47f5d30841e87d49737f5323f56b0a5a0c90c6d6` (539512 byte), wrapper `e1cb2a2a8b3940d1b53d1974e2b2cc45a25975d5889b7b46aed4018307c7fc19` (539324 byte), scadenza 24 novembre 2026.
 - Collaudo manuale Joomla dettagliato nel [testbook](docs/QA_TESTBOOK.md#imp-03--preview-editoriale-di-documenti-e-audio-04147-dev); resta pendente.
 
-# Changelog
 
-## 0.41.80-dev — rimozione del collegamento Programma duplicato (STAB-05 / issue #200)
-
-- Rimosso il collegamento al Programma ripetuto nel corpo della scheda editor corso; resta l’azione **Salva e apri programma** nella toolbar e la scheda Programma continua a mostrare il riepilogo.
-- Aggiornata la guida editoriale e aggiunti i passi di collaudo manuale Joomla nel testbook.
-- PR #243, milestone 1.0.0; CI e pacchetto candidato in attesa.
 
 
 ## 0.41.46-dev — riproduzione video nella preview editoriale (PR #177 integrata)

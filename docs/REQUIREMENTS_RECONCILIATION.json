@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-11",
-  "baseline_commit": "adc3bf5c205590c351ead14c4a086f62235b7078",
-  "runtime_tested_head": "a7ceb925ce18a180f1f0c1fdea3571344a3fc2e9",
-  "ci_run": 43116473760,
+  "date": "2026-11-12",
+  "baseline_commit": "ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62",
+  "runtime_tested_head": "eb87d3db2104889b7c55dd3b79d9c1e8be138542",
+  "ci_run": 43121346817,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #241 (STAB-04 / issue #173) abbrevia la label toolbar per i campi lezione in IT/EN senza cambiare ACL o destinazione. CI standard 4/4 run 43116473760. Pacchetto 0.41.79-dev, merge adc3bf5c205590c351ead14c4a086f62235b7078, hash interno 4c54233651a85f33594fcde84d32f7f31d51bcc82d03f63fead3e189fa270843, wrapper ZIP (estrazione singola) a33d99e3742305adfe0964f8e878b8804092d4bf3caa7e125f91d5bfeef02eaa. Accettazione Joomla pendente; avanzamento implementativo invariato 78%."
+  "note": "PR #244 (STAB-05 / issue #200) rimuove il link Programma duplicato nell’editor corso. CI standard 4/4 run 43121346817; pacchetto 0.41.80-dev, merge ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62, hash interno 5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a, wrapper ZIP (estrazione singola) c82f72b0c1728bf7bda492c368e5581a3768133ad1ce06e6c9c3f9e50c65b2c7. Accettazione manuale Joomla pendente; avanzamento implementativo invariato 78%."
 }
