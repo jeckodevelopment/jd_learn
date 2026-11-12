@@ -808,3 +808,7 @@ La regressione automatica d’integrazione in `tests/joomla-video.php` copre due
 4. Inviare da B un ulteriore batch con la revisione obsoleta. Atteso: conflitto ancora segnalato e nessuna regressione del resume.
 5. Verificare che il progresso valido già registrato da entrambe le sessioni venga mantenuto e che il corso non risulti completato due volte.
 
+## IMP-04 / AUT-03 — avviso durata video in sola consultazione (0.54.0-dev)
+
+Verificare su Joomla di prova il riepilogo **Verifica prima della pubblicazione** in una versione bozza con modalità **Sola consultazione** e una lezione video senza durata rilevata/confermata. Atteso: avviso `COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED`, nessun blocco per la sola durata e possibilità di pubblicare se gli altri controlli passano. Aggiungere poi una durata confermata valida e verificare che l’avviso scompaia. Ripetere in modalità **Apprendimento**: l’assenza di durata resta un blocco `COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED` e non viene duplicata come avviso.
+
