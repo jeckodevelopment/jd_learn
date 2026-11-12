@@ -30,9 +30,10 @@ final class PathwayProgress
             }
             if (($course['access'] ?? 'unavailable') !== 'available') {
                 $unavailable = true;
-                if (($course['percent'] ?? null) === null) { continue; }
+                $percent = 0;
+            } else {
+                $percent = $course['percent'] ?? 0;
             }
-            $percent = $course['percent'] ?? 0;
             $sum += max(0, min(100, (int) ($percent ?? 0)));
             $required++;
         }
