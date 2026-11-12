@@ -12,10 +12,10 @@ final class DisplayController extends BaseController
 
     public function display($cachable = false, $urlparams = [])
     {
-        if (!in_array($this->input->getCmd('view', 'courses'), ['courses', 'course', 'teacher', 'teacheredit', 'categories', 'category', 'dashboard', 'classroom', 'quiz', 'pathways', 'pathway'], true)) {
+        if (!in_array($this->input->getCmd('view', 'courses'), ['courses', 'course', 'lessonpreview', 'teacher', 'teacheredit', 'categories', 'category', 'dashboard', 'classroom', 'quiz', 'pathways', 'pathway'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
-        if ($this->input->getCmd('view') === 'dashboard') { $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true); }
+        if (in_array($this->input->getCmd('view'), ['dashboard', 'lessonpreview'], true)) { $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true); }
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         return parent::display(false, $urlparams);
     }

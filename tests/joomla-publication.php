@@ -119,7 +119,9 @@ if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson re
 }
 $lessonField=(int)$fieldModel->getState('field.id');
 $lesson=$authoring->saveLesson($actor,pubScope()+['id'=>0,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text','required'=>'1',
-    'body'=>'<p>SECRET_LESSON_BODY</p>','com_fields'=>['lesson-reference'=>'LESSON_FIELD_SNAPSHOT']]);
+    'body'=>'<p>SECRET_LESSON_BODY</p>','public_preview'=>'1','com_fields'=>['lesson-reference'=>'LESSON_FIELD_SNAPSHOT']]);
+pubDenied(fn()=>pubTransition(),'public preview requires explicit course setting');
+$authoring->saveTeachingRules($actor,pubScope()+['mode'=>'learning','sequence_mode'=>'free','video_threshold'=>'90','public_previews'=>'1']);
 pubExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id='.$lessonField.' AND item_id='.$db->quote((string)$lesson))->loadResult()==='LESSON_FIELD_SNAPSHOT',
     'native custom field value saved with draft lesson');
 $courseFieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
@@ -143,7 +145,7 @@ $authoring->deleteItem($actor,'lesson',pubScope()+['id'=>$video,'revision'=>1,'c
 // A required lesson must have a non-empty overlap with the published course window.
 $lessonOpen=gmdate('Y-m-d H:i:s',time()+7200);$courseClose=gmdate('Y-m-d H:i:s',time()+3600);
 $authoring->saveLesson($actor,pubScope()+['id'=>$lesson,'revision'=>1,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text',
-    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>','publish_up'=>$lessonOpen]);
+    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>','public_preview'=>'1','publish_up'=>$lessonOpen]);
 $writeFixture('#__jlms_courses',(object)['id'=>$course,'publish_down'=>$courseClose],'id');
 $unreachableRejected=false;
 try { $publication->transition($actor,$course,$version,pubRevision('courses',$course),pubRevision('course_versions',$version),(int)$publication->transitions($actor,$course)[0]->id); }
@@ -151,7 +153,7 @@ catch (\DomainException $error) { $unreachableRejected=$error->getMessage()==='C
 pubExpect($unreachableRejected,'publication rejects a required lesson outside the course window');
 $writeFixture('#__jlms_courses',(object)['id'=>$course,'publish_down'=>null],'id',true);
 $authoring->saveLesson($actor,pubScope()+['id'=>$lesson,'revision'=>2,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text',
-    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>','publish_up'=>'','publish_down'=>'']);
+    'required'=>'1','body'=>'<p>SECRET_LESSON_BODY</p>','public_preview'=>'1','publish_up'=>'','publish_down'=>'']);
 $writeFixture('#__jlms_lessons',(object)['id'=>$lesson,'release_after_days'=>5],'id');
 $dripWithoutEntryRejected=false;
 try { $publication->transition($actor,$course,$version,pubRevision('courses',$course),pubRevision('course_versions',$version),(int)$publication->transitions($actor,$course)[0]->id); }
@@ -188,6 +190,15 @@ pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course
 $assoc=(new \Joomla\CMS\Workflow\Workflow('com_jlms.course',$app,$db))->getAssociation($course);
 pubExpect((bool)$assoc,'native workflow association exists');
 pubExpect((int)$catalog->course($guest,'en-GB',$course)->id===$course,'published promotional course available without content level');
+$previewCounts = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.$course)->loadResult();
+$previewAttemptCounts = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts')->loadResult();
+$publicPreview = $catalog->publicLessonPreview($guest,'en-GB',$course,$lesson);
+pubExpect(str_contains((string)$publicPreview->body,'SECRET_LESSON_BODY'),'explicitly selected text lesson is available as a public preview despite restricted full-content access');
+pubExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.$course)->loadResult()===$previewCounts
+    && (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts')->loadResult()===$previewAttemptCounts, 'public preview creates no enrolment or quiz attempt');
+$missingPreviewRejected=false;
+try { $catalog->publicLessonPreview($guest,'en-GB',$course,$lesson+99999); } catch (\RuntimeException $error) { $missingPreviewRejected=$error->getCode()===404; }
+pubExpect($missingPreviewRejected,'unselected lesson ID is not previewable');
 $learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('r',40));
 $classroom=$component->getLearningService()->classroom($actor,'en-GB',$learnerEnrollment,$lesson);
 pubExpect(($classroom['lesson']->custom_fields[0]['values'][0] ?? '')==='LESSON_FIELD_SNAPSHOT',

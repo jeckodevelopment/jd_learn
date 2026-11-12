@@ -245,10 +245,13 @@ final class CatalogService
     {
         $course = $this->course($actor, $language, $id);
         $version = (int) $course->current_version_id;
+        $rulesQuery = $this->db->createQuery()->select('rules_json')->from('#__jlms_course_versions')
+            ->where('id = :previewVersion')->bind(':previewVersion', $version, ParameterType::INTEGER);
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $this->db->setQuery($rulesQuery)->loadResult());
         $q = $this->db->createQuery()->select('id, title')->from('#__jlms_modules')
             ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1000)->loadObjectList('id');
-        $q = $this->db->createQuery()->select('id, module_id, title, kind, required')->from('#__jlms_lessons')
+        $q = $this->db->createQuery()->select('id, module_id, title, kind, required, preview')->from('#__jlms_lessons')
             ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
         $lessons = $this->db->setQuery($q, 0, 5000)->loadObjectList();
         $grouped = [];
@@ -268,6 +271,31 @@ final class CatalogService
             ->bind(':windowCourse',$id,ParameterType::INTEGER)->bind(':windowVersion',$version,ParameterType::INTEGER);
         $edition=$this->db->setQuery($q)->loadObject();
         $startWindow=$edition && $edition->status==='open' && CourseSchedule::within($edition->starts_at,$edition->ends_at);
-        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'presentation' => $presentation, 'teachers' => $teachers, 'calendar'=>$calendar, 'start_window_open'=>$startWindow];
+        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'public_previews' => $rules['public_previews'], 'presentation' => $presentation, 'teachers' => $teachers, 'calendar'=>$calendar, 'start_window_open'=>$startWindow];
+    }
+
+    /** Return only an explicitly previewable text lesson from the current public course version. */
+    public function publicLessonPreview(User $actor, string $language, int $courseId, int $lessonId): object
+    {
+        $course = $this->course($actor, $language, $courseId);
+        $versionId = (int) $course->current_version_id;
+        $rulesQuery = $this->db->createQuery()->select('rules_json')->from('#__jlms_course_versions')
+            ->where('id = :previewVersion')->bind(':previewVersion', $versionId, ParameterType::INTEGER);
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $this->db->setQuery($rulesQuery)->loadResult());
+        if (!$rules['public_previews']) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        $query = $this->db->createQuery()->select('l.id, l.title, l.body, l.publish_up, l.publish_down, l.release_after_days')
+            ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
+            ->where('l.id = :previewLesson')->where('l.course_version_id = :previewVersion')
+            ->where('l.kind = :previewKind')->where('l.preview = 1')
+            ->bind(':previewLesson', $lessonId, ParameterType::INTEGER)->bind(':previewVersion', $versionId, ParameterType::INTEGER);
+        $previewKind = 'text';
+        $query
+            ->bind(':previewKind', $previewKind);
+        $lesson = $this->db->setQuery($query)->loadObject();
+        if (!$lesson || \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
+            $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days) !== 'available') {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
+        return $lesson;
     }
 }

@@ -33,6 +33,19 @@ La regressione automatica è integrata dalla PR [#268](https://github.com/jeckod
 
 Implementato dalla PR [#270](https://github.com/jeckodevelopment/jd_learn/pull/270), merge `0a1294e491e0aa531aeca776911674fc701ddff4`; CI standard 4/4 nel [run 43207411958](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958). Package [JD-Learn-0.47.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958/artifacts/13939861423), SHA-256 interno `e65ceefa13de8ec577a84d8284ec3a09012cb6e2950351674dec9af6ed4c009f`; wrapper SHA-256 `7721896ba521c4ba8cfbb836023af16d752df3b2c40890000fe1cb29e22cc6a0`, da estrarre una volta; scadenza 26 novembre 2026. CI copre regole, readiness, pubblicazione, iscrizione e telemetria video senza completamento; il collaudo sito Joomla resta pendente. La modalità non abilita accesso anonimo o anteprima pubblica.
 
+## IMP-02 — anteprime pubbliche esplicite delle lezioni di testo (EDGE-02 / ISC-04)
+
+Il perimetro di questo incremento consente anteprime anonime soltanto per lezioni **Testo** marcate esplicitamente e dopo aver abilitato l’opzione nelle regole didattiche del corso. Non pubblica quiz, video o materiali associati. La scheda deve essere accessibile al catalogo pubblico; l’anteprima è in sola lettura e non crea iscrizioni, progressi o tentativi.
+
+1. Su Joomla 6 di prova crea un corso con catalogo **Public** e contenuti **Registered**, una bozza con due lezioni Testo e un materiale privato. In **Regole didattiche** abilita le anteprime pubbliche; marca una sola lezione come disponibile in anteprima e pubblica.
+2. Apri la scheda del corso in una sessione anonima. Deve apparire il collegamento solo accanto alla lezione selezionata. Aprilo: deve mostrare il titolo e il testo, senza richiedere login e senza esporre il materiale privato.
+3. Confronta iscrizioni, progressi e tentativi prima/dopo: i conteggi devono restare invariati. La pagina deve indicare chiaramente la consultazione in sola lettura e avere `noindex`.
+4. Richiedi direttamente l’URL per la lezione non selezionata, una lezione Video, una lezione fuori dalla finestra o un ID appartenente a un altro corso/versione: nessun contenuto deve essere restituito.
+5. In una nuova bozza disabilita le anteprime lasciando una lezione marcata: la pubblicazione deve essere bloccata. Prova a marcare Video o Documento: il form non deve offrire l’opzione e una richiesta manipolata deve essere rifiutata.
+6. Rendi il corso non visibile agli ospiti o ritira la versione pubblicata: scheda e URL diretta di preview devono diventare inaccessibili.
+
+Le prove automatizzate di authoring/pubblicazione sono in `tests/joomla-curriculum.php` e `tests/joomla-publication.php`. Il collaudo Joomla manuale resta da eseguire e registrare.
+
 ## IMP-08 — filtri ricercabili del roster (0.45.0-dev)
 
 Riferimenti: ISC-01/02/05/07, REP-02, SCR-14; AC-11/12/25/26/40/53/54/60/63/128. Nel backend Joomla aprire il roster di un corso autorizzato con più versioni e iscritti.

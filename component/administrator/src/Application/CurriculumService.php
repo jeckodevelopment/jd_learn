@@ -256,7 +256,7 @@ final class CurriculumService
             }
             $id = $this->insert('course_versions', ['course_id' => $courseId, 'version_no' => $number,
                 'status' => 'draft', 'title_snapshot' => $course->title,
-                'rules_json' => '{"_schema":1,"mode":"learning","sequence_mode":"free","video_threshold_basis_points":9000,"certificate_enabled":false,"completion_policy":"all_required"}',
+                'rules_json' => '{"_schema":1,"mode":"learning","sequence_mode":"free","video_threshold_basis_points":9000,"certificate_enabled":false,"completion_policy":"all_required","public_previews":false}',
                 'presentation_json' => CoursePresentation::snapshot($course),
                 'fields_snapshot_json' => '{}'], $actor);
             $this->update('courses', $course, [], $actor);
@@ -325,6 +325,9 @@ final class CurriculumService
             $rules['mode'] = $mode;
             $rules['sequence_mode'] = $mode === 'consultation' ? 'free' : $sequenceMode;
             $rules['completion_policy'] = $mode === 'consultation' ? 'none' : 'all_required';
+            $publicPreviews = $input['public_previews'] ?? ($rules['public_previews'] ? '1' : '0');
+            if ((!is_string($publicPreviews) && !is_int($publicPreviews)) || !in_array((string) $publicPreviews, ['0', '1'], true)) { throw new \DomainException('COM_JLMS_INVALID_INPUT'); }
+            $rules['public_previews'] = (string) $publicPreviews === '1';
             if (array_key_exists('video_threshold', $input)) {
                 $rules['video_threshold_basis_points'] = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold']);
             }
@@ -478,6 +481,12 @@ final class CurriculumService
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null, 'params_json' => '{}',
             'publish_up' => null, 'publish_down' => null, 'release_after_days' => null];
+        $publicPreview = $input['public_preview'] ?? '0';
+        if ((!is_string($publicPreview) && !is_int($publicPreview)) || !in_array((string) $publicPreview, ['0', '1'], true)
+            || ((string) $publicPreview === '1' && $kind !== 'text')) {
+            throw new \DomainException('COM_JLMS_INVALID_INPUT');
+        }
+        $fields['preview'] = (int) $publicPreview;
         if ($kind === 'video' && ($input['provider_key'] ?? '') === 'html5') {
             // HTML5 source/duration are assigned only by LocalVideoService; ignore stale or forged form values.
             $fields['provider_key'] = 'html5';

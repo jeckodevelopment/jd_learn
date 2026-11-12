@@ -1,5 +1,11 @@
 # Gestione dei corsi
 
+## Anteprime pubbliche delle lezioni
+
+In **Programma → Regole didattiche**, il corso può abilitare le anteprime pubbliche. La scelta vale per la versione in bozza; in ogni lezione Testo l’autore può poi attivare **Disponibile come anteprima pubblica**. L’opzione non è prevista per Video, Documento, Audio o quiz. La pubblicazione rifiuta le lezioni marcate quando la funzione del corso è disabilitata.
+
+La scheda pubblica mostra un link alle sole lezioni Testo selezionate della versione attiva. La vista è read-only, non crea iscrizioni, progressi o tentativi e non rende pubblici gli allegati della lezione. L’endpoint rivalida corso pubblico, versione corrente, selezione e disponibilità della lezione a ogni richiesta. Le anteprime sono noindex. La procedura di verifica è nel [testbook](QA_TESTBOOK.md#imp-02--anteprime-pubbliche-esplicite-delle-lezioni-di-testo-edge-02--isc-04).
+
 ## Editor corso essenziale (0.41.4-dev)
 
 L’editor raggruppa le attività in cinque schede: **Corso** (testi, immagine, docenti e metadati essenziali), **Programma** (struttura e regole didattiche supportate), **Accesso e pubblicazione** (categoria, lingua, livelli, iscrizione e calendario), **Campi personalizzati** quando disponibili, e **Opzioni** (SEO, associazioni e permessi). Le regole si aprono dal contesto del programma. La riorganizzazione riguarda la navigazione del form; non cambia i dati salvati, le versioni didattiche o i permessi.

@@ -205,7 +205,8 @@ final class PublicationService
                 if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
-                if (($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5') || (int) $lesson->preview !== 0
+                if (($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5')
+                    || ((int) $lesson->preview !== 0 && ($lesson->kind !== 'text' || !$rules['public_previews']))
                     || strlen((string) $lesson->body) > 1048576) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }

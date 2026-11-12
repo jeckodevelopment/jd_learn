@@ -64,7 +64,7 @@ foreach ([1, 2, 3] as $position) {
  <?php foreach ($this->item['modules'] as $module) : ?>
   <section id="jlms-module-<?= (int) $module->id ?>" class="jlms-module"><h3 class="jlms-module__title"><?= $this->escape($module->title) ?></h3>
    <ol class="jlms-module__lessons"><?php foreach ($this->item['lessons'][(int) $module->id] ?? [] as $lesson) : ?>
-    <li id="jlms-lesson-<?= (int) $lesson->id ?>" class="jlms-lesson"><span class="jlms-lesson__title"><?= $this->escape($lesson->title) ?></span> <span class="jlms-lesson__requirement"><?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></span></li>
+    <li id="jlms-lesson-<?= (int) $lesson->id ?>" class="jlms-lesson"><span class="jlms-lesson__title"><?= $this->escape($lesson->title) ?></span> <span class="jlms-lesson__requirement"><?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></span><?php if (!empty($this->item['public_previews']) && (int) $lesson->preview === 1) : ?> <a class="jlms-lesson__public-preview" href="<?= Route::_('index.php?option=com_jlms&view=lessonpreview&course_id=' . (int) $course->id . '&lesson_id=' . (int) $lesson->id) ?>"><?= Text::_('COM_JLMS_OPEN_PUBLIC_PREVIEW') ?></a><?php endif; ?></li>
    <?php endforeach; ?></ol>
   </section>
  <?php endforeach; ?></section>

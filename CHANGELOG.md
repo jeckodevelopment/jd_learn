@@ -1,3 +1,9 @@
+## 0.49.0-dev — anteprime pubbliche esplicite delle lezioni di testo (IMP-02)
+
+- Aggiunge un’impostazione di corso e la selezione esplicita per le lezioni Testo; la pubblicazione impedisce preview attive quando il corso non le abilita.
+- La vista ospite rivalida visibilità del corso, versione didattica corrente, selezione e finestra della lezione; non crea iscrizioni, progressi o tentativi. Video, quiz e materiali di lezione non vengono esposti.
+- Test automatizzati aggiornati per authoring, pubblicazione e controlli di accesso. Collaudo Joomla manuale nel testbook, ancora da eseguire.
+
 ## 0.48.0-dev — consultazione video senza requisiti di tracciamento (IMP-02 / AUT-03)
 
 - PR [#272](https://github.com/jeckodevelopment/jd_learn/pull/272), milestone 1.0.0, integrata nel commit `ae81e46a69fc3d2528585c497f0b263677d3d0f9`; CI standard 4/4 nel [run 43211155470](https://github.com/jeckodevelopment/jd_learn/actions/runs/43211155470). Package [JD-Learn-0.48.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43211155470/artifacts/13940634151), SHA-256 interno `6e7d35f18d15eb71e6e7d3c13906038da52f4fb06fc191a26dc35946aa8182dd`, digest wrapper `831e28868f9bcfe1605dc8fd43c9232a1b2b26f4f196733c3af578c0dd113e1a`; scade il 26 novembre 2026.

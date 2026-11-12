@@ -7,6 +7,7 @@
 <field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />
 <field name="kind" type="list" label="COM_JLMS_LESSON_KIND" default="text"><option value="text">COM_JLMS_LESSON_TEXT</option><option value="document">COM_JLMS_LESSON_DOCUMENT</option><option value="audio">COM_JLMS_LESSON_AUDIO</option><option value="video">COM_JLMS_LESSON_VIDEO</option></field>
 <field name="required" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_LESSON_REQUIRED" default="1"><option value="0">JNO</option><option value="1">JYES</option></field>
+<field name="public_preview" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_LESSON_PUBLIC_PREVIEW" description="COM_JLMS_LESSON_PUBLIC_PREVIEW_DESC" default="0" showon="kind:text"><option value="0">JNO</option><option value="1">JYES</option></field>
 <field name="publish_up" type="calendar" label="COM_JLMS_LESSON_PUBLISH_UP" format="%Y-%m-%d %H:%M:%S" translateformat="false" showtime="true" timeformat="24" filter="raw" />
 <field name="publish_down" type="calendar" label="COM_JLMS_LESSON_PUBLISH_DOWN" format="%Y-%m-%d %H:%M:%S" translateformat="false" showtime="true" timeformat="24" filter="raw" />
 <field name="release_after_days" type="number" label="COM_JLMS_LESSON_RELEASE_AFTER_DAYS" description="COM_JLMS_LESSON_RELEASE_AFTER_DAYS_DESC" min="0" max="3650" step="1" filter="raw" />

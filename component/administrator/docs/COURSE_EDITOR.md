@@ -1,5 +1,11 @@
 # Gestione dei corsi
 
+## Anteprime pubbliche delle lezioni
+
+In **Programma → Regole didattiche**, il corso può abilitare le anteprime pubbliche. La scelta vale per la versione in bozza; in ogni lezione Testo l’autore può poi attivare **Disponibile come anteprima pubblica**. L’opzione non è prevista per Video, Documento, Audio o quiz. La pubblicazione rifiuta le lezioni marcate quando la funzione del corso è disabilitata.
+
+La scheda pubblica mostra un link alle sole lezioni Testo selezionate della versione attiva. La vista è read-only, non crea iscrizioni, progressi o tentativi e non rende pubblici gli allegati della lezione. L’endpoint rivalida corso pubblico, versione corrente, selezione e disponibilità della lezione a ogni richiesta. Le anteprime sono noindex. La procedura di verifica è nel [testbook](../../../docs/QA_TESTBOOK.md#imp-02--anteprime-pubbliche-esplicite-delle-lezioni-di-testo-edge-02--isc-04).
+
 ## Anteprima editoriale
 
 Dal programma aprire **Anteprima editoriale** per leggere il testo e navigare il corso con una selezione simulata dei livelli di accesso. Le lezioni video possono essere riprodotte in sola lettura: l’endpoint verifica nuovamente i permessi dell’editor e non crea iscrizioni, sessioni, tentativi o progressi. I video esterni rispettano la policy privacy configurata; la consegna dei video HTML5 locali resta protetta e limitata a editor con permesso sui materiali. Dalla 0.41.47-dev, le lezioni Documento mostrano gli allegati pronti e le lezioni Audio consentono la riproduzione MP3/OGG e l’apertura degli allegati, sempre senza registrare attività. Le interazioni quiz restano non simulate. Per la procedura di prova vedere [testbook progetto](../../docs/QA_TESTBOOK.md#imp-03--preview-editoriale-di-documenti-e-audio-04147-dev).

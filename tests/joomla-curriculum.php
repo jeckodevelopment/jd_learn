@@ -101,10 +101,11 @@ curriculumDenied(fn () => $service->saveModule($actor,$stale+['id'=>$module,'rev
 $anonymous = new \Joomla\CMS\User\User();
 curriculumDenied(fn () => $service->outline($anonymous,$course),'anonymous cannot read draft');
 curriculumDenied(fn () => $service->saveModule($anonymous,scopeInput()+['id'=>0,'title'=>'No access']),'anonymous cannot mutate draft');
+$service->saveTeachingRules($actor,scopeInput()+['mode'=>'learning','sequence_mode'=>'free','video_threshold'=>'90','public_previews'=>'1']);
 $firstLesson = $service->saveLesson($actor, scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Text introduction',
-    'kind'=>'text','required'=>'1','body'=>'<p>First lesson</p>','preview'=>1,'completion_rule'=>'forged','release_after_days'=>'2']);
+    'kind'=>'text','required'=>'1','body'=>'<p>First lesson</p>','preview'=>1,'public_preview'=>'1','completion_rule'=>'forged','release_after_days'=>'2']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $firstLesson)->loadObject();
-curriculumExpect($row->completion_rule==='manual' && (int)$row->preview===0,'server derives rules and ignores preview mass assignment');
+curriculumExpect($row->completion_rule==='manual' && (int)$row->preview===1,'explicit text preview is saved while derived completion rules ignore mass assignment');
 curriculumExpect((int)$row->release_after_days===2,'relative lesson release is validated and persisted');
 curriculumExpect($row->body===\Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'),'body uses the native Joomla content filter');
 $video = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Video draft','kind'=>'video',
@@ -112,6 +113,12 @@ $video = $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $video)->loadObject();
 $source = json_decode($row->source_json,true,32,JSON_THROW_ON_ERROR);
 curriculumExpect($source['reference']==='dQw4w9WgXcQ' && $row->completion_rule==='video_coverage' && (int)$row->required===0,'video normalised and optional flag retained');
+$videoPreviewRejected = false;
+try {
+    $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Video preview','kind'=>'video',
+        'required'=>'0','body'=>'','public_preview'=>'1','provider_key'=>'youtube','source_reference'=>'https://youtu.be/dQw4w9WgXcQ']);
+} catch (\DomainException $error) { $videoPreviewRejected = $error->getMessage()==='COM_JLMS_INVALID_INPUT'; }
+curriculumExpect($videoPreviewRejected,'public preview is limited to text lessons');
 $before = versionRevision();
 curriculumDenied(fn () => $service->saveLesson($actor,scopeInput()+['id'=>0,'module_id'=>$module,'title'=>'Invalid video','kind'=>'video',
     'required'=>'1','body'=>'','provider_key'=>'youtube','source_reference'=>'https://127.0.0.1/private']),'unsafe source rejected');
