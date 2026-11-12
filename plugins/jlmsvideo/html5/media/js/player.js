@@ -33,10 +33,7 @@ export async function create(container, descriptor, emit, signal) {
   container.append(video); video.src = url.href;
   await ready; signal?.throwIfAborted();
   return {
-    playbackRates: async () => {
-      try { video.playbackRate = 1.25; const supported = Math.abs(video.playbackRate - 1.25) < 0.001; video.playbackRate = 1; return supported ? [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] : [1]; }
-      catch { try { video.playbackRate = 1; } catch {} return [1]; }
-    },
+    playbackRates: async () => ('playbackRate' in video ? [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] : [1]),
     setPlaybackRate: async rate => { video.playbackRate = rate; return video.playbackRate; },
     sample: async () => ({position_ms:Math.round(video.currentTime*1000),duration_ms:Math.round(video.duration*1000),
       rate_milli:Math.round(video.playbackRate*1000),playing:!video.paused && !video.ended}),
