@@ -211,12 +211,13 @@ export class VideoLesson {
   async flush(keepalive = false) {
     if (this.saving || !this.session || (!this.pending && !this.queue.length)) return;
     this.saving = true;
+    this.message('saving');
     if (!this.pending) this.pending = {session_id: this.session.session_id, source_revision: this.session.source_revision,
       sequence: this.sequence, duration_ms: this.duration, events_json: JSON.stringify(this.queue.splice(0))};
     try {
       const result = await this.request('save', this.pending, keepalive);
       this.sequence = result.next_sequence; this.pending = null;
-      if (result.lesson_completed) this.message('completed');
+      this.message(result.lesson_completed ? 'completed' : 'saved');
       const meter = document.getElementById('jlms-progress-meter');
       if (meter) meter.value = result.course_percent;
     } catch (error) {
