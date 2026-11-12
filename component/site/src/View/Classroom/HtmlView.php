@@ -56,7 +56,7 @@ final class HtmlView extends BaseHtmlView
         }
         if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked) && $this->item['lesson']->kind === 'video') {
             $labels = [];
-            foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider', 'saving', 'saved', 'youtube_csp, 'youtube_sdk', 'youtube_referrer', 'youtube_embed'] as $key) {
+            foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider', 'saving', 'saved', 'youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed'] as $key) {
                 $labels[$key] = \Joomla\CMS\Language\Text::_(implode('_', ['COM', 'JLMS', 'VIDEO', strtoupper($key === 'consent' ? 'consent_required' : $key)]));
             }
             $labels['rate_unavailable'] = \Joomla\CMS\Language\Text::_('COM_JLMS_VIDEO_SPEED_UNAVAILABLE');
