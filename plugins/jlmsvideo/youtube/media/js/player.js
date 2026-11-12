@@ -1,5 +1,14 @@
 let sdk;
 
+function savedCaptionLanguage() {
+  try {
+    const language = globalThis.localStorage?.getItem('jdlearn.video.language.v1')?.trim();
+    return language && /^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i.test(language) ? language.toLowerCase() : '';
+  } catch {
+    return '';
+  }
+}
+
 function loadSdk() {
   if (globalThis.YT?.Player) return Promise.resolve();
   if (sdk) return sdk;
@@ -53,10 +62,16 @@ export async function create(container, descriptor, emit, signal) {
   signal?.throwIfAborted();
   const frame = document.createElement('iframe');
   const url = new URL('https://www.youtube-nocookie.com/embed/' + encodeURIComponent(descriptor.options.reference));
-  url.search = new URLSearchParams({
+  const parameters = new URLSearchParams({
     enablejsapi: '1', origin: location.origin, autoplay: '0', controls: '1',
     playsinline: '1', hl: (descriptor.options.locale || 'en').split('-')[0],
   });
+  const captionLanguage = savedCaptionLanguage();
+  if (captionLanguage) {
+    parameters.set('cc_lang_pref', captionLanguage);
+    parameters.set('cc_load_policy', '1');
+  }
+  url.search = parameters;
   frame.title = container.dataset.title || 'YouTube';
   frame.referrerPolicy = 'strict-origin';
   frame.allow = 'encrypted-media; fullscreen; picture-in-picture';
