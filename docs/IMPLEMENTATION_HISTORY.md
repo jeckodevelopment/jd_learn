@@ -1,6 +1,6 @@
-## 12 novembre 2026 — feedback salvataggio progresso video (IMP-04 / STU-03)
+## 12 novembre 2026 — feedback salvataggio progresso video (IMP-04 / STU-03, PR #287)
 
-La candidata 0.55.0-dev aggiunge al player video gli stati localizzati di salvataggio e conferma del progresso. In caso di completamento, il messaggio di completamento conserva la precedenza; in caso di errori transitori resta il messaggio offline già esistente. CI e collaudo Joomla sono pendenti fino alla revisione PR.
+La PR [#287](https://github.com/jeckodevelopment/jd_learn/pull/287) integra in 0.55.0-dev gli stati localizzati di salvataggio e conferma del progresso video. Completamento e messaggi di offline/accesso negato conservano la precedenza prevista; retry e sequenza del server restano invariati. Merge `2af8994271d95f3c41b3e5f813ba2222794265c5`; CI standard 4/4 [run 43289138110](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110). Pacchetto [JD-Learn-0.55.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105), SHA-256 `fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282`. Collaudo Joomla manuale ancora pendente. Avanzamento 82% (81,57%; M03 79%).
 
 ## 12 novembre 2026 — STU-05, preferenza velocità player (PR #258)
 
