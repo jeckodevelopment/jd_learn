@@ -784,9 +784,9 @@ Riferimenti: PRO-05, VID-03; AC-05, AC-27, AC-30, AC-44, AC-91. PR [#278](https:
 **Esito automatico locale:** build pacchetto e check strutturali superati; test player JavaScript superati. CI standard 4/4, inclusi test PHP e integrazione Joomla; il collaudo manuale live resta pendente. **Esito sito Joomla:** Non eseguito.
 
 
-## IMP-04 — ripresa video tra sessioni concorrenti (0.52.0-dev)
+## IMP-04 — ripresa video tra sessioni concorrenti (0.52.0-dev, PR #280)
 
-Requisiti: PRO-06, STU-03; AC-07, AC-37, AC-81, AC-91. Una sessione video avviata da una posizione obsoleta può continuare ad aggiungere copertura, ma non deve sovrascrivere la posizione più recente né riacquisire il diritto di farlo nei batch successivi.
+Requisiti: PRO-06, STU-03; AC-07, AC-37, AC-81, AC-91. PR [#280](https://github.com/jeckodevelopment/jd_learn/pull/280), integrata nel commit `dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4`; CI standard 4/4 nel [run 43250267681](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681). Pacchetto [0.52.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681/artifacts/13958934116), SHA-256 `f5c0986ae59361de77c67ebae9ed9d91583b12f38e835a4a12a9cedfebfb9216`; wrapper `3f528639d38a2c61d39fc5713f6750f7dfadb5bf5c6220d810174cddaf8b89e9`, scadenza 26 novembre 2026. Una sessione video avviata da una posizione obsoleta può continuare ad aggiungere copertura, ma non deve sovrascrivere la posizione più recente né riacquisire il diritto di farlo nei batch successivi.
 
 **Comportamenti da testare in Joomla**
 
@@ -796,4 +796,4 @@ Requisiti: PRO-06, STU-03; AC-07, AC-37, AC-81, AC-91. Una sessione video avviat
 4. Ricaricare la lezione nel browser B o aprirla in una nuova sessione: il player deve riprendere dalla posizione più recente confermata. Il completamento e la percentuale devono rimanere idempotenti.
 5. Ripetere con due sessioni sulla stessa lezione e verificare che chiudere una sessione non chiuda né invalidi l’altra.
 
-La regressione automatica d’integrazione in `tests/joomla-video.php` copre due batch consecutivi da una sessione obsoleta. Accettazione live Joomla: Non eseguita.
+La regressione automatica d’integrazione in `tests/joomla-video.php` copre due batch consecutivi da una sessione obsoleta ed è passata nella CI standard 4/4. Accettazione live Joomla: Non eseguita.
