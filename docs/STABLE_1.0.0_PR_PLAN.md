@@ -152,3 +152,8 @@ Il workflow [43131327572](https://github.com/jeckodevelopment/jd_learn/actions/r
 ### REL-01–03 — Candidate dry-run 1.0.0 superato (12 novembre 2026)
 
 [Run 43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497): **SUCCESS** in preparazione del candidato stabile versione 1.0.0 senza pubblicazione, ZIP generato e feed XML preparato con checksum SHA-256. Il job protetto di pubblicazione è stato **SKIPPED** come previsto (`publish=false`). Artefatto [jd-learn-release-candidate-1.0.0](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497/artifacts/13906260145). Questo non completa IMP-10 né dimostra il corretto funzionamento dell'updater Joomla sul sito di prova; avanzamento implementativo globale documentato **78% invariato**.
+
+
+### IMP-10 — Installazione manuale candidato confermata (12 novembre 2026)
+
+L'utente ha confermato che il candidato 1.0.0 preparato nel [run 43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497) è stato installato sul sito Joomla di prova e che il componente funziona. Evidenza limitata allo **smoke test di installazione e funzionamento generale**, da registrare come **conferma utente**. Non equivale ad accettazione completa IMP-10: restano da collaudare upgrade con dati storici e conservazione dei progressi, flussi applicativi specifici e updater/feed Joomla. Stato IMP-10 ancora **parziale**; pubblicazione 1.0.0 non autorizzata. Avanzamento implementativo globale documentato **78% invariato**.
