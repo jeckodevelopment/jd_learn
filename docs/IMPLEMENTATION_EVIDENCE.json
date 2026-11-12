@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
     "percent": 81,
-    "basis": "Media semplice delle sette macroaree incluse: (81+81+78+99+68+92+70)/7=81,29%, arrotondata a 81%. PR #280 rende persistente il conflitto di ripresa durante tutti i batch successivi di una sessione video obsoleta, mantenendo l’unione della copertura. Restano altri residui IMP-04 e l’accettazione Joomla live.",
+    "basis": "Media semplice delle sette macroaree incluse: (81+81+78+99+68+92+70)/7=81,29%, arrotondata a 81%. PR #280 rende persistente il conflitto di ripresa durante batch video concorrenti; PR #282 conserva il conflitto nel replay idempotente senza riapplicare il progresso. Restano altri residui IMP-04 e l’accettazione Joomla live.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -12972,12 +12972,13 @@
   "latest_feature": {
     "plan_increment": "IMP-04",
     "requirements": [
-      "PRO-06"
+      "PRO-06",
+      "STU-03"
     ],
     "pull_request": 282,
     "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/282",
     "merged_commit": "66a59d0a5e4e60943b0d1487ddce4c95c64f97b0",
-    "manual_acceptance": "Pending; verify idempotent retry and stale resume across browsers per docs/QA_TESTBOOK.md.",
-    "progress_estimate": "81.29% exact (81% reported); M03 78%, M04 99%. Remaining IMP-04 work and manual Joomla acceptance remain open."
+    "manual_acceptance": "Pending; verify an identical stale video batch replay returns replay=true and resume_conflict=true without changing saved resume or applying coverage/completion twice, per docs/QA_TESTBOOK.md.",
+    "progress_estimate": "81.29% exact (81% reported); M03 78%, M04 99%. Other IMP-04 residues and manual Joomla acceptance remain open."
   }
 }
