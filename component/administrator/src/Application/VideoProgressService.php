@@ -268,8 +268,9 @@ final class VideoProgressService
                 'modified_at' => self::date($now), 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
             if ($newCourseCompletion) {
+                $courseId = (int) $version->course_id;
                 $q = $this->db->createQuery()->select('c.title, c.language')->from('#__jlms_courses AS c')->where('c.id = :id')
-                    ->bind(':id', (int) $version->course_id, ParameterType::INTEGER);
+                    ->bind(':id', $courseId, ParameterType::INTEGER);
                 $course = $this->db->setQuery($q)->loadObject();
                 $name = trim((string) $actor->name);
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
