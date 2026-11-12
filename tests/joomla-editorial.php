@@ -164,6 +164,9 @@ editorialExpect($fieldValue()==='HISTORY_FIELD_ORIGINAL','Content History restor
 editorialExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.$course)->loadResult()===$assignedVersion
     && $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id='.$course.' ORDER BY id')->loadAssocList()===$assignedLearners,
     'Content History field restore preserves the active teaching version and learner assignments');
+$item=$model->getItem($course);
+editorialExpect($model->save(['id'=>$course,'revision'=>(int)$item->revision,'title'=>'Editorially updated course']),
+    'History fixture restores the shared course title expected by later HTTP checks');
 
 // Copy material associations and native MP4 references without copying blobs or progress.
 foreach (['html5-fixture','materials-fixture'] as $alias) {
