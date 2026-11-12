@@ -17,7 +17,7 @@ Con un account che può modificare il corso, modificare i valori `com_fields` e 
 
 Atteso: i dati editoriali e il campo tornano a “Valore A”; lo stato del corso, la versione didattica corrente, le versioni assegnate, le iscrizioni e i progressi restano invariati. Se il corso ha una bozza aperta, il ripristino aggiorna i dati editoriali del corso e non sovrascrive la struttura delle versioni. Verificare anche che un account privo di `core.edit.value` sul campo non possa alterarlo tramite il ripristino.
 
-La regressione automatica della PR dedicata verifica il valore del campo nella revisione Joomla e il ripristino tramite il salvataggio autorizzato del modello; completare comunque il confronto e il ripristino dalla schermata Content History sul sito di prova.
+La regressione automatica è integrata dalla PR [#268](https://github.com/jeckodevelopment/jd_learn/pull/268); CI standard 4/4 nel [run 43201132206](https://github.com/jeckodevelopment/jd_learn/actions/runs/43201132206). Verifica il valore del campo nella revisione Joomla, il ripristino tramite il salvataggio autorizzato del modello e la conservazione della versione didattica attiva e delle iscrizioni. Completare comunque il confronto/ripristino dalla schermata Content History sul sito di prova.
 
 ## IMP-08 — filtri ricercabili del roster (0.45.0-dev)
 
