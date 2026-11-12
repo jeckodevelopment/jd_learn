@@ -8,7 +8,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--release-version',help='Produce a stable release artifact without changing source manifests')
 args=parser.parse_args()
 VERSION=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
-if args.release_version and not re.fullmatch(r'[1-9]\d*\.\d+\.\d+',args.release_version):
+if args.release_version and not re.fullmatch(r'(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)',args.release_version):
     parser.error('release version must be a stable numeric X.Y.Z')
 if args.release_version and tuple(map(int,args.release_version.split('.'))) <= tuple(map(int,VERSION.split('.'))):
     parser.error('release version must be greater than current source package version')
