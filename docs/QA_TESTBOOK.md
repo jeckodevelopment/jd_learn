@@ -1,3 +1,14 @@
+## IMP-04 / AUT-03 — avviso durata video in sola consultazione (PR #284, 0.54.0-dev)
+
+PR [#284](https://github.com/jeckodevelopment/jd_learn/pull/284) integrata nel commit `04704621f64a7ee712743f98037dfe31d7a4606f`; CI standard 4/4 nel [run 43256423443](https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443). Pacchetto installabile [JD-Learn-0.54.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443/artifacts/13961114324), SHA-256 ZIP `bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12`; wrapper `ba7f9c7568500bfd82da3d9ff054ea907272942c9dfc9ff9f5203bfc8331494d`. Accettazione manuale da eseguire sul sito Joomla di prova.
+
+1. Crea una bozza in modalità **Sola consultazione** con una lezione video la cui durata non è disponibile o confermata. Apri il riepilogo di pubblicazione: deve apparire l’avviso sulla durata e la pubblicazione non deve essere bloccata solo per questo motivo.
+2. Imposta/conferma una durata valida e riapri il riepilogo: l’avviso deve scomparire.
+3. Passa alla modalità **Apprendimento** e rimuovi la durata o la relativa conferma: deve restare il blocco esistente `COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED`, senza un secondo avviso duplicato.
+4. Verifica che gli errori già esistenti relativi a provider o sorgente video continuino a essere segnalati correttamente.
+
+La copertura automatizzata è in `tests/run.php`; registrare separatamente il collaudo Joomla manuale.
+
 ## IMP-01 — snapshot dei campi corso `com_fields` (0.46.0-dev, PR #266)
 
 PR [#266](https://github.com/jeckodevelopment/jd_learn/pull/266) integrata nel commit `d41111e229ced8460ff9e30a0baa24f2094c4e60`; CI standard 4/4 nel [run 43196626438](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438). Pacchetto [JD-Learn-0.46.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438/artifacts/13932614114), SHA-256 interno `044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183`, wrapper `4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013` (estrarre una volta; scade il 26 novembre 2026). Accettazione manuale Joomla ancora da registrare.
