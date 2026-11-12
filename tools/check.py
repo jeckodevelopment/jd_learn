@@ -52,6 +52,9 @@ assert 'jlms-course-programme-link' not in course_editor
 assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
 course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
 assert "ToolbarHelper::custom('course.programme'" in course_view
+dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
+pathways_template=(ROOT/'component/administrator/tmpl/pathways/default.php').read_text()
+assert not re.search(r'<h1\b',dashboard_template) and not re.search(r'<h1\b',pathways_template)
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():

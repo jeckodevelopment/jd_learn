@@ -8,7 +8,6 @@ use Joomla\CMS\Language\Text;
 ?>
 <section id="jlms-admin-dashboard">
     <header class="jlms-admin-dashboard__header">
-        <h1><?= Text::_('COM_JLMS_DASHBOARD_TITLE') ?></h1>
         <p><?= Text::_('COM_JLMS_DASHBOARD_INTRO') ?></p>
     </header>
     <p class="alert alert-info"><?= Text::_('COM_JLMS_FOUNDATION_NOTICE') ?></p>

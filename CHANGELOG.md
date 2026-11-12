@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.41.81-dev — titoli amministrativi senza duplicati (STAB-05 / issue #199)
+
+- Rimosso il titolo interno ripetuto dalla Dashboard e dalla lista Percorsi formativi; rimane il titolo Joomla nella barra blu.
+- La didascalia accessibile della tabella Percorsi e l’introduzione Dashboard restano presenti.
+- Aggiunti controlli HTTP sull’unico titolo H1 e controlli strutturali per impedire la regressione.
+- PR #247 candidata alla milestone 1.0.0; CI e collaudo Joomla in attesa.
+
 ## 0.41.80-dev — rimozione del collegamento Programma duplicato (STAB-05 / issue #200)
 
 - Rimosso il collegamento “Programma didattico” duplicato dal contenuto dell’editor; restano l’azione toolbar e il riepilogo nella scheda Programma.

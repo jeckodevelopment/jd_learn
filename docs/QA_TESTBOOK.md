@@ -629,3 +629,18 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 5. Ripetere in italiano e inglese e con un utente in sola lettura; nessun comando di modifica non autorizzato deve comparire.
 
 **Esito sito Joomla:** Non eseguito.
+
+
+## STAB-05 — titoli non duplicati in Dashboard e Percorsi formativi (0.41.81-dev, issue #199)
+
+**Stato:** PR #247 candidata alla milestone 1.0.0. I titoli interni delle due viste sono rimossi; il titolo principale Joomla resta nella barra blu. Il caption accessibile della tabella Percorsi e l’introduzione della Dashboard restano presenti. CI e accettazione manuale da completare.
+
+**Comportamenti da testare in Joomla**
+
+1. Installare JD Learn 0.41.81-dev su un sito Joomla di prova e accedere con un utente autorizzato a `core.manage` su JD Learn.
+2. Aprire **Componenti → JD Learn**. Verificare che “JD Learn” compaia una sola volta come titolo, nella barra blu, e che introduzione, scorciatoie operative e stato dei quattro provider restino visibili.
+3. Aprire **Percorsi formativi** dal menu laterale o dalla dashboard. Verificare che il titolo compaia una sola volta nella barra blu, senza intestazione ripetuta sopra la tabella; tabella, intestazioni colonne e paginazione restano visibili.
+4. Usare uno screen reader o l’albero accessibilità del browser: il titolo Joomla deve rimanere un heading principale; la tabella Percorsi deve conservare una caption accessibile.
+5. Ripetere in italiano e inglese e con un utente senza `jlms.pathways.manage`: la vista percorsi e il relativo collegamento devono continuare a essere negati/nascosti.
+
+**Esito sito Joomla:** Non eseguito.
