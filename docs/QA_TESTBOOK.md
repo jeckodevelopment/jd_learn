@@ -1,14 +1,13 @@
-## IMP-04 / STU-03 — feedback salvataggio progresso video (0.55.0-dev)
+## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
 
-**Comportamenti da testare in Joomla**
+PR [#287](https://github.com/jeckodevelopment/jd_learn/pull/287) integrata nel commit `2af8994271d95f3c41b3e5f813ba2222794265c5`; CI standard 4/4 nel [run 43289138110](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110). Pacchetto installabile [JD-Learn-0.55.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105).
 
 1. Su un corso in modalità Apprendimento con lezione video tracciabile, accedi come studente e avvia il video. Durante un invio periodico o dopo pausa/seek, verifica che l’area di stato mostri “Salvataggio del progresso…” e poi “Progresso salvato” dopo la risposta positiva del server.
-2. Verifica che un completamento ottenuto sulla soglia prevista mostri il messaggio di completamento, senza essere sostituito dallo stato salvato.
-3. Simula una perdita di rete durante il salvataggio: il player deve mostrare lo stato offline e riprendere il salvataggio idempotente al successivo invio; dopo il recupero deve mostrare lo stato salvato. Un errore 4xx definitivo deve continuare a mostrare il messaggio di accesso/conflitto e fermare la sessione secondo il comportamento esistente.
-4. Ripeti in inglese e verifica le etichette localizzate. Nella preview editoriale non deve apparire uno stato di salvataggio né essere creata telemetria.
+2. Verifica che il completamento ottenuto alla soglia mostri il proprio messaggio, senza essere sostituito dallo stato salvato.
+3. Simula una perdita di rete durante il salvataggio: deve apparire lo stato offline e il batch deve restare riutilizzabile per il retry idempotente. Dopo il recupero deve apparire lo stato salvato. Un errore 4xx definitivo deve continuare a mostrare conflitto/accesso negato e fermare la sessione.
+4. Ripeti in inglese. In preview editoriale non deve essere generata telemetria né mostrato uno stato di salvataggio.
 
-Automazione: `tests/video-player.mjs` controlla gli stati durante la richiesta, dopo errore transient e dopo risposta positiva. Il collaudo Joomla manuale resta da eseguire.
-
+Il test automatico `tests/video-player.mjs` e la CI standard sono superati. Il collaudo Joomla manuale resta da eseguire.
 ## IMP-04 / AUT-03 — avviso durata video in sola consultazione (PR #284, 0.54.0-dev)
 
 PR [#284](https://github.com/jeckodevelopment/jd_learn/pull/284) integrata nel commit `04704621f64a7ee712743f98037dfe31d7a4606f`; CI standard 4/4 nel [run 43256423443](https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443). Pacchetto installabile [JD-Learn-0.54.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443/artifacts/13961114324), SHA-256 ZIP `bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12`; wrapper `ba7f9c7568500bfd82da3d9ff054ea907272942c9dfc9ff9f5203bfc8331494d`. Accettazione manuale da eseguire sul sito Joomla di prova.
