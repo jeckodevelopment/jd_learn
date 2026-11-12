@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.42.0-dev — velocità di riproduzione video (STU-05 / IMP-05)
+
+- Aggiunta una preferenza locale per la velocità video, applicata solo se il player e il singolo video la supportano; disponibile sui player YouTube, Vimeo quando consentito dall’account/video, e HTML5.
+- Il player Cloudflare Stream non espone questa impostazione e non mostra il selettore. La velocità effettiva resta parte dei campioni di telemetria già usati dal calcolo della copertura; nessuna soglia o regola di completamento cambia.
+- Collaudo Joomla da eseguire: vedere [STU-05 nel testbook](docs/QA_TESTBOOK.md#stu-05--preferenza-velocita-player-0420-dev).
+
 ## Processo di rilascio — issue #160
 
 - Definita la policy SemVer per le versioni 0.x, la stabile 1.0.0 e le release successive in [VERSIONING.md](docs/VERSIONING.md).
