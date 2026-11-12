@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
     "percent": 81,
-    "basis": "Media semplice delle sette macroaree incluse: (81+81+78+99+68+92+70)/7=81,29%, arrotondata a 81%. PR #280 rende persistente il conflitto di ripresa durante tutti i batch successivi di una sessione video obsoleta, mantenendo l’unione della copertura. Restano altri residui IMP-04 e l’accettazione Joomla live.",
+    "basis": "Media semplice delle sette macroaree incluse: (81+81+78+99+68+92+70)/7=81,29%, arrotondata a 81%. PR #280 rende persistente il conflitto di ripresa durante batch video concorrenti; PR #282 conserva il conflitto nel replay idempotente senza riapplicare il progresso. Restano altri residui IMP-04 e l’accettazione Joomla live.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -15,59 +15,59 @@
       "release_preparation": 70
     }
   },
-  "version": "0.52.0-dev",
+  "version": "0.53.0-dev",
   "code_baseline": {
-    "tested_head": "379f2a3aacac0114ddf4b5c6d0a11e95887e8405",
-    "parent_main_commit": "3c42b6cb95d8919593727f2fe7149f4572cbfdc5",
-    "pull_request": 280,
-    "merged_main_commit": "dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4"
+    "tested_head": "a54054f9748cff2c28ffcf3a07d77a27d6158dc3",
+    "parent_main_commit": "a9a293c31adf5dec8bc7080bdee72781d8df4637",
+    "pull_request": 282,
+    "merged_main_commit": "66a59d0a5e4e60943b0d1487ddce4c95c64f97b0"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43250267681,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681",
+    "run_id": 43252689828,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 131293873499,
+        "id": 131302508855,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131293968104,
+        "id": 131302597635,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131293968029,
+        "id": 131302597994,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131293968105,
+        "id": 131302597850,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #280 / IMP-04: CI standard 4/4; test d’integrazione Joomla verifica che salvataggi ripetuti da una sessione video obsoleta non sovrascrivano la ripresa e non duplicano completamenti."
+    "note": "PR #282 / IMP-04: CI standard 4/4; replay idempotente di un batch video obsoleto conserva resume e stato di conflitto senza duplicare il progresso."
   },
   "package": {
-    "artifact_id": 13958934116,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681/artifacts/13958934116",
-    "artifact_name": "JD-Learn-0.52.0-dev",
-    "installable_package": "pkg_jlms-0.52.0-dev.zip",
-    "sha256": "f5c0986ae59361de77c67ebae9ed9d91583b12f38e835a4a12a9cedfebfb9216",
-    "artifact_sha256": "3f528639d38a2c61d39fc5713f6750f7dfadb5bf5c6220d810174cddaf8b89e9",
-    "size_bytes": 579979,
-    "artifact_size_bytes": 579763,
-    "expires_at": "2026-11-26T15:44:47Z",
+    "artifact_id": 13959653251,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828/artifacts/13959653251",
+    "artifact_name": "JD-Learn-0.53.0-dev",
+    "installable_package": "pkg_jlms-0.53.0-dev.zip",
+    "sha256": "7898ba9c5dc340aaec1b9c260ef729bc4314cde4cd31bc44c2411efacca0616e",
+    "artifact_sha256": "a2dc70a32891b12c378f0920c75c5fa4b9da3c47e46fc0efd442b898051235fa",
+    "size_bytes": 579992,
+    "artifact_size_bytes": 579779,
+    "expires_at": "2026-11-26T15:57:46Z",
     "wrapper_zip": true,
-    "build_source": "CI standard sulla head 379f2a3aacac0114ddf4b5c6d0a11e95887e8405 della PR #280, integrata nel merge dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4. Build ripetibile e upgrade Joomla verificati dalla CI."
+    "build_source": "CI standard sulla head a54054f9748cff2c28ffcf3a07d77a27d6158dc3 della PR #282, integrata nel merge 66a59d0a5e4e60943b0d1487ddce4c95c64f97b0. Build ripetibile e upgrade Joomla verificati dalla CI."
   },
   "release_process": {
     "issue": 160,
@@ -77,11 +77,11 @@
     "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855",
     "standard_ci_jobs": 4,
     "status": "passed; process/tooling change only; no runtime requirement progress",
-    "latest_installable_artifact_id": 13958934116,
-    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681/artifacts/13958934116",
-    "package_sha256": "f5c0986ae59361de77c67ebae9ed9d91583b12f38e835a4a12a9cedfebfb9216",
-    "artifact_wrapper_sha256": "3f528639d38a2c61d39fc5713f6750f7dfadb5bf5c6220d810174cddaf8b89e9",
-    "artifact_expires_at": "2026-11-26T15:44:47Z",
+    "latest_installable_artifact_id": 13959653251,
+    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828/artifacts/13959653251",
+    "package_sha256": "7898ba9c5dc340aaec1b9c260ef729bc4314cde4cd31bc44c2411efacca0616e",
+    "artifact_wrapper_sha256": "a2dc70a32891b12c378f0920c75c5fa4b9da3c47e46fc0efd442b898051235fa",
+    "artifact_expires_at": "2026-11-26T15:57:46Z",
     "manual_joomla_acceptance": "not applicable to process-only PR; existing product acceptance remains pending"
   },
   "full_requirement_acceptance": {},
@@ -95,6 +95,58 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "version": "0.52.0-dev",
+      "code_baseline": {
+        "tested_head": "379f2a3aacac0114ddf4b5c6d0a11e95887e8405",
+        "parent_main_commit": "3c42b6cb95d8919593727f2fe7149f4572cbfdc5",
+        "pull_request": 280,
+        "merged_main_commit": "dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4"
+      },
+      "ci": {
+        "run_id": 43250267681,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681"
+      },
+      "package": {
+        "artifact_id": 13958934116,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681/artifacts/13958934116",
+        "artifact_name": "JD-Learn-0.52.0-dev",
+        "installable_package": "pkg_jlms-0.52.0-dev.zip",
+        "sha256": "f5c0986ae59361de77c67ebae9ed9d91583b12f38e835a4a12a9cedfebfb9216",
+        "artifact_sha256": "3f528639d38a2c61d39fc5713f6750f7dfadb5bf5c6220d810174cddaf8b89e9",
+        "size_bytes": 579979,
+        "artifact_size_bytes": 579763,
+        "expires_at": "2026-11-26T15:44:47Z",
+        "wrapper_zip": true,
+        "build_source": "CI standard sulla head 379f2a3aacac0114ddf4b5c6d0a11e95887e8405 della PR #280, integrata nel merge dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4. Build ripetibile e upgrade Joomla verificati dalla CI."
+      },
+      "progress": {
+        "as_of": "2026-11-12",
+        "percent": 81,
+        "basis": "Media semplice delle sette macroaree incluse: (81+81+78+99+68+92+70)/7=81,29%, arrotondata a 81%. PR #280 rende persistente il conflitto di ripresa durante tutti i batch successivi di una sessione video obsoleta, mantenendo l’unione della copertura. Restano altri residui IMP-04 e l’accettazione Joomla live.",
+        "macroareas": {
+          "courses": 81,
+          "catalogue": 81,
+          "learning_progress": 78,
+          "video_materials": 99,
+          "enrollment": 68,
+          "joomla_integrations": 92,
+          "release_preparation": 70
+        }
+      },
+      "latest_feature": {
+        "plan_increment": "IMP-04",
+        "requirements": [
+          "PRO-06",
+          "STU-03"
+        ],
+        "pull_request": 280,
+        "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/280",
+        "merged_commit": "dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4",
+        "manual_acceptance": "Pending; verify competing video sessions and resume persistence per docs/QA_TESTBOOK.md.",
+        "progress_estimate": "81.29% exact (81% reported); M03 78%, M04 99%. Other IMP-04 residues and manual Joomla acceptance remain open."
+      }
+    },
     {
       "version": "0.51.0-dev",
       "code_baseline": {
@@ -12923,10 +12975,10 @@
       "PRO-06",
       "STU-03"
     ],
-    "pull_request": 280,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/280",
-    "merged_commit": "dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4",
-    "manual_acceptance": "Pending; verify competing video sessions and resume persistence per docs/QA_TESTBOOK.md.",
+    "pull_request": 282,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/282",
+    "merged_commit": "66a59d0a5e4e60943b0d1487ddce4c95c64f97b0",
+    "manual_acceptance": "Pending; verify an identical stale video batch replay returns replay=true and resume_conflict=true without changing saved resume or applying coverage/completion twice, per docs/QA_TESTBOOK.md.",
     "progress_estimate": "81.29% exact (81% reported); M03 78%, M04 99%. Other IMP-04 residues and manual Joomla acceptance remain open."
   }
 }
