@@ -81,6 +81,11 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
 expect(!in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true), 'consultation courses may contain only optional lessons');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']], [], false, $consultationRules,
+);
+expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'consultation videos do not require tracked duration metadata');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']], [], false, $consultationRules,
 );
 expect(in_array('COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS', $readiness['blockers'], true), 'consultation courses reject required lessons');

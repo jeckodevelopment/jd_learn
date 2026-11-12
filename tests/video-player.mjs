@@ -34,6 +34,7 @@ await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1)
 // YouTube can be ready for commands before it knows the duration.
 lesson.session = {session_id:'youtube-test', source_revision:1, duration_ms:10000};
 lesson.stopped = false;
+lesson.tracking = true;
 lesson.queue = [];
 let duration = 0;
 lesson.player = {sample: async () => ({position_ms:0, duration_ms:duration, rate_milli:1000, playing:false})};
@@ -49,6 +50,11 @@ assert.equal(lesson.stopped, true);
 lesson.session = null;
 lesson.queue = [];
 await lesson.destroy();assert.equal(listeners.size,0);
+const consultationPlayer = new VideoLesson(config,root,async()=>{throw Error('untracked consultation must not call telemetry endpoints');});
+let consultationSamples=0;consultationPlayer.tracking=false;consultationPlayer.stopped=false;
+consultationPlayer.player={sample:async()=>{consultationSamples++;throw Error('consultation playback must not sample progress');}};
+await consultationPlayer.record('position');assert.equal(consultationSamples,0);assert.equal(consultationPlayer.queue.length,0);
+await consultationPlayer.destroy();
 // The default browser transport keeps the global fetch receiver and loads the adapter after authorization.
 const originalFetch = globalThis.fetch;
 const startup = [];

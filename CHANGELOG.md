@@ -1,3 +1,8 @@
+## 0.48.0-dev — consultazione video senza requisiti di tracciamento (IMP-02 / AUT-03)
+
+- La modalità di sola consultazione pubblica lezioni video anche senza durata misurata e senza capacità di telemetria/progresso. Il preflight e il controllo server restano coerenti; configurazione, normalizzazione della sorgente e validità del contenuto sono ancora verificate.
+- Test Joomla estesi sul percorso di pubblicazione e regressione del preflight. Collaudo manuale in `docs/QA_TESTBOOK.md`.
+
 ## 0.47.0-dev — modalità corso di sola consultazione (IMP-02 / AUT-03)
 
 - PR [#270](https://github.com/jeckodevelopment/jd_learn/pull/270), milestone 1.0.0, integrata nel commit `0a1294e491e0aa531aeca776911674fc701ddff4`; CI standard 4/4 nel [run 43207411958](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958). Package [JD-Learn-0.47.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958/artifacts/13939861423), SHA-256 interno `e65ceefa13de8ec577a84d8284ec3a09012cb6e2950351674dec9af6ed4c009f`, wrapper `7721896ba521c4ba8cfbb836023af16d752df3b2c40890000fe1cb29e22cc6a0`; scade il 26 novembre 2026.

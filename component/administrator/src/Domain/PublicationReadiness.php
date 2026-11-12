@@ -38,6 +38,7 @@ final class PublicationReadiness
 
         $required = 0;
         $initialRequired = 0;
+        $consultation = ($rules['mode'] ?? 'learning') === 'consultation' && ($rules['completion_policy'] ?? '') === 'none';
         foreach ($lessons as $lesson) {
             $moduleId = (int) $lesson->module_id;
             if (!array_key_exists($moduleId, $moduleCounts)) {
@@ -82,8 +83,8 @@ final class PublicationReadiness
             } elseif (($lesson->kind ?? '') === 'video') {
                 $lessonParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
                 $duration = (int) ($lesson->duration_ms ?? 0);
-                if ($duration < 1000 || $duration > 28800000
-                    || !is_array($lessonParams) || ($lessonParams['video_duration_confirmed'] ?? false) !== true) {
+                if (!$consultation && ($duration < 1000 || $duration > 28800000
+                    || !is_array($lessonParams) || ($lessonParams['video_duration_confirmed'] ?? false) !== true)) {
                     $blockers[] = 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED';
                 }
             }
@@ -116,7 +117,6 @@ final class PublicationReadiness
                 break;
             }
         }
-        $consultation = ($rules['mode'] ?? 'learning') === 'consultation' && ($rules['completion_policy'] ?? '') === 'none';
         if ($consultation && $required > 0) {
             $blockers[] = 'COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS';
         } elseif (!$consultation && $required === 0) {

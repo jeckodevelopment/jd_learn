@@ -117,6 +117,14 @@ final class VideoProgressService
         $preflight = $this->context($identity, $language, $enrollmentId, $lessonId, false);
         $fingerprint = self::fingerprint($preflight[3]);
         $descriptor = $this->descriptor([...$preflight, $language]);
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $preflight[1]->rules_json);
+        if ($rules['mode'] === 'consultation') {
+            $current = $this->context($identity, $language, $enrollmentId, $lessonId, false);
+            if (!hash_equals($fingerprint, self::fingerprint($current[3]))) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
+            return ['tracking' => false, 'session_id' => null, 'source_revision' => (int) $current[3]->source_revision,
+                'next_sequence' => null, 'resume_ms' => 0, 'duration_ms' => null, 'provider' => $descriptor->provider,
+                'options' => $descriptor->playerOptions, 'expires_at' => $descriptor->expiresAt?->getTimestamp()];
+        }
         return $this->transaction(function () use ($identity, $language, $enrollmentId, $lessonId, $fingerprint, $descriptor): array {
             [$actor, , $enrollment, $lesson, $provider] = $this->context($identity, $language, $enrollmentId, $lessonId);
             if (!hash_equals($fingerprint, self::fingerprint($lesson))) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
@@ -144,7 +152,7 @@ final class VideoProgressService
                 'last_activity_at' => $date, 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
                 'modified_at' => $date, 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
-            return ['session_id' => $session->id, 'source_revision' => (int) $lesson->source_revision, 'next_sequence' => 1,
+            return ['tracking' => true, 'session_id' => $session->id, 'source_revision' => (int) $lesson->source_revision, 'next_sequence' => 1,
                 'resume_ms' => (int) $progress->resume_ms, 'duration_ms' => (int) $lesson->duration_ms,
                 'provider' => $descriptor->provider, 'options' => $descriptor->playerOptions,
                 'expires_at' => $descriptor->expiresAt?->getTimestamp()];

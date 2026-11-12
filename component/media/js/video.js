@@ -4,7 +4,7 @@ const providerErrors = new Set(['youtube_csp', 'youtube_sdk', 'youtube_referrer'
 export class VideoLesson {
   constructor(config, root, transport = (...args) => globalThis.fetch(...args), importer = path => import(path)) {
     this.config = config; this.root = root; this.transport = transport; this.importer = importer;
-    this.queue = []; this.pending = null; this.id = 0; this.sequence = 1; this.stopped = true;
+    this.queue = []; this.pending = null; this.id = 0; this.sequence = 1; this.stopped = true; this.tracking = true;
     this.chain = Promise.resolve(); this.generation = 0;
     this.status = root.querySelector('#jlms-player-status');
     this.rateSelect = root.querySelector('#jlms-video-speed');
@@ -18,8 +18,8 @@ export class VideoLesson {
       else { this.stop(true); this.message(this.config.policy === 'click' ? 'policy' : 'consent'); }
     };
     this.onPageShow = event => { if (event.persisted) this.start(); };
-    this.onVisibility = () => { if (document.hidden) { this.player?.pause(); if (!this.config.preview) this.record('pause').then(() => this.flush()); } };
-    this.onPageHide = () => { this.player?.pause(); if (!this.config.preview) this.flush(true); this.stop(false); };
+    this.onVisibility = () => { if (document.hidden) { this.player?.pause(); if (!this.config.preview && this.tracking) this.record('pause').then(() => this.flush()); } };
+    this.onPageHide = () => { this.player?.pause(); if (!this.config.preview && this.tracking) this.flush(true); this.stop(false); };
     this.onOffline = () => { this.player?.pause(); this.message('offline'); };
     window.addEventListener('jlms:consent-changed', this.onConsent);
     window.addEventListener('pagehide', this.onPageHide);
@@ -145,30 +145,31 @@ export class VideoLesson {
     this.message('loading');
     try {
       const grant = await this.request('playback', {consent: '1'});
-      if (!this.allowed() || generation !== this.generation) { if (!this.config.preview) await this.request('close', {session_id: grant.session_id}); return; }
+      if (!this.allowed() || generation !== this.generation) { if (!this.config.preview && grant.session_id) await this.request('close', {session_id: grant.session_id}); return; }
       // The PHP registry validates keys; Joomla plugins provide this conventional module path.
       if (grant.provider !== this.config.provider || !/^[a-z][a-z0-9_]{1,63}$/.test(grant.provider)) throw new Error('provider');
-      this.session = this.config.preview ? null : grant; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
+      this.tracking = !this.config.preview && grant.tracking !== false;
+      this.session = this.tracking ? grant : null; this.sequence = 1; this.id = 0; this.queue = []; this.pending = null;
       this.started = performance.now(); this.previous = null; this.aborter = new AbortController();
       failure = 'startup_module';
       const moduleUrl = new URL(`../../plg_jlmsvideo_${grant.provider}/js/player.js`, import.meta.url);
       moduleUrl.search = new URL(import.meta.url).search;
       const adapter = await this.importer(moduleUrl.href);
-      if (!this.allowed() || generation !== this.generation) { if (!this.config.preview) await this.request('close', {session_id: grant.session_id}); return; }
+      if (!this.allowed() || generation !== this.generation) { if (!this.config.preview && grant.session_id) await this.request('close', {session_id: grant.session_id}); return; }
       this.adapter = adapter; this.stopped = false;
       failure = 'startup_provider';
       const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => {
         if (event === 'error') { this.message(providerErrors.has(reason) ? reason : 'startup_provider'); this.stop(false); }
-        else if (!this.config.preview) this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
+        else if (this.tracking) this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
       }, this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player;
       await this.configurePlaybackSpeed(player);
       await this.configureCaptionLanguage(player);
-      if (!this.config.preview && grant.resume_ms) await player.seek(grant.resume_ms);
-      if (!this.config.preview) await this.record('seeked');
+      if (this.tracking && grant.resume_ms) await player.seek(grant.resume_ms);
+      if (this.tracking) await this.record('seeked');
       if (this.stopped || generation !== this.generation) return;
-      if (!this.config.preview) { this.sampler = setInterval(() => this.record('position'), 1000); this.schedule(); this.scheduleRenew(); }
+      if (this.tracking) { this.sampler = setInterval(() => this.record('position'), 1000); this.schedule(); this.scheduleRenew(); }
       this.message('ready');
     } catch (error) {
       if (generation === this.generation) {
@@ -179,6 +180,7 @@ export class VideoLesson {
     finally { this.starting = false; }
   }
   record(type) {
+    if (!this.tracking) return Promise.resolve();
     this.chain = this.chain.then(async () => {
       if (this.stopped || this.replacing || !this.player) return;
       const sample = await this.player.sample();
@@ -260,6 +262,7 @@ export class VideoLesson {
     const player = this.player; this.player = null;
     try { await player?.destroy(); } catch { /* Teardown must continue. */ }
     this.root.querySelector('#jlms-player').replaceChildren();
+    this.tracking = false;
     const rateControl = this.root.querySelector('#jlms-video-speed-control');
     if (rateControl) rateControl.hidden = true;
     // On explicit stop save already observed samples, then expire the server session.

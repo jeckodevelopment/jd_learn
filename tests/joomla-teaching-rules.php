@@ -91,7 +91,11 @@ $consultationItem=$model->getItem($consultationCourse);
 ruleExpect($model->save(['id'=>$consultationCourse,'revision'=>$consultationItem->revision,'catalog_access'=>1,'content_access'=>1,'enrollment_mode'=>'auto']),'Consultation fixture has valid learner access');
 $consultationVersion=(int)$authoring->outline($actor,$consultationCourse)['version']->id;
 $db->setQuery('UPDATE #__jlms_lessons SET required=0 WHERE course_version_id='.(int)$consultationVersion)->execute();
+$db->setQuery("UPDATE #__jlms_lessons SET duration_ms=NULL, params_json='{}' WHERE course_version_id=".(int)$consultationVersion." AND kind='video'")->execute();
 $authoring->saveTeachingRules($actor,['course_id'=>$consultationCourse,'version_id'=>$consultationVersion,'expected_version_revision'=>ruleRow('course_versions',$consultationVersion)->revision,'mode'=>'consultation','sequence_mode'=>'free','video_threshold'=>'90']);
+$consultationOutline=$authoring->outline($actor,$consultationCourse,$consultationVersion);
+$consultationReadiness=\Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(ruleRow('courses',$consultationCourse),$consultationOutline['modules'],$consultationOutline['lessons'],[],false,$authoring->teachingRules($actor,$consultationCourse,$consultationVersion));
+ruleExpect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED',$consultationReadiness['blockers'],true),'Consultation video can be published without tracking-only duration metadata');
 $consultationTransition=(int)$publication->transitions($actor,$consultationCourse,$consultationVersion)[0]->id;
 $publication->transition($actor,$consultationCourse,$consultationVersion,(int)ruleRow('courses',$consultationCourse)->revision,(int)ruleRow('course_versions',$consultationVersion)->revision,$consultationTransition);
 $consultationEnrollment=$learning->start($actor,'en-GB',$consultationCourse,bin2hex(random_bytes(20)));
@@ -136,9 +140,12 @@ ruleExpect($newResult['lesson_completed']&&$newResult['course_completed']&&!$old
 $now+=3975;$oldResult=$video->save($actor,'en-GB',$oldEnrollment,$oldLesson,$oldGrant['session_id'],$oldGrant['source_revision'],3,10000,json_encode([$event(4,9000,9000)],JSON_THROW_ON_ERROR));
 ruleExpect($oldResult['lesson_completed']&&$oldResult['course_completed'],'Existing student still completes at original90percent');
 $consultationVideo=(int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id='.(int)$consultationVersion." AND kind='video' ORDER BY id")->loadResult();
-$consultationGrant=$video->playback($actor,'en-GB',$consultationEnrollment,$consultationVideo,true);$now+=10000;
-$consultationResult=$video->save($actor,'en-GB',$consultationEnrollment,$consultationVideo,$consultationGrant['session_id'],$consultationGrant['source_revision'],1,10000,json_encode([$event(10,0,0,'play'),$event(11,10000,10000)],JSON_THROW_ON_ERROR));
-ruleExpect(!$consultationResult['lesson_completed']&&!$consultationResult['course_completed'],'Consultation video telemetry never grants lesson or course completion');
+$progressBeforeConsultationPlayback=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE lesson_id='.(int)$consultationVideo)->loadResult();
+$sessionsBeforeConsultationPlayback=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id='.(int)$consultationVideo)->loadResult();
+$consultationGrant=$video->playback($actor,'en-GB',$consultationEnrollment,$consultationVideo,true);
+ruleExpect($consultationGrant['tracking']===false&&$consultationGrant['session_id']===null&&$consultationGrant['duration_ms']===null,'Consultation video receives a playback descriptor without telemetry requirements');
+ruleExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE lesson_id='.(int)$consultationVideo)->loadResult()===$progressBeforeConsultationPlayback
+    &&(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id='.(int)$consultationVideo)->loadResult()===$sessionsBeforeConsultationPlayback,'Consultation video playback creates no progress rows or telemetry sessions');
 $version=$authoring->createDraft($actor,$course,(int)ruleRow('courses',$course)->revision);
 file_put_contents($fixture,json_encode(['course'=>$course,'version'=>$version,'original'=>$original],JSON_THROW_ON_ERROR));
 echo json_encode(['teaching_rules_native_checks'=>$checks,'status'=>'passed']).PHP_EOL;
