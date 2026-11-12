@@ -46,9 +46,9 @@ log=open(root.parent/'materials-http.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
 scanner=None
 admin=client();student=client();guest=client()
-def admin_page(course=None,version=None,replace=0):
+def admin_page(course=None,version=None,replace=0,scope=0):
  course=fixture['course_id'] if course is None else course;version=fixture['version_id'] if version is None else version
- return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version)+'&replace_id='+str(replace))
+ return request(admin,'/administrator/index.php?option=com_jlms&view=materials&id='+str(course)+'&version_id='+str(version)+'&replace_id='+str(replace)+'&material_scope='+str(scope))
 def upload(name,content,title='Materiale',lesson=0,replace=0,expected=200,course=None,version=None,invalid_token=False,publish_up='',publish_down='',preview=0):
  url,body,_=admin_page(course,version,replace);html=body.decode();page=Page(html);form=next(f for f in page.forms if f['id']=='jlms-material-upload')
  expect('jform[publish_up]' in html and 'jform[publish_down]' in html and 'datetime-local' in html,'Material form exposes both course-time-zone availability fields')
@@ -109,6 +109,12 @@ try:
  upload('guida-à.pdf',pdf,'PDF handout',lesson=fixture['lesson_id'])
  upload('foreign.txt',b'FOREIGN_PRIVATE_NOTES\n','Foreign handout',course=fixture['foreign_course_id'],version=fixture['foreign_version_id'])
  expect(len(files())==4,'Course and lesson attachment scopes and explicit reuse persisted')
+ _,all_scope,_=admin_page(); all_html=all_scope.decode()
+ expect('id="jlms-material-scope-filter"' in all_html and 'value="0" selected' in all_html,'Material administration exposes a scope filter with all scopes selected by default')
+ _,course_scope,_=admin_page(scope=-1); course_html=course_scope.decode()
+ expect('id="jlms-material-scope-filter"' in course_html and 'value="-1" selected' in course_html and 'data-attachment-id="'+str(lesson_file['id'])+'"' not in course_html,'Course scope filter excludes lesson-only attachments')
+ _,lesson_scope,_=admin_page(scope=fixture['lesson_id']); lesson_html=lesson_scope.decode()
+ expect('value="'+str(fixture['lesson_id'])+'" selected' in lesson_html and 'data-attachment-id="'+str(lesson_file['id'])+'"' in lesson_html and 'data-attachment-id="'+str(reused['id'])+'"' not in lesson_html,'Lesson scope filter shows only attachments linked to that lesson')
  expect(command('denied')=='material ACL passed','Material authoring requires its specific permission')
  expect(json.loads(first['scan_json'])['result']=='not_configured','Absent scanner is explicit, never reported clean')
  # Mandatory scanner unavailable: quarantine, admin download blocked and publication refused.

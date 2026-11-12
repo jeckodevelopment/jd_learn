@@ -14,6 +14,7 @@ final class HtmlView extends BaseHtmlView
     public $form;
     public int $replacement = 0;
     public int $replacementLesson = 0;
+    public int $selectedScope = 0;
     public string $scheduleTimezone = 'UTC';
     public array $dateValues = ['publish_up' => '', 'publish_down' => ''];
 
@@ -31,6 +32,7 @@ final class HtmlView extends BaseHtmlView
             'expected_version_revision' => $this->item['version']->revision, 'replace_id' => 0, 'preview' => 0];
         $data['publish_up'] = '';
         $data['publish_down'] = '';
+        $this->selectedScope = (int) $this->item['scope'];
         $selectedLesson = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('lesson_id');
         if ($selectedLesson) {
             if (!in_array($selectedLesson, array_map(static fn($lesson): int => (int) $lesson->id, $this->item['lessons']), true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }

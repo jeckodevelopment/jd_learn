@@ -9,6 +9,7 @@ use Joomla\CMS\Router\Route;
 $item = $this->item; $course = $item['course']; $version = $item['version']; $editable = $version->status === 'draft';
 $link = static fn (string $url): string => Route::link('administrator', $url);
 $base = 'index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id;
+$base .= '&material_scope=' . (int) $this->selectedScope;
 $hidden = static function (array $fields): void {
     foreach ($fields as $name => $value) { echo '<input type="hidden" name="jform[' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ']" value="' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '">'; }
 };
@@ -30,6 +31,17 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <?php if ($this->replacement) : ?><a href="<?= $link($base) ?>"><?= Text::_('JCANCEL') ?></a><?php endif; ?>
  </form>
  <?php else : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
+ <form id="jlms-material-scope-filter" method="get" action="<?= $link('index.php') ?>">
+  <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="materials">
+  <input type="hidden" name="id" value="<?= (int) $course->id ?>"><input type="hidden" name="version_id" value="<?= (int) $version->id ?>">
+  <label for="jlms-material-scope"><?= Text::_('COM_JLMS_MATERIAL_SCOPE_FILTER') ?></label>
+  <select id="jlms-material-scope" name="material_scope">
+   <option value="0"<?= $this->selectedScope === 0 ? ' selected' : '' ?>><?= Text::_('COM_JLMS_MATERIAL_SCOPE_ALL') ?></option>
+   <option value="-1"<?= $this->selectedScope === -1 ? ' selected' : '' ?>><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></option>
+   <?php foreach ($item['lessons'] as $lesson) : ?><option value="<?= (int) $lesson->id ?>"<?= $this->selectedScope === (int) $lesson->id ? ' selected' : '' ?>><?= $this->escape($lesson->title) ?></option><?php endforeach; ?>
+  </select><button class="btn btn-secondary" type="submit"><?= Text::_('JSEARCH_FILTER_SUBMIT') ?></button>
+ </form>
+ <p><?= (int) $item['files']['total'] ?> <?= Text::_('COM_JLMS_MATERIALS_COUNT') ?></p>
  <div id="jlms-admin-material-list">
  <?php foreach ($item['files']['items'] as $file) : ?>
  <section class="jlms-admin-material" data-attachment-id="<?= (int) $file->id ?>">
@@ -65,6 +77,7 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <form method="post" action="<?= $link('index.php?option=com_jlms') ?>"><?php $hidden($scope + ['id' => $file->id]); ?><input type="hidden" name="task" value="material.scan"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_RESCAN') ?></button></form>
  </section>
  <?php endforeach; ?></div>
+ <?php if (!$item['files']['items']) : ?><p><?= Text::_('COM_JLMS_NO_MATERIALS_IN_SCOPE') ?></p><?php endif; ?>
  <nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
  <?php if ($item['files']['page'] > 0) : ?><a href="<?= $link($base . '&page=' . ($item['files']['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php endif; ?>
  <?php if (($item['files']['page'] + 1) * 20 < $item['files']['total']) : ?><a href="<?= $link($base . '&page=' . ($item['files']['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?>

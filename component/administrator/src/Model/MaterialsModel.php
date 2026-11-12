@@ -19,7 +19,8 @@ final class MaterialsModel extends FormModel
         $app = Factory::getApplication();
         try {
             return $app->bootComponent('com_jlms')->getMaterialService()->administration($app->getIdentity(),
-                $app->getInput()->getInt('id', 0), $app->getInput()->getInt('version_id', 0), $app->getInput()->getInt('page', 0));
+                $app->getInput()->getInt('id', 0), $app->getInput()->getInt('version_id', 0), $app->getInput()->getInt('page', 0),
+                $app->getInput()->getInt('material_scope', 0));
         } catch (\RuntimeException $error) {
             $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED'];
             if (in_array($error->getMessage(), $known, true)) {

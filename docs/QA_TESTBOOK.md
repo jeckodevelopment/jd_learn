@@ -1,3 +1,15 @@
+## MAT-01 — filtro degli allegati per ambito (0.44.0-dev)
+
+Riferimenti: MAT-01, AC-93, AC-97–103. Nel sito Joomla di prova, aprire la gestione materiali di una bozza con almeno un allegato del corso e allegati in due lezioni.
+
+1. Verificare che l’apertura iniziale mostri tutti gli ambiti e il conteggio totale.
+2. Selezionare i materiali del corso: devono apparire solo collegamenti con `lesson_id` nullo. Selezionare una lezione: devono apparire soltanto i materiali di quella lezione, senza i collegamenti riutilizzati in altri ambiti.
+3. Provare paginazione e ritorno all’elenco: il filtro deve restare selezionato e conteggio/risultati devono rimanere coerenti.
+4. Provare modifica, download, sostituzione, riuso e rimozione dal filtro; le azioni devono riguardare solo il collegamento scelto e rispettare ACL/versione. Alterare `material_scope` con un ID lezione di un’altra versione: deve restituire not found e non mostrare materiali.
+5. Verificare un ambito vuoto: messaggio esplicito e nessun errore PHP. Ripetere con account senza permesso `jlms.materials.manage`: accesso negato.
+
+**Automatizzato:** fixture `tests/materials-http.py` verifica selettore, separazione corso/lezione e isolamento da collegamenti riutilizzati. L’accettazione manuale Joomla resta da registrare.
+
 ## STU-05 — preferenza velocità player (0.42.0-dev)
 
 **Riferimenti:** STU-05, VID-01, PRO-04. La preferenza è locale al browser; il selettore compare solo dopo la verifica di supporto del player e non altera il completamento.

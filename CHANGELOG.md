@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.44.0-dev — filtro per ambito nella gestione materiali (MAT-01)
+
+- La vista amministrativa dei materiali consente di filtrare l’elenco per corso, singola lezione o corso e tutte le lezioni; il filtro conserva la paginazione e le azioni operano solo sugli allegati della versione autorizzata.
+- Aggiunti messaggi IT/EN per il filtro, il conteggio e lo stato senza risultati. Il collaudo automatico copre separazione degli ambiti e validazione di lezioni estranee alla versione.
+- Collaudo Joomla manuale richiesto nel testbook; nessun file diventa pubblico né cambia il comportamento di accesso/download.
+
+
 ## 0.43.0-dev — preferenza lingua sottotitoli player (STU-05)
 
 - Aggiunta la preferenza lingua locale per le tracce caption/sottotitoli esposte dal player; selezione esatta o fallback al codice lingua principale e comando per disattivare le tracce.
