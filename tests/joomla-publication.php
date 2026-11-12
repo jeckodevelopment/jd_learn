@@ -122,6 +122,17 @@ $lesson=$authoring->saveLesson($actor,pubScope()+['id'=>0,'module_id'=>$module,'
     'body'=>'<p>SECRET_LESSON_BODY</p>','com_fields'=>['lesson-reference'=>'LESSON_FIELD_SNAPSHOT']]);
 pubExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id='.$lessonField.' AND item_id='.$db->quote((string)$lesson))->loadResult()==='LESSON_FIELD_SNAPSHOT',
     'native custom field value saved with draft lesson');
+$courseFieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
+if (!$courseFieldModel->save(['id'=>0,'context'=>'com_jlms.course','title'=>'Course reference','label'=>'Course reference','name'=>'course-reference','type'=>'text',
+    'state'=>1,'access'=>2,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','params'=>['showlabel'=>1],'fieldparams'=>['filter'=>'string']])) {
+    throw new \RuntimeException('Native course field fixture failed: ' . $courseFieldModel->getError());
+}
+$courseField=(int)$courseFieldModel->getState('field.id');
+if (!$courseFieldModel->setFieldValue($courseField,$course,'COURSE_FIELD_SNAPSHOT')) {
+    throw new \RuntimeException('Native course field value fixture failed.');
+}
+pubExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id='.$courseField.' AND item_id='.$db->quote((string)$course))->loadResult()==='COURSE_FIELD_SNAPSHOT',
+    'native custom field value saved for the course');
 pubDenied(fn()=>pubTransition(1),'stale publication revision rejected');
 $choices=$publication->transitions($actor,$course);
 pubDenied(fn()=>$publication->transition($guest,$course,$version,pubRevision('courses',$course),pubRevision('course_versions',$version),(int)$choices[0]->id),'guest publication denied');
@@ -163,13 +174,21 @@ pubExpect($hidden(),'failed state callback leaves public course hidden');
 pubTransition();
 $frozen=$db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id='.$version)->loadObject();
 pubExpect($frozen->status==='published' && strlen($frozen->structure_hash)===64 && $frozen->published_at!==null,'publication freezes hash and timestamp');
+$courseSnapshot=json_decode((string)$frozen->fields_snapshot_json,true,32,JSON_THROW_ON_ERROR);
+pubExpect(($courseSnapshot['fields']['course-reference']['values'][0] ?? '')==='COURSE_FIELD_SNAPSHOT',
+    'publication freezes native course custom fields into the assigned teaching version');
 $lessonSnapshot=json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_lessons WHERE id='.$lesson)->loadResult(),true,32,JSON_THROW_ON_ERROR);
 pubExpect(($lessonSnapshot['fields']['lesson-reference']['values'][0] ?? '')==='LESSON_FIELD_SNAPSHOT','publication freezes lesson custom field value');
+pubExpect((bool)$courseFieldModel->setFieldValue($courseField,$course,'COURSE_FIELD_CURRENT_VALUE'),
+    'course editorial field can change after publishing');
+$unchangedCourseSnapshot=json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id='.$version)->loadResult(),true,32,JSON_THROW_ON_ERROR);
+pubExpect(($unchangedCourseSnapshot['fields']['course-reference']['values'][0] ?? '')==='COURSE_FIELD_SNAPSHOT',
+    'later editorial field changes do not rewrite the frozen course snapshot');
 pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id='.$course)->loadResult()===1,'one default edition created');
 $assoc=(new \Joomla\CMS\Workflow\Workflow('com_jlms.course',$app,$db))->getAssociation($course);
 pubExpect((bool)$assoc,'native workflow association exists');
 pubExpect((int)$catalog->course($guest,'en-GB',$course)->id===$course,'published promotional course available without content level');
-$learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('p',40));
+$learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('r',40));
 $classroom=$component->getLearningService()->classroom($actor,'en-GB',$learnerEnrollment,$lesson);
 pubExpect(($classroom['lesson']->custom_fields[0]['values'][0] ?? '')==='LESSON_FIELD_SNAPSHOT',
     'assigned classroom renders frozen lesson custom field value');
@@ -202,4 +221,23 @@ pubExpect($hidden(),'native unpublish hides course');
 pubExpect($db->setQuery('SELECT structure_hash FROM #__jlms_course_versions WHERE id='.$version)->loadResult()===$frozen->structure_hash,'unpublish preserves frozen teaching history');
 pubTransition();
 pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id='.$course)->loadResult()===1,'republish creates no duplicate edition');
+$nextVersion=$authoring->createDraft($actor,$course,pubRevision('courses',$course));
+$publishChoice=null;
+foreach ($publication->transitions($actor,$course,$nextVersion) as $candidate) {
+    $options=new \Joomla\Registry\Registry($candidate->options);
+    $action=(string)$options->get('jlms_action',(string)$options->get('publishing')==='1'?'publish':'unpublish');
+    if ($action==='publish') { $publishChoice=$candidate; break; }
+}
+pubExpect((bool)$publishChoice,'new teaching version has a publish transition');
+$nextImpact=$publication->updateImpact($actor,$course,$nextVersion,(int)$publishChoice->id);
+pubExpect(is_array($nextImpact) && isset($nextImpact['fingerprint']),'new version publication impact can be reviewed');
+$publication->transition($actor,$course,$nextVersion,pubRevision('courses',$course),pubRevision('course_versions',$nextVersion),
+    (int)$publishChoice->id,(string)$nextImpact['fingerprint']);
+$nextSnapshot=json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id='.$nextVersion)->loadResult(),true,32,JSON_THROW_ON_ERROR);
+$oldSnapshot=json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id='.$version)->loadResult(),true,32,JSON_THROW_ON_ERROR);
+pubExpect(($nextSnapshot['fields']['course-reference']['values'][0] ?? '')==='COURSE_FIELD_CURRENT_VALUE'
+    && ($oldSnapshot['fields']['course-reference']['values'][0] ?? '')==='COURSE_FIELD_SNAPSHOT',
+    'new teaching version captures current course fields while preserving the prior snapshot');
+pubExpect((int)$db->setQuery('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id='.(int)$learnerEnrollment)->loadResult()===$version,
+    'existing learner remains assigned to the original teaching version after update publication');
 echo json_encode(['publication_checks'=>$checks,'status'=>'passed','course_id'=>$course],JSON_THROW_ON_ERROR).PHP_EOL;

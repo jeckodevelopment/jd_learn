@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.46.0-dev — snapshot dei campi corso (IMP-01 / CORE-10)
+
+- Alla pubblicazione, i valori e le definizioni dei campi Joomla `com_fields` del corso sono congelati in `fields_snapshot_json` della versione didattica e inclusi nell'hash strutturale. I cambi editoriali successivi non alterano la versione assegnata; una nuova pubblicazione registra i valori aggiornati.
+- Il limite artificiale che rifiutava versioni con snapshot corso non vuoto è rimosso. Restano attivi i controlli dello snapshot lezione, dei livelli di accesso Joomla e del limite massimo di campi.
+- Collaudo manuale Joomla in `docs/QA_TESTBOOK.md`; verifica automatica nella CI della PR.
+
 ## 0.45.0-dev — selettori ricercabili nel roster (IMP-08)
 
 - PR [#264](https://github.com/jeckodevelopment/jd_learn/pull/264), milestone 1.0.0, integrata nel commit `aed93820f0a948b11d3427ce9ba4d312621b0d74`; CI standard 4/4 nel [run 43188504970](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970). Artifact [JD-Learn-0.45.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970/artifacts/13929363404), ZIP SHA-256 `ee4b58ba2bbd81821a1b481951c7a411b767d3a7885c0e6b402a1692f6a5b677` (artifact in scadenza il 26 novembre 2026).
