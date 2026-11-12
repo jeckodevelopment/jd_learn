@@ -7,7 +7,7 @@
 3. Aggiornare nuovamente il pacchetto: oggetto, corpo e traduzione personalizzati devono rimanere invariati; non devono comparire modelli duplicati.
 4. Verificare che l'impostazione del mailer/SMTP resti quella globale di Joomla. Questo incremento registra i modelli; la spedizione automatica e il retry persistente sono residui CORE-18 e non vanno considerati collaudati da queste prove.
 
-La CI verifica la registrazione via API Joomla, i tag esposti e la preservazione del testo personalizzato su upgrade. L'accettazione manuale resta da eseguire.
+La PR #288 aggiunge una prova CI della registrazione via API Joomla, dei tag e della preservazione del testo personalizzato su upgrade. La CI è in corso; l'accettazione manuale resta da eseguire.
 
 ## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
 
