@@ -1,3 +1,5 @@
+**Riconciliazione avanzamento 12 novembre 2026:** stima implementativa aggiornata a **80%** in seguito alle PR #236, #239, #243, #245, #248, #249 e ai controlli reali [FTPS #43131327572](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572) e [dry-run 1.0.0 #43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497). La macroarea M10–M12 passa da 58% a **70%** per manifest update, feed, workflow di build e pubblicazione protetta, FTPS live e generazione del candidato. Restano fuori dall'aumento i collaudi manuali non ancora svolti e l'attivazione del feed di produzione; nessun requisito è marcato integralmente accettato. La stima non è una percentuale di criteri di accettazione superati.
+
 Aggiornato al 12 novembre 2026. Main **0.41.81-dev** integra la PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251), merge `f15945853bd11546300d9776fa4bdc12707369a9`; CI standard 4/4 nel [run 43130882855](https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855). Il pacchetto installabile più recente è [JD-Learn-0.41.81-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855/artifacts/13905526892), SHA-256 interno `3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573`, wrapper `8b12e9b762db6fece5df30d9bbb275e152da4dc014e6d5ad8b2448b8bef0af1e` da estrarre una volta (scade il 26 novembre 2026). PR #251 definisce e automatizza la policy SemVer, senza modificare il runtime o la versione. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
 
 
@@ -34,10 +36,10 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Video e materiali essenziali (M04) | 94% |
 | Iscrizione e roster essenziale (M06/M09) | 67% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
-| Collaudo e preparazione release (M10–M12) | 58% |
-| **Avanzamento complessivo stimato** | **78%** |
+| Collaudo e preparazione release (M10–M12) | 70% |
+| **Avanzamento complessivo stimato** | **80%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (546/7 = 78,00%, arrotondato al 78%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (558/7 = 79,71%, arrotondato all'80%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 IMP-07 comprende PR #204, #206–#213, #215 e #222–#225. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; la PR #225 aggiunge il riepilogo e la ricollocazione atomica dei riferimenti per corsi, percorsi, docenti e domande, preservando gli storici; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la PR #221 corregge la #219 per gli allegati e PR #226 sostituisce l’offload Nginx dei video HTML5 con streaming PHP a blocchi, compatibile con Apache/LiteSpeed; M04 stimata 94% dopo la PR #233; PR #235/0.41.77-dev completa l’inclusione dei materiali corso nell’anteprima delle lezioni testo/video; catalogo al 81%; CORE-09 integrato dalla PR #222; CORE-07: associazioni dei corsi pubblicati implementate dalla PR #223 e ricerca selector integrata dalla #224, portando le integrazioni Joomla al 92%; avanzamento complessivo 78%. Accettazione Joomla di materiali, lifecycle/ricollocazione categorie, CAT-01 e SEO/Finder ancora pendente.
 
