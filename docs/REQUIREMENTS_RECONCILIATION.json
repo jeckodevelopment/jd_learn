@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "8b26c4272fd223173daba744f1546798212a1cb2",
-  "ci_run": 43240360856,
+  "runtime_tested_head": "a54054f9748cff2c28ffcf3a07d77a27d6158dc3",
+  "ci_run": 43252689828,
   "counts": {
     "Stato implementazione": {
       "Parziale": 169,
@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 81,
-    "method": "Media semplice delle sette aree: (81+81+78+99+68+92+70)/7 = 81,29%, arrotondata all’81%. PR #280 corregge il conflitto persistente del resume nelle sessioni video concorrenti; restano altri residui IMP-04 e collaudo Joomla manuale.",
+    "method": "Media semplice delle sette aree: (81+81+78+99+68+92+70)/7 = 81,29%, arrotondata all’81%. PR #280 protegge il resume da sessioni video obsolete; PR #282 mantiene resume_conflict=true nel replay idempotente senza riapplicare progresso. Restano altri residui IMP-04 e collaudo Joomla manuale.",
     "areas": [
       81,
       81,
@@ -36,5 +36,5 @@
       70
     ]
   },
-  "note": "PR #272 / IMP-02 consente la fruizione video in modalità consultazione senza durata di tracciamento, sessioni o righe di avanzamento. Main ae81e46a69fc3d2528585c497f0b263677d3d0f9, CI standard 4/4 run 43211155470, package 0.48.0-dev artifact 13940634151, SHA-256 installabile 6e7d35f18d15eb71e6e7d3c13906038da52f4fb06fc191a26dc35946aa8182dd. Accettazione manuale Joomla e IMP-10 restano aperti."
+  "note": "PR #282 / IMP-04 corregge il replay idempotente dei batch video obsoleti. Main 66a59d0a5e4e60943b0d1487ddce4c95c64f97b0, CI standard 4/4 run 43252689828, package 0.53.0-dev artifact 13959653251, SHA-256 installabile 7898ba9c5dc340aaec1b9c260ef729bc4314cde4cd31bc44c2411efacca0616e. Avanzamento 81,29% (81% arrotondato); accettazione Joomla manuale e IMP-10 restano aperti."
 }
