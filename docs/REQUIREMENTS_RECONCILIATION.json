@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 81,
-    "method": "Media semplice delle sette aree: (82+81+78+99+68+92+70)/7 = 81,43%, arrotondata all’81%. PR #284 / AUT-03 aggiunge l’avviso non bloccante sulla durata non verificata dei video in sola consultazione; il blocco in apprendimento resta invariato. Accettazione Joomla manuale e altri residui IMP-04 restano aperti.",
+    "method": "Media semplice delle sette aree: (82+81+78+99+68+92+70)/7 = 81,43%, arrotondata all’81%. PR #284 / AUT-03 integra l’avviso non bloccante sulla durata non verificata dei video in sola consultazione; il blocco in apprendimento resta invariato. Accettazione Joomla manuale e altri residui IMP-04 restano aperti.",
     "areas": [
       82,
       81,
@@ -36,5 +36,5 @@
       70
     ]
   },
-  "note": "PR #284 / IMP-04-AUT-03 integra l’avviso pre-pubblicazione per video consultabili senza durata confermata, mantenendo il blocco per la modalità Apprendimento. Main 04704621f64a7ee712743f98037dfe31d7a4606f, CI standard 4/4 run 43256423443, package 0.54.0-dev artifact 13961114324, SHA-256 installabile bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12. Avanzamento 81,43%; accettazione Joomla manuale e IMP-10 restano aperti."
+  "note": "Main 0.54.0-dev include PR #284, merge 04704621f64a7ee712743f98037dfe31d7a4606f. CI standard 4/4: run 43256423443. Pacchetto installabile artifact 13961114324; SHA-256 ZIP bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12; accettazione Joomla manuale pendente."
 }
