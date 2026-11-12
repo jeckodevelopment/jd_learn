@@ -1,3 +1,5 @@
+Aggiornato al 12 novembre 2026. La candidata 0.55.0-dev rende espliciti gli stati di salvataggio del progresso video (IMP-04/STU-03); dopo il merge proseguire con i residui implementativi prioritari di IMP-04/05 elencati nella matrice e con i collaudi Joomla live. Il gate IMP-10 resta separato.
+
 
 
 Aggiornato al 12 novembre 2026. Main **0.54.0-dev** integra PR [#284](https://github.com/jeckodevelopment/jd_learn/pull/284): AUT-03 ora avvisa sui video senza durata confermata in sola consultazione; il blocco Apprendimento resta invariato. Avanzamento **81% (81,43% esatto)**; M01/M02 82%, M03 78%, M04 99%. Proseguire con gli altri residui IMP-04/05 e i collaudi Joomla live. Il ciclo bozza/revisione/nuova pubblicazione è già presente e va collaudato. IMP-10 e le prove manuali restano gate separati.
