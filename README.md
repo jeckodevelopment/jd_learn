@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main **0.41.80-dev** integra la PR #244; candidato **0.41.81-dev** (PR #247) rimuove i titoli duplicati in Dashboard e Percorsi formativi, mantenendo quello della toolbar Joomla. Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
+Aggiornato al 12 novembre 2026. Main **0.41.81-dev** integra la PR [#247](https://github.com/jeckodevelopment/jd_learn/pull/247), merge `a8734dd606cc579077312dfecd9cd66773934804`; CI standard 4/4 nel [run 43129077496](https://github.com/jeckodevelopment/jd_learn/actions/runs/43129077496). [Pacchetto installabile JD-Learn-0.41.81-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43129077496/artifacts/13904467823), SHA-256 interno `3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573`, wrapper `1924e7a641dbb539e3b5833d6b57a737c2389edda2645b8c6d6688e4699df3ee` da estrarre una volta (scade il 26 novembre 2026). Avanzamento implementativo **78%**; accettazione manuale Joomla pendente.
 
 
 

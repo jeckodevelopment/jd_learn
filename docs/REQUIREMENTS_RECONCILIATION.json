@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
-  "baseline_commit": "ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62",
-  "runtime_tested_head": "eb87d3db2104889b7c55dd3b79d9c1e8be138542",
-  "ci_run": 43121346817,
+  "baseline_commit": "a8734dd606cc579077312dfecd9cd66773934804",
+  "runtime_tested_head": "f45554db4bafb6417aa325f5469f455fc28a2038",
+  "ci_run": 43129077496,
   "counts": {
     "Stato implementazione": {
       "Parziale": 167,
@@ -36,5 +36,5 @@
       58
     ]
   },
-  "note": "PR #244 (STAB-05 / issue #200) rimuove il link Programma duplicato nell’editor corso. CI standard 4/4 run 43121346817; pacchetto 0.41.80-dev, merge ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62, hash interno 5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a, wrapper ZIP (estrazione singola) c82f72b0c1728bf7bda492c368e5581a3768133ad1ce06e6c9c3f9e50c65b2c7. Accettazione manuale Joomla pendente; avanzamento implementativo invariato 78%."
+  "note": "PR #247 (STAB-05 / issue #199) rimuove i titoli duplicati in Dashboard e Percorsi formativi. CI standard 4/4 run 43129077496; pacchetto 0.41.81-dev, merge a8734dd606cc579077312dfecd9cd66773934804, hash interno 3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573, wrapper ZIP (estrazione singola) 1924e7a641dbb539e3b5833d6b57a737c2389edda2645b8c6d6688e4699df3ee. Accettazione manuale Joomla pendente; avanzamento implementativo invariato 78%."
 }
