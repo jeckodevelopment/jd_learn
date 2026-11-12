@@ -1,6 +1,19 @@
 {
   "audited_at": "2026-11-12",
   "product": "JD Learn",
+  "current_implementation_estimate": {
+    "as_of": "2026-11-12",
+    "percent": 80,
+    "basis": "Equal-weight mean of seven implementation macroareas: (77+81+77+94+67+92+70)/7=79.71, rounded to 80. Previous release-preparation area: 58; updated: 70. The number is an engineering estimate, not a count of accepted requirements.",
+    "macroareas": {"courses":77,"catalogue":81,"learning_progress":77,"video_materials":94,"enrollment":67,"joomla_integrations":92,"release_preparation":70},
+    "updater_implementation": {
+      "state": "implemented; production activation and end-to-end Joomla acceptance pending",
+      "ftps_live_success": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572",
+      "candidate_1_0_0_dry_run_success": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497",
+      "manual_joomla_installation": "user confirmed installation and general operation; no updater end-to-end acceptance",
+      "remaining": "Activate feed only with release gate; verify Joomla native updater, existing data preservation, rollback and certificate authenticity by independent confirmation"
+    }
+  },
   "version": "0.41.81-dev",
   "code_baseline": {
     "tested_head": "f45554db4bafb6417aa325f5469f455fc28a2038",
