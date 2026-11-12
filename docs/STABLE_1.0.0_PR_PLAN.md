@@ -135,3 +135,10 @@ La PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) integra la t
 ## Aggiornamento 12 novembre 2026 — STAB-05 / PR #244
 
 PR [#244](https://github.com/jeckodevelopment/jd_learn/pull/244) integra la correzione dell’issue #200: il collegamento al Programma presente sotto la toolbar è stato rimosso; restano l’azione di toolbar, il riepilogo nella scheda Programma e il messaggio per i corsi non ancora salvati. Merge `ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62`. CI standard 4/4 nel [run 43121346817](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817). Pacchetto installabile [JD-Learn-0.41.80-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817/artifacts/13900597900), SHA-256 interno `5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a`, wrapper `c82f72b0c1728bf7bda492c368e5581a3768133ad1ce06e6c9c3f9e50c65b2c7` da estrarre una volta (scade il 25 novembre 2026). L’accettazione manuale Joomla resta nel testbook; avanzamento implementativo 78%.
+
+
+### IMP-09 — Trust del certificato FTPS privato (12 novembre 2026)
+
+Due esecuzioni del test di connessione FTPS (`43120970931` e `43127528106`) hanno fallito prima del login per `CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate`, rispettivamente con dominio e hostname tecnico del provider. È stata sviluppata un'opzione di **certificate pinning SHA-256** controllata da `JDLEARN_FTPS_CERT_SHA256`: in assenza del pin resta attiva la normale PKI pubblica; in presenza del pin le sessioni TLS di **controllo e dati** devono presentare esattamente il certificato verificato. Non è previsto fallback in FTP semplice e la verifica deve precedere username/password. SHA-256 osservato dal richiedente, **da convalidare indipendentemente con Host.it**, documentato in [RELEASE_PROCEDURE.md](RELEASE_PROCEDURE.md).
+
+**Stato:** implementazione e test automatici aggiunti, verifica live ancora da ripetere con secret configurati; IMP-09/US-06 rimangono parziali fino alla prova reale, IMP-10 invariato. Questa PR tecnica non incrementa di per sé la percentuale di avanzamento globale documentata (78%).
