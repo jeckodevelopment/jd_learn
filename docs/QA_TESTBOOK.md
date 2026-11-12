@@ -855,3 +855,18 @@ La regressione automatica d’integrazione in `tests/joomla-video.php` copre due
 
 Verificare su Joomla di prova il riepilogo **Verifica prima della pubblicazione** in una versione bozza con modalità **Sola consultazione** e una lezione video senza durata rilevata/confermata. Atteso: avviso `COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED`, nessun blocco per la sola durata e possibilità di pubblicare se gli altri controlli passano. Aggiungere poi una durata confermata valida e verificare che l’avviso scompaia. Ripetere in modalità **Apprendimento**: l’assenza di durata resta un blocco `COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED` e non viene duplicata come avviso.
 
+
+## IMP-09-CERT — attestati PDF essenziali (previsti per 1.0.0, non ancora implementati)
+
+**Comportamenti da testare in Joomla (da eseguire dopo le PR runtime):**
+
+1. Disabilitare e abilitare il rilascio attestati a livello globale e per corso; completare un corso abilitato e uno disabilitato, verificando l'emissione solo dove autorizzata.
+2. Simulare corso incompleto, anteprima editoriale e sola consultazione: nessun attestato deve essere emesso.
+3. Ripetere evento e richieste concorrenti di completamento: il codice identificativo e il numero attestati non devono duplicarsi.
+4. Personalizzare logo/intestazione e generare PDF con nomi e titoli lunghi, caratteri accentati, lingua italiana e inglese. Verificare studente, corso, data, codice e leggibilità.
+5. Studente A scarica il proprio attestato; studente B e visitatore anonimo non possono scaricarlo nemmeno conoscendo l'URL. Verificare risposta e assenza indicizzazione di PDF privati.
+6. Verificare elenco e download dal backend per amministratore autorizzato; negare accessi non consentiti da ACL a dettagli e dati personali.
+7. Eseguire upgrade e ripristino dati: attestati e codici restano invariati, senza rigenerazioni accidentali.
+8. Verificare mail di disponibilità tramite modello Joomla con invio, errore SMTP, retry e deduplica; l'attestato persiste quando la posta non funziona.
+
+**Stato:** prove pianificate, nessuna accettazione manuale registrata. Vedere [CERTIFICATES_1.0.0.md](CERTIFICATES_1.0.0.md).
