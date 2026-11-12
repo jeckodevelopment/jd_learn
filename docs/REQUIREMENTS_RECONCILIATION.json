@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "a54054f9748cff2c28ffcf3a07d77a27d6158dc3",
-  "ci_run": 43252689828,
+  "runtime_tested_head": "d9935f8b0e84ff1200d42b448491a80dba8a40e2",
+  "ci_run": 43256423443,
   "counts": {
     "Stato implementazione": {
       "Parziale": 169,
@@ -25,9 +25,9 @@
   },
   "implementation_progress": {
     "percent": 81,
-    "method": "Media semplice delle sette aree: (81+81+78+99+68+92+70)/7 = 81,29%, arrotondata all’81%. PR #280 protegge il resume da sessioni video obsolete; PR #282 mantiene resume_conflict=true nel replay idempotente senza riapplicare progresso. Restano altri residui IMP-04 e collaudo Joomla manuale.",
+    "method": "Media semplice delle sette aree: (82+81+78+99+68+92+70)/7 = 81,43%, arrotondata all’81%. PR #284 / AUT-03 integra l’avviso non bloccante sulla durata non verificata dei video in sola consultazione; il blocco in apprendimento resta invariato. Accettazione Joomla manuale e altri residui IMP-04 restano aperti.",
     "areas": [
-      81,
+      82,
       81,
       78,
       99,
@@ -36,5 +36,5 @@
       70
     ]
   },
-  "note": "PR #282 / IMP-04 corregge il replay idempotente dei batch video obsoleti. Main 66a59d0a5e4e60943b0d1487ddce4c95c64f97b0, CI standard 4/4 run 43252689828, package 0.53.0-dev artifact 13959653251, SHA-256 installabile 7898ba9c5dc340aaec1b9c260ef729bc4314cde4cd31bc44c2411efacca0616e. Avanzamento 81,29% (81% arrotondato); accettazione Joomla manuale e IMP-10 restano aperti."
+  "note": "Main 0.54.0-dev include PR #284, merge 04704621f64a7ee712743f98037dfe31d7a4606f. CI standard 4/4: run 43256423443. Pacchetto installabile artifact 13961114324; SHA-256 ZIP bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12; accettazione Joomla manuale pendente."
 }
