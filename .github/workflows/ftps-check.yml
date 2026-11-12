@@ -22,6 +22,7 @@ jobs:
         run: |
           python3 tests/ftps-publish.py
           python3 tests/ftps-live-probe.py
+          python3 tests/ftps-certificate-pin.py
       - name: Connect with explicit verified FTPS and test disposable files
         env:
           JDLEARN_FTPS_HOST: ${{ secrets.JDLEARN_FTPS_HOST }}
