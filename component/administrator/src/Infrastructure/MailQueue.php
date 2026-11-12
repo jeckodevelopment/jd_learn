@@ -21,6 +21,8 @@ final class MailQueue
         $event = match ($template) {
             'com_jlms.enrollment.confirmed' => 'enrollment',
             'com_jlms.course.completed' => 'completion',
+            'com_jlms.enrollment.suspended' => 'suspension',
+            'com_jlms.enrollment.reactivated' => 'reactivation',
             default => null,
         };
         if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {

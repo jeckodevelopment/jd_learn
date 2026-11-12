@@ -18,8 +18,9 @@ final class EnrollmentStateService
     {
         $actor = $this->learning->freshActor($identity);
         $c = $this->roster->course($actor, $course);
-        $q = $this->db->createQuery()->select('e.*, u.name AS learner_name')->from('#__jlms_enrollments AS e')
-            ->leftJoin('#__users AS u ON u.id = e.user_id')->where('e.id = :enrollment')->where('e.course_id = :course')
+        $q = $this->db->createQuery()->select('e.*, u.name AS learner_name, u.email AS learner_email, c.title AS course_title, c.language AS course_language, c.params_json AS course_params')
+            ->from('#__jlms_enrollments AS e')->leftJoin('#__users AS u ON u.id = e.user_id')
+            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->where('e.id = :enrollment')->where('e.course_id = :course')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
         $e = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         return [$actor, $c, $e];
@@ -104,6 +105,14 @@ final class EnrollmentStateService
             ($this->audit)($actor, ['id' => (int) $record->id, 'actor_id' => (int) $actor->id, 'enrollment_id' => $enrollment,
                 'previous_status' => $e->status, 'target_status' => $target, 'reason_reference' => (int) $record->id,
                 'reason_code' => 'enrollment_state_changed', 'correlation_id' => bin2hex(random_bytes(16))]);
+            $template = $target === 'suspended' ? 'com_jlms.enrollment.suspended' : 'com_jlms.enrollment.reactivated';
+            $name = trim((string) ($e->learner_name ?? ''));
+            (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
+                $course, hash('sha256', 'enrollment.state:' . (int) $record->id), $template,
+                (string) ($e->course_language ?: '*'), (string) ($e->learner_email ?? ''), $name,
+                ['NAME' => $name, 'COURSE' => (string) $e->course_title,
+                    'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+            );
             $this->db->transactionCommit(); return (int) $record->id;
         } catch (\Throwable $error) { $this->db->transactionRollback(); throw $error; }
     }

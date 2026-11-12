@@ -9,6 +9,8 @@ La PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288), inclusa in 
 | `com_jlms.enrollment.requested` | Richiesta di iscrizione ricevuta | `{NAME}`, `{COURSE}`, `{SITENAME}` |
 | `com_jlms.enrollment.confirmed` | Iscrizione confermata | `{NAME}`, `{COURSE}`, `{SITENAME}`, `{COURSE_URL}` |
 | `com_jlms.course.completed` | Corso completato | `{NAME}`, `{COURSE}`, `{SITENAME}` |
+| `com_jlms.enrollment.suspended` | Accesso al corso sospeso | `{NAME}`, `{COURSE}`, `{SITENAME}` |
+| `com_jlms.enrollment.reactivated` | Accesso al corso riattivato | `{NAME}`, `{COURSE}`, `{SITENAME}` |
 
 I modelli iniziali includono testo semplice e HTML. Il gestore Joomla consente di modificarli e creare le relative traduzioni. L'installer registra solo gli ID mancanti: non sostituisce modifiche editoriali o traduzioni esistenti quando il componente viene aggiornato.
 
@@ -24,6 +26,12 @@ Per il collaudo manuale vedere [QA_TESTBOOK.md](QA_TESTBOOK.md#imp-09--core-18-t
 La PR [#295](https://github.com/jeckodevelopment/jd_learn/pull/295), integrata in 0.56.2-dev, aggiunge due impostazioni globali in configurazione JD Learn (conferma iscrizione automatica e completamento) e override per corso con tre opzioni: usa impostazione globale, abilita, disabilita. L'override del corso prevale sul valore globale; se impostato su eredita, vale il valore del sito. La decisione è applicata quando si verifica la transizione e prima di inserire l'email in coda. CI standard 4/4 nel [run 43305020698](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698); il collaudo manuale resta pendente. Pacchetto [JD-Learn-0.56.2-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698/artifacts/13983557253), SHA-256 ZIP `9923d41d5d342ac1b854090f6956b9c9fff745c2b71f939a446a6b7494849ad7`.
 
 Queste preferenze coprono soltanto i due eventi già collegati. Non attivano eventi mancanti e non forniscono ancora impostazioni per richieste, sospensione/riattivazione o modifiche delle lezioni.
+
+## Sospensione e riattivazione iscrizione (candidata 0.56.3-dev)
+
+La candidata registra due nuovi template nel gestore Mail Templates Joomla e accoda le email quando un amministratore sospende o riattiva un'iscrizione. La scrittura usa la stessa transazione della modifica stato; un errore dell'outbox non deve lasciare stato e notifica disallineati. Ogni evento ha idempotency key legata alla riga di audit della transizione. Le impostazioni globali e gli override per corso seguono le preferenze introdotte in #295.
+
+Questa estensione non copre ancora iscrizioni amministrative iniziali, richieste/approvazioni o annullamenti.
 
 ## Requisiti approvati per la 1.0.0 (12 novembre 2026)
 

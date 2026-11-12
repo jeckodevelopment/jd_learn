@@ -33,7 +33,7 @@ final class MailTemplateInstaller
     }
 
     /**
-     * Certificate and reminder messages remain outside the 1.0.0 scope.
+     * Only operational events approved for the 1.0.0 scope are registered here.
      *
      * @return array<string, array{string, string, array<int, string>, string}>
      */
@@ -57,6 +57,18 @@ final class MailTemplateInstaller
                 "Ciao {NAME},\n\nhai completato il corso {COURSE}.\n\n{SITENAME}",
                 ['NAME', 'COURSE', 'SITENAME'],
                 '<p>Ciao {NAME},</p><p>hai completato il corso <strong>{COURSE}</strong>.</p><p>{SITENAME}</p>',
+            ],
+            'com_jlms.enrollment.suspended' => [
+                'Accesso al corso sospeso: {COURSE}',
+                "Ciao {NAME},\n\nl'accesso al corso {COURSE} è stato sospeso. Per informazioni contatta il responsabile del corso.\n\n{SITENAME}",
+                ['NAME', 'COURSE', 'SITENAME'],
+                '<p>Ciao {NAME},</p><p>l\'accesso al corso <strong>{COURSE}</strong> è stato sospeso. Per informazioni contatta il responsabile del corso.</p><p>{SITENAME}</p>',
+            ],
+            'com_jlms.enrollment.reactivated' => [
+                'Accesso al corso riattivato: {COURSE}',
+                "Ciao {NAME},\n\nl'accesso al corso {COURSE} è stato riattivato.\n\n{SITENAME}",
+                ['NAME', 'COURSE', 'SITENAME'],
+                '<p>Ciao {NAME},</p><p>l\'accesso al corso <strong>{COURSE}</strong> è stato riattivato.</p><p>{SITENAME}</p>',
             ],
         ];
     }
