@@ -782,3 +782,18 @@ Riferimenti: PRO-05, VID-03; AC-05, AC-27, AC-30, AC-44, AC-91. PR [#278](https:
 4. In un ambiente di test con adapter che dichiara o restituisce capabilities incomplete, verificare che la pubblicazione oppure l’avvio del tracciamento venga rifiutato e che nessun progresso sia attribuito. L’assenza di velocità o caption, da sola, non deve bloccare la pubblicazione.
 
 **Esito automatico locale:** build pacchetto e check strutturali superati; test player JavaScript superati. CI standard 4/4, inclusi test PHP e integrazione Joomla; il collaudo manuale live resta pendente. **Esito sito Joomla:** Non eseguito.
+
+
+## IMP-04 — ripresa video tra sessioni concorrenti (0.52.0-dev)
+
+Requisiti: PRO-06, STU-03; AC-07, AC-37, AC-81, AC-91. Una sessione video avviata da una posizione obsoleta può continuare ad aggiungere copertura, ma non deve sovrascrivere la posizione più recente né riacquisire il diritto di farlo nei batch successivi.
+
+**Comportamenti da testare in Joomla**
+
+1. Accedere con lo stesso account studente da due browser o dispositivi e avviare la stessa lezione video in entrambi.
+2. Nel browser A avanzare fino a un punto riconoscibile e attendere il salvataggio; annotare la posizione confermata.
+3. Lasciare aperto il browser B dalla posizione precedente e inviare almeno due salvataggi successivi. La copertura può unirsi, ma la posizione di ripresa non deve retrocedere o sostituire quella più recente.
+4. Ricaricare la lezione nel browser B o aprirla in una nuova sessione: il player deve riprendere dalla posizione più recente confermata. Il completamento e la percentuale devono rimanere idempotenti.
+5. Ripetere con due sessioni sulla stessa lezione e verificare che chiudere una sessione non chiuda né invalidi l’altra.
+
+La regressione automatica d’integrazione in `tests/joomla-video.php` copre due batch consecutivi da una sessione obsoleta. Accettazione live Joomla: Non eseguita.
