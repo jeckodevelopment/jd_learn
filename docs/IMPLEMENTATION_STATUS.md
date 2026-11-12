@@ -1,5 +1,7 @@
 **Main al 12 novembre 2026: 0.56.0-dev**, PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288), merge `9ea5725c1b1784d9ae59a91339d8b3dcb83d1144`: registrati tre modelli email core nel sistema Mail Templates nativo Joomla; l’upgrade preserva le modifiche admin. CI standard 4/4 nel [run 43294015095](https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095). Avanzamento **82%** (81,71%; M01/M02 82%, M03 79%, M04 99%, M06/M09 68%, M10 93%, M11/M12 70%). Pacchetto [JD-Learn-0.56.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386), SHA-256 ZIP `4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37`, digest artefatto `9fa791b4157c3b405059ce5a5d90acfa6584af66b358c2c8f533273b9a4c0deb`. Collaudo Joomla manuale pendente; consegna con retry/idempotenza AC-13/AC-57 resta da implementare.
 
+La PR in preparazione 0.56.1-dev affronta il residuo di invio core con una coda schedulata, perimetro, retry ed esito incerto descritti in [MAIL_TEMPLATES.md](MAIL_TEMPLATES.md); la main e la percentuale qui sopra restano riferite al commit già integrato fino al merge.
+
 La PR #238 / 0.41.78-dev corregge STAB-01 / issue #150: `COM_JLMS_PATHWAYS` è ora presente nei cataloghi IT/EN di sistema per il menu backend. L’ordinamento dashboard e il riepilogo stato provider richiesti dall’issue #149 sono già implementati; accettazione Joomla di entrambi resta da registrare.
 
 

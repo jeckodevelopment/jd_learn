@@ -226,7 +226,7 @@ final class LearningService
         $code = 'default-v' . (int) $courseVersion->version_no;
         $q->bind(':code', $code);
         $editionId = (int) $this->db->setQuery($q)->loadResult();
-        return $this->transaction(function () use ($actor, $language, $courseId, $versionId, $editionId, $subject, $key, $mode): int {
+        return $this->transaction(function () use ($actor, $language, $course, $courseId, $versionId, $editionId, $subject, $key, $mode): int {
             // First transactional read: same serialization point as manual admission.
             $edition = $this->row('editions', $editionId, true);
             if ((int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId) {
@@ -273,6 +273,13 @@ final class LearningService
                     'modified_by' => (int) $actor->id, 'created_at' => $now, 'modified_at' => $now];
                 $this->db->insertObject('#__jlms_enrollments', $record, 'id');
                 $id = (int) $record->id;
+                $name = trim((string) $actor->name);
+                (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
+                    hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
+                    (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
+                    ['NAME' => $name, 'COURSE' => (string) $course->title, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
+                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id]
+                );
             }
             $this->ledger($actor, 'enrollment.start', $key, ['course_id' => $courseId], $id);
             return $id;
@@ -595,11 +602,27 @@ final class LearningService
                 'started_at' => $enrollment->started_at ?: $now, 'completed_at' => $enrollment->completed_at,
                 'last_activity_at' => $now, 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
                 'modified_by' => (int) $actor->id, 'modified_at' => $now];
-            if ($total >= (int) $enrollment->required_total && (int) $enrollment->required_total > 0) {
+            $newCourseCompletion = $enrollment->completed_at === null && $total >= (int) $enrollment->required_total && (int) $enrollment->required_total > 0;
+            if ($newCourseCompletion) {
                 $update->completed_at = $enrollment->completed_at ?: $now;
             }
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
+            if ($newCourseCompletion) {
+                $this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language);
+            }
         });
+    }
+
+    private function queueCourseCompletion(User $actor, int $enrollmentId, int $courseId, string $language): void
+    {
+        $q = $this->db->createQuery()->select('title')->from('#__jlms_courses')->where('id = :id')->bind(':id', $courseId, ParameterType::INTEGER);
+        $course = (string) $this->db->setQuery($q)->loadResult();
+        $name = trim((string) $actor->name);
+        (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
+            hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
+            (string) ($actor->getParam('language', '') ?: $language), (string) $actor->email, $name,
+            ['NAME' => $name, 'COURSE' => $course, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+        );
     }
 
     /** Record an explicitly opened lesson without granting completion or progress credit. */

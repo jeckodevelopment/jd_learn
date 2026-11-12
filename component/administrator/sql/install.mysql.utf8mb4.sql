@@ -777,3 +777,23 @@ ALTER TABLE `#__jlms_courses` ADD CONSTRAINT `#__jlms_fk_course_category` FOREIG
 ALTER TABLE `#__jlms_pathways` ADD CONSTRAINT `#__jlms_fk_pathway_category` FOREIGN KEY (`catid`) REFERENCES `#__categories` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `#__jlms_teachers` ADD CONSTRAINT `#__jlms_fk_teacher_category` FOREIGN KEY (`catid`) REFERENCES `#__categories` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `#__jlms_questions` ADD CONSTRAINT `#__jlms_fk_question_category` FOREIGN KEY (`catid`) REFERENCES `#__categories` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `event_key` CHAR(64) NOT NULL,
+  `template_id` VARCHAR(100) NOT NULL,
+  `language` VARCHAR(7) NOT NULL DEFAULT '*',
+  `recipient_email` VARCHAR(320) NOT NULL,
+  `recipient_name` VARCHAR(255) NOT NULL DEFAULT '',
+  `template_data` LONGTEXT NOT NULL,
+  `state` VARCHAR(16) NOT NULL DEFAULT 'pending',
+  `attempts` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `available_at` DATETIME(6) NOT NULL,
+  `claimed_at` DATETIME(6) NULL,
+  `sent_at` DATETIME(6) NULL,
+  `last_error` VARCHAR(1000) NULL,
+  `created_at` DATETIME(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_event_key` (`event_key`),
+  KEY `ix_ready` (`state`,`available_at`,`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

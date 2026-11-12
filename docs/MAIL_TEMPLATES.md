@@ -14,6 +14,6 @@ I modelli iniziali includono testo semplice e HTML. Il gestore Joomla consente d
 
 ## Perimetro e stato
 
-Questa integrazione prepara i modelli e il loro punto di gestione nativo. La spedizione automatica collegata agli eventi, la registrazione persistente delle consegne fallite e il retry idempotente richiesti da AC-13/AC-57 restano attività implementative separate prima della release 1.0.0. La funzionalità di attestati e i promemoria avanzati restano fuori dal primo rilascio secondo il perimetro approvato.
+Questa integrazione prepara i modelli e il loro punto di gestione nativo. La PR in sviluppo collega la conferma dell'iscrizione automatica e il completamento ai template mediante una coda persistente. Il task Joomla `JD Learn: send queued emails` usa il mailer globale del sito, ritenta errori transitori fino a cinque tentativi con attesa progressiva e registra l'esito. La chiave univoca dell'evento impedisce inserimenti duplicati. Se il processo si interrompe dopo la presa in carico o dopo l'accettazione SMTP ma prima della conferma DB, il messaggio resta `sending` per evitare un reinvio cieco; richiede riconciliazione operativa. Restano fuori dal collegamento corrente le richieste in approvazione, attestati e promemoria avanzati. La funzionalità di attestati e i promemoria avanzati restano fuori dal primo rilascio secondo il perimetro approvato.
 
 Per il collaudo manuale vedere [QA_TESTBOOK.md](QA_TESTBOOK.md#imp-09--core-18-template-email-joomla).
