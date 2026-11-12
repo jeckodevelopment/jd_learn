@@ -1,8 +1,10 @@
-## 0.53.0-dev — replay idempotente del conflitto di ripresa video (IMP-04)
+## 0.53.0-dev — IMP-04 / PR #282 integrata
 
-- Un replay del batch video restituisce il conflitto di ripresa anche quando la sessione è obsoleta, senza applicare nuovamente il batch.
-- Regressione d’integrazione aggiunta in `tests/joomla-video.php`.
-
+- Merge `66a59d0a5e4e60943b0d1487ddce4c95c64f97b0`; PR [#282](https://github.com/jeckodevelopment/jd_learn/pull/282), CI standard 4/4 [run 43252689828](https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828).
+- Un replay idempotente di un batch video già salvato ricalcola il conflitto di ripresa dalla sessione corrente: restituisce `resume_conflict=true` e lascia invariati resume e copertura.
+- Pacchetto [JD-Learn-0.53.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828/artifacts/13959653251), ZIP installabile SHA-256 `7898ba9c5dc340aaec1b9c260ef729bc4314cde4cd31bc44c2411efacca0616e`, wrapper `a2dc70a32891b12c378f0920c75c5fa4b9da3c47e46fc0efd442b898051235fa`, scadenza 26 novembre 2026.
+- Collaudo Joomla manuale ancora pendente: vedere [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
+- Avanzamento globale invariato: 81,29% (81% arrotondato), M03 78%, M04 99%.
 ## 0.52.0-dev — ripresa video protetta tra sessioni concorrenti (IMP-04)
 
 - PR [#280](https://github.com/jeckodevelopment/jd_learn/pull/280), milestone 1.0.0, integrata nel commit `dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4`; CI standard 4/4 nel [run 43250267681](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681).
