@@ -14,17 +14,17 @@ use Joomla\CMS\Router\Route;
    <div class="col-md-6">
     <label for="jlms-roster-version-search"><?= Text::_('COM_JLMS_ROSTER_VERSION_OPTIONS_SEARCH') ?></label>
     <input id="jlms-roster-version-search" type="search" class="form-control" data-roster-option-search="filter_version" autocomplete="off">
-    <?= $this->rosterForm->renderField('version', 'filters') ?>
+    <?= $this->rosterForm->renderField('version') ?>
    </div>
    <div class="col-md-6">
     <label for="jlms-roster-user-search"><?= Text::_('COM_JLMS_ROSTER_USER_OPTIONS_SEARCH') ?></label>
     <input id="jlms-roster-user-search" type="search" class="form-control" data-roster-option-search="filter_user" autocomplete="off">
-    <?= $this->rosterForm->renderField('user', 'filters') ?>
+    <?= $this->rosterForm->renderField('user') ?>
    </div>
   </div>
-  <?= $this->rosterForm->renderField('search', 'filters') ?>
-  <?= $this->rosterForm->renderField('status', 'filters') ?>
-  <?= $this->rosterForm->renderField('progress', 'filters') ?>
+  <?= $this->rosterForm->renderField('search') ?>
+  <?= $this->rosterForm->renderField('status') ?>
+  <?= $this->rosterForm->renderField('progress') ?>
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="enrollments"><input type="hidden" name="id" value="<?= (int) $this->course->id ?>"><input type="hidden" name="limitstart" value="0">
   <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_ROSTER_FILTER') ?></button>
  </form>
