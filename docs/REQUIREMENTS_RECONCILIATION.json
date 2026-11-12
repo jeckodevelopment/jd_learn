@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
-  "baseline_commit": "0a1294e491e0aa531aeca776911674fc701ddff4",
-  "runtime_tested_head": "43c4f2a25b56331e49198df1ce222ec581a56692",
-  "ci_run": 43207411958,
+  "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
+  "runtime_tested_head": "85f7add8776cf9d8977c893d40d5c4e4b2a0e25e",
+  "ci_run": 43211155470,
   "counts": {
     "Stato implementazione": {
       "Parziale": 169,
@@ -25,9 +25,9 @@
   },
   "implementation_progress": {
     "percent": 81,
-    "method": "Media semplice delle sette aree: (79+81+77+97+68+92+70)/7 = 80,57%, arrotondata a 81%. PR #270 porta M01/M02 al 79% con la modalità esplicita di consultazione. Collaudo Joomla e gate IMP-10 restano separati.",
+    "method": "Media semplice delle sette aree: (80+81+77+97+68+92+70)/7 = 80,71%, arrotondata a 81%. PR #272 porta M01/M02 all’80% per i video di consultazione senza telemetria né righe di progresso. Collaudo Joomla e gate IMP-10 restano separati.",
     "areas": [
-      79,
+      80,
       81,
       77,
       97,
@@ -36,5 +36,5 @@
       70
     ]
   },
-  "note": "PR #266 / IMP-01 implementa lo snapshot versionato dei campi nativi corso e preserva i dati degli iscritti; main d41111e229ced8460ff9e30a0baa24f2094c4e60, CI standard 4/4 run 43196626438, pacchetto 0.46.0-dev artifact 13932614114, SHA-256 interno 044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183, wrapper 4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013. Accettazione manuale Joomla, Content History e IMP-10 restano aperti. Avanzamento implementativo 80,43% (80% arrotondato)."
+  "note": "PR #272 / IMP-02 consente la fruizione video in modalità consultazione senza durata di tracciamento, sessioni o righe di avanzamento. Main ae81e46a69fc3d2528585c497f0b263677d3d0f9, CI standard 4/4 run 43211155470, package 0.48.0-dev artifact 13940634151, SHA-256 installabile 6e7d35f18d15eb71e6e7d3c13906038da52f4fb06fc191a26dc35946aa8182dd. Accettazione manuale Joomla e IMP-10 restano aperti."
 }
