@@ -15,7 +15,7 @@ p.add_argument('--output',required=True)
 p.add_argument('--joomla',default=r'6\.[0-9]+')
 p.add_argument('--php-minimum',default='8.3')
 args=p.parse_args()
-if not re.fullmatch(r'[1-9]\d*\.\d+\.\d+',args.version):
+if not re.fullmatch(r'(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)',args.version):
     p.error('stable semantic version X.Y.Z required')
 if not re.fullmatch(r'https://github\.com/jeckodevelopment/jd_learn/releases/download/v'+re.escape(args.version)+r'/pkg_jlms-'+re.escape(args.version)+r'\.zip',args.url):
     p.error('ZIP URL must reference the exact public JD Learn GitHub release asset')
