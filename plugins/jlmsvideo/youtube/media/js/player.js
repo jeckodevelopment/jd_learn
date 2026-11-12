@@ -113,6 +113,19 @@ export async function create(container, descriptor, emit, signal) {
     throw error;
   }
   return {
+    playbackRates: async () => player.getAvailablePlaybackRates?.() ?? [1],
+    setPlaybackRate: async rate => {
+      const supported = player.getAvailablePlaybackRates?.() ?? [1];
+      if (!supported.includes(rate)) throw new Error('unsupported playback rate');
+      player.setPlaybackRate(rate);
+      const deadline = Date.now() + 1500;
+      while (Date.now() < deadline) {
+        const current = player.getPlaybackRate();
+        if (Math.abs(current - rate) < 0.001) return current;
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+      throw new Error('playback rate was not applied');
+    },
     sample: async () => ({position_ms: Math.round(player.getCurrentTime() * 1000),
       duration_ms: Math.round(player.getDuration() * 1000), rate_milli: Math.round(player.getPlaybackRate() * 1000),
       playing: player.getPlayerState() === 1}),

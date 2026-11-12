@@ -77,6 +77,14 @@ foreach ($this->preview['lessons'] as $entry) {
                     <h3 id="jlms-preview-lesson-title"><?= $this->escape($lesson->title) ?></h3>
                     <p id="jlms-player-status" role="status" aria-live="polite"></p>
                     <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($lesson->title) ?>"></div>
+                    <div id="jlms-video-speed-control" hidden>
+                        <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
+                        <select id="jlms-video-speed" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">
+                            <?php foreach ([0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] as $speed) : ?>
+                                <option value="<?= $speed ?>"<?= $speed === 1 ? ' selected' : '' ?>><?= $speed ?>×</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </section>
             <?php elseif (in_array($lesson->kind, ['document', 'audio'], true)) : ?>
                 <p class="alert alert-info" role="status"><?= Text::_('COM_JLMS_COURSE_PREVIEW_MEDIA_READY') ?></p>

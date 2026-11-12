@@ -1,4 +1,4 @@
-**Versione corrente del pacchetto di sviluppo: 0.41.81-dev.**
+**Pacchetto candidato della branch: 0.42.0-dev (STU-05, PR #258); main resta 0.41.81-dev fino al merge.**
 
 **Riconciliazione avanzamento 12 novembre 2026:** stima implementativa aggiornata a **80%** in seguito alle PR #236, #239, #243, #245, #248, #249 e ai controlli reali [FTPS #43131327572](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572) e [dry-run 1.0.0 #43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497). La macroarea M10–M12 passa da 58% a **70%** per manifest update, feed, workflow di build e pubblicazione protetta, FTPS live e generazione del candidato. Restano fuori dall'aumento i collaudi manuali non ancora svolti e l'attivazione del feed di produzione; nessun requisito è marcato integralmente accettato. La stima non è una percentuale di criteri di accettazione superati.
 

@@ -59,3 +59,8 @@ YouTube può restituire durata zero prima di caricare i metadati. L’aula aspet
 Per YouTube l’aula distingue il blocco CSP dello script, il mancato caricamento dell’SDK, il rifiuto dell’incorporamento e l’assenza dell’identificazione del sito. Il controllo avviene dopo l’autorizzazione al player; una risposta positiva della sessione non certifica la raggiungibilità del provider.
 
 L’adapter YouTube crea l’iframe con origine del sito e API abilitate, poi attende il caricamento prima di collegare l’SDK. L’iframe usa un referrer limitato all’origine del sito.
+
+
+## Preferenza velocità player (STU-05, 0.42.0-dev)
+
+Nel player aula la velocità è una preferenza locale del browser, conservata nel solo localStorage del sito. Il selettore compare solo quando il player e il video segnalano che una velocità diversa da 1× è disponibile. YouTube fornisce i valori per il singolo video; Vimeo viene verificato tramite il suo SDK e può non consentire la funzione secondo account/video; HTML5 usa le velocità del browser. Cloudflare Stream non espone l’impostazione nella sua API e resta senza selettore. La velocità campionata continua a essere inclusa nella telemetria per mantenere corretto il calcolo degli intervalli; la preferenza non modifica la soglia di completamento. La selezione non viene sincronizzata fra dispositivi né salvata nel profilo Joomla.

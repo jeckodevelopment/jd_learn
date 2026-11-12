@@ -7,6 +7,9 @@ export class VideoLesson {
     this.queue = []; this.pending = null; this.id = 0; this.sequence = 1; this.stopped = true;
     this.chain = Promise.resolve(); this.generation = 0;
     this.status = root.querySelector('#jlms-player-status');
+    this.rateSelect = root.querySelector('#jlms-video-speed');
+    this.onRateChange = () => this.changePlaybackRate();
+    this.rateSelect?.addEventListener('change', this.onRateChange);
     this.onConsent = () => {
       if (this.allowed()) this.start();
       else { this.stop(true); this.message(this.config.policy === 'click' ? 'policy' : 'consent'); }
@@ -25,7 +28,52 @@ export class VideoLesson {
     return this.config.provider === 'html5' || this.config.policy === 'embed' || (this.config.policy === 'site_consent'
       && window.JlmsConsent?.isAllowed(this.config.provider) === true);
   }
-  message(key) { this.status.textContent = this.config.labels[key] || this.config.labels.error; }
+  message(key) { if (this.status) this.status.textContent = this.config.labels[key] || this.config.labels.error; }
+  async configurePlaybackSpeed(player) {
+    const control = this.root.querySelector('#jlms-video-speed-control');
+    const select = this.rateSelect;
+    if (!control || !select || typeof player.playbackRates !== 'function' || typeof player.setPlaybackRate !== 'function') return;
+    try {
+      const rates = [...new Set((await player.playbackRates()).map(Number)
+        .filter(rate => Number.isFinite(rate) && rate >= 0.5 && rate <= 2))].sort((a, b) => a - b);
+      if (rates.length < 2 || !rates.includes(1)) { control.hidden = true; return; }
+      for (const option of select.options) option.hidden = !rates.includes(Number(option.value));
+      let rate = this.currentRate ?? 1;
+      if (!this.ratePreferenceLoaded) {
+        this.ratePreferenceLoaded = true;
+        try {
+          const saved = Number(globalThis.localStorage?.getItem('jdlearn.video.speed.v1'));
+          if (rates.includes(saved)) rate = saved;
+        } catch { /* Playback remains available when browser storage is disabled. */ }
+      }
+      if (!rates.includes(rate)) rate = 1;
+      try {
+        if (rate !== 1) {
+          const applied = Number(await player.setPlaybackRate(rate));
+          if (!Number.isFinite(applied) || Math.abs(applied - rate) > 0.001) rate = 1;
+        }
+      } catch { rate = 1; }
+      this.currentRate = rate;
+      select.value = String(rate);
+      control.hidden = false;
+    } catch {
+      control.hidden = true;
+    }
+  }
+  async changePlaybackRate() {
+    if (!this.player || !this.rateSelect || typeof this.player.setPlaybackRate !== 'function') return;
+    const previous = this.currentRate ?? 1, requested = Number(this.rateSelect.value);
+    try {
+      const applied = Number(await this.player.setPlaybackRate(requested));
+      if (!Number.isFinite(applied) || Math.abs(applied - requested) > 0.001) throw new Error('unsupported');
+      this.currentRate = applied;
+      try { globalThis.localStorage?.setItem('jdlearn.video.speed.v1', String(applied)); } catch { /* Optional preference. */ }
+      await this.record('ratechange');
+    } catch {
+      this.rateSelect.value = String(previous);
+      this.message('rate_unavailable');
+    }
+  }
   async request(task, values, keepalive = false) {
     if (this.config.preview) {
       const body = new URLSearchParams({course_id: this.config.course, version_id: this.config.version,
@@ -72,6 +120,7 @@ export class VideoLesson {
       }, this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player;
+      await this.configurePlaybackSpeed(player);
       if (!this.config.preview && grant.resume_ms) await player.seek(grant.resume_ms);
       if (!this.config.preview) await this.record('seeked');
       if (this.stopped || generation !== this.generation) return;
@@ -97,6 +146,7 @@ export class VideoLesson {
         this.message('duration'); await this.stop(false); return;
       }
       this.duration = sample.duration_ms;
+      if (type === 'ratechange' && this.rateSelect) this.rateSelect.value = String(sample.rate_milli / 1000);
       const now = Math.round(performance.now() - this.started);
       // SDKs differ in seek notifications: discontinuities also reset the server anchor.
       if (this.previous && type === 'position' && Math.abs(sample.position_ms - this.previous.position_ms
@@ -152,6 +202,7 @@ export class VideoLesson {
       },this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player; this.previous = null; this.session.options = grant.options;
+      await this.configurePlaybackSpeed(player);
       await player.seek(sample.position_ms); this.replacing = false;
       await this.record('seeked'); this.message('renewed'); this.scheduleRenew();
     } catch (error) {
@@ -165,6 +216,8 @@ export class VideoLesson {
     const player = this.player; this.player = null;
     try { await player?.destroy(); } catch { /* Teardown must continue. */ }
     this.root.querySelector('#jlms-player').replaceChildren();
+    const rateControl = this.root.querySelector('#jlms-video-speed-control');
+    if (rateControl) rateControl.hidden = true;
     // On explicit stop save already observed samples, then expire the server session.
     if (save && !this.saving && this.session) {
       await this.flush();
@@ -173,6 +226,7 @@ export class VideoLesson {
   }
   async destroy() {
     await this.stop(true);
+    this.rateSelect?.removeEventListener('change', this.onRateChange);
     window.removeEventListener('jlms:consent-changed', this.onConsent);
     window.removeEventListener('pagehide', this.onPageHide);
     window.removeEventListener('pageshow', this.onPageShow);

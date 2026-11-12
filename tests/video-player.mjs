@@ -116,10 +116,11 @@ let ytFrame, ytDestroyed=0;
 globalThis.location={origin:'https://school.example'};
 globalThis.YT={Player:class {
   constructor(frame,options){ytFrame=frame;queueMicrotask(()=>options.events.onReady());}
-  getCurrentTime(){return 1.5;} getDuration(){return 10;}getPlaybackRate(){return 1;}getPlayerState(){return 1;}
+  getCurrentTime(){return 1.5;} getDuration(){return 10;}getPlaybackRate(){return ytRate;}getAvailablePlaybackRates(){return [0.5,1,1.5];}setPlaybackRate(rate){ytRate=rate;}getPlayerState(){return 1;}
   pauseVideo(){}seekTo(){}destroy(){ytDestroyed++;}
 }};
 const frames=[];
+let ytRate=1;
 document.createElement=tag=>({tag,dataset:{},remove(){},set src(value){this.url=value;},get src(){return this.url;}});
 const box={dataset:{title:'Lesson'},append:frame=>{frames.push(frame);}};
 const youtubeBox = {...box, append: frame => {
@@ -135,19 +136,19 @@ assert.equal(ytUrl.searchParams.get('enablejsapi'),'1');
 assert.equal(ytUrl.searchParams.get('origin'),location.origin);
 assert.equal(ytUrl.searchParams.get('autoplay'),'0');
 assert.equal(ytFrame.referrerPolicy,'strict-origin');
-assert.equal((await yt.sample()).position_ms,1500);yt.destroy();assert.equal(ytDestroyed,1);
+assert.equal((await yt.sample()).position_ms,1500);assert.deepEqual(await yt.playbackRates(),[0.5,1,1.5]);assert.equal(await yt.setPlaybackRate(1.5),1.5);yt.destroy();assert.equal(ytDestroyed,1);
 const aborted=new AbortController();aborted.abort();await assert.rejects(youtube.create(box,{options:{}},()=>{},aborted.signal));
 const vimeo=await moduleFromFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url));
 let vmHandlers=0,vmDestroyed=0;
 globalThis.Vimeo={Player:class{
   ready(){return Promise.resolve();}on(){vmHandlers++;}off(){vmHandlers--;}
   getCurrentTime(){return Promise.resolve(2);}getDuration(){return Promise.resolve(10);}
-  getPlaybackRate(){return Promise.resolve(1);}getPaused(){return Promise.resolve(false);}getEnded(){return Promise.resolve(false);}
+  getPlaybackRate(){return Promise.resolve(1);}setPlaybackRate(rate){return Promise.resolve(rate);}getPaused(){return Promise.resolve(false);}getEnded(){return Promise.resolve(false);}
   destroy(){vmDestroyed++;return Promise.resolve();}
 }};
 const vm=await vimeo.create(box,{options:{reference:'12345',privacy_hash:'abc123'}},()=>{},new AbortController().signal);
 const frameUrl=new URL(frames.at(-1).src);assert.equal(frameUrl.searchParams.get('dnt'),'1');assert.equal(frameUrl.searchParams.get('h'),'abc123');
-assert.equal((await vm.sample()).duration_ms,10000);await vm.destroy();assert.equal(vmHandlers,0);assert.equal(vmDestroyed,1);
+assert.equal((await vm.sample()).duration_ms,10000);assert.deepEqual(await vm.playbackRates(),[0.5,0.75,1,1.25,1.5,1.75,2]);assert.equal(await vm.setPlaybackRate(1.5),1.5);await vm.destroy();assert.equal(vmHandlers,0);assert.equal(vmDestroyed,1);
 console.log(JSON.stringify({provider_adapter_checks:10,status:'passed',environment:'SDK doubles; no live remote video'}));
 
 // A revoked consent must also settle an SDK instance that never reaches ready.
@@ -166,7 +167,7 @@ globalThis.Stream=()=>({currentTime:3,duration:10,playbackRate:1,paused:false,en
  addEventListener(){cfHandlers++;},removeEventListener(){cfHandlers--;},pause(){cfPaused++;}});
 const cfPlayer=await cf.create(box,{options:{domain:'customer-ci.cloudflarestream.com',token:'a.b.c'}},()=>{},new AbortController().signal);
 assert.match(frames.at(-1).src,/^https:\/\/customer-ci\.cloudflarestream\.com\/a\.b\.c\/iframe\?/);
-assert.equal((await cfPlayer.sample()).position_ms,3000);cfPlayer.pause();assert.equal(cfPaused,1);
+assert.equal((await cfPlayer.sample()).position_ms,3000);assert.equal(cfPlayer.playbackRates,undefined);cfPlayer.pause();assert.equal(cfPaused,1);
 cfPlayer.destroy();assert.equal(cfHandlers,0);
 await assert.rejects(cf.create(box,{options:{domain:'evil.example',token:'a.b.c'}},()=>{},new AbortController().signal));
 const cfAbort=new AbortController();
@@ -207,10 +208,38 @@ document.createElement=tag=>{
  videoNode=element;return element;
 };
 const native=await html5.create(box,{options:{url:'/index.php?option=com_jlms&task=media.stream&enrollment_id=1&lesson_id=2&source_revision=3'}},()=>{},new AbortController().signal);
-assert.equal(videoNode.preload,'metadata');assert.equal(videoNode.autoplay,false);assert.equal(videoNode.controls,true);
+assert.equal(videoNode.preload,'metadata');assert.equal(videoNode.autoplay,false);assert.equal(videoNode.controls,true);assert.deepEqual(await native.playbackRates(),[0.5,0.75,1,1.25,1.5,1.75,2]);assert.equal(await native.setPlaybackRate(1.5),1.5);assert.equal(videoNode.playbackRate,1.5);
 assert.equal((await native.sample()).position_ms,2000);native.seek(5000);assert.equal(videoNode.currentTime,5);
 native.destroy();native.destroy();assert.equal(removed,1);assert.equal(videoNode.handlers.size,0);
 await assert.rejects(html5.create(box,{options:{url:'https://elsewhere.example/private.mp4'}},()=>{},new AbortController().signal));
 const localConsent=new VideoLesson({...config,provider:'html5',policy:'blocked'},root);
 assert.equal(localConsent.allowed(),true);await localConsent.destroy();
 console.log(JSON.stringify({html5_adapter_checks:9,status:'passed',environment:'native media-element double; no browser decoder'}));
+
+
+const speedOptions=[0.5,0.75,1,1.25,1.5,1.75,2].map(value=>({value:String(value),hidden:false}));
+const speedSelect={options:speedOptions,value:'1',addEventListener(){},removeEventListener(){}};
+const speedControl={hidden:true};
+const speedStatus={textContent:''};
+const speedMount={replaceChildren(){}};
+const speedRoot={querySelector:selector=>({'#jlms-player-status':speedStatus,'#jlms-player':speedMount,
+  '#jlms-video-speed':speedSelect,'#jlms-video-speed-control':speedControl})[selector]};
+const previousStorage=globalThis.localStorage;
+let savedSpeed=null;
+globalThis.localStorage={getItem:key=>key==='jdlearn.video.speed.v1'?savedSpeed:null,setItem:(key,value)=>{if(key==='jdlearn.video.speed.v1')savedSpeed=value;}};
+const speedLesson=new VideoLesson({...config,labels:{...config.labels,rate_unavailable:'unsupported'}},speedRoot);
+let appliedSpeed=1;
+speedLesson.player={playbackRates:async()=>[0.5,1,1.5],setPlaybackRate:async rate=>{appliedSpeed=rate;return rate;},
+  sample:async()=>({position_ms:1000,duration_ms:10000,rate_milli:Math.round(appliedSpeed*1000),playing:false}),pause(){},destroy:async()=>{}};
+speedLesson.session={session_id:'speed',source_revision:1,duration_ms:10000};speedLesson.started=performance.now();speedLesson.stopped=false;
+await speedLesson.configurePlaybackSpeed(speedLesson.player);
+assert.equal(speedControl.hidden,false);assert.equal(speedOptions.find(option=>option.value==='0.75').hidden,true);
+speedSelect.value='1.5';await speedLesson.changePlaybackRate();
+assert.equal(appliedSpeed,1.5);assert.equal(savedSpeed,'1.5');assert.equal(speedLesson.queue.at(-1).rate_milli,1500);
+appliedSpeed=1;await speedLesson.record('ratechange');assert.equal(speedSelect.value,'1');
+speedLesson.session=null;speedLesson.queue=[];await speedLesson.destroy();
+const unsupportedLesson=new VideoLesson(config,speedRoot);
+await unsupportedLesson.configurePlaybackSpeed({playbackRates:async()=>[1],setPlaybackRate:async rate=>rate});
+assert.equal(speedControl.hidden,true);await unsupportedLesson.destroy();
+if(previousStorage===undefined) delete globalThis.localStorage; else globalThis.localStorage=previousStorage;
+console.log(JSON.stringify({playback_speed_checks:7,status:'passed',coverage:'dynamic capability, supported options, local preference, telemetry rate and unsupported player'}));

@@ -1,3 +1,22 @@
+## STU-05 — preferenza velocità player (0.42.0-dev)
+
+**Riferimenti:** STU-05, VID-01, PRO-04. La preferenza è locale al browser; il selettore compare solo dopo la verifica di supporto del player e non altera il completamento.
+
+**Comportamenti da testare in Joomla**
+
+1. Installare il package 0.42.0-dev su Joomla 6 di prova e preparare video YouTube, Vimeo, HTML5 e Cloudflare Stream secondo le rispettive guide; usare un profilo Vimeo che consenta le velocità variabili e un video che le supporti.
+2. Aprire la lezione YouTube dopo il consenso. Verificare che il selettore mostri solo le velocità restituite dall’API del video; scegliere 1,5× e controllare che il player applichi la velocità e che il valore resti selezionato ricaricando la lezione sullo stesso browser.
+3. Ripetere con Vimeo: se SDK/account/video rifiuta la velocità, il selettore non deve comparire; quando supportata, verificare 0,75× e 1,5×.
+4. Ripetere con HTML5 e verificare 0,5× e 2×; provare un browser che non espone playbackRate e controllare che il selettore resti nascosto.
+5. Aprire Cloudflare Stream e verificare che non compaia il selettore di JD Learn. La riproduzione e i controlli nativi devono restare disponibili.
+6. Con video tracciabile, campionare per un intervallo noto a velocità normale e a 1,5×; verificare che il server usi rate_milli effettivamente osservato e che l’avanzamento derivi sempre dagli intervalli unici, senza credito per il solo seek.
+7. Verificare che la preferenza resti soltanto nel browser corrente, non sia inviata a Joomla e non cambi fra dispositivi; bloccare localStorage e verificare che i player continuino a funzionare a 1×.
+
+**Esito sito Joomla:** Non eseguito.
+
+
+---
+
 ## IMP-06 — scansione materiali con ClamAV reale (0.41.74-dev)
 
 **Stato:** PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229) integrata in `0.41.74-dev` (merge `d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c`). CI standard 4/4 nel [run 43094357303](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303); artifact [JD-Learn-0.41.74-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415), wrapper SHA-256 `902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8`. Accettazione manuale Joomla sul sito di prova ancora pendente.
