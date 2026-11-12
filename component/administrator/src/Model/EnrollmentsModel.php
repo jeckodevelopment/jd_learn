@@ -86,8 +86,8 @@ final class EnrollmentsModel extends ListModel
             $label = (string) $user->name . ' (' . (string) $user->username . ') · #' . (int) $user->id;
             $userField->addChild('option', htmlspecialchars($label, ENT_XML1))->addAttribute('value', (string) $user->id);
         }
-        $form->setField($versionField, 'filters');
-        $form->setField($userField, 'filters');
+        $form->setField($versionField, null, true, 'filters');
+        $form->setField($userField, null, true, 'filters');
         $form->bind($this->getState('filter.roster', []));
         return $form;
     }
