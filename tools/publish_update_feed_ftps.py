@@ -8,6 +8,7 @@ may replace an existing target: an unsupported replacement fails closed.
 import hashlib
 import os
 from ftplib import FTP_TLS
+from ftps_trust import create_ftps_client
 from pathlib import Path
 import posixpath
 import re
@@ -52,10 +53,7 @@ def publish(env=os.environ, ftp_factory=FTP_TLS):
         raise ValueError("FTPS host must be a DNS hostname without a protocol or path")
 
     # Validates CA trust chain AND hostname. Do not disable certificate checks.
-    context = ssl.create_default_context()
-    context.verify_mode = ssl.CERT_REQUIRED
-    context.check_hostname = True
-    ftp = ftp_factory(context=context, timeout=30)
+    ftp, verify_control = create_ftps_client(env, ftp_factory)
     temporary = ".jdlearn.xml.upload-" + uuid.uuid4().hex
     uploaded = False
     try:
