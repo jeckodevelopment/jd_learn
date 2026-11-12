@@ -44,3 +44,6 @@ Dashboard personale, richiesta/approvazione/manuale/import, gestione amministrat
 ## Ripresa e retry della posizione audio (0.41.52-dev, PR #196)
 
 La richiesta `audio.save` resta un POST JSON protetto da token e controllo proprietario. Se la rete fallisce o il server risponde 408, 429 o 5xx, il client ripete una sola volta la stessa posizione. Errori permanenti vengono mostrati senza loop; una posizione successiva può superare quella fallita. Questo stato serve soltanto alla ripresa e non completa l’attività né modifica la percentuale. Collaudo manuale in [testbook](QA_TESTBOOK.md#pr-196-integrata--retry-del-progresso-audio).
+
+
+La preferenza velocità video 0.42.0-dev è locale al browser e viene applicata solo se supportata dal singolo player/video; il player non supportato conserva i controlli propri. La telemetria osserva la velocità effettiva e il calcolo della copertura non cambia.
