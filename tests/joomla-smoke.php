@@ -70,6 +70,41 @@ if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMe
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
 require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
 (new \Com_JlmsInstallerScript())->postflight('update', null);
+$mailTemplateIds = [
+    'com_jlms.enrollment.requested',
+    'com_jlms.enrollment.confirmed',
+    'com_jlms.course.completed',
+];
+foreach ($mailTemplateIds as $templateId) {
+    $mailTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate($templateId, 'it-IT');
+    if ($mailTemplate === null || !($mailTemplate->params instanceof \Joomla\Registry\Registry)) {
+        throw new \RuntimeException('JD Learn mail template is not registered in Joomla: ' . $templateId);
+    }
+    if (trim((string) $mailTemplate->subject) === '' || trim((string) $mailTemplate->body) === '' || trim((string) $mailTemplate->htmlbody) === '') {
+        throw new \RuntimeException('JD Learn mail template must include subject, plain-text and HTML content: ' . $templateId);
+    }
+    $tags = (array) $mailTemplate->params->get('tags', []);
+    $requiredTags = $templateId === 'com_jlms.enrollment.confirmed'
+        ? ['NAME', 'COURSE', 'SITENAME', 'COURSE_URL']
+        : ['NAME', 'COURSE', 'SITENAME'];
+    foreach ($requiredTags as $requiredTag) {
+        if (!in_array($requiredTag, $tags, true)) {
+            throw new \RuntimeException('JD Learn mail template does not document its variable ' . $requiredTag . ': ' . $templateId);
+        }
+    }
+}
+// Native editor changes must survive subsequent component upgrades.
+$customSubject = 'Subject edited in Joomla Mail Templates';
+$db->setQuery($db->getQuery(true)->update($db->quoteName('#__mail_templates'))
+    ->set($db->quoteName('subject') . ' = ' . $db->quote($customSubject))
+    ->where($db->quoteName('template_id') . ' = ' . $db->quote('com_jlms.enrollment.confirmed'))
+    ->where($db->quoteName('language') . ' = ' . $db->quote('')))->execute();
+require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/MailTemplateInstaller.php';
+\Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::ensureRegistered();
+$preservedTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.enrollment.confirmed', 'it-IT');
+if ($preservedTemplate->subject !== $customSubject) {
+    throw new \RuntimeException('JD Learn upgrade overwrote an administrator-edited Joomla mail template.');
+}
 $menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
 if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') { throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.'); }
 $menuLinksAfterUpdate = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();

@@ -1,3 +1,11 @@
+## 0.56.0-dev — CORE-18: template email nativi Joomla (PR #288 aperta)
+
+- Registra i template LMS per richiesta/conferma iscrizione e completamento corso nel gestore Joomla **Sistema → Modelli email**.
+- L'installer non sovrascrive template modificati o traduzioni già presenti.
+- Il riepilogo delle variabili e il limite implementativo corrente sono in [docs/MAIL_TEMPLATES.md](docs/MAIL_TEMPLATES.md).
+- La PR #288 include il test automatico d'installazione per registrazione, tag e preservazione di una modifica admin.
+- La consegna automatica con retry persistente AC-13/AC-57 non è inclusa in questo incremento e resta un residuo 1.0.0.
+
 ## 0.55.0-dev — IMP-04 / feedback salvataggio progresso video (PR #287)
 
 - PR [#287](https://github.com/jeckodevelopment/jd_learn/pull/287) integrata nel commit `2af8994271d95f3c41b3e5f813ba2222794265c5`; CI standard 4/4 nel [run 43289138110](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110).

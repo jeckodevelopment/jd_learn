@@ -96,6 +96,13 @@
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
     {
+      "version": "0.54.0-dev",
+      "ci": {
+        "run_id": 43256423443,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443"
+      }
+    },
+    {
       "version": "0.53.0-dev",
       "code_baseline": {
         "tested_head": "a54054f9748cff2c28ffcf3a07d77a27d6158dc3",
