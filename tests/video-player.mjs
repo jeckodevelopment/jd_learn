@@ -28,7 +28,7 @@ lesson.transport=async (_url,options)=>{
 };
 await lesson.flush();assert.ok(lesson.pending);assert.equal(lesson.sequence,1);assert.equal(elements['#jlms-player-status'].textContent,'offline');
 lesson.queue.push({id:2,type:'pause',position_ms:1000,client_ms:1000,rate_milli:1000,playing:false});
-await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue.length,1);assert.equal(lesson.sequence,2);assert.equal(elements['#jlms-player-status'].textContent,'saved');
+await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue.length,1);assert.equal(lesson.sequence,2,JSON.stringify({sequence:lesson.sequence,pending:lesson.pending,attempt,bodies}));assert.equal(elements['#jlms-player-status'].textContent,'saved');
 lesson.transport=async()=>({ok:false,status:403,json:async()=>({success:false})});
 let destroyed=0;lesson.player={destroy:async()=>destroyed++};
 await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1);
