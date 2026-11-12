@@ -38,6 +38,11 @@ export async function create(container, descriptor, emit, signal) {
   })]);
   clearTimeout(readyTimer);
   return {
+    playbackRates: async () => {
+      try { await player.setPlaybackRate(1); return [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]; }
+      catch { return [1]; }
+    },
+    setPlaybackRate: rate => player.setPlaybackRate(rate),
     sample: async () => {
       const [position, duration, rate, paused, ended] = await Promise.all([
         player.getCurrentTime(), player.getDuration(), player.getPlaybackRate(), player.getPaused(), player.getEnded()]);
