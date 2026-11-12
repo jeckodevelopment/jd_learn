@@ -1,3 +1,10 @@
+## 0.50.0-dev — preferenza locale caption su YouTube e Cloudflare Stream (STU-05)
+
+- PR [#276](https://github.com/jeckodevelopment/jd_learn/pull/276), milestone 1.0.0, merge `d29cdc9326bcc0d1f9ac3dd454fa40189ca20c82`; CI standard 4/4 nel [run 43240360856](https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856).
+- Pacchetto [JD-Learn-0.50.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856/artifacts/13954487496), SHA-256 interno `fce6b1f09ab3d7d1fe1821aff366a11718e420e2331754ea18cf4b741b0b877c`, digest wrapper `094f514f005324c76af7284e4e0d43a2e09a25563976c94982504e23bf78d342`; estrarre una volta, scadenza 26 novembre 2026.
+- La lingua caption valida salvata nel browser viene passata a YouTube (`cc_lang_pref` e `cc_load_policy`) e Cloudflare Stream (`defaultTextTrack`) all’inizializzazione. Input non validi o localStorage non accessibile non bloccano la riproduzione. Il selettore JD Learn rimane limitato alle tracce interrogabili tramite Vimeo/HTML5; nessun dato lingua o telemetria aggiuntiva viene inviato.
+- Accettazione Joomla manuale con account/provider/browser reali ancora pendente secondo il [testbook](docs/QA_TESTBOOK.md).
+
 ## 0.49.0-dev — anteprime pubbliche esplicite delle lezioni di testo (IMP-02)
 
 - PR [#274](https://github.com/jeckodevelopment/jd_learn/pull/274), milestone 1.0.0, integrata nel commit `2f371ddb09eaeeb1a6ae11264793dad230b7e274`. CI standard 4/4 (PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli leggeri) nel [run 43234079722](https://github.com/jeckodevelopment/jd_learn/actions/runs/43234079722).

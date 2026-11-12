@@ -4,66 +4,70 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
     "percent": 81,
-    "basis": "Equal-weight mean of seven implementation macroareas: (80+81+77+97+68+92+70)/7=80.71%, rounded to 81. PR #272 raises M01/M02 to 80 by allowing consultation video without tracking metadata or progress writes. Manual Joomla acceptance and IMP-10 remain open.",
+    "basis": "Media semplice delle sette macroaree incluse: (81+81+77+98+68+92+70)/7=81,00%, arrotondata a 81%. PR #276 chiude il passaggio della preferenza caption iniziale ai provider YouTube/Cloudflare; accettazione Joomla provider e gate IMP-10 restano aperti.",
     "macroareas": {
-      "courses": 80,
+      "courses": 81,
       "catalogue": 81,
       "learning_progress": 77,
-      "video_materials": 97,
+      "video_materials": 98,
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70
     }
   },
-  "version": "0.48.0-dev",
+  "version": "0.50.0-dev",
   "code_baseline": {
-    "tested_head": "85f7add8776cf9d8977c893d40d5c4e4b2a0e25e",
-    "parent_main_commit": "5c7380897ed0bd83895502a8176bda9dc4356904",
-    "pull_request": 272,
-    "merged_main_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9"
+    "tested_head": "8b26c4272fd223173daba744f1546798212a1cb2",
+    "parent_main_commit": "46d52b72ed7aaecfb3fc6197abe7478e5f2ede12",
+    "pull_request": 276,
+    "merged_main_commit": "d29cdc9326bcc0d1f9ac3dd454fa40189ca20c82"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43211155470,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43211155470",
+    "run_id": 43240360856,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856",
     "joomla": "6.0.0",
     "jobs": [
       {
+        "id": 131258812520,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
+        "id": 131258975612,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
+        "id": 131258975431,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
+        "id": 131258975609,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #272 / IMP-02: CI standard 4/4; consultation video can be published without duration tracking metadata, playback does not create progress sessions or progress rows, standard learning-mode tracking remains required. Manual Joomla acceptance remains pending."
+    "note": "PR #276 / STU-05: CI standard 4/4; adapters pass saved local caption preference to YouTube and Cloudflare initial player parameters. Unit adapter doubles also test missing/invalid preference and inaccessible localStorage. Manual Joomla provider/account/browser acceptance remains pending."
   },
   "package": {
-    "artifact_id": 13940634151,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43211155470/artifacts/13940634151",
-    "artifact_name": "JD-Learn-0.48.0-dev",
-    "installable_package": "pkg_jlms-0.48.0-dev.zip",
-    "sha256": "6e7d35f18d15eb71e6e7d3c13906038da52f4fb06fc191a26dc35946aa8182dd",
-    "artifact_sha256": "831e28868f9bcfe1605dc8fd43c9232a1b2b26f4f196733c3af578c0dd113e1a",
-    "size_bytes": 576335,
-    "artifact_size_bytes": 576125,
-    "expires_at": "2026-11-26T11:44:32Z",
+    "artifact_id": 13954487496,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856/artifacts/13954487496",
+    "artifact_name": "JD-Learn-0.50.0-dev",
+    "installable_package": "pkg_jlms-0.50.0-dev.zip",
+    "sha256": "fce6b1f09ab3d7d1fe1821aff366a11718e420e2331754ea18cf4b741b0b877c",
+    "artifact_sha256": "094f514f005324c76af7284e4e0d43a2e09a25563976c94982504e23bf78d342",
+    "size_bytes": 579839,
+    "artifact_size_bytes": 579633,
+    "expires_at": "2026-11-26T14:49:34Z",
     "wrapper_zip": true,
-    "build_source": "CI standard sulla head 85f7add8776cf9d8977c893d40d5c4e4b2a0e25e della PR #272, integrata nel merge ae81e46a69fc3d2528585c497f0b263677d3d0f9. Il build SHA-256 è riportato dalla CI e la build è ripetibile."
+    "build_source": "CI standard sulla head 8b26c4272fd223173daba744f1546798212a1cb2 della PR #276, integrata nel merge d29cdc9326bcc0d1f9ac3dd454fa40189ca20c82. Build ripetibile e install/upgrade verificati dalla CI."
   },
   "release_process": {
     "issue": 160,
@@ -73,11 +77,11 @@
     "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855",
     "standard_ci_jobs": 4,
     "status": "passed; process/tooling change only; no runtime requirement progress",
-    "latest_installable_artifact_id": 13932614114,
-    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438/artifacts/13932614114",
-    "package_sha256": "044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183",
-    "artifact_wrapper_sha256": "4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013",
-    "artifact_expires_at": "2026-11-26T10:05:46Z",
+    "latest_installable_artifact_id": 13954487496,
+    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856/artifacts/13954487496",
+    "package_sha256": "fce6b1f09ab3d7d1fe1821aff366a11718e420e2331754ea18cf4b741b0b877c",
+    "artifact_wrapper_sha256": "094f514f005324c76af7284e4e0d43a2e09a25563976c94982504e23bf78d342",
+    "artifact_expires_at": "2026-11-26T14:49:34Z",
     "manual_joomla_acceptance": "not applicable to process-only PR; existing product acceptance remains pending"
   },
   "full_requirement_acceptance": {},
@@ -91,6 +95,26 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "version": "0.49.0-dev",
+      "code_baseline": {
+        "pull_request": 274
+      },
+      "ci": {
+        "run_id": 43234079722,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43234079722"
+      }
+    },
+    {
+      "version": "0.48.0-dev",
+      "code_baseline": {
+        "pull_request": 272
+      },
+      "ci": {
+        "run_id": 43211155470,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43211155470"
+      }
+    },
     {
       "audited_at": "2026-11-12",
       "product": "JD Learn",
@@ -12802,13 +12826,15 @@
     }
   ],
   "latest_feature": {
-    "plan_increment": "IMP-02",
+    "plan_increment": "IMP-05",
     "requirements": [
-      "AUT-03",
-      "EDGE-02"
+      "STU-05",
+      "VID-01"
     ],
-    "merged_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-    "manual_acceptance": "Pending; see docs/QA_TESTBOOK.md#imp-02--modalita-corso-di-sola-consultazione-aut-03--edge-02.",
-    "progress_estimate": "81% (80.71% unrounded); M01/M02 80%; remaining IMP-02 work, Joomla acceptance and IMP-10 remain open."
+    "pull_request": 276,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/276",
+    "merged_commit": "d29cdc9326bcc0d1f9ac3dd454fa40189ca20c82",
+    "manual_acceptance": "Pending; follow docs/QA_TESTBOOK.md STU-05 caption-language scenarios with real provider accounts and browsers.",
+    "progress_estimate": "81.00% unrounded (81% reported); M04 98%. Joomla/provider live acceptance and IMP-10 remain open."
   }
 }

@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "85f7add8776cf9d8977c893d40d5c4e4b2a0e25e",
-  "ci_run": 43211155470,
+  "runtime_tested_head": "8b26c4272fd223173daba744f1546798212a1cb2",
+  "ci_run": 43240360856,
   "counts": {
     "Stato implementazione": {
       "Parziale": 169,
@@ -25,12 +25,12 @@
   },
   "implementation_progress": {
     "percent": 81,
-    "method": "Media semplice delle sette aree: (80+81+77+97+68+92+70)/7 = 80,71%, arrotondata a 81%. PR #272 porta M01/M02 all’80% per i video di consultazione senza telemetria né righe di progresso. Collaudo Joomla e gate IMP-10 restano separati.",
+    "method": "Media semplice delle sette aree: (81+81+77+98+68+92+70)/7 = 81,00%, arrotondata all’81%. PR #276 completa il passaggio della preferenza caption iniziale YouTube/Cloudflare STU-05. Accettazione Joomla provider e IMP-10 restano aperti.",
     "areas": [
-      80,
+      81,
       81,
       77,
-      97,
+      98,
       68,
       92,
       70
