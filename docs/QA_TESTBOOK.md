@@ -1,4 +1,6 @@
-## IMP-04 / STU-03 — feedback salvataggio progresso video (0.55.0-dev)
+## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
+
+PR [#287](https://github.com/jeckodevelopment/jd_learn/pull/287) integrata nel commit `2af8994271d95f3c41b3e5f813ba2222794265c5`; CI standard 4/4 nel [run 43289138110](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110). Pacchetto installabile [JD-Learn-0.55.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105); SHA-256 package `fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282`.
 
 **Comportamenti da testare in Joomla**
 
@@ -7,7 +9,7 @@
 3. Simula una perdita di rete durante il salvataggio: il player deve mostrare lo stato offline e riprendere il salvataggio idempotente al successivo invio; dopo il recupero deve mostrare lo stato salvato. Un errore 4xx definitivo deve continuare a mostrare il messaggio di accesso/conflitto e fermare la sessione secondo il comportamento esistente.
 4. Ripeti in inglese e verifica le etichette localizzate. Nella preview editoriale non deve apparire uno stato di salvataggio né essere creata telemetria.
 
-Automazione: `tests/video-player.mjs` controlla gli stati durante la richiesta, dopo errore transient e dopo risposta positiva. Il collaudo Joomla manuale resta da eseguire.
+Il test automatico `tests/video-player.mjs` e la CI standard sono superati. Il collaudo Joomla manuale resta da eseguire.
 
 ## IMP-04 / AUT-03 — avviso durata video in sola consultazione (PR #284, 0.54.0-dev)
 
