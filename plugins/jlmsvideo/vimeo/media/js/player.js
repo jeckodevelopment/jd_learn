@@ -27,9 +27,10 @@ export async function create(container, descriptor, emit, signal) {
     rejectReady?.(new DOMException('Playback cancelled', 'AbortError'));
   };
   signal?.addEventListener('abort', abort, {once: true});
+  let probingRate = false;
   const handlers = new Map();
   for (const event of ['play', 'pause', 'ended', 'seeking', 'seeked', 'bufferstart', 'bufferend', 'playbackratechange', 'error']) {
-    const handler = () => emit(({bufferstart: 'buffering', bufferend: 'position', playbackratechange: 'ratechange'})[event] || event);
+    const handler = () => { if (event === 'playbackratechange' && probingRate) return; emit(({bufferstart: 'buffering', bufferend: 'position', playbackratechange: 'ratechange'})[event] || event); };
     handlers.set(event, handler); player.on(event, handler);
   }
   await Promise.race([player.ready(), new Promise((_, reject) => {
@@ -39,8 +40,16 @@ export async function create(container, descriptor, emit, signal) {
   clearTimeout(readyTimer);
   return {
     playbackRates: async () => {
-      try { await player.setPlaybackRate(1.25); await player.setPlaybackRate(1); return [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]; }
-      catch { try { await player.setPlaybackRate(1); } catch {} return [1]; }
+      probingRate = true;
+      try {
+        await player.setPlaybackRate(1.25);
+        await player.setPlaybackRate(1);
+        await new Promise(resolve => setTimeout(resolve, 0));
+        return [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+      } catch {
+        try { await player.setPlaybackRate(1); } catch {}
+        return [1];
+      } finally { probingRate = false; }
     },
     setPlaybackRate: rate => player.setPlaybackRate(rate),
     sample: async () => {
