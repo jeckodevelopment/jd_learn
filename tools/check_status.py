@@ -11,14 +11,14 @@ def check_reconciliation(rows,evidence):
   key=row['Requisito'];state=row['Stato implementazione'];scope=row['Perimetro 1.0.0']
   assert state in ['Non iniziata','Parziale','Completata'],(key,'Invalid implementation state')
   assert scope in ['1.0.0','Misto','Fase 2'],(key,'Invalid release scope')
-  for field in ['Criteri 1.0.0','Criteri fase 2','PR implementazione','Commit riscontrato','Residui implementativi 1.0.0','Verifiche residue 1.0.0','Residui fase 2','Evidenza accettazione Joomla']:
+  for field in ['Criteri 1.0.0','Criteri fase 2','Commit riscontrato','Residui implementativi 1.0.0','Verifiche residue 1.0.0','Residui fase 2','Evidenza accettazione Joomla']:
    assert row[field].strip(),(key,'Missing reconciliation field',field)
   assert row['Verifica automatica']in['Non eseguita','Superata','Fallita'],key
   assert row['Copertura automatica']in['Nessuna','Parziale','Completa'],key
   assert row['Accettazione Joomla']in['Non eseguita','Parziale','Superata','Fallita'],key
   if scope=='Fase 2':assert row['Criteri 1.0.0']=='Non incluso.'and row['Residui implementativi 1.0.0'].startswith('Non applicabile'),(key,'Phase two is not a core gate')
   if state=='Completata':
-   assert row['Fonti implementazione']and row['PR implementazione'].startswith('https://github.com/jeckodevelopment/jd_learn/pull/'),(key,'Completion needs implementation evidence')
+   assert row['Fonti implementazione']and re.fullmatch(r'[1-9][0-9]*(?:;[1-9][0-9]*)*', row['PR implementazione']),(key,'Completion needs implementation evidence')
    assert row['Residui implementativi 1.0.0'].startswith('Nessuno'),(key,'Completed implementation has residual code work')
   if row['Verifica automatica']=='Superata':
    assert row['Fonti test parziali']and row['Copertura automatica']!='Nessuna',key
