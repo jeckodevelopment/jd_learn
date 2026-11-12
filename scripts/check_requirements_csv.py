@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 PATH = Path(__file__).resolve().parents[1] / "docs" / "REQUIREMENTS_STATUS.csv"
-REQ = re.compile(r"^[A-Z][A-Z0-9]*-[0-9]{2,3}$")
+REQ = re.compile(r"^[A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*-[0-9]{2,3}$")
 PRS = re.compile(r"^[1-9][0-9]*(;[1-9][0-9]*)*$")
 
 
