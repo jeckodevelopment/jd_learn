@@ -15,7 +15,7 @@
       "release_preparation": 70
     }
   },
-  "version": "0.46.0-dev",
+  "version": "0.47.0-dev (candidate)",
   "code_baseline": {
     "tested_head": "2b6c99529d8613dd2b9b40d321a6838bed052b4a",
     "parent_main_commit": "9d14e1f80630c22c760673a97c64ee88b789e77f",
@@ -12695,11 +12695,13 @@
     }
   ],
   "latest_feature": {
-    "requirement": "IMP-08 partial",
-    "implemented": "Searchable version and enrolled-learner filters in the per-course administrative roster, with course-scoped choices and server-side validation.",
-    "residual": "Manual Joomla acceptance of enrollment, state, ACL and roster scenarios; remaining IMP-10 gate.",
-    "pull_request": 264,
-    "merge_commit": "aed93820f0a948b11d3427ce9ba4d312621b0d74",
-    "manual_joomla_acceptance": "not executed"
+    "plan_increment": "IMP-02",
+    "requirements": [
+      "AUT-03",
+      "EDGE-02"
+    ],
+    "candidate": "Explicit consultation-only course mode; zero required lesson credit; no course completion percentage; quiz and prerequisite restrictions.",
+    "manual_acceptance": "Pending; see docs/QA_TESTBOOK.md#imp-02--modalita-corso-di-sola-consultazione-aut-03--edge-02.",
+    "progress_estimate": "80% (prior audited estimate 80.43% retained pending macroarea re-estimation; manual Joomla acceptance and IMP-10 remain open)."
   }
 }

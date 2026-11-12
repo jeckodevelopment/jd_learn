@@ -12,11 +12,13 @@ $currentModule = 0;
 ?>
 <section id="jlms-classroom" class="jlms-classroom" data-enrollment-id="<?= (int) $item['enrollment_id'] ?>">
  <header id="jlms-classroom-header"><h1><?= $this->escape($item['title']) ?></h1><a id="jlms-classroom-dashboard" href="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a></header>
+ <?php if ($item['progress_applicable']) : ?>
  <section id="jlms-learning-progress" aria-label="<?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>">
   <label for="jlms-progress-meter"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $item['percent'] ?>%</label>
   <progress id="jlms-progress-meter" max="100" value="<?= (int) $item['percent'] ?>"><?= (int) $item['percent'] ?>%</progress>
   <?php if ($item['completed_at']) : ?><p id="jlms-course-completed" role="status"><?= Text::_('COM_JLMS_LEARNING_COMPLETED') ?></p><?php endif; ?>
  </section>
+ <?php else : ?><p id="jlms-consultation-mode" role="status"><?= Text::_('COM_JLMS_CONSULTATION_MODE_NOTICE') ?></p><?php endif; ?>
  <div id="jlms-classroom-layout" class="jlms-classroom-layout">
  <button id="jlms-classroom-outline-toggle" class="jlms-classroom-outline-toggle" type="button" aria-controls="jlms-classroom-outline" aria-expanded="true" data-show-label="<?= $this->escape(Text::_('COM_JLMS_SHOW_CURRICULUM')) ?>" data-hide-label="<?= $this->escape(Text::_('COM_JLMS_HIDE_CURRICULUM')) ?>" hidden><?= Text::_('COM_JLMS_SHOW_CURRICULUM') ?></button>
  <nav id="jlms-classroom-outline" aria-label="<?= Text::_('COM_JLMS_CURRICULUM') ?>">
@@ -73,24 +75,24 @@ $currentModule = 0;
     <source src="<?= Route::_('index.php?option=com_jlms&task=attachment.audio&format=raw&id=' . (int) $selected->audio_attachment['id'] . '&lesson_id=' . (int) $selected->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>" type="<?= $this->escape($selected->audio_attachment['mime']) ?>">
    </audio>
    <p id="jlms-audio-progress-status" role="status" aria-live="polite"></p>
-   <form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+   <?php if ($item['progress_applicable']) : ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
     <input type="hidden" name="task" value="lesson.complete">
     <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">
     <input type="hidden" name="jform[lesson_id]" value="<?= (int) $selected->id ?>">
     <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
     <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
-   </form>
+   </form><?php endif; ?>
   </section>
   <?php elseif ($selected->kind === 'quiz') : ?>
   <a id="jlms-lesson-quiz" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=quiz&id='.(int)$item['enrollment_id'].'&lesson_id='.(int)$selected->id) ?>"><?= Text::_('COM_JLMS_QUIZ_OPEN') ?></a>
   <?php else : ?>
-  <form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+  <?php if ($item['progress_applicable']) : ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
    <input type="hidden" name="task" value="lesson.complete">
    <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">
    <input type="hidden" name="jform[lesson_id]" value="<?= (int) $selected->id ?>">
    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
-  </form>
+  </form><?php endif; ?>
   <?php endif; ?>
  <div id="jlms-material-groups">
  <?php foreach (['course' => 'jlms-classroom-course-materials', 'lesson' => 'jlms-lesson-resources'] as $scope => $region) : $files = $this->materials[$scope]; ?>

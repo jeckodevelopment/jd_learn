@@ -126,11 +126,13 @@ final class PathwayService
             $state = 'not_enrolled';
             $access = in_array((int) $course->content_access, $levels, true) ? 'available' : 'restricted';
             $percent = 0;
+            $progressApplicable = true;
 
             if ($enrollment) {
                 $done = (int) $enrollment->completed_total;
                 $required = (int) $enrollment->required_total;
-                $rules = json_decode((string) $enrollment->rules_json, true);
+                try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $enrollment->rules_json); }
+                catch (\DomainException) { $rules = null; }
                 $state = $enrollment->completed_at !== null
                     ? 'completed'
                     : (($enrollment->started_at !== null || $enrollment->last_activity_at !== null || $done > 0) ? 'in_progress' : 'not_started');
@@ -148,10 +150,11 @@ final class PathwayService
                         ? (string) $enrollment->status
                         : 'unavailable';
                 } elseif ($enrollment->version_status !== 'published' || $enrollment->edition_status !== 'open'
-                    || !is_array($rules) || ($rules['mode'] ?? '') !== 'learning'
-                    || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true) || ($rules['certificate_enabled'] ?? true) !== false
-                    || ($rules['completion_policy'] ?? '') !== 'all_required') {
+                    || $rules === null) {
                     $access = 'unavailable';
+                } elseif ($rules['mode'] === 'consultation') {
+                    $progressApplicable = false;
+                    $percent = null;
                 } elseif ($required > 0 && $done <= $required) {
                     $percent = $enrollment->completed_at !== null ? 100 : min(99, (int) floor(100 * $done / $required));
                 }
@@ -165,6 +168,7 @@ final class PathwayService
                 'access' => $access,
                 'learning_state' => $state,
                 'percent' => $access === 'available' ? $percent : 0,
+                'progress_applicable' => $progressApplicable,
             ];
         }
 

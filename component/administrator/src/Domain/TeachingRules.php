@@ -13,8 +13,13 @@ final class TeachingRules
         catch (\JsonException) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
         if (!is_array($rules)) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
         $threshold = $rules['video_threshold_basis_points'] ?? 9000;
-        if (($rules['_schema'] ?? 1) !== 1 || ($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
-            || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required'
+        $mode = $rules['mode'] ?? 'learning';
+        $completionPolicy = $rules['completion_policy'] ?? '';
+        if (($rules['_schema'] ?? 1) !== 1 || !in_array($mode, ['learning', 'consultation'], true)
+            || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
+            || ($rules['certificate_enabled'] ?? true) !== false
+            || ($mode === 'learning' && $completionPolicy !== 'all_required')
+            || ($mode === 'consultation' && ($completionPolicy !== 'none' || ($rules['sequence_mode'] ?? '') !== 'free'))
             || !is_int($threshold) || $threshold < 1 || $threshold > 10000) {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }

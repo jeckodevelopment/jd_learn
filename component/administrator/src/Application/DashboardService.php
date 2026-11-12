@@ -53,22 +53,24 @@ final class DashboardService
             $tag = $row->language === '*' ? $uiLanguage : (string) $row->language;
             $state = $row->completed_at !== null ? 'completed' : (($row->started_at !== null || $row->last_activity_at !== null || (int) $row->completed_total > 0) ? 'in_progress' : 'not_started');
             $reason = 'available';
+            $rules = null;
             if (!isset($languages[$tag])) { $reason = 'language'; }
             elseif (!isset($visible[$tag][(int) $row->course_id])) { $reason = 'unavailable'; }
             elseif (!in_array((int) $visible[$tag][(int) $row->course_id]->content_access, $levels, true)) { $reason = 'access'; }
             elseif (!in_array($row->status, ['active', 'completed'], true)) { $reason = in_array($row->status, ['suspended', 'expired', 'cancelled'], true) ? $row->status : 'pending'; }
             elseif ($row->version_status !== 'published' || $row->edition_status !== 'open') { $reason = 'unavailable'; }
             else {
-                $rules = json_decode((string) $row->rules_json, true);
-                if (!is_array($rules) || ($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
-                    || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') { $reason = 'unavailable'; }
+                try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $row->rules_json); }
+                catch (\DomainException) { $rules = null; }
+                if ($rules === null) { $reason = 'unavailable'; }
                 elseif (($row->starts_at !== null && $row->starts_at > $now) || ($row->edition_starts_at !== null && $row->edition_starts_at > $now)) { $reason = 'not_open'; }
                 elseif (($row->ends_at !== null && $row->ends_at <= $now) || ($row->edition_ends_at !== null && $row->edition_ends_at <= $now)) { $reason = 'expired'; }
             }
             $total = (int) $row->required_total; $done = (int) $row->completed_total;
-            $percent = $total > 0 && $done <= $total ? min($row->completed_at !== null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
+            $consultation = isset($rules) && is_array($rules) && $rules['mode'] === 'consultation';
+            $percent = !$consultation && $total > 0 && $done <= $total ? min($row->completed_at !== null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
             $cards[] = ['id' => (int) $row->id, 'title' => (string) ($row->title_snapshot ?? ''), 'learning_state' => $state,
-                'access' => $reason, 'percent' => $percent, 'completed' => $row->completed_at !== null];
+                'access' => $reason, 'percent' => $percent, 'progress_applicable' => !$consultation, 'completed' => $row->completed_at !== null];
         }
         return $cards;
     }

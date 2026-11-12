@@ -113,7 +113,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <h2 id="jlms-teaching-rules-heading" class="h3"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></h2>
   <?php if ($this->teachingRules === null) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_PUBLICATION_UNSUPPORTED') ?></p>
   <?php else : ?>
-   <p><?= Text::_('COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
+   <p><?= Text::_($this->teachingRules['mode'] === 'consultation' ? 'COM_JLMS_TEACHING_MODE_CONSULTATION_HELP' : 'COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
    <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p>
    <?php if ($this->editable && $this->rulesForm) : ?>
    <form id="jlms-teaching-rules-form" class="form-validate" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
@@ -121,7 +121,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button>
     <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
    </form>
-   <?php else : ?><p><?= Text::_('COM_JLMS_SEQUENCE_MODE') ?>: <?= Text::_($this->teachingRules['sequence_mode'] === 'sequential' ? 'COM_JLMS_SEQUENCE_SEQUENTIAL' : 'COM_JLMS_SEQUENCE_FREE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_THRESHOLD') ?>: <?= $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])) ?>%</p><p><?= Text::_('COM_JLMS_TEACHING_RULES_READ_ONLY') ?></p><?php endif; ?>
+   <?php else : ?><p><?= Text::_('COM_JLMS_TEACHING_MODE') ?>: <?= Text::_($this->teachingRules['mode'] === 'consultation' ? 'COM_JLMS_TEACHING_MODE_CONSULTATION' : 'COM_JLMS_TEACHING_MODE_LEARNING') ?></p><p><?= Text::_('COM_JLMS_SEQUENCE_MODE') ?>: <?= Text::_($this->teachingRules['sequence_mode'] === 'sequential' ? 'COM_JLMS_SEQUENCE_SEQUENTIAL' : 'COM_JLMS_SEQUENCE_FREE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_THRESHOLD') ?>: <?= $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])) ?>%</p><p><?= Text::_('COM_JLMS_TEACHING_RULES_READ_ONLY') ?></p><?php endif; ?>
   <?php endif; ?>
  </section>
 <?php endif; ?>

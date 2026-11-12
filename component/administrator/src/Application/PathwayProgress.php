@@ -20,23 +20,27 @@ final class PathwayProgress
         }
 
         $sum = 0;
+        $required = 0;
         $unavailable = false;
 
         foreach ($courses as $course) {
-            $percent = $course['percent'] ?? 0;
-
+            if (($course['progress_applicable'] ?? true) === false) {
+                if (($course['access'] ?? 'unavailable') !== 'available') { $unavailable = true; }
+                continue;
+            }
             if (($course['access'] ?? 'unavailable') !== 'available') {
                 $unavailable = true;
-                $percent = 0;
+                if (($course['percent'] ?? null) === null) { continue; }
             }
-
+            $percent = $course['percent'] ?? 0;
             $sum += max(0, min(100, (int) ($percent ?? 0)));
+            $required++;
         }
 
         return [
-            'percent' => (int) floor($sum / count($courses)),
+            'percent' => $required > 0 ? (int) floor($sum / $required) : null,
             'unavailable' => $unavailable,
-            'required' => count($courses),
+            'required' => $required,
         ];
     }
 }

@@ -178,6 +178,7 @@ final class PublicationService
     private function validateAndFreeze(object $course, object $version, User $actor, array $remoteChecks = []): void
     {
         $versionId = (int) $version->id;
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
         // Prerequisite edges are a supported learner rule; validate the graph before freezing it.
         $orphan=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
             ->leftJoin('#__jlms_lessons AS l ON l.id=q.lesson_id AND l.course_version_id=q.course_version_id')
@@ -221,6 +222,7 @@ final class PublicationService
                 $lesson->fields_snapshot_json = json_encode(['_schema' => 1, 'fields' => $lessonFields], JSON_THROW_ON_ERROR);
                 $quizHash = null;
                 if ($lesson->kind === 'quiz') {
+                    if ($rules['mode'] === 'consultation') { throw new \DomainException('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED'); }
                     $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze($actor, $course, $lesson);
                 } elseif ($lesson->kind === 'text') {
                     if ($lesson->completion_rule !== 'manual' || $lesson->source_json !== null || $lesson->provider_key !== null
@@ -303,10 +305,13 @@ final class PublicationService
                 $lastId = (int) $lesson->id;
             }
         } while (count($batch) === 16);
-        if (!$required || in_array(0, array_values($moduleIds), true)) {
+        if (in_array(0, array_values($moduleIds), true) || (!$required && $rules['mode'] !== 'consultation')) {
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
         }
-        if ($initialRequired === 0) {
+        if ($rules['mode'] === 'consultation' && $required > 0) {
+            throw new \DomainException('COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS');
+        }
+        if ($rules['mode'] === 'learning' && $initialRequired === 0) {
             throw new \DomainException('COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED');
         }
         $prerequisiteMap = [];
@@ -315,12 +320,12 @@ final class PublicationService
             ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('lesson_id, required_lesson_id');
         $edges = $this->db->setQuery($edgeQuery, 0, 25001)->loadObjectList();
         if (count($edges) > 25000) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+        if ($rules['mode'] === 'consultation' && $edges) { throw new \DomainException('COM_JLMS_CONSULTATION_PREREQUISITES_UNSUPPORTED'); }
         foreach ($edges as $edge) {
             if (!isset($lessonIds[(int) $edge->lesson_id]) || !isset($lessonIds[(int) $edge->required_lesson_id])
                 || (int) $edge->lesson_id === (int) $edge->required_lesson_id) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
             $prerequisiteMap[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
         }
-        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
         if ($rules['sequence_mode'] === 'sequential') {
             $sequenceQuery = $this->db->createQuery()->select('l.id, l.required')
                 ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
@@ -344,10 +349,6 @@ final class PublicationService
             $graphState[$node] = 2;
         };
         foreach (array_keys($lessonIds) as $node) { $visitPrerequisite((int) $node); }
-        if (($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
-            || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') {
-            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
-        }
         $q = $this->db->createQuery()->select('a.id, a.lesson_id, a.title, a.description, a.ordering, a.state, a.preview, a.publish_up, a.publish_down, f.id AS asset_id, f.sha256, f.byte_size, f.mime_type, f.status, f.scan_json')
             ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('a.ordering, a.id');

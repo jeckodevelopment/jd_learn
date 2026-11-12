@@ -17,7 +17,20 @@ Con un account che può modificare il corso, modificare i valori `com_fields` e 
 
 Atteso: i dati editoriali e il campo tornano a “Valore A”; lo stato del corso, la versione didattica corrente, le versioni assegnate, le iscrizioni e i progressi restano invariati. Se il corso ha una bozza aperta, il ripristino aggiorna i dati editoriali del corso e non sovrascrive la struttura delle versioni. Verificare anche che un account privo di `core.edit.value` sul campo non possa alterarlo tramite il ripristino.
 
-La regressione automatica è integrata dalla PR [#268](https://github.com/jeckodevelopment/jd_learn/pull/268); CI standard 4/4 nel [run 43201132206](https://github.com/jeckodevelopment/jd_learn/actions/runs/43201132206). Verifica il valore del campo nella revisione Joomla, il ripristino tramite il salvataggio autorizzato del modello e la conservazione della versione didattica attiva e delle iscrizioni. Completare comunque il confronto/ripristino dalla schermata Content History sul sito di prova.
+La regressione automatica è integrata dalla PR [#268](https://github.com/jeckodevelopment/jd_learn/pull/268); CI standard 4/4 nel [run 43201132206](https://github.com/jeckodevelopment/jd_learn/actions/runs/43201132206). La prova Joomla della schermata Content History resta da eseguire.
+
+## IMP-02 — modalità corso di sola consultazione (AUT-03 / EDGE-02)
+
+**Comportamenti da testare in Joomla**
+
+1. Installare il package 0.47.0-dev su Joomla 6 di prova e creare una bozza con descrizione, un modulo e una lezione Testo. In **Regole didattiche** selezionare **Sola consultazione** e salvare.
+2. Verificare che la modalità imposti regole libere senza completamento; marcare tutte le lezioni come facoltative. Il preflight non deve segnalare l’assenza di attività obbligatorie, ma deve continuare a segnalare moduli vuoti, descrizione mancante e contenuti/materiali non validi.
+3. Provare a pubblicare con una lezione obbligatoria: la pubblicazione deve essere bloccata con un messaggio comprensibile. Rendere la lezione facoltativa e riprovare: la pubblicazione deve riuscire.
+4. In una copia della bozza, aggiungere un quiz o un prerequisito e verificare che la pubblicazione sia rifiutata. Verificare che il form non consenta il sequenziamento in modalità consultazione.
+5. Accedere come studente autorizzato, iscriversi e aprire la lezione. Aula e dashboard devono indicare “Non applicabile” per il progresso, senza percentuale, completamento o attestato. Provare l’azione manuale di completamento: deve essere rifiutata. Ripetere con un video e verificare che il tracciamento non conceda completamento.
+6. Tornare in modalità **Apprendimento**: la pubblicazione senza almeno una lezione obbligatoria deve essere nuovamente bloccata. Verificare che cambiare regole in una bozza non modifichi una versione già pubblicata o le iscrizioni esistenti.
+
+La copertura automatica aggiunta per questo incremento esercita regole, readiness, pubblicazione e iscrizione; il collaudo sito Joomla resta pendente. La modalità non abilita accesso anonimo o anteprima pubblica.
 
 ## IMP-08 — filtri ricercabili del roster (0.45.0-dev)
 
