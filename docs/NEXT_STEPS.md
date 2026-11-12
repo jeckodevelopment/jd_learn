@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. La candidata 0.55.0-dev rende espliciti gli stati di salvataggio del progresso video (IMP-04/STU-03); dopo il merge proseguire con i residui implementativi prioritari di IMP-04/05 elencati nella matrice e con i collaudi Joomla live. Il gate IMP-10 resta separato.
+Aggiornato al 12 novembre 2026. Main 0.55.0-dev integra la PR #287 per gli stati localizzati di salvataggio video (IMP-04/STU-03); avanzamento 82% (81,57%; M03 79%). Proseguire con i residui implementativi prioritari di IMP-04/05 elencati nella matrice e con i collaudi Joomla live. Il gate IMP-10 resta separato. Pacchetto installabile e checksum sono registrati in README.md e IMPLEMENTATION_EVIDENCE.json.
 
 
 
