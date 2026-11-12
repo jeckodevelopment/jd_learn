@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from ftplib import FTP_TLS
+from ftplib import FTP, FTP_TLS
 from ftps_trust import (
     PinnedFTP_TLS, check_peer_certificate, create_ftps_client, parse_sha256_pin,
 )
@@ -19,8 +19,9 @@ PIN=hashlib.sha256(CERTIFICATE).hexdigest()
 
 
 class FakeSocket:
-    def __init__(self, cert):
+    def __init__(self, cert, session=None):
         self.cert=cert
+        self.session=session
         self.closed=False
     def getpeercert(self, binary_form=False):
         assert binary_form is True
@@ -75,14 +76,49 @@ class TestPinnedFTPS(unittest.TestCase):
             with self.assertRaises(ssl.SSLCertVerificationError):
                 client.auth()
 
+        # Both transfers must resume the authenticated control TLS session.
+        control_session=object()
+        client.sock=FakeSocket(CERTIFICATE,session=control_session)
+        client._prot_p=True
         good=FakeSocket(CERTIFICATE)
-        with patch.object(FTP_TLS,"ntransfercmd",return_value=(good,42)):
+        class Context:
+            def __init__(self, certificate):
+                self.certificate=certificate
+                self.args=None
+            def wrap_socket(self, socket, **kwargs):
+                self.args=kwargs
+                return FakeSocket(self.certificate)
+        ctx=Context(CERTIFICATE)
+        client.context=ctx
+        with patch.object(FTP,"ntransfercmd",return_value=(good,42)):
             self.assertEqual(client.ntransfercmd("RETR example")[1],42)
-        bad=FakeSocket(b"data-channel impostor")
-        with patch.object(FTP_TLS,"ntransfercmd",return_value=(bad,42)):
+        self.assertIs(ctx.args["session"],control_session)
+        self.assertEqual(ctx.args["server_hostname"],client.host)
+        bad_socket=FakeSocket(CERTIFICATE)
+        ctx.certificate=b"data-channel impostor"
+        with patch.object(FTP,"ntransfercmd",return_value=(bad_socket,42)):
             with self.assertRaises(ssl.SSLCertVerificationError):
                 client.ntransfercmd("RETR example")
-        self.assertTrue(bad.closed)
+        self.assertFalse(bad_socket.closed)  # original wrapped socket is owned by TLS wrapper
+
+    def test_tls_session_reuse_without_private_pin(self):
+        client,verify_callback=create_ftps_client({})
+        self.assertIsInstance(client,PinnedFTP_TLS)
+        self.assertIsNone(verify_callback)
+        self.assertEqual(client.context.verify_mode,ssl.CERT_REQUIRED)
+        self.assertTrue(client.context.check_hostname)
+        control_session=object()
+        client.sock=FakeSocket(CERTIFICATE,session=control_session)
+        client._prot_p=True
+        plain=FakeSocket(CERTIFICATE)
+        captured=[]
+        def wrap(sock, **kwargs):
+            captured.append((sock,kwargs))
+            return FakeSocket(CERTIFICATE)
+        with patch.object(client.context,"wrap_socket",side_effect=wrap):
+            with patch.object(FTP,"ntransfercmd",return_value=(plain,7)):
+                self.assertEqual(client.ntransfercmd("STOR example")[1],7)
+        self.assertIs(captured[0][1]["session"],control_session)
 
     def test_pin_does_not_match_empty_or_missing_certificate(self):
         expected=hashlib.sha256(CERTIFICATE).digest()

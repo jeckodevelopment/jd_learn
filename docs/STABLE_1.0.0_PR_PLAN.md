@@ -135,3 +135,8 @@ La PR [#238](https://github.com/jeckodevelopment/jd_learn/pull/238) integra la t
 ## Aggiornamento 12 novembre 2026 — STAB-05 / PR #244
 
 PR [#244](https://github.com/jeckodevelopment/jd_learn/pull/244) integra la correzione dell’issue #200: il collegamento al Programma presente sotto la toolbar è stato rimosso; restano l’azione di toolbar, il riepilogo nella scheda Programma e il messaggio per i corsi non ancora salvati. Merge `ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62`. CI standard 4/4 nel [run 43121346817](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817). Pacchetto installabile [JD-Learn-0.41.80-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817/artifacts/13900597900), SHA-256 interno `5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a`, wrapper `c82f72b0c1728bf7bda492c368e5581a3768133ad1ce06e6c9c3f9e50c65b2c7` da estrarre una volta (scade il 25 novembre 2026). L’accettazione manuale Joomla resta nel testbook; avanzamento implementativo 78%.
+
+
+### IMP-09 — Compatibilità FTPS riutilizzo sessione TLS (12 novembre 2026)
+
+Il test FTPS live `43129478205` ha superato l'autenticazione ma il primo trasferimento è stato rifiutato con `425 Unable to build data connection: Operation not permitted`. Possibile causa: il server ProFTPD richiede il **riutilizzo della sessione TLS** dal canale di controllo al canale dati. Il client FTPS protetto viene aggiornato per richiedere session resumption su ogni trasferimento, senza disabilitare la cifratura né il pin del certificato, con test offline dedicati. L'effettiva compatibilità sul server Host.it è ancora da confermare con il workflow FTPS sicuro; requisiti IMP-09 e IMP-10 non si considerano completati e la percentuale globale resta invariata.
