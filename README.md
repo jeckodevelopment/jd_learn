@@ -1,3 +1,5 @@
+Candidato della PR in corso: **0.53.0-dev**, i replay video idempotenti conservano il flag di conflitto per le sessioni obsolete; non ancora integrato in main.
+
 Aggiornato al 12 novembre 2026. Main **0.52.0-dev**, PR [#280](https://github.com/jeckodevelopment/jd_learn/pull/280), merge `dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4`: una sessione video obsoleta non può sovrascrivere il punto di ripresa neanche con batch successivi. CI standard 4/4 nel [run 43250267681](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681). Avanzamento implementativo **81%** (81,29%; M03 78%, M04 99%). Pacchetto [JD-Learn-0.52.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681/artifacts/13958934116), SHA-256 installabile `f5c0986ae59361de77c67ebae9ed9d91583b12f38e835a4a12a9cedfebfb9216`; digest wrapper `3f528639d38a2c61d39fc5713f6750f7dfadb5bf5c6220d810174cddaf8b89e9` (estrarre una volta; scade il 26 novembre 2026). Restano altri residui IMP-04 e accettazione Joomla manuale.
 
 
