@@ -1,3 +1,9 @@
+## 0.55.0-dev — IMP-04 / feedback salvataggio progresso video
+
+- Rende espliciti gli stati di salvataggio e conferma nel player video; preserva i messaggi di completamento, offline, conflitto e accesso negato.
+- Aggiunge etichette italiane e inglesi e copertura in `tests/video-player.mjs`.
+- Collaudo manuale Joomla in `docs/QA_TESTBOOK.md`; da eseguire dopo il merge.
+
 ## 0.54.0-dev — AUT-03: avviso durata video in sola consultazione (PR #284 integrata)
 
 - Merge `04704621f64a7ee712743f98037dfe31d7a4606f`; CI standard 4/4 nel [run 43256423443](https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443).
