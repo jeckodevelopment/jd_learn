@@ -25,7 +25,7 @@ La issue #160 chiude il requisito di processo SemVer: applicare [la policy versi
 - “In corso” nella matrice non significa che tutta la funzione manchi: distinguere implementazione, collaudo automatizzato e accettazione Joomla manuale.
 - Ogni PR runtime deve indicare requisiti e criteri di accettazione, includere la sezione **Comportamenti da testare** con prove concrete nel sito Joomla e aggiornare stato, changelog, testbook e guide pertinenti.
 - Dopo ogni merge, pubblicare il link al pacchetto installabile verificato e la stima aggiornata dell’avanzamento verso la 1.0.0. Il collaudo manuale resta separato dall’esito CI.
-- Non introdurre requisiti non approvati. Quiz didattici avanzati, attestati, report/KPI avanzati, export/import CSV, operazioni massive e ulteriori provider video restano fuori da questo rilascio. Restano incluse la gestione essenziale degli iscritti e l’eccezione amministrativa AC-131 per la banca domande.
+- Non introdurre requisiti non approvati. Quiz didattici avanzati, attestati avanzati (restano inclusi gli attestati PDF essenziali CERT-01–08), report/KPI avanzati, export/import CSV, operazioni massive e ulteriori provider video restano fuori da questo rilascio. Restano incluse la gestione essenziale degli iscritti e l’eccezione amministrativa AC-131 per la banca domande.
 - Tutte le PR implementative e di stabilizzazione appartengono alla milestone `1.0.0`. Credentials è un progetto successivo alla 1.0.0 e mantiene la propria nomenclatura e pianificazione separate.
 
 IMP-05 è in completamento progressivo: PR [#198] ha aggiunto la pulizia batch limitata; PR [#228] ha allineato Cloudflare Stream; PR [#278] completa il controllo delle capabilities minime posizione/durata/seek in pubblicazione e playback. CI standard 4/4 nel run 43246533928. Restano i collaudi live dei quattro provider, altri residui IMP-05 e nessun quinto provider.
@@ -55,7 +55,7 @@ IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è int
 - In IMP-04 e IMP-05 i quiz non diventano prerequisito per pubblicare o completare un corso che non li usa.
 - In IMP-08 si implementa il roster operativo ristretto di AC-128, non la reportistica completa di REP-02.
 - In IMP-09 la gestione amministrativa AC-131 è l’unica eccezione quiz approvata. Non aggiungere tipi di domanda, valutazioni, flussi studente o ampliamenti della banca.
-- Le trascrizioni audio, il quinto plugin video, attestati, KPI/report avanzati, export/import CSV, operazioni massive, notifiche/job non indispensabili, sblocco sequenziale tra corsi e funzioni Credentials non sono inclusi, salvo diversa decisione di prodotto formalizzata.
+- Le trascrizioni audio, il quinto plugin video, attestati avanzati (esclusi dal rinvio gli attestati essenziali CERT-01–08), KPI/report avanzati, export/import CSV, operazioni massive, notifiche/job non indispensabili, sblocco sequenziale tra corsi e funzioni Credentials non sono inclusi, salvo diversa decisione di prodotto formalizzata.
 
 
 ## Approvazione funzionale 12 novembre 2026 — Mail Templates e notifiche 1.0.0
@@ -89,6 +89,20 @@ IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è int
 | 9.4 | **IMP-09-MAIL-D · P1** | Notifiche opzionali nuove lezioni/cambi rilevanti e scadenze tramite Scheduler; UI override per corso e casi limite; documentazione/test. | MAIL-03/04/05/09 | Dopo A/B; guardie anti-spam e prova multi-corso. |
 
 Ogni PR va assegnata alla milestone **1.0.0**, documenta `Comportamenti da testare` in Joomla, aggiorna `REQUIREMENTS_STATUS.csv` (ID e numeri effettivi delle PR quando noti), guide, testbook, changelog ed evidenze. **IMP-10** deve includere scenari di posta disabilitata/non raggiungibile, retry, deduplica, upgrade template, ACL docente e carico di centinaia di destinatari. Non incrementare l'82% globale per il solo aggiornamento documentale; ricalcolare la copertura dopo implementazioni reali con denominatore coerente al perimetro ampliato.
+
+
+## Approvazione funzionale 12 novembre 2026 — attestati PDF essenziali 1.0.0
+
+**Decisione di prodotto approvata:** la 1.0.0 comprende il rilascio essenziale di attestati PDF di completamento corso, senza anticipare JD Learn Credentials / Open Badges. Requisiti, criteri di accettazione, delimitazione e prove sono in [CERTIFICATES_1.0.0.md](CERTIFICATES_1.0.0.md). Gli ID **CERT-01–CERT-08** sono nuovi e vanno registrati nella matrice di tracciabilità prima delle PR runtime; nessuna funzionalità è dichiarata implementata da questa PR documentale.
+
+| Ordine | ID / priorità | Perimetro PR | Requisiti |
+|---:|---|---|---|
+| 9.5 | **IMP-09-CERT-A · P0** | Impostazioni globali/per corso, modello persistente, ACL e generazione idempotente su completamento effettivo | CERT-01/02/04 |
+| 9.6 | **IMP-09-CERT-B · P0** | Generazione PDF con modello personalizzabile e download protetto per studente | CERT-03/05/08 |
+| 9.7 | **IMP-09-CERT-C · P0** | Elenco e download amministrativi, autorizzazioni e audit | CERT-06/08 |
+| 9.8 | **IMP-09-CERT-D · P1** | Notifica disponibilità tramite Mail Templates e outbox Joomla, prove integrative | CERT-07, MAIL-01/02/09 |
+
+Le PR CERT devono precedere **IMP-10**, essere assegnate alla milestone **1.0.0** e riportare la sezione **Comportamenti da testare**; aggiornare matrice, documentazione, testbook e changelog. **Non aumentare la percentuale implementativa** per sole modifiche documentali; al prossimo ricalcolo dichiarare il denominatore aggiornato per il nuovo perimetro. La percentuale 82% indicata in apertura è la precedente fotografia, non un ricalcolo che includa le nuove funzioni CERT.
 
 ## Blocco STAB — correzioni dopo le implementazioni
 
@@ -212,6 +226,6 @@ La candidata aggiunge filtri ricercabili del roster per versione e iscritto, pop
 
 ### IMP-09 — CORE-18: registrazione dei template email Joomla
 
-PR [#288]({repo}), integrata nel merge `{merge}` in 0.56.0-dev: registra template modificabili per richiesta di iscrizione, conferma di iscrizione e completamento corso nell'area nativa **Sistema → Modelli email**. I messaggi usano la configurazione posta globale Joomla; i tag disponibili sono dichiarati al gestore. L'installazione/aggiornamento crea solo i modelli mancanti e non sovrascrive testi o traduzioni personalizzati. La consegna effettiva con outbox/retry e deduplicazione AC-13/AC-57 resta da completare; nessun attestato o promemoria avanzato è incluso. Vedere [MAIL_TEMPLATES.md](MAIL_TEMPLATES.md).
+PR [#288]({repo}), integrata nel merge `{merge}` in 0.56.0-dev: registra template modificabili per richiesta di iscrizione, conferma di iscrizione e completamento corso nell'area nativa **Sistema → Modelli email**. I messaggi usano la configurazione posta globale Joomla; i tag disponibili sono dichiarati al gestore. L'installazione/aggiornamento crea solo i modelli mancanti e non sovrascrive testi o traduzioni personalizzati. La consegna effettiva con outbox/retry e deduplicazione AC-13/AC-57 resta da completare; nessun attestato è ancora implementato nell'incremento email qui descritto; gli attestati essenziali CERT-01–08 sono ora pianificati per la 1.0.0. Vedere [MAIL_TEMPLATES.md](MAIL_TEMPLATES.md).
 
-PR in sviluppo su `feat/email-notification-outbox` (pacchetto 0.56.1-dev): aggiunge coda persistente con chiave evento univoca, invio schedulato via task Joomla, retry progressivo fino a cinque tentativi e collegamento degli eventi di iscrizione automatica/completamento. In caso di esito SMTP incerto l'elemento resta `sending` e non viene reinviato automaticamente. Richieste in approvazione, notifiche manuali/import, attestati e promemoria restano esclusi da questo incremento. Avanzamento ancora invariato fino al merge e alla ricalcolazione documentata.
+PR in sviluppo su `feat/email-notification-outbox` (pacchetto 0.56.1-dev): aggiunge coda persistente con chiave evento univoca, invio schedulato via task Joomla, retry progressivo fino a cinque tentativi e collegamento degli eventi di iscrizione automatica/completamento. In caso di esito SMTP incerto l'elemento resta `sending` e non viene reinviato automaticamente. Richieste in approvazione, notifiche manuali/import, attestati e promemoria restano esclusi da questo singolo incremento email; CERT-01–08 sono pianificati separatamente nella 1.0.0. Avanzamento ancora invariato fino al merge e alla ricalcolazione documentata.
