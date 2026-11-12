@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "a6488b3b646d607dbc20317168f1c69dae055527",
-  "ci_run": 43300371393,
+  "runtime_tested_head": "8152e337455b1ec7b9d307dc9248c8070b964709",
+  "ci_run": 43305020698,
   "counts": {
     "Stato implementazione": {
       "Parziale": 172,
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 74,
-    "method": "Media delle sette aree di prodotto e del nuovo macroambito email approvato: (81+81+78+99+68+92+70+22)/8 = 73,875%, riportata come 73,88% e arrotondata al 74%. L’email è stimata al 22% in base a MAIL-01..10; la riduzione dall’81% precedente riflette il nuovo perimetro. La stima misura l’implementazione, non l’accettazione manuale.",
+    "percent": 66,
+    "method": "Media semplice delle sette macroaree precedenti e delle due aree approvate successivamente: (81+81+78+99+68+92+70+25,5+0)/9 = 66,06%, arrotondata al 66%. Email stimate al 25,5%; attestati PDF essenziali CERT-01–08 al 0%. La riduzione dall’81% precedente deriva dall’ampliamento approvato del perimetro email e attestati, non da regressioni.",
     "areas": [
       81,
       81,
@@ -34,8 +34,9 @@
       68,
       92,
       70,
-      22
+      25.5,
+      0
     ]
   },
-  "note": "Main 0.56.1-dev include PR #291, merge a6488b3b646d607dbc20317168f1c69dae055527. CI standard 4/4: run 43300371393. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393/artifacts/13981827024, SHA-256 ZIP beacb58745732bf803d61c6c10c72e483ad6eba2ee2a9e4337eb80d326b90154. Collaudo manuale Joomla resta pendente."
+  "note": "Main 0.56.2-dev include PR #295, merge 8152e337455b1ec7b9d307dc9248c8070b964709. CI standard 4/4: run 43305020698. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698/artifacts/13983557253, SHA-256 ZIP 9923d41d5d342ac1b854090f6956b9c9fff745c2b71f939a446a6b7494849ad7; digest wrapper 4e541658e5cf45c2b1238c41bb1501a768ec850cbd3b2958c37d3e735959450e. Collaudo Joomla manuale/SMTP pendente."
 }
