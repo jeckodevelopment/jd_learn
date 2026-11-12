@@ -147,3 +147,8 @@ Il test FTPS live `43129478205` ha superato l'autenticazione ma il primo trasfer
 ### IMP-09 — Esito FTPS live confermato (12 novembre 2026)
 
 Il workflow [43131327572](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572) è **SUCCESS** sul commit `dae0751b6828f3dcd6bc3b9a20fdd72e2a94c621` successivo al merge della PR #249. Evidenza: `FTPS LIVE PROBE OK` dopo verifica TLS/pin, autenticazione, `PROT P`, upload, readback, rename-overwrite di file temporanei e cleanup; `jdlearn.xml` non toccato. Questo conferma la compatibilità tecnica FTPS live; l'identità del certificato privato deve essere confermata con Host.it attraverso un canale indipendente. Non segna IMP-10 né l'aggiornamento Joomla end-to-end come superati. Avanzamento globale di sviluppo documentato invariato al **78%**.
+
+
+### REL-01–03 — Candidate dry-run 1.0.0 superato (12 novembre 2026)
+
+[Run 43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497): **SUCCESS** in preparazione del candidato stabile versione 1.0.0 senza pubblicazione, ZIP generato e feed XML preparato con checksum SHA-256. Il job protetto di pubblicazione è stato **SKIPPED** come previsto (`publish=false`). Artefatto [jd-learn-release-candidate-1.0.0](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497/artifacts/13906260145). Questo non completa IMP-10 né dimostra il corretto funzionamento dell'updater Joomla sul sito di prova; avanzamento implementativo globale documentato **78% invariato**.
