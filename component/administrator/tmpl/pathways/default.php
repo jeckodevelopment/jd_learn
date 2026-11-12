@@ -9,7 +9,6 @@ use Joomla\CMS\Router\Route;
 ?>
 <form action="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>" method="post" id="adminForm" name="adminForm">
  <section id="jlms-admin-pathways">
-  <h1><?= Text::_('COM_JLMS_PATHWAYS') ?></h1>
   <table class="table">
    <caption class="visually-hidden"><?= Text::_('COM_JLMS_PATHWAYS') ?></caption>
    <thead><tr><th scope="col"><?= Text::_('JGLOBAL_TITLE') ?></th><th scope="col"><?= Text::_('JSTATUS') ?></th><th scope="col"><?= Text::_('COM_JLMS_REVISION') ?></th></tr></thead>

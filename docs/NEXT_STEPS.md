@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main **0.41.80-dev** include PR #244 / issue #200, CI standard 4/4 e pacchetto verificato [JD-Learn-0.41.80-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817/artifacts/13900597900) (SHA-256 interno `5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a`). Avanzamento implementativo **78%**; restano i collaudi manuali Joomla, i residui confermati nel piano e il gate IMP-10 con endpoint update produttivo, aggiornamento end-to-end e recovery.
+Aggiornato al 12 novembre 2026. Candidata PR #247 / STAB-05 per issue #199: eliminazione dei titoli ripetuti in Dashboard e Percorsi formativi. Dopo la CI resta il collaudo sul sito Joomla. Avanzamento implementativo **78%**; proseguire con i residui del piano e con il gate IMP-10 (feed/asset produttivo e aggiornamento end-to-end).
 
 STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: la PR #238 / 0.41.78-dev integra la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
 

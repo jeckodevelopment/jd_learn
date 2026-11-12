@@ -126,6 +126,7 @@ try:
  print(json.dumps({'component_options_translation_http_checks':2,'status':'passed'}))
  url,html=get('/administrator/index.php?option=com_jlms')
  if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('JD Learn must open the administrator dashboard directly')
+ expect(len(re.findall(r'<h1\b',html))==1,'Dashboard title appears once in the Joomla toolbar')
  menu_links=[parse_qs(urlparse(x).query) for x in Page(html).links]
  for view in ['courses','teachers','questionbank']:
   if not any(q.get('option')==['com_jlms'] and q.get('view')==[view] for q in menu_links):raise RuntimeError('Native JD Learn sidebar link missing: '+view)
@@ -492,6 +493,7 @@ try:
  public_http=build_opener(HTTPCookieProcessor(CookieJar()))
  pathways=json.loads((root.parent/'pathways-fixture.json').read_text())
  _,pathway_admin=get('/administrator/index.php?option=com_jlms&view=pathways')
+ expect(len(re.findall(r'<h1\b',pathway_admin))==1,'Pathways title appears once in the Joomla toolbar')
  expect('id="jlms-admin-pathways"' in pathway_admin and 'CI learning pathway' in pathway_admin,
         'Authenticated administrator sees the native pathway list')
  _,pathway_editor=get('/administrator/index.php?option=com_jlms&task=pathway.edit&id='+str(pathways['pathway']))
