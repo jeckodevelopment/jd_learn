@@ -51,6 +51,8 @@ $pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgres
     ['access' => 'available', 'percent' => null],
 ]);
 expect($pathwayProgress === ['percent' => 25, 'unavailable' => false, 'required' => 2], 'unenrolled course contributes zero to equally weighted pathway progress');
+$pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([['access' => 'available', 'percent' => null, 'progress_applicable' => false]]);
+expect($pathwayProgress === ['percent' => null, 'unavailable' => false, 'required' => 0], 'consultation-only pathway has no progress percentage');
 $pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([
     ['access' => 'available', 'percent' => 80],
     ['access' => 'unavailable', 'percent' => 100],
@@ -71,6 +73,22 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
 );
 expect(in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true)
     && !in_array('COM_JLMS_READINESS_MODULE_EMPTY', $readiness['blockers'], true), 'pre-publication checklist distinguishes optional lesson from empty module');
+$consultationRules = ['mode' => 'consultation', 'completion_policy' => 'none', 'sequence_mode' => 'free'];
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'text']], [], false, $consultationRules,
+);
+expect(!in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true), 'consultation courses may contain only optional lessons');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']], [], false, $consultationRules,
+);
+expect(in_array('COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS', $readiness['blockers'], true), 'consultation courses reject required lessons');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'quiz']], [], false, $consultationRules,
+);
+expect(in_array('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED', $readiness['blockers'], true), 'consultation courses reject quiz lessons');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],

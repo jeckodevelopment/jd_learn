@@ -3,9 +3,13 @@
  <field name="course_id" type="hidden" filter="integer" id="jlms_rules_course_id" />
  <field name="version_id" type="hidden" filter="integer" id="jlms_rules_version_id" />
  <field name="expected_version_revision" type="hidden" filter="integer" id="jlms_rules_revision" />
- <field name="sequence_mode" type="list" label="COM_JLMS_SEQUENCE_MODE" description="COM_JLMS_SEQUENCE_MODE_HELP" required="true" filter="cmd" id="jlms_rules_sequence_mode">
+ <field name="mode" type="list" label="COM_JLMS_TEACHING_MODE" description="COM_JLMS_TEACHING_MODE_HELP" required="true" filter="cmd" id="jlms_rules_mode">
+  <option value="learning">COM_JLMS_TEACHING_MODE_LEARNING</option>
+  <option value="consultation">COM_JLMS_TEACHING_MODE_CONSULTATION</option>
+ </field>
+ <field name="sequence_mode" type="list" label="COM_JLMS_SEQUENCE_MODE" description="COM_JLMS_SEQUENCE_MODE_HELP" required="true" filter="cmd" id="jlms_rules_sequence_mode" showon="mode:learning">
   <option value="free">COM_JLMS_SEQUENCE_FREE</option>
   <option value="sequential">COM_JLMS_SEQUENCE_SEQUENTIAL</option>
  </field>
- <field name="video_threshold" type="number" label="COM_JLMS_TEACHING_THRESHOLD" description="COM_JLMS_TEACHING_THRESHOLD_HELP" min="0.01" max="100" step="0.01" required="true" filter="raw" id="jlms_rules_threshold" />
+ <field name="video_threshold" type="number" label="COM_JLMS_TEACHING_THRESHOLD" description="COM_JLMS_TEACHING_THRESHOLD_HELP" min="0.01" max="100" step="0.01" required="true" filter="raw" id="jlms_rules_threshold" showon="mode:learning" />
 </fieldset></form>

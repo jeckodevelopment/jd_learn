@@ -13,7 +13,7 @@ final class PublicationReadiness
      * @param list<object> $attachments
      * @return array{blockers:list<string>,warnings:list<string>}
      */
-    public static function inspect(object $course, array $modules, array $lessons, array $attachments = [], bool $scanRequired = false): array
+    public static function inspect(object $course, array $modules, array $lessons, array $attachments = [], bool $scanRequired = false, array $rules = []): array
     {
         $blockers = [];
         $warnings = [];
@@ -116,8 +116,14 @@ final class PublicationReadiness
                 break;
             }
         }
-        if ($required === 0) {
+        $consultation = ($rules['mode'] ?? 'learning') === 'consultation' && ($rules['completion_policy'] ?? '') === 'none';
+        if ($consultation && $required > 0) {
+            $blockers[] = 'COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS';
+        } elseif (!$consultation && $required === 0) {
             $blockers[] = 'COM_JLMS_READINESS_REQUIRED_LESSON';
+        }
+        if ($consultation) {
+            foreach ($lessons as $lesson) { if (($lesson->kind ?? '') === 'quiz') { $blockers[] = 'COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED'; break; } }
         }
 
         if (trim((string) ($course->summary ?? '')) === '') {

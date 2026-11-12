@@ -141,11 +141,8 @@ final class LearningService
             || (int) $edition->course_version_id !== (int) $version->id || $edition->status !== 'open') {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
-        $rules = json_decode($version->rules_json, true, 32, JSON_THROW_ON_ERROR);
-        if (($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
-            || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') {
-            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
-        }
+        try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json); }
+        catch (\DomainException) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         if (!$allowExpiredWindow) { self::window($edition); self::window($enrollment); }
         else {
             $now = gmdate('Y-m-d H:i:s');
@@ -223,10 +220,13 @@ final class LearningService
         $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('course_id = :course')
             ->where('course_version_id = :version')->where('code = :code')
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER);
-        $code = 'default-v' . (int) $this->row('course_versions', $versionId)->version_no;
+        $courseVersion = $this->row('course_versions', $versionId);
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $courseVersion->rules_json);
+        $mode = $rules['mode'];
+        $code = 'default-v' . (int) $courseVersion->version_no;
         $q->bind(':code', $code);
         $editionId = (int) $this->db->setQuery($q)->loadResult();
-        return $this->transaction(function () use ($actor, $language, $courseId, $versionId, $editionId, $subject, $key): int {
+        return $this->transaction(function () use ($actor, $language, $courseId, $versionId, $editionId, $subject, $key, $mode): int {
             // First transactional read: same serialization point as manual admission.
             $edition = $this->row('editions', $editionId, true);
             if ((int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId) {
@@ -261,7 +261,7 @@ final class LearningService
                 $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')->where('course_version_id = :version')
                     ->where($this->db->quoteName('required') . ' = 1')->bind(':version', $versionId, ParameterType::INTEGER);
                 $total = (int) $this->db->setQuery($q)->loadResult();
-                if ($total < 1) {
+                if ($total < 1 && $mode !== 'consultation') {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
                 $this->assertEnrollmentScheduleReachable($courseId, $versionId, $editionId,
@@ -467,8 +467,10 @@ final class LearningService
             $customFields[] = ['name' => (string) $name, 'label' => (string) ($field['label'] ?? $name),
                 'values' => array_values(array_filter($field['values'] ?? [], static fn($value): bool => is_string($value) || is_numeric($value)))];
         }
-        $percent = (int) $enrollment->required_total > 0
-            ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : 0;
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
+        $progressApplicable = $rules['mode'] === 'learning' && (int) $enrollment->required_total > 0;
+        $percent = $progressApplicable
+            ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : null;
         if (!$blocker && !$scheduleBlocked && $lesson->kind === 'audio') {
             $resumeQuery = $this->db->createQuery()->select('resume_ms')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :resumeEnrollment')->where('lesson_id = :resumeLesson')
@@ -497,7 +499,8 @@ final class LearningService
                 'resume_ms' => (int) ($lesson->resume_ms ?? 0),
                 'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) ($lesson->body ?? ''), 'HTML'),
                 'custom_fields' => $customFields],
-            'outline' => $outline, 'percent' => $percent, 'completed_at' => $enrollment->completed_at];
+            'outline' => $outline, 'percent' => $percent, 'progress_applicable' => $progressApplicable,
+            'consultation_mode' => $rules['mode'] === 'consultation', 'completed_at' => $enrollment->completed_at];
     }
 
     /** Read-only, freshly authorized resume target. Does not start an attempt or change progress. */
@@ -557,6 +560,9 @@ final class LearningService
         $actor = $this->freshActor($identity);
         $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $key): void {
             [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, true);
+            if (\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json)['mode'] === 'consultation') {
+                throw new \RuntimeException('COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE', 409);
+            }
             $lesson = $this->lesson((int) $version->id, $lessonId);
             $this->assertLessonAvailable($lesson, $enrollment);
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);

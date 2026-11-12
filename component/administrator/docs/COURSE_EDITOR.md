@@ -26,6 +26,12 @@ Nel Programma di un corso pubblicato, scegliere Modifica programma. Il sistema p
 
 Riepiloga aggiornamento apre il confronto con la versione attiva: moduli, lezioni, quiz e materiali aggiunti, modificati/riordinati o rimossi; regole e iscrizioni per versione. Il riepilogo non modifica i dati. Verificare le differenze e selezionare la conferma esplicita; Pubblica aggiornamento esegue quindi la transizione del workflow e rende disponibile il programma aggiornato per le nuove iscrizioni. Il ticket è vincolato a sessione, operatore, corso, bozza e transizione, scade dopo15minuti ed è consumato al tentativo di conferma. Modifiche intervenute dopo il riepilogo richiedono un nuovo confronto. I conteggi degli iscritti sono informativi al momento della lettura e non espongono nominativi. Gli iscritti esistenti conservano versione, progressi, tentativi, risultati e materiali assegnati. Le modifiche al programma possono essere preparate durante l’erogazione. La migrazione degli iscritti rimane un’operazione esplicita da sviluppare secondo AUT-04.
 
+## Regole didattiche
+
+Nella scheda **Regole didattiche** della bozza scegliere il tipo di corso. **Apprendimento** conserva completamento delle attività obbligatorie e, se selezionato, sequenziamento. **Sola consultazione** è destinata a programmi senza obblighi: rende tutte le lezioni facoltative, disattiva sequenziamento e completamento e richiede di eliminare quiz e prerequisiti prima della pubblicazione. Il preflight segnala le incompatibilità e la validazione server le rifiuta comunque.
+
+La regola appartiene alla versione didattica. Per cambiare modalità a un corso già pubblicato, modificare la bozza e pubblicare una nuova versione; le iscrizioni e i progressi della versione precedente restano associati alla versione originaria. La modalità non rende pubblici contenuti protetti.
+
 ## Docenti
 
 Nella scheda Docenti del corso si associano i profili desiderati. Un profilo può essere creato senza scegliere una categoria. I campi aggiuntivi si definiscono con il gestore Campi di Joomla nel contesto Docenti. Visibilità, lingua, gruppi di campi e permessi di modifica dei valori seguono il core.

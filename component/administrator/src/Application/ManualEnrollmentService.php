@@ -77,9 +77,8 @@ final class ManualEnrollmentService
             ->where('id = :version')->where('course_id = :course')->where("status = 'published'")
             ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':course', $courseId, ParameterType::INTEGER);
         $version = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
-        $rules = json_decode($version->rules_json, true);
-        if (!is_array($rules) || ($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
-            || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json); }
+        catch (\DomainException) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         $code = 'default-v' . (int) $version->version_no;
         $q = $this->db->createQuery()->select('id, revision, starts_at, ends_at, status, capacity')->from('#__jlms_editions')
             ->where('course_id = :course')->where('course_version_id = :version')->where('code = :code')
@@ -97,7 +96,7 @@ final class ManualEnrollmentService
         $used = (int) $this->db->setQuery($q)->loadResult();
         $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')->where('course_version_id = :version')->where($this->db->quoteName('required') . ' = 1')->bind(':version', $versionId, ParameterType::INTEGER);
         $total = (int) $this->db->setQuery($q)->loadResult();
-        if ($total < 1) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        if ($total < 1 && $rules['mode'] !== 'consultation') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
         $p = ['course_id' => $courseId, 'user_id' => $userId, 'language' => $language, 'version_id' => $versionId, 'version_revision' => (int) $version->revision,
             'edition_id' => $editionId, 'edition_revision' => (int) $edition->revision, 'starts_at' => $edition->starts_at, 'ends_at' => $edition->ends_at,
             'capacity' => $edition->capacity === null ? null : (int) $edition->capacity, 'used' => $used, 'required_total' => $total,

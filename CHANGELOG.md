@@ -1,3 +1,9 @@
+## 0.47.0-dev — modalità corso di sola consultazione (IMP-02 / AUT-03)
+
+- Aggiunta una modalità esplicita per pubblicare corsi con sole lezioni facoltative. La modalità standard continua a richiedere attività obbligatorie.
+- I corsi di consultazione non accettano quiz, prerequisiti o sequenziamento e non attribuiscono completamenti o percentuali; dashboard e percorsi indicano che il progresso non si applica.
+- Aggiornati il preflight, la validazione autorevole, le guide e le regressioni automatiche. Accettazione manuale Joomla ancora da eseguire.
+
 # Changelog
 
 ## 0.46.0-dev — snapshot dei campi corso (IMP-01 / CORE-10)

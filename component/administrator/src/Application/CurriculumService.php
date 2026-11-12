@@ -314,12 +314,20 @@ final class CurriculumService
         $this->transaction(function () use ($actor, $course, $version, $revision, $input): void {
             $record = $this->draft($actor, $course, $version, $revision);
             $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($record->rules_json);
+            $mode = $input['mode'] ?? $rules['mode'];
+            if (!is_string($mode) || !in_array($mode, ['learning', 'consultation'], true)) {
+                throw new \DomainException('COM_JLMS_INVALID_INPUT');
+            }
             $sequenceMode = $input['sequence_mode'] ?? $rules['sequence_mode'];
             if (!is_string($sequenceMode) || !in_array($sequenceMode, ['free', 'sequential'], true)) {
                 throw new \DomainException('COM_JLMS_INVALID_INPUT');
             }
-            $rules['sequence_mode'] = $sequenceMode;
-            $rules['video_threshold_basis_points'] = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold'] ?? null);
+            $rules['mode'] = $mode;
+            $rules['sequence_mode'] = $mode === 'consultation' ? 'free' : $sequenceMode;
+            $rules['completion_policy'] = $mode === 'consultation' ? 'none' : 'all_required';
+            if (array_key_exists('video_threshold', $input)) {
+                $rules['video_threshold_basis_points'] = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold']);
+            }
             $this->update('course_versions', $record, ['rules_json'=>json_encode($rules, JSON_THROW_ON_ERROR)], $actor);
         });
     }
