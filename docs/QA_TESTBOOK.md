@@ -770,9 +770,9 @@ Il richiedente ha confermato in chat di aver **scaricato e installato il compone
 **Non ancora confermati dall'utente:** aggiornamento da precedente versione con dati esistenti; preservazione corsi, iscrizioni e progressi; verifica approfondita dei provider/player, autorizzazioni e delle funzionalità operative; feed pubblico e aggiornamento automatico Joomla. **IMP-10 resta parziale**, nessun rilascio pubblico autorizzato. Il valore globale documentato resta 78% finché il criterio di misurazione non viene aggiornato sulla base di evidenze di tutti i requisiti.
 
 
-## IMP-05 — capacità minime per il tracciamento video (0.51.0-dev)
+## IMP-05 — capacità minime per il tracciamento video (0.51.0-dev, PR #278)
 
-Riferimenti: PRO-05, VID-03; AC-05, AC-27, AC-30, AC-44, AC-91. Il controllo richiede posizione, durata e seek per il corso in apprendimento tracciato; velocità e sottotitoli/caption restano opzionali. Il server ripete la verifica sulle capabilities del descrittore prima di avviare o rinnovare il tracciamento.
+Riferimenti: PRO-05, VID-03; AC-05, AC-27, AC-30, AC-44, AC-91. PR [#278](https://github.com/jeckodevelopment/jd_learn/pull/278), integrata nel commit `62af5dbcbc6bd2300c67bc149c04bccaa0203aec`; CI standard 4/4 nel [run 43246533928](https://github.com/jeckodevelopment/jd_learn/actions/runs/43246533928). Pacchetto [0.51.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43246533928/artifacts/13957416321), SHA-256 `b6b01e432ddd660c32f25dfa4f611bfab069edcfa92977349f2ef16dbff0fd2f`; digest wrapper `2da0bd7ce7d03b58227ab24b4e7c84060143d41d5841aa3b54449aaa06a707bc`, scadenza 26 novembre 2026. Il controllo richiede posizione, durata e seek per il corso in apprendimento tracciato; velocità e sottotitoli/caption restano opzionali. Il server ripete la verifica sulle capabilities del descrittore prima di avviare o rinnovare il tracciamento.
 
 **Comportamenti da testare in Joomla**
 
@@ -781,4 +781,4 @@ Riferimenti: PRO-05, VID-03; AC-05, AC-27, AC-30, AC-44, AC-91. Il controllo ric
 3. Provare un corso in modalità consultazione con una lezione video: la riproduzione deve restare disponibile senza sessione né scritture di progresso.
 4. In un ambiente di test con adapter che dichiara o restituisce capabilities incomplete, verificare che la pubblicazione oppure l’avvio del tracciamento venga rifiutato e che nessun progresso sia attribuito. L’assenza di velocità o caption, da sola, non deve bloccare la pubblicazione.
 
-**Esito automatico locale:** build pacchetto e check strutturali superati; test player JavaScript superati. La suite PHP e la regressione Joomla dipendono dalla CI e dal collaudo manuale. **Esito sito Joomla:** Non eseguito.
+**Esito automatico locale:** build pacchetto e check strutturali superati; test player JavaScript superati. CI standard 4/4, inclusi test PHP e integrazione Joomla; il collaudo manuale live resta pendente. **Esito sito Joomla:** Non eseguito.
