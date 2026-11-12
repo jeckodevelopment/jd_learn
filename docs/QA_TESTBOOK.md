@@ -8,7 +8,7 @@ Riferimenti: ISC-01/02/05/07, REP-02, SCR-14; AC-11/12/25/26/40/53/54/60/63/128.
 4. Ripetere con account amministrativo limitato al corso, anonimo e permesso revocato nella sessione: la protezione deve restare applicata.
 5. Confermare che la pagina resta in sola lettura e che dati, progressi e stato iscrizione non cambiano.
 
-Il test automatico `tests/roster-http.py` controlla opzioni native e isolamento corso; `tests/roster-filters.mjs` verifica ricerca delle opzioni e ripristino. Accettazione manuale Joomla da registrare.
+Il test automatico `tests/roster-http.py` controlla opzioni native e isolamento corso; `tests/roster-filters.mjs` verifica ricerca delle opzioni e ripristino. Accettazione manuale Joomla da registrare. Implementato dalla PR [#264](https://github.com/jeckodevelopment/jd_learn/pull/264), merge `aed93820f0a948b11d3427ce9ba4d312621b0d74`; CI 4/4 nel [run 43188504970](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970). L’esito della CI non sostituisce i cinque scenari manuali sopra.
 
 ## MAT-01 — filtro degli allegati per ambito (0.44.0-dev)
 
