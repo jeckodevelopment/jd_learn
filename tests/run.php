@@ -10,7 +10,7 @@ use Jlms\Component\Jlms\Administrator\Domain\QuizScorer;
 use Jlms\Component\Jlms\Administrator\Domain\AccessPolicy;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 use Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability;
-use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
+use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;\nuse Jlms\Component\Jlms\Administrator\Domain\VideoCapabilityPolicy;
 use Jlms\Contracts\Video\SourceInput;
 use Jlms\Contracts\Video\SourceNormalizer;
 use Jlms\Contracts\Video\VideoProviderRegistry;
@@ -262,7 +262,7 @@ rejects(fn () => $consume(array_fill(0,101,$event(1,'play',0,0))), 'bounded even
 require_once __DIR__ . '/../plugins/jlmsvideo/youtube/src/Provider/Provider.php';
 $enabled = new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true);
 $source = $enabled->normaliseSource(new SourceInput('https://youtu.be/dQw4w9WgXcQ'));
-expect($enabled->getDescriptor()->configured && $enabled->getCapabilities($source)->position, 'explicitly enabled embed advertises actual position capability');
+expect($enabled->getDescriptor()->configured && ($caps = $enabled->getCapabilities($source))->position && $caps->duration && $caps->seek, 'enabled embed declares minimum tracked-learning capabilities');\n$optional = new \\Jlms\\Contracts\\Video\\VideoCapabilities(true, true, true, false, false, false, false, false);\nexpect($optional->position && $optional->duration && $optional->seek, 'speed, captions and transcripts remain optional');\nexpect(!(new \\Jlms\\Contracts\\Video\\VideoCapabilities(true, false, true, true, true, true, false, false))->duration, 'provider without duration cannot support tracked learning');\nexpect(!(new \\Jlms\\Contracts\\Video\\VideoCapabilities(true, true, false, true, true, true, false, false))->seek, 'provider without seek cannot support tracked learning');
 $playback = $enabled->createPlaybackDescriptor($source, new \Jlms\Contracts\Video\PlaybackContext(1,2,3,'it-IT',0,'grant',new \DateTimeImmutable()));
 expect($playback->playerOptions['reference'] === 'dQw4w9WgXcQ' && $playback->playerOptions['autoplay'] === false, 'canonical whitelisted playback options');
 expect(!(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getDescriptor()->configured, 'embed disabled by default');
