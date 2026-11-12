@@ -896,3 +896,16 @@ Verificare su Joomla di prova il riepilogo **Verifica prima della pubblicazione*
 8. Verificare mail di disponibilità tramite modello Joomla con invio, errore SMTP, retry e deduplica; l'attestato persiste quando la posta non funziona.
 
 **Stato:** prove pianificate, nessuna accettazione manuale registrata. Vedere [CERTIFICATES_1.0.0.md](CERTIFICATES_1.0.0.md).
+
+
+## IMP-09-MAIL-B — sospensione e riattivazione (PR #297, 0.56.3-dev)
+
+**Comportamenti da testare in Joomla**
+
+1. Installare/aggiornare il pacchetto; in **Sistema → Modelli email** verificare i template `com_jlms.enrollment.suspended` e `com_jlms.enrollment.reactivated`. Personalizzare testo e traduzione, aggiornare e verificare che restino invariati.
+2. Configurare SMTP di prova e attività pianificata JD Learn. Sospendere un’iscrizione attiva: deve arrivare un solo messaggio di sospensione; rieseguire l’attività senza nuove transizioni e verificare che non partano duplicati.
+3. Riattivare l’iscrizione: deve arrivare soltanto il template di riattivazione. Verificare che progressi e storico quiz restino invariati.
+4. Verificare preferenze globali e override corso separatamente per sospensione e riattivazione: globale disabilitato con corso ereditato (nessun invio), override abilita (invio), override disabilita con globale abilitato (nessun invio).
+5. Verificare la gestione di errore di accodamento: transazione di stato/audit/coda coerente e rollback; ripetere la stessa transizione idempotente senza duplicati.
+
+PR [#297](https://github.com/jeckodevelopment/jd_learn/pull/297) integrata, CI standard 4/4 nel [run 43307181190](https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190). Pacchetto [JD-Learn-0.56.3-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190/artifacts/13983759363), SHA-256 ZIP `8c3d5e0de6935f67cf93e1b7caf3a27e7d10d61d26c20450f5d9ace1cc6cdee0`. La suite automatizzata non sostituisce le prove manuali Joomla/SMTP sopra: registrare qui ambiente ed esito.
