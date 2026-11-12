@@ -3,6 +3,7 @@
 ## Processo di rilascio — issue #160
 
 - Definita la policy SemVer per le versioni 0.x, la stabile 1.0.0 e le release successive in [VERSIONING.md](docs/VERSIONING.md).
+- PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251), milestone 1.0.0, integrata nel commit `f15945853bd11546300d9776fa4bdc12707369a9`; CI standard 4/4 nel [run 43130882855](https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855). Issue #160 chiusa come completata.
 - Il controllo strutturale verifica versione canonica e corrispondenza tra manifest del package e del componente; builder e generatore feed rifiutano versioni stabili con zeri iniziali.
 - Modifica di processo e strumenti; nessuna variazione del comportamento Joomla o del numero di versione runtime.
 
