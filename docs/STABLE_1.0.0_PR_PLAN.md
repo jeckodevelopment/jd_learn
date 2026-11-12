@@ -1,3 +1,5 @@
+> **Tracciabilità PR/requisiti (#259):** per ogni nuova PR aggiornare `docs/REQUIREMENTS_STATUS.csv` con i soli numeri PR separati da `;`, eseguire il validatore CI e seguire [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md). Le PR soltanto documentali non modificano la percentuale implementativa.
+
 **Stato aggiornato al 12 novembre 2026: main 0.54.0-dev, avanzamento implementativo 81%** (media 81,43%; M01/M02 82%, M03 78%, M04 99%). PR [#284](https://github.com/jeckodevelopment/jd_learn/pull/284) integra l’avviso AUT-03 sulla durata video in sola consultazione, mantenendo il blocco in modalità Apprendimento. Accettazione manuale Joomla, residui IMP-04 e gate IMP-10 restano aperti. Metodo e macroaree in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 Piano aggiornato al 12 novembre 2026. Main **0.45.0-dev** integra IMP-08; PR #264 completa la ricerca nei filtri Versione e Iscritto del roster. Il collaudo Joomla è descritto in `docs/QA_TESTBOOK.md` e resta da eseguire. Le note successive documentano lo storico delle PR precedenti.

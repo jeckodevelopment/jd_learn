@@ -1,0 +1,26 @@
+name: Requirements CSV integrity
+
+on:
+  pull_request:
+    paths:
+      - 'docs/REQUIREMENTS_STATUS.csv'
+      - 'scripts/check_requirements_csv.py'
+      - '.github/workflows/requirements-csv.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/REQUIREMENTS_STATUS.csv'
+      - 'scripts/check_requirements_csv.py'
+      - '.github/workflows/requirements-csv.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-requirements:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check requirements CSV integrity
+        run: python3 scripts/check_requirements_csv.py
