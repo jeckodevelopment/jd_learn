@@ -57,6 +57,39 @@ IMP-07 / PR [#204](https://github.com/jeckodevelopment/jd_learn/pull/204) è int
 - In IMP-09 la gestione amministrativa AC-131 è l’unica eccezione quiz approvata. Non aggiungere tipi di domanda, valutazioni, flussi studente o ampliamenti della banca.
 - Le trascrizioni audio, il quinto plugin video, attestati, KPI/report avanzati, export/import CSV, operazioni massive, notifiche/job non indispensabili, sblocco sequenziale tra corsi e funzioni Credentials non sono inclusi, salvo diversa decisione di prodotto formalizzata.
 
+
+## Approvazione funzionale 12 novembre 2026 — Mail Templates e notifiche 1.0.0
+
+**Decisione di prodotto approvata:** modello B, limitato alle comunicazioni operative dei corsi, con utilizzo obbligatorio di **Joomla → Sistema → Modelli email** e dell'infrastruttura mail globale Joomla. Non costruire un editor o un sistema SMTP/newsletter parallelo. Questa approvazione **estende il perimetro precedente** di IMP-09: le notifiche contestuali e alcune notifiche temporali essenziali sono ora IN per la 1.0.0, mentre campagne marketing, mailing list, promemoria ripetitivi di inattività e ulteriori notifiche avanzate restano OUT.
+
+### Requisiti approvati (ID di pianificazione MAIL-01–MAIL-10; aggiungere/mappare nella matrice funzionale prima delle PR runtime)
+
+| ID | Priorità | Requisito/criterio di accettazione |
+|---|---|---|
+| MAIL-01 | P0 | Usare esclusivamente i Mail Templates nativi Joomla per oggetto, corpo HTML/testo, lingue e variabili; mantenere le personalizzazioni/ traduzioni nell'upgrade, senza SMTP autonomo. |
+| MAIL-02 | P0 | Invio evento-driven per richiesta/conferma iscrizione, iscrizione amministrativa, sospensione, riattivazione, annullamento e completamento corso; attivare solo al verificarsi reale della transizione. |
+| MAIL-03 | P1 | Notifica facoltativa della disponibilità di una nuova lezione e di modifiche didattiche significative, con destinatari limitati agli iscritti interessati ed evitando notifiche per salvataggi editoriali ordinari. |
+| MAIL-04 | P1 | Promemoria operativo di scadenza del corso, opzionale, con soglia configurabile e Scheduler Joomla; nessuna sequenza di solleciti marketing/inattività. |
+| MAIL-05 | P0 | Opzioni globali di abilitazione dei singoli eventi e override per corso (eredita/configurazione specifica); impostazioni applicate al momento dell'evento. |
+| MAIL-06 | P0 | Azione **Comunica agli iscritti** nella gestione del corso: invio di un singolo messaggio operativo a tutti gli iscritti attivi o a un sottoinsieme selezionato; oggetto/contenuto redazionali inseriti nel template Joomla dedicato, nessuna campagna generica o contatti esterni. |
+| MAIL-07 | P0 | ACL Joomla: amministratore o docente autorizzato per il solo corso assegnato; filtro destinatari server-side e nessuna esposizione di indirizzi o invio a utenti di altri corsi. |
+| MAIL-08 | P1 | Anteprima con variabili rese, conteggio destinatari, conferma esplicita dell'invio manuale e prova email verso un indirizzo autorizzato; evitare duplicati da doppio click. |
+| MAIL-09 | P0 | Outbox/coda con elaborazione batch, retry limitato e backoff per errori transitori, idempotenza per evento/destinatario, niente rollback del fatto didattico se SMTP fallisce (AC-13/AC-57). |
+| MAIL-10 | P1 | Audit minimo di autore, corso, evento, esito, timestamp e tentativi con minimizzazione dati e retention; niente tracking aperture/click; errori consultabili dagli autorizzati. |
+
+**Precisazione modello B:** i tipi di Mail Template sono registrati dall'estensione; l'amministratore può modificarne contenuti e traduzioni e configurare le regole globali/per corso. La creazione di nuovi tipi di evento o di campagne arbitrarie non è inclusa. Conservare gli ID Joomla già presenti (`com_jlms.*`) ed evitare duplicati.
+
+### Sequenza di PR aggiuntive in IMP-09 (prima di IMP-10)
+
+| Ordine | ID / priorità | Perimetro della PR | Requisiti | Dipendenze e uscita |
+|---:|---|---|---|---|
+| 9.1 | **IMP-09-MAIL-A · P0** | Ricognizione #288 e registrazione dei template Joomla mancanti per eventi approvati, tag e lingue; definizione del contratto eventi e delle preferenze globale/per corso. | CORE-18, MAIL-01/02/03/04/05 | Non sovrascrivere personalizzazioni; verificare installazione pulita e upgrade IT/EN. |
+| 9.2 | **IMP-09-MAIL-B · P0** | Dispatcher, outbox idempotente, batch Scheduler Joomla, retry/backoff, audit minimo e collegamento delle transizioni di iscrizione/completamento. | CORE-18, MAIL-02/09/10; AC-13/AC-57 | Dopo A. Un errore posta non annulla iscrizione/completamento; nessun invio doppio. |
+| 9.3 | **IMP-09-MAIL-C · P0** | Comunicazione manuale per corso: selezione autorizzata dei destinatari attivi, editor del messaggio operativo (non editor dei Mail Templates), preview, conferma, test e job asincrono. | MAIL-06/07/08/09/10 | Dopo B; autorizzazioni corso/docente e destinatari verificate lato server. |
+| 9.4 | **IMP-09-MAIL-D · P1** | Notifiche opzionali nuove lezioni/cambi rilevanti e scadenze tramite Scheduler; UI override per corso e casi limite; documentazione/test. | MAIL-03/04/05/09 | Dopo A/B; guardie anti-spam e prova multi-corso. |
+
+Ogni PR va assegnata alla milestone **1.0.0**, documenta `Comportamenti da testare` in Joomla, aggiorna `REQUIREMENTS_STATUS.csv` (ID e numeri effettivi delle PR quando noti), guide, testbook, changelog ed evidenze. **IMP-10** deve includere scenari di posta disabilitata/non raggiungibile, retry, deduplica, upgrade template, ACL docente e carico di centinaia di destinatari. Non incrementare l'82% globale per il solo aggiornamento documentale; ricalcolare la copertura dopo implementazioni reali con denominatore coerente al perimetro ampliato.
+
 ## Blocco STAB — correzioni dopo le implementazioni
 
 Le issue sotto risultano aperte su GitHub alla data del piano. Prima di aprire la relativa PR, verificare se una PR già integrata le abbia risolte nel build corrente. Se non sono riproducibili, documentare l’evidenza e chiudere la issue senza introdurre una correzione superflua.
