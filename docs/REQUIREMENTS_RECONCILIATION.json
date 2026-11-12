@@ -38,5 +38,5 @@
       0
     ]
   },
-  "note": "Main 0.56.3-dev include PR #297, merge 18d916075ac9580f442c7ec85a45c9c82c6e9642. CI standard 4/4: run 43307181190. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190/artifacts/13983759363, SHA-256 ZIP 8c3d5e0de6935f67cf93e1b7caf3a27e7d10d61d26c20450f5d9ace1cc6cdee0; digest wrapper 7177c5d117d83bc41725845bfbde05ba40a497adae2d8c1ef373e1264df70e4a. Collaudo Joomla manuale/SMTP pendente."
+  "note": "Main 0.56.3-dev include PR #297, merge 18d916075ac9580f442c7ec85a45c9c82c6e9642; candidate head 102d8fa3ed055612c819672e118984a22712dcdf. CI standard 4/4: run 43307181190. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190/artifacts/13983759363, SHA-256 ZIP 8c3d5e0de6935f67cf93e1b7caf3a27e7d10d61d26c20450f5d9ace1cc6cdee0; digest wrapper 7177c5d117d83bc41725845bfbde05ba40a497adae2d8c1ef373e1264df70e4a. Collaudo Joomla manuale/SMTP pendente."
 }
