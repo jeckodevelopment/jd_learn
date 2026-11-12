@@ -262,7 +262,13 @@ rejects(fn () => $consume(array_fill(0,101,$event(1,'play',0,0))), 'bounded even
 require_once __DIR__ . '/../plugins/jlmsvideo/youtube/src/Provider/Provider.php';
 $enabled = new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true);
 $source = $enabled->normaliseSource(new SourceInput('https://youtu.be/dQw4w9WgXcQ'));
-expect($enabled->getDescriptor()->configured && $enabled->getCapabilities($source)->position, 'explicitly enabled embed advertises actual position capability');
+expect($enabled->getDescriptor()->configured && ($caps = $enabled->getCapabilities($source))->position && $caps->duration && $caps->seek, 'enabled embed declares minimum tracked-learning capabilities');
+$supportsTrackedLearning = static fn (\Jlms\Contracts\Video\VideoCapabilities $capabilities): bool =>
+    $capabilities->position && $capabilities->duration && $capabilities->seek;
+$optional = new \Jlms\Contracts\Video\VideoCapabilities(true, true, true, false, false, false, false, false);
+expect($supportsTrackedLearning($optional), 'speed, captions and transcripts remain optional');
+expect(!$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, false, true, true, true, true, false, false)), 'provider without duration cannot support tracked learning');
+expect(!$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, true, false, true, true, true, false, false)), 'provider without seek cannot support tracked learning');
 $playback = $enabled->createPlaybackDescriptor($source, new \Jlms\Contracts\Video\PlaybackContext(1,2,3,'it-IT',0,'grant',new \DateTimeImmutable()));
 expect($playback->playerOptions['reference'] === 'dQw4w9WgXcQ' && $playback->playerOptions['autoplay'] === false, 'canonical whitelisted playback options');
 expect(!(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getDescriptor()->configured, 'embed disabled by default');

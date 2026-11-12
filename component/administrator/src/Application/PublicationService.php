@@ -286,7 +286,7 @@ final class PublicationService
                     if (!$provider->getDescriptor()->configured) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
                     }
-                    if ($rules['mode'] !== 'consultation' && !$provider->getCapabilities($normal)->position) {
+                    if ($rules['mode'] !== 'consultation' && !(($capabilities = $provider->getCapabilities($normal))->position && $capabilities->duration && $capabilities->seek)) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                 } else { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }

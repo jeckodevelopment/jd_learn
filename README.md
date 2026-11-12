@@ -1,3 +1,5 @@
+Candidato della PR in corso: **0.51.0-dev**, enforcement delle capabilities minime video per pubblicazione e playback; non ancora integrato in main.
+
 Aggiornato al 12 novembre 2026. Main **0.50.0-dev**, PR [#276](https://github.com/jeckodevelopment/jd_learn/pull/276), merge `d29cdc9326bcc0d1f9ac3dd454fa40189ca20c82`; preferenza locale caption applicata ai default iniziali YouTube/Cloudflare (STU-05). CI standard 4/4 nel [run 43240360856](https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856). Avanzamento implementativo **81%** (81,00%; M01/M02 81%). Pacchetto [JD-Learn-0.50.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856/artifacts/13954487496), SHA-256 installabile `fce6b1f09ab3d7d1fe1821aff366a11718e420e2331754ea18cf4b741b0b877c`; digest wrapper `094f514f005324c76af7284e4e0d43a2e09a25563976c94982504e23bf78d342` (estrarre una volta; scade il 26 novembre 2026). Accettazione manuale Joomla e gate IMP-10 ancora aperti.
 
 
