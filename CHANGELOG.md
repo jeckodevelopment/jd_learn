@@ -1,7 +1,9 @@
 ## 0.52.0-dev — ripresa video protetta tra sessioni concorrenti (IMP-04)
 
-- PRO-06: una sessione obsoleta continua a contribuire alla copertura video, ma la revisione di ripresa resta obsoleta per tutta la sessione e non può sovrascrivere il punto confermato da un altro dispositivo.
-- Aggiunta regressione d’integrazione con due batch consecutivi dalla sessione obsoleta.
+- PR [#280](https://github.com/jeckodevelopment/jd_learn/pull/280), milestone 1.0.0, integrata nel commit `dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4`; CI standard 4/4 nel [run 43250267681](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681).
+- Una sessione video che rileva un conflitto di ripresa mantiene la revisione obsoleta per tutti i batch successivi. Continua ad aggiungere copertura senza spostare il resume più recente né duplicare il completamento.
+- Pacchetto [JD-Learn-0.52.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681/artifacts/13958934116), SHA-256 `f5c0986ae59361de77c67ebae9ed9d91583b12f38e835a4a12a9cedfebfb9216`, wrapper `3f528639d38a2c61d39fc5713f6750f7dfadb5bf5c6220d810174cddaf8b89e9`; scade il 26 novembre 2026.
+- Collaudo multi-browser Joomla ancora da registrare nel testbook.
 
 ## 0.51.0-dev — capabilities minime per il tracciamento video (IMP-05)
 
