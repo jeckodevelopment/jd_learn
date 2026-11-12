@@ -7,7 +7,7 @@
 3. Aggiornare nuovamente il pacchetto: oggetto, corpo e traduzione personalizzati devono rimanere invariati; non devono comparire modelli duplicati.
 4. Verificare che l'impostazione del mailer/SMTP resti quella globale di Joomla. Questo incremento registra i modelli; la spedizione automatica e il retry persistente sono residui CORE-18 e non vanno considerati collaudati da queste prove.
 
-**Verifiche aggiunte dalla PR in sviluppo 0.56.1-dev**
+**Verifiche aggiunte dalla PR #291 (0.56.1-dev)**
 
 5. Abilitare il plugin Attività - JD Learn e creare un'attività pianificata Joomla `JD Learn: invia email in coda` con frequenza breve per il collaudo. Configurare il mailer globale del sito su una casella di prova.
 6. Con un utente di prova, iscriversi a un corso pubblicato in modalità automatica. Eseguire l'attività e verificare la conferma d'iscrizione con corso, nome, lingua e link aula corretti. Ripetere l'attività: la casella deve ricevere un solo messaggio.
@@ -15,7 +15,7 @@
 8. Simulare un errore SMTP temporaneo prima dell'invio, eseguire l'attività e verificare che l'elemento venga ritentato dopo l'attesa progressiva e raggiunga `sent` al ripristino. Verificare che il log dell'attività riporti l'esito senza contenuti o destinatari sensibili.
 9. Verificare nel database che i messaggi inviati abbiano stato `sent` e i dati personali siano rimossi; i messaggi in stato `sending` dopo un'interruzione non devono essere reinviati automaticamente.
 
-PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288) integrata nel commit `9ea5725c1b1784d9ae59a91339d8b3dcb83d1144`. CI standard 4/4 nel [run 43294015095](https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095); test Joomla automatici su entrambi gli stack superati. Pacchetto [JD-Learn-0.56.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386), SHA-256 ZIP `4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37`. L'accettazione manuale resta da eseguire. La consegna automatica retryable/idempotente AC-13/AC-57 non è coperta da questa PR.
+PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291) integrata nel commit `a6488b3b646d607dbc20317168f1c69dae055527`. CI standard 4/4 nel [run 43300371393](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393), inclusi controlli automatici su entrambi gli stack DB e Chromium. Pacchetto [JD-Learn-0.56.1-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393/artifacts/13981827024), SHA-256 ZIP `beacb58745732bf803d61c6c10c72e483ad6eba2ee2a9e4337eb80d326b90154` (scade il 26 novembre 2026). La CI copre schema, integrazioni e suite automatizzata, ma non prova SMTP end-to-end né sostituisce l'accettazione manuale Joomla. Per i test manuali descritti sopra registrare qui esito, Joomla/PHP, mailer e configurazione usata; non marcare il requisito superato senza tali evidenze.
 
 ## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
 

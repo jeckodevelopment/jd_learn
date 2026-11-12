@@ -3,55 +3,56 @@
   "product": "JD Learn",
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
-    "percent": 82,
-    "basis": "Media semplice delle sette macroaree incluse: (82+81+79+99+68+93+70)/7=81,71%, arrotondata a 82%. PR #288 integra il nucleo dei template email Joomla nel CORE-18; restano invio automatico con retry/idempotenza AC-13/AC-57, accettazione Joomla manuale, residui IMP-04/05 e gate IMP-10.",
+    "percent": 74,
+    "basis": "Media delle sette aree precedenti e del nuovo macroambito email approvato il 12 novembre: (81+81+78+99+68+92+70+22)/8=73,875%, arrotondata al 74%. La variazione rispetto all’81% deriva dall’ampliamento del perimetro email, non da regressioni.",
     "macroareas": {
-      "courses": 82,
+      "courses": 81,
       "catalogue": 81,
-      "learning_progress": 79,
+      "learning_progress": 78,
       "video_materials": 99,
       "enrollment": 68,
-      "joomla_integrations": 93,
-      "release_preparation": 70
+      "joomla_integrations": 92,
+      "release_preparation": 70,
+      "email_notifications": 22
     }
   },
-  "version": "0.56.0-dev",
+  "version": "0.56.1-dev",
   "code_baseline": {
-    "tested_head": "21edd2ff175efe43b90d91a328d3ad24b563e0a0",
+    "tested_head": "a6488b3b646d607dbc20317168f1c69dae055527",
     "parent_main_commit": "199b07baf65a9cb90c53dc498bdb845a420e0aa7",
-    "pull_request": 288,
-    "merged_main_commit": "9ea5725c1b1784d9ae59a91339d8b3dcb83d1144"
+    "pull_request": 291,
+    "merged_main_commit": "a6488b3b646d607dbc20317168f1c69dae055527"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43294015095,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095",
+    "run_id": 43300371393,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
     "jobs": [
       {
-        "id": 131447474418,
+        "id": 131469612614,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131447556557,
+        "id": 131469798829,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131447556613,
-        "name": "PHP 8.3 / MySQL 8.4",
+        "id": 131469798681,
+        "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131447556784,
-        "name": "PHP 8.4 / MariaDB 10.6",
+        "id": 131469798557,
+        "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
@@ -13086,6 +13087,11 @@
       "package_size_bytes": 552635,
       "artifact_size_bytes": 552379,
       "artifact_expires_at": "2026-11-24T21:36:47Z"
+    },
+    {
+      "ci": {
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095"
+      }
     }
   ],
   "latest_feature": {
