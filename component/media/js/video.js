@@ -216,7 +216,7 @@ export class VideoLesson {
       sequence: this.sequence, duration_ms: this.duration, events_json: JSON.stringify(this.queue.splice(0))};
     try {
       const result = await this.request('save', this.pending, keepalive);
-      this.sequence = Math.max(Number(result.next_sequence) || 0, Number(this.pending.sequence) + 1); this.pending = null;
+      this.sequence = result.next_sequence; this.pending = null;
       this.message(result.lesson_completed ? 'completed' : 'saved');
       const meter = document.getElementById('jlms-progress-meter');
       if (meter) meter.value = result.course_percent;
