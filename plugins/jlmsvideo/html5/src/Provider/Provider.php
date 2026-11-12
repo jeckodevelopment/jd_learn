@@ -19,7 +19,7 @@ final class Provider extends AbstractFoundationProvider
     public function getDescriptor(): ProviderDescriptor { return new ProviderDescriptor('html5', 'PLG_JLMSVIDEO_HTML5', 1, $this->enabled); }
     public function getCapabilities(VideoSource $source): VideoCapabilities
     {
-        return new VideoCapabilities($this->enabled, $this->enabled, $this->enabled, false, false, false, false, false);
+        return new VideoCapabilities($this->enabled, $this->enabled, $this->enabled, $this->enabled, false, false, false, false);
     }
     public function createPlaybackDescriptor(VideoSource $source, PlaybackContext $context): PlaybackDescriptor
     {
