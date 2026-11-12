@@ -651,3 +651,10 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 **Evidenza automatica ambiente remoto:** [GitHub Actions #43131327572](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572), branch `main`, commit `dae0751b6828f3dcd6bc3b9a20fdd72e2a94c621`, **SUCCESS**. Il log contiene `FTPS LIVE PROBE OK`: handshake FTPS esplicito con verifica certificato/pin configurato, login, `PROT P`, upload, lettura di ritorno, rename-overwrite di due file usa-e-getta e cancellazione. `jdlearn.xml` **non modificato**. I test offline risultano 5/5 + 3/3 + 7/7.
 
 **Limite evidenza:** il workflow non esegue pubblicazione di una versione reale, non verifica la raggiungibilità HTTP del feed e non collauda l'aggiornamento Joomla end-to-end (IMP-10). Conferma indipendente dell'impronta del certificato privato con Host.it ancora raccomandata. **Esito collaudo Joomla:** Non eseguito.
+
+
+## REL-01–03 — Dry-run del rilascio 1.0.0 (12 novembre 2026)
+
+**Esito automatico:** [GitHub Actions 43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497), commit `67505908b2a7729429f345a420b534f13387070a`, **SUCCESS**. Generati `pkg_jlms-1.0.0.zip` (569587 byte; SHA-256 `8fd033a56ca4a424d6d754d1f9e13dfc3e78f3b40d64e49f7ad8b01b178b41df`), `jdlearn.xml` e `RELEASE_SHA256SUMS.txt`; artefatto [13906260145](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497/artifacts/13906260145). Job produzione **SKIPPED**. Feed XML generato soltanto localmente: il suo URL di download della v1.0.0 non è ancora disponibile pubblicamente.
+
+**Comportamenti ancora da testare in Joomla (IMP-10):** installazione pulita del candidato su un sito di prova; upgrade da versione precedente mantenendo iscrizioni e progressi; compatibilità con Apache/LiteSpeed standard senza configurazioni Nginx; verifiche finali del catalogo, corsi, lezioni, player ed enrollment; updater e feed pubblico solo dopo autorizzazione esplicita al rilascio. **Esito collaudo reale Joomla:** Non eseguito. Non pubblicare una release stabile sulla base del solo dry-run.
