@@ -89,11 +89,21 @@ final class VideoProgressService
         [$actor, , $enrollment, $lesson, $provider] = $context;
         $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
         $video = new VideoSource($lesson->provider_key, $source['reference'], (int) $lesson->source_revision, $source['options'] ?? []);
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $context[1]->rules_json);
+        $trackingRequired = $rules['mode'] !== 'consultation';
+        $capabilities = $provider->getCapabilities($video);
+        if ($trackingRequired && !($capabilities->position && $capabilities->duration && $capabilities->seek)) {
+            throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
+        }
         $expiry = $lesson->access_expires_at ? new \DateTimeImmutable($lesson->access_expires_at, new \DateTimeZone('UTC')) : null;
         // Remote work is always outside the write transaction. A second current-access check follows it.
         $descriptor = $provider->createPlaybackDescriptor($video, new PlaybackContext((int) $actor->id, (int) $enrollment->id,
             (int) $lesson->id, $context[5], 0, bin2hex(random_bytes(16)),
             new \DateTimeImmutable(self::date(($this->clock)()), new \DateTimeZone('UTC')), $expiry));
+        $actual = $descriptor->capabilities;
+        if ($trackingRequired && !($actual->position && $actual->duration && $actual->seek)) {
+            throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
+        }
         if ($descriptor->expiresAt && $descriptor->expiresAt->getTimestamp() <= intdiv(($this->clock)(), 1000) + 5) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
