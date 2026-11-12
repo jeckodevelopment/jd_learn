@@ -1,6 +1,6 @@
-**Versione main: 0.48.0-dev (PR [#272](https://github.com/jeckodevelopment/jd_learn/pull/272), IMP-02). Candidata successiva: 0.49.0-dev, anteprime pubbliche esplicite per lezioni Testo (IMP-02 / EDGE-02).**
-**Avanzamento implementativo al 12 novembre 2026: 81%** (media non arrotondata 80,71%). La PR #272 porta M01/M02 dal 79% all’80%; media: (80+81+77+97+68+92+70)/7 = 80,71%. La candidata 0.49.0-dev estende il sottoinsieme IMP-02 alle anteprime anonime delle sole lezioni Testo selezionate, senza progresso o iscrizione; in attesa di CI e merge. Accettazione manuale Joomla e gate IMP-10 restano aperti.
-CI standard 4/4 nel [run 43211155470](https://github.com/jeckodevelopment/jd_learn/actions/runs/43211155470) sulla head `85f7add8776cf9d8977c893d40d5c4e4b2a0e25e` della PR #272, integrata nel merge `ae81e46a69fc3d2528585c497f0b263677d3d0f9`. Package [JD-Learn-0.48.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43211155470/artifacts/13940634151), SHA-256 installabile `6e7d35f18d15eb71e6e7d3c13906038da52f4fb06fc191a26dc35946aa8182dd`; wrapper artifact SHA-256 `831e28868f9bcfe1605dc8fd43c9232a1b2b26f4f196733c3af578c0dd113e1a`, estrarre una volta; scade il 26 novembre 2026.
+**Versione main: 0.49.0-dev (PR [#274](https://github.com/jeckodevelopment/jd_learn/pull/274), IMP-02 / EDGE-02).**
+**Avanzamento implementativo al 12 novembre 2026: 81%** (media non arrotondata 80,86%). Le sette macroaree sono: (81+81+77+97+68+92+70)/7 = 80,86%; M01/M02 sale all’81% con l’anteprima anonima read-only delle lezioni Testo selezionate. CI standard 4/4 nel [run 43234079722](https://github.com/jeckodevelopment/jd_learn/actions/runs/43234079722) sulla head `8db52e56164522139c5dddc1af6fc4bd088d4a61`, integrata nel merge `2f371ddb09eaeeb1a6ae11264793dad230b7e274`. Accettazione manuale Joomla e gate IMP-10 restano aperti.
+Pacchetto [JD-Learn-0.49.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43234079722/artifacts/13951218766), SHA-256 interno `5d5abf5374426bc2585520a0fc4d41b6057085d4f49802a94a0ed16df031e408`; digest wrapper `0b00be026f88f683c17d9dea92454202aa4c3d91be800fde175b32b8cb6b18be` (estrarre una volta; scade il 26 novembre 2026).
 
 Aggiornato al 12 novembre 2026. Main **0.42.0-dev** integra PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), merge `c04bda9b5db8f82e571b27400863cb29ba5b84ef`; CI standard 4/4 nel [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135). Pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`, digest wrapper `4cba266ce1b7008f5d4736d25482f589566a030fdb53a7130f0bd0a6fae5720e`, scadenza 26 novembre 2026. STU-05 parziale: velocità implementata, preferenza lingua e collaudo Joomla pendenti. Avanzamento stimato **80%**.
 
@@ -32,7 +32,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 
 | Area | Avanzamento |
 |---|---:|
-| Corsi, versioni e programma (M01/M02) | 79% |
+| Corsi, versioni e programma (M01/M02) | 81% |
 | Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04, CORE-09) | 81% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 97% |
