@@ -109,13 +109,13 @@ ruleDenied(fn()=>$authoring->saveTeachingRules($actor,array_replace($input,['vid
 $other=(int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult();
 foreach([['courses',$course],['course_versions',$version]] as [$table,$id]){$oldCheckout=ruleRow($table,$id)->checked_out;$locked=(object)['id'=>$id,'checked_out'=>$other];$db->updateObject('#__jlms_'.$table,$locked,'id',true);try{ruleDenied(fn()=>$authoring->saveTeachingRules($actor,$input),'JERROR_ALERTNOAUTHOR');}finally{$locked->checked_out=$oldCheckout;$db->updateObject('#__jlms_'.$table,$locked,'id',true);}}
 $authoring->saveTeachingRules($actor,$input+['mode'=>'consultation','certificate_enabled'=>true,'rules_json'=>'{}']);
-$rules=$authoring->teachingRules($actor,$course,$version);ruleExpect($rules['video_threshold_basis_points']===5025&&$rules['mode']==='learning'&&$rules['certificate_enabled']===false,'Only supported threshold field changes');
+$rules=$authoring->teachingRules($actor,$course,$version);ruleExpect($rules['video_threshold_basis_points']===5025&&$rules['mode']==='consultation'&&$rules['certificate_enabled']===false,'Supported mode and threshold fields change; unsupported fields are ignored');
 ruleExpect((int)ruleRow('course_versions',$version)->revision===(int)$input['expected_version_revision']+1,'Rule save increments version CAS');
 ruleExpect(ruleRow('courses',$course)==$courseBefore&&ruleRow('course_versions',$original)==$old&&ruleLearning()===$before,'Draft rule change preserves metadata, frozen source and all learning');
 ruleDenied(fn()=>$authoring->saveTeachingRules($actor,$input),'COM_JLMS_REVISION_CONFLICT');
 $t=(int)$publication->transitions($actor,$course,$version)[0]->id;$review=$publication->updateImpact($actor,$course,$version,$t);ruleExpect($review['rules_changed'],'Publication review recognises teaching rule changes');
 ruleExpect($review['video_threshold_change']===['before'=>9000,'after'=>5025],'Review exposes exact before/after threshold');
-$authoring->saveTeachingRules($actor,array_replace($input,['expected_version_revision'=>ruleRow('course_versions',$version)->revision,'video_threshold'=>'50.26']));
+$authoring->saveTeachingRules($actor,array_replace($input,['expected_version_revision'=>ruleRow('course_versions',$version)->revision,'mode'=>'learning','video_threshold'=>'50.26']));
 ruleDenied(fn()=>$publication->transition($actor,$course,$version,(int)ruleRow('courses',$course)->revision,(int)ruleRow('course_versions',$version)->revision,$t,$review['fingerprint']),'COM_JLMS_PUBLICATION_REVIEW_STALE');
 $authoring->saveTeachingRules($actor,array_replace($input,['expected_version_revision'=>ruleRow('course_versions',$version)->revision]));
 $valid=ruleRow('course_versions',$version);$invalid=(object)['id'=>$version,'rules_json'=>json_encode(array_replace($rules,['video_threshold_basis_points'=>10001]),JSON_THROW_ON_ERROR)];$db->updateObject('#__jlms_course_versions',$invalid,'id');
