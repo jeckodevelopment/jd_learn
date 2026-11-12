@@ -215,3 +215,31 @@ await assert.rejects(html5.create(box,{options:{url:'https://elsewhere.example/p
 const localConsent=new VideoLesson({...config,provider:'html5',policy:'blocked'},root);
 assert.equal(localConsent.allowed(),true);await localConsent.destroy();
 console.log(JSON.stringify({html5_adapter_checks:9,status:'passed',environment:'native media-element double; no browser decoder'}));
+
+
+const speedOptions=[0.5,0.75,1,1.25,1.5,1.75,2].map(value=>({value:String(value),hidden:false}));
+const speedSelect={options:speedOptions,value:'1',addEventListener(){},removeEventListener(){}};
+const speedControl={hidden:true};
+const speedStatus={textContent:''};
+const speedMount={replaceChildren(){}};
+const speedRoot={querySelector:selector=>({'#jlms-player-status':speedStatus,'#jlms-player':speedMount,
+  '#jlms-video-speed':speedSelect,'#jlms-video-speed-control':speedControl})[selector]};
+const previousStorage=globalThis.localStorage;
+let savedSpeed=null;
+globalThis.localStorage={getItem:key=>key==='jdlearn.video.speed.v1'?savedSpeed:null,setItem:(key,value)=>{if(key==='jdlearn.video.speed.v1')savedSpeed=value;}};
+const speedLesson=new VideoLesson({...config,labels:{...config.labels,rate_unavailable:'unsupported'}},speedRoot);
+let appliedSpeed=1;
+speedLesson.player={playbackRates:async()=>[0.5,1,1.5],setPlaybackRate:async rate=>{appliedSpeed=rate;return rate;},
+  sample:async()=>({position_ms:1000,duration_ms:10000,rate_milli:Math.round(appliedSpeed*1000),playing:false}),pause(){},destroy:async()=>{}};
+speedLesson.session={session_id:'speed',source_revision:1,duration_ms:10000};speedLesson.started=performance.now();speedLesson.stopped=false;
+await speedLesson.configurePlaybackSpeed(speedLesson.player);
+assert.equal(speedControl.hidden,false);assert.equal(speedOptions.find(option=>option.value==='0.75').hidden,true);
+speedSelect.value='1.5';await speedLesson.changePlaybackRate();
+assert.equal(appliedSpeed,1.5);assert.equal(savedSpeed,'1.5');assert.equal(speedLesson.queue.at(-1).rate_milli,1500);
+appliedSpeed=1;await speedLesson.record('ratechange');assert.equal(speedSelect.value,'1');
+speedLesson.session=null;speedLesson.queue=[];await speedLesson.destroy();
+const unsupportedLesson=new VideoLesson(config,speedRoot);
+await unsupportedLesson.configurePlaybackSpeed({playbackRates:async()=>[1],setPlaybackRate:async rate=>rate});
+assert.equal(speedControl.hidden,true);await unsupportedLesson.destroy();
+if(previousStorage===undefined) delete globalThis.localStorage; else globalThis.localStorage=previousStorage;
+console.log(JSON.stringify({playback_speed_checks:7,status:'passed',coverage:'dynamic capability, supported options, local preference, telemetry rate and unsupported player'}));
