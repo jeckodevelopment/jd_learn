@@ -1,3 +1,8 @@
+## 0.53.0-dev — replay idempotente del conflitto di ripresa video (IMP-04)
+
+- Un replay del batch video restituisce il conflitto di ripresa anche quando la sessione è obsoleta, senza applicare nuovamente il batch.
+- Regressione d’integrazione aggiunta in `tests/joomla-video.php`.
+
 ## 0.52.0-dev — ripresa video protetta tra sessioni concorrenti (IMP-04)
 
 - PR [#280](https://github.com/jeckodevelopment/jd_learn/pull/280), milestone 1.0.0, integrata nel commit `dcc49eb0e09b0ba6f2424e6eaaa973b837b3e4f4`; CI standard 4/4 nel [run 43250267681](https://github.com/jeckodevelopment/jd_learn/actions/runs/43250267681).
