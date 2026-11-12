@@ -83,8 +83,11 @@ final class PublicationReadiness
             } elseif (($lesson->kind ?? '') === 'video') {
                 $lessonParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
                 $duration = (int) ($lesson->duration_ms ?? 0);
-                if (!$consultation && ($duration < 1000 || $duration > 28800000
-                    || !is_array($lessonParams) || ($lessonParams['video_duration_confirmed'] ?? false) !== true)) {
+                $durationReady = $duration >= 1000 && $duration <= 28800000
+                    && is_array($lessonParams) && ($lessonParams['video_duration_confirmed'] ?? false) === true;
+                if (!$durationReady && $consultation) {
+                    $warnings[] = 'COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED';
+                } elseif (!$durationReady) {
                     $blockers[] = 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED';
                 }
             }
