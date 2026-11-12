@@ -167,7 +167,8 @@ $r=$save($c,1,$otherBatch);videoExpect($r['covered_ms']===9000 && $r['lesson_com
 videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'stale tab cannot overwrite resume');
 $now+=1000;
 $staleAgain=json_encode([$event(3,'position',6000,6000)],JSON_THROW_ON_ERROR);
-$r=$save($b,2,$staleAgain);videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'stale session keeps the newer resume after first conflict');\n$replay=$save($b,2,$staleAgain);videoExpect($replay['replay'] && $replay['resume_conflict'] && $replay['resume_ms']===5000,'idempotent replay preserves the stale resume conflict');
+$r=$save($b,2,$staleAgain);videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'stale session keeps the newer resume after first conflict');
+$replay=$save($b,2,$staleAgain);videoExpect($replay['replay'] && $replay['resume_conflict'] && $replay['resume_ms']===5000,'idempotent replay preserves the stale resume conflict');
 $now+=1000;
 $staleThird=json_encode([$event(4,'position',7000,7000)],JSON_THROW_ON_ERROR);
 $r=$save($b,3,$staleThird);videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'repeated stale writes cannot replace the newer resume');
