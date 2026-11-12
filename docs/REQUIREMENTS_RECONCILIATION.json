@@ -1,40 +1,41 @@
 {
   "date": "2026-11-12",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "21edd2ff175efe43b90d91a328d3ad24b563e0a0",
-  "ci_run": 43294015095,
+  "runtime_tested_head": "a6488b3b646d607dbc20317168f1c69dae055527",
+  "ci_run": 43300371393,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 170,
+      "Parziale": 172,
       "Completata": 14,
-      "Non iniziata": 26
+      "Non iniziata": 24
     },
     "Perimetro 1.0.0": {
-      "1.0.0": 133,
+      "1.0.0": 135,
       "Misto": 40,
-      "Fase 2": 37
+      "Fase 2": 35
     },
     "Accettazione Joomla": {
       "Non eseguita": 208,
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 172,
-      "Non eseguita": 38
+      "Superata": 174,
+      "Non eseguita": 36
     }
   },
   "implementation_progress": {
-    "percent": 82,
-    "method": "Media semplice delle sette aree: (82+81+79+99+68+93+70)/7 = 81,71%, arrotondata all’82%. PR #288 / CORE-18 integra i template email nativi Joomla, conserva le personalizzazioni in upgrade e completa il test automatico d’integrazione. Restano consegna automatica con retry/idempotenza AC-13/AC-57, accettazione Joomla manuale, residui IMP-04/05 e gate IMP-10.",
+    "percent": 74,
+    "method": "Media delle sette aree di prodotto e del nuovo macroambito email approvato: (81+81+78+99+68+92+70+22)/8 = 73,875%, riportata come 73,88% e arrotondata al 74%. L’email è stimata al 22% in base a MAIL-01..10; la riduzione dall’81% precedente riflette il nuovo perimetro. La stima misura l’implementazione, non l’accettazione manuale.",
     "areas": [
-      82,
       81,
-      79,
+      81,
+      78,
       99,
       68,
-      93,
-      70
+      92,
+      70,
+      22
     ]
   },
-  "note": "Main 0.56.0-dev include PR #288, merge 9ea5725c1b1784d9ae59a91339d8b3dcb83d1144. CI standard 4/4: run 43294015095. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386, SHA-256 ZIP 4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37. Collaudo Joomla manuale CORE-18 e retry AC-13/AC-57 restano pendenti."
+  "note": "Main 0.56.1-dev include PR #291, merge a6488b3b646d607dbc20317168f1c69dae055527. CI standard 4/4: run 43300371393. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393/artifacts/13981827024, SHA-256 ZIP beacb58745732bf803d61c6c10c72e483ad6eba2ee2a9e4337eb80d326b90154. Collaudo manuale Joomla resta pendente."
 }

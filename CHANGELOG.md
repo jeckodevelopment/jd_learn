@@ -1,9 +1,11 @@
-## 0.56.1-dev — Notifiche email core con coda Joomla (PR in preparazione)
+## 0.56.1-dev — Notifiche email core con coda Joomla (PR #291 integrata)
 
 - Collega la conferma dell'iscrizione automatica e il completamento corso ai template Mail Templates introdotti in 0.56.0-dev.
 - Aggiunge una coda persistente con chiave univoca evento, invio tramite attività pianificata Joomla, retry progressivo limitato e pulizia dei dati personali a consegna confermata.
 - Se la consegna SMTP ha esito incerto, il messaggio resta in stato `sending` e non viene reinviato automaticamente; le richieste in approvazione, gli inserimenti manuali/import, gli attestati e i promemoria restano fuori da questo incremento.
-- Pacchetto locale di sviluppo generato: `pkg_jlms-0.56.1-dev.zip`, SHA-256 `5d0801f3d630d7d3c4d5c61c8159c10afa94b3a38a8ef3c2313bf637d4d2521c`. CI e percentuale aggiornata dopo il merge.
+- PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291) integrata nel merge `a6488b3b646d607dbc20317168f1c69dae055527`, milestone 1.0.0; CI standard 4/4 nel [run 43300371393](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393).
+- Pacchetto [JD-Learn-0.56.1-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393/artifacts/13981827024), SHA-256 `beacb58745732bf803d61c6c10c72e483ad6eba2ee2a9e4337eb80d326b90154`; digest wrapper `d4fe5ad8470a88163b4682d6a95aafaf013b6ea9358ecee9c071514e91a9ceb5` (scade il 26 novembre 2026).
+- Avanzamento aggiornato: 73,88% (74% arrotondato), includendo il macroambito email approvato al 22%.
 
 ## 0.56.0-dev — CORE-18: template email nativi Joomla (PR #288 integrata)
 
