@@ -4,7 +4,7 @@
 
 ### Preferenza lingua delle tracce (implementazione STU-05)
 
-Gli adapter che implementano `textTracks()` e `setTextTrack(id)` possono esporre al componente le tracce `subtitles`/`captions` supportate dal contenuto. Il componente mostra la selezione solo quando riceve almeno una traccia con codice lingua, memorizza la preferenza nel browser e applica solo lingue effettivamente esposte. Vimeo usa le API text tracks del player; HTML5 usa `TextTrackList` nativa. Provider senza elenco interrogabile (attualmente YouTube e Cloudflare Stream) non mostrano il selettore. Nessuna traccia o preferenza viene salvata lato server.
+Gli adapter che implementano `textTracks()` e `setTextTrack(id)` espongono al componente le tracce `subtitles`/`captions` del contenuto. Il selettore appare solo con tracce interrogabili; Vimeo usa le API del player e HTML5 la `TextTrackList` nativa. La scelta viene memorizzata nel solo browser. YouTube e Cloudflare Stream non espongono qui un elenco interrogabile e non mostrano il selettore JD Learn; se esiste una preferenza valida, YouTube riceve `cc_lang_pref` e `cc_load_policy=1` all’avvio, mentre Cloudflare Stream riceve `defaultTextTrack` (codice BCP-47). I controlli nativi mantengono la selezione successiva nelle mani dello studente; un codice non disponibile è ignorato dal provider. Valori non validi e storage non accessibile vengono ignorati. Nessuna traccia o preferenza viene inviata al server.
 
 Versione 1.0 · 30 ottobre 2026 · Parte obbligatoria della specifica del pacchetto base
 

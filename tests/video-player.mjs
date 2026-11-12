@@ -128,6 +128,8 @@ globalThis.YT={Player:class {
 }};
 const frames=[];
 let ytRate=1;
+const originalProviderStorage=globalThis.localStorage;
+globalThis.localStorage={getItem:key=>key==='jdlearn.video.language.v1'?'fr-CA':null};
 document.createElement=tag=>({tag,dataset:{},remove(){},set src(value){this.url=value;},get src(){return this.url;}});
 const box={dataset:{title:'Lesson'},append:frame=>{frames.push(frame);}};
 const youtubeBox = {...box, append: frame => {
@@ -142,9 +144,20 @@ assert.equal(ytUrl.pathname,'/embed/dQw4w9WgXcQ');
 assert.equal(ytUrl.searchParams.get('enablejsapi'),'1');
 assert.equal(ytUrl.searchParams.get('origin'),location.origin);
 assert.equal(ytUrl.searchParams.get('autoplay'),'0');
+assert.equal(ytUrl.searchParams.get('cc_lang_pref'),'fr-ca');
+assert.equal(ytUrl.searchParams.get('cc_load_policy'),'1');
 assert.equal(ytFrame.referrerPolicy,'strict-origin');
 assert.equal((await yt.sample()).position_ms,1500);assert.deepEqual(await yt.playbackRates(),[0.5,1,1.5]);assert.equal(await yt.setPlaybackRate(1.5),1.5);yt.destroy();assert.equal(ytDestroyed,1);
 const aborted=new AbortController();aborted.abort();await assert.rejects(youtube.create(box,{options:{}},()=>{},aborted.signal));
+globalThis.localStorage={getItem:()=>'<script>'};
+ytFrame=undefined;
+const ytWithoutPreference=await youtube.create(youtubeBox,{options:{reference:'dQw4w9WgXcQ',locale:'it-IT'}},()=>{},new AbortController().signal);
+assert.equal(new URL(ytFrame.src).searchParams.has('cc_lang_pref'),false);assert.equal(new URL(ytFrame.src).searchParams.has('cc_load_policy'),false);ytWithoutPreference.destroy();
+globalThis.localStorage={getItem:()=>{throw Error('storage unavailable');}};
+ytFrame=undefined;
+const ytWithoutStorage=await youtube.create(youtubeBox,{options:{reference:'dQw4w9WgXcQ',locale:'it-IT'}},()=>{},new AbortController().signal);
+assert.equal(new URL(ytFrame.src).searchParams.has('cc_lang_pref'),false);ytWithoutStorage.destroy();
+globalThis.localStorage={getItem:key=>key==='jdlearn.video.language.v1'?'fr-CA':null};
 const vimeo=await moduleFromFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url));
 let vmHandlers=0,vmDestroyed=0,vmInstance;
 globalThis.Vimeo={Player:class{
@@ -180,8 +193,13 @@ globalThis.Stream=()=>({currentTime:3,duration:10,playbackRate:1,paused:false,en
  addEventListener(){cfHandlers++;},removeEventListener(){cfHandlers--;},pause(){cfPaused++;}});
 const cfPlayer=await cf.create(box,{options:{domain:'customer-ci.cloudflarestream.com',token:'a.b.c'}},()=>{},new AbortController().signal);
 assert.match(frames.at(-1).src,/^https:\/\/customer-ci\.cloudflarestream\.com\/a\.b\.c\/iframe\?/);
+assert.equal(new URL(frames.at(-1).src).searchParams.get('defaultTextTrack'),'fr-ca');
 assert.equal((await cfPlayer.sample()).position_ms,3000);assert.equal(cfPlayer.playbackRates,undefined);cfPlayer.pause();assert.equal(cfPaused,1);
 cfPlayer.destroy();assert.equal(cfHandlers,0);
+globalThis.localStorage={getItem:()=>'<script>'};
+const cfWithoutPreference=await cf.create(box,{options:{domain:'customer-ci.cloudflarestream.com',token:'a.b.c'}},()=>{},new AbortController().signal);
+assert.equal(new URL(frames.at(-1).src).searchParams.has('defaultTextTrack'),false);cfWithoutPreference.destroy();
+if(originalProviderStorage===undefined)delete globalThis.localStorage;else globalThis.localStorage=originalProviderStorage;
 await assert.rejects(cf.create(box,{options:{domain:'evil.example',token:'a.b.c'}},()=>{},new AbortController().signal));
 const cfAbort=new AbortController();
 globalThis.Stream=()=>({duration:0,addEventListener(){},removeEventListener(){}});

@@ -1,4 +1,12 @@
 let sdk;
+function savedCaptionLanguage() {
+  try {
+    const language = globalThis.localStorage?.getItem('jdlearn.video.language.v1')?.trim();
+    return language && /^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i.test(language) ? language.toLowerCase() : '';
+  } catch {
+    return '';
+  }
+}
 async function loadSdk() {
   if (globalThis.Stream) return;
   if (!sdk) sdk = new Promise((resolve, reject) => {
@@ -18,7 +26,12 @@ export async function create(container, descriptor, emit, signal) {
     || typeof token !== 'string' || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(token)) throw new Error('descriptor');
   const frame = document.createElement('iframe');
   frame.title = container.dataset.title; frame.referrerPolicy = 'no-referrer'; frame.allow = 'fullscreen; picture-in-picture'; frame.allowFullscreen = true;
-  frame.src = 'https://' + domain + '/' + token + '/iframe?autoplay=false&controls=true';
+  const playerUrl = new URL('https://' + domain + '/' + token + '/iframe');
+  playerUrl.searchParams.set('autoplay', 'false');
+  playerUrl.searchParams.set('controls', 'true');
+  const captionLanguage = savedCaptionLanguage();
+  if (captionLanguage) playerUrl.searchParams.set('defaultTextTrack', captionLanguage);
+  frame.src = playerUrl.href;
   const handlers = new Map(); let player, timer, rejectReady;
   const destroy = () => {
     clearTimeout(timer); signal?.removeEventListener('abort', abort);
