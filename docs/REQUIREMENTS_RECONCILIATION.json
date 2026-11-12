@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "ac0d369e67a5cdf2bcc95415d6a4dd39bad5c2e4",
-  "ci_run": 43289138110,
+  "runtime_tested_head": "21edd2ff175efe43b90d91a328d3ad24b563e0a0",
+  "ci_run": 43294015095,
   "counts": {
     "Stato implementazione": {
       "Parziale": 170,
@@ -19,22 +19,22 @@
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 171,
-      "Non eseguita": 39
+      "Superata": 172,
+      "Non eseguita": 38
     }
   },
   "implementation_progress": {
     "percent": 82,
-    "method": "Media semplice delle sette aree: (82+81+79+99+68+92+70)/7 = 81,57%, arrotondata all’82%. PR #287 / IMP-04-STU-03 integra gli indicatori localizzati di invio e conferma del salvataggio video; il collaudo Joomla, gli altri residui IMP-04/05 e IMP-10 restano aperti.",
+    "method": "Media semplice delle sette aree: (82+81+79+99+68+93+70)/7 = 81,71%, arrotondata all’82%. PR #288 / CORE-18 integra i template email nativi Joomla, conserva le personalizzazioni in upgrade e completa il test automatico d’integrazione. Restano consegna automatica con retry/idempotenza AC-13/AC-57, accettazione Joomla manuale, residui IMP-04/05 e gate IMP-10.",
     "areas": [
       82,
       81,
       79,
       99,
       68,
-      92,
+      93,
       70
     ]
   },
-  "note": "Main 0.55.0-dev include PR #287, merge 2af8994271d95f3c41b3e5f813ba2222794265c5. CI standard 4/4: run 43289138110. Il collaudo Joomla manuale resta pendente."
+  "note": "Main 0.56.0-dev include PR #288, merge 9ea5725c1b1784d9ae59a91339d8b3dcb83d1144. CI standard 4/4: run 43294015095. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386, SHA-256 ZIP 4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37. Collaudo Joomla manuale CORE-18 e retry AC-13/AC-57 restano pendenti."
 }
