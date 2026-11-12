@@ -11,6 +11,14 @@ Riferimenti: CORE-10, EDGE-11, AUT-04; criteri AC-48, AC-71, AC-119/120/125. Nel
 
 La CI automatizzata copre congelamento, hash e conservazione dei campi corso/lezione durante la pubblicazione. Registrare separatamente l’accettazione Joomla manuale.
 
+## IMP-01 — ripristino dei campi corso tramite Content History (CORE-10/CORE-16)
+
+Con un account che può modificare il corso, modificare i valori `com_fields` e usare Content History, salvare una revisione del corso con il campo impostato su “Valore A”, quindi salvare “Valore B”. Aprire **Versioni**, confrontare la revisione con “Valore A” e ripristinarla.
+
+Atteso: i dati editoriali e il campo tornano a “Valore A”; lo stato del corso, la versione didattica corrente, le versioni assegnate, le iscrizioni e i progressi restano invariati. Se il corso ha una bozza aperta, il ripristino aggiorna i dati editoriali del corso e non sovrascrive la struttura delle versioni. Verificare anche che un account privo di `core.edit.value` sul campo non possa alterarlo tramite il ripristino.
+
+La regressione automatica della PR dedicata verifica il valore del campo nella revisione Joomla e il ripristino tramite il salvataggio autorizzato del modello; completare comunque il confronto e il ripristino dalla schermata Content History sul sito di prova.
+
 ## IMP-08 — filtri ricercabili del roster (0.45.0-dev)
 
 Riferimenti: ISC-01/02/05/07, REP-02, SCR-14; AC-11/12/25/26/40/53/54/60/63/128. Nel backend Joomla aprire il roster di un corso autorizzato con più versioni e iscritti.
