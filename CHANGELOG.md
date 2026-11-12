@@ -1,3 +1,8 @@
+## 0.52.0-dev — ripresa video protetta tra sessioni concorrenti (IMP-04)
+
+- PRO-06: una sessione obsoleta continua a contribuire alla copertura video, ma la revisione di ripresa resta obsoleta per tutta la sessione e non può sovrascrivere il punto confermato da un altro dispositivo.
+- Aggiunta regressione d’integrazione con due batch consecutivi dalla sessione obsoleta.
+
 ## 0.51.0-dev — capabilities minime per il tracciamento video (IMP-05)
 
 - PR [#278](https://github.com/jeckodevelopment/jd_learn/pull/278), milestone 1.0.0, integrata nel commit `62af5dbcbc6bd2300c67bc149c04bccaa0203aec`; CI standard 4/4 nel [run 43246533928](https://github.com/jeckodevelopment/jd_learn/actions/runs/43246533928).

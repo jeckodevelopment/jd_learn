@@ -264,7 +264,9 @@ final class VideoProgressService
                 'last_activity_at' => self::date($now), 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
                 'modified_at' => self::date($now), 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
-            $telemetry['state']['progress_revision'] = (int) $progress->revision;
+            $telemetry['state']['progress_revision'] = $resumeConflict
+                ? (int) $state['progress_revision']
+                : (int) $progress->revision;
             $sessionUpdate = (object) ['id' => $sessionId, 'sequence_no' => $sequence, 'last_batch_hash' => $hash,
                 'anchor_media_ms' => $telemetry['resume_ms'], 'anchor_at' => self::date($now),
                 'player_state_json' => json_encode($telemetry['state'], JSON_THROW_ON_ERROR), 'expires_at' => self::date($now + 7200000)];

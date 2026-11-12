@@ -165,6 +165,13 @@ videoDenied(fn()=>$save($b,1,$batch),403,'revoked access even on replay');
 $now+=4000;$otherBatch=json_encode([$event(1,'play',5000,0),$event(2,'position',9000,4000)],JSON_THROW_ON_ERROR);
 $r=$save($c,1,$otherBatch);videoExpect($r['covered_ms']===9000 && $r['lesson_completed'] && $r['course_completed'],'cross-tab interval union completes exactly');
 videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'stale tab cannot overwrite resume');
+$now+=1000;
+$staleAgain=json_encode([$event(3,'position',6000,6000)],JSON_THROW_ON_ERROR);
+$r=$save($b,2,$staleAgain);videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'stale session keeps the newer resume after first conflict');
+$now+=1000;
+$staleThird=json_encode([$event(4,'position',7000,7000)],JSON_THROW_ON_ERROR);
+$r=$save($b,3,$staleThird);videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'repeated stale writes cannot replace the newer resume');
+
 videoExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult()===1,'completion counted once');
 videoExpect($save($c,1,$otherBatch)['replay'],'completion replay');
 $service->close($student,'en-GB',$enrollment,$lesson,$b['session_id']);
