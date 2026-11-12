@@ -297,8 +297,7 @@ final class LearningService
         $supported = ($lesson->kind === 'quiz' && $lesson->completion_rule === 'quiz_pass')
             || (in_array($lesson->kind, ['text', 'document', 'audio'], true) && $lesson->completion_rule === 'manual')
             || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
-                && is_string($lesson->provider_key) && preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key) === 1
-                && (int) $lesson->duration_ms >= 1000);
+                && is_string($lesson->provider_key) && preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key) === 1);
         if (!$supported || !LessonAvailability::validReleaseDays($lesson->release_after_days)) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
@@ -367,6 +366,10 @@ final class LearningService
         $actor = $this->freshActor($identity);
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
         $lesson = $this->lesson((int) $version->id, $lessonId);
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
+        if ($rules['mode'] !== 'consultation' && (int) $lesson->duration_ms < 1000) {
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+        }
         $this->assertLessonAvailable($lesson, $enrollment);
         $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         if ($lesson->kind !== 'video') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }

@@ -266,16 +266,16 @@ final class PublicationService
                     if ($lesson->provider_key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
                     }
-                    if ((int) $lesson->duration_ms < 1000 || (int) $lesson->duration_ms > 28800000
-                        || ($params['video_duration_confirmed'] ?? false) !== true) {
+                    if ($rules['mode'] !== 'consultation' && ((int) $lesson->duration_ms < 1000 || (int) $lesson->duration_ms > 28800000
+                        || ($params['video_duration_confirmed'] ?? false) !== true)) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
                     }
                     if ($lesson->provider_key === 'html5') { $this->app->bootComponent('com_jlms')->getLocalVideoService()->assertReady($lesson); }
                     if ($lesson->provider_key === 'cloudflarestream') {
                         $proof = $remoteChecks[(int) $lesson->id] ?? null;
-                        if (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
+                        if ($rules['mode'] !== 'consultation' && (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
                             || $proof['source_revision'] !== (int) $lesson->source_revision
-                            || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, (int)$proof['duration_ms'])) {
+                            || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, (int)$proof['duration_ms']))) {
                             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                         }
                     }
@@ -285,7 +285,7 @@ final class PublicationService
                     if (!$provider->getDescriptor()->configured) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
                     }
-                    if (!$provider->getCapabilities($normal)->position) {
+                    if ($rules['mode'] !== 'consultation' && !$provider->getCapabilities($normal)->position) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                 } else { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
@@ -437,10 +437,11 @@ final class PublicationService
         $preOptions = new Registry($preselected->options);
         $preAction = (string) $preOptions->get('jlms_action', (string) $preOptions->get('publishing') === '1' ? 'publish' : 'unpublish');
         if ($version->status === 'draft' && $preAction === 'publish') {
+            $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
             $q = $this->db->createQuery()->select('id, source_json, source_revision')->from('#__jlms_lessons')
                 ->where('course_version_id = :version')->where($this->db->quoteName('provider_key') . ' = ' . $this->db->quote('cloudflarestream'))
                 ->bind(':version', $versionId, ParameterType::INTEGER)->order('id');
-            $remoteLessons = $this->db->setQuery($q, 0, 101)->loadObjectList();
+            $remoteLessons = $rules['mode'] === 'consultation' ? [] : $this->db->setQuery($q, 0, 101)->loadObjectList();
             if (count($remoteLessons) > 100) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
             foreach ($remoteLessons as $lesson) {
                 $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);

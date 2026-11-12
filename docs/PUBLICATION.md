@@ -2,6 +2,10 @@
 
 La prima pubblicazione è disponibile ed è stata confermata dall’utente sul percorso provato. Questa guida descrive l’uso corrente; per funzioni e collaudi mancanti vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
+## Modalità di sola consultazione e video
+
+In un corso configurato come **Sola consultazione**, una lezione video non richiede una durata misurata né capacità di telemetria/progresso: il corso non assegna completamenti o percentuali. Il preflight editoriale applica la stessa regola della pubblicazione server. Il provider e la sorgente video devono comunque essere validi e configurati secondo la policy del sito; la modalità non aggira i controlli di accesso o di sicurezza del player.
+
 ## Filtrare il catalogo per tag
 
 Il catalogo e la pagina di una categoria offrono un selettore dei tag Joomla. Il selettore include soltanto tag pubblicati e accessibili associati a corsi visibili all’utente corrente. Selezionando un tag, la lista conserva i normali controlli di accesso e, nelle categorie, resta limitata al ramo selezionato.
