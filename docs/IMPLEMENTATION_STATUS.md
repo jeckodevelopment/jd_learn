@@ -1,6 +1,6 @@
-**Versione main: 0.46.0-dev (PR [#266](https://github.com/jeckodevelopment/jd_learn/pull/266), IMP-01).**
-**Avanzamento implementativo al 12 novembre 2026: 80%** (media non arrotondata 80,43%). PR #264 ha portato M06/M09 al 68%; PR #266 porta M01/M02 dal 77% al 78%. PR #268 aggiunge copertura automatica al ripristino Content History senza cambiare la stima, in attesa di accettazione Joomla. La candidata 0.47.0-dev per IMP-02 implementa la modalità esplicita di sola consultazione (AUT-03); la stima resta invariata in attesa dell’aggiornamento coerente delle macroaree e del collaudo Joomla. Media: (78+81+77+97+68+92+70)/7 = 80,43%. Accettazione manuale Joomla e gate IMP-10 restano aperti.
-CI standard 4/4 nel [run 43196626438](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438) sul commit PR `2b6c99529d8613dd2b9b40d321a6838bed052b4a`, integrato nel merge `d41111e229ced8460ff9e30a0baa24f2094c4e60`. Pacchetto [JD-Learn-0.46.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438/artifacts/13932614114), SHA-256 del pacchetto installabile `044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183`; digest del wrapper `4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013`. Il wrapper ZIP va estratto una volta; scade il 26 novembre 2026.
+**Versione main: 0.47.0-dev (PR [#270](https://github.com/jeckodevelopment/jd_learn/pull/270), IMP-02).**
+**Avanzamento implementativo al 12 novembre 2026: 81%** (media non arrotondata 80,57%). PR #264 ha portato M06/M09 al 68%; PR #266 porta M01/M02 al 78% e PR #270 al 79%; PR #268 copre il ripristino Content History. Media: (79+81+77+97+68+92+70)/7 = 80,57%. Accettazione manuale Joomla e gate IMP-10 restano aperti.
+CI standard 4/4 nel [run 43207411958](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958) sulla head `43c4f2a25b56331e49198df1ce222ec581a56692` della PR #270, integrata nel merge `0a1294e491e0aa531aeca776911674fc701ddff4`. Package [JD-Learn-0.47.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958/artifacts/13939861423), SHA-256 installabile `e65ceefa13de8ec577a84d8284ec3a09012cb6e2950351674dec9af6ed4c009f`, wrapper `7721896ba521c4ba8cfbb836023af16d752df3b2c40890000fe1cb29e22cc6a0`; estrarre una volta, scade il 26 novembre 2026.
 
 Aggiornato al 12 novembre 2026. Main **0.42.0-dev** integra PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), merge `c04bda9b5db8f82e571b27400863cb29ba5b84ef`; CI standard 4/4 nel [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135). Pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`, digest wrapper `4cba266ce1b7008f5d4736d25482f589566a030fdb53a7130f0bd0a6fae5720e`, scadenza 26 novembre 2026. STU-05 parziale: velocità implementata, preferenza lingua e collaudo Joomla pendenti. Avanzamento stimato **80%**.
 
@@ -26,22 +26,22 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima descrive main 0.41.78-dev dopo la PR #238: il form Cloudflare Stream espone solo la firma API implementata e ignora i parametri di firma locale salvati dalle versioni precedenti. Restano distinti i collaudi Joomla reali con account provider, browser e hosting. Gli altri incrementi recenti includono streaming HTML5 protetto Apache/LiteSpeed (PR #226), retention configurabile dei materiali (PR #227) e le attività catalogo/lifecycle già descritte.
+La stima descrive main 0.47.0-dev dopo la PR #270: il form Cloudflare Stream espone solo la firma API implementata e ignora i parametri di firma locale salvati dalle versioni precedenti. Restano distinti i collaudi Joomla reali con account provider, browser e hosting. Gli altri incrementi recenti includono streaming HTML5 protetto Apache/LiteSpeed (PR #226), retention configurabile dei materiali (PR #227) e le attività catalogo/lifecycle già descritte.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
 | Area | Avanzamento |
 |---|---:|
-| Corsi, versioni e programma (M01/M02) | 78% |
+| Corsi, versioni e programma (M01/M02) | 79% |
 | Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04, CORE-09) | 81% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 97% |
 | Iscrizione e roster essenziale (M06/M09) | 68% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 70% |
-| **Avanzamento complessivo stimato** | **80%** |
+| **Avanzamento complessivo stimato** | **81%** |
 
-Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (559/7 = 79,86%, arrotondato all'80%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
+Metodo: media semplice delle sette aree incluse nella prima versione stabile riportate sopra, arrotondata all'intero più vicino (564/7 = 80,57%, arrotondato all'81%). Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; le prove Joomla manuali ancora aperte restano conteggiate separatamente; gli esiti confermati sono registrati nel testbook.
 
 IMP-07 comprende PR #204, #206–#213, #215 e #222–#225. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; la PR #225 aggiunge il riepilogo e la ricollocazione atomica dei riferimenti per corsi, percorsi, docenti e domande, preservando gli storici; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la PR #221 corregge la #219 per gli allegati e PR #226 sostituisce l’offload Nginx dei video HTML5 con streaming PHP a blocchi, compatibile con Apache/LiteSpeed; M04 stimata 94% dopo la PR #233 e 95% con la preferenza velocità STU-05/PR #258; PR #235/0.41.77-dev completa l’inclusione dei materiali corso nell’anteprima delle lezioni testo/video; catalogo al 81%; CORE-09 integrato dalla PR #222; CORE-07: associazioni dei corsi pubblicati implementate dalla PR #223 e ricerca selector integrata dalla #224, portando le integrazioni Joomla al 92%; avanzamento complessivo 78%. Accettazione Joomla di materiali, lifecycle/ricollocazione categorie, CAT-01 e SEO/Finder ancora pendente.
 

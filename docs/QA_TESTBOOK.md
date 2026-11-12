@@ -30,7 +30,7 @@ La regressione automatica è integrata dalla PR [#268](https://github.com/jeckod
 5. Accedere come studente autorizzato, iscriversi e aprire la lezione. Aula e dashboard devono indicare “Non applicabile” per il progresso, senza percentuale, completamento o attestato. Provare l’azione manuale di completamento: deve essere rifiutata. Ripetere con un video e verificare che il tracciamento non conceda completamento.
 6. Tornare in modalità **Apprendimento**: la pubblicazione senza almeno una lezione obbligatoria deve essere nuovamente bloccata. Verificare che cambiare regole in una bozza non modifichi una versione già pubblicata o le iscrizioni esistenti.
 
-La copertura automatica aggiunta per questo incremento esercita regole, readiness, pubblicazione e iscrizione; il collaudo sito Joomla resta pendente. La modalità non abilita accesso anonimo o anteprima pubblica.
+Implementato dalla PR [#270](https://github.com/jeckodevelopment/jd_learn/pull/270), merge `0a1294e491e0aa531aeca776911674fc701ddff4`; CI standard 4/4 nel [run 43207411958](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958). Package [JD-Learn-0.47.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43207411958/artifacts/13939861423), SHA-256 interno `e65ceefa13de8ec577a84d8284ec3a09012cb6e2950351674dec9af6ed4c009f`; wrapper SHA-256 `7721896ba521c4ba8cfbb836023af16d752df3b2c40890000fe1cb29e22cc6a0`, da estrarre una volta; scadenza 26 novembre 2026. CI copre regole, readiness, pubblicazione, iscrizione e telemetria video senza completamento; il collaudo sito Joomla resta pendente. La modalità non abilita accesso anonimo o anteprima pubblica.
 
 ## IMP-08 — filtri ricercabili del roster (0.45.0-dev)
 

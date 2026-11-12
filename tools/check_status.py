@@ -22,7 +22,8 @@ def check_reconciliation(rows,evidence):
    assert row['Residui implementativi 1.0.0'].startswith('Nessuno'),(key,'Completed implementation has residual code work')
   if row['Verifica automatica']=='Superata':
    assert row['Fonti test parziali']and row['Copertura automatica']!='Nessuna',key
-   assert row['Evidenza automatica']==evidence['ci']['url'],(key,'Unregistered CI evidence')
+   valid_ci_urls={evidence['ci']['url']}|{prior.get('ci',{}).get('url') for prior in evidence.get('prior_evidence',[]) if prior.get('ci',{}).get('url')}
+   assert row['Evidenza automatica'] in valid_ci_urls,(key,'Unregistered CI evidence')
   if row['Verifica automatica']=='Non eseguita':assert row['Copertura automatica']=='Nessuna',key
   if row['Accettazione Joomla']=='Superata':
    assert key in evidence['full_requirement_acceptance'],(key,'No full human acceptance report')

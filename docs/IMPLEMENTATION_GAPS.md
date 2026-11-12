@@ -1,4 +1,4 @@
-Stato aggiornato al 12 novembre 2026: main **0.46.0-dev** integra PR #266 (IMP-01), che congela i campi nativi corso nelle versioni didattiche. PR #268 copre con regressione il ripristino dei campi con Content History e la conservazione della versione attiva/iscrizioni; resta il collaudo della schermata Joomla, gli altri casi e il gate IMP-10. Le lacune storiche seguenti conservano la data della relativa verifica.
+Stato aggiornato al 12 novembre 2026: main **0.47.0-dev** integra PR #270 (IMP-02), che aggiunge la modalità esplicita di sola consultazione. PR #266 congela i campi corso e PR #268 copre il ripristino Content History; accettazione Joomla e gate IMP-10 restano aperti. Le lacune storiche seguenti conservano la data della relativa verifica.
 
 Stato aggiornato al **12 novembre 2026**: main **0.42.0-dev** integra PR #258 per la velocità STU-05; la candidata **0.43.0-dev** aggiunge la preferenza lingua per tracce interrogabili Vimeo/HTML5. Resta il collaudo provider in Joomla. Le lacune storiche seguenti conservano la data della relativa verifica.
 
