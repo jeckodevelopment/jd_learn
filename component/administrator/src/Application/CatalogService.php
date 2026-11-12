@@ -287,8 +287,10 @@ final class CatalogService
             ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
             ->where('l.id = :previewLesson')->where('l.course_version_id = :previewVersion')
             ->where('l.kind = :previewKind')->where('l.preview = 1')
-            ->bind(':previewLesson', $lessonId, ParameterType::INTEGER)->bind(':previewVersion', $versionId, ParameterType::INTEGER)
-            ->bind(':previewKind', 'text');
+            ->bind(':previewLesson', $lessonId, ParameterType::INTEGER)->bind(':previewVersion', $versionId, ParameterType::INTEGER);
+        $previewKind = 'text';
+        $query
+            ->bind(':previewKind', $previewKind);
         $lesson = $this->db->setQuery($query)->loadObject();
         if (!$lesson || \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
             $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days) !== 'available') {
