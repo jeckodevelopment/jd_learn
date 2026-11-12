@@ -1,8 +1,8 @@
 {
   "date": "2026-11-12",
-  "baseline_commit": "c04bda9b5db8f82e571b27400863cb29ba5b84ef",
-  "runtime_tested_head": "028af87a2420e898a419960a91e6ec6c9712596a",
-  "ci_run": 43134490135,
+  "baseline_commit": "d41111e229ced8460ff9e30a0baa24f2094c4e60",
+  "runtime_tested_head": "2b6c99529d8613dd2b9b40d321a6838bed052b4a",
+  "ci_run": 43196626438,
   "counts": {
     "Stato implementazione": {
       "Parziale": 168,
@@ -25,16 +25,16 @@
   },
   "implementation_progress": {
     "percent": 80,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #258 aumenta M04 da 94 a 95 per la preferenza velocità STU-05: (77+81+77+95+67+92+70)/7 = 79,86%, arrotondata all'80%. Accettazione manuale Joomla e preferenza lingua restano separate.",
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #264 porta M06/M09 al 68%, PR #266 porta M01/M02 da 77% a 78% per lo snapshot dei campi corso: (78+81+77+97+68+92+70)/7 = 80,43%, arrotondata a 80%. Accettazione manuale Joomla e gate IMP-10 restano separati.",
     "areas": [
-      77,
+      78,
       81,
       77,
-      95,
-      67,
+      97,
+      68,
       92,
       70
     ]
   },
-  "note": "PR #258 / STU-05 implementa la velocità video locale; CI standard 4/4 run 43134490135, pacchetto 0.42.0-dev, merge c04bda9b5db8f82e571b27400863cb29ba5b84ef, artifact 13907211349, SHA-256 interno b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d; manuale Joomla e preferenza lingua pendenti. Stima 80%."
+  "note": "PR #266 / IMP-01 implementa lo snapshot versionato dei campi nativi corso e preserva i dati degli iscritti; main d41111e229ced8460ff9e30a0baa24f2094c4e60, CI standard 4/4 run 43196626438, pacchetto 0.46.0-dev artifact 13932614114, SHA-256 interno 044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183, wrapper 4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013. Accettazione manuale Joomla, Content History e IMP-10 restano aperti. Avanzamento implementativo 80,43% (80% arrotondato)."
 }

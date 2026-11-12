@@ -1,4 +1,6 @@
-## IMP-01 — snapshot dei campi corso `com_fields` (0.46.0-dev)
+## IMP-01 — snapshot dei campi corso `com_fields` (0.46.0-dev, PR #266)
+
+PR [#266](https://github.com/jeckodevelopment/jd_learn/pull/266) integrata nel commit `d41111e229ced8460ff9e30a0baa24f2094c4e60`; CI standard 4/4 nel [run 43196626438](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438). Pacchetto [JD-Learn-0.46.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438/artifacts/13932614114), SHA-256 interno `044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183`, wrapper `4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013` (estrarre una volta; scade il 26 novembre 2026). Accettazione manuale Joomla ancora da registrare.
 
 Riferimenti: CORE-10, EDGE-11, AUT-04; criteri AC-48, AC-71, AC-119/120/125. Nel sito Joomla di prova crea un corso con un campo nativo `com_fields` valorizzato e pubblica una versione didattica.
 
