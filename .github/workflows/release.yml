@@ -153,6 +153,7 @@ jobs:
           JDLEARN_FTPS_PORT: ${{ secrets.JDLEARN_FTPS_PORT }}
           JDLEARN_FTPS_DIRECTORY: ${{ secrets.JDLEARN_FTPS_DIRECTORY }}
           JDLEARN_FTPS_PASSWORD: ${{ secrets.JDLEARN_FTPS_PASSWORD }}
+          JDLEARN_FTPS_CERT_SHA256: ${{ secrets.JDLEARN_FTPS_CERT_SHA256 }}
           JDLEARN_FEED_FILE: dist/jdlearn.xml
         run: |
           python3 tools/publish_update_feed_ftps.py
