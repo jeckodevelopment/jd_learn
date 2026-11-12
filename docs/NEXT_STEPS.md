@@ -1,13 +1,5 @@
 Aggiornato al 12 novembre 2026. Main 0.55.0-dev integra PR #287 per gli stati di salvataggio/conferma del video; avanzamento 82% (81,57%). La prossima implementazione prioritaria è aggiungere lo stato “Salvataggio in corso” al salvataggio della posizione audio, completando la coerenza richiesta da STU-03. Poi continuare con i residui IMP-04/05 della matrice. Accettazione multi-browser e gate IMP-10 restano separati; pacchetto e checksum sono in README.md e IMPLEMENTATION_EVIDENCE.json.
 
-
-
-Aggiornato al 12 novembre 2026. Main **0.54.0-dev** integra PR [#284](https://github.com/jeckodevelopment/jd_learn/pull/284): AUT-03 ora avvisa sui video senza durata confermata in sola consultazione; il blocco Apprendimento resta invariato. Avanzamento **81% (81,43% esatto)**; M01/M02 82%, M03 78%, M04 99%. Proseguire con gli altri residui IMP-04/05 e i collaudi Joomla live. Il ciclo bozza/revisione/nuova pubblicazione è già presente e va collaudato. IMP-10 e le prove manuali restano gate separati.
-
-La policy SemVer della PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251) è applicata: main 0.54.0-dev. La modalità di sola consultazione accetta video senza durata tracciata e non apre sessioni telemetry; i requisiti di durata e tracciamento restano obbligatori in modalità Apprendimento.
-
-Aggiornato al 12 novembre 2026. Main **0.42.0-dev** include PR #258; la candidata runtime **0.43.0-dev** aggiunge la lingua delle tracce dove supportata. Il pacchetto di riferimento main è [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349) (SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`). Avanzamento stimato **80%**; priorità: eseguire l’accettazione player e le restanti prove Joomla nel testbook. Restano il gate IMP-10 e le altre accettazioni manuali Joomla.
-
 STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: la PR #238 / 0.41.78-dev integra la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
 
 
