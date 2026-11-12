@@ -225,7 +225,8 @@ $nextVersion=$authoring->createDraft($actor,$course,pubRevision('courses',$cours
 $publishChoice=null;
 foreach ($publication->transitions($actor,$course,$nextVersion) as $candidate) {
     $options=new \Joomla\Registry\Registry($candidate->options);
-    if ((string)$options->get('jlms_action','')==='publish') { $publishChoice=$candidate; break; }
+    $action=(string)$options->get('jlms_action',(string)$options->get('publishing')==='1'?'publish':'unpublish');
+    if ($action==='publish') { $publishChoice=$candidate; break; }
 }
 pubExpect((bool)$publishChoice,'new teaching version has a publish transition');
 $nextImpact=$publication->updateImpact($actor,$course,$nextVersion,(int)$publishChoice->id);
