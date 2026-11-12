@@ -128,6 +128,6 @@ Le vecchie indicazioni “mancante”, “da verificare” o “prossimo increme
 - Accettazione manuale dashboard/menu Joomla ancora da eseguire; nessun avanzamento percentuale attribuito prima del collaudo.
 
 
-## 12 novembre 2026 — STAB-05 / PR #243 candidata
+## 12 novembre 2026 — STAB-05 / PR #244
 
-La candidata 0.41.80-dev risolve l’issue #200 togliendo il link duplicato al Programma dall’editor corso; l’azione della toolbar resta il percorso di apertura, insieme alla scheda di riepilogo. PR assegnata alla milestone 1.0.0. Collaudo Joomla e CI in attesa.
+La PR [#244](https://github.com/jeckodevelopment/jd_learn/pull/244) integra la correzione dell’issue #200 in 0.41.80-dev: rimosso il collegamento duplicato al Programma nel corpo dell’editor; la toolbar e il riepilogo restano disponibili. Merge `ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62`, CI standard 4/4 nel run 43121346817. Pacchetto [JD-Learn-0.41.80-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817/artifacts/13900597900), hash interno `5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a`, wrapper `c82f72b0c1728bf7bda492c368e5581a3768133ad1ce06e6c9c3f9e50c65b2c7`. Accettazione Joomla pendente; avanzamento implementativo 78%.

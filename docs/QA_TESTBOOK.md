@@ -618,14 +618,14 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 
 ## STAB-05 — un solo accesso al Programma nell’editor corso (0.41.80-dev, issue #200)
 
-**Stato:** PR #243 candidata alla milestone 1.0.0. Rimuove il link duplicato dal corpo dell’editor; l’azione della toolbar e la scheda Programma restano disponibili. CI e accettazione manuale Joomla da completare.
+**Stato:** PR [#244](https://github.com/jeckodevelopment/jd_learn/pull/244) integrata nel commit `ce3ee6f9d62c2483a3a826a34c0a0ba9b0d3bf62`. CI standard 4/4 nel [run 43121346817](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817); pacchetto [JD-Learn-0.41.80-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43121346817/artifacts/13900597900), SHA-256 interno `5faefa65f5dce76823cb8dd7aa378ebe1801ad720bc740dc7ebe228bdb19132a`, wrapper `c82f72b0c1728bf7bda492c368e5581a3768133ad1ce06e6c9c3f9e50c65b2c7` (estrarre una volta; scade il 25 novembre 2026). Accettazione manuale Joomla non eseguita.
 
 **Comportamenti da testare in Joomla**
 
-1. Installare il pacchetto candidato 0.41.80-dev su un sito Joomla di prova e accedere con un utente autorizzato a modificare corsi.
-2. Aprire un corso esistente in **Componenti → JD Learn → Corsi → Modifica**. Verificare che sotto la toolbar non ci sia un secondo pulsante “Programma didattico” e che la toolbar mostri una sola azione **Salva e apri programma**.
-3. Aprire la scheda **Programma**: riepilogo dei moduli e comando **Salva e apri programma** restano disponibili. Usare la toolbar e verificare che il salvataggio apra il programma corretto.
-4. Aprire un nuovo corso: l’avviso che richiede il primo salvataggio deve restare visibile; dopo il salvataggio la toolbar deve aprire il programma senza link duplicati.
-5. Ripetere in italiano e inglese e con un utente in sola lettura; non deve apparire un’azione di modifica non autorizzata.
+1. Installare il pacchetto 0.41.80-dev su un sito Joomla di prova e accedere con un utente autorizzato a modificare corsi.
+2. Aprire un corso esistente in **Componenti → JD Learn → Corsi → Modifica**. Verificare che il contenuto non mostri più il secondo pulsante “Programma didattico” sotto la toolbar e che la toolbar mostri una sola azione **Salva e apri programma**.
+3. Aprire la scheda **Programma**: il riepilogo moduli e il comando devono restare disponibili. Usare la toolbar e verificare che salvataggio e apertura portino al programma dello stesso corso.
+4. Aprire un nuovo corso: l’avviso che richiede il primo salvataggio deve restare visibile; dopo il salvataggio, la toolbar deve aprire il programma senza link duplicati.
+5. Ripetere in italiano e inglese e con un utente in sola lettura; nessun comando di modifica non autorizzato deve comparire.
 
 **Esito sito Joomla:** Non eseguito.
