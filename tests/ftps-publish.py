@@ -3,10 +3,12 @@
 import importlib.util
 from pathlib import Path
 import ssl
+import sys
 import tempfile
 import unittest
 
 module_path=Path(__file__).resolve().parents[1] / "tools/publish_update_feed_ftps.py"
+sys.path.insert(0,str(module_path.parent))
 spec=importlib.util.spec_from_file_location("ftps_publisher",module_path)
 pub=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pub)

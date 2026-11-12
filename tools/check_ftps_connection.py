@@ -11,6 +11,7 @@ import os
 import secrets
 import ssl
 from ftplib import FTP_TLS
+from ftps_trust import create_ftps_client
 from publish_update_feed_ftps import required, remote_directory
 
 
@@ -26,9 +27,7 @@ def probe(env=os.environ, ftp_factory=FTP_TLS):
     if not re.fullmatch(r"[A-Za-z0-9.-]+", host):
         raise ValueError("FTPS host must be a DNS hostname")
 
-    context = ssl.create_default_context()
-    # No custom CA override, no unverified TLS, no plaintext FTP fallback.
-    ftp = ftp_factory(context=context, timeout=30)
+    ftp, verify_control = create_ftps_client(env, ftp_factory)
     token = secrets.token_hex(12)
     source = ".jdlearn-ftps-probe-" + token + ".upload"
     target = ".jdlearn-ftps-probe-" + token + ".target"
@@ -41,6 +40,8 @@ def probe(env=os.environ, ftp_factory=FTP_TLS):
         ftp.connect(host=host, port=port, timeout=30)
         connected = True
         ftp.auth()
+        if verify_control is not None:
+            verify_control()  # Pin verified before credentials are transmitted.
         ftp.login(user=user, passwd=password)
         ftp.prot_p()
         ftp.set_pasv(True)
@@ -87,7 +88,7 @@ def probe(env=os.environ, ftp_factory=FTP_TLS):
                 ftp.close()
     if not overwrite_ok:
         raise RuntimeError("FTP rename-overwrite test did not pass")
-    print("FTPS LIVE PROBE OK: AUTH TLS, certificate validation, PROT P, upload, "
+    print("FTPS LIVE PROBE OK: AUTH TLS, certificate trust/pin, PROT P, upload, "
           "readback, rename-overwrite and cleanup; jdlearn.xml untouched")
 
 

@@ -68,6 +68,7 @@ jobs:
           sha256sum "dist/pkg_jlms-$VERSION.zip" > dist/RELEASE_SHA256SUMS.txt
           python3 -m compileall -q tools/release_feed.py tools/publish_update_feed_ftps.py
           python3 tests/ftps-publish.py
+          python3 tests/ftps-certificate-pin.py
       - name: Upload candidate for review (not a public release)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -153,6 +154,7 @@ jobs:
           JDLEARN_FTPS_PORT: ${{ secrets.JDLEARN_FTPS_PORT }}
           JDLEARN_FTPS_DIRECTORY: ${{ secrets.JDLEARN_FTPS_DIRECTORY }}
           JDLEARN_FTPS_PASSWORD: ${{ secrets.JDLEARN_FTPS_PASSWORD }}
+          JDLEARN_FTPS_CERT_SHA256: ${{ secrets.JDLEARN_FTPS_CERT_SHA256 }}
           JDLEARN_FEED_FILE: dist/jdlearn.xml
         run: |
           python3 tools/publish_update_feed_ftps.py
