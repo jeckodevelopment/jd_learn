@@ -1,10 +1,10 @@
-## 0.56.0-dev — CORE-18: template email nativi Joomla (PR #288 aperta)
+## 0.56.0-dev — CORE-18: template email nativi Joomla (PR #288 integrata)
 
-- Registra i template LMS per richiesta/conferma iscrizione e completamento corso nel gestore Joomla **Sistema → Modelli email**.
-- L'installer non sovrascrive template modificati o traduzioni già presenti.
-- Il riepilogo delle variabili e il limite implementativo corrente sono in [docs/MAIL_TEMPLATES.md](docs/MAIL_TEMPLATES.md).
-- La PR #288 include il test automatico d'installazione per registrazione, tag e preservazione di una modifica admin.
-- La consegna automatica con retry persistente AC-13/AC-57 non è inclusa in questo incremento e resta un residuo 1.0.0.
+- PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288), merge `9ea5725c1b1784d9ae59a91339d8b3dcb83d1144`, milestone 1.0.0. Registra template per richiesta, conferma iscrizione e completamento corso nel gestore Joomla; gli aggiornamenti preservano testo e traduzioni personalizzati.
+- CI standard 4/4 nel [run 43294015095](https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095); test d’installazione/upgrade superato su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6.
+- Pacchetto [JD-Learn-0.56.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386), SHA-256 ZIP `4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37`, digest wrapper `9fa791b4157c3b405059ce5a5d90acfa6584af66b358c2c8f533273b9a4c0deb` (scade il 26 novembre 2026).
+- Avanzamento globale **81,71% esatto (82% arrotondato)**; M10 93%.
+- Collaudo Joomla manuale ancora pendente. L’invio automatico con outbox/retry/deduplicazione AC-13/AC-57 resta un residuo 1.0.0; attestati e promemoria avanzati restano esclusi.
 
 ## 0.55.0-dev — IMP-04 / feedback salvataggio progresso video (PR #287)
 

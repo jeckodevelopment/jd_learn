@@ -4,69 +4,69 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
     "percent": 82,
-    "basis": "Media semplice delle sette macroaree incluse: (82+81+79+99+68+92+70)/7=81,57%, arrotondata a 82%. PR #287 completa l’indicatore localizzato di invio e conferma del salvataggio video (IMP-04/STU-03); restano l’accettazione Joomla manuale, gli altri residui IMP-04/05 e il gate IMP-10.",
+    "basis": "Media semplice delle sette macroaree incluse: (82+81+79+99+68+93+70)/7=81,71%, arrotondata a 82%. PR #288 integra il nucleo dei template email Joomla nel CORE-18; restano invio automatico con retry/idempotenza AC-13/AC-57, accettazione Joomla manuale, residui IMP-04/05 e gate IMP-10.",
     "macroareas": {
       "courses": 82,
       "catalogue": 81,
       "learning_progress": 79,
       "video_materials": 99,
       "enrollment": 68,
-      "joomla_integrations": 92,
+      "joomla_integrations": 93,
       "release_preparation": 70
     }
   },
-  "version": "0.55.0-dev",
+  "version": "0.56.0-dev",
   "code_baseline": {
-    "tested_head": "ac0d369e67a5cdf2bcc95415d6a4dd39bad5c2e4",
-    "parent_main_commit": "1233442fa1fac2ab8a2389f5489cd855d2bcde9c",
-    "pull_request": 287,
-    "merged_main_commit": "2af8994271d95f3c41b3e5f813ba2222794265c5"
+    "tested_head": "21edd2ff175efe43b90d91a328d3ad24b563e0a0",
+    "parent_main_commit": "199b07baf65a9cb90c53dc498bdb845a420e0aa7",
+    "pull_request": 288,
+    "merged_main_commit": "9ea5725c1b1784d9ae59a91339d8b3dcb83d1144"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43289138110,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110",
+    "run_id": 43294015095,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
     "jobs": [
       {
-        "id": 131430396217,
+        "id": 131447474418,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131430478801,
+        "id": 131447556557,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131430478738,
-        "name": "PHP 8.4 / MariaDB 10.6",
+        "id": 131447556613,
+        "name": "PHP 8.3 / MySQL 8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131430478749,
-        "name": "PHP 8.3 / MySQL 8.4",
+        "id": 131447556784,
+        "name": "PHP 8.4 / MariaDB 10.6",
         "status": "completed",
         "conclusion": "success"
       }
     ]
   },
   "package": {
-    "artifact_id": 13975579105,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105",
-    "artifact_name": "JD-Learn-0.55.0-dev",
-    "installable_package": "pkg_jlms-0.55.0-dev.zip",
-    "sha256": "fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282",
-    "artifact_sha256": "3438a2017c0488ab1cbbd2502e56314f9dfd787998733b6fee81a2be7b5462c1",
-    "size_bytes": 580197,
-    "artifact_size_bytes": 579985,
-    "expires_at": "2026-11-26T19:24:10Z",
+    "artifact_id": 13979316386,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386",
+    "artifact_name": "JD-Learn-0.56.0-dev",
+    "installable_package": "pkg_jlms-0.56.0-dev.zip",
+    "sha256": "4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37",
+    "artifact_sha256": "9fa791b4157c3b405059ce5a5d90acfa6584af66b358c2c8f533273b9a4c0deb",
+    "size_bytes": 581202,
+    "artifact_size_bytes": 580994,
+    "expires_at": "2026-11-26T19:52:38Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -77,12 +77,12 @@
     "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855",
     "standard_ci_jobs": 4,
     "status": "passed; process/tooling change only; no runtime requirement progress",
-    "latest_installable_artifact_id": 13975579105,
-    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105",
-    "package_sha256": "fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282",
-    "artifact_wrapper_sha256": "3438a2017c0488ab1cbbd2502e56314f9dfd787998733b6fee81a2be7b5462c1",
-    "artifact_expires_at": "2026-11-26T19:24:10Z",
-    "manual_joomla_acceptance": "Product acceptance remains pending; run the video save-status Joomla scenarios in docs/QA_TESTBOOK.md."
+    "latest_installable_artifact_id": 13979316386,
+    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386",
+    "package_sha256": "4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37",
+    "artifact_wrapper_sha256": "9fa791b4157c3b405059ce5a5d90acfa6584af66b358c2c8f533273b9a4c0deb",
+    "artifact_expires_at": "2026-11-26T19:52:38Z",
+    "manual_joomla_acceptance": "CORE-18 manual Joomla acceptance remains pending; execute the email-template scenarios in docs/QA_TESTBOOK.md. AC-13/AC-57 persistent retry delivery remains an implementation residual."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -95,6 +95,68 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "version": "0.55.0-dev",
+      "ci": {
+        "run_id": 43289138110,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "id": 131430396217,
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 131430478801,
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 131430478738,
+            "name": "PHP 8.4 / MariaDB 10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 131430478749,
+            "name": "PHP 8.3 / MySQL 8.4",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      "package": {
+        "artifact_id": 13975579105,
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105",
+        "artifact_name": "JD-Learn-0.55.0-dev",
+        "installable_package": "pkg_jlms-0.55.0-dev.zip",
+        "sha256": "fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282",
+        "artifact_sha256": "3438a2017c0488ab1cbbd2502e56314f9dfd787998733b6fee81a2be7b5462c1",
+        "size_bytes": 580197,
+        "artifact_size_bytes": 579985,
+        "expires_at": "2026-11-26T19:24:10Z",
+        "wrapper_zip": true
+      },
+      "progress": {
+        "as_of": "2026-11-12",
+        "percent": 82,
+        "basis": "Media semplice delle sette macroaree incluse: (82+81+79+99+68+92+70)/7=81,57%, arrotondata a 82%. PR #287 completa l’indicatore localizzato di invio e conferma del salvataggio video (IMP-04/STU-03); restano l’accettazione Joomla manuale, gli altri residui IMP-04/05 e il gate IMP-10.",
+        "macroareas": {
+          "courses": 82,
+          "catalogue": 81,
+          "learning_progress": 79,
+          "video_materials": 99,
+          "enrollment": 68,
+          "joomla_integrations": 92,
+          "release_preparation": 70
+        }
+      }
+    },
     {
       "version": "0.54.0-dev",
       "ci": {
@@ -13027,17 +13089,21 @@
     }
   ],
   "latest_feature": {
-    "plan_increment": "IMP-04",
+    "plan_increment": "IMP-09",
     "requirements": [
-      "PRO-06",
-      "STU-03"
+      "CORE-18"
     ],
-    "pull_request": 287,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/287",
-    "merged_commit": "2af8994271d95f3c41b3e5f813ba2222794265c5",
-    "ci_run_id": 43289138110,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110",
-    "manual_acceptance": "Pending; execute video save-in-progress/saved, completion precedence, offline retry, definitive 4xx and English labels in Joomla per docs/QA_TESTBOOK.md.",
-    "progress_estimate": "81.57% exact (82% reported); M01/M02 82%, M03 79%, M04 99%."
+    "pull_request": 288,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/288",
+    "tested_head": "21edd2ff175efe43b90d91a328d3ad24b563e0a0",
+    "merged_commit": "9ea5725c1b1784d9ae59a91339d8b3dcb83d1144",
+    "ci_run_id": 43294015095,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095",
+    "artifact_id": 13979316386,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386",
+    "package_sha256": "4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37",
+    "artifact_sha256": "9fa791b4157c3b405059ce5a5d90acfa6584af66b358c2c8f533273b9a4c0deb",
+    "manual_acceptance": "Pending; in Joomla open Sistema → Modelli email, verify three com_jlms templates, tags, edit and translate one, then upgrade and confirm edits/translations persist. AC-13/AC-57 persistent retry delivery remains an implementation residual.",
+    "progress_estimate": "81.71% exact (82% reported); M01/M02 82%, M03 79%, M04 99%, M06/M09 68%, M10 93%, M11/M12 70%."
   }
 }
