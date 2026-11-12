@@ -185,6 +185,7 @@ final class HtmlView extends BaseHtmlView
                         ? \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($lessonParams['video_threshold_basis_points']) : '';
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
+                        'public_preview' => (int) $lesson->preview,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
                         'video_threshold_percent'=>$lessonThreshold, 'duration_mode'=>'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
@@ -211,20 +212,21 @@ final class HtmlView extends BaseHtmlView
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
-                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','video_threshold_percent','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days']));
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','video_threshold_percent','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days','public_preview']));
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }
             }
             if ($this->editorMode === 'rules' && $this->teachingRules !== null) {
                 $this->rulesForm = $this->get('RulesForm');
-                $data = $common + ['mode'=>$this->teachingRules['mode'], 'sequence_mode'=>$this->teachingRules['sequence_mode'], 'video_threshold'=>\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])];
+                $data = $common + ['mode'=>$this->teachingRules['mode'], 'sequence_mode'=>$this->teachingRules['sequence_mode'], 'video_threshold'=>\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points']), 'public_previews'=>$this->teachingRules['public_previews'] ? 1 : 0];
                 $key = 'com_jlms.curriculum.' . (int)$course->id . '.' . (int)$version->id . '.rules';
                 $saved = $app->getUserState($key, []); $app->setUserState($key, null);
                 if (is_array($saved)) {
                     if (is_string($saved['video_threshold'] ?? null) || is_int($saved['video_threshold'] ?? null)) { $data['video_threshold'] = $saved['video_threshold']; }
                     if (in_array($saved['sequence_mode'] ?? null, ['free', 'sequential'], true)) { $data['sequence_mode'] = $saved['sequence_mode']; }
                     if (in_array($saved['mode'] ?? null, ['learning', 'consultation'], true)) { $data['mode'] = $saved['mode']; }
+                    if (in_array((string) ($saved['public_previews'] ?? ''), ['0', '1'], true)) { $data['public_previews'] = (int) $saved['public_previews']; }
                 }
                 $this->rulesForm->bind($data);
             }

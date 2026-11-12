@@ -15,15 +15,18 @@ final class TeachingRules
         $threshold = $rules['video_threshold_basis_points'] ?? 9000;
         $mode = $rules['mode'] ?? 'learning';
         $completionPolicy = $rules['completion_policy'] ?? '';
+        $publicPreviews = $rules['public_previews'] ?? false;
         if (($rules['_schema'] ?? 1) !== 1 || !in_array($mode, ['learning', 'consultation'], true)
             || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
             || ($rules['certificate_enabled'] ?? true) !== false
             || ($mode === 'learning' && $completionPolicy !== 'all_required')
             || ($mode === 'consultation' && ($completionPolicy !== 'none' || ($rules['sequence_mode'] ?? '') !== 'free'))
-            || !is_int($threshold) || $threshold < 1 || $threshold > 10000) {
+            || !is_int($threshold) || $threshold < 1 || $threshold > 10000
+            || !is_bool($publicPreviews)) {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         $rules['video_threshold_basis_points'] = $threshold;
+        $rules['public_previews'] = $publicPreviews;
         return $rules;
     }
 

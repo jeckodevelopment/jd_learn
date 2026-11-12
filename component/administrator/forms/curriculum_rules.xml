@@ -12,4 +12,5 @@
   <option value="sequential">COM_JLMS_SEQUENCE_SEQUENTIAL</option>
  </field>
  <field name="video_threshold" type="number" label="COM_JLMS_TEACHING_THRESHOLD" description="COM_JLMS_TEACHING_THRESHOLD_HELP" min="0.01" max="100" step="0.01" required="true" filter="raw" id="jlms_rules_threshold" showon="mode:learning" />
+ <field name="public_previews" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_PUBLIC_PREVIEWS" description="COM_JLMS_PUBLIC_PREVIEWS_DESC" default="0" filter="integer"><option value="1">JYES</option><option value="0">JNO</option></field>
 </fieldset></form>
