@@ -1,3 +1,7 @@
+## 12 novembre 2026 — feedback salvataggio progresso video (IMP-04 / STU-03)
+
+La candidata 0.55.0-dev aggiunge al player video gli stati localizzati di salvataggio e conferma del progresso. In caso di completamento, il messaggio di completamento conserva la precedenza; in caso di errori transitori resta il messaggio offline già esistente. CI e collaudo Joomla sono pendenti fino alla revisione PR.
+
 ## 12 novembre 2026 — STU-05, preferenza velocità player (PR #258)
 
 La PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), milestone 1.0.0, aggiunge in 0.42.0-dev una preferenza velocità locale al browser. Il selettore è mostrato solo per velocità rilevate come supportate da YouTube, Vimeo (secondo video/account) e HTML5; Cloudflare Stream non espone la capacità. Il campione resta nella telemetria esistente e il completamento non cambia. Merge `c04bda9b5db8f82e571b27400863cb29ba5b84ef`; CI 4/4 [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135). Pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`, wrapper `4cba266ce1b7008f5d4736d25482f589566a030fdb53a7130f0bd0a6fae5720e`. STU-05 è parziale: preferenza lingua e collaudo Joomla restano aperti. M04 passa da 94% a 95%; stima complessiva 80% dopo arrotondamento.
