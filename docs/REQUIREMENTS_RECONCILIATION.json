@@ -25,11 +25,11 @@
   },
   "implementation_progress": {
     "percent": 81,
-    "method": "Media semplice delle sette aree: (81+81+77+99+68+92+70)/7 = 81,14%, arrotondata all’81%. PR #278 completa il controllo delle capabilities minime per posizione, durata e seek in pubblicazione e playback; accettazione live dei provider e IMP-10 restano aperti.",
+    "method": "Media semplice delle sette aree: (81+81+78+99+68+92+70)/7 = 81,29%, arrotondata all’81%. PR #280 corregge il conflitto persistente del resume nelle sessioni video concorrenti; restano altri residui IMP-04 e collaudo Joomla manuale.",
     "areas": [
       81,
       81,
-      77,
+      78,
       99,
       68,
       92,
