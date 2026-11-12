@@ -12,6 +12,8 @@
 6. Con video tracciabile, campionare per un intervallo noto a velocità normale e a 1,5×; verificare che il server usi rate_milli effettivamente osservato e che l’avanzamento derivi sempre dagli intervalli unici, senza credito per il solo seek.
 7. Verificare che la preferenza resti soltanto nel browser corrente, non sia inviata a Joomla e non cambi fra dispositivi; bloccare localStorage e verificare che i player continuino a funzionare a 1×.
 
+**Implementata dalla PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), merge `c04bda9b5db8f82e571b27400863cb29ba5b84ef`, versione 0.42.0-dev. CI 4/4 [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135); pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`. La preferenza lingua resta da implementare.
+
 **Esito sito Joomla:** Non eseguito.
 
 
