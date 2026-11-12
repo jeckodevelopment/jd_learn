@@ -27,8 +27,35 @@
   "ci": {
     "run_id": 43256423443,
     "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443",
-    "status": "passed",
-    "standard_jobs": 4
+    "status": "completed",
+    "conclusion": "success",
+    "standard_jobs": 4,
+    "jobs": [
+      {
+        "id": 131315768298,
+        "name": "Candidate plan and lightweight checks",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 131315882491,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 131315882522,
+        "name": "PHP 8.3 / MySQL 8.4",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 131315882591,
+        "name": "PHP 8.4 / MariaDB 10.6",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
   },
   "package": {
     "artifact_id": 13961114324,
