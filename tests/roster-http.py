@@ -52,6 +52,9 @@ try:
  p=Page(html)
  expect('jlms-roster-table'in p.ids and'jlms-roster-filters'in p.ids,'native roster rendered')
  expect('name="filter[search]"'in html,'native learner search control rendered')
+ expect('data-roster-option-search="filter_version"'in html and 'id="filter_version"' in html,'course version filter has a linked searchable control')
+ expect('data-roster-option-search="filter_user"'in html and 'id="filter_user"' in html,'enrolled user filter has a linked searchable control')
+ expect('name="filter[version]"' in html and 'name="filter[user]"' in html and str(f['owner']) in html,'authorized filter choices are native selects populated from this course')
  expect('no-store'in headers.get('Cache-Control',''),'private no-store administrative response')
  expect(len(enrollments(html))==20 and f['foreign_enrollment']not in enrollments(html),'bounded course-only first page')
  # Audit the IDs owned by this component, including the native filter controls.

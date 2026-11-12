@@ -73,6 +73,21 @@ final class EnrollmentsModel extends ListModel
     public function getRosterForm(): Form
     {
         $form = Form::getInstance('com_jlms.enrollments.filters', JPATH_ADMINISTRATOR . '/components/com_jlms/forms/enrollments.xml', ['control' => 'filter']);
+        $options = $this->service()->filterOptions(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course'));
+        $versionField = new \SimpleXMLElement('<field name="version" type="list" label="COM_JLMS_ROSTER_VERSION_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>');
+        $versionField->addChild('option', 'JALL')->addAttribute('value', '0');
+        foreach ($options['versions'] as $version) {
+            $label = (string) $version->title_snapshot . ' · v' . (int) $version->version_no . ' · ' . (string) $version->status . ' · #' . (int) $version->id;
+            $versionField->addChild('option', htmlspecialchars($label, ENT_XML1))->addAttribute('value', (string) $version->id);
+        }
+        $userField = new \SimpleXMLElement('<field name="user" type="list" label="COM_JLMS_ROSTER_USER_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>');
+        $userField->addChild('option', 'JALL')->addAttribute('value', '0');
+        foreach ($options['users'] as $user) {
+            $label = (string) $user->name . ' (' . (string) $user->username . ') · #' . (int) $user->id;
+            $userField->addChild('option', htmlspecialchars($label, ENT_XML1))->addAttribute('value', (string) $user->id);
+        }
+        $form->setField($versionField, 'filters');
+        $form->setField($userField, 'filters');
         $form->bind($this->getState('filter.roster', []));
         return $form;
     }

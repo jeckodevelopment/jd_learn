@@ -1,4 +1,4 @@
-Stato aggiornato al 12 novembre 2026: main **0.43.0-dev** integra la PR #262 per STU-05; la candidata **0.44.0-dev** aggiunge il filtro backend MAT-01 per corso e lezioni. L’accettazione manuale Joomla resta aperta. Le lacune storiche seguenti conservano la data della relativa verifica.
+Stato aggiornato al 12 novembre 2026: main **0.44.0-dev** integra MAT-01 e STU-05; la candidata **0.45.0-dev** implementa selettori ricercabili per versione e iscritto nel roster IMP-08, limitati al corso autorizzato. Il collaudo manuale Joomla resta aperto. Le lacune storiche seguenti conservano la data della relativa verifica.
 
 Stato aggiornato al **12 novembre 2026**: main **0.42.0-dev** integra PR #258 per la velocità STU-05; la candidata **0.43.0-dev** aggiunge la preferenza lingua per tracce interrogabili Vimeo/HTML5. Resta il collaudo provider in Joomla. Le lacune storiche seguenti conservano la data della relativa verifica.
 

@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main integra la PR [#262](https://github.com/jeckodevelopment/jd_learn/pull/262) con STU-05 (preferenza lingua caption); la candidata **0.44.0-dev** aggiunge il filtro degli allegati per ambito previsto da MAT-01. CI e pacchetto candidati da verificare prima del merge. Avanzamento implementativo stimato **80%**; accettazione manuale Joomla ancora aperta.
+Aggiornato al 12 novembre 2026. Main **0.44.0-dev** integra MAT-01 (filtro allegati per ambito); la candidata **0.45.0-dev** aggiunge filtri ricercabili per versione e iscritto nel roster IMP-08. CI e pacchetto candidati da verificare prima del merge. Avanzamento implementativo stimato **80%**; accettazione manuale Joomla ancora aperta.
 
 
 

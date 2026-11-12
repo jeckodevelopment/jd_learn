@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
   "name": "com_jlms",
-  "version": "0.41.52",
+  "version": "0.45.0",
   "assets": [
     {
       "name": "com_jlms.site",
@@ -99,6 +99,17 @@
       "name": "com_jlms.courseAssociations",
       "type": "script",
       "uri": "com_jlms/course-associations.js",
+      "attributes": {
+        "type": "module"
+      },
+      "dependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "com_jlms.rosterFilters",
+      "type": "script",
+      "uri": "com_jlms/roster-filters.js",
       "attributes": {
         "type": "module"
       },
