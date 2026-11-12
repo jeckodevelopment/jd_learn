@@ -1,3 +1,11 @@
+## 0.54.0-dev — AUT-03: avviso durata video in sola consultazione (PR #284 integrata)
+
+- Merge `04704621f64a7ee712743f98037dfe31d7a4606f`; CI standard 4/4 nel [run 43256423443](https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443).
+- Il riepilogo pre-pubblicazione mostra un avviso quando un video consultabile non ha durata confermata. La modalità Apprendimento mantiene il blocco esistente.
+- Pacchetto installabile [JD-Learn-0.54.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443/artifacts/13961114324), SHA-256 ZIP `bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12`; SHA-256 wrapper `ba7f9c7568500bfd82da3d9ff054ea907272942c9dfc9ff9f5203bfc8331494d` (estrarre una volta; scade il 26 novembre 2026).
+- Collaudo Joomla manuale ancora pendente: vedere `docs/QA_TESTBOOK.md`.
+- Avanzamento globale **81,43% esatto (81% arrotondato)**; M01/M02 82%, M03 78%, M04 99%.
+
 ## 0.54.0-dev — AUT-03: avviso durata video in sola consultazione
 
 - Il riepilogo pre-pubblicazione mostra un avviso quando un video consultabile non ha una durata confermata. La modalità Apprendimento mantiene il blocco esistente.
