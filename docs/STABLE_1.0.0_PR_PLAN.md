@@ -142,3 +142,8 @@ PR [#244](https://github.com/jeckodevelopment/jd_learn/pull/244) integra la corr
 ### IMP-09 — Compatibilità FTPS riutilizzo sessione TLS (12 novembre 2026)
 
 Il test FTPS live `43129478205` ha superato l'autenticazione ma il primo trasferimento è stato rifiutato con `425 Unable to build data connection: Operation not permitted`. Possibile causa: il server ProFTPD richiede il **riutilizzo della sessione TLS** dal canale di controllo al canale dati. Il client FTPS protetto viene aggiornato per richiedere session resumption su ogni trasferimento, senza disabilitare la cifratura né il pin del certificato, con test offline dedicati. L'effettiva compatibilità sul server Host.it è ancora da confermare con il workflow FTPS sicuro; requisiti IMP-09 e IMP-10 non si considerano completati e la percentuale globale resta invariata.
+
+
+### IMP-09 — Esito FTPS live confermato (12 novembre 2026)
+
+Il workflow [43131327572](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572) è **SUCCESS** sul commit `dae0751b6828f3dcd6bc3b9a20fdd72e2a94c621` successivo al merge della PR #249. Evidenza: `FTPS LIVE PROBE OK` dopo verifica TLS/pin, autenticazione, `PROT P`, upload, readback, rename-overwrite di file temporanei e cleanup; `jdlearn.xml` non toccato. Questo conferma la compatibilità tecnica FTPS live; l'identità del certificato privato deve essere confermata con Host.it attraverso un canale indipendente. Non segna IMP-10 né l'aggiornamento Joomla end-to-end come superati. Avanzamento globale di sviluppo documentato invariato al **78%**.

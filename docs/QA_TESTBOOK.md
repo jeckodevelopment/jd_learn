@@ -644,3 +644,10 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 5. Ripetere in italiano e inglese e con un utente senza `jlms.pathways.manage`: la vista percorsi e il relativo collegamento devono continuare a essere negati/nascosti.
 
 **Esito sito Joomla:** Non eseguito.
+
+
+## IMP-09 — Verifica FTPS reale (12 novembre 2026)
+
+**Evidenza automatica ambiente remoto:** [GitHub Actions #43131327572](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572), branch `main`, commit `dae0751b6828f3dcd6bc3b9a20fdd72e2a94c621`, **SUCCESS**. Il log contiene `FTPS LIVE PROBE OK`: handshake FTPS esplicito con verifica certificato/pin configurato, login, `PROT P`, upload, lettura di ritorno, rename-overwrite di due file usa-e-getta e cancellazione. `jdlearn.xml` **non modificato**. I test offline risultano 5/5 + 3/3 + 7/7.
+
+**Limite evidenza:** il workflow non esegue pubblicazione di una versione reale, non verifica la raggiungibilità HTTP del feed e non collauda l'aggiornamento Joomla end-to-end (IMP-10). Conferma indipendente dell'impronta del certificato privato con Host.it ancora raccomandata. **Esito collaudo Joomla:** Non eseguito.
