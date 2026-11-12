@@ -82,7 +82,7 @@ La release è candidata solo quando:
 
 ## Stato corrente del piano
 
-Aggiornato all’11 novembre 2026: main **0.41.77-dev** integra la PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235), merge `dbd277605a7eebd18d5d16515853a5f61a40d3f0`. CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231). Pacchetto [JD-Learn-0.41.77-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810), SHA-256 interno `22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1`, wrapper `fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f`, scadenza 25 novembre 2026. Avanzamento **78%** (M01/M02 77%, M04 94%, catalogo 81%, integrazioni Joomla 92%). Collaudi manuali Joomla restano aperti.
+Aggiornato al 12 novembre 2026: main **0.43.0-dev** integra la PR [#235](https://github.com/jeckodevelopment/jd_learn/pull/235), merge `dbd277605a7eebd18d5d16515853a5f61a40d3f0`. CI standard 4/4 nel [run 43110571231](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231). Pacchetto [JD-Learn-0.41.77-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43110571231/artifacts/13896755810), SHA-256 interno `22f41d76870fb2c5b39fa621d8d9d0e596ccf1a9c19886fe712aeac8d4159cd1`, wrapper `fcbdd65eac2f49d17a987d5510e39581dd445335e4014393f4a2db370d82f61f`, scadenza 25 novembre 2026. Avanzamento **80%** (M01/M02 77%, M04 96%, catalogo 81%, integrazioni Joomla 92%). Collaudi manuali Joomla restano aperti.
 
 ## Aggiornamento 10 novembre 2026 — IMP-07 / PR #208
 
@@ -164,3 +164,8 @@ L'utente ha confermato che il candidato 1.0.0 preparato nel [run 43131931497](ht
 ### 12 novembre 2026 — STU-05 / PR #258
 
 Integrata la preferenza locale della velocità per YouTube, Vimeo quando consentito da video/account e HTML5; Cloudflare Stream resta senza controllo. La capacità è verificata a runtime e non cambia il completamento. STU-05 resta parziale: preferenza lingua da implementare. CI 4/4 [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135); pacchetto [0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`. M04 95%; stima 80%. Accettazione Joomla pendente nel testbook.
+
+
+### 12 novembre 2026 — MAT-01 / 0.44.0-dev (PR in preparazione)
+
+Aggiunto alla gestione amministrativa un filtro per allegati del corso, tutte le lezioni o una singola lezione; risultati, conteggio e paginazione sono limitati all’ambito e gli ID lezione sono validati sulla versione. Test automatico `materials-http.py` aggiunto; accettazione Joomla manuale pendente. M04 stimato 96%, avanzamento globale 80% (arrotondato).

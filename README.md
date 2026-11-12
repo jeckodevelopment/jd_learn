@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main **0.42.0-dev** integra la PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258); la candidata **0.43.0-dev** completa il residuo implementativo STU-05 per le tracce lingua esposte da Vimeo e HTML5. La CI e il pacchetto della candidata sono da verificare prima del merge. Avanzamento implementativo stimato **80%**; l’accettazione Joomla resta aperta.
+Aggiornato al 12 novembre 2026. Main integra la PR [#262](https://github.com/jeckodevelopment/jd_learn/pull/262) con STU-05 (preferenza lingua caption); la candidata **0.44.0-dev** aggiunge il filtro degli allegati per ambito previsto da MAT-01. CI e pacchetto candidati da verificare prima del merge. Avanzamento implementativo stimato **80%**; accettazione manuale Joomla ancora aperta.
 
 
 

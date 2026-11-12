@@ -6,6 +6,10 @@ Ogni esecuzione esamina al massimo 100 record (parametro `limit`, intervallo 1�
 
 Nella bozza è possibile collegare lo stesso materiale a un altro ambito del corso (corso o lezione) senza caricare una seconda copia. Il collegamento condivide l'asset privato immutabile ma mantiene titolo, descrizione e disponibilità del materiale sorgente; una duplicazione dello stesso asset nello stesso ambito viene rifiutata. La destinazione deve appartenere alla medesima versione in bozza. Il collegamento non modifica corsi già pubblicati e il cleanup conserva l'asset finché almeno un allegato lo usa.
 
+## Elenco amministrativo per ambito
+
+La gestione dei materiali mostra per default corso e tutte le lezioni della versione selezionata. Il filtro consente di restringere l’elenco ai soli materiali del corso o a una singola lezione. Il conteggio e la paginazione si riferiscono all’ambito selezionato; i collegamenti di pagina mantengono il filtro. Un ID lezione appartenente a un’altra versione viene rifiutato. Le azioni di modifica, sostituzione, rimozione e riuso continuano a rivalidare versione, permessi e collegamento lato server.
+
 ## Anteprima editoriale in sola lettura
 
 L'anteprima dell'editor mostra gli allegati dell'ambito corso disponibili anche quando è selezionata una lezione di testo o video. I materiali di lezione compaiono soltanto per le lezioni Documento/Audio. L'anteprima esclude campioni marcati per la sola esposizione pubblica, allegati disattivati, asset non pronti e file fuori dalla finestra; il download usa un endpoint amministrativo, richiede l'autorizzazione editoriale e rivalida corso, versione, lezione e collegamento. Questa vista non crea iscrizioni, tentativi o progressi. Il relativo collaudo Joomla è nel [testbook IMP-03](QA_TESTBOOK.md#imp-03--preview-video-in-sola-lettura-04146-dev).

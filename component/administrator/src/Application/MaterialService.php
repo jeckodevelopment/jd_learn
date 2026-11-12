@@ -82,13 +82,19 @@ final class MaterialService
         return ['items' => $this->db->setQuery($q, $page * 20, 20)->loadObjectList(), 'total' => $total, 'page' => $page, 'limit' => 20];
     }
 
-    public function administration(User $actor, int $courseId, int $versionId, int $page = 0): array
+    public function administration(User $actor, int $courseId, int $versionId, int $page = 0, int $scope = 0): array
     {
         [, $course, $version] = $this->author($actor, $courseId, $versionId);
         $q = $this->db->createQuery()->select('id, title')->from('#__jlms_lessons')->where('course_version_id = :version')
             ->bind(':version', $versionId, ParameterType::INTEGER)->order('module_id, ordering, id');
-        return ['course' => $course, 'version' => $version, 'files' => $this->listing($versionId, 0, $page, true),
-            'lessons' => $this->db->setQuery($q, 0, 5000)->loadObjectList(), 'limit' => $this->storage->limit(),
+        $lessons = $this->db->setQuery($q, 0, 5000)->loadObjectList();
+        $lessonIds = array_map(static fn ($lesson): int => (int) $lesson->id, $lessons);
+        if ($scope < -1 || ($scope > 0 && !in_array($scope, $lessonIds, true))) {
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
+        $lessonFilter = $scope === -1 ? null : $scope;
+        return ['course' => $course, 'version' => $version, 'files' => $this->listing($versionId, $lessonFilter, $page, true),
+            'lessons' => $lessons, 'scope' => $scope, 'limit' => $this->storage->limit(),
             'scan_required' => (bool) $this->storage->config()->get('material_scan_required', false),
             'schedule_timezone' => CourseSchedule::read($course)['timezone']];
     }

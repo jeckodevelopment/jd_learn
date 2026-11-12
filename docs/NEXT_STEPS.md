@@ -1,4 +1,4 @@
-**STU-05:** velocità e preferenza locale della lingua delle caption/sottotitoli sono implementate quando il player espone le rispettive capacità. La selezione lingua è limitata a Vimeo e tracce native HTML5 interrogabili; YouTube/Cloudflare non espongono una lista interrogabile nell’adapter. Accettazione reale da registrare nel testbook.
+Aggiornato al 12 novembre 2026. Main **0.43.0-dev** integra PR #262. La candidata **0.44.0-dev** implementa MAT-01: filtro materiali per ambito corso/tutte le lezioni/singola lezione, con isolamento per versione. Priorità dopo il merge: collaudi manuali Joomla e gate IMP-10; nessuna nuova funzione già presente va duplicata.
 
 La policy SemVer della PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251) è applicata: il runtime corrente è 0.42.0-dev e i prossimi incrementi seguono [VERSIONING.md](VERSIONING.md). Proseguire con le implementazioni IMP nell’ordine della [roadmap stabile](STABLE_1.0.0_PR_PLAN.md); registrare separatamente le accettazioni manuali Joomla e il gate IMP-10.
 
