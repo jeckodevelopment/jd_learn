@@ -55,6 +55,21 @@
     "wrapper_zip": true,
     "build_source": "Build CI riproducibile sul commit PR f45554db4bafb6417aa325f5469f455fc28a2038; PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, controlli leggeri e Chromium standard 4/4. SHA-256 interno verificato nei log CI; digest wrapper dai metadati artifact."
   },
+  "release_process": {
+    "issue": 160,
+    "pull_request": 251,
+    "merged_commit": "f15945853bd11546300d9776fa4bdc12707369a9",
+    "ci_run_id": 43130882855,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855",
+    "standard_ci_jobs": 4,
+    "status": "passed; process/tooling change only; no runtime requirement progress",
+    "latest_installable_artifact_id": 13905526892,
+    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855/artifacts/13905526892",
+    "package_sha256": "3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573",
+    "artifact_wrapper_sha256": "8b12e9b762db6fece5df30d9bbb275e152da4dc014e6d5ad8b2448b8bef0af1e",
+    "artifact_expires_at": "2026-11-26T00:59:26Z",
+    "manual_joomla_acceptance": "not applicable to process-only PR; existing product acceptance remains pending"
+  },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
   "excluded_evidence": [

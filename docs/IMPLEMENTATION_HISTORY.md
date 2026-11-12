@@ -1,3 +1,7 @@
+## 12 novembre 2026 — SemVer e release engineering (issue #160)
+
+La PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251) aggiunge la policy [VERSIONING.md](VERSIONING.md), controlla la forma canonica delle versioni stabili e la parità tra manifest package/componente. Integrata nel commit `f15945853bd11546300d9776fa4bdc12707369a9`; CI standard 4/4 nel [run 43130882855](https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855). Il package runtime resta 0.41.81-dev; nessun requisito runtime è cambiato, quindi l’avanzamento resta 78%. Issue #160 chiusa. Accettazione Joomla manuale non applicabile alla PR di processo; i collaudi funzionali già aperti restano pendenti.
+
 ## 0.41.79-dev — STAB-04, label compatta dei campi lezione (PR #241)
 
 La [PR #241](https://github.com/jeckodevelopment/jd_learn/pull/241), milestone 1.0.0, accorcia la label del collegamento a `com_fields` per il contesto `com_jlms.lesson`: “Campi aggiuntivi” / “Lesson fields”. ACL e destinazione restano invariate. Integrata nel commit `adc3bf5c205590c351ead14c4a086f62235b7078`; CI standard 4/4 nel [run 43116473760](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760). Pacchetto [JD-Learn-0.41.79-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43116473760/artifacts/13899451043), SHA-256 `4c54233651a85f33594fcde84d32f7f31d51bcc82d03f63fead3e189fa270843`, wrapper `a33d99e3742305adfe0964f8e878b8804092d4bf3caa7e125f91d5bfeef02eaa`. Accettazione Joomla e verifica accessibilità/resa ancora da eseguire; avanzamento resta 78%.
