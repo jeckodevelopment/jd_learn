@@ -188,7 +188,7 @@ pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course
 $assoc=(new \Joomla\CMS\Workflow\Workflow('com_jlms.course',$app,$db))->getAssociation($course);
 pubExpect((bool)$assoc,'native workflow association exists');
 pubExpect((int)$catalog->course($guest,'en-GB',$course)->id===$course,'published promotional course available without content level');
-$learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('p',40));
+$learnerEnrollment=$component->getLearningService()->start($actor,'en-GB',$course,str_repeat('r',40));
 $classroom=$component->getLearningService()->classroom($actor,'en-GB',$learnerEnrollment,$lesson);
 pubExpect(($classroom['lesson']->custom_fields[0]['values'][0] ?? '')==='LESSON_FIELD_SNAPSHOT',
     'assigned classroom renders frozen lesson custom field value');
@@ -238,4 +238,6 @@ $oldSnapshot=json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM
 pubExpect(($nextSnapshot['fields']['course-reference']['values'][0] ?? '')==='COURSE_FIELD_CURRENT_VALUE'
     && ($oldSnapshot['fields']['course-reference']['values'][0] ?? '')==='COURSE_FIELD_SNAPSHOT',
     'new teaching version captures current course fields while preserving the prior snapshot');
+pubExpect((int)$db->setQuery('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id='.(int)$learnerEnrollment)->loadResult()===$version,
+    'existing learner remains assigned to the original teaching version after update publication');
 echo json_encode(['publication_checks'=>$checks,'status'=>'passed','course_id'=>$course],JSON_THROW_ON_ERROR).PHP_EOL;
