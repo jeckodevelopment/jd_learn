@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main **0.44.0-dev** integra PR #263. La candidata **0.45.0-dev** migliora IMP-08 con filtri ricercabili nel roster per versione didattica e iscritto del corso, mantenendo ACL per corso e convalida server-side. Prossimi residui: accettazione manuale Joomla e gate IMP-10; export/KPI restano fuori dal perimetro core.
+Aggiornato al 12 novembre 2026. Main **0.45.0-dev** integra PR [#264](https://github.com/jeckodevelopment/jd_learn/pull/264) per IMP-08. I filtri ricercabili del roster sono in main; M06/M09 è al 68%, avanzamento globale 80%. Prossimi residui: collaudi manuali Joomla e gate IMP-10; export/KPI restano fuori dal perimetro core.
 
 La policy SemVer della PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251) è applicata: il runtime corrente è 0.42.0-dev e i prossimi incrementi seguono [VERSIONING.md](VERSIONING.md). Proseguire con le implementazioni IMP nell’ordine della [roadmap stabile](STABLE_1.0.0_PR_PLAN.md); registrare separatamente le accettazioni manuali Joomla e il gate IMP-10.
 

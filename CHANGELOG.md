@@ -2,6 +2,8 @@
 
 ## 0.45.0-dev — selettori ricercabili nel roster (IMP-08)
 
+- PR [#264](https://github.com/jeckodevelopment/jd_learn/pull/264), milestone 1.0.0, integrata nel commit `aed93820f0a948b11d3427ce9ba4d312621b0d74`; CI standard 4/4 nel [run 43188504970](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970). Artifact [JD-Learn-0.45.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970/artifacts/13929363404), ZIP SHA-256 `ee4b58ba2bbd81821a1b481951c7a411b767d3a7885c0e6b402a1692f6a5b677` (artifact in scadenza il 26 novembre 2026).
+
 - I filtri Versione e Iscritto nel roster sono selettori ricercabili e mostrano solo voci del corso autorizzato. Ricerca libera per nome/username, stato, avanzamento e permessi per corso restano integrati.
 - Test automatici HTTP e JavaScript aggiunti. Collaudo Joomla manuale richiesto nel testbook; nessuna modifica allo storico o ai diritti di accesso.
 

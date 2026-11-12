@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main **0.44.0-dev** integra MAT-01 (filtro allegati per ambito); la candidata **0.45.0-dev** aggiunge filtri ricercabili per versione e iscritto nel roster IMP-08. CI e pacchetto candidati da verificare prima del merge. Avanzamento implementativo stimato **80%**; accettazione manuale Joomla ancora aperta.
+Aggiornato al 12 novembre 2026. Main **0.45.0-dev** integra PR [#264]( https://github.com/jeckodevelopment/jd_learn/pull/264), merge `aed93820f0a948b11d3427ce9ba4d312621b0d74`; CI 4/4 nel [run 43188504970](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970). Pacchetto installabile [JD-Learn-0.45.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970/artifacts/13929363404), SHA-256 `ee4b58ba2bbd81821a1b481951c7a411b767d3a7885c0e6b402a1692f6a5b677`. Avanzamento implementativo **80%**; accettazione manuale Joomla e IMP-10 restano aperti.
 
 
 
