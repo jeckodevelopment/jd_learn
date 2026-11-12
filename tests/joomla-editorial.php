@@ -135,6 +135,39 @@ editorialExpect((int)$model->getItem($course)->current_version_id === $draft, 'R
 $item=$model->getItem($course);
 editorialExpect($model->save(['id'=>$course,'revision'=>(int)$item->revision,'title'=>'Editorially updated course']), 'Course stays editable after history restoration');
 
+// Native course fields participate in Joomla Content History and restore through
+// the same guarded CourseModel save without changing the active teaching version.
+PluginHelper::importPlugin('system', 'fields');
+$historyFieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
+if (!$historyFieldModel->save(['id'=>0,'context'=>'com_jlms.course','title'=>'History reference','name'=>'history-reference','type'=>'text',
+    'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'','description'=>'','params'=>[],'fieldparams'=>['filter'=>'string']])) {
+    throw new RuntimeException('Native course history field fixture failed: '.$historyFieldModel->getError());
+}
+$historyField=(int)$historyFieldModel->getState('field.id');
+$fieldValue=static fn(): string => (string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id='.$historyField.' AND item_id='.$db->quote((string)$course))->loadResult();
+$item=$model->getItem($course);
+editorialExpect($model->save(['id'=>$course,'revision'=>(int)$item->revision,'title'=>'Course history target',
+    'com_fields'=>['history-reference'=>'HISTORY_FIELD_ORIGINAL']]), 'Course field revision can be saved into native editorial history');
+$targetHistory=null;
+foreach ($db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course.".$course."' ORDER BY version_id DESC")->loadObjectList() as $candidate) {
+    $snapshot=json_decode($candidate->version_data,true,64,JSON_THROW_ON_ERROR);
+    if (($snapshot['com_fields']['history-reference'] ?? null)==='HISTORY_FIELD_ORIGINAL') { $targetHistory=$candidate; break; }
+}
+editorialExpect($targetHistory!==null,'Native course history captures the field value with its editorial revision');
+$item=$model->getItem($course);
+editorialExpect($model->save(['id'=>$course,'revision'=>(int)$item->revision,'title'=>'Course history current',
+    'com_fields'=>['history-reference'=>'HISTORY_FIELD_CURRENT']]), 'A later native field value can be saved before restoring history');
+$assignedVersion=(int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.$course)->loadResult();
+$assignedLearners=$db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id='.$course.' ORDER BY id')->loadAssocList();
+editorialExpect($model->loadHistory((int)$targetHistory->version_id),'Native history restores course custom fields through the guarded save');
+editorialExpect($fieldValue()==='HISTORY_FIELD_ORIGINAL','Content History restores the custom field value');
+editorialExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.$course)->loadResult()===$assignedVersion
+    && $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id='.$course.' ORDER BY id')->loadAssocList()===$assignedLearners,
+    'Content History field restore preserves the active teaching version and learner assignments');
+$item=$model->getItem($course);
+editorialExpect($model->save(['id'=>$course,'revision'=>(int)$item->revision,'title'=>'Editorially updated course']),
+    'History fixture restores the shared course title expected by later HTTP checks');
+
 // Copy material associations and native MP4 references without copying blobs or progress.
 foreach (['html5-fixture','materials-fixture'] as $alias) {
     $q=$db->createQuery()->select('*')->from('#__jlms_courses')->where('alias=:alias')->bind(':alias',$alias);
