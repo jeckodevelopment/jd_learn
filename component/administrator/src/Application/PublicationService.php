@@ -217,7 +217,7 @@ final class PublicationService
                 )) {
                     throw new \DomainException('COM_JLMS_LESSON_UNREACHABLE');
                 }
-                $lessonFields = $this->snapshotLessonFields($actor, (int) $lesson->id);
+                $lessonFields = $this->snapshotFields($actor, 'com_jlms.lesson', (int) $lesson->id);
                 $lesson->fields_snapshot_json = json_encode(['_schema' => 1, 'fields' => $lessonFields], JSON_THROW_ON_ERROR);
                 $quizHash = null;
                 if ($lesson->kind === 'quiz') {
@@ -345,8 +345,7 @@ final class PublicationService
         };
         foreach (array_keys($lessonIds) as $node) { $visitPrerequisite((int) $node); }
         if (($rules['mode'] ?? '') !== 'learning' || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
-            || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required'
-            || $version->fields_snapshot_json !== '{}') {
+            || ($rules['certificate_enabled'] ?? true) !== false || ($rules['completion_policy'] ?? '') !== 'all_required') {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         $q = $this->db->createQuery()->select('a.id, a.lesson_id, a.title, a.description, a.ordering, a.state, a.preview, a.publish_up, a.publish_down, f.id AS asset_id, f.sha256, f.byte_size, f.mime_type, f.status, f.scan_json')
@@ -367,12 +366,16 @@ final class PublicationService
         }
         CoursePresentation::requireDescription($course);
         $presentation = TeacherProfiles::freeze($this->db, $actor, $course, CoursePresentation::snapshot($course));
+        $courseFields = $this->snapshotFields($actor, 'com_jlms.course', (int) $course->id);
+        $courseFieldsSnapshot = json_encode(['_schema' => 1, 'fields' => $courseFields], JSON_THROW_ON_ERROR);
         $hash = hash('sha256', json_encode(['_schema' => 1, 'title' => $course->title, 'rules' => $rules,
-            'presentation' => $presentation, 'modules' => $modules, 'lessons' => $lessons,
+            'presentation' => $presentation, 'course_fields_sha256' => hash('sha256', $courseFieldsSnapshot),
+            'modules' => $modules, 'lessons' => $lessons,
             'prerequisites' => $prerequisiteMap, 'attachments' => $attachments], JSON_THROW_ON_ERROR));
         $now = gmdate('Y-m-d H:i:s');
         $update = (object) ['id' => $versionId, 'status' => 'published', 'title_snapshot' => $course->title,
-            'presentation_json' => $presentation, 'structure_hash' => $hash, 'published_at' => $now,
+            'presentation_json' => $presentation, 'fields_snapshot_json' => $courseFieldsSnapshot,
+            'structure_hash' => $hash, 'published_at' => $now,
             'revision' => (int) $version->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
         $this->db->updateObject('#__jlms_course_versions', $update, 'id');
         $calendar=CourseSchedule::read($course);
@@ -383,17 +386,21 @@ final class PublicationService
         $this->db->insertObject('#__jlms_editions', $edition);
     }
 
-    /** Freeze lesson field values and their display metadata into the immutable teaching version. */
-    private function snapshotLessonFields(User $actor, int $lessonId): array
+    /** Freeze native field values and display metadata into the immutable teaching version. */
+    private function snapshotFields(User $actor, string $context, int $itemId): array
     {
-        $context = 'com_jlms.lesson';
-        $item = (string) $lessonId;
+        if (!in_array($context, ['com_jlms.course', 'com_jlms.lesson'], true) || $itemId < 1) {
+            throw new \DomainException('COM_JLMS_INVALID_INPUT');
+        }
+        $item = (string) $itemId;
         $q = $this->db->createQuery()->select('f.id, f.name, f.title, f.type, f.access, v.value')
             ->from('#__fields AS f')->innerJoin('#__fields_values AS v ON v.field_id = f.id')
             ->where('f.context = :context')->where('f.state = 1')->where('v.item_id = :item')
             ->bind(':context', $context)->bind(':item', $item)->order('f.id');
         $fields = [];
-        foreach ($this->db->setQuery($q, 0, 1001)->loadObjectList() as $row) {
+        $rows = $this->db->setQuery($q, 0, 1001)->loadObjectList();
+        if (count($rows) > 1000) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+        foreach ($rows as $row) {
             if (!in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) { continue; }
             $fields[$row->name] ??= ['label' => (string) $row->title, 'type' => (string) $row->type,
                 'access' => (int) $row->access, 'values' => []];

@@ -1,3 +1,14 @@
+## IMP-01 — snapshot dei campi corso `com_fields` (0.46.0-dev)
+
+Riferimenti: CORE-10, EDGE-11, AUT-04; criteri AC-48, AC-71, AC-119/120/125. Nel sito Joomla di prova crea un corso con un campo nativo `com_fields` valorizzato e pubblica una versione didattica.
+
+1. Verificare che la pubblicazione riesca e che aula/lezioni continuino a mostrare i campi lezione previsti.
+2. Cambiare il valore del campo corso dopo la pubblicazione. La scheda editoriale può mostrare il valore corrente, ma lo snapshot della versione già pubblicata e le iscrizioni assegnate devono conservare quello originario.
+3. Creare una nuova versione di lavoro e pubblicarla: lo snapshot della nuova versione deve contenere il valore corrente del campo; la versione precedente deve restare invariata.
+4. Ripetere con un campo non pubblicato o non visibile al livello Joomla dell’operatore: non deve essere incluso nello snapshot. Verificare inoltre che accessi e stato dei campi nativi restino gestiti da Joomla.
+
+La CI automatizzata copre congelamento, hash e conservazione dei campi corso/lezione durante la pubblicazione. Registrare separatamente l’accettazione Joomla manuale.
+
 ## IMP-08 — filtri ricercabili del roster (0.45.0-dev)
 
 Riferimenti: ISC-01/02/05/07, REP-02, SCR-14; AC-11/12/25/26/40/53/54/60/63/128. Nel backend Joomla aprire il roster di un corso autorizzato con più versioni e iscritti.

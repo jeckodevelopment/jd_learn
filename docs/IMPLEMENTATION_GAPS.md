@@ -1,4 +1,4 @@
-Stato aggiornato al 12 novembre 2026: main **0.45.0-dev** integra PR [#264](https://github.com/jeckodevelopment/jd_learn/pull/264) con filtri ricercabili versione/iscritto nel roster IMP-08, limitati al corso autorizzato. L’accettazione manuale Joomla e il gate IMP-10 restano aperti. Le lacune storiche seguenti conservano la data della relativa verifica.
+Stato aggiornato al 12 novembre 2026: main **0.45.0-dev** integra IMP-08; candidata PR IMP-01 / **0.46.0-dev** congela i campi nativi corso nelle versioni didattiche. Resta il collaudo Joomla, il ripristino dei campi con Content History e il gate IMP-10. Le lacune storiche seguenti conservano la data della relativa verifica.
 
 Stato aggiornato al **12 novembre 2026**: main **0.42.0-dev** integra PR #258 per la velocità STU-05; la candidata **0.43.0-dev** aggiunge la preferenza lingua per tracce interrogabili Vimeo/HTML5. Resta il collaudo provider in Joomla. Le lacune storiche seguenti conservano la data della relativa verifica.
 

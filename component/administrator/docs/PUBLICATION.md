@@ -12,6 +12,8 @@ La prima pubblicazione è disponibile ed è stata confermata dall’utente sul p
 
 L’editor a schede, le duplicazioni e la pubblicazione degli aggiornamenti sono disponibili. Il workflow Joomla supporta Bozza, In revisione, Pubblicato e Archiviato. L’invio in revisione non cambia la versione live e blocca le modifiche finché la bozza non è restituita o approvata; l’aggiornamento richiede sempre la schermata di impatto. Archiviare nasconde il corso dal catalogo e impedisce nuove iscrizioni, mantenendo versione corrente, storico e accesso degli iscritti esistenti. **Ripristina corso** riporta nel catalogo la medesima versione. La preview editoriale include **Verifica dei livelli di accesso**: selezionare uno o più viewing access level Joomla per vedere separatamente visibilità del catalogo e accesso ai contenuti, oltre all’esito combinato. È una simulazione read-only: non cambia appartenenze, iscrizioni, corso o progressi. Resta l’anteprima studente interattiva. Per aggiornare un corso già pubblicato seguire [COURSE_EDITOR.md](COURSE_EDITOR.md). Non modificare lo stato tramite SQL o task generici per aggirare la validazione.
 
+La pubblicazione congela anche i valori dei campi nativi `com_fields` del corso e delle lezioni nella versione didattica. Una modifica successiva ai campi editoriali del corso non cambia la versione già assegnata agli studenti; il valore aggiornato entra nello snapshot soltanto pubblicando una nuova versione. Campi disabilitati o non accessibili all’attore che pubblica non vengono inclusi.
+
 ## Diagnostica
 
 Il Programma mostra lo stato del corso e un motivo se il comando non è disponibile:
