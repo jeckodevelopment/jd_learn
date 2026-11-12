@@ -19,7 +19,7 @@
   },
   "version": "0.56.3-dev",
   "code_baseline": {
-    "tested_head": "0ef1c9c8b94e1f3731c42a",
+    "tested_head": "102d8fa3ed055612c819672e118984a22712dcdf",
     "pull_request": 297,
     "merged_main_commit": "18d916075ac9580f442c7ec85a45c9c82c6e9642"
   },
@@ -13101,6 +13101,7 @@
   ],
   "latest_feature": {
     "pull_request": 297,
+    "candidate_head": "102d8fa3ed055612c819672e118984a22712dcdf",
     "merged_main_commit": "18d916075ac9580f442c7ec85a45c9c82c6e9642",
     "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190/artifacts/13983759363",
     "artifact_id": 13983759363,
