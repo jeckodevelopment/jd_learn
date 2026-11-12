@@ -21,13 +21,14 @@ lesson.duration=10000; lesson.stopped=false;
 lesson.queue=[{id:1,type:'play',position_ms:0,client_ms:0,rate_milli:1000,playing:true}];
 const bodies=[]; let attempt=0;
 lesson.transport=async (_url,options)=>{
+  assert.equal(elements['#jlms-player-status'].textContent,'saving');
   bodies.push(options.body.toString());
   if (++attempt===1) throw Error('network');
   return {ok:true,json:async()=>({success:true,data:{next_sequence:2,lesson_completed:false,course_percent:0}})};
 };
-await lesson.flush();assert.ok(lesson.pending);assert.equal(lesson.sequence,1);
+await lesson.flush();assert.ok(lesson.pending);assert.equal(lesson.sequence,1);assert.equal(elements['#jlms-player-status'].textContent,'offline');
 lesson.queue.push({id:2,type:'pause',position_ms:1000,client_ms:1000,rate_milli:1000,playing:false});
-await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue.length,1);assert.equal(lesson.sequence,2);
+await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue.length,1);assert.equal(lesson.sequence,2);assert.equal(elements['#jlms-player-status'].textContent,'saved');
 lesson.transport=async()=>({ok:false,status:403,json:async()=>({success:false})});
 let destroyed=0;lesson.player={destroy:async()=>destroyed++};
 await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1);
