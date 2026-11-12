@@ -88,6 +88,8 @@ final class Com_JlmsInstallerScript
         \Jlms\Component\Jlms\Administrator\Infrastructure\WorkflowInstaller::install(Factory::getApplication(), $db);
         require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/EditorialInstaller.php';
         \Jlms\Component\Jlms\Administrator\Infrastructure\EditorialInstaller::install($db);
+        require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/MailTemplateInstaller.php';
+        \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::ensureRegistered();
         return true;
     }
 

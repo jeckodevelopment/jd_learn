@@ -1,3 +1,14 @@
+## IMP-09 / CORE-18 — template email Joomla
+
+**Comportamenti da testare in Joomla**
+
+1. Installare o aggiornare il pacchetto e aprire **Sistema → Modelli email**. Filtrare per `com_jlms` e verificare i modelli richiesta iscrizione, iscrizione confermata e completamento corso, con testo, HTML e tag dichiarati.
+2. Aprire un modello, modificarne oggetto e corpo e salvare. Creare inoltre una traduzione per la lingua secondaria configurata nel sito.
+3. Aggiornare nuovamente il pacchetto: oggetto, corpo e traduzione personalizzati devono rimanere invariati; non devono comparire modelli duplicati.
+4. Verificare che l'impostazione del mailer/SMTP resti quella globale di Joomla. Questo incremento registra i modelli; la spedizione automatica e il retry persistente sono residui CORE-18 e non vanno considerati collaudati da queste prove.
+
+La CI verifica la registrazione via API Joomla, i tag esposti e la preservazione del testo personalizzato su upgrade. L'accettazione manuale resta da eseguire.
+
 ## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
 
 PR [#287](https://github.com/jeckodevelopment/jd_learn/pull/287) integrata nel commit `2af8994271d95f3c41b3e5f813ba2222794265c5`; CI standard 4/4 nel [run 43289138110](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110). Pacchetto installabile [JD-Learn-0.55.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105); SHA-256 package `fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282`.
