@@ -798,15 +798,13 @@ Requisiti: PRO-06, STU-03; AC-07, AC-37, AC-81, AC-91. PR [#280](https://github.
 
 La regressione automatica d’integrazione in `tests/joomla-video.php` copre due batch consecutivi da una sessione obsoleta ed è passata nella CI standard 4/4. Accettazione live Joomla: Non eseguita.
 
-## IMP-04 — replay del batch video obsoleto (0.53.0-dev)
+## IMP-04 — replay del batch video obsoleto (PR #282, 0.53.0-dev)
 
-Requisito: PRO-06; AC-07, AC-37, AC-81, AC-91.
+**Stato automatico:** superato nella CI standard 4/4 [run 43252689828](https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828), incluso test Joomla/PHP di replay idempotente. Merge `66a59d0a5e4e60943b0d1487ddce4c95c64f97b0`. **Accettazione manuale Joomla: da eseguire.** Pacchetto [JD-Learn-0.53.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828/artifacts/13959653251), SHA-256 ZIP `7898ba9c5dc340aaec1b9c260ef729bc4314cde4cd31bc44c2411efacca0616e`; wrapper `a2dc70a32891b12c378f0920c75c5fa4b9da3c47e46fc0efd442b898051235fa`, scade il 26 novembre 2026.
 
-**Comportamenti da testare in Joomla**
+1. Sul sito Joomla di prova, aprire la stessa iscrizione video in due sessioni/browser: A e B.
+2. Avanzare e salvare da A un punto di ripresa più recente. Da B inviare un batch di progresso basato sulla revisione precedente; verificare che la risposta segnali il conflitto e il resume salvato resti quello più recente.
+3. Ripetere da B la stessa identica richiesta. Atteso: risposta idempotente con `replay=true` e `resume_conflict=true`; nessuna seconda applicazione di copertura, completamento o posizione di ripresa.
+4. Inviare da B un ulteriore batch con la revisione obsoleta. Atteso: conflitto ancora segnalato e nessuna regressione del resume.
+5. Verificare che il progresso valido già registrato da entrambe le sessioni venga mantenuto e che il corso non risulti completato due volte.
 
-1. Avviare una lezione video nello stesso account da due browser.
-2. Salvare un punto più recente nel browser A, quindi inviare un batch dalla sessione precedente del browser B.
-3. Ritentare identico il batch di B. Il server deve riconoscerlo come replay idempotente, restituire il conflitto di ripresa e mantenere invariati resume e copertura già registrati.
-4. Inviare il batch successivo da B: la ripresa deve restare sul punto di A.
-
-La regressione automatica è aggiunta a `tests/joomla-video.php`; accettazione live: Non eseguita.
