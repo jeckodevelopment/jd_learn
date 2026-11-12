@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Candidata PR #247 / STAB-05 per issue #199: eliminazione dei titoli ripetuti in Dashboard e Percorsi formativi. Dopo la CI resta il collaudo sul sito Joomla. Avanzamento implementativo **78%**; proseguire con i residui del piano e con il gate IMP-10 (feed/asset produttivo e aggiornamento end-to-end).
+Aggiornato al 12 novembre 2026. Main **0.41.81-dev** include PR #247 / issue #199, CI standard 4/4 e pacchetto verificato [JD-Learn-0.41.81-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43129077496/artifacts/13904467823) (SHA-256 interno `3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573`). Avanzamento implementativo **78%**; resta il collaudo manuale delle viste amministrative e degli altri flussi, oltre al gate IMP-10 con feed/update produttivo e recovery end-to-end.
 
 STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: la PR #238 / 0.41.78-dev integra la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
 
