@@ -62,6 +62,10 @@ $currentModule = 0;
      <?php endforeach; ?>
     </select>
    </div>
+   <div id="jlms-video-language-control" hidden>
+    <label for="jlms-video-language"><?= Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE') ?></label>
+    <select id="jlms-video-language" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE')) ?>"></select>
+   </div>
   </section>
   <?php elseif ($selected->kind === 'audio' && !empty($selected->audio_attachment)) : ?>
   <section id="jlms-audio-region" aria-labelledby="jlms-lesson-title">

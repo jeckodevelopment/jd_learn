@@ -10,6 +10,15 @@
 4. Ripetere con HTML5 e verificare 0,5× e 2×; provare un browser che non espone playbackRate e controllare che il selettore resti nascosto.
 5. Aprire Cloudflare Stream e verificare che non compaia il selettore di JD Learn. La riproduzione e i controlli nativi devono restare disponibili.
 6. Con video tracciabile, campionare per un intervallo noto a velocità normale e a 1,5×; verificare che il server usi rate_milli effettivamente osservato e che l’avanzamento derivi sempre dagli intervalli unici, senza credito per il solo seek.
+
+### Preferenza lingua caption/sottotitoli (0.43.0-dev)
+
+1. Installare il pacchetto su Joomla 6 di prova. Preparare un video Vimeo con almeno due tracce linguistiche abilitate e un file HTML5 con tracce native `captions`/`subtitles` in due lingue. Aprire la lezione da un account iscritto e autorizzato.
+2. Su Vimeo, scegliere una lingua dal controllo **Lingua dei sottotitoli**. Verificare che venga attivata la traccia scelta; ricaricare la lezione nello stesso browser e verificare la persistenza locale. Selezionare **Disattivati** e verificare che la traccia si spenga e che la preferenza venga rimossa.
+3. Ripetere con HTML5; verificare che la traccia scelta sia `showing` e le altre siano `disabled`. Provare una preferenza `fr-CA` con traccia `fr`: il selettore deve scegliere la lingua principale corrispondente.
+4. Ripetere su un altro browser o profilo: la preferenza non deve trasferirsi. Negare il consenso a un provider esterno: nessuna richiesta SDK o selezione deve avvenire prima del normale consenso/autorizzazione.
+5. Su video YouTube e Cloudflare Stream verificare che il selettore JD Learn non compaia quando l’adapter non espone l’elenco tracce; i controlli nativi del player restano disponibili. Nell’anteprima editoriale ripetere la selezione e verificare che non siano creati progressi, iscrizioni o eventi di telemetria.
+6. Durante una lezione tracciabile, cambiare lingua e verificare che la selezione non alteri stato, percentuale, soglia o progressi del video.
 7. Verificare che la preferenza resti soltanto nel browser corrente, non sia inviata a Joomla e non cambi fra dispositivi; bloccare localStorage e verificare che i player continuino a funzionare a 1×.
 
 **Implementata dalla PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), merge `c04bda9b5db8f82e571b27400863cb29ba5b84ef`, versione 0.42.0-dev. CI 4/4 [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135); pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`. La preferenza lingua resta da implementare.

@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main **0.42.0-dev** integra la PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), merge `c04bda9b5db8f82e571b27400863cb29ba5b84ef`; CI standard 4/4 nel [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135). Pacchetto installabile [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`, wrapper `4cba266ce1b7008f5d4736d25482f589566a030fdb53a7130f0bd0a6fae5720e` (scade il 26 novembre 2026). Avanzamento stimato **80%**.
+Aggiornato al 12 novembre 2026. Main **0.42.0-dev** integra la PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258); la candidata **0.43.0-dev** completa il residuo implementativo STU-05 per le tracce lingua esposte da Vimeo e HTML5. La CI e il pacchetto della candidata sono da verificare prima del merge. Avanzamento implementativo stimato **80%**; l’accettazione Joomla resta aperta.
 
 
 

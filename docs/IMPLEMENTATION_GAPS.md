@@ -1,6 +1,6 @@
 # Problemi specifici e differenze aperte
 
-Stato aggiornato al **12 novembre 2026**: main **0.42.0-dev** integra PR #258 per la velocità STU-05; resta la preferenza lingua e il collaudo provider in Joomla. Le lacune storiche seguenti conservano la data della relativa verifica.
+Stato aggiornato al **12 novembre 2026**: main **0.42.0-dev** integra PR #258 per la velocità STU-05; la candidata **0.43.0-dev** aggiunge la preferenza lingua per tracce interrogabili Vimeo/HTML5. Resta il collaudo provider in Joomla. Le lacune storiche seguenti conservano la data della relativa verifica.
 
 ## Casi aperti
 

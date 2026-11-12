@@ -85,6 +85,10 @@ foreach ($this->preview['lessons'] as $entry) {
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div id="jlms-video-language-control" hidden>
+                        <label for="jlms-video-language"><?= Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE') ?></label>
+                        <select id="jlms-video-language" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE')) ?>"></select>
+                    </div>
                 </section>
             <?php elseif (in_array($lesson->kind, ['document', 'audio'], true)) : ?>
                 <p class="alert alert-info" role="status"><?= Text::_('COM_JLMS_COURSE_PREVIEW_MEDIA_READY') ?></p>

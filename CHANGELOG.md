@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.43.0-dev — preferenza lingua sottotitoli player (STU-05)
+
+- Aggiunta la preferenza lingua locale per le tracce caption/sottotitoli esposte dal player; selezione esatta o fallback al codice lingua principale e comando per disattivare le tracce.
+- La selezione è disponibile per Vimeo e per tracce native HTML5. YouTube e Cloudflare Stream non espongono all’adapter un elenco interrogabile e non mostrano il selettore. La preferenza resta nel browser e non modifica progresso, soglia o dati Joomla.
+- Collaudo Joomla da registrare secondo la sezione STU-05 in `docs/QA_TESTBOOK.md`; selezione e persistenza verificate anche con test automatici su adapter simulati.
+
 ## 0.42.0-dev — velocità di riproduzione video (STU-05 / IMP-05)
 
 - Aggiunta una preferenza locale per la velocità video, applicata solo se il player e il singolo video la supportano; disponibile sui player YouTube, Vimeo quando consentito dall’account/video, e HTML5.
