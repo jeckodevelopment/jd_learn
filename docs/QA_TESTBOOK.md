@@ -31,6 +31,18 @@ Le prove automatizzate pure coprono ereditarietà, override, validazione e conse
 
 PR [#295](https://github.com/jeckodevelopment/jd_learn/pull/295) integrata nel commit `8152e337455b1ec7b9d307dc9248c8070b964709`; CI standard 4/4 nel [run 43305020698](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698). Pacchetto [JD-Learn-0.56.2-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698/artifacts/13983557253), SHA-256 ZIP `9923d41d5d342ac1b854090f6956b9c9fff745c2b71f939a446a6b7494849ad7`, digest artefatto `4e541658e5cf45c2b1238c41bb1501a768ec850cbd3b2958c37d3e735959450e` (scade il 26 novembre 2026). Acceptance manuale Joomla/SMTP ancora pendente.
 
+## IMP-09-MAIL-B — email su sospensione e riattivazione (0.56.3-dev)
+
+**Comportamenti da testare in Joomla**
+
+1. Installare/aggiornare 0.56.3-dev e aprire **Sistema → Modelli email**. Verificare i template `com_jlms.enrollment.suspended` e `com_jlms.enrollment.reactivated`, i tag dichiarati e la conservazione di personalizzazioni dopo un secondo upgrade.
+2. Configurare il mailer globale Joomla su casella di prova; impostare globalmente entrambe le notifiche. Sospendere l'iscrizione attiva di uno studente: l'attività pianificata deve inviare un solo messaggio con nome e corso corretti; ripetere il task senza duplicati.
+3. Riattivare la stessa iscrizione: inviare il solo template di riattivazione. Verificare che progressi, stato di completamento e tentativi quiz conservati restino invariati.
+4. Disabilitare globalmente la sospensione; per un corso lasciare **Usa impostazione del sito** e per un altro impostare **Abilita**. Sospendere due iscrizioni e verificare che la prima non accodi messaggi e la seconda sì. Verificare anche l'override **Disabilita** con default globale attivo e la preferenza di riattivazione separata.
+5. Configurare un errore nel database/outbox durante l'applicazione: la transazione non deve lasciare uno stato aggiornato senza il corrispondente evento; ripetere una richiesta idempotente e verificare un solo record di coda.
+
+Il test automatico copre i valori consentiti e la risoluzione delle preferenze. La CI di integrazione verifica il workflow e il registro template; invio SMTP/Joomla manuale ancora da eseguire.
+
 ## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
 
 PR [#287](https://github.com/jeckodevelopment/jd_learn/pull/287) integrata nel commit `2af8994271d95f3c41b3e5f813ba2222794265c5`; CI standard 4/4 nel [run 43289138110](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110). Pacchetto installabile [JD-Learn-0.55.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105); SHA-256 package `fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282`.

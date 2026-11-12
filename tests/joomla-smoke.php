@@ -73,6 +73,8 @@ require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
 $mailTemplateIds = [
     'com_jlms.enrollment.requested',
     'com_jlms.enrollment.confirmed',
+    'com_jlms.enrollment.suspended',
+    'com_jlms.enrollment.reactivated',
     'com_jlms.course.completed',
 ];
 foreach ($mailTemplateIds as $templateId) {

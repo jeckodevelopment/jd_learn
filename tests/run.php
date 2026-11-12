@@ -43,6 +43,9 @@ expect($mailPrefsClass::enabled('completion', true, $mailParams), 'unset course 
 expect(!$mailPrefsClass::enabled('completion', false, $mailParams), 'inherited course setting follows the disabled global default');
 $courseOverride = $mailPrefsClass::merge(['mail_completion' => 'enabled'], $mailParams);
 expect($mailPrefsClass::enabled('completion', false, $courseOverride), 'explicit course preference overrides the global default');
+$mailParams = $mailPrefsClass::merge(['mail_suspension' => 'disabled', 'mail_reactivation' => 'enabled'], $mailParams);
+expect(!$mailPrefsClass::enabled('suspension', true, $mailParams)
+    && $mailPrefsClass::enabled('reactivation', false, $mailParams), 'suspension and reactivation preferences support independent course overrides');
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
     && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');

@@ -1,3 +1,9 @@
+## 0.56.3-dev — Notifiche sospensione e riattivazione iscrizione (in sviluppo)
+
+- Registra template Joomla per sospensione e riattivazione dell’accesso al corso.
+- Accoda i messaggi nella stessa transazione della modifica di stato e applica le preferenze globali/per corso.
+- La chiave evento deduplica i replay della transizione; il mancato invio non annulla lo stato didattico.
+
 ## 0.56.2-dev — Preferenze notifiche email per sito e corso (PR #295 integrata)
 
 - Aggiunge opzioni globali per abilitare o disabilitare conferme di iscrizione automatica e email di completamento.
