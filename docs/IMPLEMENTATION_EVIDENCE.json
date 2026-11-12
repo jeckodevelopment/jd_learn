@@ -3,70 +3,70 @@
   "product": "JD Learn",
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
-    "percent": 81,
-    "basis": "Media semplice delle sette macroaree incluse: (82+81+78+99+68+92+70)/7=81,43%, arrotondata a 81%. PR #284 completa un avviso AUT-03 sul video senza durata verificata in sola consultazione; in modalità Apprendimento il controllo bloccante resta invariato. Restano gli avvisi su sottotitoli/provider quando rilevabili, altri residui IMP-04 e l’accettazione Joomla live.",
+    "percent": 82,
+    "basis": "Media semplice delle sette macroaree incluse: (82+81+79+99+68+92+70)/7=81,57%, arrotondata a 82%. PR #287 completa l’indicatore localizzato di invio e conferma del salvataggio video (IMP-04/STU-03); restano l’accettazione Joomla manuale, gli altri residui IMP-04/05 e il gate IMP-10.",
     "macroareas": {
       "courses": 82,
       "catalogue": 81,
-      "learning_progress": 78,
+      "learning_progress": 79,
       "video_materials": 99,
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70
     }
   },
-  "version": "0.54.0-dev",
+  "version": "0.55.0-dev",
   "code_baseline": {
-    "tested_head": "d9935f8b0e84ff1200d42b448491a80dba8a40e2",
-    "parent_main_commit": "19a5d17592a09fdbfca4a49bd7aaee7ef1b8fcee",
-    "pull_request": 284,
-    "merged_main_commit": "04704621f64a7ee712743f98037dfe31d7a4606f"
+    "tested_head": "ac0d369e67a5cdf2bcc95415d6a4dd39bad5c2e4",
+    "parent_main_commit": "1233442fa1fac2ab8a2389f5489cd855d2bcde9c",
+    "pull_request": 287,
+    "merged_main_commit": "2af8994271d95f3c41b3e5f813ba2222794265c5"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43256423443,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443",
+    "run_id": 43289138110,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
     "jobs": [
       {
-        "id": 131315768298,
+        "id": 131430396217,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131315882491,
+        "id": 131430478801,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131315882522,
-        "name": "PHP 8.3 / MySQL 8.4",
+        "id": 131430478738,
+        "name": "PHP 8.4 / MariaDB 10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131315882591,
-        "name": "PHP 8.4 / MariaDB 10.6",
+        "id": 131430478749,
+        "name": "PHP 8.3 / MySQL 8.4",
         "status": "completed",
         "conclusion": "success"
       }
     ]
   },
   "package": {
-    "artifact_id": 13961114324,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443/artifacts/13961114324",
-    "artifact_name": "JD-Learn-0.54.0-dev",
-    "installable_package": "pkg_jlms-0.54.0-dev.zip",
-    "sha256": "bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12",
-    "artifact_sha256": "ba7f9c7568500bfd82da3d9ff054ea907272942c9dfc9ff9f5203bfc8331494d",
-    "size_bytes": 580148,
-    "artifact_size_bytes": 579936,
-    "expires_at": "2026-11-26T16:18:16Z",
+    "artifact_id": 13975579105,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105",
+    "artifact_name": "JD-Learn-0.55.0-dev",
+    "installable_package": "pkg_jlms-0.55.0-dev.zip",
+    "sha256": "fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282",
+    "artifact_sha256": "3438a2017c0488ab1cbbd2502e56314f9dfd787998733b6fee81a2be7b5462c1",
+    "size_bytes": 580197,
+    "artifact_size_bytes": 579985,
+    "expires_at": "2026-11-26T19:24:10Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -77,12 +77,12 @@
     "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855",
     "standard_ci_jobs": 4,
     "status": "passed; process/tooling change only; no runtime requirement progress",
-    "latest_installable_artifact_id": 13961114324,
-    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43256423443/artifacts/13961114324",
-    "package_sha256": "bb30f239755b24b7c439d03ba5a70b7e11294360d648ce2a0a291cdbb0c46f12",
-    "artifact_wrapper_sha256": "ba7f9c7568500bfd82da3d9ff054ea907272942c9dfc9ff9f5203bfc8331494d",
-    "artifact_expires_at": "2026-11-26T16:18:16Z",
-    "manual_joomla_acceptance": "not applicable to process-only PR; existing product acceptance remains pending"
+    "latest_installable_artifact_id": 13975579105,
+    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105",
+    "package_sha256": "fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282",
+    "artifact_wrapper_sha256": "3438a2017c0488ab1cbbd2502e56314f9dfd787998733b6fee81a2be7b5462c1",
+    "artifact_expires_at": "2026-11-26T19:24:10Z",
+    "manual_joomla_acceptance": "Product acceptance remains pending; run the video save-status Joomla scenarios in docs/QA_TESTBOOK.md."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -13022,12 +13022,15 @@
   "latest_feature": {
     "plan_increment": "IMP-04",
     "requirements": [
-      "AUT-03"
+      "PRO-06",
+      "STU-03"
     ],
-    "pull_request": 284,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/284",
-    "merged_commit": "04704621f64a7ee712743f98037dfe31d7a4606f",
-    "manual_acceptance": "Pending; test the consultation-video duration warning and unchanged learning-mode blocker per docs/QA_TESTBOOK.md.",
-    "progress_estimate": "81.43% exact (81% reported); M01/M02 82%, M03 78%, M04 99%."
+    "pull_request": 287,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/287",
+    "merged_commit": "2af8994271d95f3c41b3e5f813ba2222794265c5",
+    "ci_run_id": 43289138110,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110",
+    "manual_acceptance": "Pending; execute video save-in-progress/saved, completion precedence, offline retry, definitive 4xx and English labels in Joomla per docs/QA_TESTBOOK.md.",
+    "progress_estimate": "81.57% exact (82% reported); M01/M02 82%, M03 79%, M04 99%."
   }
 }
