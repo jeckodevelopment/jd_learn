@@ -8,8 +8,11 @@ export class VideoLesson {
     this.chain = Promise.resolve(); this.generation = 0;
     this.status = root.querySelector('#jlms-player-status');
     this.rateSelect = root.querySelector('#jlms-video-speed');
+    this.languageSelect = root.querySelector('#jlms-video-language');
     this.onRateChange = () => this.changePlaybackRate();
+    this.onLanguageChange = () => this.changeCaptionLanguage();
     this.rateSelect?.addEventListener('change', this.onRateChange);
+    this.languageSelect?.addEventListener('change', this.onLanguageChange);
     this.onConsent = () => {
       if (this.allowed()) this.start();
       else { this.stop(true); this.message(this.config.policy === 'click' ? 'policy' : 'consent'); }
@@ -74,6 +77,46 @@ export class VideoLesson {
       this.message('rate_unavailable');
     }
   }
+  async configureCaptionLanguage(player) {
+    const control = this.root.querySelector('#jlms-video-language-control');
+    const select = this.languageSelect;
+    if (!control || !select || typeof player.textTracks !== 'function' || typeof player.setTextTrack !== 'function') return;
+    try {
+      const tracks = (await player.textTracks()).filter(track => track && typeof track.language === 'string' && track.language.trim());
+      if (!tracks.length) { control.hidden = true; return; }
+      const byLanguage = new Map();
+      for (const track of tracks) {
+        const language = track.language.trim().toLowerCase();
+        if (!byLanguage.has(language)) byLanguage.set(language, track);
+      }
+      let saved = '';
+      try { saved = globalThis.localStorage?.getItem('jdlearn.video.language.v1')?.toLowerCase() || ''; } catch { /* Optional preference. */ }
+      const selected = saved && (byLanguage.has(saved) ? saved : [...byLanguage.keys()].find(language => language.split('-')[0] === saved.split('-')[0]))
+        || [...byLanguage].find(([, track]) => track.active)?.[0] || '';
+      select.replaceChildren();
+      const off = document.createElement('option'); off.value = ''; off.textContent = this.config.labels.captions_off || 'Off'; select.append(off);
+      for (const [language, track] of byLanguage) {
+        const option = document.createElement('option'); option.value = language;
+        option.textContent = track.label || language; select.append(option);
+      }
+      if (selected && selected !== [...byLanguage].find(([, track]) => track.active)?.[0]) await player.setTextTrack(byLanguage.get(selected).id);
+      select.value = selected;
+      control.hidden = false;
+    } catch { control.hidden = true; }
+  }
+  async changeCaptionLanguage() {
+    if (!this.player || !this.languageSelect || typeof this.player.setTextTrack !== 'function') return;
+    const language = this.languageSelect.value;
+    try {
+      const tracks = await this.player.textTracks();
+      const track = tracks.find(item => item.language.trim().toLowerCase() === language);
+      await this.player.setTextTrack(track?.id ?? '');
+      try {
+        if (language) globalThis.localStorage?.setItem('jdlearn.video.language.v1', language);
+        else globalThis.localStorage?.removeItem('jdlearn.video.language.v1');
+      } catch { /* Optional browser preference. */ }
+    } catch { this.message('captions_unavailable'); }
+  }
   async request(task, values, keepalive = false) {
     if (this.config.preview) {
       const body = new URLSearchParams({course_id: this.config.course, version_id: this.config.version,
@@ -121,6 +164,7 @@ export class VideoLesson {
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player;
       await this.configurePlaybackSpeed(player);
+      await this.configureCaptionLanguage(player);
       if (!this.config.preview && grant.resume_ms) await player.seek(grant.resume_ms);
       if (!this.config.preview) await this.record('seeked');
       if (this.stopped || generation !== this.generation) return;
@@ -227,6 +271,7 @@ export class VideoLesson {
   async destroy() {
     await this.stop(true);
     this.rateSelect?.removeEventListener('change', this.onRateChange);
+    this.languageSelect?.removeEventListener('change', this.onLanguageChange);
     window.removeEventListener('jlms:consent-changed', this.onConsent);
     window.removeEventListener('pagehide', this.onPageHide);
     window.removeEventListener('pageshow', this.onPageShow);

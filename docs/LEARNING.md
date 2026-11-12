@@ -1,5 +1,7 @@
 # Iscrizione automatica e aula testo
 
+Nel player video, quando il provider espone tracce lingua interrogabili, l’utente può scegliere i sottotitoli/caption disponibili. La scelta resta nel browser locale e non cambia il completamento. La selezione è disponibile per Vimeo e per eventuali tracce native HTML5; YouTube e Cloudflare Stream mantengono i propri controlli perché gli adapter non espongono l’elenco delle tracce.
+
 Su smartphone l’indice del programma è comprimibile: il contenuto della lezione resta subito raggiungibile e il comando “Mostra programma” apre temporaneamente la navigazione. Desktop mantiene l’indice visibile. La funzione non cambia accessi, stato o progressi.
 
 Per provare il flusso: pubblicare un corso contenente solo lezioni di testo, modalità di iscrizione **automatica**, con almeno una lezione obbligatoria. Un utente Joomla con il livello contenuto corretto apre la scheda e preme **Inizia / Riprendi**. Il login usa com_users e la sessione nativa; il LMS non gestisce password, gruppi commerciali o pagamenti. Su una copia di prova il risultato è verificabile ricaricando e riprendendo con lo stesso account.

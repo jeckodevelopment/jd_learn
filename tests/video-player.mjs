@@ -5,9 +5,10 @@ const source = (await readFile(new URL('../component/media/js/video.js', import.
 const {VideoLesson} = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
 const listeners = new Map();
 globalThis.window = {addEventListener: (k,v) => listeners.set(k,v), removeEventListener: k => listeners.delete(k)};
-globalThis.document = {hidden:false, addEventListener(){},removeEventListener(){},getElementById(){return null;}};
-const elements = Object.fromEntries(['#jlms-player-status','#jlms-player']
+globalThis.document = {hidden:false, addEventListener(){},removeEventListener(){},getElementById(){return null;},createElement:tag=>({tag,options:[],append(option){this.options.push(option);}})};
+const elements = Object.fromEntries(['#jlms-player-status','#jlms-player','#jlms-video-language-control']
   .map(k => [k, {textContent:'',addEventListener(){},replaceChildren(){}}]));
+elements['#jlms-video-language']={value:'',options:[],addEventListener(){},removeEventListener(){},replaceChildren(){this.options=[];},append(option){this.options.push(option);}};
 const root = {querySelector:k=>elements[k]};
 let calls = 0;
 const config = {policy:'site_consent',provider:'youtube',enrollment:1,lesson:2,token:'csrf',
@@ -139,16 +140,22 @@ assert.equal(ytFrame.referrerPolicy,'strict-origin');
 assert.equal((await yt.sample()).position_ms,1500);assert.deepEqual(await yt.playbackRates(),[0.5,1,1.5]);assert.equal(await yt.setPlaybackRate(1.5),1.5);yt.destroy();assert.equal(ytDestroyed,1);
 const aborted=new AbortController();aborted.abort();await assert.rejects(youtube.create(box,{options:{}},()=>{},aborted.signal));
 const vimeo=await moduleFromFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url));
-let vmHandlers=0,vmDestroyed=0;
+let vmHandlers=0,vmDestroyed=0,vmInstance;
 globalThis.Vimeo={Player:class{
+  constructor(){vmInstance=this;}
   ready(){return Promise.resolve();}on(){vmHandlers++;}off(){vmHandlers--;}
   getCurrentTime(){return Promise.resolve(2);}getDuration(){return Promise.resolve(10);}
   getPlaybackRate(){return Promise.resolve(1);}setPlaybackRate(rate){return Promise.resolve(rate);}getPaused(){return Promise.resolve(false);}getEnded(){return Promise.resolve(false);}
+  getTextTracks(){return Promise.resolve([{language:'en',label:'English',kind:'captions',mode:'disabled'},{language:'fr',label:'Français',kind:'captions',mode:'showing'}]);}
+  enableTextTrack(language,kind){this.enabled=[language,kind];return Promise.resolve();}disableTextTrack(){this.enabled=null;return Promise.resolve();}
   destroy(){vmDestroyed++;return Promise.resolve();}
 }};
 const vm=await vimeo.create(box,{options:{reference:'12345',privacy_hash:'abc123'}},()=>{},new AbortController().signal);
 const frameUrl=new URL(frames.at(-1).src);assert.equal(frameUrl.searchParams.get('dnt'),'1');assert.equal(frameUrl.searchParams.get('h'),'abc123');
 assert.equal((await vm.sample()).duration_ms,10000);assert.deepEqual(await vm.playbackRates(),[0.5,0.75,1,1.25,1.5,1.75,2]);assert.equal(await vm.setPlaybackRate(1.5),1.5);await vm.destroy();assert.equal(vmHandlers,0);assert.equal(vmDestroyed,1);
+const vmTracks=await vm.textTracks();assert.equal(vmTracks.length,2);assert.equal(vmTracks[1].active,true);
+await vm.setTextTrack(vmTracks[0].id);assert.deepEqual(vmInstance.enabled,['en','captions']);
+await vm.setTextTrack('');
 console.log(JSON.stringify({provider_adapter_checks:10,status:'passed',environment:'SDK doubles; no live remote video'}));
 
 // A revoked consent must also settle an SDK instance that never reaches ready.
@@ -200,8 +207,10 @@ const html5=await moduleFromFile(new URL('../plugins/jlmsvideo/html5/media/js/pl
 location.href='https://school.example/index.php?option=com_jlms';
 let videoNode, removed=0, pauses=0;
 document.createElement=tag=>{
+ if(tag==='option')return {value:'',textContent:''};
  assert.equal(tag,'video');const handlers=new Map();
  const element={currentTime:2,duration:10,playbackRate:1,paused:false,ended:false,
+  textTracks:[{language:'en',label:'English',kind:'captions',mode:'disabled'},{language:'it',label:'Italiano',kind:'subtitles',mode:'disabled'}],
   setAttribute(){},removeAttribute(){},load(){},pause(){pauses++;},remove(){removed++;},
   addEventListener:(event,handler)=>handlers.set(event,handler),removeEventListener:event=>handlers.delete(event),
   set src(value){this.url=value;queueMicrotask(()=>handlers.get('loadedmetadata')?.());},get src(){return this.url;},handlers};
@@ -209,6 +218,7 @@ document.createElement=tag=>{
 };
 const native=await html5.create(box,{options:{url:'/index.php?option=com_jlms&task=media.stream&enrollment_id=1&lesson_id=2&source_revision=3'}},()=>{},new AbortController().signal);
 assert.equal(videoNode.preload,'metadata');assert.equal(videoNode.autoplay,false);assert.equal(videoNode.controls,true);assert.deepEqual(await native.playbackRates(),[0.5,0.75,1,1.25,1.5,1.75,2]);assert.equal(await native.setPlaybackRate(1.5),1.5);assert.equal(videoNode.playbackRate,1.5);
+const nativeTracks=await native.textTracks();assert.equal(nativeTracks.length,2);await native.setTextTrack('1');assert.equal(videoNode.textTracks[1].mode,'showing');assert.equal(videoNode.textTracks[0].mode,'disabled');await native.setTextTrack('');assert.equal(videoNode.textTracks[1].mode,'disabled');
 assert.equal((await native.sample()).position_ms,2000);native.seek(5000);assert.equal(videoNode.currentTime,5);
 native.destroy();native.destroy();assert.equal(removed,1);assert.equal(videoNode.handlers.size,0);
 await assert.rejects(html5.create(box,{options:{url:'https://elsewhere.example/private.mp4'}},()=>{},new AbortController().signal));
@@ -241,5 +251,24 @@ speedLesson.session=null;speedLesson.queue=[];await speedLesson.destroy();
 const unsupportedLesson=new VideoLesson(config,speedRoot);
 await unsupportedLesson.configurePlaybackSpeed({playbackRates:async()=>[1],setPlaybackRate:async rate=>rate});
 assert.equal(speedControl.hidden,true);await unsupportedLesson.destroy();
-if(previousStorage===undefined) delete globalThis.localStorage; else globalThis.localStorage=previousStorage;
-console.log(JSON.stringify({playback_speed_checks:7,status:'passed',coverage:'dynamic capability, supported options, local preference, telemetry rate and unsupported player'}));
+
+// The saved caption language is applied only when a matching exposed track exists.
+let captionTrack=''; let captionPreference='fr-CA';
+Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:key=>key==='jdlearn.video.language.v1'?captionPreference:null,
+  setItem:(key,value)=>{if(key==='jdlearn.video.language.v1')captionPreference=value;},
+  removeItem:key=>{if(key==='jdlearn.video.language.v1')captionPreference=null;}}});
+const languageLesson=new VideoLesson(config,root);
+languageLesson.player={textTracks:async()=>[
+  {id:'en',language:'en',label:'English'},{id:'fr',language:'fr',label:'Français'}],
+  setTextTrack:async id=>{captionTrack=id;}};
+await languageLesson.configureCaptionLanguage(languageLesson.player);
+assert.equal(elements['#jlms-video-language-control'].hidden,false);
+assert.equal(captionTrack,'fr');assert.equal(elements['#jlms-video-language'].value,'fr');
+assert.deepEqual(elements['#jlms-video-language'].options.map(option=>option.value),['','en','fr']);
+elements['#jlms-video-language'].value='en';await languageLesson.changeCaptionLanguage();
+assert.equal(captionTrack,'en');assert.equal(captionPreference,'en');
+elements['#jlms-video-language'].value='';await languageLesson.changeCaptionLanguage();
+assert.equal(captionTrack,'');assert.equal(captionPreference,null);
+await languageLesson.destroy();
+if(previousStorage===undefined) delete globalThis.localStorage; else Object.defineProperty(globalThis,'localStorage',{configurable:true,value:previousStorage});
+console.log(JSON.stringify({player_preference_checks:12,status:'passed',coverage:'dynamic playback speed and caption tracks, local preferences, unsupported player, preview-safe presentation'}));

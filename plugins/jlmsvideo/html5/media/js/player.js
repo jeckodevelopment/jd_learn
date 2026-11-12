@@ -33,6 +33,15 @@ export async function create(container, descriptor, emit, signal) {
   container.append(video); video.src = url.href;
   await ready; signal?.throwIfAborted();
   return {
+    textTracks: async () => Array.from(video.textTracks || []).map((track, id) => ({id: String(id), language: track.language || '', label: track.label || '', kind: track.kind, active: track.mode === 'showing'}))
+      .filter(track => ['subtitles', 'captions'].includes(track.kind)),
+    setTextTrack: async id => {
+      for (let index = 0; index < (video.textTracks?.length || 0); index++) {
+        const track = video.textTracks[index];
+        if (['subtitles', 'captions'].includes(track.kind)) track.mode = String(index) === String(id) ? 'showing' : 'disabled';
+      }
+      return id;
+    },
     playbackRates: async () => ('playbackRate' in video ? [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] : [1]),
     setPlaybackRate: async rate => { video.playbackRate = rate; return video.playbackRate; },
     sample: async () => ({position_ms:Math.round(video.currentTime*1000),duration_ms:Math.round(video.duration*1000),

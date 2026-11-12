@@ -2,6 +2,10 @@
 
 # LMS Joomla — Sviluppo sicuro e specifiche dei plugin video
 
+### Preferenza lingua delle tracce (implementazione STU-05)
+
+Gli adapter che implementano `textTracks()` e `setTextTrack(id)` possono esporre al componente le tracce `subtitles`/`captions` supportate dal contenuto. Il componente mostra la selezione solo quando riceve almeno una traccia con codice lingua, memorizza la preferenza nel browser e applica solo lingue effettivamente esposte. Vimeo usa le API text tracks del player; HTML5 usa `TextTrackList` nativa. Provider senza elenco interrogabile (attualmente YouTube e Cloudflare Stream) non mostrano il selettore. Nessuna traccia o preferenza viene salvata lato server.
+
 Versione 1.0 · 30 ottobre 2026 · Parte obbligatoria della specifica del pacchetto base
 
 ## 1. Vincoli di sviluppo e distribuzione

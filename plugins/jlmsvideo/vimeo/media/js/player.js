@@ -39,6 +39,15 @@ export async function create(container, descriptor, emit, signal) {
   })]);
   clearTimeout(readyTimer);
   return {
+    textTracks: async () => (await player.getTextTracks()).map(track => ({
+      id: JSON.stringify({language: track.language, kind: track.kind || 'subtitles'}),
+      language: track.language || '', label: track.label || track.language || '', active: track.mode === 'showing'
+    })),
+    setTextTrack: async id => {
+      if (!id) return player.disableTextTrack();
+      const track = JSON.parse(String(id));
+      return player.enableTextTrack(track.language, track.kind);
+    },
     playbackRates: async () => {
       probingRate = true;
       try {

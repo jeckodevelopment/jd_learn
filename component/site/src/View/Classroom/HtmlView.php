@@ -60,6 +60,8 @@ final class HtmlView extends BaseHtmlView
                 $labels[$key] = \Joomla\CMS\Language\Text::_(implode('_', ['COM', 'JLMS', 'VIDEO', strtoupper($key === 'consent' ? 'consent_required' : $key)]));
             }
             $labels['rate_unavailable'] = \Joomla\CMS\Language\Text::_('COM_JLMS_VIDEO_SPEED_UNAVAILABLE');
+            $labels['captions_off'] = \Joomla\CMS\Language\Text::_('COM_JLMS_VIDEO_CAPTIONS_OFF');
+            $labels['captions_unavailable'] = \Joomla\CMS\Language\Text::_('COM_JLMS_VIDEO_CAPTIONS_UNAVAILABLE');
             $urls = [];
             foreach (['playback', 'save', 'renew', 'close'] as $task) {
                 $urls[$task] = \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=video.' . $task . '&format=json', false);
