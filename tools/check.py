@@ -56,6 +56,11 @@ dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').r
 pathways_template=(ROOT/'component/administrator/tmpl/pathways/default.php').read_text()
 assert not re.search(r'<h1\b',dashboard_template) and not re.search(r'<h1\b',pathways_template)
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
+component_version=E.parse(ROOT/'component/jlms.xml').findtext('version')
+semver_core=r'(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)'
+assert re.fullmatch(semver_core,version),('non-canonical package version',version)
+assert re.fullmatch(semver_core,component_version),('non-canonical component version',component_version)
+assert version==component_version,('package/component version mismatch',version,component_version)
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
  with zipfile.ZipFile(package) as z:
