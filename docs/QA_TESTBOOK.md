@@ -14,7 +14,9 @@
 
 **Esito sito Joomla:** Non eseguito.
 
+
 ---
+
 ## IMP-06 — scansione materiali con ClamAV reale (0.41.74-dev)
 
 **Stato:** PR [#229](https://github.com/jeckodevelopment/jd_learn/pull/229) integrata in `0.41.74-dev` (merge `d02aeceb2402b8b609fbe97a4ad31c38aa7b4b8c`). CI standard 4/4 nel [run 43094357303](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303); artifact [JD-Learn-0.41.74-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43094357303/artifacts/13890232415), wrapper SHA-256 `902cc7909297f38936feddade12020bffec6335a7fd430ffe173b71e172e29c8`. Accettazione manuale Joomla sul sito di prova ancora pendente.
@@ -675,3 +677,10 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 **Esito automatico:** [GitHub Actions 43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497), commit `67505908b2a7729429f345a420b534f13387070a`, **SUCCESS**. Generati `pkg_jlms-1.0.0.zip` (569587 byte; SHA-256 `8fd033a56ca4a424d6d754d1f9e13dfc3e78f3b40d64e49f7ad8b01b178b41df`), `jdlearn.xml` e `RELEASE_SHA256SUMS.txt`; artefatto [13906260145](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497/artifacts/13906260145). Job produzione **SKIPPED**. Feed XML generato soltanto localmente: il suo URL di download della v1.0.0 non è ancora disponibile pubblicamente.
 
 **Comportamenti ancora da testare in Joomla (IMP-10):** installazione pulita del candidato su un sito di prova; upgrade da versione precedente mantenendo iscrizioni e progressi; compatibilità con Apache/LiteSpeed standard senza configurazioni Nginx; verifiche finali del catalogo, corsi, lezioni, player ed enrollment; updater e feed pubblico solo dopo autorizzazione esplicita al rilascio. **Esito collaudo reale Joomla:** Non eseguito. Non pubblicare una release stabile sulla base del solo dry-run.
+
+
+### IMP-10 — Conferma manuale installazione candidato 1.0.0 (12 novembre 2026)
+
+Il richiedente ha confermato in chat di aver **scaricato e installato il componente** dal candidato 1.0.0 generato dal workflow [43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497) e che il componente **funziona** sul sito Joomla di prova. Evidenza **dichiarata dall'utente**, non accompagnata da screenshot o verbale di casi dettagliati. Considerare **superato il solo smoke test manuale di installazione e avvio generale**.
+
+**Non ancora confermati dall'utente:** aggiornamento da precedente versione con dati esistenti; preservazione corsi, iscrizioni e progressi; verifica approfondita dei provider/player, autorizzazioni e delle funzionalità operative; feed pubblico e aggiornamento automatico Joomla. **IMP-10 resta parziale**, nessun rilascio pubblico autorizzato. Il valore globale documentato resta 78% finché il criterio di misurazione non viene aggiornato sulla base di evidenze di tutti i requisiti.
