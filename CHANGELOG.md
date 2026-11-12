@@ -1,3 +1,8 @@
+## 0.54.0-dev — AUT-03: avviso durata video in sola consultazione
+
+- Il riepilogo pre-pubblicazione mostra un avviso quando un video consultabile non ha una durata confermata. La modalità Apprendimento mantiene il blocco esistente.
+- Regressione aggiunta in `tests/run.php`; accettazione Joomla manuale documentata in `docs/QA_TESTBOOK.md` e ancora da eseguire.
+
 ## 0.53.0-dev — IMP-04 / PR #282 integrata
 
 - Merge `66a59d0a5e4e60943b0d1487ddce4c95c64f97b0`; PR [#282](https://github.com/jeckodevelopment/jd_learn/pull/282), CI standard 4/4 [run 43252689828](https://github.com/jeckodevelopment/jd_learn/actions/runs/43252689828).

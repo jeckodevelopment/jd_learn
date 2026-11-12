@@ -1,3 +1,5 @@
+Candidata **0.54.0-dev / AUT-03**: avvisa quando una lezione video di sola consultazione non ha durata confermata; la pubblicazione resta possibile se tutti gli altri controlli passano. Il blocco sulla durata nei corsi Apprendimento resta invariato.
+
 Aggiornato al 12 novembre 2026. Main **0.53.0-dev** integra PR [#282](https://github.com/jeckodevelopment/jd_learn/pull/282): il replay identico di un batch video già salvato conserva l’indicatore di conflitto della sessione obsoleta senza riapplicare il progresso. Avanzamento 81% (81,29%); M01/M02 81%, M03 78%, M04 99%. Proseguire con gli altri residui IMP-04/05 e i collaudi Joomla live. Il ciclo bozza/revisione/nuova pubblicazione è già presente e va collaudato, non duplicato. Preview pubbliche restano limitate al perimetro approvato; IMP-10 e le prove manuali sono gate separati.
 
 La policy SemVer della PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251) è applicata: main 0.53.0-dev. La modalità di sola consultazione accetta video senza durata tracciata e non apre sessioni telemetry; i requisiti di durata e tracciamento restano obbligatori in modalità Apprendimento.

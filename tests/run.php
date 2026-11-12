@@ -84,6 +84,7 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']], [], false, $consultationRules,
 );
 expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'consultation videos do not require tracked duration metadata');
+expect(in_array('COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED', $readiness['warnings'], true), 'consultation videos warn when duration is not confirmed');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']], [], false, $consultationRules,
@@ -106,6 +107,7 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']],
 );
 expect(in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist blocks a video without confirmed bounded duration');
+expect(!in_array('COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED', $readiness['warnings'], true), 'learning-mode duration remains a blocker without a duplicate warning');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
