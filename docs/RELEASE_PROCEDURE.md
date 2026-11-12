@@ -2,6 +2,10 @@
 
 Stato: **workflow predisposto, NON autorizzato a pubblicare 1.0.0 fino al gate IMP-10**. Requisiti: CORE-22, JOO-01/03, SECDEV-08, REL-01–03, PBASE-04; US-01–US-06 descritti in [JOOMLA_UPDATE_SERVER_1.0.md](JOOMLA_UPDATE_SERVER_1.0.md).
 
+## Versioning
+
+Le versioni del package seguono [la policy SemVer del progetto](VERSIONING.md). Prima di una release stabile, gli strumenti rifiutano numeri non canonici (zeri iniziali) e il controllo strutturale verifica che manifest package e componente riportino la stessa versione. Le versioni di sviluppo restano nel canale `-dev`; non sono release stabili.
+
 ## Operazioni prima della prima pubblicazione
 
 1. Validare la compatibilità della release con la matrice Joomla/PHP approvata; attualmente il generatore usa **Joomla 6.x e PHP minimo 8.3** come default tecnico da verificare rispetto ai target effettivi. Se serve una matrice diversa modificarla esplicitamente, non aumentare arbitrariamente il supporto.

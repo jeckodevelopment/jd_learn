@@ -20,6 +20,7 @@ Aggiornato al 12 novembre 2026. Main **0.41.81-dev** integra la PR [#247](https:
 | [Backend: piano UX](docs/ADMIN_UX_PLAN.md) | Menu e dashboard amministrativa aggiornati; restano collaudo ruoli, accessibilità e navigazione in Joomla reale |
 | [Politica CI](docs/CI_POLICY.md) | Bozze leggere e integrazioni sul candidato prima del merge |
 | [Prove del build](docs/IMPLEMENTATION_EVIDENCE.json) | Commit, CI e pacchetto effettivamente verificati |
+| [Politica versioni](docs/VERSIONING.md) | Regole SemVer per sviluppo, release stabile e manifest Joomla |
 | [Cronologia](docs/IMPLEMENTATION_HISTORY.md) e [changelog](CHANGELOG.md) | Come siamo arrivati allo stato attuale |
 
 ## Usare e configurare JD Learn

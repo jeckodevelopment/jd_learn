@@ -14,6 +14,8 @@ Il piano ha due blocchi in quest’ordine:
 
 Gli identificativi IMP e STAB sono riferimenti stabili del piano, non numeri di PR. Le PR effettive vanno aperte nell’ordine indicato, assegnate alla milestone GitHub `1.0.0` e collegate agli ID dei requisiti coperti.
 
+La issue #160 chiude il requisito di processo SemVer: applicare [la policy versioni](VERSIONING.md) e i controlli automatici su manifest e release tooling prima della 1.0.0. L’attuale `0.41.81-dev` è storico; le nuove release runtime seguono da subito la regola definita.
+
 ## Regole di pianificazione
 
 - Prima di ogni PR, confrontare il suo perimetro con lo stato di `main` e con le evidenze aggiornate. Se una parte è già implementata, non duplicarla: aggiornare la PR per coprire solo il residuo, oppure registrare l’ID come implementato con evidenza.
