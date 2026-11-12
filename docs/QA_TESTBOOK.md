@@ -768,3 +768,17 @@ Riferimenti: CAT-01, AC-41 e AC-85. Installare il candidato su Joomla 6 di prova
 Il richiedente ha confermato in chat di aver **scaricato e installato il componente** dal candidato 1.0.0 generato dal workflow [43131931497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497) e che il componente **funziona** sul sito Joomla di prova. Evidenza **dichiarata dall'utente**, non accompagnata da screenshot o verbale di casi dettagliati. Considerare **superato il solo smoke test manuale di installazione e avvio generale**.
 
 **Non ancora confermati dall'utente:** aggiornamento da precedente versione con dati esistenti; preservazione corsi, iscrizioni e progressi; verifica approfondita dei provider/player, autorizzazioni e delle funzionalità operative; feed pubblico e aggiornamento automatico Joomla. **IMP-10 resta parziale**, nessun rilascio pubblico autorizzato. Il valore globale documentato resta 78% finché il criterio di misurazione non viene aggiornato sulla base di evidenze di tutti i requisiti.
+
+
+## IMP-05 — capacità minime per il tracciamento video (0.51.0-dev)
+
+Riferimenti: PRO-05, VID-03; AC-05, AC-27, AC-30, AC-44, AC-91. Il controllo richiede posizione, durata e seek per il corso in apprendimento tracciato; velocità e sottotitoli/caption restano opzionali. Il server ripete la verifica sulle capabilities del descrittore prima di avviare o rinnovare il tracciamento.
+
+**Comportamenti da testare in Joomla**
+
+1. Installare il pacchetto candidato 0.51.0-dev in Joomla 6 di prova e configurare, uno alla volta, YouTube, Vimeo, Cloudflare Stream e HTML5 con sorgenti valide.
+2. Per ciascun provider, creare una lezione video richiesta in un corso in modalità apprendimento, verificare la durata, pubblicare il corso e avviare la lezione. Verificare che il player si apra e che posizione, durata e seek siano disponibili; completare una parte del video e controllare che la copertura venga registrata.
+3. Provare un corso in modalità consultazione con una lezione video: la riproduzione deve restare disponibile senza sessione né scritture di progresso.
+4. In un ambiente di test con adapter che dichiara o restituisce capabilities incomplete, verificare che la pubblicazione oppure l’avvio del tracciamento venga rifiutato e che nessun progresso sia attribuito. L’assenza di velocità o caption, da sola, non deve bloccare la pubblicazione.
+
+**Esito automatico locale:** build pacchetto e check strutturali superati; test player JavaScript superati. La suite PHP e la regressione Joomla dipendono dalla CI e dal collaudo manuale. **Esito sito Joomla:** Non eseguito.
