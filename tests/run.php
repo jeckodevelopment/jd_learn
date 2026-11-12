@@ -36,6 +36,17 @@ function rejects(callable $work, string $message): void
     }
     throw new \RuntimeException($message);
 }
+$mailPrefsClass = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::class;
+$mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'disabled'], '{"unrelated_setting":"retain-me"}');
+expect(!$mailPrefsClass::enabled('enrollment', true, $mailParams), 'course can disable a globally enabled enrollment email');
+expect($mailPrefsClass::enabled('completion', true, $mailParams), 'unset course preference inherits the global completion email setting');
+expect(!$mailPrefsClass::enabled('completion', false, $mailParams), 'inherited course setting follows the disabled global default');
+$courseOverride = $mailPrefsClass::merge(['mail_completion' => 'enabled'], $mailParams);
+expect($mailPrefsClass::enabled('completion', false, $courseOverride), 'explicit course preference overrides the global default');
+$mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
+expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
+    && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');
+rejects(static fn () => $mailPrefsClass::merge(['mail_completion' => 'yes'], '{}'), 'mail preference values are restricted to inherit, enabled or disabled');
 $readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
     'summary' => $summary,
     'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),

@@ -17,6 +17,18 @@
 
 PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291) integrata nel commit `a6488b3b646d607dbc20317168f1c69dae055527`. CI standard 4/4 nel [run 43300371393](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393), inclusi controlli automatici su entrambi gli stack DB e Chromium. Pacchetto [JD-Learn-0.56.1-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393/artifacts/13981827024), SHA-256 ZIP `beacb58745732bf803d61c6c10c72e483ad6eba2ee2a9e4337eb80d326b90154` (scade il 26 novembre 2026). La CI copre schema, integrazioni e suite automatizzata, ma non prova SMTP end-to-end né sostituisce l'accettazione manuale Joomla. Per i test manuali descritti sopra registrare qui esito, Joomla/PHP, mailer e configurazione usata; non marcare il requisito superato senza tali evidenze.
 
+## IMP-09-MAIL-A — preferenze globali e override corso (0.56.2-dev)
+
+**Comportamenti da testare in Joomla**
+
+1. Aprire le opzioni di JD Learn e verificare le impostazioni per conferma iscrizione automatica e completamento. Impostare entrambe su abilitate; su un corso lasciare entrambe su **Usa impostazione del sito**. Salvare e riaprire: le scelte devono persistere.
+2. Con un account di prova, attivare una nuova iscrizione automatica e completare un altro corso. Eseguire il task email: entrambe le notifiche devono essere accodate e consegnate secondo le prove della sezione precedente.
+3. Disabilitare a livello globale la conferma di iscrizione. Per un corso lasciare eredita, per un secondo corso impostare esplicitamente abilita. Creare nuove iscrizioni automatiche: il primo corso non deve notificare; il secondo deve notificare.
+4. Impostare l'override disabilita sul completamento di un corso, lasciando l'opzione globale abilitata; completare il corso e verificare che non si accodi la mail. Per un altro corso con eredita, il completamento deve continuare a produrre la notifica.
+5. Riportare un override da abilita/disabilita a **Usa impostazione del sito** e verificare la nuova eredità. Confermare che modificare queste opzioni non alteri iscrizioni, completamenti, progressi o personalizzazioni dei modelli Joomla.
+
+Le prove automatizzate pure coprono ereditarietà, override, validazione e conservazione dei parametri estranei. L'invio SMTP end-to-end e il collaudo manuale Joomla restano da registrare.
+
 ## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
 
 PR [#287](https://github.com/jeckodevelopment/jd_learn/pull/287) integrata nel commit `2af8994271d95f3c41b3e5f813ba2222794265c5`; CI standard 4/4 nel [run 43289138110](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110). Pacchetto installabile [JD-Learn-0.55.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43289138110/artifacts/13975579105); SHA-256 package `fb30f231780fc290aeecb64ff3ab7b79f3bb2c00ea19085ea67c0ff239794282`.

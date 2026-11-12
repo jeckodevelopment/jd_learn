@@ -16,9 +16,26 @@ final class MailQueue
     }
 
     /** The unique event key makes repeated domain transitions harmless. */
-    public function enqueue(string $key, string $template, string $language, string $email, string $name, array $data): void
+    public function enqueue(int $courseId, string $key, string $template, string $language, string $email, string $name, array $data): void
     {
-        if (!preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $event = match ($template) {
+            'com_jlms.enrollment.confirmed' => 'enrollment',
+            'com_jlms.course.completed' => 'completion',
+            default => null,
+        };
+        if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return;
+        }
+
+        $courseQuery = $this->db->createQuery()->select('params_json')->from('#__jlms_courses')
+            ->where('id = :id')->bind(':id', $courseId, ParameterType::INTEGER);
+        $courseParams = $this->db->setQuery($courseQuery)->loadResult();
+        if ($courseParams === null) {
+            return;
+        }
+        $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', true);
+        if (!\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled($event, $globalEnabled, (string) $courseParams)) {
             return;
         }
 

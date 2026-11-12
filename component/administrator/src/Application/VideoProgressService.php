@@ -274,7 +274,7 @@ final class VideoProgressService
                 $course = $this->db->setQuery($q)->loadObject();
                 $name = trim((string) $actor->name);
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
-                    hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
+                    $courseId, hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
                     (string) ($actor->getParam('language', '') ?: $course->language), (string) $actor->email, $name,
                     ['NAME' => $name, 'COURSE' => (string) $course->title, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
                 );

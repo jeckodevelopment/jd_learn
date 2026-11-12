@@ -34,6 +34,10 @@
  <fieldset name="teachers" label="COM_JLMS_TEACHERS">
   <field name="teacher_ids" type="Courseteachers" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" label="COM_JLMS_TEACHERS" description="COM_JLMS_TEACHER_ASSIGN_HELP" multiple="true" filter="raw" />
  </fieldset>
+ <fieldset name="notifications" label="COM_JLMS_COURSE_MAIL_PREFERENCES">
+  <field name="mail_enrollment" type="list" label="COM_JLMS_MAIL_ENROLLMENT_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
+  <field name="mail_completion" type="list" label="COM_JLMS_MAIL_COMPLETION_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
+ </fieldset>
  <fieldset name="metadata" label="COM_JLMS_COURSE_METADATA">
   <field name="presentation_seo_title" type="text" label="COM_JLMS_COURSE_SEO_TITLE" maxlength="255" filter="raw" />
   <field name="presentation_seo_description" type="textarea" label="COM_JLMS_COURSE_SEO_DESCRIPTION" rows="3" maxlength="500" filter="raw" />
