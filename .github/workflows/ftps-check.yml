@@ -27,6 +27,7 @@ jobs:
           JDLEARN_FTPS_HOST: ${{ secrets.JDLEARN_FTPS_HOST }}
           JDLEARN_FTPS_USER: ${{ secrets.JDLEARN_FTPS_USER }}
           JDLEARN_FTPS_PASSWORD: ${{ secrets.JDLEARN_FTPS_PASSWORD }}
+          JDLEARN_FTPS_CERT_SHA256: ${{ secrets.JDLEARN_FTPS_CERT_SHA256 }}
           JDLEARN_FTPS_PORT: ${{ secrets.JDLEARN_FTPS_PORT }}
           JDLEARN_FTPS_DIRECTORY: ${{ secrets.JDLEARN_FTPS_DIRECTORY }}
         run: python3 tools/check_ftps_connection.py
