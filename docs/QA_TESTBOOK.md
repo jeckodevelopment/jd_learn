@@ -17,7 +17,7 @@
 
 PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291) integrata nel commit `a6488b3b646d607dbc20317168f1c69dae055527`. CI standard 4/4 nel [run 43300371393](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393), inclusi controlli automatici su entrambi gli stack DB e Chromium. Pacchetto [JD-Learn-0.56.1-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393/artifacts/13981827024), SHA-256 ZIP `beacb58745732bf803d61c6c10c72e483ad6eba2ee2a9e4337eb80d326b90154` (scade il 26 novembre 2026). La CI copre schema, integrazioni e suite automatizzata, ma non prova SMTP end-to-end né sostituisce l'accettazione manuale Joomla. Per i test manuali descritti sopra registrare qui esito, Joomla/PHP, mailer e configurazione usata; non marcare il requisito superato senza tali evidenze.
 
-## IMP-09-MAIL-A — preferenze globali e override corso (0.56.2-dev)
+## IMP-09-MAIL-A — preferenze globali e override corso (PR #295, 0.56.2-dev)
 
 **Comportamenti da testare in Joomla**
 
@@ -28,6 +28,8 @@ PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291) integrata nel c
 5. Riportare un override da abilita/disabilita a **Usa impostazione del sito** e verificare la nuova eredità. Confermare che modificare queste opzioni non alteri iscrizioni, completamenti, progressi o personalizzazioni dei modelli Joomla.
 
 Le prove automatizzate pure coprono ereditarietà, override, validazione e conservazione dei parametri estranei. L'invio SMTP end-to-end e il collaudo manuale Joomla restano da registrare.
+
+PR [#295](https://github.com/jeckodevelopment/jd_learn/pull/295) integrata nel commit `8152e337455b1ec7b9d307dc9248c8070b964709`; CI standard 4/4 nel [run 43305020698](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698). Pacchetto [JD-Learn-0.56.2-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698/artifacts/13983557253), SHA-256 ZIP `9923d41d5d342ac1b854090f6956b9c9fff745c2b71f939a446a6b7494849ad7`, digest artefatto `4e541658e5cf45c2b1238c41bb1501a768ec850cbd3b2958c37d3e735959450e` (scade il 26 novembre 2026). Acceptance manuale Joomla/SMTP ancora pendente.
 
 ## IMP-04 / STU-03 — feedback salvataggio progresso video (PR #287, 0.55.0-dev)
 

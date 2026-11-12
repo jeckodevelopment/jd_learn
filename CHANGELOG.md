@@ -1,8 +1,10 @@
-## 0.56.2-dev — Preferenze notifiche email per sito e corso (in sviluppo)
+## 0.56.2-dev — Preferenze notifiche email per sito e corso (PR #295 integrata)
 
 - Aggiunge opzioni globali per abilitare o disabilitare conferme di iscrizione automatica e email di completamento.
 - Aggiunge override per corso: eredita dall'impostazione globale, abilita o disabilita l'evento. Le preferenze sono salvate in `params_json` senza migrazioni DB e valutate alla transizione, prima dell'accodamento.
-- Aggiorna le guide dopo l'integrazione.
+- PR [#295](https://github.com/jeckodevelopment/jd_learn/pull/295) integrata nel merge `8152e337455b1ec7b9d307dc9248c8070b964709`; CI standard 4/4 nel [run 43305020698](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698).
+- Pacchetto installabile [JD-Learn-0.56.2-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698/artifacts/13983557253), SHA-256 ZIP `9923d41d5d342ac1b854090f6956b9c9fff745c2b71f939a446a6b7494849ad7`; digest artefatto `4e541658e5cf45c2b1238c41bb1501a768ec850cbd3b2958c37d3e735959450e` (scade il 26 novembre 2026).
+- Avanzamento aggiornato a 66,06% (66% arrotondato), contando anche gli attestati essenziali PDF approvati e ancora non implementati (0%).
 
 ## 0.56.1-dev — Notifiche email core con coda Joomla (PR #291 integrata)
 

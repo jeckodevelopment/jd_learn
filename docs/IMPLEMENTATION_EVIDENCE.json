@@ -3,8 +3,8 @@
   "product": "JD Learn",
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
-    "percent": 74,
-    "basis": "Media delle sette aree precedenti e del nuovo macroambito email approvato il 12 novembre: (81+81+78+99+68+92+70+22)/8=73,875%, arrotondata al 74%. La variazione rispetto all’81% deriva dall’ampliamento del perimetro email, non da regressioni.",
+    "percent": 66,
+    "basis": "Media semplice delle sette aree precedenti e delle due aree approvate successivamente: (81+81+78+99+68+92+70+25.5+0)/9=66.06%, arrotondata al 66%. Email 25.5%; attestati essenziali CERT-01–08 0%. La variazione è dovuta all’ampliamento del perimetro approvato, non a regressioni.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,45 +13,46 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 22
+      "email_notifications": 25.5,
+      "certificates": 0
     }
   },
-  "version": "0.56.1-dev",
+  "version": "0.56.2-dev",
   "code_baseline": {
-    "tested_head": "a6488b3b646d607dbc20317168f1c69dae055527",
+    "tested_head": "902c221ef5885a51b3b1d583e741fba1d48ee9a8",
     "parent_main_commit": "199b07baf65a9cb90c53dc498bdb845a420e0aa7",
-    "pull_request": 291,
-    "merged_main_commit": "a6488b3b646d607dbc20317168f1c69dae055527"
+    "pull_request": 295,
+    "merged_main_commit": "8152e337455b1ec7b9d307dc9248c8070b964709"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43300371393,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393",
+    "run_id": 43305020698,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
     "jobs": [
       {
-        "id": 131469612614,
+        "id": 131485884603,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131469798829,
+        "id": 131485967347,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131469798681,
+        "id": 131485967434,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131469798557,
+        "id": 131485967505,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
@@ -13092,24 +13093,30 @@
       "ci": {
         "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095"
       }
+    },
+    {
+      "ci": {
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43300371393"
+      }
     }
   ],
   "latest_feature": {
-    "plan_increment": "IMP-09",
+    "plan_increment": "IMP-09-MAIL-A",
     "requirements": [
-      "CORE-18"
+      "NOT-01",
+      "MAIL-05"
     ],
-    "pull_request": 288,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/288",
-    "tested_head": "21edd2ff175efe43b90d91a328d3ad24b563e0a0",
-    "merged_commit": "9ea5725c1b1784d9ae59a91339d8b3dcb83d1144",
-    "ci_run_id": 43294015095,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095",
-    "artifact_id": 13979316386,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386",
-    "package_sha256": "4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37",
-    "artifact_sha256": "9fa791b4157c3b405059ce5a5d90acfa6584af66b358c2c8f533273b9a4c0deb",
-    "manual_acceptance": "Pending; in Joomla open Sistema → Modelli email, verify three com_jlms templates, tags, edit and translate one, then upgrade and confirm edits/translations persist. AC-13/AC-57 persistent retry delivery remains an implementation residual.",
-    "progress_estimate": "81.71% exact (82% reported); M01/M02 82%, M03 79%, M04 99%, M06/M09 68%, M10 93%, M11/M12 70%."
+    "pull_request": 295,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/295",
+    "tested_head": "902c221ef5885a51b3b1d583e741fba1d48ee9a8",
+    "merged_commit": "8152e337455b1ec7b9d307dc9248c8070b964709",
+    "ci_run_id": 43305020698,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698",
+    "artifact_id": 13983557253,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698/artifacts/13983557253",
+    "package_sha256": "9923d41d5d342ac1b854090f6956b9c9fff745c2b71f939a446a6b7494849ad7",
+    "artifact_sha256": "4e541658e5cf45c2b1238c41bb1501a768ec850cbd3b2958c37d3e735959450e",
+    "manual_acceptance": "Pending. In Joomla test site, exercise global and per-course inherit/enable/disable for automatic enrollment and completion emails, then verify SMTP/queue behavior and that learning outcomes are unchanged.",
+    "progress_estimate": "66.06% exact (66% reported): courses 81%, catalogue 81%, learning progress 78%, video/materials 99%, enrollment 68%, Joomla integrations 92%, release preparation 70%, operational email notifications 25.5%, essential PDF certificates 0%."
   }
 }
