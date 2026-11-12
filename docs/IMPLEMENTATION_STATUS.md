@@ -1,6 +1,6 @@
-**Versione candidata del pacchetto di sviluppo: 0.44.0-dev.**
-**Riconciliazione avanzamento 12 novembre 2026:** stima implementativa **80%**. La PR #262 completa la preferenza lingua locale per tracce Vimeo/HTML5 (M04 96%). La candidata 0.44.0-dev completa il filtro backend MAT-01 per corso, tutte le lezioni o singola lezione; non altera i confini ACL/versione. Media delle sette aree: (77+81+77+96+67+92+70)/7 = 80,00%. Accettazione Joomla e gate IMP-10 restano aperti.
-Aggiornato al 12 novembre 2026. Main 0.43.0-dev integra PR #262; CI standard 4/4 nel [run 43179691593](https://github.com/jeckodevelopment/jd_learn/actions/runs/43179691593). La candidata 0.44.0-dev aggiunge il filtro MAT-01; CI e pacchetto candidati in attesa di esito.
+**Versione candidata del pacchetto di sviluppo: 0.45.0-dev.**
+**Riconciliazione avanzamento 12 novembre 2026:** stima implementativa **80%**. Main include MAT-01 e STU-05. La candidata 0.45.0-dev aggiunge selettori ricercabili di versione/iscritto limitati al roster del corso autorizzato (M06/M09 da 67% a 68%). Media: (77+81+77+97+68+92+70)/7 = 80,29%, arrotondata a 80%. Accettazione Joomla e gate IMP-10 restano aperti.
+Aggiornato al 12 novembre 2026. Main 0.44.0-dev integra PR #263; la candidata 0.45.0-dev migliora la gestione del roster prevista da IMP-08. CI e pacchetto candidati in attesa di esito.
 
 Aggiornato al 12 novembre 2026. Main **0.42.0-dev** integra PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), merge `c04bda9b5db8f82e571b27400863cb29ba5b84ef`; CI standard 4/4 nel [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135). Pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`, digest wrapper `4cba266ce1b7008f5d4736d25482f589566a030fdb53a7130f0bd0a6fae5720e`, scadenza 26 novembre 2026. STU-05 parziale: velocità implementata, preferenza lingua e collaudo Joomla pendenti. Avanzamento stimato **80%**.
 
@@ -36,7 +36,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Catalogo e percorsi formativi (CAT-01/03/SCR-04/EDGE-04, CORE-09) | 81% |
 | Fruizione e progressi core (M03/M09) | 77% |
 | Video e materiali essenziali (M04) | 97% |
-| Iscrizione e roster essenziale (M06/M09) | 67% |
+| Iscrizione e roster essenziale (M06/M09) | 68% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 70% |
 | **Avanzamento complessivo stimato** | **80%** |

@@ -23,6 +23,7 @@ final class HtmlView extends BaseHtmlView
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->rosterForm = $this->get('RosterForm');
+        $this->getDocument()->getWebAssetManager()->useScript('com_jlms.rosterFilters');
         ToolbarHelper::title(Text::_('COM_JLMS_ENROLLMENTS_TITLE'), 'users');
         parent::display($tpl);
     }

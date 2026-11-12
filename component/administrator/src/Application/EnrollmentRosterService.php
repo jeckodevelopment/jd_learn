@@ -25,6 +25,23 @@ final class EnrollmentRosterService
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
     }
 
+    /** Searchable filter choices are restricted to versions and learners of this authorized course. */
+    public function filterOptions(User $identity, int $courseId): array
+    {
+        $this->course($identity, $courseId);
+        $versions = $this->db->setQuery($this->db->createQuery()
+            ->select('id, version_no, title_snapshot, status')
+            ->from('#__jlms_course_versions')->where('course_id = :course')
+            ->bind(':course', $courseId, ParameterType::INTEGER)->order('version_no DESC, id DESC'))
+            ->loadObjectList();
+        $users = $this->db->setQuery($this->db->createQuery()
+            ->select('DISTINCT u.id, u.name, u.username')
+            ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id = e.user_id')
+            ->where('e.course_id = :course')->bind(':course', $courseId, ParameterType::INTEGER)
+            ->order('u.name, u.username, u.id'))->loadObjectList();
+        return ['versions' => $versions, 'users' => $users];
+    }
+
     private function optionalId(mixed $value): int
     {
         if ($value === 0 || $value === '0' || $value === '') { return 0; }

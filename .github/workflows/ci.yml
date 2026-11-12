@@ -186,6 +186,8 @@ jobs:
         run: python3 tests/video-http.py .runtime/joomla
       - name: Player consent, retry and teardown with a mock browser transport
         run: node tests/video-player.mjs
+      - name: Searchable roster filter controls
+        run: node tests/roster-filters.mjs
       - name: Audio progress retry and failure recovery
         run: node tests/audio-progress.mjs
       - name: Expiring playback, renewed authorisation and provider failures

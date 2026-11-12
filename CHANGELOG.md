@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.45.0-dev — selettori ricercabili nel roster (IMP-08)
+
+- I filtri Versione e Iscritto nel roster sono selettori ricercabili e mostrano solo voci del corso autorizzato. Ricerca libera per nome/username, stato, avanzamento e permessi per corso restano integrati.
+- Test automatici HTTP e JavaScript aggiunti. Collaudo Joomla manuale richiesto nel testbook; nessuna modifica allo storico o ai diritti di accesso.
+
+
 ## 0.44.0-dev — filtro per ambito nella gestione materiali (MAT-01)
 
 - La vista amministrativa dei materiali consente di filtrare l’elenco per corso, singola lezione o corso e tutte le lezioni; il filtro conserva la paginazione e le azioni operano solo sugli allegati della versione autorizzata.

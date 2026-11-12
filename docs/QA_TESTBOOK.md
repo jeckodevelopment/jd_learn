@@ -1,3 +1,15 @@
+## IMP-08 — filtri ricercabili del roster (0.45.0-dev)
+
+Riferimenti: ISC-01/02/05/07, REP-02, SCR-14; AC-11/12/25/26/40/53/54/60/63/128. Nel backend Joomla aprire il roster di un corso autorizzato con più versioni e iscritti.
+
+1. Verificare che i selettori Versione e Iscritto mostrino soltanto versioni e account associati al corso; digitare nel campo di ricerca di ciascun selettore e verificare il filtro delle opzioni senza invio del form.
+2. Scegliere un valore e applicare il filtro: il totale, le righe e la paginazione devono rispettare la selezione. Combinare con ricerca nome/username, stato e avanzamento.
+3. Modificare l’URL con una versione di altro corso, ID negativo o non numerico: la richiesta deve essere respinta senza esporre righe esterne. Un iscritto di altro corso non deve comparire nelle opzioni.
+4. Ripetere con account amministrativo limitato al corso, anonimo e permesso revocato nella sessione: la protezione deve restare applicata.
+5. Confermare che la pagina resta in sola lettura e che dati, progressi e stato iscrizione non cambiano.
+
+Il test automatico `tests/roster-http.py` controlla opzioni native e isolamento corso; `tests/roster-filters.mjs` verifica ricerca delle opzioni e ripristino. Accettazione manuale Joomla da registrare.
+
 ## MAT-01 — filtro degli allegati per ambito (0.44.0-dev)
 
 Riferimenti: MAT-01, AC-93, AC-97–103. Nel sito Joomla di prova, aprire la gestione materiali di una bozza con almeno un allegato del corso e allegati in due lezioni.
