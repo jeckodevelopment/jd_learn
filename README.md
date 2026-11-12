@@ -1,4 +1,4 @@
-Aggiornato al 12 novembre 2026. Main **0.45.0-dev** integra IMP-08 (#264); la candidata PR IMP-01 / **0.46.0-dev** aggiunge lo snapshot dei campi nativi corso. Avanzamento stimato **80%**; accettazione manuale Joomla e IMP-10 restano aperti. Il pacchetto main verificato è [JD-Learn-0.45.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43188504970/artifacts/13929363404), SHA-256 `ee4b58ba2bbd81821a1b481951c7a411b767d3a7885c0e6b402a1692f6a5b677`.
+Aggiornato al 12 novembre 2026. Main **0.46.0-dev** integra PR [#266](https://github.com/jeckodevelopment/jd_learn/pull/266) (IMP-01); CI standard 4/4 nel [run 43196626438](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438). Avanzamento implementativo **80%** (80,43% non arrotondato); accettazione manuale Joomla e gate IMP-10 ancora aperti. Pacchetto [JD-Learn-0.46.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438/artifacts/13932614114), SHA-256 interno `044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183`; wrapper `4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013` (estrarre una volta; scade il 26 novembre 2026).
 
 
 

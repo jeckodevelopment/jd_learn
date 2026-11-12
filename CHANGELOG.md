@@ -2,6 +2,8 @@
 
 ## 0.46.0-dev — snapshot dei campi corso (IMP-01 / CORE-10)
 
+- PR [#266](https://github.com/jeckodevelopment/jd_learn/pull/266), milestone 1.0.0, integrata nel commit `d41111e229ced8460ff9e30a0baa24f2094c4e60`; CI standard 4/4 nel [run 43196626438](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438). Pacchetto [JD-Learn-0.46.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43196626438/artifacts/13932614114), SHA-256 interno `044782978b03fa740889c6f215439c7658a84a95d7bb9fe721f64dfc19ca5183`, digest wrapper `4993336bd9f382f8e6df7191b4842c7f3699525a12ab2c46dfa7abfff7384013` (scade il 26 novembre 2026).
+
 - Alla pubblicazione, i valori e le definizioni dei campi Joomla `com_fields` del corso sono congelati in `fields_snapshot_json` della versione didattica e inclusi nell'hash strutturale. I cambi editoriali successivi non alterano la versione assegnata; una nuova pubblicazione registra i valori aggiornati.
 - Il limite artificiale che rifiutava versioni con snapshot corso non vuoto è rimosso. Restano attivi i controlli dello snapshot lezione, dei livelli di accesso Joomla e del limite massimo di campi.
 - Collaudo manuale Joomla in `docs/QA_TESTBOOK.md`; verifica automatica nella CI della PR.
