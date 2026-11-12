@@ -1,6 +1,8 @@
+**STU-05 parziale dopo PR #258:** velocità locale disponibile nei player supportati; preferenza lingua residua. Eseguire il collaudo manuale del testbook per YouTube, Vimeo, HTML5 e Cloudflare prima di dichiarare accettata la parte implementata.
+
 Completata la policy SemVer con PR [#251](https://github.com/jeckodevelopment/jd_learn/pull/251) / issue #160: usare le regole di [VERSIONING.md](VERSIONING.md) dalla prossima release runtime; la versione storica 0.41.81-dev non viene riscritta. Proseguire con le implementazioni IMP nell’ordine della [roadmap stabile](STABLE_1.0.0_PR_PLAN.md); registrare separatamente le accettazioni manuali Joomla e il gate IMP-10.
 
-Aggiornato al 12 novembre 2026. Main **0.41.81-dev** include PR #247 / issue #199, CI standard 4/4 e pacchetto verificato [JD-Learn-0.41.81-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43129077496/artifacts/13904467823) (SHA-256 interno `3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573`). Avanzamento implementativo **78%**; resta il collaudo manuale delle viste amministrative e degli altri flussi, oltre al gate IMP-10 con feed/update produttivo e recovery end-to-end.
+Aggiornato al 12 novembre 2026. Main **0.42.0-dev** include PR #258, CI standard 4/4 e pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349) (SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`). Avanzamento stimato **80%**; priorità: completare STU-05 con preferenza lingua dove supportata e registrare il collaudo player nel testbook. Restano il gate IMP-10 e le altre accettazioni manuali Joomla.
 
 STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: la PR #238 / 0.41.78-dev integra la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
 

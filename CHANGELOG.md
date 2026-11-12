@@ -4,7 +4,8 @@
 
 - Aggiunta una preferenza locale per la velocità video, applicata solo se il player e il singolo video la supportano; disponibile sui player YouTube, Vimeo quando consentito dall’account/video, e HTML5.
 - Il player Cloudflare Stream non espone questa impostazione e non mostra il selettore. La velocità effettiva resta parte dei campioni di telemetria già usati dal calcolo della copertura; nessuna soglia o regola di completamento cambia.
-- Collaudo Joomla da eseguire: vedere [STU-05 nel testbook](docs/QA_TESTBOOK.md#stu-05--preferenza-velocita-player-0420-dev).
+- PR [#258](https://github.com/jeckodevelopment/jd_learn/pull/258), milestone 1.0.0, integrata nel commit `c04bda9b5db8f82e571b27400863cb29ba5b84ef`; CI standard 4/4 nel [run 43134490135](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135). Pacchetto [JD-Learn-0.42.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349), SHA-256 interno `b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d`; digest wrapper `4cba266ce1b7008f5d4736d25482f589566a030fdb53a7130f0bd0a6fae5720e` (scade il 26 novembre 2026).
+- STU-05 resta parziale: preferenza lingua da completare e collaudo provider da registrare nel [testbook](docs/QA_TESTBOOK.md#stu-05--preferenza-velocita-player-0420-dev).
 
 ## Processo di rilascio — issue #160
 

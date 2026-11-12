@@ -1,13 +1,13 @@
 {
   "date": "2026-11-12",
-  "baseline_commit": "a8734dd606cc579077312dfecd9cd66773934804",
-  "runtime_tested_head": "f45554db4bafb6417aa325f5469f455fc28a2038",
-  "ci_run": 43129077496,
+  "baseline_commit": "c04bda9b5db8f82e571b27400863cb29ba5b84ef",
+  "runtime_tested_head": "028af87a2420e898a419960a91e6ec6c9712596a",
+  "ci_run": 43134490135,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 167,
+      "Parziale": 168,
       "Completata": 14,
-      "Non iniziata": 29
+      "Non iniziata": 28
     },
     "Perimetro 1.0.0": {
       "1.0.0": 133,
@@ -19,22 +19,22 @@
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 169,
-      "Non eseguita": 41
+      "Superata": 170,
+      "Non eseguita": 40
     }
   },
   "implementation_progress": {
-    "percent": 78,
-    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; IMP-03 esteso dalla PR #235/0.41.77-dev; stima 546/7 = 78,00%, arrotondata al 78%. L’accettazione manuale Joomla resta pendente e separata.",
+    "percent": 80,
+    "method": "Media semplice delle sette aree in IMPLEMENTATION_STATUS.md; PR #258 aumenta M04 da 94 a 95 per la preferenza velocità STU-05: (77+81+77+95+67+92+70)/7 = 79,86%, arrotondata all'80%. Accettazione manuale Joomla e preferenza lingua restano separate.",
     "areas": [
       77,
       81,
       77,
-      94,
+      95,
       67,
       92,
-      58
+      70
     ]
   },
-  "note": "PR #247 (STAB-05 / issue #199) rimuove i titoli duplicati in Dashboard e Percorsi formativi. CI standard 4/4 run 43129077496; pacchetto 0.41.81-dev, merge a8734dd606cc579077312dfecd9cd66773934804, hash interno 3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573, wrapper ZIP (estrazione singola) 1924e7a641dbb539e3b5833d6b57a737c2389edda2645b8c6d6688e4699df3ee. Accettazione manuale Joomla pendente; avanzamento implementativo invariato 78%."
+  "note": "PR #258 / STU-05 implementa la velocità video locale; CI standard 4/4 run 43134490135, pacchetto 0.42.0-dev, merge c04bda9b5db8f82e571b27400863cb29ba5b84ef, artifact 13907211349, SHA-256 interno b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d; manuale Joomla e preferenza lingua pendenti. Stima 80%."
 }

@@ -4,69 +4,70 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-12",
     "percent": 80,
-    "basis": "Equal-weight mean of seven implementation macroareas: (77+81+77+94+67+92+70)/7=79.71, rounded to 80. Previous release-preparation area: 58; updated: 70. The number is an engineering estimate, not a count of accepted requirements.",
-    "macroareas": {"courses":77,"catalogue":81,"learning_progress":77,"video_materials":94,"enrollment":67,"joomla_integrations":92,"release_preparation":70},
-    "updater_implementation": {
-      "state": "implemented; production activation and end-to-end Joomla acceptance pending",
-      "ftps_live_success": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43131327572",
-      "candidate_1_0_0_dry_run_success": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43131931497",
-      "manual_joomla_installation": "user confirmed installation and general operation; no updater end-to-end acceptance",
-      "remaining": "Activate feed only with release gate; verify Joomla native updater, existing data preservation, rollback and certificate authenticity by independent confirmation"
+    "basis": "Equal-weight mean of seven implementation macroareas: (77+81+77+95+67+92+70)/7=79.86, rounded to 80. M04 video/materials rises from 94 to 95 for the supported player speed preference in PR #258; manual Joomla acceptance and player language preference remain open.",
+    "macroareas": {
+      "courses": 77,
+      "catalogue": 81,
+      "learning_progress": 77,
+      "video_materials": 95,
+      "enrollment": 67,
+      "joomla_integrations": 92,
+      "release_preparation": 70
     }
   },
-  "version": "0.41.81-dev",
+  "version": "0.42.0-dev",
   "code_baseline": {
-    "tested_head": "f45554db4bafb6417aa325f5469f455fc28a2038",
-    "parent_main_commit": "79cba056607e4ce8ba1114e68b75a380c4dd171b",
-    "pull_request": 247,
-    "merged_main_commit": "a8734dd606cc579077312dfecd9cd66773934804"
+    "tested_head": "028af87a2420e898a419960a91e6ec6c9712596a",
+    "parent_main_commit": "5a80f6e3f529a1778bbd222491752bb7b690d735",
+    "pull_request": 258,
+    "merged_main_commit": "c04bda9b5db8f82e571b27400863cb29ba5b84ef"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43129077496,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43129077496",
+    "run_id": 43134490135,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135",
     "joomla": "6.0.0",
     "jobs": [
       {
-        "id": 130888440844,
+        "id": 130906408408,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130888502992,
+        "id": 130906457555,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130888502973,
+        "id": 130906457488,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 130888502890,
+        "id": 130906457439,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       }
     ],
-    "note": "PR #247 / STAB-05 / issue #199: CI standard 4/4; check HTTP sulla presenza di una sola intestazione H1 per Dashboard e Percorsi. Accettazione manuale Joomla pendente."
+    "note": "PR #258 / STU-05: CI standard 4/4. Test adapter per capacità dinamiche, preferenza browser, telemetria rate_milli e player non supportato. Accettazione manuale provider Joomla pendente."
   },
   "package": {
-    "artifact_id": 13904467823,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43129077496/artifacts/13904467823",
-    "artifact_name": "JD-Learn-0.41.81-dev",
-    "installable_package": "pkg_jlms-0.41.81-dev.zip",
-    "sha256": "3ef211e6ac7713d381fb9fabb106ee40881eca72a9b3bbff5465fd300bdcc573",
-    "artifact_sha256": "1924e7a641dbb539e3b5833d6b57a737c2389edda2645b8c6d6688e4699df3ee",
-    "size_bytes": 569590,
-    "artifact_size_bytes": 569343,
-    "expires_at": "2026-11-26T00:45:10Z",
+    "artifact_id": 13907211349,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43134490135/artifacts/13907211349",
+    "artifact_name": "JD-Learn-0.42.0-dev",
+    "installable_package": "pkg_jlms-0.42.0-dev.zip",
+    "sha256": "b984c68bcd06470d656de5b11d88e13aba614327df37216b66058e655826d26d",
+    "artifact_sha256": "4cba266ce1b7008f5d4736d25482f589566a030fdb53a7130f0bd0a6fae5720e",
+    "size_bytes": 571066,
+    "artifact_size_bytes": 570832,
+    "expires_at": "2026-11-26T01:30:43Z",
     "wrapper_zip": true,
-    "build_source": "Build CI riproducibile sul commit PR f45554db4bafb6417aa325f5469f455fc28a2038; PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, controlli leggeri e Chromium standard 4/4. SHA-256 interno verificato nei log CI; digest wrapper dai metadati artifact."
+    "build_source": "Build CI standard sul commit PR 028af87a2420e898a419960a91e6ec6c9712596a; controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium, CI 4/4. SHA package nei log CI; digest wrapper dai metadati artifact."
   },
   "release_process": {
     "issue": 160,
@@ -12636,5 +12637,13 @@
       "artifact_size_bytes": 552379,
       "artifact_expires_at": "2026-11-24T21:36:47Z"
     }
-  ]
+  ],
+  "latest_feature": {
+    "requirement": "STU-05 partial",
+    "implemented": "Browser-local video playback speed for supported YouTube, Vimeo and HTML5 players; Cloudflare Stream has no speed selector.",
+    "residual": "Player language preference and manual Joomla provider acceptance.",
+    "pull_request": 258,
+    "merge_commit": "c04bda9b5db8f82e571b27400863cb29ba5b84ef",
+    "manual_joomla_acceptance": "not executed"
+  }
 }
