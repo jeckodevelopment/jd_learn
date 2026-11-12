@@ -1,3 +1,10 @@
+## 0.51.0-dev — capabilities minime per il tracciamento video (IMP-05)
+
+- PR [#278](https://github.com/jeckodevelopment/jd_learn/pull/278), milestone 1.0.0, integrata nel commit `62af5dbcbc6bd2300c67bc149c04bccaa0203aec`; CI standard 4/4 nel [run 43246533928](https://github.com/jeckodevelopment/jd_learn/actions/runs/43246533928).
+- Per pubblicare e avviare una lezione video tracciata, provider e descrittore devono supportare posizione, durata e seek. Velocità, caption e trascrizione restano opzionali. La consultazione non richiede capabilities di tracciamento.
+- Pacchetto [JD-Learn-0.51.0-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43246533928/artifacts/13957416321), SHA-256 `b6b01e432ddd660c32f25dfa4f611bfab069edcfa92977349f2ef16dbff0fd2f`, wrapper `2da0bd7ce7d03b58227ab24b4e7c84060143d41d5841aa3b54449aaa06a707bc`; scade il 26 novembre 2026.
+- Collaudo Joomla dei quattro provider e adapter con capabilities incomplete ancora pendente; vedere il [testbook](docs/QA_TESTBOOK.md).
+
 ## 0.50.0-dev — preferenza locale caption su YouTube e Cloudflare Stream (STU-05)
 
 - PR [#276](https://github.com/jeckodevelopment/jd_learn/pull/276), milestone 1.0.0, merge `d29cdc9326bcc0d1f9ac3dd454fa40189ca20c82`; CI standard 4/4 nel [run 43240360856](https://github.com/jeckodevelopment/jd_learn/actions/runs/43240360856).
