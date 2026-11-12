@@ -54,6 +54,14 @@ $currentModule = 0;
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
+   <div id="jlms-video-speed-control" hidden>
+    <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
+    <select id="jlms-video-speed" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">
+     <?php foreach ([0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] as $speed) : ?>
+      <option value="<?= $speed ?>"<?= $speed === 1 ? ' selected' : '' ?>><?= $speed ?>×</option>
+     <?php endforeach; ?>
+    </select>
+   </div>
   </section>
   <?php elseif ($selected->kind === 'audio' && !empty($selected->audio_attachment)) : ?>
   <section id="jlms-audio-region" aria-labelledby="jlms-lesson-title">
