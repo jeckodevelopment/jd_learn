@@ -86,3 +86,12 @@ L'impronta da sola, copiata da una prima connessione non autenticata, **non cert
 Dopo aver aggiornato l'hostname e il pin, avviare unicamente **Check JD Learn FTPS access (safe)**. Il job non pubblica la 1.0.0; eventuali errori di certificato, rotazione o uso di certificati diversi sui canali dati vengono segnalati senza fallback. Quando Host.it rinnova il certificato, aggiornare il pin **solo dopo aver verificato il nuovo valore**. Non introdurre `CERT_NONE` come configurazione priva di pin.
 
 **Nota sulla verifica end-to-end:** il test con file temporanei comprova il protocollo e l'accesso alla directory, non la corretta pubblicazione del feed Joomla; IMP-10 resta obbligatorio.
+
+
+## FTPS 425: riutilizzo della sessione TLS sui trasferimenti
+
+Il test live [43129478205](https://github.com/jeckodevelopment/jd_learn/actions/runs/43129478205) ha **superato handshake TLS e login**, ma il server ha risposto `425 Unable to build data connection: Operation not permitted` al primo `STOR`. Un'origine possibile, documentata per ProFTPD, è il **mancato riutilizzo della sessione TLS** tra connessione di controllo e connessioni dati. La libreria standard Python non riutilizza necessariamente tale sessione nel client FTPS di default.
+
+Il client JD Learn ora apre la connessione dati passiva e richiede al contesto TLS di **riprendere la sessione della connessione di controllo** (`session=self.sock.session`). La verifica PKI standard o la corrispondenza SHA-256 del certificato rimangono obbligatorie, così come `PROT P`; non è consentito passare a FTP non cifrato. Si applica sia al collaudo con file temporanei sia alla pubblicazione effettiva del feed.
+
+**Diagnosi ancora da confermare:** il codice è stato corretto, ma solo un nuovo test live nell'ambiente `jdlearn-release-production` potrà stabilire se il server accetta il trasferimento. Se fallisce ancora, verificare nei log Host.it se l'errore dipenda da TLS session reuse, porte passive/firewall o altre policy del server; non disabilitare TLS o la verifica dell'identità.

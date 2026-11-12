@@ -9,7 +9,7 @@ import hashlib
 import hmac
 import re
 import ssl
-from ftplib import FTP_TLS
+from ftplib import FTP, FTP_TLS
 
 
 def parse_sha256_pin(value):
@@ -43,14 +43,24 @@ class PinnedFTP_TLS(FTP_TLS):
         return result
 
     def ntransfercmd(self, cmd, rest=None):
-        conn, size = super().ntransfercmd(cmd, rest)
+        # FTP_TLS.ntransfercmd in Python's standard library creates a new TLS
+        # session for every data transfer. Some ProFTPD servers require the
+        # data connection to resume the verified control-channel TLS session.
+        # Call FTP.ntransfercmd to open a passive data socket, then wrap it
+        # with the existing context and verified control socket's session.
+        conn, size = FTP.ntransfercmd(self, cmd, rest)
         try:
-            if self.expected_sha256 is not None:
-                check_peer_certificate(conn, self.expected_sha256)
+            if self._prot_p:
+                control_session = self.sock.session
+                conn = self.context.wrap_socket(
+                    conn, server_hostname=self.host, session=control_session
+                )
+                if self.expected_sha256 is not None:
+                    check_peer_certificate(conn, self.expected_sha256)
+            return conn, size
         except BaseException:
             conn.close()
             raise
-        return conn, size
 
 
 def create_ftps_client(env, ftp_factory=FTP_TLS):
@@ -59,6 +69,8 @@ def create_ftps_client(env, ftp_factory=FTP_TLS):
         context = ssl.create_default_context()
         context.check_hostname = True
         context.verify_mode = ssl.CERT_REQUIRED
+        if ftp_factory is FTP_TLS:
+            return PinnedFTP_TLS(context=context, timeout=30), None
         client = ftp_factory(context=context, timeout=30)
         return client, None
 
