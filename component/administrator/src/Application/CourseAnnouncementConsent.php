@@ -147,7 +147,7 @@ final class CourseAnnouncementConsent
             $this->db->setQuery($remove)->execute();
             $this->db->transactionCommit();
             return true;
-        } catch (\\Throwable $error) {
+        } catch (\Throwable $error) {
             $this->db->transactionRollback();
             throw $error;
         }
@@ -155,7 +155,7 @@ final class CourseAnnouncementConsent
 
     public function revoke(int $userId): void
     {
-        if ($userId < 1) { throw new \\InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED'); }
+        if ($userId < 1) { throw new \InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED'); }
         $this->db->transactionStart();
         try {
             $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'revoked'")
@@ -166,7 +166,7 @@ final class CourseAnnouncementConsent
                 ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
             $this->db->setQuery($remove)->execute();
             $this->db->transactionCommit();
-        } catch (\\Throwable $error) {
+        } catch (\Throwable $error) {
             $this->db->transactionRollback();
             throw $error;
         }
