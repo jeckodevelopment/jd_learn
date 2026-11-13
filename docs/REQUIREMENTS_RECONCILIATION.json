@@ -1,8 +1,8 @@
 {
   "date": "2026-11-13",
   "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
-  "runtime_tested_head": "46fb687c2f7ce042921227e5fe8072dd3192f008",
-  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433",
+  "runtime_tested_head": "6431bbff1a6965371042e0dc49f88bfa030479f5",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796",
   "counts": {
     "Stato implementazione": {
       "Parziale": 179,
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 76,
-    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+43+75)/9 = 76,33%, arrotondato a 76%. La macroarea email sale da 37% a 43% dopo MAIL-11.3; resta sviluppo per registrazione e gestione/invio amministrativo. Le prove manuali non aumentano la copertura implementativa.",
+    "percent": 77,
+    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+46+75)/9 = 76,67%, arrotondato a 77%. La macroarea email sale da 43% a 46% dopo l’integrazione dell’opt-in nella registrazione Joomla (PR #323); restano selezione/preview e invio amministrativo controllato. Le prove manuali non aumentano la copertura implementativa.",
     "areas": [
       81,
       81,
@@ -34,12 +34,12 @@
       68,
       92,
       70,
-      43,
+      46,
       75
     ]
   },
-  "note": "Main 0.56.11-dev integra MAIL-11.2/11.3 parzialmente con PR #317, merge 6c44bc4e852bf1d693b53646b5deee6c83153629. CI standard 4/4 nel run 43457091398; pacchetto/artifact e checksum sono registrati in IMPLEMENTATION_EVIDENCE.json e CHANGELOG.md. Collaudo Joomla manuale pendente; nessun annuncio di nuovo corso viene inviato.",
-  "updated_at": "2026-11-13T16:00:00Z",
+  "note": "Main 0.56.14-dev integra PR #323 (merge 2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72): consenso facoltativo nella registrazione Joomla. CI standard 4/4 nel run 43482627796; pacchetto e checksum in IMPLEMENTATION_EVIDENCE.json/CHANGELOG.md. Collaudo Joomla/SMTP manuale pendente; nessun annuncio di nuovo corso viene inviato.",
+  "updated_at": "2026-11-13T18:30:00Z",
   "imp_09_mail_c": {
     "pull_request": 313,
     "merge_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
