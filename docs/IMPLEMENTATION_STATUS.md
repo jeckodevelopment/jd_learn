@@ -98,7 +98,7 @@ Seguire l’ordine e i confini già approvati in [NEXT_STEPS.md](NEXT_STEPS.md),
 
 La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) conservano la baseline storica: 209 requisiti originariamente del rilascio 1 e uno differito. La riconciliazione del 10 novembre distingue 133 righe interamente core, 40 miste e 37 di fase 2; implementazione: 14 completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate. Verifica automatica: 169 esiti superati con copertura parziale e 41 senza esecuzione specifica. Accettazione Joomla: 2 parziali, 208 non eseguite integralmente, 0 integrali. Metodo e limiti nella [guida](REQUIREMENTS_STATUS_GUIDE.md); conteggi verificabili in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La ricognizione non aggiunge funzionalità: stima per aree aggiornata al 74% (518/7). Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
-Schema attuale: **46 tabelle / 66 FK**; il pacchetto 0.56.14-dev contiene 11 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
+Schema attuale: **47 tabelle / 66 FK**; il pacchetto 0.56.16-dev contiene 11 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.
 
