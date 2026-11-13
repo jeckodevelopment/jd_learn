@@ -68,7 +68,7 @@ assert "ToolbarHelper::custom('course.programme'" in course_view
 dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
 dashboard_style=(ROOT/'component/media/css/admin-dashboard.css').read_text()
 for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
-    marker='COM_JLMS_DASHBOARD_GROUP_'+group
+    marker='COM_JLMS_DASHBOARD_'+'GROUP_'+group
     assert marker in dashboard_view and marker in dashboard_template, ('Dashboard missing group', group)
     for locale in ('it-IT','en-GB'):
         assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
