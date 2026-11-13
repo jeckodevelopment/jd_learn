@@ -246,16 +246,16 @@ parse_str((string) parse_url((string) $linkTwo, PHP_URL_QUERY), $linkQueryTwo);
 $tokenOne = (string) ($linkQueryOne['token'] ?? '');
 $tokenTwo = (string) ($linkQueryTwo['token'] ?? '');
 if (!$linkOne || !$linkTwo || $tokenOne === '' || $tokenTwo === '' || str_contains((string) $linkOne, (string) $userId)) {
-    throw new \\RuntimeException('Unsubscribe link did not contain an opaque token or exposed the user id.');
+    throw new \RuntimeException('Unsubscribe link did not contain an opaque token or exposed the user id.');
 }
 $db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 SECOND)')
     ->where('token_hash = ' . $db->quote(hash('sha256', $tokenOne))))->execute();
 if ($mailConsent->revokeByToken($tokenOne) || $mailConsent->state((int) $userId) !== 'confirmed') {
-    throw new \\RuntimeException('Expired unsubscribe token revoked consent.');
+    throw new \RuntimeException('Expired unsubscribe token revoked consent.');
 }
 if (!$mailConsent->revokeByToken($tokenTwo) || $mailConsent->state((int) $userId) !== 'revoked'
     || $mailConsent->revokeByToken($tokenTwo)) {
-    throw new \\RuntimeException('Valid unsubscribe token was not one-use or did not revoke consent.');
+    throw new \RuntimeException('Valid unsubscribe token was not one-use or did not revoke consent.');
 }
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();
 $certificateService = $component->getCertificateService();
