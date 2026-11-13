@@ -157,10 +157,12 @@ final class CourseAnnouncementService
             'SITE_NAME_HTML' => $siteNameHtml,
             // A safe, non-working placeholder keeps the preview from performing an unsubscribe action.
             'UNSUBSCRIBE_URL' => 'https://example.invalid/jd-learn-preview-unsubscribe',
+            'UNSUBSCRIBE_URL_HTML' => 'https://example.invalid/jd-learn-preview-unsubscribe',
+            'UNSUBSCRIBE_URL_TEXT' => 'https://example.invalid/jd-learn-preview-unsubscribe',
         ];
         $result['template_data'] = $tags;
         $renderer = new CourseAnnouncementPreviewRenderer('com_jlms.course.published', $language);
-        $renderer->addUnsafeTags(['NAME', 'COURSE_TITLE', 'COURSE_INTRO_TEXT', 'COURSE_LESSONS_TEXT', 'COURSE_URL', 'SITE_NAME', 'UNSUBSCRIBE_URL']);
+        $renderer->addUnsafeTags(['NAME', 'COURSE_TITLE', 'COURSE_INTRO_TEXT', 'COURSE_LESSONS_TEXT', 'COURSE_URL', 'SITE_NAME', 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT']);
         $result['subject'] = $renderer->render((string) $template->subject, $tags);
         $result['body_text'] = $renderer->render((string) $template->body, $tags);
         $result['body_html'] = $renderer->render((string) $template->htmlbody, $tags, true);
