@@ -71,7 +71,9 @@ $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->q
 require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
 (new \Com_JlmsInstallerScript())->postflight('update', null);
 $defaultCertificateTemplate = $db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_templates')
-    ->where('title = :title')->where('state = 1')->bind(':title', 'JD Learn — Attestato standard');
+    ->where('title = :title')->where('state = 1');
+$defaultCertificateTitle = 'JD Learn — Attestato standard';
+$defaultCertificateTemplate->bind(':title', $defaultCertificateTitle);
 if ((int) $db->setQuery($defaultCertificateTemplate)->loadResult() !== 1) {
     throw new \RuntimeException('JD Learn must install exactly one safe default certificate template.');
 }
