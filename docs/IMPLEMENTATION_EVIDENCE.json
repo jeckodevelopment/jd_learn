@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
     "percent": 75,
-    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+34+75)/9=75,33%, arrotondato a 75%. Email 34% dopo MAIL-C; attestati 75%. Collaudo manuale Joomla/SMTP pendente.",
+    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+35+75)/9=75,44%, arrotondato a 75%. Email 35% dopo MAIL-C e template MAIL-11.1; MAIL-11.2–11.5 resta da implementare.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,21 +13,21 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 34,
+      "email_notifications": 35,
       "certificates": 75
     }
   },
-  "version": "0.56.9-dev",
+  "version": "0.56.10-dev",
   "code_baseline": {
-    "tested_head": "85bc01df25034ddf87b7513edd60a8e14f82b8e6",
-    "pull_request": 313,
-    "merged_main_commit": "53f5e032ae16da9df963e938cfb449c6c249a933"
+    "tested_head": "442d3eae67da787dc1992c6915afb51176f568cd",
+    "pull_request": 315,
+    "merged_main_commit": "fd5b66941421127037afa54a3bbaea6810e6e7ca"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43445911912,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912",
+    "run_id": 43450891869,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43450891869",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -55,15 +55,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14046839802,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912/artifacts/14046839802",
-    "artifact_name": "JD-Learn-0.56.9-dev",
-    "installable_package": "pkg_jlms-0.56.9-dev.zip",
-    "sha256": "2c243c2d86ce4b1ee306f79602201a873d3f2b38a662290bb2ef6d0024fe9842",
-    "artifact_sha256": "679adbf6ed13b788786d1eecc13400d94a4d364de9fb4114557cf9639985042a",
-    "size_bytes": 615333,
-    "artifact_size_bytes": 615141,
-    "expires_at": "2026-11-27T14:51:02Z",
+    "artifact_id": 14051706158,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43450891869/artifacts/14051706158",
+    "artifact_name": "JD-Learn-0.56.10-dev",
+    "installable_package": "pkg_jlms-0.56.10-dev.zip",
+    "sha256": "d593244c4bf21ef46f2ba98b4af43815dec5c497b1f115e23f269a9239587334",
+    "artifact_sha256": "dc6afb45cde270e257e588cfa4ac64ec358efeed6ae862d5638acac214ce5809",
+    "size_bytes": 615822,
+    "artifact_size_bytes": 615623,
+    "expires_at": "2026-11-27T15:20:48Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -13162,26 +13162,13 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 313,
-    "candidate_head": "85bc01df25034ddf87b7513edd60a8e14f82b8e6",
-    "merged_main_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912/artifacts/14046839802",
-    "artifact_id": 14046839802,
-    "sha256": "2c243c2d86ce4b1ee306f79602201a873d3f2b38a662290bb2ef6d0024fe9842",
-    "artifact_sha256": "679adbf6ed13b788786d1eecc13400d94a4d364de9fb4114557cf9639985042a",
-    "manual_acceptance": "IMP-09-MAIL-C Joomla/SMTP collaudo pendente; eseguire scenari in docs/QA_TESTBOOK.md"
-  },
-  "candidate_implementation": {
-    "as_of": "2026-11-13",
-    "version": "0.56.10-dev",
     "pull_request": 315,
-    "status": "draft; CI pending",
-    "feature": "MAIL-11.1 native published course template",
-    "commit": "7b079ec54b35593c84ac8c09c6cd30d09b4f7740",
-    "testbook": "docs/QA_TESTBOOK.md#mail-111--pr-315--template-joomla-annuncio-nuovo-corso-05610-dev",
-    "limitations": [
-      "No opt-in/double opt-in, revocation, admin campaign UI or delivery is implemented",
-      "Manual Joomla template/upgrade acceptance pending"
-    ]
+    "candidate_head": "442d3eae67da787dc1992c6915afb51176f568cd",
+    "merged_main_commit": "fd5b66941421127037afa54a3bbaea6810e6e7ca",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43450891869/artifacts/14051706158",
+    "artifact_id": 14051706158,
+    "sha256": "d593244c4bf21ef46f2ba98b4af43815dec5c497b1f115e23f269a9239587334",
+    "artifact_sha256": "dc6afb45cde270e257e588cfa4ac64ec358efeed6ae862d5638acac214ce5809",
+    "manual_acceptance": "MAIL-11.1 template IT/EN and upgrade preservation pending; MAIL-11.2–11.5 remain unimplemented"
   }
 }
