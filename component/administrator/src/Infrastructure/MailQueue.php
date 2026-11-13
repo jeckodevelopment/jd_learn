@@ -23,6 +23,7 @@ final class MailQueue
             'com_jlms.course.completed' => 'completion',
             'com_jlms.enrollment.suspended' => 'suspension',
             'com_jlms.enrollment.reactivated' => 'reactivation',
+            'com_jlms.certificate.available' => 'certificate',
             default => null,
         };
         if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {

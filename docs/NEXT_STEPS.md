@@ -1,3 +1,5 @@
+Candidato in lavorazione: PR IMP-09-CERT-D / 0.56.8-dev. La modifica implementa l’accodamento email di disponibilità attestato e il template nativo; CI e merge sono ancora da completare. Main rimane 0.56.7-dev al 73,44%.
+
 Aggiornato al 13 novembre 2026. Main **0.56.7-dev** integra la PR [#304](https://github.com/jeckodevelopment/jd_learn/pull/304), merge `461c2d83c85e1152e2fb2497e0e15be62e36cec9`. CERT-A/B/C sono implementati; avanzamento globale stimato **73,44%** (email 29,5%; attestati 62,5%). CI standard 4/4 superata nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo manuale Joomla ancora pendente. Pacchetto installabile [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 ZIP interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, checksum artifact wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`; disponibile fino al 27 novembre 2026 alle 12:00 UTC.
 **Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
 

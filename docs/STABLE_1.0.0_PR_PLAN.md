@@ -238,3 +238,6 @@ La PR #299 è integrata in main 0.56.4-dev e collega la conferma per iscrizione 
 
 
 **Aggiornamento CERT-C (13 novembre 2026, PR #304 integrata):** elenco, dettaglio, download amministrativo con ACL e audit minimo. CI 4/4 nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo Joomla pendente. Pacchetto [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`. Avanzamento attestati 62,5%, globale 73,44%.
+
+
+**CERT-D in preparazione:** ramo 0.56.8-dev aggiunge la notifica disponibilità tramite Mail Templates/outbox, override per corso e scenari QA; PR e integrazione CI in corso.

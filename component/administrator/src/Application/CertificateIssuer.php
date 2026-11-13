@@ -7,6 +7,8 @@ namespace Jlms\Component\Jlms\Administrator\Application;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Log\Log;
 
 /** Creates one immutable certificate issuance record for a persisted course completion. */
 final class CertificateIssuer
@@ -15,7 +17,7 @@ final class CertificateIssuer
 
     public function issueForCompletedEnrollment(int $enrollmentId, int $courseVersionId, string $completedAt): bool
     {
-        $q = $this->db->createQuery()->select('e.id, e.user_id, e.course_id, e.course_version_id, e.completed_at, u.name, c.title, c.params_json, c.language, v.title_snapshot, v.rules_json')
+        $q = $this->db->createQuery()->select('e.id, e.user_id, e.course_id, e.course_version_id, e.completed_at, u.name, u.email, u.language AS user_language, c.title, c.params_json, c.language, v.title_snapshot, v.rules_json')
             ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id = e.user_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
             ->where('e.id = :enrollment')->where('e.course_version_id = :version')->where('e.completed_at = :completed')
@@ -66,6 +68,24 @@ final class CertificateIssuer
         $this->db->insertObject('#__jlms_certificate_documents', $document, 'id');
         $link = (object) ['id' => $certificateId, 'current_document_id' => (int) $document->id];
         $this->db->updateObject('#__jlms_certificates', $link, 'id');
+
+        // Certificate issuance and course completion are authoritative even if the mail
+        // outbox cannot be written. The worker sends later through Joomla's MailTemplate.
+        try {
+            (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
+                (int) $row->course_id,
+                hash('sha256', 'certificate.available:' . $certificateId . ':' . (int) $document->id),
+                'com_jlms.certificate.available',
+                (string) ($row->user_language ?: $row->language),
+                (string) $row->email,
+                (string) $row->name,
+                ['NAME' => (string) $row->name, 'COURSE' => (string) ($row->title_snapshot ?: $row->title),
+                    'SITENAME' => (string) \Joomla\CMS\Factory::getConfig()->get('sitename', ''),
+                    'CERTIFICATE_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard']
+            );
+        } catch (\Throwable $error) {
+            Log::add('Could not enqueue a certificate availability email.', Log::WARNING, 'com_jlms');
+        }
         return true;
     }
 }

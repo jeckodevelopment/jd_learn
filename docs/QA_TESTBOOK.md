@@ -961,3 +961,12 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 6. Aggiornare da 0.56.6-dev e verificare che certificati e asset esistenti restino leggibili e non vengano rigenerati o modificati.
 
 **Verifica automatica PR #304:** CI standard 4/4 superata nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); la suite ha superato database, installazione/upgrade e smoke test Joomla su MySQL 8.4 e MariaDB 10.6. Gli scenari manuali Joomla restano pendenti. Pacchetto [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 ZIP interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`.
+
+
+# CERT-D — notifica disponibilità attestato (PR in sviluppo)
+
+1. Aggiornare il componente su Joomla di prova, abilitare attestati e notifiche email globali; verificare che il template `com_jlms.certificate.available` compaia in **Sistema → Modelli email** con oggetto, HTML/testo e tag `NAME`, `COURSE`, `SITENAME`, `CERTIFICATE_URL`. Personalizzare il template e verificare che l’upgrade successivo lo preservi.
+2. Completare un corso idoneo con utenti che hanno lingua profilo IT ed EN; verificare una sola riga in outbox per ciascun documento e template lingua corretto. Eseguire il task `JD Learn: send queued emails` e verificare contenuti, link autenticato alla dashboard e accesso al download.
+3. Ripetere il completamento/replay: non devono essere create ulteriori notifiche. Disabilitare la preferenza globale oppure l’override per corso e verificare che l’email non venga accodata.
+4. Provare un errore temporaneo SMTP: il completamento e l’attestato devono restare validi, la coda deve pianificare il retry; dopo il ripristino eseguire il task e verificare la consegna.
+5. Eseguire CI e smoke test Joomla automatici; l’accettazione manuale sul sito di prova resta a carico del collaudo di progetto.
