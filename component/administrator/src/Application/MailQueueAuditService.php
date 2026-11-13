@@ -106,6 +106,10 @@ final class MailQueueAuditService
             ->bind(':note', $note)->bind(':lastError', 'Manual reconciliation: ' . $note)
             ->bind(':id', $queueId, ParameterType::INTEGER);
 
+        if ($action === 'retry') {
+            $query->where('attempts < 5');
+        }
+
         if ($action === 'sent') {
             $query->set('sent_at = COALESCE(sent_at, UTC_TIMESTAMP(6))')
                 ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}'");
