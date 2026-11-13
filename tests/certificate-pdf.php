@@ -7,7 +7,7 @@ $identity = ['name' => 'Luca (Test)\\', 'course_title' => 'Rigoletto — Opera',
 $pdf = CertificatePdf::render($identity, ['heading' => 'Attestato', 'subheading' => 'ha completato', 'footer' => 'JD Learn', 'accent_color' => '#315A70']);
 certificatePdfExpect(str_starts_with($pdf, '%PDF-1.4'), 'PDF header missing');
 certificatePdfExpect(str_ends_with($pdf, "%%EOF\n"), 'PDF trailer missing');
-certificatePdfExpect(str_contains($pdf, 'Luca \\(Test\\\\)'), 'PDF text escaping failed');
+certificatePdfExpect(str_contains($pdf, 'Luca \\(Test\\)\\\\'), 'PDF text escaping failed');
 certificatePdfExpect(str_contains($pdf, 'Rigoletto'), 'Course title missing');
 $english = CertificatePdf::render(['name' => 'Student', 'course_title' => 'Course', 'serial' => 'XYZ', 'completed_at' => '2026-11-13', 'language' => 'en-GB'], []);
 certificatePdfExpect(str_contains($english, 'Certificate of completion'), 'English fallback missing');
