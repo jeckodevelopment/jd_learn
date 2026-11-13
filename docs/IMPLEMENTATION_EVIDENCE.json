@@ -13170,5 +13170,18 @@
     "sha256": "2c243c2d86ce4b1ee306f79602201a873d3f2b38a662290bb2ef6d0024fe9842",
     "artifact_sha256": "679adbf6ed13b788786d1eecc13400d94a4d364de9fb4114557cf9639985042a",
     "manual_acceptance": "IMP-09-MAIL-C Joomla/SMTP collaudo pendente; eseguire scenari in docs/QA_TESTBOOK.md"
+  },
+  "candidate_implementation": {
+    "as_of": "2026-11-13",
+    "version": "0.56.10-dev",
+    "pull_request": 315,
+    "status": "draft; CI pending",
+    "feature": "MAIL-11.1 native published course template",
+    "commit": "7b079ec54b35593c84ac8c09c6cd30d09b4f7740",
+    "testbook": "docs/QA_TESTBOOK.md#mail-111--pr-315--template-joomla-annuncio-nuovo-corso-05610-dev",
+    "limitations": [
+      "No opt-in/double opt-in, revocation, admin campaign UI or delivery is implemented",
+      "Manual Joomla template/upgrade acceptance pending"
+    ]
   }
 }
