@@ -5,9 +5,9 @@
   "ci_run": 43404564275,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 175,
+      "Parziale": 178,
       "Completata": 14,
-      "Non iniziata": 29
+      "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
       "1.0.0": 143,
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 69,
-    "method": "Media semplice delle nove aree approvate: (81+81+78+99+68+92+70+29.5+18.75)/9 = 68.58%, arrotondata al 69%. Email 29,5%; CERT-A 18,75% (PR #300 integrata). La stima misura implementazione; l’accettazione manuale Joomla resta pendente.",
+    "percent": 72,
+    "method": "Media semplice delle nove aree approvate per la 1.0.0: (81+81+78+99+68+92+70+29.5+50)/9 = 72.06%, arrotondata al 72%. Email 29,5%; attestati 50% dopo CERT-A e CERT-B candidata. Stima di implementazione; accettazione manuale Joomla distinta e ancora pendente.",
     "areas": [
       81,
       81,
@@ -35,8 +35,8 @@
       92,
       70,
       29.5,
-      18.75
+      50
     ]
   },
-  "note": "Main 0.56.5-dev integra PR #300, merge cbc0394d895b9b35f99d08aeb3c7f4182a56a182; CI standard 4/4 superata: run 43404564275. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43404564275/artifacts/14027235893, SHA-256 ZIP b8cfdc200be80b4450eb4770127a1cc1340bc5db20d886f9707ba293b0dc129c. CERT-A integrato; collaudo Joomla manuale pendente."
+  "note": "Candidate CERT-B (PR #302) non ancora integrata; il commit runtime main verificato resta cbc0394d895b9b35f99d08aeb3c7f4182a56a182 (PR #300), CI 4/4 run 43404564275, pacchetto artifact 14027235893 SHA-256 b8cfdc200be80b4450eb4770127a1cc1340bc5db20d886f9707ba293b0dc129c. La documentazione descrive la candidata; non costituisce verifica o accettazione."
 }

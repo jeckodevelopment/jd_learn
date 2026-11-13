@@ -41,6 +41,16 @@ final class CertificateIssuer
         $templateRow = $this->db->setQuery($template)->loadObject();
         if (!$templateRow) { return false; }
 
+        $templateSnapshot = json_decode((string) $templateRow->template_json, true, 32, JSON_THROW_ON_ERROR);
+        if (!is_array($templateSnapshot)) { return false; }
+        foreach (['certificate_heading' => 'heading', 'certificate_subheading' => 'subheading', 'certificate_footer' => 'footer'] as $setting => $key) {
+            $value = trim((string) $params->get($setting, ''));
+            if ($value !== '') { $templateSnapshot[$key] = mb_substr($value, 0, 255); }
+        }
+        $accent = (string) $params->get('certificate_accent_color', '#315A70');
+        $templateSnapshot['accent_color'] = preg_match('/\\A#?[a-f0-9]{6}\\z/iD', $accent) ? $accent : '#315A70';
+        $templateSnapshot['logo_path'] = (string) $params->get('certificate_logo', '');
+        $templateSnapshotJson = json_encode($templateSnapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         $certificate = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => $courseVersionId,
             'template_id' => (int) $templateRow->id, 'current_document_id' => null, 'issued_at' => $completedAt, 'revision' => 1];
         $this->db->insertObject('#__jlms_certificates', $certificate, 'id');
@@ -51,7 +61,7 @@ final class CertificateIssuer
             'identity_snapshot_json' => json_encode(['user_id' => (int) $row->user_id, 'name' => (string) $row->name,
                 'course_id' => (int) $row->course_id, 'course_title' => (string) ($row->title_snapshot ?: $row->title),
                 'course_version_id' => $courseVersionId, 'completed_at' => $completedAt, 'language' => (string) $row->language], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
-            'template_snapshot_json' => (string) $templateRow->template_json, 'status' => 'pending_render', 'pdf_asset_id' => null,
+            'template_snapshot_json' => $templateSnapshotJson, 'status' => 'pending_render', 'pdf_asset_id' => null,
             'issued_at' => $completedAt, 'revoked_at' => null, 'revocation_reason' => null, 'revision' => 1];
         $this->db->insertObject('#__jlms_certificate_documents', $document, 'id');
         $link = (object) ['id' => $certificateId, 'current_document_id' => (int) $document->id];

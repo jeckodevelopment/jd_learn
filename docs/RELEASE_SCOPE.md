@@ -15,7 +15,7 @@
 ## Fase 2: sviluppo sospeso per la prima versione
 
 - **Quiz e banca domande:** le funzionalità didattiche quiz restano congelate. Eccezione approvata l’8 novembre 2026: rendere usabile l’amministrazione della banca esistente con elenco e form separati e azioni di creazione, duplicazione ed eliminazione, usando i pattern standard Joomla (AC-131). Nessun nuovo tipo di domanda, comportamento di valutazione o flusso studente rientra nell’eccezione. Il codice esistente si conserva; restano ammesse correzioni di blocchi, sicurezza e integrità.
-- **Attestati:** emissione, modelli, download, verifica e revoca rinviati.
+- **Attestati:** il rilascio essenziale di attestati PDF di completamento è incluso per decisione approvata il 12 novembre 2026 ([requisiti CERT](CERTIFICATES_1.0.0.md)); verifica pubblica, revoca/sostituzione avanzata e Open Badges restano fuori perimetro 1.0.0.
 - **Reportistica avanzata:** KPI, analisi dettagliate di frequenza/risultati e report avanzati rinviati. Il roster operativo essenziale descritto sopra rimane incluso.
 - **Flussi iscrizioni avanzati:** importazioni massive, approvazioni articolate, edizioni/finestre e reportistica di massa rinviati, salvo una dipendenza dimostrata per i flussi essenziali.
 

@@ -882,7 +882,7 @@ La regressione automatica d’integrazione in `tests/joomla-video.php` copre due
 Verificare su Joomla di prova il riepilogo **Verifica prima della pubblicazione** in una versione bozza con modalità **Sola consultazione** e una lezione video senza durata rilevata/confermata. Atteso: avviso `COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED`, nessun blocco per la sola durata e possibilità di pubblicare se gli altri controlli passano. Aggiungere poi una durata confermata valida e verificare che l’avviso scompaia. Ripetere in modalità **Apprendimento**: l’assenza di durata resta un blocco `COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED` e non viene duplicata come avviso.
 
 
-## IMP-09-CERT — attestati PDF essenziali (previsti per 1.0.0, non ancora implementati)
+## IMP-09-CERT — attestati PDF essenziali (CERT-A integrata, CERT-B candidata)
 
 **Comportamenti da testare in Joomla (da eseguire dopo le PR runtime):**
 
@@ -928,3 +928,19 @@ PR [#297](https://github.com/jeckodevelopment/jd_learn/pull/297) integrata, CI s
 La CI deve verificare installazione/upgrade dello schema, preferenza disabilitata per default, override per corso e un solo record attestato dopo il completamento reale nelle modalità testo/documento/audio, quiz (inclusa revisione), video e completamento idempotente. Verificare che consultazione, corso non completato e corso senza attestati abilitati non creino record; che il template e lo snapshot persistano i valori al momento del completamento.
 
 **Collaudo manuale Joomla da eseguire:** abilitare gli attestati globalmente e poi sovrascrivere la preferenza in due corsi; completare un corso Apprendimento e verificare nel database di prova una sola riga per iscrizione/versione con nome, titolo/versione e data corretti; ripetere l'ultima richiesta e verificare che il record non cambi; completare un corso in sola consultazione e verificare che non venga emesso nulla. Il PDF, l'area studente e la vista amministrativa sono fuori da CERT-A e verranno collaudati nelle PR successive.
+
+
+# CERT-B — PDF personalizzabile e download protetto (PR #302 candidata)
+
+**Prerequisiti:** installare la candidata su Joomla di prova con storage materiali privato configurato; predisporre un JPEG locale nella cartella media consentita; attivare attestati globali e per il corso di test; usare uno studente A completabile, uno studente B e un account anonimo.
+
+**Collaudo manuale Joomla da eseguire**
+
+1. In Configurazione componente → Attestati impostare intestazione, sottotitolo, piè pagina, colore e logo JPEG locale. Completare il corso come studente A. Atteso: nel pannello studente compare un attestato e il PDF scaricato riporta nome, titolo del corso, data, codice, testi e logo configurati.
+2. Aprire il PDF in italiano e con account inglese; verificare testo e date/localizzazione, nomi accentati, nomi lunghi e titolo corso lungo. Atteso: una pagina A4 orizzontale leggibile, contenuti non interpretati come markup e file PDF valido.
+3. Rimuovere o impostare un logo PNG/URL remoto e avviare una nuova emissione di prova. Atteso: il renderer rifiuta il formato/percorso non supportato senza esporre file e senza rompere l’aula; ripristinare poi un JPEG valido.
+4. Accedere all’URL di download come A, come B, anonimo e con un enrollment_id inesistente. Atteso: A scarica il proprio PDF; B, anonimo e ID inesistente non ricevono il documento di A. Il percorso non è enumerabile tramite seriale o URL asset.
+5. Verificare intestazioni `Content-Type: application/pdf`, `Cache-Control: private, no-store`, `X-Robots-Tag: noindex, nofollow`; ripetere con HEAD. Atteso: HEAD non invia il corpo.
+6. Ripetere il download e confrontare seriale/contenuti: lo stesso attestato resta identico. Controllare che il blob risieda nello storage privato esterno alla web root, con permessi restrittivi e che l’upgrade non lo elimini.
+
+**Esito sito Joomla:** Non eseguito. Questa procedura non copre ancora vista amministrativa, audit né backup/ripristino, previsti nelle PR successive/IMP-10.
