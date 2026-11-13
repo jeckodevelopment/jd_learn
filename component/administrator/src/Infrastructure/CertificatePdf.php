@@ -27,7 +27,7 @@ final class CertificatePdf
 
         $accent = self::color((string) ($template['accent_color'] ?? '#315A70'));
         $content = self::drawBox(30, 30, self::WIDTH - 60, self::HEIGHT - 60, $accent, 2.2);
-        $content .= self::drawLine(85, 83, self::WIDTH - 170, 83, $accent, 1.2);
+        $content .= self::drawLine(85, 83, self::WIDTH - 170, $accent, 1.2);
 
         $imageObject = null;
         $imageResources = '';
