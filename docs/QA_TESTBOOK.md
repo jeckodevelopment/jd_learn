@@ -1129,3 +1129,14 @@ Le date mostrate nell’audit sono in UTC e identificano la transizione registra
 6. Provare date senza scadenza, scadenza già trascorsa, corso completato, utente bloccato e soglie 1/30 giorni; nessuno deve ricevere un promemoria fuori dai criteri.
 
 L'esecuzione del task usa solo il mailer globale Joomla; nessun SMTP autonomo è aggiunto. La verifica manuale SMTP resta da registrare.
+
+
+## PR #346 — Dashboard raggruppata e template email Joomla (CORE-20 / UI-02)
+
+- [ ] Super User: Dashboard con sezioni Didattica, Persone e valutazione, Comunicazioni, Configurazione e tutti i collegamenti permessi nell'ordine concordato; Attestati non è in prima posizione (issue #308 soltanto parzialmente risolta: resta la vista elenco).
+- [ ] Utente con ACL limitate: soltanto link autorizzati e nessuna sezione priva di pulsanti; rifiuto core dei link visitati direttamente senza permessi.
+- [ ] Comunicazioni → Template email: apertura di Joomla `com_mails` con `com_jlms` selezionato; nessun template estraneo visibile, filtro rimovibile; ricerca/lingua/paginazione non restano attaccate da sessioni precedenti; verifica in IT/EN.
+- [ ] Verificare issue #312 separatamente: titoli e descrizioni mail template localizzati, senza considerare il problema risolto dalla sola aggiunta del collegamento.
+- [ ] Desktop 13–15 pollici, smartphone, tema scuro, accessibilità tastiera e focus, stato provider espandibile, toolbar Opzioni nativa invariata.
+
+Nessun dato di test personale nei log o screenshot. CI e test strutturali non sono accettazione manuale Joomla.
