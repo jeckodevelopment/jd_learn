@@ -811,7 +811,8 @@ CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue` (
   `created_at` DATETIME(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_event_key` (`event_key`),
-  KEY `ix_ready` (`state`,`available_at`,`id`)
+  KEY `ix_ready` (`state`,`available_at`,`id`),
+  KEY `ix_announcement_campaign` (`course_id`,`template_id`,`state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__jlms_course_announcement_campaigns` (
