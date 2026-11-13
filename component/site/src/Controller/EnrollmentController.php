@@ -45,6 +45,21 @@ class EnrollmentController extends BaseController
                 $service->complete($this->app->getIdentity(), $language, $id, $lessonId, $key);
             } else {
                 $id = $service->start($this->app->getIdentity(), $language, CurriculumService::id($data['course_id'] ?? null), $key);
+                if (($data['course_announcement_consent'] ?? null) === '1') {
+                    $user = $this->app->getIdentity();
+                    $consentService = $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent();
+                    // Do not resend a pending confirmation when the enrollment request is replayed.
+                    if ($consentService->state((int) $user->id) === 'none') {
+                        try {
+                            $consentService->request((int) $user->id, (string) $user->email, (string) $user->name, 'enrollment');
+                            $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_CONFIRMATION_SENT'), 'message');
+                        } catch (\Throwable) {
+                            // Consent email failure must not roll back a successful enrollment.
+                            Log::add('Enrollment consent email failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+                            $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_REQUEST_FAILED'), 'warning');
+                        }
+                    }
+                }
             }
             $this->setRedirect(Route::_('index.php?option=com_jlms&view=classroom&id=' . $id . '&lesson_id=' . $lessonId, false));
         } catch (\Throwable $error) {
