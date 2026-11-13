@@ -64,7 +64,7 @@ Alla prima emissione del documento, JD Learn aggiunge all’outbox una sola noti
 
 ## MAIL-11 — Annuncio disponibilità nuovo corso (approvato 13 novembre 2026)
 
-**Stato: parzialmente implementato; MAIL-11.1 è integrata dalla PR #315.** La notifica serve a presentare un corso appena pubblicato agli utenti che ne hanno fatto richiesta; non è un invio marketing generalista né una newsletter. Il piano e i criteri MAIL-11.1–11.5 sono in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md#estensione-approvata-13-novembre-2026--mail-11-nuovo-corso-disponibile).
+**Stato implementativo: completato per MAIL-11.1–11.5 nella PR #327 (main 0.56.16-dev); accettazione manuale Joomla/SMTP non eseguita.** La notifica serve a presentare un corso appena pubblicato agli utenti che ne hanno fatto richiesta; non è un invio marketing generalista né una newsletter. Il piano e i criteri MAIL-11.1–11.5 sono in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md#estensione-approvata-13-novembre-2026--mail-11-nuovo-corso-disponibile).
 
 ### Template nativo Joomla
 
@@ -96,15 +96,29 @@ Proposto ID `com_jlms.course.published`. Il default HTML presenta in quest'ordin
 
 ## Comunicazione operativa per corso — MAIL-C
 
-La PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313) integrata nella 0.56.9-dev aggiunge il template Joomla com_jlms.course.message, componibile dal roster per gli iscritti attivi selezionati. L'invio di prova è riservato all'operatore corrente; l'invio reale richiede preview e conferma, crea un job idempotente e usa il task Scheduler/outbox. Preferenze: mail_communication_enabled globale e mail_communication per corso. I destinatari e le autorizzazioni vengono rivalidati all'elaborazione. Variabili supportate: NAME, NAME_HTML, COURSE, COURSE_HTML, MESSAGE_SUBJECT, MESSAGE_BODY_TEXT, MESSAGE_BODY_HTML, SITENAME, SITENAME_HTML. MAIL-11 (notifica facoltativa nuovo corso con opt-in) è separata e resta da implementare.
+La PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313) integrata nella 0.56.9-dev aggiunge il template Joomla com_jlms.course.message, componibile dal roster per gli iscritti attivi selezionati. L'invio di prova è riservato all'operatore corrente; l'invio reale richiede preview e conferma, crea un job idempotente e usa il task Scheduler/outbox. Preferenze: mail_communication_enabled globale e mail_communication per corso. I destinatari e le autorizzazioni vengono rivalidati all'elaborazione. Variabili supportate: NAME, NAME_HTML, COURSE, COURSE_HTML, MESSAGE_SUBJECT, MESSAGE_BODY_TEXT, MESSAGE_BODY_HTML, SITENAME, SITENAME_HTML. MAIL-11 (notifica facoltativa nuovo corso con opt-in) è separata da MAIL-C ed è implementata in main 0.56.16-dev; il collaudo manuale resta pendente.
 
 
 ### MAIL-11.1 — template annuncio nuovo corso
 
-La PR [#315](https://github.com/jeckodevelopment/jd_learn/pull/315), integrata in 0.56.10-dev, registra `com_jlms.course.published` in Joomla → Sistema → Modelli email. Il default HTML include immagine opzionale, titolo, introduzione, elenco delle sole lezioni pubbliche, CTA e revoca; il plain text riporta URL e programma. Il servizio di invio dovrà costruire placeholder HTML con escaping e validare gli URL HTTPS. L’installer non sovrascrive personalizzazioni. Il template non è collegato a campagne.
+La PR [#315](https://github.com/jeckodevelopment/jd_learn/pull/315), integrata in 0.56.10-dev, registra `com_jlms.course.published` in Joomla → Sistema → Modelli email. Il default HTML include immagine opzionale, titolo, introduzione, elenco delle sole lezioni pubbliche, CTA e revoca; il plain text riporta URL e programma. Il servizio di invio dovrà costruire placeholder HTML con escaping e validare gli URL HTTPS. L’installer non sovrascrive personalizzazioni. Il template è collegato alle campagne approvate dall'amministratore a partire dalla PR #327.
 
 ### MAIL-11.2/11.3 — richiesta e conferma dell’adesione (PR #317, 0.56.11-dev)
 
-La candidata aggiunge una preferenza facoltativa nell’Area personale, non preselezionata e separata dalle notifiche operative. La richiesta resta `pending` finché l’utente apre il collegamento di conferma ricevuto all’indirizzo Joomla; il token casuale è conservato solo come SHA-256, è monouso e scade dopo 24 ore. Alla conferma sono registrati stato, timestamp, origine e versione dell’informativa. Lo stato `confirmed` è l’unico autorizzabile a ricevere annunci; l’utente può revocare dal proprio account. L’integrazione con registrazione/iscrizione, revoca tramite link anonimo e invio delle campagne resta da completare. Il plugin Privacy esporta e rimuove i dati di consenso; il token non è esportato.
+La PR #317 integrata aggiunge una preferenza facoltativa nell’Area personale, non preselezionata e separata dalle notifiche operative. La richiesta resta `pending` finché l’utente apre il collegamento di conferma ricevuto all’indirizzo Joomla; il token casuale è conservato solo come SHA-256, è monouso e scade dopo 24 ore. Alla conferma sono registrati stato, timestamp, origine e versione dell’informativa. Lo stato `confirmed` è l’unico autorizzabile a ricevere annunci; l’utente può revocare dal proprio account. Le PR #319 e #323 collegano rispettivamente iscrizione al corso e registrazione Joomla; le PR #321, #325 e #327 completano revoca via link, anteprima e gestione delle campagne. Il plugin Privacy esporta e rimuove i dati di consenso; il token non è esportato.
 
-La candidata registra inoltre `com_jlms.course.consent` in Joomla Mail Templates, senza sovrascrivere personalizzazioni. Nessun messaggio di nuovo corso viene accodato o inviato. Prove Joomla e SMTP ancora pendenti: seguire [QA_TESTBOOK.md](QA_TESTBOOK.md#imp-09-mail-d--mail-112113-consenso-e-double-opt-in).
+La candidata registra inoltre `com_jlms.course.consent` in Joomla Mail Templates, senza sovrascrivere personalizzazioni. La campagna richiede conferma esplicita e usa outbox/Scheduler, con rivalidazione del consenso e della visibilità prima dell'invio. Prove Joomla e SMTP ancora pendenti: seguire [QA_TESTBOOK.md](QA_TESTBOOK.md#imp-09-mail-d--mail-112113-consenso-e-double-opt-in).
+
+
+### Stato riconciliato MAIL-11 (main 0.56.16-dev)
+
+| Criterio | Evidenza implementativa | Accettazione |
+|---|---|---|
+| MAIL-11.1 | PR #315: modello `com_jlms.course.published` nativo Joomla | Joomla/SMTP pendente |
+| MAIL-11.2–11.3 | PR #317, #319, #321, #323: opt-in area personale, iscrizione e registrazione; double opt-in e revoca | Joomla/SMTP pendente |
+| MAIL-11.4 | PR #325, #327: anteprima del corso pubblico, scelta e conferma esplicita dell'amministratore | Joomla/SMTP pendente |
+| MAIL-11.5 | PR #327: campagna unica, coda idempotente, rivalidazione destinatario/consenso/visibilità al dispatch, retry | Joomla/SMTP pendente |
+
+Baseline documentata: [piano 1.0.0](STABLE_1.0.0_PR_PLAN.md), [stato implementativo](IMPLEMENTATION_STATUS.md) e [QA Testbook](QA_TESTBOOK.md). Stima globale **78,00%**, area email **58%**: questi numeri non aumentano per questa correzione documentale. La PR #329 sull'audit e riconciliazione dei messaggi in stato `sending` è separata e non viene anticipata come integrata.
+
+**Configurazione invio:** `MailQueue::dispatch()` e `CourseAnnouncementConsent::request()` istanziano `Joomla\CMS\Mail\MailTemplate` e ne chiamano `send()`. Utilizzano il trasporto configurato globalmente in Joomla (PHP Mail, Sendmail o SMTP); JD Learn non gestisce credenziali SMTP proprie. Le richieste di double opt-in sono inviate nel flusso di richiesta; le campagne e le notifiche operative sono elaborate dal task Scheduler. La prova con SMTP reale e la verifica dei limiti di retry restano collaudi manuali.
