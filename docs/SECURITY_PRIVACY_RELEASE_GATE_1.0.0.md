@@ -15,7 +15,7 @@
 - Eseguire audit **su codice e candidata finale effettivi**, non soltanto su specifiche; CI verde, controlli statici e mock non dimostrano sicurezza in produzione.
 - Non inviare agli strumenti esterni credenziali, dati degli studenti o segreti. Registrare evidenze minimizzate e prive di dati personali.
 - Verificare su hosting standard Joomla Apache/LiteSpeed con sessioni/cookie protetti, upgrade da versione precedente, minimo runtime supportato e versione corrente.
-- Aggiornare [SECURITY.md](../SECURITY.md): versioni realmente supportate (la tabella 0.4.x è obsoleta), canale di segnalazione privato e ciclo di gestione vulnerabilità prima della pubblicazione.
+- [SECURITY.md](../SECURITY.md) è stato aggiornato nella PR di sicurezza 1.0.0: non dichiara supportate release non ancora pubblicate, descrive il canale di segnalazione privata e il processo di risposta. Questo aggiornamento di policy non completa SEC-P1: la review sistematica del codice, la matrice minaccia-controllo-test e la classificazione dei findings restano da svolgere.
 - Non dichiarare certificazione ASVS/GDPR o assenza di cookie fino all'ottenimento delle evidenze pertinenti; classificazione legale e privacy policy finale spettano al titolare del sito.
 - Includere per ogni PR implementativa una sezione **Impatto sicurezza/privacy/cookie** con test di regressione; conservare collegamento tra PR, requisito e testbook.
 
