@@ -923,3 +923,8 @@ PR [#297](https://github.com/jeckodevelopment/jd_learn/pull/297) integrata, CI s
 6. Simulare errore SMTP: l’iscrizione deve restare valida e la coda deve applicare retry secondo le regole esistenti; controllare lingua e dati email nel log, senza esporre dati personali eccedenti.
 
 **Esito sito Joomla:** Non eseguito.
+# CERT-A — Emissione persistente degli attestati (0.56.5-dev)
+
+La CI deve verificare installazione/upgrade dello schema, preferenza disabilitata per default, override per corso e un solo record attestato dopo il completamento reale nelle modalità testo/documento/audio, quiz (inclusa revisione), video e completamento idempotente. Verificare che consultazione, corso non completato e corso senza attestati abilitati non creino record; che il template e lo snapshot persistano i valori al momento del completamento.
+
+**Collaudo manuale Joomla da eseguire:** abilitare gli attestati globalmente e poi sovrascrivere la preferenza in due corsi; completare un corso Apprendimento e verificare nel database di prova una sola riga per iscrizione/versione con nome, titolo/versione e data corretti; ripetere l'ultima richiesta e verificare che il record non cambi; completare un corso in sola consultazione e verificare che non venga emesso nulla. Il PDF, l'area studente e la vista amministrativa sono fuori da CERT-A e verranno collaudati nelle PR successive.

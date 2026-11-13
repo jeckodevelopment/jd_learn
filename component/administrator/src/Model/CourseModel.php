@@ -57,6 +57,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             foreach (\Jlms\Component\Jlms\Administrator\Application\MailPreferences::EVENTS as $event) {
                 $item->{'mail_' . $event} = $mailPreferences[$event] ?? 'inherit';
             }
+            $item->certificate_enabled = json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['certificate_enabled'] ?? 'inherit';
             $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(),(int) $item->id);
             $item->tags = new \Joomla\CMS\Helper\TagsHelper();
             $item->tags->getTagIds((int) $item->id, 'com_jlms.course');
@@ -240,7 +241,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $db = $this->getDatabase();
         $this->associationWrite = false;
-        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation'];
+        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'certificate_enabled'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
         $allowed=array_merge($allowed,\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
         $data = array_intersect_key($data, array_flip($allowed));
@@ -321,6 +322,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             );
             foreach (\Jlms\Component\Jlms\Administrator\Application\MailPreferences::EVENTS as $event) { unset($data['mail_' . $event]); }
             if ($mailPreferences !== null) { $data['params_json'] = $mailPreferences; }
+            $certificatePreferences = \Jlms\Component\Jlms\Administrator\Application\CertificatePreferences::merge(
+                $data, $data['params_json'] ?? $record->params_json ?? '{}',
+            );
+            unset($data['certificate_enabled']);
+            if ($certificatePreferences !== null) { $data['params_json'] = $certificatePreferences; }
             if (($data['calendar_timezone'] ?? null) === '') { $data['calendar_timezone'] = $this->siteTimezone(); }
             $calendar=\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data,$record ?? (object) [],$data['params_json'] ?? $record->params_json ?? '{}',$this->siteTimezone());
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { unset($data[$field]); }

@@ -118,6 +118,8 @@ final class QuizReviewService
             }
             $update=(object)['id'=>$enrollment,'completed_total'=>$impact['after_completed_total'],'completed_at'=>$impact['after_course_completed_at'],
                 'revision'=>(int)$e->revision+1,'modified_by'=>(int)$actor->id,'modified_at'=>$now];$this->db->updateObject('#__jlms_enrollments',$update,'id',true);
+            if($e->completed_at===null&&$impact['after_course_completed_at']!==null)
+                (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment,(int)$e->course_version_id,(string)$impact['after_course_completed_at']);
             ($this->audit)($actor,['id'=>$attempt,'actor_id'=>(int)$actor->id,'enrollment_id'=>$enrollment,'quiz_id'=>(int)$quiz->id,'reason_code'=>'quiz_attempt_invalidated',
                 'reason_reference'=>$attempt,'before_status'=>$a->status,'after_status'=>'invalidated','return_attempt'=>$refund,'before_counted'=>(int)$a->counted_for_limit,'after_counted'=>$refund?0:1,
                 'before_completed_total'=>$impact['before_completed_total'],'after_completed_total'=>$impact['after_completed_total'],

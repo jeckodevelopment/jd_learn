@@ -25,13 +25,13 @@ Per il collaudo manuale vedere [QA_TESTBOOK.md](QA_TESTBOOK.md#imp-09--core-18-t
 
 La PR [#295](https://github.com/jeckodevelopment/jd_learn/pull/295), integrata in 0.56.2-dev, aggiunge due impostazioni globali in configurazione JD Learn (conferma iscrizione automatica e completamento) e override per corso con tre opzioni: usa impostazione globale, abilita, disabilita. L'override del corso prevale sul valore globale; se impostato su eredita, vale il valore del sito. La decisione è applicata quando si verifica la transizione e prima di inserire l'email in coda. CI standard 4/4 nel [run 43305020698](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698); il collaudo manuale resta pendente. Pacchetto [JD-Learn-0.56.2-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43305020698/artifacts/13983557253), SHA-256 ZIP `9923d41d5d342ac1b854090f6956b9c9fff745c2b71f939a446a6b7494849ad7`.
 
-Le preferenze globali e per corso coprono quattro eventi dopo #297. La candidata 0.56.4-dev riusa le preferenze di conferma per le assegnazioni amministrative; richieste/approvazioni, annullamenti, modifiche lezioni e scadenze restano non collegati.
+Le preferenze globali e per corso coprono quattro eventi dopo #297. La PR #299 collega la conferma per l’iscrizione amministrativa singola, riusando le preferenze di conferma. Richieste/approvazioni, annullamenti, modifiche lezioni e scadenze restano non collegati.
 
-## Sospensione, riattivazione e iscrizione amministrativa (candidata 0.56.4-dev)
+## Sospensione, riattivazione e iscrizione amministrativa (0.56.4-dev, #297/#299)
 
-La candidata registra due nuovi template nel gestore Mail Templates Joomla e accoda le email quando un amministratore sospende o riattiva un'iscrizione. La scrittura usa la stessa transazione della modifica stato; un errore dell'outbox non deve lasciare stato e notifica disallineati. Ogni evento ha idempotency key legata alla riga di audit della transizione. Le impostazioni globali e gli override per corso seguono le preferenze introdotte in #295.
+La PR #297 registra due nuovi template nel gestore Mail Templates Joomla e accoda le email quando un amministratore sospende o riattiva un'iscrizione. La scrittura usa la stessa transazione della modifica stato; un errore dell'outbox non deve lasciare stato e notifica disallineati. Ogni evento ha idempotency key legata alla riga di audit della transizione. Le impostazioni globali e gli override per corso seguono le preferenze introdotte in #295.
 
-La candidata 0.56.4-dev collega anche l’iscrizione amministrativa singola al template `com_jlms.enrollment.confirmed`. La notifica entra nell’outbox nella stessa transazione dell’iscrizione e usa la chiave evento deduplicata. Un preassegnamento senza accesso corrente non invia una conferma che possa far credere allo studente di poter entrare nel corso. L’evento eredita preferenze globali/per corso dell’iscrizione. Richieste/approvazioni e annullamenti restano da collegare.
+La PR #299 collega anche l’iscrizione amministrativa singola al template `com_jlms.enrollment.confirmed`. La notifica entra nell’outbox nella stessa transazione dell’iscrizione e usa la chiave evento deduplicata. Un preassegnamento senza accesso corrente non invia una conferma che possa far credere allo studente di poter entrare nel corso. L’evento eredita preferenze globali/per corso dell’iscrizione. Richieste/approvazioni e annullamenti restano da collegare.
 
 ## Requisiti approvati per la 1.0.0 (12 novembre 2026)
 

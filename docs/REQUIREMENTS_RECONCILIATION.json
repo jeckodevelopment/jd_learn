@@ -1,31 +1,31 @@
 {
-  "date": "2026-11-12",
+  "date": "2026-11-13",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
   "runtime_tested_head": "18d916075ac9580f442c7ec85a45c9c82c6e9642",
   "ci_run": 43307181190,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 172,
+      "Parziale": 175,
       "Completata": 14,
-      "Non iniziata": 24
+      "Non iniziata": 29
     },
     "Perimetro 1.0.0": {
-      "1.0.0": 135,
+      "1.0.0": 143,
       "Misto": 40,
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 208,
+      "Non eseguita": 216,
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 174,
-      "Non eseguita": 36
+      "Superata": 173,
+      "Non eseguita": 45
     }
   },
   "implementation_progress": {
-    "percent": 66,
-    "method": "Media semplice delle sette macroaree precedenti e delle due aree successive: (81+81+78+99+68+92+70+28.5+0)/9 = 66,39%, arrotondata al 66%. Email 28,5%; attestati PDF essenziali CERT-01–08 0%.",
+    "percent": 69,
+    "method": "Media semplice delle nove aree approvate: (81+81+78+99+68+92+70+29.5+18.75)/9 = 68.58%, arrotondata al 69%. Email 29,5%; CERT-A 18,75%. La stima misura implementazione candidata, non accettazione manuale.",
     "areas": [
       81,
       81,
@@ -34,8 +34,8 @@
       68,
       92,
       70,
-      28.5,
-      0
+      29.5,
+      18.75
     ]
   },
   "note": "Main 0.56.3-dev include PR #297, merge 18d916075ac9580f442c7ec85a45c9c82c6e9642; candidate head 102d8fa3ed055612c819672e118984a22712dcdf. CI standard 4/4: run 43307181190. Pacchetto https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190/artifacts/13983759363, SHA-256 ZIP 8c3d5e0de6935f67cf93e1b7caf3a27e7d10d61d26c20450f5d9ace1cc6cdee0; digest wrapper 7177c5d117d83bc41725845bfbde05ba40a497adae2d8c1ef373e1264df70e4a. Collaudo Joomla manuale/SMTP pendente."

@@ -734,3 +734,8 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Mantiene l'elenco autorizzato, il limite esplicito di 2.000 corsi e la convalida server di lingua, ACL, checkout e appartenenza al gruppo.
 - Corregge la guida e le stringhe editoriali: le associazioni dei corsi pubblicati sono modificabili dalla PR #223; programmi, iscrizioni e progressi restano invariati.
 - PR [#224](https://github.com/jeckodevelopment/jd_learn/pull/224) integrata in main 0.41.69-dev. Pacchetto SHA-256 `54b8667258a833fcd907b3a9767abbd2d7cadbbd8e01fceecd0dda1c86034450`; controlli documentali e due stack PHP/database CI superati, Chromium ancora bloccato nel setup runtime. Accettazione manuale AC-20/AC-48 pendente.
+# 0.56.5-dev — 2026-11-13
+
+- Avvia CERT-A: preferenze globali e per corso (predefinito disabilitato) e registrazione idempotente dell'attestato sui completamenti persistiti in modalità Apprendimento, anche tramite quiz, revisione quiz e video.
+- Il record conserva snapshot di studente, corso/versione, data e modello; non è ancora generato o scaricabile un PDF.
+- Integra la conferma email dell'iscrizione amministrativa della PR #299 (merge 561e3a9).
