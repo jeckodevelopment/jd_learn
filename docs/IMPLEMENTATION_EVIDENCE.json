@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
     "percent": 77,
-    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+46+75)/9=76,67%, arrotondato a 77%. Email 46% dopo l’integrazione del consenso nella registrazione (PR #323); restano scelta/preview amministrativa e invio controllato. Acceptance manuale Joomla/SMTP pendente e non influenza la copertura implementativa.",
+    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+48+75)/9=76,89%, arrotondato a 77%. La macroarea email passa da 46% a 48% (+2 punti) dopo la preview amministrativa read-only (PR #325). Restano conferma esplicita, guardie al dispatch, outbox/deduplica/retry/audit; acceptance manuale Joomla/SMTP pendente e separata dalla copertura implementativa.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,17 +13,17 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 46,
+      "email_notifications": 48,
       "certificates": 75
     }
   },
-  "version": "0.56.14-dev",
-  "code_baseline": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
+  "version": "0.56.15-dev",
+  "code_baseline": "c6b9c108333f41c5225b8fe1c5f31b66c0b8947e",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43482627796,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796",
+    "run_id": 43506010300,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43506010300",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,15 +51,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14065717873,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873",
-    "artifact_name": "JD-Learn-0.56.14-dev",
-    "installable_package": "pkg_jlms-0.56.14-dev.zip",
-    "sha256": "919090590b479624958199f956712cf485320ef828bcc84047c9b4ca322d7aa9",
-    "artifact_sha256": "7ca7d4768db10f64199cff448ffb93733a208eabab60778038b4f9dadea99d5c",
-    "size_bytes": 627778,
-    "artifact_size_bytes": 627507,
-    "expires_at": "2026-11-27T18:29:45Z",
+    "artifact_id": 14075479164,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43506010300/artifacts/14075479164",
+    "artifact_name": "JD-Learn-0.56.15-dev",
+    "installable_package": "pkg_jlms-0.56.15-dev.zip",
+    "sha256": "a5ef7469c77dbf310350cc4917d5f7eb8b03a5910ccaf05eedd32bbb0591fc2b",
+    "artifact_sha256": "43181d7ae8d3db8dfd52340d56806e4e5afc5d6681237859b503c60a08ca819f",
+    "size_bytes": 632705,
+    "artifact_size_bytes": 632424,
+    "expires_at": "2026-11-27T21:00:17Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -13169,17 +13169,12 @@
     }
   ],
   "latest_feature": {
-    "version": "0.56.14-dev",
-    "pull_request": 323,
-    "candidate_head": "6431bbff1a6965371042e0dc49f88bfa030479f5",
-    "merged_main_commit": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
-    "ci_run": 43482627796,
-    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873",
-    "artifact_id": 14065717873,
-    "sha256": "919090590b479624958199f956712cf485320ef828bcc84047c9b4ca322d7aa9",
-    "artifact_sha256": "7ca7d4768db10f64199cff448ffb93733a208eabab60778038b4f9dadea99d5c",
-    "manual_acceptance": "Registrazione Joomla/SMTP IT/EN, scelta/no scelta, errore SMTP e stato plugin dopo upgrade da eseguire sul sito di prova; nessun esito manuale dichiarato."
+    "pull_request": 325,
+    "merge_commit": "c6b9c108333f41c5225b8fe1c5f31b66c0b8947e",
+    "feature": "MAIL-11.4 read-only course announcement preview",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43506010300",
+    "manual_acceptance": "pending Joomla/SMTP; see docs/QA_TESTBOOK.md",
+    "residual_implementation": "Explicit dispatch confirmation, visibility/consent recheck at send time, persisted outbox, deduplication, retry and audit"
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
