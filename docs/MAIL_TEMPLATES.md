@@ -64,7 +64,7 @@ Alla prima emissione del documento, JD Learn aggiunge all’outbox una sola noti
 
 ## MAIL-11 — Annuncio disponibilità nuovo corso (approvato 13 novembre 2026)
 
-**Stato: parzialmente implementato; MAIL-11.1 è candidata nella PR #315.** La notifica serve a presentare un corso appena pubblicato agli utenti che ne hanno fatto richiesta; non è un invio marketing generalista né una newsletter. Il piano e i criteri MAIL-11.1–11.5 sono in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md#estensione-approvata-13-novembre-2026--mail-11-nuovo-corso-disponibile).
+**Stato: parzialmente implementato; MAIL-11.1 è integrata dalla PR #315.** La notifica serve a presentare un corso appena pubblicato agli utenti che ne hanno fatto richiesta; non è un invio marketing generalista né una newsletter. Il piano e i criteri MAIL-11.1–11.5 sono in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md#estensione-approvata-13-novembre-2026--mail-11-nuovo-corso-disponibile).
 
 ### Template nativo Joomla
 
@@ -101,4 +101,4 @@ La PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313) integrata ne
 
 ### MAIL-11.1 — template annuncio nuovo corso
 
-La candidata PR #315 registra `com_jlms.course.published` in Joomla → Sistema → Modelli email. Il default HTML include immagine opzionale, titolo, introduzione, elenco delle sole lezioni pubbliche, CTA e revoca; il plain text riporta URL e programma. Placeholders HTML (`COURSE_IMAGE_HTML`, `COURSE_TITLE_HTML`, `COURSE_INTRO_HTML`, `COURSE_LESSONS_HTML`, `SITE_NAME_HTML`) dovranno essere costruiti con escaping e URL HTTPS validati dal futuro servizio di invio. L’installer non sovrascrive personalizzazioni. Questa PR non invia il template e non abilita destinatari; opt-in/double opt-in, revoca e trigger restano implementazioni successive MAIL-D.
+La PR [#315](https://github.com/jeckodevelopment/jd_learn/pull/315), integrata in 0.56.10-dev, registra `com_jlms.course.published` in Joomla → Sistema → Modelli email. Il default HTML include immagine opzionale, titolo, introduzione, elenco delle sole lezioni pubbliche, CTA e revoca; il plain text riporta URL e programma. Placeholders HTML (`COURSE_IMAGE_HTML`, `COURSE_TITLE_HTML`, `COURSE_INTRO_HTML`, `COURSE_LESSONS_HTML`, `SITE_NAME_HTML`) dovranno essere costruiti con escaping e URL HTTPS validati dal futuro servizio di invio. L’installer non sovrascrive personalizzazioni. Questa PR non invia il template e non abilita destinatari; opt-in/double opt-in, revoca e trigger restano implementazioni successive MAIL-D.
