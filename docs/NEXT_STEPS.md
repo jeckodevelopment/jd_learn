@@ -108,3 +108,8 @@ Il CRUD amministrativo e le viste pubbliche erano già implementati. La PR [#147
 ## 13 novembre 2026 — MAIL-C PR #313 integrata
 
 La candidata 0.56.9-dev implementa il messaggio operativo per corso previsto da IMP-09-MAIL-C: selezione, preview/conferma, invio test all'operatore, job idempotente e scheduler/outbox, preferenza globale/per corso e controllo ACL/destinatari aggiornato prima della consegna. PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313), milestone 1.0.0. CI 4/4 superata; collaudo manuale Joomla/SMTP pendente. MAIL-11 rimane un requisito distinto, già registrato, ancora non implementato. Collaudi: [testbook](QA_TESTBOOK.md#imp-09-mail-c--pr-313--comunicazione-operativa-per-corso-0569-dev).
+
+
+## 13 novembre 2026 — MAIL-D, primo incremento
+
+La candidata PR [#315](https://github.com/jeckodevelopment/jd_learn/pull/315), milestone 1.0.0, implementa solo MAIL-11.1: template nativo `com_jlms.course.published`. È il primo slice di IMP-09-MAIL-D; restano opt-in, double opt-in, revoca sicura, selezione/preview admin, consenso verificato e invio batch. Non inviare finché questi controlli non sono implementati.

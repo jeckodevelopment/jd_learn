@@ -982,3 +982,16 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 4. Ripetere/replay della conferma e inviare POST alterati con course/enrollment ID o hash vecchi: nessun duplicato, l'alterazione è respinta e la preview diventa da aggiornare se è cambiato il roster.
 5. Prima dell'elaborazione revocare l'ACL del docente assegnato e provare con un docente non assegnato. Job revocato interrotto; roster e pagina comunicazione negati al docente non assegnato.
 6. Provare switch globale e override corso (eredita/abilita/disabilita), mailer non disponibile e ripresa del Scheduler. Verificare log azioni, conteggi, assenza del testo e degli indirizzi nei dati di audit/job e pulizia del payload a esito terminale.
+
+
+## MAIL-11.1 / PR #315 — template Joomla annuncio nuovo corso (0.56.10-dev)
+
+**Nessun invio è previsto da questa PR.** Sul Joomla 6 di prova:
+
+1. Installare o aggiornare JD Learn, aprire **Sistema → Modelli email** e cercare `com_jlms.course.published`.
+2. Verificare tag disponibili: `NAME`, `COURSE_TITLE`, `COURSE_TITLE_HTML`, `COURSE_IMAGE_HTML`, `COURSE_INTRO_TEXT`, `COURSE_INTRO_HTML`, `COURSE_LESSONS_TEXT`, `COURSE_LESSONS_HTML`, `COURSE_URL`, `SITE_NAME`, `SITE_NAME_HTML`, `UNSUBSCRIBE_URL`.
+3. Verificare testo e HTML: immagine opzionale, titolo, introduzione, lezioni pubbliche ordinate, CTA e revoca; plain text leggibile con URL e lezioni.
+4. Tradurre IT/EN con la funzione Joomla, personalizzare i corpi e aggiornare il componente: le personalizzazioni devono restare intatte.
+5. Installazione pulita deve creare un solo template; aggiornamento non invia email e non crea destinatari né campagne.
+
+MAIL-11.2–11.5 (consenso, double opt-in, revoca effettiva, scelta/preview amministrativa e outbox con deduplica) restano non implementati e bloccano qualsiasi invio di annunci.

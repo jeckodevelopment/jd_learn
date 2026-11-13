@@ -5,9 +5,9 @@
   "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912",
   "counts": {
     "Stato implementazione": {
-      "Parziale": 178,
+      "Parziale": 179,
       "Completata": 16,
-      "Non iniziata": 25
+      "Non iniziata": 24
     },
     "Perimetro 1.0.0": {
       "1.0.0": 144,
@@ -54,5 +54,19 @@
     "ci": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912",
     "testbook": "docs/QA_TESTBOOK.md#imp-09-mail-c--pr-313--comunicazione-operativa-per-corso-0569-dev",
     "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912/artifacts/14046839802"
+  },
+  "imp_09_mail_d_11_1": {
+    "pull_request": 315,
+    "commit": "fbe8863f04325c1eb358df6a913277ccd26ce91a",
+    "status": "partial implementation; CI pending; manual Joomla acceptance pending",
+    "criteria": [
+      "MAIL-11.1"
+    ],
+    "out_of_scope_until_followups": [
+      "MAIL-11.2",
+      "MAIL-11.3",
+      "MAIL-11.4",
+      "MAIL-11.5"
+    ]
   }
 }
