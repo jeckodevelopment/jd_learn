@@ -60,3 +60,35 @@ La registrazione dei template nella PR #288 e la coda dei due eventi core nella 
 ## Notifica attestato (CERT-D)
 
 Alla prima emissione del documento, JD Learn aggiunge all’outbox una sola notifica con chiave stabile legata a certificato e documento. Un replay del completamento trova l’emissione esistente e non accoda di nuovo. Il template nativo `com_jlms.certificate.available` rimane modificabile e offre link all’area personale; la consegna usa il task Joomla già esistente. L’impostazione globale è attiva per default e il corso può ereditarla, abilitarla o disabilitarla. Un errore SMTP è gestito dal worker con retry; l’emissione non dipende dall’esito di consegna. Il link porta alla dashboard autenticata e non espone il PDF.
+
+
+## MAIL-11 — Annuncio disponibilità nuovo corso (approvato 13 novembre 2026)
+
+**Stato: requisito approvato per la 1.0.0, non ancora implementato.** La notifica serve a presentare un corso appena pubblicato agli utenti che ne hanno fatto richiesta; non è un invio marketing generalista né una newsletter. Il piano e i criteri MAIL-11.1–11.5 sono in [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md#estensione-approvata-13-novembre-2026--mail-11-nuovo-corso-disponibile).
+
+### Template nativo Joomla
+
+Proposto ID `com_jlms.course.published`. Il default HTML presenta in quest'ordine: immagine anteprima del corso (URL HTTPS pubblico con testo alternativo), titolo, introduzione, elenco ordinato delle lezioni pubbliche, pulsante/link verso la scheda pubblica del corso, spiegazione del motivo dell'invio e collegamento di revoca. L'amministratore può togliere o riordinare i blocchi modificando il modello in **Sistema → Modelli email** di Joomla; non introdurre editor dei modelli separato. Il plain text deve rimanere leggibile e contenere link e programma. Variabili previste, da rendere compatibili con i placeholder già usati dall'estensione:
+
+| Placeholder | Contenuto/fallback |
+|---|---|
+| `{NAME}` | Nome destinatario, con fallback neutro |
+| `{COURSE_TITLE}` | Titolo del corso, escapato |
+| `{COURSE_IMAGE}` | Immagine HTML pubblica opzionale, URL assoluto HTTPS, alt e fallback senza immagine |
+| `{COURSE_INTRO}` | Introduzione sanitizzata, con fallback descrizione sintetica |
+| `{COURSE_LESSONS}` | Elenco HTML ordinato dei **soli titoli e descrizioni pubblici** delle lezioni, senza materiale protetto; fallback appropriato |
+| `{COURSE_URL}` | URL pubblico completo della scheda del corso |
+| `{COURSE_DURATION}` | Durata prevista se disponibile; altrimenti blocco vuoto |
+| `{SITE_NAME}` | Nome configurato del sito |
+| `{UNSUBSCRIBE_URL}` | Link sicuro di revoca, senza credenziali o dati identificativi nell'URL |
+
+### Preferenze privacy e invio
+
+- Una sola preferenza utente per `nuovi corsi`, distinta dalle notifiche operative di iscrizione, tracciata al livello utente. Default **non selezionato**.
+- Offrire l'adesione in registrazione utente Joomla, iscrizione al corso e profilo personale, senza forzare il consenso né duplicare lo stato; revoca disponibile in qualunque momento.
+- Richiedere double opt-in prima dell'idoneità all'invio e conservare evidenza minimizzata di opt-in/opt-out, data, origine, versione informativa e conferma; definire retention coerente con la policy del sito.
+- Solo amministratori con permesso adeguato possono scegliere esplicitamente di notificare, vedere anteprima e platea eleggibile e confermare l'invio **dopo** la prima pubblicazione effettiva del corso; non inviare automaticamente alla modifica o ripubblicazione.
+- Invio batch tramite outbox/Scheduler Joomla esistenti, deduplica per corso+destinatario+annuncio e controllo nuovamente dell'opt-in confermato e della visibilità del corso all'atto del recapito; non esporre gli indirizzi agli altri destinatari.
+- Nessuna profilazione automatica, mailing list esterna, tracciamento apertura/click o invio a utenti non opt-in; mai includere titoli di lezioni riservate o collegamenti a contenuti privati.
+
+**Collaudo sul sito Joomla:** confronto email HTML/testo IT/EN, rendering con immagini bloccate, corsi senza foto/intro/lezioni pubbliche, template admin preservato su upgrade, opt-in/pendente/revocato, conferma e revoca, nuovo corso vs aggiornamento, corso privato, ACL e link sicuro, SMTP indisponibile, retry, coda con centinaia di utenti, deduplicazione, variazione preferenze prima dell'invio. Non segnare come superato fino a prova eseguita.
