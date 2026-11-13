@@ -26,6 +26,7 @@ final class MailQueue
             'com_jlms.enrollment.reactivated' => 'reactivation',
             'com_jlms.certificate.available' => 'certificate',
             'com_jlms.course.message' => 'communication',
+            'com_jlms.course.expiring' => 'expiry',
             default => null,
         };
         if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -46,9 +47,9 @@ final class MailQueue
 
         $now = gmdate('Y-m-d H:i:s');
         $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
-            ->columns(['event_key', 'template_id', 'language', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
+            ->columns(['event_key', 'template_id', 'course_id', 'language', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
             ->values(implode(',', [
-                $this->db->quote($key), $this->db->quote($template), $this->db->quote($language ?: '*'),
+                $this->db->quote($key), $this->db->quote($template), (string) $courseId, $this->db->quote($language ?: '*'),
                 $this->db->quote($email), $this->db->quote($name), $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)),
                 $this->db->quote('pending'), $this->db->quote($now), $this->db->quote($now),
             ]));
@@ -132,6 +133,14 @@ final class MailQueue
                     $skipped++;
                     continue;
                 }
+                if ((string) $row->template_id === 'com_jlms.course.expiring' && !$this->expiryEligible($row)) {
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
+                        ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
+                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    $skipped++;
+                    continue;
+                }
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $mail = new MailTemplate((string) $row->template_id, (string) $row->language);
                 $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
@@ -170,6 +179,26 @@ final class MailQueue
         $this->db->setQuery("UPDATE #__jlms_course_announcement_campaigns AS campaign SET state = 'finished' WHERE campaign.state = 'queued' AND NOT EXISTS (SELECT 1 FROM #__jlms_mail_queue AS queued WHERE queued.course_id = campaign.course_id AND queued.template_id = 'com_jlms.course.published' AND queued.state IN ('pending','retry','sending'))")->execute();
         return ['sent' => $sent, 'failed' => $failed, 'skipped' => $skipped, 'processed' => count($ids)];
     }
+    /** Re-check active, incomplete enrollment immediately before SMTP. */
+    private function expiryEligible(object $row): bool
+    {
+        try {
+            $data = json_decode((string) $row->template_data, true, 16, JSON_THROW_ON_ERROR);
+            $enrollmentId = is_array($data) ? (int) ($data['ENROLLMENT_ID'] ?? 0) : 0;
+        } catch (\Throwable) {
+            return false;
+        }
+        if ($enrollmentId < 1) {
+            return false;
+        }
+        $query = $this->db->createQuery()->select('e.id')->from('#__jlms_enrollments AS e')->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id')
+            ->innerJoin('#__users AS u ON u.id = e.user_id')->where('e.id = :id')->where("e.status = 'active'")
+            ->where('e.completed_at IS NULL')->where('u.block = 0')->where('LOWER(u.email) = LOWER(:email)')
+            ->where('COALESCE(e.ends_at, ed.ends_at) > UTC_TIMESTAMP(6)')
+            ->bind(':id', $enrollmentId, ParameterType::INTEGER)->bind(':email', (string) $row->recipient_email);
+        return (bool) $this->db->setQuery($query)->loadResult();
+    }
+
     /** Re-check consent revision, account, address, campaign and public visibility immediately before SMTP. */
     private function announcementEligible(object $row): bool
     {
