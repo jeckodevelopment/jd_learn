@@ -1,8 +1,9 @@
-## 0.56.12-dev — MAIL-11.2: adesione durante iscrizione automatica
+## 0.56.12-dev — MAIL-11.2: adesione durante iscrizione automatica (PR #319)
 
 - Aggiunta una scelta facoltativa e non preselezionata per la richiesta di adesione agli annunci di nuovi corsi nel modulo di avvio automatico.
 - Il double opt-in è richiesto solo dopo l'avvio riuscito; le richieste duplicate non reinviano una conferma già pending. Un errore SMTP non annulla l'iscrizione.
-- CI e accettazione manuale Joomla/SMTP della candidata pendenti. Gli annunci restano disattivati.
+- CI standard 4/4 nel [run 43469236700](https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700); merge `571cd69639a9d7ca0f7c204dd55e08ce5276d500`.
+- Pacchetto [JD-Learn-0.56.12-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700/artifacts/14059519179), SHA-256 ZIP `2219c21df9308f2688ef83f0c408fe9da17280a636bd8b7fc8578edacde16b47`, digest artifact wrapper `98e31e8727ea5170e8c8a5e9bd9c1bb201225393cb7f009f57ec5b03c5adebf6` (scadenza 27 novembre 2026 alle 17:09 UTC). Accettazione manuale Joomla/SMTP pendente; gli annunci restano disattivati.
 
 # 0.56.11-dev — consenso confermato per annunci nuovi corsi (MAIL-11.2/11.3, PR #317 integrata)
 

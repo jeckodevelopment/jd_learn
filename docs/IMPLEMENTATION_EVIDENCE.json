@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
     "percent": 76,
-    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+37+75)/9=75,67%, arrotondato a 76%. Email 37% dopo MAIL-C e MAIL-11.1 più consenso/double opt-in parziali MAIL-11.2/11.3; invio annunci, revoca via link e flusso amministrativo restano aperti.",
+    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+38+75)/9=75,78%, arrotondato a 76%. Email 38% dopo MAIL-C, MAIL-11.1, consenso/double opt-in e opt-in durante iscrizione automatica (MAIL-11.2/11.3 parziali); registrazione Joomla, revoca via link e flusso amministrativo restano aperti.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,21 +13,21 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 37,
+      "email_notifications": 38,
       "certificates": 75
     }
   },
-  "version": "0.56.11-dev",
+  "version": "0.56.12-dev",
   "code_baseline": {
-    "tested_head": "ec6ff14d64a85810f016d1dccac59a210eb7bceb",
-    "pull_request": 317,
-    "merged_main_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629"
+    "tested_head": "7350d8f437f90c5c53b866981116445f6326de76",
+    "pull_request": 319,
+    "merged_main_commit": "571cd69639a9d7ca0f7c204dd55e08ce5276d500"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43457091398,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43457091398",
+    "run_id": 43469236700,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -55,15 +55,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14053993647,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43457091398/artifacts/14053993647",
-    "artifact_name": "JD-Learn-0.56.11-dev",
-    "installable_package": "pkg_jlms-0.56.11-dev.zip",
-    "sha256": "3e6b918c157b320984064a7fecc0b392ef5bc049d164a3e088b5a835e6732420",
-    "artifact_sha256": "c8b6c3a4421d90a6c3588c80ffff635de614b401b1e313d7d3e6dcfdd3c3d569",
-    "size_bytes": 620751,
-    "artifact_size_bytes": 620521,
-    "expires_at": "2026-11-27T15:57:05Z",
+    "artifact_id": 14059519179,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700/artifacts/14059519179",
+    "artifact_name": "JD-Learn-0.56.12-dev",
+    "installable_package": "pkg_jlms-0.56.12-dev.zip",
+    "sha256": "2219c21df9308f2688ef83f0c408fe9da17280a636bd8b7fc8578edacde16b47",
+    "artifact_sha256": "98e31e8727ea5170e8c8a5e9bd9c1bb201225393cb7f009f57ec5b03c5adebf6",
+    "size_bytes": 621331,
+    "artifact_size_bytes": 621100,
+    "expires_at": "2026-11-27T17:09:43Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -13162,22 +13162,29 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 315,
-    "candidate_head": "442d3eae67da787dc1992c6915afb51176f568cd",
-    "merged_main_commit": "fd5b66941421127037afa54a3bbaea6810e6e7ca",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43450891869/artifacts/14051706158",
-    "artifact_id": 14051706158,
-    "sha256": "d593244c4bf21ef46f2ba98b4af43815dec5c497b1f115e23f269a9239587334",
-    "artifact_sha256": "dc6afb45cde270e257e588cfa4ac64ec358efeed6ae862d5638acac214ce5809",
-    "manual_acceptance": "MAIL-11.1 template IT/EN and upgrade preservation pending; MAIL-11.2–11.5 remain unimplemented"
+    "pull_request": 319,
+    "candidate_head": "7350d8f437f90c5c53b866981116445f6326de76",
+    "merged_main_commit": "571cd69639a9d7ca0f7c204dd55e08ce5276d500",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700/artifacts/14059519179",
+    "artifact_id": 14059519179,
+    "sha256": "2219c21df9308f2688ef83f0c408fe9da17280a636bd8b7fc8578edacde16b47",
+    "artifact_sha256": "98e31e8727ea5170e8c8a5e9bd9c1bb201225393cb7f009f57ec5b03c5adebf6",
+    "manual_acceptance": "MAIL-11.2 enrollment checkbox, double opt-in/replay and SMTP failure scenarios still pending on Joomla test site"
   },
   "imp_09_mail_d_11_2_3": {
-    "pull_request": 317,
-    "merge_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
+    "pull_request": 319,
+    "merge_commit": "571cd69639a9d7ca0f7c204dd55e08ce5276d500",
     "status": "partial; CI standard 4/4 passed; Joomla/SMTP manual acceptance pending",
     "testbook": "docs/QA_TESTBOOK.md#imp-09-mail-d--mail-112113-consenso-e-double-opt-in",
+    "completed": [
+      "profile opt-in and authenticated revocation from PR #317",
+      "optional opt-in checkbox during automatic enrollment",
+      "double opt-in request only after successful enrollment",
+      "no duplicate pending confirmation on enrollment replay",
+      "Joomla Privacy export/delete"
+    ],
     "remaining": [
-      "registration/enrollment consent UI",
+      "registration consent UI",
       "anonymous unsubscribe token link",
       "admin campaign selection and preview",
       "send-time consent/visibility checks and deduplicated outbox"
