@@ -50,6 +50,10 @@ $mailParams = $mailPrefsClass::merge(['mail_certificate' => 'disabled'], $mailPa
 expect(!$mailPrefsClass::enabled('certificate', true, $mailParams), 'course can suppress certificate availability email');
 $mailParams = $mailPrefsClass::merge(['mail_certificate' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('certificate', true, $mailParams) && !$mailPrefsClass::enabled('certificate', false, $mailParams), 'certificate email preference inherits the global setting');
+$mailParams = $mailPrefsClass::merge(['mail_communication' => 'disabled'], $mailParams);
+expect(!$mailPrefsClass::enabled('communication', true, $mailParams), 'course communication obeys an explicit course-level disable');
+$mailParams = $mailPrefsClass::merge(['mail_communication' => 'inherit'], $mailParams);
+expect($mailPrefsClass::enabled('communication', true, $mailParams) && !$mailPrefsClass::enabled('communication', false, $mailParams), 'course communication inherits the global switch');
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
     && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');

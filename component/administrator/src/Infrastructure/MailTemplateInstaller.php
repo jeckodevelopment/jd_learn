@@ -76,6 +76,12 @@ final class MailTemplateInstaller
                 ['NAME', 'COURSE', 'SITENAME'],
                 '<p>Ciao {NAME},</p><p>l\'accesso al corso <strong>{COURSE}</strong> è stato riattivato.</p><p>{SITENAME}</p>',
             ],
+            'com_jlms.course.message' => [
+                '{COURSE}: {MESSAGE_SUBJECT}',
+                "{MESSAGE_BODY_TEXT}\n\n{SITENAME}",
+                ['NAME', 'NAME_HTML', 'COURSE', 'COURSE_HTML', 'MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML', 'SITENAME', 'SITENAME_HTML'],
+                '<p>Ciao {NAME_HTML},</p><p><strong>{COURSE_HTML}</strong></p><p>{MESSAGE_BODY_HTML}</p><p>{SITENAME_HTML}</p>',
+            ],
         ];
     }
 }

@@ -8,6 +8,7 @@ use Joomla\CMS\Router\Route;
  <h1><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?>: <?= $this->escape($this->course->title) ?></h1>
  <p id="jlms-roster-policy" class="alert alert-info"><?= Text::_('COM_JLMS_ROSTER_POLICY') ?></p>
  <p><a id="jlms-roster-manual" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=manualenrollment&id='.(int) $this->course->id) ?>"><?= Text::_('COM_JLMS_MANUAL_TITLE') ?></a>
+ <a id="jlms-roster-communication" class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=coursemessage&id='.(int) $this->course->id) ?>"><?= Text::_('COM_JLMS_COMMUNICATION_TITLE') ?></a>
  <a id="jlms-roster-course-operations" class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=courseoperations&id='.(int) $this->course->id.'&operation=admissions_close') ?>"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_TITLE') ?></a></p>
  <form id="jlms-roster-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=enrollments&id=' . (int) $this->course->id) ?>">
   <div class="row">
