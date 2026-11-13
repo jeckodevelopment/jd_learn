@@ -278,7 +278,10 @@ final class VideoProgressService
                     (string) ($actor->getParam('language', '') ?: $course->language), (string) $actor->email, $name,
                     ['NAME' => $name, 'COURSE' => (string) $course->title, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
                 );
-                (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollmentId, (int) $context[1]->id, (string) $enrollment->completed_at);
+                $versionRules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
+                if ($versionRules['certificate_enabled']) {
+                    (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollmentId, (int) $version->id, (string) $enrollment->completed_at);
+                }
             }
             $telemetry['state']['progress_revision'] = $resumeConflict
                 ? (int) $state['progress_revision']
