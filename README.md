@@ -57,7 +57,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **46 tabelle / 66 FK**. Il pacchetto 0.56.14-dev contiene 11 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy, filtro ACL della sidebar e consenso email in registrazione.
+Schema InnoDB: **47 tabelle / 66 FK**. Il pacchetto candidato 0.56.16-dev contiene 11 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy, filtro ACL della sidebar e consenso email in registrazione.
 
 ```sh
 python3 tools/build.py
