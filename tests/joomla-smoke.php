@@ -198,7 +198,7 @@ foreach ($privacyExportData as $contribution) {
     }
 }
 sort($privacyDomainNames);
-$expectedPrivacyDomainNames = ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates', 'jdlearn_enrollments', 'jdlearn_enrollment_requests', 'jdlearn_progress'];
+$expectedPrivacyDomainNames = ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates', 'jdlearn_course_announcement_consent', 'jdlearn_enrollments', 'jdlearn_enrollment_requests', 'jdlearn_progress'];
 sort($expectedPrivacyDomainNames);
 if ($privacyDomainNames !== $expectedPrivacyDomainNames) {
     throw new \RuntimeException('JD Learn privacy export domains missing: ' . implode(', ', $privacyDomainNames));

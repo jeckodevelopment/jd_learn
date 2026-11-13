@@ -19,13 +19,13 @@
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 179,
-      "Non eseguita": 40
+      "Superata": 178,
+      "Non eseguita": 41
     }
   },
   "implementation_progress": {
-    "percent": 75,
-    "method": "Media delle nove macroaree (81+81+78+99+68+92+70+35+75)/9 = 75,44%, arrotondato a 75%. Email 35% dopo MAIL-C e MAIL-11.1.",
+    "percent": 76,
+    "method": "Media delle nove macroaree (81+81+78+99+68+92+70+37+75)/9 = 75,67%, arrotondato a 76%. Email 37% dopo MAIL-C, MAIL-11.1 e la tranche candidata di consenso/double opt-in MAIL-11.2/11.3.",
     "areas": [
       81,
       81,
@@ -34,12 +34,12 @@
       68,
       92,
       70,
-      35,
+      37,
       75
     ]
   },
   "note": "Main 0.56.6-dev integra PR #302, merge a3a3a706b4d312f58a79952ad355c02fd7dcd3a8; CI standard 4/4 nel run 43410407842. Pacchetto artefatto 14029108411; SHA-256 wrapper 313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92, ZIP Joomla interno 73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1; scadenza 2026-11-27. CERT-B implementato; collaudo manuale Joomla pendente.",
-  "updated_at": "2026-11-13",
+  "updated_at": "2026-11-13T16:00:00Z",
   "imp_09_mail_c": {
     "pull_request": 313,
     "merge_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",

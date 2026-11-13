@@ -11,6 +11,7 @@ final class HtmlView extends BaseHtmlView
 {
     public array $items = [];
     public array $certificates = [];
+    public string $announcementConsent = 'none';
     public $pagination;
     public $progressForm;
 
@@ -19,6 +20,8 @@ final class HtmlView extends BaseHtmlView
         $this->items = $this->get('Items');
         $this->certificates = \Joomla\CMS\Factory::getApplication()->bootComponent('com_jlms')
             ->getCertificateService()->listForStudent(\Joomla\CMS\Factory::getApplication()->getIdentity());
+        $this->announcementConsent = \Joomla\CMS\Factory::getApplication()->bootComponent('com_jlms')
+            ->getCourseAnnouncementConsent()->state((int) \Joomla\CMS\Factory::getApplication()->getIdentity()->id);
         $this->pagination = $this->get('Pagination');
         $this->progressForm = $this->getModel()->getProgressForm();
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500); }

@@ -1,4 +1,4 @@
-**Candidata PR #315, 0.56.10-dev:** registra il template nativo MAIL-11.1 per l’annuncio di nuovo corso; il flusso di consenso e invio non è ancora implementato. Main 0.56.9-dev integra MAIL-C; avanzamento globale stabile: 75%.
+**Candidata MAIL-D, 0.56.11-dev:** aggiunge in Area personale la richiesta di consenso e il double opt-in per gli annunci di nuovi corsi. Il flusso di annunci resta disattivato fino al completamento della revoca via link e dei controlli/preview amministrativi. Base runtime 0.56.10-dev integra MAIL-11.1; avanzamento globale stimato candidato 75,67% (76% arrotondato), accettazione manuale ancora pendente.
 
 Aggiornato al 13 novembre 2026. Main **0.56.7-dev** integra la PR [#304](https://github.com/jeckodevelopment/jd_learn/pull/304), merge `461c2d83c85e1152e2fb2497e0e15be62e36cec9`. CERT-A/B/C sono implementati; avanzamento globale stimato **73,44%** (email 29,5%; attestati 62,5%). CI standard 4/4 superata nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo manuale Joomla ancora pendente. Pacchetto installabile [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 ZIP interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, checksum artifact wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`; disponibile fino al 27 novembre 2026 alle 12:00 UTC.
 
@@ -57,7 +57,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **44 tabelle / 65 FK**. Il pacchetto 0.56.1-dev contiene 10 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **45 tabelle / 65 FK**. Il pacchetto 0.56.11-dev contiene 10 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
 
 ```sh
 python3 tools/build.py
