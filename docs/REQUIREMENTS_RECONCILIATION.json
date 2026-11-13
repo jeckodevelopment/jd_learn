@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 78.33,
-    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+61+75)/9 = 78,33% (78% arrotondato). L’area email sale da 58% a 61% dopo audit consultabile e riconciliazione controllata degli elementi sending stale (PR #332). CI standard 4/4; accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
+    "percent": 78,
+    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+61+75)/9 = 78,33%, arrotondata a 78%. L’area email sale da 58% a 61% dopo audit consultabile e riconciliazione controllata degli elementi sending stale (PR #332). CI standard 4/4; accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
     "areas": [
       81,
       81,
