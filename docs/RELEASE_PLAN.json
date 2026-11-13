@@ -1,8 +1,8 @@
 {
   "version": "1.1",
-  "updated_at": "2026-11-08",
+  "updated_at": "2026-11-13",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
-  "current_increment": "0.41.9-dev integrata in main con PR #70 (merge 70f6ed7); CI standard superata nel run 42428496835; collaudo Joomla reale aperto",
+  "current_increment": "Candidata 0.56.9-dev PR #313: comunicazione operativa MAIL-C implementata, gate CI e collaudo Joomla pendenti.",
   "semantics": "Responsabilità primaria pianificata, non completamento. I requisiti trasversali sono verificati in ogni incremento e accettati solo dopo tutti gli scenari della baseline. Nessuna data o percentuale dedotta da questa mappatura.",
   "milestones": [
     {
@@ -141,8 +141,10 @@
       "acceptance": "Non accettata",
       "requirements": [
         "NOT-01",
-        "NOT-02"
-      ]
+        "NOT-02",
+        "MAIL-11"
+      ],
+      "status": "Outbox/Scheduler integrati per notifiche operative esistenti; MAIL-11 approvato e tracciato nella baseline dalla PR #313, implementazione runtime ancora da eseguire."
     },
     {
       "id": "M08",
