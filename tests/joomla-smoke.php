@@ -233,8 +233,10 @@ $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
 $component = $app->bootComponent('com_jlms');
 $certificateService = $component->getCertificateService();
 $certificateService->adminList($app->getIdentity(), ['q' => 'CERT-C-PROBE', 'status' => 'ready', 'offset' => 0]);
+$auditActorId = (int) $userId;
+$auditAction = 'admin_list';
 $auditCount = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_audit')
-    ->where('actor_user_id = :actor')->where('action = :action')->bind(':actor', $userId)->bind(':action', 'admin_list'))->loadResult();
+    ->where('actor_user_id = :actor')->where('action = :action')->bind(':actor', $auditActorId)->bind(':action', $auditAction))->loadResult();
 if ($auditCount < 1) { throw new \RuntimeException('Certificate administrator list access was not audited.'); }
 try {
     $certificateService->adminList(new \Joomla\CMS\User\User(), []);

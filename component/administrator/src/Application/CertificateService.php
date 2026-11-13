@@ -52,9 +52,12 @@ final class CertificateService
         if (!$record || $record->status !== 'ready' || (int) $record->asset_id < 1) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
         }
+        $assetId = (int) $record->asset_id;
+        $readyStatus = 'ready';
+        $pdfMime = 'application/pdf';
         $query = $this->db->createQuery()->select('a.*')->from('#__jlms_assets AS a')
             ->where('a.id = :asset')->where('a.status = :ready')->where('a.mime_type = :mime')
-            ->bind(':asset', (int) $record->asset_id, ParameterType::INTEGER)->bind(':ready', 'ready')->bind(':mime', 'application/pdf');
+            ->bind(':asset', $assetId, ParameterType::INTEGER)->bind(':ready', $readyStatus)->bind(':mime', $pdfMime);
         $asset = $this->db->setQuery($query)->loadObject();
         if (!$asset) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
         $handle = $this->storage->open($asset);
@@ -93,11 +96,12 @@ final class CertificateService
         $committed = false;
         try {
             $this->db->transactionStart(); $started = true;
+            $documentId = (int) $record->document_id;
             $locked = $this->db->createQuery()->select('d.id, d.status, c.id AS certificate_id')
                 ->from('#__jlms_certificate_documents AS d')->innerJoin('#__jlms_certificates AS c ON c.id = d.certificate_id AND c.current_document_id = d.id')
                 ->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')->where('d.id = :document')
                 ->where('e.id = :enrollment')->where('e.user_id = :user')->where('e.completed_at IS NOT NULL')
-                ->bind(':document', (int) $record->document_id, ParameterType::INTEGER)->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':document', $documentId, ParameterType::INTEGER)->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
                 ->bind(':user', $userId, ParameterType::INTEGER);
             $current = $this->db->setQuery((string) $locked . ' FOR UPDATE')->loadObject();
             if (!$current) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
@@ -183,9 +187,10 @@ final class CertificateService
         $templateSnapshot = json_decode((string) $record->template_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($identitySnapshot) || !is_array($templateSnapshot)) { throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503); }
         $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity->id, 'admin_view');
+        $certificateId = (int) $record->certificate_id;
         $auditQuery = $this->db->createQuery()->select('action, actor_user_id, created_at')
             ->from('#__jlms_certificate_audit')->where('certificate_id = :certificate')
-            ->bind(':certificate', (int) $record->certificate_id, ParameterType::INTEGER)->order('id DESC');
+            ->bind(':certificate', $certificateId, ParameterType::INTEGER)->order('id DESC');
         $audit = $this->db->setQuery($auditQuery, 0, 50)->loadObjectList();
         return ['id' => (int) $record->certificate_id, 'document_id' => (int) $record->document_id,
             'serial' => (string) $record->serial, 'status' => $record->revoked_at ? 'revoked' : (string) $record->status,
@@ -209,9 +214,12 @@ final class CertificateService
         if (!$record || $record->revoked_at || $record->status !== 'ready' || (int) $record->asset_id < 1) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
         }
+        $assetId = (int) $record->asset_id;
+        $readyStatus = 'ready';
+        $pdfMime = 'application/pdf';
         $query = $this->db->createQuery()->select('a.*')->from('#__jlms_assets AS a')->where('a.id = :asset')
             ->where('a.status = :ready')->where('a.mime_type = :mime')
-            ->bind(':asset', (int) $record->asset_id, ParameterType::INTEGER)->bind(':ready', 'ready')->bind(':mime', 'application/pdf');
+            ->bind(':asset', $assetId, ParameterType::INTEGER)->bind(':ready', $readyStatus)->bind(':mime', $pdfMime);
         $asset = $this->db->setQuery($query)->loadObject();
         if (!$asset) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
         $handle = $this->storage->open($asset);
