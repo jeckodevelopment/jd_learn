@@ -1,3 +1,9 @@
+## SEC — Policy di segnalazione vulnerabilità e versioni supportate
+
+- Rimosse le linee obsolete 0.4.x/0.3.x come versioni supportate; chiarito che non esiste ancora una release stabile e che gli snapshot `-dev` non sono supportati per produzione.
+- Documentati il canale privato GitHub Security Advisories, i dati minimizzati da includere e il ciclo di risposta coordinata.
+- Questo aggiornamento documentale non completa SEC-P1: threat model, code review sistematica, matrice minaccia-controllo-test e findings classificati restano da produrre. Nessun incremento della percentuale di copertura.
+
 ## 0.56.16-dev — MAIL-11.4/11.5: conferma e invio controllato annuncio corso (PR #327 integrata)
 
 - Aggiunta conferma amministrativa esplicita, protetta da CSRF, e una campagna unica per corso con una riga di coda per destinatario.
