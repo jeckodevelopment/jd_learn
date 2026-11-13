@@ -21,7 +21,7 @@ with zipfile.ZipFile(archive) as z:
     assert m.findtext('version')=='1.0.0'
     assert m.findtext('packagename')=='jlms'
     assert m.find('./updateservers/server') is not None
-    assert len(m.findall('./files/file'))==10
+    assert len(m.findall('./files/file'))==11
 with tempfile.TemporaryDirectory() as tmp:
     feed=Path(tmp)/'jdlearn.xml'
     url='https://github.com/jeckodevelopment/jd_learn/releases/download/v1.0.0/pkg_jlms-1.0.0.zip'
