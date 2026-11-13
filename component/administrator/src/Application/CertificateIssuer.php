@@ -17,7 +17,7 @@ final class CertificateIssuer
 
     public function issueForCompletedEnrollment(int $enrollmentId, int $courseVersionId, string $completedAt): bool
     {
-        $q = $this->db->createQuery()->select('e.id, e.user_id, e.course_id, e.course_version_id, e.completed_at, u.name, u.email, u.language AS user_language, c.title, c.params_json, c.language, v.title_snapshot, v.rules_json')
+        $q = $this->db->createQuery()->select('e.id, e.user_id, e.course_id, e.course_version_id, e.completed_at, u.name, u.email, u.params AS user_params, c.title, c.params_json, c.language, v.title_snapshot, v.rules_json')
             ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id = e.user_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
             ->where('e.id = :enrollment')->where('e.course_version_id = :version')->where('e.completed_at = :completed')
@@ -69,6 +69,10 @@ final class CertificateIssuer
         $link = (object) ['id' => $certificateId, 'current_document_id' => (int) $document->id];
         $this->db->updateObject('#__jlms_certificates', $link, 'id');
 
+        // Joomla keeps the frontend language in the user profile parameters.
+        $userSettings = json_decode((string) ($row->user_params ?? '{}'), true);
+        $userLanguage = is_array($userSettings) ? (string) ($userSettings['language'] ?? $row->language) : (string) $row->language;
+
         // Certificate issuance and course completion are authoritative even if the mail
         // outbox cannot be written. The worker sends later through Joomla's MailTemplate.
         try {
@@ -76,7 +80,7 @@ final class CertificateIssuer
                 (int) $row->course_id,
                 hash('sha256', 'certificate.available:' . $certificateId . ':' . (int) $document->id),
                 'com_jlms.certificate.available',
-                (string) ($row->user_language ?: $row->language),
+                $userLanguage,
                 (string) $row->email,
                 (string) $row->name,
                 ['NAME' => (string) $row->name, 'COURSE' => (string) ($row->title_snapshot ?: $row->title),
