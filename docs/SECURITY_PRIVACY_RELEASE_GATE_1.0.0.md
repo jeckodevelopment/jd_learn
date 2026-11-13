@@ -25,3 +25,8 @@ Questo piano è separato dalle funzionalità future Credentials/Open Badges; fir
 ## PRIV-C — Registro e diritto di accesso ai consensi applicativi
 
 La verifica di SEC-P3 include obbligatoriamente **PRIV-C1–C5** in [JOOMLA_PRIVACY_CONSENT_INTEGRATION.md](JOOMLA_PRIVACY_CONSENT_INTEGRATION.md): verificare l'interfaccia Joomla 6 per l'eventuale visualizzazione del consenso MAIL-11 nel registro centrale; garantire comunque una consultazione autorizzata senza duplicare fonti di verità, completare export/rimozione/anomizzazione dei dati correlati e documentare la procedura per gli amministratori IT/EN. Il plugin Privacy JD Learn espone già capabilities, export e un percorso di removal, ma la copertura dei token di revoca, code e audit va provata. Il registro Joomla non aggrega automaticamente consensi conservati in tabelle di componenti terzi. **Non scrivere direttamente nel registro interno Joomla senza API documentata e testata.** Nessuna nuova copertura attribuita finché le PR implementative e i test non sono integrati.
+
+
+## Finding SEC-P1 — dati di eccezione SMTP persistiti nell'outbox
+
+La review mirata della coda email ha rilevato che il testo delle eccezioni del mailer veniva scritto in `last_error`; risposte SMTP e provider possono contenere indirizzi destinatario o altri dettagli operativi. Classificazione preliminare **media**: esposizione non necessaria a chi legge il database o i backup, senza evidenza di accesso anonimo via interfaccia. La candidata 0.56.18 sostituisce il testo con un messaggio generico, esclude `last_error` dalla vista di audit e redige i valori già registrati tramite migrazione. Verifiche CI e collaudo Joomla/SMTP sono ancora pendenti; il finding non chiude SEC-P1 e non sostituisce la review sistematica.
