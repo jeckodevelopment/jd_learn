@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-\\defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
-use Joomla\\CMS\\HTML\\HTMLHelper;
-use Joomla\\CMS\\Language\\Text;
-use Joomla\\CMS\\Router\\Route;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 ?>
 <main id="jlms-mail-consent-revoke" class="jlms-mail-consent-revoke">
  <h1><?= Text::_('COM_JLMS_MAIL_CONSENT_LINK_TITLE') ?></h1>
