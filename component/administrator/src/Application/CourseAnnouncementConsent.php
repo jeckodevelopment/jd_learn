@@ -135,10 +135,11 @@ final class CourseAnnouncementConsent
             }
 
             $confirmedAt = (string) $record->consent_confirmed_at;
+            $tokenUserId = (int) $record->user_id;
             $update = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'revoked'")
                 ->set('revoked_at = UTC_TIMESTAMP()')->set('token_hash = NULL')->set('token_expires_at = NULL')
                 ->where('user_id = :user')->where("state = 'confirmed'")->where('confirmed_at = :confirmed')
-                ->bind(':user', (int) $record->user_id, ParameterType::INTEGER)
+                ->bind(':user', $tokenUserId, ParameterType::INTEGER)
                 ->bind(':confirmed', $confirmedAt);
             $this->db->setQuery($update)->execute();
             if ($this->db->getAffectedRows() !== 1) {
