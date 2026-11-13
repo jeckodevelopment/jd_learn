@@ -23,13 +23,13 @@ final class CertificateIssuer
             ->bind(':completed', $completedAt);
         $row = $this->db->setQuery($q)->loadObject();
         if (!$row) { return false; }
+        $rules = json_decode((string) $row->rules_json, true, 32, JSON_THROW_ON_ERROR);
+        if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
+            || ($rules['certificate_enabled'] ?? false) !== true) { return false; }
         $params = ComponentHelper::getParams('com_jlms');
         if (!CertificatePreferences::enabled((bool) $params->get('certificate_enabled', 0), (string) $row->params_json)) {
             return false;
         }
-        $rules = json_decode((string) $row->rules_json, true, 32, JSON_THROW_ON_ERROR);
-        if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
-            || ($rules['certificate_enabled'] ?? false) !== true) { return false; }
 
         $existing = $this->db->createQuery()->select('id')->from('#__jlms_certificates')
             ->where('enrollment_id = :enrollment')->where('course_version_id = :version')
