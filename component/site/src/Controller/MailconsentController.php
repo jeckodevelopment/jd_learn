@@ -58,7 +58,7 @@ final class MailconsentController extends BaseController
         $this->app->setHeader('Referrer-Policy', 'no-referrer', true);
         $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         if (strtoupper($this->input->getMethod()) !== 'POST' || !$this->checkToken('post', false)) {
-            throw new \\RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
         }
 
         $token = $this->input->post->getString('token', '');
