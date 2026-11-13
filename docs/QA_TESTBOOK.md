@@ -1103,7 +1103,7 @@ Le date mostrate nell’audit sono in UTC e identificano la transizione registra
 **Accettazione manuale Joomla/SMTP:** da eseguire; la CI non equivale al collaudo reale. La riconciliazione “inviato” richiede evidenza nei log del mailer, mentre “retry” richiede evidenza che SMTP non abbia accettato il messaggio.
 
 
-## SEC-P1 — riduzione dati nelle eccezioni SMTP (0.56.18-dev candidata)
+## SEC-P1 — riduzione dati nelle eccezioni SMTP (PR #338 integrata, 0.56.18-dev)
 
 **Comportamenti da collaudare sul sito Joomla di prova dopo installazione/upgrade**
 
@@ -1114,4 +1114,4 @@ Le date mostrate nell’audit sono in UTC e identificano la transizione registra
 5. Aggiornare da una versione precedente che contiene righe con errori storici: la migrazione deve sostituire tutti i `last_error` preesistenti con il testo generico senza modificare stato, conteggio tentativi o disponibilità.
 6. Ripetere con errore temporaneo e permanente; verificare retry, limite di cinque tentativi, nessuna interruzione della registrazione/iscrizione e nessuna fuga di dati nella pagina.
 
-**Accettazione manuale Joomla/SMTP:** pendente. Non inserire dati reali o segreti nelle prove; usare solo account e trasporto usa-e-getta.
+**Stato:** PR #338 integrata; CI standard 4/4 nel [run 43522457570](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570). **Accettazione manuale Joomla/SMTP:** pendente. Non inserire dati reali o segreti nelle prove; usare solo account e trasporto usa-e-getta.
