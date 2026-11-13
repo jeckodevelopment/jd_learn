@@ -205,7 +205,9 @@ final class CourseAnnouncementService
                 $data = $preview['template_data'];
                 $name = htmlspecialchars((string) $recipient->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                 $data['NAME'] = $name;
-                $data['UNSUBSCRIBE_URL'] = htmlspecialchars($unsubscribe, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                $data['UNSUBSCRIBE_URL'] = $unsubscribe;
+                $data['UNSUBSCRIBE_URL_HTML'] = htmlspecialchars($unsubscribe, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                $data['UNSUBSCRIBE_URL_TEXT'] = $unsubscribe;
                 $profile = json_decode((string) $recipient->params, true);
                 $language = is_array($profile) && in_array($profile['language'] ?? '', ['it-IT','en-GB'], true)
                     ? (string) $profile['language'] : (string) $preview['language'];
