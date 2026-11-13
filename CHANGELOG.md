@@ -1,3 +1,12 @@
+## 0.56.16-dev — MAIL-11.4/11.5: conferma e invio controllato annuncio corso (PR #327 integrata)
+
+- Aggiunta conferma amministrativa esplicita, protetta da CSRF, e una campagna unica per corso con una riga di coda per destinatario.
+- Lo Scheduler invia in batch tramite la coda persistente già esistente. Prima di ciascun tentativo verifica di nuovo la revisione del consenso, lo stato account/email, la preferenza di invio e l'accessibilità pubblica del corso; le righe non più idonee vengono saltate e i dati del destinatario rimossi.
+- Idempotenza per corso/utente, link individuali di revoca, retry limitati e record campagna. Migrazione 0.56.16; installazione aggiornata a 47 tabelle / 66 FK.
+- PR #327 merge `0bae6bb428f06636a1d3be7d524f32a15739bd0b`; CI standard 4/4 nel [run 43511719258](https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258). Accettazione manuale Joomla/SMTP ancora pendente, con gli scenari in [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
+- Pacchetto [JD-Learn-0.56.16-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258/artifacts/14077534734), SHA-256 ZIP `3fdaff806b1f742f9e8dda230546967cf2c9de52817f1efd27d73734a330ca07`, digest archivio artifact `f93f7fcf8ccac09de5f949177cf029ea16be0e2aed9ba6266be43c8903b50550`.
+- Avanzamento globale **78,00%** (78%); macroarea email **58%** (+10 punti). Implementazione, CI e collaudo manuale restano assi separati.
+
 ## 0.56.15-dev — MAIL-11.4: anteprima amministrativa annuncio corso (PR #325 integrata)
 
 - Aggiunta anteprima amministrativa in sola lettura del modello Joomla `com_jlms.course.published`, con oggetto, HTML, testo semplice e conteggio aggregato degli utenti con consenso confermato ed email valida.

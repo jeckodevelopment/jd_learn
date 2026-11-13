@@ -1,12 +1,12 @@
 {
   "date": "2026-11-13",
   "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
-  "runtime_tested_head": "c6b9c108333f41c5225b8fe1c5f31b66c0b8947e",
-  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43506010300",
+  "runtime_tested_head": "0bae6bb428f06636a1d3be7d524f32a15739bd0b",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258",
   "counts": {
     "Stato implementazione": {
-      "Parziale": 179,
-      "Completata": 16,
+      "Parziale": 178,
+      "Completata": 17,
       "Non iniziata": 24
     },
     "Perimetro 1.0.0": {
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 77,
-    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+48+75)/9 = 76,89%, arrotondato a 77%. L’area email sale da 46% a 48% (+2 punti) con la preview amministrativa read-only (PR #325). Restano conferma e invio protetto con outbox; acceptance manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
+    "percent": 78,
+    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+58+75)/9 = 78,00%. L’area email sale da 48% a 58% (+10 punti) dopo la conferma amministrativa e l’invio controllato MAIL-11 (PR #327). Accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
     "areas": [
       81,
       81,
@@ -34,12 +34,12 @@
       68,
       92,
       70,
-      48,
+      58,
       75
     ]
   },
-  "note": "Main 0.56.15-dev integra PR #325 (merge c6b9c108333f41c5225b8fe1c5f31b66c0b8947e): anteprima read-only dell’annuncio corso, senza invio/accodamento. CI 4/4 run 43506010300; pacchetto e checksum in IMPLEMENTATION_EVIDENCE.json/CHANGELOG.md. Collaudo Joomla/SMTP manuale pendente.",
-  "updated_at": "2026-11-13T21:05:00Z",
+  "note": "Main 0.56.16-dev integra PR #327 (merge 0bae6bb428f06636a1d3be7d524f32a15739bd0b): conferma una tantum, coda Scheduler, guardie al dispatch per consenso e visibilità, deduplica, retry limitato e audit campagna. CI standard 4/4 run 43511719258; pacchetto e checksum in IMPLEMENTATION_EVIDENCE.json/CHANGELOG.md. Accettazione manuale Joomla/SMTP pendente.",
+  "updated_at": "2026-11-13T22:00:00Z",
   "imp_09_mail_c": {
     "pull_request": 313,
     "merge_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
