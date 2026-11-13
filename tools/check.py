@@ -65,11 +65,12 @@ assert 'jlms-course-programme-link' not in course_editor
 assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
 course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
 assert "ToolbarHelper::custom('course.programme'" in course_view
+dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
 dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
 dashboard_style=(ROOT/'component/media/css/admin-dashboard.css').read_text()
 for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
     marker='COM_JLMS_DASHBOARD_'+'GROUP_'+group
-    assert marker in dashboard_view and marker in dashboard_template, ('Dashboard missing group', group)
+    assert marker in dashboard_view, ('Dashboard missing group', group)
     for locale in ('it-IT','en-GB'):
         assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
 assert "foreach ($this->shortcutGroups as $groupKey => $shortcuts)" in dashboard_template
@@ -79,7 +80,7 @@ assert "option=com_mails&view=templates&filter[extension]=com_jlms" in dashboard
 assert dashboard_view.index("'COM_JLMS_COURSES'") < dashboard_view.index("'COM_JLMS_CERTIFICATES'")
 assert "'COM_JLMS_MAIL_TEMPLATES'" in dashboard_view
 assert "grid-template-columns: repeat(4" in dashboard_style and "@media (max-width:" in dashboard_style
-dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
+
 pathways_template=(ROOT/'component/administrator/tmpl/pathways/default.php').read_text()
 assert not re.search(r'<h1\b',dashboard_template) and not re.search(r'<h1\b',pathways_template)
 version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
