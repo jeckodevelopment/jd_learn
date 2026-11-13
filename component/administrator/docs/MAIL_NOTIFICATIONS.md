@@ -10,3 +10,8 @@ Variabili del template: `NAME`, `COURSE`, `SITENAME`, `CERTIFICATE_URL`. Le pers
 ## Comunicazione manuale per corso
 
 La PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313) introduce il template operativo com_jlms.course.message e invio dal roster ai soli iscritti attivi selezionati. Preview/conferma, test all'indirizzo dell'operatore e invio asincrono via Scheduler/outbox. Le preferenze mail_communication_enabled e mail_communication governano la disponibilità; ACL e roster sono verificati di nuovo lato server.
+
+
+## MAIL-11.1 — template nuovo corso
+
+La candidata PR #315 registra il template nativo `com_jlms.course.published` con contenuto HTML/testo e tag per titolo, immagine, introduzione, lezioni pubbliche ordinate, CTA e revoca. L’installer non sovrascrive personalizzazioni esistenti. È solo la registrazione del modello: non accoda né invia annunci. Opt-in confermato, revoca funzionante e controlli di visibilità restano necessari prima di attivare il flusso.
