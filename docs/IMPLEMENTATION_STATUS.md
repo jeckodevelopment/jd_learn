@@ -1,4 +1,4 @@
-Aggiornato al 13 novembre 2026. Main **0.56.9-dev** integra la PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313), merge `53f5e032ae16da9df963e938cfb449c6c249a933`. IMP-09-MAIL-C aggiunge comunicazione operativa per corso con selezione, preview/conferma, test all'operatore e invio Scheduler/outbox. CI 4/4 superata nel [run 43445911912](https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912). Avanzamento stimato **75%** (75,33%; email 34%; attestati 75%). Collaudo Joomla/SMTP pendente. Pacchetto [JD-Learn-0.56.9-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912/artifacts/14046839802), ZIP SHA-256 `2c243c2d86ce4b1ee306f79602201a873d3f2b38a662290bb2ef6d0024fe9842`, wrapper `679adbf6ed13b788786d1eecc13400d94a4d364de9fb4114557cf9639985042a`.
+Aggiornato al 13 novembre 2026. Main 0.56.9-dev integra MAIL-C (PR #313), avanzamento globale 75% (stima 75,33%; email 34%, attestati 75%). La candidata PR [#315](https://github.com/jeckodevelopment/jd_learn/pull/315), 0.56.10-dev, implementa parzialmente MAIL-11.1 registrando il template nativo Joomla `com_jlms.course.published`; non invia notifiche. CI/collaudo della candidata in corso. Collaudo Joomla/SMTP di MAIL-C ancora pendente.
 
 La PR #299 collega anche la conferma dopo iscrizione amministrativa singola; la CI completa è verde, mentre il collaudo manuale Joomla/SMTP resta pendente. CERT-D è integrato con la PR #307; restano aperti gli altri residui email approvati, CERT-08 (backup/ripristino e rigenerazione immutabile) e il collaudo manuale Joomla CERT-A/B/C/D.
 
@@ -104,3 +104,8 @@ Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [pro
 ## IMP-09-MAIL-C / PR #313 integrata — 0.56.9-dev
 
 Implementata la comunicazione operativa manuale per corso: destinatari selezionabili dal roster autorizzato, anteprima e conferma, test all'operatore, job idempotente, batch via Scheduler/outbox e preferenze globale/per corso. ACL e stato degli iscritti sono ricontrollati a ogni elaborazione. PR #313 è integrata nella milestone 1.0.0; CI 4/4 superata, accettazione manuale Joomla/SMTP pendente. Email stimata 34%; totale 75,33% (75%), media delle nove macroaree. MAIL-11 resta distinta e non implementata.
+
+
+## Candidata MAIL-11.1 / PR #315
+
+La candidata aggiunge il template `com_jlms.course.published` a Joomla → Sistema → Modelli email, con soggetto, corpo testo/HTML e tag per titolo, immagine, introduzione, sole lezioni pubbliche, URL del corso, sito e revoca. L’installer crea il modello solo se manca; la personalizzazione si conserva. Non esistono ancora invii, opt-in, double opt-in o funzione di revoca. Stato MAIL-11 resta parziale; email/global progress non cambiano prima del merge e del ricalcolo.
