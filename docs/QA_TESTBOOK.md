@@ -1115,3 +1115,17 @@ Le date mostrate nell’audit sono in UTC e identificano la transizione registra
 6. Ripetere con errore temporaneo e permanente; verificare retry, limite di cinque tentativi, nessuna interruzione della registrazione/iscrizione e nessuna fuga di dati nella pagina.
 
 **Accettazione manuale Joomla/SMTP:** pendente. CI standard 4/4 nel [run 43522457570](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570). Il pacchetto [JD-Learn-0.56.18-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570/artifacts/14083597534) contiene `pkg_jlms-0.56.18-dev.zip`, SHA-256 `c59074d3bbe6a4ddb6b79714ca0d2948e04d6bff0d40316a1ac0e15f8087cbc6`. Non inserire dati reali o segreti nelle prove; usare solo account e trasporto usa-e-getta.
+
+
+## IMP-09-MAIL-D / MAIL-04 — promemoria scadenza corso (candidata 0.56.19-dev)
+
+**Comportamenti da testare sul sito Joomla di prova**
+
+1. Aggiornare il pacchetto e aprire le opzioni di JD Learn → Notifiche email. Confermare che il promemoria sia disabilitato per impostazione predefinita; abilitarlo e impostare una soglia di 3 giorni.
+2. In un corso di prova, impostare la scadenza dell'edizione a circa 48 ore e iscrivere uno studente attivo non completato con email usa-e-getta. Eseguire il task pianificato **JD Learn: send queued emails**. Atteso: un solo messaggio in outbox con corso, data/ora UTC e collegamento all'area personale.
+3. Eseguire di nuovo il task: non deve essere accodata una seconda email per la stessa iscrizione e scadenza. Verificare in **JD Learn → Coda email** il template `com_jlms.course.expiring` e il corso associato.
+4. Disabilitare l'override per il corso e controllare l'ereditarietà dall'impostazione globale; impostare poi l'override su disabilitato e verificare che non venga accodata alcuna email. Con l'impostazione globale disabilitata, il comportamento deve restare spento anche per i corsi in ereditarietà.
+5. Accodare un promemoria, completare o sospendere l'iscrizione prima dell'invio SMTP e rilanciare il task: l'elemento non deve essere inviato e i dati personali della riga saltata devono essere rimossi. Ripristinare mailer SMTP di prova e controllare le traduzioni IT/EN del template.
+6. Provare date senza scadenza, scadenza già trascorsa, corso completato, utente bloccato e soglie 1/30 giorni; nessuno deve ricevere un promemoria fuori dai criteri.
+
+L'esecuzione del task usa solo il mailer globale Joomla; nessun SMTP autonomo è aggiunto. La verifica manuale SMTP resta da registrare.
