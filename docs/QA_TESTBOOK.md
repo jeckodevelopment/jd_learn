@@ -996,6 +996,18 @@ PR integrata; CI 4/4 superata nel [run 43450891869](https://github.com/jeckodeve
 
 MAIL-11.2/11.3 sono parziali nella PR #317; MAIL-11.4/11.5 restano da implementare e bloccano qualsiasi invio di annunci.
 
+
+
+### Candidata 0.56.12-dev — opt-in durante iscrizione automatica
+
+1. Configurare il mailer Joomla verso una casella controllata e pubblicare un corso con iscrizione automatica.
+2. Aprire il corso da utente autenticato: la casella annunci deve essere facoltativa e non selezionata per default.
+3. Avviare il corso senza selezionarla: l'iscrizione riesce e non viene inviata una richiesta di consenso.
+4. Con un utente nuovo, selezionarla e avviare il corso: l'iscrizione riesce e arriva soltanto l'email double opt-in; nessun annuncio viene accodato.
+5. Ripetere il POST mentre lo stato è pending: non deve partire una seconda email di conferma. Confermare il token e ripetere: non deve essere riaperta la richiesta.
+6. Simulare un errore SMTP: l'iscrizione resta valida, compare un avviso e i log non contengono email, nome o token.
+7. Verificare label IT/EN e uso da tastiera. Registrazione Joomla, revoca anonima e campagna amministrativa restano fuori da questa tranche.
+
 ## IMP-09-MAIL-D — MAIL-11.2/11.3 consenso e double opt-in (PR #317, 0.56.11-dev)
 
 PR [#317](https://github.com/jeckodevelopment/jd_learn/pull/317) integrata nel merge `6c44bc4e852bf1d693b53646b5deee6c83153629`; CI standard 4/4 nel [run 43457091398](https://github.com/jeckodevelopment/jd_learn/actions/runs/43457091398). Pacchetto installabile [JD-Learn-0.56.11-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43457091398/artifacts/14053993647), SHA-256 interno `3e6b918c157b320984064a7fecc0b392ef5bc049d164a3e088b5a835e6732420`; accettazione manuale Joomla/SMTP pendente.
