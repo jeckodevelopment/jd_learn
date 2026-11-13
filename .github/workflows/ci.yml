@@ -95,6 +95,7 @@ jobs:
       - name: Domain, source validation and plugin registry tests
         run: |
           php tests/run.php
+          php tests/certificate-pdf.php
           php tests/question-definition.php
           php tests/teaching-rules.php
           php tests/video-duration.php

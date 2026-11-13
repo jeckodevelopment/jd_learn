@@ -30,6 +30,18 @@ use Joomla\CMS\Router\Route;
  <?php endforeach; ?>
  <?php if (!$this->items) : ?><p id="jlms-dashboard-empty"><?= Text::_('COM_JLMS_DASHBOARD_EMPTY') ?></p><?php endif; ?>
  </div>
+ <?php if ($this->certificates) : ?>
+ <section id="jlms-my-certificates" class="jlms-dashboard-group"><h2><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></h2>
+  <div class="jlms-my-course-grid"><?php foreach ($this->certificates as $certificate) : ?>
+   <article class="jlms-my-course"><h3><?= $this->escape($certificate['title']) ?></h3>
+    <p><?= Text::_('COM_JLMS_CERTIFICATE_ISSUED') ?>: <?= $this->escape($certificate['issued_at']) ?></p>
+    <p><?= Text::_('COM_JLMS_CERTIFICATE_CODE') ?>: <?= $this->escape($certificate['serial']) ?></p>
+    <?php if ($certificate['status'] === 'ready' || $certificate['status'] === 'pending_render') : ?>
+     <a class="jlms-my-course__action" href="<?= Route::_('index.php?option=com_jlms&task=certificate.download&enrollment_id=' . (int) $certificate['enrollment_id']) ?>"><?= Text::_('COM_JLMS_CERTIFICATE_DOWNLOAD') ?></a>
+    <?php endif; ?>
+   </article>
+  <?php endforeach; ?></div>
+ </section><?php endif; ?>
  <nav id="jlms-dashboard-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
  <a id="jlms-dashboard-catalog" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
 </section>

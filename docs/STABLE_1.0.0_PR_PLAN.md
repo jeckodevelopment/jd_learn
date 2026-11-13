@@ -92,12 +92,12 @@ Ogni PR va assegnata alla milestone **1.0.0**, documenta `Comportamenti da testa
 
 ## Approvazione funzionale 12 novembre 2026 — attestati PDF essenziali 1.0.0
 
-**Decisione di prodotto approvata:** la 1.0.0 comprende il rilascio essenziale di attestati PDF di completamento corso, senza anticipare JD Learn Credentials / Open Badges. Requisiti, criteri di accettazione, delimitazione e prove sono in [CERTIFICATES_1.0.0.md](CERTIFICATES_1.0.0.md). Gli ID **CERT-01–CERT-08** sono nuovi e vanno registrati nella matrice di tracciabilità prima delle PR runtime; nessuna funzionalità è dichiarata implementata da questa PR documentale.
+**Decisione di prodotto approvata:** la 1.0.0 comprende il rilascio essenziale di attestati PDF di completamento corso, senza anticipare JD Learn Credentials / Open Badges. Requisiti, criteri di accettazione, delimitazione e prove sono in [CERTIFICATES_1.0.0.md](CERTIFICATES_1.0.0.md). Gli ID **CERT-01–CERT-08** sono tracciati in matrice; CERT-A (PR #300) è integrata, CERT-B è la prossima PR runtime.
 
 | Ordine | ID / priorità | Perimetro PR | Requisiti |
 |---:|---|---|---|
 | 9.5 | **IMP-09-CERT-A · P0** | Impostazioni globali/per corso, modello persistente, ACL e generazione idempotente su completamento effettivo | CERT-01/02/04 |
-| 9.6 | **IMP-09-CERT-B · P0** | Generazione PDF con modello personalizzabile e download protetto per studente | CERT-03/05/08 |
+| 9.6 | **IMP-09-CERT-B · P0 · PR #302 candidata** | PDF personalizzabile IT/EN, asset privato, dashboard e download protetto dello studente | CERT-03/05 e parte di CERT-08 |
 | 9.7 | **IMP-09-CERT-C · P0** | Elenco e download amministrativi, autorizzazioni e audit | CERT-06/08 |
 | 9.8 | **IMP-09-CERT-D · P1** | Notifica disponibilità tramite Mail Templates e outbox Joomla, prove integrative | CERT-07, MAIL-01/02/09 |
 

@@ -109,6 +109,18 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->materialService;
     }
 
+    private \Jlms\Component\Jlms\Administrator\Application\CertificateService $certificateService;
+
+    public function setCertificateService(\Jlms\Component\Jlms\Administrator\Application\CertificateService $service): void
+    {
+        $this->certificateService = $service;
+    }
+
+    public function getCertificateService(): \Jlms\Component\Jlms\Administrator\Application\CertificateService
+    {
+        return $this->certificateService;
+    }
+
 
     private \Jlms\Component\Jlms\Administrator\Application\LearningService $learningService;
 

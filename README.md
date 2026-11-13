@@ -1,4 +1,7 @@
-Aggiornato al 13 novembre 2026. Main **0.56.5-dev** integra le PR [#299](https://github.com/jeckodevelopment/jd_learn/pull/299) e [#300](https://github.com/jeckodevelopment/jd_learn/pull/300); merge #300 `cbc0394d895b9b35f99d08aeb3c7f4182a56a182`. CERT-A è integrato; avanzamento globale stimato **68,58%** (email 29,5%; attestati 18,75%). CI standard 4/4 superata nel [run 1017](https://github.com/jeckodevelopment/jd_learn/actions/runs/43404564275); pacchetto installabile [JD-Learn-0.56.5-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43404564275/artifacts/14027235893), SHA-256 ZIP `b8cfdc200be80b4450eb4770127a1cc1340bc5db20d886f9707ba293b0dc129c`. Collaudo manuale sul sito Joomla/SMTP ancora da eseguire; PDF, download studente, vista amministrativa e notifica attestato restano nelle PR CERT successive.
+Candidate PR #302 builds package **0.56.6-dev**; it is not merged. Main remains **0.56.5-dev** at `cbc0394d895b9b35f99d08aeb3c7f4182a56a182`. CERT-A is integrated; CERT-B is under review. Current main progress: 68.58%; candidate estimate after CERT-B: 72.06%, pending CI, merge and Joomla acceptance.
+
+**Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
+
 
 **Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
 

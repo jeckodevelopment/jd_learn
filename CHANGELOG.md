@@ -1,3 +1,9 @@
+# 0.56.6-dev — PDF e download protetto attestati (PR #302 candidata)
+
+- Generazione PDF A4 IT/EN con dati certificati congelati, intestazioni personalizzabili, colore e logo JPEG locale.
+- Elenco attestati nella dashboard studente e download GET/HEAD protetto; PDF conservato come asset nello storage privato esistente e rendering alla prima richiesta autorizzata.
+- Test unitario renderer in CI; collaudo manuale Joomla, audit e backup/ripristino pendenti. Requisiti CERT-03/05 e parte di CERT-08.
+
 ## 0.56.4-dev — conferma iscrizione amministrativa (in preparazione)
 
 - Collega l’iscrizione amministrativa singola al template Joomla di conferma e all’outbox già esistente.
