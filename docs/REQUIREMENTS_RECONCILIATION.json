@@ -1,8 +1,8 @@
 {
   "date": "2026-11-13",
   "baseline_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
-  "runtime_tested_head": "85bc01df25034ddf87b7513edd60a8e14f82b8e6",
-  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912",
+  "runtime_tested_head": "442d3eae67da787dc1992c6915afb51176f568cd",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43450891869",
   "counts": {
     "Stato implementazione": {
       "Parziale": 179,
@@ -19,13 +19,13 @@
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 178,
-      "Non eseguita": 41
+      "Superata": 179,
+      "Non eseguita": 40
     }
   },
   "implementation_progress": {
     "percent": 75,
-    "method": "Media semplice delle nove macroaree (81+81+78+99+68+92+70+34+75)/9 = 75,33%, arrotondato a 75%. Email 34% dopo MAIL-C; attestati 75%.",
+    "method": "Media delle nove macroaree (81+81+78+99+68+92+70+35+75)/9 = 75,44%, arrotondato a 75%. Email 35% dopo MAIL-C e MAIL-11.1.",
     "areas": [
       81,
       81,
@@ -34,7 +34,7 @@
       68,
       92,
       70,
-      34,
+      35,
       75
     ]
   },
@@ -57,12 +57,13 @@
   },
   "imp_09_mail_d_11_1": {
     "pull_request": 315,
-    "commit": "fbe8863f04325c1eb358df6a913277ccd26ce91a",
-    "status": "partial implementation; CI pending; manual Joomla acceptance pending",
+    "merge_commit": "fd5b66941421127037afa54a3bbaea6810e6e7ca",
+    "status": "partial; CI passed; manual Joomla acceptance pending",
+    "ci": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43450891869",
     "criteria": [
       "MAIL-11.1"
     ],
-    "out_of_scope_until_followups": [
+    "remaining": [
       "MAIL-11.2",
       "MAIL-11.3",
       "MAIL-11.4",
