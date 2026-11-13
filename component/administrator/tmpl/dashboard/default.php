@@ -14,8 +14,8 @@ use Joomla\CMS\Language\Text;
     <nav class="jlms-admin-dashboard__shortcuts" aria-label="<?= $this->escape(Text::_('COM_JLMS_DASHBOARD_TOOLS')) ?>">
         <?php foreach ($this->shortcutGroups as $groupKey => $shortcuts) : ?>
             <?php if (!$shortcuts) { continue; } ?>
-            <section class="jlms-admin-dashboard__group" aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(preg_replace('/^COM_JLMS_DASHBOARD_GROUP_/', '', $groupKey))) ?>">
-                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(preg_replace('/^COM_JLMS_DASHBOARD_GROUP_/', '', $groupKey))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
+            <section class="jlms-admin-dashboard__group" aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>">
+                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
                 <ul>
                     <?php foreach ($shortcuts as $shortcut) : ?>
                         <li>
