@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Jlms\\Component\\Jlms\\Site\\View\\Mailconsentrevoke;
+namespace Jlms\Component\Jlms\Site\View\Mailconsentrevoke;
 
-use Joomla\\CMS\\Factory;
-use Joomla\\CMS\\Language\\Text;
-use Joomla\\CMS\\MVC\\View\\HtmlView as BaseHtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
 /** Confirmation page for bearer unsubscribe links; GET never changes consent. */
 final class HtmlView extends BaseHtmlView
