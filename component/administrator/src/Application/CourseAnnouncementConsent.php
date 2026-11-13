@@ -73,7 +73,7 @@ final class CourseAnnouncementConsent
     {
         if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) { return false; }
         $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'confirmed'")
-            ->set('confirmed_at = UTC_TIMESTAMP()')->set('token_hash = NULL')->set('token_expires_at = NULL')
+            ->set('confirmed_at = UTC_TIMESTAMP(6)')->set('token_hash = NULL')->set('token_expires_at = NULL')
             ->where("state = 'pending'")->where('token_hash = :hash')->where('token_expires_at >= UTC_TIMESTAMP()')
             ->bind(':hash', hash('sha256', $token));
         $this->db->setQuery($q)->execute();
