@@ -34,7 +34,7 @@ final class CourseAnnouncementConsent
     public function request(int $userId, string $email, string $name, string $origin): void
     {
         if ($userId < 1 || !filter_var($email, FILTER_VALIDATE_EMAIL)
-            || !in_array($origin, ['dashboard', 'enrollment'], true)) {
+            || !in_array($origin, ['dashboard', 'enrollment', 'registration'], true)) {
             throw new \InvalidArgumentException('COM_JLMS_MAIL_CONSENT_INVALID');
         }
         if ($this->state($userId) === 'confirmed') { return; }

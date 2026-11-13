@@ -28,10 +28,11 @@ parts.append(('constituents/plg_task_jlms.zip',archive(tree(ROOT/'plugins/task/j
 parts.append(('constituents/plg_privacy_jdlearn.zip',archive(tree(ROOT/'plugins/privacy/jdlearn'))))
 parts.append(('constituents/plg_system_jlmsmenu.zip',archive(tree(ROOT/'plugins/system/jlmsmenu'))))
 parts.append(('constituents/plg_finder_jlms.zip',archive(tree(ROOT/'plugins/finder/jlms'))))
+parts.append(('constituents/plg_user_jdlearnconsent.zip',archive(tree(ROOT/'plugins/user/jdlearnconsent'))))
 manifest=(ROOT/'packages/pkg_jlms.xml').read_text()
 if args.release_version:
     manifest=re.sub(r'(<version>)[^<]+(</version>)',lambda m:m.group(1)+args.release_version+m.group(2),manifest,count=1)
 parts.append(('pkg_jlms.xml',manifest.encode()))
 data=archive(parts);out=DIST/f'pkg_jlms-{OUTPUT_VERSION}{"" if args.release_version else "-dev"}.zip';out.write_bytes(data)
 digest=hashlib.sha256(data).hexdigest();(DIST/'SHA256SUMS.txt').write_text(digest+'  '+out.name+'\n')
-print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':10}))
+print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':11}))

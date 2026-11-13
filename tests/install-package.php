@@ -13,6 +13,9 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
+    if (($argv[3] ?? '') === 'disabled-upgrade') {
+        $fixtureDb->exec("UPDATE joomla_extensions SET enabled=0 WHERE type='plugin' AND folder='user' AND element='jdlearnconsent'");
+    }
     unset($fixtureDb);
 }
 
@@ -77,6 +80,13 @@ try {
     if ($privacyPlugin === null || (int) $privacyPlugin !== 1) {
         throw new \RuntimeException('The package installer did not enable the JD Learn privacy plugin.');
     }
+    $consentPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='user' AND element='jdlearnconsent'")->loadResult();
+    $expectedConsentState = $expectDisabledPlugin ? 0 : 1;
+    if ($consentPlugin === null || (int) $consentPlugin !== $expectedConsentState) {
+        throw new \RuntimeException($expectDisabledPlugin
+            ? 'A JD Learn package upgrade must preserve the registration consent plugin state.'
+            : 'The package installer did not enable the registration consent plugin.');
+    }
     $menuPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->loadResult();
     $expectedPluginState = $expectDisabledPlugin ? 0 : 1;
     if ($menuPlugin === null || (int) $menuPlugin !== $expectedPluginState) {
@@ -88,6 +98,7 @@ try {
     echo json_encode([
         'package_install' => 'passed',
         'menu_acl_plugin_state' => $expectDisabledPlugin ? 'preserved disabled across upgrade' : 'enabled on install',
+        'registration_consent_plugin_state' => $expectDisabledPlugin ? 'preserved disabled across upgrade' : 'enabled on install',
         'messages' => $app->getMessageQueue(),
     ], JSON_THROW_ON_ERROR) . PHP_EOL;
 } finally {

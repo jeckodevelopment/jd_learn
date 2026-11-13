@@ -1039,3 +1039,17 @@ La pagina di revoca non modifica preferenze in GET: i client email possono aprir
 6. Rimuovere l’utente o il suo consenso tramite Privacy Joomla e verificare che anche i token di revoca siano eliminati.
 
 La UI e il servizio sono coperti dalla CI; collaudo reale Joomla/email resta da registrare. Questa tranche non invia annunci: il generatore di token sarà collegato al flusso amministrativo in una PR successiva.
+
+## MAIL-11.2 — opt-in durante la registrazione Joomla (0.56.14-dev)
+
+Eseguire sul sito di prova con un indirizzo email controllato e il mailer Joomla collegato alla casella di test. Il plugin utente **JD Learn - Consenso email nuovi corsi** deve essere attivo dopo una nuova installazione.
+
+1. Aprire la registrazione Joomla in italiano e inglese. Verificare la sezione facoltativa con checkbox non selezionata e testo che spiega conferma email e revoca; completare la registrazione senza selezionarla. L’account deve essere creato e nessun consenso deve risultare pending o confirmed.
+2. Ripetere selezionando la checkbox. Verificare che l’account venga creato, il consenso risulti pending con origine `registration`, e venga inviata l’email double opt-in. Prima della conferma l’utente non deve essere eleggibile per annunci di nuovi corsi; confermare dal link e verificare lo stato confirmed.
+3. Verificare che la preferenza selezionata non diventi attiva senza conferma; provare link scaduto/riutilizzato tramite i test già descritti nelle sezioni MAIL-11.3.
+4. Simulare un errore di invio SMTP. La registrazione deve comunque riuscire e mostrare un avviso comprensibile; controllare log senza indirizzo email o altri dati personali. Verificare che la preferenza non risulti confirmed.
+5. Disabilitare manualmente il plugin in **Sistema → Gestisci → Plugin**, aggiornare il pacchetto e verificare che resti disabilitato. Su nuova installazione deve invece essere attivo.
+6. Compilare la registrazione senza consenso e con consenso selezionato, verificando che gli altri plugin e i campi standard Joomla continuino a funzionare.
+
+La CI esercita il caricamento del plugin e la presenza del campo nel form nativo; il flusso SMTP e i casi sopra restano collaudo manuale sul sito Joomla.
+

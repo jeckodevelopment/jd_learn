@@ -12,7 +12,7 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='privacy' AND element='jdlearn'))");
+    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='privacy' AND element='jdlearn') OR (folder='user' AND element='jdlearnconsent'))");
     unset($fixtureDb);
 }
 
@@ -312,6 +312,17 @@ if (!$model->save($data)) {
 }
 if ($model->save($data)) {
     throw new \RuntimeException('Obsolete revision overwrote a newer draft.');
+}
+// The native Joomla registration form receives the optional, unchecked consent field.
+PluginHelper::importPlugin('user');
+$registrationForm = Form::getInstance('com_users.registration', JPATH_SITE . '/components/com_users/forms/registration.xml', ['control' => 'jform']);
+$app->getDispatcher()->dispatch('onContentPrepareForm', new PrepareFormEvent('onContentPrepareForm', [
+    'subject' => $registrationForm,
+    'data' => [],
+]));
+$consentField = $registrationForm->getField('course_announcements', 'jdlearn');
+if (!$consentField || (string) $consentField->getAttribute('default') !== '0') {
+    throw new \RuntimeException('Native registration form is missing the unchecked course announcement consent field.');
 }
 // Enable providers only inside the disposable fixture to exercise Joomla's real plugin boot/dispatcher.
 PluginHelper::importPlugin('jlmsvideo');

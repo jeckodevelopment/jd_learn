@@ -1,3 +1,9 @@
+## 0.56.14-dev — MAIL-11.2: opt-in durante la registrazione Joomla
+
+- Aggiunto il plugin utente JD Learn che inserisce nella registrazione Joomla un checkbox facoltativo e non preselezionato per gli annunci di nuovi corsi.
+- La scelta richiede conferma email double opt-in; l’account viene creato anche se l’invio fallisce. Il plugin viene attivato alla prima installazione e il suo stato manuale è preservato negli aggiornamenti.
+- Pacchetto aggiornato con l’undicesima estensione; test CI coprono il form e lo stato plugin. Collaudo reale Joomla/SMTP pendente secondo `docs/QA_TESTBOOK.md`.
+
 ## 0.56.12-dev — MAIL-11.2: adesione durante iscrizione automatica (PR #319)
 
 - Aggiunta una scelta facoltativa e non preselezionata per la richiesta di adesione agli annunci di nuovi corsi nel modulo di avvio automatico.
