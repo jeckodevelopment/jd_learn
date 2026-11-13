@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
     "percent": 78,
-    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+61+75)/9=78,33%, arrotondata a 78%. L’area email è stimata al 61% dopo audit consultabile e riconciliazione controllata della coda (PR #332); la mitigazione diagnostica SEC-P1 della candidata #338 non aggiunge copertura ai requisiti funzionali. Accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
+    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+61+75)/9=78,33%, arrotondata a 78%. L’area email è stimata al 61%; la PR #338 mitiga SEC-P1 senza modificare la copertura funzionale. Accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -17,8 +17,8 @@
       "certificates": 75
     }
   },
-  "version": "0.56.17-dev",
-  "code_baseline": "3540b9a256253fb7c3e9257262a86d11027550fe",
+  "version": "0.56.18-dev",
+  "code_baseline": "5d38e6e47582422be581247de085206abc2c0296",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
@@ -29,22 +29,26 @@
     "standard_jobs": 4,
     "jobs": [
       {
+        "id": 132219896267,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
+        "id": 132219991338,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "name": "PHP 8.4 / mariadb:10.6",
+        "id": 132219991419,
+        "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "name": "Curriculum navigation in Chromium (controlled fixture)",
+        "id": 132219991777,
+        "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       }
@@ -88,6 +92,16 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "version": "0.56.17-dev",
+      "ci": {
+        "run_id": 43518504217,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43518504217",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      "feature": "PR #332 outbox audit/reconciliation"
+    },
     {
       "version": "0.56.8-dev",
       "ci": {
@@ -13182,10 +13196,10 @@
   "latest_feature": {
     "pull_request": 338,
     "merge_commit": "5d38e6e47582422be581247de085206abc2c0296",
-    "feature": "SEC-P1 preliminary mitigation: redact SMTP/provider exception details from the email queue and audit output; redact legacy values during migration",
+    "feature": "SEC-P1: redact persisted SMTP/provider transport diagnostics and legacy outbox errors",
     "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570",
     "manual_acceptance": "pending Joomla/SMTP; see docs/QA_TESTBOOK.md",
-    "residual_implementation": "Systematic security review and SEC-P1–P5 release gates remain open; functional email coverage remains 61%."
+    "residual_implementation": "Systematic security review and SEC-P1–P5 remain open; manual SMTP/upgrade acceptance pending."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
@@ -13206,7 +13220,7 @@
       "send-time consent/visibility checks and deduplicated outbox"
     ]
   },
-  "runtime_tested_head": "5d38e6e47582422be581247de085206abc2c0296",
+  "runtime_tested_head": "6c86bbd0a195f0be6f94c59c4e0b7f7e4d4b1ba0",
   "imp_09_mail_d_registration": {
     "pull_request": 323,
     "merge_commit": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
@@ -13230,12 +13244,13 @@
     "testbook": "docs/QA_TESTBOOK.md#mail-112--opt-in-durante-la-registrazione-joomla-05614-dev",
     "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873"
   },
-  "note": "Main 0.56.18-dev integra PR #338 (merge 5d38e6e47582422be581247de085206abc2c0296); CI standard 4/4 e pacchetto registrati. Avanzamento implementativo invariato 78,33% (78% arrotondato), email 61%: la mitigazione SEC-P1 non modifica la copertura funzionale misurata. Collaudo Joomla/SMTP pendente.",
-  "updated_at": "2026-11-13T22:53:32Z",
+  "note": "Main 0.56.18-dev integra PR #338. CI standard 4/4; pacchetto e checksum registrati. Avanzamento implementativo invariato a 78,33% (78% arrotondato), email 61%. Collaudo Joomla/SMTP pendente.",
+  "updated_at": "2026-11-13T23:00:00Z",
   "sec_p1_mail_transport_candidate": {
     "pull_request": 338,
-    "runtime_commit": "5d38e6e47582422be581247de085206abc2c0296",
-    "status": "integrated; standard CI 4/4 successful; manual Joomla/SMTP acceptance pending",
-    "finding": "Mailer exception text can contain addresses or provider/SMTP details; redacts legacy queue values and stops returning last_error in audit view. Systematic SEC-P1–P5 review remains open."
+    "runtime_commit": "6c86bbd0a195f0be6f94c59c4e0b7f7e4d4b1ba0",
+    "merge_commit": "5d38e6e47582422be581247de085206abc2c0296",
+    "status": "integrated; CI 4/4; manual Joomla/SMTP acceptance pending",
+    "finding": "Mailer exception text can contain addresses or provider/SMTP details; redact legacy queue values and stop returning last_error in audit view."
   }
 }
