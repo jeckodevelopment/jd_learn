@@ -789,8 +789,10 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Nessun trigger o invio di annuncio; opt-in, double opt-in, revoca e invio restano da implementare. CI 4/4 nel run 43450891869; artifact 14051706158.
 
 
-## 0.56.13-dev — revoca via link email (in PR)
+## 0.56.13-dev — MAIL-11.3: revoca via link email (PR #321 integrata)
 
 - Implementa revoca anonima esplicita con token opaco SHA-256, monouso e valido 30 giorni, legato alla specifica versione del consenso.
 - La visita GET non revoca; la conferma POST richiede CSRF. La revoca invalida i token paralleli; cancellazione consenso elimina i token via FK.
 - Aggiunge view Joomla IT/EN, migrazione schema e verifiche automatizzate del ciclo di vita. Il collegamento al flusso di invio annunci resta nella tranche admin successiva; nessun annuncio viene inviato da questa PR.
+- CI standard 4/4 nel [run 43477935433](https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433); merge `dda543402a036dd7cbc1cbf84a6545c61b4f47fe`.
+- Pacchetto [JD-Learn-0.56.13-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433/artifacts/14062899580), SHA-256 ZIP `6af55c08a96d9c3b9ad02add1e3c3d491ecd931e11c5aa9d6ec3555f7447128c`, digest artifact `0e3ec5bd9e067833edf7160e70fe5a3ec5be9f5bfcc73f76fd5552f9a35958a7`.
