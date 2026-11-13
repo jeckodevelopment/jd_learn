@@ -1,8 +1,8 @@
 {
   "date": "2026-11-13",
   "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
-  "runtime_tested_head": "ec6ff14d64a85810f016d1dccac59a210eb7bceb",
-  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43457091398",
+  "runtime_tested_head": "46fb687c2f7ce042921227e5fe8072dd3192f008",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433",
   "counts": {
     "Stato implementazione": {
       "Parziale": 179,
@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 76,
-    "method": "Media delle nove macroaree (81+81+78+99+68+92+70+37+75)/9 = 75,67%, arrotondato a 76%. Email 37% dopo MAIL-C, MAIL-11.1 e MAIL-11.2/11.3 parziali: consenso e double opt-in; invio annunci ancora escluso.",
+    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+43+75)/9 = 76,33%, arrotondato a 76%. La macroarea email sale da 37% a 43% dopo MAIL-11.3; resta sviluppo per registrazione e gestione/invio amministrativo. Le prove manuali non aumentano la copertura implementativa.",
     "areas": [
       81,
       81,
@@ -34,7 +34,7 @@
       68,
       92,
       70,
-      37,
+      43,
       75
     ]
   },
