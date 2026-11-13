@@ -1,8 +1,8 @@
-# 0.56.8-dev — notifica disponibilità attestato (CERT-D, PR in preparazione)
+# 0.56.8-dev — notifica disponibilità attestato (CERT-D, PR #307 integrata)
 
 - Aggiunge il template Joomla `com_jlms.certificate.available` e l’accodamento idempotente alla prima emissione.
 - Preferenze globali/per corso; errore outbox non annulla l’emissione; consegna differita al task esistente.
-- Collaudo manuale Joomla documentato in `docs/QA_TESTBOOK.md`; CI e merge da completare.
+- CI standard 4/4 nel [run 1038](https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845); collaudo manuale Joomla in `docs/QA_TESTBOOK.md` ancora da eseguire.
 
 # 0.56.7-dev — gestione amministrativa attestati (PR #304 integrata)
 

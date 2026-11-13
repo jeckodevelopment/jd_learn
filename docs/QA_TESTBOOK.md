@@ -963,7 +963,7 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 **Verifica automatica PR #304:** CI standard 4/4 superata nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); la suite ha superato database, installazione/upgrade e smoke test Joomla su MySQL 8.4 e MariaDB 10.6. Gli scenari manuali Joomla restano pendenti. Pacchetto [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 ZIP interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`.
 
 
-# CERT-D — notifica disponibilità attestato (PR in sviluppo)
+# CERT-D — notifica disponibilità attestato (PR #307 integrata; 0.56.8-dev)
 
 1. Aggiornare il componente su Joomla di prova, abilitare attestati e notifiche email globali; verificare che il template `com_jlms.certificate.available` compaia in **Sistema → Modelli email** con oggetto, HTML/testo e tag `NAME`, `COURSE`, `SITENAME`, `CERTIFICATE_URL`. Personalizzare il template e verificare che l’upgrade successivo lo preservi.
 2. Completare un corso idoneo con utenti che hanno lingua profilo IT ed EN; verificare una sola riga in outbox per ciascun documento e template lingua corretto. Eseguire il task `JD Learn: send queued emails` e verificare contenuti, link autenticato alla dashboard e accesso al download.
