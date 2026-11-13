@@ -12,6 +12,9 @@ $id = (int) $this->item->id;
  <section id="jlms-course-publication-help" class="mb-3">
   <?php if (!$id) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
  </section>
+ <?php if ($this->canPreviewAnnouncement) : ?>
+  <p><a class="btn btn-outline-primary" href="<?= Route::_('index.php?option=com_jlms&view=courseannouncement&id=' . $id) ?>"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW') ?></a></p>
+ <?php endif; ?>
  <?php if ($this->readOnly) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_COURSE_CHECKED_OUT') ?></p><?php endif; ?>
  <?= HTMLHelper::_('uitab.startTabSet', 'jlms-course-tabs', ['active'=>'jlms-course-general']) ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-general', Text::_('COM_JLMS_COURSE')) ?>
