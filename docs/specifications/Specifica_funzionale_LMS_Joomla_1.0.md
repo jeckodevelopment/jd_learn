@@ -337,7 +337,7 @@ Il prodotto JD Learn usa i contesti dell’estensione com_jlms. Categorie, campi
 - **Media pubblici:** gestiti dal servizio nativo. **File riservati:** richiedono autorizzazione alla consegna; non basta il controllo dell'editor media.
 - **Override:** personalizza la presentazione. Nessuna decisione su esiti, accessi o punteggi deve dipendere da un file di override.
 
-Le API web Joomla del LMS restano nel rilascio 3 perché sono una superficie funzionale aggiuntiva: saranno implementate come estensione delle Web Services native, senza un sistema parallelo. L'integrazione con le API interne del core è invece obbligatoria già nel rilascio 1. Le funzionalità core prive di relazione con il LMS non richiedono schermate o servizi fittizi; le esclusioni vanno documentate e non possono comprendere le integrazioni obbligatorie sopra elencate.
+Le API web Joomla del LMS restano nel rilascio 3 perché sono una superficie funzionale aggiuntiva: saranno implementate come estensione delle Web Services native, senza un sistema parallelo. Il caso d'uso headless LMS (catalogo, iscrizione e possibile fruizione completa in app esterne) e la separazione in MVP e fasi successive sono descritti nella [roadmap API del rilascio 3](../HEADLESS_API_RELEASE3_ROADMAP.md). Questa integrazione documentale non modifica la 1.0.0, non approva ancora gli endpoint esecutivi e non equivale a disponibilità delle API. L'integrazione con le API interne del core è invece obbligatoria già nel rilascio 1. Le funzionalità core prive di relazione con il LMS non richiedono schermate o servizi fittizi; le esclusioni vanno documentate e non possono comprendere le integrazioni obbligatorie sopra elencate.
 
 ### 17.3 Contratto pubblico di personalizzazione delle viste
 
