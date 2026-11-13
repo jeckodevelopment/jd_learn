@@ -3,8 +3,8 @@
   "product": "JD Learn",
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
-    "percent": 76,
-    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+43+75)/9=76,33%, arrotondato a 76%. Email 43% dopo MAIL-11.3: consenso, double opt-in, revoca autenticata e revoca esplicita via link monouso; restano registrazione Joomla, selezione/preview e invio amministrativo controllato.",
+    "percent": 77,
+    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+46+75)/9=76,67%, arrotondato a 77%. Email 46% dopo l’integrazione del consenso nella registrazione (PR #323); restano scelta/preview amministrativa e invio controllato. Acceptance manuale Joomla/SMTP pendente e non influenza la copertura implementativa.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,21 +13,17 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 43,
+      "email_notifications": 46,
       "certificates": 75
     }
   },
-  "version": "0.56.13-dev",
-  "code_baseline": {
-    "tested_head": "46fb687c2f7ce042921227e5fe8072dd3192f008",
-    "pull_request": 321,
-    "merged_main_commit": "dda543402a036dd7cbc1cbf84a6545c61b4f47fe"
-  },
+  "version": "0.56.14-dev",
+  "code_baseline": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43477935433,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433",
+    "run_id": 43482627796,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -55,15 +51,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14059519179,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700/artifacts/14059519179",
-    "artifact_name": "JD-Learn-0.56.12-dev",
-    "installable_package": "pkg_jlms-0.56.12-dev.zip",
-    "sha256": "2219c21df9308f2688ef83f0c408fe9da17280a636bd8b7fc8578edacde16b47",
-    "artifact_sha256": "98e31e8727ea5170e8c8a5e9bd9c1bb201225393cb7f009f57ec5b03c5adebf6",
-    "size_bytes": 621331,
-    "artifact_size_bytes": 621100,
-    "expires_at": "2026-11-27T17:09:43Z",
+    "artifact_id": 14065717873,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873",
+    "artifact_name": "JD-Learn-0.56.14-dev",
+    "installable_package": "pkg_jlms-0.56.14-dev.zip",
+    "sha256": "919090590b479624958199f956712cf485320ef828bcc84047c9b4ca322d7aa9",
+    "artifact_sha256": "7ca7d4768db10f64199cff448ffb93733a208eabab60778038b4f9dadea99d5c",
+    "size_bytes": 627778,
+    "artifact_size_bytes": 627507,
+    "expires_at": "2026-11-27T18:29:45Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -13159,17 +13155,31 @@
         "status": "completed",
         "conclusion": "success"
       }
+    },
+    {
+      "version": "0.56.13-dev",
+      "pull_request": 321,
+      "merged_main_commit": "dda543402a036dd7cbc1cbf84a6545c61b4f47fe",
+      "ci": {
+        "run_id": 43477935433,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433",
+        "status": "completed",
+        "conclusion": "success"
+      }
     }
   ],
   "latest_feature": {
-    "pull_request": 321,
-    "candidate_head": "46fb687c2f7ce042921227e5fe8072dd3192f008",
-    "merged_main_commit": "dda543402a036dd7cbc1cbf84a6545c61b4f47fe",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433/artifacts/14062899580",
-    "artifact_id": 14062899580,
-    "sha256": "6af55c08a96d9c3b9ad02add1e3c3d491ecd931e11c5aa9d6ec3555f7447128c",
-    "artifact_sha256": "0e3ec5bd9e067833edf7160e70fe5a3ec5be9f5bfcc73f76fd5552f9a35958a7",
-    "manual_acceptance": "Revoca link anonima: eseguire collaudo Joomla/email dei casi GET senza mutazione, conferma POST CSRF, token scaduto/monouso, IT/EN, headers e privacy cascade; nessun invio annunci da questa tranche."
+    "version": "0.56.14-dev",
+    "pull_request": 323,
+    "candidate_head": "6431bbff1a6965371042e0dc49f88bfa030479f5",
+    "merged_main_commit": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
+    "ci_run": 43482627796,
+    "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873",
+    "artifact_id": 14065717873,
+    "sha256": "919090590b479624958199f956712cf485320ef828bcc84047c9b4ca322d7aa9",
+    "artifact_sha256": "7ca7d4768db10f64199cff448ffb93733a208eabab60778038b4f9dadea99d5c",
+    "manual_acceptance": "Registrazione Joomla/SMTP IT/EN, scelta/no scelta, errore SMTP e stato plugin dopo upgrade da eseguire sul sito di prova; nessun esito manuale dichiarato."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
@@ -13186,9 +13196,34 @@
       "expired/replayed tokens cannot revoke; successful revocation invalidates parallel tokens"
     ],
     "remaining": [
-      "registration consent UI",
       "admin campaign selection and preview",
       "send-time consent/visibility checks and deduplicated outbox"
     ]
-  }
+  },
+  "runtime_tested_head": "6431bbff1a6965371042e0dc49f88bfa030479f5",
+  "imp_09_mail_d_registration": {
+    "pull_request": 323,
+    "merge_commit": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
+    "status": "partial; CI standard 4/4 passed; Joomla/SMTP manual acceptance pending",
+    "requirements": [
+      "MAIL-11.2"
+    ],
+    "completed": [
+      "optional unchecked IT/EN course announcement consent in Joomla native registration",
+      "registration origin starts existing double-opt-in flow only after user creation succeeds",
+      "registration remains successful when confirmation mail fails",
+      "fresh install enables user plugin and upgrade preserves administrator disabled state",
+      "Joomla smoke test verifies native registration form field"
+    ],
+    "remaining": [
+      "manual Joomla/SMTP acceptance",
+      "admin campaign selection and preview",
+      "send-time consent/visibility checks and deduplicated outbox"
+    ],
+    "ci": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796",
+    "testbook": "docs/QA_TESTBOOK.md#mail-112--opt-in-durante-la-registrazione-joomla-05614-dev",
+    "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873"
+  },
+  "note": "Main 0.56.14-dev integra PR #323 e il checkbox facoltativo di consenso nella registrazione nativa Joomla. CI standard 4/4 nel run 43482627796; pacchetto e checksum registrati. Copertura globale 76,67% (77% arrotondato), email 46%; acceptance manuale Joomla/SMTP pendente. Nessun annuncio di nuovo corso viene ancora inviato.",
+  "updated_at": "2026-11-13T18:30:00Z"
 }

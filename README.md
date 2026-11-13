@@ -1,4 +1,4 @@
-**Candidate 0.56.14-dev (PR #323)** aggiunge l’opt-in facoltativo agli annunci di nuovi corsi durante la registrazione Joomla, con conferma double opt-in. La percentuale sarà aggiornata dopo il merge; collaudo Joomla/SMTP pendente. Il pacchetto candidato è generato dalla CI della PR.
+**Main 0.56.14-dev** integra PR [#323](https://github.com/jeckodevelopment/jd_learn/pull/323): opt-in facoltativo, non preselezionato, durante la registrazione Joomla e conferma double opt-in. CI 4/4 [run 43482627796](https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796); progresso globale 76,67% (77% arrotondato), email 46%. Acceptance manuale Joomla/SMTP pendente. Pacchetto [JD-Learn-0.56.14-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873), SHA-256 ZIP `919090590b479624958199f956712cf485320ef828bcc84047c9b4ca322d7aa9`.
 
 Aggiornato al 13 novembre 2026. Main **0.56.7-dev** integra la PR [#304](https://github.com/jeckodevelopment/jd_learn/pull/304), merge `461c2d83c85e1152e2fb2497e0e15be62e36cec9`. CERT-A/B/C sono implementati; avanzamento globale stimato **73,44%** (email 29,5%; attestati 62,5%). CI standard 4/4 superata nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo manuale Joomla ancora pendente. Pacchetto installabile [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 ZIP interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, checksum artifact wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`; disponibile fino al 27 novembre 2026 alle 12:00 UTC.
 
@@ -57,7 +57,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **46 tabelle / 66 FK**. Il pacchetto 0.56.13-dev contiene 10 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy e filtro ACL della sidebar.
+Schema InnoDB: **46 tabelle / 66 FK**. Il pacchetto 0.56.14-dev contiene 11 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy, filtro ACL della sidebar e consenso email in registrazione.
 
 ```sh
 python3 tools/build.py
