@@ -21,6 +21,7 @@ final class MailQueueAuditService
         'com_jlms.enrollment.reactivated',
         'com_jlms.course.message',
         'com_jlms.course.published',
+        'com_jlms.course.expiring',
         'com_jlms.course.consent',
     ];
     private const STALE_MINUTES = 15;
