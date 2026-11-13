@@ -88,6 +88,12 @@ final class MailTemplateInstaller
                 ['NAME', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'COURSE_IMAGE_HTML', 'COURSE_INTRO_TEXT', 'COURSE_INTRO_HTML', 'COURSE_LESSONS_TEXT', 'COURSE_LESSONS_HTML', 'COURSE_URL', 'SITE_NAME', 'SITE_NAME_HTML', 'UNSUBSCRIBE_URL'],
                 '<p>Ciao {NAME},</p>{COURSE_IMAGE_HTML}<h2>{COURSE_TITLE_HTML}</h2><p>{COURSE_INTRO_HTML}</p>{COURSE_LESSONS_HTML}<p><a href="{COURSE_URL}">Scopri il corso</a></p><p>Ricevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. <a href="{UNSUBSCRIBE_URL}">Revoca l’adesione</a>.</p><p>{SITE_NAME_HTML}</p>',
             ],
+            'com_jlms.course.consent' => [
+                'Conferma l’adesione alle novità di {SITE_NAME}',
+                "Ciao {NAME},\n\nper confermare la richiesta di ricevere comunicazioni sulla disponibilità di nuovi corsi, apri questo link entro 24 ore:\n{CONFIRM_URL}\n\nSe non hai fatto tu la richiesta, ignora questa email.\n\n{SITE_NAME}",
+                ['NAME', 'CONFIRM_URL', 'SITE_NAME'],
+                '<p>Ciao {NAME},</p><p>Per confermare la richiesta di ricevere comunicazioni sulla disponibilità di nuovi corsi, <a href="{CONFIRM_URL}">conferma l’adesione entro 24 ore</a>.</p><p>Se non hai fatto tu la richiesta, ignora questa email.</p><p>{SITE_NAME}</p>',
+            ],
         ];
     }
 }

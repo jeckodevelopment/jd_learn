@@ -14,7 +14,7 @@ for base in ['component','libraries','plugins','packages']:
 for p in ROOT.rglob('*.json'):
  if 'dist' not in p.parts:json.loads(p.read_text())
 sql=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
-assert len(re.findall(r'^CREATE TABLE',sql,re.M))==44
+assert len(re.findall(r'^CREATE TABLE',sql,re.M))==45
 assert len(re.findall(r'ADD CONSTRAINT',sql))==65
 mail_queue=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
 assert re.search(r'CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue`',mail_queue)
@@ -94,10 +94,16 @@ if package.exists():
 # Keep implementation claims separate from planned acceptance and verify their source references.
 import runpy
 runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
-print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':44,'foreign_keys':65,'structural_checks':'passed'}))
+print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':45,'foreign_keys':65,'structural_checks':'passed'}))
 
 # MAIL-11.1 registers the opt-in new-course template without enabling sends.
 mail_templates=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 assert "'com_jlms.course.published' => [" in mail_templates
 for tag in ['COURSE_TITLE','COURSE_IMAGE_HTML','COURSE_INTRO_HTML','COURSE_LESSONS_HTML','COURSE_URL','UNSUBSCRIBE_URL']:
     assert tag in mail_templates, ('MAIL-11.1 missing template token',tag)
+consent=(ROOT/'component/administrator/src/Application/CourseAnnouncementConsent.php').read_text()
+assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
+assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
+assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
+assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()

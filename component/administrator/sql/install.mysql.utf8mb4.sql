@@ -811,5 +811,19 @@ CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue` (
   KEY `ix_ready` (`state`,`available_at`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `#__jlms_mail_consents` (
+  `user_id` INT UNSIGNED NOT NULL,
+  `state` VARCHAR(16) NOT NULL,
+  `origin` VARCHAR(16) NOT NULL,
+  `policy_version` VARCHAR(32) NOT NULL,
+  `requested_at` DATETIME(6) NOT NULL,
+  `confirmed_at` DATETIME(6) NULL,
+  `revoked_at` DATETIME(6) NULL,
+  `token_hash` CHAR(64) NULL,
+  `token_expires_at` DATETIME(6) NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `ix_mail_consent_state` (`state`,`confirmed_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 ALTER TABLE `#__jlms_certificate_audit` ADD CONSTRAINT `#__jlms_fk_certificate_audit_certificate` FOREIGN KEY (`certificate_id`) REFERENCES `#__jlms_certificates` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `#__jlms_certificate_audit` ADD CONSTRAINT `#__jlms_fk_certificate_audit_document` FOREIGN KEY (`document_id`) REFERENCES `#__jlms_certificate_documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

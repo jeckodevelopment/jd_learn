@@ -20,7 +20,7 @@ foreach (explode(';', $sql) as $query) {
     }
 }
 $tables = $db->query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE 'ci_jlms_%'")->fetchColumn();
-if ((int) $tables !== 44) {
+if ((int) $tables !== 45) {
     throw new \RuntimeException('Schema table count mismatch');
 }
 $mailKeys = $db->query("SHOW INDEX FROM `ci_jlms_mail_queue` WHERE Key_name='uq_event_key'")->fetchAll();

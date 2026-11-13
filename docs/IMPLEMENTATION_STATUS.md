@@ -1,4 +1,4 @@
-Aggiornato al 13 novembre 2026. Main 0.56.9-dev integra MAIL-C (PR #313), avanzamento globale 75% (stima 75,33%; email 34%, attestati 75%). La candidata PR [#315](https://github.com/jeckodevelopment/jd_learn/pull/315), 0.56.10-dev, implementa parzialmente MAIL-11.1 registrando il template nativo Joomla `com_jlms.course.published`; non invia notifiche. CI/collaudo della candidata in corso. Collaudo Joomla/SMTP di MAIL-C ancora pendente.
+Aggiornato al 13 novembre 2026. Main 0.56.10-dev integra MAIL-11.1 (#315) e MAIL-C (#313). Candidata 0.56.11-dev / IMP-09-MAIL-D implementa richiesta opt-in in Area personale, double opt-in con token monouso in scadenza e revoca autenticata; non invia annunci. Stima candidata 75,67% (76% arrotondato), email 37%, attestati 75%. CI e collaudo Joomla/SMTP della candidata da completare; MAIL-D annuncio, revoca via link e invio amministrativo restano aperti.
 
 La PR #299 collega anche la conferma dopo iscrizione amministrativa singola; la CI completa è verde, mentre il collaudo manuale Joomla/SMTP resta pendente. CERT-D è integrato con la PR #307; restano aperti gli altri residui email approvati, CERT-08 (backup/ripristino e rigenerazione immutabile) e il collaudo manuale Joomla CERT-A/B/C/D.
 
@@ -36,11 +36,11 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Iscrizione e roster essenziale (M06/M09) | 68% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 70% |
-| Email e notifiche operative (MAIL-01–11 approvati) | 35% |
+| Email e notifiche operative (MAIL-01–11 approvati) | 37% |
 | Attestati PDF essenziali (CERT-01–08 approvati) | 62,5% |
-| **Avanzamento complessivo stimato** | **75,44% (75%)** |
+| **Avanzamento complessivo stimato** | **75,67% (76%)** |
 
-Metodo: media semplice delle nove aree approvate per la 1.0.0: (81+81+78+99+68+92+70+35+75)/9 = 75,44%. Email 29,5% e attestati 62,5% sono stime di copertura parziale dei rispettivi criteri; CERT-A copre impostazioni/emissione/idempotenza e CERT-B aggiunge PDF IT/EN, template globale, area personale e download protetto. CERT-D, rigenerazione amministrativa e backup/ripristino restano aperti; CERT-C ha integrato elenco, dettaglio, download e audit minimo. Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; i collaudi Joomla restano separati.
+Metodo: media semplice delle nove aree approvate per la 1.0.0: (81+81+78+99+68+92+70+37+75)/9 = 75,67%. La stima email include la registrazione del template MAIL-11.1, preferenza utente, conferma dell'indirizzo e revoca autenticata; resta escluso l'invio annunci finché non esistono revoca via link e guardie amministrative/visibilità. CERT-D è integrato; rigenerazione amministrativa e backup/ripristino restano aperti. Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; i collaudi Joomla restano separati.
 
 IMP-07 comprende PR #204, #206–#213, #215 e #222–#225. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; la PR #225 aggiunge il riepilogo e la ricollocazione atomica dei riferimenti per corsi, percorsi, docenti e domande, preservando gli storici; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la PR #221 corregge la #219 per gli allegati e PR #226 sostituisce l’offload Nginx dei video HTML5 con streaming PHP a blocchi, compatibile con Apache/LiteSpeed; M03 sale al 78% dopo la protezione persistente del resume da sessioni concorrenti obsolete (PR #280); M04 stimata 94% dopo la PR #233, 95% con velocità STU-05/PR #258, 98% con preferenza caption/PR #276 e 99% con il controllo capabilities/PR #278; PR #235/0.41.77-dev completa l’inclusione dei materiali corso nell’anteprima delle lezioni testo/video; catalogo al 81%; CORE-09 integrato dalla PR #222; CORE-07: associazioni dei corsi pubblicati implementate dalla PR #223 e ricerca selector integrata dalla #224, portando le integrazioni Joomla al 92%; avanzamento complessivo 78%. Accettazione Joomla di materiali, lifecycle/ricollocazione categorie, CAT-01 e SEO/Finder ancora pendente.
 
@@ -96,16 +96,20 @@ Seguire l’ordine e i confini già approvati in [NEXT_STEPS.md](NEXT_STEPS.md),
 
 La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) conservano la baseline storica: 209 requisiti originariamente del rilascio 1 e uno differito. La riconciliazione del 10 novembre distingue 133 righe interamente core, 40 miste e 37 di fase 2; implementazione: 14 completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate. Verifica automatica: 169 esiti superati con copertura parziale e 41 senza esecuzione specifica. Accettazione Joomla: 2 parziali, 208 non eseguite integralmente, 0 integrali. Metodo e limiti nella [guida](REQUIREMENTS_STATUS_GUIDE.md); conteggi verificabili in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La ricognizione non aggiunge funzionalità: stima per aree aggiornata al 74% (518/7). Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
-Schema attuale: **44 tabelle / 65 FK**; il pacchetto candidato 0.41.67-dev contiene 9 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
+Schema attuale: **45 tabelle / 65 FK**; il pacchetto contiene 10 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.
 
 
 ## IMP-09-MAIL-C / PR #313 integrata — 0.56.9-dev
 
-Implementata la comunicazione operativa manuale per corso: destinatari selezionabili dal roster autorizzato, anteprima e conferma, test all'operatore, job idempotente, batch via Scheduler/outbox e preferenze globale/per corso. ACL e stato degli iscritti sono ricontrollati a ogni elaborazione. PR #313 è integrata nella milestone 1.0.0; CI 4/4 superata, accettazione manuale Joomla/SMTP pendente. Email stimata 34%; totale 75,33% (75%), media delle nove macroaree. MAIL-11 resta distinta e non implementata.
+Implementata la comunicazione operativa manuale per corso: destinatari selezionabili dal roster autorizzato, anteprima e conferma, test all'operatore, job idempotente, batch via Scheduler/outbox e preferenze globale/per corso. ACL e stato degli iscritti sono ricontrollati a ogni elaborazione. PR #313 è integrata nella milestone 1.0.0; CI 4/4 superata, accettazione manuale Joomla/SMTP pendente. MAIL-11 è separata dalle notifiche operative.
 
 
 ## MAIL-11.1 / PR #315 integrata — 0.56.10-dev
 
-La PR #315 registra il template `com_jlms.course.published` in Joomla → Sistema → Modelli email, con testo/HTML e tag per titolo, immagine, introduzione, sole lezioni pubbliche, URL corso, sito e revoca. L’installer crea il modello solo se manca; la personalizzazione si conserva. MAIL-11 resta parziale: invio, opt-in/double opt-in, revoca runtime e scelta admin non sono implementati. Email 35%; avanzamento globale 75,44% (75%), accettazione Joomla pendente.
+La PR #315 registra il template `com_jlms.course.published` in Joomla → Sistema → Modelli email, con testo/HTML e tag per titolo, immagine, introduzione, sole lezioni pubbliche, URL corso, sito e revoca. L’installer crea il modello solo se manca; la personalizzazione si conserva. MAIL-11 è ancora parziale e non invia annunci.
+
+## IMP-09-MAIL-D — MAIL-11.2/11.3 consenso (candidata 0.56.11-dev)
+
+Candidata: richiesta di consenso facoltativa non preselezionata nell’Area personale, email double opt-in, token monouso conservato solo come hash SHA-256 e valido 24 ore, tracciamento minimale di origine/data/versione informativa, conferma e revoca autenticata. I dati sono esportabili e rimovibili via plugin Privacy Joomla. Gli annunci non vengono accodati. Restano integrazione registrazione/iscrizione, revoca via link email, conferma amministrativa/preview, controllo visibilità e invio; accettazione Joomla/SMTP pendente.
