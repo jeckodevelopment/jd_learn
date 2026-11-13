@@ -1,7 +1,9 @@
-Aggiornato al 13 novembre 2026. Main **0.56.12-dev** integra la PR [#319](https://github.com/jeckodevelopment/jd_learn/pull/319), tranche MAIL-11.2 per opt-in durante l'iscrizione automatica. Avanzamento stimato **75,78%** (76% arrotondato; email 38%, attestati 75%). CI standard 4/4 nel [run 43469236700](https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700); accettazione manuale Joomla/SMTP pendente. Pacchetto [JD-Learn-0.56.12-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700/artifacts/14059519179), SHA-256 ZIP `2219c21df9308f2688ef83f0c408fe9da17280a636bd8b7fc8578edacde16b47`, digest wrapper `98e31e8727ea5170e8c8a5e9bd9c1bb201225393cb7f009f57ec5b03c5adebf6` (scadenza 27 novembre 2026 alle 17:09 UTC).
+# Prossimi passi verso JD Learn 1.0.0
 
-**Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
+Aggiornato al 13 novembre 2026. Baseline **main 0.56.16-dev**, PR [#327](https://github.com/jeckodevelopment/jd_learn/pull/327), merge `0bae6bb428f06636a1d3be7d524f32a15739bd0b`. CI standard 4/4: [run 43511719258](https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258). Pacchetto [JD-Learn-0.56.16-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258/artifacts/14077534734), SHA-256 ZIP `3fdaff806b1f742f9e8dda230546967cf2c9de52817f1efd27d73734a330ca07`.
 
-**Prossime attività MAIL-D:** adesione nella registrazione Joomla, revoca tramite link sicuro, scelta amministrativa/anteprima, controlli di consenso e visibilità prima dell'accodamento.
+**Avanzamento stimato implementativo:** 78,00% globale; 58% area email; 75% attestati. **MAIL-11.1–11.5 è implementato**, ma l'accettazione manuale Joomla/SMTP non è stata eseguita e la CI verde non costituisce accettazione.
 
-.
+**Attività aperte:** completare gli altri requisiti funzionali approvati per 1.0.0, eseguire gli scenari MAIL-11 del [testbook](QA_TESTBOOK.md), verificare il comportamento SMTP reale e la configurazione mailer globale Joomla, e chiudere i gate di stabilizzazione del [piano PR](STABLE_1.0.0_PR_PLAN.md). La PR [#329](https://github.com/jeckodevelopment/jd_learn/pull/329) per audit e riconciliazione outbox è **aperta**: non attribuirle copertura, versioni o percentuali finché non sarà integrata e documentata.
+
+La documentazione di riferimento è [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e [MAIL_TEMPLATES.md](MAIL_TEMPLATES.md). Nessun incremento di avanzamento è attribuito a questa sola riconciliazione documentale.
