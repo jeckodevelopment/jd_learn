@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
     "percent": 76,
-    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+38+75)/9=75,78%, arrotondato a 76%. Email 38% dopo MAIL-C, MAIL-11.1, consenso/double opt-in e opt-in durante iscrizione automatica (MAIL-11.2/11.3 parziali); registrazione Joomla, revoca via link e flusso amministrativo restano aperti.",
+    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+43+75)/9=76,33%, arrotondato a 76%. Email 43% dopo MAIL-11.3: consenso, double opt-in, revoca autenticata e revoca esplicita via link monouso; restano registrazione Joomla, selezione/preview e invio amministrativo controllato.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,21 +13,21 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 38,
+      "email_notifications": 43,
       "certificates": 75
     }
   },
-  "version": "0.56.12-dev",
+  "version": "0.56.13-dev",
   "code_baseline": {
-    "tested_head": "7350d8f437f90c5c53b866981116445f6326de76",
-    "pull_request": 319,
-    "merged_main_commit": "571cd69639a9d7ca0f7c204dd55e08ce5276d500"
+    "tested_head": "46fb687c2f7ce042921227e5fe8072dd3192f008",
+    "pull_request": 321,
+    "merged_main_commit": "dda543402a036dd7cbc1cbf84a6545c61b4f47fe"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43469236700,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700",
+    "run_id": 43477935433,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -74,12 +74,12 @@
     "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855",
     "standard_ci_jobs": 4,
     "status": "passed; process/tooling change only; no runtime requirement progress",
-    "latest_installable_artifact_id": 13979316386,
-    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43294015095/artifacts/13979316386",
-    "package_sha256": "4f3907ff29bb195b2568fed588fd259ddd1ff5ddc228061868aac1b7afd20d37",
-    "artifact_wrapper_sha256": "9fa791b4157c3b405059ce5a5d90acfa6584af66b358c2c8f533273b9a4c0deb",
-    "artifact_expires_at": "2026-11-26T19:52:38Z",
-    "manual_joomla_acceptance": "CORE-18 manual Joomla acceptance remains pending; execute the email-template scenarios in docs/QA_TESTBOOK.md. AC-13/AC-57 persistent retry delivery remains an implementation residual."
+    "latest_installable_artifact_id": 14062899580,
+    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433/artifacts/14062899580",
+    "package_sha256": "6af55c08a96d9c3b9ad02add1e3c3d491ecd931e11c5aa9d6ec3555f7447128c",
+    "artifact_wrapper_sha256": "0e3ec5bd9e067833edf7160e70fe5a3ec5be9f5bfcc73f76fd5552f9a35958a7",
+    "artifact_expires_at": "2026-11-27T18:01:24Z",
+    "manual_joomla_acceptance": "MAIL-11.3 revoca anonima via link: eseguire i casi documentati in docs/QA_TESTBOOK.md; CORE-18 e gli altri collaudi manuali restano pendenti."
   },
   "full_requirement_acceptance": {},
   "known_gaps": "docs/IMPLEMENTATION_GAPS.md",
@@ -13162,30 +13162,31 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 319,
-    "candidate_head": "7350d8f437f90c5c53b866981116445f6326de76",
-    "merged_main_commit": "571cd69639a9d7ca0f7c204dd55e08ce5276d500",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700/artifacts/14059519179",
-    "artifact_id": 14059519179,
-    "sha256": "2219c21df9308f2688ef83f0c408fe9da17280a636bd8b7fc8578edacde16b47",
-    "artifact_sha256": "98e31e8727ea5170e8c8a5e9bd9c1bb201225393cb7f009f57ec5b03c5adebf6",
-    "manual_acceptance": "MAIL-11.2 enrollment checkbox, double opt-in/replay and SMTP failure scenarios still pending on Joomla test site"
+    "pull_request": 321,
+    "candidate_head": "46fb687c2f7ce042921227e5fe8072dd3192f008",
+    "merged_main_commit": "dda543402a036dd7cbc1cbf84a6545c61b4f47fe",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433/artifacts/14062899580",
+    "artifact_id": 14062899580,
+    "sha256": "6af55c08a96d9c3b9ad02add1e3c3d491ecd931e11c5aa9d6ec3555f7447128c",
+    "artifact_sha256": "0e3ec5bd9e067833edf7160e70fe5a3ec5be9f5bfcc73f76fd5552f9a35958a7",
+    "manual_acceptance": "Revoca link anonima: eseguire collaudo Joomla/email dei casi GET senza mutazione, conferma POST CSRF, token scaduto/monouso, IT/EN, headers e privacy cascade; nessun invio annunci da questa tranche."
   },
   "imp_09_mail_d_11_2_3": {
-    "pull_request": 319,
-    "merge_commit": "571cd69639a9d7ca0f7c204dd55e08ce5276d500",
-    "status": "partial; CI standard 4/4 passed; Joomla/SMTP manual acceptance pending",
-    "testbook": "docs/QA_TESTBOOK.md#imp-09-mail-d--mail-112113-consenso-e-double-opt-in",
+    "pull_request": 321,
+    "merge_commit": "dda543402a036dd7cbc1cbf84a6545c61b4f47fe",
+    "status": "partial; CI standard 4/4 passed; Joomla/email manual acceptance pending",
+    "testbook": "docs/QA_TESTBOOK.md#imp-09-mail-d-revoca-anonima-tramite-link-email-mail-113",
     "completed": [
       "profile opt-in and authenticated revocation from PR #317",
-      "optional opt-in checkbox during automatic enrollment",
+      "optional opt-in checkbox during automatic enrollment (PR #319)",
       "double opt-in request only after successful enrollment",
       "no duplicate pending confirmation on enrollment replay",
-      "Joomla Privacy export/delete"
+      "Joomla Privacy export/delete",
+      "anonymous explicit unsubscribe page with POST/CSRF, SHA-256 token, 30-day expiry and consent-revision binding (PR #321)",
+      "expired/replayed tokens cannot revoke; successful revocation invalidates parallel tokens"
     ],
     "remaining": [
       "registration consent UI",
-      "anonymous unsubscribe token link",
       "admin campaign selection and preview",
       "send-time consent/visibility checks and deduplicated outbox"
     ]
