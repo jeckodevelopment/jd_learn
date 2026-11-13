@@ -1,9 +1,10 @@
-## 0.56.18-dev candidato — minimizzazione diagnostica outbox (PR #338)
+## 0.56.18-dev — minimizzazione diagnostica outbox (PR #338 integrata)
 
 - Non persiste più il testo delle eccezioni SMTP/provider, che può contenere indirizzi o dettagli infrastrutturali; il retry mantiene gli stati e i limiti esistenti.
 - La vista di audit non seleziona `last_error`; la migrazione redige i testi già presenti senza modificare stato, tentativi o pianificazione.
-- Finding SEC-P1 preliminare mitigato nella candidata; review sistematica e fasi SEC-P1–P5 restano aperte. Accettazione Joomla/SMTP pendente.
-- CI candidata e pacchetto: da registrare dopo la verifica del commit completo della PR.
+- PR #338 integrata nel merge `5d38e6e47582422be581247de085206abc2c0296`; il finding preliminare è mitigato da questa modifica, ma audit sistematico e fasi SEC-P1–P5 restano aperti. Accettazione Joomla/SMTP pendente.
+- CI standard 4/4 nel [run 43522457570](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570). Pacchetto [JD-Learn-0.56.18-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570/artifacts/14083597534), SHA-256 ZIP `c59074d3bbe6a4ddb6b79714ca0d2948e04d6bff0d40316a1ac0e15f8087cbc6`, wrapper SHA-256 `220f1fec0aeb4b3b452719908c06ea308543186624c3e4c571d3cefe66cdfeba` (scade il 27 novembre 2026 alle 22:53 UTC).
+- Avanzamento globale invariato: **78,33%** (78% arrotondato); macroarea email **61%**. Collaudo Joomla/SMTP manuale pendente.
 
 ## SEC — Policy di segnalazione vulnerabilità e versioni supportate
 
