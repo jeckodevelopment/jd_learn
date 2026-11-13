@@ -1068,3 +1068,19 @@ La CI esercita il caricamento del plugin e la presenza del campo nel form nativo
 7. Simulare un errore SMTP temporaneo e verificare il retry limitato. Un errore di persistenza dopo l'accettazione SMTP non deve causare un reinvio cieco del messaggio.
 
 La deduplicazione per corso/destinatario impedisce campagne ripetute; i controlli al dispatch usano anche la revisione temporale del consenso e i dati correnti dell'account/corso.
+
+
+## IMP-09-MAIL-B / CORE-18 — audit e riconciliazione coda email (PR in preparazione, 0.56.17-dev)
+
+**Comportamenti da collaudare sul sito Joomla di prova**
+
+1. Installare/aggiornare JD Learn 0.56.17-dev e aprire **JD Learn → Coda email** con un account `core.manage`. Un account senza il permesso non deve vedere la scorciatoia e deve ricevere diniego aprendo direttamente la vista.
+2. Verificare filtri per stato e modello, paginazione e righe con corso e numero tentativi. Gli indirizzi devono essere mascherati; i contenuti del messaggio e l’indirizzo completo non devono essere esposti nella pagina.
+3. In ambiente SMTP controllato, portare una riga in `sending` con `claimed_at` più vecchio di 15 minuti. La riga deve mostrare l’avviso; righe recenti o in altri stati devono restare in sola lettura.
+4. Confrontare i log del mailer/SMTP. Se il messaggio è stato accettato/consegnato, usare **Segna come inviato**; se non è stato accettato e il retry è sicuro, usare **Accoda nuovo tentativo**. Senza nota (10–1000 caratteri) o conferma esplicita il server deve rifiutare l’operazione. Verificare che il testo avverta del rischio di duplicati.
+5. Ripetere il POST senza token CSRF, con utente non autorizzato e con un ID alterato: ogni tentativo deve essere respinto. Inviare due richieste concorrenti per la stessa riga: una sola può completare; il refresh deve mostrare il nuovo stato.
+6. Verificare che la scelta “inviato” imposti `sent`, data UTC e autore, cancelli email/nome/payload personali dalla coda; la scelta “retry” imposti `retry` e `available_at` immediato. Nota e azione devono essere visibili nello storico.
+7. Verificare che a cinque tentativi il retry manuale non sia disponibile e che il limite venga applicato anche a richieste POST costruite a mano. Dopo la riconciliazione una riga non deve poter essere modificata una seconda volta.
+8. Aggiornare da versione precedente e verificare la migrazione schema senza perdita delle righe e la compatibilità dei task Scheduler esistenti.
+
+**Accettazione manuale Joomla/SMTP:** da eseguire; la CI non equivale al collaudo reale. La riconciliazione “inviato” richiede evidenza nei log del mailer, mentre “retry” richiede evidenza che SMTP non abbia accettato il messaggio.
