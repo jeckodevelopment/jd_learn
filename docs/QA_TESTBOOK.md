@@ -1055,14 +1055,16 @@ La CI esercita il caricamento del plugin e la presenza del campo nel form nativo
 
 
 
-## MAIL-11.4 — anteprima amministrativa annuncio corso
+## MAIL-11.4/11.5 — anteprima e invio controllato annuncio corso
 
 **Comportamenti da testare sul sito Joomla di prova**
 
-1. Accedere con un amministratore che può modificare un corso pubblicato e visibile nel catalogo pubblico. Nella modifica del corso deve comparire **Anteprima email di annuncio**; aprirla e verificare oggetto, corpo HTML, testo semplice, immagine e lezioni pubblicamente visibili nel modello.
-2. Verificare che il conteggio includa soltanto account attivi con email valida e consenso all'annuncio confermato. Gli indirizzi email non devono essere mostrati nella schermata.
-3. Verificare che il link non compaia per bozze o corsi già bloccati in modifica da un altro utente. Se si prova direttamente la pagina con un corso bozza, privato o non visibile pubblicamente, mostrare il messaggio di non eleggibilità.
-4. Ricaricare la schermata e controllare la coda email: la sola anteprima non deve accodare né inviare messaggi. Il link di disiscrizione mostrato nell'anteprima è un segnaposto non operativo.
-5. Accedere con un utente senza permesso di modifica del corso e verificare il rifiuto di accesso anche aprendo direttamente l'URL.
+1. Accedere con un amministratore che può modificare un corso pubblicato e visibile nel catalogo pubblico. Nella modifica deve comparire **Anteprima email di annuncio**; verificare oggetto, HTML, testo semplice, immagine e lezioni pubblicamente visibili. L'anteprima non deve accodare email né mostrare indirizzi.
+2. Verificare che il conteggio includa soltanto account attivi con email valida e consenso confermato. Bozze, corsi privati/non visibili e corsi in checkout da un altro editor non devono essere eleggibili.
+3. In anteprima, inviare il modulo senza checkbox o con token CSRF alterato: la campagna non deve essere creata. Accedere con un utente privo di permesso di modifica e tentare l'URL diretto: accesso negato.
+4. Selezionare la conferma esplicita e verificare una sola campagna e una riga di coda per destinatario con consenso. Ripetere la richiesta o ricaricare la pagina: non devono apparire campagne o righe duplicate; il corso non deve essere notificabile una seconda volta.
+5. Configurare il mailer Joomla su una casella di prova ed eseguire il plugin Attività - JD Learn. Verificare invio in lotti, contenuto IT/EN, link del corso e link personale per revocare il consenso. Ripetere l’attività: i messaggi già inviati non devono essere rispediti.
+6. Accodare un test e, prima dell'attività, revocare il consenso, bloccare l'account/cambiare email oppure rendere il corso privato o non pubblicato. Eseguire Scheduler e verificare che la riga venga marcata come saltata e nessuna email raggiunga il destinatario.
+7. Simulare un errore SMTP temporaneo e verificare il retry limitato. Un errore di persistenza dopo l'accettazione SMTP non deve causare un reinvio cieco del messaggio.
 
-L'invio, la conferma esplicita, la deduplicazione e la coda persistente non sono inclusi in questa tranche.
+La deduplicazione per corso/destinatario impedisce campagne ripetute; i controlli al dispatch usano anche la revisione temporale del consenso e i dati correnti dell'account/corso.
