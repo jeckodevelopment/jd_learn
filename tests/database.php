@@ -20,7 +20,7 @@ foreach (explode(';', $sql) as $query) {
     }
 }
 $tables = $db->query("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME LIKE 'ci_jlms_%'")->fetchColumn();
-if ((int) $tables !== 43) {
+if ((int) $tables !== 44) {
     throw new \RuntimeException('Schema table count mismatch');
 }
 $mailKeys = $db->query("SHOW INDEX FROM `ci_jlms_mail_queue` WHERE Key_name='uq_event_key'")->fetchAll();
@@ -28,7 +28,7 @@ if (count($mailKeys) !== 1 || (int) $mailKeys[0]['Non_unique'] !== 0) {
     throw new \RuntimeException('Mail queue event key is not unique');
 }
 $constraints = $db->query("SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_TYPE='FOREIGN KEY'")->fetchColumn();
-if ((int) $constraints !== 63) {
+if ((int) $constraints !== 65) {
     throw new \RuntimeException('Schema foreign key count mismatch');
 }
 $db->beginTransaction();
