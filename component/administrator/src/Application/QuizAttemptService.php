@@ -214,9 +214,11 @@ final class QuizAttemptService
         }else{$record=(object)($fields+['enrollment_id'=>$enrollment,'course_version_id'=>(int)$a->course_version_id,'lesson_id'=>$lesson,'source_revision'=>$rules['source_revision']]);$this->db->insertObject('#__jlms_lesson_progress',$record);}
         $total=(int)$e->completed_total+(!$wasCompleted&&$completed?(int)$l->required:0);
         $finished=$e->completed_at?:($total>=(int)$e->required_total&&(int)$e->required_total>0?self::date($time):null);
+        $newCourseCompletion=$e->completed_at===null&&$finished!==null;
         $touch=(object)['id'=>$enrollment,'completed_total'=>$total,'completed_at'=>$finished,'last_activity_at'=>self::date($time),'last_lesson_id'=>$lesson,
             'revision'=>(int)$e->revision+1,'modified_at'=>self::date($time),'modified_by'=>$e->user_id];$this->db->updateObject('#__jlms_enrollments',$touch,'id',true);
         $e->completed_total=$total;$e->completed_at=$finished;$e->revision=$touch->revision;
+        if($newCourseCompletion)(new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment,(int)$e->course_version_id,$finished);
     }
     public function state(User $identity,string $language,int $enrollment,int $lesson,int $attempt=0,bool $compact=false):array
     {

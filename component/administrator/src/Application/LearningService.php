@@ -609,6 +609,7 @@ final class LearningService
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
             if ($newCourseCompletion) {
                 $this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language);
+                (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollmentId, (int) $version->id, $update->completed_at);
             }
         });
     }
