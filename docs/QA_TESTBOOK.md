@@ -1068,3 +1068,18 @@ La CI esercita il caricamento del plugin e la presenza del campo nel form nativo
 7. Simulare un errore SMTP temporaneo e verificare il retry limitato. Un errore di persistenza dopo l'accettazione SMTP non deve causare un reinvio cieco del messaggio.
 
 La deduplicazione per corso/destinatario impedisce campagne ripetute; i controlli al dispatch usano anche la revisione temporale del consenso e i dati correnti dell'account/corso.
+
+
+## MAIL-11 — riconciliazione della copertura e accettazione manuale (baseline 0.56.16-dev)
+
+Implementazione integrata: PR #315, #317, #319, #321, #323, #325 e #327. **Tutti i test seguenti sono da eseguire e registrare sul sito di prova**; l'esito CI non li sostituisce.
+
+1. Configurare in **Joomla → Configurazione globale → Server → Impostazioni email** un trasporto di test, senza configurare SMTP in JD Learn; verificare l'invio della conferma double opt-in e delle mail in coda tramite il medesimo trasporto.
+2. Verificare opt-in inizialmente non selezionato, IT/EN, da registrazione Joomla, iscrizione al corso e Area personale; confermare il token entro 24 ore, tentare riuso e scadenza, poi revocare con link sicuro e ripetere la richiesta.
+3. Personalizzare in **Sistema → Modelli email** soggetto, corpo HTML e plain text di `com_jlms.course.published`; aggiornare il componente e verificare che le modifiche non siano sovrascritte.
+4. Provare anteprima con immagine assente/presente e immagini bloccate, introduzione e solo lezioni pubbliche, senza divulgare lezioni o materiali protetti; testare corso privato/non pubblicato e ACL amministrative.
+5. Confermare esplicitamente l'annuncio di un nuovo corso: verificare platea eleggibile, una sola campagna per corso, deduplica, nessun invio automatico su semplice modifica/ripubblicazione e invio batch Scheduler.
+6. Tra accodamento e invio revocare consenso, bloccare account, variare indirizzo email o rendere privato il corso: l'elemento deve essere saltato. Verificare minimizzazione dei dati in coda.
+7. Simulare SMTP temporaneamente indisponibile; verificare retry e limite tentativi, assenza di invalidazione di registrazioni/iscrizioni o attività didattiche, e nessun doppio invio su esecuzioni ripetute. Trattare lo stato `sending` ambiguo solo con verifica degli esiti SMTP, senza presumere exactly-once.
+
+Registrare versione Joomla/PHP, lingua, configurazione di invio, data, esito e prove. La PR #329 (audit/reconciliation outbox) è aperta e non va considerata collaudata o integrata fino al merge.
