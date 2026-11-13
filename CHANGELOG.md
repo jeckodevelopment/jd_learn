@@ -787,3 +787,10 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 
 - Registra il template nativo Joomla `com_jlms.course.published` per MAIL-11.1, con variabili per contenuti pubblici, immagine e revoca.
 - Nessun trigger o invio di annuncio; opt-in, double opt-in, revoca e invio restano da implementare. CI 4/4 nel run 43450891869; artifact 14051706158.
+
+
+## 0.56.13-dev — revoca via link email (in PR)
+
+- Implementa revoca anonima esplicita con token opaco SHA-256, monouso e valido 30 giorni, legato alla specifica versione del consenso.
+- La visita GET non revoca; la conferma POST richiede CSRF. La revoca invalida i token paralleli; cancellazione consenso elimina i token via FK.
+- Aggiunge view Joomla IT/EN, migrazione schema e verifiche automatizzate del ciclo di vita. Il collegamento al flusso di invio annunci resta nella tranche admin successiva; nessun annuncio viene inviato da questa PR.
