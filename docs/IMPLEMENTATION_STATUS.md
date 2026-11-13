@@ -118,3 +118,8 @@ La PR #317 integra richiesta di consenso facoltativa non preselezionata nell’A
 ## IMP-09-MAIL-D — MAIL-11.2 / PR #319 integrata — 0.56.12-dev
 
 La PR #319 aggiunge una casella facoltativa e non preselezionata durante l'avvio automatico del corso. La richiesta double opt-in parte solo dopo l'iscrizione riuscita; i replay mentre il consenso è pending non inviano conferme duplicate. Errori SMTP non annullano l'iscrizione. CI standard 4/4 nel [run 1078](https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700); build installabile [JD-Learn-0.56.12-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43469236700/artifacts/14059519179), SHA-256 ZIP `2219c21df9308f2688ef83f0c408fe9da17280a636bd8b7fc8578edacde16b47`, digest artifact `98e31e8727ea5170e8c8a5e9bd9c1bb201225393cb7f009f57ec5b03c5adebf6`. L'accettazione manuale Joomla/SMTP resta pendente. Rimangono registrazione Joomla, revoca via link e invio annunci amministrativo con preview e controlli di visibilità.
+
+
+### MAIL-11.3 — revoca anonima via link (in PR)
+
+Aggiunto link di revoca opaco con token casuale hashato, scadenza a 30 giorni e legame al timestamp del consenso; la GET non modifica stato e il POST richiede CSRF. La revoca è monouso e invalida tutti i link della stessa adesione. La nuova migrazione 0.56.13 e i test CI coprono schema/cascade e ciclo del token. Nessun invio di annuncio è ancora abilitato; resta da collegare il link al template/outbox amministrativo. Collaudo Joomla/SMTP da eseguire dopo merge seguendo [QA_TESTBOOK.md](QA_TESTBOOK.md).
