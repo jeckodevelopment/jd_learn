@@ -103,6 +103,7 @@ final class MailQueue
     {
         $sent = 0;
         $failed = 0;
+        $skipped = 0;
         $limit = max(1, min(100, $limit));
         $q = $this->db->createQuery()->select('id')->from('#__jlms_mail_queue')
             ->where("state IN ('pending','retry')")->where('available_at <= UTC_TIMESTAMP(6)')
@@ -127,6 +128,7 @@ final class MailQueue
                     ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
                     ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($skip)->execute();
+                $skipped++;
                 continue;
             }
 
@@ -164,7 +166,8 @@ final class MailQueue
             $sent++;
         }
 
-        return ['sent' => $sent, 'failed' => $failed, 'processed' => count($ids)];
+        $this->db->setQuery("UPDATE #__jlms_course_announcement_campaigns AS campaign SET state = 'finished' WHERE campaign.state = 'queued' AND NOT EXISTS (SELECT 1 FROM #__jlms_mail_queue AS queued WHERE queued.course_id = campaign.course_id AND queued.template_id = 'com_jlms.course.published' AND queued.state IN ('pending','retry','sending'))")->execute();
+        return ['sent' => $sent, 'failed' => $failed, 'skipped' => $skipped, 'processed' => count($ids)];
     }
     /** Re-check consent revision, account, address, campaign and public visibility immediately before SMTP. */
     private function announcementEligible(object $row): bool
