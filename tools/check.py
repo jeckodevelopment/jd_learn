@@ -95,3 +95,9 @@ if package.exists():
 import runpy
 runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
 print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':44,'foreign_keys':65,'structural_checks':'passed'}))
+
+# MAIL-11.1 registers the opt-in new-course template without enabling sends.
+mail_templates=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+assert "'com_jlms.course.published' => [" in mail_templates
+for tag in ['COURSE_TITLE','COURSE_IMAGE_HTML','COURSE_INTRO_HTML','COURSE_LESSONS_HTML','COURSE_URL','UNSUBSCRIBE_URL']:
+    assert tag in mail_templates, ('MAIL-11.1 missing template token',tag)
