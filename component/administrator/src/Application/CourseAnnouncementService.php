@@ -176,15 +176,15 @@ final class CourseAnnouncementService
     {
         $preview = $this->preview($identity, $courseId);
         if (empty($preview['eligible'])) {
-            throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NOT_ELIGIBLE');
+            throw new \RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NOT_ELIGIBLE');
         }
         if (!empty($preview['already_notified'])) {
-            throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED');
+            throw new \RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED');
         }
 
         $recipients = $this->confirmedRecipients();
         if (!$recipients) {
-            throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NO_RECIPIENTS');
+            throw new \RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NO_RECIPIENTS');
         }
 
         $actor = CourseEditorAccess::fresh($identity);
@@ -224,7 +224,7 @@ final class CourseAnnouncementService
                 }
             }
             if ($queued < 1) {
-                throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NO_RECIPIENTS');
+                throw new \RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NO_RECIPIENTS');
             }
             $countUpdate = $this->db->createQuery()->update('#__jlms_course_announcement_campaigns')
                 ->set('recipient_count = :count')->where('course_id = :course')
@@ -232,10 +232,10 @@ final class CourseAnnouncementService
             $this->db->setQuery($countUpdate)->execute();
             $this->db->transactionCommit();
             return $queued;
-        } catch (\\Throwable $error) {
+        } catch (\Throwable $error) {
             $this->db->transactionRollback();
             if (stripos($error->getMessage(), 'Duplicate') !== false || stripos($error->getMessage(), '1062') !== false) {
-                throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED');
+                throw new \RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED');
             }
             throw $error;
         }
