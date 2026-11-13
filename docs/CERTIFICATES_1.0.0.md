@@ -1,6 +1,6 @@
 # Attestati essenziali — perimetro JD Learn 1.0.0
 
-**Decisione approvata: 12 novembre 2026.** La prima versione stabile include l'emissione di attestati PDF di completamento del corso. Il perimetro è distinto da **JD Learn Credentials / Open Badges**, che rimane successivo alla 1.0.0. Requisiti approvati il 12 novembre 2026 per la prima stabile. CERT-A (PR #300), CERT-B (PR #302) e CERT-C (PR #304) sono integrate; l'implementazione del macroambito è stimata al 62,5%. L'accettazione Joomla resta distinta dalla presenza del codice.
+**Decisione approvata: 12 novembre 2026.** La prima versione stabile include l'emissione di attestati PDF di completamento del corso. Il perimetro è distinto da **JD Learn Credentials / Open Badges**, che rimane successivo alla 1.0.0. Requisiti approvati il 12 novembre 2026 per la prima stabile. CERT-A (PR #300), CERT-B (PR #302), CERT-C (PR #304) e CERT-D (PR #307) sono integrate; l'implementazione del macroambito è stimata al 75%. L'accettazione Joomla resta distinta dalla presenza del codice.
 
 ## Requisiti CERT-01–CERT-08
 
