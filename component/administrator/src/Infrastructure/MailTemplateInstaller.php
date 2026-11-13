@@ -52,6 +52,12 @@ final class MailTemplateInstaller
                 ['NAME', 'COURSE', 'SITENAME', 'COURSE_URL'],
                 '<p>Ciao {NAME},</p><p>la tua iscrizione al corso <strong>{COURSE}</strong> è confermata.</p><p><a href="{COURSE_URL}">Apri il corso</a></p><p>{SITENAME}</p>',
             ],
+            'com_jlms.course.expiring' => [
+                'Il corso {COURSE} termina il {COURSE_ENDS_AT}',
+                "Ciao {NAME},\n\nil corso {COURSE} terminerà il {COURSE_ENDS_AT}. Completa le attività entro la scadenza.\n\n{COURSE_URL}\n\n{SITENAME}",
+                ['NAME', 'COURSE', 'COURSE_ENDS_AT', 'COURSE_URL', 'SITENAME'],
+                '<p>Ciao {NAME},</p><p>il corso <strong>{COURSE}</strong> terminerà il {COURSE_ENDS_AT}. Completa le attività entro la scadenza.</p><p><a href="{COURSE_URL}">Apri il corso</a></p><p>{SITENAME}</p>',
+            ],
             'com_jlms.course.completed' => [
                 'Corso completato: {COURSE}',
                 "Ciao {NAME},\n\nhai completato il corso {COURSE}.\n\n{SITENAME}",
