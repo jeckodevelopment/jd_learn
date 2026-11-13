@@ -759,3 +759,10 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Avvia CERT-A: preferenze globali e per corso (predefinito disabilitato) e registrazione idempotente dell'attestato sui completamenti persistiti in modalità Apprendimento, anche tramite quiz, revisione quiz e video.
 - Il record conserva snapshot di studente, corso/versione, data e modello; non è ancora generato o scaricabile un PDF.
 - Integra la conferma email dell'iscrizione amministrativa della PR #299 (merge 561e3a9).
+
+
+## 0.56.9-dev — PR #313 (candidata)
+
+- Aggiunta comunicazione operativa agli iscritti selezionati per corso con anteprima, conferma e test all'operatore.
+- Aggiunto job asincrono idempotente, rivalidazione ACL/stato, preferenze globale/per corso e template Joomla com_jlms.course.message.
+- Collaudo manuale Joomla/SMTP pendente; vedere [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
