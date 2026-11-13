@@ -245,7 +245,7 @@ parse_str((string) parse_url((string) $linkOne, PHP_URL_QUERY), $linkQueryOne);
 parse_str((string) parse_url((string) $linkTwo, PHP_URL_QUERY), $linkQueryTwo);
 $tokenOne = (string) ($linkQueryOne['token'] ?? '');
 $tokenTwo = (string) ($linkQueryTwo['token'] ?? '');
-if (!$linkOne || !$linkTwo || $tokenOne === '' || $tokenTwo === '' || str_contains((string) $linkOne, (string) $userId)) {
+if (!$linkOne || !$linkTwo || $tokenOne === '' || $tokenTwo === '' || array_key_exists('user_id', $linkQueryOne) || array_key_exists('email', $linkQueryOne)) {
     throw new \RuntimeException('Unsubscribe link did not contain an opaque token or exposed the user id.');
 }
 $db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 SECOND)')
