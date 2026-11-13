@@ -487,16 +487,6 @@ CREATE TABLE IF NOT EXISTS `#__jlms_certificate_documents` (
   UNIQUE KEY `uq_verify_hash` (`verification_hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `#__jlms_certificate_templates`
-  (`title`,`version_no`,`template_json`,`background_asset_id`,`hash`,`state`,`created_by`,`created_at`,`modified_by`,`modified_at`)
-SELECT 'JD Learn — Attestato standard',1,
-  '{"schema":1,"title":"Attestato di completamento","subtitle":"ha completato il corso","locale":"it-IT"}',
-  NULL,
-  SHA2('{"schema":1,"title":"Attestato di completamento","subtitle":"ha completato il corso","locale":"it-IT"}',256),
-  1,NULL,UTC_TIMESTAMP(6),NULL,UTC_TIMESTAMP(6)
-FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM `#__jlms_certificate_templates` WHERE `state`=1);
-
 CREATE TABLE IF NOT EXISTS `#__jlms_version_equivalences` (
   `source_lesson_id` BIGINT UNSIGNED NOT NULL,
   `target_lesson_id` BIGINT UNSIGNED NOT NULL,

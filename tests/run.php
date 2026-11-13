@@ -54,6 +54,16 @@ $readinessCourse = static fn (string $description, string $summary = '', string 
     'summary' => $summary,
     'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),
 ];
+$certificatePrefs = \Jlms\Component\Jlms\Administrator\Application\CertificatePreferences::class;
+$certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'disabled'], '{"preserve_me":true}');
+expect(!$certificatePrefs::enabled(true, $certificateParams), 'course can disable globally enabled certificates');
+expect($certificatePrefs::enabled(true, '{}') && !$certificatePrefs::enabled(false, '{}'), 'certificate preference inherits the site setting');
+$certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'enabled'], $certificateParams);
+expect($certificatePrefs::enabled(false, $certificateParams)
+    && json_decode($certificateParams, true)['preserve_me'] === true, 'course can enable certificates and unrelated params are retained');
+$certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'inherit'], $certificateParams);
+expect(!array_key_exists('certificate_enabled', json_decode($certificateParams, true)), 'inherit removes only the course certificate override');
+rejects(static fn () => $certificatePrefs::merge(['certificate_enabled' => 'yes'], '{}'), 'certificate preference is restricted to inherit, enabled or disabled');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect($readinessCourse('  '), [], []);
 expect(in_array('COM_JLMS_COURSE_DESCRIPTION_REQUIRED', $readiness['blockers'], true)
     && in_array('COM_JLMS_READINESS_MODULES_REQUIRED', $readiness['blockers'], true)

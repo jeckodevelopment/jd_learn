@@ -90,6 +90,8 @@ final class Com_JlmsInstallerScript
         \Jlms\Component\Jlms\Administrator\Infrastructure\EditorialInstaller::install($db);
         require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/MailTemplateInstaller.php';
         \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::ensureRegistered();
+        require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/CertificateTemplateInstaller.php';
+        \Jlms\Component\Jlms\Administrator\Infrastructure\CertificateTemplateInstaller::ensureDefault($db);
         return true;
     }
 

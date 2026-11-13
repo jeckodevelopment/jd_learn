@@ -70,6 +70,11 @@ if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMe
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
 require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
 (new \Com_JlmsInstallerScript())->postflight('update', null);
+$defaultCertificateTemplate = $db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_templates')
+    ->where('title = :title')->where('state = 1')->bind(':title', 'JD Learn — Attestato standard');
+if ((int) $db->setQuery($defaultCertificateTemplate)->loadResult() !== 1) {
+    throw new \RuntimeException('JD Learn must install exactly one safe default certificate template.');
+}
 $mailTemplateIds = [
     'com_jlms.enrollment.requested',
     'com_jlms.enrollment.confirmed',
