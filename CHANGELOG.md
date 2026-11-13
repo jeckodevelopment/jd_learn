@@ -1,8 +1,9 @@
-# 0.56.6-dev — PDF e download protetto attestati (PR #302 candidata)
+# 0.56.6-dev — PDF e download protetto attestati (PR #302 integrata)
 
 - Generazione PDF A4 IT/EN con dati certificati congelati, intestazioni personalizzabili, colore e logo JPEG locale.
 - Elenco attestati nella dashboard studente e download GET/HEAD protetto; PDF conservato come asset nello storage privato esistente e rendering alla prima richiesta autorizzata.
-- Test unitario renderer in CI; collaudo manuale Joomla, audit e backup/ripristino pendenti. Requisiti CERT-03/05 e parte di CERT-08.
+- PR [#302](https://github.com/jeckodevelopment/jd_learn/pull/302) integrata nel merge `a3a3a706b4d312f58a79952ad355c02fd7dcd3a8`, milestone 1.0.0; CI standard 4/4 nel [run 1023](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842). Collaudo manuale Joomla, audit e backup/ripristino pendenti. Requisiti CERT-03/05 e parte di CERT-08.
+- Pacchetto [JD-Learn-0.56.6-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842/artifacts/14029108411), ZIP Joomla interno SHA-256 `73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1`, wrapper `313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92` (scadenza 27 novembre 2026).
 
 ## 0.56.4-dev — conferma iscrizione amministrativa (in preparazione)
 

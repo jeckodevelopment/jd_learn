@@ -97,7 +97,7 @@ Ogni PR va assegnata alla milestone **1.0.0**, documenta `Comportamenti da testa
 | Ordine | ID / priorità | Perimetro PR | Requisiti |
 |---:|---|---|---|
 | 9.5 | **IMP-09-CERT-A · P0** | Impostazioni globali/per corso, modello persistente, ACL e generazione idempotente su completamento effettivo | CERT-01/02/04 |
-| 9.6 | **IMP-09-CERT-B · P0 · PR #302 candidata** | PDF personalizzabile IT/EN, asset privato, dashboard e download protetto dello studente | CERT-03/05 e parte di CERT-08 |
+| 9.6 | **IMP-09-CERT-B · P0 · PR #302 integrata** | PDF personalizzabile IT/EN, asset privato, dashboard e download protetto dello studente | CERT-03/05 e parte di CERT-08 |
 | 9.7 | **IMP-09-CERT-C · P0** | Elenco e download amministrativi, autorizzazioni e audit | CERT-06/08 |
 | 9.8 | **IMP-09-CERT-D · P1** | Notifica disponibilità tramite Mail Templates e outbox Joomla, prove integrative | CERT-07, MAIL-01/02/09 |
 
@@ -232,3 +232,6 @@ PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291) integrata in 0.
 **Aggiornamento CERT-A (13 novembre 2026, PR #300 integrata):** la 0.56.5-dev introduce preferenze globali/per corso e registrazione persistente idempotente su completamento effettivo in modalità Apprendimento, inclusi completamenti da lezioni standard, quiz, revisione quiz e video. Non genera ancora PDF né espone attestati. CERT-A stimato 18,75%; CI 4/4 superata nel [run 1017](https://github.com/jeckodevelopment/jd_learn/actions/runs/43404564275); collaudo Joomla pendente. Pacchetto [JD-Learn-0.56.5-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43404564275/artifacts/14027235893), SHA-256 `b8cfdc200be80b4450eb4770127a1cc1340bc5db20d886f9707ba293b0dc129c`.
 
 La PR #299 è integrata in main 0.56.4-dev e collega la conferma per iscrizione amministrativa singola. La PR [#300](https://github.com/jeckodevelopment/jd_learn/pull/300) è integrata in main 0.56.5-dev e aggiunge l’emissione persistente CERT-A; restano mail manuale/audit e le altre notifiche approvate.
+
+
+**Aggiornamento CERT-B (13 novembre 2026, PR #302 integrata):** generazione PDF personalizzabile IT/EN, snapshot di template/logo, dashboard attestati e download autenticato con asset nello storage privato. CI standard 4/4 nel [run 1023](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842); collaudo Joomla pendente. Pacchetto [JD-Learn-0.56.6-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842/artifacts/14029108411), checksum ZIP `73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1`, wrapper `313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92` (scadenza 27 novembre 2026). Avanzamento attestati stimato 50%, globale 72,06%. Prossime PR: CERT-C (vista amministrativa/audit) e CERT-D (notifica mail/outbox).
