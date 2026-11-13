@@ -998,7 +998,7 @@ MAIL-11.2/11.3 sono parziali nella PR #317; MAIL-11.4/11.5 restano da implementa
 
 
 
-### Candidata 0.56.12-dev — opt-in durante iscrizione automatica
+### PR #319 integrata — 0.56.12-dev: opt-in durante iscrizione automatica
 
 1. Configurare il mailer Joomla verso una casella controllata e pubblicare un corso con iscrizione automatica.
 2. Aprire il corso da utente autenticato: la casella annunci deve essere facoltativa e non selezionata per default.
@@ -1006,7 +1006,7 @@ MAIL-11.2/11.3 sono parziali nella PR #317; MAIL-11.4/11.5 restano da implementa
 4. Con un utente nuovo, selezionarla e avviare il corso: l'iscrizione riesce e arriva soltanto l'email double opt-in; nessun annuncio viene accodato.
 5. Ripetere il POST mentre lo stato è pending: non deve partire una seconda email di conferma. Confermare il token e ripetere: non deve essere riaperta la richiesta.
 6. Simulare un errore SMTP: l'iscrizione resta valida, compare un avviso e i log non contengono email, nome o token.
-7. Verificare label IT/EN e uso da tastiera. Registrazione Joomla, revoca anonima e campagna amministrativa restano fuori da questa tranche.
+7. Verificare label IT/EN e uso da tastiera. Registrazione Joomla, revoca anonima e campagna amministrativa restano fuori da questa tranche. Questi scenari sono ancora da eseguire sul sito Joomla; CI run 43469236700 ha superato i controlli automatici standard 4/4.
 
 ## IMP-09-MAIL-D — MAIL-11.2/11.3 consenso e double opt-in (PR #317, 0.56.11-dev)
 
