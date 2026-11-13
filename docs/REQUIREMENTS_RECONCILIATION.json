@@ -7,20 +7,20 @@
     "Stato implementazione": {
       "Parziale": 178,
       "Completata": 16,
-      "Non iniziata": 24
+      "Non iniziata": 25
     },
     "Perimetro 1.0.0": {
-      "1.0.0": 143,
+      "1.0.0": 144,
       "Misto": 40,
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 216,
+      "Non eseguita": 217,
       "Parziale": 2
     },
     "Verifica automatica": {
       "Superata": 178,
-      "Non eseguita": 40
+      "Non eseguita": 41
     }
   },
   "implementation_progress": {
