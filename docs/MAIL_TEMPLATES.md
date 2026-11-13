@@ -128,3 +128,8 @@ La candidata registra inoltre `com_jlms.course.consent` in Joomla Mail Templates
 Baseline documentata: [piano 1.0.0](STABLE_1.0.0_PR_PLAN.md), [stato implementativo](IMPLEMENTATION_STATUS.md) e [QA Testbook](QA_TESTBOOK.md). Stima globale **78,00%**, area email **58%**: questi numeri non aumentano per questa correzione documentale. La PR #329 sull'audit e riconciliazione dei messaggi in stato `sending` è separata e non viene anticipata come integrata.
 
 **Configurazione invio:** `MailQueue::dispatch()` e `CourseAnnouncementConsent::request()` istanziano `Joomla\CMS\Mail\MailTemplate` e ne chiamano `send()`. Utilizzano il trasporto configurato globalmente in Joomla (PHP Mail, Sendmail o SMTP); JD Learn non gestisce credenziali SMTP proprie. Le richieste di double opt-in sono inviate nel flusso di richiesta; le campagne e le notifiche operative sono elaborate dal task Scheduler. La prova con SMTP reale e la verifica dei limiti di retry restano collaudi manuali.
+
+
+## Dati diagnostici ed errori di trasporto (SEC-P1 / PR #338 integrata, 0.56.18-dev)
+
+Le eccezioni del mailer possono includere indirizzi destinatario, risposte SMTP o dettagli del provider. La PR #338 è integrata: la coda salva un messaggio generico, la vista di audit non seleziona `last_error` e la migrazione redige i valori storici. CI standard 4/4 nel [run 43522457570](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570). Il collaudo Joomla/SMTP resta pendente; review sistematica e gate SEC-P1–P5 restano aperti.
