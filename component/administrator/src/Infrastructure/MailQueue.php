@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\Infrastructure;
 use Joomla\CMS\Mail\MailTemplate;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Joomla\CMS\User\User;
 
 /** Durable queue for core learner emails. */
 final class MailQueue
@@ -64,11 +65,45 @@ final class MailQueue
         }
     }
 
+
+    /** Queue one idempotent new-course notice for a confirmed consent revision. */
+    public function enqueueAnnouncement(int $courseId, int $userId, string $consentAt, string $key, string $language, string $email, string $name, array $data): bool
+    {
+        if ($courseId < 1 || $userId < 1 || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+        $paramsQuery = $this->db->createQuery()->select('params_json')->from('#__jlms_courses')->where('id = :course')
+            ->bind(':course', $courseId, ParameterType::INTEGER);
+        $params = $this->db->setQuery($paramsQuery)->loadResult();
+        $global = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_announcement_enabled', true);
+        if ($params === null || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled('announcement', $global, (string) $params)) {
+            return false;
+        }
+        $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
+            ->columns(['event_key','template_id','course_id','recipient_user_id','recipient_consent_at','language','recipient_email','recipient_name','template_data','state','available_at','created_at'])
+            ->values(implode(',', [
+                $this->db->quote($key), $this->db->quote('com_jlms.course.published'), (string) $courseId, (string) $userId,
+                $this->db->quote($consentAt), $this->db->quote($language ?: '*'), $this->db->quote($email), $this->db->quote($name),
+                $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)), $this->db->quote('pending'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)',
+            ]));
+        try {
+            $this->db->setQuery($query)->execute();
+            return true;
+        } catch (\Throwable $error) {
+            $check = $this->db->createQuery()->select('id')->from('#__jlms_mail_queue')->where('event_key = :key')->bind(':key', $key);
+            if ((int) $this->db->setQuery($check)->loadResult()) {
+                return false;
+            }
+            throw $error;
+        }
+    }
+
     /** Process a bounded batch; a claimed message is never automatically sent twice. */
     public function dispatch(int $limit = 25): array
     {
         $sent = 0;
         $failed = 0;
+        $skipped = 0;
         $limit = max(1, min(100, $limit));
         $q = $this->db->createQuery()->select('id')->from('#__jlms_mail_queue')
             ->where("state IN ('pending','retry')")->where('available_at <= UTC_TIMESTAMP(6)')
@@ -89,6 +124,14 @@ final class MailQueue
                 ->bind(':id', $id, ParameterType::INTEGER);
             $row = $this->db->setQuery($q)->loadObject();
             try {
+                if ((string) $row->template_id === 'com_jlms.course.published' && !$this->announcementEligible($row)) {
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
+                        ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
+                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    $skipped++;
+                    continue;
+                }
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $mail = new MailTemplate((string) $row->template_id, (string) $row->language);
                 $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
@@ -122,6 +165,48 @@ final class MailQueue
             $sent++;
         }
 
-        return ['sent' => $sent, 'failed' => $failed, 'processed' => count($ids)];
+        $this->db->setQuery("UPDATE #__jlms_course_announcement_campaigns AS campaign SET state = 'finished' WHERE campaign.state = 'queued' AND NOT EXISTS (SELECT 1 FROM #__jlms_mail_queue AS queued WHERE queued.course_id = campaign.course_id AND queued.template_id = 'com_jlms.course.published' AND queued.state IN ('pending','retry','sending'))")->execute();
+        return ['sent' => $sent, 'failed' => $failed, 'skipped' => $skipped, 'processed' => count($ids)];
     }
+    /** Re-check consent revision, account, address, campaign and public visibility immediately before SMTP. */
+    private function announcementEligible(object $row): bool
+    {
+        $userId = (int) ($row->recipient_user_id ?? 0);
+        $courseId = (int) ($row->course_id ?? 0);
+        if ($userId < 1 || $courseId < 1 || empty($row->recipient_consent_at)) {
+            return false;
+        }
+        $q = $this->db->createQuery()->select('u.id')->from('#__jlms_mail_consents AS consent')
+            ->innerJoin('#__users AS u ON u.id = consent.user_id')->where('consent.user_id = :user')
+            ->where("consent.state = 'confirmed'")->where('consent.confirmed_at = :confirmed')
+            ->where('u.block = 0')->where('LOWER(u.email) = LOWER(:email)')
+            ->bind(':user', $userId, ParameterType::INTEGER)->bind(':confirmed', (string) $row->recipient_consent_at)
+            ->bind(':email', (string) $row->recipient_email);
+        if (!(int) $this->db->setQuery($q)->loadResult()) {
+            return false;
+        }
+        $campaign = $this->db->createQuery()->select('course_id')->from('#__jlms_course_announcement_campaigns')
+            ->where('course_id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
+        if (!(int) $this->db->setQuery($campaign)->loadResult()) {
+            return false;
+        }
+        $course = $this->db->createQuery()->select('params_json')->from('#__jlms_courses')->where('id = :course')
+            ->bind(':course', $courseId, ParameterType::INTEGER);
+        $params = $this->db->setQuery($course)->loadResult();
+        $global = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_announcement_enabled', true);
+        if ($params === null || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled('announcement', $global, (string) $params)) {
+            return false;
+        }
+        $guest = new \Joomla\CMS\User\User(0);
+        $guest->clearAccessRights();
+        try {
+            $language = preg_match('/^[a-z]{2}-[A-Z]{2}$/', (string) $row->language) ? (string) $row->language : 'en-GB';
+            $catalog = new \Jlms\Component\Jlms\Administrator\Application\CatalogService($this->db);
+            $public = $catalog->course($guest, $language, $courseId);
+            return in_array((int) $public->content_access, array_map('intval', $guest->getAuthorisedViewLevels()), true);
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
 }

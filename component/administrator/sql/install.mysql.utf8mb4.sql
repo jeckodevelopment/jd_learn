@@ -795,6 +795,9 @@ CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `event_key` CHAR(64) NOT NULL,
   `template_id` VARCHAR(100) NOT NULL,
+  `course_id` BIGINT UNSIGNED NULL,
+  `recipient_user_id` INT UNSIGNED NULL,
+  `recipient_consent_at` DATETIME(6) NULL,
   `language` VARCHAR(7) NOT NULL DEFAULT '*',
   `recipient_email` VARCHAR(320) NOT NULL,
   `recipient_name` VARCHAR(255) NOT NULL DEFAULT '',
@@ -808,7 +811,18 @@ CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue` (
   `created_at` DATETIME(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_event_key` (`event_key`),
-  KEY `ix_ready` (`state`,`available_at`,`id`)
+  KEY `ix_ready` (`state`,`available_at`,`id`),
+  KEY `ix_announcement_campaign` (`course_id`,`template_id`,`state`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__jlms_course_announcement_campaigns` (
+  `course_id` BIGINT UNSIGNED NOT NULL,
+  `requested_by` INT UNSIGNED NOT NULL,
+  `recipient_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `state` VARCHAR(16) NOT NULL DEFAULT 'queued',
+  `requested_at` DATETIME(6) NOT NULL,
+  PRIMARY KEY (`course_id`),
+  KEY `ix_announcement_campaign_state` (`state`,`requested_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__jlms_mail_consents` (

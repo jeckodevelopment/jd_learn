@@ -84,9 +84,9 @@ final class MailTemplateInstaller
             ],
             'com_jlms.course.published' => [
                 'Nuovo corso disponibile: {COURSE_TITLE}',
-                "Ciao {NAME},\n\n{COURSE_INTRO_TEXT}\n\nScopri il corso: {COURSE_URL}\n\nLezioni pubbliche:\n{COURSE_LESSONS_TEXT}\n\nRicevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. Per revocare l’adesione: {UNSUBSCRIBE_URL}\n\n{SITE_NAME}",
-                ['NAME', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'COURSE_IMAGE_HTML', 'COURSE_INTRO_TEXT', 'COURSE_INTRO_HTML', 'COURSE_LESSONS_TEXT', 'COURSE_LESSONS_HTML', 'COURSE_URL', 'SITE_NAME', 'SITE_NAME_HTML', 'UNSUBSCRIBE_URL'],
-                '<p>Ciao {NAME},</p>{COURSE_IMAGE_HTML}<h2>{COURSE_TITLE_HTML}</h2><p>{COURSE_INTRO_HTML}</p>{COURSE_LESSONS_HTML}<p><a href="{COURSE_URL}">Scopri il corso</a></p><p>Ricevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. <a href="{UNSUBSCRIBE_URL}">Revoca l’adesione</a>.</p><p>{SITE_NAME_HTML}</p>',
+                "Ciao {NAME},\n\n{COURSE_INTRO_TEXT}\n\nScopri il corso: {COURSE_URL}\n\nLezioni pubbliche:\n{COURSE_LESSONS_TEXT}\n\nRicevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. Per revocare l’adesione: {UNSUBSCRIBE_URL_TEXT}\n\n{SITE_NAME}",
+                ['NAME', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'COURSE_IMAGE_HTML', 'COURSE_INTRO_TEXT', 'COURSE_INTRO_HTML', 'COURSE_LESSONS_TEXT', 'COURSE_LESSONS_HTML', 'COURSE_URL', 'SITE_NAME', 'SITE_NAME_HTML', 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT'],
+                '<p>Ciao {NAME},</p>{COURSE_IMAGE_HTML}<h2>{COURSE_TITLE_HTML}</h2><p>{COURSE_INTRO_HTML}</p>{COURSE_LESSONS_HTML}<p><a href="{COURSE_URL}">Scopri il corso</a></p><p>Ricevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. <a href="{UNSUBSCRIBE_URL_HTML}">Revoca l’adesione</a>.</p><p>{SITE_NAME_HTML}</p>',
             ],
             'com_jlms.course.consent' => [
                 'Conferma l’adesione alle novità di {SITE_NAME}',
