@@ -1,3 +1,11 @@
+## 0.56.15-dev — MAIL-11.4: anteprima amministrativa annuncio corso (PR #325 integrata)
+
+- Aggiunta anteprima amministrativa in sola lettura del modello Joomla `com_jlms.course.published`, con oggetto, HTML, testo semplice e conteggio aggregato degli utenti con consenso confermato ed email valida.
+- Il contenuto è limitato al corso e alle lezioni pubbliche; la schermata non espone indirizzi email e non invia né accoda messaggi. Corsi non pubblicati/non visibili non sono eleggibili. Invio confermato, outbox, guardie al dispatch, deduplicazione, retry e audit restano da implementare.
+- PR #325 merge `c6b9c108333f41c5225b8fe1c5f31b66c0b8947e`; CI completa 4/4 nel [run 43506010300](https://github.com/jeckodevelopment/jd_learn/actions/runs/43506010300). Collaudo reale Joomla/SMTP ancora pendente; i passi sono in [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
+- Pacchetto [JD-Learn-0.56.15-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43506010300/artifacts/14075479164), SHA-256 ZIP `a5ef7469c77dbf310350cc4917d5f7eb8b03a5910ccaf05eedd32bbb0591fc2b`, digest archivio artifact `43181d7ae8d3db8dfd52340d56806e4e5afc5d6681237859b503c60a08ca819f`.
+- Avanzamento globale stimato 76,89% (77% arrotondato); macroarea email 48% (+2 punti). Implementazione e accettazione manuale sono rendicontate separatamente.
+
 ## 0.56.14-dev — MAIL-11.2: opt-in durante la registrazione Joomla (PR #323 integrata)
 
 - Aggiunto il plugin utente JD Learn che inserisce nella registrazione Joomla un checkbox facoltativo e non preselezionato per gli annunci di nuovi corsi.
