@@ -20,6 +20,7 @@ use Jlms\Contracts\Video\VideoProviderRegistry;
 use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Jlms\Component\Jlms\Administrator\Application\PublicationService;
+use Jlms\Component\Jlms\Administrator\Application\MailQueueAuditService;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Jlms\Component\Jlms\Administrator\Extension\JlmsComponent;
@@ -33,6 +34,7 @@ return new class () implements ServiceProviderInterface {
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new \Joomla\CMS\Extension\Service\Provider\RouterFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new CategoryFactory('\\Jlms\\Component\\Jlms'));
+        $container->set(MailQueueAuditService::class, static fn (Container $c): MailQueueAuditService => new MailQueueAuditService($c->get(DatabaseInterface::class)));
         $container->set(CurriculumService::class, static function (Container $container): CurriculumService {
             $registry = null;
             return new CurriculumService(
