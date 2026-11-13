@@ -3,8 +3,8 @@
   "product": "JD Learn",
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
-    "percent": 72,
-    "basis": "Media semplice delle nove aree approvate: (81+81+78+99+68+92+70+29.5+50)/9=72.06%, arrotondata al 72%. Email 29,5%; attestati essenziali 50% dopo CERT-A e CERT-B. Accettazione manuale Joomla pendente.",
+    "percent": 73,
+    "basis": "Media semplice delle nove aree approvate: (81+81+78+99+68+92+70+29.5+62.5)/9=73.44%, arrotondata al 73%. Email 29,5%; attestati essenziali 62,5% dopo CERT-A, CERT-B e CERT-C. Accettazione manuale Joomla pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -14,44 +14,44 @@
       "joomla_integrations": 92,
       "release_preparation": 70,
       "email_notifications": 29.5,
-      "certificates": 50
+      "certificates": 62.5
     }
   },
-  "version": "0.56.6-dev",
+  "version": "0.56.7-dev",
   "code_baseline": {
-    "tested_head": "37685b937831af6ff000a9f7c397e4d2b35e6b8c",
-    "pull_request": 302,
-    "merged_main_commit": "a3a3a706b4d312f58a79952ad355c02fd7dcd3a8"
+    "tested_head": "48ce0c3b8e0e2a392145873b18898c6be80252b6",
+    "pull_request": 304,
+    "merged_main_commit": "461c2d83c85e1152e2fb2497e0e15be62e36cec9"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43410407842,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842",
+    "run_id": 43421028364,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
     "jobs": [
       {
-        "id": 131835095890,
+        "id": 131870764797,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131835175542,
+        "id": 131870827879,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131835175566,
+        "id": 131870827918,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131835175611,
+        "id": 131870827950,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
@@ -59,15 +59,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14029108411,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842/artifacts/14029108411",
-    "artifact_name": "JD-Learn-0.56.6-dev",
-    "installable_package": "pkg_jlms-0.56.6-dev.zip",
-    "sha256": "73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1",
-    "artifact_sha256": "313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92",
-    "size_bytes": 597871,
-    "artifact_size_bytes": 597667,
-    "expires_at": "2026-11-27T10:41:24Z",
+    "artifact_id": 14034621388,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388",
+    "artifact_name": "JD-Learn-0.56.7-dev",
+    "installable_package": "pkg_jlms-0.56.7-dev.zip",
+    "sha256": "28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4",
+    "artifact_sha256": "f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2",
+    "size_bytes": 604701,
+    "artifact_size_bytes": 604465,
+    "expires_at": "2026-11-27T12:00:30Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -13107,16 +13107,24 @@
       "ci": {
         "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190"
       }
+    },
+    {
+      "version": "0.56.6-dev",
+      "ci": {
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842",
+        "status": "completed",
+        "conclusion": "success"
+      }
     }
   ],
   "latest_feature": {
-    "pull_request": 302,
-    "candidate_head": "37685b937831af6ff000a9f7c397e4d2b35e6b8c",
-    "merged_main_commit": "a3a3a706b4d312f58a79952ad355c02fd7dcd3a8",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842/artifacts/14029108411",
-    "artifact_id": 14029108411,
-    "sha256": "73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1",
-    "artifact_sha256": "313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92",
-    "manual_acceptance": "Pending Joomla testbook; CERT-C/D remain"
+    "pull_request": 304,
+    "candidate_head": "48ce0c3b8e0e2a392145873b18898c6be80252b6",
+    "merged_main_commit": "461c2d83c85e1152e2fb2497e0e15be62e36cec9",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388",
+    "artifact_id": 14034621388,
+    "sha256": "28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4",
+    "artifact_sha256": "f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2",
+    "manual_acceptance": "Pending Joomla testbook; CERT-D and backup/restore residuals remain"
   }
 }

@@ -1,6 +1,6 @@
 # Attestati essenziali — perimetro JD Learn 1.0.0
 
-**Decisione approvata: 12 novembre 2026.** La prima versione stabile include l'emissione di attestati PDF di completamento del corso. Il perimetro è distinto da **JD Learn Credentials / Open Badges**, che rimane successivo alla 1.0.0. Requisiti approvati il 12 novembre 2026 per la prima stabile. CERT-A (PR #300) e CERT-B (PR #302) sono integrate; l'implementazione del macroambito è stimata al 50%. L'accettazione Joomla resta distinta dalla presenza del codice.
+**Decisione approvata: 12 novembre 2026.** La prima versione stabile include l'emissione di attestati PDF di completamento del corso. Il perimetro è distinto da **JD Learn Credentials / Open Badges**, che rimane successivo alla 1.0.0. Requisiti approvati il 12 novembre 2026 per la prima stabile. CERT-A (PR #300), CERT-B (PR #302) e CERT-C (PR #304) sono integrate; l'implementazione del macroambito è stimata al 62,5%. L'accettazione Joomla resta distinta dalla presenza del codice.
 
 ## Requisiti CERT-01–CERT-08
 
@@ -44,3 +44,6 @@ Ogni PR di implementazione: milestone `1.0.0`, elenco requisiti, sezione **Compo
 7. Verificare che gli attestati non espongano URL o informazioni private tramite indicizzazione o API.
 
 Questi scenari vanno aggiunti a `docs/QA_TESTBOOK.md`; l'esecuzione manuale non è dichiarata superata dall'esito CI.
+
+
+**Aggiornamento CERT-C (13 novembre 2026, PR #304 integrata):** elenco, dettaglio e download amministrativo protetto con ACL Joomla; audit minimo per consultazione, ricerca e download. CI standard 4/4 nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo Joomla pendente. Pacchetto [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), ZIP interno SHA-256 `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2` (scadenza 27 novembre 2026 alle 12:00 UTC). CERT-A/B/C coprono il 62,5% stimato dei criteri attestati; prossima PR CERT-D per notifica tramite Mail Templates/outbox.

@@ -1,8 +1,9 @@
-# 0.56.7-dev — gestione amministrativa attestati (PR IMP-09-CERT-C in preparazione)
+# 0.56.7-dev — gestione amministrativa attestati (PR #304 integrata)
 
-- Aggiunge elenco filtrabile, dettaglio e download amministrativo protetto degli attestati; controllo ACL `jlms.certificates.manage` e registro degli accessi.
-- Aggiunge schema audit e relativa migrazione; il download usa storage privato e snapshot congelati.
-- Collaudo manuale Joomla e CI della PR da completare.
+- Elenco ricercabile/filtrabile, dettaglio su snapshot e download amministrativo protetto; ACL `jlms.certificates.manage` e audit minimo per elenco, consultazione e download.
+- Migrazione additiva per il registro audit; schema ora a 44 tabelle e 65 FK.
+- PR [#304](https://github.com/jeckodevelopment/jd_learn/pull/304) integrata nel merge `461c2d83c85e1152e2fb2497e0e15be62e36cec9`, milestone 1.0.0. CI standard 4/4 nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo manuale Joomla pendente.
+- Pacchetto [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), ZIP interno SHA-256 `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2` (scadenza 27 novembre 2026 alle 12:00 UTC).
 
 # 0.56.6-dev — PDF e download protetto attestati (PR #302 integrata)
 
