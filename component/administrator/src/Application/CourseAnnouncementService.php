@@ -11,6 +11,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
 
 /** Read-only administration preview for the optional new-course announcement. */
 final class CourseAnnouncementService
@@ -48,7 +49,12 @@ final class CourseAnnouncementService
             'subject' => '',
             'body_text' => '',
             'body_html' => '',
+            'template_data' => [],
+            'already_notified' => false,
         ];
+        $existing = $this->db->createQuery()->select('state')->from('#__jlms_course_announcement_campaigns')
+            ->where('course_id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
+        $result['already_notified'] = (bool) $this->db->setQuery($existing)->loadResult();
         if ((int) $course->state !== 1 || $course->current_version_id === null) {
             return $result;
         }
@@ -152,6 +158,7 @@ final class CourseAnnouncementService
             // A safe, non-working placeholder keeps the preview from performing an unsubscribe action.
             'UNSUBSCRIBE_URL' => 'https://example.invalid/jd-learn-preview-unsubscribe',
         ];
+        $result['template_data'] = $tags;
         $renderer = new CourseAnnouncementPreviewRenderer('com_jlms.course.published', $language);
         $renderer->addUnsafeTags(['NAME', 'COURSE_TITLE', 'COURSE_INTRO_TEXT', 'COURSE_LESSONS_TEXT', 'COURSE_URL', 'SITE_NAME', 'UNSUBSCRIBE_URL']);
         $result['subject'] = $renderer->render((string) $template->subject, $tags);
@@ -161,6 +168,88 @@ final class CourseAnnouncementService
         $result['eligible_count'] = $this->confirmedRecipientCount();
         $result['language'] = $language;
         return $result;
+    }
+
+
+    /** Explicitly authorize and queue the first announcement for an eligible public course. */
+    public function notify(User $identity, int $courseId): int
+    {
+        $preview = $this->preview($identity, $courseId);
+        if (empty($preview['eligible'])) {
+            throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NOT_ELIGIBLE');
+        }
+        if (!empty($preview['already_notified'])) {
+            throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED');
+        }
+
+        $recipients = $this->confirmedRecipients();
+        if (!$recipients) {
+            throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NO_RECIPIENTS');
+        }
+
+        $actor = CourseEditorAccess::fresh($identity);
+        $campaign = $this->db->createQuery()->insert('#__jlms_course_announcement_campaigns')
+            ->columns(['course_id','requested_by','recipient_count','state','requested_at'])
+            ->values(implode(',', [(string) $courseId, (string) (int) $actor->id, (string) count($recipients), $this->db->quote('queued'), 'UTC_TIMESTAMP(6)']));
+        $queue = new MailQueue($this->db);
+        $consent = new CourseAnnouncementConsent($this->db);
+        $queued = 0;
+        $this->db->transactionStart();
+        try {
+            $this->db->setQuery($campaign)->execute();
+            foreach ($recipients as $recipient) {
+                $unsubscribe = $consent->createUnsubscribeUrl((int) $recipient->id);
+                if (!$unsubscribe) {
+                    continue;
+                }
+                $data = $preview['template_data'];
+                $name = htmlspecialchars((string) $recipient->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                $data['NAME'] = $name;
+                $data['UNSUBSCRIBE_URL'] = htmlspecialchars($unsubscribe, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                $profile = json_decode((string) $recipient->params, true);
+                $language = is_array($profile) && in_array($profile['language'] ?? '', ['it-IT','en-GB'], true)
+                    ? (string) $profile['language'] : (string) $preview['language'];
+                $key = hash('sha256', 'jd-learn-course-announcement:' . $courseId . ':' . (int) $recipient->id);
+                if ($queue->enqueueAnnouncement(
+                    $courseId,
+                    (int) $recipient->id,
+                    (string) $recipient->confirmed_at,
+                    $key,
+                    $language,
+                    (string) $recipient->email,
+                    (string) $recipient->name,
+                    $data
+                )) {
+                    $queued++;
+                }
+            }
+            if ($queued < 1) {
+                throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_NO_RECIPIENTS');
+            }
+            $countUpdate = $this->db->createQuery()->update('#__jlms_course_announcement_campaigns')
+                ->set('recipient_count = :count')->where('course_id = :course')
+                ->bind(':count', $queued, ParameterType::INTEGER)->bind(':course', $courseId, ParameterType::INTEGER);
+            $this->db->setQuery($countUpdate)->execute();
+            $this->db->transactionCommit();
+            return $queued;
+        } catch (\\Throwable $error) {
+            $this->db->transactionRollback();
+            if (stripos($error->getMessage(), 'Duplicate') !== false || stripos($error->getMessage(), '1062') !== false) {
+                throw new \\RuntimeException('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED');
+            }
+            throw $error;
+        }
+    }
+
+    /** @return array<int, object> */
+    private function confirmedRecipients(): array
+    {
+        $query = $this->db->createQuery()->select('u.id,u.name,u.email,u.params,consent.confirmed_at')
+            ->from('#__jlms_mail_consents AS consent')->innerJoin('#__users AS u ON u.id = consent.user_id')
+            ->where("consent.state = 'confirmed'")->where('consent.confirmed_at IS NOT NULL')
+            ->where('u.block = 0')->order('u.id ASC');
+        $rows = $this->db->setQuery($query)->loadObjectList();
+        return array_values(array_filter($rows, static fn (object $row): bool => filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)));
     }
 
     /** Count only confirmed, unblocked accounts with syntactically valid email addresses. */
