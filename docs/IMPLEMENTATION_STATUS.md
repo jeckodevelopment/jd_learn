@@ -36,7 +36,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Iscrizione e roster essenziale (M06/M09) | 68% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 70% |
-| Email e notifiche operative (MAIL-01–10 approvati) | 29,5% |
+| Email e notifiche operative (MAIL-01–11 approvati) | 31% |
 | Attestati PDF essenziali (CERT-01–08 approvati) | 62,5% |
 | **Avanzamento complessivo stimato** | **73,44%** |
 
@@ -99,3 +99,8 @@ La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_ST
 Schema attuale: **44 tabelle / 65 FK**; il pacchetto candidato 0.41.67-dev contiene 9 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.
+
+
+## IMP-09-MAIL-C / PR #313 — candidata 0.56.9-dev
+
+Implementata la comunicazione operativa manuale per corso: destinatari selezionabili dal roster autorizzato, anteprima e conferma, test all'operatore, job idempotente, batch via Scheduler/outbox e preferenze globale/per corso. ACL e stato degli iscritti sono ricontrollati a ogni elaborazione. PR #313 è aperta sulla milestone 1.0.0; CI e accettazione manuale Joomla ancora pendenti. La stima globale documentata resta 75% fino al merge e al ricalcolo sulla matrice; non conteggiare MAIL-11, che è distinta e non implementata.
