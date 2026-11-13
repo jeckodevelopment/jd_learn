@@ -986,7 +986,7 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 
 ## MAIL-11.1 / PR #315 — template Joomla annuncio nuovo corso (0.56.10-dev)
 
-**Nessun invio è previsto da questa PR.** Sul Joomla 6 di prova:
+PR integrata; CI 4/4 superata nel [run 43450891869](https://github.com/jeckodevelopment/jd_learn/actions/runs/43450891869). **Nessun invio è previsto da questa PR.** Collaudo manuale Joomla pendente. Sul Joomla 6 di prova:
 
 1. Installare o aggiornare JD Learn, aprire **Sistema → Modelli email** e cercare `com_jlms.course.published`.
 2. Verificare tag disponibili: `NAME`, `COURSE_TITLE`, `COURSE_TITLE_HTML`, `COURSE_IMAGE_HTML`, `COURSE_INTRO_TEXT`, `COURSE_INTRO_HTML`, `COURSE_LESSONS_TEXT`, `COURSE_LESSONS_HTML`, `COURSE_URL`, `SITE_NAME`, `SITE_NAME_HTML`, `UNSUBSCRIBE_URL`.
