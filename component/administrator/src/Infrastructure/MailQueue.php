@@ -140,15 +140,17 @@ final class MailQueue
                 if (!$mail->send()) {
                     throw new \RuntimeException('Joomla mail template delivery returned false.');
                 }
-            } catch (\Throwable $error) {
+            } catch (\Throwable) {
                 $attempts = (int) $row->attempts;
                 $retry = $attempts < 5;
                 $delay = min(3600, 60 * (2 ** min(6, $attempts - 1)));
                 $update = $this->db->createQuery()->update('#__jlms_mail_queue')
                     ->set($retry ? "state = 'retry'" : "state = 'failed'")
                     ->set($retry ? 'available_at = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ' . $delay . ' SECOND)' : 'available_at = available_at')
+                    // Transport exceptions can contain recipient addresses, SMTP responses, or
+                    // provider details. Keep the outbox diagnostic useful without persisting them.
                     ->set('last_error = :error')->set('claimed_at = NULL')->where('id = :id')
-                    ->bind(':error', mb_substr($error->getMessage(), 0, 1000))
+                    ->bind(':error', 'Delivery failed; transport details are withheld.')
                     ->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($update)->execute();
                 $failed++;

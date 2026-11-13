@@ -55,7 +55,7 @@ final class MailQueueAuditService
 
         $query = $this->db->createQuery()->select([
             'q.id', 'q.template_id', 'q.course_id', 'c.title AS course_title', 'q.recipient_email',
-            'q.state', 'q.attempts', 'q.available_at', 'q.claimed_at', 'q.sent_at', 'q.last_error',
+            'q.state', 'q.attempts', 'q.available_at', 'q.claimed_at', 'q.sent_at',
             'q.created_at', 'q.reconciliation_action', 'q.reconciliation_by', 'q.reconciliation_at',
             'q.reconciliation_note',
             '(CASE WHEN q.state = ' . $this->db->quote('sending') . ' AND q.claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' . self::STALE_MINUTES . ' MINUTE) THEN 1 ELSE 0 END) AS is_stale_sending',
