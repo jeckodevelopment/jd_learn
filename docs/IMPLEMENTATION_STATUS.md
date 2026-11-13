@@ -1,3 +1,5 @@
+**Candidata 0.56.19-dev (MAIL-04)**: promemoria facoltativo prima della scadenza; main resta 0.56.18-dev fino al merge. La stima globale resta 78,33% e l’area email 61% fino all’integrazione della PR.
+
 **Main 0.56.18-dev** integra la PR [#338](https://github.com/jeckodevelopment/jd_learn/pull/338), merge `5d38e6e47582422be581247de085206abc2c0296`: redazione degli errori SMTP/provider nella coda, vista audit senza diagnostica legacy e migrazione dei valori storici. CI standard 4/4 nel [run 43522457570](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570); pacchetto [JD-Learn-0.56.18-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570/artifacts/14083597534), SHA-256 ZIP `c59074d3bbe6a4ddb6b79714ca0d2948e04d6bff0d40316a1ac0e15f8087cbc6` (scade il 27 novembre 2026 alle 22:53 UTC). Avanzamento implementativo stimato 78,33% (78% arrotondato), email 61%; collaudo manuale Joomla/SMTP pendente.
 
 Aggiornato al 13 novembre 2026. Main **0.56.17-dev** integra la PR [#332](https://github.com/jeckodevelopment/jd_learn/pull/332), merge `3540b9a256253fb7c3e9257262a86d11027550fe`: audit e riconciliazione controllata della coda email. CI standard 4/4 nel [run 43518504217](https://github.com/jeckodevelopment/jd_learn/actions/runs/43518504217); 47 tabelle / 66 FK. Avanzamento implementativo stimato 78,33% (78% arrotondato), email 61%. Il collaudo manuale Joomla/SMTP resta pendente. Candidata di sicurezza 0.56.18-dev: redazione dei dettagli SMTP/provider dalla coda e migrazione dei dati diagnostici già salvati; PR in revisione e CI runtime pendente.
@@ -127,3 +129,8 @@ La PR #319 aggiunge una casella facoltativa e non preselezionata durante l'avvio
 ### MAIL-11.3 — revoca anonima via link (in PR)
 
 Aggiunto link di revoca opaco con token casuale hashato, scadenza a 30 giorni e legame al timestamp del consenso; la GET non modifica stato e il POST richiede CSRF. La revoca è monouso e invalida tutti i link della stessa adesione. La nuova migrazione 0.56.13 e i test CI coprono schema/cascade e ciclo del token. Nessun invio di annuncio è ancora abilitato; resta da collegare il link al template/outbox amministrativo. Collaudo Joomla/SMTP da eseguire dopo merge seguendo [QA_TESTBOOK.md](QA_TESTBOOK.md).
+
+
+## MAIL-04 — promemoria operativo scadenza corso (candidata PR runtime)
+
+La candidata 0.56.19-dev aggiunge il promemoria unico prima della scadenza per gli iscritti attivi non completati. Il sito può abilitarlo globalmente, scegliere una soglia da 1 a 30 giorni (default 3) e applicare un override per corso. Il task scheduler genera elementi idempotenti nell'outbox Joomla; prima dell'invio SMTP ricontrolla che l'iscrizione sia ancora attiva e incompleta. Il template usa Mail Templates Joomla. Collaudo manuale Joomla/SMTP pendente; CI non equivale ad accettazione.

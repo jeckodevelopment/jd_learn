@@ -133,3 +133,8 @@ Baseline documentata: [piano 1.0.0](STABLE_1.0.0_PR_PLAN.md), [stato implementat
 ## Dati diagnostici ed errori di trasporto (SEC-P1 / PR #338 integrata, 0.56.18-dev)
 
 La PR #338 è integrata: la coda salva un messaggio generico, la vista di audit non seleziona `last_error` e la migrazione redige i valori storici. CI standard 4/4 nel [run 43522457570](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570). Il collaudo Joomla/SMTP resta pendente; review sistematica e gate SEC-P1–P5 restano aperti.
+
+
+## MAIL-04 — promemoria operativo scadenza corso
+
+Il template `com_jlms.course.expiring` usa il mailer globale e i Mail Templates nativi Joomla. È inviato una sola volta per iscrizione e scadenza, soltanto se la funzione è abilitata globalmente e l’override del corso lo consente. La soglia è configurabile tra 1 e 30 giorni (default 3); la funzione è disabilitata globalmente per impostazione predefinita. Il task di invio ri-verifica che l’iscrizione sia ancora attiva, incompleta e non scaduta prima della consegna. Variabili: `{NAME}`, `{COURSE}`, `{COURSE_ENDS_AT}`, `{COURSE_URL}`, `{SITENAME}`.
