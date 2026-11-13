@@ -1,3 +1,10 @@
+## 0.56.18-dev candidato — minimizzazione diagnostica outbox (PR #338)
+
+- Non persiste più il testo delle eccezioni SMTP/provider, che può contenere indirizzi o dettagli infrastrutturali; il retry mantiene gli stati e i limiti esistenti.
+- La vista di audit non seleziona `last_error`; la migrazione redige i testi già presenti senza modificare stato, tentativi o pianificazione.
+- Finding SEC-P1 preliminare mitigato nella candidata; review sistematica e fasi SEC-P1–P5 restano aperte. Accettazione Joomla/SMTP pendente.
+- CI candidata e pacchetto: da registrare dopo la verifica del commit completo della PR.
+
 ## SEC — Policy di segnalazione vulnerabilità e versioni supportate
 
 - Rimosse le linee obsolete 0.4.x/0.3.x come versioni supportate; chiarito che non esiste ancora una release stabile e che gli snapshot `-dev` non sono supportati per produzione.
