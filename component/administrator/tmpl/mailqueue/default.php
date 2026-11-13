@@ -5,6 +5,7 @@ declare(strict_types=1);
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 
 $data = $this->data;
@@ -85,7 +86,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
           <textarea class="form-control mb-2" id="jlms-mail-queue-sent-note-<?= (int) $row->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
           <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-sent-confirm-<?= (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-sent-confirm-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_SENT_CONFIRM') ?></label></div>
           <button class="btn btn-success" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_MARK_SENT') ?></button>
-          <?= Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
+          <?= HTMLHelper::_('form.token') ?>
          </form>
          <?php if ((int) $row->attempts < 5) : ?>
          <form method="post" action="<?= Route::_('index.php?option=com_jlms&task=mailqueue.reconcile') ?>">
