@@ -72,10 +72,11 @@ final class CourseAnnouncementConsent
     public function confirm(string $token): bool
     {
         if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) { return false; }
+        $tokenHash = hash('sha256', $token);
         $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'confirmed'")
             ->set('confirmed_at = UTC_TIMESTAMP(6)')->set('token_hash = NULL')->set('token_expires_at = NULL')
             ->where("state = 'pending'")->where('token_hash = :hash')->where('token_expires_at >= UTC_TIMESTAMP()')
-            ->bind(':hash', hash('sha256', $token));
+            ->bind(':hash', $tokenHash);
         $this->db->setQuery($q)->execute();
         return $this->db->getAffectedRows() === 1;
     }
@@ -100,6 +101,7 @@ final class CourseAnnouncementConsent
 
         $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
         $tokenHash = hash('sha256', $token);
+        $confirmedAt = (string) $consent->confirmed_at;
         $now = gmdate('Y-m-d H:i:s');
         $insert = $this->db->createQuery()->insert('#__jlms_mail_unsubscribe_tokens')
             ->columns(['user_id', 'consent_confirmed_at', 'token_hash', 'created_at', 'expires_at'])
@@ -107,7 +109,7 @@ final class CourseAnnouncementConsent
                 ':user', ':confirmed', ':hash', $this->db->quote($now), 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL 30 DAY)',
             ]))
             ->bind(':user', $userId, ParameterType::INTEGER)
-            ->bind(':confirmed', (string) $consent->confirmed_at)
+            ->bind(':confirmed', $confirmedAt)
             ->bind(':hash', $tokenHash);
         $this->db->setQuery($insert)->execute();
 
@@ -119,23 +121,25 @@ final class CourseAnnouncementConsent
     public function revokeByToken(string $token): bool
     {
         if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) { return false; }
+        $tokenHash = hash('sha256', $token);
         $this->db->transactionStart();
         try {
             $q = $this->db->createQuery()->select(['user_id', 'consent_confirmed_at'])
                 ->from('#__jlms_mail_unsubscribe_tokens')
                 ->where('token_hash = :hash')->where('expires_at >= UTC_TIMESTAMP()')
-                ->bind(':hash', hash('sha256', $token));
+                ->bind(':hash', $tokenHash);
             $record = $this->db->setQuery($q)->loadObject();
             if (!$record) {
                 $this->db->transactionRollback();
                 return false;
             }
 
+            $confirmedAt = (string) $record->consent_confirmed_at;
             $update = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'revoked'")
                 ->set('revoked_at = UTC_TIMESTAMP()')->set('token_hash = NULL')->set('token_expires_at = NULL')
                 ->where('user_id = :user')->where("state = 'confirmed'")->where('confirmed_at = :confirmed')
                 ->bind(':user', (int) $record->user_id, ParameterType::INTEGER)
-                ->bind(':confirmed', (string) $record->consent_confirmed_at);
+                ->bind(':confirmed', $confirmedAt);
             $this->db->setQuery($update)->execute();
             if ($this->db->getAffectedRows() !== 1) {
                 $this->db->transactionRollback();
