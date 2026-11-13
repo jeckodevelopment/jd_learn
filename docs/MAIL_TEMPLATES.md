@@ -11,12 +11,13 @@ La PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288), inclusa in 
 | `com_jlms.course.completed` | Corso completato | `{NAME}`, `{COURSE}`, `{SITENAME}` |
 | `com_jlms.enrollment.suspended` | Accesso al corso sospeso | `{NAME}`, `{COURSE}`, `{SITENAME}` |
 | `com_jlms.enrollment.reactivated` | Accesso al corso riattivato | `{NAME}`, `{COURSE}`, `{SITENAME}` |
+| `com_jlms.certificate.available` | Attestato emesso e disponibile nell’area personale | `{NAME}`, `{COURSE}`, `{SITENAME}`, `{CERTIFICATE_URL}` |
 
 I modelli iniziali includono testo semplice e HTML. Il gestore Joomla consente di modificarli e creare le relative traduzioni. L'installer registra solo gli ID mancanti: non sostituisce modifiche editoriali o traduzioni esistenti quando il componente viene aggiornato.
 
 ## Perimetro e stato
 
-La PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291), integrata in 0.56.1-dev, collega la conferma dell'iscrizione automatica e il completamento ai template mediante una coda persistente. Il task Joomla `JD Learn: send queued emails` usa il mailer globale del sito, ritenta errori transitori fino a cinque tentativi con attesa progressiva e registra l'esito. La chiave univoca impedisce di accodare due volte la stessa transizione. Se il processo si interrompe dopo la presa in carico o dopo l'accettazione SMTP ma prima della conferma DB, il messaggio resta `sending` per evitare un reinvio cieco; richiede riconciliazione operativa. Un'eccezione durante l'invio SMTP può avere esito ambiguo: SMTP non offre una garanzia exactly-once. Le preferenze globali/per corso coprono ora quattro eventi (iscrizione automatica, completamento, sospensione e riattivazione) grazie alle PR #295 e #297; restano da collegare altri eventi approvati, comunicazione manuale, audit consultabile e retention. Gli attestati PDF essenziali sono nel perimetro 1.0.0 con requisiti CERT-01–08, ma l’integrazione della notifica CERT-07 è ancora da realizzare. Credentials/Open Badges, newsletter e tracking restano fuori dal perimetro.
+La PR [#291](https://github.com/jeckodevelopment/jd_learn/pull/291), integrata in 0.56.1-dev, collega la conferma dell'iscrizione automatica e il completamento ai template mediante una coda persistente. Il task Joomla `JD Learn: send queued emails` usa il mailer globale del sito, ritenta errori transitori fino a cinque tentativi con attesa progressiva e registra l'esito. La chiave univoca impedisce di accodare due volte la stessa transizione. Se il processo si interrompe dopo la presa in carico o dopo l'accettazione SMTP ma prima della conferma DB, il messaggio resta `sending` per evitare un reinvio cieco; richiede riconciliazione operativa. Un'eccezione durante l'invio SMTP può avere esito ambiguo: SMTP non offre una garanzia exactly-once. Le preferenze globali/per corso coprono cinque eventi includendo la disponibilità dell’attestato (CERT-D); restano da collegare altri eventi approvati, comunicazione manuale, audit consultabile e retention. La notifica CERT-D entra nell’outbox solo per una nuova emissione e usa la lingua del profilo Joomla. Il task Scheduler consegna tramite MailTemplate; la posta non viene inviata durante il completamento e un errore di accodamento non annulla l’attestato. Credentials/Open Badges, newsletter e tracking restano fuori dal perimetro.
 
 Per il collaudo manuale vedere [QA_TESTBOOK.md](QA_TESTBOOK.md#imp-09--core-18-template-email-joomla).
 
@@ -54,3 +55,8 @@ La registrazione dei template nella PR #288 e la coda dei due eventi core nella 
 6. Con SMTP temporaneamente indisponibile le azioni sul corso rimangono persistite; la coda registra l'errore, ritenta nei limiti e non duplica consegne già riuscite.
 7. I job gestiscono centinaia di iscritti senza invio HTTP monolitico; verificare permessi e privacy dei log, pulizia/retention e comportamento multi-lingua.
 
+
+
+## Notifica attestato (CERT-D)
+
+Alla prima emissione del documento, JD Learn aggiunge all’outbox una sola notifica con chiave stabile legata a certificato e documento. Un replay del completamento trova l’emissione esistente e non accoda di nuovo. Il template nativo `com_jlms.certificate.available` rimane modificabile e offre link all’area personale; la consegna usa il task Joomla già esistente. L’impostazione globale è attiva per default e il corso può ereditarla, abilitarla o disabilitarla. Un errore SMTP è gestito dal worker con retry; l’emissione non dipende dall’esito di consegna. Il link porta alla dashboard autenticata e non espone il PDF.

@@ -83,6 +83,7 @@ $mailTemplateIds = [
     'com_jlms.enrollment.suspended',
     'com_jlms.enrollment.reactivated',
     'com_jlms.course.completed',
+    'com_jlms.certificate.available',
 ];
 foreach ($mailTemplateIds as $templateId) {
     $mailTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate($templateId, 'it-IT');
@@ -93,9 +94,11 @@ foreach ($mailTemplateIds as $templateId) {
         throw new \RuntimeException('JD Learn mail template must include subject, plain-text and HTML content: ' . $templateId);
     }
     $tags = (array) $mailTemplate->params->get('tags', []);
-    $requiredTags = $templateId === 'com_jlms.enrollment.confirmed'
-        ? ['NAME', 'COURSE', 'SITENAME', 'COURSE_URL']
-        : ['NAME', 'COURSE', 'SITENAME'];
+    $requiredTags = match ($templateId) {
+        'com_jlms.enrollment.confirmed' => ['NAME', 'COURSE', 'SITENAME', 'COURSE_URL'],
+        'com_jlms.certificate.available' => ['NAME', 'COURSE', 'SITENAME', 'CERTIFICATE_URL'],
+        default => ['NAME', 'COURSE', 'SITENAME'],
+    };
     foreach ($requiredTags as $requiredTag) {
         if (!in_array($requiredTag, $tags, true)) {
             throw new \RuntimeException('JD Learn mail template does not document its variable ' . $requiredTag . ': ' . $templateId);

@@ -58,6 +58,12 @@ final class MailTemplateInstaller
                 ['NAME', 'COURSE', 'SITENAME'],
                 '<p>Ciao {NAME},</p><p>hai completato il corso <strong>{COURSE}</strong>.</p><p>{SITENAME}</p>',
             ],
+            'com_jlms.certificate.available' => [
+                'Attestato disponibile: {COURSE}',
+                "Ciao {NAME},\n\nil tuo attestato per il corso {COURSE} è disponibile nella tua area personale.\n\n{SITENAME}",
+                ['NAME', 'COURSE', 'SITENAME', 'CERTIFICATE_URL'],
+                '<p>Ciao {NAME},</p><p>il tuo attestato per il corso <strong>{COURSE}</strong> è disponibile nella tua area personale.</p><p><a href="{CERTIFICATE_URL}">Apri la tua area personale</a></p><p>{SITENAME}</p>',
+            ],
             'com_jlms.enrollment.suspended' => [
                 'Accesso al corso sospeso: {COURSE}',
                 "Ciao {NAME},\n\nl'accesso al corso {COURSE} è stato sospeso. Per informazioni contatta il responsabile del corso.\n\n{SITENAME}",

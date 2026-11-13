@@ -46,6 +46,10 @@ expect($mailPrefsClass::enabled('completion', false, $courseOverride), 'explicit
 $mailParams = $mailPrefsClass::merge(['mail_suspension' => 'disabled', 'mail_reactivation' => 'enabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('suspension', true, $mailParams)
     && $mailPrefsClass::enabled('reactivation', false, $mailParams), 'suspension and reactivation preferences support independent course overrides');
+$mailParams = $mailPrefsClass::merge(['mail_certificate' => 'disabled'], $mailParams);
+expect(!$mailPrefsClass::enabled('certificate', true, $mailParams), 'course can suppress certificate availability email');
+$mailParams = $mailPrefsClass::merge(['mail_certificate' => 'inherit'], $mailParams);
+expect($mailPrefsClass::enabled('certificate', true, $mailParams) && !$mailPrefsClass::enabled('certificate', false, $mailParams), 'certificate email preference inherits the global setting');
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
     && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');

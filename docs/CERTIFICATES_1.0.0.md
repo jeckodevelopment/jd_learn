@@ -47,3 +47,10 @@ Questi scenari vanno aggiunti a `docs/QA_TESTBOOK.md`; l'esecuzione manuale non 
 
 
 **Aggiornamento CERT-C (13 novembre 2026, PR #304 integrata):** elenco, dettaglio e download amministrativo protetto con ACL Joomla; audit minimo per consultazione, ricerca e download. CI standard 4/4 nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo Joomla pendente. Pacchetto [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), ZIP interno SHA-256 `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2` (scadenza 27 novembre 2026 alle 12:00 UTC). CERT-A/B/C coprono il 62,5% stimato dei criteri attestati; prossima PR CERT-D per notifica tramite Mail Templates/outbox.
+
+
+## CERT-D — notifica disponibilità attestato
+
+La prima emissione accoda `com_jlms.certificate.available` nell’outbox esistente, con lingua del profilo Joomla, link autenticato alla dashboard e chiave univoca per documento. Preferenza globale/per corso; la consegna è differita al task Scheduler e usa il mailer Joomla. Replay non crea una seconda notifica; errori di invio non invalidano completamento o attestato.
+
+**Collaudo manuale Joomla:** abilitare gli attestati e le notifiche globali, configurare SMTP di test; completare il corso con uno studente IT e uno EN e verificare in Joomla → Sistema → Modelli email le variabili e il template. Eseguire il job `JD Learn: send queued emails`, verificare una email corretta con link alla dashboard e download disponibile dopo login. Ripetere il completamento e verificare nessuna seconda riga/invio. Disabilitare l’override per corso e verificare che non venga accodata. Rendere temporaneamente indisponibile il mailer prima del job: il certificato deve restare presente, la coda deve ritentare e, ripristinato SMTP, la notifica deve essere consegnata una volta.
