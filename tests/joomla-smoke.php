@@ -322,7 +322,7 @@ $app->getDispatcher()->dispatch('onContentPrepareForm', new PrepareFormEvent('on
 ]));
 $consentField = $registrationForm->getField('course_announcements', 'jdlearn');
 if (!$consentField || (string) $consentField->getAttribute('default') !== '0') {
-    throw new \\RuntimeException('Native registration form is missing the unchecked course announcement consent field.');
+    throw new \RuntimeException('Native registration form is missing the unchecked course announcement consent field.');
 }
 // Enable providers only inside the disposable fixture to exercise Joomla's real plugin boot/dispatcher.
 PluginHelper::importPlugin('jlmsvideo');
