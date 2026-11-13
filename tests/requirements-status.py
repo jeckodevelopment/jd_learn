@@ -11,6 +11,11 @@ class Reconciliation(unittest.TestCase):
   self.evidence=json.loads((ROOT/'docs/IMPLEMENTATION_EVIDENCE.json').read_text())
  def check(self):status.check_reconciliation(self.rows,self.evidence)
  def test_implemented_does_not_require_human_acceptance(self):self.check()
+ def test_unimplemented_documented_requirement_has_no_runtime_commit(self):
+  row=next(r for r in self.rows if r['Requisito']=='MAIL-11')
+  self.assertEqual(row['Stato implementazione'],'Non iniziata')
+  self.assertEqual(row['Commit riscontrato'],'')
+  self.check()
  def test_green_ci_does_not_grant_acceptance(self):
   self.rows[0]['Accettazione Joomla']='Superata'
   with self.assertRaisesRegex(AssertionError,'No full human'):self.check()
