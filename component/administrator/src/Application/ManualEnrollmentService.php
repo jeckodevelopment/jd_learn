@@ -135,7 +135,7 @@ final class ManualEnrollmentService
             // Same serialization point as automatic start, before fresh authorization establishes a read view.
             $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('id = :id')->bind(':id', $edition, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE'); $this->db->setQuery($q)->loadResult();
-            [$actor, , , $p] = $this->context($identity, $course, $user, $language, $preassignment);
+            [$actor, $learner, $courseRecord, $p] = $this->context($identity, $course, $user, $language, $preassignment);
             if ($p['edition_id'] !== $edition) { throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409); }
             $payload = ['actor' => (int) $actor->id, 'course' => $course, 'user' => $user, 'language' => $language, 'reason' => $reason, 'impact' => $impact];
             if ($preassignment) { $payload['preassignment'] = true; }
@@ -164,6 +164,16 @@ final class ManualEnrollmentService
             $update = (object) ['id' => (int) $receipt->id, 'enrollment_id' => $id, 'course_version_id' => $p['version_id']]; $this->db->updateObject('#__jlms_manual_enrollments', $update, 'id');
             ($this->audit)($actor, ['id' => (int) $receipt->id, 'actor_id' => $actorId, 'enrollment_id' => $id, 'reason_reference' => (int) $receipt->id,
                 'reason_code' => 'manual_enrollment_created', 'preassignment_requested' => $preassignment, 'access_at_assignment' => $p['has_current_access'], 'correlation_id' => bin2hex(random_bytes(16))]);
+            // A preassignment does not grant course access, so it must not look like a confirmed admission.
+            if (!$preassignment || $p['has_current_access']) {
+                (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
+                    $course, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
+                    (string) ($learner->getParam('language', '') ?: $language), (string) $learner->email, trim((string) $learner->name),
+                    ['NAME' => trim((string) $learner->name), 'COURSE' => (string) $courseRecord->title,
+                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id,
+                        'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+                );
+            }
             $this->db->transactionCommit(); return $id;
         } catch (\Throwable $error) { $this->db->transactionRollback(); throw $error; }
     }
