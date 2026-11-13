@@ -1083,4 +1083,6 @@ La deduplicazione per corso/destinatario impedisce campagne ripetute; i controll
 7. Verificare che a cinque tentativi il retry manuale non sia disponibile e che il limite venga applicato anche a richieste POST costruite a mano. Dopo la riconciliazione una riga non deve poter essere modificata una seconda volta.
 8. Aggiornare da versione precedente e verificare la migrazione schema senza perdita delle righe e la compatibilità dei task Scheduler esistenti.
 
+Le date mostrate nell’audit sono in UTC e identificano la transizione registrata, non il momento di accettazione SMTP.
+
 **Accettazione manuale Joomla/SMTP:** da eseguire; la CI non equivale al collaudo reale. La riconciliazione “inviato” richiede evidenza nei log del mailer, mentre “retry” richiede evidenza che SMTP non abbia accettato il messaggio.
