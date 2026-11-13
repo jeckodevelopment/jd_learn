@@ -14,8 +14,8 @@ for base in ['component','libraries','plugins','packages']:
 for p in ROOT.rglob('*.json'):
  if 'dist' not in p.parts:json.loads(p.read_text())
 sql=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
-assert len(re.findall(r'^CREATE TABLE',sql,re.M))==45
-assert len(re.findall(r'ADD CONSTRAINT',sql))==65
+assert len(re.findall(r'^CREATE TABLE',sql,re.M))==46
+assert len(re.findall(r'ADD CONSTRAINT',sql))==66
 mail_queue=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
 assert re.search(r'CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue`',mail_queue)
 assert re.search(r'UNIQUE KEY `uq_event_key` \(`event_key`\)',mail_queue)
@@ -94,7 +94,7 @@ if package.exists():
 # Keep implementation claims separate from planned acceptance and verify their source references.
 import runpy
 runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
-print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':45,'foreign_keys':65,'structural_checks':'passed'}))
+print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':46,'foreign_keys':66,'structural_checks':'passed'}))
 
 # MAIL-11.1 registers the opt-in new-course template without enabling sends.
 mail_templates=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
@@ -107,3 +107,13 @@ assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAM
 assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
 assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+
+# MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
+assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
+assert 'mail_unsubscribe_tokens' in consent and 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL 30 DAY)' in consent
+assert "->where('confirmed_at = :confirmed')" in consent
+mail_controller=(ROOT/'component/site/src/Controller/MailconsentController.php').read_text()
+assert "['request', 'confirm', 'revoke', 'revokelink']" in mail_controller.lower()
+assert "strtoupper($this->input->getMethod()) !== 'POST'" in mail_controller
+assert "->revokeByToken($token)" in mail_controller
+assert "mailconsentrevoke" in (ROOT/'component/site/src/View/Mailconsentrevoke/HtmlView.php').read_text().lower()

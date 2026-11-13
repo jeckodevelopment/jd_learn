@@ -1022,4 +1022,20 @@ PR [#317](https://github.com/jeckodevelopment/jd_learn/pull/317) integrata nel m
 6. Esportare i dati personali dal plugin Privacy Joomla: verificare origine, stato, versione informativa e timestamp senza hash/token. Eseguire la rimozione Privacy su un utente di prova: la riga di consenso deve essere rimossa.
 7. Verificare IT/EN, navigazione tastiera/label checkbox e che l’upgrade conservi le personalizzazioni dei modelli `com_jlms.course.published` e `com_jlms.course.consent`.
 
-Il collaudo manuale/SMTP resta da registrare. La registrazione durante enrollment/registrazione, la revoca via link anonimo, i trigger e l’invio degli annunci sono fuori da questa tranche e non devono essere simulati come implementati.
+Il collaudo manuale/SMTP resta da registrare. La revoca anonima tramite link è coperta dal caso IMP-09-MAIL-D dedicato qui sotto. Registrazione Joomla, trigger e invio degli annunci restano fuori da questa tranche.
+
+
+## IMP-09-MAIL-D — Revoca anonima tramite link email (MAIL-11.3)
+
+La pagina di revoca non modifica preferenze in GET: i client email possono aprire o pre-caricare il link. La revoca avviene solo dopo conferma POST protetta da token CSRF. Il bearer token casuale è memorizzato solo come SHA-256, scade dopo 30 giorni ed è legato al timestamp esatto del consenso confermato; una revoca invalida tutti i link emessi per quel consenso. La pagina non mostra dati dell’utente e imposta no-store/no-referrer/noindex.
+
+**Comportamenti da testare sul sito Joomla di prova**
+
+1. Con utente di prova che ha confermato l’opt-in, generare un’email di annuncio di prova e aprire il link di revoca senza inviare il modulo: la preferenza deve restare attiva, anche dopo il prefetch automatico del link.
+2. Confermare la revoca dal modulo: verificare messaggio generico, preferenza revocata, redirect senza token nell’URL e assenza di altre email annuncio per quell’utente.
+3. Ripetere con link scaduto, già usato e link di un utente senza consenso attivo: l’esito deve essere generico, senza rivelare indirizzo o stato; nessun consenso nuovo deve essere modificato.
+4. Verificare POST privo di token CSRF respinto; tentare riutilizzo del link e verificare che non produca ulteriori modifiche.
+5. Verificare intestazioni `Cache-Control: private, no-store`, `Referrer-Policy: no-referrer`, `X-Robots-Tag: noindex, nofollow`, lingua italiana/inglese e layout mobile.
+6. Rimuovere l’utente o il suo consenso tramite Privacy Joomla e verificare che anche i token di revoca siano eliminati.
+
+La UI e il servizio sono coperti dalla CI; collaudo reale Joomla/email resta da registrare. Questa tranche non invia annunci: il generatore di token sarà collegato al flusso amministrativo in una PR successiva.
