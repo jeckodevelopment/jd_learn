@@ -123,16 +123,15 @@ final class MailQueue
             $q = $this->db->createQuery()->select('*')->from('#__jlms_mail_queue')->where('id = :id')
                 ->bind(':id', $id, ParameterType::INTEGER);
             $row = $this->db->setQuery($q)->loadObject();
-            if ((string) $row->template_id === 'com_jlms.course.published' && !$this->announcementEligible($row)) {
-                $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
-                    ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
-                    ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
-                $this->db->setQuery($skip)->execute();
-                $skipped++;
-                continue;
-            }
-
             try {
+                if ((string) $row->template_id === 'com_jlms.course.published' && !$this->announcementEligible($row)) {
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
+                        ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
+                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    $skipped++;
+                    continue;
+                }
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $mail = new MailTemplate((string) $row->template_id, (string) $row->language);
                 $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
