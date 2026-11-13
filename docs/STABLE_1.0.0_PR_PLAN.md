@@ -265,3 +265,10 @@ La PR #299 è integrata in main 0.56.4-dev e collega la conferma per iscrizione 
 ## Avanzamento MAIL-C
 
 La PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313) implementa il perimetro MAIL-C e CI 4/4 superata; resta il collaudo manuale Joomla. MAIL-11 non è duplicata e resta nella successiva attività MAIL-D.
+
+
+## DOC — Documentazione di prodotto e guida contestuale (gate obbligatorio 1.0.0)
+
+**Approvato il 13 novembre 2026.** Dopo il completamento delle PR implementative e in parallelo alla stabilizzazione, prima del gate finale IMP-10, eseguire DOC-P1–DOC-P5 descritti in [PRODUCT_DOCUMENTATION_1.0.0.md](PRODUCT_DOCUMENTATION_1.0.0.md). Comprendono manuali di installazione/upgrade, amministratore, docente, studente, sviluppatore, troubleshooting e rilascio, guida contestuale per schermata e spiegazioni dei campi/azioni complessi, IT/EN, accessibili e collaudate sul sito Joomla. La documentazione di rilascio è requisito **bloccante**, non facoltativo.
+
+**Tracciabilità:** DOC-01–DOC-10 sono ID di pianificazione nuovi da registrare nella matrice dei requisiti prima delle PR runtime. Le PR DOC-P2/3 contengono anche interventi applicativi per field help e guida contestuale e richiedono test Joomla; le altre sono prevalentemente editoriali e di validazione. Ogni futura PR funzionale deve dichiarare l'impatto su manuali, tooltip e help e aggiornarli quando necessario. La ricognizione parziale dei form (course.xml: 39 campi/10 description; config.xml: 26/11) **non** costituisce un collaudo complessivo. Le funzionalità Open Badges/Credentials restano successive alla 1.0.0 ma adotteranno gli stessi standard di guida per firme, chiavi, crittografia e verifica. L'approvazione del piano non modifica l'avanzamento implementativo e non dichiara superata l'accettazione.
