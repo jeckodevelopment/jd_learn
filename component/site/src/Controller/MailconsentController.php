@@ -14,7 +14,7 @@ final class MailconsentController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['request', 'confirm', 'revoke', 'revokeLink'], true)) {
+        if (!in_array(strtolower($task), ['request', 'confirm', 'revoke', 'revokelink'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
