@@ -35,7 +35,7 @@ $db->beginTransaction();
 $db->exec("INSERT INTO `ci_jlms_mail_consents` (`user_id`,`state`,`origin`,`policy_version`,`requested_at`,`confirmed_at`) VALUES (987654,'confirmed','dashboard','test',UTC_TIMESTAMP(),UTC_TIMESTAMP())");
 $db->exec("INSERT INTO `ci_jlms_mail_unsubscribe_tokens` (`user_id`,`consent_confirmed_at`,`token_hash`,`created_at`,`expires_at`) VALUES (987654,UTC_TIMESTAMP(),REPEAT('a',64),UTC_TIMESTAMP(),DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 DAY))");
 $db->exec("DELETE FROM `ci_jlms_mail_consents` WHERE `user_id`=987654");
-if ((int) $db->query("SELECT COUNT(*) FROM `ci_jlms_mail_unsubscribe_tokens` WHERE `user_id`=987654")->fetchColumn() !== 0) { throw new \\RuntimeException('Consent deletion did not cascade unsubscribe tokens'); }
+if ((int) $db->query("SELECT COUNT(*) FROM `ci_jlms_mail_unsubscribe_tokens` WHERE `user_id`=987654")->fetchColumn() !== 0) { throw new \RuntimeException('Consent deletion did not cascade unsubscribe tokens'); }
 $now = gmdate('Y-m-d H:i:s');
 function insertRow(\PDO $db, string $table, array $data): int
 {
