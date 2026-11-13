@@ -144,6 +144,7 @@ try:
  required_shortcuts={
   'jlms-admin-shortcut-certificates':('com_jlms','certificates'),
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
+  'jlms-admin-shortcut-mail_queue':('com_jlms','mailqueue'),
   'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
   'jlms-admin-shortcut-pathway_categories':('com_categories','categories'),
@@ -152,7 +153,7 @@ try:
   'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
   'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
  }
- expected_shortcut_order=['certificates','courses','pathways','course_categories','pathway_categories','question_bank','teachers','custom_fields','video_plugins']
+ expected_shortcut_order=['certificates','courses','mail_queue','pathways','course_categories','pathway_categories','question_bank','teachers','custom_fields','video_plugins']
  actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
  if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
  for shortcut,(option,view) in required_shortcuts.items():
