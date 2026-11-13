@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="user" method="upgrade">
+ <name>PLG_USER_JDLEARNCONSENT</name><author>Jecko Development</author><version>0.1.0</version>
+ <description>PLG_USER_JDLEARNCONSENT_DESCRIPTION</description>
+ <namespace path="src">Jlms\Plugin\User\Jdlearnconsent</namespace>
+ <scriptfile>installer.php</scriptfile>
+ <files>
+  <filename>installer.php</filename>
+  <folder plugin="jdlearnconsent">services</folder>
+  <folder>src</folder><folder>forms</folder><folder>language</folder>
+ </files>
+ <languages>
+  <language tag="it-IT">language/it-IT/plg_user_jdlearnconsent.ini</language>
+  <language tag="it-IT">language/it-IT/plg_user_jdlearnconsent.sys.ini</language>
+  <language tag="en-GB">language/en-GB/plg_user_jdlearnconsent.ini</language>
+  <language tag="en-GB">language/en-GB/plg_user_jdlearnconsent.sys.ini</language>
+ </languages>
+</extension>
