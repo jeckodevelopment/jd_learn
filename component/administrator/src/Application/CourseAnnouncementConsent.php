@@ -148,7 +148,7 @@ final class CourseAnnouncementConsent
             }
 
             $remove = $this->db->createQuery()->delete('#__jlms_mail_unsubscribe_tokens')
-                ->where('user_id = :user')->bind(':user', (int) $record->user_id, ParameterType::INTEGER);
+                ->where('user_id = :user')->bind(':user', $tokenUserId, ParameterType::INTEGER);
             $this->db->setQuery($remove)->execute();
             $this->db->transactionCommit();
             return true;
