@@ -5,9 +5,9 @@
   "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364",
   "counts": {
     "Stato implementazione": {
-      "Parziale": 179,
+      "Parziale": 178,
       "Completata": 15,
-      "Non iniziata": 24
+      "Non iniziata": 25
     },
     "Perimetro 1.0.0": {
       "1.0.0": 143,
