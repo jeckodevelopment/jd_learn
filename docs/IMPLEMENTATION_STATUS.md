@@ -1,4 +1,4 @@
-Aggiornato al 13 novembre 2026. Candidata **0.56.17-dev**, PR [#332 in revisione](https://github.com/jeckodevelopment/jd_learn/pull/331): audit e riconciliazione della coda email; verifica automatica leggera superata, integrazione PHP/database completa da eseguire. Main **0.56.16-dev** integra la PR #327; CI completa 4/4 [run 43511719258](https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258), 47 tabelle / 66 FK, progresso globale 78,00%, email 58%. Collaudo manuale Joomla/SMTP della candidata pendente.
+Aggiornato al 13 novembre 2026. Main **0.56.17-dev** integra la PR [#332](https://github.com/jeckodevelopment/jd_learn/pull/332), merge `3540b9a256253fb7c3e9257262a86d11027550fe`: audit e riconciliazione controllata della coda email. CI standard 4/4 nel [run 43518504217](https://github.com/jeckodevelopment/jd_learn/actions/runs/43518504217); 47 tabelle / 66 FK. Avanzamento implementativo stimato 78,33% (78% arrotondato), email 61%. Il collaudo manuale Joomla/SMTP resta pendente. Pacchetto [JD-Learn-0.56.17-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43518504217/artifacts/14081936957), SHA-256 ZIP `61fb4f41f10754aceeecc0b891154fb212168198d1d88390f5a2afa599bdc981`.
 
 La PR #323 aggiunge alla registrazione Joomla un checkbox IT/EN facoltativo, non preselezionato, che avvia il double opt-in dopo la creazione dell'account; errori di invio email non annullano la registrazione. CI 4/4 nel run 43482627796; package 0.56.14-dev in CHANGELOG.md; collaudo Joomla/SMTP manuale pendente.
 
@@ -25,7 +25,7 @@ La gestione corsi, programma, video/materiali, aula e iscrizioni comprende i per
 
 ## Avanzamento stimato verso la prima versione stabile
 
-La stima corrente descrive main 0.50.0-dev, incluso il default della preferenza sottotitoli sui provider YouTube e Cloudflare. Restano distinti i collaudi Joomla reali con account provider, browser e hosting.
+La stima corrente descrive main 0.56.17-dev, incluso il default della preferenza sottotitoli sui provider YouTube e Cloudflare. Restano distinti i collaudi Joomla reali con account provider, browser e hosting.
 
 Le percentuali indicano la completezza implementativa stimata rispetto al perimetro approvato; non equivalgono ad accettazione manuale in Joomla.
 
@@ -38,7 +38,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Iscrizione e roster essenziale (M06/M09) | 68% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 70% |
-| Email e notifiche operative (MAIL-01–11 approvati) | 38% |
+| Email e notifiche operative (MAIL-01–11 approvati) | 61% |
 | Attestati PDF essenziali (CERT-01–08 approvati) | 75% |
 | **Avanzamento complessivo stimato** | **75,78% (76%)** |
 

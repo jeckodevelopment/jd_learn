@@ -1,4 +1,4 @@
-**Candidata 0.56.17-dev (PR #332 in revisione)** implementa l’audit e la riconciliazione controllata delle email bloccate in invio; include coda amministrativa con destinatari mascherati, conferma e nota obbligatorie, limite tentativi e storico. Main 0.56.16-dev integra la PR [#327](https://github.com/jeckodevelopment/jd_learn/pull/327), con avanzamento globale 78,00% e email 58%. Collaudo manuale Joomla/SMTP della nuova funzione da eseguire dopo l’installazione della candidata.
+**Main 0.56.17-dev** integra la PR [#332](https://github.com/jeckodevelopment/jd_learn/pull/332): audit e riconciliazione controllata delle email bloccate in invio. CI completa 4/4 nel [run 43518504217](https://github.com/jeckodevelopment/jd_learn/actions/runs/43518504217); merge `3540b9a256253fb7c3e9257262a86d11027550fe`. Avanzamento implementativo stimato 78,33% (78% arrotondato), email 61%; accettazione manuale Joomla/SMTP pendente. Pacchetto installabile [JD-Learn-0.56.17-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43518504217/artifacts/14081936957), SHA-256 ZIP `61fb4f41f10754aceeecc0b891154fb212168198d1d88390f5a2afa599bdc981` (disponibile fino al 27 novembre 2026).
 
 **Main 0.56.16-dev** integra PR [#327](https://github.com/jeckodevelopment/jd_learn/pull/327): conferma esplicita e invio controllato degli annunci di nuovi corsi. CI completa 4/4 [run 43511719258](https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258); progresso globale 78,00% (78%), email 58% (+10 punti). Collaudo manuale Joomla/SMTP pendente. Pacchetto [JD-Learn-0.56.16-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258/artifacts/14077534734), SHA-256 ZIP `3fdaff806b1f742f9e8dda230546967cf2c9de52817f1efd27d73734a330ca07`.
 
@@ -59,7 +59,7 @@ Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo
 
 Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
 
-Schema InnoDB: **47 tabelle / 66 FK**. Il pacchetto 0.56.16-dev contiene 11 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy, filtro ACL della sidebar e consenso email in registrazione.
+Schema InnoDB: **47 tabelle / 66 FK**. Il pacchetto 0.56.17-dev contiene 11 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy, filtro ACL della sidebar e consenso email in registrazione.
 
 ```sh
 python3 tools/build.py

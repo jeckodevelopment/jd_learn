@@ -1,8 +1,8 @@
 {
   "date": "2026-11-13",
   "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
-  "runtime_tested_head": "0bae6bb428f06636a1d3be7d524f32a15739bd0b",
-  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43511719258",
+  "runtime_tested_head": "3540b9a256253fb7c3e9257262a86d11027550fe",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43518504217",
   "counts": {
     "Stato implementazione": {
       "Parziale": 178,
@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 78,
-    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+58+75)/9 = 78,00%. L’area email sale da 48% a 58% (+10 punti) dopo la conferma amministrativa e l’invio controllato MAIL-11 (PR #327). Accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
+    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+61+75)/9 = 78,33%, arrotondata a 78%. L’area email sale da 58% a 61% dopo audit consultabile e riconciliazione controllata degli elementi sending stale (PR #332). CI standard 4/4; accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
     "areas": [
       81,
       81,
@@ -34,7 +34,7 @@
       68,
       92,
       70,
-      58,
+      61,
       75
     ]
   },
