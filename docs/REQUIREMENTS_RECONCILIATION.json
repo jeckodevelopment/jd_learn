@@ -1,13 +1,13 @@
 {
   "date": "2026-11-13",
   "baseline_commit": "ae81e46a69fc3d2528585c497f0b263677d3d0f9",
-  "runtime_tested_head": "37685b937831af6ff000a9f7c397e4d2b35e6b8c",
-  "ci_run": 43410407842,
+  "runtime_tested_head": "48ce0c3b8e0e2a392145873b18898c6be80252b6",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364",
   "counts": {
     "Stato implementazione": {
       "Parziale": 178,
-      "Completata": 14,
-      "Non iniziata": 26
+      "Completata": 15,
+      "Non iniziata": 25
     },
     "Perimetro 1.0.0": {
       "1.0.0": 143,
@@ -19,13 +19,13 @@
       "Parziale": 2
     },
     "Verifica automatica": {
-      "Superata": 176,
-      "Non eseguita": 42
+      "Superata": 177,
+      "Non eseguita": 41
     }
   },
   "implementation_progress": {
-    "percent": 72,
-    "method": "Media semplice delle nove aree approvate: (81+81+78+99+68+92+70+29.5+50)/9 = 72.06%, arrotondata al 72%. Email 29,5%; attestati 50% dopo CERT-A/B. La stima misura implementazione; l’accettazione manuale Joomla resta pendente.",
+    "percent": 73,
+    "method": "Media semplice delle nove aree approvate: (81+81+78+99+68+92+70+29.5+62.5)/9 = 73.44%, arrotondata al 73%. Email 29,5%; attestati 62,5% dopo CERT-A/B/C. La stima misura implementazione; l’accettazione manuale Joomla resta pendente.",
     "areas": [
       81,
       81,
@@ -35,7 +35,7 @@
       92,
       70,
       29.5,
-      50
+      62.5
     ]
   },
   "note": "Main 0.56.6-dev integra PR #302, merge a3a3a706b4d312f58a79952ad355c02fd7dcd3a8; CI standard 4/4 nel run 43410407842. Pacchetto artefatto 14029108411; SHA-256 wrapper 313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92, ZIP Joomla interno 73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1; scadenza 2026-11-27. CERT-B implementato; collaudo manuale Joomla pendente."

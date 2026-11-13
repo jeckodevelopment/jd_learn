@@ -1,5 +1,4 @@
-Aggiornato al 13 novembre 2026. Main **0.56.6-dev** integra PR [#302](https://github.com/jeckodevelopment/jd_learn/pull/302), merge `a3a3a706b4d312f58a79952ad355c02fd7dcd3a8`. CERT-A e CERT-B sono integrati; avanzamento implementativo globale stimato **72,06%** (email 29,5%; attestati 50%). CI standard 4/4 superata nel [run 1023](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842); collaudo manuale Joomla ancora pendente. Pacchetto installabile [JD-Learn-0.56.6-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842/artifacts/14029108411), SHA-256 ZIP interno `73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1`, checksum wrapper `313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92`; artefatto disponibile fino al 27 novembre 2026.
-
+Aggiornato al 13 novembre 2026. Main **0.56.7-dev** integra la PR [#304](https://github.com/jeckodevelopment/jd_learn/pull/304), merge `461c2d83c85e1152e2fb2497e0e15be62e36cec9`. CERT-A/B/C sono implementati; avanzamento globale stimato **73,44%** (email 29,5%; attestati 62,5%). CI standard 4/4 superata nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo manuale Joomla ancora pendente. Pacchetto installabile [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 ZIP interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, checksum artifact wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`; disponibile fino al 27 novembre 2026 alle 12:00 UTC.
 **Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
 
 STAB-01 / issue #149: ordine delle scorciatoie e stato dei provider sono già presenti nella dashboard; issue #150: la PR #238 / 0.41.78-dev integra la traduzione IT/EN mancante nei cataloghi di sistema. Eseguire l’accettazione manuale sul sito di prova prima di chiudere il gruppo.
@@ -75,6 +74,8 @@ La PR #90 integrata rimuove le liste fisse di provider in pubblicazione/fruizion
 **Accettazione:** storico sulla versione assegnata, pubblicazione impossibile per regole non supportate/cicliche, progresso coerente dopo cambiamenti espliciti e nessuna apertura di media o risposte riservate.
 
 ### Attestati e notifiche
+
+CERT-A/B/C sono integrate; attestati al 62,5% e avanzamento globale 73,44%. La PR #304 aggiunge vista amministrativa, ACL e audit minimo. Prossima priorità: CERT-D, notifica di disponibilità tramite Mail Templates Joomla e outbox. Accettazione manuale delle PR CERT ancora pendente.
 
 Prerequisito condiviso: job/outbox affidabili con eventi/lingua/destinatari documentati e gestione retry/esito incerto. I template Mail Templates nativi sono registrati dalla PR #288/0.56.0-dev. Implementare idoneità, modelli/PDF e snapshot, download, verifica opzionale non enumerabile, revoca/sostituzione e anomalie dopo rivalutazione. Non inviare posta dentro le transazioni didattiche.
 
