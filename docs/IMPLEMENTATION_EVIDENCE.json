@@ -13235,7 +13235,7 @@
   "sec_p1_mail_transport_candidate": {
     "pull_request": 338,
     "runtime_commit": "82a15f1b5a5de0170411feb2a3ace2ee5498c7e4",
-    "status": "candidate; CI run 43521314740 pending; manual Joomla/SMTP acceptance pending",
+    "status": "candidate; review-ready integration CI for the current PR head is running; manual Joomla/SMTP acceptance pending",
     "finding": "Mailer exception text can contain addresses or provider/SMTP details; redact legacy queue values and stop returning last_error in audit view."
   }
 }
