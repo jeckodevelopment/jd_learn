@@ -12,6 +12,8 @@ $data = $this->data;
 $filters = $data['filters'];
 $limit = (int) $data['limit'];
 $start = (int) $data['start'];
+$stateKeys = ['pending' => 'COM_JLMS_MAIL_QUEUE_STATE_PENDING', 'retry' => 'COM_JLMS_MAIL_QUEUE_STATE_RETRY', 'sending' => 'COM_JLMS_MAIL_QUEUE_STATE_SENDING', 'sent' => 'COM_JLMS_MAIL_QUEUE_STATE_SENT', 'failed' => 'COM_JLMS_MAIL_QUEUE_STATE_FAILED', 'skipped' => 'COM_JLMS_MAIL_QUEUE_STATE_SKIPPED'];
+$actionKeys = ['sent' => 'COM_JLMS_MAIL_QUEUE_ACTION_SENT', 'retry' => 'COM_JLMS_MAIL_QUEUE_ACTION_RETRY'];
 $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&filter[template]=' . rawurlencode((string) $filters['template']);
 ?>
 <section id="jlms-mail-queue">
@@ -25,7 +27,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    <select class="form-select" name="filter[state]" id="jlms-mail-queue-state">
     <option value=""><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_ALL') ?></option>
     <?php foreach (['pending','retry','sending','sent','failed','skipped'] as $state) : ?>
-     <option value="<?= $state ?>" <?= $filters['state'] === $state ? 'selected' : '' ?>><?= Text::_('COM_JLMS_MAIL_QUEUE_STATE_' . strtoupper($state)) ?></option>
+     <option value="<?= $state ?>" <?= $filters['state'] === $state ? 'selected' : '' ?>><?= Text::_($stateKeys[$state]) ?></option>
     <?php endforeach; ?>
    </select>
   </div>
@@ -68,7 +70,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
      <td><code><?= $this->escape($row->template_id) ?></code></td>
      <td><?php if ($row->course_id) : ?><?= $this->escape((string) ($row->course_title ?: '#' . $row->course_id)) ?><?php else : ?>—<?php endif; ?></td>
      <td><?= $row->recipient_masked !== '' ? '<code>' . $this->escape($row->recipient_masked) . '</code>' : '—' ?></td>
-     <td><?= Text::_('COM_JLMS_MAIL_QUEUE_STATE_' . strtoupper((string) $row->state)) ?>
+     <td><?= Text::_($stateKeys[(string) $row->state] ?? 'COM_JLMS_MAIL_QUEUE_STATE_PENDING') ?>
       <?php if ((int) $row->is_stale_sending === 1) : ?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php endif; ?>
      </td>
      <td><?= (int) $row->attempts ?></td>
@@ -102,7 +104,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
         </div>
        </details>
       <?php elseif ($row->reconciliation_action) : ?>
-       <div><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILED') ?>: <?= Text::_('COM_JLMS_MAIL_QUEUE_ACTION_' . strtoupper((string) $row->reconciliation_action)) ?></div>
+       <div><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILED') ?>: <?= Text::_($actionKeys[(string) $row->reconciliation_action] ?? 'COM_JLMS_MAIL_QUEUE_ACTION_SENT') ?></div>
        <small><?= $this->escape((string) $row->reconciliation_at) ?></small>
        <div><?= $this->escape((string) $row->reconciliation_note) ?></div>
       <?php else : ?>—<?php endif; ?>
