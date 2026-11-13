@@ -766,3 +766,9 @@ Primo incremento di sviluppo, non release del sistema e-learning completo.
 - Aggiunta comunicazione operativa agli iscritti selezionati per corso con anteprima, conferma e test all'operatore.
 - Aggiunto job asincrono idempotente, rivalidazione ACL/stato, preferenze globale/per corso e template Joomla com_jlms.course.message.
 - CI 4/4 superata, merge 53f5e032ae16da9df963e938cfb449c6c249a933; collaudo manuale Joomla/SMTP pendente; pacchetto artifact 14046839802. vedere [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
+
+
+## 0.56.10-dev — PR #315 (candidata)
+
+- Registra il template nativo Joomla `com_jlms.course.published` per MAIL-11.1, con variabili per contenuti pubblici, immagine e revoca.
+- Nessun trigger o invio di annuncio; opt-in, double opt-in, revoca e invio restano da implementare.
