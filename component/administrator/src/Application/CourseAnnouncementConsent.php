@@ -80,12 +80,95 @@ final class CourseAnnouncementConsent
         return $this->db->getAffectedRows() === 1;
     }
 
+    /**
+     * Create an expiring, one-use unsubscribe link bound to this confirmed consent revision.
+     * Returns null when the user has not confirmed the optional notices.
+     */
+    public function createUnsubscribeUrl(int $userId): ?string
+    {
+        if ($userId < 1) { return null; }
+        $q = $this->db->createQuery()->select(['state', 'confirmed_at'])->from('#__jlms_mail_consents')
+            ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
+        $consent = $this->db->setQuery($q)->loadObject();
+        if (!$consent || $consent->state !== 'confirmed' || !$consent->confirmed_at) { return null; }
+
+        // Remove expired tokens for this user before adding another campaign link.
+        $cleanup = $this->db->createQuery()->delete('#__jlms_mail_unsubscribe_tokens')
+            ->where('user_id = :user')->where('expires_at < UTC_TIMESTAMP()')
+            ->bind(':user', $userId, ParameterType::INTEGER);
+        $this->db->setQuery($cleanup)->execute();
+
+        $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $tokenHash = hash('sha256', $token);
+        $now = gmdate('Y-m-d H:i:s');
+        $insert = $this->db->createQuery()->insert('#__jlms_mail_unsubscribe_tokens')
+            ->columns(['user_id', 'consent_confirmed_at', 'token_hash', 'created_at', 'expires_at'])
+            ->values(implode(',', [
+                ':user', ':confirmed', ':hash', $this->db->quote($now), 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL 30 DAY)',
+            ]))
+            ->bind(':user', $userId, ParameterType::INTEGER)
+            ->bind(':confirmed', (string) $consent->confirmed_at)
+            ->bind(':hash', $tokenHash);
+        $this->db->setQuery($insert)->execute();
+
+        $path = 'index.php?option=com_jlms&view=mailconsentrevoke&token=' . rawurlencode($token);
+        return \Joomla\CMS\Router\Route::link('site', $path, false);
+    }
+
+    /** Revoke only the consent revision and one-use token that produced the link. */
+    public function revokeByToken(string $token): bool
+    {
+        if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) { return false; }
+        $this->db->transactionStart();
+        try {
+            $q = $this->db->createQuery()->select(['user_id', 'consent_confirmed_at'])
+                ->from('#__jlms_mail_unsubscribe_tokens')
+                ->where('token_hash = :hash')->where('expires_at >= UTC_TIMESTAMP()')
+                ->bind(':hash', hash('sha256', $token));
+            $record = $this->db->setQuery($q)->loadObject();
+            if (!$record) {
+                $this->db->transactionRollback();
+                return false;
+            }
+
+            $update = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'revoked'")
+                ->set('revoked_at = UTC_TIMESTAMP()')->set('token_hash = NULL')->set('token_expires_at = NULL')
+                ->where('user_id = :user')->where("state = 'confirmed'")->where('confirmed_at = :confirmed')
+                ->bind(':user', (int) $record->user_id, ParameterType::INTEGER)
+                ->bind(':confirmed', (string) $record->consent_confirmed_at);
+            $this->db->setQuery($update)->execute();
+            if ($this->db->getAffectedRows() !== 1) {
+                $this->db->transactionRollback();
+                return false;
+            }
+
+            $remove = $this->db->createQuery()->delete('#__jlms_mail_unsubscribe_tokens')
+                ->where('user_id = :user')->bind(':user', (int) $record->user_id, ParameterType::INTEGER);
+            $this->db->setQuery($remove)->execute();
+            $this->db->transactionCommit();
+            return true;
+        } catch (\\Throwable $error) {
+            $this->db->transactionRollback();
+            throw $error;
+        }
+    }
+
     public function revoke(int $userId): void
     {
-        if ($userId < 1) { throw new \InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED'); }
-        $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'revoked'")
-            ->set('revoked_at = UTC_TIMESTAMP()')->set('token_hash = NULL')->set('token_expires_at = NULL')
-            ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
-        $this->db->setQuery($q)->execute();
+        if ($userId < 1) { throw new \\InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED'); }
+        $this->db->transactionStart();
+        try {
+            $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'revoked'")
+                ->set('revoked_at = UTC_TIMESTAMP()')->set('token_hash = NULL')->set('token_expires_at = NULL')
+                ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
+            $this->db->setQuery($q)->execute();
+            $remove = $this->db->createQuery()->delete('#__jlms_mail_unsubscribe_tokens')
+                ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
+            $this->db->setQuery($remove)->execute();
+            $this->db->transactionCommit();
+        } catch (\\Throwable $error) {
+            $this->db->transactionRollback();
+            throw $error;
+        }
     }
 }
