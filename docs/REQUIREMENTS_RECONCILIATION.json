@@ -1,8 +1,8 @@
 {
   "date": "2026-11-13",
   "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
-  "runtime_tested_head": "5d38e6e47582422be581247de085206abc2c0296",
-  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570",
+  "runtime_tested_head": "0fc688bfdbcdacb99616378b69cac30260eef5fb",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43527480797",
   "counts": {
     "Stato implementazione": {
       "Parziale": 178,
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 78,
-    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+61+75)/9 = 78,33%, arrotondata a 78%. L’area email resta 61% dopo PR #338, che mitiga un finding SEC-P1 sulla persistenza dei dettagli SMTP/provider ma non aggiunge copertura funzionale misurata. CI standard 4/4; accettazione manuale Joomla/SMTP pendente e distinta dalla copertura implementativa.",
+    "percent": 79,
+    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+64+75)/9 = 78,67%, arrotondata a 79%. MAIL-04/PR #344 porta email dal 61% al 64%. Implementazione e verifica CI non equivalgono all’accettazione manuale Joomla/SMTP.",
     "areas": [
       81,
       81,
@@ -34,12 +34,12 @@
       68,
       92,
       70,
-      61,
+      64,
       75
     ]
   },
-  "note": "Main 0.56.18-dev integra PR #338 (merge 5d38e6e47582422be581247de085206abc2c0296); CI standard 4/4. Stima globale invariata 78,33% (78% arrotondato), email 61%. L’incremento è una mitigazione di sicurezza e non cambia la copertura funzionale stimata. Collaudo manuale Joomla/SMTP pendente.",
-  "updated_at": "2026-11-13T22:53:32Z",
+  "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Stima globale 78,67% (79% arrotondato), email 64%. Collaudo manuale Joomla/SMTP pendente.",
+  "updated_at": "2026-11-13T23:32:53Z",
   "imp_09_mail_c": {
     "pull_request": 313,
     "merge_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
