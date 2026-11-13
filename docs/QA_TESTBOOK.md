@@ -882,7 +882,7 @@ La regressione automatica d’integrazione in `tests/joomla-video.php` copre due
 Verificare su Joomla di prova il riepilogo **Verifica prima della pubblicazione** in una versione bozza con modalità **Sola consultazione** e una lezione video senza durata rilevata/confermata. Atteso: avviso `COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED`, nessun blocco per la sola durata e possibilità di pubblicare se gli altri controlli passano. Aggiungere poi una durata confermata valida e verificare che l’avviso scompaia. Ripetere in modalità **Apprendimento**: l’assenza di durata resta un blocco `COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED` e non viene duplicata come avviso.
 
 
-## IMP-09-CERT — attestati PDF essenziali (CERT-A integrata, CERT-B candidata)
+## IMP-09-CERT — attestati PDF essenziali (CERT-A/B integrate)
 
 **Comportamenti da testare in Joomla (da eseguire dopo le PR runtime):**
 
@@ -930,7 +930,7 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 **Collaudo manuale Joomla da eseguire:** abilitare gli attestati globalmente e poi sovrascrivere la preferenza in due corsi; completare un corso Apprendimento e verificare nel database di prova una sola riga per iscrizione/versione con nome, titolo/versione e data corretti; ripetere l'ultima richiesta e verificare che il record non cambi; completare un corso in sola consultazione e verificare che non venga emesso nulla. Il PDF, l'area studente e la vista amministrativa sono fuori da CERT-A e verranno collaudati nelle PR successive.
 
 
-# CERT-B — PDF personalizzabile e download protetto (PR #302 candidata)
+# CERT-B — PDF personalizzabile e download protetto (PR #302 integrata; 0.56.6-dev)
 
 **Prerequisiti:** installare la candidata su Joomla di prova con storage materiali privato configurato; predisporre un JPEG locale nella cartella media consentita; attivare attestati globali e per il corso di test; usare uno studente A completabile, uno studente B e un account anonimo.
 
@@ -944,3 +944,6 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 6. Ripetere il download e confrontare seriale/contenuti: lo stesso attestato resta identico. Controllare che il blob risieda nello storage privato esterno alla web root, con permessi restrittivi e che l’upgrade non lo elimini.
 
 **Esito sito Joomla:** Non eseguito. Questa procedura non copre ancora vista amministrativa, audit né backup/ripristino, previsti nelle PR successive/IMP-10.
+
+
+**Verifica automatica PR #302:** CI standard 4/4 superata nel [run 1023](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842); il test PDF e la lint PHP sono passati. L’accettazione manuale descritta sopra resta pendente. Pacchetto [JD-Learn-0.56.6-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842/artifacts/14029108411), ZIP interno SHA-256 `73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1`, wrapper SHA-256 `313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92`.
