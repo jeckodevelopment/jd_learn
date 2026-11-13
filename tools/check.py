@@ -15,7 +15,8 @@ for p in ROOT.rglob('*.json'):
  if 'dist' not in p.parts:json.loads(p.read_text())
 sql=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
 assert len(re.findall(r'^CREATE TABLE',sql,re.M))==46
-assert len(re.findall(r'ADD CONSTRAINT',sql))==66
+assert len(re.findall(r'ADD CONSTRAINT',sql))==65
+assert len(re.findall(r'CONSTRAINT `#__jlms_fk_mail_unsubscribe_consent` FOREIGN KEY',sql))==1
 mail_queue=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_text()
 assert re.search(r'CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue`',mail_queue)
 assert re.search(r'UNIQUE KEY `uq_event_key` \(`event_key`\)',mail_queue)
