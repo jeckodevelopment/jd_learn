@@ -1082,10 +1082,10 @@ Implementazione integrata: PR #315, #317, #319, #321, #323, #325 e #327. **Tutti
 6. Tra accodamento e invio revocare consenso, bloccare account, variare indirizzo email o rendere privato il corso: l'elemento deve essere saltato. Verificare minimizzazione dei dati in coda.
 7. Simulare SMTP temporaneamente indisponibile; verificare retry e limite tentativi, assenza di invalidazione di registrazioni/iscrizioni o attività didattiche, e nessun doppio invio su esecuzioni ripetute. Trattare lo stato `sending` ambiguo solo con verifica degli esiti SMTP, senza presumere exactly-once.
 
-Registrare versione Joomla/PHP, lingua, configurazione di invio, data, esito e prove. La PR #329 (audit/reconciliation outbox) è aperta e non va considerata collaudata o integrata fino al merge.
+Registrare versione Joomla/PHP, lingua, configurazione di invio, data, esito e prove. L'audit e la riconciliazione outbox sono integrati dalla PR #332; il relativo collaudo manuale resta pendente.
 
 
-## IMP-09-MAIL-B / CORE-18 — audit e riconciliazione coda email (PR in preparazione, 0.56.17-dev)
+## IMP-09-MAIL-B / CORE-18 — audit e riconciliazione coda email (PR #332 integrata, 0.56.17-dev)
 
 **Comportamenti da collaudare sul sito Joomla di prova**
 
@@ -1101,3 +1101,17 @@ Registrare versione Joomla/PHP, lingua, configurazione di invio, data, esito e p
 Le date mostrate nell’audit sono in UTC e identificano la transizione registrata, non il momento di accettazione SMTP.
 
 **Accettazione manuale Joomla/SMTP:** da eseguire; la CI non equivale al collaudo reale. La riconciliazione “inviato” richiede evidenza nei log del mailer, mentre “retry” richiede evidenza che SMTP non abbia accettato il messaggio.
+
+
+## SEC-P1 — riduzione dati nelle eccezioni SMTP (0.56.18-dev candidata)
+
+**Comportamenti da collaudare sul sito Joomla di prova dopo installazione/upgrade**
+
+1. Configurare il mailer globale Joomla su un trasporto SMTP di test e accodare un messaggio a un account fittizio con indirizzo riconoscibile, per esempio `sec-test@example.invalid`.
+2. Forzare una risposta SMTP di errore che includa l'indirizzo di prova o una stringa diagnostica identificabile. Eseguire il task Scheduler e verificare che la riga resti retry/failed secondo il limite previsto.
+3. Controllare la tabella `#__jlms_mail_queue`: `last_error` deve contenere solo il messaggio generico, senza testo SMTP, indirizzo, nome o dettagli del provider.
+4. Aprire **JD Learn → Coda email**: la risposta della vista non deve includere il campo `last_error` né esporre payload/indirizzo completo.
+5. Aggiornare da una versione precedente che contiene righe con errori storici: la migrazione deve sostituire tutti i `last_error` preesistenti con il testo generico senza modificare stato, conteggio tentativi o disponibilità.
+6. Ripetere con errore temporaneo e permanente; verificare retry, limite di cinque tentativi, nessuna interruzione della registrazione/iscrizione e nessuna fuga di dati nella pagina.
+
+**Accettazione manuale Joomla/SMTP:** pendente. Non inserire dati reali o segreti nelle prove; usare solo account e trasporto usa-e-getta.

@@ -147,8 +147,8 @@ final class MailQueue
                 $update = $this->db->createQuery()->update('#__jlms_mail_queue')
                     ->set($retry ? "state = 'retry'" : "state = 'failed'")
                     ->set($retry ? 'available_at = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ' . $delay . ' SECOND)' : 'available_at = available_at')
-                    // Transport exceptions can contain recipient addresses, SMTP responses, or
-                    // provider details. Keep the outbox diagnostic useful without persisting them.
+                    // Transport exceptions can contain addresses, SMTP responses, or provider details.
+                    // Keep the outbox diagnostic useful without persisting them.
                     ->set('last_error = :error')->set('claimed_at = NULL')->where('id = :id')
                     ->bind(':error', 'Delivery failed; transport details are withheld.')
                     ->bind(':id', $id, ParameterType::INTEGER);
