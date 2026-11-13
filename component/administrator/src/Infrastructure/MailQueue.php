@@ -75,8 +75,8 @@ final class MailQueue
         $paramsQuery = $this->db->createQuery()->select('params_json')->from('#__jlms_courses')->where('id = :course')
             ->bind(':course', $courseId, ParameterType::INTEGER);
         $params = $this->db->setQuery($paramsQuery)->loadResult();
-        $global = (bool) \\Joomla\\CMS\\Component\\ComponentHelper::getParams('com_jlms')->get('mail_announcement_enabled', true);
-        if ($params === null || !\\Jlms\\Component\\Jlms\\Administrator\\Application\\MailPreferences::enabled('announcement', $global, (string) $params)) {
+        $global = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_announcement_enabled', true);
+        if ($params === null || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled('announcement', $global, (string) $params)) {
             return false;
         }
         $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
@@ -89,7 +89,7 @@ final class MailQueue
         try {
             $this->db->setQuery($query)->execute();
             return true;
-        } catch (\\Throwable $error) {
+        } catch (\Throwable $error) {
             $check = $this->db->createQuery()->select('id')->from('#__jlms_mail_queue')->where('event_key = :key')->bind(':key', $key);
             if ((int) $this->db->setQuery($check)->loadResult()) {
                 return false;
@@ -194,18 +194,18 @@ final class MailQueue
         $course = $this->db->createQuery()->select('params_json')->from('#__jlms_courses')->where('id = :course')
             ->bind(':course', $courseId, ParameterType::INTEGER);
         $params = $this->db->setQuery($course)->loadResult();
-        $global = (bool) \\Joomla\\CMS\\Component\\ComponentHelper::getParams('com_jlms')->get('mail_announcement_enabled', true);
-        if ($params === null || !\\Jlms\\Component\\Jlms\\Administrator\\Application\\MailPreferences::enabled('announcement', $global, (string) $params)) {
+        $global = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_announcement_enabled', true);
+        if ($params === null || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled('announcement', $global, (string) $params)) {
             return false;
         }
-        $guest = new \\Joomla\\CMS\\User\\User(0);
+        $guest = new \Joomla\CMS\User\User(0);
         $guest->clearAccessRights();
         try {
             $language = preg_match('/^[a-z]{2}-[A-Z]{2}$/', (string) $row->language) ? (string) $row->language : 'en-GB';
-            $catalog = new \\Jlms\\Component\\Jlms\\Administrator\\Application\\CatalogService($this->db);
+            $catalog = new \Jlms\Component\Jlms\Administrator\Application\CatalogService($this->db);
             $public = $catalog->course($guest, $language, $courseId);
             return in_array((int) $public->content_access, array_map('intval', $guest->getAuthorisedViewLevels()), true);
-        } catch (\\Throwable) {
+        } catch (\Throwable) {
             return false;
         }
     }
