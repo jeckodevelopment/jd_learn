@@ -1,3 +1,9 @@
+## 0.56.12-dev — MAIL-11.2: adesione durante iscrizione automatica
+
+- Aggiunta una scelta facoltativa e non preselezionata per la richiesta di adesione agli annunci di nuovi corsi nel modulo di avvio automatico.
+- Il double opt-in è richiesto solo dopo l'avvio riuscito; le richieste duplicate non reinviano una conferma già pending. Un errore SMTP non annulla l'iscrizione.
+- CI e accettazione manuale Joomla/SMTP della candidata pendenti. Gli annunci restano disattivati.
+
 # 0.56.11-dev — consenso confermato per annunci nuovi corsi (MAIL-11.2/11.3, PR #317 integrata)
 
 - Aggiunge in Area personale l’adesione facoltativa non preselezionata, conferma email double opt-in con token SHA-256 monouso e scadenza 24 ore, stato pending/confirmed/revoked e revoca autenticata.
