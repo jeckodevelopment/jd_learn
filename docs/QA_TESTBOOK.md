@@ -1053,3 +1053,16 @@ Eseguire sul sito di prova con un indirizzo email controllato e il mailer Joomla
 
 La CI esercita il caricamento del plugin e la presenza del campo nel form nativo; il flusso SMTP e i casi sopra restano collaudo manuale sul sito Joomla.
 
+
+
+## MAIL-11.4 — anteprima amministrativa annuncio corso
+
+**Comportamenti da testare sul sito Joomla di prova**
+
+1. Accedere con un amministratore che può modificare un corso pubblicato e visibile nel catalogo pubblico. Nella modifica del corso deve comparire **Anteprima email di annuncio**; aprirla e verificare oggetto, corpo HTML, testo semplice, immagine e lezioni pubblicamente visibili nel modello.
+2. Verificare che il conteggio includa soltanto account attivi con email valida e consenso all'annuncio confermato. Gli indirizzi email non devono essere mostrati nella schermata.
+3. Verificare che il link non compaia per bozze o corsi già bloccati in modifica da un altro utente. Se si prova direttamente la pagina con un corso bozza, privato o non visibile pubblicamente, mostrare il messaggio di non eleggibilità.
+4. Ricaricare la schermata e controllare la coda email: la sola anteprima non deve accodare né inviare messaggi. Il link di disiscrizione mostrato nell'anteprima è un segnaposto non operativo.
+5. Accedere con un utente senza permesso di modifica del corso e verificare il rifiuto di accesso anche aprendo direttamente l'URL.
+
+L'invio, la conferma esplicita, la deduplicazione e la coda persistente non sono inclusi in questa tranche.

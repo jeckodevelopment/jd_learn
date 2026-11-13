@@ -129,6 +129,10 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     public function setCourseAnnouncementConsent(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent $service): void { $this->courseAnnouncementConsent = $service; }
     public function getCourseAnnouncementConsent(): \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent { return $this->courseAnnouncementConsent; }
 
+    private \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService $courseAnnouncementService;
+    public function setCourseAnnouncementService(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService $service): void { $this->courseAnnouncementService = $service; }
+    public function getCourseAnnouncementService(): \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService { return $this->courseAnnouncementService; }
+
 
     private \Jlms\Component\Jlms\Administrator\Application\LearningService $learningService;
 
