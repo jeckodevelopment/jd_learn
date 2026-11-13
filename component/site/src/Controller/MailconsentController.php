@@ -14,7 +14,7 @@ final class MailconsentController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['request', 'confirm', 'revoke'], true)) {
+        if (!in_array(strtolower($task), ['request', 'confirm', 'revoke', 'revokeLink'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -50,6 +50,24 @@ final class MailconsentController extends BaseController
         $ok = $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->confirm($token);
         $this->app->enqueueMessage(Text::_($ok ? 'COM_JLMS_MAIL_CONSENT_CONFIRMED' : 'COM_JLMS_MAIL_CONSENT_LINK_INVALID'), $ok ? 'message' : 'warning');
         $this->setRedirect(Route::_('index.php?option=com_jlms&view=dashboard', false));
+    }
+
+    public function revokeLink(): void
+    {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        $this->app->setHeader('Referrer-Policy', 'no-referrer', true);
+        $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+        if (strtoupper($this->input->getMethod()) !== 'POST' || !$this->checkToken('post', false)) {
+            throw new \\RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
+        }
+
+        $token = $this->input->post->getString('token', '');
+        $ok = $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->revokeByToken($token);
+        $this->app->enqueueMessage(
+            Text::_($ok ? 'COM_JLMS_MAIL_CONSENT_LINK_REVOKED' : 'COM_JLMS_MAIL_CONSENT_LINK_INVALID'),
+            $ok ? 'message' : 'warning'
+        );
+        $this->setRedirect(Route::_('index.php?option=com_jlms&view=mailconsentrevoke&done=1', false));
     }
 
     public function revoke(): void
