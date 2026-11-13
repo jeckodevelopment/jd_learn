@@ -40,11 +40,13 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
     protected function dispatchMail(ExecuteTaskEvent $event):int
     {
         $params=$event->getArgument('params');
-        Factory::getApplication()->bootComponent('com_jlms');
+        $app=Factory::getApplication();
+        $app->bootComponent('com_jlms');
         $db=Factory::getContainer()->get(DatabaseInterface::class);
-        $communication=Factory::getApplication()->bootComponent('com_jlms')->getCourseCommunicationService()->process((int)($params->limit??25));
+        $expiry=(new \Jlms\Component\Jlms\Administrator\Application\CourseExpiryReminderService($db))->enqueueDue();
+        $communication=$app->bootComponent('com_jlms')->getCourseCommunicationService()->process((int)($params->limit??25));
         $result=(new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))->dispatch((int)($params->limit??25));
-        $this->logTask('Course communications: queued='.$communication['queued'].'; failed='.$communication['failed'].'; mail queue: sent='.$result['sent'].'; failed='.$result['failed'].'; processed='.$result['processed']);
-        return ($result['failed'] || $communication['failed'])?Status::KNOCKOUT:Status::OK;
+        $this->logTask('Course expiry reminders: queued='.$expiry['queued'].'; failed='.$expiry['failed'].'; processed='.$expiry['processed'].'; communications: queued='.$communication['queued'].'; failed='.$communication['failed'].'; mail queue: sent='.$result['sent'].'; failed='.$result['failed'].'; processed='.$result['processed']);
+        return ($result['failed'] || $communication['failed'] || $expiry['failed'])?Status::KNOCKOUT:Status::OK;
     }
 }
