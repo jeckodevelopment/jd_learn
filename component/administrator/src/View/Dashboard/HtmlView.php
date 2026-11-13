@@ -33,6 +33,7 @@ final class HtmlView extends BaseHtmlView
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut('COM_JLMS_COURSES', 'icon-book', 'index.php?option=com_jlms&view=courses');
+            $addShortcut('COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
             if ($actor->authorise('jlms.pathways.manage', 'com_jlms')) {
                 $addShortcut('COM_JLMS_PATHWAYS', 'icon-map-signs', 'index.php?option=com_jlms&view=pathways');
             }
