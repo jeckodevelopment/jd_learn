@@ -1,4 +1,4 @@
-Aggiornato al 13 novembre 2026. Main **0.56.8-dev** integra la PR [#307](https://github.com/jeckodevelopment/jd_learn/pull/307), merge `c7e83ed045ad2a410f5aef964a54cbf7c07d993d`. CERT-D aggiunge la notifica attestato via Mail Templates/outbox; avanzamento globale stimato **75%** (email 31%; attestati 75%). CI standard 4/4 superata nel [run 1038](https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845); accettazione manuale Joomla pendente. Pacchetto installabile [JD-Learn-0.56.8-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845/artifacts/14040650963), SHA-256 ZIP interno `c838ffe9d2cd99745455fac1e69a1f838da8eea9ee01f633c8ca84a07e963535`, wrapper `36432450930d714a3c5f2748fca2cb5dd05d7238a45de6c0e1b5687824f61829`; scadenza 27 novembre 2026 alle 13:23 UTC.
+Aggiornato al 13 novembre 2026. Main **0.56.9-dev** integra la PR [#307](https://github.com/jeckodevelopment/jd_learn/pull/307), merge `c7e83ed045ad2a410f5aef964a54cbf7c07d993d`. CERT-D aggiunge la notifica attestato via Mail Templates/outbox; avanzamento globale stimato **75%** (email 31%; attestati 75%). CI standard 4/4 superata nel [run 1038](https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845); accettazione manuale Joomla pendente. Pacchetto installabile [JD-Learn-0.56.8-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845/artifacts/14040650963), SHA-256 ZIP interno `c838ffe9d2cd99745455fac1e69a1f838da8eea9ee01f633c8ca84a07e963535`, wrapper `36432450930d714a3c5f2748fca2cb5dd05d7238a45de6c0e1b5687824f61829`; scadenza 27 novembre 2026 alle 13:23 UTC.
 
 La PR #299 collega anche la conferma dopo iscrizione amministrativa singola; la CI completa è verde, mentre il collaudo manuale Joomla/SMTP resta pendente. CERT-D è integrato con la PR #307; restano aperti gli altri residui email approvati, CERT-08 (backup/ripristino e rigenerazione immutabile) e il collaudo manuale Joomla CERT-A/B/C/D.
 
@@ -36,7 +36,7 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Iscrizione e roster essenziale (M06/M09) | 68% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 70% |
-| Email e notifiche operative (MAIL-01–10 approvati) | 29,5% |
+| Email e notifiche operative (MAIL-01–11 approvati) | 31% |
 | Attestati PDF essenziali (CERT-01–08 approvati) | 62,5% |
 | **Avanzamento complessivo stimato** | **73,44%** |
 
@@ -99,3 +99,8 @@ La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_ST
 Schema attuale: **44 tabelle / 65 FK**; il pacchetto candidato 0.41.67-dev contiene 9 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.
+
+
+## IMP-09-MAIL-C / PR #313 — candidata 0.56.9-dev
+
+Implementata la comunicazione operativa manuale per corso: destinatari selezionabili dal roster autorizzato, anteprima e conferma, test all'operatore, job idempotente, batch via Scheduler/outbox e preferenze globale/per corso. ACL e stato degli iscritti sono ricontrollati a ogni elaborazione. PR #313 è aperta sulla milestone 1.0.0; CI e accettazione manuale Joomla ancora pendenti. La stima globale documentata resta 75% fino al merge e al ricalcolo sulla matrice; non conteggiare MAIL-11, che è distinta e non implementata.

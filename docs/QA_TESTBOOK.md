@@ -970,3 +970,15 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 3. Ripetere il completamento/replay: non devono essere create ulteriori notifiche. Disabilitare la preferenza globale oppure l’override per corso e verificare che l’email non venga accodata.
 4. Provare un errore temporaneo SMTP: il completamento e l’attestato devono restare validi, la coda deve pianificare il retry; dopo il ripristino eseguire il task e verificare la consegna.
 5. Eseguire CI e smoke test Joomla automatici; l’accettazione manuale sul sito di prova resta a carico del collaudo di progetto.
+
+
+## IMP-09-MAIL-C / PR #313 — comunicazione operativa per corso (0.56.9-dev)
+
+**Collaudo manuale Joomla/SMTP pendente; la CI non equivale all'accettazione.** Preparare Joomla 6, mailer di prova, Scheduler JD Learn attivo, corso con almeno tre iscritti attivi, uno sospeso e un docente assegnato.
+
+1. Dal roster aprire “Comunica agli iscritti”, modificare oggetto/testo e selezionare due iscritti. Verificare anteprima, conteggio e destinatari; email e indirizzi non devono apparire nell'interfaccia.
+2. Inviare il test: deve riceverlo solo l'operatore autenticato; gli iscritti non ricevono il test.
+3. Confermare e lanciare il task Scheduler più volte. Solo i selezionati ancora attivi e non bloccati ricevono un messaggio ciascuno; verificare corpo HTML e testo, lingua Joomla e template com_jlms.course.message in Sistema → Modelli email.
+4. Ripetere/replay della conferma e inviare POST alterati con course/enrollment ID o hash vecchi: nessun duplicato, l'alterazione è respinta e la preview diventa da aggiornare se è cambiato il roster.
+5. Prima dell'elaborazione revocare l'ACL del docente assegnato e provare con un docente non assegnato. Job revocato interrotto; roster e pagina comunicazione negati al docente non assegnato.
+6. Provare switch globale e override corso (eredita/abilita/disabilita), mailer non disponibile e ripresa del Scheduler. Verificare log azioni, conteggi, assenza del testo e degli indirizzi nei dati di audit/job e pulizia del payload a esito terminale.

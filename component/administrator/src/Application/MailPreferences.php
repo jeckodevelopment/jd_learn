@@ -7,7 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\Application;
 /** Validated global and per-course switches for operational learner emails. */
 final class MailPreferences
 {
-    public const EVENTS = ['enrollment', 'completion', 'suspension', 'reactivation', 'certificate'];
+    public const EVENTS = ['enrollment', 'completion', 'suspension', 'reactivation', 'certificate', 'communication'];
 
     public static function merge(array $input, ?string $params): ?string
     {

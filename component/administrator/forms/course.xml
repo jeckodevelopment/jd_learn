@@ -40,6 +40,7 @@
   <field name="mail_suspension" type="list" label="COM_JLMS_MAIL_SUSPENSION_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
   <field name="mail_reactivation" type="list" label="COM_JLMS_MAIL_REACTIVATION_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
   <field name="mail_certificate" type="list" label="COM_JLMS_MAIL_CERTIFICATE_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
+  <field name="mail_communication" type="list" label="COM_JLMS_MAIL_COMMUNICATION_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
   <field name="certificate_enabled" type="list" label="COM_JLMS_CERTIFICATE_ENABLED" description="COM_JLMS_CERTIFICATE_ENABLED_DESC" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_CERTIFICATE_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
  </fieldset>
  <fieldset name="metadata" label="COM_JLMS_COURSE_METADATA">

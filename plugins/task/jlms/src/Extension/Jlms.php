@@ -42,8 +42,9 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
         $params=$event->getArgument('params');
         Factory::getApplication()->bootComponent('com_jlms');
         $db=Factory::getContainer()->get(DatabaseInterface::class);
+        $communication=Factory::getApplication()->bootComponent('com_jlms')->getCourseCommunicationService()->process((int)($params->limit??25));
         $result=(new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))->dispatch((int)($params->limit??25));
-        $this->logTask('Mail queue: sent='.$result['sent'].'; failed='.$result['failed'].'; processed='.$result['processed']);
-        return $result['failed']?Status::KNOCKOUT:Status::OK;
+        $this->logTask('Course communications: queued='.$communication['queued'].'; failed='.$communication['failed'].'; mail queue: sent='.$result['sent'].'; failed='.$result['failed'].'; processed='.$result['processed']);
+        return ($result['failed'] || $communication['failed'])?Status::KNOCKOUT:Status::OK;
     }
 }

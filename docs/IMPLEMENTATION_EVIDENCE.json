@@ -13137,5 +13137,21 @@
     "sha256": "c838ffe9d2cd99745455fac1e69a1f838da8eea9ee01f633c8ca84a07e963535",
     "artifact_sha256": "36432450930d714a3c5f2748fca2cb5dd05d7238a45de6c0e1b5687824f61829",
     "manual_acceptance": "CERT-D manual testbook pending; CERT-08 backup/restore and immutable regeneration remain"
+  },
+  "candidate_implementation": {
+    "as_of": "2026-11-13",
+    "version": "0.56.9-dev",
+    "pull_request": 313,
+    "status": "open; CI and manual Joomla acceptance pending",
+    "feature": "IMP-09-MAIL-C operational course communication",
+    "testbook": "docs/QA_TESTBOOK.md#imp-09-mail-c--pr-313--comunicazione-operativa-per-corso-0569-dev",
+    "local_checks": [
+      "python3 tools/check.py passed",
+      "python3 tools/build.py passed"
+    ],
+    "limitations": [
+      "PHP CLI unavailable locally",
+      "Joomla/SMTP manual acceptance pending"
+    ]
   }
 }

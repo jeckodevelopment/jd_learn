@@ -7,20 +7,20 @@
     "Stato implementazione": {
       "Parziale": 178,
       "Completata": 16,
-      "Non iniziata": 24
+      "Non iniziata": 25
     },
     "Perimetro 1.0.0": {
-      "1.0.0": 143,
+      "1.0.0": 144,
       "Misto": 40,
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 216,
+      "Non eseguita": 217,
       "Parziale": 2
     },
     "Verifica automatica": {
       "Superata": 178,
-      "Non eseguita": 40
+      "Non eseguita": 41
     }
   },
   "implementation_progress": {
@@ -38,5 +38,18 @@
       75
     ]
   },
-  "note": "Main 0.56.6-dev integra PR #302, merge a3a3a706b4d312f58a79952ad355c02fd7dcd3a8; CI standard 4/4 nel run 43410407842. Pacchetto artefatto 14029108411; SHA-256 wrapper 313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92, ZIP Joomla interno 73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1; scadenza 2026-11-27. CERT-B implementato; collaudo manuale Joomla pendente."
+  "note": "Main 0.56.6-dev integra PR #302, merge a3a3a706b4d312f58a79952ad355c02fd7dcd3a8; CI standard 4/4 nel run 43410407842. Pacchetto artefatto 14029108411; SHA-256 wrapper 313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92, ZIP Joomla interno 73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1; scadenza 2026-11-27. CERT-B implementato; collaudo manuale Joomla pendente.",
+  "updated_at": "2026-11-13",
+  "imp_09_mail_c": {
+    "pull_request": 313,
+    "status": "implementation candidate; CI and Joomla manual acceptance pending",
+    "covers": [
+      "MAIL-06",
+      "MAIL-07",
+      "MAIL-08",
+      "MAIL-09",
+      "MAIL-10"
+    ],
+    "testbook": "docs/QA_TESTBOOK.md#imp-09-mail-c--pr-313--comunicazione-operativa-per-corso-0569-dev"
+  }
 }

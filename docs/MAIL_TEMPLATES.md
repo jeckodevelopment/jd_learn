@@ -92,3 +92,8 @@ Proposto ID `com_jlms.course.published`. Il default HTML presenta in quest'ordin
 - Nessuna profilazione automatica, mailing list esterna, tracciamento apertura/click o invio a utenti non opt-in; mai includere titoli di lezioni riservate o collegamenti a contenuti privati.
 
 **Collaudo sul sito Joomla:** confronto email HTML/testo IT/EN, rendering con immagini bloccate, corsi senza foto/intro/lezioni pubbliche, template admin preservato su upgrade, opt-in/pendente/revocato, conferma e revoca, nuovo corso vs aggiornamento, corso privato, ACL e link sicuro, SMTP indisponibile, retry, coda con centinaia di utenti, deduplicazione, variazione preferenze prima dell'invio. Non segnare come superato fino a prova eseguita.
+
+
+## Comunicazione operativa per corso — MAIL-C
+
+La PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313) candidata alla 0.56.9-dev aggiunge il template Joomla com_jlms.course.message, componibile dal roster per gli iscritti attivi selezionati. L'invio di prova è riservato all'operatore corrente; l'invio reale richiede preview e conferma, crea un job idempotente e usa il task Scheduler/outbox. Preferenze: mail_communication_enabled globale e mail_communication per corso. I destinatari e le autorizzazioni vengono rivalidati all'elaborazione. Variabili supportate: NAME, NAME_HTML, COURSE, COURSE_HTML, MESSAGE_SUBJECT, MESSAGE_BODY_TEXT, MESSAGE_BODY_HTML, SITENAME, SITENAME_HTML. MAIL-11 (notifica facoltativa nuovo corso con opt-in) è separata e resta da implementare.

@@ -17,12 +17,21 @@ final class EnrollmentRosterService
     {
         $actor = $this->learning->freshActor($identity);
         if ($courseId < 1) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-        if (!$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.enrollments.manage', 'com_jlms.course.' . $courseId)) {
-            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
-        }
         $q = $this->db->createQuery()->select('id, title')->from('#__jlms_courses')
             ->where('id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
-        return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $course = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $courseAccess = $actor->authorise('jlms.enrollments.manage', 'com_jlms.course.' . $courseId);
+        $administrator = $actor->authorise('core.manage', 'com_jlms');
+        $teacher = false;
+        if (!$administrator && $courseAccess) {
+            $assignment = $this->db->createQuery()->select('COUNT(*)')
+                ->from('#__jlms_course_teachers AS ct')->innerJoin('#__jlms_teachers AS t ON t.id=ct.teacher_id')
+                ->where('ct.course_id=:course')->where('t.user_id=:user')->where('t.state=1')
+                ->bind(':course',$courseId,ParameterType::INTEGER)->bind(':user',(int)$actor->id,ParameterType::INTEGER);
+            $teacher = (int) $this->db->setQuery($assignment)->loadResult() > 0;
+        }
+        if (!$courseAccess || (!$administrator && !$teacher)) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+        return $course;
     }
 
     /** Searchable filter choices are restricted to versions and learners of this authorized course. */
