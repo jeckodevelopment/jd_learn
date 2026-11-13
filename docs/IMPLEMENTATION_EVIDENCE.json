@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
     "percent": 75,
-    "basis": "Media semplice delle nove macroaree approvate: (81+81+78+99+68+92+70+31+75)/9=75%. Email 31% include l’evento CERT-D; attestati essenziali 75% dopo CERT-A/B/C/D. Accettazione manuale Joomla pendente.",
+    "basis": "Media semplice delle nove macroaree: (81+81+78+99+68+92+70+34+75)/9=75,33%, arrotondato a 75%. Email 34% dopo MAIL-C; attestati 75%. Collaudo manuale Joomla/SMTP pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,45 +13,41 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 31,
+      "email_notifications": 34,
       "certificates": 75
     }
   },
-  "version": "0.56.8-dev",
+  "version": "0.56.9-dev",
   "code_baseline": {
-    "tested_head": "02d80b262b37a51619c04513dead0e133d8744c1",
-    "pull_request": 307,
-    "merged_main_commit": "c7e83ed045ad2a410f5aef964a54cbf7c07d993d"
+    "tested_head": "85bc01df25034ddf87b7513edd60a8e14f82b8e6",
+    "pull_request": 313,
+    "merged_main_commit": "53f5e032ae16da9df963e938cfb449c6c249a933"
   },
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43432555845,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845",
+    "run_id": 43445911912,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
     "jobs": [
       {
-        "id": 131909429977,
         "name": "Candidate plan and lightweight checks",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131909579996,
         "name": "PHP 8.3 / mysql:8.4",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131909580003,
         "name": "PHP 8.4 / mariadb:10.6",
         "status": "completed",
         "conclusion": "success"
       },
       {
-        "id": 131909580305,
         "name": "Curriculum navigation in Chromium (controlled fixture)",
         "status": "completed",
         "conclusion": "success"
@@ -59,15 +55,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14040650963,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845/artifacts/14040650963",
-    "artifact_name": "JD-Learn-0.56.8-dev",
-    "installable_package": "pkg_jlms-0.56.8-dev.zip",
-    "sha256": "c838ffe9d2cd99745455fac1e69a1f838da8eea9ee01f633c8ca84a07e963535",
-    "artifact_sha256": "36432450930d714a3c5f2748fca2cb5dd05d7238a45de6c0e1b5687824f61829",
-    "size_bytes": 605969,
-    "artifact_size_bytes": 605729,
-    "expires_at": "2026-11-27T13:23:11Z",
+    "artifact_id": 14046839802,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912/artifacts/14046839802",
+    "artifact_name": "JD-Learn-0.56.9-dev",
+    "installable_package": "pkg_jlms-0.56.9-dev.zip",
+    "sha256": "2c243c2d86ce4b1ee306f79602201a873d3f2b38a662290bb2ef6d0024fe9842",
+    "artifact_sha256": "679adbf6ed13b788786d1eecc13400d94a4d364de9fb4114557cf9639985042a",
+    "size_bytes": 615333,
+    "artifact_size_bytes": 615141,
+    "expires_at": "2026-11-27T14:51:02Z",
     "wrapper_zip": true
   },
   "release_process": {
@@ -13129,29 +13125,13 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 307,
-    "candidate_head": "02d80b262b37a51619c04513dead0e133d8744c1",
-    "merged_main_commit": "c7e83ed045ad2a410f5aef964a54cbf7c07d993d",
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43432555845/artifacts/14040650963",
-    "artifact_id": 14040650963,
-    "sha256": "c838ffe9d2cd99745455fac1e69a1f838da8eea9ee01f633c8ca84a07e963535",
-    "artifact_sha256": "36432450930d714a3c5f2748fca2cb5dd05d7238a45de6c0e1b5687824f61829",
-    "manual_acceptance": "CERT-D manual testbook pending; CERT-08 backup/restore and immutable regeneration remain"
-  },
-  "candidate_implementation": {
-    "as_of": "2026-11-13",
-    "version": "0.56.9-dev",
     "pull_request": 313,
-    "status": "open; CI and manual Joomla acceptance pending",
-    "feature": "IMP-09-MAIL-C operational course communication",
-    "testbook": "docs/QA_TESTBOOK.md#imp-09-mail-c--pr-313--comunicazione-operativa-per-corso-0569-dev",
-    "local_checks": [
-      "python3 tools/check.py passed",
-      "python3 tools/build.py passed"
-    ],
-    "limitations": [
-      "PHP CLI unavailable locally",
-      "Joomla/SMTP manual acceptance pending"
-    ]
+    "candidate_head": "85bc01df25034ddf87b7513edd60a8e14f82b8e6",
+    "merged_main_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912/artifacts/14046839802",
+    "artifact_id": 14046839802,
+    "sha256": "2c243c2d86ce4b1ee306f79602201a873d3f2b38a662290bb2ef6d0024fe9842",
+    "artifact_sha256": "679adbf6ed13b788786d1eecc13400d94a4d364de9fb4114557cf9639985042a",
+    "manual_acceptance": "IMP-09-MAIL-C Joomla/SMTP collaudo pendente; eseguire scenari in docs/QA_TESTBOOK.md"
   }
 }
