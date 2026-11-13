@@ -1,3 +1,10 @@
+# Changelog
+
+## 0.56.19-dev (candidata)
+
+- MAIL-04: promemoria operativo facoltativo prima della scadenza, con soglia configurabile, override per corso, outbox/Scheduler Joomla e rivalidazione dell’iscrizione prima dell’invio. Default disattivato.
+- Il codice stabile e i dati attestati restano invariati. Collaudo Joomla/SMTP e CI della PR pendenti.
+
 ## 0.56.18-dev — minimizzazione diagnostica outbox (PR #338 integrata)
 
 - Non persiste più il testo delle eccezioni SMTP/provider, che può contenere indirizzi o dettagli infrastrutturali; il retry mantiene gli stati e i limiti esistenti.
