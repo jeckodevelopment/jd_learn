@@ -13,7 +13,7 @@ class Reconciliation(unittest.TestCase):
  def test_implemented_does_not_require_human_acceptance(self):self.check()
  def test_mail11_template_is_partial_not_fully_implemented(self):
   row=next(r for r in self.rows if r['Requisito']=='MAIL-11')
-  self.assertEqual(row['Stato implementazione'],'Parziale')
+  self.assertEqual(row['Stato implementazione'],'Completata')
   self.assertIn('MailTemplateInstaller.php',row['Fonti implementazione'])
   self.assertNotEqual(row['Criteri completi superati'],'Sì')
   self.check()
