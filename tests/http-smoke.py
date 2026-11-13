@@ -1,1 +1,568 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×­ûí:-jZ.¶›­–)Ş³R""$W†W&6—6R&VÂV&Æ–2öFÖ–â&VæFW&–ær–ââ—6öÆFVB¦ööÖÆf—‡GW&RÂv—F†÷WB'&÷w6W"FWVæFVæ7’â"" ¦g&öÒF†Æ–"–×÷'BF€¦g&öÒ‡FÖÂç'6W"–×÷'B…DÔÅ'6W ¦g&öÒW&ÆÆ–"ç&WVW7B–×÷'B'V–ÆEö÷VæW"Ä…EE6öö¶–U&ö6W76÷"Å&WVW7@¦g&öÒW&ÆÆ–"æW'&÷"–×÷'B…EEW'&÷ ¦g&öÒW&ÆÆ–"ç'6R–×÷'BW&ÆVæ6öFRÇW&Æ¦ö–âÇW&Ç'6RÇ'6U÷0¦g&öÒ‡GGæ6öö¶–V¦"–×÷'B6öö¶–T¦ ¦g&öÒ‡FÖÂ–×÷'BVæW66P¦–×÷'B7V'&ö6W72Ç7—2ÇF–ÖRÆ§6öâÆ÷2Ç&P§&ö÷CÕF‚‡7—2æ&we³Ò’ç&W6öÇfR‚¦–b÷2æVçf—&öâævWB‚t¤ÄÕ5õDU5EôD•5õ4$ÄRr’Òss§&—6R'VçF–ÖTW'&÷"‚tF—7÷6&ÆR¦ööÖÆ6—FR&WV—&VBr¦6Æ72vR„…DÔÅ'6W"“ ¢FVbõö–æ—Eõò‡6VÆbÆ‡FÖÂ“ ¢7WW"‚’åõö–æ—Eõò†6öçfW'Eö6†'&Vg3ÕG'VR“·6VÆbæf÷&×3ÕµÓ·6VÆbæ7W'&VçCÔæöæS·6VÆbæÆ–æ·3ÕµÓ·6VÆbææ6†÷'3ÕµÓ·6VÆbæ&6SÔæöæS·6VÆbçFW‡F&VÔæöæS·6VÆbç6VÆV7CÔæöæS·6VÆbæfVVB†‡FÖÂ¢FVb†æFÆU÷7F'GFr‡6VÆbÇFrÆGG'2“ ¢ÖF–7B†GG'2¢–bFsÓÒv&6RræBævWB‚v‡&Vbr“§6VÆbæ&6SÖ²v‡&VbuĞ¢–bFsÓÒvf÷&Òs§6VÆbæ7W'&VçC×²v–Bs¦ævWB‚v–BrÂrr’Âv7F–öâs¦ævWB‚v7F–öârÂrr’Âvf–VÆG2s§·×Ó·6VÆbæf÷&×2æVæB‡6VÆbæ7W'&VçB¢–bFsÓÒv–çWBræB6VÆbæ7W'&VçB—2æ÷BæöæRæBvæÖRr–âæBvF—6&ÆVBræ÷B–â ¢–bævWB‚wG—Rr’æ÷B–â²v6†V6¶&÷‚rÂw&F–òuÒ÷"v6†V6¶VBr–â§6VÆbæ7W'&VçE²vf–VÆG2uÕ¶²væÖRuÕÓÖævWB‚wfÇVRrÂrr¢–bFsÓÒwFW‡F&Vs ¢6VÆbçFW‡F&VÖævWB‚væÖRr’–b6VÆbæ7W'&VçB—2æ÷BæöæRæBvF—6&ÆVBræ÷B–âVÇ6RæöæP¢–b6VÆbçFW‡F&V§6VÆbæ7W'&VçE²vf–VÆG2uÕ·6VÆbçFW‡F&VÓÒrp¢–bFsÓÒw6VÆV7Bs§6VÆbç6VÆV7CÖævWB‚væÖRr’–b6VÆbæ7W'&VçB—2æ÷BæöæRæBvF—6&ÆVBræ÷B–âVÇ6RæöæP¢–bFsÓÒv÷F–öâræB6VÆbç6VÆV7BæB6VÆbæ7W'&VçB—2æ÷BæöæS ¢–b6VÆbç6VÆV7Bæ÷B–â6VÆbæ7W'&VçE²vf–VÆG2uÒ÷"w6VÆV7FVBr–â§6VÆbæ7W'&VçE²vf–VÆG2uÕ·6VÆbç6VÆV7EÓÖævWB‚wfÇVRrÂrr¢–bFsÓÒvræBævWB‚v‡&Vbr“ ¢6VÆbæÆ–æ·2æVæB†²v‡&VbuÒ“·6VÆbææ6†÷'2æVæB†¢FVb†æFÆUöVæGFr‡6VÆbÇFr“ ¢–bFsÓÒvf÷&Òs§6VÆbæ7W'&VçCÔæöæS·6VÆbçFW‡F&VÔæöæS·6VÆbç6VÆV7CÔæöæP¢–bFsÓÒwFW‡F&Vs§6VÆbçFW‡F&VÔæöæP¢–bFsÓÒw6VÆV7Bs§6VÆbç6VÆV7CÔæöæP¢FVb†æFÆUöFF‡6VÆbÆFF“ ¢–b6VÆbçFW‡F&VæB6VÆbæ7W'&VçB—2æ÷BæöæS§6VÆbæ7W'&VçE²vf–VÆG2uÕ·6VÆbçFW‡F&VÒ³ÖFF¦&6SÒv‡GG¢òó#rããã£ƒ“2p¢2¦ööÖÆG&VG2F†R6Æ’×6W'fW"4’24Ä’f÷"U$’F—66÷fW'’â6öæf–wW&RF†R—6öÆFV@¢26—FRw2¶æ÷vâU$Â6ò—G2æF—fR&÷WFW"VÖ—G2F†R6ÖRF‡22vV"×6W'fW"FWÆ÷–ÖVçBà¦6öæf–s×&ö÷Bòv6öæf–wW&F–öâç‡p§FW‡BÆ6÷VçC×&Rç7V&â‡"'V&Æ–5Ç2µÂFÆ—fU÷6—FUÇ2£ÕÇ2¥µãµÒ³²"Â'V&Æ–2FÆ—fU÷6—FRÒr"¶&6R²"s²"Â6öæf–rç&VE÷FW‡B‚’¦–b6÷VçBÓ§&—6R'VçF–ÖTW'&÷"‚tF—7÷6&ÆR6—FRU$Â6÷VÆBæ÷B&R6öæf–wW&VBr¦6öæf–rçw&—FU÷FW‡B‡FW‡B¦ÆösÖ÷Vâ‡&ö÷Bç&VçBòv‡GG×6Öö¶RæÆörrÂwr²r§6W'fW#×7V'&ö6W72å÷Vâ…²w‡rÂrÕ2rÂs#rããã£ƒ“2rÂr×BrÇ7G"‡&ö÷B•ÒÇ7FF÷WCÖÆörÇ7FFW'#ÖÆör¦‡GGÖ'V–ÆEö÷VæW"„…EE6öö¶–U&ö6W76÷"„6öö¶–T¦"‚’’¦FVbvWB‡F‚“ ¢G'“ ¢v—F‚‡GGæ÷Vâ‡W&Æ¦ö–â†&6RÇF‚’ÇF–ÖV÷WCÓR’2#§&WGW&â"ævWGW&Â‚’Ç"ç&VB‚’æFV6öFR‚wWFbÓ‚r¢W†6WB…EEW'&÷"2W'&÷# ¢FWF–Ã×&Rç7V"‡"sÅµãåÒ³ârÂrrÆW'&÷"ç&VB‚’æFV6öFR‚wWFbÓ‚rÆW'&÷'3Òw&WÆ6Rr’¢&–çB‚tF—7÷6&ÆR…EEf—‡GW&RW'&÷#¢r·&Rç7V"‡"uÇ2²rÂrrÆFWF–Â•²Ó¥ÒÆf–ÆS×7—2ç7FFW'"¢&—6P§G'“ ¢f÷"’–â&ævRƒC“ ¢G'“§W&ÂÆ‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2r“¶'&V°¢W†6WBõ4W'&÷# ¢–b6W'fW"çöÆÂ‚’—2æ÷BæöæS§&—6R'VçF–ÖTW'&÷"‚uFW7B…EE6W'fW"W†—FVBr¢F–ÖRç6ÆVW‚ã"¢VÇ6S§&—6R'VçF–ÖTW'&÷"‚uFW7B…EE6W'fW"F–Bæ÷B&V6öÖR&VG’r¢–bv–CÒ&¦Æ×2Ö6÷W'6W2"ræ÷B–â‡FÖÂ÷"uV&Æ–6F–öâf—‡GW&Rræ÷B–â‡FÖÃ§&—6R'VçF–ÖTW'&÷"‚uV&Æ—6†VB6÷W'6R6FÆörF–Bæ÷B&VæFW"r¢–bv–CÒ&¦Æ×2Ö6FÆörÖf–ÇFW'2"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%·6V&6…Ò"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%¶÷&FW%Ò"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%·Fuö–EÒ"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%·FV6†W%ö–EÒ"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%·F‡v•ö–EÒ"ræ÷B–â‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26FÆör6V&6‚Â÷&FW"æBFr6öçG&öÇ2F–Bæ÷B&VæFW"r¢òÆÆÅ÷Fuö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%·Fuö–EÒs¢swÒ’¢–buV&Æ–6F–öâf—‡GW&Rræ÷B–âÆÅ÷Fuö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚uF†RÆÂ×Fw26VÆV7F–öâ×W7B&W6W'fRF†RVæf–ÇFW&VBV&Æ–26FÆörr¢òÆ–çfÆ–E÷Fuö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%·Fuö–EÒs¢s#CsCƒ3cCrwÒ’¢–buV&Æ–6F–öâf—‡GW&Rr–â–çfÆ–E÷Fuö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚tâVæ¶æ÷vâFr×W7Bæ÷B'&öFVâF†RV&Æ–26FÆör&W7VÇBr¢–bv–CÒ&¦Æ×2Ö6FÆörÖf–ÇFW'2"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%·6V&6…Ò"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%¶÷&FW%Ò"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%¶F–ff–7VÇG•Ò"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%¶GW&F–öåÒ"ræ÷B–â‡FÖÂ÷"væÖSÒ&f–ÇFW%¶Æ–÷WEÒ"ræ÷B–â‡FÖÂ÷"vFFÖÆ–÷WCÒ&w&–B"ræ÷B–â‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26FÆör6V&6‚Â÷&FW"æB6÷&Rf–ÇFW'2F–Bæ÷B&VæFW"r¢òÆÆ—7EöÆ–÷WCÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%¶Æ–÷WEÒs¢vÆ—7BwÒ’¢–bvFFÖÆ–÷WCÒ&Æ—7B"ræ÷B–âÆ—7EöÆ–÷WB÷"v¦Æ×2Ö6÷W'6RÖw&–BÒÖÆ—7Bræ÷B–âÆ—7EöÆ–÷WC ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26FÆörÆ—7BÆ–÷WBF–Bæ÷B&VæFW"r¢òÆ–çfÆ–EöÆ–÷WCÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%¶Æ–÷WEÒs¢wVæW‡V7FVBwÒ’¢–bvFFÖÆ–÷WCÒ&w&–B"ræ÷B–â–çfÆ–EöÆ–÷WC ¢&—6R'VçF–ÖTW'&÷"‚uVç7W÷'FVB6FÆörÆ–÷WG2×W7BfÆÂ&6²FòF†Rw&–Br¢6V&6…÷W&ÂÇ6V&6…ö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%·6V&6…Òs¢uV&Æ–6F–öâf—‡GW&RrÂvf–ÇFW%¶÷&FW%Òs¢wF—FÆRwÒ’¢–buV&Æ–6F–öâf—‡GW&Rræ÷B–â6V&6…ö‡FÖÂ÷"wfÇVSÒ'F—FÆR"6VÆV7FVBræ÷B–â6V&6…ö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26FÆörF—FÆR÷7VÖÖ'’6V&6‚æBF—FÆR÷&FW&–ærF–Bæ÷BÇ’r¢òÆf–ÇFW&VEö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%¶F–ff–7VÇG•Òs¢v&Vv–ææW"rÂvf–ÇFW%¶GW&F–öåÒs¢s3ÓcwÒ’¢–buV&Æ–6F–öâf—‡GW&Rræ÷B–âf–ÇFW&VEö‡FÖÂ÷"wfÇVSÒ&&Vv–ææW""6VÆV7FVBræ÷B–âf–ÇFW&VEö‡FÖÂ÷"wfÇVSÒ#3Óc"6VÆV7FVBræ÷B–âf–ÇFW&VEö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26FÆörF–ff–7VÇG’æBW7F–ÖFVBÖGW&F–öâf–ÇFW'2F–Bæ÷BÇ’r¢òÆW†6ÇVFVEö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%¶F–ff–7VÇG•Òs¢vGfæ6VBwÒ’¢–buV&Æ–6F–öâf—‡GW&Rr–âW†6ÇVFVEö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26FÆörF–ff–7VÇG’f–ÇFW"–æ6ÇVFVBæöâÖÖF6†–ær6÷W'6Rr¢òÆGW&F–öåöW†6ÇVFVEö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%¶GW&F–öåÒs¢v÷fW"Ó#wÒ’¢–buV&Æ–6F–öâf—‡GW&Rr–âGW&F–öåöW†6ÇVFVEö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26FÆörGW&F–öâf–ÇFW"–æ6ÇVFVBæöâÖÖF6†–ær6÷W'6Rr¢òÇ&—fFU÷FW&Õö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%·6V&6…Òs¢u4T5$UEôÄU54ôåô$ôE’wÒ’¢–buV&Æ–6F–öâf—‡GW&Rr–â&—fFU÷FW&Õö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚t6FÆör6V&6‚×W7Bæ÷B6V&6‚&÷FV7FVBÆW76öâ&öF–W2r¢6FVv÷'•÷W&ÃÖæW‡B‚‡‚f÷"‚–âvR†‡FÖÂ’æÆ–æ·2–b'6U÷2‡W&Ç'6R‡‚’çVW'’’ævWB‚wf–Wrr“ÓÕ²v6FVv÷'’uÒ’ÄæöæR¢–b6FVv÷'•÷W&Ã ¢6FVv÷'•÷VW'“×W&ÆVæ6öFR‡²vf–ÇFW%·6V&6…Òs¢uV&Æ–6F–öâf—‡GW&RrÂvf–ÇFW%¶÷&FW%Òs¢wF—FÆRrÂvf–ÇFW%¶F–ff–7VÇG•Òs¢v&Vv–ææW"rÂvf–ÇFW%¶GW&F–öåÒs¢s3ÓcwÒ¢òÆ6FVv÷'•÷6V&6ƒÖvWB†6FVv÷'•÷W&Â²‚rbr–bsòr–â6FVv÷'•÷W&ÂVÇ6Rsòr’¶6FVv÷'•÷VW'’¢–buV&Æ–6F–öâf—‡GW&Rræ÷B–â6FVv÷'•÷6V&6‚÷"v–CÒ&¦Æ×2Ö6FVv÷'’Ö6FÆörÖf–ÇFW'2"ræ÷B–â6FVv÷'•÷6V&6‚÷"væÖSÒ&f–ÇFW%·Fuö–EÒ"ræ÷B–â6FVv÷'•÷6V&6ƒ ¢&—6R'VçF–ÖTW'&÷"‚t6FVv÷'’×66÷VB6V&6‚æBFr6öçG&öÇ2F–Bæ÷B&W6W'fRF†V—"6FVv÷'’r¢–buV&Æ–6F–öâf—‡GW&Rræ÷B–â6FVv÷'•÷6V&6‚÷"v–CÒ&¦Æ×2Ö6FVv÷'’Ö6FÆörÖf–ÇFW'2"ræ÷B–â6FVv÷'•÷6V&6‚÷"wfÇVSÒ&&Vv–ææW""6VÆV7FVBræ÷B–â6FVv÷'•÷6V&6‚÷"wfÇVSÒ#3Óc"6VÆV7FVBræ÷B–â6FVv÷'•÷6V&6ƒ ¢&—6R'VçF–ÖTW'&÷"‚t6FVv÷'’×66÷VB6FÆör6V&6‚F–Bæ÷B&W6W'fR—G26FVv÷'’r¢òÆ6FVv÷'•öÆ—7CÖvWB†6FVv÷'•÷W&Â²‚rbr–bsòr–â6FVv÷'•÷W&ÂVÇ6Rsòr’·W&ÆVæ6öFR‡²vf–ÇFW%¶Æ–÷WEÒs¢vÆ—7BwÒ’¢–bvFFÖÆ–÷WCÒ&Æ—7B"ræ÷B–â6FVv÷'•öÆ—7B÷"v¦Æ×2Ö6÷W'6RÖw&–BÒÖÆ—7Bræ÷B–â6FVv÷'•öÆ—7C ¢&—6R'VçF–ÖTW'&÷"‚t6FVv÷'’6÷W'6RÆ—7BÆ–÷WBF–Bæ÷B&VæFW"r¢òÆ–çfÆ–Eöf–ÇFW%ö‡FÖÃÖvWB‚rö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2gf–WsÖ6÷W'6W2br·W&ÆVæ6öFR‡²vf–ÇFW%¶F–ff–7VÇG•Òs¢v&Vv–ææW%Ârõ"ÓÒÒrÂvf–ÇFW%¶GW&F–öåÒs¢sõ"ÓwÒ’¢–buV&Æ–6F–öâf—‡GW&Rræ÷B–â–çfÆ–Eöf–ÇFW%ö‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚t–çfÆ–B6FÆörf–ÇFW"fÇVW2×W7B&R–væ÷&VB6fVÇ’r¢6÷W'6UöÆ–æ·3Õ·‚f÷"‚–âvR†‡FÖÂ’æÆ–æ·2–b'6U÷2‡W&Ç'6R‡‚’çVW'’’ævWB‚wf–Wrr“ÓÕ²v6÷W'6RuÒ÷"rö6÷W'6Ròr–â…Ğ¢–bæ÷B6÷W'6UöÆ–æ·3§&—6R'VçF–ÖTW'&÷"‚uV&Æ–26÷W'6RÆ–æ²Ö—76–ærr¢f÷"V&Æ–5ö6÷W'6U÷W&Â–â6÷W'6UöÆ–æ·3 ¢òÆFWF–ÃÖvWB‡V&Æ–5ö6÷W'6U÷W&Â¢–bv–CÕÂ&¦Æ×2Ö6÷W'6RÖ÷WFÆ–æUÂ"r–âFWF–ÂæBuV&Æ–6F–öâf—‡GW&Rr–âFWF–Ã¦'&V°¢VÇ6S§&—6R'VçF–ÖTW'&÷"‚uV&Æ–6F–öâf—‡GW&R6†VWBÖ—76–ærr¢–bv–CÒ&¦Æ×2Ö6÷W'6RÖ÷WFÆ–æR"ræ÷B–âFWF–Â÷"uV&Æ—6†VBÆW76öâræ÷B–âFWF–Â÷"u4T5$UEôÄU54ôåô$ôE’r–âFWF–Ã ¢&—6R'VçF–ÖTW'&÷"‚uV&Æ–26†VWB×W7B6†÷r÷WFÆ–æRv—F†÷WB&÷FV7FVBÆW76öâ&öG’r¢W&ÂÆ‡FÖÃÖvWB‚röFÖ–æ—7G&F÷"ö–æFW‚ç‡r¢vSÕvR†‡FÖÂ¢f÷&ÓÖæW‡B‚†bf÷"b–âvRæf÷&×2–bwW6W&æÖRr–âe²vf–VÆG2uÒæBw77vBr–âe²vf–VÆG2uÒ’ÄæöæR¢–bæ÷Bf÷&Ó§&—6R'VçF–ÖTW'&÷"‚tæF—fR¦ööÖÆFÖ–âÆöv–âf÷&Òv2æ÷Bf÷VæBr¢f–VÆG3Öf÷&Õ²vf–VÆG2uÓ¶f–VÆG2çWFFR‡W6W&æÖSÒv6–÷W&F÷"rÇ77vCÒt6’ÖöæÇ’ÔÆöærÕ77v÷&BÓ##br¢v—F‚‡GGæ÷Vâ‡W&Æ¦ö–â‡W&Æ¦ö–â‡W&ÂÇvRæ&6R÷"rr’Æf÷&Õ²v7F–öâuÒ’ÆFF×W&ÆVæ6öFR†f–VÆG2’æVæ6öFR‚’ÇF–ÖV÷WCÓ#’2#§"ç&VB‚¢÷F–öç5÷W&ÂÆ÷F–öç5ö‡FÖÃÖvWB‚röFÖ–æ—7G&F÷"ö–æFW‚ç‡ö÷F–öãÖ6öÕö6öæf–rgf–WsÖ6ö×öæVçBf6ö×öæVçCÖ6öÕö¦Æ×2r¢÷F–öç5÷F—FÆS×&Rç6V&6‚‡"sÇF—FÆSâ‚â£ò“Â÷F—FÆSârÆ÷F–öç5ö‡FÖÂÇ&Rå2¢–bæ÷B÷F–öç5÷F—FÆR÷"t¤BÆV&ã¢÷F–öç2ræ÷B–âVæW66R†÷F–öç5÷F—FÆRæw&÷Wƒ’’÷"v6öÕö¦Æ×5ö6öæf–wW&F–öâr–â÷F–öç5ö‡FÖÃ ¢7GVÅ÷F—FÆS×VæW66R†÷F–öç5÷F—FÆRæw&÷Wƒ’’–b÷F–öç5÷F—FÆRVÇ6Rr†Ö—76–ærÇF—FÆSâ’p¢&—6R'VçF–ÖTW'&÷"‚t¤BÆV&â6ö×öæVçB÷F–öç2×W7B†fRF†RG&ç6ÆFVB'&÷w6W"F—FÆS²F—FÆSÒr¶7GVÅ÷F—FÆR¢–bt¤tÄô$Åô„•5Dõ%•ôõD”ôå2r–â÷F–öç5ö‡FÖÂ÷"÷F–öç5ö‡FÖÂæ6÷VçB‚ufW'6–öâ†—7F÷'’÷F–öç2r“Ã# ¢&—6R'VçF–ÖTW'&÷"‚t6ö×öæVçB†—7F÷'’F"æBw&÷W×W7BW6RF†RG&ç6ÆFVBÆ&VÂr¢&–çB†§6öâæGV×2‡²v6ö×öæVçEö÷F–öç5÷G&ç6ÆF–öåö‡GGö6†V6·2s£"Âw7FGW2s¢w76VBwÒ’¢W&ÂÆ‡FÖÃÖvWB‚röFÖ–æ—7G&F÷"ö–æFW‚ç‡ö÷F–öãÖ6öÕö¦Æ×2r¢–bv–CÒ&¦Æ×2ÖFÖ–âÖF6†&ö&B"ræ÷B–â‡FÖÃ§&—6R'VçF–ÖTW'&÷"‚t¤BÆV&â×W7B÷VâF†RFÖ–æ—7G&F÷"F6†&ö&BF—&V7FÇ’r¢–bÆVâ‡&Ræf–æFÆÂ‡"sÆƒÆ"rÆ‡FÖÂ’’Ó§&—6R'VçF–ÖTW'&÷"‚tF6†&ö&BF—FÆRV'2öæ6R–âF†R¦ööÖÆFööÆ&"r¢ÖVçUöÆ–æ·3Õ·'6U÷2‡W&Ç'6R‡‚’çVW'’’f÷"‚–âvR†‡FÖÂ’æÆ–æ·5Ğ¢f÷"f–Wr–â²v6÷W'6W2rÂwFV6†W'2rÂwVW7F–öæ&æ²uÓ ¢–bæ÷Bç’‡ævWB‚v÷F–öâr“ÓÕ²v6öÕö¦Æ×2uÒæBævWB‚wf–Wrr“ÓÕ·f–WuÒf÷"–âÖVçUöÆ–æ·2“§&—6R'VçF–ÖTW'&÷"‚tæF—fR¤BÆV&â6–FV&"Æ–æ²Ö—76–æs¢r·f–Wr¢–bæ÷Bç’‡ævWB‚v÷F–öâr“ÓÕ²v6öÕö6FVv÷&–W2uÒæBævWB‚vW‡FVç6–öâr“ÓÕ²v6öÕö¦Æ×2æ6÷W'6RuÒf÷"–âÖVçUöÆ–æ·2“§&—6R'VçF–ÖTW'&÷"‚tæF—fR6÷W'6R6FVv÷'’6–FV&"Ö—76–ærr¢7W7FöÕöf–VÆG5öÆ–æ³ÖæW‡B‚‡‚f÷"‚–âvR†‡FÖÂ’æÆ–æ·2–b'6U÷2‡W&Ç'6R‡‚’çVW'’’ævWB‚v÷F–öâr“ÓÕ²v6öÕöf–VÆG2uÒæB'6U÷2‡W&Ç'6R‡‚’çVW'’’ævWB‚wf–Wrr“ÓÕ²vf–VÆG2uÒæB'6U÷2‡W&Ç'6R‡‚’çVW'’’ævWB‚v6öçFW‡Br“ÓÕ²v6öÕö¦Æ×2æ6÷W'6RuÒ’ÄæöæR¢–bæ÷B7W7FöÕöf–VÆG5öÆ–æ³§&—6R'VçF–ÖTW'&÷"‚tæF—fR7W7FöÒf–VÆG26–FV&"Æ–æ²Ö—76–ærr¢òÆ7W7FöÕöf–VÆG5ö‡FÖÃÖvWB‡W&Æ¦ö–â‡W&ÂÆ7W7FöÕöf–VÆG5öÆ–æ²’¢6öçFW‡Eöf–ÇFW#×&Rç6V&6‚‡"sÇ6VÆV7EµãåÒ¶æÖSÒ&6öçFW‡B%µãåÒ£â‚â£ò“Â÷6VÆV7CârÆ7W7FöÕöf–VÆG5ö‡FÖÂÇ&Rå2¢–bæ÷B6öçFW‡Eöf–ÇFW"÷"ç’‚wfÇVSÒ&6öÕö¦Æ×2âr¶6öçFW‡B²r"ræ÷B–â6öçFW‡Eöf–ÇFW"æw&÷Wƒ’f÷"6öçFW‡B–â²v6÷W'6RrÂwFV6†W"rÂvÆW76öâuÒ“§&—6R'VçF–ÖTW'&÷"‚tæF—fR7W7FöÒf–VÆG26öçFW‡Bf–ÇFW"×W7BöffW"6÷W'6RÂFV6†W"æBÆW76öâr¢ÇVv–åöÆ–æ³ÖæW‡B‚‡‚f÷"‚–âvR†‡FÖÂ’æÆ–æ·2–b'6U÷2‡W&Ç'6R‡‚’çVW'’’ævWB‚v÷F–öâr“ÓÕ²v6öÕ÷ÇVv–ç2uÒæB'6U÷2‡W&Ç'6R‡‚’çVW'’’ævWB‚vf–ÇFW%¶föÆFW%Òr“ÓÕ²v¦Æ×7f–FVòuÒ’ÄæöæR¢–bæ÷BÇVv–åöÆ–æ³§&—6R'VçF–ÖTW'&÷"‚tæF—fRf–FVòÇVv–âÖævW"6–FV&"Æ–æ²Ö—76–ærr¢F6†&ö&E÷vSÕvR†‡FÖÂ¢F6†&ö&E÷6†÷'F7WG3×¶ævWB‚v–Br“§'6U÷2‡W&Ç'6R†ævWB‚v‡&VbrÂrr’’çVW'’’f÷"–âF6†&ö&E÷vRææ6†÷'2–bævWB‚v–BrÂrr’ç7F'G7v—F‚‚v¦Æ×2ÖFÖ–â×6†÷'F7WBÒr—Ğ¢–bç’‚rf×²r–âævWB‚v‡&VbrÂrr’f÷"–âF6†&ö&E÷vRææ6†÷'2–bævWB‚v–BrÂrr’ç7F'G7v—F‚‚v¦Æ×2ÖFÖ–â×6†÷'F7WBÒr’“§&—6R'VçF–ÖTW'&÷"‚tF6†&ö&B6†÷'F7WB‡&Vb×W7Bæ÷B6öçF–âÆ—FW&Â…DÔÂVçF—G’r¢&WV—&VE÷6†÷'F7WG3×°¢v¦Æ×2ÖFÖ–â×6†÷'F7WBÖ6W'F–f–6FW2s¢‚v6öÕö¦Æ×2rÂv6W'F–f–6FW2r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WBÖ6÷W'6W2s¢‚v6öÕö¦Æ×2rÂv6÷W'6W2r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WB×F‡v—2s¢‚v6öÕö¦Æ×2rÂwF‡v—2r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WBÖ6÷W'6Uö6FVv÷&–W2s¢‚v6öÕö6FVv÷&–W2rÂv6FVv÷&–W2r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WB×F‡v•ö6FVv÷&–W2s¢‚v6öÕö6FVv÷&–W2rÂv6FVv÷&–W2r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WB×VW7F–öåö&æ²s¢‚v6öÕö¦Æ×2rÂwVW7F–öæ&æ²r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WB×FV6†W'2s¢‚v6öÕö¦Æ×2rÂwFV6†W'2r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WBÖ7W7FöÕöf–VÆG2s¢‚v6öÕöf–VÆG2rÂvf–VÆG2r’À¢v¦Æ×2ÖFÖ–â×6†÷'F7WB×f–FVõ÷ÇVv–ç2s¢‚v6öÕ÷ÇVv–ç2rÂwÇVv–ç2r’À¢Ğ¢W‡V7FVE÷6†÷'F7WEö÷&FW#Õ²v6W'F–f–6FW2rÂv6÷W'6W2rÂwF‡v—2rÂv6÷W'6Uö6FVv÷&–W2rÂwF‡v•ö6FVv÷&–W2rÂwVW7F–öåö&æ²rÂwFV6†W'2rÂv7W7FöÕöf–VÆG2rÂwf–FVõ÷ÇVv–ç2uĞ¢7GVÅ÷6†÷'F7WEö÷&FW#Õ¶–FVçF–f–W"ç&VÖ÷fW&Vf—‚‚v¦Æ×2ÖFÖ–â×6†÷'F7WBÒr’f÷"–FVçF–f–W"–âF6†&ö&E÷6†÷'F7WG5Ğ¢–b7GVÅ÷6†÷'F7WEö÷&FW"ÖW‡V7FVE÷6†÷'F7WEö÷&FW#§&—6R'VçF–ÖTW'&÷"‚tF6†&ö&B6†÷'F7WG2×W7BföÆÆ÷rF†Rw&VVB÷W&F–öæÂ÷&FW#¢r¶§6öâæGV×2†7GVÅ÷6†÷'F7WEö÷&FW"’¢f÷"6†÷'F7WBÂ†÷F–öâÇf–Wr’–â&WV—&VE÷6†÷'F7WG2æ—FV×2‚“ ¢VW'“ÖF6†&ö&E÷6†÷'F7WG2ævWB‡6†÷'F7WB¢–bæ÷BVW'’÷"VW'’ævWB‚v÷F–öâr’Õ¶÷F–öåÒ÷"VW'’ævWB‚wf–Wrr’Õ·f–WuÓ ¢f÷VæC×¶ævWB‚v–Br“¦ævWB‚v‡&Vbr’f÷"–âF6†&ö&E÷vRææ6†÷'2–bævWB‚v–BrÂrr’ç7F'G7v—F‚‚v¦Æ×2ÖFÖ–â×6†÷'F7WBÒr—Ğ¢&—6R'VçF–ÖTW'&÷"‚tF6†&ö&B6†÷'F7WBÖ—76–ær÷"Ö—7&÷WFVC¢r·6†÷'F7WB²s²f÷VæCÒr¶§6öâæGV×2†f÷VæBÇ6÷'Eö¶W—3ÕG'VR’¢–btÖævR6÷W'6W2ÂF†RÆV&æ–ær&öw&ÖÖRæBFV6†–ær&W6÷W&6W2g&öÒF†RFÖ–æ—7G&F÷"æVÂâræ÷B–â‡FÖÂ÷"u–÷W"ÆV&æ–ær†—7F÷'’æB7W'&VçB6Æ77&ööÒf–Æ&–Æ—G’&R6†÷vâ6W&FVÇ’âr–â‡FÖÃ ¢&—6R'VçF–ÖTW'&÷"‚tFÖ–æ—7G&F÷"F6†&ö&B–çG&öGV7F–öâ×W7BW6R—G27W'&VçBÂ&VÆWfçBG&ç6ÆF–öâr¢–6öåö6÷VçCÖÆVâ‡&Ræf–æFÆÂ‡"v6Æ73Ò%µâ%Ò¦¦Æ×2ÖFÖ–âÖF6†&ö&Eõ÷6†÷'F7WBÖ–6öåµâ%Ò¦–6öâÕµâ%Ò²"rÆ‡FÖÂ’¢–b–6öåö6÷VçBÖÆVâ†F6†&ö&E÷6†÷'F7WG2“§&—6R'VçF–ÖTW'&÷"‚tWfW'’f—6–&ÆRF6†&ö&B6†÷'F7WB×W7B–æ6ÇVFR¦ööÖÆ–6öâr¢&÷f–FW%÷&÷w3×&Ræf–æFÆÂ‡"sÆÆ’FFÖ¦Æ×2×&÷f–FW#Ò"…µâ%Ò²’#ârÆ‡FÖÂ¢–b&÷f–FW%÷&÷w2Õ²w–÷WGV&RrÂwf–ÖVòrÂv6Æ÷VFfÆ&W7G&VÒrÂv‡FÖÃRuÓ§&—6R'VçF–ÖTW'&÷"‚tF6†&ö&B×W7B6†÷rÆÂ'VæFÆVB&÷f–FW'2–â7F&ÆR÷&FW#¢r¶§6öâæGV×2‡&÷f–FW%÷&÷w2’¢2&–÷"ÇVv–âÖÖævW"6V&6‚÷7FGW2×W7Bæ÷B†–FR&÷f–FW'2öâVçG'’g&öÒ¤BÆV&âà¢vWB‚röFÖ–æ—7G&F÷"ö–æFW‚ç‡ö÷F–öãÖ6öÕ÷ÇVv–ç2gf–Ws×ÇVv–ç2ff–ÇFW%¶föÆFW%ÓÖ6öçFVçBff–ÇFW%·6V&6…ÓÔ¤DÄT$åôäõôÔD4‚ff–ÇFW%¶Væ&ÆVEÓÓff–ÇFW%¶VÆVÖVçEÓÖÖ—76–ærfÆ–Ö—G7F'CÓr¢òÇÇVv–åö‡FÖÃÖvWB‡W&Æ¦ö–â‡W&Æ¦ö–â‡W&ÂÅvR†‡FÖÂ’æ&6R÷"""’ÇÇVv–åöÆ–æ²’¢ÇVv–å÷vSÕvR‡ÇVv–åö‡FÖÂ¢ÇVv–åöf÷&ÓÖæW‡B†bf÷"b–âÇVv–å÷vRæf÷&×2–be²v–BuÓÓÒvFÖ–äf÷&Òr¢–bÇVv–åöf÷&Õ²vf–VÆG2uÒævWB‚vf–ÇFW%¶föÆFW%Òr’Òv¦Æ×7f–FVòr÷"ÇVv–åöf÷&Õ²vf–VÆG2uÒævWB‚vf–ÇFW%·6V&6…Òr’Òrr÷"ÇVv–åöf÷&Õ²vf–VÆG2uÒævWB‚vf–ÇFW%¶Væ&ÆVEÒr’Òrs§&—6R'VçF–ÖTW'&÷"‚uf–FVòÇVv–âf–ÇFW"÷"6ÆV&VB6V&6‚÷7FGW2·ï»h‘éì¶»§q«^u…Ñ•½Éä™É½´Ñ¡”¹…Ñ¥Ù”…Ñ•½ÉäÍ•±•Ñ½È°¹½Ğ„Õ•ÍÍ•‘…Ñ…‰…Í”%¸(…Ñ•½ÉäõÉ”¹Í•…É ¡ÈœñÍ•±•Ñmxùt©¹…µ”ô‰©™½Éµqm…Ñ¥‘qt‰mxùt¨ø ¸¨ü¤ğ½Í•±•Ğøœ± ±É”¹L¤¹É½ÕÀ Ä¤(…Ñ¥õÉ”¹Í•…É ¡Èœñ½ÁÑ¥½¹mxùt©Ù…±Õ”ôˆ¡lÄ´åulÀ´åt¨¤‰mxùt¨ùmxñt©$½ÕÉÍ•Ìœ±…Ñ•½Éä¤¹É½ÕÀ Ä¤(Ô± õÍÕ‰µ¥Ğ¡Ô±™½É´±ìÑ…Í¬œè½ÕÉÍ”¹…ÁÁ±äœ°©™½ÉµmÑ¥Ñ±•tœè!QQ@™¥ÉÍĞÁÕ‰±¥…Ñ¥½¸œ°©™½Éµm…±¥…Ítœè¡ÑÑÀµ™¥ÉÍĞµÁÕ‰±¥…Ñ¥½¸œ°(€€©™½Éµm…Ñ¥‘tœé…Ñ¥°©™½Éµm±…¹Õ…•tœèœ¨œ°©™½Éµm…Ñ…±½}…•ÍÍtœèœÄœ°©™½Éµm½¹Ñ•¹Ñ}…•ÍÍtœèœÈœ°(€€©™½Éµm•¹É½±±µ•¹Ñ}µ½‘•tœè…ÕÑ¼œ°©™½ÉµmÍÕµµ…ÉåtœèÉ•…Ñ•…¹™¥ÉÍĞÁÕ‰±¥Í¡•Ñ¡É½Õ ¹…Ñ¥Ù”!QQ@™½ÉµÌô¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜€©™½ÉµmÑ¥Ñ±•tœ¥¸™l™¥•±‘Ìt¤(½ÕÉÍ•}¥õ¥¹Ğ¡™½Éµl™¥•±‘Ìul©™½Éµm¥‘tt¤(•áÁ•Ğ¡½ÕÉÍ•}¥øÀ…¹€¥ô‰©±µÌµ½ÕÉÍ”µÁÉ½É…µµ”µ±¥¹¬ˆœ¹½Ğ¥¸ …¹€Ñ…Í¬ô‰½ÕÉÍ”¹ÁÉ½É…µµ”ˆœ¥¸ °M…Ù•‘É…™Ğ­••ÁÌÑ¡”ÕÉÉ¥Õ±Õ´…Ñ¥½¸İ¥Ñ¡½ÕĞ„‘ÕÁ±¥…Ñ”±¥¹¬œ¤(•áÁ•Ğ ©½½µ±„µ™¥•±µµ•‘¥„œ¥¸ …¹€©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}¥µ…•tœ¥¸ °9…Ñ¥Ù”5•‘¥„5…¹…•È™¥•±¥Ì…Ù…¥±…‰±”¥¸½ÕÉÍ”•‘¥Ñ½Èœ¤(•áÁ•Ğ¡…±° ¥ôˆœ­à¬œˆœ¥¸ ™½Èà¥¸l©±µÌµ½ÕÉÍ”µÑ…‰Ìœ°©±µÌµ½ÕÉÍ”µ•¹•É…°œ°©±µÌµ½ÕÉÍ”µÁÉ•Í•¹Ñ…Ñ¥½¸œ°©±µÌµ½ÕÉÍ”µ…•ÍÌµÍ•ÑÑ¥¹Ìœ°©±µÌµ½ÕÉÍ”µµ•Ñ…‘…Ñ„œ°©±µÌµ½ÕÉÍ”µ…±•¹‘…Èœ°©±µÌµ½ÕÉÍ”µÁÕ‰±¥Í¡¥¹œœ°©±µÌµ½ÕÉÍ”µÁ•Éµ¥ÍÍ¥½¹Ìt¤°9…Ñ¥Ù”½ÕÉÍ”•‘¥Ñ½È•áÁ½Í•Ì•¹•É…°°ÁÉ•Í•¹Ñ…Ñ¥½¸°…•ÍÌ…¹ÁÕ‰±¥…Ñ¥½¸Ñ…‰Ìœ¤(‰•™½É”õ™¥áÑÕÉ” ¤(Ô± õÍÕ‰µ¥Ğ¡Ô±™½É´±ìÑ…Í¬œè½ÕÉÍ”¹…ÁÁ±äœ°©™½Éµm…±•¹‘…É}Ñ¥µ•é½¹•tœèÕÉ½Á”½I½µ”œ°©™½Éµm…±•¹‘…É}ÍÑ…ÉÑÍ}…ÑtœèœÈÀÈÜ´ÀÌ´Èà€ÀÈèÌÀèÀÀô¤(•áÁ•Ğ¡™¥áÑÕÉ” ¤ôõ‰•™½É”°9…Ñ¥Ù”™½É´É•©•ÑÌ¹½¹•á¥ÍÑ•¹ĞMPÑ¥µ”İ¥Ñ¡½ÕĞÍ…Ù¥¹œœ¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜€©™½ÉµmÑ¥Ñ±•tœ¥¸™l™¥•±‘Ìt¤(Ô± õÍÕ‰µ¥Ğ¡Ô±™½É´±ìÑ…Í¬œè½ÕÉÍ”¹…ÁÁ±äœ°©™½Éµm…±•¹‘…É}Ñ¥µ•é½¹•tœèÕÉ½Á”½I½µ”œ°(€€©™½Éµm…±•¹‘…É}ÁÕ‰±¥Í¡}ÕÁtœèœÈÀÀÀ´ÀÄ´ÀÄ€ÀÄèÀÀèÀÀœ°©™½Éµm…±•¹‘…É}ÁÕ‰±¥Í¡}‘½İ¹tœèœÈÀää´ÀÄ´ÀÄ€ÀÄèÀÀèÀÀœ°(€€©™½Éµm…±•¹‘…É}ÍÑ…ÉÑÍ}…ÑtœèœÈÀÀÀ´ÀÄ´ÀÄ€ÀÄèÀÀèÀÀœ°©™½Éµm…±•¹‘…É}•¹‘Í}…ÑtœèœÈÀäà´ÀÄ´ÀÄ€ÀÄèÀÀèÀÀœ°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}‘•ÍÉ¥ÁÑ¥½¹tœèœñÀù!QQ@•áÑ•¹‘•€ñÍÑÉ½¹œù‘•ÍÉ¥ÁÑ¥½¸ğ½ÍÑÉ½¹œøğ½Àøñ¥µœÍÉŒô‰¡ÑÑÁÌè¼½•á…µÁ±”¹¥¹Ù…±¥½Á¥á•°ˆ½¹•ÉÉ½Èô‰…±•ÉĞ Ä¤ˆøñÍÉ¥ÁĞù…±•ÉĞ È¤ğ½ÍÉ¥ÁĞøœ°(€€©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}½‰©•Ñ¥Ù•Ítœè!QQ@½‰©•Ñ¥Ù•Ì€ñÍÉ¥ÁĞùÁ±…¥¸Ñ•áĞğ½ÍÉ¥ÁĞøœ°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}…Õ‘¥•¹•tœè!QQ@…Õ‘¥•¹”œ°(€€©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}¥µ…•tœè¥µ…•Ì½©±µÌµ¤µ½Ù•È¹Á¹œ©½½µ±…%µ…”è¼½±½…°µ¥µ…•Ì½©±µÌµ¤µ½Ù•È¹Á¹œıİ¥‘Ñ ôÄ™¡•¥¡ĞôÄœ°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}¥µ…•}…±Ñtœè!QQ@½Ù•È€‰ÅÕ½Ñ•ˆ€ñÁ±…¥¸Ñ•áĞøœ°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}¥µ…•}‘•½É…Ñ¥Ù•tœèœÀœ°(€€©™½ÉµmÑ•…¡•É}¥‘ÍumtœéÍÑÈ¡¡ÑÑÁ}Ñ•…¡•É}¥¤°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}Í•½}Ñ¥Ñ±•tœè!QQ@ÁÕ‰±¥Í¡•M<Ñ¥Ñ±”œ°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}Í•½}‘•ÍÉ¥ÁÑ¥½¹tœè!QQ@M<‘•ÍÉ¥ÁÑ¥½¸€˜ÁÕ‰±¥ŒÍ¡••Ğœ°(€€©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}ÁÉ•É•ÅÕ¥Í¥Ñ•}Ñ•áÑtœè!QQ@ÁÉ¥½È­¹½İ±•‘”œ°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}‘¥™™¥Õ±Ñåtœè¥¹Ñ•Éµ•‘¥…Ñ”œ°©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}•ÍÑ¥µ…Ñ•‘}µ¥¹ÕÑ•ÍtœèœÜÔô¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜€©™½ÉµmÑ¥Ñ±•tœ¥¸™l™¥•±‘Ìt¤(•áÁ•Ğ¡™½Éµl™¥•±‘Ìul©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}•ÍÑ¥µ…Ñ•‘}µ¥¹ÕÑ•ÍttôôœÜÔœ…¹€!QQ@•áÑ•¹‘•œ¥¸™½Éµl™¥•±‘Ìul©™½ÉµmÁÉ•Í•¹Ñ…Ñ¥½¹}‘•ÍÉ¥ÁÑ¥½¹tt°AÉ•Í•¹Ñ…Ñ¥½¸Í…Ù•…¹É•½Á•¹•¥¸¹…Ñ¥Ù”•‘¥Ñ½Èœ¤(•áÁ•Ğ Ñ…Í¬ô‰½ÕÉÍ”¹ÁÉ½É…µµ”ˆœ¥¸ °M…Ù•½ÕÉÍ”É•Ñ…¥¹ÌÑ¡”ÕÉÉ¥Õ±Õ´…Ñ¥½¸¥¸¥ÑÌAÉ½É…µµ”Ñ…ˆœ¤(ÁÉ½É…µµ”ôœ½…‘µ¥¹¥ÍÑÉ…Ñ½È½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•ÜõÕÉÉ¥Õ±Õ´™¥ôœ­ÍÑÈ¡½ÕÉÍ•}¥¤(€Œ±½Í”Ñ¡É½Õ Ñ¡”¹…Ñ¥Ù”½¹ÑÉ½±±•È‰•™½É”±•…Ù¥¹œÑ¡”•‘¥Ñ½È¸(±½Í•}ÕÉ°±±½Í•}¡Ñµ°õÍÕ‰µ¥Ğ¡Ô±™½É´±ìÑ…Í¬œè½ÕÉÍ”¹Í…Ù”ô¤(•áÁ•Ğ¡Á…ÉÍ•}ÅÌ¡ÕÉ±Á…ÉÍ”¡±½Í•}ÕÉ°¤¹ÅÕ•Éä¤¹•Ğ Ù¥•Üœ¤ôõl½ÕÉÍ•Ìt°9…Ñ¥Ù”Í…Ù”…¹±½Í”ÍÕ••‘Ìİ¥Ñ …±°É•¹‘•É•½¹ÑÉ½±Ìœ¤(Ô± õ•Ğ¡ÁÉ½É…µµ”¤(•áÁ•Ğ ¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µ¹½Ñ¥”ˆœ¥¸ …¹€¥ô‰©±µÌµÙ•ÉÍ¥½¸µ™½É´ˆœ¥¸ °½ÕÉÍ”İ¥Ñ¡½ÕĞÙ•ÉÍ¥½¸•áÁ±…¥¹ÌÑ¡”¹•áĞÍÑ•Àœ¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜™l¥tôô©±µÌµÙ•ÉÍ¥½¸µ™½É´œ¤íÔ± õÍÕ‰µ¥Ğ¡Ô±™½É´¤(•áÁ•Ğ ¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µ™½É´ˆœ¥¸ …¹É”¹Í•…É ¡È¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µÍÕ‰µ¥Ğ‰mxùt¨ùqÌ©á•ÕÑ”ÑÉ…¹Í¥Ñ¥½¹qÌ¨ğ½‰ÕÑÑ½¸øœ± ¤(€…¹€M•¹™½ÈÉ•Ù¥•Üœ¥¸ …¹€AÕ‰±¥Í œ¥¸ °¥ÉÍĞ‘É…™Ğ•áÁ½Í•Ì•áÁ±¥¥ĞÉ•Ù¥•Ü…¹…ÕÑ¡½É¥é•ÁÕ‰±¥Í ÑÉ…¹Í¥Ñ¥½¹Ìœ¤(•áÁ•Ğ ¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µÉ•…‘¥¹•ÍÌˆœ¥¸ …¹€‘…Ñ„µÉ•…‘¥¹•ÍÌµ½‘”ô‰=5})15M}I%9MM}5=U1M}IEU%Iˆœ¥¸ (€…¹€‘…Ñ„µÉ•…‘¥¹•ÍÌµ½‘”ô‰=5})15M}I%9MM}IEU%I}1MM=8ˆœ¥¸ °É…™ĞÁÕ‰±¥…Ñ¥½¸Á…”Í¡½İÌ‰…Í¥Œ‰±½­•ÉÌ‰•™½É”Ñ¡”ÕÍ•ÈÍÕ‰µ¥ÑÌœ¤(‰•™½É”õ™¥áÑÕÉ” ¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜™l¥tôô©±µÌµÁÕ‰±¥…Ñ¥½¸µ™½É´œ¤(ÑÉ…¹Í¥Ñ¥½¸õÉ”¹Í•…É ¡Èœñ½ÁÑ¥½¸Ù…±Õ”ôˆ¡lÄ´åulÀ´åt¨¤ˆœ±¡m ¹¥¹‘•à ¥ô‰©±µÌµÑÉ…¹Í¥Ñ¥½¸ˆœ¤ét¤¹É½ÕÀ Ä¤(Ô± õÍÕ‰µ¥Ğ¡Ô±™½É´±ì©™½ÉµmÑÉ…¹Í¥Ñ¥½¹}¥‘tœéÑÉ…¹Í¥Ñ¥½¹ô¤(•áÁ•Ğ¡™¥áÑÕÉ” ¤ôõ‰•™½É”°µÁÑä¥¹¥Ñ¥…°ÁÉ½É…µµ”…¹¹½ĞÁÕ‰±¥Í ½ÈÉ•…Ñ”…¸•‘¥Ñ¥½¸œ¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜™l¥tôô©±µÌµµ½‘Õ±”µ™½É´œ¤íÔ± õÍÕ‰µ¥Ğ¡Ô±™½É´±ì©™½ÉµmÑ¥Ñ±•tœè!QQ@™¥ÉÍĞµ½‘Õ±”ô¤(±•ÍÍ½¹}±¥¹¬õ¹•áĞ¡à™½Èà¥¸A…”¡ ¤¹±¥¹­Ì¥˜Á…ÉÍ•}ÅÌ¡ÕÉ±Á…ÉÍ”¡à¤¹ÅÕ•Éä¤¹•Ğ ¹•İ}±•ÍÍ½¸œ¤ôõlœÄt¤(Ô± õ•Ğ¡±•ÍÍ½¹}±¥¹¬¤(•áÁ•Ğ ‘…Ñ„µÉ•…‘¥¹•ÍÌµ½‘”ô‰=5})15M}I%9MM}5=U1}5AQdˆœ¥¸ °¸•µÁÑäµ½‘Õ±”É•µ…¥¹Ì„ÁÕ‰±¥…Ñ¥½¸‰±½­•Èİ¡¥±”•‘¥Ñ¥¹œ¥ÑÌ™¥ÉÍĞ±•ÍÍ½¸œ¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜™l¥tôô©±µÌµ±•ÍÍ½¸µ™½É´œ¤(Ô± õÍÕ‰µ¥Ğ¡Ô±™½É´±ì©™½ÉµmÑ¥Ñ±•tœè!QQ@™¥ÉÍĞÉ•ÅÕ¥É•±•ÍÍ½¸œ°©™½Éµm­¥¹‘tœèÑ•áĞœ°©™½ÉµmÉ•ÅÕ¥É•‘tœèœÄœ°(€€©™½Éµmµ½‘Õ±•}¥‘tœéÉ”¹Í•…É ¡È‘…Ñ„µµ½‘Õ±”µ¥ôˆ¡lÄ´åulÀ´åt¨¤ˆœ± ¤¹É½ÕÀ Ä¤°(€€©™½Éµm‰½‘åtœèœñÀù%IMQ}AU	1%Q%=9}AI%YQ}	=dğ½Àøô¤(•áÁ•Ğ !QQ@™¥ÉÍĞÉ•ÅÕ¥É•±•ÍÍ½¸œ¥¸ °5½‘Õ±”…¹É•ÅÕ¥É•Ñ•áĞ±•ÍÍ½¸Í…Ù•Ñ¡É½Õ !QQ@œ¤(•áÁ•Ğ ¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µ‰±½­•ÉÌˆœ¥¸ …¹€=5})15M}I%9MM}5=U1}5AQdœ¹½Ğ¥¸ (€…¹€=5})15M}I%9MM}IEU%I}1MM=8œ¹½Ğ¥¸ °‘‘¥¹œÑ¡”É•ÅÕ¥É•±•ÍÍ½¸±•…ÉÌÍÑÉÕÑÕÉ…°‰±½­•ÉÌœ¤(µ…Ñ•É¥…°õ™¥áÑÕÉ” µ…Ñ•É¥…°µ…‘œ¤(Ô± õ•Ğ¡Ô¤(•áÁ•Ğ ‘…Ñ„µÉ•…‘¥¹•ÍÌµ½‘”ô‰=5})15M}5QI%1}9=Q}Idˆœ¥¸ °É…™ĞÉ•…‘¥¹•ÍÌ¥‘•¹Ñ¥™¥•Ì…¸…ÑÑ…¡µ•¹ĞÑ¡…ĞÑ¡”ÁÕ‰±¥…Ñ¥½¸Í•ÉÙ¥”İ½Õ±É•©•Ğœ¤(™¥áÑÕÉ” µ…Ñ•É¥…°µÉ•µ½Ù”œ±µ…Ñ•É¥…±l…ÑÑ…¡µ•¹Ñ}¥t¤(Ô± õ•Ğ¡Ô¤(•áÁ•Ğ ‘…Ñ„µÉ•…‘¥¹•ÍÌµ½‘”ô‰=5})15M}5QI%1}9=Q}Idˆœ¹½Ğ¥¸ °I•µ½Ù¥¹œÑ¡”Õ¹É•…‘ä™¥áÑÕÉ”µ…Ñ•É¥…°±•…ÉÌ¥ÑÌÉ•…‘¥¹•ÍÌ‰±½­•Èœ¤(™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜™l¥tôô©±µÌµÁÕ‰±¥…Ñ¥½¸µ™½É´œ¤(ÑÉ…¹Í¥Ñ¥½¸õÉ”¹Í•…É ¡Èœñ½ÁÑ¥½¸Ù…±Õ”ôˆ¡lÄ´åulÀ´åt¨¤ˆœ±¡m ¹¥¹‘•à ¥ô‰©±µÌµÑÉ…¹Í¥Ñ¥½¸ˆœ¤ét¤¹É½ÕÀ Ä¤(€Œ‘¥Í…‰±•¹…Ñ¥Ù”Á±Õ¥¸µÕÍĞ‰”‘¥…¹½Í•İ¥Ñ¡½ÕĞ¡…¹¥¹œ½ÕÉÍ”½Ù•ÉÍ¥½¸‘…Ñ„¸(½É¥¥¹…±}Á±Õ¥¸õ™¥áÑÕÉ” ¥lÁ±Õ¥¸t(ÑÉäè(€™¥áÑÕÉ” Á±Õ¥¸œ°À¤íÔ± õ•Ğ¡Ô¤(€•áÁ•Ğ ¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µ¹½Ñ¥”ˆœ¥¸ …¹€¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µ™½É´ˆœ¹½Ğ¥¸ °¥Í…‰±•AÕ‰±¥Í¡¥¹œÁ±Õ¥¸¡…ÌÙ¥Í¥‰±”‘¥…¹½ÍÑ¥Œ…¹¹¼…Ñ¥½¸œ¤(€‰•™½É”õ™¥áÑÕÉ” ¤íÔ± õÍÕ‰µ¥Ğ¡Ô±™½É´±ì©™½ÉµmÑÉ…¹Í¥Ñ¥½¹}¥‘tœéÑÉ…¹Í¥Ñ¥½¹ô¤(€•áÁ•Ğ¡™¥áÑÕÉ” ¤ôõ‰•™½É”°MÑ…±”™½É´…¹¹½ĞÁÕ‰±¥Í İ¥Ñ ‘¥Í…‰±•Á±Õ¥¸œ¤(™¥¹…±±äé™¥áÑÕÉ” Á±Õ¥¸œ±½É¥¥¹…±}Á±Õ¥¸¤(Ô± õ•Ğ¡Ô¤í™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜™l¥tôô©±µÌµÁÕ‰±¥…Ñ¥½¸µ™½É´œ¤(ÍÑ…±•}™½É´õ‘¥Ğ¡™½É´¤íÍÑ…±•}™½Éµl™¥•±‘Ìtõ‘¥Ğ¡™½Éµl™¥•±‘Ìt¤(ÑÉ…¹Í¥Ñ¥½¸õÉ”¹Í•…É ¡Èœñ½ÁÑ¥½¸Ù…±Õ”ôˆ¡lÄ´åulÀ´åt¨¤ˆœ±¡m ¹¥¹‘•à ¥ô‰©±µÌµÑÉ…¹Í¥Ñ¥½¸ˆœ¤ét¤¹É½ÕÀ Ä¤(Ô± õÍÕ‰µ¥Ğ¡Ô±™½É´±ì©™½ÉµmÑÉ…¹Í¥Ñ¥½¹}¥‘tœéÑÉ…¹Í¥Ñ¥½¹ô¤(€ŒÕÉÉ•¹Ğ…•ÍÌÉÕ±•ÌÉ•µ…¥¸¹…Ñ¥Ù”•Ù•¸İ¡•¸Ñ¡”Ñ•…¡¥¹œÙ•ÉÍ¥½¸¥Ì¥µµÕÑ…‰±”¸(ÁÕ‰±¥Í¡•‘}•‘¥Ñ½É}ÕÉ°±ÁÕ‰±¥Í¡•‘}•‘¥Ñ½Èõ•Ğ œ½…‘µ¥¹¥ÍÑÉ…Ñ½È½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•Üõ½ÕÉÍ”™±…å½ÕĞõ•‘¥Ğ™¥ôœ­ÍÑÈ¡½ÕÉÍ•}¥¤¤(¥˜€¥ô‰©±µÌµ½ÕÉÍ”µÉÕ±•Ìˆœ¹½Ğ¥¸ÁÕ‰±¥Í¡•‘}•‘¥Ñ½Èè(€É…¥Í”IÕ¹Ñ¥µ•ÉÉ½È ÕÑ¡½É¥Í•…‘µ¥¹¥ÍÑÉ…Ñ½ÉÌµÕÍĞ‰”…‰±”Ñ¼µ…¹…”ÕÉÉ•¹ĞÁ•Éµ¥ÍÍ¥½¹Ì½˜„ÁÕ‰±¥Í¡•½ÕÉÍ”œ¤(ÁÕ‰±¥Í¡•‘}•‘¥Ñ½É}™½É´õ¹•áĞ¡˜™½È˜¥¸A…”¡ÁÕ‰±¥Í¡•‘}•‘¥Ñ½È¤¹™½ÉµÌ¥˜™l¥tôô…‘µ¥¹½É´œ¤(¥˜€©™½ÉµmÑ¥Ñ±•tœ¹½Ğ¥¸ÁÕ‰±¥Í¡•‘}•‘¥Ñ½É}™½Éµl™¥•±‘Ìtè(€É…¥Í”IÕ¹Ñ¥µ•ÉÉ½È AÕ‰±¥Í¡•½ÕÉÍ”•‘¥Ñ½É¥…°™¥•±‘ÌµÕÍĞ‰”•‘¥Ñ…‰±”œ¤(ÁÉ¥¹Ğ¡©Í½¸¹‘ÕµÁÌ¡ìÁÕ‰±¥Í¡•‘}½ÕÉÍ•}ÉÕ±•Í}¡ÑÑÁ}¡•­ÌœèÄ°ÍÑ…ÑÕÌœèÁ…ÍÍ•ô¤¤(ÁÕ‰±¥Í¡•õ™¥áÑÕÉ” ¥l½ÕÉÍ”t(•áÁ•Ğ¡¥¹Ğ¡ÁÕ‰±¥Í¡•‘lÍÑ…Ñ”t¤ôôÄ…¹ÁÕ‰±¥Í¡•‘lÍÑ…ÑÕÌtôôÁÕ‰±¥Í¡•œ…¹¥¹Ğ¡ÁÕ‰±¥Í¡•‘l•‘¥Ñ¥½¹Ìt¤ôôÄ…¹¥¹Ğ¡ÁÕ‰±¥Í¡•‘l…ÍÍ½¥…Ñ¥½¹Ìt¤ôôÄ°¥ÉÍĞ!QQ@ÁÕ‰±¥…Ñ¥½¸™É••é•ÌÙ•ÉÍ¥½¸…¹É•…Ñ•Ì½¹”•‘¥Ñ¥½¸…¹¹…Ñ¥Ù”…ÍÍ½¥…Ñ¥½¸œ¤(•áÁ•Ğ¡‰½½°¡ÁÕ‰±¥Í¡•‘lÍÑÉÕÑÕÉ•}¡…Í t¤…¹‰½½°¡ÁÕ‰±¥Í¡•‘lÁÕ‰±¥Í¡•‘}…Ğt¤°%¹¥Ñ¥…°ÁÕ‰±¥…Ñ¥½¸É•½É‘Ì¥µµÕÑ…‰±”¡…Í …¹Ñ¥µ•ÍÑ…µÀœ¤(Ô± õÍÕ‰µ¥Ğ¡Ô±ÍÑ…±•}™½É´±ì©™½ÉµmÑÉ…¹Í¥Ñ¥½¹}¥‘tœéÑÉ…¹Í¥Ñ¥½¹ô¤(•áÁ•Ğ¡™¥áÑÕÉ” ¥l½ÕÉÍ”tôõÁÕ‰±¥Í¡•°I•Á•…Ñ•ÍÑ…±”ÁÕ‰±¥…Ñ¥½¸‘½•Ì¹½Ğ‘ÕÁ±¥…Ñ”•‘¥Ñ¥½¸½È¡…¹”¡¥ÍÑ½Éäœ¤(ÁÕ‰±¥}¡ÑÑÀõ‰Õ¥±‘}½Á•¹•È¡!QQA½½­¥•AÉ½•ÍÍ½È¡½½­¥•)…È ¤¤¤(Á…Ñ¡İ…åÌõ©Í½¸¹±½…‘Ì ¡É½½Ğ¹Á…É•¹Ğ¼Á…Ñ¡İ…åÌµ™¥áÑÕÉ”¹©Í½¸œ¤¹É•…‘}Ñ•áĞ ¤¤(|±Á…Ñ¡İ…å}…‘µ¥¸õ•Ğ œ½…‘µ¥¹¥ÍÑÉ…Ñ½È½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•ÜõÁ…Ñ¡İ…åÌœ¤(•áÁ•Ğ¡±•¸¡É”¹™¥¹‘…±°¡Èœñ Åqˆœ±Á…Ñ¡İ…å}…‘µ¥¸¤¤ôôÄ°A…Ñ¡İ…åÌÑ¥Ñ±”…ÁÁ•…ÉÌ½¹”¥¸Ñ¡”)½½µ±„Ñ½½±‰…Èœ¤(•áÁ•Ğ ¥ô‰©±µÌµ…‘µ¥¸µÁ…Ñ¡İ…åÌˆœ¥¸Á…Ñ¡İ…å}…‘µ¥¸…¹€$±•…É¹¥¹œÁ…Ñ¡İ…äœ¥¸Á…Ñ¡İ…å}…‘µ¥¸°(€€€€€€€€ÕÑ¡•¹Ñ¥…Ñ•…‘µ¥¹¥ÍÑÉ…Ñ½ÈÍ••ÌÑ¡”¹…Ñ¥Ù”Á…Ñ¡İ…ä±¥ÍĞœ¤(|±Á…Ñ¡İ…å}•‘¥Ñ½Èõ•Ğ œ½…‘µ¥¹¥ÍÑÉ…Ñ½È½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ñ…Í¬õÁ…Ñ¡İ…ä¹•‘¥Ğ™¥ôœ­ÍÑÈ¡Á…Ñ¡İ…åÍlÁ…Ñ¡İ…ät¤¤(•áÁ•Ğ ¥ô‰©±µÌµÁ…Ñ¡İ…äµ•‘¥Ñ½Èˆœ¥¸Á…Ñ¡İ…å}•‘¥Ñ½È…¹€©™½ÉµmÑ¥Ñ±•tœ¥¸Á…Ñ¡İ…å}•‘¥Ñ½È…¹€©™½Éµm½ÕÉÍ•Ítœ¥¸Á…Ñ¡İ…å}•‘¥Ñ½È°(€€€€€€€€ÕÑ¡•¹Ñ¥…Ñ•…‘µ¥¹¥ÍÑÉ…Ñ½È…¸•‘¥ĞÁ…Ñ¡İ…ä‘•Ñ…¥±Ì…¹½ÕÉÍ”…ÍÍ½¥…Ñ¥½¹Ìœ¤(İ¥Ñ ÁÕ‰±¥}¡ÑÑÀ¹½Á•¸¡‰…Í”¬œ½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•ÜõÁ…Ñ¡İ…åÌœ±Ñ¥µ•½ÕĞôÄÔ¤…ÌÉ•ÍÁ½¹Í”è(€Á…Ñ¡İ…å}…Ñ…±½œõÉ•ÍÁ½¹Í”¹É•… ¤¹‘•½‘” ÕÑ˜´àœ¤(•áÁ•Ğ ¥ô‰©±µÌµÁ…Ñ¡İ…åÌˆœ¥¸Á…Ñ¡İ…å}…Ñ…±½œ…¹€$±•…É¹¥¹œÁ…Ñ¡İ…äœ¥¸Á…Ñ¡İ…å}…Ñ…±½œ°(€€€€€€€€AÕ‰±¥ŒÁ…Ñ¡İ…ä…Ñ…±½œÉ•¹‘•ÉÌÁÕ‰±¥Í¡•Á…Ñ¡İ…åÌœ¤(|±Á…Ñ¡İ…å}™¥±Ñ•É•õ•Ğ œ½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•Üõ½ÕÉÍ•Ì˜œ­ÕÉ±•¹½‘”¡ì™¥±Ñ•ÉmÁ…Ñ¡İ…å}¥‘tœéÍÑÈ¡Á…Ñ¡İ…åÍlÁ…Ñ¡İ…ät¥ô¤¤(¥˜€AÕ‰±¥…Ñ¥½¸™¥áÑÕÉ”œ¹½Ğ¥¸Á…Ñ¡İ…å}™¥±Ñ•É•½È€Ù…±Õ”ôˆœ­ÍÑÈ¡Á…Ñ¡İ…åÍlÁ…Ñ¡İ…ät¤¬œˆÍ•±•Ñ•œ¹½Ğ¥¸Á…Ñ¡İ…å}™¥±Ñ•É•è(€É…¥Í”IÕ¹Ñ¥µ•ÉÉ½È AÕ‰±¥Œ…Ñ…±½œÁ…Ñ¡İ…ä™¥±Ñ•È‘¥¹½ĞÁÉ•Í•ÉÙ”Ù¥Í¥‰±”½ÕÉÍ•Ì…¹Í•±•Ñ¥½¸œ¤(|±Ñ•…¡•É}™¥±Ñ•É•õ•Ğ œ½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•Üõ½ÕÉÍ•Ì˜œ­ÕÉ±•¹½‘”¡ì™¥±Ñ•ÉmÑ•…¡•É}¥‘tœéÍÑÈ¡¡ÑÑÁ}Ñ•…¡•É}¥¥ô¤¤(¥˜€!QQ@™¥ÉÍĞÁÕ‰±¥…Ñ¥½¸œ¹½Ğ¥¸Ñ•…¡•É}™¥±Ñ•É•½È€Ù…±Õ”ôˆœ­ÍÑÈ¡¡ÑÑÁ}Ñ•…¡•É}¥¤¬œˆÍ•±•Ñ•œ¹½Ğ¥¸Ñ•…¡•É}™¥±Ñ•É•è(€É…¥Í”IÕ¹Ñ¥µ•ÉÉ½È AÕ‰±¥Œ…Ñ…±½œÑ•…¡•È™¥±Ñ•È‘¥¹½Ğ¥¹±Õ‘”Ñ¡”…ÍÍ¥¹•Ù¥Í¥‰±”½ÕÉÍ”œ¤(|±¥¹Ù…±¥‘}Ñ•…¡•Èõ•Ğ œ½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•Üõ½ÕÉÍ•Ì˜œ­ÕÉ±•¹½‘”¡ì™¥±Ñ•ÉmÑ•…¡•É}¥‘tœèœÈÄĞÜĞàÌØĞÜô¤¤(¥˜€!QQ@™¥ÉÍĞÁÕ‰±¥…Ñ¥½¸œ¥¸¥¹Ù…±¥‘}Ñ•…¡•Èè(€É…¥Í”IÕ¹Ñ¥µ•ÉÉ½È U¹­¹½İ¸Ñ•…¡•È™¥±Ñ•ÈµÕÍĞ¹½Ğ‰É½…‘•¸Ñ¡”ÁÕ‰±¥Œ…Ñ…±½œœ¤(|±¥¹Ù…±¥‘}Á…Ñ¡İ…äõ•Ğ œ½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•Üõ½ÕÉÍ•Ì˜œ­ÕÉ±•¹½‘”¡ì™¥±Ñ•ÉmÁ…Ñ¡İ…å}¥‘tœèœÈÄĞÜĞàÌØĞÜô¤¤(¥˜€AÕ‰±¥…Ñ¥½¸™¥áÑÕÉ”œ¥¸¥¹Ù…±¥‘}Á…Ñ¡İ…äè(€É…¥Í”IÕ¹Ñ¥µ•ÉÉ½È U¹­¹½İ¸Á…Ñ¡İ…ä™¥±Ñ•ÈµÕÍĞ¹½Ğ‰É½…‘•¸Ñ¡”ÁÕ‰±¥Œ…Ñ…±½œœ¤(İ¥Ñ ÁÕ‰±¥}¡ÑÑÀ¹½Á•¸¡‰…Í”¬œ½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•ÜõÁ…Ñ¡İ…ä™¥ôœ­ÍÑÈ¡Á…Ñ¡İ…åÍlÁ…Ñ¡İ…ät¤±Ñ¥µ•½ÕĞôÄÔ¤…ÌÉ•ÍÁ½¹Í”è(€Á…Ñ¡İ…å}Á…”õÉ•ÍÁ½¹Í”¹É•… ¤¹‘•½‘” ÕÑ˜´àœ¤(•áÁ•Ğ ¥ô‰©±µÌµÁ…Ñ¡İ…äˆœ¥¸Á…Ñ¡İ…å}Á…”…¹€$±•…É¹¥¹œÁ…Ñ¡İ…äœ¥¸Á…Ñ¡İ…å}Á…”…¹€AÕ‰±¥…Ñ¥½¸™¥áÑÕÉ”œ¥¸Á…Ñ¡İ…å}Á…”°(€€€€€€€€AÕ‰±¥ŒÁ…Ñ¡İ…äÍ¡••ĞÉ•¹‘•ÉÌ½É‘•É•½ÕÉÍ”…ÍÍ½¥…Ñ¥½¸œ¤(•áÁ•Ğ ¥ô‰©±µÌµÁ…Ñ¡İ…äµÁÉ½É•ÍÌµ±…‰•°ˆœ¹½Ğ¥¸Á…Ñ¡İ…å}Á…”…¹€¥ô‰©±µÌµÁ…Ñ¡İ…äµ½ÕÉÍ”´Äˆœ¥¸Á…Ñ¡İ…å}Á…”°(€€€€€€€€Õ•ÍĞÁ…Ñ¡İ…äÁ…”¡¥‘•ÌÁ•ÉÍ½¹…°ÁÉ½É•ÍÌ…¹­••ÁÌÑ¡”Õ¹…Ù…¥±…‰±”½ÕÉÍ”Á½Í¥Ñ¥½¸œ¤(•áÁ•Ğ Q•ÍĞ½ÕÉÍ”œ¹½Ğ¥¸Á…Ñ¡İ…å}Á…”…¹€Q¡¥Ì½ÕÉÍ”¥Ì¹½ĞÕÉÉ•¹Ñ±ä…Ù…¥±…‰±”¸œ¥¸Á…Ñ¡İ…å}Á…”°(€€€€€€€€Õ•ÍĞÁ…Ñ¡İ…äÁ…”±…‰•±ÌÑ¡”¡¥‘‘•¸½ÕÉÍ”İ¥Ñ¡½ÕĞÉ•Ù•…±¥¹œ¥ÑÌ¥‘•¹Ñ¥Ñäœ¤(İ¥Ñ ÁÕ‰±¥}¡ÑÑÀ¹½Á•¸¡‰…Í”¬œ½¥¹‘•à¹Á¡Àı½ÁÑ¥½¸õ½µ}©±µÌ™Ù¥•Üõ½ÕÉÍ”™¥ôœ­ÍÑÈ¡½ÕÉÍ•}¥¤±Ñ¥µ•½ÕĞôÄÔ¤…ÌÉ•ÍÁ½¹Í”è(€Í¡••ĞõÉ•ÍÁ½¹Í”¹É•… ¤¹‘•½‘” ÕÑ˜´àœ¤(•áÁ•Ğ !QQ@™¥ÉÍĞÉ•ÅÕ¥É•±•ÍÍ½¸œ¥¸Í¡••Ğ…¹€%IMQ}AU	1%Q%=9}AI%YQ}	=dœ¹½Ğ¥¸Í¡••Ğ°¥ÉÍĞÁÕ‰±¥Í¡•½ÕÉÍ”¥ÌÁÕ‰±¥Œİ¥Ñ ¹¼±•ÍÍ½¸‰½‘ä±•…¬œ¤(•áÁ•Ğ¡…±° ¥ôˆœ­à¬œˆœ¥¸Í¡••Ğ™½Èà¥¸l©±µÌµ½ÕÉÍ”µ‘•ÍÉ¥ÁÑ¥½¸œ°©±µÌµ½ÕÉÍ”µ½‰©•Ñ¥Ù•Ìœ°©±µÌµ½ÕÉÍ”µ…Õ‘¥•¹”œ°©±µÌµ½ÕÉÍ”µÁÉ•É•ÅÕ¥Í¥Ñ”µÑ•áĞœ°©±µÌµ½ÕÉÍ”µ™…ÑÌœ°©±µÌµ½ÕÉÍ”µ‘¥™™¥Õ±Ñäœ°©±µÌµ½ÕÉÍ”µ•ÍÑ¥µ…Ñ•µ‘ÕÉ…Ñ¥½¸t¤°AÕ‰±¥ŒÁÉ•Í•¹Ñ…Ñ¥½¸•áÁ½Í•Ì‘½Õµ•¹Ñ•Õ¹¥ÅÕ”É•¥½¹Ìœ¤(•áÁ•Ğ œñÍÑÉ½¹œù‘•ÍÉ¥ÁÑ¥½¸ğ½ÍÑÉ½¹œøœ¥¸Í¡••Ğ…¹€!QQ@…Õ‘¥•¹”œ¥¸Í¡••Ğ…¹€œÜÔµ¥¹ÕÑ•Ìœ¥¸Í¡••Ğ°É½é•¸ÁÉ•Í•¹Ñ…Ñ¥½¸¥ÌÙ¥Í¥‰±”½¸ÁÕ‰±¥Œ½ÕÉÍ”Í¡••Ğœ¤(•áÁ•Ğ •á…µÁ±”¹¥¹Ù…±¥½Á¥á•°œ¹½Ğ¥¸Í¡••Ğ…¹€œñÍÉ¥ÁĞùÁ±…¥¸Ñ•áĞğ½ÍÉ¥ÁĞøœ¹½Ğ¥¸Í¡••Ğ…¹€œ™±ĞíÍÉ¥ÁĞ™ĞíÁ±…¥¸Ñ•áĞ™±Ğì½ÍÉ¥ÁĞ™Ğìœ¥¸Í¡••Ğ°U¹Í…™”!Q50É•µ½Ù•…¹¥¹™½Éµ…Ñ¥½¹…°Ñ•áĞ•Í…Á•œ¤(½Ù•ÈõÉ”¹Í•…É ¡Èœñ‘¥Ø¥ô‰©±µÌµ½ÕÉÍ”µ½Ù•Èˆ¸¨üğ½‘¥Øøœ±Í¡••Ğ±É”¹L¤(•áÁ•Ğ¡‰½½°¡½Ù•È¤…¹€¥µ…•Ì½©±µÌµ¤µ½Ù•È¹Á¹œœ¥¸½Ù•È¹É½ÕÀ À¤…¹€…±Ğô‰!QQ@½Ù•È€™ÅÕ½ĞíÅÕ½Ñ•™ÅÕ½Ğì€™±ĞíÁ±…¥¸Ñ•áĞ™Ğìˆœ¥¸½Ù•È¹É½ÕÀ À¤°AÕ‰±¥Œ½Ù•ÈÕÍ•ÌÍ…™”UI0…¹•Í…Á•…±Ñ•É¹…Ñ¥Ù”Ñ•áĞœ¤(•áÁ•Ğ œñÑ¥Ñ±”ù!QQ@ÁÕ‰±¥Í¡•M<Ñ¥Ñ±”ğ½Ñ¥Ñ±”øœ¥¸Í¡••Ğ…¹€!QQ@M<‘•ÍÉ¥ÁÑ¥½¸€™…µÀìÁÕ‰±¥ŒÍ¡••Ğœ¥¸Í¡••Ğ°9…Ñ¥Ù”‘½Õµ•¹Ğ¡•…ÕÍ•ÌÑ¡”ÁÕ‰±¥Í¡•M<Ù…±Õ•Ìœ¤(•áÁ•Ğ œ©½½µ±…%µ…”œ¹½Ğ¥¸½Ù•È¹É½ÕÀ À¤°9…Ñ¥Ù”…‘…ÁÑ•Èµ•Ñ…‘…Ñ„¹½Ğ•µ¥ÑÑ•¥¸ÁÕ‰±¥Œ¥µ…”UI0œ¤(•áÁ•Ğ ¥ô‰©±µÌµ½ÕÉÍ”µÑ•…¡•ÉÌˆœ¥¸Í¡••Ğ…¹€!QQ@Ñ•…¡•È‰¥½É…Á¡ä€™±ĞíÍÉ¥ÁĞ™ĞíÁ±…¥¸Ñ•áĞ™±Ğì½ÍÉ¥ÁĞ™Ğìœ¥¸Í¡••Ğ°ÍÍ¥¹•¹…Ñ¥Ù”Ñ•…¡•È…ÁÁ•…ÉÌ…Ì•Í…Á•™É½é•¸ÁÕ‰±¥ŒÁÉ½™¥±”œ¤(•áÁ•Ğ ¥ô‰©±µÌµ½ÕÉÍ”µ…±•¹‘…Èˆœ¥¸Í¡••Ğ…¹€ÕÉ½Á”½I½µ”œ¥¸Í¡••Ğ…¹€œÈÀÀÀ´ÀÄ´ÀÄ€ÀÄèÀÀèÀÀ€¬ÀÄèÀÀœ¥¸Í¡••Ğ°AÕ‰±¥Œ™É½é•¸…±•¹‘…ÈÍ¡½İÌ¥ÑÌ•áÁ±¥¥Ğé½¹”…¹½™™Í•Ğœ¤(•áÁ•Ğ¡ÁÕ‰±¥Í¡•‘l…±•¹‘…É}Ñ¥µ•é½¹”tôôÕÉ½Á”½I½µ”œ…¹ÁÕ‰±¥Í¡•‘l…±•¹‘…É}ÍÑ…ÉĞt¹ÍÑ…ÉÑÍİ¥Ñ  œÈÀÀÀ´ÀÄ´ÀÄ€ÀÀèÀÀèÀÀœ¤…¹ÁÕ‰±¥Í¡•‘l•‘¥Ñ¥½¹}•¹t¹ÍÑ…ÉÑÍİ¥Ñ  œÈÀäà´ÀÄ´ÀÄ€ÀÀèÀÀèÀÀœ¤°9…Ñ¥Ù”…±•¹‘…È™½É´Á•ÉÍ¥ÍÑÌUQ…¹¥¹¥Ñ¥…°•‘¥Ñ¥½¸‘…Ñ•Ìœ¤(•áÁ•Ğ ¥ô‰©±µÌµÁÕ‰±¥…Ñ¥½¸µÍÑ…ÑÕÌˆœ¥¸ °‘µ¥¹¥ÍÑÉ…Ñ½ÈÍ••Ì½ÕÉÍ”ÁÕ‰±¥…Ñ¥½¸ÍÑ…ÑÕÌœ¤(ÁÉ¥¹Ğ¡©Í½¸¹‘ÕµÁÌ¡ì™¥ÉÍÑ}ÁÕ‰±¥…Ñ¥½¹}¡ÑÑÁ}¡•­Ìœé¡•­Ì°ÍÑ…ÑÕÌœèÁ…ÍÍ•ô¤¤((€Œá•É¥Í”Ñ¡”¹…Ñ¥Ù”ÁÕ‰±¥…Ñ¥½¸½¹ÑÉ½±±•È°MIÑ½­•¸°É•‘¥É•Ğ…¹ÕÉÉ•¹Ğ½ÕÉÍ”É•Ù¥Í¥½¸¸(™½È±¥¹¬¥¸ÕÉÉ¥Õ±Õµ}±¥¹­Ìè(€Ô± õ•Ğ¡±¥¹¬¤(€¥˜€AÕ‰±¥…Ñ¥½¸™¥áÑÕÉ”œ¥¸ é‰É•…¬(•±Í”éÉ…¥Í”IÕ¹Ñ¥µ•ÉÉ½È AÕ‰±¥…Ñ¥½¸™¥áÑÕÉ”…‘µ¥¸ÍÉ••¸…‰Í•¹Ğœ¤(™½È½Á•É…Ñ¥½¸¥¸lÕ¹ÁÕ‰±¥Í œ°É•ÁÕ‰±¥Í tè(€™½É´õ¹•áĞ ¡˜™½È˜¥¸A…”¡ ¤¹™½ÉµÌ¥˜™l¥tôô©±µÌµÁÕ‰±¥…Ñ¥½¸µ™½É´œ¤±9½¹”¤(€¥˜¹½Ğ™½É´éÉ…¥Í”IÕ¹Ñ¥µ•ÉÉ½È 9…Ñ¥Ù”ÑÉ…¹Í¥Ñ¥½¸™½É´µ¥ÍÍ¥¹œœ¤(€™¥•±‘Ìõ‘¥Ğ¡™½Éµl™¥•±‘Ìt¤(€™¥•±‘Íl©™½ÉµmÑÉ…¹Í¥Ñ¥½¹}¥‘ttõÉ”¹Í•…É ¡Èœñ½ÁÑ¥½¸Ù…±Õ”ôˆ¡lÄ´åulÀ´åt¨¤ˆœ±¡m ¹¥¹‘•à ¥ô‰©±µÌµÑÉ…¹Í¥Ñ¥½¸ˆœ¤ét¤¹É½ÕÀ Ä¤(€İ¥Ñ ¡ÑÑÀ¹½Á•¸¡ÕÉ±©½¥¸¡Ô±™½Éµl…Ñ¥½¸t¤±‘…Ñ„õÕÉ±•¹½‘”¡™¥•±‘Ì¤¹•¹½‘” ¤±Ñ¥µ•½ÕĞôÈÀ¤…ÌÉ•ÍÁ½¹Í”è(€€ õÉ•ÍÁ½¹Í”¹É•… ¤¹‘•½‘” ÕÑ˜´àœ¤(€ÑÉäè(€€İ¥Ñ ¡ÑÑÀ¹½Á•¸¡ÕÉ±©½¥¸¡‰…Í”±ÁÕ‰±¥}½ÕÉÍ•}ÕÉ°¤±Ñ¥µ•½ÕĞôÄÔ¤…ÌÉ•ÍÁ½¹Í”éÍÑ…ÑÕÌõÉ•ÍÁ½¹Í”¹ÍÑ…ÑÕÌíÉ•ÍÁ½¹Í”¹É•… ¤(€•á•ÁĞ!QQAÉÉ½È…Ì•ÉÉ½ÈéÍÑ…ÑÕÌõ•ÉÉ½È¹½‘”(€¥˜ÍÑ…ÑÕÌ„ô ĞÀĞ¥˜½Á•É…Ñ¥½¸ôôÕ¹ÁÕ‰±¥Í œ•±Í”€ÈÀÀ¤éÉ…¥Í”IÕ¹Ñ¥µ•ÉÉ½È !QQ@€œ­½Á•É…Ñ¥½¸¬œ‘¥¹½ĞÕÁ‘…Ñ”ÁÕ‰±¥ŒÙ¥Í¥‰¥±¥Ñäœ¤((ÁÉ¥¹Ğ¡©Í½¸¹‘ÕµÁÌ¡ì¡ÑÑÁ}Íµ½­”œèÁ…ÍÍ•œ€°Á…•ÌœélÁÕ‰±¥Œ…Ñ…±½Õ”œ°¹…Ñ¥Ù”…‘µ¥¸±½¥¸œ°‘…Í¡‰½…Éœ°‘É…™Ğ±¥ÍĞœ°‘É…™Ğ•‘¥Ñ½Èuô¤¤)•á•ÁĞá•ÁÑ¥½¸è(±½œ¹™±ÕÍ  ¤í±½œ¹Í••¬ À¤íÁÉ¥¹Ğ¡±½œ¹É•… ¥l´àÀÀÀét±™¥±”õÍåÌ¹ÍÑ‘•ÉÈ¤íÉ…¥Í”)™¥¹…±±äè(Í•ÉÙ•È¹Ñ•Éµ¥¹…Ñ” ¤(ÑÉäéÍ•ÉÙ•È¹İ…¥Ğ¡Ñ¥µ•½ÕĞôÔ¤(•á•ÁĞÍÕ‰ÁÉ½•ÍÌ¹Q¥µ•½ÕÑáÁ¥É•éÍ•ÉÙ•È¹­¥±° ¤íÍ•ÉÙ•È¹İ…¥Ğ ¤(±½œ¹±½Í” ¤(
+"""Exercise real public/admin rendering in an isolated Joomla fixture, without a browser dependency."""
+from pathlib import Path
+from html.parser import HTMLParser
+from urllib.request import build_opener,HTTPCookieProcessor,Request
+from urllib.error import HTTPError
+from urllib.parse import urlencode,urljoin,urlparse,parse_qs
+from http.cookiejar import CookieJar
+from html import unescape
+import subprocess,sys,time,json,os,re
+root=Path(sys.argv[1]).resolve()
+if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
+class Page(HTMLParser):
+ def __init__(self,html):
+  super().__init__(convert_charrefs=True);self.forms=[];self.current=None;self.links=[];self.anchors=[];self.base=None;self.textarea=None;self.select=None;self.feed(html)
+ def handle_starttag(self,tag,attrs):
+  a=dict(attrs)
+  if tag=='base' and a.get('href'):self.base=a['href']
+  if tag=='form':self.current={'id':a.get('id',''),'action':a.get('action',''),'fields':{}};self.forms.append(self.current)
+  if tag=='input' and self.current is not None and 'name' in a and 'disabled' not in a:
+   if a.get('type') not in ['checkbox','radio'] or 'checked' in a:self.current['fields'][a['name']]=a.get('value','')
+  if tag=='textarea':
+   self.textarea=a.get('name') if self.current is not None and 'disabled' not in a else None
+   if self.textarea:self.current['fields'][self.textarea]=''
+  if tag=='select':self.select=a.get('name') if self.current is not None and 'disabled' not in a else None
+  if tag=='option' and self.select and self.current is not None:
+   if self.select not in self.current['fields'] or 'selected' in a:self.current['fields'][self.select]=a.get('value','')
+  if tag=='a' and a.get('href'):
+   self.links.append(a['href']);self.anchors.append(a)
+ def handle_endtag(self,tag):
+  if tag=='form':self.current=None;self.textarea=None;self.select=None
+  if tag=='textarea':self.textarea=None
+  if tag=='select':self.select=None
+ def handle_data(self,data):
+  if self.textarea and self.current is not None:self.current['fields'][self.textarea]+=data
+base='http://127.0.0.1:8093'
+# Joomla treats the cli-server SAPI as CLI for URI discovery. Configure the isolated
+# site's known URL so its native router emits the same paths as a web-server deployment.
+config=root/'configuration.php'
+text,count=re.subn(r"public\s+\$live_site\s*=\s*[^;]+;", "public $live_site = '"+base+"';", config.read_text())
+if count!=1:raise RuntimeError('Disposable site URL could not be configured')
+config.write_text(text)
+log=open(root.parent/'http-smoke.log','w+')
+server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
+http=build_opener(HTTPCookieProcessor(CookieJar()))
+def get(path):
+ try:
+  with http.open(urljoin(base,path),timeout=15) as r:return r.geturl(),r.read().decode('utf-8')
+ except HTTPError as error:
+  detail=re.sub(r'<[^>]+>',' ',error.read().decode('utf-8',errors='replace'))
+  print('Disposable HTTP fixture error: '+re.sub(r'\s+',' ',detail)[-10000:],file=sys.stderr)
+  raise
+try:
+ for i in range(40):
+  try:url,html=get('/index.php?option=com_jlms&view=courses');break
+  except OSError:
+   if server.poll() is not None:raise RuntimeError('Test HTTP server exited')
+   time.sleep(.2)
+ else:raise RuntimeError('Test HTTP server did not become ready')
+ if 'id="jlms-courses"' not in html or 'Publication fixture' not in html:raise RuntimeError('Published course catalog did not render')
+ if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[tag_id]"' not in html or 'name="filter[teacher_id]"' not in html or 'name="filter[pathway_id]"' not in html:
+  raise RuntimeError('Public catalog search, order and tag controls did not render')
+ _,all_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'0'}))
+ if 'Publication fixture' not in all_tag_html:
+  raise RuntimeError('The all-tags selection must preserve the unfiltered public catalog')
+ _,invalid_tag_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[tag_id]':'2147483647'}))
+ if 'Publication fixture' in invalid_tag_html:
+  raise RuntimeError('An unknown tag must not broaden the public catalog result')
+ if 'id="jlms-catalog-filters"' not in html or 'name="filter[search]"' not in html or 'name="filter[order]"' not in html or 'name="filter[difficulty]"' not in html or 'name="filter[duration]"' not in html or 'name="filter[layout]"' not in html or 'data-layout="grid"' not in html:
+  raise RuntimeError('Public catalog search, order and core filters did not render')
+ _,list_layout=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[layout]':'list'}))
+ if 'data-layout="list"' not in list_layout or 'jlms-course-grid--list' not in list_layout:
+  raise RuntimeError('Public catalog list layout did not render')
+ _,invalid_layout=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[layout]':'unexpected'}))
+ if 'data-layout="grid"' not in invalid_layout:
+  raise RuntimeError('Unsupported catalog layouts must fall back to the grid')
+ search_url,search_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[search]':'Publication fixture','filter[order]':'title'}))
+ if 'Publication fixture' not in search_html or 'value="title" selected' not in search_html:
+  raise RuntimeError('Public catalog title/summary search and title ordering did not apply')
+ _,filtered_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'beginner','filter[duration]':'30-60'}))
+ if 'Publication fixture' not in filtered_html or 'value="beginner" selected' not in filtered_html or 'value="30-60" selected' not in filtered_html:
+  raise RuntimeError('Public catalog difficulty and estimated-duration filters did not apply')
+ _,excluded_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'advanced'}))
+ if 'Publication fixture' in excluded_html:
+  raise RuntimeError('Public catalog difficulty filter included a non-matching course')
+ _,duration_excluded_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[duration]':'over-120'}))
+ if 'Publication fixture' in duration_excluded_html:
+  raise RuntimeError('Public catalog duration filter included a non-matching course')
+ _,private_term_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[search]':'SECRET_LESSON_BODY'}))
+ if 'Publication fixture' in private_term_html:
+  raise RuntimeError('Catalog search must not search protected lesson bodies')
+ category_url=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('view')==['category']),None)
+ if category_url:
+  category_query=urlencode({'filter[search]':'Publication fixture','filter[order]':'title','filter[difficulty]':'beginner','filter[duration]':'30-60'})
+  _,category_search=get(category_url+('&' if '?' in category_url else '?')+category_query)
+  if 'Publication fixture' not in category_search or 'id="jlms-category-catalog-filters"' not in category_search or 'name="filter[tag_id]"' not in category_search:
+   raise RuntimeError('Category-scoped search and tag controls did not preserve their category')
+  if 'Publication fixture' not in category_search or 'id="jlms-category-catalog-filters"' not in category_search or 'value="beginner" selected' not in category_search or 'value="30-60" selected' not in category_search:
+   raise RuntimeError('Category-scoped catalog search did not preserve its category')
+  _,category_list=get(category_url+('&' if '?' in category_url else '?')+urlencode({'filter[layout]':'list'}))
+  if 'data-layout="list"' not in category_list or 'jlms-course-grid--list' not in category_list:
+   raise RuntimeError('Category course list layout did not render')
+ _,invalid_filter_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'beginner\' OR 1=1 --','filter[duration]':'0 OR 1=1'}))
+ if 'Publication fixture' not in invalid_filter_html:
+  raise RuntimeError('Invalid catalog filter values must be ignored safely')
+ course_links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('view')==['course'] or '/course/' in x]
+ if not course_links:raise RuntimeError('Public course link missing')
+ for public_course_url in course_links:
+  _,detail=get(public_course_url)
+  if 'id=\"jlms-course-outline\"' in detail and 'Publication fixture' in detail:break
+ else:raise RuntimeError('Publication fixture sheet missing')
+ if 'id="jlms-course-outline"' not in detail or 'Published lesson' not in detail or 'SECRET_LESSON_BODY' in detail:
+  raise RuntimeError('Public sheet must show outline without protected lesson body')
+ url,html=get('/administrator/index.php')
+ page=Page(html)
+ form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)
+ if not form:raise RuntimeError('Native Joomla admin login form was not found')
+ fields=form['fields'];fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
+ with http.open(urljoin(urljoin(url,page.base or ''),form['action']),data=urlencode(fields).encode(),timeout=20) as r:r.read()
+ options_url,options_html=get('/administrator/index.php?option=com_config&view=component&component=com_jlms')
+ options_title=re.search(r'<title>(.*?)</title>',options_html,re.S)
+ if not options_title or 'JD Learn: Options' not in unescape(options_title.group(1)) or 'com_jlms_configuration' in options_html:
+  actual_title=unescape(options_title.group(1)) if options_title else '(missing <title>)'
+  raise RuntimeError('JD Learn component options must have the translated browser title; title='+actual_title)
+ if 'JGLOBAL_HISTORY_OPTIONS' in options_html or options_html.count('Version History Options')<2:
+  raise RuntimeError('Component history tab and group must use the translated label')
+ print(json.dumps({'component_options_translation_http_checks':2,'status':'passed'}))
+ url,html=get('/administrator/index.php?option=com_jlms')
+ if 'id="jlms-admin-dashboard"' not in html:raise RuntimeError('JD Learn must open the administrator dashboard directly')
+ if len(re.findall(r'<h1\b',html))!=1:raise RuntimeError('Dashboard title appears once in the Joomla toolbar')
+ menu_links=[parse_qs(urlparse(x).query) for x in Page(html).links]
+ for view in ['courses','teachers','questionbank']:
+  if not any(q.get('option')==['com_jlms'] and q.get('view')==[view] for q in menu_links):raise RuntimeError('Native JD Learn sidebar link missing: '+view)
+ if not any(q.get('option')==['com_categories'] and q.get('extension')==['com_jlms.course'] for q in menu_links):raise RuntimeError('Native course category sidebar missing')
+ custom_fields_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_fields'] and parse_qs(urlparse(x).query).get('view')==['fields'] and parse_qs(urlparse(x).query).get('context')==['com_jlms.course']),None)
+ if not custom_fields_link:raise RuntimeError('Native custom fields sidebar link missing')
+ _,custom_fields_html=get(urljoin(url,custom_fields_link))
+ context_filter=re.search(r'<select[^>]+name="context"[^>]*>(.*?)</select>',custom_fields_html,re.S)
+ if not context_filter or any('value="com_jlms.'+context+'"' not in context_filter.group(1) for context in ['course','teacher','lesson']):raise RuntimeError('Native custom fields context filter must offer course, teacher and lesson')
+ plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
+ if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
+ dashboard_page=Page(html)
+ dashboard_shortcuts={a.get('id'):parse_qs(urlparse(a.get('href','')).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+ if any('&amp;' in a.get('href','') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')):raise RuntimeError('Dashboard shortcut href must not contain a literal HTML entity')
+ required_shortcuts={
+  'jlms-admin-shortcut-certificates':('com_jlms','certificates'),
+  'jlms-admin-shortcut-courses':('com_jlms','courses'),
+  'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
+  'jlms-admin-shortcut-course_categories':('com_categories','categories'),
+  'jlms-admin-shortcut-pathway_categories':('com_categories','categories'),
+  'jlms-admin-shortcut-question_bank':('com_jlms','questionbank'),
+  'jlms-admin-shortcut-teachers':('com_jlms','teachers'),
+  'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
+  'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
+ }
+ expected_shortcut_order=['certificates','courses','pathways','course_categories','pathway_categories','question_bank','teachers','custom_fields','video_plugins']
+ actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
+ if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
+ for shortcut,(option,view) in required_shortcuts.items():
+  query=dashboard_shortcuts.get(shortcut)
+  if not query or query.get('option')!=[option] or query.get('view')!=[view]:
+   found={a.get('id'):a.get('href') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
+   raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
+ if 'Manage courses, the learning programme and teaching resources from the administrator panel.' not in html or 'Your learning history and current classroom availability are shown separately.' in html:
+  raise RuntimeError('Administrator dashboard introduction must use its current, relevant translation')
+ icon_count=len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))
+ if icon_count!=len(dashboard_shortcuts):raise RuntimeError('Every visible dashboard shortcut must include a Joomla icon')
+ provider_rows=re.findall(r'<li data-jlms-provider="([^"]+)">',html)
+ if provider_rows!=['youtube','vimeo','cloudflarestream','html5']:raise RuntimeError('Dashboard must show all bundled providers in a stable order: '+json.dumps(provider_rows))
+ # A prior plugin-manager search/status must not hide providers on entry from JD Learn.
+ get('/administrator/index.php?option=com_plugins&view=plugins&filter[folder]=content&filter[search]=JDLEARN_NO_MATCH&filter[enabled]=0&filter[element]=missing&limitstart=100')
+ _,plugin_html=get(urljoin(urljoin(url,Page(html).base or ""),plugin_link))
+ plugin_page=Page(plugin_html)
+ plugin_form=next(f for f in plugin_page.forms if f['id']=='adminForm')
+ if plugin_form['fields'].get('filter[folder]')!='jlmsvideo' or plugin_form['fields'].get('filter[search]')!='' or plugin_form['fields'].get('filter[enabled]')!='':raise RuntimeError('Video plugin filter or cleared search/status is incorrect')
+ plugin_ids={parse_qs(urlparse(x).query).get('extension_id',[''])[0] for x in plugin_page.links if parse_qs(urlparse(x).query).get('task')==['plugin.edit']}
+ if len(plugin_ids)!=4 or '' in plugin_ids:raise RuntimeError('Filtered manager must show exactly the four installed video plugins')
+ print(json.dumps({'admin_navigation_http_checks':8,'status':'passed'}))
+ url,html=get('/administrator/index.php?option=com_categories&view=categories&extension=com_jlms.course')
+ if 'CI Courses' not in html:raise RuntimeError('Native Joomla category manager did not render the saved category')
+ url,html=get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'COM_JLMS_COURSE_FIELDS_MANAGE' in html or 'option=com_fields&amp;view=fields&amp;context=com_jlms.course' in html:raise RuntimeError('Course custom fields access must be in the sidebar, not the list view')
+ links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('task')==['course.edit']]
+ if not links:raise RuntimeError('Saved draft is absent from the native course list')
+ # The latest course may already be published: find an actually editable draft.
+ # Disabled published controls are not browser-successful fields.
+ edit=None
+ for link in links:
+  url,html=get(link)
+  edit=next((f for f in Page(html).forms if 'jform[title]' in f['fields']),None)
+  if edit:break
+ if not edit or 'jform[revision]' not in edit['fields'] or 'jform[alias]' not in edit['fields']:
+  raise RuntimeError('Native draft editor/form controls did not render')
+ fields=dict(edit['fields']);fields.update({'task':'course.apply','jform[summary]':'Ã¨'*501})
+ with http.open(urljoin(url,edit['action']),data=urlencode(fields).encode(),timeout=20) as response:
+  invalid_html=response.read().decode('utf-8')
+ invalid=next(f for f in Page(invalid_html).forms if 'jform[summary]' in f['fields'])
+ if ('The short description must contain no more than 500 characters.' not in invalid_html
+     or invalid['fields']['jform[summary]']!='Ã¨'*501
+     or invalid['fields']['jform[revision]']!=edit['fields']['jform[revision]']):
+  raise RuntimeError('The editor must reject an overlong description and preserve the unsaved input')
+ print(json.dumps({'editor_summary_http_checks':1,'status':'passed'}))
+ url,html=get('/administrator/index.php?option=com_jlms&view=courses')
+ curriculum_links=[x for x in Page(html).links if parse_qs(urlparse(x).query).get('view')==['curriculum']]
+ if not curriculum_links:raise RuntimeError('Curriculum navigation link missing')
+ # The curriculum fixture is created last among courses that have a draft structure.
+ chosen=None
+ for link in curriculum_links:
+  u,h=get(link)
+  if 'Curriculum fixture' in h:chosen=(u,h);break
+ if not chosen:raise RuntimeError('Curriculum fixture screen absent')
+ module_link=next(x for x in Page(chosen[1]).links if parse_qs(urlparse(x).query).get('new_module')==['1'])
+ url,html=get(module_link)
+ form=next((f for f in Page(html).forms if f['id']=='jlms-module-form'),None)
+ if not form:raise RuntimeError('Native module editor missing')
+ fields=dict(form['fields']);fields['jform[title]']='HTTP chapter'
+ with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+  result=response.read().decode('utf-8')
+ if 'HTTP chapter' not in result:raise RuntimeError('Module was not saved through the authenticated MVC form')
+ lesson_link=next(x for x in Page(result).links if parse_qs(urlparse(x).query).get('new_lesson')==['1'])
+ url,result=get(lesson_link)
+ if 'id="jlms-lesson-form"' not in result:raise RuntimeError('Contextual native lesson editor missing')
+ lesson_form=next(f for f in Page(result).forms if f['id']=='jlms-lesson-form')
+ fields=dict(lesson_form['fields']);fields.update({'jform[title]':'HTTP text lesson','jform[kind]':'text','jform[required]':'1',
+  'jform[module_id]':re.search(r'data-module-id="([1-9][0-9]*)"',result).group(1),'jform[body]':'<p>Content saved through the native form</p>'})
+ with http.open(urljoin(url,lesson_form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+  result=response.read().decode('utf-8')
+ if 'HTTP text lesson' not in result:raise RuntimeError('Lesson was not saved through the authenticated MVC form')
+ preview_link=next(link for link in Page(result).links if parse_qs(urlparse(link).query).get('view')==['coursepreview'])
+ preview_url,preview=get(preview_link)
+ if 'id="jlms-course-preview"' not in preview or 'HTTP text lesson' not in preview:
+  raise RuntimeError('Program link must open the correct editorial preview')
+ if 'id="jlms-course-access-preview"' not in preview or 'name="access_levels[]"' not in preview or 'satisfy course access requirements' not in preview:
+  raise RuntimeError('Editorial preview must provide a read-only simulation of catalogue and content access levels')
+ for link in Page(preview).links:
+  if parse_qs(urlparse(link).query).get('lesson_id'):
+   _,preview_lesson=get(link)
+   if 'Content saved through the native form' in preview_lesson:
+    break
+ else:raise RuntimeError('Preview must render the saved lesson content')
+ if 'id="jlms-course-preview-lesson"' not in preview_lesson or 'id="jlms-complete-form"' in preview_lesson or 'com_jlms.video' in preview_lesson:
+  raise RuntimeError('Editorial preview must not expose student actions or a player session')
+ try:
+  http.open(preview_url+'&lesson_id=2147483647',timeout=15)
+ except HTTPError as error:
+  if error.code!=404:raise
+ else:raise RuntimeError('An unknown lesson must not render a preview')
+ setup=re.search(r'<details id="jlms-video-setup">(.*?)</details>',result,re.S)
+ if not setup or not all(f'<strong>{name}</strong>' in setup[1] for name in ['YouTube','Vimeo','Cloudflare Stream','MP4']):
+  raise RuntimeError('Draft editor must show configuration status for all shipped providers')
+ print(json.dumps({'video_editor_setup_http_checks':1,'status':'passed'}))
+
+ # Editor diagnostics and delegated-category navigation over real HTTP.
+ editor_fixture=json.loads((root.parent/'editor-access-fixture.json').read_text())
+ u,h=get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['locked']))
+ locked_form=next(f for f in Page(h).forms if f['id']=='adminForm')
+ if 'jform[title]' in locked_form['fields'] or 'id="jlms-course-effective-rights"' not in h or 'id="jlms-course-rules"' in h:
+  raise RuntimeError('Other-operator checkout must render a read-only editor and permission diagnostic')
+ if 'id="jlms-course-options-link"' not in h:raise RuntimeError('Authorised native options link missing')
+ delegated_http=build_opener(HTTPCookieProcessor(CookieJar()))
+ def delegated_get(path):
+  with delegated_http.open(urljoin(base,path),timeout=20) as response:return response.geturl(),response.read().decode('utf-8')
+ du,dh=delegated_get('/administrator/index.php')
+ login_form=next(f for f in Page(dh).forms if 'username' in f['fields'] and 'passwd' in f['fields'])
+ fields=dict(login_form['fields']);fields.update(username='cieditor',passwd='Ci-only-Editor-Password-2026')
+ with delegated_http.open(urljoin(du,login_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ try:
+  delegated_get(preview_url)
+ except HTTPError as error:
+  if error.code!=403:raise
+ else:raise RuntimeError('An editor delegated elsewhere cannot preview the course')
+ print(json.dumps({'editorial_preview_http_checks':4,'status':'passed'}))
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor allowed1' not in dh or 'Editor denied' in dh or 'Editor foreign' in dh or 'Editor other_owner' in dh:
+  raise RuntimeError('Administrative course list leaked or omitted native delegated scope')
+ # The native Rules field persists through Joomla com_config, with its own ACL and CSRF guards.
+ rules_url,rules_html=get('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(editor_fixture['denied']))
+ rules_region=re.search(r'<section id="jlms-course-rules">(.*?)</section>',rules_html,re.S)
+ if not rules_region or '<joomla-field-permissions' not in rules_region[1]:
+  raise RuntimeError('Authorised saved-course editor must render the native Rules field')
+ rules_form=next(f for f in Page(rules_html).forms if f['id']=='adminForm')
+ rules_endpoint=unescape(re.search(r'data-uri="([^"]+)"',rules_region[1]).group(1))
+ permission={'comp':'com_jlms.course.'+str(editor_fixture['denied']),'action':'core.edit',
+  'rule':str(editor_fixture['group']),'value':'1','title':'Editor denied'}
+ def update_native_rule(client,endpoint,data):
+  req=Request(urljoin(rules_url,endpoint),data=json.dumps(data).encode(),headers={'Content-Type':'application/json','Accept':'application/json'})
+  try:
+   with client.open(req,timeout=20) as response:return json.loads(response.read().decode('utf-8'))
+  except HTTPError as error:
+   if error.code==403:return {'data':False}
+   raise
+ # Missing CSRF cannot turn a deny into a grant.
+ no_token=urlparse(rules_endpoint)
+ clean_endpoint=no_token._replace(query=urlencode({k:v[0] for k,v in parse_qs(no_token.query).items() if not re.fullmatch(r'[a-f0-9]{32}',k)})).geturl()
+ if (update_native_rule(http,clean_endpoint,permission).get('data') or {}).get('result'):
+  raise RuntimeError('Native permission endpoint accepted missing CSRF')
+ if not (update_native_rule(http,rules_endpoint,permission).get('data') or {}).get('result'):
+  raise RuntimeError('Native course permission grant failed')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' not in visible:raise RuntimeError('Record grant must take effect in the next delegated request')
+ # Restore inheritance, which grants edit through the category.
+ inherited=dict(permission,value='')
+ if not (update_native_rule(http,rules_endpoint,inherited).get('data') or {}).get('result'):
+  raise RuntimeError('Native inherited rule failed')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' not in visible:raise RuntimeError('Clearing a record rule must restore category inheritance')
+ denied=dict(permission,value='0')
+ if not (update_native_rule(http,rules_endpoint,denied).get('data') or {}).get('result'):
+  raise RuntimeError('Native record deny failed')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' in visible:raise RuntimeError('Record deny must take effect in the next delegated request')
+ # A user with edit rights but no core.admin cannot grant permission via the same native endpoint.
+ _,delegate_edit=delegated_get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['allowed']))
+ if 'id="jlms-course-rules"' in delegate_edit or '<joomla-field-permissions' in delegate_edit:
+  raise RuntimeError('The native Rules editor must be hidden from ordinary course editors')
+ delegate_edit_form=next(f for f in Page(delegate_edit).forms if f['id']=='adminForm')
+ delegate_token=next(k for k in delegate_edit_form['fields'] if re.fullmatch(r'[a-f0-9]{32}',k))
+ delegate_endpoint=no_token._replace(query=urlencode({'option':'com_config','task':'application.store','format':'json',delegate_token:'1'})).geturl()
+ if (update_native_rule(delegated_http,delegate_endpoint,permission).get('data') or {}).get('result'):
+  raise RuntimeError('Course editor escalated record permissions without core.admin')
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' in visible:raise RuntimeError('Unauthorised permission request changed the rule')
+ # A standard metadata save must preserve rules already saved by native AJAX.
+ fields=dict(rules_form['fields']);fields['task']='course.save'
+ with http.open(urljoin(rules_url,rules_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ _,visible=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
+ if 'Editor denied' in visible:raise RuntimeError('Course metadata save overwrote the native deny')
+ print(json.dumps({'course_rules_http_checks':9,'status':'passed'}))
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&task=course.add')
+ delegate_form=next(f for f in Page(dh).forms if 'jform[title]' in f['fields'])
+ selector=re.search(r'<select[^>]*name="jform\[catid\]"[^>]*>(.*?)</select>',dh,re.S).group(1)
+ if 'Editor allowed' not in selector or 'Editor other' in selector or 'Editor trash' in selector or 'id="jlms-course-options-link"' in dh:
+  raise RuntimeError('Category-only creation selector or options permissions incorrect')
+ fields=dict(delegate_form['fields']);fields.update({'task':'course.apply','jform[title]':'Editor HTTP delegated','jform[alias]':'editor-http-delegated',
+  'jform[catid]':str(editor_fixture['allowed_category']),'jform[language]':'*','jform[catalog_access]':'1','jform[content_access]':'2','jform[enrollment_mode]':'auto'})
+ with delegated_http.open(urljoin(du,delegate_form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+  du=response.geturl();dh=response.read().decode('utf-8')
+ delegate_form=next(f for f in Page(dh).forms if 'jform[title]' in f['fields'])
+ if int(delegate_form['fields']['jform[id]'])<1 or 'id="jlms-course-effective-rights"' not in dh:
+  raise RuntimeError('Delegate could not create through the native controller/form')
+ # Submit a forged destination not offered by the native category selector.
+ fields=dict(delegate_form['fields']);fields.update({'task':'course.apply','jform[catid]':str(editor_fixture['other_category'])})
+ with delegated_http.open(urljoin(du,delegate_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ stored=json.loads(subprocess.check_output(['php',str(Path(__file__).with_name('editor-http-fixture.php'))],text=True))
+ if int(stored['catid'])!=editor_fixture['allowed_category'] or int(stored['revision'])!=1:
+  raise RuntimeError('Forged category mutation changed the saved course')
+ # Publish through Joomla using the category grant, with no component-wide state permission.
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=curriculum&id='+str(editor_fixture['delegated']))
+ publication_form=next(f for f in Page(dh).forms if f['id']=='jlms-publication-form')
+ with delegated_http.open(urljoin(du,publication_form['action']),data=urlencode(publication_form['fields']).encode(),timeout=20) as response:
+  published_html=response.read().decode('utf-8')
+ if 'Before publishing, enter the full description' not in published_html or re.search(r'<strong>Published</strong>',published_html):
+  raise RuntimeError('An otherwise valid course without a description must show the specific publication error')
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(editor_fixture['delegated']))
+ description_form=next(f for f in Page(dh).forms if 'jform[presentation_description]' in f['fields'])
+ fields=dict(description_form['fields']);fields.update({'task':'course.save','jform[presentation_description]':'<p>Delegated course presentation.</p>'})
+ with delegated_http.open(urljoin(du,description_form['action']),data=urlencode(fields).encode(),timeout=20) as response:response.read()
+ du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=curriculum&id='+str(editor_fixture['delegated']))
+ publication_form=next(f for f in Page(dh).forms if f['id']=='jlms-publication-form')
+ with delegated_http.open(urljoin(du,publication_form['action']),data=urlencode(publication_form['fields']).encode(),timeout=20) as response:
+  published_html=response.read().decode('utf-8')
+ print(json.dumps({'publication_description_http_checks':2,'status':'passed'}))
+ if not re.search(r'<strong>Published</strong>',published_html):
+  raise RuntimeError('First publication failed for the category-scoped publisher')
+ print(json.dumps({'scoped_publication_http_checks':1,'status':'passed'}))
+ print(json.dumps({'editor_access_http_checks':6,'status':'passed'}))
+
+ # Exercise teacher creation through the native administrator form.
+ u,h=get('/administrator/index.php?option=com_jlms&view=teachers')
+ if 'id="jlms-admin-teachers"' not in h:raise RuntimeError('Native teacher list missing')
+ if 'COM_JLMS_TEACHER_FIELDS' in h or 'option=com_fields&amp;view=fields&amp;context=com_jlms.teacher' in h:raise RuntimeError('Teacher custom fields access must be in the sidebar, not the list view')
+ u,h=get('/administrator/index.php?option=com_jlms&task=teacher.add')
+ teacher_form=next(f for f in Page(h).forms if 'jform[bio]' in f['fields'])
+ if 'jform[catid]' in teacher_form['fields']:raise RuntimeError('Teacher creation must not require choosing a category')
+ teacher_fields=dict(teacher_form['fields']);teacher_fields.update({'task':'teacher.apply','jform[title]':'HTTP teacher','jform[alias]':'http-teacher',
+  'jform[state]':'1','jform[access]':'1','jform[language]':'*','jform[bio]':'HTTP teacher biography <script>plain text</script>',
+  'jform[image]':'','jform[image_alt]':'','jform[image_decorative]':'0','jform[website]':'https://example.invalid/http-teacher','jform[user_id]':'0'})
+ with http.open(urljoin(u,teacher_form['action']),data=urlencode(teacher_fields).encode(),timeout=20) as response:
+  u=response.geturl();h=response.read().decode('utf-8')
+ teacher_form=next(f for f in Page(h).forms if 'jform[bio]' in f['fields'])
+ http_teacher_id=int(teacher_form['fields']['jform[id]'])
+ if http_teacher_id<1 or teacher_form['fields']['jform[title]']!='HTTP teacher':raise RuntimeError('Native teacher save/reopen failed')
+ teacher_fields=dict(teacher_form['fields']);teacher_fields['task']='teacher.save'
+ with http.open(urljoin(u,teacher_form['action']),data=urlencode(teacher_fields).encode(),timeout=20) as response:
+  h=response.read().decode('utf-8')
+ if 'HTTP teacher' not in h or 'id="jlms-admin-teachers"' not in h:raise RuntimeError('Native teacher save/close failed')
+
+ # Start from the same native New Course UI as an administrator, not a service-created published fixture.
+ checks=0
+ def expect(ok,message):
+  global checks
+  if not ok:raise RuntimeError(message)
+  checks+=1
+ def submit(url,form,updates=None):
+  fields=dict(form['fields']);fields.update(updates or {})
+  try:
+   with http.open(urljoin(url,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+    return response.geturl(),response.read().decode('utf-8')
+  except HTTPError as error:
+   detail=re.sub(r'<[^>]+>',' ',error.read().decode('utf-8',errors='replace'))
+   print('Disposable form error: '+re.sub(r'\s+',' ',detail)[-10000:],file=sys.stderr)
+   raise
+ def fixture(operation='snapshot',value=None):
+  args=['php',str(Path(__file__).with_name('publication-http-fixture.php')),operation]
+  if value is not None:args.append(str(value))
+  return json.loads(subprocess.check_output(args,text=True))
+ u,h=get('/administrator/index.php?option=com_jlms&task=course.add')
+ expect('id="jlms-course-publication-help"' in h and 'id="jlms-course-programme-link"' not in h,'New course explains save-before-publication')
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ # Read the category from the native category selector, not a guessed database ID.
+ category=re.search(r'<select[^>]*name="jform\[catid\]"[^>]*>(.*?)</select>',h,re.S).group(1)
+ catid=re.search(r'<option[^>]*value="([1-9][0-9]*)"[^>]*>[^<]*CI Courses',category).group(1)
+ u,h=submit(u,form,{'task':'course.apply','jform[title]':'HTTP first publication','jform[alias]':'http-first-publication',
+  'jform[catid]':catid,'jform[language]':'*','jform[catalog_access]':'1','jform[content_access]':'2',
+  'jform[enrollment_mode]':'auto','jform[summary]':'Created and first published through native HTTP forms'})
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ course_id=int(form['fields']['jform[id]'])
+ expect(course_id>0 and 'id="jlms-course-programme-link"' not in h and 'task="course.programme"' in h,'Saved draft keeps the curriculum action without a duplicate link')
+ expect('joomla-field-media' in h and 'jform[presentation_image]' in h,'Native Media Manager field is available in course editor')
+ expect(all('id="'+x+'"' in h for x in ['jlms-course-tabs','jlms-course-general','jlms-course-presentation','jlms-course-access-settings','jlms-course-metadata','jlms-course-calendar','jlms-course-publishing','jlms-course-permissions']),'Native course editor exposes general, presentation, access and publication tabs')
+ before=fixture()
+ u,h=submit(u,form,{'task':'course.apply','jform[calendar_timezone]':'Europe/Rome','jform[calendar_starts_at]':'2027-03-28 02:30:00'})
+ expect(fixture()==before,'Native form rejects nonexistent DST time without saving')
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ u,h=submit(u,form,{'task':'course.apply','jform[calendar_timezone]':'Europe/Rome',
+  'jform[calendar_publish_up]':'2000-01-01 01:00:00','jform[calendar_publish_down]':'2099-01-01 01:00:00',
+  'jform[calendar_starts_at]':'2000-01-01 01:00:00','jform[calendar_ends_at]':'2098-01-01 01:00:00','jform[presentation_description]':'<p>HTTP extended <strong>description</strong></p><img src="https://example.invalid/pixel" onerror="alert(1)"><script>alert(2)</script>',
+  'jform[presentation_objectives]':'HTTP objectives <script>plain text</script>','jform[presentation_audience]':'HTTP audience',
+  'jform[presentation_image]':'images/jlms-ci-cover.png#joomlaImage://local-images/jlms-ci-cover.png?width=1&height=1','jform[presentation_image_alt]':'HTTP cover "quoted" <plain text>','jform[presentation_image_decorative]':'0',
+  'jform[teacher_ids][]':str(http_teacher_id),'jform[presentation_seo_title]':'HTTP published SEO title','jform[presentation_seo_description]':'HTTP SEO description & public sheet',
+  'jform[presentation_prerequisite_text]':'HTTP prior knowledge','jform[presentation_difficulty]':'intermediate','jform[presentation_estimated_minutes]':'75'})
+ form=next(f for f in Page(h).forms if 'jform[title]' in f['fields'])
+ expect(form['fields']['jform[presentation_estimated_minutes]']=='75' and 'HTTP extended' in form['fields']['jform[presentation_description]'],'Presentation saved and reopened in native editor')
+ expect('task="course.programme"' in h,'Saved course retains the curriculum action in its Programme tab')
+ programme='/administrator/index.php?option=com_jlms&view=curriculum&id='+str(course_id)
+ # Close through the native controller before leaving the editor.
+ close_url,close_html=submit(u,form,{'task':'course.save'})
+ expect(parse_qs(urlparse(close_url).query).get('view')==['courses'],'Native save and close succeeds with all rendered controls')
+ u,h=get(programme)
+ expect('id="jlms-publication-notice"' in h and 'id="jlms-version-form"' in h,'Course without version explains the next step')
+ form=next(f for f in Page(h).forms if f['id']=='jlms-version-form');u,h=submit(u,form)
+ expect('id="jlms-publication-form"' in h and re.search(r'id="jlms-publication-submit"[^>]*>\s*Execute transition\s*</button>',h)
+  and 'Send for review' in h and 'Publish' in h,'First draft exposes explicit review and authorized publish transitions')
+ expect('id="jlms-publication-readiness"' in h and 'data-readiness-code="COM_JLMS_READINESS_MODULES_REQUIRED"' in h
+  and 'data-readiness-code="COM_JLMS_READINESS_REQUIRED_LESSON"' in h,'Draft publication page shows basic blockers before the user submits')
+ before=fixture()
+ form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
+ transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+ u,h=submit(u,form,{'jform[transition_id]':transition})
+ expect(fixture()==before,'Empty initial programme cannot publish or create an edition')
+ form=next(f for f in Page(h).forms if f['id']=='jlms-module-form');u,h=submit(u,form,{'jform[title]':'HTTP first module'})
+ lesson_link=next(x for x in Page(h).links if parse_qs(urlparse(x).query).get('new_lesson')==['1'])
+ u,h=get(lesson_link)
+ expect('data-readiness-code="COM_JLMS_READINESS_MODULE_EMPTY"' in h,'An empty module remains a publication blocker while editing its first lesson')
+ form=next(f for f in Page(h).forms if f['id']=='jlms-lesson-form')
+ u,h=submit(u,form,{'jform[title]':'HTTP first required lesson','jform[kind]':'text','jform[required]':'1',
+  'jform[module_id]':re.search(r'data-module-id="([1-9][0-9]*)"',h).group(1),
+  'jform[body]':'<p>FIRST_PUBLICATION_PRIVATE_BODY</p>'})
+ expect('HTTP first required lesson' in h,'Module and required text lesson saved through HTTP')
+ expect('id="jlms-publication-blockers"' in h and 'COM_JLMS_READINESS_MODULE_EMPTY' not in h
+  and 'COM_JLMS_READINESS_REQUIRED_LESSON' not in h,'Adding the required lesson clears structural blockers')
+ material=fixture('material-add')
+ u,h=get(u)
+ expect('data-readiness-code="COM_JLMS_MATERIAL_NOT_READY"' in h,'Draft readiness identifies an attachment that the publication service would reject')
+ fixture('material-remove',material['attachment_id'])
+ u,h=get(u)
+ expect('data-readiness-code="COM_JLMS_MATERIAL_NOT_READY"' not in h,'Removing the unready fixture material clears its readiness blocker')
+ form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
+ transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+ # A disabled native plugin must be diagnosed without changing course/version data.
+ original_plugin=fixture()['plugin']
+ try:
+  fixture('plugin',0);u,h=get(u)
+  expect('id="jlms-publication-notice"' in h and 'id="jlms-publication-form"' not in h,'Disabled Publishing plugin has visible diagnostic and no action')
+  before=fixture();u,h=submit(u,form,{'jform[transition_id]':transition})
+  expect(fixture()==before,'Stale form cannot publish with disabled plugin')
+ finally:fixture('plugin',original_plugin)
+ u,h=get(u);form=next(f for f in Page(h).forms if f['id']=='jlms-publication-form')
+ stale_form=dict(form);stale_form['fields']=dict(form['fields'])
+ transition=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+ u,h=submit(u,form,{'jform[transition_id]':transition})
+ # Current access rules remain native even when the teaching version is immutable.
+ published_editor_url,published_editor=get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(course_id))
+ if 'id="jlms-course-rules"' not in published_editor:
+  raise RuntimeError('Authorised administrators must be able to manage current permissions of a published course')
+ published_editor_form=next(f for f in Page(published_editor).forms if f['id']=='adminForm')
+ if 'jform[title]' not in published_editor_form['fields']:
+  raise RuntimeError('Published course editorial fields must be editable')
+ print(json.dumps({'published_course_rules_http_checks':1,'status':'passed'}))
+ published=fixture()['course']
+ expect(int(published['state'])==1 and published['status']=='published' and int(published['editions'])==1 and int(published['associations'])==1,'First HTTP publication freezes version and creates one edition and native association')
+ expect(bool(published['structure_hash']) and bool(published['published_at']),'Initial publication records immutable hash and timestamp')
+ u,h=submit(u,stale_form,{'jform[transition_id]':transition})
+ expect(fixture()['course']==published,'Repeated stale publication does not duplicate edition or change history')
+ public_http=build_opener(HTTPCookieProcessor(CookieJar()))
+ pathways=json.loads((root.parent/'pathways-fixture.json').read_text())
+ _,pathway_admin=get('/administrator/index.php?option=com_jlms&view=pathways')
+ expect(len(re.findall(r'<h1\b',pathway_admin))==1,'Pathways title appears once in the Joomla toolbar')
+ expect('id="jlms-admin-pathways"' in pathway_admin and 'CI learning pathway' in pathway_admin,
+        'Authenticated administrator sees the native pathway list')
+ _,pathway_editor=get('/administrator/index.php?option=com_jlms&task=pathway.edit&id='+str(pathways['pathway']))
+ expect('id="jlms-pathway-editor"' in pathway_editor and 'jform[title]' in pathway_editor and 'jform[courses]' in pathway_editor,
+        'Authenticated administrator can edit pathway details and course associations')
+ with public_http.open(base+'/index.php?option=com_jlms&view=pathways',timeout=15) as response:
+  pathway_catalog=response.read().decode('utf-8')
+ expect('id="jlms-pathways"' in pathway_catalog and 'CI learning pathway' in pathway_catalog,
+        'Public pathway catalog renders published pathways')
+ _,pathway_filtered=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[pathway_id]':str(pathways['pathway'])}))
+ if 'Publication fixture' not in pathway_filtered or 'value="'+str(pathways['pathway'])+'" selected' not in pathway_filtered:
+  raise RuntimeError('Public catalog pathway filter did not preserve visible courses and selection')
+ _,teacher_filtered=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[teacher_id]':str(http_teacher_id)}))
+ if 'HTTP first publication' not in teacher_filtered or 'value="'+str(http_teacher_id)+'" selected' not in teacher_filtered:
+  raise RuntimeError('Public catalog teacher filter did not include the assigned visible course')
+ _,invalid_teacher=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[teacher_id]':'2147483647'}))
+ if 'HTTP first publication' in invalid_teacher:
+  raise RuntimeError('Unknown teacher filter must not broaden the public catalog')
+ _,invalid_pathway=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[pathway_id]':'2147483647'}))
+ if 'Publication fixture' in invalid_pathway:
+  raise RuntimeError('Unknown pathway filter must not broaden the public catalog')
+ with public_http.open(base+'/index.php?option=com_jlms&view=pathway&id='+str(pathways['pathway']),timeout=15) as response:
+  pathway_page=response.read().decode('utf-8')
+ expect('id="jlms-pathway"' in pathway_page and 'CI learning pathway' in pathway_page and 'Publication fixture' in pathway_page,
+        'Public pathway sheet renders ordered course association')
+ expect('id="jlms-pathway-progress-label"' not in pathway_page and 'id="jlms-pathway-course-1"' in pathway_page,
+        'Guest pathway page hides personal progress and keeps the unavailable course position')
+ expect('Test course' not in pathway_page and 'This course is not currently available.' in pathway_page,
+        'Guest pathway page labels the hidden course without revealing its identity')
+ with public_http.open(base+'/index.php?option=com_jlms&view=course&id='+str(course_id),timeout=15) as response:
+  sheet=response.read().decode('utf-8')
+ expect('HTTP first required lesson' in sheet and 'FIRST_PUBLICATION_PRIVATE_BODY' not in sheet,'First published course is public with no lesson body leak')
+ expect(all('id="'+x+'"' in sheet for x in ['jlms-course-description','jlms-course-objectives','jlms-course-audience','jlms-course-prerequisite-text','jlms-course-facts','jlms-course-difficulty','jlms-course-estimated-duration']),'Public presentation exposes documented unique regions')
+ expect('<strong>description</strong>' in sheet and 'HTTP audience' in sheet and '75 minutes' in sheet,'Frozen presentation is visible on public course sheet')
+ expect('example.invalid/pixel' not in sheet and '<script>plain text</script>' not in sheet and '&lt;script&gt;plain text&lt;/script&gt;' in sheet,'Unsafe HTML removed and informational text escaped')
+ cover=re.search(r'<div id="jlms-course-cover".*?</div>',sheet,re.S)
+ expect(bool(cover) and 'images/jlms-ci-cover.png' in cover.group(0) and 'alt="HTTP cover &quot;quoted&quot; &lt;plain text&gt;"' in cover.group(0),'Public cover uses safe URL and escaped alternative text')
+ expect('<title>HTTP published SEO title</title>' in sheet and 'HTTP SEO description &amp; public sheet' in sheet,'Native document head uses the published SEO values')
+ expect('#joomlaImage' not in cover.group(0),'Native adapter metadata not emitted in public image URL')
+ expect('id="jlms-course-teachers"' in sheet and 'HTTP teacher biography &lt;script&gt;plain text&lt;/script&gt;' in sheet,'Assigned native teacher appears as escaped frozen public profile')
+ expect('id="jlms-course-calendar"' in sheet and 'Europe/Rome' in sheet and '2000-01-01 01:00:00 +01:00' in sheet,'Public frozen calendar shows its explicit zone and offset')
+ expect(published['calendar_timezone']=='Europe/Rome' and published['calendar_start'].startswith('2000-01-01 00:00:00') and published['edition_end'].startswith('2098-01-01 00:00:00'),'Native calendar form persists UTC and initial edition dates')
+ expect('id="jlms-publication-status"' in h,'Administrator sees course publication status')
+ print(json.dumps({'first_publication_http_checks':checks,'status':'passed'}))
+
+ # Exercise the native publication controller, CSRF token, redirect and current course revision.
+ for link in curriculum_links:
+  u,h=get(link)
+  if 'Publication fixture' in h:break
+ else:raise RuntimeError('Publication fixture admin screen absent')
+ for operation in ['unpublish','republish']:
+  form=next((f for f in Page(h).forms if f['id']=='jlms-publication-form'),None)
+  if not form:raise RuntimeError('Native transition form missing')
+  fields=dict(form['fields'])
+  fields['jform[transition_id]']=re.search(r'<option value="([1-9][0-9]*)"',h[h.index('id="jlms-transition"'):]).group(1)
+  with http.open(urljoin(u,form['action']),data=urlencode(fields).encode(),timeout=20) as response:
+   h=response.read().decode('utf-8')
+  try:
+   with http.open(urljoin(base,public_course_url),timeout=15) as response:status=response.status;response.read()
+  except HTTPError as error:status=error.code
+  if status!=(404 if operation=='unpublish' else 200):raise RuntimeError('HTTP '+operation+' did not update public visibility')
+
+ print(json.dumps({'http_smoke':'passed' ,'pages':['public catalogue','native admin login','dashboard','draft list','draft editor']}))
+except Exception:
+ log.flush();log.seek(0);print(log.read()[-8000:],file=sys.stderr);raise
+finally:
+ server.terminate()
+ try:server.wait(timeout=5)
+ except subprocess.TimeoutExpired:server.kill();server.wait()
+ log.close()
+
