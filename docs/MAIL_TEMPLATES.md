@@ -103,7 +103,7 @@ La PR [#313](https://github.com/jeckodevelopment/jd_learn/pull/313) integrata ne
 
 La PR [#315](https://github.com/jeckodevelopment/jd_learn/pull/315), integrata in 0.56.10-dev, registra `com_jlms.course.published` in Joomla → Sistema → Modelli email. Il default HTML include immagine opzionale, titolo, introduzione, elenco delle sole lezioni pubbliche, CTA e revoca; il plain text riporta URL e programma. Il servizio di invio dovrà costruire placeholder HTML con escaping e validare gli URL HTTPS. L’installer non sovrascrive personalizzazioni. Il template non è collegato a campagne.
 
-### MAIL-11.2/11.3 — richiesta e conferma dell’adesione (candidata 0.56.11-dev)
+### MAIL-11.2/11.3 — richiesta e conferma dell’adesione (PR #317, 0.56.11-dev)
 
 La candidata aggiunge una preferenza facoltativa nell’Area personale, non preselezionata e separata dalle notifiche operative. La richiesta resta `pending` finché l’utente apre il collegamento di conferma ricevuto all’indirizzo Joomla; il token casuale è conservato solo come SHA-256, è monouso e scade dopo 24 ore. Alla conferma sono registrati stato, timestamp, origine e versione dell’informativa. Lo stato `confirmed` è l’unico autorizzabile a ricevere annunci; l’utente può revocare dal proprio account. L’integrazione con registrazione/iscrizione, revoca tramite link anonimo e invio delle campagne resta da completare. Il plugin Privacy esporta e rimuove i dati di consenso; il token non è esportato.
 

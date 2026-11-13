@@ -2,7 +2,7 @@
   "version": "1.1",
   "updated_at": "2026-11-13",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
-  "current_increment": "Main 0.56.10-dev integra PR #315 (fd5b66941421127037afa54a3bbaea6810e6e7ca): MAIL-11.1 template; CI 4/4, manual Joomla acceptance pending. MAIL-11.2–11.5 remain unimplemented.",
+  "current_increment": "Main 0.56.11-dev integra PR #317 / MAIL-11.2/11.3 parziali (consenso Area personale, double opt-in, revoca autenticata). Merge 6c44bc4e852bf1d693b53646b5deee6c83153629; CI standard 4/4 nel run 43457091398. Accettazione Joomla/SMTP pendente; MAIL-11.4/11.5 e invio annunci non implementati.",
   "semantics": "Responsabilità primaria pianificata, non completamento. I requisiti trasversali sono verificati in ogni incremento e accettati solo dopo tutti gli scenari della baseline. Nessuna data o percentuale dedotta da questa mappatura.",
   "milestones": [
     {
