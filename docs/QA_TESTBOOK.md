@@ -1022,7 +1022,7 @@ PR [#317](https://github.com/jeckodevelopment/jd_learn/pull/317) integrata nel m
 6. Esportare i dati personali dal plugin Privacy Joomla: verificare origine, stato, versione informativa e timestamp senza hash/token. Eseguire la rimozione Privacy su un utente di prova: la riga di consenso deve essere rimossa.
 7. Verificare IT/EN, navigazione tastiera/label checkbox e che l’upgrade conservi le personalizzazioni dei modelli `com_jlms.course.published` e `com_jlms.course.consent`.
 
-Il collaudo manuale/SMTP resta da registrare. La registrazione durante enrollment/registrazione, la revoca via link anonimo, i trigger e l’invio degli annunci sono fuori da questa tranche e non devono essere simulati come implementati.
+Il collaudo manuale/SMTP resta da registrare. La revoca anonima tramite link è coperta dal caso IMP-09-MAIL-D dedicato qui sotto. Registrazione Joomla, trigger e invio degli annunci restano fuori da questa tranche.
 
 
 ## IMP-09-MAIL-D — Revoca anonima tramite link email (MAIL-11.3)
