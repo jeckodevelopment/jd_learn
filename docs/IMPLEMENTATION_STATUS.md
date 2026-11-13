@@ -1,5 +1,7 @@
 Aggiornato al 13 novembre 2026. Main **0.56.14-dev** integra PR [#323](https://github.com/jeckodevelopment/jd_learn/pull/323), merge `2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72`; Schema attuale: **46 tabelle / 66 FK**. CI standard 4/4 nel [run 43482627796](https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796). Progresso globale **76,67%** (77% arrotondato), email **46%**, attestati **75%**. Pacchetto [JD-Learn-0.56.14-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873). Collaudo manuale Joomla/SMTP della registrazione pendente.
 
+La PR #323 aggiunge alla registrazione Joomla un checkbox IT/EN facoltativo, non preselezionato, che avvia il double opt-in dopo la creazione dell'account; errori di invio email non annullano la registrazione. CI 4/4 nel run 43482627796; package 0.56.14-dev in CHANGELOG.md; collaudo Joomla/SMTP manuale pendente.
+
 La PR #299 collega anche la conferma dopo iscrizione amministrativa singola; la CI completa è verde, mentre il collaudo manuale Joomla/SMTP resta pendente. CERT-D è integrato con la PR #307; restano aperti gli altri residui email approvati, CERT-08 (backup/ripristino e rigenerazione immutabile) e il collaudo manuale Joomla CERT-A/B/C/D.
 
 La PR #238 / 0.41.78-dev corregge STAB-01 / issue #150: `COM_JLMS_PATHWAYS` è ora presente nei cataloghi IT/EN di sistema per il menu backend. L’ordinamento dashboard e il riepilogo stato provider richiesti dall’issue #149 sono già implementati; accettazione Joomla di entrambi resta da registrare.
@@ -96,7 +98,7 @@ Seguire l’ordine e i confini già approvati in [NEXT_STEPS.md](NEXT_STEPS.md),
 
 La specifica funzionale **1.5** e la [matrice dei 210 requisiti](REQUIREMENTS_STATUS.csv) conservano la baseline storica: 209 requisiti originariamente del rilascio 1 e uno differito. La riconciliazione del 10 novembre distingue 133 righe interamente core, 40 miste e 37 di fase 2; implementazione: 14 completate nel sottoinsieme core esplicito, 166 parziali, 30 non iniziate. Verifica automatica: 169 esiti superati con copertura parziale e 41 senza esecuzione specifica. Accettazione Joomla: 2 parziali, 208 non eseguite integralmente, 0 integrali. Metodo e limiti nella [guida](REQUIREMENTS_STATUS_GUIDE.md); conteggi verificabili in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La ricognizione non aggiunge funzionalità: stima per aree aggiornata al 74% (518/7). Nessun requisito è dichiarato integralmente accettato senza un report completo. Non si ricava una percentuale contando le righe “In corso”.
 
-Schema attuale: **45 tabelle / 65 FK**; il pacchetto contiene 10 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
+Schema attuale: **46 tabelle / 66 FK**; il pacchetto 0.56.14-dev contiene 11 estensioni. Questi conteggi descrivono l'architettura, non l'avanzamento.
 
 Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [problemi specifici](IMPLEMENTATION_GAPS.md) e [guide](../README.md#usare-e-configurare-jd-learn) approfondiscono i rispettivi temi; [cronologia](IMPLEMENTATION_HISTORY.md) e [changelog](../CHANGELOG.md) conservano gli incrementi passati.
 
