@@ -20,3 +20,8 @@
 - Includere per ogni PR implementativa una sezione **Impatto sicurezza/privacy/cookie** con test di regressione; conservare collegamento tra PR, requisito e testbook.
 
 Questo piano è separato dalle funzionalità future Credentials/Open Badges; firma digitale, custodia/rotazione chiavi, revoca e verifiche di interoperabilità richiederanno una review dedicata quando implementate.
+
+
+## PRIV-C — Registro e diritto di accesso ai consensi applicativi
+
+La verifica di SEC-P3 include obbligatoriamente **PRIV-C1–C5** in [JOOMLA_PRIVACY_CONSENT_INTEGRATION.md](JOOMLA_PRIVACY_CONSENT_INTEGRATION.md): verificare l'interfaccia Joomla 6 per l'eventuale visualizzazione del consenso MAIL-11 nel registro centrale; garantire comunque una consultazione autorizzata senza duplicare fonti di verità, completare export/rimozione/anomizzazione dei dati correlati e documentare la procedura per gli amministratori IT/EN. Il plugin Privacy JD Learn espone già capabilities, export e un percorso di removal, ma la copertura dei token di revoca, code e audit va provata. Il registro Joomla non aggrega automaticamente consensi conservati in tabelle di componenti terzi. **Non scrivere direttamente nel registro interno Joomla senza API documentata e testata.** Nessuna nuova copertura attribuita finché le PR implementative e i test non sono integrati.
