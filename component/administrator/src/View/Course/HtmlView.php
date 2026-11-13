@@ -20,6 +20,7 @@ final class HtmlView extends BaseHtmlView
     public array $editorRights = [];
     public bool $canConfigure = false;
     public bool $canManageCourseRules = false;
+    public bool $canPreviewAnnouncement = false;
 
     public function display($tpl = null)
     {
@@ -40,6 +41,7 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->getWebAssetManager()->useScript('com_jlms.courseAssociations');
         ToolbarHelper::title(Text::_('COM_JLMS_COURSE'), 'graduation-cap');
         $this->checkedOutByOther=$id>0 && $this->item->checked_out && (int)$this->item->checked_out!==(int)$actor->id;
+        $this->canPreviewAnnouncement = $id > 0 && !$this->checkedOutByOther && (int) $this->item->state === 1;
         $asset=$id>0?'com_jlms.course.'.$id:'com_jlms';
         $this->canConfigure=$actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms');
         if ($id > 0 && $actor->authorise('core.admin', $asset) && !$this->checkedOutByOther) {
