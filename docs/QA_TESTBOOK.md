@@ -974,7 +974,7 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 
 ## IMP-09-MAIL-C / PR #313 — comunicazione operativa per corso (0.56.9-dev)
 
-**Collaudo manuale Joomla/SMTP pendente; la CI non equivale all'accettazione.** Preparare Joomla 6, mailer di prova, Scheduler JD Learn attivo, corso con almeno tre iscritti attivi, uno sospeso e un docente assegnato.
+**PR #313 integrata; CI 4/4 superata nel run [43445911912](https://github.com/jeckodevelopment/jd_learn/actions/runs/43445911912). Collaudo manuale Joomla/SMTP pendente; la CI non equivale all'accettazione.** Preparare Joomla 6, mailer di prova, Scheduler JD Learn attivo, corso con almeno tre iscritti attivi, uno sospeso e un docente assegnato.
 
 1. Dal roster aprire “Comunica agli iscritti”, modificare oggetto/testo e selezionare due iscritti. Verificare anteprima, conteggio e destinatari; email e indirizzi non devono apparire nell'interfaccia.
 2. Inviare il test: deve riceverlo solo l'operatore autenticato; gli iscritti non ricevono il test.
