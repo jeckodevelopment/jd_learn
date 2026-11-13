@@ -36,11 +36,11 @@ Le percentuali indicano la completezza implementativa stimata rispetto al perime
 | Iscrizione e roster essenziale (M06/M09) | 68% |
 | Usabilità amministrativa e integrazioni Joomla | 92% |
 | Collaudo e preparazione release (M10–M12) | 70% |
-| Email e notifiche operative (MAIL-01–11 approvati) | 34% |
+| Email e notifiche operative (MAIL-01–11 approvati) | 35% |
 | Attestati PDF essenziali (CERT-01–08 approvati) | 62,5% |
-| **Avanzamento complessivo stimato** | **75,33% (75%)** |
+| **Avanzamento complessivo stimato** | **75,44% (75%)** |
 
-Metodo: media semplice delle nove aree approvate per la 1.0.0: (81+81+78+99+68+92+70+34+75)/9 = 75,33%. Email 29,5% e attestati 62,5% sono stime di copertura parziale dei rispettivi criteri; CERT-A copre impostazioni/emissione/idempotenza e CERT-B aggiunge PDF IT/EN, template globale, area personale e download protetto. CERT-D, rigenerazione amministrativa e backup/ripristino restano aperti; CERT-C ha integrato elenco, dettaglio, download e audit minimo. Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; i collaudi Joomla restano separati.
+Metodo: media semplice delle nove aree approvate per la 1.0.0: (81+81+78+99+68+92+70+35+75)/9 = 75,44%. Email 29,5% e attestati 62,5% sono stime di copertura parziale dei rispettivi criteri; CERT-A copre impostazioni/emissione/idempotenza e CERT-B aggiunge PDF IT/EN, template globale, area personale e download protetto. CERT-D, rigenerazione amministrativa e backup/ripristino restano aperti; CERT-C ha integrato elenco, dettaglio, download e audit minimo. Fase 2 esclusa. La percentuale misura implementazione stimata, non accettazione manuale; i collaudi Joomla restano separati.
 
 IMP-07 comprende PR #204, #206–#213, #215 e #222–#225. La PR #215 aggiunge FK che impediscono la cancellazione permanente delle categorie referenziate; la PR #225 aggiunge il riepilogo e la ricollocazione atomica dei riferimenti per corsi, percorsi, docenti e domande, preservando gli storici; cestinamento e ripristino conservano i record. IMP-06/PR #217 aggiunge il riuso degli asset tra materiali corso/lezione della stessa bozza senza duplicare il blob; la PR #221 corregge la #219 per gli allegati e PR #226 sostituisce l’offload Nginx dei video HTML5 con streaming PHP a blocchi, compatibile con Apache/LiteSpeed; M03 sale al 78% dopo la protezione persistente del resume da sessioni concorrenti obsolete (PR #280); M04 stimata 94% dopo la PR #233, 95% con velocità STU-05/PR #258, 98% con preferenza caption/PR #276 e 99% con il controllo capabilities/PR #278; PR #235/0.41.77-dev completa l’inclusione dei materiali corso nell’anteprima delle lezioni testo/video; catalogo al 81%; CORE-09 integrato dalla PR #222; CORE-07: associazioni dei corsi pubblicati implementate dalla PR #223 e ricerca selector integrata dalla #224, portando le integrazioni Joomla al 92%; avanzamento complessivo 78%. Accettazione Joomla di materiali, lifecycle/ricollocazione categorie, CAT-01 e SEO/Finder ancora pendente.
 
@@ -106,6 +106,6 @@ Questo documento è il riepilogo corrente. [Roadmap](ROADMAP_TO_STABLE.md), [pro
 Implementata la comunicazione operativa manuale per corso: destinatari selezionabili dal roster autorizzato, anteprima e conferma, test all'operatore, job idempotente, batch via Scheduler/outbox e preferenze globale/per corso. ACL e stato degli iscritti sono ricontrollati a ogni elaborazione. PR #313 è integrata nella milestone 1.0.0; CI 4/4 superata, accettazione manuale Joomla/SMTP pendente. Email stimata 34%; totale 75,33% (75%), media delle nove macroaree. MAIL-11 resta distinta e non implementata.
 
 
-## Candidata MAIL-11.1 / PR #315
+## MAIL-11.1 / PR #315 integrata — 0.56.10-dev
 
-La candidata aggiunge il template `com_jlms.course.published` a Joomla → Sistema → Modelli email, con soggetto, corpo testo/HTML e tag per titolo, immagine, introduzione, sole lezioni pubbliche, URL del corso, sito e revoca. L’installer crea il modello solo se manca; la personalizzazione si conserva. Non esistono ancora invii, opt-in, double opt-in o funzione di revoca. Stato MAIL-11 resta parziale; email/global progress non cambiano prima del merge e del ricalcolo.
+La PR #315 registra il template `com_jlms.course.published` in Joomla → Sistema → Modelli email, con testo/HTML e tag per titolo, immagine, introduzione, sole lezioni pubbliche, URL corso, sito e revoca. L’installer crea il modello solo se manca; la personalizzazione si conserva. MAIL-11 resta parziale: invio, opt-in/double opt-in, revoca runtime e scelta admin non sono implementati. Email 35%; avanzamento globale 75,44% (75%), accettazione Joomla pendente.
