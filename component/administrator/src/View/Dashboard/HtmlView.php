@@ -28,6 +28,9 @@ final class HtmlView extends BaseHtmlView
         $addShortcut = function (string $key, string $icon, string $url) : void {
             $this->shortcuts[] = ['key' => $key, 'icon' => $icon, 'url' => \Joomla\CMS\Router\Route::_($url)];
         };
+        if ($actor->authorise('core.manage', 'com_jlms') && $actor->authorise('jlms.certificates.manage', 'com_jlms')) {
+            $addShortcut('COM_JLMS_CERTIFICATES', 'icon-certificate', 'index.php?option=com_jlms&view=certificates');
+        }
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut('COM_JLMS_COURSES', 'icon-book', 'index.php?option=com_jlms&view=courses');
             if ($actor->authorise('jlms.pathways.manage', 'com_jlms')) {

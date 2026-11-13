@@ -142,6 +142,7 @@ try:
  dashboard_shortcuts={a.get('id'):parse_qs(urlparse(a.get('href','')).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
  if any('&amp;' in a.get('href','') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')):raise RuntimeError('Dashboard shortcut href must not contain a literal HTML entity')
  required_shortcuts={
+  'jlms-admin-shortcut-certificates':('com_jlms','certificates'),
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
   'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
@@ -151,7 +152,7 @@ try:
   'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
   'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
  }
- expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','question_bank','teachers','custom_fields','video_plugins']
+ expected_shortcut_order=['certificates','courses','pathways','course_categories','pathway_categories','question_bank','teachers','custom_fields','video_plugins']
  actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
  if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
  for shortcut,(option,view) in required_shortcuts.items():
@@ -564,3 +565,4 @@ finally:
  try:server.wait(timeout=5)
  except subprocess.TimeoutExpired:server.kill();server.wait()
  log.close()
+

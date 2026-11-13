@@ -1,3 +1,9 @@
+# 0.56.7-dev — gestione amministrativa attestati (PR IMP-09-CERT-C in preparazione)
+
+- Aggiunge elenco filtrabile, dettaglio e download amministrativo protetto degli attestati; controllo ACL `jlms.certificates.manage` e registro degli accessi.
+- Aggiunge schema audit e relativa migrazione; il download usa storage privato e snapshot congelati.
+- Collaudo manuale Joomla e CI della PR da completare.
+
 # 0.56.6-dev — PDF e download protetto attestati (PR #302 integrata)
 
 - Generazione PDF A4 IT/EN con dati certificati congelati, intestazioni personalizzabili, colore e logo JPEG locale.
