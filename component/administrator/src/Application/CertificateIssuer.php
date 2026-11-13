@@ -28,7 +28,8 @@ final class CertificateIssuer
             return false;
         }
         $rules = json_decode((string) $row->rules_json, true, 32, JSON_THROW_ON_ERROR);
-        if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning') { return false; }
+        if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
+            || ($rules['certificate_enabled'] ?? false) !== true) { return false; }
 
         $existing = $this->db->createQuery()->select('id')->from('#__jlms_certificates')
             ->where('enrollment_id = :enrollment')->where('course_version_id = :version')
