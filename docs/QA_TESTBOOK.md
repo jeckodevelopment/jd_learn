@@ -337,7 +337,235 @@ PR [#207](https://github.com/jeckodevelopment/jd_learn/pull/207), milestone **1.
 1. Installare il pacchetto candidato su Joomla di prova e creare una scheda corso pubblica con titolo SEO, descrizione SEO e immagine promozionale locale; creare anche un corso con catalogo pubblico ma contenuto riservato, una categoria pubblica e una categoria accessibile solo agli utenti registrati, e un percorso pubblico.
 2. Aprire la scheda pubblica e verificare nel sorgente HTML titolo/descrizione, `og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `twitter:card`, `twitter:title`, `twitter:description` e `twitter:image`. L’immagine deve essere un URL assoluto del sito.
 3. Aprire categoria e percorso pubblici: verificare canonical assoluto, titolo e descrizione social coerenti con la pagina, senza duplicati di meta tag.
-4. Aprire scheda corso con catalogo o contenuto non accessibile agli ospiti e la categoria privata: verificare `robots=noindex, nofollow` e assenza di canonical/preview social che li promuovano come contenuti pubblici. Accedere poi da utente autorizzato: i contenuti restano consultabili, ma non devono diventare indicizzabili�}:����k�w��menti restano conservati e non si trasformano in un flusso di gestione per l’utente.
+4. Aprire scheda corso con catalogo o contenuto non accessibile agli ospiti e la categoria privata: verificare `robots=noindex, nofollow` e assenza di canonical/preview social che li promuovano come contenuti pubblici. Accedere poi da utente autorizzato: i contenuti restano consultabili, ma non devono diventare indicizzabili.
+5. Aprire un percorso da utente autenticato: verificare `robots=noindex, nofollow` e assenza di metadati social/canonical.
+6. Ripetere con SEF attivo e disattivo e in IT/EN; verificare che canonical sia assoluto, stabile e privo di parametri di ricerca, filtro o paginazione.
+
+## IMP-07 — Ricerca e ordinamento del catalogo (0.41.56-dev, PR #206 integrata)
+
+La PR aggiunge ricerca su titolo/sommario e ordinamento recenti/titolo, nel catalogo completo e dentro una categoria. Verificare sul sito Joomla 6 di prova con corsi pubblici e contenuti riservati di fixture.
+
+1. Installare il pacchetto candidato. Aprire Catalogo corsi e verificare i controlli “Cerca nei corsi” e “Ordina per” in italiano; ripetere con lingua inglese.
+2. Cercare una parola univoca nel titolo e poi una nel sommario promozionale; verificare che compaiano solo le schede pubbliche accessibili.
+3. Usare un termine presente solo in una lezione o in un campo privato: nessun corso deve comparire per quel termine.
+4. Ordinare per “Titolo” e per “Più recenti”; verificare ordine stabile e che paginazione e selezione restino coerenti.
+5. Aprire una categoria con discendenti, cercare un corso appartenente a un discendente, cambiare ordinamento e paginare; verificare che la ricerca resti limitata alla categoria e ai discendenti.
+6. Provare caratteri speciali e stringhe con virgolette; nessun errore SQL o allargamento ai contenuti protetti.
+
+La PR #206 è stata integrata nel commit `cc5af168e5b42aff0b30db2e051acecd86806b9c`; CI standard 4/4 superata nel [run 42901417240](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240). [Pacchetto installabile JD-Learn-0.41.56-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42901417240/artifacts/13803875500), wrapper SHA-256 `3c3d7d078ae6b3d03e530d81d833bd89babd8c12903580f84f8d8f4b3b526cd2`, disponibile fino al 24 novembre 2026. Estrarre il wrapper per ottenere lo ZIP Joomla. La CI verifica il rendering HTTP e l’isolamento dei termini di ricerca in fixture; l’accettazione sul sito reale resta da registrare separatamente.
+
+## IMP-07 — Smart Search del catalogo JD Learn (0.41.55-dev, PR #204 integrata)
+
+La PR #204 è stata integrata nel commit `5018d895e52727be29cedb31f4f93b5245ef346a`. CI standard 4/4 superata nel [run 42898585659](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659). Il collaudo manuale Joomla sul sito di prova resta richiesto prima di chiudere IMP-07; la CI non sostituisce queste prove. Pacchetto installabile [JD-Learn-0.41.55-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42898585659/artifacts/13802930146), wrapper ZIP SHA-256 `48af954a9fa682519e5a6c8121ef97d22b17bd37004f9969e1e8c59c694e66e1`, disponibile fino al 24 novembre 2026. Estrarre il wrapper per ottenere il pacchetto Joomla.
+
+1. Installare il pacchetto candidato su Joomla 6 di prova con `com_finder` attivo. Verificare **Estensioni → Plugin**: `Smart Search - JD Learn` è abilitato alla prima installazione e resta nello stato scelto durante un aggiornamento.
+2. Predisporre corsi con titolo/sommario univoci: pubblicato in categoria pubblica, non pubblicato, catalogo con livello registrato, categoria privata, antenato non pubblicato, lingua differente, senza versione pubblicata, e pubblicato con `publish_up`/`publish_down` configurato. Predisporre anche un corso pubblico con titolo e sommario promozionale.
+3. In **Componenti → Smart Search → Indice**, avviare l’indicizzazione e verificare che risultino soltanto i corsi pubblici idonei. Cercare dal sito il titolo univoco: il link apre la scheda corso e mostra solo titolo/sommario; nessuna lezione o informazione privata compare nel risultato.
+4. Modificare titolo e sommario del corso pubblico, reindicizzare, quindi verificare i nuovi termini e l’assenza dei precedenti. Ritirare/pubblicare un corso e verificare rispettivamente rimozione/ricomparsa del risultato.
+5. Cambiare accesso, stato o lingua di una categoria/antenato; spostare una categoria con corsi dentro/fuori. Dopo aggiornamento indice, verificare le nuove regole sulle schede discendenti.
+6. Ripetere in IT e EN con filtro lingua attivo. Verificare che corsi incompatibili con la lingua categoria non compaiano e che i corsi con finestra programmata restino esclusi.
+
+## PR #196 integrata — retry del progresso audio
+
+PR [#196](https://github.com/jeckodevelopment/jd_learn/pull/196), milestone **1.0.0**, introduce un retry singolo dello stesso salvataggio per errori di rete, timeout, 408, 429 e 5xx. Gli errori permanenti non vengono riprovati. Il progresso audio non completa la lezione né aumenta la percentuale; la conferma esplicita resta necessaria. CI 4/4 nel [run 42876421523](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523). Collaudo manuale pendente.
+
+1. Avviare una lezione audio, attendere il salvataggio e ricaricare: la ripresa deve partire dal punto registrato.
+2. Mettere in pausa e spostare il cursore; verificare salvataggio e ripresa della posizione aggiornata.
+3. Simulare rete/5xx: il client deve ritentare una volta lo stesso punto e mostrare il salvataggio se riuscito.
+4. Simulare 403: nessun retry ripetuto, errore visibile, nessun cambiamento di completamento o percentuale.
+5. Arrivare alla fine dell’audio: la lezione deve richiedere ancora la conferma esplicita.
+
+[Pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/42876421523/artifacts/13793090250), disponibile fino al 24 novembre 2026.
+
+## PR #194 integrata — filtri della banca domande
+
+PR [#194](https://github.com/jeckodevelopment/jd_learn/pull/194), milestone **1.0.0**, aggiunge i controlli Ricerca, Categoria, Stato e Lingua e corregge l’intestazione Azioni. CI standard 4/4 superata nel [run 42873607501](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501). Collaudo manuale pendente.
+
+1. Aprire JD Learn → Banca domande come amministratore autorizzato.
+2. Verificare i quattro controlli; filtrare singolarmente, poi combinarli. Usare Pulisci.
+3. Verificare risultati, paginazione e ordinamento.
+4. Verificare **Azioni** in italiano e **Actions** in inglese, senza placeholder.
+5. Con un ruolo senza `jlms.quiz.manage`, verificare che l’accesso sia negato.
+
+[Pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/42873607501/artifacts/13791570779).
+
+## PR #192 integrata — default “Usa globali” per il fuso del corso
+
+Issue [#172](https://github.com/jeckodevelopment/jd_learn/issues/172) corretta: il campo Timezone nativo Joomla offre e seleziona “Usa globali” per un nuovo corso. Il salvataggio risolve l’opzione nel fuso IANA di Configurazione globale; corsi esistenti e date UTC restano invariati. PR [#192](https://github.com/jeckodevelopment/jd_learn/pull/192), merge commit `64ae66454c7d2a64a3237f1f7f12b2d9174f95ae`.
+
+CI standard 4/4 superata nel [run 42865678167](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167). Pacchetto [JD-Learn-0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42865678167/artifacts/13787890952); wrapper SHA-256 `9b29ce5e6d2e5cc54f857d64080b3dfb45be6ef46dd967248cb04ba20113d3c4` (543923 byte), pacchetto Joomla interno `2a42ae0a50139cf727995b2ab50764d33fe6734ab738a09e6f7cde62aab19ac3` (544064 byte). Scadenza artifact: 24 novembre 2026, 17:34 UTC. Collaudo manuale sul sito Joomla ancora pendente:
+
+1. Impostare **Europe/Rome** in Configurazione globale → Server → Fuso orario.
+2. Aprire JD Learn → Corsi → Nuovo e verificare che il campo fuso mostri **Usa globali**, non Abidjan.
+3. Inserire una data/ora locale, salvare e riaprire: il selettore deve mostrare Europe/Rome e l’orario deve restare invariato.
+4. Cambiare il fuso globale, creare un altro corso e verificare che resti selezionato **Usa globali**; dopo il salvataggio deve risultare il nuovo fuso globale.
+5. Aprire un corso con fuso esplicito e verificare che fuso e date non cambino.
+
+## PR #190 integrata — indice aula su smartphone (0.41.52-dev)
+
+CI standard 4/4 superata nel [run 42860617351](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351). Il [pacchetto 0.41.52-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42860617351/artifacts/13784608215) contiene il runtime verificato (SHA-256 interno `278d260dddbdcdda305fff7456943d5ee43a15d042c94e1c3d901fe9f166c332`, wrapper `6214644bc36d91e60cb7da5b9d31f9216e3e53c8492eba1a5ea3ac5fa4962ddd`; scade il 24 novembre 2026 alle 17:06 UTC). La procedura manuale seguente resta pendente.
+
+1. Aprire da smartphone (viewport 375 px) un corso pubblicato con più moduli e lezioni; aprire una lezione accessibile. Atteso: il programma inizia chiuso e il contenuto della lezione appare senza scorrere l’intero indice.
+2. Attivare “Mostra programma”. Atteso: si espande l’indice, il controllo cambia in “Nascondi programma” e aria-expanded passa a true; attivarlo di nuovo lo chiude. Verificare navigazione da tastiera e focus visibile.
+3. Selezionare una lezione dal programma aperto. Atteso: viene caricata la lezione selezionata e al nuovo caricamento l’indice mobile torna chiuso.
+4. Ridimensionare il viewport oltre 48rem. Atteso: il controllo sparisce e il programma resta visibile nella colonna desktop. Verificare anche la navigazione su corso con lezione bloccata e senza JavaScript: contenuto non autorizzato non viene mostrato e i link del programma restano raggiungibili.
+
+## PR #187 integrata — retry del salvataggio di avvio (0.41.51-dev)
+
+CI standard 4/4 superata nel [run 42845258898](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898). Il [pacchetto 0.41.51-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42845258898/artifacts/13779340061) contiene il runtime verificato (SHA-256 interno `1f7563bd4957f66027dbc1d9b925784a087e196a75ad8909d4b78ce9b2455cab`); questa procedura Joomla resta pendente.
+
+1. Installare il pacchetto verificato 0.41.51-dev su Joomla 6 di prova. Predisporre un corso pubblicato e uno studente iscritto; aprire una lezione testo/documento accessibile e verificare lo stato visibile “Salvataggio dell’attività…” seguito da “Attività avviata e salvata”, quindi “In corso” nell’indice.
+2. Con gli strumenti di rete del browser, provocare un errore transitorio (timeout/connessione interrotta oppure risposta 503) alla prima chiamata `lesson.begin`; ripristinare la rete durante la finestra di retry. Verificare una sola seconda richiesta, con la stessa chiave `idempotency_key`, esito salvato e una sola riga di progresso `started`.
+3. Lasciare la rete offline per entrambe le richieste. Atteso: al massimo due tentativi e messaggio d’errore; nessun completamento/credito e ricaricando la pagina il flusso può riprovare.
+4. Provare un rifiuto 403 (sessione/token non valido o accesso revocato) e verificare che non sia ripetuto; nessun contenuto riservato viene mostrato o mutato.
+5. Verificare che il completamento manuale successivo conti una sola volta e che l’avvio di una lezione audio/video non azzeri posizione o copertura già acquisita.
+
+## PR #185 integrata — avvio e ripresa della lezione (0.41.50-dev)
+
+CI standard 4/4 superata nel [run 42839639601](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601). Il pacchetto [0.41.50-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42839639601/artifacts/13776106013) verificato contiene SHA-256 interno `9534346da253c8f953da826d203b3f3509fab0682b09e7d09736e60180e28e83` (542668 byte) e wrapper `461d8dd9c4d8287c15d6dc667821920e25c4c879108f0a3d9a2ac8cea5ec70f6` (542489 byte), con scadenza 24 novembre 2026 15:03 UTC. L’accettazione manuale resta aperta.
+
+1. Installare il pacchetto su Joomla 6 di prova. Creare un corso pubblicato con due lezioni obbligatorie testo/documento, iscrivere uno studente e aprire la seconda lezione senza premere “Segna come completata”.
+2. Verificare che lo stato della seconda lezione diventi “In corso”, l’avanzamento del corso resti 0% e la lezione non risulti completata. Ricaricare l’aula e verificare la persistenza dello stato.
+3. Tornare alla Dashboard, usare “Riprendi” e verificare che riapra l’ultima lezione aperta ancora disponibile. Ripetere con altro browser/dispositivo sullo stesso account.
+4. Premere “Segna come completata”: la stessa attività passa a completata, avanza il corso una sola volta e non genera conflitti o righe duplicate. Verificare anche una lezione audio/video, per cui il player continua a salvare posizione/copertura senza cambiare la regola di completamento.
+5. Tentare avvio su iscrizione non propria, lezione futura, chiusa, bloccata da prerequisiti, token mancante o metodo GET: atteso diniego e nessuna mutazione. Confermare che visualizzare una pagina bloccata non crea progresso.
+
+## PR #183 integrata — soglia video per lezione (0.41.49-dev)
+
+CI standard 4/4 superata nel [run 42830117573](https://github.com/jeckodevelopment/jd_learn/actions/runs/42830117573). Il pacchetto [0.41.49-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42830117573/artifacts/13770693036) contiene il runtime verificato; SHA-256 interno `46db03c8214873bbd2d266f067585458ebec059e3abbaf2fe29d9e38be1635bb`. Accettazione manuale sul Joomla di prova ancora pendente.
+
+1. In Joomla di prova, creare una bozza con soglia di versione al 75% e due lezioni video. Lasciare vuota la soglia della prima e impostare 50% sulla seconda. Salvare entrambe, riaprire il Programma e verificare che il valore esplicito sia mostrato e la prima resti vuota (eredita).
+2. Impostare valori limite 0,01% e 100% e salvare; verificare che valori 0, 100,01 e più di due decimali siano rifiutati mantenendo i dati già salvati.
+3. Pubblicare e iscrivere uno studente di prova. Verificare che la prima lezione applichi il 75% e la seconda il 50% del video visto, anche se entrambe usano lo stesso provider.
+4. Modificare la soglia in una nuova versione e pubblicarla: lo studente già iscritto mantiene la versione e la soglia originali; una nuova iscrizione riceve i nuovi valori.
+5. Verificare che una lezione non video non esponga la soglia e che una richiesta alterata che provi a salvarla su testo/audio/documento venga respinta senza modifiche.
+
+Warning: truncated output (original token count: 14491)
+Total output lines: 515
+
+## PR #162 integrata — anteprima dei livelli di accesso (0.41.43-dev)
+
+CI standard 4/4 superata nel [run 42712132178](https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178). Il [pacchetto 0.41.43-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42712132178/artifacts/13715794795) contiene il runtime verificato (SHA-256 interno `39797f26dfee8bcfec34c9aa8365c218653e56857c8133808f1892996e2de738`); il collaudo Joomla resta aperto.
+
+1. Aggiornare il sito Joomla 6 di prova. Predisporre un corso pubblicato con catalogo **Public**, contenuto **Registered**, categoria pubblica e un editor con permesso di aprire la preview del programma.
+2. In **Programma → Anteprima editoriale → Verifica dei livelli di accesso**, selezionare solo **Public** e inviare. Atteso: catalogo visibile, contenuto non accessibile, requisito combinato non soddisfatto.
+3. Selezionare **Public** e **Registered**. Atteso: entrambe le condizioni vere e requisito combinato soddisfatto. Provare solo Registered: il catalogo resta nascosto se il livello della categoria/corso è Public.
+4. Verificare che gruppi dell’editor, stato/versione corso, iscrizioni e progressi restino invariati; nessun tentativo, iscrizione o attività viene creato.
+5. Richiedere la preview per un corso fuori dall’ACL editor. Atteso: Joomla nega la richiesta senza mostrare livelli o esiti.
+
+## PR #159 integrata — archiviazione e ripristino (0.41.42-dev)
+
+CI standard 4/4 superata nel [run 42704783478](https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478). Il [pacchetto 0.41.42-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/42704783478/artifacts/13711989978) contiene il runtime verificato (SHA-256 interno `0e8ab0086a7305829b24f76e5859369213320d8529eda56a9556edaf7f0ad6fb`); resta aperto il collaudo sul Joomla di prova.
+
+1. Predisporre un corso pubblicato e un’iscrizione attiva con progressi, più autore e revisore con ACL distinte.
+2. Come revisore…8326 tokens truncated…sponibile nella finestra e non più disponibile dopo la fine.
+5. Modificare/sostituire materiale in bozza e verificare aggiornamento/conservazione della finestra e immutabilità della versione pubblicata.
+
+**Esito sito Joomla:** Non eseguito.
+
+### PR #80 — preflight disponibilità corso
+
+Riferimenti: [PR #80](https://github.com/jeckodevelopment/jd_learn/pull/80), criteri di pubblicazione del corso. 
+
+1. In una bozza, allegare materiale in quarantena/non pronto: Programma mostra un blocco di pubblicazione.
+2. Con scansione ClamAV obbligatoria, il blocco resta finché il file non è pronto e la scansione `clamd` non è pulita.
+3. Materiali solo anteprima o programmati mostrano un blocco.
+4. Materiale pronto, non di anteprima e senza finestra rimuove il blocco (con scansione obbligatoria, solo dopo esito pulito).
+5. La pagina preflight non apre/scansiona file; la pubblicazione valida di nuovo lato server e blocca materiale non valido.
+
+**Esito sito Joomla:** Non eseguito.
+
+### PR #74 — controlli di pubblicazione
+
+Riferimenti: [PR #74](https://github.com/jeckodevelopment/jd_learn/pull/74), percorso editoriale/pref-light. 
+
+1. Con amministratore autore/editore, creare bozza con un modulo senza lezioni: Programma segnala modulo vuoto e assenza di lezione obbligatoria.
+2. Aggiungere lezione facoltativa: scompare il blocco modulo vuoto, resta quello sulla lezione obbligatoria.
+3. Aggiungere lezione obbligatoria: scompaiono entrambi i blocchi strutturali; riepilogo/coperina assenti restano solo avvisi facoltativi.
+4. Completare dettagli di contenuto e tentare la pubblicazione: controlli definitivi server rifiutano provider/contenuti non validi e conservano la bozza.
+5. Ripetere la sola consultazione con ruolo che può leggere Programma ma non pubblicare. Liste separate e tradotte; il caricamento non cambia lo stato della bozza.
+
+**Esito sito Joomla:** Non eseguito.
+
+### PR #78 — preflight durata video mancante
+
+Riferimenti: [PR #78](https://github.com/jeckodevelopment/jd_learn/pull/78), durata video/preflight.
+
+1. Aprire bozza con lezione video senza durata rilevata/confermata: preflight mostra il blocco.
+2. Registrare durata valida (1 secondo–8 ore) con flusso normale editor: blocco scompare dopo ricaricamento.
+3. Tentare pubblicazione senza conferma: il server rifiuta e non modifica versione.
+4. Verificare che l’apertura del preflight non contatti provider.
+
+**Esito sito Joomla:** Non eseguito.
+
+### PR #64 — accesso all’aula dopo il ritiro dal catalogo
+
+Riferimenti: [PR #64](https://github.com/jeckodevelopment/jd_learn/pull/64), R-03.
+
+1. Iscrivere uno studente, avviare una lezione testo e una video.
+2. Ritirare la scheda e impostare la fine pubblicazione nel passato: scheda nascosta, nuovo studente non può avviare il corso né ricevere ammissione manuale.
+3. Con lo studente già iscritto, usare Riprendi: aula, progressi e player continuano a funzionare anche dopo ricaricamento.
+4. Revocare il livello Joomla o rendere indisponibile la categoria: l’aula viene bloccata.
+5. Ripubblicare: corso torna visibile e progressi/versione dello studente restano invariati.
+
+**Esito sito Joomla:** Non eseguito.
+
+### PR #62 — Riprendi alla prima lezione obbligatoria incompleta
+
+Riferimenti: [PR #62](https://github.com/jeckodevelopment/jd_learn/pull/62), R-05.
+
+Precondizioni: corso pubblicato con almeno tre lezioni testo obbligatorie e una quarta facoltativa; iscrizione studente di prova.
+
+1. Con iscrizione nuova, selezionare **Riprendi**: apre la prima lezione obbligatoria.
+2. Completare le prime due; con ultima attività ancora valida, **Riprendi** riapre quella lezione.
+3. Solo sull’istanza eliminabile, azzerare `last_lesson_id` nell’iscrizione di test: **Riprendi** apre la terza obbligatoria, non le già completate né la facoltativa.
+4. Completare tutte le obbligatorie, azzerare nuovamente il riferimento e usare **Riprendi**: apre la prima lezione per revisione.
+5. Controllare che le aperture non cambino stato, percentuale o progressi.
+
+**Esito sito Joomla:** Non eseguito.
+
+## PR senza comportamento Joomla
+
+PR esclusivamente documentali o di infrastruttura senza cambiamento di comportamento utente: registrare “Non applicabile” con link alla PR e motivazione; non aggiungere casi manuali fittizi.
+
+## Prove storiche ancora da recuperare
+
+Le PR runtime senza procedura dettagliata nelle rispettive descrizioni non sono implicitamente collaudate. Per ciascuna, trascrivere i passi solo da requisiti/scenari già approvati e guide correnti; se la fonte non basta, segnalare la lacuna e chiedere una decisione di prodotto invece di inventare un test. Fino alla trascrizione ed esecuzione, mantenere lo stato “Non eseguito”.
+
+## Manutenzione dopo ogni PR
+
+Prima di unire una PR con comportamento runtime, riportarne qui le istruzioni manuali già presenti nella PR, collegare gli ID requisito/scenario esistenti e indicare precondizioni e risultati attesi. Se manca una procedura, indicare esplicitamente la fonte da cui ricavarla e tenere il test aperto. La descrizione di ogni PR deve includere `## Collaudo manuale Joomla`; per una PR solo documentale deve dichiarare che non cambia comportamento Joomla e che il test sito non è applicabile.
+## Issue #154 — fuso iniziale del corso dalla configurazione globale Joomla
+
+**Stato:** prova automatizzata superata in CI nel [run 42769089189](https://github.com/jeckodevelopment/jd_learn/actions/runs/42769089189); il collaudo manuale Joomla è ancora da eseguire. PR [#167](https://github.com/jeckodevelopment/jd_learn/pull/167), main 0.41.44-dev.
+
+1. In Joomla 6, impostare in **Configurazione globale → Server → Fuso orario** un valore riconoscibile, ad esempio `Europe/Rome`. Creare un nuovo corso come autore.
+2. Aprire la scheda **Calendario**: il campo Fuso orario deve partire da `Europe/Rome`, anche se il fuso del profilo utente è diverso o non impostato.
+3. Selezionare un fuso diverso e salvare il corso; riaprirlo e verificare che il valore scelto sia conservato.
+4. Creare un altro corso e impostare date locali dopo aver selezionato un fuso diverso. Verificare che l’ora salvata/mostrata segua il fuso scelto e che le date esistenti dei corsi non vengano reinterpretate.
+
+## Issue #157 — usabilità del programma didattico
+
+**Stato:** PR [#169](https://github.com/jeckodevelopment/jd_learn/pull/169) integrata in 0.41.45-dev; CI standard 4/4 superata nel [run 42771935666](https://github.com/jeckodevelopment/jd_learn/actions/runs/42771935666); il collaudo manuale Joomla deve ancora essere eseguito.
+
+1. Aprire il programma di un corso in bozza con un utente autorizzato alla modifica. Verificare che **Aggiungi modulo**, **Campi lezione**, **Regole didattiche** e **Anteprima corso** compaiano nella toolbar nativa Joomla, senza duplicati sotto il titolo, e che mantengano il corso/versione selezionati.
+2. Aggiungere un modulo e aprire ciascuna delle altre destinazioni. Verificare che la navigazione arrivi alla funzione corretta, mantenendo il contesto del corso quando previsto.
+3. Ripetere con un utente senza permesso di modifica e con un utente senza gestione campi: le azioni non autorizzate non devono comparire; provare anche l’accesso diretto alle relative URL.
+4. Usare la toolbar e i form laterali solo da tastiera; verificare focus visibile e spaziatura leggibile a larghezza desktop e mobile, compreso il pannello Joomla compresso.
+
+**Esito sito Joomla:** Non eseguito.
+
+
+## AC-121 — docenti, associazioni e profili preesistenti
+
+Riferimenti: AUT-01, CAT-02, CORE-01/04, LIFE-02; [guida Profili e associazioni docente](../component/administrator/docs/TEACHERS.md).
+
+Precondizioni: Joomla 6 di prova aggiornabile, un corso in bozza e uno pubblicato, un profilo docente nuovo e uno preesistente; account segreteria con permessi di gestione corsi/docenti.
+
+1. Aprire JD Learn → Docenti e creare un profilo. Verificare che non sia richiesta né mostrata una categoria docente; il salvataggio deve usare il profilo senza assegnare gruppi Joomla o permessi all’account collegato.
+2. Modificare un profilo preesistente e associarlo al corso in bozza. Salvare, riaprire il corso e verificare che l’associazione e l’ordine restino invariati.
+3. Modificare l’associazione di un corso pubblicato. La scheda editoriale deve mostrare il dato corrente, mentre la versione didattica e lo snapshot già pubblicati restano invariati.
+4. Ripetere l’aggiornamento dei dati di un profilo tecnico preesistente: categorie tecniche e riferimenti restano conservati e non si trasformano in un flusso di gestione per l’utente.
 
 **Esito sito Joomla:** Non eseguito.
 
