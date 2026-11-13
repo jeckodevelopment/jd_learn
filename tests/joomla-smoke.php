@@ -231,6 +231,17 @@ if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$p
 $privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
 $component = $app->bootComponent('com_jlms');
+$certificateService = $component->getCertificateService();
+$certificateService->adminList($app->getIdentity(), ['q' => 'CERT-C-PROBE', 'status' => 'ready', 'offset' => 0]);
+$auditCount = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_audit')
+    ->where('actor_user_id = :actor')->where('action = :action')->bind(':actor', $userId)->bind(':action', 'admin_list'))->loadResult();
+if ($auditCount < 1) { throw new \RuntimeException('Certificate administrator list access was not audited.'); }
+try {
+    $certificateService->adminList(new \Joomla\CMS\User\User(), []);
+    throw new \RuntimeException('Certificate administration must reject unauthorised users.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+}
 $factory = $component->getMVCFactory();
 if (($argv[2] ?? '') === 'retained') {
     $record = $db->setQuery("SELECT title, revision FROM #__jlms_courses WHERE alias='test-course'")->loadObject();

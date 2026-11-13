@@ -947,3 +947,17 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 
 
 **Verifica automatica PR #302:** CI standard 4/4 superata nel [run 1023](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842); il test PDF e la lint PHP sono passati. L’accettazione manuale descritta sopra resta pendente. Pacchetto [JD-Learn-0.56.6-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43410407842/artifacts/14029108411), ZIP interno SHA-256 `73a8cb6de3e4c2f636b2a2b0702799864e3644dcc3c463913e628a4c4c4056d1`, wrapper SHA-256 `313e4a2b18adc2d1f431114eed9b19ff593ec5b154dc0784481e094546a80a92`.
+
+
+# CERT-C — gestione amministrativa attestati (candidato 0.56.7-dev)
+
+**Prerequisiti:** installare/aggiornare il pacchetto candidato su Joomla di prova; abilitare Attestati; completare un corso come studente; creare due account amministrativi, uno con `core.manage` e `jlms.certificates.manage`, uno senza il permesso certificati.
+
+1. Da JD Learn > Dashboard, l’account autorizzato vede la scorciatoia **Attestati**; l’account senza il permesso non la vede. Aprire elenco e dettaglio del certificato e verificare studente, corso, codice, data e dati dello snapshot.
+2. Cercare per nome studente, titolo corso e codice; applicare separatamente i filtri Disponibile, In attesa del PDF e Revocato; verificare risultati, paginazione e stato.
+3. Con l’account senza `jlms.certificates.manage`, aprire direttamente elenco, dettaglio e URL `task=certificate.download`: ogni richiesta deve essere negata senza esporre dati o PDF. Provare anche da utente non autenticato.
+4. Con l’account autorizzato scaricare il PDF dal dettaglio: il file deve corrispondere al codice e ai dati congelati del certificato. Revocare un attestato e verificare che il download amministrativo venga negato.
+5. Nel dettaglio verificare gli eventi di consultazione/download con ID amministratore e data UTC. Confermare che l’audit non includa email o altri dati personali non necessari.
+6. Aggiornare da 0.56.6-dev e verificare che certificati e asset esistenti restino leggibili e non vengano rigenerati o modificati.
+
+**Stato:** scenari manuali pendenti; l’esito CI e il pacchetto verranno registrati dopo l’integrazione della PR.
