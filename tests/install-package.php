@@ -83,7 +83,7 @@ try {
     $consentPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='user' AND element='jdlearnconsent'")->loadResult();
     $expectedConsentState = $expectDisabledPlugin ? 0 : 1;
     if ($consentPlugin === null || (int) $consentPlugin !== $expectedConsentState) {
-        throw new \\RuntimeException($expectDisabledPlugin
+        throw new \RuntimeException($expectDisabledPlugin
             ? 'A JD Learn package upgrade must preserve the registration consent plugin state.'
             : 'The package installer did not enable the registration consent plugin.');
     }
