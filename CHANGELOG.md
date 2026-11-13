@@ -1,3 +1,9 @@
+## 0.56.4-dev — conferma iscrizione amministrativa (in preparazione)
+
+- Collega l’iscrizione amministrativa singola al template Joomla di conferma e all’outbox già esistente.
+- Applica le preferenze globali/per corso e deduplica per enrollment; i preassegnamenti senza accesso corrente non inviano una falsa conferma.
+- Requisiti: IMP-09-MAIL-A, MAIL-02/05. Collaudo Joomla/SMTP pendente.
+
 ## 0.56.3-dev — Notifiche sospensione e riattivazione iscrizione (PR #297 integrata)
 
 - Registra template Joomla per sospensione e riattivazione dell’accesso al corso.

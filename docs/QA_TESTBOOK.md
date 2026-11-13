@@ -909,3 +909,17 @@ Verificare su Joomla di prova il riepilogo **Verifica prima della pubblicazione*
 5. Verificare la gestione di errore di accodamento: transazione di stato/audit/coda coerente e rollback; ripetere la stessa transizione idempotente senza duplicati.
 
 PR [#297](https://github.com/jeckodevelopment/jd_learn/pull/297) integrata, CI standard 4/4 nel [run 43307181190](https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190). Pacchetto [JD-Learn-0.56.3-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43307181190/artifacts/13983759363), SHA-256 ZIP `8c3d5e0de6935f67cf93e1b7caf3a27e7d10d61d26c20450f5d9ace1cc6cdee0`. La suite automatizzata non sostituisce le prove manuali Joomla/SMTP sopra: registrare qui ambiente ed esito.
+
+
+## IMP-09-MAIL-A — conferma di iscrizione amministrativa (candidata 0.56.4-dev)
+
+**Comportamenti da testare in Joomla**
+
+1. Installare/aggiornare il pacchetto candidato su Joomla di prova con SMTP di test e attività pianificata JD Learn attiva; verificare che il template `com_jlms.enrollment.confirmed` esista in Sistema → Modelli email e che le personalizzazioni esistenti siano preservate dall’upgrade.
+2. Come amministratore autorizzato, iscrivere manualmente uno studente valido a un corso pubblicato in cui abbia accesso ai contenuti. Atteso: l’iscrizione viene creata e, se le preferenze globali/corso sono abilitate, entra in coda una sola email di conferma con nome, corso e URL aula corretti.
+3. Ripetere la stessa richiesta idempotente o ricaricare la schermata dopo il salvataggio. Atteso: un’unica iscrizione e nessun messaggio duplicato.
+4. Disabilitare l’evento globalmente; verificare nessun messaggio. Riabilitarlo e impostare l’override del corso su disabilitato; verificare ancora nessun messaggio. Con globale disabilitato e override esplicitamente abilitato, verificare un solo messaggio.
+5. Eseguire un preassegnamento senza livello di accesso al contenuto. Atteso: l’assegnazione resta distinta e lo studente non riceve una falsa conferma di accesso. Se l’utente possiede già accesso corrente e l’evento è abilitato, la conferma può essere accodata.
+6. Simulare errore SMTP: l’iscrizione deve restare valida e la coda deve applicare retry secondo le regole esistenti; controllare lingua e dati email nel log, senza esporre dati personali eccedenti.
+
+**Esito sito Joomla:** Non eseguito.
