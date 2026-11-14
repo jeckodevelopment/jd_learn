@@ -277,7 +277,7 @@ final class LearningService
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                     $courseId, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
                     (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
-                    ['NAME' => $name, 'COURSE' => (string) $course->title, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
+                    ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id]
                 );
             }
@@ -622,7 +622,7 @@ final class LearningService
         (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
             $courseId, hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
             (string) ($actor->getParam('language', '') ?: $language), (string) $actor->email, $name,
-            ['NAME' => $name, 'COURSE' => $course, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
         );
     }
 
