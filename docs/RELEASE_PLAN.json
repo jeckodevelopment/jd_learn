@@ -314,7 +314,12 @@
         "SECDEV-05",
         "SECDEV-06",
         "SECDEV-07",
-        "SECDEV-08"
+        "SECDEV-08",
+        "SEC-P1",
+        "SEC-P2",
+        "SEC-P3",
+        "SEC-P4",
+        "SEC-P5"
       ]
     },
     {
@@ -325,7 +330,17 @@
         "REL-01",
         "REL-02",
         "REL-03",
-        "REL-04"
+        "REL-04",
+        "DOC-01",
+        "DOC-02",
+        "DOC-03",
+        "DOC-04",
+        "DOC-05",
+        "DOC-06",
+        "DOC-07",
+        "DOC-08",
+        "DOC-09",
+        "DOC-10"
       ]
     },
     {
