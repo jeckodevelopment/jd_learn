@@ -1,3 +1,11 @@
+## Issue #368 — traduzione voce sidebar ricollocazione categorie
+
+1. Aprire il backend Joomla 6.2 in italiano e verificare che la voce **Gestione dipendenze categorie** compaia nel menu laterale JD Learn invece della chiave `COM_JLMS_CATEGORY_REASSIGN_TITLE`.
+2. Passare all’inglese e verificare che la stessa voce mostri **Category dependency cleanup**.
+3. Aprire la voce in entrambe le lingue e verificare che la pagina si carichi senza errori e mantenga le autorizzazioni esistenti.
+
+CI verifica entrambe le traduzioni in `com_jlms.sys.ini` e che Joomla risolva la chiave in inglese nel menu amministrativo.
+
 ## Issue #377 — vista Docenti: stato e conteggio corsi
 
 1. In Joomla 6.2 di prova, aprire **JD Learn → Docenti**. Verificare che la colonna Stato mostri l'icona nativa Joomla per pubblicato/non pubblicato, senza testo e senza consentire toggle inline.
