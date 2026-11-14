@@ -102,6 +102,7 @@ foreach ([
     'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.approved' => 'approval'",
     'component/administrator/src/Application/MailPreferences.php' => "'approval', 'rejection'",
     'component/administrator/src/Application/EnrollmentApprovalService.php' => "FOR UPDATE",
+    'component/administrator/src/Infrastructure/AssessmentAudit.php' => "'enrollmentapproval'=>'COM_JLMS_LOG_ENROLLMENT_APPROVAL'",
     'component/administrator/src/Controller/EnrollmentapprovalController.php' => "checkToken('post', false)",
     'component/administrator/tmpl/enrollments/default.php' => 'enrollmentapproval.decide',
 ] as $file => $needle) {
