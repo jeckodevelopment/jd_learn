@@ -2,9 +2,9 @@
   "audited_at": "2026-11-14",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "as_of": "2026-11-13",
+    "as_of": "2026-11-14",
     "percent": 79,
-    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+64+75)/9=78,67%, arrotondata a 79%. MAIL-04/PR #344 aggiunge 3 punti all’area email (61%→64%); la stima riguarda implementazione, non accettazione. Collaudo Joomla/SMTP pendente.",
+    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+64+75)/9=78,67%, arrotondata a 79%. Stima invariata dopo la PR #365 (rifinitura UX della toolbar, nessun requisito funzionale completato); implementazione distinta dall’accettazione manuale, che resta pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -17,13 +17,13 @@
       "certificates": 75
     }
   },
-  "version": "0.56.21-dev",
-  "code_baseline": "387b6d28a66f64ab89d2eba50849d09bfff98c06",
+  "version": "0.56.26-dev",
+  "code_baseline": "c73a10bf3c7910fcfd9bab35e0a68f929dc3ed9f",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43630634077,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
+    "run_id": 43641553637,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43641553637",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,15 +51,17 @@
     ]
   },
   "package": {
-    "artifact_id": 14128431017,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077/artifacts/14128431017",
-    "artifact_name": "JD-Learn-0.56.21-dev",
-    "installable_package": "pkg_jlms-0.56.21-dev.zip",
-    "sha256": "5fc55817dab76cce76b85b27b6cfde2ee5350e3084a1c567e2a4410414fb100c",
-    "artifact_sha256": "cb2b0988e8d8238754a4601ebf9f945d3e9d8f12399c31ebac6a264195a54b0c",
-    "size_bytes": 662292,
+    "artifact_id": 14132288101,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43641553637/artifacts/14132288101",
+    "artifact_name": "JD-Learn-0.56.26-dev",
+    "installable_package": "pkg_jlms-0.56.26-dev.zip",
+    "sha256": "c4955873b3ea1c67d0b4baa685d55943764c1107f7c2fc64c6e36f8d4590679c",
+    "artifact_sha256": "2b9ad03f966826046f58e01a76e51aee3f847a948607935fb545fa54e616f349",
+    "size_bytes": 662870,
+    "artifact_size_bytes": 662598,
     "wrapper_zip": true,
-    "notes": "Extract inner Joomla ZIP from GitHub Actions wrapper; user-confirmed installation pertains to previous 0.56.20 only."
+    "expires_at": "2026-11-28T21:16:25Z",
+    "notes": "Estrarre lo ZIP Joomla interno dal contenitore GitHub Actions. Accettazione visiva/navigazione della toolbar nel sito Joomla ancora pendente."
   },
   "release_process": {
     "issue": 160,
@@ -69,11 +71,11 @@
     "ci_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43130882855",
     "standard_ci_jobs": 4,
     "status": "passed; process/tooling change only; no runtime requirement progress",
-    "latest_installable_artifact_id": 14062899580,
-    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43477935433/artifacts/14062899580",
-    "package_sha256": "6af55c08a96d9c3b9ad02add1e3c3d491ecd931e11c5aa9d6ec3555f7447128c",
-    "artifact_wrapper_sha256": "0e3ec5bd9e067833edf7160e70fe5a3ec5be9f5bfcc73f76fd5552f9a35958a7",
-    "artifact_expires_at": "2026-11-27T18:01:24Z",
+    "latest_installable_artifact_id": 14132288101,
+    "latest_installable_artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43641553637/artifacts/14132288101",
+    "package_sha256": "c4955873b3ea1c67d0b4baa685d55943764c1107f7c2fc64c6e36f8d4590679c",
+    "artifact_wrapper_sha256": "2b9ad03f966826046f58e01a76e51aee3f847a948607935fb545fa54e616f349",
+    "artifact_expires_at": "2026-11-28T21:16:25Z",
     "manual_joomla_acceptance": "MAIL-11.3 revoca anonima via link: eseguire i casi documentati in docs/QA_TESTBOOK.md; CORE-18 e gli altri collaudi manuali restano pendenti."
   },
   "full_requirement_acceptance": {},
@@ -13298,12 +13300,12 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 338,
-    "merge_commit": "5d38e6e47582422be581247de085206abc2c0296",
-    "feature": "SEC-P1 preliminary mitigation: redact SMTP/provider exception details from the email queue and audit output; redact legacy values during migration",
-    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570",
-    "manual_acceptance": "pending Joomla/SMTP; see docs/QA_TESTBOOK.md",
-    "residual_implementation": "Systematic security review and SEC-P1–P5 release gates remain open; functional email coverage remains 61%."
+    "pull_request": 365,
+    "merge_commit": "c73a10bf3c7910fcfd9bab35e0a68f929dc3ed9f",
+    "feature": "Issue #365: raggruppata l’azione Salva e apri programma nel menu del pulsante Salva & Chiudi; Salva resta autonomo.",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43641553637",
+    "manual_acceptance": "pending Joomla 6.2 visual/navigation acceptance; see docs/QA_TESTBOOK.md#issue-365--azioni-di-salvataggio-nella-toolbar-corso",
+    "residual_implementation": "UX-only; no functional requirement completion. Implementation estimate remains 79% (78.67% unrounded)."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
