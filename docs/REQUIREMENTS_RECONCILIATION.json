@@ -1,8 +1,8 @@
 {
   "date": "2026-11-14",
   "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
-  "runtime_tested_head": "9ada1824bdc0eb09efe547465d4231f973f41b8a",
-  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407",
+  "runtime_tested_head": "387b6d28a66f64ab89d2eba50849d09bfff98c06",
+  "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
   "counts": {
     "Stato implementazione": {
       "Parziale": 178,
