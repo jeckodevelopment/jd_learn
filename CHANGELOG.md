@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.56.29-dev
+
+- Corretta la localizzazione della voce **Salva & Chiudi** nell’editor corso, con stringhe dedicate per italiano e inglese (#391).
+
+
 ## 0.56.28-dev
 
 - Ripristinata la toolbar dell’editor corso: **Salva** resta autonomo; **Salva & Chiudi** è l’azione principale del menu split e **Salva e apri programma** è la voce aggiuntiva (#384).
