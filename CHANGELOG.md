@@ -1,5 +1,13 @@
 # Changelog
 
+## Correzione consegna ZIP Joomla (14 novembre 2026)
+
+- Corretto il processo di consegna degli ZIP di sviluppo: GitHub Actions scarica un wrapper contenente `SHA256SUMS.txt` e `pkg_jlms-0.56.19-dev.zip`, mentre Joomla deve ricevere il solo ZIP interno con `pkg_jlms.xml` alla radice. La distinzione era stata omessa nella consegna dopo PR #362, #366 e #367 e causava il messaggio «manifest mancante».
+- Nuovo `tools/verify_installable.py` per validare ZIP interno e manifest, 11 costituenti, SHA-256 ed estrazione sicura dal wrapper. Test regressione negativo dell'archivio esterno e positivo del pacchetto installabile.
+- La CI ora fallisce se il pacchetto candidato non è caricabile in Joomla e contrassegna l'archivio scaricabile da Actions con `EXTRACT-FIRST`.
+- Il pacchetto interno 0.56.19-dev della PR #367 è già stato estratto, verificato e fornito direttamente all'utente. La pipeline non cambia il formato interno né la versione; il collaudo dell'installazione nel sito di prova rimane distinto.
+
+
 ## MAIL-F — richieste approvate/rifiutate (PR #367 integrata)
 
 - Integrazione su `main` il 14 novembre 2026, commit `902480be3eec7aa7cdf0bd8b6ba4603cab7172c5`; [PR #367](https://github.com/jeckodevelopment/jd_learn/pull/367), milestone 1.0.0.
