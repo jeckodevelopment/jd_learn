@@ -1,5 +1,5 @@
 {
-  "audited_at": "2026-11-13",
+  "audited_at": "2026-11-14",
   "product": "JD Learn",
   "current_implementation_estimate": {
     "as_of": "2026-11-13",
@@ -17,13 +17,13 @@
       "certificates": 75
     }
   },
-  "version": "0.56.19-dev",
-  "code_baseline": "0fc688bfdbcdacb99616378b69cac30260eef5fb",
+  "version": "0.56.20-dev",
+  "code_baseline": "9ada1824bdc0eb09efe547465d4231f973f41b8a",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43527480797,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43527480797",
+    "run_id": 43627177407,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,16 +51,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14086560667,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43527480797/artifacts/14086560667",
-    "artifact_name": "JD-Learn-0.56.19-dev",
-    "installable_package": "pkg_jlms-0.56.19-dev.zip",
-    "sha256": "764d47952c513b554329689f136d90b747081d9128711f44e98452611d942021",
-    "artifact_sha256": "03cfde440b0241b42e6465b0e8e2781d16459202fe9c7a62ca18637199e9193f",
-    "size_bytes": 646493,
-    "artifact_size_bytes": 646221,
-    "expires_at": "2026-11-27T23:32:53Z",
-    "wrapper_zip": true
+    "artifact_id": 14126702616,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407/artifacts/14126702616",
+    "artifact_name": "JD-Learn-0.56.20-dev",
+    "installable_package": "pkg_jlms-0.56.20-dev.zip",
+    "sha256": "ab972ee39895bd529ff72a64f9df51814a4d5981baf6d4402882bb654fe69ab2",
+    "artifact_sha256": "e5d8622ccc4b8cb0eaf4a903b9c6c4801cb89c76ff1e85a21fc4e81d2cd08870",
+    "size_bytes": 660705,
+    "wrapper_zip": true,
+    "notes": "GitHub Actions wraps the direct installable Joomla ZIP. The additional dev prerelease publishing workflow is reverted; do not use stale jdlearn-dev-latest release."
   },
   "release_process": {
     "issue": 160,
@@ -13232,6 +13231,38 @@
         "standard_jobs": 4
       },
       "note": "PR #367 merged: MAIL-F approval/rejection, complete CI 4/4; manual Joomla acceptance pending."
+    },
+    {
+      "ci": {
+        "run_id": 43527480797,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43527480797",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      "note": "Previously reported CI baseline, superseded by installer repair PR #373; manual acceptance never asserted."
     }
   ],
   "latest_feature": {
@@ -13285,8 +13316,8 @@
     "testbook": "docs/QA_TESTBOOK.md#mail-112--opt-in-durante-la-registrazione-joomla-05614-dev",
     "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873"
   },
-  "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Avanzamento implementativo 78,67% (79% arrotondato), email 64%. MAIL-04 implementato; accettazione manuale Joomla/SMTP pendente.",
-  "updated_at": "2026-11-13T23:32:53Z",
+  "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Avanzamento implementativo 78,67% (79% arrotondato), email 64%. MAIL-04 implementato; accettazione manuale Joomla/SMTP pendente. | Installer updateObject by-reference fixed in merged PR #373; reverting additional packaging, official 79% baseline unchanged pending weighted recalculation after #367. Manual Joomla 6.2.0 installation must be retested.",
+  "updated_at": "2026-11-14",
   "sec_p1_mail_transport_candidate": {
     "pull_request": 338,
     "runtime_commit": "5d38e6e47582422be581247de085206abc2c0296",
@@ -13304,5 +13335,19 @@
     "ci": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43527480797",
     "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43527480797/artifacts/14086560667",
     "testbook": "docs/QA_TESTBOOK.md"
+  },
+  "installer_upgrade_fix": {
+    "pull_request": 373,
+    "merge_commit": "9ada1824bdc0eb09efe547465d4231f973f41b8a",
+    "cause": "Joomla DatabaseDriver::updateObject second argument by-reference; temporary `(object) []` passed in MailTemplateTagUpdater::synchronize during component postflight; bug present before #366, exposed by existing mail template tag changes",
+    "fix": "Named object variable in postflight and four LearningService updateObject call sites; regression in tests/joomla-smoke.php and tests/database-byref-safety.py",
+    "reverted_packaging_prs": [
+      369,
+      370,
+      371
+    ],
+    "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407",
+    "manual_joomla_6_2_acceptance": "pending",
+    "implementation_delta_percent_points": 0
   }
 }
