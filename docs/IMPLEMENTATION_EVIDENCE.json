@@ -17,13 +17,13 @@
       "certificates": 75
     }
   },
-  "version": "0.56.20-dev",
-  "code_baseline": "9ada1824bdc0eb09efe547465d4231f973f41b8a",
+  "version": "0.56.21-dev",
+  "code_baseline": "387b6d28a66f64ab89d2eba50849d09bfff98c06",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43627177407,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407",
+    "run_id": 43630634077,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,15 +51,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14126702616,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407/artifacts/14126702616",
-    "artifact_name": "JD-Learn-0.56.20-dev",
-    "installable_package": "pkg_jlms-0.56.20-dev.zip",
-    "sha256": "ab972ee39895bd529ff72a64f9df51814a4d5981baf6d4402882bb654fe69ab2",
-    "artifact_sha256": "e5d8622ccc4b8cb0eaf4a903b9c6c4801cb89c76ff1e85a21fc4e81d2cd08870",
-    "size_bytes": 660705,
+    "artifact_id": 14128431017,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077/artifacts/14128431017",
+    "artifact_name": "JD-Learn-0.56.21-dev",
+    "installable_package": "pkg_jlms-0.56.21-dev.zip",
+    "sha256": "5fc55817dab76cce76b85b27b6cfde2ee5350e3084a1c567e2a4410414fb100c",
+    "artifact_sha256": "cb2b0988e8d8238754a4601ebf9f945d3e9d8f12399c31ebac6a264195a54b0c",
+    "size_bytes": 662292,
     "wrapper_zip": true,
-    "notes": "GitHub Actions wraps the direct installable Joomla ZIP. The additional dev prerelease publishing workflow is reverted; do not use stale jdlearn-dev-latest release."
+    "notes": "Extract inner Joomla ZIP from GitHub Actions wrapper; user-confirmed installation pertains to previous 0.56.20 only."
   },
   "release_process": {
     "issue": 160,
@@ -13263,6 +13263,38 @@
         ]
       },
       "note": "Previously reported CI baseline, superseded by installer repair PR #373; manual acceptance never asserted."
+    },
+    {
+      "ci": {
+        "run_id": 43627177407,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      "note": "Historical CI baseline before MAIL-G #376; manual Joomla/SMTP acceptance pending."
     }
   ],
   "latest_feature": {
@@ -13349,5 +13381,25 @@
     "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407",
     "manual_joomla_6_2_acceptance": "pending",
     "implementation_delta_percent_points": 0
+  },
+  "mail_g_teacher_assignment": {
+    "pull_request": 376,
+    "merge_commit": "387b6d28a66f64ab89d2eba50849d09bfff98c06",
+    "scope": "First MAIL-G increment: teacher assignment native Mail Template, queued on effective course-teacher link with global/course override; skip stale/blocked/unlinked accounts",
+    "ci": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
+    "manual_joomla_smtp_acceptance": "pending",
+    "implementation_estimate_delta_points_approx": 0.2,
+    "remaining": [
+      "New lesson published",
+      "Significant didactic changes",
+      "Approval request routed to authorized staff",
+      "MAIL-H end-to-end editorial and SMTP review"
+    ]
+  },
+  "manual_installation_0_56_20": {
+    "status": "user-confirmed",
+    "date": "2026-11-14",
+    "environment": "Joomla 6.2.0",
+    "scope": "Installation only; no claim of complete functional acceptance"
   }
 }
