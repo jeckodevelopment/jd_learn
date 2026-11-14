@@ -142,7 +142,17 @@
       "requirements": [
         "NOT-01",
         "NOT-02",
-        "MAIL-11"
+        "MAIL-11",
+        "MAIL-01",
+        "MAIL-02",
+        "MAIL-03",
+        "MAIL-04",
+        "MAIL-05",
+        "MAIL-06",
+        "MAIL-07",
+        "MAIL-08",
+        "MAIL-09",
+        "MAIL-10"
       ],
       "status": "Outbox/Scheduler integrati per notifiche operative esistenti; MAIL-11 approvato e tracciato nella baseline dalla PR #313, implementazione runtime ancora da eseguire."
     },
