@@ -116,6 +116,8 @@ if package.exists():
 display_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
 assert "'courseannouncement'" in display_controller
 assert (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').is_file()
+assert 'new \\Jlms\\Component\\Jlms\\Administrator\\Application\\CourseAnnouncementService' in (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').read_text()
+assert 'new CourseAnnouncementService' in (ROOT/'component/administrator/src/Controller/CourseannouncementController.php').read_text()
 assert (ROOT/'component/administrator/tmpl/courseannouncement/default.php').is_file()
 
 # Keep implementation claims separate from planned acceptance and verify their source references.
