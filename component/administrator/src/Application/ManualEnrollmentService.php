@@ -169,7 +169,7 @@ final class ManualEnrollmentService
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                     $course, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
                     (string) ($learner->getParam('language', '') ?: $language), (string) $learner->email, trim((string) $learner->name),
-                    ['USER_FULLNAME' => trim((string) $learner->name), 'COURSE_TITLE' => (string) $courseRecord->title,
+                    ['USER_FULLNAME' => trim((string) $learner->name), 'COURSE_TITLE' => (string) $courseRecord->title, 'ENROLLMENT_DATE' => $now,
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id,
                         'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
                 );
