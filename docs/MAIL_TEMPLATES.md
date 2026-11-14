@@ -173,3 +173,10 @@ Il registro read-only `MailTemplateVariableCatalog::forTemplate($templateId, $la
 | Conferma consenso | `USER_FULLNAME`, `CONFIRM_URL`, `SITE_NAME` |
 
 **Attenzione:** i tag `*_HTML` rappresentano valori escaped o frammenti HTML predisposti dal componente: non vanno usati come HTML arbitrario. Un tag non presente nell'elenco del modello non deve essere considerato disponibile. `COURSE_ENDS_AT` è una data, mentre `COURSE_URL` e i link di consenso sono URL; la disponibilità del dato dipende dallo specifico evento. La specifica delle nuove variabili non è prova che siano già disponibili. Il confronto con il backend e il collaudo SMTP rimangono da eseguire.
+
+
+## MAIL-E — controllo segnaposto prima dell'invio (incremento PR #351)
+
+Il dispatcher della coda consulta il modello Joomla effettivamente selezionato per lingua (con fallback `*`) e, **prima di SMTP**, confronta i segnaposto nel suo oggetto, testo e HTML con i tag dichiarati in `MailTemplateInstaller::tagsFor()` e i dati realmente presenti nel payload. Vengono verificati soltanto i segnaposto JD Learn in forma `{UPPER_SNAKE_CASE}`, per non interpretare arbitrariamente altri costrutti editoriali. Tag non dichiarati, non disponibili per l'evento o dati non scalari causano **blocco dell'invio**, senza generare un messaggio con variabili irrisolte. Gli errori di modello sono **definitivi nella coda** (senza retry SMTP) e la diagnostica non registra destinatari, token o contenuti delle email; l'operatore deve correggere il modello e valutare esplicitamente un nuovo invio. Gli errori di trasporto mantengono le precedenti regole di retry.
+
+Questo è un controllo **al dispatch**, non un editor/validatore preventivo nel modulo amministrativo dei template. Rimangono da implementare la validazione in fase di modifica/anteprima, una guida contestuale Joomla e le nuove variabili approvate ma non ancora prodotte. **Test Joomla/SMTP manuali richiesti**: template personalizzato con token non supportato, token registrato ma non fornito, template valido, HTML/oggetto e coda; nessun avanzamento automatico dell'accettazione.
