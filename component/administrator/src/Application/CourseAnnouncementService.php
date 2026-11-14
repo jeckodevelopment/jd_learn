@@ -162,7 +162,7 @@ final class CourseAnnouncementService
         ];
         $result['template_data'] = $tags;
         $renderer = new CourseAnnouncementPreviewRenderer('com_jlms.course.published', $language);
-        $renderer->addUnsafeTags(['NAME', 'COURSE_TITLE', 'COURSE_INTRO_TEXT', 'COURSE_LESSONS_TEXT', 'COURSE_URL', 'SITE_NAME', 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT']);
+        $renderer->addUnsafeTags(['USER_FULLNAME', 'COURSE_TITLE', 'COURSE_INTRO_TEXT', 'COURSE_LESSONS_TEXT', 'COURSE_URL', 'SITE_NAME', 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT']);
         $result['subject'] = $renderer->render((string) $template->subject, $tags);
         $result['body_text'] = $renderer->render((string) $template->body, $tags);
         $result['body_html'] = $renderer->render((string) $template->htmlbody, $tags, true);
@@ -206,7 +206,7 @@ final class CourseAnnouncementService
                 }
                 $data = $preview['template_data'];
                 $name = htmlspecialchars((string) $recipient->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                $data[''USER_FULLNAME''] = $name;
+                $data['USER_FULLNAME'] = $name;
                 $data['UNSUBSCRIBE_URL'] = $unsubscribe;
                 $data['UNSUBSCRIBE_URL_HTML'] = htmlspecialchars($unsubscribe, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                 $data['UNSUBSCRIBE_URL_TEXT'] = $unsubscribe;
