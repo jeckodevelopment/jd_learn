@@ -158,7 +158,7 @@ try:
    raise RuntimeError('Native field rows do not match '+expected)
  print(json.dumps({'custom_fields_context_switches':6,'status':'passed'}))
  plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
- if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
+ if not plugin_link:raise RuntimeError('Native video plugin manager dashboard link missing')
  dashboard_page=Page(html)
  dashboard_shortcuts={a.get('id'):parse_qs(urlparse(a.get('href','')).query) for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
  if any('&amp;' in a.get('href','') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')):raise RuntimeError('Dashboard shortcut href must not contain a literal HTML entity')
@@ -166,7 +166,7 @@ try:
   'jlms-admin-shortcut-certificates':('com_jlms','certificates'),
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
   'jlms-admin-shortcut-mail_queue':('com_jlms','mailqueue'),
-  'jlms-admin-shortcut-mail_variable_guide_title':('com_jlms','mailvariables'),
+  'jlms-admin-shortcut-dashboard_mail_variables':('com_jlms','mailvariables'),
   'jlms-admin-shortcut-mail_templates':('com_mails','templates'),
   'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
@@ -175,8 +175,9 @@ try:
   'jlms-admin-shortcut-teachers':('com_jlms','teachers'),
   'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
   'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
+  'jlms-admin-shortcut-dashboard_category_dependencies':('com_jlms','categoryreassignment'),
  }
- expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','teachers','question_bank','certificates','mail_queue','mail_variable_guide_title','mail_templates','custom_fields','video_plugins']
+ expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','teachers','question_bank','certificates','mail_queue','mail_templates','dashboard_mail_variables','custom_fields','video_plugins','dashboard_category_dependencies']
  actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
  if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
  for shortcut,(option,view) in required_shortcuts.items():
@@ -185,7 +186,7 @@ try:
    found={a.get('id'):a.get('href') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
    raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
  # The standalone guide is available by navigation and does not clutter mail queue monitoring.
- guide_url=next(a.get('href') for a in dashboard_page.anchors if a.get('id')=='jlms-admin-shortcut-mail_variable_guide_title')
+ guide_url=next(a.get('href') for a in dashboard_page.anchors if a.get('id')=='jlms-admin-shortcut-dashboard_mail_variables')
  _,guide_html=get(urljoin(url,guide_url))
  if 'jlms-mail-variable-guide' not in guide_html or 'COURSE_TITLE' not in guide_html:
   raise RuntimeError('JD Learn standalone variable guide did not render')

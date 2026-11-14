@@ -1,3 +1,15 @@
+## UX navigazione amministrativa — issue #359 (collaudo richiesto)
+
+1. Installare/aggiornare JD Learn su Joomla 5/6 in italiano e inglese. Verificare che la sidebar presenti **solo** Dashboard, Corsi, Percorsi formativi, Docenti, Coda email, Banca domande, esattamente in questo ordine e senza voci residue dopo l'aggiornamento.
+2. Aprire la dashboard. Verificare le sezioni Didattica, Persone e valutazione, Comunicazioni, Configurazione & Strumenti. Verificare il collegamento Dipendenze categorie in quest'ultima, la destinazione della vista di ricollocazione, e il pannello Stato provider video.
+3. In Comunicazioni verificare la voce **Variabili modelli email** (#359), che deve continuare ad aprire la guida esistente; verificare anche Template email nativi Joomla e Coda email.
+4. Con amministratore autorizzato e con ruoli ACL limitati confrontare sidebar, dashboard e accesso diretto agli URL: nessun collegamento deve eludere le ACL.
+5. Aprire in successione elenco corsi, modifica corso, programma, modifica lezione; poi percorsi e modifica percorso, docenti e modifica docente, banca domande e modifica domanda, coda email e vista interna. Verificare la selezione della voce attiva fornita dal menu nativo Joomla nei percorsi profondi; l'accettazione manuale è ancora pendente.
+6. Da una vista secondaria accessibile solo dalla dashboard (Dipendenze categorie, Plugin video, Campi aggiuntivi, Template email) verificare l'assenza di un'evidenziazione fuorviante e la disponibilità di percorsi di ritorno tramite strumenti nativi Joomla. Verificare il percorso di ritorno con la toolbar e la navigazione nativa Atum. Non utilizzare Pathway nel client administrator: provoca HTTP 500. L'accettazione manuale è ancora pendente.
+7. Verificare eventuali menu di amministrazione personalizzati, caching e aggiornamento da una versione precedente: non deve essere necessario reinstallare il componente.
+
+La mappatura nativa della voce attiva è implementata; Pathway amministrativo non è supportato. Le verifiche visive 5 e 6 restano **collaudi manuali aperti**. Non dichiarare accettazione su Atum senza riscontro reale. L'esito dei test automatici non costituisce accettazione manuale.
+
 ## Issue #391 — etichetta localizzata Salva & Chiudi
 
 1. Installare il pacchetto `0.56.29-dev` della PR #391 integrata su Joomla 6.2.
