@@ -15,6 +15,7 @@ final class HtmlView extends BaseHtmlView
     public array $items;
     public $pagination;
     public $rosterForm;
+    public array $pendingRequests = [];
 
     public function display($tpl = null)
     {
