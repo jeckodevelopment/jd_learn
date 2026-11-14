@@ -20,6 +20,10 @@ La PR [#377](https://github.com/jeckodevelopment/jd_learn/pull/377) ha implement
 
 La CI della #377 è risultata verde: [run 43636264130](https://github.com/jeckodevelopment/jd_learn/actions/runs/43636264130), 4/4 job. La #377 non ha corretto una regressione funzionale introdotta dalla #375; ha corretto un test diventato obsoleto a seguito della #375 e ha consegnato una modifica UX separata.
 
+## PR #365 — toolbar salvataggio corso
+
+La prima esecuzione [43641502071](https://github.com/jeckodevelopment/jd_learn/actions/runs/43641502071) è fallita nel controllo leggero per un riepilogo versione del README non allineato alla candidata 0.56.26-dev. Il riepilogo è stato aggiornato e la pipeline completa è stata rilanciata: [43641553637](https://github.com/jeckodevelopment/jd_learn/actions/runs/43641553637), **4/4 job verdi**. Il merge `c73a10bf3c7910fcfd9bab35e0a68f929dc3ed9f` è avvenuto solo dopo l’esito verde. La modifica è UX-only e non cambia la copertura funzionale; accettazione Joomla resta pendente.
+
 ## Azione di processo
 
-Per le PR successive, compresa la #365, il merge avverrà solo dopo aver verificato l’esito conclusivo verde di tutti i job richiesti sulla revisione candidata. Un test fallito non sarà trattato come irrilevante finché la causa non sarà identificata, corretta e verificata con una nuova CI completa.
+La #365 ha rispettato questo gate: dopo il fallimento del controllo README, la versione candidata è stata riallineata e la pipeline completa è stata rilanciata prima del merge. Per ogni PR successiva, il merge richiede l’esito verde di tutti i job previsti sulla revisione esatta che verrà integrata. Un test fallito va diagnosticato, corretto e seguito da una nuova CI completa.
