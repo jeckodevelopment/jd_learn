@@ -33,6 +33,14 @@ jobs:
           python3 tests/ci-plan.py
           python3 tests/requirements-status.py
           python3 tools/ci_plan.py
+      - name: Enforce runtime PR to requirements CSV traceability
+        if: github.event_name == 'pull_request'
+        env:
+          JD_LEARN_PR_NUMBER: ${{ github.event.pull_request.number }}
+          JD_LEARN_BASE_REF: ${{ github.base_ref }}
+        run: |
+          python3 tests/pr-requirements-coverage.py
+          python3 scripts/check_pr_requirements_coverage.py --base-ref "origin/$JD_LEARN_BASE_REF" --pr "$JD_LEARN_PR_NUMBER"
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
