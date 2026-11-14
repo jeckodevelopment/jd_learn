@@ -46,12 +46,24 @@ foreach ($definitions as $id => [$subject, $body, $tags, $html]) {
 if (MailTemplateInstaller::templateIds() !== array_keys($definitions)) {
     throw new RuntimeException('Mail template list is not sourced from definitions.');
 }
-$guide = file_get_contents(__DIR__ . '/../component/administrator/tmpl/mailqueue/default.php');
+$guide = file_get_contents(__DIR__ . '/../component/administrator/tmpl/mailvariables/default.php');
+$queue = file_get_contents(__DIR__ . '/../component/administrator/tmpl/mailqueue/default.php');
+$dashboard = file_get_contents(__DIR__ . '/../component/administrator/src/View/Dashboard/HtmlView.php');
+$guideView = file_get_contents(__DIR__ . '/../component/administrator/src/View/Mailvariables/HtmlView.php');
 if ($guide === false || !str_contains($guide, 'MailTemplateInstaller::templateIds()')
     || !str_contains($guide, 'MailTemplateVariableCatalog::class')
     || !str_contains($guide, 'forTemplate($mailId, $mailLanguage)')
     || !str_contains($guide, 'jlms-mail-variable-guide')) {
-    throw new RuntimeException('Mail queue variable guide must use the registered catalog.');
+    throw new RuntimeException('Standalone variable guide must use the registered catalog.');
+}
+if ($queue === false || str_contains($queue, 'jlms-mail-variable-guide')
+    || !str_contains($queue, 'MailTemplateInstaller::templateIds()')) {
+    throw new RuntimeException('Mail queue must remain operational and keep the shared filter list.');
+}
+if ($dashboard === false || !str_contains($dashboard, "view=mailvariables")
+    || $guideView === false || !str_contains($guideView, "authorise('core.manage', 'com_jlms')")
+    || !str_contains($guide, "authorise('core.edit', 'com_mails')")) {
+    throw new RuntimeException('Guide navigation and native editor ACL must be enforced.');
 }
 foreach (['it-IT', 'en-GB'] as $locale) {
     $language = file_get_contents(__DIR__ . '/../component/administrator/language/' . $locale . '/com_jlms.ini');
