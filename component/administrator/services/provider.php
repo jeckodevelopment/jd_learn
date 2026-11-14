@@ -96,6 +96,7 @@ return new class () implements ServiceProviderInterface {
             $component->setEnrollmentMigrationService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService::class));
             $component->setCourseOperationsService($container->get(\Jlms\Component\Jlms\Administrator\Application\CourseOperationsService::class));
             $component->setEnrollmentRosterService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService::class));
+            $component->setEnrollmentApprovalService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService::class));
             $component->setCourseCommunicationService($container->get(\Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService::class));
             $component->setLearningService($container->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class));
             $component->setMaterialService($container->get(\Jlms\Component\Jlms\Administrator\Application\MaterialService::class));
