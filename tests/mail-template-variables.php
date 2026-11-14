@@ -120,6 +120,32 @@ if ($script === false || !str_contains($script, 'MailTemplateTagUpdater::synchro
     throw new RuntimeException('Joomla postflight must synchronize native template tags.');
 }
 
+
+foreach (['com_jlms.course.completed', 'com_jlms.enrollment.reactivated'] as $templateId) {
+    $definition = $definitions[$templateId];
+    if (!in_array('DASHBOARD_URL', $definition[2], true)
+        || !str_contains($definition[1], '{DASHBOARD_URL}')
+        || !str_contains($definition[3], 'href="{DASHBOARD_URL}"')) {
+        throw new RuntimeException('Authenticated dashboard URL must be available in text and HTML: ' . $templateId);
+    }
+    foreach (['it-IT', 'en-GB'] as $locale) {
+        if (MailTemplateVariableCatalog::forTemplate($templateId, $locale)['DASHBOARD_URL']['type'] !== 'url') {
+            throw new RuntimeException('Missing localized dashboard URL metadata: ' . $templateId);
+        }
+    }
+}
+foreach ([
+    'LearningService.php' => ["'DASHBOARD_URL' => \\Joomla\\CMS\\Uri\\Uri::root()"],
+    'EnrollmentStateService.php' => ["\$target === 'active' ? ['DASHBOARD_URL' => \\Joomla\\CMS\\Uri\\Uri::root()"],
+] as $filename => $needles) {
+    $source = file_get_contents(__DIR__ . '/../component/administrator/src/Application/' . $filename);
+    foreach ($needles as $needle) {
+        if ($source === false || !str_contains($source, $needle)) {
+            throw new RuntimeException('Missing authorized dashboard URL event payload: ' . $filename);
+        }
+    }
+}
+
 if (MailTemplateInstaller::templateIds() !== array_keys($definitions)) {
     throw new RuntimeException('Mail template list is not sourced from definitions.');
 }
