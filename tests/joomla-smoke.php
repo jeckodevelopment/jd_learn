@@ -119,6 +119,40 @@ $preservedTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.enroll
 if ($preservedTemplate->subject !== $customSubject) {
     throw new \RuntimeException('JD Learn upgrade overwrote an administrator-edited Joomla mail template.');
 }
+// Reproduce a real upgrade with existing localized mail templates requiring
+// canonical tag synchronization. This was not exercised by fresh-install CI.
+require_once JPATH_ADMINISTRATOR . '/components/com_jlms/src/Infrastructure/MailTemplateTagUpdater.php';
+$mailId = 'com_jlms.enrollment.confirmed';
+$mailLang = '';
+$mailRowQuery = $db->getQuery(true)->select(['template_id', 'language', 'params', 'subject'])
+    ->from('#__mail_templates')
+    ->where('template_id = ' . $db->quote($mailId))
+    ->where('language = ' . $db->quote($mailLang));
+$mailBefore = $db->setQuery($mailRowQuery)->loadObject();
+if (!$mailBefore) {
+    throw new \RuntimeException('Upgrade regression fixture: mail template missing.');
+}
+$mailParams = json_decode((string) $mailBefore->params, true, 64, JSON_THROW_ON_ERROR);
+if (!is_array($mailParams) || !is_array($mailParams['tags'] ?? null)) {
+    throw new \RuntimeException('Upgrade regression fixture: invalid initial tags.');
+}
+$mailParams['tags'] = array_values(array_diff($mailParams['tags'], ['COURSE_TITLE']));
+$mailParams['tags'][] = 'NAME';
+$db->setQuery($db->getQuery(true)->update('#__mail_templates')
+    ->set('params = ' . $db->quote(json_encode($mailParams, JSON_THROW_ON_ERROR)))
+    ->where('template_id = ' . $db->quote($mailId))
+    ->where('language = ' . $db->quote($mailLang)))->execute();
+$changedTags = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateTagUpdater::synchronize($db);
+if ($changedTags < 1) {
+    throw new \RuntimeException('Upgrade regression: old mail tags were not synchronized.');
+}
+$mailAfter = $db->setQuery($mailRowQuery)->loadObject();
+$finalTags = json_decode((string) $mailAfter->params, true, 64, JSON_THROW_ON_ERROR)['tags'];
+if (!in_array('COURSE_TITLE', $finalTags, true) || in_array('NAME', $finalTags, true)
+    || (string) $mailAfter->subject !== $customSubject
+    || \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateTagUpdater::synchronize($db) !== 0) {
+    throw new \RuntimeException('Upgrade regression: tags, editor content or idempotency lost.');
+}
 $menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
 if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') { throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.'); }
 $menuLinksAfterUpdate = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();

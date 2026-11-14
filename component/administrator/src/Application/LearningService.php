@@ -662,9 +662,10 @@ final class LearningService
             }
             $now = gmdate('Y-m-d H:i:s');
             if ($existing) {
-                $this->db->updateObject('#__jlms_lesson_progress', (object) ['enrollment_id' => $enrollmentId,
+                $progressUpdate1 = (object) ['enrollment_id' => $enrollmentId,
                     'lesson_id' => $lessonId, 'state' => 'completed', 'completed_at' => $now,
-                    'last_activity_at' => $now, 'revision' => (int) $existing->revision + 1], ['enrollment_id', 'lesson_id']);
+                    'last_activity_at' => $now, 'revision' => (int) $existing->revision + 1];
+                $this->db->updateObject('#__jlms_lesson_progress', $progressUpdate1, ['enrollment_id', 'lesson_id']);
             } else {
                 $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $version->id,
                     'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision, 'coverage_json' => '[]',
@@ -732,10 +733,11 @@ final class LearningService
             }
             // Do not revise an existing progress row on page load: a concurrent video session
             // captures this revision and must not be invalidated by the non-credit start receipt.
-            $this->db->updateObject('#__jlms_enrollments', (object) ['id' => $enrollmentId,
+            $progressUpdate2 = (object) ['id' => $enrollmentId,
                 'started_at' => $enrollment->started_at ?: $now, 'last_activity_at' => $now,
                 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
-                'modified_by' => (int) $actor->id, 'modified_at' => $now], 'id', true);
+                'modified_by' => (int) $actor->id, 'modified_at' => $now];
+            $this->db->updateObject('#__jlms_enrollments', $progressUpdate2, 'id', true);
             return (string) $progress->state;
         });
     }
@@ -766,14 +768,16 @@ final class LearningService
                     'completed_at' => null, 'last_activity_at' => $now, 'revision' => 1];
                 $this->db->insertObject('#__jlms_lesson_progress', $progress);
             } else {
-                $this->db->updateObject('#__jlms_lesson_progress', (object) ['enrollment_id' => $enrollmentId,
+                $progressUpdate3 = (object) ['enrollment_id' => $enrollmentId,
                     'lesson_id' => $lessonId, 'resume_ms' => $positionMs, 'last_activity_at' => $now,
-                    'revision' => (int) $progress->revision + 1], ['enrollment_id', 'lesson_id']);
+                    'revision' => (int) $progress->revision + 1];
+                $this->db->updateObject('#__jlms_lesson_progress', $progressUpdate3, ['enrollment_id', 'lesson_id']);
             }
-            $this->db->updateObject('#__jlms_enrollments', (object) ['id' => $enrollmentId,
+            $progressUpdate4 = (object) ['id' => $enrollmentId,
                 'started_at' => $enrollment->started_at ?: $now, 'last_activity_at' => $now,
                 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
-                'modified_by' => (int) $actor->id, 'modified_at' => $now], 'id', true);
+                'modified_by' => (int) $actor->id, 'modified_at' => $now];
+            $this->db->updateObject('#__jlms_enrollments', $progressUpdate4, 'id', true);
             return $positionMs;
         });
     }

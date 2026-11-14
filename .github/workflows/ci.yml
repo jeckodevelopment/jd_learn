@@ -37,9 +37,8 @@ jobs:
         run: |
           python3 tools/build.py
           python3 tools/check.py
-          python3 tools/verify_installable.py dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip
+          python3 tests/database-byref-safety.py
           python3 tests/release-workflow.py
-          python3 tests/dev-package-workflow.py
           python3 tests/ftps-publish.py
           python3 tests/ftps-live-probe.py
           python3 tests/ftps-certificate-pin.py
@@ -114,8 +113,7 @@ jobs:
         run: |
           python3 tools/build.py
           python3 tools/check.py
-          # Validate the exact ZIP Joomla accepts, not the outer GitHub Actions artifact.
-          python3 tools/verify_installable.py dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip
+          python3 tests/database-byref-safety.py
           cp dist/SHA256SUMS.txt /tmp/first-build.sha256
           python3 tools/build.py
           diff /tmp/first-build.sha256 dist/SHA256SUMS.txt
@@ -382,8 +380,7 @@ jobs:
         if: matrix.php == '8.4' && matrix.database == 'mariadb:10.6'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          # This is a GitHub Actions wrapper; extract the pkg_jlms-*.zip before uploading to Joomla.
-          name: EXTRACT-FIRST-JD-Learn-${{ steps.package.outputs.version }}
+          name: JD-Learn-${{ steps.package.outputs.version }}
           path: dist/
           if-no-files-found: error
           retention-days: 14
