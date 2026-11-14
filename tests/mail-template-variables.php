@@ -64,6 +64,10 @@ $displayController = file_get_contents(__DIR__ . '/../component/administrator/sr
 if ($displayController === false || !str_contains($displayController, "'mailvariables'")) {
     throw new RuntimeException('Mail variable guide is not permitted by the administrator display controller.');
 }
+$queueController = file_get_contents(__DIR__ . '/../component/administrator/src/Controller/MailqueueController.php');
+if ($queueController === false || !str_contains($queueController, "['reconcile', 'display']")) {
+    throw new RuntimeException('Operational outbox read-only display must stay permitted.');
+}
 if ($dashboard === false || !str_contains($dashboard, "view=mailvariables")
     || $guideView === false || !str_contains($guideView, "authorise('core.manage', 'com_jlms')")
     || !str_contains($guide, "authorise('core.edit', 'com_mails')")) {
