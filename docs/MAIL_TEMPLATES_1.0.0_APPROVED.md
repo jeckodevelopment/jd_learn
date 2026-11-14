@@ -1,4 +1,4 @@
-# JD Learn 1.0.0 — catalogo email, dizionario variabili e completamento notifiche
+> **Decisione integrativa, 14 novembre 2026:** poiché JD Learn non è ancora rilasciato, il contratto prevede un solo nome canonico per variabile, **nessun alias legacy**. Le clausole precedenti di mantenimento alias e retrocompatibilità riportate sotto sono superate da questa decisione. Le installazioni di test esistenti possono richiedere il ripristino dei template personalizzati o una migrazione editoriale; preservare comunque le modifiche amministrative salvo scelta esplicita dell'operatore.\n\n# JD Learn 1.0.0 — catalogo email, dizionario variabili e completamento notifiche
 
 **Decisione approvata:** 14 novembre 2026. **Stato:** specifica funzionale approvata; implementazioni aggiuntive e accettazione Joomla/SMTP da eseguire. Questa specifica integra, senza sostituire, [MAIL_TEMPLATES.md](MAIL_TEMPLATES.md) e [STABLE_1.0.0_PR_PLAN.md](STABLE_1.0.0_PR_PLAN.md). Non considerare queste decisioni come codice già implementato.
 
@@ -6,9 +6,9 @@
 
 - Usare esclusivamente i Mail Templates e il mailer del core Joomla; nessun editor/SMTP/servizio newsletter parallelo.
 - Registro **centralizzato e tipizzato** delle variabili: canonical names in inglese, `UPPER_SNAKE_CASE`, documentati per template e per contesto. Non esporre indiscriminatamente informazioni di altri utenti o di corsi non autorizzati.
-- Mantenere gli ID template `com_jlms.*` e accettare i **vecchi placeholder** come alias retrocompatibili, senza sovrascrivere modelli già personalizzati in upgrade. Verificare la risoluzione sia nell'oggetto sia nel testo/HTML.
+- Mantenere gli ID template `com_jlms.*` ma **non creare alias** per i vecchi placeholder; usare soltanto nomi canonici nei template e nei payload dei nuovi eventi. Non sovrascrivere modelli personalizzati durante l'upgrade. Verificare la risoluzione sia nell'oggetto sia nel testo/HTML.
 - Escaping contestuale: valori testuali HTML escaped; frammenti HTML generati e sanitizzati dal componente; URL validati e codificati per attributi; testo semplice privo di markup. Mai HTML grezzo preso da campi utente senza sanitizzazione. Non inserire segreti, token di accesso o dati riservati in URL di anteprima.
-- Le variabili mancanti hanno fallback documentati (nessun valore `{TOKEN}` lasciato nel messaggio). **Validare** i segnaposto in fase di modifica/anteprima e prima dell'accodamento/invio; errore esplicito e diagnostica senza dati personali o segreti per token sconosciuti. Non rompere i template legacy durante la migrazione.
+- Le variabili mancanti hanno fallback documentati (nessun valore `{TOKEN}` lasciato nel messaggio). **Validare** i segnaposto in fase di modifica/anteprima e prima dell'accodamento/invio; errore esplicito e diagnostica senza dati personali o segreti per token sconosciuti. Le personalizzazioni di installazioni di prova basate su vecchi nomi devono essere aggiornate dall'amministratore o ripristinate consapevolmente.
 - Una variabile è esposta solo se dati e permessi la rendono applicabile all'evento. Lingua del destinatario Joomla, date/timezone coerenti con configurazione del sito; anteprima e prova di invio per IT/EN.
 - Preferenze globali e override per corso, autorizzazioni Joomla, invii evento idempotenti via outbox/Scheduler, retry limitati e audit minimizzato. Messaggi didattici/operativi separati dall'annuncio nuovi corsi con consenso double opt-in; nessun tracking apertura/click, marketing generico o notifiche ricorrenti di inattività.
 
@@ -43,22 +43,9 @@ La seguente tabella è il **contratto richiesto**, non un elenco di variabili gi
 | `{CONFIRM_URL}` | Conferma double opt-in, soltanto email consenso |
 | `{MESSAGE_SUBJECT}`, `{MESSAGE_BODY_TEXT}`, `{MESSAGE_BODY_HTML}` | Comunicazione operativa manuale autorizzata, sanitizzata |
 
-Per ogni placeholder che compare in HTML distinguere il valore testuale escaped dalla versione frammento `*_HTML` generata da un renderer fidato; l'implementazione può esporre alias `*_HTML` necessari alla retrocompatibilità. `{COURSE_IMAGE}` della precedente specifica è **alias documentale**, non una promessa di markup arbitrario.
+Per ogni placeholder che compare in HTML distinguere il valore testuale escaped dalla versione frammento `*_HTML` generata da un renderer fidato; le varianti `*_HTML` sono segnaposto distinti e tipizzati, non alias. `{COURSE_IMAGE}` della precedente specifica è **denominazione obsoleta**, non una promessa di markup arbitrario.
 
-### Alias legacy da preservare
-
-| Segnaposto corrente | Canonical / modalità |
-|---|---|
-| `{NAME}` | Alias contestuale di `{USER_FULLNAME}` (o saluto neutro compatibile) |
-| `{COURSE}` | Alias di `{COURSE_TITLE}` |
-| `{SITENAME}` | Alias di `{SITE_NAME}` |
-| `{COURSE_TITLE_HTML}`, `{NAME_HTML}`, `{COURSE_HTML}`, `{SITE_NAME_HTML}`, `{SITENAME_HTML}` | Varianti HTML escaped o renderizzate in sicurezza; mantenere l'esatta compatibilità di ciascun template |
-| `{UNSUBSCRIBE_URL_HTML}`, `{UNSUBSCRIBE_URL_TEXT}` | Varianti sicure del link di revoca, mantenute |
-| `{COURSE_INTRO_HTML}`, `{COURSE_LESSONS_HTML}` | Frammenti HTML sanitizzati (non testo raw) |
-
-Tutte le variabili già usate nei template originali devono continuare a funzionare anche se non elencate sopra; aggiungere un test che confronti il registro e i template esistenti. Non cambiare automaticamente i testi personalizzati durante upgrade.
-
-## Eventi richiesti e destinatari
+### Nomi storici eliminati prima della release\n\nI segnaposto `{NAME}`, `{COURSE}`, `{SITENAME}`, `{NAME_HTML}`, `{COURSE_HTML}`, `{SITENAME_HTML}` non costituiscono alias supportati. Devono essere sostituiti rispettivamente da `{USER_FULLNAME}`, `{COURSE_TITLE}`, `{SITE_NAME}`, `{USER_FULLNAME_HTML}`, `{COURSE_TITLE_HTML}`, `{SITE_NAME_HTML}` nei template e nel codice. I dati già presenti nelle installazioni di test possono richiedere pulizia, senza promessa di compatibilità pre-release.\n\n## Eventi richiesti e destinatari
 
 | Evento/template | Destinatari | Regola / priorità | Stato alla decisione |
 |---|---|---|---|
