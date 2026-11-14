@@ -103,6 +103,19 @@ teacherExpect($courseModel->save($courseBase),'Draft course saved');$course=(int
 $courseData=array_replace($courseBase,['id'=>$course,'teacher_ids'=>[$public,$private]]);
 teacherExpect($courseModel->save($courseData),'Ordered teachers assigned to saved draft');
 teacherExpect(TeacherProfiles::selected($db,$course)===[$public,$private],'Teacher order persisted in relation table');
+
+$teacherNoticeCount = static function () use ($db, $course): int {
+    return (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE course_id=" . $course
+        . " AND template_id='com_jlms.teacher.assigned'")->loadResult();
+};
+teacherExpect($teacherNoticeCount() === 1, 'A newly assigned linked Joomla account receives exactly one teacher notice; unlinked profile receives none');
+$teacherNotice = $db->setQuery("SELECT recipient_user_id,recipient_email,template_data FROM #__jlms_mail_queue WHERE course_id="
+    . $course . " AND template_id='com_jlms.teacher.assigned'")->loadObject();
+teacherExpect((int) $teacherNotice->recipient_user_id === (int) $actor->id
+    && (string) $teacherNotice->recipient_email === (string) $actor->email
+    && !str_contains((string) $teacherNotice->template_data, 'PRIVATE_TEACHER_BIO'),
+    'Teacher notification uses the linked Joomla identity and does not disclose unrelated teacher details');
+
 $directory=$factory->createModel('Teachers','Administrator',['ignore_request'=>true]);$directory->setCurrentUser($actor);
  $teacherRows=$directory->getItems();
 if (!is_array($teacherRows)) { throw new RuntimeException('Teacher directory listing failed: ' . (string) $directory->getError()); }

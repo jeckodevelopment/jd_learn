@@ -45,6 +45,25 @@ foreach ($definitions as $id => [$subject, $body, $tags, $html]) {
         }
     }
 }
+// MAIL-G: teacher notices use only canonical, documented, recipient-scoped tokens.
+$teacherTemplate = $definitions['com_jlms.teacher.assigned'] ?? null;
+if (!$teacherTemplate || $teacherTemplate[2] !== ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME']) {
+    throw new RuntimeException('Native teacher assignment mail template missing.');
+}
+foreach ([
+    'component/administrator/config.xml' => 'mail_teacher_assignment_enabled',
+    'component/administrator/forms/course.xml' => 'mail_teacher_assignment',
+    'component/administrator/src/Application/MailPreferences.php' => "'teacher_assignment'",
+    'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.teacher.assigned' => 'teacher_assignment'",
+    'component/administrator/src/Model/CourseModel.php' => 'queueAdded($id, $previousTeacherIds, $teachers)',
+    'component/administrator/src/Application/TeacherAssignmentNotice.php' => 'public function queueAdded(',
+] as $file => $expected) {
+    $source = file_get_contents(__DIR__ . '/../' . $file);
+    if ($source === false || !str_contains($source, $expected)) {
+        throw new RuntimeException('MAIL-G assignment notification wiring incomplete: ' . $file);
+    }
+}
+
 $cancelled = $definitions['com_jlms.enrollment.cancelled'] ?? null;
 if (!$cancelled || !str_contains($cancelled[1], '{COURSE_TITLE}')
     || !str_contains($cancelled[3], '{USER_FULLNAME}')

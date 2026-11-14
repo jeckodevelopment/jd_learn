@@ -53,6 +53,12 @@ final class MailTemplateInstaller
     private static function definitions(): array
     {
         return [
+            'com_jlms.teacher.assigned' => [
+                'Assegnazione al corso: {COURSE_TITLE}',
+                "Ciao {USER_FULLNAME},\n\nsei stato assegnato come docente al corso {COURSE_TITLE}. La gestione del corso rimane soggetta ai permessi Joomla.\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
+                '<p>Ciao {USER_FULLNAME},</p><p>sei stato assegnato come docente al corso <strong>{COURSE_TITLE}</strong>. La gestione del corso rimane soggetta ai permessi Joomla.</p><p>{SITE_NAME}</p>',
+            ],
             'com_jlms.enrollment.requested' => [
                 'Richiesta di iscrizione ricevuta: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nabbiamo ricevuto la tua richiesta di iscrizione al corso {COURSE_TITLE}.\n\n{SITE_NAME}",

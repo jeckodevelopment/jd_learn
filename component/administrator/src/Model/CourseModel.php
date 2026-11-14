@@ -241,7 +241,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $db = $this->getDatabase();
         $this->associationWrite = false;
-        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
+        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_teacher_assignment', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
         $allowed=array_merge($allowed,\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
         $data = array_intersect_key($data, array_flip($allowed));
@@ -305,6 +305,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
             $this->validateAssociations($data, $user, $id, $record);
             $teachers = null;
+            $previousTeacherIds = $id ? \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id) : [];
             if (array_key_exists('teacher_ids', $data)) {
                 $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db,$user,(string) ($data['language'] ?? $record->language ?? '*'),$data['teacher_ids']);
                 if (!$id && $teachers) { throw new \DomainException('COM_JLMS_TEACHER_SAVE_FIRST'); }
@@ -348,6 +349,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 foreach ($teachers as $ordering => $teacher) {
                     $relation = (object) ['course_id'=>$id,'teacher_id'=>$teacher,'ordering'=>$ordering]; $db->insertObject('#__jlms_course_teachers',$relation);
                 }
+                // Queue inside the same transaction: no notice on failed edits or unchanged assignments.
+                (new \Jlms\Component\Jlms\Administrator\Application\TeacherAssignmentNotice($db))
+                    ->queueAdded($id, $previousTeacherIds, $teachers);
             }
             if ($copySource !== null) {
                 $newId = (int) $this->getState('course.id');

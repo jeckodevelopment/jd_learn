@@ -321,3 +321,7 @@ Dopo #366, l'incremento amministrativo aggiunge decisioni corso-scoped con contr
 
 La mancata installazione segnalata a partire dal pacchetto post-merge #366 è riconducibile all'errore PHP `DatabaseDriver::updateObject(): Argument #2 ($object) could not be passed by reference` nel `postflight` sincronizzazione Mail Templates (istruzione difettosa già presente prima di #366, ma eseguita con tag da aggiornare). Corretto il codice e aggiunta prova di upgrade con tag non canonici e verifica della conservazione delle preferenze. Analoghe chiamate in `LearningService` risolte. Le modifiche alle pipeline delle PR #369, #370, #371 sono **annullate**: ripristinata la build Actions originale. La prima stabile resta subordinata ai collaudi Joomla, security e ai gate esistenti. Nessun aumento della percentuale implementativa per il bug fix.
 
+
+### MAIL-G — Primo incremento (candidata 0.56.21-dev)
+
+Avvio dell'evento docente assegnato: notifica nativa Joomla `com_jlms.teacher.assigned` solo per nuove relazioni tra corso e profilo docente con account collegato, con revalidazione prima dell'invio, transazione, idempotenza e preferenze globali/per corso. Restano nel blocco MAIL-G le notifiche su pubblicazione nuove lezioni, variazioni didattiche significative e richieste d'approvazione destinate ai responsabili autorizzati. L'installazione della versione precedente 0.56.20-dev **è stata confermata dall'utente su Joomla 6.2.0** (14/11/2026); ciò non equivale al collaudo delle nuove funzionalità o SMTP.
