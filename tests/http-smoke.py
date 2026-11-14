@@ -178,7 +178,7 @@ try:
  if '<form' not in mail_template_html or 'com_mails' not in mail_template_html:raise RuntimeError('Native Joomla Mail Templates did not render from JD Learn dashboard')
  if 'Manage courses, the learning programme and teaching resources from the administrator panel.' not in html or 'Your learning history and current classroom availability are shown separately.' in html:
   raise RuntimeError('Administrator dashboard introduction must use its current, relevant translation')
- icon_count=len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))
+ icon_count=len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*(?:icon-[a-z0-9-]+|fa-[a-z0-9-]+)[^"]+"',html))
  if icon_count!=len(dashboard_shortcuts):raise RuntimeError('Every visible dashboard shortcut must include a Joomla icon')
  provider_rows=re.findall(r'<li data-jlms-provider="([^"]+)">',html)
  if provider_rows!=['youtube','vimeo','cloudflarestream','html5']:raise RuntimeError('Dashboard must show all bundled providers in a stable order: '+json.dumps(provider_rows))
