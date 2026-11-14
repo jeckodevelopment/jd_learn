@@ -5,22 +5,22 @@
   "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
   "counts": {
     "Stato implementazione": {
-      "Parziale": 187,
+      "Parziale": 197,
       "Completata": 17,
-      "Non iniziata": 25
+      "Non iniziata": 30
     },
     "Perimetro 1.0.0": {
-      "1.0.0": 154,
+      "1.0.0": 169,
       "Misto": 40,
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 227,
+      "Non eseguita": 242,
       "Parziale": 2
     },
     "Verifica automatica": {
       "Superata": 179,
-      "Non eseguita": 50
+      "Non eseguita": 65
     }
   },
   "implementation_progress": {
@@ -38,7 +38,7 @@
       75
     ]
   },
-  "note": "Ricognizione documentale: aggiunti i 10 criteri MAIL-01–10 approvati e registrate le PR recenti omesse. La stima per nove macroaree rimane invariata; nessun nuovo esito di accettazione o CI dichiarato.",
+  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata.",
   "updated_at": "2026-11-14",
   "imp_09_mail_c": {
     "pull_request": 313,
@@ -100,5 +100,24 @@
     "MAIL-08",
     "MAIL-09",
     "MAIL-10"
+  ],
+  "approved_documentation_addendum": [
+    "DOC-01",
+    "DOC-02",
+    "DOC-03",
+    "DOC-04",
+    "DOC-05",
+    "DOC-06",
+    "DOC-07",
+    "DOC-08",
+    "DOC-09",
+    "DOC-10"
+  ],
+  "approved_security_gates": [
+    "SEC-P1",
+    "SEC-P2",
+    "SEC-P3",
+    "SEC-P4",
+    "SEC-P5"
   ]
 }
