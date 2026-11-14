@@ -75,16 +75,18 @@ final class HtmlView extends BaseHtmlView
             }
         } else {
             $toolbar = $this->getDocument()->getToolbar();
-            $toolbar->apply('course.apply');
-            $saveDropdown = $toolbar->dropdownButton('save-group', 'JTOOLBAR_SAVE_AND_CLOSE', 'course.save')
+            $toolbar->save('course.apply');
+            $saveDropdown = $toolbar->dropdownButton('save-group')
+                ->buttonClass('btn btn-success');
+            $programmeMenu = $saveDropdown->getChildToolbar();
+            $programmeMenu->save('course.save', 'JTOOLBAR_SAVE_AND_CLOSE')
                 ->buttonClass('btn btn-success')
                 ->icon('icon-save');
-            $programmeMenu = $saveDropdown->getChildToolbar();
-            $programmeMenu->customButton(
+            $programmeMenu->standardButton(
                 'course-programme',
                 'COM_JLMS_COURSE_SAVE_PROGRAMME',
                 'course.programme'
-            )->icon('icon-list');
+            )->formValidation(true)->icon('icon-list');
         }
         if ($id > 0) { ToolbarHelper::versions('com_jlms.course', $id); }
         ToolbarHelper::cancel('course.cancel');
