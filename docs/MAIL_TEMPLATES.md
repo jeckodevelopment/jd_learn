@@ -1,3 +1,5 @@
+Dalla guida **JD Learn → Variabili modelli email**, gli utenti autorizzati aprono i modelli filtrati del componente tramite il pulsante **Template Email** nella toolbar. Il pulsante compare solo con `core.manage` e `core.edit` su `com_mails`.
+
 > **Decisione successiva (14 novembre 2026, PR #349):** prima del rilascio si adotta **un solo vocabolario di variabili**, senza alias. Sostituiti `{NAME}`→`{USER_FULLNAME}`, `{COURSE}`→`{COURSE_TITLE}`, `{SITENAME}`→`{SITE_NAME}` e i relativi tag HTML. Il catalogo storico sottostante descrive le versioni precedenti e non è il riferimento canonico. I template già personalizzati in installazioni di prova vanno riallineati manualmente o ripristinati; non è prevista compatibilità retroattiva. Le notifiche e il collaudo di invio rimangono da verificare.\n\n# Template email di JD Learn
 
 La PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288), inclusa in 0.56.0-dev, registra i modelli nel sistema nativo **Joomla → Sistema → Modelli email** e usa il mailer e la configurazione SMTP globali del sito. Non esistono credenziali SMTP separate in JD Learn.
