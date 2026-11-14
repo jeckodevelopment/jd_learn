@@ -138,12 +138,12 @@ $stale=stateCommand($service->editor($actor,$qf['course_id'],$qe,'suspended'));$
 stateDenied(fn()=>$service->apply($actor,...$stale),409,'quiz progress invalidates preview');
 $runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,3,stateKey(),$answers,true);
 // MAIL-F: only real, not-completed cancellations produce one audited notification.
-$cancelUser = new \Joomla\\CMS\\User\\User();
+$cancelUser = new \Joomla\CMS\User\User();
 $cancelData = ['name'=>'CI Cancellable Learner','username'=>'cicancellable20261114','email'=>'cicancellable20261114@example.invalid',
     'password'=>'CI-Only-Long-Password-2026','password2'=>'CI-Only-Long-Password-2026',
     'groups'=>[2,$f['group']],'block'=>0,'activation'=>''];
 if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) { throw new \RuntimeException($cancelUser->getError()); }
-$cancelUser = new \Joomla\\CMS\\User\\User((int) $cancelUser->id);
+$cancelUser = new \Joomla\CMS\User\User((int) $cancelUser->id);
 $cancelEnrollment = $learning->start($cancelUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 $cancelBefore = $stable($cancelEnrollment);
 $cancelPreview = $service->editor($actor,$course,$cancelEnrollment,'cancelled');
