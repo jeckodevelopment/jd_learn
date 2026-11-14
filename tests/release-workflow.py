@@ -22,6 +22,17 @@ with zipfile.ZipFile(archive) as z:
     assert m.findtext('packagename')=='jlms'
     assert m.find('./updateservers/server') is not None
     assert len(m.findall('./files/file'))==11
+# The direct inner ZIP is installable; GitHub's download wrapper is not.
+call('tools/verify_installable.py', archive)
+with tempfile.TemporaryDirectory() as download_test:
+    wrapper=Path(download_test)/'github-artifact.zip'
+    with zipfile.ZipFile(wrapper, 'w') as z:
+        z.write(archive, archive.name)
+        z.writestr('SHA256SUMS.txt', hashlib.sha256(archive.read_bytes()).hexdigest()+'  '+archive.name+'\\n')
+    call('tools/verify_installable.py',wrapper,expected=1)
+    output=Path(download_test)/'joomla-ready'
+    call('tools/verify_installable.py',wrapper,'--extract-wrapper','--output',output)
+    assert (output/archive.name).read_bytes()==archive.read_bytes()
 with tempfile.TemporaryDirectory() as tmp:
     feed=Path(tmp)/'jdlearn.xml'
     url='https://github.com/jeckodevelopment/jd_learn/releases/download/v1.0.0/pkg_jlms-1.0.0.zip'
