@@ -24,6 +24,7 @@ final class HtmlView extends BaseHtmlView
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->rosterForm = $this->get('RosterForm');
+        $this->pendingRequests = Factory::getApplication()->bootComponent('com_jlms')->getEnrollmentApprovalService()->pending(Factory::getApplication()->getIdentity(), (int) $this->course->id);
         $this->getDocument()->getWebAssetManager()->useScript('com_jlms.rosterFilters');
         ToolbarHelper::title(Text::_('COM_JLMS_ENROLLMENTS_TITLE'), 'users');
         parent::display($tpl);
