@@ -142,7 +142,22 @@ final class MailQueue
                     continue;
                 }
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
-                $mail = new MailTemplate((string) $row->template_id, (string) $row->language);
+                $templateId = (string) $row->template_id;
+                $language = (string) $row->language;
+                $selected = MailTemplate::getTemplate($templateId, $language)
+                    ?? MailTemplate::getTemplate($templateId, '*');
+                if ($selected === null) {
+                    throw new \RuntimeException('JD Learn mail template not registered.');
+                }
+                $unresolved = MailTemplatePlaceholderValidator::unresolved(
+                    $templateId, $data, (string) $selected->subject,
+                    (string) $selected->body, (string) $selected->htmlbody
+                );
+                if ($unresolved !== []) {
+                    // Never store recipient values or the body in audit diagnostics.
+                    throw new \RuntimeException('JD Learn mail template has unresolved placeholders.');
+                }
+                $mail = new MailTemplate($templateId, $language);
                 $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
                 $mail->addTemplateData($data);
                 $mail->addUnsafeTags(array_keys($data));
