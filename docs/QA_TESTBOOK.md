@@ -1163,3 +1163,15 @@ Nessun dato di test personale nei log o screenshot. CI e test strutturali non so
 7. Testare utenti con permessi diversi, URL di altro corso, CSRF mancante, metodo GET, motivazioni contenenti caratteri non ammessi e richieste obsolette. Verificare audit e risposte senza dati riservati.
 
 La CI automatizzata non sostituisce questi collaudi di accettazione.
+
+## Collaudo upgrade 0.56.20-dev (PR #373, 14 novembre 2026)
+
+**Ambiente:** Joomla 6.2.0 di prova con una versione JD Learn precedente alla #366 (o 0.56.19-dev) e Mail Templates Joomla preesistenti, almeno uno personalizzato. Eseguire un backup ripristinabile prima dell'upgrade. Scaricare l'artefatto Actions `JD-Learn-0.56.20-dev`, **estrarlo una volta** e caricare in Joomla solo il file interno `pkg_jlms-0.56.20-dev.zip` (manifest `pkg_jlms.xml` in radice).
+
+- [ ] Eseguire l'upgrade in **Estensioni → Installa → Installa da URL** (fornendo un URL diretto allo ZIP installabile se disponibile) oppure **Carica file pacchetto** con lo ZIP interno; verificare esito positivo e nessuna eccezione `DatabaseDriver::updateObject() ... passed by reference`.
+- [ ] Aprire **Sistema → Mail Templates**, filtrare `com_jlms`: i template presenti, inclusi quelli IT/EN, devono conservare oggetto, corpo HTML/testo, mittente e preferenze personalizzate; le variabili canoniche devono essere disponibili.
+- [ ] Ripetere lo stesso upgrade, verificando idempotenza e conservazione contenuti/dati iscrizioni.
+- [ ] Accedere ai corsi, alle iscrizioni e a una lezione con progresso preesistente; verificare che la ripresa e il completamento funzionino.
+- [ ] Verificare separatamente il manager **Campi personalizzati** su Joomla 6.2.0 per l'issue [#374](https://github.com/jeckodevelopment/jd_learn/issues/374); questa anomalia HTTP/FieldsHelper è distinta dal blocco d'installazione.
+
+**Stato:** prove automatizzate PR #373 4/4 CI superate (Joomla 6.0.0 in CI standard); accettazione **manuale** Joomla 6.2.0 ancora da eseguire. Non chiamare il vecchio snapshot GitHub `jdlearn-dev-latest` una release aggiornata: contiene la versione 0.56.19-dev, ora superata.
