@@ -3,7 +3,7 @@
 ## 0.57.0-dev
 
 - Sidebar amministrativa JD Learn ridotta a sei voci operative, dashboard aggiornata con **Configurazione & Strumenti** e **Dipendenze categorie**.
-- Pulsante **Variabili modelli email** (#359); viste interne associate alle rispettive voci principali e breadcrumb contestuale con API native di Joomla (#390).
+- Pulsante **Variabili modelli email** (#359); viste interne associate alle rispettive voci principali tramite menu amministrativo nativo di Joomla (#390).
 - Accettazione visiva su Atum/Joomla e verifica di aggiornamento ancora da registrare nel testbook.
 
 ## 0.56.29-dev
