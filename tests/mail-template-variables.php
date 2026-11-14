@@ -45,6 +45,25 @@ foreach ($definitions as $id => [$subject, $body, $tags, $html]) {
         }
     }
 }
+$cancelled = $definitions['com_jlms.enrollment.cancelled'] ?? null;
+if (!$cancelled || !str_contains($cancelled[1], '{COURSE_TITLE}')
+    || !str_contains($cancelled[3], '{USER_FULLNAME}')
+    || $cancelled[2] !== ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME']) {
+    throw new RuntimeException('Cancellation mail must be declared in native HTML/text templates.');
+}
+foreach ([
+    'component/administrator/config.xml' => 'mail_cancellation_enabled',
+    'component/administrator/forms/course.xml' => 'mail_cancellation',
+    'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.cancelled' => 'cancellation'",
+    'component/administrator/src/Application/MailPreferences.php' => "'cancellation'",
+    'component/administrator/src/Application/EnrollmentStateService.php' => "'cancelled' => 'com_jlms.enrollment.cancelled'",
+] as $file => $expected) {
+    $contents = file_get_contents(__DIR__ . '/../' . $file);
+    if ($contents === false || !str_contains($contents, $expected)) {
+        throw new RuntimeException('Missing cancellation event wiring: ' . $file);
+    }
+}
+
 $confirmed = $definitions['com_jlms.enrollment.confirmed'];
 $completed = $definitions['com_jlms.course.completed'];
 if (!in_array('ENROLLMENT_DATE', $confirmed[2], true)
