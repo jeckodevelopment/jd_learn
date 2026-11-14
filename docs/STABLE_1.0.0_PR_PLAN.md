@@ -46,7 +46,7 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 | Issue | Priorità proposta | Destinazione |
 |---|---|---|
 | [#364](https://github.com/jeckodevelopment/jd_learn/issues/364) — anteprima annuncio: 404 | P0 | MAIL-H / STAB |
-| [#379](https://github.com/jeckodevelopment/jd_learn/issues/379) — versioni/date/nomi manifest | P0 | IMP-10 / REL |
+| [#379](https://github.com/jeckodevelopment/jd_learn/issues/379) — versioni/date/nomi manifest | P2 (label GitHub) | IMP-10 / REL |
 | [#312](https://github.com/jeckodevelopment/jd_learn/issues/312) — traduzioni Mail Templates | P1 | MAIL-H |
 | [#368](https://github.com/jeckodevelopment/jd_learn/issues/368) — stringa sidebar | P1 | STAB |
 | [#308](https://github.com/jeckodevelopment/jd_learn/issues/308) — elenco attestati Joomla | P1 | CERT / STAB |
