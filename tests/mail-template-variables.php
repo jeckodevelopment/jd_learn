@@ -88,6 +88,29 @@ foreach (['it-IT', 'en-GB'] as $locale) {
     }
 }
 
+// MAIL-F: outcome notifications and the administrative authorization boundary are explicit.
+foreach (['approved' => ['USER_FULLNAME','COURSE_TITLE','DASHBOARD_URL','SITE_NAME'],
+          'rejected' => ['USER_FULLNAME','COURSE_TITLE','SITE_NAME']] as $event => $expectedTags) {
+    $id = 'com_jlms.enrollment.' . $event;
+    if (!isset($definitions[$id]) || $definitions[$id][2] !== $expectedTags) {
+        throw new RuntimeException('MAIL-F outcome template missing or inconsistent: ' . $id);
+    }
+}
+foreach ([
+    'component/administrator/config.xml' => 'mail_approval_enabled',
+    'component/administrator/forms/course.xml' => 'mail_rejection',
+    'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.approved' => 'approval'",
+    'component/administrator/src/Application/MailPreferences.php' => "'approval', 'rejection'",
+    'component/administrator/src/Application/EnrollmentApprovalService.php' => "FOR UPDATE",
+    'component/administrator/src/Controller/EnrollmentapprovalController.php' => "checkToken('post', false)",
+    'component/administrator/tmpl/enrollments/default.php' => 'enrollmentapproval.decide',
+] as $file => $needle) {
+    $source = file_get_contents(__DIR__ . '/../' . $file);
+    if ($source === false || !str_contains($source, $needle)) {
+        throw new RuntimeException('MAIL-F outcome wiring missing: ' . $file);
+    }
+}
+
 $confirmed = $definitions['com_jlms.enrollment.confirmed'];
 $completed = $definitions['com_jlms.course.completed'];
 if (!in_array('ENROLLMENT_DATE', $confirmed[2], true)
