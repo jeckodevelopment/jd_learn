@@ -20,7 +20,7 @@ final class HtmlView extends BaseHtmlView
         $input = Factory::getApplication()->getInput();
         $filters = $input->get('filter', [], 'array');
         $start = max(0, $input->getInt('limitstart', 0));
-        $this->data = Factory::getContainer()->get(MailQueueAuditService::class)
+        $this->data = new MailQueueAuditService(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class))
             ->page(Factory::getApplication()->getIdentity(), $filters, $start, 50);
         ToolbarHelper::title(Text::_('COM_JLMS_MAIL_QUEUE_TITLE'), 'envelope');
         parent::display($tpl);
