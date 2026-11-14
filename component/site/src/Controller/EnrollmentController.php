@@ -14,7 +14,7 @@ class EnrollmentController extends BaseController
 {
     public function execute($task)
     {
-        $allowed = static::class === self::class ? ['start', 'resume'] : ['complete', 'begin'];
+        $allowed = static::class === self::class ? ['start', 'resume', 'request'] : ['complete', 'begin'];
         if (!in_array(strtolower($task), $allowed, true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
@@ -71,6 +71,39 @@ class EnrollmentController extends BaseController
                 throw new \RuntimeException(Text::_($error->getMessage()), in_array($code, [400, 401, 403, 404, 409], true) ? $code : 400);
             }
             Log::add('Learning mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
+        }
+    }
+
+    public function request(): void
+    {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        if (strtoupper($this->input->getMethod()) !== 'POST') {
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+        }
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
+        }
+        try {
+            $data = $this->input->post->get('jform', [], 'array');
+            $key = $data['idempotency_key'] ?? null;
+            if (!is_string($key)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            $courseId = CurriculumService::id($data['course_id'] ?? null);
+            $this->app->bootComponent('com_jlms')->getLearningService()->requestApproval(
+                $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $courseId, $key
+            );
+            $this->app->enqueueMessage(Text::_('COM_JLMS_ENROLLMENT_REQUEST_RECEIVED'), 'message');
+            $this->setRedirect(Route::_('index.php?option=com_jlms&view=course&id=' . $courseId, false));
+        } catch (\Throwable $error) {
+            $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW',
+                'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_IDEMPOTENCY_CONFLICT',
+                'COM_JLMS_ENROLLMENT_REQUEST_ALREADY_DECIDED', 'COM_JLMS_ENROLLMENT_MODE_PENDING',
+                'COM_JLMS_COURSE_ADMISSIONS_CLOSED', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];
+            if (in_array($error->getMessage(), $known, true)) {
+                $code = (int) $error->getCode();
+                throw new \RuntimeException(Text::_($error->getMessage()), in_array($code, [400, 401, 403, 404, 409], true) ? $code : 400);
+            }
+            Log::add('Enrollment request failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
