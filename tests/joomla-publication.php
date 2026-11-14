@@ -118,6 +118,14 @@ if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson re
     throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
 }
 $lessonField=(int)$fieldModel->getState('field.id');
+foreach (['course' => 'Course context fixture', 'teacher' => 'Teacher context fixture'] as $section => $title) {
+    if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.' . $section,'title'=>$title,'label'=>$title,
+        'name'=>$section . '-context-fixture','type'=>'text','state'=>1,'access'=>1,'language'=>'*','group_id'=>0,
+        'default_value'=>'','description'=>'','params'=>[],'fieldparams'=>['filter'=>'string']])) {
+        throw new \RuntimeException('Native context fixture failed: ' . $fieldModel->getError());
+    }
+}
+
 $lesson=$authoring->saveLesson($actor,pubScope()+['id'=>0,'module_id'=>$module,'title'=>'Published lesson','kind'=>'text','required'=>'1',
     'body'=>'<p>SECRET_LESSON_BODY</p>','public_preview'=>'1','com_fields'=>['lesson-reference'=>'LESSON_FIELD_SNAPSHOT']]);
 pubDenied(fn()=>pubTransition(),'public preview requires explicit course setting');
