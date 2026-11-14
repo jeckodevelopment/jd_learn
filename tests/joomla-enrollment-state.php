@@ -75,6 +75,36 @@ if(($argv[2]??'')==='retained'){
  stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.enrollmentstate' AND item_id=".(int)$saved['first_event'])->loadResult()===1,'native state audit retained');
  echo json_encode(['enrollment_state_retention_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;exit;
 }
+if (($argv[2] ?? '') === 'cancellation') {
+// MAIL-F: only real, not-completed cancellations produce one audited notification.
+$cancelUser = new \Joomla\CMS\User\User();
+$cancelData = ['name'=>'CI Cancellable Learner','username'=>'cicancellable20261114','email'=>'cicancellable20261114@example.invalid',
+    'password'=>'CI-Only-Long-Password-2026','password2'=>'CI-Only-Long-Password-2026',
+    'groups'=>[2,$f['group']],'block'=>0,'activation'=>''];
+if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) { throw new \RuntimeException($cancelUser->getError()); }
+$cancelUser = new \Joomla\CMS\User\User((int) $cancelUser->id);
+$cancelEnrollment = $learning->start($cancelUser, 'en-GB', $course, bin2hex(random_bytes(16)));
+$cancelBefore = $stable($cancelEnrollment);
+$cancelPreview = $service->editor($actor,$course,$cancelEnrollment,'cancelled');
+stateExpect($cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled','valid cancellation preview');
+$cancelCommand = stateCommand($cancelPreview);
+$cancelRecord = $service->apply($actor,...$cancelCommand);
+stateExpect($service->apply($actor,...$cancelCommand) === $cancelRecord,'replayed cancellation does not duplicate event');
+stateExpect((string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled','cancellation persisted');
+stateExpect($cancelBefore === $stable($cancelEnrollment),'cancellation preserves prior learning and assignment data');
+stateDenied(fn()=>$learning->resumeTarget($cancelUser,'en-GB',$cancelEnrollment),403,'cancelled enrollment denies classroom');
+stateExpect($service->editor($actor,$course,$cancelEnrollment,'active')['impact']['blocked'] !== null,'cancelled enrollment cannot be reactivated');
+stateExpect($service->editor($actor,$course,$cancelEnrollment,'cancelled')['impact']['blocked'] !== null,'cancelled enrollment cannot be cancelled twice');
+$cancelQ = $db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue')
+    ->where("template_id = 'com_jlms.enrollment.cancelled'")
+    ->where('event_key = ' . $db->quote(hash('sha256','enrollment.state:' . $cancelRecord)));
+stateExpect((int) $db->setQuery($cancelQ)->loadResult() === 1,'cancellation queues exactly one learner notification');
+$completionPreview = $service->editor($actor,$course,(int)$f['completed'],'cancelled');
+stateExpect($completionPreview['impact']['blocked'] !== null,'completed enrollment cannot be cancelled');
+
+echo json_encode(['enrollment_cancellation_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+exit;
+}
 $before=$stable($enrollment);$groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
 $i=$service->editor($manager,$course,$enrollment,'suspended');$command=stateCommand($i);$event=$service->apply($manager,...$command);
 stateExpect($service->editor($actor,$course,$enrollment)['impact']['previous_status']==='suspended','authorized suspension persisted');
@@ -137,32 +167,6 @@ stateExpect($savedAnswers===$db->setQuery('SELECT aa.* FROM #__jlms_attempt_answ
 $stale=stateCommand($service->editor($actor,$qf['course_id'],$qe,'suspended'));$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,2,stateKey(),$answers,false);
 stateDenied(fn()=>$service->apply($actor,...$stale),409,'quiz progress invalidates preview');
 $runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,3,stateKey(),$answers,true);
-// MAIL-F: only real, not-completed cancellations produce one audited notification.
-$cancelUser = new \Joomla\CMS\User\User();
-$cancelData = ['name'=>'CI Cancellable Learner','username'=>'cicancellable20261114','email'=>'cicancellable20261114@example.invalid',
-    'password'=>'CI-Only-Long-Password-2026','password2'=>'CI-Only-Long-Password-2026',
-    'groups'=>[2,$f['group']],'block'=>0,'activation'=>''];
-if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) { throw new \RuntimeException($cancelUser->getError()); }
-$cancelUser = new \Joomla\CMS\User\User((int) $cancelUser->id);
-$cancelEnrollment = $learning->start($cancelUser, 'en-GB', $course, bin2hex(random_bytes(16)));
-$cancelBefore = $stable($cancelEnrollment);
-$cancelPreview = $service->editor($actor,$course,$cancelEnrollment,'cancelled');
-stateExpect($cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled','valid cancellation preview');
-$cancelCommand = stateCommand($cancelPreview);
-$cancelRecord = $service->apply($actor,...$cancelCommand);
-stateExpect($service->apply($actor,...$cancelCommand) === $cancelRecord,'replayed cancellation does not duplicate event');
-stateExpect((string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled','cancellation persisted');
-stateExpect($cancelBefore === $stable($cancelEnrollment),'cancellation preserves prior learning and assignment data');
-stateDenied(fn()=>$learning->resumeTarget($cancelUser,'en-GB',$cancelEnrollment),403,'cancelled enrollment denies classroom');
-stateExpect($service->editor($actor,$course,$cancelEnrollment,'active')['impact']['blocked'] !== null,'cancelled enrollment cannot be reactivated');
-stateExpect($service->editor($actor,$course,$cancelEnrollment,'cancelled')['impact']['blocked'] !== null,'cancelled enrollment cannot be cancelled twice');
-$cancelQ = $db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue')
-    ->where("template_id = 'com_jlms.enrollment.cancelled'")
-    ->where('event_key = ' . $db->quote(hash('sha256','enrollment.state:' . $cancelRecord)));
-stateExpect((int) $db->setQuery($cancelQ)->loadResult() === 1,'cancellation queues exactly one learner notification');
-$completionPreview = $service->editor($actor,$course,(int)$f['completed'],'cancelled');
-stateExpect($completionPreview['impact']['blocked'] !== null,'completed enrollment cannot be cancelled');
-
 $serialized=json_encode($service->editor($actor,$course,$enrollment),JSON_THROW_ON_ERROR);stateExpect(!str_contains($serialized,'subject_key')&&!str_contains($serialized,'rules_json'),'editor excludes internal subject and grading data');
 file_put_contents($path,json_encode(['course'=>$course,'enrollment'=>$enrollment,'owner'=>$f['owner'],'lesson'=>$f['lesson'],'first_event'=>$event,'history_count'=>$count(),'stable'=>$stable($enrollment),'manager'=>$rf['manager'],'manager_group'=>$rf['group'],'http_enrollment'=>$f['other_enrollment'],'cancelled'=>$f['cancelled'],'foreign_enrollment'=>$f['italian'],'other_course'=>$rf['other_course']],JSON_THROW_ON_ERROR));
 echo json_encode(['enrollment_state_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
