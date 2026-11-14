@@ -35,6 +35,8 @@
   <field name="teacher_ids" type="Courseteachers" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" label="COM_JLMS_TEACHERS" description="COM_JLMS_TEACHER_ASSIGN_HELP" multiple="true" filter="raw" />
  </fieldset>
  <fieldset name="notifications" label="COM_JLMS_COURSE_MAIL_PREFERENCES">
+  <field name="mail_approval" type="list" label="COM_JLMS_MAIL_APPROVAL_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
+  <field name="mail_rejection" type="list" label="COM_JLMS_MAIL_REJECTION_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
   <field name="mail_request" type="list" label="COM_JLMS_MAIL_REQUEST_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
   <field name="mail_enrollment" type="list" label="COM_JLMS_MAIL_ENROLLMENT_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
   <field name="mail_completion" type="list" label="COM_JLMS_MAIL_COMPLETION_ENABLED" default="inherit" filter="cmd"><option value="inherit">COM_JLMS_MAIL_INHERIT_GLOBAL</option><option value="enabled">JYES</option><option value="disabled">JNO</option></field>
