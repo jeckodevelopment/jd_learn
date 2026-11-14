@@ -153,3 +153,23 @@ La specifica vincolante per la **1.0.0** è [MAIL_TEMPLATES_1.0.0_APPROVED.md](M
 
 
 \n### MAIL-E — uniformazione senza alias\n\nLa PR #349 migra le dichiarazioni dei template e i generatori dati degli eventi oggi collegati a `{USER_FULLNAME}`, `{COURSE_TITLE}`, `{SITE_NAME}` e varianti HTML `{USER_FULLNAME_HTML}`, `{COURSE_TITLE_HTML}`, `{SITE_NAME_HTML}`. Rimuove lo strato di alias inizialmente proposto. Le altre variabili approvate nella [specifica 1.0.0](MAIL_TEMPLATES_1.0.0_APPROVED.md) saranno disponibili solo dopo effettiva implementazione; non dichiararle funzionanti prima delle PR successive.\n
+
+## MAIL-E — catalogo tipizzato delle variabili effettivamente disponibili
+
+Il registro read-only `MailTemplateVariableCatalog::forTemplate($templateId, $language)` legge l'elenco dei tag direttamente da `MailTemplateInstaller::tagsFor()` e restituisce per ogni segnaposto **tipo** e **descrizione IT/EN**. I test PHP assicurano che ogni segnaposto registrato in ogni template abbia una descrizione in entrambe le lingue e che l'elenco dei tag non diverga da quello nativo Joomla. Questo è un primo incremento infrastrutturale: **non aggiunge ancora variabili nei payload e non espone automaticamente una guida nella schermata amministrativa Joomla**.
+
+### Riferimento per gli amministratori (template attualmente registrati)
+
+| Tipo di email | Variabili già registrate |
+|---|---|
+| Richiesta iscrizione | `USER_FULLNAME`, `COURSE_TITLE`, `SITE_NAME` |
+| Conferma iscrizione | `USER_FULLNAME`, `COURSE_TITLE`, `SITE_NAME`, `COURSE_URL` |
+| Sospensione / riattivazione | `USER_FULLNAME`, `COURSE_TITLE`, `SITE_NAME` |
+| Completamento | `USER_FULLNAME`, `COURSE_TITLE`, `SITE_NAME` |
+| Attestato disponibile | `USER_FULLNAME`, `COURSE_TITLE`, `SITE_NAME`, `CERTIFICATE_URL` |
+| Scadenza | `USER_FULLNAME`, `COURSE_TITLE`, `COURSE_ENDS_AT`, `COURSE_URL`, `SITE_NAME` |
+| Messaggio operativo | `USER_FULLNAME`, `USER_FULLNAME_HTML`, `COURSE_TITLE`, `COURSE_TITLE_HTML`, `MESSAGE_SUBJECT`, `MESSAGE_BODY_TEXT`, `MESSAGE_BODY_HTML`, `SITE_NAME`, `SITE_NAME_HTML` |
+| Annuncio nuovo corso | `USER_FULLNAME`, `COURSE_TITLE`, `COURSE_TITLE_HTML`, `COURSE_IMAGE_HTML`, `COURSE_INTRO_TEXT`, `COURSE_INTRO_HTML`, `COURSE_LESSONS_TEXT`, `COURSE_LESSONS_HTML`, `COURSE_URL`, `SITE_NAME`, `SITE_NAME_HTML`, `UNSUBSCRIBE_URL`, `UNSUBSCRIBE_URL_HTML`, `UNSUBSCRIBE_URL_TEXT` |
+| Conferma consenso | `USER_FULLNAME`, `CONFIRM_URL`, `SITE_NAME` |
+
+**Attenzione:** i tag `*_HTML` rappresentano valori escaped o frammenti HTML predisposti dal componente: non vanno usati come HTML arbitrario. Un tag non presente nell'elenco del modello non deve essere considerato disponibile. `COURSE_ENDS_AT` è una data, mentre `COURSE_URL` e i link di consenso sono URL; la disponibilità del dato dipende dallo specifico evento. La specifica delle nuove variabili non è prova che siano già disponibili. Il confronto con il backend e il collaudo SMTP rimangono da eseguire.
