@@ -1,5 +1,8 @@
 # Changelog
 
+**Main 0.56.20-dev — PR [#373](https://github.com/jeckodevelopment/jd_learn/pull/373) integrata** (merge `9ada1824bdc0eb09efe547465d4231f973f41b8a`). Riparato il blocco upgrade Joomla causato da `DatabaseDriver::updateObject()` con `(object) [...]` temporaneo nel postflight Mail Templates; corrette quattro chiamate analoghe in `LearningService`. Revert dell'automazione di packaging aggiuntiva #369–#371; ripristinato l'unico workflow CI. CI [43627177407](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407) **4/4 superata**, [tracciabilità](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177463) superata. Il package interno verificato `pkg_jlms-0.56.20-dev.zip` è nell'[artefatto Actions 14126702616](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407/artifacts/14126702616); estrarre prima il contenitore GitHub. SHA-256 ZIP interno `ab972ee39895bd529ff72a64f9df51814a4d5981baf6d4402882bb654fe69ab2`. Nessuna crescita di copertura funzionale (bug fix); collaudo manuale Joomla 6.2.0 sul sito dell'utente pendente. La vecchia prerelease `jdlearn-dev-latest` contiene la versione 0.56.19 e non deve essere utilizzata.
+
+
 ## 0.56.20-dev — Riparazione upgrade Joomla e semplificazione packaging (14 novembre 2026)
 
 - **Causa verificata:** il `postflight` di `com_jlms` invocava `MailTemplateTagUpdater::synchronize()`, che passava direttamente `(object) [...]` come secondo argomento di `DatabaseDriver::updateObject()`; l'API Joomla richiede un oggetto variabile per riferimento. Il difetto era preesistente alla PR #366, ma si manifesta quando i Mail Templates installati devono aggiornare i tag canonici.
