@@ -1,6 +1,6 @@
 # JD Learn
 
-**Build di sviluppo candidata: `0.56.26-dev`** (verifica CI in corso; non release stabile). Lo stato installabile va confermato nelle evidenze CI.
+**Build di sviluppo corrente: `0.56.26-dev`** (non release stabile). La CI della build è verde; per pacchetto e checksum vedere [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json).
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
@@ -19,7 +19,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 La copertura **implementativa stimata** verso la 1.0.0 è circa **80%** nell'ultima fotografia documentata; **non è una misura dell'accettazione manuale**. La fonte aggiornata, con pesi e verifiche, è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md). Per le singole modifiche, consultare esclusivamente il [Changelog](CHANGELOG.md).
 
-Le integrazioni più recenti riguardano le traduzioni del menu amministrativo, le notifiche ai docenti, la compatibilità dei campi aggiuntivi con Joomla 6.2 e l'allineamento dell'interfaccia amministrativa agli schemi Joomla. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
+Le integrazioni più recenti riguardano le notifiche email approvate, la compatibilità con Joomla 6.2 e l’allineamento delle viste amministrative e delle toolbar agli schemi Joomla. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
 
 ## Installazione e sviluppo
 
