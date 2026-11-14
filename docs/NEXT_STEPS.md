@@ -11,3 +11,6 @@ Aggiornato al 14 novembre 2026. Baseline **main 0.56.19-dev**, PR [#346](https:/
 **Prossime priorità:** completare i residui approvati di MAIL-03/MAIL-02 nel blocco IMP-09-MAIL-D; registrare sul sito Joomla i collaudi manuali dashboard, template e notifiche nel [testbook](QA_TESTBOOK.md). Poi proseguire con DOC-P1–DOC-P5 e SEC-P1–SEC-P5 previsti come gate obbligatori prima della 1.0.0.
 
 Riferimenti: [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), [MAIL_TEMPLATES.md](MAIL_TEMPLATES.md), [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md).
+
+
+**Decisione del 14 novembre 2026 — email 1.0.0:** approvato il [catalogo dei template, variabili canoniche e notifiche](MAIL_TEMPLATES_1.0.0_APPROVED.md) con blocchi IMP-09-MAIL-E/F/G/H nel [piano PR](STABLE_1.0.0_PR_PLAN.md). Include template di esito/rinuncia iscrizione, notifiche facoltative per lezioni e modifiche, email a docenti/amministratori e correzione issue #312. Non ancora implementato: la baseline e la percentuale pubblicate sopra **non cambiano** per una PR solo documentale.
