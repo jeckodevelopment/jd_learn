@@ -259,8 +259,9 @@ if ($queueController === false || !str_contains($queueController, "['reconcile',
 }
 if ($dashboard === false || !str_contains($dashboard, "view=mailvariables")
     || $guideView === false || !str_contains($guideView, "authorise('core.manage', 'com_jlms')")
-    || !str_contains($guide, "authorise('core.edit', 'com_mails')")) {
-    throw new RuntimeException('Guide navigation and native editor ACL must be enforced.');
+    || !str_contains($guideView, "authorise('core.manage', 'com_mails')")
+    || !str_contains($guideView, "authorise('core.edit', 'com_mails')")) {
+    throw new RuntimeException('Guide navigation and native editor ACL must be enforced by the toolbar view.');
 }
 foreach (['it-IT', 'en-GB'] as $locale) {
     $language = file_get_contents(__DIR__ . '/../component/administrator/language/' . $locale . '/com_jlms.ini');
