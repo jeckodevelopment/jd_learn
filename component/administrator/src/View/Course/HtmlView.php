@@ -82,11 +82,11 @@ final class HtmlView extends BaseHtmlView
             $programmeMenu->save('course.save', 'JTOOLBAR_SAVE_AND_CLOSE')
                 ->buttonClass('btn btn-success')
                 ->icon('icon-save');
-            $programmeMenu->customButton(
+            $programmeMenu->standardButton(
                 'course-programme',
                 'COM_JLMS_COURSE_SAVE_PROGRAMME',
                 'course.programme'
-            )->icon('icon-list');
+            )->formValidation(true)->icon('icon-list');
         }
         if ($id > 0) { ToolbarHelper::versions('com_jlms.course', $id); }
         ToolbarHelper::cancel('course.cancel');
