@@ -61,9 +61,9 @@ final class MailTemplateInstaller
             ],
             'com_jlms.enrollment.confirmed' => [
                 'Iscrizione confermata: {COURSE_TITLE}',
-                "Ciao {USER_FULLNAME},\n\nla tua iscrizione al corso {COURSE_TITLE} è confermata.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'COURSE_URL'],
-                '<p>Ciao {USER_FULLNAME},</p><p>la tua iscrizione al corso <strong>{COURSE_TITLE}</strong> è confermata.</p><p><a href="{COURSE_URL}">Apri il corso</a></p><p>{SITE_NAME}</p>',
+                "Ciao {USER_FULLNAME},\n\nla tua iscrizione al corso {COURSE_TITLE} è confermata (data UTC: {ENROLLMENT_DATE}).\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'COURSE_URL', 'ENROLLMENT_DATE'],
+                '<p>Ciao {USER_FULLNAME},</p><p>la tua iscrizione al corso <strong>{COURSE_TITLE}</strong> è confermata (data UTC: {ENROLLMENT_DATE}).</p><p><a href="{COURSE_URL}">Apri il corso</a></p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.course.expiring' => [
                 'Il corso {COURSE_TITLE} termina il {COURSE_ENDS_AT}',
@@ -73,9 +73,9 @@ final class MailTemplateInstaller
             ],
             'com_jlms.course.completed' => [
                 'Corso completato: {COURSE_TITLE}',
-                "Ciao {USER_FULLNAME},\n\nhai completato il corso {COURSE_TITLE}.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
-                '<p>Ciao {USER_FULLNAME},</p><p>hai completato il corso <strong>{COURSE_TITLE}</strong>.</p><p>{SITE_NAME}</p>',
+                "Ciao {USER_FULLNAME},\n\nhai completato il corso {COURSE_TITLE} (data UTC: {COMPLETION_DATE}).\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'COMPLETION_DATE'],
+                '<p>Ciao {USER_FULLNAME},</p><p>hai completato il corso <strong>{COURSE_TITLE}</strong> (data UTC: {COMPLETION_DATE}).</p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.certificate.available' => [
                 'Attestato disponibile: {COURSE_TITLE}',
