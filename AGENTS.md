@@ -1,5 +1,8 @@
 # JD Learn development
 
+- Consegna pacchetto **direttamente scaricabile**: dopo un merge su `main`, controllare il workflow `Publish installable JD Learn development ZIP` e il link HTTPS della prerelease `jdlearn-dev-latest`, che espone il vero `pkg_jlms-*-dev.zip` senza wrapper. Verificare che il workflow di pubblicazione sia verde, checksum e manifest corrispondano, e fornire il link diretto alla GitHub Release. Se il job è fallito, non presentare il file come consegnato. Questo canale sviluppo non deve aggiornare il feed Joomla o la release stabile.
+
+
 - **Packaging e consegna (obbligatorio):** gli artefatti di GitHub Actions sono ZIP esterni, non installabili in Joomla. Per ogni PR integrata verificare con `tools/verify_installable.py` il file interno `pkg_jlms-*-dev.zip` con manifest `pkg_jlms.xml` in radice, undici costituenti e SHA-256; consegnare il file interno direttamente, oppure etichettare esplicitamente il link Actions come `EXTRACT-FIRST` con istruzione di estrazione. **Non presentare l'URL Actions artifact come ZIP caricabile direttamente in Joomla.** Vedere `docs/RELEASE_PROCEDURE.md`.
 
 

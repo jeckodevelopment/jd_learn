@@ -14,6 +14,14 @@ Validazione locale: `python3 tools/build.py` e `python3 tools/verify_installable
 
 La validazione strutturale e la CI installano lo ZIP interno sul runtime Joomla isolato, ma non sostituiscono l'accettazione manuale su un sito reale. Il rilascio pubblico stabile resta subordinato a IMP-10; questa procedura **non pubblica** alcuna nuova release stabile.
 
+## Download diretto delle build di sviluppo (dopo integrazione)
+
+**Canale dedicato alle build di sviluppo:** dopo un merge su `main` che modifica codice, manifest o build, il workflow `.github/workflows/dev-package.yml` genera `pkg_jlms-VERSION-dev.zip`, controlla manifest e SHA-256, lo pubblica come **asset ZIP diretto** nella [GitHub Release di sviluppo `jdlearn-dev-latest`](https://github.com/jeckodevelopment/jd_learn/releases/tag/jdlearn-dev-latest) e verifica che il download HTTPS pubblico contenga gli stessi byte installabili su Joomla.
+
+**Questo URL è un vero ZIP Joomla, senza wrapper:** `https://github.com/jeckodevelopment/jd_learn/releases/download/jdlearn-dev-latest/pkg_jlms-VERSION-dev.zip`. Non confonderlo con gli artefatti Actions `EXTRACT-FIRST-JD-Learn-...`: quei download sono archivi esterni che vanno estratti. Il tag `jdlearn-dev-latest` è mobile e il file può cambiare a ogni merge, anche quando il numero di versione `-dev` non cambia; release notes e checksum identificano ogni commit. Per riprodurre una build precedente utilizzare il relativo artefatto Actions, estrarre lo ZIP interno e controllare il checksum.
+
+**Governance:** questo è soltanto un canale *prerelease* per prove tecniche. Non crea tag semantici `vX.Y.Z`, non tocca `jdlearn.xml`, il server FTPS né il gate di pubblicazione stabile IMP-10. Il workflow non acquisisce segreti di produzione. Se il download diretto non è raggiungibile o non è stato verificato dopo un merge, **non** affermare che il nuovo pacchetto sia disponibile e utilizzare temporaneamente lo ZIP interno validato da Actions. La CI verde da sola non prova l'accesso al download della release.
+
 ## Versioning
 
 Le versioni del package seguono [la policy SemVer del progetto](VERSIONING.md). Prima di una release stabile, gli strumenti rifiutano numeri non canonici (zeri iniziali) e il controllo strutturale verifica che manifest package e componente riportino la stessa versione. Le versioni di sviluppo restano nel canale `-dev`; non sono release stabili.
