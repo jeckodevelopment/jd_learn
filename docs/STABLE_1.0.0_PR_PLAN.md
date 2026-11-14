@@ -325,3 +325,5 @@ Gli artefatti scaricati da GitHub Actions sono ZIP esterni che **non si installa
 ### Pacchetti installabili — canale di sviluppo (candidata)
 
 Dopo la regressione di consegna degli archivi Actions, aggiunto il workflow `.github/workflows/dev-package.yml` per esporre sulla GitHub Release di sviluppo `jdlearn-dev-latest` **il vero ZIP Joomla** senza il contenitore Actions. Verifica automatica di checksum, manifest e scaricabilità HTTPS; tag di sviluppo mobile, nessun aggiornamento di feed o release stabile. Collaudo reale su sito utente sempre distinto dalle prove di CI. Prima di dare un link ad ogni merge bisogna verificare la **riuscita della pubblicazione diretta**, non soltanto della CI della PR.
+
+**Trigger PR dirette:** il canale di sviluppo scatta anche dopo una PR conclusa con merge in `main` (non sulle PR chiuse senza merge), in modo che ogni integrazione produca un file direttamente scaricabile. Pubblicazione e verifica del download devono risultare verdi prima della consegna.
