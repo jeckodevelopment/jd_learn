@@ -57,12 +57,14 @@ final class HtmlView extends BaseHtmlView
                 $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_CERTIFICATES', 'fas fa-certificate', 'index.php?option=com_jlms&view=certificates');
             }
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables');
         }
         if ($actor->authorise('core.manage', 'com_mails') && $actor->authorise('core.edit', 'com_mails')) {
             // Use com_mails' native extension filter; it remains editable in Joomla.
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_TEMPLATES', 'fas fa-envelope',
                 'index.php?option=com_mails&view=templates&filter[extension]=com_jlms&filter[search]=&filter[language]=&limitstart=0');
+        }
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_DASHBOARD_MAIL_VARIABLES', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables');
         }
         if ($actor->authorise('core.manage', 'com_fields')
             && $actor->authorise('core.manage', 'com_jlms')) {
@@ -70,6 +72,9 @@ final class HtmlView extends BaseHtmlView
         }
         if ($actor->authorise('core.manage', 'com_plugins')) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_VIDEO_PLUGINS', 'icon-plug', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0');
+        }
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder-tree', 'index.php?option=com_jlms&view=categoryreassignment');
         }
         if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
         $registry = new VideoProviderRegistry();
