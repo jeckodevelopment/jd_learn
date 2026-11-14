@@ -305,7 +305,7 @@ try:
   if not all(text in visible for text in expected_labels):
    raise RuntimeError(label+' course toolbar is missing a visible save action: '+str([text for text in expected_labels if text not in visible]))
  assert_course_save_toolbar('/administrator/index.php?option=com_jlms&view=course&layout=edit&id=0','New')
- assert_course_save_toolbar('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['allowed1']),'Existing')
+ assert_course_save_toolbar('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['allowed']),'Existing')
  print(json.dumps({'course_save_toolbar_http_checks':2,'status':'passed'}))
  # Announcement preview was already implemented, but the main display controller must route this view.
  announcement_id=int(editor_fixture['denied'])
