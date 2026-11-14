@@ -1,4 +1,4 @@
-Dalla guida **JD Learn → Variabili modelli email**, gli utenti autorizzati aprono i modelli filtrati del componente tramite il pulsante **Template Email** nella toolbar. Il pulsante compare solo con `core.manage` e `core.edit` su `com_mails`.
+La candidata [PR #375](https://github.com/jeckodevelopment/jd_learn/pull/375) sposta nella toolbar il collegamento ai modelli filtrati del componente, mantenendolo visibile solo con `core.manage` e `core.edit` su `com_mails`.
 
 > **Decisione successiva (14 novembre 2026, PR #349):** prima del rilascio si adotta **un solo vocabolario di variabili**, senza alias. Sostituiti `{NAME}`→`{USER_FULLNAME}`, `{COURSE}`→`{COURSE_TITLE}`, `{SITENAME}`→`{SITE_NAME}` e i relativi tag HTML. Il catalogo storico sottostante descrive le versioni precedenti e non è il riferimento canonico. I template già personalizzati in installazioni di prova vanno riallineati manualmente o ripristinati; non è prevista compatibilità retroattiva. Le notifiche e il collaudo di invio rimangono da verificare.\n\n# Template email di JD Learn
 
