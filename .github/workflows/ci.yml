@@ -157,7 +157,7 @@ jobs:
           python3 tools/verify_installable.py .runtime/pre-366-source/dist/pkg_jlms-0.56.19-dev.zip
           python3 tools/verify_installable.py .runtime/post-366-source/dist/pkg_jlms-0.56.19-dev.zip
           php tests/install-package.php .runtime/joomla "$(pwd)/.runtime/pre-366-source/dist/pkg_jlms-0.56.19-dev.zip"
-          php tests/install-package.php .runtime/joomla "$(pwd)/.runtime/post-366-source/dist/pkg_jlms-0.56.19-dev.zip"
+          python3 tests/installer-http-regression.py .runtime/joomla "$(pwd)/.runtime/post-366-source/dist/pkg_jlms-0.56.19-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
