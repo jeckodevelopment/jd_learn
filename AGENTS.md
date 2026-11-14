@@ -1,5 +1,8 @@
 # JD Learn development
 
+- **Packaging e consegna (obbligatorio):** gli artefatti di GitHub Actions sono ZIP esterni, non installabili in Joomla. Per ogni PR integrata verificare con `tools/verify_installable.py` il file interno `pkg_jlms-*-dev.zip` con manifest `pkg_jlms.xml` in radice, undici costituenti e SHA-256; consegnare il file interno direttamente, oppure etichettare esplicitamente il link Actions come `EXTRACT-FIRST` con istruzione di estrazione. **Non presentare l'URL Actions artifact come ZIP caricabile direttamente in Joomla.** Vedere `docs/RELEASE_PROCEDURE.md`.
+
+
 - User preference: work through GitHub for every development increment. Publish the branch, open/update a pull request and inspect its actual GitHub Actions results; do not leave an increment only as a local patch.
 
 - Use `docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md` (content version1.5), the technical design and the security/provider specifications as the scope baseline. Keep requirements and implementation status separate.
