@@ -64,6 +64,30 @@ foreach ([
     }
 }
 
+// MAIL-F: the public request action must use the native queue and course-level preferences.
+foreach ([
+    'component/administrator/config.xml' => 'mail_request_enabled',
+    'component/administrator/forms/course.xml' => 'mail_request',
+    'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.requested' => 'request'",
+    'component/administrator/src/Application/MailPreferences.php' => "'request'",
+    'component/administrator/src/Application/LearningService.php' => 'public function requestApproval(',
+    'component/site/src/Controller/EnrollmentController.php' => 'public function request(): void',
+    'component/site/tmpl/course/default.php' => 'jlms-enrollment-request-form',
+] as $file => $expected) {
+    $source = file_get_contents(__DIR__ . '/../' . $file);
+    if ($source === false || !str_contains($source, $expected)) {
+        throw new RuntimeException('Incomplete approval request wiring: ' . $file);
+    }
+}
+foreach (['it-IT', 'en-GB'] as $locale) {
+    $admin = file_get_contents(__DIR__ . '/../component/administrator/language/' . $locale . '/com_jlms.ini');
+    $site = file_get_contents(__DIR__ . '/../component/site/language/' . $locale . '/com_jlms.ini');
+    if ($admin === false || !str_contains($admin, 'COM_JLMS_MAIL_REQUEST_ENABLED=')
+        || $site === false || !str_contains($site, 'COM_JLMS_ENROLLMENT_REQUEST_SUBMIT=')) {
+        throw new RuntimeException('Missing MAIL-F translation: ' . $locale);
+    }
+}
+
 $confirmed = $definitions['com_jlms.enrollment.confirmed'];
 $completed = $definitions['com_jlms.course.completed'];
 if (!in_array('ENROLLMENT_DATE', $confirmed[2], true)

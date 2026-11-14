@@ -1140,3 +1140,14 @@ L'esecuzione del task usa solo il mailer globale Joomla; nessun SMTP autonomo è
 - [ ] Desktop 13–15 pollici, smartphone, tema scuro, accessibilità tastiera e focus, stato provider espandibile, toolbar Opzioni nativa invariata.
 
 Nessun dato di test personale nei log o screenshot. CI e test strutturali non sono accettazione manuale Joomla.
+
+## MAIL-F — Richiesta pending (da collaudare in Joomla)
+
+1. Creare un corso pubblicato in modalità **Approvazione**, con edizione aperta e iscrizioni consentite. Accedere come studente avente il livello di accesso previsto: deve apparire **Richiedi iscrizione**, non **Inizia**.
+2. Inviare la richiesta: verificare il messaggio di ricevuta e una sola riga `#__jlms_enrollment_requests` con stato `pending`. Nessun record in `#__jlms_enrollments`, nessun accesso all'aula, nessun progresso e nessuna variazione dei gruppi Joomla.
+3. Ripetere la stessa POST e un nuovo invio con chiave differente: deve restare una sola richiesta e una sola notifica in coda; nessun reinvio duplicate SMTP dopo lo Scheduler.
+4. Verificare che modalità automatica/esplicita non accettino `enrollment.request`, e che la chiamata senza CSRF, con utente non autenticato/bloccato, accesso revocato, edizione chiusa, lingua errata o corso non pubblicato venga respinta senza mutazioni.
+5. Impostare le preferenze globali e gli override corso su disabilitata/abilitata/eredita; verificare la coda per nuove richieste. Modificare il template in IT/EN e verificare i placeholder canonici, lingua destinatario e conservazione upgrade.
+6. Forzare un fallimento dell'accodamento e verificare rollback dell'intera richiesta; riprovare dopo il ripristino. La consegna SMTP avviene in Scheduler e non deve attribuire accesso didattico.
+
+**Non ancora implementati in questo incremento:** decisione amministrativa approva/rifiuta, promozione a iscrizione attiva, notifiche esiti e revoca distinta; non considerarli collaudati.

@@ -1,5 +1,14 @@
 # Changelog
 
+
+## MAIL-F — Richiesta di iscrizione soggetta ad approvazione (candidata)
+
+- Introdotto il comando studente protetto per presentare una richiesta pending in modalità `approval`, con vincolo di unicità per utente/edizione e replica idempotente.
+- Conferma via modello nativo Joomla `com_jlms.enrollment.requested` e outbox già esistente, con preferenze di notifica globali/per corso.
+- Nessun accesso all'aula né record di iscrizione attiva prima della futura decisione amministrativa.
+- Test fixture Joomla e controlli strutturali aggiunti; collaudo manuale Joomla/SMTP pendente. MAIL-F non è ancora completo.
+
+
 ## Dashboard — icone collegamenti (issue #352 e #353)
 
 - I collegamenti **Attestati** e **Template email** usano classi Font Awesome esplicite (`fas fa-certificate` e `fas fa-envelope`) invece delle vecchie classi IcoMoon, non sempre presenti nell'amministrazione Joomla.

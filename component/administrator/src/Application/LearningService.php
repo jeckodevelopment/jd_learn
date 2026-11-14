@@ -202,6 +202,80 @@ final class LearningService
         return (string) $this->db->setQuery($q)->loadResult();
     }
 
+    /**
+     * Register an approval-mode admission request without granting learning access.
+     * The unique (subject, edition) constraint makes repeated POSTs harmless.
+     */
+    public function requestApproval(User $identity, string $language, int $courseId, string $key): int
+    {
+        self::key($key);
+        $actor = $this->freshActor($identity);
+        $course = $this->course($actor, $language, $courseId);
+        $current = $this->row('courses', $courseId);
+        if ($current->enrollment_mode !== 'approval') {
+            throw new \RuntimeException('COM_JLMS_ENROLLMENT_MODE_PENDING', 409);
+        }
+        $subject = $this->subject($actor);
+        $versionId = (int) $current->current_version_id;
+        $version = $this->row('course_versions', $versionId);
+        if ($version->status !== 'published' || (int) $version->course_id !== $courseId) {
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+        }
+        $code = 'default-v' . (int) $version->version_no;
+        $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')
+            ->where('course_id = :course')->where('course_version_id = :version')->where('code = :code')
+            ->bind(':course', $courseId, ParameterType::INTEGER)
+            ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':code', $code);
+        $editionId = (int) $this->db->setQuery($q)->loadResult();
+        if (!$editionId) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+
+        return $this->transaction(function () use ($actor, $language, $course, $courseId, $versionId, $editionId, $subject): int {
+            // Serialize admission changes on the same edition row as immediate enrollment.
+            $edition = $this->row('editions', $editionId, true);
+            $actor = $this->freshActor($actor);
+            $this->course($actor, $language, $courseId);
+            $current = $this->row('courses', $courseId);
+            if ($current->enrollment_mode !== 'approval' || (int) $current->current_version_id !== $versionId
+                || (int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId) {
+                throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
+            }
+            if ($edition->status !== 'open') { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
+            self::window($edition);
+            $q = $this->db->createQuery()->select('id, status')->from('#__jlms_enrollment_requests')
+                ->where('subject_key = :subject')->where('edition_id = :edition')
+                ->bind(':subject', $subject)->bind(':edition', $editionId, ParameterType::INTEGER);
+            $existing = $this->db->setQuery($q)->loadObject();
+            if ($existing) {
+                if ($existing->status !== 'pending') {
+                    throw new \RuntimeException('COM_JLMS_ENROLLMENT_REQUEST_ALREADY_DECIDED', 409);
+                }
+                return (int) $existing->id;
+            }
+            if (!(int) $current->admissions_open) { throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409); }
+            $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')
+                ->where('subject_key = :subject')->where('edition_id = :edition')
+                ->bind(':subject', $subject)->bind(':edition', $editionId, ParameterType::INTEGER);
+            if ($this->db->setQuery($q)->loadResult()) { throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409); }
+            // Requests never consume capacity and never create progress, enrollments or Joomla group grants.
+            $now = gmdate('Y-m-d H:i:s');
+            $request = (object) [
+                'user_id' => (int) $actor->id, 'subject_key' => $subject, 'edition_id' => $editionId,
+                'status' => 'pending', 'revision' => 1, 'created_by' => (int) $actor->id,
+                'created_at' => $now, 'modified_by' => (int) $actor->id, 'modified_at' => $now,
+            ];
+            $this->db->insertObject('#__jlms_enrollment_requests', $request, 'id');
+            $requestId = (int) $request->id;
+            $name = trim((string) $actor->name);
+            (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
+                $courseId, hash('sha256', 'enrollment.requested:' . $requestId), 'com_jlms.enrollment.requested',
+                (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
+                ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title,
+                    'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+            );
+            return $requestId;
+        });
+    }
+
     public function start(User $identity, string $language, int $courseId, string $key): int
     {
         self::key($key);
