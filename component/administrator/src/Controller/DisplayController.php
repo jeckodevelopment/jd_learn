@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace Jlms\Component\Jlms\Administrator\Controller;
 
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\Language\Text;
 
 final class DisplayController extends BaseController
 {
@@ -64,18 +63,5 @@ final class DisplayController extends BaseController
             break;
         }
 
-        if ($view === $parent) {
-            return;
-        }
-
-        // Breadcrumbs use Joomla's own Pathway API, not parallel markup.
-        $labels = [
-            'courses' => 'COM_JLMS_COURSES',
-            'pathways' => 'COM_JLMS_PATHWAYS',
-            'teachers' => 'COM_JLMS_TEACHERS',
-            'mailqueue' => 'COM_JLMS_MAIL_QUEUE',
-            'questionbank' => 'COM_JLMS_QUESTION_BANK',
-        ];
-        $app->getPathway()->addItem(Text::_($labels[$parent]), 'index.php?option=com_jlms&view=' . $parent);
     }
 }
