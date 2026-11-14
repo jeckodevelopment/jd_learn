@@ -79,7 +79,7 @@ final class HtmlView extends BaseHtmlView
             $saveDropdown = $toolbar->dropdownButton('save-group')
                 ->buttonClass('btn btn-success');
             $programmeMenu = $saveDropdown->getChildToolbar();
-            $programmeMenu->save('course.save', 'JTOOLBAR_SAVE_AND_CLOSE')
+            $programmeMenu->save('course.save', 'COM_JLMS_COURSE_SAVE_AND_CLOSE')
                 ->buttonClass('btn btn-success')
                 ->icon('icon-save');
             $programmeMenu->standardButton(

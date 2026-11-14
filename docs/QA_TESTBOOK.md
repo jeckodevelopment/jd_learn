@@ -1,3 +1,13 @@
+## Issue #391 — etichetta localizzata Salva & Chiudi
+
+1. Installare la candidata `0.56.29-dev` su Joomla 6.2.
+2. Con lingua amministrativa inglese, aprire **JD Learn → Corsi → Nuovo** e verificare che la toolbar mostri **Save & Close**, senza chiavi tecniche.
+3. Cambiare la lingua amministrativa in italiano, riaprire l’editor e verificare **Salva & Chiudi**.
+4. Ripetere su un corso esistente e verificare che **Salva**, **Salva & Chiudi** e **Salva e apri programma** mantengano i rispettivi comportamenti.
+5. Verificare che non appaiano le stringhe letterali `JTOOLBAR_SAVE_AND_CLOSE` o `COM_JLMS_COURSE_SAVE_AND_CLOSE`.
+
+La CI controlla i cataloghi IT/EN e l’etichetta inglese effettivamente renderizzata via HTTP. L’accettazione visuale sul sito di prova resta da registrare.
+
 ## Issue #384 — toolbar salvataggio corso
 
 1. In Joomla 6.2 accedere come amministratore con permesso di creazione e modifica corsi.
