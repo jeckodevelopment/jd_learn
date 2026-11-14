@@ -69,4 +69,4 @@ Il comando `python3 tools/check.py` esegue anche `tools/check_docs_hygiene.py`, 
 
 ## Stato e rendicontazione
 
-L'ultima stima nel piano precedente era **circa 80% di copertura implementativa**, non un'accettazione della release; rimane **invariata** per questa revisione documentale. La baseline numerica, pesi e verifiche vanno letti in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), senza sommare autonomamente percentuali locali. Lo storico tecnico precedente è conservato nell'[archivio del piano](STABLE_1.0.0_PR_PLAN_ARCHIVE.md).
+L'ultima stima documentata è **79% (78,67% non arrotondato)** di copertura implementativa, non un'accettazione della release; resta **invariata** per la correzione UX della regressione #384. La baseline numerica, pesi e verifiche vanno letti in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), senza sommare autonomamente percentuali locali. Lo storico tecnico precedente è conservato nell'[archivio del piano](STABLE_1.0.0_PR_PLAN_ARCHIVE.md).
