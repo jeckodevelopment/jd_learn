@@ -5,22 +5,22 @@
   "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
   "counts": {
     "Stato implementazione": {
-      "Parziale": 178,
+      "Parziale": 187,
       "Completata": 17,
-      "Non iniziata": 24
+      "Non iniziata": 25
     },
     "Perimetro 1.0.0": {
-      "1.0.0": 144,
+      "1.0.0": 154,
       "Misto": 40,
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 217,
+      "Non eseguita": 227,
       "Parziale": 2
     },
     "Verifica automatica": {
       "Superata": 179,
-      "Non eseguita": 40
+      "Non eseguita": 50
     }
   },
   "implementation_progress": {
@@ -38,8 +38,8 @@
       75
     ]
   },
-  "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Stima globale 78,67% (79% arrotondato), email 64%. Collaudo manuale Joomla/SMTP pendente.",
-  "updated_at": "2026-11-13T23:32:53Z",
+  "note": "Ricognizione documentale: aggiunti i 10 criteri MAIL-01–10 approvati e registrate le PR recenti omesse. La stima per nove macroaree rimane invariata; nessun nuovo esito di accettazione o CI dichiarato.",
+  "updated_at": "2026-11-14",
   "imp_09_mail_c": {
     "pull_request": 313,
     "merge_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
@@ -87,5 +87,18 @@
       "MAIL-11.4 admin selection and preview",
       "MAIL-11.5 guarded campaign outbox/deduplication"
     ]
-  }
+  },
+  "requirements_register": "docs/REQUIREMENTS_STATUS.csv",
+  "approved_mail_addendum": [
+    "MAIL-01",
+    "MAIL-02",
+    "MAIL-03",
+    "MAIL-04",
+    "MAIL-05",
+    "MAIL-06",
+    "MAIL-07",
+    "MAIL-08",
+    "MAIL-09",
+    "MAIL-10"
+  ]
 }
