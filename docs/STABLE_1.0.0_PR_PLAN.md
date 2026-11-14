@@ -52,7 +52,7 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 | [#308](https://github.com/jeckodevelopment/jd_learn/issues/308) — elenco attestati Joomla | P1 | CERT / STAB |
 | [#377](https://github.com/jeckodevelopment/jd_learn/issues/377) — UI docenti | P1 | STAB (rivalutare dopo eventuale PR già integrata) |
 | [#363](https://github.com/jeckodevelopment/jd_learn/issues/363) — pulsante annuncio fuori toolbar | P1 | MAIL-H |
-| [#365](https://github.com/jeckodevelopment/jd_learn/issues/365) — azioni di salvataggio corso | P2 | STAB |
+| [#365](https://github.com/jeckodevelopment/jd_learn/issues/365) — azioni di salvataggio corso | P1 | STAB |
 | [#359](https://github.com/jeckodevelopment/jd_learn/issues/359) — etichetta dashboard | P2 | STAB |
 
 Le priorità sono **proposte di pianificazione**, non sostituiscono label GitHub non verificate. Dopo ogni fix ricontrollare se l'issue sia effettivamente risolta prima di chiuderla.

@@ -66,7 +66,11 @@ course_editor=(ROOT/'component/administrator/tmpl/course/edit.php').read_text()
 assert 'jlms-course-programme-link' not in course_editor
 assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
 course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
-assert "ToolbarHelper::custom('course.programme'" in course_view
+assert "$toolbar->apply('course.apply')" in course_view
+assert "$toolbar->dropdownButton('save-group', 'JTOOLBAR_SAVE_AND_CLOSE', 'course.save')" in course_view
+assert "$saveDropdown->getChildToolbar()" in course_view
+assert "'course-programme'" in course_view and "'COM_JLMS_COURSE_SAVE_PROGRAMME'" in course_view and "'course.programme'" in course_view
+assert "ToolbarHelper::custom('course.programme'" not in course_view
 dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
 dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
 dashboard_style=(ROOT/'component/media/css/admin-dashboard.css').read_text()
