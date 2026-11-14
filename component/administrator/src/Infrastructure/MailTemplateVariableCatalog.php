@@ -20,6 +20,8 @@ final class MailTemplateVariableCatalog
         'SITE_NAME' => ['text', 'Nome del sito', 'Site name'],
         'SITE_NAME_HTML' => ['html-escaped', 'Nome del sito per HTML', 'HTML-escaped site name'],
         'COURSE_URL' => ['url', 'Collegamento al corso', 'Course link'],
+        'ENROLLMENT_DATE' => ['date', 'Data UTC di iscrizione al corso', 'UTC course enrollment date'],
+        'COMPLETION_DATE' => ['date', 'Data UTC di completamento del corso', 'UTC course completion date'],
         'COURSE_ENDS_AT' => ['date', 'Data di scadenza del corso', 'Course expiry date'],
         'CERTIFICATE_URL' => ['url', 'Collegamento all’area attestati autenticata', 'Authenticated certificate area link'],
         'MESSAGE_SUBJECT' => ['text', 'Oggetto della comunicazione manuale', 'Manual message subject'],
