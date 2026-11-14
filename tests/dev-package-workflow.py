@@ -7,6 +7,9 @@ root = Path(__file__).resolve().parents[1]
 workflow = (root / ".github/workflows/dev-package.yml").read_text()
 package_workflow = (root / ".github/workflows/ci.yml").read_text()
 assert "branches: [main]" in workflow
+assert "types: [closed]" in workflow
+assert "github.event.pull_request.merged == true" in workflow
+assert "github.event_name != 'pull_request'" in workflow
 assert "github.repository == 'jeckodevelopment/jd_learn'" in workflow
 assert "github.ref == 'refs/heads/main'" in workflow
 assert "gh release create" in workflow
