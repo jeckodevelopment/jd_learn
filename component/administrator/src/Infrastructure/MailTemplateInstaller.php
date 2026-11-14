@@ -73,9 +73,9 @@ final class MailTemplateInstaller
             ],
             'com_jlms.course.completed' => [
                 'Corso completato: {COURSE_TITLE}',
-                "Ciao {USER_FULLNAME},\n\nhai completato il corso {COURSE_TITLE} (data UTC: {COMPLETION_DATE}).\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'COMPLETION_DATE'],
-                '<p>Ciao {USER_FULLNAME},</p><p>hai completato il corso <strong>{COURSE_TITLE}</strong> (data UTC: {COMPLETION_DATE}).</p><p>{SITE_NAME}</p>',
+                "Ciao {USER_FULLNAME},\n\nhai completato il corso {COURSE_TITLE} (data UTC: {COMPLETION_DATE}).\n\nAccedi alla tua area personale: {DASHBOARD_URL}\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'COMPLETION_DATE', 'DASHBOARD_URL'],
+                '<p>Ciao {USER_FULLNAME},</p><p>hai completato il corso <strong>{COURSE_TITLE}</strong> (data UTC: {COMPLETION_DATE}).</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.certificate.available' => [
                 'Attestato disponibile: {COURSE_TITLE}',
@@ -91,9 +91,9 @@ final class MailTemplateInstaller
             ],
             'com_jlms.enrollment.reactivated' => [
                 'Accesso al corso riattivato: {COURSE_TITLE}',
-                "Ciao {USER_FULLNAME},\n\nl'accesso al corso {COURSE_TITLE} è stato riattivato.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
-                '<p>Ciao {USER_FULLNAME},</p><p>l\'accesso al corso <strong>{COURSE_TITLE}</strong> è stato riattivato.</p><p>{SITE_NAME}</p>',
+                "Ciao {USER_FULLNAME},\n\nl'accesso al corso {COURSE_TITLE} è stato riattivato.\n\nApri la tua area personale: {DASHBOARD_URL}\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'DASHBOARD_URL'],
+                '<p>Ciao {USER_FULLNAME},</p><p>l\'accesso al corso <strong>{COURSE_TITLE}</strong> è stato riattivato.</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.course.message' => [
                 '{COURSE_TITLE}: {MESSAGE_SUBJECT}',
