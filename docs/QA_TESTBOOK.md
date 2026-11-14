@@ -1,3 +1,13 @@
+## Issue #364 — anteprima email annuncio corso
+
+1. Accedere al backend Joomla come amministratore con autorizzazione a modificare il corso.
+2. Aprire **JD Learn → Corsi**, modificare un corso esistente e individuare l’azione per l’anteprima dell’annuncio email.
+3. Aprire l’anteprima. La pagina deve caricarsi senza 404 e mostrare il titolo del corso e lo stato dell’annuncio (anteprima disponibile, corso non idoneo oppure nessun destinatario).
+4. Verificare che l’anteprima non invii email: l’accodamento deve avvenire solo dopo la conferma esplicita, con token Joomla valido.
+5. Con un utente privo di permesso di modifica sul corso, tentare di aprire direttamente lo stesso URL: Joomla deve negare l’accesso senza mostrare i contenuti del corso.
+
+CI copre il routing HTTP autenticato usando un corso fixture e verifica il contenuto della vista. L’invio reale SMTP e l’accodamento restano fuori da questo collaudo di sola anteprima.
+
 ## Issue #365 — azioni di salvataggio nella toolbar corso
 
 1. In Joomla 6.2, accedere con un utente autorizzato a creare corsi e aprire **JD Learn → Corsi → Nuovo**. Verificare che **Salva** resti un'azione autonoma e che **Salva & Chiudi** sia il pulsante principale del gruppo a discesa.

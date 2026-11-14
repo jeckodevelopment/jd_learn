@@ -290,6 +290,11 @@ try:
 
  # Editor diagnostics and delegated-category navigation over real HTTP.
  editor_fixture=json.loads((root.parent/'editor-access-fixture.json').read_text())
+ # Announcement preview was already implemented, but the main display controller must route this view.
+ announcement_id=int(editor_fixture['denied'])
+ _,announcement_html=get('/administrator/index.php?option=com_jlms&view=courseannouncement&id='+str(announcement_id))
+ if 'Editor denied' not in announcement_html or 'JERROR_LAYOUT_PAGE_NOT_FOUND' in announcement_html:
+  raise RuntimeError('Course announcement preview must render for an editable course')
  u,h=get('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['locked']))
  locked_form=next(f for f in Page(h).forms if f['id']=='adminForm')
  if 'jform[title]' in locked_form['fields'] or 'id="jlms-course-effective-rights"' not in h or 'id="jlms-course-rules"' in h:

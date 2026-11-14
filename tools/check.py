@@ -112,6 +112,14 @@ if package.exists():
       source='/'.join(x for x in [prefix,f.text] if x)
       assert source in names or any(n.startswith(source+'/') for n in names),(manifest,source)
  print(f'ZIP manifests and all {len(m.findall("./files/file"))} child archives verified')
+# The administrator announcement preview is an explicit, reachable display route.
+display_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
+assert "'courseannouncement'" in display_controller
+assert (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').is_file()
+assert 'new \\Jlms\\Component\\Jlms\\Administrator\\Application\\CourseAnnouncementService' in (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').read_text()
+assert 'new CourseAnnouncementService' in (ROOT/'component/administrator/src/Controller/CourseannouncementController.php').read_text()
+assert (ROOT/'component/administrator/tmpl/courseannouncement/default.php').is_file()
+
 # Keep implementation claims separate from planned acceptance and verify their source references.
 import runpy
 runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')

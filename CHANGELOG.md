@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.56.27-dev
+
+- Ripristinato il routing amministrativo dell’anteprima email di annuncio corso, includendo la vista esistente nella whitelist del controller display (#364).
+
+
 Registro delle modifiche delle build di sviluppo JD Learn, in ordine di versione decrescente. Le versioni `-dev` **non sono rilasci stabili**. Sono riportate modifiche applicative verificabili, non le attività pianificate, la cronologia CI né i risultati del collaudo. Per l'archivio integrale precedente alla normalizzazione vedere [CHANGELOG_ARCHIVE_PRE_1_0.md](docs/CHANGELOG_ARCHIVE_PRE_1_0.md); per le evidenze di test vedere [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
 
 ## 0.56.26-dev

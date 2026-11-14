@@ -8,6 +8,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService;
 
 final class CourseannouncementController extends BaseController
@@ -39,7 +40,7 @@ final class CourseannouncementController extends BaseController
         }
 
         try {
-            $service = Factory::getContainer()->get(CourseAnnouncementService::class);
+            $service = new CourseAnnouncementService(Factory::getContainer()->get(DatabaseInterface::class));
             $queued = $service->notify($this->app->getIdentity(), $courseId);
             $this->app->enqueueMessage(Text::sprintf('COM_JLMS_COURSE_ANNOUNCEMENT_QUEUED', $queued), 'message');
         } catch (\Throwable $error) {
