@@ -1151,3 +1151,15 @@ Nessun dato di test personale nei log o screenshot. CI e test strutturali non so
 6. Forzare un fallimento dell'accodamento e verificare rollback dell'intera richiesta; riprovare dopo il ripristino. La consegna SMTP avviene in Scheduler e non deve attribuire accesso didattico.
 
 **Non ancora implementati in questo incremento:** decisione amministrativa approva/rifiuta, promozione a iscrizione attiva, notifiche esiti e revoca distinta; non considerarli collaudati.
+
+## MAIL-F — Decisioni amministrative pending (prove manuali pendenti)
+
+1. Creare un corso pubblicato in modalità approvazione e due richieste pending. Come amministratore autorizzato aprire **Corsi → Iscritti**: le richieste devono essere visibili solo nel corso di appartenenza, senza duplicati; con docente non assegnato devono essere nascoste/negate.
+2. Approvare la prima richiesta: una sola iscrizione `active`, versione corretta, progressi inizialmente vuoti, audit della decisione, stato richiesta `approved`, un solo evento `enrollment.approved` in coda; nessuna concessione automatica di gruppi Joomla. Verificare l'accesso all'aula con lo studente.
+3. Rifiutare la seconda: stato `rejected`, nessuna iscrizione, nessun accesso didattico, evento `enrollment.rejected`; la motivazione interna non compare in oggetto, testo o HTML dell'email.
+4. Inviare nuovamente lo stesso form, con la stessa revisione, poi tentare la decisione opposta. Verificare risposta di conflitto e assenza di doppi record/email.
+5. Prima di approvare chiudere iscrizioni, scadere edizione, esaurire posti, cambiare versione o revocare ACL allo studente. Ogni azione deve fallire senza mutazioni né invii. Verificare capienza in due richieste concorrenti: non superare la capacità impostata.
+6. Disabilitare globalmente e per corso le notifiche approval/rejection, poi verificare gli override eredita/abilita/disabilita, l'invio tramite Scheduler SMTP e il retry; confermare la conservazione di traduzioni e template personalizzati dopo upgrade.
+7. Testare utenti con permessi diversi, URL di altro corso, CSRF mancante, metodo GET, motivazioni contenenti caratteri non ammessi e richieste obsolette. Verificare audit e risposte senza dati riservati.
+
+La CI automatizzata non sostituisce questi collaudi di accettazione.
