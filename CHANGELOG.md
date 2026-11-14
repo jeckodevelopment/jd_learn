@@ -1,28 +1,12 @@
 # Changelog
 
+## 0.56.20-dev — Riparazione upgrade Joomla e semplificazione packaging (14 novembre 2026)
 
-## 14 novembre 2026 — Consegna ZIP Joomla verificata
-
-Il problema «manifest mancante» dipendeva dall'aver consegnato l'archivio **esterno** GitHub Actions al posto dello ZIP Joomla **interno**. Verificati gli artefatti #362, #366 e #367: gli ZIP interni hanno manifest `pkg_jlms.xml` alla radice, undici archivi figli, checksum SHA-256 validi. La soluzione permanente è [PR #370](https://github.com/jeckodevelopment/jd_learn/pull/370) (merge `b4b04543013ee09ddc04271ce70a2c7d70a5151d`) e [PR #371](https://github.com/jeckodevelopment/jd_learn/pull/371) (merge `39aaa115850b248b20ea6dcf61f3a1fdf15fdae6`), entrambe integrate con CI **4/4 verde** ([run #370](https://github.com/jeckodevelopment/jd_learn/actions/runs/43621395655), [run #371](https://github.com/jeckodevelopment/jd_learn/actions/runs/43622004014)). Il workflow [Pubblica ZIP Joomla di sviluppo](https://github.com/jeckodevelopment/jd_learn/actions/runs/43622507285) è concluso **successfully**, come il controllo successivo [43622508114](https://github.com/jeckodevelopment/jd_learn/actions/runs/43622508114); verifica pubblicazione e download pubblico HTTPS del medesimo ZIP. Link **diretto, senza wrapper**: [pkg_jlms-0.56.19-dev.zip](https://github.com/jeckodevelopment/jd_learn/releases/download/jdlearn-dev-latest/pkg_jlms-0.56.19-dev.zip); [pagina della prerelease](https://github.com/jeckodevelopment/jd_learn/releases/tag/jdlearn-dev-latest). SHA-256: `3d5c630db47e621ef3227dddad24f506746c298ec08e398f3f2f28991693154a`; 660683 byte. Solo lo ZIP scaricato dall'URL diretto è da caricare in Joomla senza estrarlo. Il tag `jdlearn-dev-latest` è mobile, non è una release stabile e non aggiorna il feed di produzione. **L'accettazione sul sito di prova dell'utente non è ancora stata eseguita**; la CI ha testato installazione/upgrade su Joomla isolato.
-
-## Consegna diretta build installabili Joomla — sviluppo (candidata)
-
-- Nuovo workflow di pubblicazione automatica **solo di prerelease di sviluppo** dopo merge su main: costruisce, verifica e distribuisce come vero asset GitHub Releases `pkg_jlms-*-dev.zip`, senza wrapper di Actions.
-- Asset HTTPS scaricato e convalidato attraverso checksum e controllo del manifest. Test statici impediscono di toccare tag stabili o il feed di update in produzione.
-- Il tag `jdlearn-dev-latest` è mobile e identifica uno snapshot di sviluppo, non una versione stabile. Verifica effettiva del workflow GitHub post-merge necessaria prima di dichiararlo pronto per il download.
-
-
-## PR #369 — Correzione consegna pacchetto Joomla, integrata
-
-La [PR #369](https://github.com/jeckodevelopment/jd_learn/pull/369) è **integrata su main** (merge `227f0a879c717a254a0a15004546c90b478a0513`). La [CI 43619757872](https://github.com/jeckodevelopment/jd_learn/actions/runs/43619757872) è **4/4 verde**, con installazione Joomla e upgrade su PHP 8.3/MySQL e PHP 8.4/MariaDB; validatore requirements [43619757848](https://github.com/jeckodevelopment/jd_learn/actions/runs/43619757848) verde. L'artefatto Actions ora si chiama [EXTRACT-FIRST-JD-Learn-0.56.19-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43619757872/artifacts/14123527192): **è un ZIP esterno da estrarre**. Lo ZIP Joomla interno `pkg_jlms-0.56.19-dev.zip` è stato estratto, testato con manifest `pkg_jlms.xml` nella radice, 11 ZIP figli e SHA-256 `3d5c630db47e621ef3227dddad24f506746c298ec08e398f3f2f28991693154a`. Non caricare in Joomla l'archivio esterno Actions. La versione interna resta 0.56.19-dev; accettazione manuale del sito di prova pendente.
-
-
-## Correzione consegna ZIP Joomla (14 novembre 2026)
-
-- Corretto il processo di consegna degli ZIP di sviluppo: GitHub Actions scarica un wrapper contenente `SHA256SUMS.txt` e `pkg_jlms-0.56.19-dev.zip`, mentre Joomla deve ricevere il solo ZIP interno con `pkg_jlms.xml` alla radice. La distinzione era stata omessa nella consegna dopo PR #362, #366 e #367 e causava il messaggio «manifest mancante».
-- Nuovo `tools/verify_installable.py` per validare ZIP interno e manifest, 11 costituenti, SHA-256 ed estrazione sicura dal wrapper. Test regressione negativo dell'archivio esterno e positivo del pacchetto installabile.
-- La CI ora fallisce se il pacchetto candidato non è caricabile in Joomla e contrassegna l'archivio scaricabile da Actions con `EXTRACT-FIRST`.
-- Il pacchetto interno 0.56.19-dev della PR #367 è già stato estratto, verificato e fornito direttamente all'utente. La pipeline non cambia il formato interno né la versione; il collaudo dell'installazione nel sito di prova rimane distinto.
+- **Causa verificata:** il `postflight` di `com_jlms` invocava `MailTemplateTagUpdater::synchronize()`, che passava direttamente `(object) [...]` come secondo argomento di `DatabaseDriver::updateObject()`; l'API Joomla richiede un oggetto variabile per riferimento. Il difetto era preesistente alla PR #366, ma si manifesta quando i Mail Templates installati devono aggiornare i tag canonici.
+- Corretto l'aggiornamento dei tag senza alterare oggetto, mittente, HTML o preferenze degli amministratori. Eliminati quattro analoghi argomenti temporanei in `LearningService`.
+- Nuova prova di upgrade con template preesistente e tag obsoleti; validazione statica contro la ricomparsa del bug.
+- **Revert di packaging #369–#371:** eliminati workflow aggiuntivo di prerelease, test collegati e validatore ridondante; ripristinati workflow e test di packaging precedenti. Rimane l'artefatto Actions originale contenente lo ZIP Joomla interno, da estrarre prima di installarlo. La precedente prerelease GitHub è uno snapshot storico e non viene più aggiornata.
+- Percentuale implementativa 1.0.0 invariata (correzione regressione, non nuova funzionalità). Accettazione sul sito di prova ancora da eseguire.
 
 
 ## MAIL-F — richieste approvate/rifiutate (PR #367 integrata)
