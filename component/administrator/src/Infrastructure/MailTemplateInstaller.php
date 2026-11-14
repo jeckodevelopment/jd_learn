@@ -43,7 +43,7 @@ final class MailTemplateInstaller
             'com_jlms.enrollment.requested' => [
                 'Richiesta di iscrizione ricevuta: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nabbiamo ricevuto la tua richiesta di iscrizione al corso {COURSE_TITLE}.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITENAME'],
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
                 '<p>Ciao {USER_FULLNAME},</p><p>abbiamo ricevuto la tua richiesta di iscrizione al corso <strong>{COURSE_TITLE}</strong>.</p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.enrollment.confirmed' => [
@@ -55,13 +55,13 @@ final class MailTemplateInstaller
             'com_jlms.course.expiring' => [
                 'Il corso {COURSE_TITLE} termina il {COURSE_ENDS_AT}',
                 "Ciao {USER_FULLNAME},\n\nil corso {COURSE_TITLE} terminerà il {COURSE_ENDS_AT}. Completa le attività entro la scadenza.\n\n{COURSE_URL}\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'COURSE_ENDS_AT', 'COURSE_URL', 'SITENAME'],
+                ['USER_FULLNAME', 'COURSE_TITLE', 'COURSE_ENDS_AT', 'COURSE_URL', 'SITE_NAME'],
                 '<p>Ciao {USER_FULLNAME},</p><p>il corso <strong>{COURSE_TITLE}</strong> terminerà il {COURSE_ENDS_AT}. Completa le attività entro la scadenza.</p><p><a href="{COURSE_URL}">Apri il corso</a></p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.course.completed' => [
                 'Corso completato: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nhai completato il corso {COURSE_TITLE}.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITENAME'],
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
                 '<p>Ciao {USER_FULLNAME},</p><p>hai completato il corso <strong>{COURSE_TITLE}</strong>.</p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.certificate.available' => [
@@ -73,19 +73,19 @@ final class MailTemplateInstaller
             'com_jlms.enrollment.suspended' => [
                 'Accesso al corso sospeso: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nl'accesso al corso {COURSE_TITLE} è stato sospeso. Per informazioni contatta il responsabile del corso.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITENAME'],
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
                 '<p>Ciao {USER_FULLNAME},</p><p>l\'accesso al corso <strong>{COURSE_TITLE}</strong> è stato sospeso. Per informazioni contatta il responsabile del corso.</p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.enrollment.reactivated' => [
                 'Accesso al corso riattivato: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nl'accesso al corso {COURSE_TITLE} è stato riattivato.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITENAME'],
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
                 '<p>Ciao {USER_FULLNAME},</p><p>l\'accesso al corso <strong>{COURSE_TITLE}</strong> è stato riattivato.</p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.course.message' => [
                 '{COURSE_TITLE}: {MESSAGE_SUBJECT}',
                 "{MESSAGE_BODY_TEXT}\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML', 'SITE_NAME', 'SITENAME_HTML'],
+                ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML', 'SITE_NAME', 'SITE_NAME_HTML'],
                 '<p>Ciao {USER_FULLNAME_HTML},</p><p><strong>{COURSE_TITLE_HTML}</strong></p><p>{MESSAGE_BODY_HTML}</p><p>{SITE_NAME_HTML}</p>',
             ],
             'com_jlms.course.published' => [
