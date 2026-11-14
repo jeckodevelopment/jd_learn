@@ -17,7 +17,7 @@ EXTRA_RUNTIME = {"tools/build.py", "tools/ci_plan.py"}
 
 def changed_paths(base_ref: str) -> set[str]:
     output = subprocess.check_output(
-        ["git", "diff", "--name-only", "--diff-filter=ACMRT", f"{base_ref}...HEAD"],
+        ["git", "diff", "--name-only", "--diff-filter=ACDMRT", f"{base_ref}...HEAD"],
         cwd=ROOT, text=True,
     )
     return set(output.splitlines())
