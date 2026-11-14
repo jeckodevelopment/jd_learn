@@ -72,6 +72,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
 function teacherExpect(bool $ok,string $message):void { global $checks; if (!$ok) { throw new RuntimeException($message); } $checks++; }
+$teacherListTemplate = file_get_contents(dirname(__DIR__) . '/component/administrator/tmpl/teachers/default.php');
+teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "HTMLHelper::_('jgrid.published'") && str_contains($teacherListTemplate, "'teachers.'"), 'Teacher state uses Joomla status icons without enabling inline state changes');
+teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "'btn-success'") && str_contains($teacherListTemplate, "'btn-secondary'") && !str_contains($teacherListTemplate, 'badge bg-info text-dark'), 'Teacher course count follows Joomla category count button contrast');
 $fixture = dirname($root) . '/teachers-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $f=json_decode(file_get_contents($fixture),true,32,JSON_THROW_ON_ERROR);
