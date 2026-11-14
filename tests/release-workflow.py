@@ -28,7 +28,7 @@ with tempfile.TemporaryDirectory() as download_test:
     wrapper=Path(download_test)/'github-artifact.zip'
     with zipfile.ZipFile(wrapper, 'w') as z:
         z.write(archive, archive.name)
-        z.writestr('SHA256SUMS.txt', hashlib.sha256(archive.read_bytes()).hexdigest()+'  '+archive.name+'\\n')
+        z.writestr('SHA256SUMS.txt', hashlib.sha256(archive.read_bytes()).hexdigest()+'  '+archive.name+'\n')
     call('tools/verify_installable.py',wrapper,expected=1)
     output=Path(download_test)/'joomla-ready'
     call('tools/verify_installable.py',wrapper,'--extract-wrapper','--output',output)
