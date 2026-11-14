@@ -95,9 +95,9 @@ foreach ($mailTemplateIds as $templateId) {
     }
     $tags = (array) $mailTemplate->params->get('tags', []);
     $requiredTags = match ($templateId) {
-        'com_jlms.enrollment.confirmed' => ['NAME', 'COURSE', 'SITENAME', 'COURSE_URL'],
-        'com_jlms.certificate.available' => ['NAME', 'COURSE', 'SITENAME', 'CERTIFICATE_URL'],
-        default => ['NAME', 'COURSE', 'SITENAME'],
+        'com_jlms.enrollment.confirmed' => ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'COURSE_URL'],
+        'com_jlms.certificate.available' => ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'CERTIFICATE_URL'],
+        default => ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
     };
     foreach ($requiredTags as $requiredTag) {
         if (!in_array($requiredTag, $tags, true)) {
