@@ -14,7 +14,7 @@ final class MailqueueController extends BaseController
 {
     public function execute($task)
     {
-        if (strtolower((string) $task) !== 'reconcile') {
+        if (!in_array(strtolower((string) $task), ['reconcile', 'display'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
