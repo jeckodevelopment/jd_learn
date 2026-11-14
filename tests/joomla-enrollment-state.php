@@ -167,6 +167,26 @@ stateExpect($savedAnswers===$db->setQuery('SELECT aa.* FROM #__jlms_attempt_answ
 $stale=stateCommand($service->editor($actor,$qf['course_id'],$qe,'suspended'));$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,2,stateKey(),$answers,false);
 stateDenied(fn()=>$service->apply($actor,...$stale),409,'quiz progress invalidates preview');
 $runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,3,stateKey(),$answers,true);
+// MAIL-F: an approval request never becomes an enrollment and repeat POSTs are idempotent.
+$requestUser = new \Joomla\CMS\User\User();
+$requestData = ['name'=>'CI Pending Applicant','username'=>'cimailfpending','email'=>'cimailfpending@example.invalid',
+    'password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026',
+    'groups'=>[2,$f['group']],'block'=>0,'activation'=>''];
+if (!$requestUser->bind($requestData) || !$requestUser->save()) { throw new \RuntimeException($requestUser->getError()); }
+$requestUser = new \Joomla\CMS\User\User((int)$requestUser->id);
+$modeBefore = (string)$db->setQuery('SELECT enrollment_mode FROM #__jlms_courses WHERE id='.$course)->loadResult();
+$db->setQuery("UPDATE #__jlms_courses SET enrollment_mode='approval' WHERE id=".$course)->execute();
+try {
+    $requestId = $learning->requestApproval($requestUser,'en-GB',$course,stateKey());
+    stateExpect($requestId>0,'approval request persisted');
+    stateExpect($requestId===$learning->requestApproval($requestUser,'en-GB',$course,stateKey()),'request replay reuses pending record');
+    stateExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id='.$requestId." AND status='pending'")->loadResult()===1,'request remains pending');
+    stateExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id='.(int)$requestUser->id.' AND course_id='.$course)->loadResult()===0,'request grants no learning access');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='".hash('sha256','enrollment.requested:'.$requestId)."'")->loadResult()===1,'request notifies once');
+    stateDenied(fn()=>$learning->start($requestUser,'en-GB',$course,stateKey()),409,'approval is not bypassed by automatic start');
+} finally {
+    $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode=".$db->quote($modeBefore)." WHERE id=".$course)->execute();
+}
 $serialized=json_encode($service->editor($actor,$course,$enrollment),JSON_THROW_ON_ERROR);stateExpect(!str_contains($serialized,'subject_key')&&!str_contains($serialized,'rules_json'),'editor excludes internal subject and grading data');
 file_put_contents($path,json_encode(['course'=>$course,'enrollment'=>$enrollment,'owner'=>$f['owner'],'lesson'=>$f['lesson'],'first_event'=>$event,'history_count'=>$count(),'stable'=>$stable($enrollment),'manager'=>$rf['manager'],'manager_group'=>$rf['group'],'http_enrollment'=>$f['other_enrollment'],'cancelled'=>$f['cancelled'],'foreign_enrollment'=>$f['italian'],'other_course'=>$rf['other_course']],JSON_THROW_ON_ERROR));
 echo json_encode(['enrollment_state_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
