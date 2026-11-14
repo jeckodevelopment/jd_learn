@@ -133,9 +133,30 @@ try:
  if not any(q.get('option')==['com_categories'] and q.get('extension')==['com_jlms.course'] for q in menu_links):raise RuntimeError('Native course category sidebar missing')
  custom_fields_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_fields'] and parse_qs(urlparse(x).query).get('view')==['fields'] and parse_qs(urlparse(x).query).get('context')==['com_jlms.course']),None)
  if not custom_fields_link:raise RuntimeError('Native custom fields sidebar link missing')
- _,custom_fields_html=get(urljoin(url,custom_fields_link))
- context_filter=re.search(r'<select[^>]+name="context"[^>]*>(.*?)</select>',custom_fields_html,re.S)
- if not context_filter or any('value="com_jlms.'+context+'"' not in context_filter.group(1) for context in ['course','teacher','lesson']):raise RuntimeError('Native custom fields context filter must offer course, teacher and lesson')
+ fields_url,fields_html=get(urljoin(url,custom_fields_link))
+ contexts={'course':('Courses','Course context fixture'),
+           'teacher':('Teachers','Teacher context fixture'),
+           'lesson':('Lessons','Lesson reference')}
+ for selected in ('course','teacher','lesson','course','lesson','teacher'):
+  context_filter=re.search(r'<select[^>]+name="context"[^>]*>(.*?)</select>',fields_html,re.S)
+  if not context_filter:raise RuntimeError('Native custom fields context selector missing')
+  options={value:unescape(label).strip() for value,label in re.findall(
+   r'<option\b[^>]*value="([^"]+)"[^>]*>([^<]*)</option>',context_filter.group(1))}
+  if options!={'com_jlms.'+key:labels[0] for key,labels in contexts.items()}:
+   raise RuntimeError('Custom fields label/context mismatch: '+str(options))
+  form=next(f for f in Page(fields_html).forms if f['id']=='adminForm')
+  expected='com_jlms.'+selected
+  with http.open(urljoin(fields_url,form['action']),data=urlencode(form['fields']|{'context':expected}).encode(),timeout=20) as response:
+   fields_url=response.geturl()
+   fields_html=response.read().decode('utf-8')
+  if parse_qs(urlparse(fields_url).query).get('context')!=[expected]:
+   raise RuntimeError('Context switch did not navigate to '+expected)
+  selected_form=next(f for f in Page(fields_html).forms if f['id']=='adminForm')
+  if selected_form['fields'].get('context')!=expected:
+   raise RuntimeError('Context selector did not retain '+expected)
+  if any((marker in fields_html)!=(key==selected) for key,(_,marker) in contexts.items()):
+   raise RuntimeError('Native field rows do not match '+expected)
+ print(json.dumps({'custom_fields_context_switches':6,'status':'passed'}))
  plugin_link=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('option')==['com_plugins'] and parse_qs(urlparse(x).query).get('filter[folder]')==['jlmsvideo']),None)
  if not plugin_link:raise RuntimeError('Native video plugin manager sidebar link missing')
  dashboard_page=Page(html)
@@ -236,6 +257,8 @@ try:
  url,result=get(lesson_link)
  if 'id="jlms-lesson-form"' not in result:raise RuntimeError('Contextual native lesson editor missing')
  lesson_form=next(f for f in Page(result).forms if f['id']=='jlms-lesson-form')
+ if 'jform[com_fields][lesson-reference]' not in lesson_form['fields']:
+  raise RuntimeError('The Joomla lesson field must render in the curriculum form')
  fields=dict(lesson_form['fields']);fields.update({'jform[title]':'HTTP text lesson','jform[kind]':'text','jform[required]':'1',
   'jform[module_id]':re.search(r'data-module-id="([1-9][0-9]*)"',result).group(1),'jform[body]':'<p>Content saved through the native form</p>'})
  with http.open(urljoin(url,lesson_form['action']),data=urlencode(fields).encode(),timeout=20) as response:
@@ -288,6 +311,14 @@ try:
  du,dh=delegated_get('/administrator/index.php?option=com_jlms&view=courses')
  if 'Editor allowed1' not in dh or 'Editor denied' in dh or 'Editor foreign' in dh or 'Editor other_owner' in dh:
   raise RuntimeError('Administrative course list leaked or omitted native delegated scope')
+ if any(q.get('option')==['com_fields'] and q.get('context',[''])[0].startswith('com_jlms.')
+        for q in (parse_qs(urlparse(link).query) for link in Page(dh).links)):
+  raise RuntimeError('A delegated editor without Fields management must not see the sidebar link')
+ guest_http=build_opener(HTTPCookieProcessor(CookieJar()))
+ for section in contexts:
+  with guest_http.open(base+'/administrator/index.php?option=com_fields&view=fields&context=com_jlms.'+section,timeout=20) as response:
+   if not any('passwd' in form['fields'] for form in Page(response.read().decode('utf-8')).forms):
+    raise RuntimeError('Guest access to the native field manager must require Joomla login')
  # The native Rules field persists through Joomla com_config, with its own ACL and CSRF guards.
  rules_url,rules_html=get('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(editor_fixture['denied']))
  rules_region=re.search(r'<section id="jlms-course-rules">(.*?)</section>',rules_html,re.S)

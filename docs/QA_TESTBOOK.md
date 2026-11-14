@@ -1,3 +1,12 @@
+## CORE-10 — Campi aggiuntivi su Joomla 6.2.0 (PR #378)
+
+1. Aggiornare JD Learn su un sito di prova Joomla 6.2.0. Creare un campo testuale distinto per ciascuno dei tre contesti.
+2. Da **JD Learn → Campi aggiuntivi**, cambiare il selettore avanti e indietro. Controllare URL, etichetta selezionata e righe: Corsi = `com_jlms.course`, Docenti = `com_jlms.teacher`, Lezioni = `com_jlms.lesson`.
+3. Aprire il programma di un corso in bozza e creare o modificare una lezione. Il form deve mostrare il campo nativo lezione senza errore HTTP 500.
+4. Verificare che un editor delegato privo del permesso di gestione Campi non veda il collegamento nel menu. Da una sessione anonima verificare il rinvio al login per tutti e tre gli URL diretti.
+
+La suite HTTP copre selettore, isolamento degli elenchi, form lezione e accesso dopo l’upgrade. Collaudo manuale sul sito di prova da registrare.
+
 ## IMP-09 / CORE-18 — template email Joomla
 
 **Comportamenti da testare in Joomla**

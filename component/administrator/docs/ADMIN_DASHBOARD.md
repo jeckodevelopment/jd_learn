@@ -4,6 +4,8 @@ La voce radice **JD Learn** apre la dashboard del componente. I riquadri sono co
 
 Nel sottomenu laterale di **JD Learn**, la prima voce **Dashboard** riapre la pagina principale; **Corsi** segue subito dopo; **Percorsi formativi** è visibile solo con il permesso dedicato. Il plugin di sistema `plg_system_jlmsmenu` filtra anche il sottomenu nativo per i permessi specifici: Banca domande richiede `jlms.quiz.manage`; Categorie e Campi applicano i permessi Joomla nativi e quelli del contesto JD Learn; Plugin video richiede `core.manage` su `com_plugins`. Le altre voci JD Learn richiedono `core.manage` su `com_jlms`. I controlli d’accesso di Joomla e del componente restano attivi sugli URL diretti. Il plugin viene attivato all’installazione del pacchetto e un aggiornamento conserva l’eventuale scelta di disattivarlo.
 
+**Campi aggiuntivi** apre il gestore Joomla sul contesto Corsi. Il selettore consente di passare a Docenti e Lezioni, ciascuno con il proprio elenco di campi. Il plugin del menu mantiene l’URL allineato al contesto scelto.
+
 Il riepilogo espandibile elenca sempre YouTube, Vimeo, Cloudflare Stream e video locali. Indica per ciascuno se non è installato, è disattivato, non è disponibile, richiede configurazione o è pronto; non mostra credenziali né contatta i provider. La dashboard non aggiunge statistiche, attestati, report o nuovi flussi amministrativi: tali funzioni restano fuori da questa implementazione e seguono la pianificazione di fase 2.
 
 ## Collaudo manuale
