@@ -1,77 +1,33 @@
-**Candidata `0.56.25-dev` / PR #368 — issue P1:** traduzione del titolo della voce sidebar per la ricollocazione delle categorie aggiunta ai cataloghi di sistema IT/EN; CI e accettazione Joomla da completare.
+# JD Learn
 
-**Main `0.56.24-dev` — PR [#377](https://github.com/jeckodevelopment/jd_learn/pull/377) integrata** (merge `3e666c65908606ea235d4104c0343f84c271ea13`). Lista Docenti allineata alla UI Joomla; modifica solo UX, copertura funzionale invariata (~80%). CI [43636264130](https://github.com/jeckodevelopment/jd_learn/actions/runs/43636264130) 4/4 verde (PHP 8.3/MySQL, PHP 8.4/MariaDB, browser Chromium e controlli leggeri). Pacchetto `pkg_jlms-0.56.24-dev.zip` verificato, SHA-256 `2e374f156e6910d5ee364f910845ccf74cda46e01d1543ebdfa99ea71d644707`, nell'[artefatto Actions 14130382094](https://github.com/jeckodevelopment/jd_learn/actions/runs/43636264130/artifacts/14130382094) (scaricare il contenitore GitHub ed estrarre il file ZIP interno). Accettazione visiva manuale Joomla ancora pendente.
+**Build di sviluppo corrente: `0.56.25-dev`** (non release stabile). Lo stato della build installabile deve essere verificato nelle evidenze CI.
 
+**JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
+## Funzionalità e perimetro della 1.0.0
 
-**Post-merge MAIL-G (#376, 14 novembre 2026):** PR [#376](https://github.com/jeckodevelopment/jd_learn/pull/376) integrata con merge `387b6d28a66f64ab89d2eba50849d09bfff98c06`. CI [43630634077](https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077) **4/4 verde** (compreso test Joomla con notifica unica al docente con account associato; nessuna notifica al docente senza account); [validazione requisiti](https://github.com/jeckodevelopment/jd_learn/actions/runs/43630633929) superata. Artefatto [JD-Learn-0.56.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077/artifacts/14128431017), che è un **contenitore Actions da estrarre** per ottenere `pkg_jlms-0.56.21-dev.zip` realmente installabile; SHA-256 dello ZIP interno `5fc55817dab76cce76b85b27b6cfde2ee5350e3084a1c567e2a4410414fb100c`. Accettazione SMTP/utente su Joomla 6.2.0 **pendente**, mentre l'installazione della precedente 0.56.20-dev è stata confermata dall'utente. **Stima sviluppo: ~80% (arrotondata), delta stimato +0,2 punti percentuali non formalizzati rispetto al post-MAIL-F**; il solo evento docente di MAIL-G non completa tutto il blocco. 
+- Gestione amministrativa dei corsi e del programma didattico, docenti, versioni e pubblicazione.
+- Fruizione di lezioni testo, documento, audio e video, con controllo degli accessi e tracciamento di base.
+- Provider YouTube, Vimeo, Cloudflare Stream e HTML5 locale; materiali privati e allegati.
+- Iscrizioni e roster essenziali, catalogo e percorsi, integrazione con ACL, categorie, lingue e servizi Joomla.
+- Comunicazioni operative tramite **Modelli email Joomla**, coda e Scheduler, preferenze di invio; annunci di nuovi corsi soltanto con adesione esplicita.
+- Attestati PDF essenziali di completamento. Open Badges/Credentials, reporting avanzato e quiz avanzati non fanno parte della prima release stabile.
 
-**Main 0.56.20-dev — PR [#373](https://github.com/jeckodevelopment/jd_learn/pull/373) integrata** (merge `9ada1824bdc0eb09efe547465d4231f973f41b8a`). Riparato il blocco upgrade Joomla causato da `DatabaseDriver::updateObject()` con `(object) [...]` temporaneo nel postflight Mail Templates; corrette quattro chiamate analoghe in `LearningService`. Revert dell'automazione di packaging aggiuntiva #369–#371; ripristinato l'unico workflow CI. CI [43627177407](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407) **4/4 superata**, [tracciabilità](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177463) superata. Il package interno verificato `pkg_jlms-0.56.20-dev.zip` è nell'[artefatto Actions 14126702616](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407/artifacts/14126702616); estrarre prima il contenitore GitHub. SHA-256 ZIP interno `ab972ee39895bd529ff72a64f9df51814a4d5981baf6d4402882bb654fe69ab2`. Nessuna crescita di copertura funzionale (bug fix); collaudo manuale Joomla 6.2.0 sul sito dell'utente pendente. La vecchia prerelease `jdlearn-dev-latest` contiene la versione 0.56.19 e non deve essere utilizzata.
+L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata soltanto dopo i gate tecnici, di sicurezza e di accettazione documentati.
 
-**Candidata 0.56.19-dev (MAIL-04)**: promemoria facoltativo di scadenza corso, soglia configurabile e outbox/Scheduler Joomla. Main resta 0.56.18-dev finché la PR non è integrata; avanzamento implementativo non ancora ricalcolato.
+## Stato dello sviluppo e ultime integrazioni
 
-**Main 0.56.18-dev** integra la PR [#338](https://github.com/jeckodevelopment/jd_learn/pull/338), merge `5d38e6e47582422be581247de085206abc2c0296`: redazione degli errori SMTP/provider nella coda, vista audit senza diagnostica legacy e migrazione dei valori storici. CI standard 4/4 nel [run 43522457570](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570); pacchetto [JD-Learn-0.56.18-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43522457570/artifacts/14083597534), SHA-256 ZIP `c59074d3bbe6a4ddb6b79714ca0d2948e04d6bff0d40316a1ac0e15f8087cbc6` (scade il 27 novembre 2026 alle 22:53 UTC). Avanzamento implementativo stimato 78,33% (78% arrotondato), email 61%; collaudo manuale Joomla/SMTP pendente.
+La copertura **implementativa stimata** verso la 1.0.0 è circa **80%** nell'ultima fotografia documentata; **non è una misura dell'accettazione manuale**. La fonte aggiornata, con pesi e verifiche, è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md). Per le singole modifiche, consultare esclusivamente il [Changelog](CHANGELOG.md).
 
-**PR #338 integrata:** il fix SEC-P1 preliminare riduce i dati diagnostici SMTP/provider persistiti. CI 4/4; pacchetto, checksum e test manuali pendenti sono riportati nella sezione principale e nel changelog. La review sistematica SEC-P1–P5 resta aperta.
+Le integrazioni più recenti riguardano le traduzioni del menu amministrativo, le notifiche ai docenti, la compatibilità dei campi aggiuntivi con Joomla 6.2 e l'allineamento dell'interfaccia amministrativa agli schemi Joomla. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
 
-Aggiornato al 13 novembre 2026. Main **0.56.7-dev** integra la PR [#304](https://github.com/jeckodevelopment/jd_learn/pull/304), merge `461c2d83c85e1152e2fb2497e0e15be62e36cec9`. CERT-A/B/C sono implementati; avanzamento globale stimato **73,44%** (email 29,5%; attestati 62,5%). CI standard 4/4 superata nel [run 1031](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364); collaudo manuale Joomla ancora pendente. Pacchetto installabile [JD-Learn-0.56.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43421028364/artifacts/14034621388), SHA-256 ZIP interno `28c462f2eae0b795cf02574408ac9bfa830e8e4a95bd5ad634bc011700e14bc4`, checksum artifact wrapper `f0467b1a4e96ab784283090e48377d400fbb69f944579ffd444934cdc41175e2`; disponibile fino al 27 novembre 2026 alle 12:00 UTC.
+## Installazione e sviluppo
 
-**Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
+Schema InnoDB: **47 tabelle / 66 FK**.
 
-**Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
+Requisiti documentati: **Joomla 6**, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. Hosting compatibile con gli ordinari requisiti Joomla e ambienti Apache/LiteSpeed; nessun requisito Nginx aggiuntivo.
 
-**Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
-
-
-**Stato attuale:** [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
-
-
-**Per sapere a che punto siamo: [stato attuale dello sviluppo](docs/IMPLEMENTATION_STATUS.md).** La gestione di base dei corsi e la fruizione testo/documento/audio/video/quiz sono disponibili nei flussi implementati; collaudi manuali di release ancora aperti, inclusi il rilascio relativo della 0.41.38-dev, l’authoring Percorsi della 0.41.39-dev e la dashboard provider 0.41.40-dev e il workflow editoriale e anteprima accessi 0.41.43-dev, default del fuso sito 0.41.44-dev e toolbar del programma 0.41.45-dev. La preview editoriale video read-only è integrata; PR #179/0.41.47-dev integra documenti/audio, mentre le interazioni quiz restano escluse; le regole didattiche, le iscrizioni complete, gli attestati, le notifiche, i report e il collaudo di rilascio.
-
-## Orientarsi nella documentazione
-
-| Documento | A cosa serve |
-|---|---|
-| [Stato attuale](docs/IMPLEMENTATION_STATUS.md) | Cosa funziona, cosa manca e quali prove abbiamo |
-| [Prossime attività](docs/NEXT_STEPS.md) | Ordine del lavoro residuo e condizioni per chiuderlo |
-| [Checklist gestione corsi](docs/M01_ACCEPTANCE.md) | Funzioni presenti, implementazioni mancanti e collaudi M01 |
-| [Roadmap](docs/ROADMAP_TO_STABLE.md) | Perimetro delle fasi fino al rilascio stabile |
-| [Matrice requisiti](docs/REQUIREMENTS_STATUS.csv) | Tracciabilità dettagliata dei 210 requisiti |
-| [Modifiche ai requisiti](docs/REQUIREMENTS_CHANGES.md) | Decisioni approvate e scenari AC aggiornati |
-| [Come leggere lo stato requisiti](docs/REQUIREMENTS_STATUS_GUIDE.md) | Significato di implementazione parziale, criteri completi e accettazione |
-| [Testbook collaudo Joomla](docs/QA_TESTBOOK.md) | Percorsi manuali per PR, registrazione esiti e prove ancora da ricostruire |
-| [Problemi specifici](docs/IMPLEMENTATION_GAPS.md) | Differenze aperte e segnalazioni risolte |
-| [Backend: piano UX](docs/ADMIN_UX_PLAN.md) | Menu e dashboard amministrativa aggiornati; restano collaudo ruoli, accessibilità e navigazione in Joomla reale |
-| [Politica CI](docs/CI_POLICY.md) | Bozze leggere e integrazioni sul candidato prima del merge |
-| [Prove del build](docs/IMPLEMENTATION_EVIDENCE.json) | Commit, CI e pacchetto effettivamente verificati |
-| [Politica versioni](docs/VERSIONING.md) | Regole SemVer per sviluppo, release stabile e manifest Joomla |
-| [Cronologia](docs/IMPLEMENTATION_HISTORY.md) e [changelog](CHANGELOG.md) | Come siamo arrivati allo stato attuale |
-
-## Usare e configurare JD Learn
-
-- Corsi: [editor](docs/COURSE_EDITOR.md), [programma](docs/AUTHORING.md), [pubblicazione](docs/PUBLICATION.md), [permessi](docs/EDITOR_PERMISSIONS.md), [docenti](docs/TEACHERS.md), [calendario](docs/CALENDAR.md).
-- Studenti: [aula](docs/LEARNING.md), [area personale](docs/LEARNER_DASHBOARD.md), [categorie](docs/CATEGORIES.md), [multilingua](docs/MULTILINGUAL.md).
-- Media: [video](docs/VIDEO.md), [Cloudflare Stream](docs/CLOUDFLARE_STREAM.md), [HTML5 privato](docs/HTML5_VIDEO.md), [materiali](docs/MATERIALS.md).
-- Iscrizioni: [elenco iscritti](docs/ENROLLMENT_ROSTER.md), [migrazione tra versioni](component/administrator/docs/ENROLLMENT_MIGRATION.md), [ammissione manuale](docs/MANUAL_ENROLLMENT.md), [preassegnazione](docs/PREASSIGNMENT.md), [stato della singola iscrizione](docs/ENROLLMENT_STATE.md), [disponibilità operativa del corso](docs/COURSE_OPERATIONS.md).
-- Quiz: [composizione](docs/QUIZ_AUTHORING.md), [tentativi](docs/QUIZ_RUNTIME.md), [tempi individuali](docs/QUIZ_EXTRA_TIME.md), [annullamenti](docs/QUIZ_CANCELLATION.md), [proroghe](docs/QUIZ_DEADLINE_EXTENSION.md).
-- Amministrazione: [dashboard JD Learn](component/administrator/docs/ADMIN_DASHBOARD.md).
-- Personalizzazioni: [contratto CSS e override](docs/FRONTEND_CSS.md).
-
-## Evoluzioni successive alla prima stabile
-
-- **JD Learn Credentials (Open Badges 3.0)**: modulo futuro **nativo in `com_jlms`**, senza installazione di un secondo componente, [specifica funzionale](docs/specifications/JD_LEARN_CREDENTIALS_FUNCTIONAL_SPEC.md) e [progettazione tecnica T-001–T-007](docs/specifications/JD_LEARN_CREDENTIALS_TECHNICAL_DESIGN.md) e [piano 21 PR / milestone](docs/CREDENTIALS_IMPLEMENTATION_PLAN.md) e [decisioni approvate T-008–T-015](docs/CREDENTIALS_DECISIONS_T008_T015.md) per emissione, firma, verifica pubblica sul dominio dell'emittente e condivisione LinkedIn. **Esclusa dalla versione 1.0.0**; sviluppo e avanzamento separati dalla baseline dei 210 requisiti. Nessuna funzionalità Credentials è attualmente dichiarata implementata.
-
-## Specifiche e perimetro
-
-La [specifica funzionale 1.5 con addendum approvato l’8 novembre](docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md), il [progetto tecnico](docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md), le [specifiche di sicurezza e provider](docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md) e i [servizi progettati](docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md) definiscono il risultato da raggiungere. Il suffisso `1.0` nei nomi è storico: la versione interna è autorevole. Le specifiche descrivono anche funzioni non ancora implementate; le decisioni sono registrate in [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md).
-
-Identificativi installati: `com_jlms`, `pkg_jlms`, `lib_jlms`, gruppo `jlmsvideo`. Account, gruppi e livelli sono quelli Joomla. Vendita e gestione degli abbonamenti sono esterne; l'iscrizione non assegna gruppi. Compiti, live e interoperabilità seguono le fasi differite della specifica.
-
-## Ambiente, build e installazione
-
-Joomla 6, PHP 8.3+ a 64 bit, MySQL 8.0.13+ oppure MariaDB 10.6+, InnoDB e utf8mb4. La CI usa Joomla 6.0.0 come minimo di compatibilità, non come raccomandazione di patch per la produzione.
-
-Schema InnoDB: **47 tabelle / 66 FK**. Il pacchetto 0.56.17-dev contiene 11 estensioni: componente, libreria, quattro provider video, plugin Scheduler, Privacy, filtro ACL della sidebar e consenso email in registrazione.
+Per preparare una build di sviluppo:
 
 ```sh
 python3 tools/build.py
@@ -79,16 +35,28 @@ python3 tools/check.py
 php tests/run.php
 ```
 
-La build genera `dist/pkg_jlms-<versione>-dev.zip` e `SHA256SUMS.txt`; la versione è letta dai manifest del pacchetto. Non richiede Composer o NPM sul sito. Installare il pacchetto intero su un Joomla di prova tramite il gestore estensioni. Database e smoke test richiedono un sito usa e getta e `JLMS_TEST_DISPOSABLE=1`; non eseguirli su un sito cliente.
+Il pacchetto da installare è il **`pkg_jlms-<versione>-dev.zip` interno**; quando distribuito tramite GitHub Actions, estrarlo dall'eventuale contenitore dell'artefatto prima di usare il gestore estensioni Joomla. Installare sempre l'intero pacchetto su un sito di prova; non eseguire test di database su siti di produzione. Configurare i provider video e i relativi consensi prima di abilitarli. Per dettagli su upgrade e rilascio vedere [Politica versioni](docs/VERSIONING.md) e [Testbook Joomla](docs/QA_TESTBOOK.md).
 
-I provider video sono installati disabilitati: configurare plugin e consenso secondo le guide prima dell'uso. **JD Learn - Privacy** viene abilitato alla prima installazione; gli aggiornamenti preservano la scelta amministrativa. Le stringhe sono caricate nel contesto lingua usato da Joomla Privacy. Stream e HTML5 richiedono anche configurazione server/storage. I campi delle credenziali accettano riferimenti, non segreti. La disinstallazione conserva tabelle e file: non equivale alla cancellazione privacy.
+## Documentazione
 
+| Argomento | Documento |
+|---|---|
+| Stato corrente e lavoro residuo | [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) |
+| Piano delle PR verso la stabile | [STABLE_1.0.0_PR_PLAN.md](docs/STABLE_1.0.0_PR_PLAN.md) |
+| Requisiti, tracciabilità e decisioni | [REQUIREMENTS_STATUS.csv](docs/REQUIREMENTS_STATUS.csv) · [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md) |
+| Test e accettazione | [QA_TESTBOOK.md](docs/QA_TESTBOOK.md) |
+| Modelli e notifiche email | [MAIL_TEMPLATES.md](docs/MAIL_TEMPLATES.md) |
+| Corsi e pubblicazione | [COURSE_EDITOR.md](docs/COURSE_EDITOR.md) · [PUBLICATION.md](docs/PUBLICATION.md) |
+| Didattica, video e materiali | [LEARNING.md](docs/LEARNING.md) · [VIDEO.md](docs/VIDEO.md) · [MATERIALS.md](docs/MATERIALS.md) |
+| Iscrizioni, docenti e catalogo | [ENROLLMENT_ROSTER.md](docs/ENROLLMENT_ROSTER.md) · [TEACHERS.md](docs/TEACHERS.md) · [CATEGORIES.md](docs/CATEGORIES.md) |
+| Sicurezza, privacy e test release | [SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md](docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md) |
+| Changelog delle versioni | [CHANGELOG.md](CHANGELOG.md) |
+| Evidenze e cronologia tecnica | [IMPLEMENTATION_EVIDENCE.json](docs/IMPLEMENTATION_EVIDENCE.json) · [IMPLEMENTATION_HISTORY.md](docs/IMPLEMENTATION_HISTORY.md) |
 
+## Sviluppi successivi
 
+JD Learn Credentials / Open Badges è pianificato separatamente e non rientra nel gate 1.0.0; vedere il [piano Credentials](docs/CREDENTIALS_IMPLEMENTATION_PLAN.md). La vendita di corsi e la gestione di abbonamenti rimangono esterne al componente.
 
-La gestione corsi comprende editor e programma, versioni, video con durata automatica e menu amministrativo nativo. Plugin video apre il gestore Joomla filtrato sul gruppo jlmsvideo. La resa editoriale dei campi corso e i campi didattici delle lezioni sono disponibili; la CI standard della 0.41.7 è superata (PR #65, run 42420998171). La 0.41.8 aggiorna la dashboard amministrativa. La 0.41.9 integra i controlli R-03 per ammissioni ed erogazione (PR #70, merge [70f6ed7](https://github.com/jeckodevelopment/jd_learn/commit/70f6ed7f2a1f4386b943bcb834f57e8d31cf935f)); CI standard superata (run [42428496835](https://github.com/jeckodevelopment/jd_learn/actions/runs/42428496835)); collaudo manuale Joomla ancora aperto. M01 resta aperto per il collaudo sul sito Joomla e gli altri requisiti indicati nello stato attuale.
+## Regole per contribuire
 
-
-### Comunicazione operativa agli iscritti
-
-Dal roster corso gli utenti autorizzati possono comporre, verificare e accodare un messaggio agli iscritti attivi selezionati. Il test raggiunge solo l'operatore; consegna asincrona via Scheduler/outbox e template modificabile in Joomla. Non è una newsletter. Per i dettagli vedere [MAIL_TEMPLATES.md](docs/MAIL_TEMPLATES.md) e [QA_TESTBOOK.md](docs/QA_TESTBOOK.md).
+Ogni PR deve indicare requisiti e issue interessati, descrivere i **Comportamenti da testare** in Joomla, aggiornare tracciabilità e guide pertinenti e verificare la CI. Il **README non è un diario delle PR**: lo storico delle modifiche va nel changelog, le evidenze operative e i test nei rispettivi documenti. Una PR esclusivamente documentale non aumenta la percentuale di implementazione.
