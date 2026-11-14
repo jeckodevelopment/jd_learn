@@ -14,7 +14,7 @@ final class MailqueueController extends BaseController
 {
     public function execute($task)
     {
-        if (strtolower((string) $task) !== 'reconcile') {
+        if (!in_array(strtolower((string) $task), ['reconcile', 'display'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -35,7 +35,7 @@ final class MailqueueController extends BaseController
         $note = is_string($data['note'] ?? null) ? $data['note'] : '';
         $confirmed = ($data['confirm'] ?? '') === '1';
         try {
-            $service = Factory::getContainer()->get(MailQueueAuditService::class);
+            $service = new MailQueueAuditService(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class));
             $service->reconcile($this->app->getIdentity(), $id, $action, $note, $confirmed);
             $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_SUCCESS'), 'message');
         } catch (\Throwable $error) {

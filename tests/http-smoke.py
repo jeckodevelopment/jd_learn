@@ -145,6 +145,7 @@ try:
   'jlms-admin-shortcut-certificates':('com_jlms','certificates'),
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
   'jlms-admin-shortcut-mail_queue':('com_jlms','mailqueue'),
+  'jlms-admin-shortcut-mail_variable_guide_title':('com_jlms','mailvariables'),
   'jlms-admin-shortcut-mail_templates':('com_mails','templates'),
   'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
@@ -154,7 +155,7 @@ try:
   'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
   'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
  }
- expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','teachers','question_bank','certificates','mail_queue','mail_templates','custom_fields','video_plugins']
+ expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','teachers','question_bank','certificates','mail_queue','mail_variable_guide_title','mail_templates','custom_fields','video_plugins']
  actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
  if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
  for shortcut,(option,view) in required_shortcuts.items():
@@ -162,6 +163,13 @@ try:
   if not query or query.get('option')!=[option] or query.get('view')!=[view]:
    found={a.get('id'):a.get('href') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
    raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
+ # The standalone guide is available by navigation and does not clutter mail queue monitoring.
+ guide_url=next(a.get('href') for a in dashboard_page.anchors if a.get('id')=='jlms-admin-shortcut-mail_variable_guide_title')
+ _,guide_html=get(urljoin(url,guide_url))
+ if 'jlms-mail-variable-guide' not in guide_html or 'COURSE_TITLE' not in guide_html:
+  raise RuntimeError('JD Learn standalone variable guide did not render')
+ _,queue_html=get('/administrator/index.php?option=com_jlms&view=mailqueue')
+ if 'jlms-mail-variable-guide' in queue_html:raise RuntimeError('Operational mail queue must not contain variable guide')
  # The native Mail Templates filter must keep JD Learn in focus without changing com_mails.
  mail_query=dashboard_shortcuts['jlms-admin-shortcut-mail_templates']
  if mail_query.get('filter[extension]')!=['com_jlms']:raise RuntimeError('Mail Templates shortcut must select the JD Learn extension')
