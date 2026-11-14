@@ -69,8 +69,11 @@ course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_t
 assert "$toolbar->save('course.apply')" in course_view
 assert "$toolbar->dropdownButton('save-group')" in course_view
 assert "$saveDropdown->getChildToolbar()" in course_view
-assert "$programmeMenu->save('course.save', 'JTOOLBAR_SAVE_AND_CLOSE')" in course_view
+assert "$programmeMenu->save('course.save', 'COM_JLMS_COURSE_SAVE_AND_CLOSE')" in course_view
 assert "$programmeMenu->standardButton(" in course_view
+assert "'COM_JLMS_COURSE_SAVE_AND_CLOSE'" in course_view
+assert 'COM_JLMS_COURSE_SAVE_AND_CLOSE="Save & Close"' in (ROOT/'component/administrator/language/en-GB/com_jlms.ini').read_text()
+assert 'COM_JLMS_COURSE_SAVE_AND_CLOSE="Salva & Chiudi"' in (ROOT/'component/administrator/language/it-IT/com_jlms.ini').read_text()
 assert "'course-programme'" in course_view and "'COM_JLMS_COURSE_SAVE_PROGRAMME'" in course_view and "'course.programme'" in course_view
 assert "ToolbarHelper::custom('course.programme'" not in course_view
 dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
