@@ -154,3 +154,34 @@ assert "mailconsentrevoke" in (ROOT/'component/site/src/View/Mailconsentrevoke/H
 
 # Documentation hygiene is checked with every standard build.
 runpy.run_path(str(ROOT / 'tools/check_docs_hygiene.py'), run_name='__main__')
+
+# JD Learn's administrator sidebar is a concise operational navigation, not a
+# duplicate of the dashboard. Secondary native Joomla views remain reachable
+# from the dashboard with their existing ACL guards.
+manifest=(ROOT/'component/jlms.xml').read_text()
+submenu=E.fromstring(manifest).find('./administration/submenu')
+assert submenu is not None
+assert [node.attrib.get('link') for node in submenu.findall('menu')]==[
+ 'option=com_jlms&view=dashboard',
+ 'option=com_jlms&view=courses',
+ 'option=com_jlms&view=pathways',
+ 'option=com_jlms&view=teachers',
+ 'option=com_jlms&view=mailqueue',
+ 'option=com_jlms&view=questionbank',
+]
+dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
+for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES'):
+ assert key in dashboard_view
+assert "'COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables'" not in dashboard_view
+for tag in ('it-IT','en-GB'):
+ messages=(ROOT/f'component/administrator/language/{tag}/com_jlms.ini').read_text()
+ for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES','COM_JLMS_DASHBOARD_GROUP_CONFIGURATION'):
+  assert len(re.findall(r'^'+key+r'=',messages,re.M))==1,(tag,key)
+
+# Nested Joomla administrator views must map to the component's own primary
+# menu entries and use Joomla Pathway rather than a custom breadcrumb widget.
+admin_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
+for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']","'mailqueue' => ['mailqueue']"):
+ assert pair in admin_controller,pair
+assert '$menu->setActive((int) $item->id)' in admin_controller
+assert "$app->getPathway()->addItem(" in admin_controller
