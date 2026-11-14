@@ -66,6 +66,10 @@ Le priorità sono **proposte di pianificazione**, non sostituiscono label GitHub
 - CI verde **e** collaudi di accettazione separatamente registrati in [QA_TESTBOOK.md](QA_TESTBOOK.md); pacchetto, checksum, note di rilascio e updater verificati.
 - Nessuna 1.0.0 dichiarata rilasciata soltanto perché la build o la CI funzionano.
 
+## Verifica documentale
+
+Il comando `python3 tools/check.py` esegue anche `tools/check_docs_hygiene.py`, che controlla la struttura del README e l'unicità e l'ordinamento delle versioni del changelog. Il controllo integra, ma non sostituisce, i test di installazione e accettazione Joomla.
+
 ## Stato e rendicontazione
 
 L'ultima stima nel piano precedente era **circa 80% di copertura implementativa**, non un'accettazione della release; rimane **invariata** per questa revisione documentale. La baseline numerica, pesi e verifiche vanno letti in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), senza sommare autonomamente percentuali locali. Lo storico tecnico precedente è conservato nell'[archivio del piano](STABLE_1.0.0_PR_PLAN_ARCHIVE.md).
