@@ -305,6 +305,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
             $this->validateAssociations($data, $user, $id, $record);
             $teachers = null;
+            $previousTeacherIds = $id ? \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id) : [];
             if (array_key_exists('teacher_ids', $data)) {
                 $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db,$user,(string) ($data['language'] ?? $record->language ?? '*'),$data['teacher_ids']);
                 if (!$id && $teachers) { throw new \DomainException('COM_JLMS_TEACHER_SAVE_FIRST'); }
@@ -348,6 +349,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 foreach ($teachers as $ordering => $teacher) {
                     $relation = (object) ['course_id'=>$id,'teacher_id'=>$teacher,'ordering'=>$ordering]; $db->insertObject('#__jlms_course_teachers',$relation);
                 }
+                // Queue inside the same transaction: no notice on failed edits or unchanged assignments.
+                (new \Jlms\Component\Jlms\Administrator\Application\TeacherAssignmentNotice($db))
+                    ->queueAdded($id, $previousTeacherIds, $teachers);
             }
             if ($copySource !== null) {
                 $newId = (int) $this->getState('course.id');
