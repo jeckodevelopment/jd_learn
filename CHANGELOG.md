@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 14 novembre 2026 — Consegna ZIP Joomla verificata
+
+Il problema «manifest mancante» dipendeva dall'aver consegnato l'archivio **esterno** GitHub Actions al posto dello ZIP Joomla **interno**. Verificati gli artefatti #362, #366 e #367: gli ZIP interni hanno manifest `pkg_jlms.xml` alla radice, undici archivi figli, checksum SHA-256 validi. La soluzione permanente è [PR #370](https://github.com/jeckodevelopment/jd_learn/pull/370) (merge `b4b04543013ee09ddc04271ce70a2c7d70a5151d`) e [PR #371](https://github.com/jeckodevelopment/jd_learn/pull/371) (merge `39aaa115850b248b20ea6dcf61f3a1fdf15fdae6`), entrambe integrate con CI **4/4 verde** ([run #370](https://github.com/jeckodevelopment/jd_learn/actions/runs/43621395655), [run #371](https://github.com/jeckodevelopment/jd_learn/actions/runs/43622004014)). Il workflow [Pubblica ZIP Joomla di sviluppo](https://github.com/jeckodevelopment/jd_learn/actions/runs/43622507285) è concluso **successfully**, come il controllo successivo [43622508114](https://github.com/jeckodevelopment/jd_learn/actions/runs/43622508114); verifica pubblicazione e download pubblico HTTPS del medesimo ZIP. Link **diretto, senza wrapper**: [pkg_jlms-0.56.19-dev.zip](https://github.com/jeckodevelopment/jd_learn/releases/download/jdlearn-dev-latest/pkg_jlms-0.56.19-dev.zip); [pagina della prerelease](https://github.com/jeckodevelopment/jd_learn/releases/tag/jdlearn-dev-latest). SHA-256: `3d5c630db47e621ef3227dddad24f506746c298ec08e398f3f2f28991693154a`; 660683 byte. Solo lo ZIP scaricato dall'URL diretto è da caricare in Joomla senza estrarlo. Il tag `jdlearn-dev-latest` è mobile, non è una release stabile e non aggiorna il feed di produzione. **L'accettazione sul sito di prova dell'utente non è ancora stata eseguita**; la CI ha testato installazione/upgrade su Joomla isolato.
+
 ## Consegna diretta build installabili Joomla — sviluppo (candidata)
 
 - Nuovo workflow di pubblicazione automatica **solo di prerelease di sviluppo** dopo merge su main: costruisce, verifica e distribuisce come vero asset GitHub Releases `pkg_jlms-*-dev.zip`, senza wrapper di Actions.
