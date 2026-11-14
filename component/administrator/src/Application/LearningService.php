@@ -277,7 +277,7 @@ final class LearningService
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                     $courseId, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
                     (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
-                    ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
+                    ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title, 'ENROLLMENT_DATE' => $now, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id]
                 );
             }
@@ -608,13 +608,13 @@ final class LearningService
             }
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
             if ($newCourseCompletion) {
-                $this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language);
+                $this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language, (string) $update->completed_at);
                 (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollmentId, (int) $version->id, $update->completed_at);
             }
         });
     }
 
-    private function queueCourseCompletion(User $actor, int $enrollmentId, int $courseId, string $language): void
+    private function queueCourseCompletion(User $actor, int $enrollmentId, int $courseId, string $language, string $completedAt): void
     {
         $q = $this->db->createQuery()->select('title')->from('#__jlms_courses')->where('id = :id')->bind(':id', $courseId, ParameterType::INTEGER);
         $course = (string) $this->db->setQuery($q)->loadResult();
@@ -622,7 +622,7 @@ final class LearningService
         (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
             $courseId, hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
             (string) ($actor->getParam('language', '') ?: $language), (string) $actor->email, $name,
-            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'COMPLETION_DATE' => $completedAt, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
         );
     }
 
