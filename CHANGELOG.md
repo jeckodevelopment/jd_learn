@@ -1,5 +1,10 @@
 # Changelog
 
+## PR #369 — Correzione consegna pacchetto Joomla, integrata
+
+La [PR #369](https://github.com/jeckodevelopment/jd_learn/pull/369) è **integrata su main** (merge `227f0a879c717a254a0a15004546c90b478a0513`). La [CI 43619757872](https://github.com/jeckodevelopment/jd_learn/actions/runs/43619757872) è **4/4 verde**, con installazione Joomla e upgrade su PHP 8.3/MySQL e PHP 8.4/MariaDB; validatore requirements [43619757848](https://github.com/jeckodevelopment/jd_learn/actions/runs/43619757848) verde. L'artefatto Actions ora si chiama [EXTRACT-FIRST-JD-Learn-0.56.19-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43619757872/artifacts/14123527192): **è un ZIP esterno da estrarre**. Lo ZIP Joomla interno `pkg_jlms-0.56.19-dev.zip` è stato estratto, testato con manifest `pkg_jlms.xml` nella radice, 11 ZIP figli e SHA-256 `3d5c630db47e621ef3227dddad24f506746c298ec08e398f3f2f28991693154a`. Non caricare in Joomla l'archivio esterno Actions. La versione interna resta 0.56.19-dev; accettazione manuale del sito di prova pendente.
+
+
 ## Correzione consegna ZIP Joomla (14 novembre 2026)
 
 - Corretto il processo di consegna degli ZIP di sviluppo: GitHub Actions scarica un wrapper contenente `SHA256SUMS.txt` e `pkg_jlms-0.56.19-dev.zip`, mentre Joomla deve ricevere il solo ZIP interno con `pkg_jlms.xml` alla radice. La distinzione era stata omessa nella consegna dopo PR #362, #366 e #367 e causava il messaggio «manifest mancante».
