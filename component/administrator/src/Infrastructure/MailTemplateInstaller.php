@@ -32,6 +32,13 @@ final class MailTemplateInstaller
         return $created;
     }
 
+    /** @return array<int, string> Canonical placeholders registered for this template. */
+    public static function tagsFor(string $templateId): array
+    {
+        $definitions = self::definitions();
+        return isset($definitions[$templateId]) ? $definitions[$templateId][2] : [];
+    }
+
     /**
      * Only operational events approved for the 1.0.0 scope are registered here.
      *
