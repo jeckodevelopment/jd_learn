@@ -1,4 +1,4 @@
-# Template email di JD Learn
+> **Decisione successiva (14 novembre 2026, PR #349):** prima del rilascio si adotta **un solo vocabolario di variabili**, senza alias. Sostituiti `{NAME}`→`{USER_FULLNAME}`, `{COURSE}`→`{COURSE_TITLE}`, `{SITENAME}`→`{SITE_NAME}` e i relativi tag HTML. Il catalogo storico sottostante descrive le versioni precedenti e non è il riferimento canonico. I template già personalizzati in installazioni di prova vanno riallineati manualmente o ripristinati; non è prevista compatibilità retroattiva. Le notifiche e il collaudo di invio rimangono da verificare.\n\n# Template email di JD Learn
 
 La PR [#288](https://github.com/jeckodevelopment/jd_learn/pull/288), inclusa in 0.56.0-dev, registra i modelli nel sistema nativo **Joomla → Sistema → Modelli email** e usa il mailer e la configurazione SMTP globali del sito. Non esistono credenziali SMTP separate in JD Learn.
 
@@ -150,3 +150,6 @@ La compatibilità del filtro nell'ambiente Joomla target e la traduzione di tito
 ## Decisione approvata il 14 novembre 2026 — completamento template e variabili
 
 La specifica vincolante per la **1.0.0** è [MAIL_TEMPLATES_1.0.0_APPROVED.md](MAIL_TEMPLATES_1.0.0_APPROVED.md). Include un registro centralizzato dei placeholder con alias legacy e documentazione amministrativa, eventi di annullamento ed esiti approvazione/rifiuto, notifiche facoltative di nuove lezioni/cambi didattici, notifiche a docenti e amministratori, revisione editoriale e correzione issue [#312](https://github.com/jeckodevelopment/jd_learn/issues/312). I blocchi sono IMP-09-MAIL-E/F/G/H nel piano stabile. **Questa sezione è una decisione approvata, non prova di implementazione:** l'inventario runtime sopra resta valido fino al merge delle PR applicative e i collaudi Joomla/SMTP restano pendenti.
+
+
+\n### MAIL-E — uniformazione senza alias\n\nLa PR #349 migra le dichiarazioni dei template e i generatori dati degli eventi oggi collegati a `{USER_FULLNAME}`, `{COURSE_TITLE}`, `{SITE_NAME}` e varianti HTML `{USER_FULLNAME_HTML}`, `{COURSE_TITLE_HTML}`, `{SITE_NAME_HTML}`. Rimuove lo strato di alias inizialmente proposto. Le altre variabili approvate nella [specifica 1.0.0](MAIL_TEMPLATES_1.0.0_APPROVED.md) saranno disponibili solo dopo effettiva implementazione; non dichiararle funzionanti prima delle PR successive.\n

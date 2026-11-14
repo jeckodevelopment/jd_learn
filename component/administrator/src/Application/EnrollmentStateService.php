@@ -110,8 +110,8 @@ final class EnrollmentStateService
             (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                 $course, hash('sha256', 'enrollment.state:' . (int) $record->id), $template,
                 (string) ($e->course_language ?: '*'), (string) ($e->learner_email ?? ''), $name,
-                ['NAME' => $name, 'COURSE' => (string) $e->course_title,
-                    'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+                ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $e->course_title,
+                    'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
             );
             $this->db->transactionCommit(); return (int) $record->id;
         } catch (\Throwable $error) { $this->db->transactionRollback(); throw $error; }

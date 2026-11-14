@@ -51,11 +51,11 @@ final class CourseExpiryReminderService
                     'com_jlms.course.expiring', (string) ($language ?: $row->course_language),
                     (string) $row->learner_email, $name, [
                         'ENROLLMENT_ID' => (string) (int) $row->enrollment_id,
-                        'NAME' => $name,
-                        'COURSE' => (string) $row->course_title,
+                        'USER_FULLNAME' => $name,
+                        'COURSE_TITLE' => (string) $row->course_title,
                         'COURSE_ENDS_AT' => gmdate('Y-m-d H:i', strtotime($end . ' UTC')) . ' UTC',
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard',
-                        'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
+                        'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
                     ]);
                 $queued++;
             } catch (\Throwable) {

@@ -169,9 +169,9 @@ final class ManualEnrollmentService
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                     $course, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
                     (string) ($learner->getParam('language', '') ?: $language), (string) $learner->email, trim((string) $learner->name),
-                    ['NAME' => trim((string) $learner->name), 'COURSE' => (string) $courseRecord->title,
+                    ['USER_FULLNAME' => trim((string) $learner->name), 'COURSE_TITLE' => (string) $courseRecord->title,
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id,
-                        'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+                        'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
                 );
             }
             $this->db->transactionCommit(); return $id;

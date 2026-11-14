@@ -83,8 +83,8 @@ final class CertificateIssuer
                 $userLanguage,
                 (string) $row->email,
                 (string) $row->name,
-                ['NAME' => (string) $row->name, 'COURSE' => (string) ($row->title_snapshot ?: $row->title),
-                    'SITENAME' => (string) \Joomla\CMS\Factory::getConfig()->get('sitename', ''),
+                ['USER_FULLNAME' => (string) $row->name, 'COURSE_TITLE' => (string) ($row->title_snapshot ?: $row->title),
+                    'SITE_NAME' => (string) \Joomla\CMS\Factory::getConfig()->get('sitename', ''),
                     'CERTIFICATE_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard']
             );
         } catch (\Throwable $error) {

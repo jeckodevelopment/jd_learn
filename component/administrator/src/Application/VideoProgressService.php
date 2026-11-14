@@ -276,7 +276,7 @@ final class VideoProgressService
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                     $courseId, hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
                     (string) ($actor->getParam('language', '') ?: $course->language), (string) $actor->email, $name,
-                    ['NAME' => $name, 'COURSE' => (string) $course->title, 'SITENAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+                    ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
                 );
                 $versionRules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
                 if ($versionRules['certificate_enabled']) {
