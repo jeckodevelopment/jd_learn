@@ -1,3 +1,11 @@
+## Issue #377 — vista Docenti: stato e conteggio corsi
+
+1. In Joomla 6.2 di prova, aprire **JD Learn → Docenti**. Verificare che la colonna Stato mostri l'icona nativa Joomla per pubblicato/non pubblicato, senza testo e senza consentire toggle inline.
+2. Verificare il conteggio Corsi: con corsi assegnati il pulsante usa il colore di conteggio positivo delle categorie; con zero corsi usa il colore secondario. Aprire il conteggio e verificare che la lista Corsi sia filtrata per docente.
+3. Controllare contrasto e leggibilità in tema chiaro/scuro, navigazione da tastiera e viewport desktop/mobile.
+
+CI controlla uso di `jgrid.published`, assenza del toggle inline e classi di stato del conteggio. Accettazione visiva manuale da registrare.
+
 ## IMP-09 / issue #375 — toolbar Guida alle variabili email
 
 1. Accedere con un amministratore autorizzato a `com_jlms`, `core.manage` e `core.edit` su `com_mails`. Aprire **JD Learn → Variabili modelli email** e verificare che il pulsante **Template Email** compaia nella toolbar e apra i modelli filtrati su `com_jlms`.
