@@ -24,6 +24,7 @@ final class MailQueue
             'com_jlms.course.completed' => 'completion',
             'com_jlms.enrollment.suspended' => 'suspension',
             'com_jlms.enrollment.reactivated' => 'reactivation',
+            'com_jlms.enrollment.cancelled' => 'cancellation',
             'com_jlms.certificate.available' => 'certificate',
             'com_jlms.course.message' => 'communication',
             'com_jlms.course.expiring' => 'expiry',

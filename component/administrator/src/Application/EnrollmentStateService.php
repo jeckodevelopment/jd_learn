@@ -8,7 +8,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 
-/** Explicit pedagogical suspension/reactivation. Never grants Joomla groups or resets learning history. */
+/** Audited enrollment state changes. Never grants Joomla groups or resets learning history. */
 final class EnrollmentStateService
 {
     public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
@@ -35,7 +35,7 @@ final class EnrollmentStateService
 
     private function plan(object $e, string $target): array
     {
-        if (!in_array($target, ['active', 'suspended'], true)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        if (!in_array($target, ['active', 'suspended', 'cancelled'], true)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
         $id = (int) $e->id;
         // All quiz writers acquire the enrollment lock first, so this projection is stable during apply.
         $q = $this->db->createQuery()->select('a.id, a.revision, a.deadline_at')->from('#__jlms_active_attempts AS s')
@@ -43,7 +43,12 @@ final class EnrollmentStateService
             ->where('s.enrollment_id = :enrollment')->where("a.status = 'open'")->bind(':enrollment', $id, ParameterType::INTEGER)->order('a.id');
         $attempts = $this->db->setQuery($q, 0, 1001)->loadAssocList();
         $last = $this->latest($id); $revision = $last ? (int) $last->revision_no : 0;
-        $allowed = $target === 'suspended' ? in_array($e->status, ['active', 'completed'], true) : $e->status === 'suspended';
+        $allowed = match ($target) {
+            'suspended' => in_array($e->status, ['active', 'completed'], true),
+            'active' => $e->status === 'suspended',
+            'cancelled' => in_array($e->status, ['active', 'suspended'], true)
+                && $e->completed_at === null && count($attempts) === 0,
+        };
         $p = ['enrollment_id' => $id, 'enrollment_revision' => (int) $e->revision, 'history_revision' => $revision,
             'previous_status' => $e->status, 'target_status' => $target, 'completed_at' => $e->completed_at,
             'completed_total' => (int) $e->completed_total, 'required_total' => (int) $e->required_total,
@@ -67,7 +72,7 @@ final class EnrollmentStateService
     public function apply(User $identity, int $course, int $enrollment, int $expected, string $target,
         string $reason, string $key, string $impactHash, bool $confirmed): int
     {
-        if (!$confirmed || $expected < 1 || !in_array($target, ['active', 'suspended'], true)
+        if (!$confirmed || $expected < 1 || !in_array($target, ['active', 'suspended', 'cancelled'], true)
             || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key)
             || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
         $reason = trim($reason);
@@ -105,7 +110,11 @@ final class EnrollmentStateService
             ($this->audit)($actor, ['id' => (int) $record->id, 'actor_id' => (int) $actor->id, 'enrollment_id' => $enrollment,
                 'previous_status' => $e->status, 'target_status' => $target, 'reason_reference' => (int) $record->id,
                 'reason_code' => 'enrollment_state_changed', 'correlation_id' => bin2hex(random_bytes(16))]);
-            $template = $target === 'suspended' ? 'com_jlms.enrollment.suspended' : 'com_jlms.enrollment.reactivated';
+            $template = match ($target) {
+                'suspended' => 'com_jlms.enrollment.suspended',
+                'active' => 'com_jlms.enrollment.reactivated',
+                'cancelled' => 'com_jlms.enrollment.cancelled',
+            };
             $name = trim((string) ($e->learner_name ?? ''));
             (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                 $course, hash('sha256', 'enrollment.state:' . (int) $record->id), $template,

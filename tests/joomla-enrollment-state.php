@@ -75,6 +75,36 @@ if(($argv[2]??'')==='retained'){
  stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.enrollmentstate' AND item_id=".(int)$saved['first_event'])->loadResult()===1,'native state audit retained');
  echo json_encode(['enrollment_state_retention_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;exit;
 }
+if (($argv[2] ?? '') === 'cancellation') {
+// MAIL-F: only real, not-completed cancellations produce one audited notification.
+$cancelUser = new \Joomla\CMS\User\User();
+$cancelData = ['name'=>'CI Cancellable Learner','username'=>'cicancellable20261114','email'=>'cicancellable20261114@example.invalid',
+    'password'=>'CI-Only-Long-Password-2026','password2'=>'CI-Only-Long-Password-2026',
+    'groups'=>[2,$f['group']],'block'=>0,'activation'=>''];
+if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) { throw new \RuntimeException($cancelUser->getError()); }
+$cancelUser = new \Joomla\CMS\User\User((int) $cancelUser->id);
+$cancelEnrollment = $learning->start($cancelUser, 'en-GB', $course, bin2hex(random_bytes(16)));
+$cancelBefore = $stable($cancelEnrollment);
+$cancelPreview = $service->editor($actor,$course,$cancelEnrollment,'cancelled');
+stateExpect($cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled','valid cancellation preview');
+$cancelCommand = stateCommand($cancelPreview);
+$cancelRecord = $service->apply($actor,...$cancelCommand);
+stateExpect($service->apply($actor,...$cancelCommand) === $cancelRecord,'replayed cancellation does not duplicate event');
+stateExpect((string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled','cancellation persisted');
+stateExpect($cancelBefore === $stable($cancelEnrollment),'cancellation preserves prior learning and assignment data');
+stateDenied(fn()=>$learning->resumeTarget($cancelUser,'en-GB',$cancelEnrollment),403,'cancelled enrollment denies classroom');
+stateExpect($service->editor($actor,$course,$cancelEnrollment,'active')['impact']['blocked'] !== null,'cancelled enrollment cannot be reactivated');
+stateExpect($service->editor($actor,$course,$cancelEnrollment,'cancelled')['impact']['blocked'] !== null,'cancelled enrollment cannot be cancelled twice');
+$cancelQ = $db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue')
+    ->where("template_id = 'com_jlms.enrollment.cancelled'")
+    ->where('event_key = ' . $db->quote(hash('sha256','enrollment.state:' . $cancelRecord)));
+stateExpect((int) $db->setQuery($cancelQ)->loadResult() === 1,'cancellation queues exactly one learner notification');
+$completionPreview = $service->editor($actor,$course,(int)$f['completed'],'cancelled');
+stateExpect($completionPreview['impact']['blocked'] !== null,'completed enrollment cannot be cancelled');
+
+echo json_encode(['enrollment_cancellation_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+exit;
+}
 $before=$stable($enrollment);$groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
 $i=$service->editor($manager,$course,$enrollment,'suspended');$command=stateCommand($i);$event=$service->apply($manager,...$command);
 stateExpect($service->editor($actor,$course,$enrollment)['impact']['previous_status']==='suspended','authorized suspension persisted');
@@ -97,7 +127,7 @@ stateDenied(fn()=>$service->editor(new \Joomla\CMS\User\User(),$course,$enrollme
 stateDenied(fn()=>$service->editor($manager,(int)$rf['other_course'],$f['italian']),403,'course-specific management scope');
 stateDenied(fn()=>$service->editor($actor,$course,$f['italian']),404,'foreign enrollment cannot cross course');
 $i=$service->editor($actor,$course,$enrollment,'suspended');$base=stateCommand($i);
-foreach([[7,false,400],[3,'cancelled',400],[4,'',422],[4,'<script>',422],[4,str_repeat('x',501),422],[6,str_repeat('0',64),409]]as[$index,$value,$code]){$bad=$base;$bad[$index]=$value;stateDenied(fn()=>$service->apply($actor,...$bad),$code,'malformed or stale command rejected');}
+foreach([[7,false,400],[3,'rejected',400],[4,'',422],[4,'<script>',422],[4,str_repeat('x',501),422],[6,str_repeat('0',64),409]]as[$index,$value,$code]){$bad=$base;$bad[$index]=$value;stateDenied(fn()=>$service->apply($actor,...$bad),$code,'malformed or stale command rejected');}
 stateExpect($count()===2,'failed commands create no events');
 $legacy=$service->editor($actor,$course,(int)$f['completed'],'suspended');$legacyBefore=$stable((int)$f['completed']);$service->apply($actor,...stateCommand($legacy));$service->apply($actor,...stateCommand($service->editor($actor,$course,(int)$f['completed'],'active')));
 stateExpect($stable((int)$f['completed'])===$legacyBefore,'completed history and expired window preserved');
@@ -126,7 +156,8 @@ $user=new \Joomla\CMS\User\User();$data=['name'=>'CI Enrollment State Quiz','use
 $qe=$learning->start($user,'en-GB',$qf['course_id'],bin2hex(random_bytes(16)));$runtime=$component->getQuizAttemptService();$attempt=$runtime->start($user,'en-GB',$qe,$qf['lesson_id'],stateKey());$aid=$attempt['attempt']['id'];
 $answers=json_encode([$attempt['questions'][0]['id']=>['first']],JSON_THROW_ON_ERROR);$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,1,stateKey(),$answers,false);
 $quizBefore=$db->setQuery('SELECT status,revision,rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id='.$aid)->loadAssoc();$savedAnswers=$db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id='.$aid)->loadAssocList();
-$qi=$service->editor($actor,$qf['course_id'],$qe,'suspended');stateExpect($qi['impact']['open_attempts']===1,'preview reports an open quiz');$service->apply($actor,...stateCommand($qi));
+$qi=$service->editor($actor,$qf['course_id'],$qe,'suspended');stateExpect($qi['impact']['open_attempts']===1,'preview reports an open quiz');
+stateDenied(fn()=>$service->apply($actor,...stateCommand($service->editor($actor,$qf['course_id'],$qe,'cancelled'))),409,'cannot cancel enrollment during an open quiz');$service->apply($actor,...stateCommand($qi));
 stateDenied(fn()=>$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,2,stateKey(),$answers,false),403,'suspension denies quiz save');
 stateDenied(fn()=>$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,2,stateKey(),$answers,true),403,'suspension denies quiz submit');
 $service->apply($actor,...stateCommand($service->editor($actor,$qf['course_id'],$qe,'active')));
