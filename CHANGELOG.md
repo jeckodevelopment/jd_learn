@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 0.56.21-dev — MAIL-G, notifiche ai docenti (candidata 14 novembre 2026)
+
+- Inserita notifica operativa al docente effettivamente assegnato a un corso, via Joomla Mail Templates e outbox, con opt-out globale/per corso, idempotenza e controllo dell'associazione/account all'invio. Nessun invio per salvataggi senza nuova relazione, nessun privilegio aggiuntivo, nessuna informazione di roster.
+- Confermato dall'utente il successo dell'installazione 0.56.20-dev sul sito Joomla 6.2.0. La prova del nuovo evento email è ancora pendente e i restanti blocchi MAIL-G/H non risultano completati.
+
+
 **Main 0.56.20-dev — PR [#373](https://github.com/jeckodevelopment/jd_learn/pull/373) integrata** (merge `9ada1824bdc0eb09efe547465d4231f973f41b8a`). Riparato il blocco upgrade Joomla causato da `DatabaseDriver::updateObject()` con `(object) [...]` temporaneo nel postflight Mail Templates; corrette quattro chiamate analoghe in `LearningService`. Revert dell'automazione di packaging aggiuntiva #369–#371; ripristinato l'unico workflow CI. CI [43627177407](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407) **4/4 superata**, [tracciabilità](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177463) superata. Il package interno verificato `pkg_jlms-0.56.20-dev.zip` è nell'[artefatto Actions 14126702616](https://github.com/jeckodevelopment/jd_learn/actions/runs/43627177407/artifacts/14126702616); estrarre prima il contenitore GitHub. SHA-256 ZIP interno `ab972ee39895bd529ff72a64f9df51814a4d5981baf6d4402882bb654fe69ab2`. Nessuna crescita di copertura funzionale (bug fix); collaudo manuale Joomla 6.2.0 sul sito dell'utente pendente. La vecchia prerelease `jdlearn-dev-latest` contiene la versione 0.56.19 e non deve essere utilizzata.
 
 
