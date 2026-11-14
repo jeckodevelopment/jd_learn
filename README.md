@@ -45,6 +45,7 @@ Il pacchetto da installare è il **`pkg_jlms-<versione>-dev.zip` interno**; quan
 | Piano delle PR verso la stabile | [STABLE_1.0.0_PR_PLAN.md](docs/STABLE_1.0.0_PR_PLAN.md) |
 | Requisiti, tracciabilità e decisioni | [REQUIREMENTS_STATUS.csv](docs/REQUIREMENTS_STATUS.csv) · [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md) |
 | Test e accettazione | [QA_TESTBOOK.md](docs/QA_TESTBOOK.md) |
+| Gate CI e revisione dei merge | [CI_MERGE_REVIEW.md](docs/CI_MERGE_REVIEW.md) |
 | Modelli e notifiche email | [MAIL_TEMPLATES.md](docs/MAIL_TEMPLATES.md) |
 | Corsi e pubblicazione | [COURSE_EDITOR.md](docs/COURSE_EDITOR.md) · [PUBLICATION.md](docs/PUBLICATION.md) |
 | Didattica, video e materiali | [LEARNING.md](docs/LEARNING.md) · [VIDEO.md](docs/VIDEO.md) · [MATERIALS.md](docs/MATERIALS.md) |
