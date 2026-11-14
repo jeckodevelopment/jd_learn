@@ -65,7 +65,7 @@ try:
  request(admin,'/administrator/index.php?option=com_jlms&task=enrollmentstate.apply',expected=405)
  apply(admin,url,form,{'jform[confirmation]':'0'},400)
  apply(admin,url,form,{'jform[reason]':''},422)
- apply(admin,url,form,{'jform[target_status]':'cancelled'},400)
+ apply(admin,url,form,{'jform[target_status]':'rejected'},400)
  apply(admin,url,form,{'jform[impact_hash]':'0'*64},409)
  apply(admin,url,form,{'jform[enrollment_id]':str(f['foreign_enrollment'])},404)
  student=client();login(student,'cidashboardother','Ci-only-Dashboard-Password-2026',False)
