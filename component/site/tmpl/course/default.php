@@ -59,6 +59,15 @@ foreach ([1, 2, 3] as $position) {
    <label class="jlms-course-consent"><input type="checkbox" name="jform[course_announcement_consent]" value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
    <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_START_RESUME') ?></button>
   </form>
+ <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'approval') : ?>
+  <form id="jlms-enrollment-request-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+   <input type="hidden" name="task" value="enrollment.request">
+   <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
+   <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
+   <?= HTMLHelper::_('form.token') ?>
+   <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_ENROLLMENT_REQUEST_SUBMIT') ?></button>
+  </form>
+  <p><?= Text::_('COM_JLMS_ENROLLMENT_REQUEST_EXPLANATION') ?></p>
  <?php elseif ($this->hasContentAccess && !$this->canStartWindow) : ?><p id="jlms-course-window-closed"><?= Text::_('COM_JLMS_CALENDAR_CLOSED') ?></p>
  <?php elseif ($this->hasContentAccess) : ?><p><?= Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php endif; ?></aside>
  <section id="jlms-course-outline"><h2><?= Text::_('COM_JLMS_CURRICULUM') ?></h2>
