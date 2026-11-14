@@ -1175,3 +1175,13 @@ La CI automatizzata non sostituisce questi collaudi di accettazione.
 - [ ] Verificare separatamente il manager **Campi personalizzati** su Joomla 6.2.0 per l'issue [#374](https://github.com/jeckodevelopment/jd_learn/issues/374); questa anomalia HTTP/FieldsHelper è distinta dal blocco d'installazione.
 
 **Stato:** prove automatizzate PR #373 4/4 CI superate (Joomla 6.0.0 in CI standard); accettazione **manuale** Joomla 6.2.0 ancora da eseguire. Non chiamare il vecchio snapshot GitHub `jdlearn-dev-latest` una release aggiornata: contiene la versione 0.56.19-dev, ora superata.
+
+## MAIL-G — Primo incremento: avviso docente assegnato (0.56.21-dev)
+
+- [ ] Su Joomla 6.2.0 assegnare un nuovo profilo docente **collegato a un account Joomla attivo** a un corso salvato: verificare una sola voce `com_jlms.teacher.assigned` nella Coda email e il destinatario esatto.
+- [ ] Assegnare un docente senza account, ripetere il salvataggio del corso o riordinare soltanto profili già assegnati: nessuna nuova mail.
+- [ ] Rimuovere il docente prima del dispatch o bloccare l'account/alterare la sua email: il dispatch deve marcare la notifica `skipped` senza consegnare o rivelare dati ad altri.
+- [ ] Provare disabilitazione globale e override per corso; inviare tramite SMTP a docente di prova, controllando lingua, oggetto, HTML/testo e conservazione di template personalizzati dopo upgrade.
+- [ ] Verificare che l'assegnazione non attribuisca ACL di amministrazione e non includa dati di iscritti o altre persone nell'email.
+
+Il solo successo CI non prova l'accettazione SMTP sul sito dell'utente.
