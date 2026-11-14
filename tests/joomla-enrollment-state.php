@@ -212,6 +212,12 @@ try {
     stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=".(int)$rejectedUser->id." AND course_id=".$course)->loadResult()===0,'rejection never grants classroom access');
     stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=".$rejectRequestId." AND status='rejected'")->loadResult()===1,'rejection audit state saved');
     stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='".hash('sha256','enrollment.decision:'.$rejectRequestId)."'")->loadResult()===1,'single rejection email queued');
+    // The approval fixture is not part of the pre-existing roster retention baseline.
+    // Remove only its CI-created enrollment so the subsequent upgrade checks can
+    // compare the original roster snapshot without unrelated test pollution.
+    $db->setQuery('DELETE FROM #__jlms_enrollments WHERE id=' . $enrollmentApproved)->execute();
+    stateExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=' . $enrollmentApproved)->loadResult()===0,
+        'approval fixture cleanup preserves roster retention baseline');
 } finally {
     $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode=".$db->quote($modeBefore)." WHERE id=".$course)->execute();
 }
