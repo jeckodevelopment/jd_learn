@@ -145,3 +145,8 @@ Il template `com_jlms.course.expiring` usa il mailer globale e i Mail Templates 
 Nel backend aprire **JD Learn → Dashboard → Comunicazioni → Template email**. Il collegamento apre la vista nativa `com_mails`, preimpostando il filtro estensione a `com_jlms`; non è un editor JD Learn separato e l'amministratore può cambiare il filtro dalla pagina Joomla. È visibile solo agli utenti con permessi di gestione e modifica del componente `com_mails`. La **Coda email** resta una funzione distinta che mostra tentativi e stati di invio, senza cambiare contenuto ai template.
 
 La compatibilità del filtro nell'ambiente Joomla target e la traduzione di titolo/descrizione (issue #312) vanno verificate sul sito di prova: il collegamento non risolve da solo le chiavi lingua non tradotte.
+
+
+## Decisione approvata il 14 novembre 2026 — completamento template e variabili
+
+La specifica vincolante per la **1.0.0** è [MAIL_TEMPLATES_1.0.0_APPROVED.md](MAIL_TEMPLATES_1.0.0_APPROVED.md). Include un registro centralizzato dei placeholder con alias legacy e documentazione amministrativa, eventi di annullamento ed esiti approvazione/rifiuto, notifiche facoltative di nuove lezioni/cambi didattici, notifiche a docenti e amministratori, revisione editoriale e correzione issue [#312](https://github.com/jeckodevelopment/jd_learn/issues/312). I blocchi sono IMP-09-MAIL-E/F/G/H nel piano stabile. **Questa sezione è una decisione approvata, non prova di implementazione:** l'inventario runtime sopra resta valido fino al merge delle PR applicative e i collaudi Joomla/SMTP restano pendenti.
