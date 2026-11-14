@@ -13222,6 +13222,16 @@
         "status": "completed",
         "conclusion": "success"
       }
+    },
+    {
+      "ci": {
+        "run_id": 43617948055,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43617948055",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4
+      },
+      "note": "PR #367 merged: MAIL-F approval/rejection, complete CI 4/4; manual Joomla acceptance pending."
     }
   ],
   "latest_feature": {
