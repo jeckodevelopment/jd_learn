@@ -1,3 +1,13 @@
+## Issue #384 — toolbar salvataggio corso
+
+1. In Joomla 6.2 accedere come amministratore con permesso di creazione e modifica corsi.
+2. Aprire **JD Learn → Corsi → Nuovo**. Verificare che **Salva** sia autonomo e che **Salva & Chiudi** sia il pulsante principale split.
+3. Aprire il menu split: verificare la voce **Salva e apri programma**.
+4. Verificare i tre esiti: **Salva** salva e resta nell’editor; **Salva & Chiudi** salva e torna all’elenco; **Salva e apri programma** salva e apre il programma del corso.
+5. Ripetere le verifiche su un corso esistente e verificare che la validazione e la protezione read-only/check-out restino attive.
+
+La CI verifica le etichette e i task effettivamente renderizzati via HTTP autenticato sia sul form nuovo sia su un corso esistente. L’accettazione visuale sul sito di prova resta da registrare.
+
 ## Issue #364 — anteprima email annuncio corso
 
 1. Accedere al backend Joomla come amministratore con autorizzazione a modificare il corso.
