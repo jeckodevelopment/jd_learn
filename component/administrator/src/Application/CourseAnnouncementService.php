@@ -144,7 +144,7 @@ final class CourseAnnouncementService
         }
 
         $tags = [
-            'NAME' => $language === 'it-IT' ? 'Studente' : 'Learner',
+            'USER_FULLNAME' => $language === 'it-IT' ? 'Studente' : 'Learner',
             'COURSE_TITLE' => $title,
             'COURSE_TITLE_HTML' => $titleHtml,
             'COURSE_IMAGE_HTML' => $imageHtml,
@@ -206,7 +206,7 @@ final class CourseAnnouncementService
                 }
                 $data = $preview['template_data'];
                 $name = htmlspecialchars((string) $recipient->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                $data['NAME'] = $name;
+                $data[''USER_FULLNAME''] = $name;
                 $data['UNSUBSCRIBE_URL'] = $unsubscribe;
                 $data['UNSUBSCRIBE_URL_HTML'] = htmlspecialchars($unsubscribe, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                 $data['UNSUBSCRIBE_URL_TEXT'] = $unsubscribe;
