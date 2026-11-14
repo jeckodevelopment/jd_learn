@@ -1,3 +1,7 @@
+## Toolbar di salvataggio corso (issue #365)
+
+Nell’editor amministrativo **Salva** esegue l’applicazione senza uscire. **Salva & Chiudi** è l’azione principale del gruppo a discesa; il menu contiene **Salva e apri programma**, che usa il task Joomla `course.programme` per salvare e poi aprire il programma didattico. La stessa azione resta disponibile nella scheda Programma. La toolbar è disponibile solo per corsi modificabili.
+
 # Gestione dei corsi
 
 ## Anteprime pubbliche delle lezioni
