@@ -138,3 +138,10 @@ La PR #338 è integrata: la coda salva un messaggio generico, la vista di audit 
 ## MAIL-04 — promemoria operativo scadenza corso
 
 Il template `com_jlms.course.expiring` usa il mailer globale e i Mail Templates nativi Joomla. È inviato una sola volta per iscrizione e scadenza, soltanto se la funzione è abilitata globalmente e l’override del corso lo consente. La soglia è configurabile tra 1 e 30 giorni (default 3); la funzione è disabilitata globalmente per impostazione predefinita. Il task di invio ri-verifica che l’iscrizione sia ancora attiva, incompleta e non scaduta prima della consegna. Variabili: `{NAME}`, `{COURSE}`, `{COURSE_ENDS_AT}`, `{COURSE_URL}`, `{SITENAME}`.
+
+
+## Accesso rapido ai modelli dalla dashboard JD Learn
+
+Nel backend aprire **JD Learn → Dashboard → Comunicazioni → Template email**. Il collegamento apre la vista nativa `com_mails`, preimpostando il filtro estensione a `com_jlms`; non è un editor JD Learn separato e l'amministratore può cambiare il filtro dalla pagina Joomla. È visibile solo agli utenti con permessi di gestione e modifica del componente `com_mails`. La **Coda email** resta una funzione distinta che mostra tentativi e stati di invio, senza cambiare contenuto ai template.
+
+La compatibilità del filtro nell'ambiente Joomla target e la traduzione di titolo/descrizione (issue #312) vanno verificate sul sito di prova: il collegamento non risolve da solo le chiavi lingua non tradotte.

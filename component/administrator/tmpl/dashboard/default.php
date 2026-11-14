@@ -12,17 +12,22 @@ use Joomla\CMS\Language\Text;
     </header>
     <p class="alert alert-info"><?= Text::_('COM_JLMS_FOUNDATION_NOTICE') ?></p>
     <nav class="jlms-admin-dashboard__shortcuts" aria-label="<?= $this->escape(Text::_('COM_JLMS_DASHBOARD_TOOLS')) ?>">
-        <h2><?= Text::_('COM_JLMS_DASHBOARD_TOOLS') ?></h2>
-        <ul>
-            <?php foreach ($this->shortcuts as $shortcut) : ?>
-                <li>
-                    <a id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key']))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
-                        <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
-                        <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <?php foreach ($this->shortcutGroups as $groupKey => $shortcuts) : ?>
+            <?php if (!$shortcuts) { continue; } ?>
+            <section class="jlms-admin-dashboard__group" aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>">
+                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
+                <ul>
+                    <?php foreach ($shortcuts as $shortcut) : ?>
+                        <li>
+                            <a id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key']))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
+                                <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
+                                <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
+        <?php endforeach; ?>
     </nav>
     <details class="jlms-admin-dashboard__providers">
         <summary><?= Text::_('COM_JLMS_DASHBOARD_PROVIDER_STATUS') ?></summary>

@@ -145,6 +145,7 @@ try:
   'jlms-admin-shortcut-certificates':('com_jlms','certificates'),
   'jlms-admin-shortcut-courses':('com_jlms','courses'),
   'jlms-admin-shortcut-mail_queue':('com_jlms','mailqueue'),
+  'jlms-admin-shortcut-mail_templates':('com_mails','templates'),
   'jlms-admin-shortcut-pathways':('com_jlms','pathways'),
   'jlms-admin-shortcut-course_categories':('com_categories','categories'),
   'jlms-admin-shortcut-pathway_categories':('com_categories','categories'),
@@ -153,7 +154,7 @@ try:
   'jlms-admin-shortcut-custom_fields':('com_fields','fields'),
   'jlms-admin-shortcut-video_plugins':('com_plugins','plugins'),
  }
- expected_shortcut_order=['certificates','courses','mail_queue','pathways','course_categories','pathway_categories','question_bank','teachers','custom_fields','video_plugins']
+ expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','teachers','question_bank','certificates','mail_queue','mail_templates','custom_fields','video_plugins']
  actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
  if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
  for shortcut,(option,view) in required_shortcuts.items():
@@ -161,6 +162,12 @@ try:
   if not query or query.get('option')!=[option] or query.get('view')!=[view]:
    found={a.get('id'):a.get('href') for a in dashboard_page.anchors if a.get('id','').startswith('jlms-admin-shortcut-')}
    raise RuntimeError('Dashboard shortcut missing or misrouted: '+shortcut+'; found='+json.dumps(found,sort_keys=True))
+ # The native Mail Templates filter must keep JD Learn in focus without changing com_mails.
+ mail_query=dashboard_shortcuts['jlms-admin-shortcut-mail_templates']
+ if mail_query.get('filter[extension]')!=['com_jlms']:raise RuntimeError('Mail Templates shortcut must select the JD Learn extension')
+ mail_template_url=next(a.get('href') for a in dashboard_page.anchors if a.get('id')=='jlms-admin-shortcut-mail_templates')
+ _,mail_template_html=get(urljoin(url,mail_template_url))
+ if '<form' not in mail_template_html or 'com_mails' not in mail_template_html:raise RuntimeError('Native Joomla Mail Templates did not render from JD Learn dashboard')
  if 'Manage courses, the learning programme and teaching resources from the administrator panel.' not in html or 'Your learning history and current classroom availability are shown separately.' in html:
   raise RuntimeError('Administrator dashboard introduction must use its current, relevant translation')
  icon_count=len(re.findall(r'class="[^"]*jlms-admin-dashboard__shortcut-icon[^"]*icon-[^"]+"',html))

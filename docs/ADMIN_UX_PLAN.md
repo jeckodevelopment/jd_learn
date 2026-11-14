@@ -82,3 +82,12 @@ La PR [#124](https://github.com/jeckodevelopment/jd_learn/pull/124), integrata i
 ## Issue #149 — ordinamento dashboard e stato provider
 
 Incremento pianificato in 0.41.40-dev: collegamenti rapidi ordinati per il flusso operativo (Corsi, Percorsi, Categorie corsi, Categorie percorsi, Banca domande, Docenti, Campi, Plugin video). Il riepilogo elenca tutti i provider inclusi e distingue installato/disattivato/non disponibile/da configurare/pronto. La vista è in sola lettura e non mostra configurazioni riservate. Collaudo ruoli, stati e lingue nel testbook; M01/M04 acceptance rimane separata.
+
+
+## Dashboard per aree operative (novembre 2026)
+
+La dashboard raggruppa i collegamenti con intestazioni **Didattica** (Corsi, Percorsi, Categorie corsi, Categorie percorsi), **Persone e valutazione** (Docenti, Banca domande, Attestati), **Comunicazioni** (Coda email, Template email) e **Configurazione** (Campi aggiuntivi, Plugin video). Le sezioni senza collegamenti autorizzati non vengono mostrate. L'ordine risolve la richiesta sulla posizione iniziale degli Attestati della issue #308; **non** sostituisce però la revisione della vista elenco Attestati, che rimane da fare. La toolbar Opzioni del core Joomla resta invariata.
+
+Template email: il collegamento si vede solo con `core.manage` e `core.edit` per `com_mails`, apre la lista nativa Joomla con `filter[extension]=com_jlms` e azzera ricerca/lingua/paginazione precedenti. Il filtro resta modificabile nella lista Joomla e va confermato su Joomla supportato (stato dei filtri in sessione). Non è introdotto un editor parallelo. Verificare in backend anche il comportamento della issue #312: le traduzioni dei template sono una correzione distinta.
+
+**Comportamenti da testare:** login Super User e utente con soli permessi limitati; contenuto/ordine di ogni sezione e assenza delle sezioni vuote; navigazione di ogni link, categorie con contesto corretto, filtro `com_mails` solo JD Learn e sua rimozione; nessuna esposizione di template/controlli a utenti non autorizzati; tab/focus e screen reader, responsive 13–15 pollici e mobile, tema scuro, stato provider espandibile e link Opzioni ancora nativo. Documentare l'esito nel testbook; CI statica non equivale a collaudo manuale.
