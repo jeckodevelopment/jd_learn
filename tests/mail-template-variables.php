@@ -5,10 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateInstaller.php';
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateVariableCatalog.php';
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplatePlaceholderValidator.php';
+require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateTagUpdater.php';
 
 use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller;
 use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog;
 use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplatePlaceholderValidator;
+use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateTagUpdater;
 
 $method = new ReflectionMethod(MailTemplateInstaller::class, 'definitions');
 $definitions = $method->invoke(null);
@@ -72,6 +74,50 @@ foreach (['it-IT', 'en-GB'] as $locale) {
         || MailTemplateVariableCatalog::forTemplate('com_jlms.course.completed', $locale)['COMPLETION_DATE']['type'] !== 'date') {
         throw new RuntimeException('Missing typed localized date variables: ' . $locale);
     }
+}
+
+
+// Joomla upgrades must expose new canonical variables without changing editorial
+// content or non-tag mailer settings, including on localized template rows.
+$originalParams = [
+    'tags' => ['USER_FULLNAME', 'COURSE_TITLE', 'NAME', 'EXTRA_CUSTOM', 'COURSE_TITLE'],
+    'mailfrom' => 'operator@example.invalid',
+    'replyto' => 'support@example.invalid',
+    'custom' => ['format' => 'html', 'enabled' => false],
+];
+$mergedParams = MailTemplateTagUpdater::mergeParams(
+    $originalParams, MailTemplateInstaller::tagsFor('com_jlms.enrollment.confirmed')
+);
+if (!in_array('ENROLLMENT_DATE', $mergedParams['tags'], true)
+    || !in_array('COURSE_URL', $mergedParams['tags'], true)
+    || !in_array('EXTRA_CUSTOM', $mergedParams['tags'], true)
+    || in_array('NAME', $mergedParams['tags'], true)
+    || count($mergedParams['tags']) !== count(array_unique($mergedParams['tags']))
+    || $mergedParams['mailfrom'] !== $originalParams['mailfrom']
+    || $mergedParams['replyto'] !== $originalParams['replyto']
+    || $mergedParams['custom'] !== $originalParams['custom']
+    || $originalParams['tags'][2] !== 'NAME') {
+    throw new RuntimeException('Upgrade tag synchronization must preserve preferences and add canonical tags.');
+}
+if (MailTemplateTagUpdater::mergeParams(
+    $mergedParams, MailTemplateInstaller::tagsFor('com_jlms.enrollment.confirmed')
+) !== $mergedParams) {
+    throw new RuntimeException('Upgrading already synchronized template tags must be idempotent.');
+}
+if (!in_array('COMPLETION_DATE', MailTemplateTagUpdater::mergeParams(
+    ['tags' => []], MailTemplateInstaller::tagsFor('com_jlms.course.completed')
+)['tags'], true)) {
+    throw new RuntimeException('Completion date must be available on upgraded templates.');
+}
+try {
+    MailTemplateTagUpdater::mergeParams(['tags' => 'malformed'], ['COURSE_TITLE']);
+    throw new RuntimeException('Malformed template tag metadata must be rejected.');
+} catch (UnexpectedValueException $expected) {
+    // Do not discard or replace corrupt configuration silently.
+}
+$script = file_get_contents(__DIR__ . '/../component/script.php');
+if ($script === false || !str_contains($script, 'MailTemplateTagUpdater::synchronize($db)')) {
+    throw new RuntimeException('Joomla postflight must synchronize native template tags.');
 }
 
 if (MailTemplateInstaller::templateIds() !== array_keys($definitions)) {
