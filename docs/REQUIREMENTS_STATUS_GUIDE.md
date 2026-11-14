@@ -1,10 +1,10 @@
 # Registro canonico dei requisiti JD Learn
 
-La **fonte di verità** del perimetro, dell'implementazione e della tracciabilità è [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv). Il file contiene **229 ID** dopo l'addendum approvato del 14 novembre 2026: 219 righe precedenti, incluse CERT-01–08 e MAIL-11, più **MAIL-01–10**, che erano state approvate ma non registrate singolarmente. Le definizioni approvate sono in [MAIL_TEMPLATES_1.0.0_APPROVED.md](MAIL_TEMPLATES_1.0.0_APPROVED.md) e nel [piano 1.0.0](STABLE_1.0.0_PR_PLAN.md). L'addendum è soltanto **additivo**: tutti gli ID e criteri storici restano invariati.
+La **fonte di verità** del perimetro, dell'implementazione e della tracciabilità è [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv). Il file contiene **244 ID** dopo l'addendum approvato del 14 novembre 2026: 219 righe precedenti, incluse CERT-01–08 e MAIL-11, più **MAIL-01–10**, **DOC-01–10** e i gate **SEC-P1–SEC-P5**, già approvati ma non registrati singolarmente. Le definizioni approvate sono in [MAIL_TEMPLATES_1.0.0_APPROVED.md](MAIL_TEMPLATES_1.0.0_APPROVED.md) e nel [piano 1.0.0](STABLE_1.0.0_PR_PLAN.md). L'addendum è soltanto **additivo**: tutti gli ID e criteri storici restano invariati.
 
 ## Stato corrente e interpretazione
 
-I conteggi **calcolati dalle righe**, non aggiornati manualmente, sono in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La riconciliazione iniziale registra 187 requisiti parziali, 17 completati a livello implementativo e 25 non iniziati. Nessun requisito è stato dichiarato integralmente accettato in Joomla. L'aggiunta delle righe non modifica da sola la stima pesata ~79% delle nove macroaree; occorre un ricalcolo rigoroso degli incrementi applicativi e dei relativi pesi.
+I conteggi **calcolati dalle righe**, non aggiornati manualmente, sono in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La riconciliazione iniziale registra 197 requisiti parziali, 17 completati a livello implementativo e 30 non iniziati. Nessun requisito è stato dichiarato integralmente accettato in Joomla. L'aggiunta delle righe non modifica da sola la stima pesata ~79% delle nove macroaree; occorre un ricalcolo rigoroso degli incrementi applicativi e dei relativi pesi.
 
 Le tre dimensioni sono indipendenti:
 
@@ -12,7 +12,7 @@ Le tre dimensioni sono indipendenti:
 - **Verifica automatica**: Non eseguita / Superata / Fallita, con copertura ed evidenza specifiche. Una vecchia esecuzione CI non prova il codice appena modificato.
 - **Accettazione Joomla**: Non eseguita / Parziale / Superata / Fallita. Superata richiede un report esplicito del testbook ed evidenza associata; non è dedotta da una PR o da un test fixture.
 
-Gli incrementi MAIL-01–10 sono stati inizializzati in modo prudente: il collegamento a PR già integrate non prova da solo ogni criterio. Le verifiche specifiche sono da effettuare e le nuove righe non incrementano la percentuale. Il requisito MAIL-03 (nuove lezioni/cambi didattici rilevanti) non ha ancora una PR implementativa specifica identificata.
+I nuovi criteri MAIL, DOC e SEC sono stati inizializzati in modo prudente: il collegamento a PR già integrate non prova da solo ogni criterio. Le verifiche specifiche sono da effettuare e le nuove righe non incrementano la percentuale. In particolare il requisito MAIL-03 (nuove lezioni/cambi didattici rilevanti) non ha ancora una PR implementativa specifica identificata.
 
 ## Manutenzione obbligatoria per ogni PR
 
