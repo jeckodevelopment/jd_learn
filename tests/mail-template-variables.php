@@ -43,6 +43,37 @@ foreach ($definitions as $id => [$subject, $body, $tags, $html]) {
         }
     }
 }
+$confirmed = $definitions['com_jlms.enrollment.confirmed'];
+$completed = $definitions['com_jlms.course.completed'];
+if (!in_array('ENROLLMENT_DATE', $confirmed[2], true)
+    || !str_contains($confirmed[1], '{ENROLLMENT_DATE}')
+    || !str_contains($confirmed[3], '{ENROLLMENT_DATE}')) {
+    throw new RuntimeException('Enrollment date must be registered in both text and HTML.');
+}
+if (!in_array('COMPLETION_DATE', $completed[2], true)
+    || !str_contains($completed[1], '{COMPLETION_DATE}')
+    || !str_contains($completed[3], '{COMPLETION_DATE}')) {
+    throw new RuntimeException('Completion date must be registered in both text and HTML.');
+}
+foreach ([
+    'ManualEnrollmentService.php' => ["'ENROLLMENT_DATE' => $now"],
+    'LearningService.php' => ["'ENROLLMENT_DATE' => $now", "'COMPLETION_DATE' => $completedAt",
+        '$this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language, (string) $update->completed_at)'],
+] as $producerFile => $needles) {
+    $producer = file_get_contents(__DIR__ . '/../component/administrator/src/Application/' . $producerFile);
+    foreach ($needles as $needle) {
+        if ($producer === false || !str_contains($producer, $needle)) {
+            throw new RuntimeException('Missing persisted timestamp producer contract: ' . $producerFile);
+        }
+    }
+}
+foreach (['it-IT', 'en-GB'] as $locale) {
+    if (MailTemplateVariableCatalog::forTemplate('com_jlms.enrollment.confirmed', $locale)['ENROLLMENT_DATE']['type'] !== 'date'
+        || MailTemplateVariableCatalog::forTemplate('com_jlms.course.completed', $locale)['COMPLETION_DATE']['type'] !== 'date') {
+        throw new RuntimeException('Missing typed localized date variables: ' . $locale);
+    }
+}
+
 if (MailTemplateInstaller::templateIds() !== array_keys($definitions)) {
     throw new RuntimeException('Mail template list is not sourced from definitions.');
 }
