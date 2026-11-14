@@ -21,6 +21,7 @@ final class MailQueue
     {
         $event = match ($template) {
             'com_jlms.enrollment.confirmed' => 'enrollment',
+            'com_jlms.enrollment.requested' => 'request',
             'com_jlms.course.completed' => 'completion',
             'com_jlms.enrollment.suspended' => 'suspension',
             'com_jlms.enrollment.reactivated' => 'reactivation',
