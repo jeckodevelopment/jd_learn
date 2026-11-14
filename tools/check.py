@@ -184,4 +184,4 @@ admin_controller=(ROOT/'component/administrator/src/Controller/DisplayController
 for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']","'mailqueue' => ['mailqueue']"):
  assert pair in admin_controller,pair
 assert '$menu->setActive((int) $item->id)' in admin_controller
-assert "$app->getPathway()->addItem(" in admin_controller
+assert "$app->getPathway()" not in admin_controller
