@@ -6,7 +6,7 @@
 4. Verificare i tre esiti: **Salva** salva e resta nell’editor; **Salva & Chiudi** salva e torna all’elenco; **Salva e apri programma** salva e apre il programma del corso.
 5. Ripetere le verifiche su un corso esistente e verificare che la validazione e la protezione read-only/check-out restino attive.
 
-La CI verifica le etichette e i task effettivamente renderizzati via HTTP autenticato sia sul form nuovo sia su un corso esistente. L’accettazione visuale sul sito di prova resta da registrare.
+CI [43648461944](https://github.com/jeckodevelopment/jd_learn/actions/runs/43648461944) **4/4 verde**. La prova HTTP autenticata verifica le tre etichette e i task effettivamente renderizzati su form nuovo/esistente. Resta da registrare l’accettazione manuale sul sito Joomla di prova.
 
 ## Issue #364 — anteprima email annuncio corso
 
