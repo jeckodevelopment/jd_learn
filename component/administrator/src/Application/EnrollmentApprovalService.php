@@ -143,11 +143,12 @@ final class EnrollmentApprovalService
                 $now = gmdate('Y-m-d H:i:s');
             }
 
-            $this->db->updateObject('#__jlms_enrollment_requests', (object) [
+            $updatedRequest = (object) [
                 'id' => $requestId, 'status' => $decision, 'reason' => $reason ?: null,
                 'decided_by' => (int) $actor->id, 'decided_at' => $now,
                 'revision' => $revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now,
-            ], 'id');
+            ];
+            $this->db->updateObject('#__jlms_enrollment_requests', $updatedRequest, 'id');
             ($this->audit)($actor, [
                 'id' => $requestId, 'actor_id' => (int) $actor->id, 'course_id' => $courseId,
                 'reason_reference' => $requestId, 'reason_code' => 'enrollment_request_' . $decision,
