@@ -273,6 +273,15 @@ foreach (['it-IT', 'en-GB'] as $locale) {
     }
 }
 
+// The native Mail Templates shortcut belongs in the Joomla toolbar and retains its ACL boundary.
+if ($guideView === false
+    || !str_contains($guideView, "ToolbarHelper::link(")
+    || !str_contains($guideView, "authorise('core.edit', 'com_mails')")
+    || !str_contains($guideView, "filter[extension]=com_jlms")
+    || str_contains($guide, 'COM_JLMS_MAIL_TEMPLATES')) {
+    throw new RuntimeException('Mail template shortcut must be toolbar-only and ACL protected.');
+}
+
 if (MailTemplateVariableCatalog::forTemplate('unknown.template') !== []) {
     throw new RuntimeException('Unknown template has unexpected tags.');
 }
