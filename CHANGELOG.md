@@ -2,7 +2,7 @@
 
 ## 0.56.22-dev — Campi aggiuntivi su Joomla 6.2
 
-- Corretto il contratto dati del form lezione con FieldsHelper di Joomla 6.2.0 (#374).
+- Corretto il contratto dati del form lezione con FieldsHelper di Joomla 6.2.0 e resa dei gruppi nativi nel form (#374).
 - Il gestore nativo apre l’URL del contesto selezionato per Corsi, Docenti e Lezioni (#306).
 
 
