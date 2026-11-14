@@ -1,16 +1,18 @@
-# Tracciabilità requisiti → Pull Request
+# Tracciabilità requisiti ↔ Pull Request
 
-Il registro dei requisiti è [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv). La colonna **PR implementazione** contiene soltanto numeri di Pull Request, nell'ordine registrato, separati dal punto e virgola, per esempio `209;210;211;213`. Non contiene URL, simboli `#`, commenti o testo descrittivo. Il campo vuoto significa **PR non ricostruita o non ancora associata** e **non** dimostra che il requisito non sia implementato. Non attribuire una PR sulla base della sola presenza di codice o di un commit.
+Il registro canonico è [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv). **Ogni PR che modifica runtime o packaging deve aggiornarlo prima del merge**: la colonna `PR implementazione` contiene solamente numeri separati da `;`, senza URL o prefisso `#`. La correzione di una regressione registra il requisito interessato ma non aumenta automaticamente la copertura.
 
-La matrice distingue esplicitamente **implementazione**, **copertura automatica** e **accettazione Joomla manuale**. La sola PR o CI superata non prova l'accettazione manuale. Le PR che riguardano più requisiti possono comparire in più righe. Le correzioni successive possono essere aggiunte alla colonna, senza cancellare la storia precedente.
+Nel corpo della PR indicare ID, scopo, modifiche verificabili e **Comportamenti da testare** in Joomla. Aggiornare separatamente evidenze, residui, CI e stato implementativo soltanto quando effettivamente supportati. L'accettazione Joomla manuale rimane indipendente.
 
-## Regola per ogni nuova PR
+## Controlli CI
 
-1. Nel corpo della PR indicare gli **ID requisiti** interessati, l'ambito effettivo e la sezione **Comportamenti da testare** (prove Joomla concrete, oppure «non applicabile» per PR solo documentali).
-2. Aggiornare la colonna `PR implementazione` dei requisiti interessati prima del merge, aggiungendo l'ID della PR; aggiornare separatamente stato, evidenze, limiti e residui soltanto quando giustificato.
-3. Eseguire `python3 scripts/check_requirements_csv.py` e verificare la GitHub Action **Requirements CSV integrity**. Il controllo verifica struttura, ID, unicità e formato dei numeri PR; **non** certifica l'esistenza delle PR su GitHub né la completezza semantica della mappatura.
-4. Non modificare la percentuale di avanzamento funzionale per un intervento soltanto documentale.
+1. `python3 scripts/check_requirements_csv.py` valida il formato.
+2. `python3 tools/check.py` valida il registro rispetto a baseline approvata, fonti e riepilogo.
+3. `python3 tests/pr-requirements-coverage.py` verifica la logica del gate.
+4. `python3 scripts/check_pr_requirements_coverage.py --base-ref origin/main --pr NUMERO` è eseguito automaticamente sulle PR: per codice in `component/`, `libraries/`, `plugins/`, `packages/` e tooling di build richiede sia una modifica del CSV sia la nuova associazione dell'effettivo numero PR. Il controllo **non** dimostra la correttezza semantica del requisito, che resta responsabilità di review.
 
-## Ripristino storico #259
+Le PR solo documentali non registrano copertura applicativa fittizia e non aumentano la percentuale globale.
 
-L'issue #259 normalizza gli URL preesistenti in soli ID e corregge le celle CSV prive di quoting nelle righe VID-03, CORE-22, EDGE-02 e MAT-04. I riferimenti non ricostruibili restano vuoti. L'integrità sintattica non equivale a una verifica dell'effettiva relazione semantica tra PR e requisito: questa rimane una revisione distinta.
+## Riconciliazione storica
+
+La PR #259 aveva normalizzato la sintassi delle associazioni; tale validatore, da solo, non imponeva alle successive PR runtime di aggiornare il CSV. La presente riconciliazione completa gli ID MAIL-01–10 approvati, collega PR recenti omesse e introduce il controllo preventivo per il futuro. Tutti gli ID precedenti restano conservati.

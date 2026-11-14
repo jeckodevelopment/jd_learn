@@ -5,22 +5,22 @@
   "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
   "counts": {
     "Stato implementazione": {
-      "Parziale": 178,
+      "Parziale": 197,
       "Completata": 17,
-      "Non iniziata": 24
+      "Non iniziata": 30
     },
     "Perimetro 1.0.0": {
-      "1.0.0": 144,
+      "1.0.0": 169,
       "Misto": 40,
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 217,
+      "Non eseguita": 242,
       "Parziale": 2
     },
     "Verifica automatica": {
       "Superata": 179,
-      "Non eseguita": 40
+      "Non eseguita": 65
     }
   },
   "implementation_progress": {
@@ -38,8 +38,8 @@
       75
     ]
   },
-  "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Stima globale 78,67% (79% arrotondato), email 64%. Collaudo manuale Joomla/SMTP pendente.",
-  "updated_at": "2026-11-13T23:32:53Z",
+  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata.",
+  "updated_at": "2026-11-14",
   "imp_09_mail_c": {
     "pull_request": 313,
     "merge_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
@@ -87,5 +87,37 @@
       "MAIL-11.4 admin selection and preview",
       "MAIL-11.5 guarded campaign outbox/deduplication"
     ]
-  }
+  },
+  "requirements_register": "docs/REQUIREMENTS_STATUS.csv",
+  "approved_mail_addendum": [
+    "MAIL-01",
+    "MAIL-02",
+    "MAIL-03",
+    "MAIL-04",
+    "MAIL-05",
+    "MAIL-06",
+    "MAIL-07",
+    "MAIL-08",
+    "MAIL-09",
+    "MAIL-10"
+  ],
+  "approved_documentation_addendum": [
+    "DOC-01",
+    "DOC-02",
+    "DOC-03",
+    "DOC-04",
+    "DOC-05",
+    "DOC-06",
+    "DOC-07",
+    "DOC-08",
+    "DOC-09",
+    "DOC-10"
+  ],
+  "approved_security_gates": [
+    "SEC-P1",
+    "SEC-P2",
+    "SEC-P3",
+    "SEC-P4",
+    "SEC-P5"
+  ]
 }

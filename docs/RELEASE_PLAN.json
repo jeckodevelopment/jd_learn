@@ -142,7 +142,17 @@
       "requirements": [
         "NOT-01",
         "NOT-02",
-        "MAIL-11"
+        "MAIL-11",
+        "MAIL-01",
+        "MAIL-02",
+        "MAIL-03",
+        "MAIL-04",
+        "MAIL-05",
+        "MAIL-06",
+        "MAIL-07",
+        "MAIL-08",
+        "MAIL-09",
+        "MAIL-10"
       ],
       "status": "Outbox/Scheduler integrati per notifiche operative esistenti; MAIL-11 approvato e tracciato nella baseline dalla PR #313, implementazione runtime ancora da eseguire."
     },
@@ -304,7 +314,12 @@
         "SECDEV-05",
         "SECDEV-06",
         "SECDEV-07",
-        "SECDEV-08"
+        "SECDEV-08",
+        "SEC-P1",
+        "SEC-P2",
+        "SEC-P3",
+        "SEC-P4",
+        "SEC-P5"
       ]
     },
     {
@@ -315,7 +330,17 @@
         "REL-01",
         "REL-02",
         "REL-03",
-        "REL-04"
+        "REL-04",
+        "DOC-01",
+        "DOC-02",
+        "DOC-03",
+        "DOC-04",
+        "DOC-05",
+        "DOC-06",
+        "DOC-07",
+        "DOC-08",
+        "DOC-09",
+        "DOC-10"
       ]
     },
     {

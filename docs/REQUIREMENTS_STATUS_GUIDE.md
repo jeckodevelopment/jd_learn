@@ -1,43 +1,36 @@
-# Come leggere `REQUIREMENTS_STATUS.csv`
+# Registro canonico dei requisiti JD Learn
 
-Ricognizione iniziale del **10 novembre 2026** sulla baseline main. Matrice aggiornata dopo PR #229 su main `d02aece` / runtime **0.41.74-dev**; la suite completa con ClamAV reale è verificata, mentre l'accettazione manuale del sito resta distinta. I 210 ID, descrizioni, scenari e perimetri originari restano invariati.
+La **fonte di verità** del perimetro, dell'implementazione e della tracciabilità è [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv). Il file contiene **244 ID** dopo l'addendum approvato del 14 novembre 2026: 219 righe precedenti, incluse CERT-01–08 e MAIL-11, più **MAIL-01–10**, **DOC-01–10** e i gate **SEC-P1–SEC-P5**, già approvati ma non registrati singolarmente. Le definizioni approvate sono in [MAIL_TEMPLATES_1.0.0_APPROVED.md](MAIL_TEMPLATES_1.0.0_APPROVED.md) e nel [piano 1.0.0](STABLE_1.0.0_PR_PLAN.md). L'addendum è soltanto **additivo**: tutti gli ID e criteri storici restano invariati.
 
-| Dimensione | Conteggio | Significato |
-|---|---:|---|
-| Implementazione completata | 14 | Nessun residuo di codice identificato nel sottoinsieme core esplicitato |
-| Implementazione parziale | 167 | Codice/documentazione presente, con delta o completezza puntuale ancora da riscontrare |
-| Implementazione non iniziata | 29 | Percorso specifico non disponibile; uno schema non è una funzione |
-| Interamente 1.0.0 | 133 | Criteri baseline inclusi |
-| Misto | 40 | Sottoinsieme core e criteri differiti distinti nella stessa riga |
-| Interamente fase 2 | 37 | Non entra nei gate/denominatori core |
-| Verifica automatica superata, copertura parziale | 169 | Passano le asserzioni della suite citata, non tutti gli scenari baseline |
-| Verifica automatica non eseguita | 41 | Nessuna prova automatica specifica registrata; include riscontri solo documentali |
-| Accettazione Joomla parziale | 2 | CORE-20/SCR-13: sola dashboard AC-132 confermata dall’utente l’8 novembre |
-| Accettazione Joomla non eseguita integralmente | 208 | Nessun esito integrale registrato |
-| Requisiti integralmente accettati | 0 | Nessun report completo: “Criteri completi superati” resta No |
+## Stato corrente e interpretazione
 
-I conteggi comprendono anche il codice esistente in fase 2; non sono una percentuale dello sviluppo core. Il [riepilogo verificabile](REQUIREMENTS_RECONCILIATION.json) è confrontato automaticamente con le righe.
+I conteggi **calcolati dalle righe**, non aggiornati manualmente, sono in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La riconciliazione iniziale registra 197 requisiti parziali, 17 completati a livello implementativo e 30 non iniziati. Nessun requisito è stato dichiarato integralmente accettato in Joomla. L'aggiunta delle righe non modifica da sola la stima pesata ~79% delle nove macroaree; occorre un ricalcolo rigoroso degli incrementi applicativi e dei relativi pesi.
 
-## Dimensioni indipendenti
+Le tre dimensioni sono indipendenti:
 
-**Stato implementazione** usa Non iniziata / Parziale / Completata. Completata riguarda esclusivamente i **Criteri 1.0.0** dichiarati quando il requisito è misto; non dichiara conclusa la parte di fase 2. Non richiede un collaudo manuale superato. In assenza di riscontro puntuale si mantiene Parziale anche quando non è stata individuata una nuova lacuna runtime concreta: non si inventa lavoro né si deduce completezza dalla sola presenza di un servizio.
+- **Stato implementazione**: Non iniziata / Parziale / Completata nel sottoinsieme approvato per 1.0.0. Non trasformare automaticamente Parziale in Completata soltanto perché la CI passa.
+- **Verifica automatica**: Non eseguita / Superata / Fallita, con copertura ed evidenza specifiche. Una vecchia esecuzione CI non prova il codice appena modificato.
+- **Accettazione Joomla**: Non eseguita / Parziale / Superata / Fallita. Superata richiede un report esplicito del testbook ed evidenza associata; non è dedotta da una PR o da un test fixture.
 
-**Verifica automatica** usa Non eseguita / Superata / Fallita, con copertura ed esecuzione. Le 169 righe Superata hanno tutte copertura **Parziale**: fonti di test e [CI standard #210](https://github.com/jeckodevelopment/jd_learn/actions/runs/42913999069), sui due stack PHP/database e fixture Chromium. La CI #210 è l’ultima esecuzione della suite completa; la copertura delle righe resta parziale e non costituisce accettazione integrale dei requisiti. Test citato, scenario previsto e scenario integralmente superato sono informazioni diverse.
+I nuovi criteri MAIL, DOC e SEC sono stati inizializzati in modo prudente: il collegamento a PR già integrate non prova da solo ogni criterio. Le verifiche specifiche sono da effettuare e le nuove righe non incrementano la percentuale. In particolare il requisito MAIL-03 (nuove lezioni/cambi didattici rilevanti) non ha ancora una PR implementativa specifica identificata.
 
-**Accettazione Joomla** usa Non eseguita / Parziale / Superata / Fallita. La conferma AC-132 non accetta CORE-20 o SCR-13 integralmente e non si estende alle modifiche successive. Procedure/esiti sono nel [testbook](QA_TESTBOOK.md); una CI verde non li trasforma in superati.
+## Manutenzione obbligatoria per ogni PR
 
-**Criteri completi superati** resta il gate integrale: richiede un report nel registro `full_requirement_acceptance` di [IMPLEMENTATION_EVIDENCE.json](IMPLEMENTATION_EVIDENCE.json), oggi vuoto. **Verifica parziale**, conservato, classifica il riscontro CI/documento/nessuno e non è un secondo esito di accettazione.
+1. **Prima del merge**, ogni PR che modifica codice applicativo, plugin, librerie, manifest o packaging deve aggiornare il CSV e aggiungere il **numero effettivo della PR** nella colonna `PR implementazione` delle righe coinvolte. Il numero va inserito una sola volta, separato da `;`, senza `#` o URL.
+2. Verificare e aggiornare, quando pertinente, `Stato implementazione`, `Fonti implementazione`, `Commit riscontrato`, `Evidenza e limiti`, `Residui implementativi 1.0.0`, `Verifiche residue 1.0.0`, copertura e prove automatiche; non inventare accettazione Joomla o incremento percentuale.
+3. Registrare nella PR gli ID requisiti, il perimetro e la sezione **Comportamenti da testare** con azioni/risultati sul sito Joomla. Le PR puramente documentali non devono dichiarare copertura di codice non modificato.
+4. Eseguire `python3 scripts/check_requirements_csv.py`, `python3 tools/check.py` e `python3 tests/pr-requirements-coverage.py`. In GitHub Actions, il gate di piano controlla che **ogni PR runtime** abbia modificato il CSV e aggiunto il proprio numero ad almeno una riga. È una garanzia di **tracciabilità minima**, non di attribuzione semantica corretta: la revisione umana deve comunque confrontare requisiti, codice, test, issue e perimetro.
+5. Dopo il merge, aggiornare le evidenze dell'esito CI e il riferimento al pacchetto realmente installabile, senza sovrascrivere o inventare prove precedenti. L'aggiornamento del CSV fatto nella PR soddisfa la tracciabilità prima dell'integrazione; lo stato post-merge può essere documentato separatamente.
 
-## Perimetro, PR e residui
+Le PR di bug fix e regressione **sono comprese** nella regola se cambiano runtime: registrano il requisito riparato anche quando l'avanzamento funzionale resta invariato. Le PR solo README, changelog, piano, testbook e guide non devono duplicare storico di implementazione nel CSV.
 
-Perimetro 1.0.0, Criteri 1.0.0 e Criteri fase 2 applicano [RELEASE_SCOPE.md](RELEASE_SCOPE.md) e [RELEASE_SCOPE_MATRIX.md](RELEASE_SCOPE_MATRIX.md). I trasversali restano obbligatori sui flussi inclusi. AC-131 è la sola eccezione amministrativa alla sospensione quiz. Quinto provider, import/batch, attestati e KPI non diventano gate core. Per CAT-03/SCR-04 non è introdotto un rinvio.
+**Provenienza dei commit:** `Commit riscontrato` può riferirsi alla modifica sorgente riscontrata o a uno snapshot di codice/documentazione che contiene il materiale parziale; non è automaticamente il commit originario della funzionalità. Le nuove righe MAIL usano, ove ricostruito, un merge concreto pertinente. Nessun riferimento generico di baseline può essere usato per dedurre il completamento.
 
-**PR implementazione** raccoglie PR integrate già citate nelle evidenze e PR associate ai commit che modificano le fonti. **Commit riscontrato** identifica l’ultima modifica delle fonti nella baseline: non è necessariamente la PR originaria della funzione, né prova ogni criterio. Una ricostruzione mancante è dichiarata. Le PR #204 Finder e #207 metadati canonical/social sono integrate; CORE-14 è ora parziale per implementazione, mentre la verifica automatica specifica e l’accettazione Joomla restano non eseguite.
+## Controlli e limiti
 
-**Residui implementativi 1.0.0** indica codice/documentazione da completare oppure un riscontro puntuale ancora necessario. **Verifiche residue 1.0.0** conserva scenari, prove Joomla/provider/browser, benchmark e limiti della precedente evidenza, da applicare al solo core; i riferimenti storici possono citare funzionalità ormai presenti, che non vanno reimplementate. **Residui fase 2** mantiene distinto il lavoro rinviato. **Criteri residui** riepiloga le tre colonne, senza aggiungere un backlog.
+- `scripts/check_requirements_csv.py`: struttura, unicità degli ID e formato delle PR.
+- `tools/check_status.py`: confronto matrice/corpus approvato, fonti, stati, conteggi ed evidenze.
+- `scripts/check_pr_requirements_coverage.py`: impedisce merge di PR runtime senza una **nuova associazione** del numero PR al CSV. Non può rilevare automaticamente se si è scelto il requisito giusto.
+- `docs/QA_TESTBOOK.md`: unico registro dell'accettazione manuale e degli scenari ancora da testare.
 
-## Mantenimento e avanzamento
-
-Ogni incremento aggiorna righe, fonti, PR/commit, esecuzione dei test e limiti, insieme al riepilogo JSON. `tools/check.py` verifica baseline immutata, fonti presenti, stati indipendenti, evidenze e conteggi. `tests/requirements-status.py` impedisce accettazione dedotta dalla CI, completamento con residui di codice e fase 2 trasformata in gate core.
-
-Avanzamento main **77% stimato**: media delle sette aree di [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), 536/7, fase 2 esclusa. La PR #217 completa il riuso materiali in bozza; la PR #221 corregge la #219 ripristinando consegna PHP compatibile con Apache/LiteSpeed, portando M04 all’89%. La PR #222 aggiunge tag Joomla nativi ai corsi e la #223 associazioni multilingua ai corsi pubblicati; area integrazioni Joomla al 92%. Accettazione Joomla manuale AC-20/AC-48 ancora pendente. I collaudi manuali restano separati. Non si assegna un peso arbitrario del 50% a Parziale e non si usa 14/210 come avanzamento. La settima area comprende preparazione/verifica del rilascio: è una stima storica per aree, non una misura di codice scritto o di accettazione Joomla.
+È necessario un controllo funzionale puntuale ulteriore delle singole righe, in particolare per MAIL, NOT e integrazioni Joomla. La presente riconciliazione **non dichiara** il completamento di questa attività di accettazione.
