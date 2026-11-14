@@ -6,6 +6,7 @@ Run in a pull_request job with fetch-depth: 0.
 """
 import argparse
 import csv
+import io
 import subprocess
 from pathlib import Path
 
@@ -22,7 +23,7 @@ def changed_paths(base_ref: str) -> set[str]:
     return set(output.splitlines())
 
 def requirement_map(content: str) -> dict[str, str]:
-    reader = csv.DictReader(content.splitlines())
+    reader = csv.DictReader(io.StringIO(content))
     if not {"Requisito", "PR implementazione"}.issubset(reader.fieldnames or []):
         raise ValueError("Missing required columns in requirements registry")
     return {row["Requisito"]: row["PR implementazione"] for row in reader}
