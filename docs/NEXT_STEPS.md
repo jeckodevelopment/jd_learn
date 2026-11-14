@@ -14,3 +14,12 @@ Riferimenti: [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), [REQUIREMENTS
 
 
 **Decisione del 14 novembre 2026 — email 1.0.0:** approvato il [catalogo dei template, variabili canoniche e notifiche](MAIL_TEMPLATES_1.0.0_APPROVED.md) con blocchi IMP-09-MAIL-E/F/G/H nel [piano PR](STABLE_1.0.0_PR_PLAN.md). Include template di esito/rinuncia iscrizione, notifiche facoltative per lezioni e modifiche, email a docenti/amministratori e correzione issue #312. Non ancora implementato: la baseline e la percentuale pubblicate sopra **non cambiano** per una PR solo documentale.
+
+
+## 14 novembre 2026 — PR #349 integrata: uniformazione segnaposto email
+
+La [PR #349](https://github.com/jeckodevelopment/jd_learn/pull/349), merge `e481e5cb38998c85b4d57b457a24fdb3460b75f4`, realizza il **primo incremento parziale** di IMP-09-MAIL-E. Non introduce alias: migra template predefiniti e generatori degli eventi email da `NAME/COURSE/SITENAME` ai nomi canonici `USER_FULLNAME/COURSE_TITLE/SITE_NAME`, comprese le varianti `_HTML` pertinenti. Allinea `tests/joomla-smoke.php` e aggiunge il test `tests/mail-template-variables.php` al workflow PHP. Aggiornata la tracciabilità CORE-18 nel CSV. Restano mancanti il set esteso di variabili, la loro documentazione contestuale nell'interfaccia, il controllo dei token sconosciuti e gli altri template approvati; MAIL-E non è concluso.
+
+**Verifiche:** [CI GitHub Actions 43590698830](https://github.com/jeckodevelopment/jd_learn/actions/runs/43590698830) superata (controllo leggero, browser, PHP 8.3/MySQL e PHP 8.4/MariaDB); [integrità CSV 43590698854](https://github.com/jeckodevelopment/jd_learn/actions/runs/43590698854) superata. Accettazione manuale Joomla/SMTP ancora non eseguita. I template già personalizzati in installazioni di prova potrebbero richiedere riallineamento editoriale: l'installer non sovrascrive modelli esistenti.
+
+**Avanzamento:** mantiene la baseline **78,67% globale, 64% email**: intervento di normalizzazione/qualità, senza incremento attribuibile alla copertura di nuovi eventi o variabili funzionali. Pacchetto installabile della CI verificata: [JD-Learn-0.56.19-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43590698830/artifacts/14112431239) (nome di versione invariato, artefatto della PR; disponibile fino al 28 novembre 2026). Per il collaudo: verificare i nuovi token in subject/testo/HTML per gli eventi core, entrambe le lingue, personalizzazioni precedenti e contenuti speciali. La CI non è accettazione Joomla.
