@@ -56,8 +56,8 @@ if (!in_array('COMPLETION_DATE', $completed[2], true)
     throw new RuntimeException('Completion date must be registered in both text and HTML.');
 }
 foreach ([
-    'ManualEnrollmentService.php' => ["'ENROLLMENT_DATE' => $now"],
-    'LearningService.php' => ["'ENROLLMENT_DATE' => $now", "'COMPLETION_DATE' => $completedAt",
+    'ManualEnrollmentService.php' => ['\'ENROLLMENT_DATE\' => $now'],
+    'LearningService.php' => ['\'ENROLLMENT_DATE\' => $now', '\'COMPLETION_DATE\' => $completedAt',
         '$this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language, (string) $update->completed_at)'],
 ] as $producerFile => $needles) {
     $producer = file_get_contents(__DIR__ . '/../component/administrator/src/Application/' . $producerFile);
