@@ -1,5 +1,14 @@
 # Changelog
 
+## MAIL-F — richieste approvate/rifiutate (PR #367 integrata)
+
+- Integrazione su `main` il 14 novembre 2026, commit `902480be3eec7aa7cdf0bd8b6ba4603cab7172c5`; [PR #367](https://github.com/jeckodevelopment/jd_learn/pull/367), milestone 1.0.0.
+- Gestione amministrativa delle richieste pendenti nel roster del corso con ACL, revisione, capienza controllata in transazione, iscrizione attiva solo dopo approvazione, rifiuto senza accessi.
+- Modelli nativi Joomla distinti per approvazione/rifiuto, preferenze globali/per corso, audit e nessuna esposizione della motivazione riservata nell'email.
+- CI standard 4/4 superata nel [run 43617948055](https://github.com/jeckodevelopment/jd_learn/actions/runs/43617948055); [pacchetto installabile 0.56.19-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43617948055/artifacts/14123305769).
+- Accettazione manuale Joomla/SMTP ancora pendente. Implementazione globale **circa 80%** come stima ragionata (baseline 78,67%, peso email 1/9 e macroarea email stimata 64%→72%), non un'attestazione di collaudo.
+
+
 ## MAIL-F — Approvazione e rifiuto amministrativi (candidata)
 
 - Da Corsi → Iscritti, un gestore autorizzato può approvare o rifiutare richieste pendenti del singolo corso con POST/CSRF, controllo revisione e motivazione interna facoltativa.
