@@ -45,7 +45,6 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 | Issue | Priorità proposta | Destinazione |
 |---|---|---|
-| [#391](https://github.com/jeckodevelopment/jd_learn/issues/391) — chiave Salva & Chiudi non tradotta | P0 | STAB / UX |
 | [#379](https://github.com/jeckodevelopment/jd_learn/issues/379) — versioni/date/nomi manifest | P2 (label GitHub) | IMP-10 / REL |
 | [#312](https://github.com/jeckodevelopment/jd_learn/issues/312) — traduzioni Mail Templates | P1 | MAIL-H |
 | [#308](https://github.com/jeckodevelopment/jd_learn/issues/308) — elenco attestati Joomla | P1 | CERT / STAB |
@@ -75,4 +74,4 @@ Il comando `python3 tools/check.py` esegue anche `tools/check_docs_hygiene.py`, 
 
 ## Stato e rendicontazione
 
-L'ultima stima documentata è **79% (78,67% non arrotondato)** di copertura implementativa, non un'accettazione della release; resta **invariata** dopo la fix toolbar #384 e localizzazione #391, integrata dalla PR #388. La baseline numerica, pesi e verifiche vanno letti in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), senza sommare autonomamente percentuali locali. Lo storico tecnico precedente è conservato nell'[archivio del piano](STABLE_1.0.0_PR_PLAN_ARCHIVE.md).
+L'ultima stima documentata è **79% (78,67% non arrotondato)** di copertura implementativa, non un'accettazione della release; resta **invariata** dopo la fix toolbar #384 e localizzazione #391, integrate dalle PR #388 e #391. La baseline numerica, pesi e verifiche vanno letti in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), senza sommare autonomamente percentuali locali. Lo storico tecnico precedente è conservato nell'[archivio del piano](STABLE_1.0.0_PR_PLAN_ARCHIVE.md).

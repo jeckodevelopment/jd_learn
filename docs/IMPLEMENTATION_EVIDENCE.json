@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-14",
     "percent": 79,
-    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+64+75)/9=78,67%, arrotondata a 79%. Stima invariata dopo PR #388: ripristino UX della toolbar senza completamento di un requisito; accettazione manuale Joomla resta pendente.",
+    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+64+75)/9=78,67%, arrotondata a 79%. Stima invariata dopo PR #391: correzione della localizzazione toolbar senza completamento di un requisito; accettazione manuale Joomla resta pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -17,13 +17,13 @@
       "certificates": 75
     }
   },
-  "version": "0.56.28-dev",
-  "code_baseline": "9087903f582214bd5df020672f42b712324e4098",
+  "version": "0.56.29-dev",
+  "code_baseline": "e3639d8544e8a1f5bfbd3e53803e0b35c56f904e",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43648461944,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43648461944",
+    "run_id": 43649969902,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43649969902",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,17 +51,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14135516082,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43648461944/artifacts/14135516082",
-    "artifact_name": "JD-Learn-0.56.28-dev",
-    "installable_package": "pkg_jlms-0.56.28-dev.zip",
-    "sha256": "7dafec2303dc5e92409dd8ce64482b814a69fe0c0059177dde8c9ddc16d44073",
-    "artifact_sha256": "739c2d92a100a3a1d1c6d5ba650d9934a57975d29943336764f2c72aa1c9449a",
-    "size_bytes": 662920,
-    "artifact_size_bytes": 662644,
+    "artifact_id": 14135354365,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43649969902/artifacts/14135354365",
+    "artifact_name": "JD-Learn-0.56.29-dev",
+    "installable_package": "pkg_jlms-0.56.29-dev.zip",
+    "artifact_sha256": "a932a7e5c51edc2bb40801e56f7107941e85b0a1a6dfab3fc29083e548f269aa",
+    "artifact_size_bytes": 662658,
     "wrapper_zip": true,
-    "expires_at": "2026-11-28T22:34:12Z",
-    "notes": "Pacchetto installabile verificato dalla CI completa sul tested_head 321b9181f1afb482ca8d1b34fb740b31e249e1f3. Estrarre lo ZIP Joomla interno dal contenitore GitHub Actions. Accettazione manuale toolbar Joomla 6.2 pendente; vedere docs/QA_TESTBOOK.md."
+    "expires_at": "2026-11-28T22:52:57Z",
+    "notes": "CI completa verde sul commit PR e6d490110ae756e862a5a4edd85908cf13a2faa4; merge main e3639d8544e8a1f5bfbd3e53803e0b35c56f904e. L'archivio Actions contiene il pacchetto Joomla pkg_jlms-0.56.29-dev.zip da estrarre. SHA-256 riportato per l'archivio artifact; accettazione manuale toolbar su Joomla 6.2 pendente."
   },
   "release_process": {
     "issue": 160,
@@ -13300,18 +13298,18 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 388,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/388",
-    "issue": 384,
-    "merge_commit": "9087903f582214bd5df020672f42b712324e4098",
-    "tested_head": "321b9181f1afb482ca8d1b34fb740b31e249e1f3",
-    "feature": "Ripristinate le azioni di salvataggio nella toolbar dell’editor corso dopo la regressione introdotta dalla PR #365.",
-    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43648461944",
+    "pull_request": 391,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/391",
+    "issue": 391,
+    "merge_commit": "e3639d8544e8a1f5bfbd3e53803e0b35c56f904e",
+    "tested_head": "e6d490110ae756e862a5a4edd85908cf13a2faa4",
+    "feature": "Corretta la traduzione del pulsante Salva & Chiudi nell'editor corso con stringhe dedicate en-GB e it-IT.",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43649969902",
     "requirements": [
       "AUT-01",
       "SCR-13"
     ],
-    "manual_acceptance": "pending Joomla 6.2 site acceptance; see docs/QA_TESTBOOK.md#issue-384--toolbar-salvataggio-corso",
+    "manual_acceptance": "pending Joomla 6.2 site acceptance; see docs/QA_TESTBOOK.md#issue-391--etichetta-localizzata-salva--chiudi",
     "residual_implementation": "Bug fix only; no new functional requirement completed. Implementation estimate remains 79% (78.67% unrounded)."
   },
   "imp_09_mail_d_11_2_3": {
