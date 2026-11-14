@@ -303,6 +303,8 @@ try:
   expected_labels=['Save','Save & Close','Save and open curriculum']
   if not all(text in visible for text in expected_labels):
    raise RuntimeError(label+' course toolbar is missing a visible save action: '+str([text for text in expected_labels if text not in visible]))
+  if 'JTOOLBAR_SAVE_AND_CLOSE' in visible or 'COM_JLMS_COURSE_SAVE_AND_CLOSE' in visible:
+   raise RuntimeError(label+' course toolbar exposes an untranslated save-close key')
  assert_course_save_toolbar('/administrator/index.php?option=com_jlms&view=course&layout=edit&id=0','New')
  assert_course_save_toolbar('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['allowed']),'Existing')
  print(json.dumps({'course_save_toolbar_http_checks':2,'status':'passed'}))
