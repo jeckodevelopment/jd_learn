@@ -91,3 +91,13 @@ La dashboard raggruppa i collegamenti con intestazioni **Didattica** (Corsi, Per
 Template email: il collegamento si vede solo con `core.manage` e `core.edit` per `com_mails`, apre la lista nativa Joomla con `filter[extension]=com_jlms` e azzera ricerca/lingua/paginazione precedenti. Il filtro resta modificabile nella lista Joomla e va confermato su Joomla supportato (stato dei filtri in sessione). Non è introdotto un editor parallelo. Verificare in backend anche il comportamento della issue #312: le traduzioni dei template sono una correzione distinta.
 
 **Comportamenti da testare:** login Super User e utente con soli permessi limitati; contenuto/ordine di ogni sezione e assenza delle sezioni vuote; navigazione di ogni link, categorie con contesto corretto, filtro `com_mails` solo JD Learn e sua rimozione; nessuna esposizione di template/controlli a utenti non autorizzati; tab/focus e screen reader, responsive 13–15 pollici e mobile, tema scuro, stato provider espandibile e link Opzioni ancora nativo. Documentare l'esito nel testbook; CI statica non equivale a collaudo manuale.
+
+## Navigazione amministrativa compatta — decisione 14 novembre 2026
+
+Sidebar operativa approvata: **Dashboard, Corsi, Percorsi formativi, Docenti, Coda email, Banca domande** (nell'ordine). Le categorie e gli strumenti secondari restano raggiungibili dalla dashboard, senza eliminare viste o permessi Joomla.
+
+Dashboard approvata: Didattica (Corsi, Percorsi formativi, Categorie corsi, Categorie percorsi); Persone e valutazione (Docenti, Banca domande, Attestati); Comunicazioni (Coda email, Template email, **Variabili modelli email**, issue #359); **Configurazione & Strumenti** (Campi aggiuntivi, Plugin video, **Dipendenze categorie**). Mantenere il pannello Stato dei provider video.
+
+UX-NAV-01: le viste interne devono mantenere selezionata la voce primaria della propria area in sidebar. UX-NAV-02: le viste secondarie devono conservare il contesto JD Learn e offrire breadcrumb/ritorno con meccanismi nativi Joomla, senza menu DOM/JavaScript paralleli. Il controller amministrativo mappa le viste interne sulle voci operative usando il menu Joomla e aggiunge il genitore con l'API nativa Pathway. **Accettazione visiva su Joomla 5/6 e Atum ancora da eseguire**: non dichiarare collaudo manuale superato.
+
+Fonte canonica degli stati di copertura: `docs/REQUIREMENTS_STATUS.csv`; test manuali in `docs/QA_TESTBOOK.md`.
