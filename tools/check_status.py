@@ -39,6 +39,8 @@ def check_status():
  baseline=read_csv('docs/specifications/Matrice_requisiti_test_LMS_1.0.csv')
  rows=read_csv('docs/REQUIREMENTS_STATUS.csv')
  expected={r['Requisito']:r for r in baseline}
+ approved={*(f'MAIL-{n:02d}' for n in range(1,12)),*(f'DOC-{n:02d}' for n in range(1,11)),*(f'CERT-{n:02d}' for n in range(1,9)),*(f'SEC-P{n}' for n in range(1,6))}
+ assert approved.issubset(expected),('Missing approved 1.0.0 requirements',sorted(approved-set(expected)))
  assert len(expected)==len(baseline),'Duplicate baseline requirement'
  assert [r['Requisito']for r in rows]==[r['Requisito']for r in baseline],'Requirements missing, duplicated or reordered'
  evidence=json.loads((ROOT/'docs/IMPLEMENTATION_EVIDENCE.json').read_text())
