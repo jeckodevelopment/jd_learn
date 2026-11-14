@@ -17,7 +17,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-La copertura **implementativa stimata** verso la 1.0.0 è circa **80%** nell'ultima fotografia documentata; **non è una misura dell'accettazione manuale**. L’ultima correzione ripristina l’accesso all’anteprima email degli annunci corso (#364). La copertura implementativa resta circa **79%**; questa correzione risolve un routing mancante e non completa un nuovo requisito. La fonte aggiornata, con pesi e verifiche, è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md). Per le singole modifiche, consultare esclusivamente il [Changelog](CHANGELOG.md).
+La copertura **implementativa stimata** verso la 1.0.0 è circa **80%** nell'ultima fotografia documentata; **non è una misura dell'accettazione manuale**. L’ultima correzione ripristina l’accesso all’anteprima email degli annunci corso e il caricamento del relativo servizio applicativo (#364). La copertura implementativa resta circa **79%**; questa correzione risolve un routing mancante e non completa un nuovo requisito. La fonte aggiornata, con pesi e verifiche, è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md). Per le singole modifiche, consultare esclusivamente il [Changelog](CHANGELOG.md).
 
 Le integrazioni più recenti riguardano le notifiche email approvate, la compatibilità con Joomla 6.2 e l’allineamento delle viste amministrative e delle toolbar agli schemi Joomla. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
 
