@@ -2,6 +2,18 @@
 
 Stato: **workflow predisposto, NON autorizzato a pubblicare 1.0.0 fino al gate IMP-10**. Requisiti: CORE-22, JOO-01/03, SECDEV-08, REL-01–03, PBASE-04; US-01–US-06 descritti in [JOOMLA_UPDATE_SERVER_1.0.md](JOOMLA_UPDATE_SERVER_1.0.md).
 
+## Scaricare un pacchetto di sviluppo realmente installabile (14 novembre 2026)
+
+**Attenzione:** un download dalla sezione **GitHub Actions → Artifacts** contiene un **archivio esterno**, non il file da caricare in Joomla. L'archivio esterno contiene `SHA256SUMS.txt` e `pkg_jlms-VERSION-dev.zip`; il primo ZIP non ha `pkg_jlms.xml` alla radice ed è rifiutato correttamente da Joomla come «manifest mancante». La CI prova l'installazione dello ZIP interno, non dell'archivio di download di GitHub. Questo ha causato le consegne errate delle PR #362, #366 e #367.
+
+**Istruzioni per chi scarica da Actions:** scaricare l'artefatto `EXTRACT-FIRST-JD-Learn-...`, estrarre il suo contenuto, caricare **solo** `pkg_jlms-VERSION-dev.zip` in Sistema → Installa → Estensioni → Carica file pacchetto. **Non estrarre il secondo ZIP.** Il nome dell'artefatto contiene ora esplicitamente `EXTRACT-FIRST`.
+
+**Regola obbligatoria di consegna:** dopo ogni merge, chi fornisce il link al pacchetto deve distinguere il link Actions all'archivio esterno dal **file ZIP Joomla direttamente installabile**. Non chiamare «pacchetto installabile» l'URL `/actions/runs/.../artifacts/...`; se si fornisce quest'ultimo, avvertire chiaramente che è un wrapper da estrarre. Per una consegna diretta, estrarre `pkg_jlms-*.zip`, verificare checksum e manifest, quindi fornire il file interno come allegato. Nessun merge va annunciato con uno ZIP direttamente caricabile senza averlo effettivamente verificato.
+
+Validazione locale: `python3 tools/build.py` e `python3 tools/verify_installable.py dist/pkg_jlms-VERSION-dev.zip`. Dopo il download da Actions, `python3 tools/verify_installable.py github-artifact.zip --extract-wrapper --output dist/ready` valida SHA-256, manifest e undici sottoarchivi e produce lo ZIP Joomla direttamente caricabile. Il validatore rifiuta intenzionalmente gli archivi esterni se invocato senza `--extract-wrapper`.
+
+La validazione strutturale e la CI installano lo ZIP interno sul runtime Joomla isolato, ma non sostituiscono l'accettazione manuale su un sito reale. Il rilascio pubblico stabile resta subordinato a IMP-10; questa procedura **non pubblica** alcuna nuova release stabile.
+
 ## Versioning
 
 Le versioni del package seguono [la policy SemVer del progetto](VERSIONING.md). Prima di una release stabile, gli strumenti rifiutano numeri non canonici (zeri iniziali) e il controllo strutturale verifica che manifest package e componente riportino la stessa versione. Le versioni di sviluppo restano nel canale `-dev`; non sono release stabili.
