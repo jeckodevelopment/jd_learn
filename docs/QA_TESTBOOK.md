@@ -1,3 +1,12 @@
+## Issue #365 — azioni di salvataggio nella toolbar corso
+
+1. In Joomla 6.2, accedere con un utente autorizzato a creare corsi e aprire **JD Learn → Corsi → Nuovo**. Verificare che **Salva** resti un'azione autonoma e che **Salva & Chiudi** sia il pulsante principale del gruppo a discesa.
+2. Aprire il menu di **Salva & Chiudi** e verificare che **Salva e apri programma** compaia come opzione aggiuntiva. Selezionarla sul nuovo corso: il corso deve essere salvato una volta e si deve aprire il suo programma didattico.
+3. Modificare un corso esistente e ripetere le tre azioni: **Salva** deve restare nella pagina, **Salva & Chiudi** deve tornare all'elenco, l'opzione del menu deve salvare e aprire il programma.
+4. Verificare che la stessa opzione inline nella scheda **Programma** continui a funzionare, che la validazione del form sia rispettata e che la toolbar resti nascosta quando il corso è in sola lettura/check-out di un altro utente.
+
+CI controlla il wiring Joomla della toolbar e il task associato; il flusso controller/programme è coperto dalla suite esistente. Accettazione visuale e di navigazione sul sito di prova da registrare.
+
 ## Issue #368 — traduzione voce sidebar ricollocazione categorie
 
 1. Aprire il backend Joomla 6.2 in italiano e verificare che la voce **Gestione dipendenze categorie** compaia nel menu laterale JD Learn invece della chiave `COM_JLMS_CATEGORY_REASSIGN_TITLE`.
