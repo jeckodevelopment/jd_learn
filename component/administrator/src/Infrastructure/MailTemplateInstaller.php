@@ -32,6 +32,12 @@ final class MailTemplateInstaller
         return $created;
     }
 
+    /** @return array<int, string> Registered JD Learn Mail Template IDs in canonical order. */
+    public static function templateIds(): array
+    {
+        return array_keys(self::definitions());
+    }
+
     /** @return array<int, string> Canonical placeholders registered for this template. */
     public static function tagsFor(string $templateId): array
     {

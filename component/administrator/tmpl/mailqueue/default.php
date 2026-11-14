@@ -19,6 +19,42 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
 <section id="jlms-mail-queue">
  <h1><?= Text::_('COM_JLMS_MAIL_QUEUE_TITLE') ?></h1>
  <p class="alert alert-info"><?= Text::_('COM_JLMS_MAIL_QUEUE_HELP') ?></p>
+ <?php
+ $mailLanguage = \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag();
+ $mailCatalog = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog::class;
+ $mailIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds();
+ ?>
+ <details class="card mb-3" id="jlms-mail-variable-guide">
+  <summary class="card-header"><?= Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE') ?></summary>
+  <div class="card-body">
+   <p><?= Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO') ?></p>
+   <p class="text-muted"><?= Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_WARNING') ?></p>
+   <?php foreach ($mailIds as $mailId) : ?>
+    <details class="mb-2">
+     <summary><code><?= $this->escape($mailId) ?></code></summary>
+     <div class="table-responsive mt-2">
+      <table class="table table-sm table-striped">
+       <caption><?= $this->escape($mailId) ?></caption>
+       <thead><tr>
+        <th scope="col"><?= Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_TAG') ?></th>
+        <th scope="col"><?= Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_TYPE') ?></th>
+        <th scope="col"><?= Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_DESCRIPTION') ?></th>
+       </tr></thead>
+       <tbody>
+       <?php foreach ($mailCatalog::forTemplate($mailId, $mailLanguage) as $name => $details) : ?>
+        <tr>
+         <td><code><?= $this->escape('{' . $name . '}') ?></code></td>
+         <td><?= $this->escape($details['type']) ?></td>
+         <td><?= $this->escape($details['description']) ?></td>
+        </tr>
+       <?php endforeach; ?>
+       </tbody>
+      </table>
+     </div>
+    </details>
+   <?php endforeach; ?>
+  </div>
+ </details>
  <form method="get" action="<?= Route::_('index.php') ?>" class="row g-2 align-items-end mb-3">
   <input type="hidden" name="option" value="com_jlms">
   <input type="hidden" name="view" value="mailqueue">
@@ -35,11 +71,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    <label class="form-label" for="jlms-mail-queue-template"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_TEMPLATE') ?></label>
    <select class="form-select" name="filter[template]" id="jlms-mail-queue-template">
     <option value=""><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_ALL') ?></option>
-    <?php foreach ([
-        'com_jlms.enrollment.requested','com_jlms.enrollment.confirmed','com_jlms.course.completed',
-        'com_jlms.certificate.available','com_jlms.enrollment.suspended','com_jlms.enrollment.reactivated',
-        'com_jlms.course.message','com_jlms.course.published','com_jlms.course.consent',
-    ] as $template) : ?>
+    <?php foreach (\Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds() as $template) : ?>
      <option value="<?= $this->escape($template) ?>" <?= $filters['template'] === $template ? 'selected' : '' ?>><?= $this->escape($template) ?></option>
     <?php endforeach; ?>
    </select>
