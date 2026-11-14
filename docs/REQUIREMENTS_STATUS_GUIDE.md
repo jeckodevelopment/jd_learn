@@ -24,6 +24,8 @@ I nuovi criteri MAIL, DOC e SEC sono stati inizializzati in modo prudente: il co
 
 Le PR di bug fix e regressione **sono comprese** nella regola se cambiano runtime: registrano il requisito riparato anche quando l'avanzamento funzionale resta invariato. Le PR solo README, changelog, piano, testbook e guide non devono duplicare storico di implementazione nel CSV.
 
+**Provenienza dei commit:** `Commit riscontrato` può riferirsi alla modifica sorgente riscontrata o a uno snapshot di codice/documentazione che contiene il materiale parziale; non è automaticamente il commit originario della funzionalità. Le nuove righe MAIL usano, ove ricostruito, un merge concreto pertinente. Nessun riferimento generico di baseline può essere usato per dedurre il completamento.
+
 ## Controlli e limiti
 
 - `scripts/check_requirements_csv.py`: struttura, unicità degli ID e formato delle PR.
