@@ -124,6 +124,7 @@ final class MailQueue
             $q = $this->db->createQuery()->select('*')->from('#__jlms_mail_queue')->where('id = :id')
                 ->bind(':id', $id, ParameterType::INTEGER);
             $row = $this->db->setQuery($q)->loadObject();
+            $invalidTemplate = false;
             try {
                 if ((string) $row->template_id === 'com_jlms.course.published' && !$this->announcementEligible($row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
@@ -147,6 +148,7 @@ final class MailQueue
                 $selected = MailTemplate::getTemplate($templateId, $language)
                     ?? MailTemplate::getTemplate($templateId, '*');
                 if ($selected === null) {
+                    $invalidTemplate = true;
                     throw new \RuntimeException('JD Learn mail template not registered.');
                 }
                 $unresolved = MailTemplatePlaceholderValidator::unresolved(
@@ -154,7 +156,8 @@ final class MailQueue
                     (string) $selected->body, (string) $selected->htmlbody
                 );
                 if ($unresolved !== []) {
-                    // Never store recipient values or the body in audit diagnostics.
+                    // Invalid template configuration cannot be fixed by transport retries.
+                    $invalidTemplate = true;
                     throw new \RuntimeException('JD Learn mail template has unresolved placeholders.');
                 }
                 $mail = new MailTemplate($templateId, $language);
@@ -166,7 +169,7 @@ final class MailQueue
                 }
             } catch (\Throwable) {
                 $attempts = (int) $row->attempts;
-                $retry = $attempts < 5;
+                $retry = !$invalidTemplate && $attempts < 5;
                 $delay = min(3600, 60 * (2 ** min(6, $attempts - 1)));
                 $update = $this->db->createQuery()->update('#__jlms_mail_queue')
                     ->set($retry ? "state = 'retry'" : "state = 'failed'")
@@ -174,7 +177,7 @@ final class MailQueue
                     // Transport exceptions can contain addresses, SMTP responses, or provider details.
                     // Keep the outbox diagnostic useful without persisting them.
                     ->set('last_error = :error')->set('claimed_at = NULL')->where('id = :id')
-                    ->bind(':error', 'Delivery failed; transport details are withheld.')
+                    ->bind(':error', $invalidTemplate ? 'Mail template is missing or contains unavailable placeholders.' : 'Delivery failed; transport details are withheld.')
                     ->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($update)->execute();
                 $failed++;
