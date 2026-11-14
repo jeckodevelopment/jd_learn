@@ -126,11 +126,11 @@ final class CourseCommunicationService
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $course = $this->editor($actor, $courseId)['course'];
-        $data = ['NAME'=>(string) $actor->name,'NAME_HTML'=>htmlspecialchars((string) $actor->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            'COURSE'=>(string) $course->title,'COURSE_HTML'=>htmlspecialchars((string) $course->title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),'MESSAGE_SUBJECT'=>$subject,
+        $data = ['USER_FULLNAME'=>(string) $actor->name,'USER_FULLNAME_HTML'=>htmlspecialchars((string) $actor->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'COURSE_TITLE'=>(string) $course->title,'COURSE_TITLE_HTML'=>htmlspecialchars((string) $course->title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),'MESSAGE_SUBJECT'=>$subject,
             'MESSAGE_BODY_TEXT'=>$body,'MESSAGE_BODY_HTML'=>nl2br(htmlspecialchars($body, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), false),
-            'SITENAME'=>(string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-            'SITENAME_HTML'=>htmlspecialchars((string) \Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')];
+            'SITE_NAME'=>(string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
+            'SITE_NAME_HTML'=>htmlspecialchars((string) \Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')];
         $key = hash('sha256', 'course-message-test:' . $courseId . ':' . $actor->id . ':' . bin2hex(random_bytes(16)));
         (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data);
     }
@@ -167,13 +167,13 @@ final class CourseCommunicationService
                 $recipient = $this->recipient($courseId, (int) $enrollmentId);
                 if ($recipient) {
                     $templateData = [
-                        'NAME'=>(string) $recipient->name,'NAME_HTML'=>htmlspecialchars((string) $recipient->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                        'COURSE'=>(string) $recipient->course_title,'COURSE_HTML'=>htmlspecialchars((string) $recipient->course_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                        'USER_FULLNAME'=>(string) $recipient->name,'USER_FULLNAME_HTML'=>htmlspecialchars((string) $recipient->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                        'COURSE_TITLE'=>(string) $recipient->course_title,'COURSE_TITLE_HTML'=>htmlspecialchars((string) $recipient->course_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                         'MESSAGE_SUBJECT'=>(string) $payload['subject'],
                         'MESSAGE_BODY_TEXT'=>(string) $payload['body'],
                         'MESSAGE_BODY_HTML'=>nl2br(htmlspecialchars((string) $payload['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), false),
-                        'SITENAME'=>(string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-                        'SITENAME_HTML'=>htmlspecialchars((string) \Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                        'SITE_NAME'=>(string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
+                        'SITE_NAME_HTML'=>htmlspecialchars((string) \Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                     ];
                     $key = hash('sha256', 'course-communication:' . (int) $job->id . ':' . (int) $enrollmentId);
                     (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) $recipient->language, (string) $recipient->email, (string) $recipient->name, $templateData);
