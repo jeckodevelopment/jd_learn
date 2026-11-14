@@ -54,14 +54,14 @@ final class HtmlView extends BaseHtmlView
                 $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_QUESTION_BANK', 'icon-question-circle', 'index.php?option=com_jlms&view=questionbank');
             }
             if ($actor->authorise('jlms.certificates.manage', 'com_jlms')) {
-                $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_CERTIFICATES', 'icon-certificate', 'index.php?option=com_jlms&view=certificates');
+                $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_CERTIFICATES', 'fas fa-certificate', 'index.php?option=com_jlms&view=certificates');
             }
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables');
         }
         if ($actor->authorise('core.manage', 'com_mails') && $actor->authorise('core.edit', 'com_mails')) {
             // Use com_mails' native extension filter; it remains editable in Joomla.
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_TEMPLATES', 'icon-file-edit',
+            $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_TEMPLATES', 'fas fa-envelope',
                 'index.php?option=com_mails&view=templates&filter[extension]=com_jlms&filter[search]=&filter[language]=&limitstart=0');
         }
         if ($actor->authorise('core.manage', 'com_fields')
