@@ -1,5 +1,8 @@
 # Changelog
 
+**MAIL-F pending (#366):** integrata in `main` il 14 novembre 2026 (merge `0247f79e03c570d45b6fe029fd46f013ab64365d`). CI 4/4 superata nel [run 43613864997](https://github.com/jeckodevelopment/jd_learn/actions/runs/43613864997); pacchetto installabile [JD-Learn-0.56.19-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43613864997/artifacts/14121059064). Accettazione manuale Joomla/SMTP pendente, MIL 1.0.0; approvazione/rifiuto amministrativi non inclusi. Stima globale 78,67% mantenuta come ultima baseline numerica: incremento MAIL-F da ripesare nel report, non quantificato arbitrariamente.
+
+
 
 ## MAIL-F — Richiesta di iscrizione soggetta ad approvazione (candidata)
 
