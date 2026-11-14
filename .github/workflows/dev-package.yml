@@ -10,6 +10,9 @@ on:
       - libraries/**
       - plugins/**
       - packages/**
+  pull_request:
+    types: [closed]
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: write
@@ -19,7 +22,7 @@ concurrency:
 jobs:
   publish-development-package:
     # Never promote a pull-request candidate, fork, or a non-main ref.
-    if: github.repository == 'jeckodevelopment/jd_learn' && github.ref == 'refs/heads/main'
+    if: github.repository == 'jeckodevelopment/jd_learn' && github.ref == 'refs/heads/main' && (github.event_name != 'pull_request' || github.event.pull_request.merged == true)
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
