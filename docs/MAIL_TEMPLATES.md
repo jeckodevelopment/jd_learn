@@ -189,3 +189,10 @@ In **JD Learn → Coda email** è disponibile una sezione espandibile **Guida al
 La guida è **in sola lettura**, non introduce un editor parallelo e non cambia i permessi per modificare i Mail Templates Joomla. È visibile a chi dispone dell'accesso autorizzato alla coda JD Learn; i dati della guida sono soltanto descrizioni statiche, senza destinatari o contenuti email. Gli amministratori modificano i modelli attraverso la funzionalità nativa **Sistema → Modelli email**. I nomi delle variabili sono univoci e **non esistono alias**.
 
 **Limiti:** i tag elencati sono quelli registrati, ma alcune variabili dipendono dall'evento effettivo; nuove variabili e relativa popolazione restano da sviluppare. La guida non è ancora incorporata nell'editor core di `com_mails` e non risolve la traduzione di titolo/descrizione segnalata nell'issue #312. **Collaudo richiesto:** guida in IT/EN, permessi di accesso, accessibilità da tastiera, filtri della coda inclusa scadenza, confronti con i Mail Templates e responsive. La CI non equivale all'accettazione manuale Joomla.
+
+
+## Correzione collocazione guida (PR #356 — decisione successiva)
+
+La guida dei segnaposto **non appartiene alla Coda email**: quest'ultima resta dedicata a stati, filtri e gestione operativa degli invii. La guida è ora una pagina autonoma **JD Learn → Dashboard → Comunicazioni → Guida alle variabili email** (`option=com_jlms&view=mailvariables`), accanto al collegamento ai **Modelli email** nativi di Joomla. Da questa pagina è possibile aprire i Modelli email soltanto se l'utente possiede anche i permessi `core.manage` e `core.edit` di `com_mails`. L'accesso alla guida richiede `core.manage` su `com_jlms`; non contiene destinatari né messaggi.
+
+Il catalogo di variabili e i suoi nomi canonici restano invariati e provengono dalle definizioni registrate; non è stato introdotto un editor di template parallelo. La documentazione precedente che indicava la guida dentro la Coda email è **superata**. Verifiche Joomla da eseguire: navigazione dalla dashboard, gestione dei permessi, accessibilità, traduzioni IT/EN, layout, filtro della coda indipendente e assenza di contenuti privati.
