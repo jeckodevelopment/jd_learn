@@ -97,7 +97,7 @@ stateDenied(fn()=>$service->editor(new \Joomla\CMS\User\User(),$course,$enrollme
 stateDenied(fn()=>$service->editor($manager,(int)$rf['other_course'],$f['italian']),403,'course-specific management scope');
 stateDenied(fn()=>$service->editor($actor,$course,$f['italian']),404,'foreign enrollment cannot cross course');
 $i=$service->editor($actor,$course,$enrollment,'suspended');$base=stateCommand($i);
-foreach([[7,false,400],[3,'cancelled',400],[4,'',422],[4,'<script>',422],[4,str_repeat('x',501),422],[6,str_repeat('0',64),409]]as[$index,$value,$code]){$bad=$base;$bad[$index]=$value;stateDenied(fn()=>$service->apply($actor,...$bad),$code,'malformed or stale command rejected');}
+foreach([[7,false,400],[3,'rejected',400],[4,'',422],[4,'<script>',422],[4,str_repeat('x',501),422],[6,str_repeat('0',64),409]]as[$index,$value,$code]){$bad=$base;$bad[$index]=$value;stateDenied(fn()=>$service->apply($actor,...$bad),$code,'malformed or stale command rejected');}
 stateExpect($count()===2,'failed commands create no events');
 $legacy=$service->editor($actor,$course,(int)$f['completed'],'suspended');$legacyBefore=$stable((int)$f['completed']);$service->apply($actor,...stateCommand($legacy));$service->apply($actor,...stateCommand($service->editor($actor,$course,(int)$f['completed'],'active')));
 stateExpect($stable((int)$f['completed'])===$legacyBefore,'completed history and expired window preserved');
