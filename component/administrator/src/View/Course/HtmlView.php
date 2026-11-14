@@ -75,11 +75,13 @@ final class HtmlView extends BaseHtmlView
             }
         } else {
             $toolbar = $this->getDocument()->getToolbar();
-            $toolbar->apply('course.apply');
-            $saveDropdown = $toolbar->dropdownButton('save-group', 'JTOOLBAR_SAVE_AND_CLOSE', 'course.save')
+            $toolbar->save('course.apply');
+            $saveDropdown = $toolbar->dropdownButton('save-group')
+                ->buttonClass('btn btn-success');
+            $programmeMenu = $saveDropdown->getChildToolbar();
+            $programmeMenu->save('course.save', 'JTOOLBAR_SAVE_AND_CLOSE')
                 ->buttonClass('btn btn-success')
                 ->icon('icon-save');
-            $programmeMenu = $saveDropdown->getChildToolbar();
             $programmeMenu->customButton(
                 'course-programme',
                 'COM_JLMS_COURSE_SAVE_PROGRAMME',
