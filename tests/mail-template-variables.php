@@ -60,6 +60,10 @@ if ($queue === false || str_contains($queue, 'jlms-mail-variable-guide')
     || !str_contains($queue, 'MailTemplateInstaller::templateIds()')) {
     throw new RuntimeException('Mail queue must remain operational and keep the shared filter list.');
 }
+$displayController = file_get_contents(__DIR__ . '/../component/administrator/src/Controller/DisplayController.php');
+if ($displayController === false || !str_contains($displayController, "'mailvariables'")) {
+    throw new RuntimeException('Mail variable guide is not permitted by the administrator display controller.');
+}
 if ($dashboard === false || !str_contains($dashboard, "view=mailvariables")
     || $guideView === false || !str_contains($guideView, "authorise('core.manage', 'com_jlms')")
     || !str_contains($guide, "authorise('core.edit', 'com_mails')")) {
