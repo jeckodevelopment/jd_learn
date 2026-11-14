@@ -95,6 +95,12 @@ final class MailTemplateInstaller
                 ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME', 'DASHBOARD_URL'],
                 '<p>Ciao {USER_FULLNAME},</p><p>l\'accesso al corso <strong>{COURSE_TITLE}</strong> è stato riattivato.</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME}</p>',
             ],
+            'com_jlms.enrollment.cancelled' => [
+                'Iscrizione annullata: {COURSE_TITLE}',
+                "Ciao {USER_FULLNAME},\\n\\nl'iscrizione al corso {COURSE_TITLE} è stata annullata. Per informazioni contatta il responsabile del corso.\\n\\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
+                '<p>Ciao {USER_FULLNAME},</p><p>l\\'iscrizione al corso <strong>{COURSE_TITLE}</strong> è stata annullata. Per informazioni contatta il responsabile del corso.</p><p>{SITE_NAME}</p>',
+            ],
             'com_jlms.course.message' => [
                 '{COURSE_TITLE}: {MESSAGE_SUBJECT}',
                 "{MESSAGE_BODY_TEXT}\n\n{SITE_NAME}",
