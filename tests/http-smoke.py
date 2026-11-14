@@ -295,7 +295,7 @@ try:
   _,editor_html=get(path)
   visible=unescape(editor_html)
   expected_tasks=['task="course.apply"','task="course.save"','task="course.programme"']
-  button_tags=re.findall(r'<button\\b[^>]*>',editor_html,re.I|re.S)
+  button_tags=re.findall(r'<button\b[^>]*>',editor_html,re.I|re.S)
   task_counts={task:sum(task in tag for tag in button_tags) for task in expected_tasks}
   if any(count!=1 for count in task_counts.values()):
    raise RuntimeError(label+' course toolbar must render each save task on exactly one button: '+str(task_counts))
