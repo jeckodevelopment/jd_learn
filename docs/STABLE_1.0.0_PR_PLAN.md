@@ -59,9 +59,9 @@ Le priorità sono **proposte di pianificazione**, non sostituiscono label GitHub
 
 ## Riconciliazione del registro requisiti (14 novembre 2026)
 
-La **fonte di verità** è [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), non il presente piano. Il registro è passato da 219 a **229** ID aggiungendo l'addendum approvato MAIL-01–10 prima presente soltanto nelle specifiche. Le associazioni per le PR #344, #362, #364, #365, #368, #375 e #377 e le correzioni correlate sono state ricondotte alle righe pertinenti. Il controllo GitHub Actions richiede ora, per ogni PR runtime, una modifica del CSV e un'associazione del proprio numero effettivo alla colonna `PR implementazione`. Vedere [guida registro](REQUIREMENTS_STATUS_GUIDE.md) e [regole di tracciabilità](REQUIREMENTS_TRACEABILITY.md).
+La **fonte di verità** è [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv), non il presente piano. Il registro è passato da 219 a **244** ID aggiungendo gli addenda approvati MAIL-01–10, DOC-01–10 e SEC-P1–SEC-P5 prima presenti soltanto nelle specifiche. Le associazioni per le PR #344, #362, #364, #365, #368, #375 e #377 e le correzioni correlate sono state ricondotte alle righe pertinenti. Il controllo GitHub Actions richiede ora, per ogni PR runtime, una modifica del CSV e un'associazione del proprio numero effettivo alla colonna `PR implementazione`. Vedere [guida registro](REQUIREMENTS_STATUS_GUIDE.md) e [regole di tracciabilità](REQUIREMENTS_TRACEABILITY.md).
 
-Questo passaggio **non** conclude la ricognizione semantica integrale di tutti i 229 requisiti: i 10 criteri email aggiunti sono prudentemente Parziale/Non iniziata, non accettati; ogni futura PR deve allineare code, residui, evidenze e percentuale motivata. Il numero di requisiti non va usato come denominatore diretto della stima pesata.
+Questo passaggio **non** conclude la ricognizione semantica integrale di tutti i 229 requisiti: i nuovi criteri email, documentali e di sicurezza sono prudentemente Parziale/Non iniziata, non accettati; ogni futura PR deve allineare code, residui, evidenze e percentuale motivata. Il numero di requisiti non va usato come denominatore diretto della stima pesata.
 
 ## Gate di rilascio 1.0.0
 
