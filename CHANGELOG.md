@@ -1,5 +1,12 @@
 # Changelog
 
+## Dashboard — icone collegamenti (issue #352 e #353)
+
+- I collegamenti **Attestati** e **Template email** usano classi Font Awesome esplicite (`fas fa-certificate` e `fas fa-envelope`) invece delle vecchie classi IcoMoon, non sempre presenti nell'amministrazione Joomla.
+- I permessi, le destinazioni e le etichette dei pulsanti restano invariati. Verificare visivamente entrambe le icone nella dashboard Atum su Joomla, con accesso autorizzato e con permessi limitati; il collaudo manuale rimane da eseguire.
+- Correzione di presentazione: **nessuna variazione della percentuale globale di implementazione**.
+
+
 ## 0.56.19-dev (candidata)
 
 - MAIL-04: promemoria operativo facoltativo prima della scadenza, con soglia configurabile, override per corso, outbox/Scheduler Joomla e rivalidazione dell’iscrizione prima dell’invio. Default disattivato.
