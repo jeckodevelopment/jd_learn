@@ -13,6 +13,7 @@ final class MailQueueAuditService
 {
     private const STATES = ['pending', 'retry', 'sending', 'sent', 'failed', 'skipped'];
     private const TEMPLATES = [
+        'com_jlms.teacher.assigned',
         'com_jlms.enrollment.requested',
         'com_jlms.enrollment.approved',
         'com_jlms.enrollment.rejected',
