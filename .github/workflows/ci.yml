@@ -367,6 +367,8 @@ jobs:
         run: php tests/joomla-course-fields-public.php .runtime/joomla retained
       - name: Verify pathway relations and public access survive package update
         run: php tests/joomla-pathways.php .runtime/joomla retained
+      - name: Verify irreversible enrollment cancellation, one notification and protected course history
+        run: php tests/joomla-enrollment-state.php .runtime/joomla cancellation
       - name: Read package version for artifact label
         id: package
         run: |
