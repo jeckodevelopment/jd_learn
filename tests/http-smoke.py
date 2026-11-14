@@ -295,10 +295,11 @@ try:
   _,editor_html=get(path)
   visible=unescape(editor_html)
   expected_tasks=['task="course.apply"','task="course.save"','task="course.programme"']
-  task_counts={task:editor_html.count(task) for task in expected_tasks}
+  button_tags=re.findall(r'<button\\b[^>]*>',editor_html,re.I|re.S)
+  task_counts={task:sum(task in tag for tag in button_tags) for task in expected_tasks}
   if any(count!=1 for count in task_counts.values()):
-   raise RuntimeError(label+' course toolbar must render each save task exactly once: '+str(task_counts))
-  task_positions=[editor_html.index(task) for task in expected_tasks]
+   raise RuntimeError(label+' course toolbar must render each save task on exactly one button: '+str(task_counts))
+  task_positions=[next(i for i,tag in enumerate(button_tags) if task in tag) for task in expected_tasks]
   if task_positions!=sorted(task_positions):
    raise RuntimeError(label+' course save actions are not ordered as standalone Save, primary Save & Close, then programme menu')
   expected_labels=['Save','Save & Close','Save and open curriculum']
