@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.56.24-dev — lista Docenti allineata a Joomla
+
+- Resa la colonna Stato tramite l'icona nativa Joomla e uniformato il contatore Corsi ai pulsanti di conteggio delle categorie (#377).
+
+## 0.56.23-dev — collegamento ai Modelli email nella toolbar
+
+- Spostato il collegamento ai Modelli email Joomla dalla guida alle variabili alla toolbar, visibile solo con i permessi di gestione e modifica di `com_mails` (#375).
+
+
 ## 0.56.23-dev — collegamento ai Modelli email nella toolbar
 
 - Spostato il collegamento ai Modelli email Joomla dalla guida alle variabili alla toolbar, visibile solo con i permessi di gestione e modifica di `com_mails` (#375).
