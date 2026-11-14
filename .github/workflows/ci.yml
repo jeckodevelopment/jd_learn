@@ -138,6 +138,26 @@ jobs:
           php tests/legacy-time-fixture.php .runtime/joomla
           PACKAGE_VERSION="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
           php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-${PACKAGE_VERSION}.zip"
+      - name: Check out the last known installable baseline before PR 366
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 0ed7db6f9b1e7e9ed7d988a36abc8d22a65868b7
+          path: .runtime/pre-366-source
+          persist-credentials: false
+      - name: Check out the exact first failing PR 366 merge
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 0247f79e03c570d45b6fe029fd46f013ab64365d
+          path: .runtime/post-366-source
+          persist-credentials: false
+      - name: Reproduce exact pre-366 to post-366 Joomla 6.2 upgrade using real installer
+        run: |
+          python3 .runtime/pre-366-source/tools/build.py
+          python3 .runtime/post-366-source/tools/build.py
+          python3 tools/verify_installable.py .runtime/pre-366-source/dist/pkg_jlms-0.56.19-dev.zip
+          python3 tools/verify_installable.py .runtime/post-366-source/dist/pkg_jlms-0.56.19-dev.zip
+          php tests/install-package.php .runtime/joomla "$(pwd)/.runtime/pre-366-source/dist/pkg_jlms-0.56.19-dev.zip"
+          php tests/install-package.php .runtime/joomla "$(pwd)/.runtime/post-366-source/dist/pkg_jlms-0.56.19-dev.zip"
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
