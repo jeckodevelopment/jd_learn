@@ -134,3 +134,6 @@ assert "['request', 'confirm', 'revoke', 'revokelink']" in mail_controller.lower
 assert "strtoupper($this->input->getMethod()) !== 'POST'" in mail_controller
 assert "->revokeByToken($token)" in mail_controller
 assert "mailconsentrevoke" in (ROOT/'component/site/src/View/Mailconsentrevoke/HtmlView.php').read_text().lower()
+
+# Documentation hygiene is checked with every standard build.
+runpy.run_path(str(ROOT / 'tools/check_docs_hygiene.py'), run_name='__main__')
