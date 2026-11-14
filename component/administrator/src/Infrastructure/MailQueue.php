@@ -50,7 +50,7 @@ final class MailQueue
             ->columns(['event_key', 'template_id', 'course_id', 'language', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
             ->values(implode(',', [
                 $this->db->quote($key), $this->db->quote($template), (string) $courseId, $this->db->quote($language ?: '*'),
-                $this->db->quote($email), $this->db->quote($name), $this->db->quote(json_encode(MailTemplateVariables::withAliases($data), JSON_THROW_ON_ERROR)),
+                $this->db->quote($email), $this->db->quote($name), $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)),
                 $this->db->quote('pending'), $this->db->quote($now), $this->db->quote($now),
             ]));
 
@@ -85,7 +85,7 @@ final class MailQueue
             ->values(implode(',', [
                 $this->db->quote($key), $this->db->quote('com_jlms.course.published'), (string) $courseId, (string) $userId,
                 $this->db->quote($consentAt), $this->db->quote($language ?: '*'), $this->db->quote($email), $this->db->quote($name),
-                $this->db->quote(json_encode(MailTemplateVariables::withAliases($data), JSON_THROW_ON_ERROR)), $this->db->quote('pending'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)',
+                $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)), $this->db->quote('pending'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)',
             ]));
         try {
             $this->db->setQuery($query)->execute();
@@ -144,7 +144,6 @@ final class MailQueue
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $mail = new MailTemplate((string) $row->template_id, (string) $row->language);
                 $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
-                $data = MailTemplateVariables::withAliases($data);
                 $mail->addTemplateData($data);
                 $mail->addUnsafeTags(array_keys($data));
                 if (!$mail->send()) {
