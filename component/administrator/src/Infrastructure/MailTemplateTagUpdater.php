@@ -66,11 +66,12 @@ final class MailTemplateTagUpdater
                     continue;
                 }
                 $serialized = json_encode($merged, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-                $db->updateObject('#__mail_templates', (object) [
+                $updatedTemplate = (object) [
                     'template_id' => (string) $row->template_id,
                     'language' => (string) $row->language,
                     'params' => $serialized,
-                ], ['template_id', 'language']);
+                ];
+                $db->updateObject('#__mail_templates', $updatedTemplate, ['template_id', 'language']);
                 ++$updated;
             }
         }
