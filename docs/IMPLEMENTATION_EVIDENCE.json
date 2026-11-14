@@ -59,7 +59,9 @@
     "artifact_size_bytes": 662658,
     "wrapper_zip": true,
     "expires_at": "2026-11-28T22:52:57Z",
-    "notes": "CI completa verde sul commit PR e6d490110ae756e862a5a4edd85908cf13a2faa4; merge main e3639d8544e8a1f5bfbd3e53803e0b35c56f904e. L'archivio Actions contiene il pacchetto Joomla pkg_jlms-0.56.29-dev.zip da estrarre. SHA-256 riportato per l'archivio artifact; accettazione manuale toolbar su Joomla 6.2 pendente."
+    "notes": "CI completa verde sul commit PR e6d490110ae756e862a5a4edd85908cf13a2faa4; merge main e3639d8544e8a1f5bfbd3e53803e0b35c56f904e. L'archivio Actions contiene il pacchetto Joomla pkg_jlms-0.56.29-dev.zip da estrarre. SHA-256 riportato per l'archivio artifact; accettazione manuale toolbar su Joomla 6.2 pendente.",
+    "sha256": "4d21d5180069d13f7f8f230e0047997025b0d14e2dd6b0374fd9e54b5735cd3d",
+    "size_bytes": 662929
   },
   "release_process": {
     "issue": 160,
