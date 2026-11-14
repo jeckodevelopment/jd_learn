@@ -1,3 +1,12 @@
+## IMP-09 / issue #375 — toolbar Guida alle variabili email
+
+1. Accedere con un amministratore autorizzato a `com_jlms`, `core.manage` e `core.edit` su `com_mails`. Aprire **JD Learn → Variabili modelli email** e verificare che il pulsante **Template Email** compaia nella toolbar e apra i modelli filtrati su `com_jlms`.
+2. Verificare che il pulsante non sia duplicato nel corpo della guida.
+3. Accedere con un utente autorizzato a JD Learn ma senza `core.edit` su `com_mails`: il pulsante non deve comparire. Ripetere senza `core.manage` su `com_mails`.
+4. Verificare che catalogo, contenuto e lingua IT/EN della guida restino invariati.
+
+CI automatica copre la presenza del link in toolbar, il filtro `com_jlms`, il controllo ACL e la rimozione del collegamento dal corpo pagina. Accettazione manuale Joomla da registrare.
+
 ## CORE-10 — Campi aggiuntivi su Joomla 6.2.0 (PR #378)
 
 1. Aggiornare JD Learn su un sito di prova Joomla 6.2.0. Creare un campo testuale distinto per ciascuno dei tre contesti.

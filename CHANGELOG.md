@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.56.23-dev — collegamento ai Modelli email nella toolbar
+
+- Spostato il collegamento ai Modelli email Joomla dalla guida alle variabili alla toolbar, visibile solo con i permessi di gestione e modifica di `com_mails` (#375).
+
+
 ## 0.56.22-dev — Campi aggiuntivi su Joomla 6.2
 
 - Corretto il contratto dati del form lezione con FieldsHelper di Joomla 6.2.0 e resa dei gruppi nativi nel form (#374).
