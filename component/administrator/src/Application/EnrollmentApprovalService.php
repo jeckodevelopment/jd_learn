@@ -110,9 +110,10 @@ final class EnrollmentApprovalService
                 if ($edition->capacity !== null && (int) $this->db->setQuery($q)->loadResult() >= (int) $edition->capacity) {
                     throw new \RuntimeException('COM_JLMS_EDITION_FULL', 409);
                 }
+                $subjectKey = (string) $request->subject_key;
                 $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')
                     ->where('edition_id = :edition')->where('subject_key = :subject')
-                    ->bind(':edition', $editionId, ParameterType::INTEGER)->bind(':subject', (string) $request->subject_key);
+                    ->bind(':edition', $editionId, ParameterType::INTEGER)->bind(':subject', $subjectKey);
                 if ($this->db->setQuery($q)->loadResult()) { throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409); }
                 $q = $this->db->createQuery()->select('rules_json')->from('#__jlms_course_versions')
                     ->where('id = :version')->where("status = 'published'")
