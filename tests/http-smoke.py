@@ -38,6 +38,11 @@ base='http://127.0.0.1:8093'
 config=root/'configuration.php'
 text,count=re.subn(r"public\s+\$live_site\s*=\s*[^;]+;", "public $live_site = '"+base+"';", config.read_text())
 if count!=1:raise RuntimeError('Disposable site URL could not be configured')
+# Only the disposable CI Joomla fixture gets detailed errors for compatibility debugging.
+text,count=re.subn(r"public\\s+\\$debug\\s*=\\s*[^;]+;", "public $debug = true;", text)
+if count!=1:raise RuntimeError('Disposable Joomla debug setting not found')
+text,count=re.subn(r"public\\s+\\$error_reporting\\s*=\\s*[^;]+;", "public $error_reporting = 'maximum';", text)
+if count!=1:raise RuntimeError('Disposable Joomla error reporting setting not found')
 config.write_text(text)
 log=open(root.parent/'http-smoke.log','w+')
 server=subprocess.Popen(['php','-S','127.0.0.1:8093','-t',str(root)],stdout=log,stderr=log)
