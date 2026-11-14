@@ -1,4 +1,4 @@
-**14 novembre 2026 — PR #375 integrata:** il collegamento **Template Email** è nella toolbar della guida alle variabili e mantiene il controllo `core.manage` + `core.edit` su `com_mails`. La stima implementativa resta invariata: fix UX senza nuove capacità funzionali. Collaudo manuale Joomla ancora da eseguire secondo [QA_TESTBOOK.md](QA_TESTBOOK.md).
+**Candidata PR #375 — in review:** il collegamento **Template Email** è nella toolbar della guida alle variabili e mantiene il controllo `core.manage` + `core.edit` su `com_mails`. La stima implementativa resta invariata: fix UX senza nuove capacità funzionali. Collaudo manuale Joomla ancora da eseguire secondo [QA_TESTBOOK.md](QA_TESTBOOK.md).
 
 **Candidata 0.56.22-dev / CORE-10:** [PR #378](https://github.com/jeckodevelopment/jd_learn/pull/378) copre il form lezione con Joomla 6.2.0 e la navigazione tra Corsi, Docenti e Lezioni nel gestore Campi aggiuntivi. Copertura funzionale stimata verso 1.0.0 circa **80%**. Collaudo manuale nel [testbook](QA_TESTBOOK.md).
 
