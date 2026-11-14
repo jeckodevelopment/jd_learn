@@ -307,3 +307,7 @@ Il gate include la verifica del bridge video `window.JlmsConsent` con CMP reale,
 
 
 **Esito post-merge MAIL-F pending (#366):** PR [#366](https://github.com/jeckodevelopment/jd_learn/pull/366) integrata nel merge `0247f79e03c570d45b6fe029fd46f013ab64365d`; CI 4/4 [run 43613864997](https://github.com/jeckodevelopment/jd_learn/actions/runs/43613864997). [Pacchetto installabile 0.56.19-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43613864997/artifacts/14121059064). Restano da implementare approvazione/rifiuto amministrativo e invii degli esiti; il gate manuale Joomla/SMTP non è superato. Nessuna nuova percentuale globale certificata: ultima baseline esplicita 78,67%.
+
+### MAIL-F — Esiti approvazione e rifiuto (incremento candidato)
+
+Dopo #366, l'incremento amministrativo aggiunge decisioni corso-scoped con controllo capienza concorrente, idempotenza di stato, audit, notifica Joomla e UX nel roster. È separato dalla cancellazione di iscrizione #361; non allarga il flusso di quiz o le credenziali. L'accettazione manuale resta da eseguire in `docs/QA_TESTBOOK.md`. Solo dopo merge aggiornare l'evidenza con CI e pacchetto; la percentuale globale richiede ricalcolo sulla stessa matrice pesata.

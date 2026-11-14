@@ -10,6 +10,38 @@ use Joomla\CMS\Router\Route;
  <p><a id="jlms-roster-manual" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=manualenrollment&id='.(int) $this->course->id) ?>"><?= Text::_('COM_JLMS_MANUAL_TITLE') ?></a>
  <a id="jlms-roster-communication" class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=coursemessage&id='.(int) $this->course->id) ?>"><?= Text::_('COM_JLMS_COMMUNICATION_TITLE') ?></a>
  <a id="jlms-roster-course-operations" class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=courseoperations&id='.(int) $this->course->id.'&operation=admissions_close') ?>"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_TITLE') ?></a></p>
+ <?php if ($this->pendingRequests) : ?>
+ <section id="jlms-pending-requests" aria-labelledby="jlms-pending-title">
+  <h2 id="jlms-pending-title"><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_PENDING') ?> (<?= count($this->pendingRequests) ?>)</h2>
+  <p><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_POLICY') ?></p>
+  <div class="table-responsive"><table class="table">
+   <thead><tr><th scope="col"><?= Text::_('JGLOBAL_USERNAME') ?></th><th scope="col"><?= Text::_('JDATE') ?></th><th scope="col"><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_ACTIONS') ?></th></tr></thead>
+   <tbody><?php foreach ($this->pendingRequests as $request) : ?>
+   <tr id="jlms-pending-request-<?= (int) $request->id ?>">
+    <th scope="row"><?= $this->escape($request->name ?? '') ?> (<?= $this->escape($request->username ?? '') ?>) · #<?= (int) $request->id ?></th>
+    <td><?= $this->escape($request->created_at) ?> UTC</td>
+    <td>
+     <?php foreach (['approved', 'rejected'] as $decision) : ?>
+     <form class="jlms-approval-decision" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+      <input type="hidden" name="task" value="enrollmentapproval.decide">
+      <input type="hidden" name="jform[course_id]" value="<?= (int) $this->course->id ?>">
+      <input type="hidden" name="jform[request_id]" value="<?= (int) $request->id ?>">
+      <input type="hidden" name="jform[revision]" value="<?= (int) $request->revision ?>">
+      <input type="hidden" name="jform[decision]" value="<?= $decision ?>">
+      <input type="hidden" name="jform[confirmation]" value="1">
+      <label><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_REASON') ?>
+       <input class="form-control" type="text" name="jform[reason]" maxlength="500" autocomplete="off">
+      </label>
+      <?= \Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
+      <button class="btn <?= $decision === 'approved' ? 'btn-success' : 'btn-outline-danger' ?>" type="submit"><?= Text::_($decision === 'approved' ? 'COM_JLMS_ENROLLMENT_APPROVAL_ACCEPT' : 'COM_JLMS_ENROLLMENT_APPROVAL_REJECT') ?></button>
+     </form>
+     <?php endforeach; ?>
+    </td>
+   </tr>
+   <?php endforeach; ?></tbody>
+  </table></div>
+ </section>
+ <?php endif; ?>
  <form id="jlms-roster-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=enrollments&id=' . (int) $this->course->id) ?>">
   <div class="row">
    <div class="col-md-6">

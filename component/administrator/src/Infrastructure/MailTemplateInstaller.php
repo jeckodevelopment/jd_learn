@@ -59,6 +59,18 @@ final class MailTemplateInstaller
                 ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
                 '<p>Ciao {USER_FULLNAME},</p><p>abbiamo ricevuto la tua richiesta di iscrizione al corso <strong>{COURSE_TITLE}</strong>.</p><p>{SITE_NAME}</p>',
             ],
+            'com_jlms.enrollment.approved' => [
+                'Richiesta di iscrizione approvata: {COURSE_TITLE}',
+                "Ciao {USER_FULLNAME},\n\nla tua richiesta di iscrizione al corso {COURSE_TITLE} è stata approvata.\n\nAccedi alla tua area personale: {DASHBOARD_URL}\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'DASHBOARD_URL', 'SITE_NAME'],
+                '<p>Ciao {USER_FULLNAME},</p><p>la tua richiesta per il corso <strong>{COURSE_TITLE}</strong> è stata approvata.</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME}</p>',
+            ],
+            'com_jlms.enrollment.rejected' => [
+                'Richiesta di iscrizione non approvata: {COURSE_TITLE}',
+                "Ciao {USER_FULLNAME},\n\nla tua richiesta di iscrizione al corso {COURSE_TITLE} non è stata approvata.\n\nPer informazioni, contatta il responsabile del corso.\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
+                '<p>Ciao {USER_FULLNAME},</p><p>la tua richiesta per il corso <strong>{COURSE_TITLE}</strong> non è stata approvata.</p><p>Per informazioni contatta il responsabile del corso.</p><p>{SITE_NAME}</p>',
+            ],
             'com_jlms.enrollment.confirmed' => [
                 'Iscrizione confermata: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nla tua iscrizione al corso {COURSE_TITLE} è confermata (data UTC: {ENROLLMENT_DATE}).\n\n{SITE_NAME}",

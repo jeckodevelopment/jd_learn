@@ -79,6 +79,8 @@ if ((int) $db->setQuery($defaultCertificateTemplate)->loadResult() !== 1) {
 }
 $mailTemplateIds = [
     'com_jlms.enrollment.requested',
+    'com_jlms.enrollment.approved',
+    'com_jlms.enrollment.rejected',
     'com_jlms.enrollment.confirmed',
     'com_jlms.enrollment.suspended',
     'com_jlms.enrollment.reactivated',

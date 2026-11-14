@@ -36,6 +36,10 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     public function setPathwayService(\Jlms\Component\Jlms\Administrator\Application\PathwayService $service): void { $this->pathwayService = $service; }
     public function getPathwayService(): \Jlms\Component\Jlms\Administrator\Application\PathwayService { return $this->pathwayService; }
 
+    private \Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService $enrollmentApprovalService;
+    public function setEnrollmentApprovalService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService $service): void { $this->enrollmentApprovalService = $service; }
+    public function getEnrollmentApprovalService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService { return $this->enrollmentApprovalService; }
+
     private \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $enrollmentRosterService;
     public function setEnrollmentRosterService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $service): void { $this->enrollmentRosterService = $service; }
     public function getEnrollmentRosterService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService { return $this->enrollmentRosterService; }

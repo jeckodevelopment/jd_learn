@@ -187,6 +187,40 @@ try {
 } finally {
     $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode=".$db->quote($modeBefore)." WHERE id=".$course)->execute();
 }
+// MAIL-F: decisions are restricted to the course and serialized with admission capacity.
+$approval = $component->getEnrollmentApprovalService();
+$db->setQuery("UPDATE #__jlms_courses SET enrollment_mode='approval' WHERE id=".$course)->execute();
+try {
+    $pending = $approval->pending($actor,$course);
+    stateExpect(count(array_filter($pending,fn($r)=>(int)$r->id===$requestId))===1,'course manager sees pending request');
+    stateDenied(fn()=>$approval->decide($requestUser,$course,$requestId,1,'approved',''),403,'learner cannot self-approve');
+    $enrollmentApproved = $approval->decide($actor,$course,$requestId,1,'approved','CI-only approval reason');
+    stateExpect($enrollmentApproved>0,'approved request creates enrollment');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=".$enrollmentApproved." AND status='active' AND origin='approval'")->loadResult()===1,'approved admission active exactly once');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=".$requestId." AND status='approved' AND revision=2")->loadResult()===1,'approved state persisted');
+    stateDenied(fn()=>$approval->decide($actor,$course,$requestId,1,'approved',''),409,'repeat decision must conflict');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='".hash('sha256','enrollment.decision:'.$requestId)."'")->loadResult()===1,'single approval notification');
+
+    $rejectedUser = new \Joomla\CMS\User\User();
+    $rejectedData = ['name'=>'CI Rejected Applicant','username'=>'cimailfrejected','email'=>'cimailfrejected@example.invalid',
+        'password'=>'Ci-only-Learner-Password-2026','password2'=>'Ci-only-Learner-Password-2026',
+        'groups'=>[2,$f['group']],'block'=>0,'activation'=>''];
+    if (!$rejectedUser->bind($rejectedData)||!$rejectedUser->save()) { throw new \RuntimeException($rejectedUser->getError()); }
+    $rejectedUser = new \Joomla\CMS\User\User((int)$rejectedUser->id);
+    $rejectRequestId = $learning->requestApproval($rejectedUser,'en-GB',$course,stateKey());
+    stateExpect($approval->decide($actor,$course,$rejectRequestId,1,'rejected','CI-only private reason')===0,'rejected request has no enrollment ID');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=".(int)$rejectedUser->id." AND course_id=".$course)->loadResult()===0,'rejection never grants classroom access');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=".$rejectRequestId." AND status='rejected'")->loadResult()===1,'rejection audit state saved');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='".hash('sha256','enrollment.decision:'.$rejectRequestId)."'")->loadResult()===1,'single rejection email queued');
+    // The approval fixture is not part of the pre-existing roster retention baseline.
+    // Remove only its CI-created enrollment so the subsequent upgrade checks can
+    // compare the original roster snapshot without unrelated test pollution.
+    $db->setQuery('DELETE FROM #__jlms_enrollments WHERE id=' . $enrollmentApproved)->execute();
+    stateExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=' . $enrollmentApproved)->loadResult()===0,
+        'approval fixture cleanup preserves roster retention baseline');
+} finally {
+    $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode=".$db->quote($modeBefore)." WHERE id=".$course)->execute();
+}
 $serialized=json_encode($service->editor($actor,$course,$enrollment),JSON_THROW_ON_ERROR);stateExpect(!str_contains($serialized,'subject_key')&&!str_contains($serialized,'rules_json'),'editor excludes internal subject and grading data');
 file_put_contents($path,json_encode(['course'=>$course,'enrollment'=>$enrollment,'owner'=>$f['owner'],'lesson'=>$f['lesson'],'first_event'=>$event,'history_count'=>$count(),'stable'=>$stable($enrollment),'manager'=>$rf['manager'],'manager_group'=>$rf['group'],'http_enrollment'=>$f['other_enrollment'],'cancelled'=>$f['cancelled'],'foreign_enrollment'=>$f['italian'],'other_course'=>$rf['other_course']],JSON_THROW_ON_ERROR));
 echo json_encode(['enrollment_state_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
