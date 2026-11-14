@@ -290,6 +290,19 @@ try:
 
  # Editor diagnostics and delegated-category navigation over real HTTP.
  editor_fixture=json.loads((root.parent/'editor-access-fixture.json').read_text())
+ # Render the editor toolbar over authenticated Joomla HTTP; source-level wiring alone missed #384.
+ def assert_course_save_toolbar(path, label):
+  _,editor_html=get(path)
+  visible=unescape(editor_html)
+  expected_tasks=['task="course.apply"','task="course.save"','task="course.programme"']
+  if not all(task in editor_html for task in expected_tasks):
+   raise RuntimeError(label+' course toolbar is missing a save task: '+str([task for task in expected_tasks if task not in editor_html]))
+  expected_labels=['Save','Save & Close','Save and open curriculum']
+  if not all(text in visible for text in expected_labels):
+   raise RuntimeError(label+' course toolbar is missing a visible save action: '+str([text for text in expected_labels if text not in visible]))
+ assert_course_save_toolbar('/administrator/index.php?option=com_jlms&view=course&layout=edit&id=0','New')
+ assert_course_save_toolbar('/administrator/index.php?option=com_jlms&view=course&layout=edit&id='+str(editor_fixture['allowed1']),'Existing')
+ print(json.dumps({'course_save_toolbar_http_checks':2,'status':'passed'}))
  # Announcement preview was already implemented, but the main display controller must route this view.
  announcement_id=int(editor_fixture['denied'])
  _,announcement_html=get('/administrator/index.php?option=com_jlms&view=courseannouncement&id='+str(announcement_id))
