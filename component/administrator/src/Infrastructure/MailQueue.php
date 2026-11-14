@@ -17,11 +17,12 @@ final class MailQueue
     }
 
     /** The unique event key makes repeated domain transitions harmless. */
-    public function enqueue(int $courseId, string $key, string $template, string $language, string $email, string $name, array $data): void
+    public function enqueue(int $courseId, string $key, string $template, string $language, string $email, string $name, array $data, ?int $recipientUserId = null): void
     {
         $event = match ($template) {
             'com_jlms.enrollment.confirmed' => 'enrollment',
             'com_jlms.enrollment.requested' => 'request',
+            'com_jlms.teacher.assigned' => 'teacher_assignment',
             'com_jlms.enrollment.approved' => 'approval',
             'com_jlms.enrollment.rejected' => 'rejection',
             'com_jlms.course.completed' => 'completion',
@@ -51,9 +52,9 @@ final class MailQueue
 
         $now = gmdate('Y-m-d H:i:s');
         $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
-            ->columns(['event_key', 'template_id', 'course_id', 'language', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
+            ->columns(['event_key', 'template_id', 'course_id', 'recipient_user_id', 'language', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
             ->values(implode(',', [
-                $this->db->quote($key), $this->db->quote($template), (string) $courseId, $this->db->quote($language ?: '*'),
+                $this->db->quote($key), $this->db->quote($template), (string) $courseId, $recipientUserId ? (string) $recipientUserId : 'NULL', $this->db->quote($language ?: '*'),
                 $this->db->quote($email), $this->db->quote($name), $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)),
                 $this->db->quote('pending'), $this->db->quote($now), $this->db->quote($now),
             ]));
@@ -133,6 +134,15 @@ final class MailQueue
                 if ((string) $row->template_id === 'com_jlms.course.published' && !$this->announcementEligible($row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
                         ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
+                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    $skipped++;
+                    continue;
+                }
+                if ((string) $row->template_id === 'com_jlms.teacher.assigned' && !$this->teacherAssignmentEligible($row)) {
+                    // The assignment or the verified account may have changed since queueing.
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
+                        ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}'")
                         ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                     $this->db->setQuery($skip)->execute();
                     $skipped++;
@@ -219,6 +229,25 @@ final class MailQueue
             ->where('COALESCE(e.ends_at, ed.ends_at) > UTC_TIMESTAMP(6)')
             ->bind(':id', $enrollmentId, ParameterType::INTEGER)->bind(':email', (string) $row->recipient_email);
         return (bool) $this->db->setQuery($query)->loadResult();
+    }
+
+    /** Never send a stale teacher assignment notice to a removed, blocked or relinked account. */
+    private function teacherAssignmentEligible(object $row): bool
+    {
+        $userId = (int) ($row->recipient_user_id ?? 0);
+        $courseId = (int) ($row->course_id ?? 0);
+        if ($userId < 1 || $courseId < 1) {
+            return false;
+        }
+        $q = $this->db->createQuery()->select('u.id')->from('#__jlms_course_teachers AS ct')
+            ->innerJoin('#__jlms_teachers AS t ON t.id = ct.teacher_id')
+            ->innerJoin('#__users AS u ON u.id = t.user_id')
+            ->where('ct.course_id = :course')->where('u.id = :recipient')
+            ->where('u.block = 0')->where('LOWER(u.email) = LOWER(:email)')
+            ->bind(':course', $courseId, ParameterType::INTEGER)
+            ->bind(':recipient', $userId, ParameterType::INTEGER)
+            ->bind(':email', (string) $row->recipient_email);
+        return (bool) $this->db->setQuery($q)->loadResult();
     }
 
     /** Re-check consent revision, account, address, campaign and public visibility immediately before SMTP. */
