@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.56.28-dev
+
+- Ripristinata la toolbar dell’editor corso: **Salva** resta autonomo; **Salva & Chiudi** è l’azione principale del menu split e **Salva e apri programma** è la voce aggiuntiva (#384).
+
+
 ## 0.56.27-dev
 
 - Ripristinato il routing amministrativo dell’anteprima email di annuncio corso, includendo la vista esistente nella whitelist del controller display (#364).
