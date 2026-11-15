@@ -83,7 +83,9 @@ foreach (['com_jlms.lesson.available', 'com_jlms.teacher.assigned', 'com_jlms.co
         }
     }
 }
-if (str_contains(implode(' ', array_merge(...array_map(static fn ($definition) => $definition[2], $definitions))), 'USER_FIRSTNAME')) {
+$registeredTags = [];
+foreach ($definitions as $definition) { $registeredTags = array_merge($registeredTags, $definition[2]); }
+if (in_array('USER_FIRSTNAME', $registeredTags, true)) {
     throw new RuntimeException('USER_FIRSTNAME must not be registered without a reliable name source.');
 }
 foreach (['LESSON_URL' => 'view=classroom', 'LESSON_DESCRIPTION' => "'LESSON_DESCRIPTION' => ''",
