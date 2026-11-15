@@ -2,7 +2,7 @@
 
 ## 0.57.7-dev
 
-- Issue #455: nella vista iscritti il ritorno a Corsi è il primo comando della toolbar; Iscrizione manuale mostra l'icona plus. Nella vista di iscrizione manuale, Iscritti è il primo comando di ritorno. Rimossi i link duplicati dal corpo pagina.
+- Issue #455: nella vista iscritti il ritorno a Corsi è il primo comando della toolbar; Iscrizione manuale mostra l'icona plus. Nella vista di iscrizione manuale, Iscritti è il primo comando di ritorno. Rimossi i link duplicati dal corpo pagina. PR #457 integrata; CI completa superata e pacchetto installabile `pkg_jlms-0.57.7-dev.zip` disponibile nell'artefatto Actions 14180606835.
 
 - Toolbar: etichette brevi in italiano e inglese per tornare agli iscritti e gestire la disponibilità del corso.
 
