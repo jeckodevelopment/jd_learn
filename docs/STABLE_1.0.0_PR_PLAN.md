@@ -85,3 +85,7 @@ Per la 1.0.0: preconfigurare il task `jlms.mail.dispatch` disabilitato a 5 minut
 Correzione regressione nel salvataggio della riconciliazione manuale dei messaggi in stato `sending`: bind SQL per riferimento compatibile con Joomla. Collegamento MAIL-09/MAIL-10 nel registro `REQUIREMENTS_STATUS.csv`; test di regressione statico in `tools/check.py`. Non cambiare la gestione dei claim SMTP ambigui, i 15 minuti di soglia o il limite di 5 tentativi. Prova manuale Joomla/SMTP necessaria per l'accettazione.
 
 PR #427 integrata: merge `58811c6817a91b372e0814479281e068d6a037f5`, CI [43728360557](https://github.com/jeckodevelopment/jd_learn/actions/runs/43728360557) 4/4 verde; stima globale 79,33% invariata. Resta collaudo Joomla/SMTP.
+
+## IMP-04 — trascrizione delle lezioni audio
+
+PR #451 (aperta): incremento per LES-01/SCR-06: campo facoltativo dedicato, storage versionato, filtro HTML, resa accessibile in aula e verifica di isolamento per tipo/lezione/versione. Nessuna modifica al calcolo percentuale globale finché la matrice non viene ricalcolata sulla copertura completa del macro-requisito.

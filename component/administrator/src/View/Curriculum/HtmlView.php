@@ -130,7 +130,7 @@ final class HtmlView extends BaseHtmlView
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
             $requestedKind = $app->getInput()->getCmd('lesson_kind');
-            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '', 'publish_down' => '', 'release_after_days' => ''];
+            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document', 'audio'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '', 'publish_down' => '', 'release_after_days' => '', 'audio_transcript' => ''];
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) { $this->editorMode = 'lesson'; }
@@ -183,8 +183,10 @@ final class HtmlView extends BaseHtmlView
                     $lessonParams = json_decode((string)$lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
                     $lessonThreshold = is_array($lessonParams) && is_int($lessonParams['video_threshold_basis_points'] ?? null)
                         ? \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($lessonParams['video_threshold_basis_points']) : '';
+                    $audioTranscript = is_array($lessonParams) && is_string($lessonParams['audio_transcript'] ?? null)
+                        ? $lessonParams['audio_transcript'] : '';
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
-                        'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
+                        'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body, 'audio_transcript' => $audioTranscript,
                         'public_preview' => (int) $lesson->preview,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',

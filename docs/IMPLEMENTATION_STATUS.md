@@ -287,3 +287,6 @@ La [PR #361](https://github.com/jeckodevelopment/jd_learn/pull/361) è stata **i
 **Avanzamento implementativo stimato:** JD Learn **79,06% (+0,22 punti)**, area email **67,5% (+2 punti)**, applicando prudenzialmente il peso relativo storico dell'area email (circa 11%); da riconciliare con i pesi del report periodico, **non è una misura di accettazione manuale**. MAIL-F è **parziale**: rimangono le richieste/approvazioni/rifiuti e le revoche con regole distinte, e ulteriori preferenze/eventi approvati. CORE-18 tracciato nella matrice CSV con PR #361, e piano/specifique aggiornati a descrivere perimetro e residui.
 
 **Pacchetto installabile della CI finale:** [JD-Learn-0.56.19-dev, artifact #14120022825](https://github.com/jeckodevelopment/jd_learn/actions/runs/43610831124/artifacts/14120022825) (nuova build con numero di versione invariato; artefatto in scadenza 28 novembre 2026 alle 15:37 UTC). Il pacchetto corrisponde al codice della PR validata; le note post-merge aggiunte a main non modificano il codice del pacchetto.
+
+**LES-01 / SCR-06 — trascrizione audio (PR #451 aperta; CI in corso):** campo editoriale facoltativo dedicato alle lezioni audio, filtrato con il filtro HTML Joomla e conservato nei parametri della versione. La trascrizione viene resa in un controllo espandibile nell’aula autorizzata; la verifica manuale è descritta nel testbook.
+
