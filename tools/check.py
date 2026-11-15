@@ -122,6 +122,18 @@ for tag in ['it-IT','en-GB']:
  assert 'COM_JLMS_CATEGORY_REASSIGN_TITLE=' in sys_ini and category_reassign in sys_ini,(tag,'com_jlms.sys.ini category reassignment label')
  lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
  assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',sys_ini,re.M)==[lesson_label],(tag,'com_jlms.sys.ini lesson fields label')
+# Issues #406/#408: back-to-course is the first native Joomla toolbar action.
+for view_name, template_name, label in [
+ ('Curriculum', 'curriculum', 'COM_JLMS_PROGRAMME_BACK_COURSE'),
+ ('Courseannouncement', 'courseannouncement', 'COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_BACK'),
+]:
+ view_source=(ROOT/f'component/administrator/src/View/{view_name}/HtmlView.php').read_text()
+ template_source=(ROOT/f'component/administrator/tmpl/{template_name}/default.php').read_text()
+ assert "->linkButton('back-to-course', '"+label+"')" in view_source, view_name
+ assert "->icon('icon-arrow-left')" in view_source, view_name
+ assert 'task=course.edit&id=' in view_source or 'view=course&layout=edit&id=' in view_source, view_name
+ assert label not in template_source, ('Back action must not remain in page body', view_name)
+ assert view_source.index("->linkButton('back-to-course'") < view_source.index('parent::display($tpl)'), view_name
 # The course editor exposes the curriculum action once, through its native toolbar.
 course_editor=(ROOT/'component/administrator/tmpl/course/edit.php').read_text()
 assert 'jlms-course-programme-link' not in course_editor
