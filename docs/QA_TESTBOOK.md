@@ -1,3 +1,12 @@
+## Issue #434 — azioni della vista iscritti nella toolbar
+
+1. Aggiornare JD Learn su Joomla 6/Atum e aprire il roster di un corso con un account autorizzato. Verificare che **Iscrizione manuale**, **Comunica agli iscritti** e **Disponibilità del corso** compaiano una sola volta nella toolbar Joomla e non nel corpo della pagina.
+2. Aprire ciascuna azione e verificare che mantenga il corso corretto. In particolare, **Disponibilità del corso** deve aprire l'operazione prevista di chiusura ammissioni. Tornare al roster con la navigazione nativa.
+3. Verificare filtri, richieste pending, tabella, paginazione e azioni per singola iscrizione. Ripetere in italiano e inglese, su desktop e mobile.
+4. Con un ruolo privo dei permessi richiesti, verificare che l'accesso alle viste di destinazione continui a essere negato anche inserendo direttamente l'URL.
+
+La modifica riordina la navigazione del roster. Non cambia le operazioni né i relativi controlli ACL.
+
 ## MAIL-H — rendering template personalizzati, escaping (PR #410)
 
 1. Installare/aggiornare build `0.57.7-dev` su sito di prova Joomla 6.2. In **Sistema → Modelli email** personalizzare una variante HTML di `com_jlms.enrollment.manager_request`: usare sia `{COURSE_TITLE}` sia `{COURSE_TITLE_HTML}` in paragrafi distinti; verificare che titoli contenenti `&`, `<`, `>` e virgolette vengano mostrati una volta sola senza doppio escaping e senza markup iniettato.

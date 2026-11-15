@@ -7,9 +7,6 @@ use Joomla\CMS\Router\Route;
 <section id="jlms-admin-enrollments">
  <h1><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?>: <?= $this->escape($this->course->title) ?></h1>
  <p id="jlms-roster-policy" class="alert alert-info"><?= Text::_('COM_JLMS_ROSTER_POLICY') ?></p>
- <p><a id="jlms-roster-manual" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=manualenrollment&id='.(int) $this->course->id) ?>"><?= Text::_('COM_JLMS_MANUAL_TITLE') ?></a>
- <a id="jlms-roster-communication" class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=coursemessage&id='.(int) $this->course->id) ?>"><?= Text::_('COM_JLMS_COMMUNICATION_TITLE') ?></a>
- <a id="jlms-roster-course-operations" class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=courseoperations&id='.(int) $this->course->id.'&operation=admissions_close') ?>"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_TITLE') ?></a></p>
  <?php if ($this->pendingRequests) : ?>
  <section id="jlms-pending-requests" aria-labelledby="jlms-pending-title">
   <h2 id="jlms-pending-title"><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_PENDING') ?> (<?= count($this->pendingRequests) ?>)</h2>

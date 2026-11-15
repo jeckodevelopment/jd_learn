@@ -29,6 +29,11 @@ for name in ('mailqueue', 'mailvariables', 'categoryreassignment'):
  assert not re.search(r'<h1\\b', template, re.I), ('Duplicate H1 beneath toolbar', name)
 assert 'COM_JLMS_MAIL_QUEUE_HELP' in (ROOT/'component/administrator/tmpl/mailqueue/default.php').read_text()
 assert 'COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO' in (ROOT/'component/administrator/tmpl/mailvariables/default.php').read_text()
+roster_view=(ROOT/'component/administrator/src/View/Enrollments/HtmlView.php').read_text()
+roster_template=(ROOT/'component/administrator/tmpl/enrollments/default.php').read_text()
+for action in ('manualenrollment', 'coursemessage', 'courseoperations'):
+ assert f'view={action}' in roster_view, ('Missing roster toolbar action', action)
+ assert f'view={action}' not in roster_template, ('Roster action duplicated in page body', action)
 assert '<h2>' in (ROOT/'component/administrator/tmpl/categoryreassignment/default.php').read_text()
 # Issue #416: translated model titles and IDs require a visible separator.
 mail_variable_guide=(ROOT/'component/administrator/tmpl/mailvariables/default.php').read_text()

@@ -94,7 +94,7 @@ try:
  expect(json.loads(fixture('snapshot'))==after,'read navigation preserves admission and progress')
  expect(after['groups']==before['groups'],'manual operation never grants groups')
  _,roster,_=request(manager,'/administrator/index.php?option=com_jlms&view=enrollments&id='+str(f['course']))
- expect('jlms-roster-manual'in Page(roster).ids,'native roster links to manual admission')
+ expect('jlms-roster-manual' not in Page(roster).ids,'manual admission action is not duplicated in the roster body')
  print(json.dumps({'manual_enrollment_http_checks':checks,'status':'passed'}))
 except Exception:
  log.flush();log.seek(0);print(log.read()[-14000:],file=sys.stderr);raise
