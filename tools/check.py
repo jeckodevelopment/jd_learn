@@ -39,6 +39,418 @@ assert "throw new \\RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404)" in ad
 assert (ROOT/'component/administrator/src/View/Coursemessage/HtmlView.php').is_file()
 assert (ROOT/'component/administrator/src/Model/CoursemessageModel.php').is_file()
 assert (ROOT/'component/administrator/tmpl/coursemessage/default.php').is_file()
+# Regression #419: Joomla DatabaseQuery::bind() accepts values by reference.
+# Passing a cast expression makes 'Accoda invio' fail with HTTP 500 before INSERT.
+communication_source=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
+assert '$scopeCourseId = (string) $courseId;' in communication_source
+assert '$ownerUserId = (int) $actor->id;' in communication_source
+assert "->bind(':scopeCourse', $scopeCourseId)" in communication_source
+assert "->bind(':owner', $ownerUserId, ParameterType::INTEGER)" in communication_source
+assert not re.search(r'->bind\\([^,]+,\\s*\\((?:int|string)\\)\\s*\\
+communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
+assert "e.status='active'" in communication and 'u.block=0' in communication
+assert 'filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)' in communication
+assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id'=>$mutationId" in communication and 'owner_user_id = :owner' in communication
+assert '->authorised' not in communication.lower() and 'getEnrollmentRosterService' not in communication
+assert "'com_jlms.course.message' => 'communication'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert "'com_jlms.course.message'" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+assert 'getCourseCommunicationService()->process' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
+assert "checkToken('post',false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
+# Catch undefined component/plugin translation keys, including INI keys assembled in ACL metadata.
+keys=set()
+for p in ROOT.rglob('*.ini'):
+ if 'docs' not in p.parts:keys.update(re.findall(r'^([A-Z][A-Z0-9_]+)=',p.read_text(),re.M))
+used=set()
+for folder in ['component','plugins']:
+ for p in (ROOT/folder).rglob('*'):
+  if p.suffix in ['.php','.xml']:used.update(re.findall(r'\b(?:COM_JLMS|PLG_JLMSVIDEO|PLG_PRIVACY_JDLEARN)_[A-Z0-9_]+\b',p.read_text()))
+# Installer error codes are caught explicitly and listed in the implementation status; still translate them.
+assert used<=keys,sorted(used-keys)
+lesson_notice=(ROOT/'component/administrator/src/Application/LessonReleaseNotice.php').read_text()
+assert "LessonAvailability::effectiveStart" in lesson_notice
+assert "'lesson_release'" in (ROOT/'component/administrator/src/Application/MailPreferences.php').read_text()
+assert "'mail_lesson_release'" in (ROOT/'component/administrator/src/Model/CourseModel.php').read_text()
+assert 'mail_lesson_release_enabled' in (ROOT/'component/administrator/config.xml').read_text()
+assert 'mail_lesson_release' in (ROOT/'component/administrator/forms/course.xml').read_text()
+assert "'com_jlms.lesson.available' => 'lesson_release'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert "lessonReleaseEligible($row)" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert "new \\Jlms\\Component\\Jlms\\Administrator\\Application\\LessonReleaseNotice($db)" in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
+course_update=(ROOT/'component/administrator/src/Application/CourseVersionChangeNotice.php').read_text()
+assert "significantVersionChange" in course_update and "course.version.changed:" in course_update
+assert "'com_jlms.course.updated' => 'course_update'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert 'courseUpdateEligible($row)' in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert 'mail_course_update_enabled' in (ROOT/'component/administrator/config.xml').read_text()
+assert "'mail_course_update'" in (ROOT/'component/administrator/src/Model/CourseModel.php').read_text()
+assert 'mail_course_update' in (ROOT/'component/administrator/forms/course.xml').read_text()
+assert 'CourseVersionChangeNotice($db)' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
+manager_notice=(ROOT/'component/administrator/src/Application/EnrollmentManagerNotice.php').read_text()
+assert 'EnrollmentRosterService' in manager_notice and 'Access::checkGroup' in manager_notice
+assert "'com_jlms.enrollment.manager_request' => 'manager_request'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert 'managerRequestEligible($row)' in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+mail_queue_source=(ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+mail_catalog_source=(ROOT/'component/administrator/src/Infrastructure/MailTemplateVariableCatalog.php').read_text()
+assert '$mail->addUnsafeTags(MailTemplateVariableCatalog::tagsRequiringHtmlEscape($templateId));' in mail_queue_source
+assert '$mail->addUnsafeTags(array_keys($data));' not in mail_queue_source
+assert 'tagsRequiringHtmlEscape' in mail_catalog_source
+assert "['text', 'date', 'url']" in mail_catalog_source
+assert 'mail_manager_request_enabled' in (ROOT/'component/administrator/config.xml').read_text()
+assert "'mail_manager_request'" in (ROOT/'component/administrator/src/Model/CourseModel.php').read_text()
+assert 'mail_manager_request' in (ROOT/'component/administrator/forms/course.xml').read_text()
+assert 'EnrollmentManagerNotice($db)' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
+# Joomla's Mail Templates manager resolves each ID title and description in both
+# administrator language catalogs: .sys.ini for the list and .ini for the editor.
+mail_definitions=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+mail_ids=[line.strip().split("'")[1] for line in mail_definitions.splitlines() if line.strip().startswith("'com_jlms.") and "' => [" in line]
+assert len(mail_ids)==17 and len(set(mail_ids))==17,('Unexpected mail template inventory',mail_ids)
+for language in ['it-IT','en-GB']:
+ for suffix in ['.ini','.sys.ini']:
+  catalog=(ROOT/'component/administrator/language'/language/('com_jlms'+suffix)).read_text()
+  for template_id in mail_ids:
+   for field in ['TITLE','DESC']:
+    language_key='COM_JLMS_MAIL_'+template_id.removeprefix('com_jlms.').replace('.','_').upper()+'_'+field
+    assert catalog.count(language_key+'="')==1,(language,suffix,language_key)
+for tag,expected in {
+ 'it-IT':'Gestisci corsi, programma e risorse didattiche dal pannello amministrativo.',
+ 'en-GB':'Manage courses, the learning programme and teaching resources from the administrator panel.',
+}.items():
+ ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.ini').read_text()
+ matches=re.findall(r'^COM_JLMS_DASHBOARD_INTRO="([^"]*)"$',ini,re.M)
+ assert matches==[expected],(tag,matches)
+ for key in ['COM_JLMS_COURSES','COM_JLMS_TEACHERS','COM_JLMS_LESSONS']:
+  assert re.search(rf'^{key}="[^"]+"$',ini,re.M),(tag,key)
+ lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
+ assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',ini,re.M)==[lesson_label],(tag,'com_jlms.ini lesson fields label')
+for tag in ['it-IT','en-GB']:
+ sys_ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.sys.ini').read_text()
+ assert re.findall(r'^COM_JLMS_DASHBOARD_MENU="([^"]*)"$',sys_ini,re.M)==['Dashboard'],tag
+ pathway_title='Percorsi formativi' if tag=='it-IT' else 'Learning pathways'
+ assert 'COM_JLMS_PATHWAYS=' in sys_ini and pathway_title in sys_ini,tag
+ category_reassign='Gestione dipendenze categorie' if tag=='it-IT' else 'Category dependency cleanup'
+ assert 'COM_JLMS_CATEGORY_REASSIGN_TITLE=' in sys_ini and category_reassign in sys_ini,(tag,'com_jlms.sys.ini category reassignment label')
+ lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
+ assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',sys_ini,re.M)==[lesson_label],(tag,'com_jlms.sys.ini lesson fields label')
+# Issues #406/#408: back-to-course is the first native Joomla toolbar action.
+for view_name, template_name, label in [
+ ('Curriculum', 'curriculum', 'COM_JLMS_PROGRAMME_BACK_COURSE'),
+ ('Courseannouncement', 'courseannouncement', 'COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_BACK'),
+]:
+ view_source=(ROOT/f'component/administrator/src/View/{view_name}/HtmlView.php').read_text()
+ template_source=(ROOT/f'component/administrator/tmpl/{template_name}/default.php').read_text()
+ assert "->linkButton('back-to-course', '"+label+"')" in view_source, view_name
+ assert "->icon('icon-arrow-left')" in view_source, view_name
+ assert 'task=course.edit&id=' in view_source or 'view=course&layout=edit&id=' in view_source, view_name
+ assert label not in template_source, ('Back action must not remain in page body', view_name)
+ assert view_source.index("->linkButton('back-to-course'") < view_source.index('parent::display($tpl)'), view_name
+# The course editor exposes the curriculum action once, through its native toolbar.
+course_editor=(ROOT/'component/administrator/tmpl/course/edit.php').read_text()
+assert 'jlms-course-programme-link' not in course_editor
+assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
+course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
+assert "$toolbar->save('course.apply')" in course_view
+assert "$toolbar->dropdownButton('save-group')" in course_view
+assert "->linkButton('announcement-preview', 'COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW')" in course_view
+assert "'index.php?option=com_jlms&view=courseannouncement&id=' . $id" in course_view
+assert 'view=courseannouncement' not in course_editor
+assert "$saveDropdown->getChildToolbar()" in course_view
+assert "$programmeMenu->save('course.save', 'COM_JLMS_COURSE_SAVE_AND_CLOSE')" in course_view
+assert "$programmeMenu->standardButton(" in course_view
+assert "'COM_JLMS_COURSE_SAVE_AND_CLOSE'" in course_view
+assert 'COM_JLMS_COURSE_SAVE_AND_CLOSE="Save & Close"' in (ROOT/'component/administrator/language/en-GB/com_jlms.ini').read_text()
+assert 'COM_JLMS_COURSE_SAVE_AND_CLOSE="Salva & Chiudi"' in (ROOT/'component/administrator/language/it-IT/com_jlms.ini').read_text()
+assert "'course-programme'" in course_view and "'COM_JLMS_COURSE_SAVE_PROGRAMME'" in course_view and "'course.programme'" in course_view
+assert "ToolbarHelper::custom('course.programme'" not in course_view
+dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
+dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
+dashboard_style=(ROOT/'component/media/css/admin-dashboard.css').read_text()
+for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
+    marker='COM_JLMS_DASHBOARD_'+'GROUP_'+group
+    assert marker in dashboard_view, ('Dashboard missing group', group)
+    for locale in ('it-IT','en-GB'):
+        assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
+assert "foreach ($this->shortcutGroups as $groupKey => $shortcuts)" in dashboard_template
+assert "if (!$shortcuts) { continue; }" in dashboard_template
+assert "core.manage', 'com_mails'" in dashboard_view and "core.edit', 'com_mails'" in dashboard_view
+assert "option=com_mails&view=templates&filter[extension]=com_jlms" in dashboard_view
+assert dashboard_view.index("'COM_JLMS_COURSES'") < dashboard_view.index("'COM_JLMS_CERTIFICATES'")
+assert "'COM_JLMS_MAIL_TEMPLATES'" in dashboard_view
+assert "grid-template-columns: repeat(4" in dashboard_style and "@media (max-width:" in dashboard_style
+
+pathways_template=(ROOT/'component/administrator/tmpl/pathways/default.php').read_text()
+assert not re.search(r'<h1\b',dashboard_template) and not re.search(r'<h1\b',pathways_template)
+version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
+component_version=E.parse(ROOT/'component/jlms.xml').findtext('version')
+semver_core=r'(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)'
+assert re.fullmatch(semver_core,version),('non-canonical package version',version)
+assert re.fullmatch(semver_core,component_version),('non-canonical component version',component_version)
+assert version==component_version,('package/component version mismatch',version,component_version)
+package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
+if package.exists():
+ with zipfile.ZipFile(package) as z:
+  assert z.testzip() is None
+  m=E.fromstring(z.read('pkg_jlms.xml'))
+  for e in m.findall('./files/file'):
+   with zipfile.ZipFile(io.BytesIO(z.read('constituents/'+e.text))) as child:
+    assert child.testzip() is None
+    names=set(child.namelist())
+    manifest='jlms.xml' if e.attrib['type'] in ['component','library'] else e.attrib['id']+'.xml'
+    x=E.fromstring(child.read(manifest))
+    for files in x.findall('files')+x.findall('administration/files'):
+     prefix=files.attrib.get('folder','')
+     for f in list(files):
+      source='/'.join(x for x in [prefix,f.text] if x)
+      assert source in names or any(n.startswith(source+'/') for n in names),(manifest,source)
+ print(f'ZIP manifests and all {len(m.findall("./files/file"))} child archives verified')
+# The administrator announcement preview is an explicit, reachable display route.
+display_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
+assert "'courseannouncement'" in display_controller
+assert (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').is_file()
+assert 'new \\Jlms\\Component\\Jlms\\Administrator\\Application\\CourseAnnouncementService' in (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').read_text()
+assert 'new CourseAnnouncementService' in (ROOT/'component/administrator/src/Controller/CourseannouncementController.php').read_text()
+assert (ROOT/'component/administrator/tmpl/courseannouncement/default.php').is_file()
+
+# Keep implementation claims separate from planned acceptance and verify their source references.
+import runpy
+runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
+print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':46,'foreign_keys':66,'structural_checks':'passed'}))
+
+# MAIL-11.1 registers the opt-in new-course template without enabling sends.
+mail_templates=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+assert "'com_jlms.course.published' => [" in mail_templates
+for tag in ['COURSE_TITLE','COURSE_IMAGE_HTML','COURSE_INTRO_HTML','COURSE_LESSONS_HTML','COURSE_URL','UNSUBSCRIBE_URL']:
+    assert tag in mail_templates, ('MAIL-11.1 missing template token',tag)
+consent=(ROOT/'component/administrator/src/Application/CourseAnnouncementConsent.php').read_text()
+assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
+assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
+assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
+assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+
+# MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
+assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
+assert 'mail_unsubscribe_tokens' in consent and 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL 30 DAY)' in consent
+assert "->where('confirmed_at = :confirmed')" in consent
+mail_controller=(ROOT/'component/site/src/Controller/MailconsentController.php').read_text()
+assert "['request', 'confirm', 'revoke', 'revokelink']" in mail_controller.lower()
+assert "strtoupper($this->input->getMethod()) !== 'POST'" in mail_controller
+assert "->revokeByToken($token)" in mail_controller
+assert "mailconsentrevoke" in (ROOT/'component/site/src/View/Mailconsentrevoke/HtmlView.php').read_text().lower()
+
+# Documentation hygiene is checked with every standard build.
+runpy.run_path(str(ROOT / 'tools/check_docs_hygiene.py'), run_name='__main__')
+
+# JD Learn's administrator sidebar is a concise operational navigation, not a
+# duplicate of the dashboard. Secondary native Joomla views remain reachable
+# from the dashboard with their existing ACL guards.
+manifest=(ROOT/'component/jlms.xml').read_text()
+submenu=E.fromstring(manifest).find('./administration/submenu')
+assert submenu is not None
+actual_submenu_links=[node.attrib.get('link') for node in submenu.findall('menu')]
+expected_submenu_links=[
+ 'option=com_jlms&view=dashboard',
+ 'option=com_jlms&view=courses',
+ 'option=com_jlms&view=pathways',
+ 'option=com_jlms&view=teachers',
+ 'option=com_jlms&view=questionbank',
+]
+assert actual_submenu_links==expected_submenu_links, {'actual': actual_submenu_links, 'expected': expected_submenu_links}
+dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
+for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES'):
+ assert key in dashboard_view
+assert "'COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables'" not in dashboard_view
+for tag in ('it-IT','en-GB'):
+ messages=(ROOT/f'component/administrator/language/{tag}/com_jlms.ini').read_text()
+ for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES','COM_JLMS_DASHBOARD_GROUP_CONFIGURATION'):
+  assert len(re.findall(r'^'+key+r'=',messages,re.M))==1,(tag,key)
+
+# Nested Joomla administrator views select native submenu entries; secondary
+# views select the component root with no operational submenu selected.
+admin_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
+for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']"):
+ assert pair in admin_controller,pair
+assert '$menu->setActive((int) $item->id)' in admin_controller
+assert "$app->getPathway()" not in admin_controller
+# The dashboard introduction used to have a stale duplicate value later in each INI file.
+for tag,expected in {
+ 'it-IT':'Gestisci corsi, programma e risorse didattiche dal pannello amministrativo.',
+ 'en-GB':'Manage courses, the learning programme and teaching resources from the administrator panel.',
+}.items():
+ ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.ini').read_text()
+ matches=re.findall(r'^COM_JLMS_DASHBOARD_INTRO="([^"]*)"$',ini,re.M)
+ assert matches==[expected],(tag,matches)
+ for key in ['COM_JLMS_COURSES','COM_JLMS_TEACHERS','COM_JLMS_LESSONS']:
+  assert re.search(rf'^{key}="[^"]+"$',ini,re.M),(tag,key)
+ lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
+ assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',ini,re.M)==[lesson_label],(tag,'com_jlms.ini lesson fields label')
+for tag in ['it-IT','en-GB']:
+ sys_ini=(ROOT/'component'/'administrator'/'language'/tag/'com_jlms.sys.ini').read_text()
+ assert re.findall(r'^COM_JLMS_DASHBOARD_MENU="([^"]*)"$',sys_ini,re.M)==['Dashboard'],tag
+ pathway_title='Percorsi formativi' if tag=='it-IT' else 'Learning pathways'
+ assert 'COM_JLMS_PATHWAYS=' in sys_ini and pathway_title in sys_ini,tag
+ category_reassign='Gestione dipendenze categorie' if tag=='it-IT' else 'Category dependency cleanup'
+ assert 'COM_JLMS_CATEGORY_REASSIGN_TITLE=' in sys_ini and category_reassign in sys_ini,(tag,'com_jlms.sys.ini category reassignment label')
+ lesson_label='Campi aggiuntivi' if tag=='it-IT' else 'Lesson fields'
+ assert re.findall(r'^COM_JLMS_LESSON_FIELDS_MANAGE="([^"]*)"$',sys_ini,re.M)==[lesson_label],(tag,'com_jlms.sys.ini lesson fields label')
+# The course editor exposes the curriculum action once, through its native toolbar.
+course_editor=(ROOT/'component/administrator/tmpl/course/edit.php').read_text()
+assert 'jlms-course-programme-link' not in course_editor
+assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
+course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
+assert "$toolbar->save('course.apply')" in course_view
+assert "$toolbar->dropdownButton('save-group')" in course_view
+assert "$saveDropdown->getChildToolbar()" in course_view
+assert "$programmeMenu->save('course.save', 'COM_JLMS_COURSE_SAVE_AND_CLOSE')" in course_view
+assert "$programmeMenu->standardButton(" in course_view
+assert "'COM_JLMS_COURSE_SAVE_AND_CLOSE'" in course_view
+assert 'COM_JLMS_COURSE_SAVE_AND_CLOSE="Save & Close"' in (ROOT/'component/administrator/language/en-GB/com_jlms.ini').read_text()
+assert 'COM_JLMS_COURSE_SAVE_AND_CLOSE="Salva & Chiudi"' in (ROOT/'component/administrator/language/it-IT/com_jlms.ini').read_text()
+assert "'course-programme'" in course_view and "'COM_JLMS_COURSE_SAVE_PROGRAMME'" in course_view and "'course.programme'" in course_view
+assert "ToolbarHelper::custom('course.programme'" not in course_view
+dashboard_template=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
+dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
+dashboard_style=(ROOT/'component/media/css/admin-dashboard.css').read_text()
+for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
+    marker='COM_JLMS_DASHBOARD_'+'GROUP_'+group
+    assert marker in dashboard_view, ('Dashboard missing group', group)
+    for locale in ('it-IT','en-GB'):
+        assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
+assert "foreach ($this->shortcutGroups as $groupKey => $shortcuts)" in dashboard_template
+assert "if (!$shortcuts) { continue; }" in dashboard_template
+assert "core.manage', 'com_mails'" in dashboard_view and "core.edit', 'com_mails'" in dashboard_view
+assert "option=com_mails&view=templates&filter[extension]=com_jlms" in dashboard_view
+assert dashboard_view.index("'COM_JLMS_COURSES'") < dashboard_view.index("'COM_JLMS_CERTIFICATES'")
+assert "'COM_JLMS_MAIL_TEMPLATES'" in dashboard_view
+assert "grid-template-columns: repeat(4" in dashboard_style and "@media (max-width:" in dashboard_style
+
+pathways_template=(ROOT/'component/administrator/tmpl/pathways/default.php').read_text()
+assert not re.search(r'<h1\b',dashboard_template) and not re.search(r'<h1\b',pathways_template)
+version=E.parse(ROOT/'packages/pkg_jlms.xml').findtext('version')
+component_version=E.parse(ROOT/'component/jlms.xml').findtext('version')
+semver_core=r'(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)'
+assert re.fullmatch(semver_core,version),('non-canonical package version',version)
+assert re.fullmatch(semver_core,component_version),('non-canonical component version',component_version)
+assert version==component_version,('package/component version mismatch',version,component_version)
+package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
+if package.exists():
+ with zipfile.ZipFile(package) as z:
+  assert z.testzip() is None
+  m=E.fromstring(z.read('pkg_jlms.xml'))
+  for e in m.findall('./files/file'):
+   with zipfile.ZipFile(io.BytesIO(z.read('constituents/'+e.text))) as child:
+    assert child.testzip() is None
+    names=set(child.namelist())
+    manifest='jlms.xml' if e.attrib['type'] in ['component','library'] else e.attrib['id']+'.xml'
+    x=E.fromstring(child.read(manifest))
+    for files in x.findall('files')+x.findall('administration/files'):
+     prefix=files.attrib.get('folder','')
+     for f in list(files):
+      source='/'.join(x for x in [prefix,f.text] if x)
+      assert source in names or any(n.startswith(source+'/') for n in names),(manifest,source)
+ print(f'ZIP manifests and all {len(m.findall("./files/file"))} child archives verified')
+# The administrator announcement preview is an explicit, reachable display route.
+display_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
+assert "'courseannouncement'" in display_controller
+assert (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').is_file()
+assert 'new \\Jlms\\Component\\Jlms\\Administrator\\Application\\CourseAnnouncementService' in (ROOT/'component/administrator/src/View/Courseannouncement/HtmlView.php').read_text()
+assert 'new CourseAnnouncementService' in (ROOT/'component/administrator/src/Controller/CourseannouncementController.php').read_text()
+assert (ROOT/'component/administrator/tmpl/courseannouncement/default.php').is_file()
+
+# Keep implementation claims separate from planned acceptance and verify their source references.
+import runpy
+runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
+print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':46,'foreign_keys':66,'structural_checks':'passed'}))
+
+# MAIL-11.1 registers the opt-in new-course template without enabling sends.
+mail_templates=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+assert "'com_jlms.course.published' => [" in mail_templates
+for tag in ['COURSE_TITLE','COURSE_IMAGE_HTML','COURSE_INTRO_HTML','COURSE_LESSONS_HTML','COURSE_URL','UNSUBSCRIBE_URL']:
+    assert tag in mail_templates, ('MAIL-11.1 missing template token',tag)
+consent=(ROOT/'component/administrator/src/Application/CourseAnnouncementConsent.php').read_text()
+assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
+assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
+assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
+assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+
+# MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
+assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
+assert 'mail_unsubscribe_tokens' in consent and 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL 30 DAY)' in consent
+assert "->where('confirmed_at = :confirmed')" in consent
+mail_controller=(ROOT/'component/site/src/Controller/MailconsentController.php').read_text()
+assert "['request', 'confirm', 'revoke', 'revokelink']" in mail_controller.lower()
+assert "strtoupper($this->input->getMethod()) !== 'POST'" in mail_controller
+assert "->revokeByToken($token)" in mail_controller
+assert "mailconsentrevoke" in (ROOT/'component/site/src/View/Mailconsentrevoke/HtmlView.php').read_text().lower()
+
+# Documentation hygiene is checked with every standard build.
+runpy.run_path(str(ROOT / 'tools/check_docs_hygiene.py'), run_name='__main__')
+
+# JD Learn's administrator sidebar is a concise operational navigation, not a
+# duplicate of the dashboard. Secondary native Joomla views remain reachable
+# from the dashboard with their existing ACL guards.
+manifest=(ROOT/'component/jlms.xml').read_text()
+submenu=E.fromstring(manifest).find('./administration/submenu')
+assert submenu is not None
+assert [node.attrib.get('link') for node in submenu.findall('menu')]==[
+ 'option=com_jlms&view=dashboard',
+ 'option=com_jlms&view=courses',
+ 'option=com_jlms&view=pathways',
+ 'option=com_jlms&view=teachers',
+ 'option=com_jlms&view=questionbank',
+]
+dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
+for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES'):
+ assert key in dashboard_view
+assert "'COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables'" not in dashboard_view
+for tag in ('it-IT','en-GB'):
+ messages=(ROOT/f'component/administrator/language/{tag}/com_jlms.ini').read_text()
+ for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES','COM_JLMS_DASHBOARD_GROUP_CONFIGURATION'):
+  assert len(re.findall(r'^'+key+r'=',messages,re.M))==1,(tag,key)
+
+# Nested Joomla administrator views must map to the component's own primary
+# menu entries. Secondary views select the native component root.
+admin_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
+for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']"):
+ assert pair in admin_controller,pair
+assert '$menu->setActive((int) $item->id)' in admin_controller
+assert "$app->getPathway()" not in admin_controller
+
+# The dashboard-only email queue stays accessible but has no sidebar entry.
+assert "'COM_JLMS_MAIL_QUEUE', 'icon-envelope'" in dashboard_view
+assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder'," in dashboard_view
+assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder-tree'," not in dashboard_view
+assert "'mailqueue' => ['mailqueue']" not in admin_controller
+assert "(int) ($item->parent_id ?? 0) !== 1" in admin_controller
+assert "(int) ($item->parent_id ?? 0) === 1" in admin_controller
+
+
+# Regression: Joomla DatabaseQuery::bind() expects stable variables (by reference).
+# The stale mail reconciliation must never bind a ternary, cast or expression.
+audit=(ROOT/'component/administrator/src/Application/MailQueueAuditService.php').read_text()
+start=audit.index('public function reconcile(')
+end=audit.index('private function filters(', start)
+reconciliation=audit[start:end]
+for expected in (
+    "$newState = $action === 'sent' ? 'sent' : 'retry';",
+    "$actorId = (int) $actor->id;",
+    "->bind(':state', $newState)",
+    "->bind(':actor', $actorId, ParameterType::INTEGER)",
+    "->bind(':lastError', $lastError)",
+    "->where(\"state = 'sending'\")",
+    "self::STALE_MINUTES",
+):
+    assert expected in reconciliation, ('Unsafe stale mail reconciliation',expected)
+for bad in (
+    "->bind(':state', $action ===",
+    "->bind(':actor', (int)",
+    "->bind(':lastError', 'Manual reconciliation:",
+):
+    assert bad not in reconciliation, ('By-reference SQL bind expression',bad)
+, communication_source), 'Joomla bind-by-reference cast expression'
+communication_template=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
+assert 'class="btn btn-danger"' not in communication_template
+assert 'class="btn btn-primary" type="submit"><?= Text::_(\\'COM_JLMS_COMMUNICATION_QUEUE\\') ?>' in communication_template
+assert 'class="form-check-label" for="jlms-communication-confirm"' in communication_template
+assert 'class="card mt-4 mb-3"' in communication_template
 # Course communications stay within active enrolments and share Joomla Mail Templates/outbox.
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
