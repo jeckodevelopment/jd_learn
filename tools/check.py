@@ -46,7 +46,13 @@ assert '$scopeCourseId = (string) $courseId;' in communication_source
 assert '$ownerUserId = (int) $actor->id;' in communication_source
 assert "->bind(':scopeCourse', $scopeCourseId)" in communication_source
 assert "->bind(':owner', $ownerUserId, ParameterType::INTEGER)" in communication_source
-assert not re.search(r'->bind\\([^,]+,\\s*\\((?:int|string)\\)\\s*\\
+assert "->bind(':scopeCourse',(string)$courseId)" not in communication_source
+assert "->bind(':owner',(int)$actor->id" not in communication_source
+communication_template=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
+assert 'class="btn btn-danger"' not in communication_template
+assert 'COM_JLMS_COMMUNICATION_QUEUE' in communication_template and 'btn btn-primary' in communication_template
+assert 'class="form-check-label" for="jlms-communication-confirm"' in communication_template
+assert 'class="card mt-4 mb-3"' in communication_template
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
 assert 'filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)' in communication
