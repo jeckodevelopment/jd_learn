@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.57.3-dev
+
+- MAIL-G (PR #399): notifica operativa facoltativa `com_jlms.course.updated` esclusivamente dopo la migrazione esplicita di un'iscrizione a una versione didattica pubblicata con cambiamenti sostanziali. Nessuna email al semplice salvataggio o alla pubblicazione di una versione non assegnata.
+- Rilevazione cambi su contenuti di lezioni, quiz, materiali, regole e moduli (escludendo la sola presentazione editoriale); default OFF, override per corso, coda idempotente/Scheduler Joomla, controllo stato iscrizione, account, categoria e ACL prima di SMTP. Modello nativo IT/EN; QA manuale SMTP pendente.
+
 ## 0.57.2-dev
 
 - MAIL-G (PR #397): introdotta notifica opzionale `com_jlms.lesson.available` quando una lezione pianificata diventa accessibile a un'iscrizione attiva della stessa versione didattica. Default globale OFF, override per corso, Scheduler e Mail Templates Joomla nativi, deduplica per iscrizione+lezione e ricontrollo ACL/stato/finestra/preferenze al dispatch. Messaggio con titolo e link autenticato, HTML con escaping.
