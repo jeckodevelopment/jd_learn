@@ -13,6 +13,7 @@ use Jlms\Component\Jlms\Administrator\Application\MailQueueAuditService;
 final class HtmlView extends BaseHtmlView
 {
     public array $data = [];
+    public array $mailScheduler = [];
 
     public function display($tpl = null)
     {
@@ -22,6 +23,9 @@ final class HtmlView extends BaseHtmlView
         $start = max(0, $input->getInt('limitstart', 0));
         $this->data = (new MailQueueAuditService(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)))
             ->page(Factory::getApplication()->getIdentity(), $filters, $start, 50);
+        $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status(
+            Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)
+        );
         ToolbarHelper::title(Text::_('COM_JLMS_MAIL_QUEUE_TITLE'), 'envelope');
         parent::display($tpl);
     }
