@@ -20,6 +20,15 @@ mail_queue=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_t
 assert re.search(r'CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue`',mail_queue)
 assert re.search(r'UNIQUE KEY `uq_event_key` \(`event_key`\)',mail_queue)
 assert not re.search(r'\b(?:DROP TABLE|TRUNCATE TABLE)\b',sql,re.I)
+# Regression #383: GET /administrator/index.php?option=com_jlms&view=coursemessage&id=N
+# must enter the read-only display whitelist and retain Courses' native Atum context.
+admin_display=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
+assert "'manualenrollment', 'coursemessage', 'mailqueue'" in admin_display
+assert "'manualenrollment', 'coursemessage', 'quiz'" in admin_display
+assert "throw new \\RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404)" in admin_display
+assert (ROOT/'component/administrator/src/View/Coursemessage/HtmlView.php').is_file()
+assert (ROOT/'component/administrator/src/Model/CoursemessageModel.php').is_file()
+assert (ROOT/'component/administrator/tmpl/coursemessage/default.php').is_file()
 # Course communications stay within active enrolments and share Joomla Mail Templates/outbox.
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
