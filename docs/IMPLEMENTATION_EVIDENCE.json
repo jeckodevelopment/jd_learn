@@ -18,12 +18,12 @@
     }
   },
   "version": "0.57.7-dev",
-  "code_baseline": "9cdb81527dcd520191bf8608868e900d519581fe",
+  "code_baseline": "2d70bb15d897f0d9f0ed3cbc29e72bf6bb61c28b",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43766296559,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559",
+    "run_id": 43768526287,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526287",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,17 +51,16 @@
     ]
   },
   "package": {
-    "artifact_id": 14182925340,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559/artifacts/14182925340",
+    "artifact_id": 14183930070,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526287/artifacts/14183930070",
     "artifact_name": "JD-Learn-0.57.7-dev",
     "installable_package": "pkg_jlms-0.57.7-dev.zip",
-    "artifact_sha256": "48b385116f470dcd16fe219a7037ca2c8ab38446f252573a115e97fda3affefe",
-    "artifact_size_bytes": 690631,
+    "artifact_sha256": "a837d45552a60876effe535ca516a3e9393c1cc9e9bf55511d7b87afbf5c57db",
+    "artifact_size_bytes": 691370,
     "wrapper_zip": true,
-    "sha256": "5bfb0e57e720f9c807b6367e3a5f1dda80cf49af87c469a71e022793a5ee5850",
-    "size_bytes": 690906,
-    "artifact_expires_at": "2026-11-29T21:58:31Z",
-    "notes": "Verified artifact for PR #464 / merged commit 9cdb81527dcd520191bf8608868e900d519581fe. Internal package SHA-256 reproduced in both PHP integration jobs; CI 4/4 and requirements CSV passed. Manual Joomla/SMTP acceptance pending."
+    "sha256": "20e3ed07b1d4200d098c6b76c11d9f5bc97dd9e232bcf8eda6d9a7499b98f02b",
+    "size_bytes": 691639,
+    "notes": "Artefatto CI della PR #468. Estrarre lo ZIP contenitore e installare pkg_jlms-0.57.7-dev.zip. Checksum e dimensione interni dalla build; digest contenitore distinto. CI 4/4 verde; accettazione manuale Joomla pendente."
   },
   "release_process": {
     "issue": 160,
@@ -13602,21 +13601,53 @@
         "conclusion": "success",
         "run_id": 43763377315
       }
+    },
+    {
+      "feature": "PR #465 validated baseline before issue #430 fix",
+      "ci": {
+        "run_id": 43766296559,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
     }
   ],
   "latest_feature": {
-    "pull_request": 464,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/464",
-    "merge_commit": "9cdb81527dcd520191bf8608868e900d519581fe",
-    "tested_head": "6942c5752dfbe205e367fc1db18487fb083e0cd9",
-    "feature": "Safe course, lesson and teacher context variables with canonical Mail Template tags, queue producers and no disclosure of lesson body content.",
-    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559",
+    "pull_request": 468,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/468",
+    "issue": 430,
+    "merge_commit": "2d70bb15d897f0d9f0ed3cbc29e72bf6bb61c28b",
+    "tested_head": "22014343e9151aa4feba5d135a1f7c5206d111d7",
+    "feature": "Include catalog_access nella proiezione pubblica del corso, richiesto dalla vista frontend per i metadati SEO e la decisione di indicizzazione.",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526287",
     "requirements": [
-      "NOT-01",
-      "MAIL-11"
+      "CAT-02"
     ],
-    "manual_acceptance": "Pending Joomla/SMTP; see MAIL-E in docs/QA_TESTBOOK.md.",
-    "residual_implementation": "Manual site validation and editor-time validation remain pending. USER_FIRSTNAME is excluded without a reliable source; LESSON_DESCRIPTION remains blank until a separate safe field exists. Estimate +2 points for the completed producers."
+    "manual_acceptance": "pending Joomla 6; see docs/QA_TESTBOOK.md",
+    "residual_implementation": "Fix warning #430 integrato; collaudo manuale Joomla pendente. Stima globale invariata 79.33%."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
@@ -13827,6 +13858,20 @@
     "installable_package": "pkg_jlms-0.57.7-dev.zip",
     "package_sha256": "29a48cbfb4b17991c93cbccccbea001d4bd58d5aa2d9495ddd1db84a70844d7d",
     "wrapper_sha256": "743a81cda8a619f1ad2ff86ff3ef37931d35abb108e1e67a458e840f04b875a4",
+    "manual_acceptance": "pending"
+  },
+  "issue_430_fix": {
+    "issue": 430,
+    "pull_request": 468,
+    "merge_commit": "2d70bb15d897f0d9f0ed3cbc29e72bf6bb61c28b",
+    "tested_head": "22014343e9151aa4feba5d135a1f7c5206d111d7",
+    "requirement": "CAT-02",
+    "verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526287",
+    "requirements_csv_validation": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526231",
+    "artifact_id": 14183930070,
+    "installable_package": "pkg_jlms-0.57.7-dev.zip",
+    "package_sha256": "20e3ed07b1d4200d098c6b76c11d9f5bc97dd9e232bcf8eda6d9a7499b98f02b",
+    "wrapper_sha256": "a837d45552a60876effe535ca516a3e9393c1cc9e9bf55511d7b87afbf5c57db",
     "manual_acceptance": "pending"
   }
 }
