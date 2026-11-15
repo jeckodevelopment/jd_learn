@@ -1,8 +1,8 @@
 {
   "date": "2026-11-15",
-  "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
-  "runtime_tested_head": "74dab84cbe617608a8c4a24a5033ab7ab8f0e5cd",
-  "ci_run": 43761830344,
+  "baseline_commit": "2d70bb15d897f0d9f0ed3cbc29e72bf6bb61c28b",
+  "runtime_tested_head": "22014343e9151aa4feba5d135a1f7c5206d111d7",
+  "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
       "Parziale": 198,
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 79,
-    "method": "Media nove macroaree (81+81+78+99+68+92+70+70+75)/9 = 79,33% (79% arrotondato). MAIL-G PR #401 completa gli avvisi ai responsabili autorizzati di richieste pending, dopo le lezioni pianificate #397 e i cambi significativi post-migrazione #399. Area email 68% → 70%; QA Joomla/SMTP pendente.",
+    "percent": 80,
+    "method": "Media semplice delle nove macroaree (81+81+78+99+68+92+70+72+75)/9 = 79,56% (80% arrotondato). PR #464 amplia i producer di contesto approvati per i template email: area email 70% → 72%. L'accettazione manuale Joomla/SMTP resta pendente; stima implementativa e accettazione sono dimensioni distinte.",
     "areas": [
       81,
       81,
@@ -34,7 +34,7 @@
       68,
       92,
       70,
-      70,
+      72,
       75
     ]
   },

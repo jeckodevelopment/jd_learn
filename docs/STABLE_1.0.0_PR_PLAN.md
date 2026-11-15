@@ -74,7 +74,7 @@ Il comando `python3 tools/check.py` esegue anche `tools/check_docs_hygiene.py`, 
 
 ## Stato e rendicontazione
 
-L'ultima stima documentata è **79% (79,33% non arrotondato; area email 70%)**, secondo la baseline aggiornata dopo MAIL-H PR #410. La stima resta invariata dopo le PR #442, #449 e #451, che correggono regressioni/UX o aggiungono un incremento non sufficiente a completare e ripesare il macro-requisito. Non equivale ad accettazione della release. Fonte di verità per pesi e dettagli: [IMPLEMENTATION_EVIDENCE.json](IMPLEMENTATION_EVIDENCE.json), [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv). Lo storico tecnico precedente è conservato nell'[archivio del piano](STABLE_1.0.0_PR_PLAN_ARCHIVE.md).
+La stima implementativa più recente è **80% (79,56% non arrotondato; area email 72%)**, ricalcolata dopo la PR #464 che amplia i producer di contesto approvati per i template email. Rispetto alla precedente riconciliazione (79,33%; email 70%) il delta è +0,22 punti globali e +2 punti nell'area email. Non equivale ad accettazione della release: i collaudi Joomla/SMTP restano separati e pendenti. Fonti correnti per pesi, conteggi ed evidenze: [IMPLEMENTATION_EVIDENCE.json](IMPLEMENTATION_EVIDENCE.json), [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json), [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) e [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv). Lo storico tecnico precedente è conservato nell'[archivio del piano](STABLE_1.0.0_PR_PLAN_ARCHIVE.md).
 
 ## Integrazione MAIL-SCHED — PR #424 (integrata, collaudo pendente)
 

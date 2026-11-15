@@ -4,7 +4,7 @@ La **fonte di verità** del perimetro, dell'implementazione e della tracciabilit
 
 ## Stato corrente e interpretazione
 
-I conteggi **calcolati dalle righe**, non aggiornati manualmente, sono in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). La riconciliazione iniziale registra 197 requisiti parziali, 17 completati a livello implementativo e 30 non iniziati. Nessun requisito è stato dichiarato integralmente accettato in Joomla. L'aggiunta delle righe non modifica da sola la stima pesata ~79% delle nove macroaree; occorre un ricalcolo rigoroso degli incrementi applicativi e dei relativi pesi.
+I conteggi **calcolati dalle righe**, non aggiornati manualmente, sono in [REQUIREMENTS_RECONCILIATION.json](REQUIREMENTS_RECONCILIATION.json). Al 15 novembre 2026 risultano 198 requisiti parziali, 17 completati a livello implementativo e 29 non iniziati. L'accettazione Joomla è parziale per 7 requisiti e non eseguita per 237; la verifica automatica è superata per 179 e non eseguita per 65. Nessun requisito è stato dichiarato integralmente accettato in Joomla. La stima ponderata sulle nove macroaree è 79,56% (80% arrotondato), secondo [IMPLEMENTATION_EVIDENCE.json](IMPLEMENTATION_EVIDENCE.json); dopo la PR #464 l'area email è al 72% (+2 punti). Conteggi del CSV e stima macroarea sono indicatori distinti.
 
 Le tre dimensioni sono indipendenti:
 
@@ -12,7 +12,7 @@ Le tre dimensioni sono indipendenti:
 - **Verifica automatica**: Non eseguita / Superata / Fallita, con copertura ed evidenza specifiche. Una vecchia esecuzione CI non prova il codice appena modificato.
 - **Accettazione Joomla**: Non eseguita / Parziale / Superata / Fallita. Superata richiede un report esplicito del testbook ed evidenza associata; non è dedotta da una PR o da un test fixture.
 
-I nuovi criteri MAIL, DOC e SEC sono stati inizializzati in modo prudente: il collegamento a PR già integrate non prova da solo ogni criterio. Le verifiche specifiche sono da effettuare e le nuove righe non incrementano la percentuale. In particolare il requisito MAIL-03 (nuove lezioni/cambi didattici rilevanti) non ha ancora una PR implementativa specifica identificata.
+I criteri MAIL, DOC e SEC sono valutati con prudenza: il collegamento a PR integrate non prova da solo ogni criterio. Le verifiche specifiche restano necessarie e l'avanzamento si aggiorna solo quando una modifica implementativa giustifica un incremento della macroarea. La PR #464 ha aggiornato di 2 punti l'area email grazie ai producer di contesto approvati, senza attribuire accettazione Joomla/SMTP. In particolare il requisito MAIL-03 (nuove lezioni/cambi didattici rilevanti) non ha ancora una PR implementativa specifica identificata.
 
 ## Manutenzione obbligatoria per ogni PR
 
