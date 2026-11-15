@@ -1270,3 +1270,16 @@ La CI automatizzata non sostituisce questi collaudi di accettazione.
 - [ ] Verificare che l'assegnazione non attribuisca ACL di amministrazione e non includa dati di iscritti o altre persone nell'email.
 
 Il solo successo CI non prova l'accettazione SMTP sul sito dell'utente.
+
+
+## MAIL-H / #312 — Titoli e descrizioni dei Mail Templates (PR #395)
+
+**Comportamenti da testare sul sito Joomla 6.2 (IT/EN)**
+
+1. Con amministrazione in italiano, aprire **Sistema → Modelli email** e filtrare `com_jlms`; verificare che tutti i 14 modelli registrati abbiano titolo e descrizione localizzati, senza chiavi `com_jlms_MAIL_..._TITLE/DESC`.
+2. Aprire il dettaglio dei modelli `com_jlms.enrollment.confirmed`, `com_jlms.course.completed` e `com_jlms.course.published`: titolo e descrizione localizzati anche nella modifica.
+3. Ripetere elenco e dettaglio cambiando la lingua amministrativa in inglese.
+4. Modificare soggetto, HTML e testo semplice di un template e creare una versione localizzata. Eseguire upgrade e verificare che le personalizzazioni rimangano inalterate e non si creino record duplicati.
+5. Verificare che accessi al gestore non accodino né inviino email; controllare che la procedura di installazione/upgrade non fallisca.
+
+**Stato:** implementazione candidata, accettazione manuale non eseguita. La CI non sostituisce questa verifica.
