@@ -30,10 +30,6 @@ $mutation=substr($mutation,0,8).'-'.substr($mutation,8,4).'-4'.substr($mutation,
     echo Editor::getInstance($editorName)->display('jform[template][htmlbody]', (string) $template['htmlbody'], '100%', '260', '60', '10', false, 'jlms-template-htmlbody');
     ?>
     <p class="small text-muted mt-2"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_TAGS') ?> <code><?= $this->escape(implode(', ', array_values(array_diff(\Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::tags(), ['MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML'])))) ?></code></p>
-    <details class="mt-3"><summary><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_PLAIN') ?></summary>
-      <label class="form-label mt-2" for="jlms-template-body"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_PLAIN_HELP') ?></label>
-      <textarea id="jlms-template-body" name="jform[template][body]" maxlength="16000" required rows="4" class="form-control"><?= $this->escape($template['body']) ?></textarea>
-    </details>
    </div>
   </div>
   <fieldset class="mt-3 mb-3"><legend><?= Text::_('COM_JLMS_COMMUNICATION_RECIPIENTS') ?></legend>
@@ -58,13 +54,13 @@ $mutation=substr($mutation,0,8).'-'.substr($mutation,8,4).'-4'.substr($mutation,
    <p><?= Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT',$preview['count']) ?></p>
    <form class="mb-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.test') ?>">
     <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><?= HTMLHelper::_('form.token') ?>
-    <?php foreach (['subject','body','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
+    <?php foreach (['subject','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
     <button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_COMMUNICATION_SEND_TEST') ?></button>
    </form>
    <form class="mt-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.queue') ?>">
     <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>">
     <?php foreach ($preview['enrollment_ids'] as $id) : ?><input type="hidden" name="jform[enrollment_ids][]" value="<?= (int)$id ?>"><?php endforeach; ?>
-    <?php foreach (['subject','body','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
+    <?php foreach (['subject','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
     <input type="hidden" name="jform[impact_hash]" value="<?= $this->escape($preview['hash']) ?>"><input type="hidden" name="jform[mutation_id]" value="<?= $this->escape($mutation) ?>">
     <div class="form-check mb-3"><input class="form-check-input" id="jlms-communication-confirm" type="checkbox" name="jform[confirmation]" value="1" required><label class="form-check-label" for="jlms-communication-confirm"><?= Text::_('COM_JLMS_COMMUNICATION_CONFIRM') ?></label></div>
     <?= HTMLHelper::_('form.token') ?>
