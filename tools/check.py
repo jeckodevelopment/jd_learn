@@ -43,7 +43,7 @@ assert used<=keys,sorted(used-keys)
 # Joomla's Mail Templates manager resolves each ID title and description in both
 # administrator language catalogs: .sys.ini for the list and .ini for the editor.
 mail_definitions=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
-mail_ids=re.findall(r"'(com_jlms\\.[a-z.]+)'\\s*=>\\s*\\[",mail_definitions)
+mail_ids=[line.strip().split("'")[1] for line in mail_definitions.splitlines() if line.strip().startswith("'com_jlms.") and "' => [" in line]
 assert len(mail_ids)==14 and len(set(mail_ids))==14,('Unexpected mail template inventory',mail_ids)
 for language in ['it-IT','en-GB']:
  for suffix in ['.ini','.sys.ini']:
