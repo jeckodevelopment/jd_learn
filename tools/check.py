@@ -196,7 +196,6 @@ for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['
  assert pair in admin_controller,pair
 assert '$menu->setActive((int) $item->id)' in admin_controller
 assert "$app->getPathway()" not in admin_controller
-,catalog,re.M))==1,(language, suffix, language_key)
 # The dashboard introduction used to have a stale duplicate value later in each INI file.
 for tag,expected in {
  'it-IT':'Gestisci corsi, programma e risorse didattiche dal pannello amministrativo.',
