@@ -49,3 +49,7 @@ La richiesta `audio.save` resta un POST JSON protetto da token e controllo propr
 
 
 La preferenza velocità video 0.42.0-dev è locale al browser e viene applicata solo se supportata dal singolo player/video; il player non supportato conserva i controlli propri. La telemetria osserva la velocità effettiva e il calcolo della copertura non cambia.
+
+## Trascrizione delle lezioni audio
+
+La lezione audio può includere una trascrizione facoltativa, separata dal corpo didattico. L’autore la inserisce nell’editor dedicato del programma; JD Learn applica il filtro HTML Joomla e la conserva nella versione della lezione. Nell’aula compare in un elemento espandibile accessibile, visibile soltanto dopo i controlli di autorizzazione della lezione. I cambiamenti alla trascrizione seguono il normale ciclo di bozza e pubblicazione della versione. Una trascrizione vuota non aggiunge elementi all’aula.

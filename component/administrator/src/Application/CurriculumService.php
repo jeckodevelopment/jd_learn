@@ -9,6 +9,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Jlms\Component\Jlms\Administrator\Domain\AudioTranscript;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
 use Jlms\Contracts\Video\SourceInput;
@@ -476,10 +477,14 @@ final class CurriculumService
         if (!in_array($required, ['0', '1'], true)) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
+        $audioTranscript = $kind === 'audio'
+            ? AudioTranscript::sanitizeInput($input['audio_transcript'] ?? '', $this->filterHtml)
+            : '';
         $fields = ['module_id' => $moduleId, 'title' => $title, 'kind' => $kind,
             'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
-            'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null, 'params_json' => '{}',
+            'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
+            'params_json' => $kind === 'audio' ? AudioTranscript::encode($audioTranscript) : '{}',
             'publish_up' => null, 'publish_down' => null, 'release_after_days' => null];
         $publicPreview = $input['public_preview'] ?? '0';
         if ((!is_string($publicPreview) && !is_int($publicPreview)) || !in_array((string) $publicPreview, ['0', '1'], true)
@@ -570,7 +575,7 @@ final class CurriculumService
                     if ($threshold === null) { unset($params['video_threshold_basis_points']); }
                     else { $params['video_threshold_basis_points'] = $threshold; }
                     $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
-                } elseif ($fields['kind'] !== 'video') {
+                } elseif ($fields['kind'] !== 'video' && $fields['kind'] !== 'audio') {
                     $fields['params_json'] = '{}';
                 }
                 $changedSource = $lesson->kind !== $fields['kind'] || $lesson->provider_key !== $fields['provider_key']

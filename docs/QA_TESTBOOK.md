@@ -1365,3 +1365,11 @@ Seguire gli scenari dettagliati in [MAIL_SCHEDULER_SETUP.md](MAIL_SCHEDULER_SETU
 ## MAIL-RECONCILE — PR #427 integrata (collaudo manuale pendente)
 
 Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 15 minuti. Confermare dal log SMTP o dal destinatario che non risulta consegna. Dalla Coda email scegliere la riconciliazione `retry`, inserire nota di almeno 10 caratteri e confermare: la chiamata POST non deve più dare «Impossibile riconciliare il messaggio»; verificare `retry`, `claimed_at=NULL`, autore e nota audit, quindi task manuale e una sola consegna. Verificare anche `sent` manuale per recapito accertato, soglia 15 minuti, limite 5 tentativi, CSRF, ACL e comportamento dopo upgrade Joomla. Non marcare come accettato prima del riscontro sul sito di prova.
+
+## LES-01 / SCR-06 — trascrizione audio
+
+1. In una bozza, creare o modificare una lezione di tipo Audio e inserire testo con paragrafi e caratteri HTML nel campo Trascrizione audio; salvare e riaprire l’editor. Il contenuto deve essere conservato.
+2. Pubblicare la nuova versione e accedere come iscritto autorizzato. La trascrizione deve apparire sotto al player audio in un controllo espandibile con nome localizzato e navigabile da tastiera.
+3. Verificare che testo non affidabile venga filtrato, che HTML ammesso mantenga la struttura e che una trascrizione vuota non mostri un controllo vuoto.
+4. Cambiare il tipo di lezione da Audio ad altro e salvare: la trascrizione audio non deve essere resa né riutilizzata; una lezione audio nuova non deve ereditare il testo di un’altra lezione o versione.
+5. Aprire la lezione con un account non iscritto o non autorizzato: non devono essere esposti né il contenuto né la trascrizione. Verificare l’assenza di modifiche a progresso, ripresa audio e completamento.
