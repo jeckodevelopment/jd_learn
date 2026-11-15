@@ -16,7 +16,7 @@ final class CoursemessageModel extends BaseDatabaseModel
             $data=$app->bootComponent('com_jlms')->getCourseCommunicationService()->editor($app->getIdentity(),$courseId);
             $key='com_jlms.coursemessage.'.(int)$app->getIdentity()->id.'.'.$courseId;
             $preview=$app->getSession()->get($key, null);
-            $data['template']=\Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::load('*');
+            $data['template']=\Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
             if (is_array($preview)) {
                 $data['preview']=$app->bootComponent('com_jlms')->getCourseCommunicationService()->preview($app->getIdentity(),$courseId,(string)$preview['subject'],(string)$preview['body'],$preview['enrollment_ids'],$preview['template']??[]);
                 $data['template']=$data['preview']['template'];
