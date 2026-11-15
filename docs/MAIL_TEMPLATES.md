@@ -1,3 +1,7 @@
+## MAIL-H / issue #416 — leggibilità della guida variabili
+
+Nel sommario espandibile di ciascun modello email, il titolo tradotto e l'ID tecnico sono separati da un trattino lungo visibile: `Nome modello — com_jlms.nome_modello`. Gli ID dei template, i tag e i dati restano invariati. **Collaudo manuale Joomla IT/EN:** verificare la separazione dei testi in Atum su desktop/mobile, l'espansione delle schede e la leggibilità degli ID. Nessun invio SMTP coinvolto; copertura funzionale invariata.
+
 ## MAIL-C / STAB P0 — accodamento comunicazioni agli iscritti (issue #419)
 
 L'azione **Accoda invio** della vista `coursemessage` falliva con HTTP 500 perché la verifica di idempotenza del job passava cast inline a `DatabaseQuery::bind()` (`(string)$courseId`, `(int)$actor->id`), che richiede variabili per riferimento. L'accodamento usa ora valori locali tipizzati, mantenendo invariati `mutation_id`, verifica dell'impatto/hash, lock sul corso, transazione e audit: non viene introdotto un canale alternativo di invio. La pagina separa visivamente anteprima e azioni, con pulsante di accodamento **primario** invece di rosso; la conferma esplicita resta obbligatoria. Nessun invio SMTP sincrono viene eseguito dal click: il task Joomla elabora i job e le email in coda.
