@@ -1,3 +1,9 @@
+## MAIL-H — accesso alla comunicazione agli iscritti (issue #383)
+
+La vista amministrativa `coursemessage`, raggiunta da **Corsi → Iscritti al corso → Comunica agli iscritti**, viene registrata esplicitamente nella whitelist del `DisplayController` e associata alla voce principale **Corsi** nella navigazione nativa Atum. Prima della correzione, la GET era bloccata con `404 JERROR_LAYOUT_PAGE_NOT_FOUND` nonostante esistessero model, view e template. L'intervento modifica **solo routing e contesto del menu**: la selezione dei destinatari, l'autorizzazione course-scoped, il CSRF dei POST, la preview e l'accodamento rimangono governati dai servizi e controller preesistenti. La whitelist per le viste non autorizzate rimane attiva.
+
+**Collaudo richiesto:** accesso con gestore autorizzato a un corso che abbia iscritti attivi, controllo del rendering della vista e del focus Corsi; accesso negato a gestore di altro corso o a ruolo non autorizzato; anteprima non inviante, prova verso destinatario di test, conferma e accodamento una sola volta; verifica coda e Scheduler separatamente, senza invii accidentali a destinatari reali. Accettazione Joomla/SMTP ancora da eseguire.
+
 ## MAIL-H — escaping per contesto dei placeholder Joomla (candidata `0.57.7-dev`, PR #410)
 
 In fase di invio, Joomla `MailTemplate::addUnsafeTags()` richiede di escapare i valori non fidati nel corpo HTML. JD Learn ora marca **solo** i token canonici di tipo `text`, `date`, `url` (es. `{USER_FULLNAME}`, `{COURSE_TITLE}`, `{DASHBOARD_URL}`). I valori già escapati `html-escaped`, `html-escaped-url` e i frammenti `html-fragment` sanitizzati a monte (es. `{USER_FULLNAME_HTML}`, `{MESSAGE_BODY_HTML}`, `{COURSE_LESSONS_HTML}`) non vengono escapati una seconda volta. Il subject e il plain text mantengono la sostituzione naturale senza HTML entities aggiuntive. I template personalizzati nel gestore Joomla non vengono riscritti.
