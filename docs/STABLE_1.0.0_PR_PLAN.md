@@ -26,7 +26,7 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 |---|---|---|
 | IMP-01 · IMP-02 | P0 | Verificare e completare i soli residui di editor corso, versioni, pubblicazione e programma, con persistenza e ACL corrette; nessuna duplicazione delle PR già integrate |
 | IMP-03 · IMP-04 | P1 | Preview autorizzata e fruizione didattica core con progressi/ripresa coerenti, senza effetti collaterali nella sola anteprima |
-| IMP-05 | P1 | Quattro provider video e capability contract; trascrizione editoriale locale in PR #456; restano tracce/caption, preferenze, dichiarazione uniforme delle capacità e prove reali YouTube, Vimeo, Cloudflare, HTML5 prima del gate finale |
+| IMP-05 | P1 | Quattro provider video e capability contract; trascrizione editoriale locale implementata da PR #456 (CI 4/4, collaudo Joomla pendente); restano tracce/caption, preferenze, dichiarazione uniforme delle capacità e prove reali YouTube, Vimeo, Cloudflare, HTML5 prima del gate finale |
 | IMP-06 | P1 | Allegati e materiali: ambiti, preview, permessi, storage/retention e cleanup |
 | IMP-07 | P1 | Catalogo/percorsi, categorie/tag Joomla, ricerca, URL, accessibilità pubblica |
 | IMP-08 | P1 | Iscrizioni e roster essenziali, filtri e ACL corso-scoped; nessuna reportistica avanzata |
@@ -88,4 +88,4 @@ PR #427 integrata: merge `58811c6817a91b372e0814479281e068d6a037f5`, CI [4372836
 
 ## IMP-04 — trascrizione delle lezioni audio
 
-PR #451 integrata (merge `71c4afcf8cff36058511209b9f2e9dcb34c01b1d`): trascrizione audio facoltativa per LES-01/SCR-06, storage versionato, filtro HTML e resa accessibile in aula. CI completa superata nel run [43758841101](https://github.com/jeckodevelopment/jd_learn/actions/runs/43758841101); pacchetto `pkg_jlms-0.57.7-dev.zip`, SHA-256 `b12aec38c78fbb1157d4dee0e2c64df1e1d12192ff5a48ad462a5d7aae6d0ffd`, nell'[artefatto](https://github.com/jeckodevelopment/jd_learn/actions/runs/43758841101/artifacts/14179616865). Accettazione manuale Joomla ancora pendente; macro-requisito parziale, nessuna variazione della stima globale 79% (78,67%).
+PR #451 integrata (merge `71c4afcf8cff36058511209b9f2e9dcb34c01b1d`): trascrizione audio facoltativa per LES-01/SCR-06, storage versionato, filtro HTML e resa accessibile in aula. CI completa superata nel run [43758841101](https://github.com/jeckodevelopment/jd_learn/actions/runs/43758841101); pacchetto `pkg_jlms-0.57.7-dev.zip`, SHA-256 `b12aec38c78fbb1157d4dee0e2c64df1e1d12192ff5a48ad462a5d7aae6d0ffd`, nell'[artefatto](https://github.com/jeckodevelopment/jd_learn/actions/runs/43758841101/artifacts/14179616865). Accettazione manuale Joomla ancora pendente; macro-requisito parziale, nessuna variazione della stima globale 79% (79,33%).
