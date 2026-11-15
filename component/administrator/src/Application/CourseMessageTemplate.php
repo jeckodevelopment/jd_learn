@@ -34,6 +34,41 @@ final class CourseMessageTemplate
     }
 
     /**
+     * The legacy Joomla default is a wrapper around a second free-message
+     * editor. The composer now has a single subject/body/HTML editor: replace
+     * only wrapper-specific slots in the *local copy*, preserving all recipient
+     * and course placeholders and every administrator customization.
+     *
+     * @return array{subject:string,body:string,htmlbody:string}
+     */
+    public static function forComposition(string $language = '*'): array
+    {
+        $source = self::load($language);
+
+        return [
+            'subject' => str_replace('{MESSAGE_SUBJECT}', 'Comunicazione agli iscritti', $source['subject']),
+            'body' => str_replace('{MESSAGE_BODY_TEXT}', 'Scrivi qui il testo della comunicazione.', $source['body']),
+            'htmlbody' => str_replace('{MESSAGE_BODY_HTML}', '<p>Scrivi qui il testo della comunicazione.</p>', $source['htmlbody']),
+        ];
+    }
+
+    /**
+     * Derive the text alternative from the same edited HTML source.
+     * Filter markup first so hidden scripts never become plaintext content.
+     */
+    public static function plainTextFromHtml(string $html): string
+    {
+        // Script/style contents are not part of the readable email alternative.
+        $html = preg_replace('~<(script|style)\\b[^>]*>.*?</\\1\\s*>~is', '', $html) ?? $html;
+        $safe = (string) InputFilter::getInstance(
+            [], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS,
+            InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES
+        )->clean($html, 'html');
+        $withLines = preg_replace('~<br\s*/?>|</(?:p|div|li|h[1-6])>~i', "\n", $safe) ?? $safe;
+        return trim(html_entity_decode(strip_tags($withLines), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    }
+
+    /**
      * Validate a single-message copy without persisting or changing the Joomla template.
      * The HTML sanitizer does not trust arbitrary administrator-entered markup.
      *
@@ -61,6 +96,14 @@ final class CourseMessageTemplate
         }
 
         $htmlbody = (string) InputFilter::getInstance([], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS, InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES)->clean($htmlbody, 'html');
+        // These legacy slots referred to a separate free-message editor. In
+        // single-editor mode they would reference their own field and must not
+        // silently render recursively or leak raw placeholders to recipients.
+        foreach ([$subject, $body, $htmlbody] as $part) {
+            if (preg_match('/\\{MESSAGE_(?:SUBJECT|BODY_TEXT|BODY_HTML)\\}/', $part)) {
+                throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_LEGACY_SLOT', 422);
+            }
+        }
         $missing = MailTemplatePlaceholderValidator::unresolved(
             self::TEMPLATE_ID, $data, $subject, $body, $htmlbody
         );

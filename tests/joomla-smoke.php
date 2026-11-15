@@ -144,8 +144,14 @@ $sampleVars = [
     'COURSE_TITLE' => 'Corso', 'COURSE_TITLE_HTML' => 'Corso',
     'SITE_NAME' => 'Sito', 'SITE_NAME_HTML' => 'Sito',
 ];
-$checked = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($templateSource, $sampleVars);
-if ($checked['subject'] !== $templateSource['subject']) {
+$composerSource = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
+if (str_contains(implode(' ', $composerSource), '{MESSAGE_SUBJECT}')
+    || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_TEXT}')
+    || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_HTML}')) {
+    throw new \RuntimeException('Legacy free-message fields were not resolved for the single composer.');
+}
+$checked = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($composerSource, $sampleVars);
+if ($checked['subject'] !== $composerSource['subject']) {
     throw new \RuntimeException('Per-message template snapshot was unexpectedly changed.');
 }
 try {
@@ -165,7 +171,7 @@ if ($renderedSubject !== 'Corso: Avviso') {
     throw new \RuntimeException('Course email subject preview differs from Joomla template replacement.');
 }
 $untrusted = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
-    ['subject'=>'{COURSE_TITLE}', 'body'=>'{MESSAGE_BODY_TEXT}', 'htmlbody'=>'<p>{MESSAGE_BODY_HTML}</p><script>alert(1)</script>'],
+    ['subject'=>'{COURSE_TITLE}', 'body'=>'{COURSE_TITLE}', 'htmlbody'=>'<p>{USER_FULLNAME_HTML}</p><script>alert(1)</script>'],
     $sampleVars
 );
 if (str_contains($untrusted['htmlbody'], '<script')) {
@@ -173,6 +179,34 @@ if (str_contains($untrusted['htmlbody'], '<script')) {
 }
 if (!str_contains($untrusted['htmlbody'], '<p>')) {
     throw new \RuntimeException('Safe HTML formatting was removed from the message.');
+}
+// Issue: a single HTML composer must accept documented recipient/course tokens
+// without requiring a second free-message field or self-referential slots.
+$singleComposer = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
+$singleComposer['subject'] = 'Aggiornamento {COURSE_TITLE}';
+$singleComposer['htmlbody'] = '<p>Ciao {USER_FULLNAME_HTML}, novità sul corso {COURSE_TITLE_HTML}.</p><p>{SITE_NAME_HTML}</p>';
+$singleComposer['body'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($singleComposer['htmlbody']);
+$checkedSingle = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($singleComposer, $sampleVars);
+if ($checkedSingle['subject'] !== 'Aggiornamento {COURSE_TITLE}'
+    || !str_contains($checkedSingle['body'], '{USER_FULLNAME_HTML}')
+    || $composerRenderer->render($checkedSingle['subject'], $sampleVars) !== 'Aggiornamento Corso') {
+    throw new \RuntimeException('Single editor rejects standard recipient/course variables.');
+}
+$dangerousPlain = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml(
+    '<p>Messaggio &amp; comunicazione</p><script>alert("bad")</script>'
+);
+if (str_contains($dangerousPlain, 'alert') || !str_contains($dangerousPlain, 'Messaggio & comunicazione')) {
+    throw new \RuntimeException('HTML-derived plain text must be safe and readable.');
+}
+try {
+    \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+        ['subject'=>'{MESSAGE_SUBJECT}', 'body'=>'Testo', 'htmlbody'=>'<p>Testo</p>'], $sampleVars
+    );
+    throw new \RuntimeException('Recursive legacy composer slot should not be accepted.');
+} catch (\RuntimeException $legacy) {
+    if ($legacy->getMessage() !== 'COM_JLMS_COMMUNICATION_TEMPLATE_LEGACY_SLOT') {
+        throw $legacy;
+    }
 }
 // Native editor changes must survive subsequent component upgrades.
 $customSubject = 'Subject edited in Joomla Mail Templates';

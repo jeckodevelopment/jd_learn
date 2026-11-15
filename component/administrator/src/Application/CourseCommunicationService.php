@@ -52,7 +52,7 @@ final class CourseCommunicationService
         $this->authorized($identity, $courseId);
         $subject = trim($subject);
         $body = trim($body);
-        if ($subject === '' || mb_strlen($subject) > 200 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body === '' || mb_strlen($body) > 12000 || count($enrollmentIds) < 1 || count($enrollmentIds) > 2000) {
+        if ($subject === '' || mb_strlen($subject) > 300 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body === '' || mb_strlen($body) > 16000 || count($enrollmentIds) < 1 || count($enrollmentIds) > 2000) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $ids = [];
@@ -70,7 +70,7 @@ final class CourseCommunicationService
         $course = $this->editor($identity, $courseId)['course'];
         $data = $this->templateData('Destinatario di esempio', (string) $course->title, $subject, $body);
         $snapshot = CourseMessageTemplate::validate(
-            $template !== [] ? $template : CourseMessageTemplate::load('*'), $data
+            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
         );
         $renderer = new CourseMessageMailer();
         $rendered = [
@@ -143,13 +143,13 @@ final class CourseCommunicationService
     {
         $actor = $this->authorized($identity, $courseId);
         $subject = trim($subject); $body = trim($body);
-        if ($subject === '' || mb_strlen($subject) > 200 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body === '' || mb_strlen($body) > 12000 || !filter_var($actor->email, FILTER_VALIDATE_EMAIL)) {
+        if ($subject === '' || mb_strlen($subject) > 300 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body === '' || mb_strlen($body) > 16000 || !filter_var($actor->email, FILTER_VALIDATE_EMAIL)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $course = $this->editor($actor, $courseId)['course'];
         $data = $this->templateData((string) $actor->name, (string) $course->title, $subject, $body);
         $data['__course_message_snapshot'] = CourseMessageTemplate::validate(
-            $template !== [] ? $template : CourseMessageTemplate::load('*'), $data
+            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
         );
         $key = hash('sha256', 'course-message-test:' . $courseId . ':' . $actor->id . ':' . bin2hex(random_bytes(16)));
         (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data);

@@ -24,10 +24,23 @@ final class CoursemessageController extends BaseController
         if (is_array($unfiltered) && isset($unfiltered['template'])) {
             $raw['template']=$unfiltered['template'];
         }
-        if (isset($raw['template']) && (!is_array($raw['template']) || count($raw['template']) !== 3)) {
-            throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID',422);
+        if (!is_array($raw['template'] ?? null)) {
+            throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
         }
-        foreach(['course_id','subject','body'] as $key) { if (!is_string($raw[$key]??null)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); } }
+        if (!is_string($raw['course_id'] ?? null)
+            || !is_string($raw['template']['subject'] ?? null)
+            || !is_string($raw['template']['htmlbody'] ?? null)) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
+        // HTML is the only body editor; generate the plain-text alternative
+        // from sanitized HTML for both preview and final message.
+        $raw['template'] = [
+            'subject' => $raw['template']['subject'],
+            'htmlbody' => $raw['template']['htmlbody'],
+            'body' => \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($raw['template']['htmlbody']),
+        ];
+        $raw['subject'] = $raw['template']['subject'];
+        $raw['body'] = $raw['template']['body'];
         $ids=$raw['enrollment_ids']??[];
         if (!is_array($ids)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); }
         return [$raw,CurriculumService::id($raw['course_id']),$ids];
