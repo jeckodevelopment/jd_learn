@@ -13,11 +13,31 @@ $filters = $data['filters'];
 $limit = (int) $data['limit'];
 $start = (int) $data['start'];
 $stateKeys = ['pending' => 'COM_JLMS_MAIL_QUEUE_STATE_PENDING', 'retry' => 'COM_JLMS_MAIL_QUEUE_STATE_RETRY', 'sending' => 'COM_JLMS_MAIL_QUEUE_STATE_SENDING', 'sent' => 'COM_JLMS_MAIL_QUEUE_STATE_SENT', 'failed' => 'COM_JLMS_MAIL_QUEUE_STATE_FAILED', 'skipped' => 'COM_JLMS_MAIL_QUEUE_STATE_SKIPPED'];
+$schedulerStateLabels = [
+ 'missing' => 'COM_JLMS_MAIL_SCHEDULER_STATE_MISSING',
+ 'disabled' => 'COM_JLMS_MAIL_SCHEDULER_STATE_DISABLED',
+ 'waiting' => 'COM_JLMS_MAIL_SCHEDULER_STATE_WAITING',
+ 'failed' => 'COM_JLMS_MAIL_SCHEDULER_STATE_FAILED',
+ 'operational' => 'COM_JLMS_MAIL_SCHEDULER_STATE_OPERATIONAL',
+];
 $actionKeys = ['sent' => 'COM_JLMS_MAIL_QUEUE_ACTION_SENT', 'retry' => 'COM_JLMS_MAIL_QUEUE_ACTION_RETRY'];
 $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&filter[template]=' . rawurlencode((string) $filters['template']);
 ?>
 <section id="jlms-mail-queue">
  <p class="alert alert-info"><?= Text::_('COM_JLMS_MAIL_QUEUE_HELP') ?></p>
+ <?php if ($this->mailScheduler) : ?>
+ <div class="small mb-3" role="status">
+  <strong><?= Text::_('COM_JLMS_MAIL_SCHEDULER_STATUS') ?>:</strong>
+  <?= $this->escape(Text::_($schedulerStateLabels[$this->mailScheduler['state']] ?? 'COM_JLMS_MAIL_SCHEDULER_STATE_MISSING')) ?>
+  <?php if ($this->mailScheduler['interval'] !== null) : ?>
+   · <?= Text::sprintf('COM_JLMS_MAIL_SCHEDULER_INTERVAL', $this->mailScheduler['interval']) ?>
+  <?php endif; ?>
+  · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_LAST') ?>:
+  <?= $this->escape((string) ($this->mailScheduler['last_execution'] ?: Text::_('JNEVER'))) ?>
+  <?php if ($this->mailScheduler['duplicates']) : ?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php endif; ?>
+  <a href="<?= Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE') ?></a>
+ </div>
+ <?php endif; ?>
  <form method="get" action="<?= Route::_('index.php') ?>" class="row g-2 align-items-end mb-3">
   <input type="hidden" name="option" value="com_jlms">
   <input type="hidden" name="view" value="mailqueue">

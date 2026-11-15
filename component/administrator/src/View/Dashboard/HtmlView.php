@@ -17,6 +17,7 @@ use Joomla\Database\DatabaseInterface;
 final class HtmlView extends BaseHtmlView
 {
     public array $providers = [];
+    public array $mailScheduler = [];
     public array $shortcutGroups = [];
 
     public function display($tpl = null)
@@ -92,6 +93,9 @@ final class HtmlView extends BaseHtmlView
             ->where($db->quoteName('client_id') . ' = 0');
         $extensionMap = $db->setQuery($extensions)->loadObjectList('element');
         $this->providers = DashboardProviderStatus::summarize($extensionMap, $registry->descriptors());
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status($db);
+        }
         parent::display($tpl);
     }
 }
