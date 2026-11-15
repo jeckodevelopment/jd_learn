@@ -1,3 +1,18 @@
+## IMP-05 — capability contract provider video
+
+1. Installare il pacchetto candidato su Joomla di prova e verificare che i quattro plugin video risultino disponibili e che soltanto quelli intenzionalmente usati siano abilitati.
+2. Preparare una lezione video tracciabile per ciascun provider (YouTube, Vimeo, Cloudflare Stream e HTML5) e provarla come studente autorizzato dopo il consenso richiesto.
+3. Verificare posizione, durata, seek e ripresa nei quattro player; nessuna variazione della copertura o del completamento deve essere attribuita al solo seek.
+4. Con video/account che lo supportano, verificare il selettore velocità su YouTube, Vimeo e HTML5; con un contenuto/account senza velocità disponibile il selettore non deve apparire. Cloudflare Stream non deve mostrare il controllo velocità.
+5. Con video dotati di caption, verificare le tracce e la selezione sui player Vimeo e HTML5; su YouTube e Cloudflare Stream verificare la preferenza lingua all’avvio e il comportamento normale se la lingua non è disponibile. Nessuna preferenza va salvata sul profilo o inviata al server.
+6. Verificare che la trascrizione locale sia disponibile separatamente per tutti i provider e che l’assenza di caption non generi una traccia artificiale.
+7. Con Cloudflare Stream, verificare scadenza/rinnovo del token e che il download resti disabilitato; con provider disabilitato o non configurato, la riproduzione deve rimanere indisponibile.
+8. Provare una sorgente configurata per un provider con l’adapter sbagliato: non deve risultare supportata né produrre una sessione valida.
+
+**Esito sito Joomla:** Da eseguire su account, SDK e browser reali. I test automatici della capability matrix verificano il contratto dichiarato; non provano la disponibilità delle singole tracce o velocità nei contenuti reali.
+
+---
+
 ## Issue #446 e #448 — toolbar comunicazioni e disponibilità corso
 
 1. Aggiornare JD Learn su Joomla 6/Atum e aprire **Comunica agli iscritti** dal roster. Verificare che **Iscritti al corso** sia il primo comando della toolbar, con icona indietro; in fondo al corpo non deve apparire un link duplicato.

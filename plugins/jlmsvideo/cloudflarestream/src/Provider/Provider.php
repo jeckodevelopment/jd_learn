@@ -52,8 +52,8 @@ final class Provider extends AbstractFoundationProvider
 
     public function getCapabilities(VideoSource $source): VideoCapabilities
     {
-        $ready = $this->getDescriptor()->configured;
-        return new VideoCapabilities($ready, $ready, $ready, false, false, false, $ready, false);
+        $ready = $this->getDescriptor()->configured && $source->providerKey === $this->key();
+        return new VideoCapabilities($ready, $ready, $ready, false, $ready, false, $ready, false);
     }
 
     private function request(string $method, string $uid, ?array $body = null): array

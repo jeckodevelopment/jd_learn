@@ -6,6 +6,20 @@
 
 Gli adapter che implementano `textTracks()` e `setTextTrack(id)` espongono al componente le tracce `subtitles`/`captions` del contenuto. Il selettore appare solo con tracce interrogabili; Vimeo usa le API del player e HTML5 la `TextTrackList` nativa. La scelta viene memorizzata nel solo browser. YouTube e Cloudflare Stream non espongono qui un elenco interrogabile e non mostrano il selettore JD Learn; se esiste una preferenza valida, YouTube riceve `cc_lang_pref` e `cc_load_policy=1` all’avvio, mentre Cloudflare Stream riceve `defaultTextTrack` (codice BCP-47). I controlli nativi mantengono la selezione successiva nelle mani dello studente; un codice non disponibile è ignorato dal provider. Valori non validi e storage non accessibile vengono ignorati. Nessuna traccia o preferenza viene inviata al server.
 
+
+### Contratto `VideoCapabilities` (IMP-05)
+
+Le capabilities sono relative all’adapter attivo e alla sorgente validata; provider disabilitato/non configurato o sorgente con `providerKey` differente restituisce tutte le flags a `false`. La matrice indica il supporto dell’adapter, non la presenza garantita di una traccia o di una velocità nel singolo video.
+
+| Provider | posizione/durata/seek | velocità | caption | trascrizione LMS | playback a scadenza | download |
+|---|---|---|---|---|---|---|
+| YouTube | sì | sì, se player/video la espongono | sì, lingua preferita all’avvio; nessun selettore JD Learn | no | no | no |
+| Vimeo | sì | sì, se account/video la consentono | sì, tracce interrogabili quando presenti | no | no | no |
+| Cloudflare Stream | sì, se configurato | no | sì, preferenza di avvio; nessun selettore JD Learn | no | sì, token temporaneo | no |
+| HTML5 | sì, se abilitato | sì, secondo supporto browser | sì, tracce native quando presenti | no | no | no |
+
+`transcript` è `false` per tutti gli adapter: la trascrizione editoriale locale è gestita da JD Learn e non dipende dal provider. Le caption non sono generate dal componente. La velocità e le tracce restano facoltative e non modificano le regole di completamento.
+
 Versione 1.0 · 30 ottobre 2026 · Parte obbligatoria della specifica del pacchetto base
 
 ## 1. Vincoli di sviluppo e distribuzione

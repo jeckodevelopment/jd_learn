@@ -18,7 +18,8 @@ abstract class EmbedProvider extends AbstractFoundationProvider
 
     public function getCapabilities(VideoSource $source): VideoCapabilities
     {
-        return new VideoCapabilities($this->enabled, $this->enabled, $this->enabled, $this->enabled, false, false, false, false);
+        $active = $this->enabled && $source->providerKey === $this->key();
+        return new VideoCapabilities($active, $active, $active, $active, $active, false, false, false);
     }
 
     public function createPlaybackDescriptor(VideoSource $source, PlaybackContext $context): PlaybackDescriptor
