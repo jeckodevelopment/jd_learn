@@ -1,3 +1,7 @@
+## MAIL-H / UX — titoli amministrativi non duplicati (issue #411)
+
+Nelle viste **Audit coda email** e **Variabili modelli email** il titolo pagina è gestito esclusivamente dalla toolbar nativa Joomla. Il titolo H1 duplicato nel corpo è stato eliminato, mantenendo testo di aiuto, filtri, sezioni espandibili, didascalie delle tabelle e controlli ACL. La stessa regola è applicata alla vista **Gestione dipendenze categorie**, senza alterare il titolo H2 della categoria selezionata né le azioni di ricollocazione. I controller e gli endpoint restano invariati. Verificare su Atum in italiano e inglese, con vista vuota e dati presenti, che compaia un unico titolo di pagina e che gli elementi interattivi siano intatti. I collaudi manuali Joomla restano da eseguire.
+
 ## MAIL-H — accesso alla comunicazione agli iscritti (issue #383)
 
 La vista amministrativa `coursemessage`, raggiunta da **Corsi → Iscritti al corso → Comunica agli iscritti**, viene registrata esplicitamente nella whitelist del `DisplayController` e associata alla voce principale **Corsi** nella navigazione nativa Atum. Prima della correzione, la GET era bloccata con `404 JERROR_LAYOUT_PAGE_NOT_FOUND` nonostante esistessero model, view e template. L'intervento modifica **solo routing e contesto del menu**: la selezione dei destinatari, l'autorizzazione course-scoped, il CSRF dei POST, la preview e l'accodamento rimangono governati dai servizi e controller preesistenti. La whitelist per le viste non autorizzate rimane attiva.

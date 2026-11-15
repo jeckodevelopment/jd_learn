@@ -11,7 +11,6 @@ use Joomla\CMS\Router\Route;
 $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
 ?>
 <div class="container-fluid">
- <h1><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_TITLE') ?></h1>
  <p><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_INTRO') ?></p>
  <form action="<?= Route::_('index.php?option=com_jlms&view=categoryreassignment', false) ?>" method="get" class="mb-3">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="categoryreassignment">

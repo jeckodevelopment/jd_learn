@@ -12,7 +12,6 @@ $mailCatalog = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVar
 $mailIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds();
 ?>
 <section id="jlms-mail-variable-guide">
- <h1><?= $this->escape(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE')) ?></h1>
  <p><?= $this->escape(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO')) ?></p>
  <p class="alert alert-info"><?= $this->escape(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_WARNING')) ?></p>
  <?php foreach ($mailIds as $mailId) : ?>

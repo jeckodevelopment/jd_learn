@@ -20,6 +20,16 @@ mail_queue=(ROOT/'component/administrator/sql/install.mysql.utf8mb4.sql').read_t
 assert re.search(r'CREATE TABLE IF NOT EXISTS `#__jlms_mail_queue`',mail_queue)
 assert re.search(r'UNIQUE KEY `uq_event_key` \(`event_key`\)',mail_queue)
 assert not re.search(r'\b(?:DROP TABLE|TRUNCATE TABLE)\b',sql,re.I)
+# Regression #411: these administrative pages expose one page title via the
+# native Joomla toolbar; keep their guidance, table captions and section headings.
+for name in ('mailqueue', 'mailvariables', 'categoryreassignment'):
+ view=(ROOT/f'component/administrator/src/View/{name.capitalize()}/HtmlView.php').read_text()
+ template=(ROOT/f'component/administrator/tmpl/{name}/default.php').read_text()
+ assert 'ToolbarHelper::title(' in view, ('Missing native toolbar title', name)
+ assert not re.search(r'<h1\\b', template, re.I), ('Duplicate H1 beneath toolbar', name)
+assert 'COM_JLMS_MAIL_QUEUE_HELP' in (ROOT/'component/administrator/tmpl/mailqueue/default.php').read_text()
+assert 'COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO' in (ROOT/'component/administrator/tmpl/mailvariables/default.php').read_text()
+assert '<h2>' in (ROOT/'component/administrator/tmpl/categoryreassignment/default.php').read_text()
 # Regression #383: GET /administrator/index.php?option=com_jlms&view=coursemessage&id=N
 # must enter the read-only display whitelist and retain Courses' native Atum context.
 admin_display=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
