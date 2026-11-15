@@ -1,3 +1,9 @@
+## Navigazione nelle viste secondarie — issue #406 e #408
+
+Nelle schermate amministrative **Programma didattico** e **Anteprima annuncio nuovo corso**, l'azione **Torna al corso** è il **primo pulsante della toolbar nativa Joomla** (LinkButton con freccia indietro), non un link nel corpo della pagina. Le destinazioni originali restano invariate: dal programma si apre il task `course.edit` con l'ID del corso; dall'anteprima annuncio si apre `view=course&layout=edit` con l'ID del corso. Si conservano ACL, anteprima non inviante, salvataggi e funzioni editoriali; la sola navigazione GET non effettua mutazioni.
+
+**Collaudo manuale Joomla IT/EN:** aprire entrambe le viste per un corso autorizzato, controllare che il primo controllo in toolbar sia Torna al corso, che il link non sia più duplicato sotto la toolbar, che apra esattamente il corso di partenza e che non effettui invii email né salvataggi. Verificare la toolbar Atum anche su viewport stretto e i normali permessi delle viste.
+
 ## Toolbar di salvataggio corso (issue #365)
 
 Nell’editor amministrativo **Salva** esegue l’applicazione senza uscire. **Salva & Chiudi** è l’azione principale del gruppo a discesa; il menu contiene **Salva e apri programma**, che usa il task Joomla `course.programme` per salvare e poi aprire il programma didattico. La stessa azione resta disponibile nella scheda Programma. La toolbar è disponibile solo per corsi modificabili.

@@ -11,7 +11,6 @@ use Joomla\CMS\Router\Route;
 $courseId = (int) $this->preview['course_id'];
 ?>
 <div class="container-fluid">
- <p><a class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=course&layout=edit&id=' . $courseId) ?>"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_BACK') ?></a></p>
  <h1><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_TITLE') ?>: <?= htmlspecialchars((string) $this->preview['course_title'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></h1>
  <?php if (empty($this->preview['eligible'])) : ?>
   <div class="alert alert-warning" role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_NOT_ELIGIBLE') ?></div>
