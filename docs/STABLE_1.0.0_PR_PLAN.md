@@ -27,7 +27,7 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 | IMP-01 · IMP-02 | P0 | Verificare e completare i soli residui di editor corso, versioni, pubblicazione e programma, con persistenza e ACL corrette; nessuna duplicazione delle PR già integrate |
 | IMP-03 · IMP-04 | P1 | Preview autorizzata e fruizione didattica core con progressi/ripresa coerenti, senza effetti collaterali nella sola anteprima |
 | IMP-05 | P1 | Capability contract allineato ai quattro adapter e sorgente; trascrizione editoriale locale implementata da PR #456; resta il collaudo reale YouTube, Vimeo, Cloudflare, HTML5 prima del gate finale |
-| IMP-06 | P1 | Allegati e materiali: ambiti, preview, permessi, storage/retention e cleanup |
+| IMP-06 | P1 | Allegati e materiali: ambiti, preview corso/lezione testuale con doppia selezione esplicita, permessi, storage/retention e cleanup |
 | IMP-07 | P1 | Catalogo/percorsi, categorie/tag Joomla, ricerca, URL, accessibilità pubblica |
 | IMP-08 | P1 | Iscrizioni e roster essenziali, filtri e ACL corso-scoped; nessuna reportistica avanzata |
 | IMP-09-MAIL-A/B/C/D | P0/P1 | Ricognizione residui già approvati e in larga parte integrati: template, eventi, preferenze, outbox, comunicazioni manuali, consenso/annuncio, scadenze; collaudo Joomla/SMTP ancora distinto dalla CI |

@@ -875,6 +875,10 @@ Riferimenti: MAT-02/04/08, AC-100/101/103. Usare Joomla 6 di prova eliminabile, 
 
 **Esito sito Joomla:** Non eseguito.
 
+## IMP-06 — anteprima pubblica dei materiali di lezione testuale
+
+Per una lezione testuale pubblica, l’anteprima del corso e l’opzione di anteprima del singolo allegato devono essere entrambe attive. La pagina della lezione mostra solo allegati selezionati, attivi, pronti e nella finestra di disponibilità. Provare GET/HEAD del link, POST rifiutato, URL diretta con allegato privato, lezione non selezionata, altro corso/versione e lezione video/documento: nessun materiale deve essere restituito. Disattivando il corso o la lezione, il link deve cessare di funzionare. I formati passivi ammessi possono essere visualizzati inline; gli altri vengono scaricati.
+
 ## IMP-06 — lifecycle e riuso dei materiali (0.41.64-dev)
 
 Riferimenti: MAT-01–08, DAT-04, SCR-16, SIC-02, SECDEV-05; AC-27–31, AC-93, AC-97–103. Su Joomla 6 di prova predisporre un corso con una bozza, almeno due lezioni e un editor con permesso di gestione materiali.

@@ -14,7 +14,7 @@ final class AttachmentController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['download', 'audio', 'preview', 'inline', 'publicpreview'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!in_array(strtolower($task), ['download', 'audio', 'preview', 'inline', 'publicpreview', 'publiclessonpreview'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
         return parent::execute($task);
     }
 
@@ -37,6 +37,33 @@ final class AttachmentController extends BaseController
             $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) { throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode()); }
             Log::add('Public preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
+        }
+    }
+
+    /** Serve an explicitly selected attachment from a public text lesson preview. */
+    public function publiclessonpreview(): void
+    {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+        if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405); }
+        try {
+            $ids = [];
+            foreach (['course_id', 'lesson_id', 'id'] as $key) {
+                try { $ids[] = CurriculumService::id($this->input->get($key, null, 'RAW')); }
+                catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            }
+            $component = $this->app->bootComponent('com_jlms');
+            $identity = $this->app->getIdentity();
+            $language = $this->app->getLanguage()->getTag();
+            $course = $component->getCatalogService()->course($identity, $language, $ids[0]);
+            $component->getCatalogService()->publicLessonPreview($identity, $language, $ids[0], $ids[1]);
+            $file = $component->getMaterialService()->publicLessonPreviewDownload($ids[0], (int) $course->current_version_id, $ids[1], $ids[2]);
+            MaterialDownload::send($this->app, $file);
+        } catch (\Throwable $error) {
+            $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
+            if (in_array($error->getMessage(), $known, true)) { throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode()); }
+            Log::add('Public lesson preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
