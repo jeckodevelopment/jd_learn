@@ -17,7 +17,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-La copertura **implementativa stimata** verso la 1.0.0 è **79% (79,33% non arrotondato)**; non rappresenta l'accettazione manuale. La candidata #401 completa l'ultimo incremento MAIL-G: avvisi facoltativi ai responsabili autorizzati delle richieste di iscrizione pending, con verifica puntuale dei permessi Joomla e nessun dato personale del richiedente nell'email; l'accettazione Joomla rimane da registrare. La fonte aggiornata è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md); le modifiche puntuali sono nel [Changelog](CHANGELOG.md).
+La copertura **implementativa stimata** verso la 1.0.0 è **80% (79,56% non arrotondato)**; non rappresenta l'accettazione manuale. Dopo la PR #464 l'area email è stimata al 72% (+2 punti), con accettazione Joomla/SMTP ancora pendente. La stima usa la media delle nove macroaree; la fonte corrente è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md) e i dettagli sono nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json). Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
 
 Le integrazioni più recenti riguardano le notifiche email approvate, la compatibilità con Joomla 6.2 e l’allineamento delle viste amministrative e delle toolbar agli schemi Joomla. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
 
