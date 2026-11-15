@@ -42,7 +42,7 @@ final class MaterialService
     {
         $lesson = $this->row('lessons', $lessonId);
         if ((int) $lesson->course_version_id !== $versionId || $lesson->kind !== 'text' || (int) $lesson->preview !== 1) {
-            throw new \\RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422);
+            throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422);
         }
     }
 
@@ -182,7 +182,7 @@ final class MaterialService
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
             ->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':id', $attachmentId, ParameterType::INTEGER)
             ->bind(':published', $published)->bind(':nowUp', $now)->bind(':nowDown', $now);
-        $link = $this->db->setQuery($q)->loadObject() ?: throw new \\RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $link = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $file = $this->open((int) $link->asset_id);
         $file['inline'] = in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true);
         return $file;
