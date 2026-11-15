@@ -42,6 +42,24 @@ final class MailTemplateVariableCatalog
         'CONFIRM_URL' => ['url', 'Collegamento di conferma adesione', 'Consent confirmation link'],
     ];
 
+    /**
+     * Joomla MailTemplate::addUnsafeTags() marks raw values to be escaped
+     * during HTML rendering. Never mark already HTML-escaped values or
+     * sanitized HTML fragments, otherwise Joomla would double-escape them.
+     *
+     * @return list<string>
+     */
+    public static function tagsRequiringHtmlEscape(string $templateId): array
+    {
+        $result = [];
+        foreach (self::forTemplate($templateId) as $name => $entry) {
+            if (in_array($entry['type'], ['text', 'date', 'url'], true)) {
+                $result[] = $name;
+            }
+        }
+        return $result;
+    }
+
     /** @return array<string, array{type: string, description: string}> */
     public static function forTemplate(string $templateId, string $language = 'it-IT'): array
     {
