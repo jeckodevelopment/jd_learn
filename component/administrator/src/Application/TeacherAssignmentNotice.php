@@ -33,7 +33,7 @@ final class TeacherAssignmentNotice
         $queue = new MailQueue($this->db);
         $notified = [];
         foreach ($added as $teacherId) {
-            $query = $this->db->createQuery()->select('u.id, u.name, u.email, u.params')
+            $query = $this->db->createQuery()->select('u.id, u.name, u.email, u.params, t.title AS teacher_name')
                 ->from('#__jlms_course_teachers AS ct')
                 ->innerJoin('#__jlms_teachers AS t ON t.id = ct.teacher_id')
                 ->innerJoin('#__users AS u ON u.id = t.user_id')
@@ -61,6 +61,7 @@ final class TeacherAssignmentNotice
                 (string) $recipient->email,
                 $name,
                 ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title,
+                    'TEACHER_NAME' => trim((string) $recipient->teacher_name),
                     'SITE_NAME' => (string) Factory::getApplication()->get('sitename')],
                 (int) $recipient->id
             );
