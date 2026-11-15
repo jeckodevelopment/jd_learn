@@ -36,6 +36,23 @@ function rejects(callable $work, string $message): void
     }
     throw new \RuntimeException($message);
 }
+$mailCatalog = \\Jlms\\Component\\Jlms\\Administrator\\Infrastructure\\MailTemplateVariableCatalog::class;
+$escaped = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.enrollment.manager_request');
+expect(in_array('USER_FULLNAME', $escaped, true) && in_array('COURSE_TITLE', $escaped, true)
+    && in_array('COURSE_MANAGEMENT_URL', $escaped, true),
+    'raw display text and unescaped links require Joomla escaping inside HTML');
+expect(!in_array('USER_FULLNAME_HTML', $escaped, true) && !in_array('COURSE_TITLE_HTML', $escaped, true),
+    'pre-escaped HTML token values must not be encoded twice');
+$communicationUnsafe = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.course.message');
+expect(in_array('MESSAGE_BODY_TEXT', $communicationUnsafe, true) && !in_array('MESSAGE_BODY_HTML', $communicationUnsafe, true)
+    && !in_array('SITE_NAME_HTML', $communicationUnsafe, true),
+    'plain message strings escape in HTML but sanitized fragments and escaped fields remain intact');
+$announcementUnsafe = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.course.published');
+expect(in_array('COURSE_TITLE', $announcementUnsafe, true)
+    && !in_array('COURSE_IMAGE_HTML', $announcementUnsafe, true)
+    && !in_array('COURSE_LESSONS_HTML', $announcementUnsafe, true)
+    && !in_array('UNSUBSCRIBE_URL_HTML', $announcementUnsafe, true),
+    'course announcement only escapes untrusted raw text, not prepared HTML or escaped links');
 $mailPrefsClass = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::class;
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'disabled'], '{"unrelated_setting":"retain-me"}');
 expect(!$mailPrefsClass::enabled('enrollment', true, $mailParams), 'course can disable a globally enabled enrollment email');
