@@ -1,3 +1,14 @@
+## PR #407 — navigazione amministrativa essenziale e issue #394 (accettazione Joomla pendente)
+
+1. Aggiornare da 0.57.5-dev a 0.57.6-dev su Joomla 6 / Atum. Verificare la sidebar a **cinque** voci nell'ordine: Dashboard, Corsi, Percorsi formativi, Docenti, Banca domande. **Coda email** assente dalla sidebar, presente nella dashboard; nessuna voce obsoleta dopo l'aggiornamento.
+2. Aprire Corsi → editor → programma → lezione; Percorsi → editor; Docenti → editor; Banca domande → editor. Verificare che la voce operativa corrispondente resti evidenziata e che JD Learn rimanga espanso.
+3. Aprire dalla dashboard **Coda email**, **Variabili modelli email**, **Dipendenze categorie**, **Attestati** e un dettaglio secondario. Verificare che il nodo JD Learn rimanga espanso ma nessuna voce operativa sia evidenziata. Gli URL diretti devono comportarsi ugualmente. Nessun errore HTTP 500.
+4. Aprire dalla dashboard **Categorie corsi**, **Categorie percorsi**, **Campi aggiuntivi**, **Plugin video** e **Template email**. Verificare che questi componenti nativi Joomla non ricevano un focus fittizio su una voce JD Learn e mantengano i propri ACL e filtri.
+5. Issue **#394**: verificare visivamente la presenza dell'icona cartella su **Dipendenze categorie** in italiano/inglese, su desktop/mobile e tema chiaro/scuro. Non basta la verifica della classe HTML: verificare la resa effettiva in Atum.
+6. Provare Super User e ruoli ACL limitati per ogni link, URL diretto e relativo accesso negato. Verificare installazione pulita e upgrade preservando dati, registrazione dei menu e pacchetto installabile.
+
+La CI automatica non costituisce accettazione manuale. Perimetro UX, nessun aumento automatico della stima globale di implementazione.
+
 ## MAIL-H — issue #363: anteprima email nella toolbar editor corso (PR candidata, accettazione pendente)
 
 1. Aggiornare Joomla con build `0.57.5-dev`. Aprire **JD Learn → Corsi** e un corso **pubblicato** con un utente autorizzato alla modifica. La toolbar amministrativa deve mostrare **Anteprima email di annuncio**, una sola volta; il vecchio pulsante nel corpo del form non deve esserci.
