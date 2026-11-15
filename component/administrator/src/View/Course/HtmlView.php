@@ -88,6 +88,14 @@ final class HtmlView extends BaseHtmlView
                 'course.programme'
             )->formValidation(true)->icon('icon-list');
         }
+        // Navigation-only preview belongs to Joomla's native editor toolbar, not
+        // inside the course form. Keep the existing published/checkout guard.
+        if ($this->canPreviewAnnouncement) {
+            $this->getDocument()->getToolbar()
+                ->linkButton('announcement-preview', 'COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW')
+                ->icon('icon-envelope')
+                ->url(\Joomla\CMS\Router\Route::_('index.php?option=com_jlms&view=courseannouncement&id=' . $id));
+        }
         if ($id > 0) { ToolbarHelper::versions('com_jlms.course', $id); }
         ToolbarHelper::cancel('course.cancel');
         parent::display($tpl);

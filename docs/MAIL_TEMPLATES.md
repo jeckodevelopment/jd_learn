@@ -1,3 +1,7 @@
+## MAIL-H — anteprima annuncio nella toolbar corso (issue #363, candidata 0.57.5-dev)
+
+La vista **Editor corso** presenta l'accesso **Anteprima email di annuncio** esclusivamente nella toolbar Joomla nativa, tramite `LinkButton`, quando il corso esiste, è pubblicato e non è in checkout da un altro amministratore. Rimossa la duplicazione nel corpo del form. Il collegamento apre la stessa vista amministrativa protetta `courseannouncement` senza salvare né inviare email. Il sistema mantiene Joomla Mail Templates come editor dei modelli, il flusso di consenso e la conferma esplicita di accodamento esistenti. Regressioni automatiche su toolbar e visibilità; accettazione manuale Joomla pendente.
+
 ## MAIL-G — richiesta di iscrizione ai responsabili (candidata 0.57.4-dev, PR #401)
 
 Il template nativo `com_jlms.enrollment.manager_request` è destinato soltanto a **utenti Joomla autorizzati alla gestione delle iscrizioni del corso**: amministratori con ACL specifico e docenti effettivamente assegnati con lo stesso permesso. La ricerca prende candidati dai gruppi Joomla con grant pertinenti e dalle assegnazioni docente, ma ogni account passa `EnrollmentRosterService::course()` prima dell'accodamento e viene nuovamente validato al dispatch. I responsabili non devono ricevere email per corsi che non amministrano. Un account docente privo di permesso sulla gestione iscrizioni non è idoneo.

@@ -104,6 +104,9 @@ assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
 course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
 assert "$toolbar->save('course.apply')" in course_view
 assert "$toolbar->dropdownButton('save-group')" in course_view
+assert "->linkButton('announcement-preview', 'COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW')" in course_view
+assert "'index.php?option=com_jlms&view=courseannouncement&id=' . $id" in course_view
+assert 'view=courseannouncement' not in course_editor
 assert "$saveDropdown->getChildToolbar()" in course_view
 assert "$programmeMenu->save('course.save', 'COM_JLMS_COURSE_SAVE_AND_CLOSE')" in course_view
 assert "$programmeMenu->standardButton(" in course_view

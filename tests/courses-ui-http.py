@@ -93,6 +93,14 @@ try:
  expect(all(editor.count('name="jform['+x+']"')==1 for x in ['title','content_access','catalog_access','enrollment_mode','presentation_description','presentation_image']) and editor.count('name="jform[teacher_ids][]"')==1,'Core fields are rendered once across the grouped form')
  expect('id="jlms-course-programme-summary"' in editor and 'List UI module' in editor,'Editor Programme tab summarizes the saved outline')
  expect('COM_JLMS_COURSE_PROGRAMME_HELP' not in editor and 'COM_JLMS_COURSES_SEARCH' not in html,'New UI labels are translated')
+ expect('Anteprima email di annuncio' in editor or 'Preview announcement email' in editor,'Announcement preview is translated on the published course editor')
+ preview_links=[x for x in Page(editor).links if parse_qs(urlparse(x).query).get('view')==['courseannouncement']]
+ expect(len(preview_links)==1,'Published course editor exposes exactly one announcement preview link in native toolbar')
+ expect('announcement-preview' in editor and 'view=courseannouncement' in editor,'Announcement preview uses Joomla native toolbar link button')
+ expect(not re.search(r'<p><a[^>]*view=courseannouncement',editor,re.S),'Announcement preview is not repeated as a form-body button')
+ _,draft_editor=request('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(f['courses']['Bravo']))
+ expect(not [x for x in Page(draft_editor).links if parse_qs(urlparse(x).query).get('view')==['courseannouncement']],'Draft course cannot preview announcement')
+
  # One native save creates a course and opens its programme without losing the submitted description.
  new_url,new_html=request('/administrator/index.php?option=com_jlms&task=course.add')
  new_form=next(x for x in Page(new_html).forms if 'jform[title]' in x['fields'])
