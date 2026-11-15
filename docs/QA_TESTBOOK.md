@@ -1,3 +1,14 @@
+## MAIL-G — nuovi avvisi ai responsabili delle richieste (PR #401, QA pendente)
+
+1. Aggiornare Joomla 6.2 alla build 0.57.4-dev. Verificare **Sistema → Modelli email**: `com_jlms.enrollment.manager_request`, titolo/descrizione IT/EN, token e conservazione delle modifiche a template esistenti.
+2. Configurare un corso in modalità iscrizione con approvazione, con responsabile amministrativo che possiede `core.manage` su `com_jlms` e `jlms.enrollments.manage` sul corso, e un docente assegnato dotato del permesso sullo stesso corso. Con la preferenza globale OFF e override Eredita, creare richiesta pending: nessun nuovo messaggio. Con override Abilita, creare una nuova richiesta e lanciare lo Scheduler: un solo messaggio per ciascun responsabile autorizzato.
+3. Aggiungere docente assegnato senza permesso di gestione, docente di un altro corso, utente non autorizzato e studente richiedente: **nessun avviso** a loro. Con globale ON e override Disabilita: nessun nuovo avviso.
+4. Ripetere Scheduler e tentare richieste duplicate: deduplica per richiesta+manager, non oltre due giorni dalla creazione. Approvare/rifiutare prima del dispatch: `skipped`, destinatario/PII rimossi; nessun avviso per richieste già decise prima della rilevazione.
+5. Accodare e poi revocare il permesso, rimuovere l'assegnazione docente, bloccare il responsabile, cambiarne email o disabilitare la preferenza: skip senza spedizione SMTP. Verificare che non vengano esposti nominativo, email o motivazione del richiedente nel messaggio.
+6. Eseguire SMTP e retry su installazione Joomla di prova; aprire il link al registro iscrizioni da account con e senza permesso per verificare la protezione delle viste. Provare lingua IT/EN, caratteri speciali nel titolo, upgrade, più amministratori e throughput di molte richieste.
+
+**La CI non sostituisce l'accettazione SMTP/manuale.** Registrare le evidenze distinte per scenario.
+
 ## MAIL-G — aggiornamenti didattici significativi (PR #399, accettazione pendente)
 
 1. Installare o aggiornare la build 0.57.3-dev su Joomla 6.2; verificare in **Sistema → Modelli email** il modello `com_jlms.course.updated` e relativi titoli/descrizioni IT/EN. Assicurarsi che i modelli già personalizzati non vengano sovrascritti.
