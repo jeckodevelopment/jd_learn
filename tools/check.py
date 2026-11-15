@@ -351,7 +351,6 @@ assert [node.attrib.get('link') for node in submenu.findall('menu')]==[
  'option=com_jlms&view=courses',
  'option=com_jlms&view=pathways',
  'option=com_jlms&view=teachers',
- 'option=com_jlms&view=mailqueue',
  'option=com_jlms&view=questionbank',
 ]
 dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
@@ -364,9 +363,9 @@ for tag in ('it-IT','en-GB'):
   assert len(re.findall(r'^'+key+r'=',messages,re.M))==1,(tag,key)
 
 # Nested Joomla administrator views must map to the component's own primary
-# menu entries and use Joomla Pathway rather than a custom breadcrumb widget.
+# menu entries. Secondary views select the native component root.
 admin_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
-for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']","'mailqueue' => ['mailqueue']"):
+for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']"):
  assert pair in admin_controller,pair
 assert '$menu->setActive((int) $item->id)' in admin_controller
 assert "$app->getPathway()" not in admin_controller
