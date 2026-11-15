@@ -6,7 +6,7 @@
 
 **Collaudo PR #452:** l'utente conferma che i pulsanti abbreviati si vedono correttamente. Accettazione limitata alla presenza visiva riferita; il resto della matrice UI-02 resta aperto.
 
-**Issue #455, PR in preparazione:** il roster torna a Corsi tramite il primo pulsante toolbar e l'iscrizione manuale torna al roster dello stesso corso; il comando di iscrizione manuale usa un'icona supportata. I link nel corpo pagina vengono rimossi e i controlli strutturali ne impediscono la regressione. Stima funzionale invariata: correzione di navigazione; il collaudo Atum è descritto in QA_TESTBOOK.md.
+**Issue #455 / PR [#457](https://github.com/jeckodevelopment/jd_learn/pull/457) integrata** (merge `74dab84cbe617608a8c4a24a5033ab7ab8f0e5cd`, build 0.57.7-dev): il roster torna a Corsi tramite il primo pulsante toolbar; iscrizione manuale ha icona plus e ritorna a Iscritti dello stesso corso. Rimossi i link duplicati dal corpo. CI [JD Learn verification #1485](https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344) **4/4 verde**, matrice [#346](https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830280) verde. Pacchetto installabile [JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344/artifacts/14180606835), ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `106addf950d16be8b7cae4340d98bcf3961326bda096e963abdfbcdfdfa327f1`. **Copertura invariata: 79,33% globale / 70% email (delta 0)**. Collaudo Joomla/Atum della #455 ancora da eseguire secondo la checklist in QA_TESTBOOK.md.
 
 **UX toolbar #446/#448, PR in preparazione:** ritorno al roster e operazioni disponibilità corso trasferiti nella toolbar. Correzione di navigazione, stima funzionale invariata; prove Atum/ACL in `QA_TESTBOOK.md`.
 
