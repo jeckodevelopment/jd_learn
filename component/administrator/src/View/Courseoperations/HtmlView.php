@@ -14,8 +14,8 @@ final class HtmlView extends BaseHtmlView
   $this->form->bind(['course_id'=>(int)$this->item['course']->id,'operation'=>$p['operation'],'course_revision'=>$p['revision'],'impact_hash'=>$p['hash'],'mutation_id'=>$id]);
   ToolbarHelper::title(Text::_('COM_JLMS_COURSE_OPERATIONS_TITLE'),'lock');
   $courseId = (int) $this->item['course']->id;
-  ToolbarHelper::link('index.php?option=com_jlms&view=enrollments&id=' . $courseId, 'COM_JLMS_ENROLLMENTS_TITLE', 'arrow-left');
-  $operations = ['admissions_close'=>'COM_JLMS_COURSE_ADMISSIONS_CLOSE','admissions_open'=>'COM_JLMS_COURSE_ADMISSIONS_OPEN','delivery_suspend'=>'COM_JLMS_COURSE_DELIVERY_SUSPEND','delivery_resume'=>'COM_JLMS_COURSE_DELIVERY_RESUME'];
+  ToolbarHelper::link('index.php?option=com_jlms&view=enrollments&id=' . $courseId, 'COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT', 'arrow-left');
+  $operations = ['admissions_close'=>'COM_JLMS_COURSE_ADMISSIONS_CLOSE_SHORT','admissions_open'=>'COM_JLMS_COURSE_ADMISSIONS_OPEN_SHORT','delivery_suspend'=>'COM_JLMS_COURSE_DELIVERY_SUSPEND_SHORT','delivery_resume'=>'COM_JLMS_COURSE_DELIVERY_RESUME_SHORT'];
   foreach ($operations as $operation => $label) {
    ToolbarHelper::link('index.php?option=com_jlms&view=courseoperations&id=' . $courseId . '&operation=' . $operation, $label, 'refresh');
   }

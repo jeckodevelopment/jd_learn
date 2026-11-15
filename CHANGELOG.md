@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Toolbar: etichette brevi in italiano e inglese per tornare agli iscritti e gestire la disponibilità del corso.
+
 - Issue #446/#448: azioni e ritorno al roster delle viste Comunicazione e Disponibilità corso trasferiti alla toolbar Joomla.
 
 - Lezioni audio: supporto facoltativo alle trascrizioni, conservate nella versione didattica e mostrate nell’aula solo agli iscritti autorizzati.
