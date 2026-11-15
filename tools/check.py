@@ -40,11 +40,17 @@ for folder in ['component','plugins']:
   if p.suffix in ['.php','.xml']:used.update(re.findall(r'\b(?:COM_JLMS|PLG_JLMSVIDEO|PLG_PRIVACY_JDLEARN)_[A-Z0-9_]+\b',p.read_text()))
 # Installer error codes are caught explicitly and listed in the implementation status; still translate them.
 assert used<=keys,sorted(used-keys)
+lesson_notice=(ROOT/'component/administrator/src/Application/LessonReleaseNotice.php').read_text()
+assert "LessonAvailability::effectiveStart" in lesson_notice
+assert "'lesson_release'" in (ROOT/'component/administrator/src/Application/MailPreferences.php').read_text()
+assert "'com_jlms.lesson.available' => 'lesson_release'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert "lessonReleaseEligible($row)" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert "new \\Jlms\\Component\\Jlms\\Administrator\\Application\\LessonReleaseNotice($db)" in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
 # Joomla's Mail Templates manager resolves each ID title and description in both
 # administrator language catalogs: .sys.ini for the list and .ini for the editor.
 mail_definitions=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 mail_ids=[line.strip().split("'")[1] for line in mail_definitions.splitlines() if line.strip().startswith("'com_jlms.") and "' => [" in line]
-assert len(mail_ids)==14 and len(set(mail_ids))==14,('Unexpected mail template inventory',mail_ids)
+assert len(mail_ids)==15 and len(set(mail_ids))==15,('Unexpected mail template inventory',mail_ids)
 for language in ['it-IT','en-GB']:
  for suffix in ['.ini','.sys.ini']:
   catalog=(ROOT/'component/administrator/language'/language/('com_jlms'+suffix)).read_text()
