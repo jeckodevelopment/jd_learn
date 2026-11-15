@@ -1,10 +1,10 @@
 {
-  "audited_at": "2026-11-14",
+  "audited_at": "2026-11-15",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "as_of": "2026-11-14",
+    "as_of": "2026-11-15",
     "percent": 79,
-    "basis": "Media delle nove macroaree: (81+81+78+99+68+92+70+64+75)/9=78,67%, arrotondata a 79%. Stima invariata dopo PR #391: correzione della localizzazione toolbar senza completamento di un requisito; accettazione manuale Joomla resta pendente.",
+    "basis": "Media delle nove macroaree invariata a 78,67% (arrotondata 79%); PR #395 MAIL-H corregge etichette dei modelli email senza completare nuovo requisito. Accettazione Joomla pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -17,13 +17,13 @@
       "certificates": 75
     }
   },
-  "version": "0.56.29-dev",
-  "code_baseline": "e3639d8544e8a1f5bfbd3e53803e0b35c56f904e",
+  "version": "0.57.1-dev",
+  "code_baseline": "12e8b0989722ebf591caba8acd9e7212d3a4e5de",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43649969902,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43649969902",
+    "run_id": 43708040426,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43708040426",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,17 +51,16 @@
     ]
   },
   "package": {
-    "artifact_id": 14135354365,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43649969902/artifacts/14135354365",
-    "artifact_name": "JD-Learn-0.56.29-dev",
-    "installable_package": "pkg_jlms-0.56.29-dev.zip",
-    "artifact_sha256": "a932a7e5c51edc2bb40801e56f7107941e85b0a1a6dfab3fc29083e548f269aa",
-    "artifact_size_bytes": 662658,
+    "artifact_id": 14159098377,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43708040426/artifacts/14159098377",
+    "artifact_name": "JD-Learn-0.57.1-dev",
+    "installable_package": "pkg_jlms-0.57.1-dev.zip",
+    "artifact_sha256": "e061acc209f5132a85b0f91cdaf3a841d735425c097c85581bcb7247387907d9",
+    "artifact_size_bytes": 665033,
     "wrapper_zip": true,
-    "expires_at": "2026-11-28T22:52:57Z",
-    "notes": "CI completa verde sul commit PR e6d490110ae756e862a5a4edd85908cf13a2faa4; merge main e3639d8544e8a1f5bfbd3e53803e0b35c56f904e. L'archivio Actions contiene il pacchetto Joomla pkg_jlms-0.56.29-dev.zip da estrarre. SHA-256 riportato per l'archivio artifact; accettazione manuale toolbar su Joomla 6.2 pendente.",
-    "sha256": "4d21d5180069d13f7f8f230e0047997025b0d14e2dd6b0374fd9e54b5735cd3d",
-    "size_bytes": 662929
+    "notes": "Estrarre dal contenitore artefatto Actions il pacchetto Joomla pkg_jlms-0.57.1-dev.zip. CI completa verde sul commit PR 54204beba1d39cf197593a289eed390f350c6f01, merge main 12e8b0989722ebf591caba8acd9e7212d3a4e5de. Accettazione manuale Joomla pendente.",
+    "sha256": "c202a62538e39b2065b32b6549adb3a7126d3174b072af08667f4eb786f34c2c",
+    "size_bytes": 665306
   },
   "release_process": {
     "issue": 160,
@@ -13358,7 +13357,7 @@
     "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873"
   },
   "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Avanzamento implementativo 78,67% (79% arrotondato), email 64%. MAIL-04 implementato; accettazione manuale Joomla/SMTP pendente. | Installer updateObject by-reference fixed in merged PR #373; reverting additional packaging, official 79% baseline unchanged pending weighted recalculation after #367. Manual Joomla 6.2.0 installation must be retested.",
-  "updated_at": "2026-11-14",
+  "updated_at": "2026-11-15",
   "sec_p1_mail_transport_candidate": {
     "pull_request": 338,
     "runtime_commit": "5d38e6e47582422be581247de085206abc2c0296",
@@ -13410,5 +13409,20 @@
     "date": "2026-11-14",
     "environment": "Joomla 6.2.0",
     "scope": "Installation only; no claim of complete functional acceptance"
+  },
+  "mail_h_template_labels": {
+    "pull_request": 395,
+    "issue": 312,
+    "merge_commit": "12e8b0989722ebf591caba8acd9e7212d3a4e5de",
+    "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43708040426",
+    "requirements_ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43708040477",
+    "template_count": 14,
+    "locales": [
+      "it-IT",
+      "en-GB"
+    ],
+    "implemented": true,
+    "manual_joomla_acceptance": "pending",
+    "delta_global_percent_points": 0
   }
 }
