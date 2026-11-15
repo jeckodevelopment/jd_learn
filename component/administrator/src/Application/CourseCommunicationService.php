@@ -47,7 +47,7 @@ final class CourseCommunicationService
     }
 
     /** @param array<int, mixed> $enrollmentIds */
-    public function preview(User $identity, int $courseId, string $subject, string $body, array $enrollmentIds): array
+    public function preview(User $identity, int $courseId, string $subject, string $body, array $enrollmentIds, array $template = []): array
     {
         $this->authorized($identity, $courseId);
         $subject = trim($subject);
@@ -67,15 +67,32 @@ final class CourseCommunicationService
         $ids = $this->activeIds($courseId, $ids);
         if (count($ids) !== count($enrollmentIds)) { throw new \RuntimeException('COM_JLMS_COMMUNICATION_RECIPIENTS_CHANGED', 409); }
         sort($ids);
-        $hash = hash('sha256', json_encode([$courseId, $subject, $body, $ids], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
-        return ['course_id'=>$courseId,'subject'=>$subject,'body'=>$body,'enrollment_ids'=>$ids,'count'=>count($ids),'hash'=>$hash];
+        $course = $this->editor($identity, $courseId)['course'];
+        $data = $this->templateData('Destinatario di esempio', (string) $course->title, $subject, $body);
+        $snapshot = CourseMessageTemplate::validate(
+            $template !== [] ? $template : CourseMessageTemplate::load('*'), $data
+        );
+        $renderer = new CourseMessageMailer();
+        $rendered = [
+            'subject' => $renderer->render($snapshot['subject'], $data),
+            'body' => $renderer->render($snapshot['body'], $data),
+            'htmlbody' => $snapshot['htmlbody'] !== ''
+                ? $renderer->render($snapshot['htmlbody'], $data, true) : '',
+        ];
+        if (trim($rendered['subject']) === '' || mb_strlen($rendered['subject']) > 300
+            || preg_match('/[\\x00-\\x1f\\x7f]/', $rendered['subject'])) {
+            throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
+        }
+        $hash = hash('sha256', json_encode([$courseId, $subject, $body, $ids, $snapshot], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+        return ['course_id'=>$courseId,'subject'=>$subject,'body'=>$body,'template'=>$snapshot,
+            'rendered'=>$rendered,'enrollment_ids'=>$ids,'count'=>count($ids),'hash'=>$hash];
     }
 
     /** Persist a confirmed job. No email addresses or recipient names are stored in the job payload. */
-    public function queue(User $identity, int $courseId, string $subject, string $body, array $ids, string $hash, string $mutationId): int
+    public function queue(User $identity, int $courseId, string $subject, string $body, array $ids, string $hash, string $mutationId, array $template = []): int
     {
         if (!preg_match('/^[a-f0-9-]{36}$/i', $mutationId)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-        $plan = $this->preview($identity, $courseId, $subject, $body, $ids);
+        $plan = $this->preview($identity, $courseId, $subject, $body, $ids, $template);
         if (!hash_equals($plan['hash'], $hash)) { throw new \RuntimeException('COM_JLMS_COMMUNICATION_CONFLICT', 409); }
         $actor = $this->authorized($identity, $courseId);
         $this->db->transactionStart();
@@ -101,7 +118,7 @@ final class CourseCommunicationService
                 $job = (object) [
                     'kind'=>'course_communication','owner_user_id'=>(int) $actor->id,
                     'scope_json'=>json_encode(['course_id'=>$courseId,'mutation_id'=>$mutationId], JSON_THROW_ON_ERROR),
-                    'payload_json'=>json_encode(['mutation_id'=>$mutationId,'subject'=>$plan['subject'],'body'=>$plan['body'],'enrollment_ids'=>$plan['enrollment_ids']], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
+                    'payload_json'=>json_encode(['mutation_id'=>$mutationId,'subject'=>$plan['subject'],'body'=>$plan['body'],'template'=>$plan['template'],'enrollment_ids'=>$plan['enrollment_ids']], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
                     'status'=>'queued','cursor_json'=>json_encode(['offset'=>0], JSON_THROW_ON_ERROR),
                     'progress_done'=>0,'progress_total'=>$plan['count'],'attempts'=>0,'available_at'=>$now,'created_at'=>$now,
                 ];
@@ -122,7 +139,7 @@ final class CourseCommunicationService
     }
 
     /** Test delivery is restricted to the authorized actor; roster addresses are never accepted. */
-    public function test(User $identity, int $courseId, string $subject, string $body): void
+    public function test(User $identity, int $courseId, string $subject, string $body, array $template = []): void
     {
         $actor = $this->authorized($identity, $courseId);
         $subject = trim($subject); $body = trim($body);
@@ -130,11 +147,10 @@ final class CourseCommunicationService
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $course = $this->editor($actor, $courseId)['course'];
-        $data = ['USER_FULLNAME'=>(string) $actor->name,'USER_FULLNAME_HTML'=>htmlspecialchars((string) $actor->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            'COURSE_TITLE'=>(string) $course->title,'COURSE_TITLE_HTML'=>htmlspecialchars((string) $course->title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),'MESSAGE_SUBJECT'=>$subject,
-            'MESSAGE_BODY_TEXT'=>$body,'MESSAGE_BODY_HTML'=>nl2br(htmlspecialchars($body, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), false),
-            'SITE_NAME'=>(string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-            'SITE_NAME_HTML'=>htmlspecialchars((string) \Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')];
+        $data = $this->templateData((string) $actor->name, (string) $course->title, $subject, $body);
+        $data['__course_message_snapshot'] = CourseMessageTemplate::validate(
+            $template !== [] ? $template : CourseMessageTemplate::load('*'), $data
+        );
         $key = hash('sha256', 'course-message-test:' . $courseId . ':' . $actor->id . ':' . bin2hex(random_bytes(16)));
         (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data);
     }
@@ -170,15 +186,10 @@ final class CourseCommunicationService
             foreach ($slice as $enrollmentId) {
                 $recipient = $this->recipient($courseId, (int) $enrollmentId);
                 if ($recipient) {
-                    $templateData = [
-                        'USER_FULLNAME'=>(string) $recipient->name,'USER_FULLNAME_HTML'=>htmlspecialchars((string) $recipient->name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                        'COURSE_TITLE'=>(string) $recipient->course_title,'COURSE_TITLE_HTML'=>htmlspecialchars((string) $recipient->course_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                        'MESSAGE_SUBJECT'=>(string) $payload['subject'],
-                        'MESSAGE_BODY_TEXT'=>(string) $payload['body'],
-                        'MESSAGE_BODY_HTML'=>nl2br(htmlspecialchars((string) $payload['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), false),
-                        'SITE_NAME'=>(string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-                        'SITE_NAME_HTML'=>htmlspecialchars((string) \Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                    ];
+                    $templateData = $this->templateData((string) $recipient->name, (string) $recipient->course_title, (string) $payload['subject'], (string) $payload['body']);
+                    if (isset($payload['template']) && is_array($payload['template'])) {
+                        $templateData['__course_message_snapshot'] = $payload['template'];
+                    }
                     $key = hash('sha256', 'course-communication:' . (int) $job->id . ':' . (int) $enrollmentId);
                     (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) $recipient->language, (string) $recipient->email, (string) $recipient->name, $templateData);
                 }
@@ -199,6 +210,23 @@ final class CourseCommunicationService
             $this->db->setQuery($update)->execute();
             return ['queued'=>0,'processed'=>0,'failed'=>1];
         }
+    }
+
+    /** @return array<string, string> */
+    private function templateData(string $recipientName, string $courseTitle, string $subject, string $body): array
+    {
+        $site = (string) \Joomla\CMS\Factory::getApplication()->get('sitename');
+        return [
+            'USER_FULLNAME'=>$recipientName,
+            'USER_FULLNAME_HTML'=>htmlspecialchars($recipientName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'COURSE_TITLE'=>$courseTitle,
+            'COURSE_TITLE_HTML'=>htmlspecialchars($courseTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'MESSAGE_SUBJECT'=>$subject,
+            'MESSAGE_BODY_TEXT'=>$body,
+            'MESSAGE_BODY_HTML'=>nl2br(htmlspecialchars($body, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), false),
+            'SITE_NAME'=>$site,
+            'SITE_NAME_HTML'=>htmlspecialchars($site, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+        ];
     }
 
     private function activeIds(int $courseId, array $ids): array

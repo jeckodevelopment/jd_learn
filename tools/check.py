@@ -56,6 +56,21 @@ for locale in ('it-IT', 'en-GB'):
     definitions=(ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
     for key in ('COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE', 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TRANSPORT'):
         assert key+'=' in definitions, (locale,key)
+# Message editor, preview and dispatch must use the same immutable snapshot.
+compose=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
+dispatch=(ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+composer_view=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
+sender=(ROOT/'component/administrator/src/Application/CourseMessageMailer.php').read_text()
+assert "'template'=>$plan['template']" in compose
+assert "'__course_message_snapshot'" in compose and "'__course_message_snapshot'" in dispatch
+assert "CourseMessageTemplate::validate($snapshot, $data)" in dispatch
+assert "CourseMessageMailer::deliver(" in dispatch
+assert "Factory::getMailer()" in sender and "->replaceTags(" in sender
+assert "CourseMessageTemplate::validate(" in compose
+assert "['rendered']['htmlbody']" in composer_view and 'sandbox=""' in composer_view
+assert "Editor::getInstance(" in composer_view
+assert "jform[template][htmlbody]" in composer_view
+assert 'class="btn btn-danger"' not in composer_view
 # Template-backed course composer: the native Joomla template is the source,
 # and a per-message snapshot is checked before any future queue persistence.
 composer=(ROOT/'component/administrator/src/Application/CourseMessageTemplate.php').read_text()
