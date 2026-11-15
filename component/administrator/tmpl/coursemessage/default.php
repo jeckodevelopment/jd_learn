@@ -19,26 +19,23 @@ $mutation=substr($mutation,0,8).'-'.substr($mutation,8,4).'-4'.substr($mutation,
  <p class="alert alert-info"><?= Text::_('COM_JLMS_COMMUNICATION_POLICY') ?></p>
  <form class="mb-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.preview') ?>">
   <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>">
-  <label class="form-label" for="jlms-message-subject"><?= Text::_('COM_JLMS_COMMUNICATION_SUBJECT') ?></label>
-  <input id="jlms-message-subject" name="jform[subject]" type="text" maxlength="200" required class="form-control" value="<?= $this->escape($subject) ?>">
-  <label class="form-label mt-3" for="jlms-message-body"><?= Text::_('COM_JLMS_COMMUNICATION_BODY') ?></label>
-  <textarea id="jlms-message-body" name="jform[body]" maxlength="12000" required rows="8" class="form-control"><?= $this->escape($body) ?></textarea>
-  <details class="card mt-4 mb-3" open>
-   <summary class="card-header"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_EDIT') ?></summary>
-   <div class="card-body">
+  <div class="card mt-3 mb-3"><div class="card-body">
+   <h2 class="h5 mb-2"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_EDIT') ?></h2>
     <p class="text-muted small"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_LOCAL') ?> <code>com_jlms.course.message</code></p>
     <label class="form-label" for="jlms-template-subject"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_SUBJECT') ?></label>
     <input id="jlms-template-subject" name="jform[template][subject]" type="text" maxlength="300" required class="form-control mb-3" value="<?= $this->escape($template['subject']) ?>">
-    <label class="form-label" for="jlms-template-body"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_PLAIN') ?></label>
-    <textarea id="jlms-template-body" name="jform[template][body]" maxlength="16000" required rows="4" class="form-control mb-3"><?= $this->escape($template['body']) ?></textarea>
     <label class="form-label" for="jlms-template-htmlbody"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_HTML') ?></label>
     <?php
     $editorName=(string) Factory::getApplication()->getIdentity()->getParam('editor', Factory::getApplication()->get('editor'));
     echo Editor::getInstance($editorName)->display('jform[template][htmlbody]', (string) $template['htmlbody'], '100%', '260', '60', '10', false, 'jlms-template-htmlbody');
     ?>
-    <p class="small text-muted mt-2"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_TAGS') ?> <code><?= $this->escape(implode(', ', \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::tags())) ?></code></p>
+    <p class="small text-muted mt-2"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_TAGS') ?> <code><?= $this->escape(implode(', ', array_values(array_diff(\Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::tags(), ['MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML'])))) ?></code></p>
+    <details class="mt-3"><summary><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_PLAIN') ?></summary>
+      <label class="form-label mt-2" for="jlms-template-body"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_PLAIN_HELP') ?></label>
+      <textarea id="jlms-template-body" name="jform[template][body]" maxlength="16000" required rows="4" class="form-control"><?= $this->escape($template['body']) ?></textarea>
+    </details>
    </div>
-  </details>
+  </div>
   <fieldset class="mt-3 mb-3"><legend><?= Text::_('COM_JLMS_COMMUNICATION_RECIPIENTS') ?></legend>
   <?php if (!$this->item['recipients']) : ?><p><?= Text::_('COM_JLMS_COMMUNICATION_NO_RECIPIENTS') ?></p><?php endif; ?>
   <?php foreach ($this->item['recipients'] as $person) : $id=(int)$person->enrollment_id; ?>
@@ -60,12 +57,12 @@ $mutation=substr($mutation,0,8).'-'.substr($mutation,8,4).'-4'.substr($mutation,
    <p class="small text-muted"><?= Text::_('COM_JLMS_COMMUNICATION_PREVIEW_SAMPLE') ?></p>
    <p><?= Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT',$preview['count']) ?></p>
    <form class="mb-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.test') ?>">
-    <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><input type="hidden" name="jform[subject]" value="<?= $this->escape($preview['subject']) ?>"><textarea hidden name="jform[body]"><?= $this->escape($preview['body']) ?></textarea><?= HTMLHelper::_('form.token') ?>
+    <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><?= HTMLHelper::_('form.token') ?>
     <?php foreach (['subject','body','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
     <button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_COMMUNICATION_SEND_TEST') ?></button>
    </form>
    <form class="mt-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.queue') ?>">
-    <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><input type="hidden" name="jform[subject]" value="<?= $this->escape($preview['subject']) ?>"><textarea hidden name="jform[body]"><?= $this->escape($preview['body']) ?></textarea>
+    <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>">
     <?php foreach ($preview['enrollment_ids'] as $id) : ?><input type="hidden" name="jform[enrollment_ids][]" value="<?= (int)$id ?>"><?php endforeach; ?>
     <?php foreach (['subject','body','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
     <input type="hidden" name="jform[impact_hash]" value="<?= $this->escape($preview['hash']) ?>"><input type="hidden" name="jform[mutation_id]" value="<?= $this->escape($mutation) ?>">
