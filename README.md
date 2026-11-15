@@ -1,6 +1,6 @@
 # JD Learn
 
-**Build di sviluppo corrente: `0.57.3-dev`** (non release stabile). PR #399 MAIL-G integrata con CI verde; collaudo manuale Joomla/SMTP pendente; per pacchetto e checksum vedere [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json).
+**Build di sviluppo candidata: `0.57.4-dev`** (non release stabile). PR #401 MAIL-G in verifica CI; collaudo manuale Joomla/SMTP pendente; per pacchetto e checksum vedere [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json).
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
@@ -17,7 +17,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-La copertura **implementativa stimata** verso la 1.0.0 è **79% (79,11% non arrotondato)**; non rappresenta l'accettazione manuale. La candidata #399 aggiunge l'avviso facoltativo per versioni didattiche con cambiamenti significativi, inviato solo in seguito alla migrazione confermata dell'iscrizione, non a un semplice salvataggio o pubblicazione; l'accettazione Joomla rimane da registrare. La fonte aggiornata è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md); le modifiche puntuali sono nel [Changelog](CHANGELOG.md).
+La copertura **implementativa stimata** verso la 1.0.0 è **79% (79,33% non arrotondato)**; non rappresenta l'accettazione manuale. La candidata #401 completa l'ultimo incremento MAIL-G: avvisi facoltativi ai responsabili autorizzati delle richieste di iscrizione pending, con verifica puntuale dei permessi Joomla e nessun dato personale del richiedente nell'email; l'accettazione Joomla rimane da registrare. La fonte aggiornata è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md); le modifiche puntuali sono nel [Changelog](CHANGELOG.md).
 
 Le integrazioni più recenti riguardano le notifiche email approvate, la compatibilità con Joomla 6.2 e l’allineamento delle viste amministrative e delle toolbar agli schemi Joomla. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
 
