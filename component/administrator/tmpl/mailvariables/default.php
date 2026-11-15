@@ -17,7 +17,7 @@ $mailIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstall
  <p class="alert alert-info"><?= $this->escape(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_WARNING')) ?></p>
  <?php foreach ($mailIds as $mailId) : ?>
  <?php
- $titleKey = 'COM_JLMS_MAIL_' . strtoupper(str_replace(['com_jlms.', '.'], ['', '_'], $mailId)) . '_TITLE';
+ $titleKey = 'COM_' . 'JLMS_MAIL_' . strtoupper(str_replace(['com_jlms.', '.'], ['', '_'], $mailId)) . '_TITLE';
  $translatedTitle = Text::_($titleKey);
  $displayTitle = $translatedTitle === $titleKey ? $mailId : $translatedTitle;
  ?>
