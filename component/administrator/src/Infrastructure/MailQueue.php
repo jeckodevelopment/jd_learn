@@ -32,6 +32,7 @@ final class MailQueue
             'com_jlms.certificate.available' => 'certificate',
             'com_jlms.course.message' => 'communication',
             'com_jlms.course.expiring' => 'expiry',
+            'com_jlms.lesson.available' => 'lesson_release', 
             default => null,
         };
         if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -45,7 +46,7 @@ final class MailQueue
             return;
         }
         $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
-        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', true);
+        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', $event !== 'lesson_release');
         if (!\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled($event, $globalEnabled, (string) $courseParams)) {
             return;
         }
@@ -156,6 +157,14 @@ final class MailQueue
                     $skipped++;
                     continue;
                 }
+                if ((string) $row->template_id === 'com_jlms.lesson.available' && !$this->lessonReleaseEligible($row)) {
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
+                        ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}'")
+                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    ++$skipped;
+                    continue;
+                }
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $templateId = (string) $row->template_id;
                 $language = (string) $row->language;
@@ -211,6 +220,69 @@ final class MailQueue
         $this->db->setQuery("UPDATE #__jlms_course_announcement_campaigns AS campaign SET state = 'finished' WHERE campaign.state = 'queued' AND NOT EXISTS (SELECT 1 FROM #__jlms_mail_queue AS queued WHERE queued.course_id = campaign.course_id AND queued.template_id = 'com_jlms.course.published' AND queued.state IN ('pending','retry','sending'))")->execute();
         return ['sent' => $sent, 'failed' => $failed, 'skipped' => $skipped, 'processed' => count($ids)];
     }
+
+    /** Revalidate the exact version, learner, ACL, window and lesson release before SMTP. */
+    private function lessonReleaseEligible(object $row): bool
+    {
+        $userId = (int) ($row->recipient_user_id ?? 0);
+        if ($userId < 1) { return false; }
+        try {
+            $data = json_decode((string) $row->template_data, true, 16, JSON_THROW_ON_ERROR);
+            $enrollmentId = (int) ($data['ENROLLMENT_ID'] ?? 0);
+            $lessonId = (int) ($data['LESSON_ID'] ?? 0);
+            if ($enrollmentId < 1 || $lessonId < 1) { return false; }
+            $query = $this->db->createQuery()->select('e.id, e.created_at, e.started_at, e.starts_at, e.ends_at, e.course_version_id, ' .
+                'ed.starts_at AS edition_starts, ed.ends_at AS edition_ends, v.published_at, ' .
+                'l.publish_up, l.publish_down, l.release_after_days, c.params_json, c.content_access')
+                ->from('#__jlms_enrollments AS e')
+                ->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id AND ed.course_version_id = e.course_version_id')
+                ->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id AND v.course_id = e.course_id')
+                ->innerJoin('#__jlms_lessons AS l ON l.id = :lesson AND l.course_version_id = e.course_version_id')
+                ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
+                ->innerJoin('#__users AS u ON u.id = e.user_id')
+                ->where('e.id = :enrollment')->where('e.user_id = :user')->where('e.course_id = :course')
+                ->where("e.status = 'active'")->where('e.completed_at IS NULL')
+                ->where("ed.status = 'open'")->where("v.status = 'published'")
+                ->where('u.block = 0')->where('LOWER(u.email) = LOWER(:email)')
+                ->where('c.delivery_enabled = 1')
+                ->where('(e.starts_at IS NULL OR e.starts_at <= UTC_TIMESTAMP(6))')
+                ->where('(e.ends_at IS NULL OR e.ends_at > UTC_TIMESTAMP(6))')
+                ->where('(ed.starts_at IS NULL OR ed.starts_at <= UTC_TIMESTAMP(6))')
+                ->where('(ed.ends_at IS NULL OR ed.ends_at > UTC_TIMESTAMP(6))')
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':lesson', $lessonId, ParameterType::INTEGER)
+                ->bind(':user', $userId, ParameterType::INTEGER)
+                ->bind(':course', (int) $row->course_id, ParameterType::INTEGER)
+                ->bind(':email', (string) $row->recipient_email);
+            $record = $this->db->setQuery($query)->loadObject();
+            if (!$record || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
+                'lesson_release',
+                (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_lesson_release_enabled', false),
+                (string) $record->params_json
+            )) { return false; }
+            $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+            $start = \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::effectiveStart(
+                $record->publish_up, $record->release_after_days, $record->started_at
+            );
+            if ($start === null || $start > $now ||
+                $start <= new \DateTimeImmutable((string) $record->created_at, new \DateTimeZone('UTC')) ||
+                $start <= new \DateTimeImmutable((string) $record->published_at, new \DateTimeZone('UTC')) ||
+                \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
+                    $record->publish_up, $record->publish_down, $record->release_after_days, $record->started_at, $now
+                ) !== 'available') { return false; }
+
+            // Native Joomla category/ancestor visibility and the learner's content ACL.
+            $user = new User($userId);
+            $user->clearAccessRights();
+            $language = preg_match('/^[a-z]{2}-[A-Z]{2}$/D', (string) $row->language) ? (string) $row->language : 'en-GB';
+            $course = (new \Jlms\Component\Jlms\Administrator\Application\CatalogService($this->db))
+                ->enrolledCourse($user, $language, (int) $row->course_id);
+            return in_array((int) $course->content_access, array_map('intval', $user->getAuthorisedViewLevels()), true);
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
     /** Re-check active, incomplete enrollment immediately before SMTP. */
     private function expiryEligible(object $row): bool
     {
