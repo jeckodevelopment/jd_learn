@@ -47,7 +47,7 @@ foreach ($definitions as $id => [$subject, $body, $tags, $html]) {
 }
 // MAIL-G: teacher notices use only canonical, documented, recipient-scoped tokens.
 $teacherTemplate = $definitions['com_jlms.teacher.assigned'] ?? null;
-if (!$teacherTemplate || $teacherTemplate[2] !== ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME']) {
+if (!$teacherTemplate || !in_array('TEACHER_NAME', $teacherTemplate[2], true)) {
     throw new RuntimeException('Native teacher assignment mail template missing.');
 }
 foreach ([
@@ -61,6 +61,36 @@ foreach ([
     $source = file_get_contents(__DIR__ . '/../' . $file);
     if ($source === false || !str_contains($source, $expected)) {
         throw new RuntimeException('MAIL-G assignment notification wiring incomplete: ' . $file);
+    }
+}
+
+// Approved course and lesson context is declared, rendered and produced by the
+// queue boundary. USER_FIRSTNAME is intentionally not a supported tag.
+$contextTags = ['COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'LESSON_DESCRIPTION', 'LESSON_URL', 'TEACHER_NAME', 'CONTACT_EMAIL'];
+$contextSource = file_get_contents(__DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateContext.php');
+$queueSource = file_get_contents(__DIR__ . '/../component/administrator/src/Infrastructure/MailQueue.php');
+if ($contextSource === false || $queueSource === false
+    || !str_contains($queueSource, 'MailTemplateContext::enrich($this->db, $courseId, $data)')) {
+    throw new RuntimeException('Mail template context enrichment is not connected to both queue paths.');
+}
+foreach (['com_jlms.lesson.available', 'com_jlms.teacher.assigned', 'com_jlms.course.published'] as $templateId) {
+    $scopedTags = array_intersect($contextTags, ['COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'CONTACT_EMAIL']);
+    if ($templateId === 'com_jlms.lesson.available') { $scopedTags = array_merge($scopedTags, ['LESSON_DESCRIPTION', 'LESSON_URL']); }
+    if ($templateId === 'com_jlms.teacher.assigned') { $scopedTags[] = 'TEACHER_NAME'; }
+    foreach ($scopedTags as $tag) {
+        if (!in_array($tag, $definitions[$templateId][2], true)) {
+            throw new RuntimeException('Approved context tag missing from ' . $templateId . ': ' . $tag);
+        }
+    }
+}
+if (str_contains(implode(' ', array_merge(...array_map(static fn ($definition) => $definition[2], $definitions))), 'USER_FIRSTNAME')) {
+    throw new RuntimeException('USER_FIRSTNAME must not be registered without a reliable name source.');
+}
+foreach (['LESSON_URL' => 'view=classroom', 'LESSON_DESCRIPTION' => "'LESSON_DESCRIPTION' => ''",
+          'COURSE_DURATION' => 'estimated_minutes', 'COURSE_START_DATE' => 'starts_at',
+          'CONTACT_EMAIL' => 'FILTER_VALIDATE_EMAIL'] as $tag => $sourceNeedle) {
+    if (!str_contains($contextSource, $sourceNeedle)) {
+        throw new RuntimeException('Mail context producer missing safe source for ' . $tag);
     }
 }
 
