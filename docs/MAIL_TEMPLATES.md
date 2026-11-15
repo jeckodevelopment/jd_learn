@@ -352,7 +352,7 @@ Per il collaudo su Joomla, aggiorna un sito di prova che abbia già un modello `
 
 ## MAIL-E — variabili di contesto corso, lezione e docente
 
-I modelli `com_jlms.lesson.available`, `com_jlms.teacher.assigned` e `com_jlms.course.published` dichiarano i nuovi placeholder solo nei contesti pertinenti. L'arricchimento avviene al confine della coda, così i valori sono disponibili sia per invii nuovi sia per template Joomla aggiornati; l'upgrade sincronizza i tag senza riscrivere oggetto, testo o HTML personalizzati.
+La PR [#464](https://github.com/jeckodevelopment/jd_learn/pull/464), integrata, completa i produttori sicuri. I modelli `com_jlms.lesson.available`, `com_jlms.teacher.assigned` e `com_jlms.course.published` dichiarano i nuovi placeholder solo nei contesti pertinenti. L'arricchimento avviene al confine della coda, così i valori sono disponibili sia per invii nuovi sia per template Joomla aggiornati; l'upgrade sincronizza i tag senza riscrivere oggetto, testo o HTML personalizzati.
 
 | Variabile | Origine e fallback | Uso |
 |---|---|---|
