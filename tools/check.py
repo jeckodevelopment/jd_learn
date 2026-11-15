@@ -71,6 +71,21 @@ assert "['rendered']['htmlbody']" in composer_view and 'sandbox=""' in composer_
 assert "Editor::getInstance(" in composer_view
 assert "jform[template][htmlbody]" in composer_view
 assert 'class="btn btn-danger"' not in composer_view
+# Regression: course messages have exactly one editor and do not accept
+# recursive legacy wrapper fields or diverging plaintext fields from POST.
+controller_source=(ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
+model_source=(ROOT/'component/administrator/src/Model/CoursemessageModel.php').read_text()
+template_source=(ROOT/'component/administrator/src/Application/CourseMessageTemplate.php').read_text()
+view_source=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
+assert 'jform[subject]' not in view_source
+assert 'jform[body]' not in view_source
+assert 'jform[template][body]' not in view_source
+assert view_source.count("Editor::getInstance(")==1
+assert "CourseMessageTemplate::forComposition(" in model_source
+assert "CourseMessageTemplate::plainTextFromHtml(" in controller_source
+assert "$raw['subject'] = $raw['template']['subject'];" in controller_source
+assert "COM_JLMS_COMMUNICATION_TEMPLATE_LEGACY_SLOT" in template_source
+assert "MESSAGE_BODY_HTML" in template_source
 # Template-backed course composer: the native Joomla template is the source,
 # and a per-message snapshot is checked before any future queue persistence.
 composer=(ROOT/'component/administrator/src/Application/CourseMessageTemplate.php').read_text()
