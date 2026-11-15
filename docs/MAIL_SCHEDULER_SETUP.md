@@ -21,4 +21,8 @@ Il controllo descrive l'ultima esecuzione, **non** dimostra consegna SMTP né di
 9. Simulare installazione parziale senza componente e disinstallazione/reinstallazione; verificare che il task esistente venga preservato.
 10. Verificare con un cron Joomla realmente attivo la differenza tra task «abilitato» e task «eseguito».
 
+## Integrazione confermata
+
+PR [#424](https://github.com/jeckodevelopment/jd_learn/pull/424) integrata in `main` il 15 novembre 2026, commit `5e61c0a32828d5b4387faf12ca2d1efdc964288a`. CI [43725870964](https://github.com/jeckodevelopment/jd_learn/actions/runs/43725870964) **4/4 verde**, controllo CSV [43725870834](https://github.com/jeckodevelopment/jd_learn/actions/runs/43725870834) verde. Pacchetto installabile `pkg_jlms-0.57.7-dev.zip` nell'[artefatto 14166561507](https://github.com/jeckodevelopment/jd_learn/actions/runs/43725870964/artifacts/14166561507). **Stima globale 79,33%, email 70%, delta 0** (hardening operativo, non nuova copertura funzionale). Accettazione manuale Joomla/SMTP da eseguire.
+
 **Gate**: CI e verifiche strutturali non equivalgono al collaudo Joomla/SMTP. Non attribuire copertura accettata finché gli scenari non sono eseguiti sul sito di prova.
