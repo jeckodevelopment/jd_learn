@@ -1433,3 +1433,8 @@ Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 
 4. Verificare che `LESSON_DESCRIPTION` sia vuota e che nessun corpo/materiale protetto compaia nell'email. Assegnare un profilo docente collegato a un account e verificare `TEACHER_NAME` dal titolo del profilo, senza includere docenti non pertinenti.
 5. Impostare il mittente Joomla valido e poi un valore non email: `CONTACT_EMAIL` deve mostrare solo il primo e restare vuoto nel secondo caso. `USER_FIRSTNAME` non deve apparire tra i tag disponibili; i modelli usano un saluto neutro dove non vogliono mostrare il nome completo.
 6. Simulare HTML con caratteri speciali in descrizione/titolo e verificare escaping singolo; ripetere con campi assenti/non validi. Completare prova SMTP e verificare stato inviato in Coda email. Questa suite è richiesta prima di registrare l'accettazione sul sito.
+
+
+## Issue #430 — metadati di accesso nella scheda corso pubblica
+
+Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catalogo. Verificare che la pagina e i metadati SEO/social si carichino senza warning PHP e che il livello di accesso al catalogo sia presente nel record restituito dal servizio. Provare poi un corso il cui livello catalogo non include l’ospite: deve restare inaccessibile o non indicizzabile secondo le regole già previste, senza warning. Verificare anche un corso visibile all’ospite e con livello contenuto più restrittivo: la scheda pubblica resta consultabile, ma l’accesso didattico conserva i controlli sul livello contenuto.
