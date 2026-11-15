@@ -32,7 +32,8 @@ final class MailQueue
             'com_jlms.certificate.available' => 'certificate',
             'com_jlms.course.message' => 'communication',
             'com_jlms.course.expiring' => 'expiry',
-            'com_jlms.lesson.available' => 'lesson_release', 
+            'com_jlms.lesson.available' => 'lesson_release',
+            'com_jlms.course.updated' => 'course_update', 
             default => null,
         };
         if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -46,7 +47,7 @@ final class MailQueue
             return;
         }
         $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
-        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', $event !== 'lesson_release');
+        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', !in_array($event, ['lesson_release', 'course_update'], true));
         if (!\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled($event, $globalEnabled, (string) $courseParams)) {
             return;
         }
@@ -165,6 +166,14 @@ final class MailQueue
                     ++$skipped;
                     continue;
                 }
+                if ((string) $row->template_id === 'com_jlms.course.updated' && !$this->courseUpdateEligible($row)) {
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
+                        ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}'")
+                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    ++$skipped;
+                    continue;
+                }
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $templateId = (string) $row->template_id;
                 $language = (string) $row->language;
@@ -219,6 +228,63 @@ final class MailQueue
 
         $this->db->setQuery("UPDATE #__jlms_course_announcement_campaigns AS campaign SET state = 'finished' WHERE campaign.state = 'queued' AND NOT EXISTS (SELECT 1 FROM #__jlms_mail_queue AS queued WHERE queued.course_id = campaign.course_id AND queued.template_id = 'com_jlms.course.published' AND queued.state IN ('pending','retry','sending'))")->execute();
         return ['sent' => $sent, 'failed' => $failed, 'skipped' => $skipped, 'processed' => count($ids)];
+    }
+
+
+    /** Ensure the learner is still entitled to the migrated course before SMTP. */
+    private function courseUpdateEligible(object $row): bool
+    {
+        $userId = (int) ($row->recipient_user_id ?? 0);
+        if ($userId < 1) { return false; }
+        try {
+            $payload = json_decode((string) $row->template_data, true, 16, JSON_THROW_ON_ERROR);
+            $migrationId = (int) ($payload['MIGRATION_ID'] ?? 0);
+            $targetId = (int) ($payload['TARGET_ENROLLMENT_ID'] ?? 0);
+            if ($migrationId < 1 || $targetId < 1) { return false; }
+            $query = $this->db->createQuery()->select(
+                'target.course_version_id, source.course_version_id AS source_version_id, c.params_json, ' .
+                'target.starts_at, target.ends_at, ed.starts_at AS edition_starts, ed.ends_at AS edition_ends'
+            )->from('#__jlms_enrollment_migrations AS m')
+                ->innerJoin('#__jlms_enrollments AS source ON source.id = m.source_enrollment_id')
+                ->innerJoin('#__jlms_enrollments AS target ON target.id = m.target_enrollment_id AND target.user_id = source.user_id AND target.course_id = source.course_id')
+                ->innerJoin('#__jlms_editions AS ed ON ed.id = target.edition_id AND ed.course_version_id = target.course_version_id')
+                ->innerJoin('#__jlms_courses AS c ON c.id = target.course_id')
+                ->innerJoin('#__jlms_course_versions AS v ON v.id = target.course_version_id AND v.course_id = target.course_id')
+                ->innerJoin('#__users AS u ON u.id = target.user_id')
+                ->where('m.id = :migration')->where('target.id = :target')->where('target.course_id = :course')
+                ->where('target.user_id = :user')->where("source.status = 'migrated'")
+                ->where("target.status = 'active'")->where('target.completed_at IS NULL')
+                ->where("ed.status = 'open'")->where("v.status = 'published'")
+                ->where('u.block = 0')->where('LOWER(u.email) = LOWER(:email)')
+                ->where('c.delivery_enabled = 1')
+                ->where('(target.starts_at IS NULL OR target.starts_at <= UTC_TIMESTAMP(6))')
+                ->where('(target.ends_at IS NULL OR target.ends_at > UTC_TIMESTAMP(6))')
+                ->where('(ed.starts_at IS NULL OR ed.starts_at <= UTC_TIMESTAMP(6))')
+                ->where('(ed.ends_at IS NULL OR ed.ends_at > UTC_TIMESTAMP(6))')
+                ->bind(':migration', $migrationId, ParameterType::INTEGER)
+                ->bind(':target', $targetId, ParameterType::INTEGER)
+                ->bind(':course', (int) $row->course_id, ParameterType::INTEGER)
+                ->bind(':user', $userId, ParameterType::INTEGER)
+                ->bind(':email', (string) $row->recipient_email);
+            $record = $this->db->setQuery($query)->loadObject();
+            if (!$record || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
+                'course_update',
+                (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_course_update_enabled', false),
+                (string) $record->params_json
+            )) { return false; }
+            $user = new User($userId);
+            $user->clearAccessRights();
+            $language = preg_match('/^[a-z]{2}-[A-Z]{2}$/D', (string) $row->language) ? (string) $row->language : 'en-GB';
+            $course = (new \Jlms\Component\Jlms\Administrator\Application\CatalogService($this->db))
+                ->enrolledCourse($user, $language, (int) $row->course_id);
+            if (!in_array((int) $course->content_access, array_map('intval', $user->getAuthorisedViewLevels()), true)) {
+                return false;
+            }
+            return (new \Jlms\Component\Jlms\Administrator\Application\PublicationImpact($this->db))
+                ->significantVersionChange((int) $record->source_version_id, (int) $record->course_version_id);
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     /** Revalidate the exact version, learner, ACL, window and lesson release before SMTP. */
