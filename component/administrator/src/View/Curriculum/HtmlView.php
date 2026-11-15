@@ -130,7 +130,7 @@ final class HtmlView extends BaseHtmlView
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
             $requestedKind = $app->getInput()->getCmd('lesson_kind');
-            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document', 'audio'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '', 'publish_down' => '', 'release_after_days' => '', 'audio_transcript' => ''];
+            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document', 'audio'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '', 'publish_down' => '', 'release_after_days' => '', 'audio_transcript' => '', 'video_transcript' => ''];
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) { $this->editorMode = 'lesson'; }
@@ -185,8 +185,11 @@ final class HtmlView extends BaseHtmlView
                         ? \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($lessonParams['video_threshold_basis_points']) : '';
                     $audioTranscript = is_array($lessonParams) && is_string($lessonParams['audio_transcript'] ?? null)
                         ? $lessonParams['audio_transcript'] : '';
+                    $videoTranscript = is_array($lessonParams) && is_string($lessonParams['video_transcript'] ?? null)
+                        ? $lessonParams['video_transcript'] : '';
                     $lessonData = array_replace($common, ['id' => $lesson->id, 'revision' => $lesson->revision,
-                        'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body, 'audio_transcript' => $audioTranscript,
+                        'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
+                        'audio_transcript' => $audioTranscript, 'video_transcript' => $videoTranscript,
                         'public_preview' => (int) $lesson->preview,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
@@ -214,7 +217,7 @@ final class HtmlView extends BaseHtmlView
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
-                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','video_threshold_percent','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days','public_preview']));
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','video_threshold_percent','audio_transcript','video_transcript','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days','public_preview']));
                     if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }
