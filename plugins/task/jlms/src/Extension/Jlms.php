@@ -45,9 +45,10 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
         $db=Factory::getContainer()->get(DatabaseInterface::class);
         $expiry=(new \Jlms\Component\Jlms\Administrator\Application\CourseExpiryReminderService($db))->enqueueDue();
         $lessons=(new \Jlms\Component\Jlms\Administrator\Application\LessonReleaseNotice($db))->enqueueDue();
+        $updates=(new \Jlms\Component\Jlms\Administrator\Application\CourseVersionChangeNotice($db))->enqueueDue();
         $communication=$app->bootComponent('com_jlms')->getCourseCommunicationService()->process((int)($params->limit??25));
         $result=(new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))->dispatch((int)($params->limit??25));
-        $this->logTask('Course expiry reminders: queued='.$expiry['queued'].'; failed='.$expiry['failed'].'; processed='.$expiry['processed'].'; lesson releases: queued='.$lessons['queued'].'; failed='.$lessons['failed'].'; processed='.$lessons['processed'].'; communications: queued='.$communication['queued'].'; failed='.$communication['failed'].'; mail queue: sent='.$result['sent'].'; failed='.$result['failed'].'; processed='.$result['processed']);
-        return ($result['failed'] || $communication['failed'] || $expiry['failed'] || $lessons['failed'])?Status::KNOCKOUT:Status::OK;
+        $this->logTask('Course expiry reminders: queued='.$expiry['queued'].'; failed='.$expiry['failed'].'; processed='.$expiry['processed'].'; lesson releases: queued='.$lessons['queued'].'; failed='.$lessons['failed'].'; processed='.$lessons['processed'].'; course version updates: queued='.$updates['queued'].'; failed='.$updates['failed'].'; processed='.$updates['processed'].'; communications: queued='.$communication['queued'].'; failed='.$communication['failed'].'; mail queue: sent='.$result['sent'].'; failed='.$result['failed'].'; processed='.$result['processed']);
+        return ($result['failed'] || $communication['failed'] || $expiry['failed'] || $lessons['failed'] || $updates['failed'])?Status::KNOCKOUT:Status::OK;
     }
 }
