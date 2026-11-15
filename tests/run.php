@@ -36,7 +36,7 @@ function rejects(callable $work, string $message): void
     }
     throw new \RuntimeException($message);
 }
-$mailCatalog = \\Jlms\\Component\\Jlms\\Administrator\\Infrastructure\\MailTemplateVariableCatalog::class;
+$mailCatalog = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog::class;
 $escaped = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.enrollment.manager_request');
 expect(in_array('USER_FULLNAME', $escaped, true) && in_array('COURSE_TITLE', $escaped, true)
     && in_array('COURSE_MANAGEMENT_URL', $escaped, true),
