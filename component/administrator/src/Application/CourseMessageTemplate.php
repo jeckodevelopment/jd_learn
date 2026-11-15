@@ -58,6 +58,8 @@ final class CourseMessageTemplate
      */
     public static function plainTextFromHtml(string $html): string
     {
+        // Script/style contents are not part of the readable email alternative.
+        $html = preg_replace('~<(script|style)\\b[^>]*>.*?</\\1\\s*>~is', '', $html) ?? $html;
         $safe = (string) InputFilter::getInstance(
             [], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS,
             InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES
