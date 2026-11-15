@@ -1,4 +1,4 @@
-**LES-01 / SCR-06 — trascrizione audio (PR in preparazione):** campo editoriale facoltativo dedicato alle lezioni audio, filtrato con il filtro HTML Joomla e conservato nei parametri della versione. La trascrizione viene resa in un controllo espandibile nell’aula autorizzata; la verifica manuale è descritta nel testbook.
+**LES-01 / SCR-06 — trascrizione audio (PR #450 aperta; CI in corso):** campo editoriale facoltativo dedicato alle lezioni audio, filtrato con il filtro HTML Joomla e conservato nei parametri della versione. La trascrizione viene resa in un controllo espandibile nell’aula autorizzata; la verifica manuale è descritta nel testbook.
 
 **Comunicazioni agli iscritti (MAIL-06/08/10)** — il compositore normalizza i segnaposto storici rimasti nel contenuto dei modelli Joomla dopo un aggiornamento. L’errore 422 mostra i nomi dei segnaposto da correggere. Scenari di collaudo Joomla/SMTP in [MAIL_TEMPLATES.md](MAIL_TEMPLATES.md). La correzione mantiene la stima di implementazione al 79,33% complessivo e al 70% per l’area email.
 

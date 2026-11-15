@@ -88,4 +88,4 @@ PR #427 integrata: merge `58811c6817a91b372e0814479281e068d6a037f5`, CI [4372836
 
 ## IMP-04 — trascrizione delle lezioni audio
 
-Incremento previsto per LES-01/SCR-06: campo facoltativo dedicato, storage versionato, filtro HTML, resa accessibile in aula e verifica di isolamento per tipo/lezione/versione. Nessuna modifica al calcolo percentuale globale finché la matrice non viene ricalcolata sulla copertura completa del macro-requisito.
+PR #450 (aperta): incremento per LES-01/SCR-06: campo facoltativo dedicato, storage versionato, filtro HTML, resa accessibile in aula e verifica di isolamento per tipo/lezione/versione. Nessuna modifica al calcolo percentuale globale finché la matrice non viene ricalcolata sulla copertura completa del macro-requisito.
