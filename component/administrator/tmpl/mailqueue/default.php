@@ -18,6 +18,19 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
 ?>
 <section id="jlms-mail-queue">
  <p class="alert alert-info"><?= Text::_('COM_JLMS_MAIL_QUEUE_HELP') ?></p>
+ <?php if ($this->mailScheduler) : ?>
+ <div class="small mb-3" role="status">
+  <strong><?= Text::_('COM_JLMS_MAIL_SCHEDULER_STATUS') ?>:</strong>
+  <?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_STATE_' . strtoupper($this->mailScheduler['state']))) ?>
+  <?php if ($this->mailScheduler['interval'] !== null) : ?>
+   · <?= Text::sprintf('COM_JLMS_MAIL_SCHEDULER_INTERVAL', $this->mailScheduler['interval']) ?>
+  <?php endif; ?>
+  · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_LAST') ?>:
+  <?= $this->escape((string) ($this->mailScheduler['last_execution'] ?: Text::_('JNEVER'))) ?>
+  <?php if ($this->mailScheduler['duplicates']) : ?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php endif; ?>
+  <a href="<?= Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE') ?></a>
+ </div>
+ <?php endif; ?>
  <form method="get" action="<?= Route::_('index.php') ?>" class="row g-2 align-items-end mb-3">
   <input type="hidden" name="option" value="com_jlms">
   <input type="hidden" name="view" value="mailqueue">
