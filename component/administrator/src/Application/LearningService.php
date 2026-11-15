@@ -7,7 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\Application;
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
-use Jlms\Component\Jlms\Administrator\Domain\AudioTranscript;
+use Jlms\Component\Jlms\Administrator\Domain\LessonTranscript;
 use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
 
 /** Text learning only. All protected operations refresh core identity and access, including replays. */
@@ -573,7 +573,11 @@ final class LearningService
             if (count($audio) >= 1) { $lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->title, 'mime' => $audio[0]->mime_type]; }
         }
         $audioTranscript = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
-            AudioTranscript::decode((string) $lesson->kind, (string) ($lesson->params_json ?? '{}')), 'HTML');
+            LessonTranscript::decode((string) $lesson->kind, (string) ($lesson->params_json ?? '{}')), 'HTML');
+        $videoTranscript = $lesson->kind === 'video'
+            ? \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
+                LessonTranscript::decode('video', (string) ($lesson->params_json ?? '{}')), 'HTML')
+            : '';
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
                 'prerequisite_blocked' => $blocker !== null, 'schedule_blocked' => $scheduleBlocked,
@@ -584,6 +588,7 @@ final class LearningService
                 'blocked_by_title' => $blocker ? (string) $blocker->required_title : '',
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
                 'resume_ms' => (int) ($lesson->resume_ms ?? 0), 'audio_transcript' => $audioTranscript,
+                'video_transcript' => $videoTranscript,
                 'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) ($lesson->body ?? ''), 'HTML'),
                 'custom_fields' => $customFields],
             'outline' => $outline, 'percent' => $percent, 'progress_applicable' => $progressApplicable,
