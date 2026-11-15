@@ -6,6 +6,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+use Jlms\Component\Jlms\Administrator\Application\CourseMessageVariableException;
 final class CoursemessageModel extends BaseDatabaseModel
 {
     public function getItem(): array
@@ -24,6 +25,9 @@ final class CoursemessageModel extends BaseDatabaseModel
             $data['preview_key']=$key;
             return $data;
         } catch (\Throwable $error) {
+            if ($error instanceof CourseMessageVariableException) {
+                throw new \RuntimeException($error->translatedMessage(), 422);
+            }
             if ($error instanceof \InvalidArgumentException) { throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'),400); }
             if (in_array($error->getCode(),[400,401,403,404,409,422],true) && str_starts_with($error->getMessage(),'COM_JLMS_')) { throw new \RuntimeException(Text::_($error->getMessage()),$error->getCode()); }
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'),500);

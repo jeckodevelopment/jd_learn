@@ -5,6 +5,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+use Jlms\Component\Jlms\Administrator\Application\CourseMessageVariableException;
 final class CoursemessageController extends BaseController
 {
     public function execute($task)
@@ -83,6 +84,9 @@ final class CoursemessageController extends BaseController
     }
     private function fail(\Throwable $error): never
     {
+        if ($error instanceof CourseMessageVariableException) {
+            throw new \RuntimeException($error->translatedMessage(), 422);
+        }
         $key=$error->getMessage(); $code=(int)$error->getCode();
         if ($error instanceof \InvalidArgumentException) { $key='COM_JLMS_INVALID_INPUT'; $code=400; }
         if (in_array($code,[400,401,403,404,409,413,422],true) && str_starts_with($key,'COM_JLMS_')) { throw new \RuntimeException(Text::_($key),$code); }
