@@ -56,8 +56,8 @@ final class MailTemplateInstaller
             'com_jlms.lesson.available' => [
                 'Nuova lezione disponibile: {LESSON_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nla lezione {LESSON_TITLE} del corso {COURSE_TITLE} è ora disponibile nella tua area personale.\n\n{DASHBOARD_URL}\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'LESSON_TITLE', 'COURSE_TITLE', 'DASHBOARD_URL', 'SITE_NAME'],
-                '<p>Ciao {USER_FULLNAME},</p><p>La lezione <strong>{LESSON_TITLE}</strong> del corso <strong>{COURSE_TITLE}</strong> è ora disponibile nella tua area personale.</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME}</p>',
+                ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'LESSON_TITLE', 'LESSON_TITLE_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'DASHBOARD_URL', 'SITE_NAME', 'SITE_NAME_HTML'],
+                '<p>Ciao {USER_FULLNAME_HTML},</p><p>La lezione <strong>{LESSON_TITLE_HTML}</strong> del corso <strong>{COURSE_TITLE_HTML}</strong> è ora disponibile nella tua area personale.</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME_HTML}</p>',
             ],
             'com_jlms.teacher.assigned' => [
                 'Assegnazione al corso: {COURSE_TITLE}',
