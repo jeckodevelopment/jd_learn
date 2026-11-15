@@ -68,6 +68,12 @@ $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailPara
 expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
     && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');
 rejects(static fn () => $mailPrefsClass::merge(['mail_completion' => 'yes'], '{}'), 'mail preference values are restricted to inherit, enabled or disabled');
+$lessonReleaseNow = new \DateTimeImmutable('2026-11-15 12:00:00', new \DateTimeZone('UTC'));
+$lessonStart = LessonAvailability::effectiveStart('2026-11-15 09:00:00', 2, '2026-11-14 08:00:00');
+expect($lessonStart?->format('Y-m-d H:i:s') === '2026-11-16 08:00:00', 'relative lesson release must supersede an earlier absolute window');
+expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-14 08:00:00', $lessonReleaseNow) === 'upcoming', 'lesson still locked until relative release');
+expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-13 08:00:00', $lessonReleaseNow) === 'available', 'lesson available after effective release');
+expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, null, $lessonReleaseNow) === 'awaiting_start', 'no premature relative release before course start');
 $readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
     'summary' => $summary,
     'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),
