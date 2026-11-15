@@ -3,8 +3,8 @@
   "product": "JD Learn",
   "current_implementation_estimate": {
     "as_of": "2026-11-15",
-    "percent": 79,
-    "basis": "MAIL-H PR #410 integrated: Joomla HTML escaping applied to raw tokens, while preescaped HTML and sanitized fragments retain their presentation. Fix/hardening only, no requirement coverage increase. Global (81+81+78+99+68+92+70+70+75)/9 = 79,33% (rounded 79%); email 70%. CI green, Joomla/SMTP manual acceptance pending.",
+    "percent": 80,
+    "basis": "PR #464 adds missing approved email context producers and regression coverage (+2 points email area); manual Joomla/SMTP acceptance remains pending. Global (81+81+78+99+68+92+70+72+75)/9 = 79.56% (rounded 80%); email 72%.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,17 +13,17 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 70,
+      "email_notifications": 72,
       "certificates": 75
     }
   },
   "version": "0.57.7-dev",
-  "code_baseline": "075af6c0426fde914a9c818e73cd18637d9fec71",
+  "code_baseline": "9cdb81527dcd520191bf8608868e900d519581fe",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43766727095,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095",
+    "run_id": 43766296559,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,16 +51,17 @@
     ]
   },
   "package": {
-    "artifact_id": 14181769192,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095/artifacts/14181769192",
+    "artifact_id": 14182925340,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559/artifacts/14182925340",
     "artifact_name": "JD-Learn-0.57.7-dev",
     "installable_package": "pkg_jlms-0.57.7-dev.zip",
-    "artifact_sha256": "743a81cda8a619f1ad2ff86ff3ef37931d35abb108e1e67a458e840f04b875a4",
-    "artifact_size_bytes": 689544,
+    "artifact_sha256": "48b385116f470dcd16fe219a7037ca2c8ab38446f252573a115e97fda3affefe",
+    "artifact_size_bytes": 690631,
     "wrapper_zip": true,
-    "sha256": "29a48cbfb4b17991c93cbccccbea001d4bd58d5aa2d9495ddd1db84a70844d7d",
-    "size_bytes": 689849,
-    "notes": "Artefatto verificato della PR #465; estrarre lo ZIP interno pkg_jlms-0.57.7-dev.zip. SHA-256 e dimensione del pacchetto interno rilevati dalla build riproducibile; digest del contenitore Actions registrato separatamente. CI 4/4 superata. Collaudo manuale Joomla pendente."
+    "sha256": "5bfb0e57e720f9c807b6367e3a5f1dda80cf49af87c469a71e022793a5ee5850",
+    "size_bytes": 690906,
+    "artifact_expires_at": "2026-11-29T21:58:31Z",
+    "notes": "Verified artifact for PR #464 / merged commit 9cdb81527dcd520191bf8608868e900d519581fe. Internal package SHA-256 reproduced in both PHP integration jobs; CI 4/4 and requirements CSV passed. Manual Joomla/SMTP acceptance pending."
   },
   "release_process": {
     "issue": 160,
@@ -13604,19 +13605,18 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 465,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/465",
-    "merge_commit": "075af6c0426fde914a9c818e73cd18637d9fec71",
-    "tested_head": "fecb2479814cd7de28ff020952c08855431bfbd0",
-    "feature": "IMP-06: allegati selezionabili nell’anteprima pubblica di lezioni testuali, con doppia autorizzazione esplicita; accesso rivalidato sul catalogo e versione correnti.",
-    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095",
+    "pull_request": 464,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/464",
+    "merge_commit": "9cdb81527dcd520191bf8608868e900d519581fe",
+    "tested_head": "6942c5752dfbe205e367fc1db18487fb083e0cd9",
+    "feature": "Safe course, lesson and teacher context variables with canonical Mail Template tags, queue producers and no disclosure of lesson body content.",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559",
     "requirements": [
-      "MAT-02",
-      "MAT-04",
-      "MAT-08"
+      "NOT-01",
+      "MAIL-11"
     ],
-    "manual_acceptance": "pending Joomla 6; see docs/QA_TESTBOOK.md",
-    "residual_implementation": "Collaudo manuale Joomla ancora pendente. Stima globale invariata 79.33% (79% arrotondato); area video/materiali invariata 99%."
+    "manual_acceptance": "Pending Joomla/SMTP; see MAIL-E in docs/QA_TESTBOOK.md.",
+    "residual_implementation": "Manual site validation and editor-time validation remain pending. USER_FIRSTNAME is excluded without a reliable source; LESSON_DESCRIPTION remains blank until a separate safe field exists. Estimate +2 points for the completed producers."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
@@ -13637,7 +13637,7 @@
       "send-time consent/visibility checks and deduplicated outbox"
     ]
   },
-  "runtime_tested_head": "74dab84cbe617608a8c4a24a5033ab7ab8f0e5cd",
+  "runtime_tested_head": "6942c5752dfbe205e367fc1db18487fb083e0cd9",
   "imp_09_mail_d_registration": {
     "pull_request": 323,
     "merge_commit": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
