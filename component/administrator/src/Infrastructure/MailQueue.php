@@ -213,13 +213,19 @@ final class MailQueue
                 $attempts = (int) $row->attempts;
                 $retry = !$invalidTemplate && $attempts < 5;
                 $delay = min(3600, 60 * (2 ** min(6, $attempts - 1)));
+                // DatabaseQuery::bind() accepts variables by reference, not a ternary
+                // expression. Without this, a failed transport leaves a stale
+                // 'sending' claim instead of recording retry/failed.
+                $safeError = $invalidTemplate
+                    ? 'Mail template is missing or contains unavailable placeholders.'
+                    : 'Delivery failed; transport details are withheld.';
                 $update = $this->db->createQuery()->update('#__jlms_mail_queue')
                     ->set($retry ? "state = 'retry'" : "state = 'failed'")
                     ->set($retry ? 'available_at = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ' . $delay . ' SECOND)' : 'available_at = available_at')
                     // Transport exceptions can contain addresses, SMTP responses, or provider details.
                     // Keep the outbox diagnostic useful without persisting them.
                     ->set('last_error = :error')->set('claimed_at = NULL')->where('id = :id')
-                    ->bind(':error', $invalidTemplate ? 'Mail template is missing or contains unavailable placeholders.' : 'Delivery failed; transport details are withheld.')
+                    ->bind(':error', $safeError)
                     ->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($update)->execute();
                 $failed++;
