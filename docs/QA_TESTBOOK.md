@@ -1,4 +1,4 @@
-## MAIL-H — rendering template personalizzati, escaping (PR #408)
+## MAIL-H — rendering template personalizzati, escaping (PR #410)
 
 1. Installare/aggiornare build `0.57.7-dev` su sito di prova Joomla 6.2. In **Sistema → Modelli email** personalizzare una variante HTML di `com_jlms.enrollment.manager_request`: usare sia `{COURSE_TITLE}` sia `{COURSE_TITLE_HTML}` in paragrafi distinti; verificare che titoli contenenti `&`, `<`, `>` e virgolette vengano mostrati una volta sola senza doppio escaping e senza markup iniettato.
 2. Verificare con `com_jlms.course.message` che `{MESSAGE_BODY_TEXT}` venga escapato in HTML e che `{MESSAGE_BODY_HTML}`, già sanitizzato dal producer, conservi il markup innocuo consentito; ripetere nel plain text e verificare che non appaiano `&amp;lt;` o tag HTML indesiderati.
