@@ -348,3 +348,20 @@ I 14 Mail Templates del componente registrano ora titolo e descrizione nelle str
 Il compositore converte nella copia locale `{NAME}`, `{COURSE}` e `{SITENAME}` nei rispettivi `{USER_FULLNAME}`, `{COURSE_TITLE}` e `{SITE_NAME}`, anche nelle varianti `_HTML`. Vale anche per i modelli personalizzati o tradotti conservati da un aggiornamento. I tre slot `MESSAGE_*` sono sostituiti da testo modificabile. La versione in testo semplice usa le varianti senza escaping HTML. Per i nuovi modelli usa le variabili canoniche mostrate nell'editor. Se un'altra variabile causa il 422, il messaggio indica quali segnaposto sostituire.
 
 Per il collaudo su Joomla, aggiorna un sito di prova che abbia già un modello `com_jlms.course.message` con oggetto `{COURSE}: {MESSAGE_SUBJECT}` e corpo HTML con `{NAME_HTML}`, `{COURSE_HTML}`, `{SITENAME_HTML}` e `{MESSAGE_BODY_HTML}`. Con accesso al registro di un corso e un iscritto attivo, apri **Comunicazione agli iscritti**, modifica il testo e chiedi l'anteprima. Verifica i tag canonici nell'editor e i valori sostituiti nell'anteprima. Ripeti con una variante IT/EN personalizzata, verifica che il modello in Joomla conservi il testo originale, quindi prova il 422 inserendo `{COURSE_URL}`. Rimuovi la variabile, invia una prova al tuo account e accoda una comunicazione di prova per un solo iscritto. Esegui lo Scheduler e verifica oggetto, HTML e parte in testo semplice.
+
+
+## MAIL-E — variabili di contesto corso, lezione e docente
+
+I modelli `com_jlms.lesson.available`, `com_jlms.teacher.assigned` e `com_jlms.course.published` dichiarano i nuovi placeholder solo nei contesti pertinenti. L'arricchimento avviene al confine della coda, così i valori sono disponibili sia per invii nuovi sia per template Joomla aggiornati; l'upgrade sincronizza i tag senza riscrivere oggetto, testo o HTML personalizzati.
+
+| Variabile | Origine e fallback | Uso |
+|---|---|---|
+| `COURSE_DESCRIPTION` | Testo estratto dalla descrizione editoriale del corso, filtrata in salvataggio; vuota se assente | Lezione, docente, annuncio |
+| `COURSE_DURATION` | Stima in minuti configurata; vuota se non impostata | Lezione, docente, annuncio |
+| `COURSE_START_DATE` | Inizio calendario configurato, formato UTC `Y-m-d H:i:s UTC`; vuota se assente/non valido | Lezione, docente, annuncio |
+| `LESSON_DESCRIPTION` | Sempre vuota: non si riusa il corpo didattico protetto come descrizione email | Avviso lezione |
+| `LESSON_URL` | URL alla vista aula autenticata, con ID iscrizione e lezione selezionate; vuoto senza entrambi gli ID | Avviso lezione |
+| `TEACHER_NAME` | Titolo del profilo assegnato; vuoto se non presente | Assegnazione docente |
+| `CONTACT_EMAIL` | `mailfrom` del sito Joomla solo se è un indirizzo valido; altrimenti vuoto | Lezione, docente, annuncio |
+
+Tutti i valori di testo vengono escapati dal renderer Joomla nei template HTML. Non esiste un campo affidabile per il nome proprio: `USER_FIRSTNAME` non è registrato e i modelli devono usare un saluto neutro se non vogliono mostrare il nome completo.
