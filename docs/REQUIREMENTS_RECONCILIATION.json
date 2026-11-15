@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 79,
-    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+66+75)/9 = 78,89%, arrotondata a 79%. MAIL-G prima tranche #397: email da rilascio pianificato di lezioni agli iscritti della propria versione; residuano cambi didattici significativi e avvisi ai responsabili. Stima implementativa, non accettazione Joomla/SMTP.",
+    "method": "Media delle nove macroaree (81+81+78+99+68+92+70+68+75)/9 = 79,11%, arrotondata a 79%. PR #399 MAIL-03: notifiche solo dopo migrazione confermata verso versione didattica significativamente cambiata; no invio per salvataggio o pubblicazione senza migrazione. Area email 66%→68%; accettazione Joomla/SMTP pendente.",
     "areas": [
       81,
       81,
@@ -34,7 +34,7 @@
       68,
       92,
       70,
-      66,
+      68,
       75
     ]
   },
