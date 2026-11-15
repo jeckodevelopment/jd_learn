@@ -60,7 +60,7 @@ final class CourseMessageTemplate
             throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
         }
 
-        $htmlbody = (string) InputFilter::getInstance()->clean($htmlbody, 'html');
+        $htmlbody = (string) InputFilter::getInstance([], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS, InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES)->clean($htmlbody, 'html');
         $missing = MailTemplatePlaceholderValidator::unresolved(
             self::TEMPLATE_ID, $data, $subject, $body, $htmlbody
         );
