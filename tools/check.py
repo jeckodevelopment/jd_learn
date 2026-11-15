@@ -30,6 +30,10 @@ for name in ('mailqueue', 'mailvariables', 'categoryreassignment'):
 assert 'COM_JLMS_MAIL_QUEUE_HELP' in (ROOT/'component/administrator/tmpl/mailqueue/default.php').read_text()
 assert 'COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO' in (ROOT/'component/administrator/tmpl/mailvariables/default.php').read_text()
 assert '<h2>' in (ROOT/'component/administrator/tmpl/categoryreassignment/default.php').read_text()
+# Issue #416: translated model titles and IDs require a visible separator.
+mail_variable_guide=(ROOT/'component/administrator/tmpl/mailvariables/default.php').read_text()
+assert '<span class="text-muted small"> — <code>' in mail_variable_guide
+assert 'd-block text-muted small' not in mail_variable_guide
 # Regression #383: GET /administrator/index.php?option=com_jlms&view=coursemessage&id=N
 # must enter the read-only display whitelist and retain Courses' native Atum context.
 admin_display=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
