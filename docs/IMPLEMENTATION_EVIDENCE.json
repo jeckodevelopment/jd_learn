@@ -22,8 +22,8 @@
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43719744721,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43719744721",
+    "run_id": 43761830344,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,16 +51,16 @@
     ]
   },
   "package": {
-    "artifact_id": 14164051853,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43719744721/artifacts/14164051853",
+    "artifact_id": 14180606835,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344/artifacts/14180606835",
     "artifact_name": "JD-Learn-0.57.7-dev",
     "installable_package": "pkg_jlms-0.57.7-dev.zip",
-    "artifact_sha256": "54caeed0c54e25271f3e66bb27b2f05cd62ac701d14296781b3a0dc0705f3f41",
-    "artifact_size_bytes": 676441,
+    "artifact_sha256": "94f29b3017cb56b0a896d945a80fb71fa03412e62ebe73805228642a0b6d023b",
+    "artifact_size_bytes": 688121,
     "wrapper_zip": true,
-    "notes": "Verified Actions artifact and internal Joomla package (11 child archives); PR #410 merge 56b63e6a350ecd6939bd6a2028fe1bebd38b894c; CI 4/4 passed, Joomla/SMTP manual acceptance pending.",
-    "sha256": "a2c4c51e05b49006f70bc3d839942fc8b0ffcfceffff56976e00a9b972f1a5be",
-    "size_bytes": 676710
+    "sha256": "106addf950d16be8b7cae4340d98bcf3961326bda096e963abdfbcdfdfa327f1",
+    "size_bytes": 688399,
+    "notes": "Verified PR #457 artifact. Internal Joomla package SHA-256 verified by reproducible build in both PHP integration jobs; CI 4/4 passed. Manual Joomla/Atum acceptance pending."
   },
   "release_process": {
     "issue": 160,
@@ -13563,18 +13563,19 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 407,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/407",
-    "issue": 394,
-    "merge_commit": "d51b2b6645ea863ec2ba6b17af1254ad4861a0ee",
-    "tested_head": "47c5b1c9ef8defef409c5696a4859a354dd5e97d",
-    "feature": "Sidebar a cinque voci; Coda email solo dashboard; selezione del nodo JD Learn per le viste secondarie; icona Dipendenze categorie corretta (#394).",
-    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43718158974",
+    "pull_request": 457,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/457",
+    "issue": 455,
+    "merge_commit": "74dab84cbe617608a8c4a24a5033ab7ab8f0e5cd",
+    "tested_head": "da734b5899144df018cd49b406d604bc73fe9a77",
+    "feature": "Iscritti: ritorno a Corsi e icona Iscrizione manuale; iscrizione manuale: ritorno agli Iscritti dello stesso corso.",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344",
     "requirements": [
-      "UI-02"
+      "UI-02",
+      "ISC-01"
     ],
     "manual_acceptance": "pending Joomla 6 / Atum; see docs/QA_TESTBOOK.md",
-    "residual_implementation": "UX enhancement; no new macro-requirement completed. Implementation estimate remains 79.33% (79% rounded)."
+    "residual_implementation": "UX navigation; no new macro-requirement completed. Estimate remains 79.33% global and 70% email."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
@@ -13595,7 +13596,7 @@
       "send-time consent/visibility checks and deduplicated outbox"
     ]
   },
-  "runtime_tested_head": "47c5b1c9ef8defef409c5696a4859a354dd5e97d",
+  "runtime_tested_head": "74dab84cbe617608a8c4a24a5033ab7ab8f0e5cd",
   "imp_09_mail_d_registration": {
     "pull_request": 323,
     "merge_commit": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
