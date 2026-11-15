@@ -101,3 +101,11 @@ Dashboard approvata: Didattica (Corsi, Percorsi formativi, Categorie corsi, Cate
 UX-NAV-01: le viste interne devono mantenere selezionata la voce primaria della propria area in sidebar. UX-NAV-02: le viste secondarie devono conservare il contesto JD Learn e offrire breadcrumb/ritorno con meccanismi nativi Joomla, senza menu DOM/JavaScript paralleli. Il controller amministrativo mappa le viste interne sulle voci operative usando il menu Joomla. **L'API Pathway non è utilizzabile nel client administrator di Joomla 6 (HTTP 500 nel test di integrazione)**: nessun breadcrumb proprietario viene introdotto. Le viste secondarie rimangono raggiungibili dalla dashboard e le azioni di ritorno già presenti nelle singole toolbar restano invariate. **Accettazione visiva su Joomla 6 e Atum ancora da eseguire**.
 
 Fonte canonica degli stati di copertura: `docs/REQUIREMENTS_STATUS.csv`; test manuali in `docs/QA_TESTBOOK.md`.
+
+## Decisione UX 15 novembre 2026 — cinque voci e focus secondario (PR #407)
+
+Sidebar definitiva: **Dashboard, Corsi, Percorsi formativi, Docenti, Banca domande**. **Coda email** esce soltanto dalla sidebar e resta nella sezione Comunicazioni della dashboard. Non cambiano routing e ACL.
+
+Scelta UX **A**: le viste operative interne mantengono il focus su Corsi / Percorsi formativi / Docenti / Banca domande. Per le viste secondarie di `com_jlms` (Coda email, Variabili modelli email, Dipendenze categorie, Attestati) la selezione del solo nodo principale Joomla mantiene JD Learn come contesto senza evidenziare un'area operativa. I collegamenti ad altri componenti Joomla (`com_categories`, `com_fields`, `com_plugins`, `com_mails`) conservano la navigazione nativa del componente ospite, non forzata da JD Learn. Niente JS per manipolare il DOM del menu e niente Pathway amministrativo.
+
+Issue #394: `icon-folder-tree` non rende l'icona in Atum; sostituita con la classe Joomla già utilizzata `icon-folder`. Verificare visivamente su Joomla di prova, con menu in IT/EN, ACL limitati e upgrade; CI verde non è accettazione manuale.
