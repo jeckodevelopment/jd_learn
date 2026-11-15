@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Issue #434: le azioni di iscrizione manuale, comunicazione agli iscritti e disponibilità del corso sono disponibili nella toolbar nativa del roster.
+
 - Comunicazioni agli iscritti: normalizzazione dei segnaposto storici dei modelli Joomla nella copia locale. Il 422 indica i segnaposto da correggere.
 
 - MAIL-H / SEC-P1: la coda email passa a Joomla `addUnsafeTags()` soltanto i valori grezzi di tipo testo, data o URL. I token `*_HTML` già escapati e i frammenti HTML sanitizzati vengono preservati senza doppio escaping. Ciò migliora la resa dei template HTML personalizzati senza rinunciare alla protezione del testo non affidabile; invariati ID, modelli, placeholder, ACL e flusso SMTP.
