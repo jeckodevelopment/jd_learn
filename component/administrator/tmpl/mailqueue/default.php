@@ -13,6 +13,13 @@ $filters = $data['filters'];
 $limit = (int) $data['limit'];
 $start = (int) $data['start'];
 $stateKeys = ['pending' => 'COM_JLMS_MAIL_QUEUE_STATE_PENDING', 'retry' => 'COM_JLMS_MAIL_QUEUE_STATE_RETRY', 'sending' => 'COM_JLMS_MAIL_QUEUE_STATE_SENDING', 'sent' => 'COM_JLMS_MAIL_QUEUE_STATE_SENT', 'failed' => 'COM_JLMS_MAIL_QUEUE_STATE_FAILED', 'skipped' => 'COM_JLMS_MAIL_QUEUE_STATE_SKIPPED'];
+$schedulerStateLabels = [
+ 'missing' => 'COM_JLMS_MAIL_SCHEDULER_STATE_MISSING',
+ 'disabled' => 'COM_JLMS_MAIL_SCHEDULER_STATE_DISABLED',
+ 'waiting' => 'COM_JLMS_MAIL_SCHEDULER_STATE_WAITING',
+ 'failed' => 'COM_JLMS_MAIL_SCHEDULER_STATE_FAILED',
+ 'operational' => 'COM_JLMS_MAIL_SCHEDULER_STATE_OPERATIONAL',
+];
 $actionKeys = ['sent' => 'COM_JLMS_MAIL_QUEUE_ACTION_SENT', 'retry' => 'COM_JLMS_MAIL_QUEUE_ACTION_RETRY'];
 $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&filter[template]=' . rawurlencode((string) $filters['template']);
 ?>
@@ -21,7 +28,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
  <?php if ($this->mailScheduler) : ?>
  <div class="small mb-3" role="status">
   <strong><?= Text::_('COM_JLMS_MAIL_SCHEDULER_STATUS') ?>:</strong>
-  <?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_STATE_' . strtoupper($this->mailScheduler['state']))) ?>
+  <?= $this->escape(Text::_($schedulerStateLabels[$this->mailScheduler['state']] ?? 'COM_JLMS_MAIL_SCHEDULER_STATE_MISSING')) ?>
   <?php if ($this->mailScheduler['interval'] !== null) : ?>
    · <?= Text::sprintf('COM_JLMS_MAIL_SCHEDULER_INTERVAL', $this->mailScheduler['interval']) ?>
   <?php endif; ?>
