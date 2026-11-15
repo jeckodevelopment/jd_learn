@@ -53,6 +53,12 @@ final class MailTemplateInstaller
     private static function definitions(): array
     {
         return [
+            'com_jlms.enrollment.manager_request' => [
+                'Nuova richiesta di iscrizione: {COURSE_TITLE}',
+                "Ciao {USER_FULLNAME},\n\nÈ stata presentata una richiesta di iscrizione al corso {COURSE_TITLE} che richiede una decisione. Accedi al registro iscrizioni del corso con il tuo account autorizzato:\n\n{COURSE_MANAGEMENT_URL}\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'COURSE_MANAGEMENT_URL', 'SITE_NAME', 'SITE_NAME_HTML'],
+                '<p>Ciao {USER_FULLNAME_HTML},</p><p>È stata presentata una richiesta di iscrizione al corso <strong>{COURSE_TITLE_HTML}</strong> che richiede una decisione.</p><p><a href="{COURSE_MANAGEMENT_URL}">Apri il registro iscrizioni</a></p><p>{SITE_NAME_HTML}</p>',
+            ],
             'com_jlms.course.updated' => [
                 'Aggiornamento del percorso: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nIl tuo percorso nel corso {COURSE_TITLE} è stato aggiornato a una nuova versione didattica. Trovi le lezioni attualmente disponibili nella tua area personale.\n\n{DASHBOARD_URL}\n\n{SITE_NAME}",
