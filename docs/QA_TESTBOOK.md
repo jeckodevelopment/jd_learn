@@ -1,3 +1,15 @@
+## MAIL-G — disponibilità nuove lezioni (PR #397, accettazione pendente)
+
+1. Installare 0.57.2-dev su Joomla 6.2 e aprire **Sistema → Modelli email** in IT/EN. Verificare `com_jlms.lesson.available`, titolo, descrizione, tag canonici, subject/HTML/testo e conservazione dei template personalizzati in upgrade.
+2. Preparare una versione pubblicata con un'iscrizione attiva e una lezione con `publish_up` futuro. Mantenere la preferenza globale OFF e per corso eredita: dopo la disponibilità, Scheduler non deve accodare nulla. Abilitare un secondo caso per corso: al rilascio deve essere presente una sola notifica per iscrizione e lezione. Verificare override corso disabilitato con globale ON.
+3. Ripetere per `release_after_days`, anche con `publish_up` più tardo e studente che non ha ancora avviato il corso. La data effettiva più tarda deve determinare la disponibilità. Una lezione già disponibile prima dell'iscrizione, una bozza e un normale salvataggio non producono email.
+4. Iscrivere uno studente a una versione precedente mentre ne viene pubblicata una nuova con lezioni differenti: nessuna notifica relativa alle lezioni di versione non assegnata. Verificare un'iscrizione completata, sospesa, edizione chiusa, corso con erogazione sospesa, utente bloccato e finestre scadute.
+5. Dopo l'accodamento revocare un permesso, bloccare l'utente o l'accesso, sospendere l'iscrizione o disattivare la preferenza: prima di SMTP il record deve passare a `skipped` ed essere privato dei dati personali; niente comunicazioni improprie.
+6. Eseguire più volte Scheduler e simulare SMTP temporaneamente assente: invio singolo, retry limitato, niente doppio invio; verificare che non vengano inviate email automaticamente al salvataggio o per eventi di oltre 48 ore prima del nuovo controllo.
+7. Confermare resa HTML/text IT/EN, escaping di titoli con caratteri speciali e collegamento sicuro alla sola dashboard autenticata. Registrare esiti separati dalla CI, inclusa performance su molte iscrizioni.
+
+**Stato:** da eseguire manualmente sul sito di prova Joomla/SMTP; la CI non sostituisce l'accettazione.
+
 ## UX navigazione amministrativa — issue #359 (collaudo richiesto)
 
 1. Installare/aggiornare JD Learn su Joomla 5/6 in italiano e inglese. Verificare che la sidebar presenti **solo** Dashboard, Corsi, Percorsi formativi, Docenti, Coda email, Banca domande, esattamente in questo ordine e senza voci residue dopo l'aggiornamento.

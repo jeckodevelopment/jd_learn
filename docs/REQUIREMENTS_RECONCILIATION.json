@@ -1,13 +1,13 @@
 {
-  "date": "2026-11-14",
+  "date": "2026-11-15",
   "baseline_commit": "6c44bc4e852bf1d693b53646b5deee6c83153629",
   "runtime_tested_head": "387b6d28a66f64ab89d2eba50849d09bfff98c06",
   "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077",
   "counts": {
     "Stato implementazione": {
-      "Parziale": 197,
+      "Parziale": 198,
       "Completata": 17,
-      "Non iniziata": 30
+      "Non iniziata": 29
     },
     "Perimetro 1.0.0": {
       "1.0.0": 169,
@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 79,
-    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+64+75)/9 = 78,67%, arrotondata a 79%. MAIL-04/PR #344 porta email dal 61% al 64%. Implementazione e verifica CI non equivalgono all’accettazione manuale Joomla/SMTP.",
+    "method": "Media delle nove macroaree: (81+81+78+99+68+92+70+66+75)/9 = 78,89%, arrotondata a 79%. MAIL-G prima tranche #397: email da rilascio pianificato di lezioni agli iscritti della propria versione; residuano cambi didattici significativi e avvisi ai responsabili. Stima implementativa, non accettazione Joomla/SMTP.",
     "areas": [
       81,
       81,
@@ -34,7 +34,7 @@
       68,
       92,
       70,
-      64,
+      66,
       75
     ]
   },

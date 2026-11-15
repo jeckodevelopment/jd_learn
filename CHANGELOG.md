@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.57.2-dev
+
+- MAIL-G (PR #397): introdotta notifica opzionale `com_jlms.lesson.available` quando una lezione pianificata diventa accessibile a un'iscrizione attiva della stessa versione didattica. Default globale OFF, override per corso, Scheduler e Mail Templates Joomla nativi, deduplica per iscrizione+lezione e ricontrollo ACL/stato/finestra/preferenze al dispatch. Messaggio con titolo e link autenticato, HTML con escaping.
+- Limitato il recupero di rilasci programmati alle ultime 48 ore, evitando annunci retroattivi su lezioni già disponibili. Escluse bozza e semplice salvataggio; modifiche didattiche significative e avvisi ai responsabili ancora da sviluppare. Collaudo reale Joomla/SMTP pendente.
+
 ## 0.57.1-dev
 
 - MAIL-H: titoli e descrizioni IT/EN dei 14 modelli email JD Learn nelle viste native Joomla, issue #312 / PR #395. Nessuna modifica ai template personalizzati; accettazione Joomla pendente.

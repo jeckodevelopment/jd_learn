@@ -15,6 +15,8 @@ final class MailTemplateVariableCatalog
     private const DEFINITIONS = [
         'USER_FULLNAME' => ['text', 'Nome completo del destinatario', 'Recipient full name'],
         'USER_FULLNAME_HTML' => ['html-escaped', 'Nome destinatario per HTML', 'HTML-escaped recipient name'],
+        'LESSON_TITLE' => ['text', 'Titolo della lezione resa disponibile', 'Title of the newly available lesson'],
+        'LESSON_TITLE_HTML' => ['html-escaped', 'Titolo lezione per HTML', 'HTML-escaped lesson title'],
         'COURSE_TITLE' => ['text', 'Titolo del corso', 'Course title'],
         'COURSE_TITLE_HTML' => ['html-escaped', 'Titolo corso per HTML', 'HTML-escaped course title'],
         'SITE_NAME' => ['text', 'Nome del sito', 'Site name'],
