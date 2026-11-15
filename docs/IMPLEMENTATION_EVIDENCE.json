@@ -13739,5 +13739,16 @@
     "csv_ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43719744723",
     "manual_acceptance": "pending",
     "estimated_delta_points": 0
+  },
+  "manual_issue_acceptance": {
+    "date": "2026-11-15",
+    "issues": [
+      455
+    ],
+    "pull_request": 457,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/457",
+    "status": "passed",
+    "scope": "Complete user-confirmed test of the PR checklist: toolbar icons and navigation, correct course destination, no duplicate body links, ACL/direct URL, IT/EN, desktop/mobile and manual enrollment flow. Does not constitute full UI-02 or ISC-01 requirement acceptance.",
+    "testbook": "docs/QA_TESTBOOK.md"
   }
 }
