@@ -58,6 +58,12 @@ $mailParams = $mailPrefsClass::merge(['mail_expiry' => 'disabled'], $mailParams)
 expect(!$mailPrefsClass::enabled('expiry', true, $mailParams), 'course can suppress an enabled course-expiry reminder');
 $mailParams = $mailPrefsClass::merge(['mail_expiry' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('expiry', true, $mailParams) && !$mailPrefsClass::enabled('expiry', false, $mailParams), 'course-expiry reminder preference inherits the global setting');
+$mailParams = $mailPrefsClass::merge(['mail_lesson_release' => 'disabled'], $mailParams);
+expect(!$mailPrefsClass::enabled('lesson_release', true, $mailParams), 'course can disable new lesson notifications');
+$mailParams = $mailPrefsClass::merge(['mail_lesson_release' => 'enabled'], $mailParams);
+expect($mailPrefsClass::enabled('lesson_release', false, $mailParams), 'course override can opt in while global lesson release notices are disabled');
+$mailParams = $mailPrefsClass::merge(['mail_lesson_release' => 'inherit'], $mailParams);
+expect(!$mailPrefsClass::enabled('lesson_release', false, $mailParams), 'lesson release notices default to off');
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
     && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');
