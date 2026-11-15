@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.57.4-dev
+
+- MAIL-G (PR #401): notifica operativa facoltativa `com_jlms.enrollment.manager_request` ai responsabili realmente autorizzati a gestire le iscrizioni del corso quando è presente una nuova richiesta ancora in attesa. Destinatari derivati da gruppi ACL Joomla e docenti assegnati, con rivalidazione individuale tramite `EnrollmentRosterService::course()` e ricontrollo prima dell'invio.
+- Configurazione globale disabilitata per default e override per corso; coda/Scheduler nativi Joomla con deduplica per richiesta e destinatario, finestra di due giorni, link autenticato alla gestione iscrizioni, nessun dato del richiedente esposto nell'email. HTML escapato e template IT/EN. QA Joomla/SMTP manuale pendente.
+
 ## 0.57.3-dev
 
 - MAIL-G (PR #399): notifica operativa facoltativa `com_jlms.course.updated` esclusivamente dopo la migrazione esplicita di un'iscrizione a una versione didattica pubblicata con cambiamenti sostanziali. Nessuna email al semplice salvataggio o alla pubblicazione di una versione non assegnata.

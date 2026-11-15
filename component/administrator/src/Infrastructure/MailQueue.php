@@ -22,6 +22,7 @@ final class MailQueue
         $event = match ($template) {
             'com_jlms.enrollment.confirmed' => 'enrollment',
             'com_jlms.enrollment.requested' => 'request',
+            'com_jlms.enrollment.manager_request' => 'manager_request',
             'com_jlms.teacher.assigned' => 'teacher_assignment',
             'com_jlms.enrollment.approved' => 'approval',
             'com_jlms.enrollment.rejected' => 'rejection',
@@ -47,7 +48,7 @@ final class MailQueue
             return;
         }
         $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
-        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', !in_array($event, ['lesson_release', 'course_update'], true));
+        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', !in_array($event, ['lesson_release', 'course_update', 'manager_request'], true));
         if (!\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled($event, $globalEnabled, (string) $courseParams)) {
             return;
         }
@@ -174,6 +175,15 @@ final class MailQueue
                     ++$skipped;
                     continue;
                 }
+                if ((string) $row->template_id === 'com_jlms.enrollment.manager_request' && !$this->managerRequestEligible($row)) {
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')
+                        ->set("state = 'skipped'")->set("recipient_email = ''")
+                        ->set("recipient_name = ''")->set("template_data = '{}'")
+                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    ++$skipped;
+                    continue;
+                }
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $templateId = (string) $row->template_id;
                 $language = (string) $row->language;
@@ -230,6 +240,48 @@ final class MailQueue
         return ['sent' => $sent, 'failed' => $failed, 'skipped' => $skipped, 'processed' => count($ids)];
     }
 
+
+
+    /** Pending status, course authorization, recipient address and preferences are fresh. */
+    private function managerRequestEligible(object $row): bool
+    {
+        $userId = (int) ($row->recipient_user_id ?? 0);
+        $courseId = (int) ($row->course_id ?? 0);
+        if ($userId < 1 || $courseId < 1) { return false; }
+        try {
+            $data = json_decode((string) $row->template_data, true, 16, JSON_THROW_ON_ERROR);
+            $requestId = (int) ($data['REQUEST_ID'] ?? 0);
+            if ($requestId < 1) { return false; }
+            $query = $this->db->createQuery()->select('r.id, r.user_id AS applicant_id, c.params_json')
+                ->from('#__jlms_enrollment_requests AS r')
+                ->innerJoin('#__jlms_editions AS ed ON ed.id = r.edition_id')
+                ->innerJoin('#__jlms_courses AS c ON c.id = ed.course_id')
+                ->innerJoin('#__users AS recipient ON recipient.id = :manager')
+                ->where('r.id = :request')->where('c.id = :course')
+                ->where("r.status = 'pending'")->where("ed.status = 'open'")
+                ->where("c.enrollment_mode = 'approval'")->where('c.state = 1')
+                ->where('c.admissions_open = 1')
+                ->where('recipient.block = 0')
+                ->where('LOWER(recipient.email) = LOWER(:email)')
+                ->bind(':manager', $userId, ParameterType::INTEGER)
+                ->bind(':course', $courseId, ParameterType::INTEGER)
+                ->bind(':request', $requestId, ParameterType::INTEGER)
+                ->bind(':email', (string) $row->recipient_email);
+            $current = $this->db->setQuery($query)->loadObject();
+            if (!$current || (int) $current->applicant_id === $userId
+                || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
+                    'manager_request',
+                    (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+                        ->get('mail_manager_request_enabled', false),
+                    (string) $current->params_json
+                )) { return false; }
+            return \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice::authorized(
+                $this->db, $courseId, $userId
+            );
+        } catch (\Throwable) {
+            return false;
+        }
+    }
 
     /** Ensure the learner is still entitled to the migrated course before SMTP. */
     private function courseUpdateEligible(object $row): bool

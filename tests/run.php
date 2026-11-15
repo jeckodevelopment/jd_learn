@@ -80,6 +80,12 @@ $mailParams = $mailPrefsClass::merge(['mail_course_update' => 'enabled'], $mailP
 expect($mailPrefsClass::enabled('course_update', false, $mailParams), 'course can explicitly enable significant update notice');
 $mailParams = $mailPrefsClass::merge(['mail_course_update' => 'inherit'], $mailParams);
 expect(!$mailPrefsClass::enabled('course_update', false, $mailParams), 'significant update is disabled by default');
+$mailParams = $mailPrefsClass::merge(['mail_manager_request' => 'disabled'], $mailParams);
+expect(!$mailPrefsClass::enabled('manager_request', true, $mailParams), 'course disables pending request notifications to managers');
+$mailParams = $mailPrefsClass::merge(['mail_manager_request' => 'enabled'], $mailParams);
+expect($mailPrefsClass::enabled('manager_request', false, $mailParams), 'course explicitly enables manager request notices');
+$mailParams = $mailPrefsClass::merge(['mail_manager_request' => 'inherit'], $mailParams);
+expect(!$mailPrefsClass::enabled('manager_request', false, $mailParams), 'new request notices default to disabled');
 $readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
     'summary' => $summary,
     'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),

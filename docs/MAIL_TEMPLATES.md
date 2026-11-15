@@ -1,3 +1,13 @@
+## MAIL-G — richiesta di iscrizione ai responsabili (candidata 0.57.4-dev, PR #401)
+
+Il template nativo `com_jlms.enrollment.manager_request` è destinato soltanto a **utenti Joomla autorizzati alla gestione delle iscrizioni del corso**: amministratori con ACL specifico e docenti effettivamente assegnati con lo stesso permesso. La ricerca prende candidati dai gruppi Joomla con grant pertinenti e dalle assegnazioni docente, ma ogni account passa `EnrollmentRosterService::course()` prima dell'accodamento e viene nuovamente validato al dispatch. I responsabili non devono ricevere email per corsi che non amministrano. Un account docente privo di permesso sulla gestione iscrizioni non è idoneo.
+
+**Trigger:** nuova richiesta `pending` in modalità approvazione, ancora in attesa al momento dello Scheduler, entro due giorni dalla creazione. La conferma/rifiuto dello studente segue i template già esistenti `com_jlms.enrollment.approved`/`.rejected`; non ci sono duplicazioni di questi eventi. Chiave idempotente SHA-256 `enrollment.manager.request:<request_id>:<manager_user_id>`; nuovo manager non eredita email relative a vecchie richieste oltre la finestra. Globale `mail_manager_request_enabled` è OFF; per corso `mail_manager_request` accetta `inherit/enabled/disabled`. Un'eventuale perdita di permesso, blocco account, cambio email, chiusura richiesta o disabilitazione della notifica prima del dispatch causa `skipped` e la redazione dei dati identificativi in coda.
+
+**Privacy:** email con titolo corso, nome del destinatario autorizzato e URL al registro iscrizioni amministrativo (`COURSE_MANAGEMENT_URL`), soggetto ai normali login e ACL Joomla; **nessun nome, indirizzo, motivazione o dato personale del richiedente**. Tag disponibili: `USER_FULLNAME`, `USER_FULLNAME_HTML`, `COURSE_TITLE`, `COURSE_TITLE_HTML`, `COURSE_MANAGEMENT_URL`, `SITE_NAME`, `SITE_NAME_HTML`.
+
+**Limiti:** la prima implementazione non aggiunge un pannello di destinatari selezionabili né un workflow parallelo all'approvazione; nessun invio garantito quando la richiesta viene risolta prima della prossima esecuzione dello Scheduler. Resta da registrare il collaudo Joomla/SMTP manuale.
+
 ## MAIL-G — aggiornamento didattico significativo (candidata 0.57.3-dev, PR #399)
 
 `com_jlms.course.updated` viene accodato solo in seguito alla **migrazione esplicita e confermata** di un'iscrizione verso una versione didattica pubblicata, se la versione di destinazione ha differenze sostanziali (lezioni, materiali, quiz, moduli, regole). Pubblicare una nuova versione non cambia automaticamente il programma degli iscritti alla precedente e **non** genera notifiche; nemmeno modifiche di bozza, salvataggi e modifiche soltanto alla presentazione del corso generano l'avviso.

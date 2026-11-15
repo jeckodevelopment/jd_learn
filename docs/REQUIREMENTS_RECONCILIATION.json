@@ -25,7 +25,7 @@
   },
   "implementation_progress": {
     "percent": 79,
-    "method": "Media delle nove macroaree (81+81+78+99+68+92+70+68+75)/9 = 79,11%, arrotondata a 79%. PR #399 MAIL-03: notifiche solo dopo migrazione confermata verso versione didattica significativamente cambiata; no invio per salvataggio o pubblicazione senza migrazione. Area email 66%→68%; accettazione Joomla/SMTP pendente.",
+    "method": "Media nove macroaree (81+81+78+99+68+92+70+70+75)/9 = 79,33% (79% arrotondato). MAIL-G PR #401 completa gli avvisi ai responsabili autorizzati di richieste pending, dopo le lezioni pianificate #397 e i cambi significativi post-migrazione #399. Area email 68% → 70%; QA Joomla/SMTP pendente.",
     "areas": [
       81,
       81,
@@ -34,7 +34,7 @@
       68,
       92,
       70,
-      68,
+      70,
       75
     ]
   },

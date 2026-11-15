@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-15",
     "percent": 79,
-    "basis": "MAIL-G #399 integrata: avviso operativo al learner quando la propria iscrizione viene migrata a una versione con cambiamenti materiali. Email 66%→68%, media globale (81+81+78+99+68+92+70+68+75)/9 = 79,11% arrotondata 79%. CI 4/4 green, accettazione Joomla/SMTP pendente; restano notifiche ai responsabili.",
+    "basis": "Candidata MAIL-G #401: notifiche facoltative ai responsabili autorizzati delle richieste pending; area email 68%→70%; media globale (81+81+78+99+68+92+70+70+75)/9 = 79,33% (79% arrotondato). Package/CI precedenti restano attestati alla main 0.57.3-dev fino al merge; collaudo Joomla SMTP pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,7 +13,7 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 68,
+      "email_notifications": 70,
       "certificates": 75
     }
   },
@@ -13518,5 +13518,12 @@
     "merge_commit": "17fb811f1b2e14e8eb667be7c55197c90f321456",
     "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43713427496",
     "csv_ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43713427541"
+  },
+  "mail_g_manager_request_candidate": {
+    "pull_request": 401,
+    "candidate_version": "0.57.4-dev",
+    "scope": "Authorized admins and assigned teachers with per-course enrollment-management ACL are notified of new pending requests, default OFF, no applicant PII",
+    "estimate_delta_points": 0.22,
+    "manual_acceptance": "pending"
   }
 }
