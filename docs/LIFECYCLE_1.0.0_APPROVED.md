@@ -28,11 +28,11 @@ Consentire pubblicazione/non pubblicazione/cestinazione/ripristino, senza stato 
 
 ## Piano di implementazione separabile
 
-1. **LIFE-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
-2. **LIFE-02 (P1):** toolbar, filtri, cestinazione e ripristino corsi; controllo dipendenze su eliminazione fisica.
-3. **LIFE-03 (P1):** stessi controlli e archiviazione percorsi, senza effetti sui corsi inclusi.
-4. **LIFE-04 (P1):** gestione docenti e associazioni storiche; mai eliminare l'account Joomla associato.
-5. **LIFE-05 (gate):** test automatici/UI Joomla, ACL/CSRF, retrocompatibilità e upgrade dati, catalogo/Finder/SEO, link diretti, storico personale/attestati, documentazione e collaudi.
+1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
+2. **LCM-02 (P1):** toolbar, filtri, cestinazione e ripristino corsi; controllo dipendenze su eliminazione fisica.
+3. **LCM-03 (P1):** stessi controlli e archiviazione percorsi, senza effetti sui corsi inclusi.
+4. **LCM-04 (P1):** gestione docenti e associazioni storiche; mai eliminare l'account Joomla associato.
+5. **LCM-05 (gate):** test automatici/UI Joomla, ACL/CSRF, retrocompatibilità e upgrade dati, catalogo/Finder/SEO, link diretti, storico personale/attestati, documentazione e collaudi.
 
 ## Comportamenti da testare sul sito Joomla
 
