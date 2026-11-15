@@ -75,6 +75,7 @@ $currentModule = 0;
     <source src="<?= Route::_('index.php?option=com_jlms&task=attachment.audio&format=raw&id=' . (int) $selected->audio_attachment['id'] . '&lesson_id=' . (int) $selected->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>" type="<?= $this->escape($selected->audio_attachment['mime']) ?>">
    </audio>
    <p id="jlms-audio-progress-status" role="status" aria-live="polite"></p>
+   <?php if (!empty($selected->audio_transcript)) : ?><details id="jlms-audio-transcript"><summary><?= Text::_('COM_JLMS_AUDIO_TRANSCRIPT') ?></summary><div class="jlms-audio-transcript__content"><?= $selected->audio_transcript ?></div></details><?php endif; ?>
    <?php if ($item['progress_applicable']) : ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
     <input type="hidden" name="task" value="lesson.complete">
     <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">

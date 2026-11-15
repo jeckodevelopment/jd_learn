@@ -8,6 +8,7 @@ require __DIR__ . '/bootstrap.php';
 use Jlms\Component\Jlms\Administrator\Domain\Coverage;
 use Jlms\Component\Jlms\Administrator\Domain\QuizScorer;
 use Jlms\Component\Jlms\Administrator\Domain\AccessPolicy;
+use Jlms\Component\Jlms\Administrator\Domain\AudioTranscript;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 use Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability;
 use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
@@ -36,6 +37,15 @@ function rejects(callable $work, string $message): void
     }
     throw new \RuntimeException($message);
 }
+$transcript = '<p>Audio <strong>transcript</strong></p>';
+expect(AudioTranscript::sanitizeInput($transcript, static fn(string $html): string => strip_tags($html, '<p><strong>')) === $transcript,
+    'audio transcript uses the configured HTML sanitizer');
+expect(AudioTranscript::decode('audio', AudioTranscript::encode($transcript)) === $transcript,
+    'audio transcript round-trips through versioned lesson parameters');
+expect(AudioTranscript::decode('text', AudioTranscript::encode($transcript)) === '',
+    'transcript is never exposed for a non-audio lesson');
+rejects(static fn() => AudioTranscript::sanitizeInput(str_repeat('x', AudioTranscript::MAX_BYTES + 1), static fn(string $html): string => $html),
+    'audio transcript payload is bounded');
 $mailCatalog = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog::class;
 $escaped = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.enrollment.manager_request');
 expect(in_array('USER_FULLNAME', $escaped, true) && in_array('COURSE_TITLE', $escaped, true)
