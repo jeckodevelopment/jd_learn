@@ -99,15 +99,20 @@ final class MailQueueAuditService
             throw new \RuntimeException('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_LIMIT', 409);
         }
 
+        // Joomla DatabaseQuery::bind() binds by reference: only pass stable variables.
+        // Expressions here caused a PHP Error before the UPDATE could be executed.
+        $newState = $action === 'sent' ? 'sent' : 'retry';
+        $actorId = (int) $actor->id;
+        $lastError = 'Manual reconciliation: ' . mb_substr($note, 0, 1000 - mb_strlen('Manual reconciliation: '));
         $query = $this->db->createQuery()->update('#__jlms_mail_queue')
             ->set('state = :state')->set('reconciliation_action = :action')
             ->set('reconciliation_by = :actor')->set('reconciliation_at = UTC_TIMESTAMP(6)')
             ->set('reconciliation_note = :note')->set('last_error = :lastError')->set('claimed_at = NULL')
             ->where('id = :id')->where("state = 'sending'")
             ->where('claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' . self::STALE_MINUTES . ' MINUTE)')
-            ->bind(':state', $action === 'sent' ? 'sent' : 'retry')
-            ->bind(':action', $action)->bind(':actor', (int) $actor->id, ParameterType::INTEGER)
-            ->bind(':note', $note)->bind(':lastError', 'Manual reconciliation: ' . $note)
+            ->bind(':state', $newState)
+            ->bind(':action', $action)->bind(':actor', $actorId, ParameterType::INTEGER)
+            ->bind(':note', $note)->bind(':lastError', $lastError)
             ->bind(':id', $queueId, ParameterType::INTEGER);
 
         if ($action === 'retry') {

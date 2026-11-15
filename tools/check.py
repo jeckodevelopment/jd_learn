@@ -414,3 +414,27 @@ assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder-tree'," not in 
 assert "'mailqueue' => ['mailqueue']" not in admin_controller
 assert "(int) ($item->parent_id ?? 0) !== 1" in admin_controller
 assert "(int) ($item->parent_id ?? 0) === 1" in admin_controller
+
+
+# Regression: Joomla DatabaseQuery::bind() expects stable variables (by reference).
+# The stale mail reconciliation must never bind a ternary, cast or expression.
+audit=(ROOT/'component/administrator/src/Application/MailQueueAuditService.php').read_text()
+start=audit.index('public function reconcile(')
+end=audit.index('private function filters(', start)
+reconciliation=audit[start:end]
+for expected in (
+    "$newState = $action === 'sent' ? 'sent' : 'retry';",
+    "$actorId = (int) $actor->id;",
+    "->bind(':state', $newState)",
+    "->bind(':actor', $actorId, ParameterType::INTEGER)",
+    "->bind(':lastError', $lastError)",
+    "->where(\"state = 'sending'\")",
+    "self::STALE_MINUTES",
+):
+    assert expected in reconciliation, ('Unsafe stale mail reconciliation',expected)
+for bad in (
+    "->bind(':state', $action ===",
+    "->bind(':actor', (int)",
+    "->bind(':lastError', 'Manual reconciliation:",
+):
+    assert bad not in reconciliation, ('By-reference SQL bind expression',bad)
