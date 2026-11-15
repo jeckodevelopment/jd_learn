@@ -17,7 +17,6 @@ $actionKeys = ['sent' => 'COM_JLMS_MAIL_QUEUE_ACTION_SENT', 'retry' => 'COM_JLMS
 $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&filter[template]=' . rawurlencode((string) $filters['template']);
 ?>
 <section id="jlms-mail-queue">
- <h1><?= Text::_('COM_JLMS_MAIL_QUEUE_TITLE') ?></h1>
  <p class="alert alert-info"><?= Text::_('COM_JLMS_MAIL_QUEUE_HELP') ?></p>
  <form method="get" action="<?= Route::_('index.php') ?>" class="row g-2 align-items-end mb-3">
   <input type="hidden" name="option" value="com_jlms">
