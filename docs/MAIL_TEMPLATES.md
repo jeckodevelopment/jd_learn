@@ -4,7 +4,7 @@ Il modello nativo `com_jlms.lesson.available` informa facoltativamente gli iscri
 
 **Configurazione:** `mail_lesson_release_enabled` globale è **OFF** per default; `mail_lesson_release` per corso permette `inherit/enabled/disabled`. Al momento del dispatch il servizio ricontrolla account, email, iscrizione attiva, edizione, versione, calendario, preferenze, tassonomia Joomla e `content_access`, poi marca `skipped` se non più autorizzato. I token canonici sono `USER_FULLNAME`, `USER_FULLNAME_HTML`, `LESSON_TITLE`, `LESSON_TITLE_HTML`, `COURSE_TITLE`, `COURSE_TITLE_HTML`, `DASHBOARD_URL`, `SITE_NAME`, `SITE_NAME_HTML`. L'HTML usa varianti escaped. Il payload include ID tecnici per verifiche, non utilizzabili come tag esposti. Il default del modello è modificabile dal gestore nativo Joomla; il normale upgrade non sovrascrive le personalizzazioni.
 
-**Limiti:** questo incremento non implementa ancora notifiche per modifiche didattiche significative o verso responsabili; il collaudo manuale Jira/SMTP è pendente. Il collaudo previsto è in [QA_TESTBOOK.md](QA_TESTBOOK.md).
+**Limiti:** questo incremento non implementa ancora notifiche per modifiche didattiche significative o verso responsabili; il collaudo manuale Joomla/SMTP è pendente. Il collaudo previsto è in [QA_TESTBOOK.md](QA_TESTBOOK.md).
 
 La PR [#375](https://github.com/jeckodevelopment/jd_learn/pull/375) ha spostato nella toolbar il collegamento ai modelli filtrati del componente, mantenendolo visibile solo con `core.manage` e `core.edit` su `com_mails`.
 
