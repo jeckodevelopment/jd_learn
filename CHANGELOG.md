@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Issue #455: nella vista iscritti il ritorno a Corsi è il primo comando della toolbar; Iscrizione manuale mostra l'icona plus. Nella vista di iscrizione manuale, Iscritti è il primo comando di ritorno. Rimossi i link duplicati dal corpo pagina.
+
 - Toolbar: etichette brevi in italiano e inglese per tornare agli iscritti e gestire la disponibilità del corso.
 
 - Issue #446/#448: azioni e ritorno al roster delle viste Comunicazione e Disponibilità corso trasferiti alla toolbar Joomla.

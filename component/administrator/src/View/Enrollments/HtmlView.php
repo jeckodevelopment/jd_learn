@@ -28,7 +28,8 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->getWebAssetManager()->useScript('com_jlms.rosterFilters');
         ToolbarHelper::title(Text::_('COM_JLMS_ENROLLMENTS_TITLE'), 'users');
         $courseId = (int) $this->course->id;
-        ToolbarHelper::link('index.php?option=com_jlms&view=manualenrollment&id=' . $courseId, 'COM_JLMS_MANUAL_TITLE', 'user-plus');
+        ToolbarHelper::link('index.php?option=com_jlms&view=courses', 'COM_JLMS_COURSES', 'arrow-left');
+        ToolbarHelper::link('index.php?option=com_jlms&view=manualenrollment&id=' . $courseId, 'COM_JLMS_MANUAL_TITLE', 'plus');
         ToolbarHelper::link('index.php?option=com_jlms&view=coursemessage&id=' . $courseId, 'COM_JLMS_COMMUNICATION_TITLE', 'envelope');
         ToolbarHelper::link('index.php?option=com_jlms&view=courseoperations&id=' . $courseId . '&operation=admissions_close', 'COM_JLMS_COURSE_OPERATIONS_TITLE', 'sliders-h');
         parent::display($tpl);

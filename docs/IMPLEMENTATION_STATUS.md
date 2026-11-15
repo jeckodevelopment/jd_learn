@@ -4,6 +4,10 @@
 
 **Collaudo issue #446/#448:** l’utente conferma che toolbar, ritorno al roster e azioni funzionano. La successiva PR cosmetica accorcia solo le etichette.
 
+**Collaudo PR #452:** l'utente conferma che i pulsanti abbreviati si vedono correttamente. Accettazione limitata alla presenza visiva riferita; il resto della matrice UI-02 resta aperto.
+
+**Issue #455, PR in preparazione:** il roster torna a Corsi tramite il primo pulsante toolbar e l'iscrizione manuale torna al roster dello stesso corso; il comando di iscrizione manuale usa un'icona supportata. I link nel corpo pagina vengono rimossi e i controlli strutturali ne impediscono la regressione. Stima funzionale invariata: correzione di navigazione; il collaudo Atum è descritto in QA_TESTBOOK.md.
+
 **UX toolbar #446/#448, PR in preparazione:** ritorno al roster e operazioni disponibilità corso trasferiti nella toolbar. Correzione di navigazione, stima funzionale invariata; prove Atum/ACL in `QA_TESTBOOK.md`.
 
 **UX roster — issue #434, PR in preparazione:** le azioni di iscrizione manuale, comunicazione agli iscritti e disponibilità del corso vengono trasferite dal corpo alla toolbar Joomla. È una correzione di navigazione; la stima funzionale resta invariata. Collaudo manuale Atum/ACL in `QA_TESTBOOK.md`.

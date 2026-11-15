@@ -78,5 +78,4 @@ use Joomla\CMS\Router\Route;
  </table></div>
  <?php if (!$this->items) : ?><p id="jlms-roster-empty"><?= Text::_('COM_JLMS_ROSTER_EMPTY') ?></p><?php endif; ?>
  <nav id="jlms-roster-pagination" aria-label="<?= Text::_('COM_JLMS_ROSTER_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
- <a href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_COURSES') ?></a>
 </section>
