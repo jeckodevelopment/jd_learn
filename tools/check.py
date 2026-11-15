@@ -33,13 +33,17 @@ message_view=(ROOT/'component/administrator/src/View/Coursemessage/HtmlView.php'
 message_page=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
 operations_view=(ROOT/'component/administrator/src/View/Courseoperations/HtmlView.php').read_text()
 operations_page=(ROOT/'component/administrator/tmpl/courseoperations/default.php').read_text()
-assert "'COM_JLMS_ENROLLMENTS_TITLE', 'arrow-left'" in message_view
-assert 'view=enrollments' not in message_page
-assert "'COM_JLMS_ENROLLMENTS_TITLE', 'arrow-left'" in operations_view
+assert "'COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT', 'arrow-left'" in message_view
+assert "Route::_('index.php?option=com_jlms&view=enrollments" not in message_page
+assert "'COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT', 'arrow-left'" in operations_view
 for operation in ('admissions_close', 'admissions_open', 'delivery_suspend', 'delivery_resume'):
  assert operation in operations_view
 assert '<nav aria-label=' not in operations_page
-assert 'view=enrollments' not in operations_page
+assert "Route::_('index.php?option=com_jlms&view=enrollments" not in operations_page
+for locale in ('it-IT', 'en-GB'):
+ strings=(ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
+ for key in ('COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT','COM_JLMS_COURSE_ADMISSIONS_CLOSE_SHORT','COM_JLMS_COURSE_ADMISSIONS_OPEN_SHORT','COM_JLMS_COURSE_DELIVERY_SUSPEND_SHORT','COM_JLMS_COURSE_DELIVERY_RESUME_SHORT'):
+  assert key+'=' in strings, (locale,key)
 roster_view=(ROOT/'component/administrator/src/View/Enrollments/HtmlView.php').read_text()
 roster_template=(ROOT/'component/administrator/tmpl/enrollments/default.php').read_text()
 for action in ('manualenrollment', 'coursemessage', 'courseoperations'):

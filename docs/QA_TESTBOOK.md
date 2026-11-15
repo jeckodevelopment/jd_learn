@@ -6,6 +6,8 @@
 4. Provare entrambi gli stati delle ammissioni e dell’erogazione, inclusi comandi già applicati e combinazioni tra loro. Verificare che audit e messaggi di conferma restino corretti.
 5. Ripetere in IT/EN, desktop/mobile e con ruoli autorizzati e non autorizzati. L’accesso diretto agli URL non deve superare le ACL.
 
+**Esito utente, 15 novembre 2026:** confermato che il ritorno al roster e le azioni toolbar delle issue #446/#448 funzionano. Collaudata la funzionalità. La richiesta cosmetica successiva accorcia le etichette in una PR distinta.
+
 ## Issue #434 — azioni della vista iscritti nella toolbar
 
 1. Aggiornare JD Learn su Joomla 6/Atum e aprire il roster di un corso con un account autorizzato. Verificare che **Iscrizione manuale**, **Comunica agli iscritti** e **Disponibilità del corso** compaiano una sola volta nella toolbar Joomla e non nel corpo della pagina.
