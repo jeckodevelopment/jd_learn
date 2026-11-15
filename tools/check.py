@@ -49,11 +49,19 @@ assert 'mail_lesson_release' in (ROOT/'component/administrator/forms/course.xml'
 assert "'com_jlms.lesson.available' => 'lesson_release'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "lessonReleaseEligible($row)" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "new \\Jlms\\Component\\Jlms\\Administrator\\Application\\LessonReleaseNotice($db)" in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
+course_update=(ROOT/'component/administrator/src/Application/CourseVersionChangeNotice.php').read_text()
+assert "significantVersionChange" in course_update and "course.version.changed:" in course_update
+assert "'com_jlms.course.updated' => 'course_update'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert 'courseUpdateEligible($row)' in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+assert 'mail_course_update_enabled' in (ROOT/'component/administrator/config.xml').read_text()
+assert "'mail_course_update'" in (ROOT/'component/administrator/src/Model/CourseModel.php').read_text()
+assert 'mail_course_update' in (ROOT/'component/administrator/forms/course.xml').read_text()
+assert 'CourseVersionChangeNotice($db)' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
 # Joomla's Mail Templates manager resolves each ID title and description in both
 # administrator language catalogs: .sys.ini for the list and .ini for the editor.
 mail_definitions=(ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 mail_ids=[line.strip().split("'")[1] for line in mail_definitions.splitlines() if line.strip().startswith("'com_jlms.") and "' => [" in line]
-assert len(mail_ids)==15 and len(set(mail_ids))==15,('Unexpected mail template inventory',mail_ids)
+assert len(mail_ids)==16 and len(set(mail_ids))==16,('Unexpected mail template inventory',mail_ids)
 for language in ['it-IT','en-GB']:
  for suffix in ['.ini','.sys.ini']:
   catalog=(ROOT/'component/administrator/language'/language/('com_jlms'+suffix)).read_text()

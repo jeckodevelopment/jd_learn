@@ -320,6 +320,10 @@ if (($argv[2] ?? '') === 'retained') {
     exit(0);
 }
 
+$courseUpdatedTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.course.updated', '*');
+if (!$courseUpdatedTemplate || !str_contains((string) $courseUpdatedTemplate->subject, '{COURSE_TITLE}')) {
+    throw new \RuntimeException('Significant course update template not installed.');
+}
 $lessonTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.lesson.available', '*');
 if (!$lessonTemplate || !str_contains((string) $lessonTemplate->subject, '{LESSON_TITLE}')) {
     throw new \RuntimeException('Lesson release Mail Template not registered in Joomla.');

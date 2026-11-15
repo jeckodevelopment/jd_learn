@@ -74,6 +74,12 @@ expect($lessonStart?->format('Y-m-d H:i:s') === '2026-11-16 08:00:00', 'relative
 expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-14 08:00:00', $lessonReleaseNow) === 'upcoming', 'lesson still locked until relative release');
 expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-13 08:00:00', $lessonReleaseNow) === 'available', 'lesson available after effective release');
 expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, null, $lessonReleaseNow) === 'awaiting_start', 'no premature relative release before course start');
+$mailParams = $mailPrefsClass::merge(['mail_course_update' => 'disabled'], $mailParams);
+expect(!$mailPrefsClass::enabled('course_update', true, $mailParams), 'course prevents significant update emails');
+$mailParams = $mailPrefsClass::merge(['mail_course_update' => 'enabled'], $mailParams);
+expect($mailPrefsClass::enabled('course_update', false, $mailParams), 'course can explicitly enable significant update notice');
+$mailParams = $mailPrefsClass::merge(['mail_course_update' => 'inherit'], $mailParams);
+expect(!$mailPrefsClass::enabled('course_update', false, $mailParams), 'significant update is disabled by default');
 $readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
     'summary' => $summary,
     'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),

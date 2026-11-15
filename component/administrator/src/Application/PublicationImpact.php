@@ -98,6 +98,44 @@ final class PublicationImpact
         return $diff;
     }
 
+    /**
+     * A changed publication is not, by itself, a learner event: learners stay on
+     * their assigned immutable version. Only a confirmed migration to a version
+     * with materially changed teaching content qualifies for an operational email.
+     * Excludes editorial-only course presentation changes and module ordering.
+     */
+    public function significantVersionChange(int $sourceVersionId, int $targetVersionId): bool
+    {
+        if ($sourceVersionId < 1 || $targetVersionId < 1 || $sourceVersionId === $targetVersionId) {
+            return false;
+        }
+        $q = $this->db->createQuery()->select('id, course_id, status, rules_json')
+            ->from('#__jlms_course_versions')->where('id IN (' . $sourceVersionId . ',' . $targetVersionId . ')');
+        $versions = [];
+        foreach ($this->db->setQuery($q)->loadObjectList() as $row) {
+            $versions[(int) $row->id] = $row;
+        }
+        if (count($versions) !== 2
+            || (int) $versions[$sourceVersionId]->course_id !== (int) $versions[$targetVersionId]->course_id
+            || $versions[$sourceVersionId]->status !== 'published'
+            || $versions[$targetVersionId]->status !== 'published') {
+            return false;
+        }
+        $oldRules = self::canonical(json_decode((string) $versions[$sourceVersionId]->rules_json, true, 32, JSON_THROW_ON_ERROR));
+        $newRules = self::canonical(json_decode((string) $versions[$targetVersionId]->rules_json, true, 32, JSON_THROW_ON_ERROR));
+        if ($oldRules !== $newRules) { return true; }
+
+        $before = $this->structure($sourceVersionId);
+        $after = $this->structure($targetVersionId);
+        // Module titles and additions/removals matter; cosmetic module ordering
+        // and presentation-only changes do not trigger learner notifications.
+        foreach ($before['modules'] as &$module) { unset($module['ordering'], $module['settings']); }
+        unset($module);
+        foreach ($after['modules'] as &$module) { unset($module['ordering'], $module['settings']); }
+        unset($module);
+        return $before !== $after;
+    }
+
     public function build(object $course, object $source, object $draft, int $transition, int $actor): array
     {
         $before = $this->structure((int) $source->id); $after = $this->structure((int) $draft->id);

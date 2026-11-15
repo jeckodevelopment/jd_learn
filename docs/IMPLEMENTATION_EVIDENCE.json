@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-15",
     "percent": 79,
-    "basis": "MAIL-G #397 integrata: notifiche per disponibilità di lezioni pianificate, email 64%→66%. Media (81+81+78+99+68+92+70+66+75)/9 = 78,89%, arrotondata 79%. CI verde; collaudo Joomla/SMTP non eseguito. Restano notifiche di modifiche significative e avvisi ai responsabili.",
+    "basis": "Candidata #399 MAIL-G: avvisi post-migrazione a versioni con cambiamenti significativi. Area email 66%→68%; media globale (81+81+78+99+68+92+70+68+75)/9 = 79,11% arrotondata 79%. Ultima build integrata verificata 0.57.2-dev fino a merge; manual Joomla/SMTP acceptance pending.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,7 +13,7 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 66,
+      "email_notifications": 68,
       "certificates": 75
     }
   },
@@ -13475,5 +13475,12 @@
     "merge_commit": "ec6987e90bb1856e96bd0884b4008973560320f6",
     "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43711803552",
     "csv_ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43711803433"
+  },
+  "mail_g_course_update_candidate": {
+    "pull_request": 399,
+    "scope": "Operational notice only after explicit enrollment migration to substantially changed published teaching version; no editorial-only notices",
+    "candidate_version": "0.57.3-dev",
+    "estimate_delta_points": 0.22,
+    "manual_acceptance": "pending"
   }
 }
