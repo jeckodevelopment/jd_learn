@@ -158,6 +158,22 @@ try {
         throw $expected;
     }
 }
+// Preview and delivery share Joomla's token replacement, including HTML escaping.
+$composerRenderer = new \Jlms\Component\Jlms\Administrator\Application\CourseMessageMailer();
+$renderedSubject = $composerRenderer->render('{COURSE_TITLE}: {MESSAGE_SUBJECT}', $sampleVars);
+if ($renderedSubject !== 'Corso: Avviso') {
+    throw new \RuntimeException('Course email subject preview differs from Joomla template replacement.');
+}
+$untrusted = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+    ['subject'=>'{COURSE_TITLE}', 'body'=>'{MESSAGE_BODY_TEXT}', 'htmlbody'=>'<p>{MESSAGE_BODY_HTML}</p><script>alert(1)</script>'],
+    $sampleVars
+);
+if (str_contains($untrusted['htmlbody'], '<script')) {
+    throw new \RuntimeException('Unsafe HTML in message snapshot was retained.');
+}
+if (!str_contains($untrusted['htmlbody'], '<p>')) {
+    throw new \RuntimeException('Safe HTML formatting was removed from the message.');
+}
 // Native editor changes must survive subsequent component upgrades.
 $customSubject = 'Subject edited in Joomla Mail Templates';
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__mail_templates'))

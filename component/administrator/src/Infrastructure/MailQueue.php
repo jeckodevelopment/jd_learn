@@ -187,27 +187,49 @@ final class MailQueue
                 $data = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                 $templateId = (string) $row->template_id;
                 $language = (string) $row->language;
-                $selected = MailTemplate::getTemplate($templateId, $language)
-                    ?? MailTemplate::getTemplate($templateId, '*');
-                if ($selected === null) {
-                    $invalidTemplate = true;
-                    throw new \RuntimeException('JD Learn mail template not registered.');
-                }
-                $unresolved = MailTemplatePlaceholderValidator::unresolved(
-                    $templateId, $data, (string) $selected->subject,
-                    (string) $selected->body, (string) $selected->htmlbody
-                );
-                if ($unresolved !== []) {
-                    // Invalid template configuration cannot be fixed by transport retries.
-                    $invalidTemplate = true;
-                    throw new \RuntimeException('JD Learn mail template has unresolved placeholders.');
-                }
-                $mail = new MailTemplate($templateId, $language);
-                $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
-                $mail->addTemplateData($data);
-                $mail->addUnsafeTags(MailTemplateVariableCatalog::tagsRequiringHtmlEscape($templateId));
-                if (!$mail->send()) {
-                    throw new \RuntimeException('Joomla mail template delivery returned false.');
+                if ($templateId === 'com_jlms.course.message' && array_key_exists('__course_message_snapshot', $data)) {
+                    // Send the exact editor snapshot from the confirmed job. The
+                    // global Joomla template may have changed after queueing.
+                    $snapshot = $data['__course_message_snapshot'];
+                    unset($data['__course_message_snapshot']);
+                    if (!is_array($snapshot)) {
+                        $invalidTemplate = true;
+                        throw new \RuntimeException('Invalid communication snapshot.');
+                    }
+                    try {
+                        $snapshot = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($snapshot, $data);
+                    } catch (\Throwable $invalid) {
+                        $invalidTemplate = true;
+                        throw $invalid;
+                    }
+                    if (!\Jlms\Component\Jlms\Administrator\Application\CourseMessageMailer::deliver(
+                        $snapshot, $data, (string) $row->recipient_email, (string) $row->recipient_name
+                    )) {
+                        throw new \RuntimeException('Joomla mailer rejected the communication.');
+                    }
+                } else {
+                    // Compatibility for legacy queued messages, without snapshots.
+                    $selected = MailTemplate::getTemplate($templateId, $language)
+                        ?? MailTemplate::getTemplate($templateId, '*');
+                    if ($selected === null) {
+                        $invalidTemplate = true;
+                        throw new \RuntimeException('JD Learn mail template not registered.');
+                    }
+                    $unresolved = MailTemplatePlaceholderValidator::unresolved(
+                        $templateId, $data, (string) $selected->subject,
+                        (string) $selected->body, (string) $selected->htmlbody
+                    );
+                    if ($unresolved !== []) {
+                        $invalidTemplate = true;
+                        throw new \RuntimeException('JD Learn mail template has unresolved placeholders.');
+                    }
+                    $mail = new MailTemplate($templateId, $language);
+                    $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
+                    $mail->addTemplateData($data);
+                    $mail->addUnsafeTags(MailTemplateVariableCatalog::tagsRequiringHtmlEscape($templateId));
+                    if (!$mail->send()) {
+                        throw new \RuntimeException('Joomla mail template delivery returned false.');
+                    }
                 }
             } catch (\Throwable) {
                 $attempts = (int) $row->attempts;

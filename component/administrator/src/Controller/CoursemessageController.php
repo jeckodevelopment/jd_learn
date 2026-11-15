@@ -18,6 +18,15 @@ final class CoursemessageController extends BaseController
         if (!$this->checkToken('post',false)) { throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'),403); }
         if ((int)$this->input->server->get('CONTENT_LENGTH',0,'UINT')>65536) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',413); }
         $raw=$this->input->post->get('jform',[],'array');
+        // Only the HTML template copy is read as raw input. The composition
+        // service sanitizes it with Joomla SafeHTML before hashing/queueing.
+        $unfiltered=$this->input->post->get('jform',[],'raw');
+        if (is_array($unfiltered) && isset($unfiltered['template'])) {
+            $raw['template']=$unfiltered['template'];
+        }
+        if (isset($raw['template']) && (!is_array($raw['template']) || count($raw['template']) !== 3)) {
+            throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID',422);
+        }
         foreach(['course_id','subject','body'] as $key) { if (!is_string($raw[$key]??null)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); } }
         $ids=$raw['enrollment_ids']??[];
         if (!is_array($ids)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); }
@@ -32,9 +41,9 @@ final class CoursemessageController extends BaseController
         try {
             [$raw,$course,$ids]=$this->read();
             $service=$this->app->bootComponent('com_jlms')->getCourseCommunicationService();
-            $plan=$service->preview($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$ids);
+            $plan=$service->preview($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$ids,$raw['template']??[]);
             $key='com_jlms.coursemessage.'.(int)$this->app->getIdentity()->id.'.'.$course;
-            $this->app->getSession()->set($key,['subject'=>$plan['subject'],'body'=>$plan['body'],'enrollment_ids'=>$plan['enrollment_ids']]);
+            $this->app->getSession()->set($key,['subject'=>$plan['subject'],'body'=>$plan['body'],'template'=>$plan['template'],'enrollment_ids'=>$plan['enrollment_ids']]);
             $this->setMessage(Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT',$plan['count']));
             $this->redirectTo($course);
         } catch (\Throwable $error) { $this->fail($error); }
@@ -43,7 +52,7 @@ final class CoursemessageController extends BaseController
     {
         try {
             [$raw,$course]=$this->read();
-            $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->test($this->app->getIdentity(),$course,$raw['subject'],$raw['body']);
+            $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->test($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$raw['template']??[]);
             $this->setMessage(Text::_('COM_JLMS_COMMUNICATION_TEST_QUEUED')); $this->redirectTo($course);
         } catch (\Throwable $error) { $this->fail($error); }
     }
@@ -53,7 +62,7 @@ final class CoursemessageController extends BaseController
             [$raw,$course,$ids]=$this->read();
             foreach(['impact_hash','mutation_id','confirmation'] as $key) { if (!is_string($raw[$key]??null)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); } }
             if ($raw['confirmation']!=='1') { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); }
-            $job=$this->app->bootComponent('com_jlms')->getCourseCommunicationService()->queue($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$ids,$raw['impact_hash'],$raw['mutation_id']);
+            $job=$this->app->bootComponent('com_jlms')->getCourseCommunicationService()->queue($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$ids,$raw['impact_hash'],$raw['mutation_id'],$raw['template']??[]);
             $key='com_jlms.coursemessage.'.(int)$this->app->getIdentity()->id.'.'.$course;
             $this->app->getSession()->clear($key);
             $this->setMessage(Text::sprintf('COM_JLMS_COMMUNICATION_JOB_QUEUED',$job)); $this->redirectTo($course);
