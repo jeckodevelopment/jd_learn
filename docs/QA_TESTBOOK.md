@@ -1350,3 +1350,7 @@ Il solo successo CI non prova l'accettazione SMTP sul sito dell'utente.
 ## MAIL-SCHED — PR #424 integrata (collaudo pendente)
 
 Seguire gli scenari dettagliati in [MAIL_SCHEDULER_SETUP.md](MAIL_SCHEDULER_SETUP.md): installazione pulita, task disabilitato a 5 minuti, attivazione, SMTP di prova e invio singolo, fallimento e ripristino, cron Joomla, plugin disabilitato, upgrade con impostazioni personalizzate, task duplicati, disinstallazione, ACL, IT/EN e responsive. La sola CI non costituisce accettazione.
+
+## MAIL-RECONCILE — PR #427 (collaudo manuale pendente)
+
+Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 15 minuti. Confermare dal log SMTP o dal destinatario che non risulta consegna. Dalla Coda email scegliere la riconciliazione `retry`, inserire nota di almeno 10 caratteri e confermare: la chiamata POST non deve più dare «Impossibile riconciliare il messaggio»; verificare `retry`, `claimed_at=NULL`, autore e nota audit, quindi task manuale e una sola consegna. Verificare anche `sent` manuale per recapito accertato, soglia 15 minuti, limite 5 tentativi, CSRF, ACL e comportamento dopo upgrade Joomla. Non marcare come accettato prima del riscontro sul sito di prova.
