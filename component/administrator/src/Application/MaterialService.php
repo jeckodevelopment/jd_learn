@@ -238,7 +238,7 @@ final class MaterialService
         $availability = MaterialAvailability::normalize($publishUp, $publishDown, CourseSchedule::read($course)['timezone']);
         if (!in_array((string) $preview, ['0', '1'], true)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
         $preview = (int) $preview;
-        if ($preview === 1 && $lessonId > 0) { throw new \RuntimeException('COM_JLMS_PREVIEW_COURSE_SCOPE_ONLY', 422); }
+        if ($preview === 1 && $lessonId > 0) { throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422); }
         if (in_array($upload['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
@@ -366,7 +366,7 @@ final class MaterialService
                 if (!is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1
                     || !is_string($description) || strlen($description) > 4096 || !in_array($state, ['0', '1'], true)
                     || !in_array($preview, ['0', '1'], true) || !ctype_digit($order) || strlen($order) > 5) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-                if ($preview === '1' && $link->lesson_id !== null) { throw new \RuntimeException('COM_JLMS_PREVIEW_COURSE_SCOPE_ONLY', 422); }
+                if ($preview === '1' && $link->lesson_id !== null) { throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422); }
                 $availability = array_key_exists('publish_up', $input) || array_key_exists('publish_down', $input)
                     ? MaterialAvailability::normalize($input['publish_up'] ?? $link->publish_up, $input['publish_down'] ?? $link->publish_down, CourseSchedule::read($course)['timezone'])
                     : ['publish_up' => $link->publish_up, 'publish_down' => $link->publish_down];
