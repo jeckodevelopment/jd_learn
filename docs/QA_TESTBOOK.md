@@ -1419,3 +1419,13 @@ Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 
 3. Verificare il filtro HTML, la trascrizione vuota senza riquadro, il cambio Video → altro tipo e l’assenza di riuso tra lezioni o versioni.
 4. Verificare l’accesso negato per account non iscritto/non autorizzato: nessuna trascrizione nel markup, nel payload aula o in endpoint separati.
 5. Accertare che la trascrizione non cambi soglia, durata, progresso, ripresa, consenso, richieste al provider o completamento del video.
+
+
+## MAIL-E — variabili di contesto email corso/lezione/docente (PR in corso)
+
+1. Aggiornare un sito Joomla 6 con template JD Learn già personalizzati. In **Sistema → Modelli email**, verificare che i tag canonici siano aggiunti ai modelli `com_jlms.lesson.available`, `com_jlms.teacher.assigned` e `com_jlms.course.published`, mentre oggetto, testo, HTML, mittente e opzioni personalizzate restano invariati.
+2. Configurare per un corso descrizione, durata stimata e inizio calendario; inviare un avviso di lezione e un annuncio opt-in. Verificare che descrizione e durata coincidano con il corso, la data sia UTC e che i valori mancanti siano vuoti senza token letterali. Controllare rendering HTML e testo semplice in italiano e inglese.
+3. Con iscrizione attiva e lezione disponibile, aprire `LESSON_URL`: deve portare alla lezione nell'aula autenticata dell'iscrizione destinataria. Cambiare o revocare l'iscrizione prima dell'invio e verificare il normale controllo di idoneità al dispatch.
+4. Verificare che `LESSON_DESCRIPTION` sia vuota e che nessun corpo/materiale protetto compaia nell'email. Assegnare un profilo docente collegato a un account e verificare `TEACHER_NAME` dal titolo del profilo, senza includere docenti non pertinenti.
+5. Impostare il mittente Joomla valido e poi un valore non email: `CONTACT_EMAIL` deve mostrare solo il primo e restare vuoto nel secondo caso. `USER_FIRSTNAME` non deve apparire tra i tag disponibili; i modelli usano un saluto neutro dove non vogliono mostrare il nome completo.
+6. Simulare HTML con caratteri speciali in descrizione/titolo e verificare escaping singolo; ripetere con campi assenti/non validi. Completare prova SMTP e verificare stato inviato in Coda email. Questa suite è richiesta prima di registrare l'accettazione sul sito.
