@@ -1,6 +1,6 @@
 # JD Learn
 
-**Build di sviluppo candidata: `0.57.4-dev`** (non release stabile). PR #401 MAIL-G in verifica CI; collaudo manuale Joomla/SMTP pendente; per pacchetto e checksum vedere [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json).
+**Build di sviluppo corrente: `0.57.4-dev`** (non release stabile). PR #401 MAIL-G integrata con CI verde; collaudo manuale Joomla/SMTP pendente; per pacchetto e checksum vedere [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json).
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
