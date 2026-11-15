@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Issue #446/#448: azioni e ritorno al roster delle viste Comunicazione e Disponibilità corso trasferiti alla toolbar Joomla.
+
 - Issue #434: le azioni di iscrizione manuale, comunicazione agli iscritti e disponibilità del corso sono disponibili nella toolbar nativa del roster.
 
 - Comunicazioni agli iscritti: normalizzazione dei segnaposto storici dei modelli Joomla nella copia locale. Il 422 indica i segnaposto da correggere.
