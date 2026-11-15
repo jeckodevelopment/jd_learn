@@ -24,6 +24,13 @@ final class LessonReleaseNotice
     public function enqueueDue(int $limit = 500): array
     {
         $limit = max(1, min(1000, $limit));
+        $global = (bool) ComponentHelper::getParams('com_jlms')->get('mail_lesson_release_enabled', false);
+        $override = "JSON_UNQUOTE(JSON_EXTRACT(c.params_json, '$.mail_preferences.lesson_release'))";
+        // Filter due releases in SQL before applying the bounded task limit. Otherwise
+        // disabled or old rows could permanently starve eligible enrollments.
+        $effective = "CASE WHEN l.release_after_days > 0 THEN " .
+            "GREATEST(COALESCE(l.publish_up, '1000-01-01 00:00:00'), " .
+            "DATE_ADD(e.started_at, INTERVAL l.release_after_days DAY)) ELSE l.publish_up END";
         $query = $this->db->createQuery()->select(
             'e.id AS enrollment_id, e.user_id, e.course_id, e.course_version_id, e.started_at, e.created_at AS enrolled_at, ' .
             'l.id AS lesson_id, l.title AS lesson_title, l.publish_up, l.publish_down, l.release_after_days, ' .
@@ -44,13 +51,19 @@ final class LessonReleaseNotice
             ->where('(e.ends_at IS NULL OR e.ends_at > UTC_TIMESTAMP(6))')
             ->where('(ed.starts_at IS NULL OR ed.starts_at <= UTC_TIMESTAMP(6))')
             ->where('(ed.ends_at IS NULL OR ed.ends_at > UTC_TIMESTAMP(6))')
-            ->where('((l.publish_up IS NOT NULL AND l.publish_up > DATE_SUB(UTC_TIMESTAMP(6), INTERVAL 2 DAY) AND l.publish_up <= UTC_TIMESTAMP(6)) OR (l.release_after_days > 0 AND e.started_at IS NOT NULL AND DATE_ADD(e.started_at, INTERVAL l.release_after_days DAY) > DATE_SUB(UTC_TIMESTAMP(6), INTERVAL 2 DAY) AND DATE_ADD(e.started_at, INTERVAL l.release_after_days DAY) <= UTC_TIMESTAMP(6)))')
+            ->where('(l.release_after_days IS NULL OR l.release_after_days = 0 OR e.started_at IS NOT NULL)')
+            ->where('(' . $effective . ') > DATE_SUB(UTC_TIMESTAMP(6), INTERVAL 2 DAY)')
+            ->where('(' . $effective . ') <= UTC_TIMESTAMP(6)')
+            ->where('(' . $effective . ') > e.created_at')
+            ->where('(' . $effective . ') > v.published_at')
+            ->where('(l.publish_down IS NULL OR l.publish_down > UTC_TIMESTAMP(6))')
+            ->where($global ? '(' . $override . " IS NULL OR " . $override . " <> 'disabled')"
+                : $override . " = 'enabled'")
             ->order('e.id, l.id');
         $rows = $this->db->setQuery($query, 0, $limit)->loadObjectList();
         $queue = new MailQueue($this->db);
         $queued = 0;
         $failed = 0;
-        $global = (bool) ComponentHelper::getParams('com_jlms')->get('mail_lesson_release_enabled', false);
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $window = $now->modify('-2 days');
         foreach ($rows as $row) {
