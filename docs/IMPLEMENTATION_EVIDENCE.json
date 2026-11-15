@@ -13799,6 +13799,8 @@
     "manual_acceptance": "pending",
     "implementation_estimate_delta_points": 0,
     "implementation_estimate_after": 79.33,
-    "note": "Allineamento del contratto dichiarativo; VID-01/VID-02 restano parziali fino alle prove reali di caption, velocità, consenso e playback sui quattro provider."
+    "note": "Allineamento del contratto dichiarativo; VID-01/VID-02 restano parziali fino alle prove reali di caption, velocità, consenso e playback sui quattro provider.",
+    "package": "pkg_jlms-0.57.7-dev.zip",
+    "package_sha256": "5b7f184b4da34d46de5f7378925a07006a67ab73bdca8f551243f21d26516440"
   }
 }
