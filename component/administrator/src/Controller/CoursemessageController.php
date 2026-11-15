@@ -27,7 +27,17 @@ final class CoursemessageController extends BaseController
         if (isset($raw['template']) && (!is_array($raw['template']) || count($raw['template']) !== 3)) {
             throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID',422);
         }
-        foreach(['course_id','subject','body'] as $key) { if (!is_string($raw[$key]??null)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); } }
+        if (!is_string($raw['course_id'] ?? null)
+            || !is_array($raw['template'] ?? null)
+            || !is_string($raw['template']['subject'] ?? null)
+            || !is_string($raw['template']['body'] ?? null)
+            || !is_string($raw['template']['htmlbody'] ?? null)) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
+        // Single source of truth: the template copy itself, not a separate
+        // free-message subject/body hidden alongside the editable mail fields.
+        $raw['subject'] = $raw['template']['subject'];
+        $raw['body'] = $raw['template']['body'];
         $ids=$raw['enrollment_ids']??[];
         if (!is_array($ids)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT',400); }
         return [$raw,CurriculumService::id($raw['course_id']),$ids];
