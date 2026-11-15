@@ -56,6 +56,7 @@ $currentModule = 0;
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
+   <?php if (!empty($selected->video_transcript)) : ?><details id="jlms-video-transcript"><summary><?= Text::_('COM_JLMS_LESSON_TRANSCRIPT') ?></summary><div class="jlms-lesson-transcript__content"><?= $selected->video_transcript ?></div></details><?php endif; ?>
    <div id="jlms-video-speed-control" hidden>
     <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
     <select id="jlms-video-speed" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">
