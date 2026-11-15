@@ -92,7 +92,7 @@ try:
  first=files()[0]
  expect(first['storage_key']!=old_key and (private/old_key).exists() and hashlib.sha256((private/old_key).read_bytes()).hexdigest()==old_hash,'Replacement preserves immutable old blob')
  upload('lesson.txt',b'LESSON_PRIVATE_NOTES\n','Lesson handout',lesson=fixture['lesson_id'])
- upload('lesson-preview.txt',b'LESSON_PREVIEW_MUST_STAY_PRIVATE\n','Lesson public preview forbidden',lesson=fixture['lesson_id'],preview=1,expected=422)
+ upload('lesson-preview.txt',b'LESSON_PREVIEW_MUST_STAY_PRIVATE\n','Lesson preview requires a selected public text lesson',lesson=fixture['lesson_id'],preview=1,expected=422)
  lesson_file=next(row for row in files() if row['title']=='Lesson handout')
  reuse_url,reuse_page,_=admin_page();reuse_form=next(f for f in Page(reuse_page.decode()).forms if f['fields'].get('task')=='material.reuse' and f['fields'].get('jform[id]')==str(lesson_file['id']))
  reuse_fields=dict(reuse_form['fields']);reuse_fields['jform[target_lesson_id]']='0'
