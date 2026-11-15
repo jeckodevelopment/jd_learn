@@ -14,7 +14,7 @@ final class DisplayController extends BaseController
     public function display($cachable = false, $urlparams = [])
     {
         $view = $this->input->getCmd('view', 'dashboard');
-        if (!in_array($view, ['dashboard', 'courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'courseannouncement', 'materials', 'questionbank', 'question', 'quiz', 'quiztime', 'quizreview', 'quizextend', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'mailqueue', 'mailvariables', 'teachers', 'teacher', 'certificates', 'certificate', 'pathways', 'pathway', 'categoryreassignment'], true)) {
+        if (!in_array($view, ['dashboard', 'courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'courseannouncement', 'materials', 'questionbank', 'question', 'quiz', 'quiztime', 'quizreview', 'quizextend', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'coursemessage', 'mailqueue', 'mailvariables', 'teachers', 'teacher', 'certificates', 'certificate', 'pathways', 'pathway', 'categoryreassignment'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         $this->setNavigationContext($view);
@@ -28,7 +28,7 @@ final class DisplayController extends BaseController
     private function setNavigationContext(string $view): void
     {
         $groups = [
-            'courses' => ['courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'courseannouncement', 'materials', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'quiz', 'quiztime', 'quizreview', 'quizextend'],
+            'courses' => ['courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'courseannouncement', 'materials', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'coursemessage', 'quiz', 'quiztime', 'quizreview', 'quizextend'],
             'pathways' => ['pathways', 'pathway'],
             'teachers' => ['teachers', 'teacher'],
             'questionbank' => ['questionbank', 'question'],
