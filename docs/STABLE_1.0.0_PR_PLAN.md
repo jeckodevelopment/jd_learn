@@ -80,6 +80,8 @@ L'ultima stima documentata è **79% (78,67% non arrotondato)** di copertura impl
 
 Per la 1.0.0: preconfigurare il task `jlms.mail.dispatch` disabilitato a 5 minuti, rispettare le modifiche degli amministratori in upgrade, rendere visibile un avviso solo nella sezione Comunicazioni della dashboard e mostrare i dettagli nello storico Coda email. Tracciamento: CORE-18, MAIL-09. Evidenze, comportamenti da testare e limiti in [MAIL_SCHEDULER_SETUP.md](MAIL_SCHEDULER_SETUP.md). **Implementazione integrata:** merge `5e61c0a32828d5b4387faf12ca2d1efdc964288a`, CI 4/4 [43725870964](https://github.com/jeckodevelopment/jd_learn/actions/runs/43725870964); **non accettato** fino al collaudo Joomla 6/SMTP; non modificare la percentuale globale sulla base del solo codice.
 
-## STAB-MAIL-RECONCILE — PR #427
+## STAB-MAIL-RECONCILE — PR #427 integrata, collaudo pendente
 
 Correzione regressione nel salvataggio della riconciliazione manuale dei messaggi in stato `sending`: bind SQL per riferimento compatibile con Joomla. Collegamento MAIL-09/MAIL-10 nel registro `REQUIREMENTS_STATUS.csv`; test di regressione statico in `tools/check.py`. Non cambiare la gestione dei claim SMTP ambigui, i 15 minuti di soglia o il limite di 5 tentativi. Prova manuale Joomla/SMTP necessaria per l'accettazione.
+
+PR #427 integrata: merge `58811c6817a91b372e0814479281e068d6a037f5`, CI [43728360557](https://github.com/jeckodevelopment/jd_learn/actions/runs/43728360557) 4/4 verde; stima globale 79,33% invariata. Resta collaudo Joomla/SMTP.
