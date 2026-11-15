@@ -357,36 +357,36 @@ require_once __DIR__ . '/../plugins/jlmsvideo/youtube/src/Provider/Provider.php'
 require_once __DIR__ . '/../plugins/jlmsvideo/vimeo/src/Provider/Provider.php';
 require_once __DIR__ . '/../plugins/jlmsvideo/html5/src/Provider/Provider.php';
 require_once __DIR__ . '/../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php';
-$enabled = new \\Jlms\\Plugin\\Jlmsvideo\\Youtube\\Provider\\Provider(true);
+$enabled = new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true);
 $source = $enabled->normaliseSource(new SourceInput('https://youtu.be/dQw4w9WgXcQ'));
 $caps = $enabled->getCapabilities($source);
 expect($enabled->getDescriptor()->configured && $caps->position && $caps->duration && $caps->seek, 'enabled YouTube declares tracked-learning capabilities');
 expect($caps->speed && $caps->captions && !$caps->transcript && !$caps->expiringPlayback && !$caps->download, 'YouTube reports adapter-supported optional capabilities only');
-$vimeo = new \\Jlms\\Plugin\\Jlmsvideo\\Vimeo\\Provider\\Provider(true);
+$vimeo = new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true);
 $vimeoSource = $vimeo->normaliseSource(new SourceInput('https://vimeo.com/123456789'));
 $vimeoCaps = $vimeo->getCapabilities($vimeoSource);
 expect($vimeoCaps->position && $vimeoCaps->duration && $vimeoCaps->seek && $vimeoCaps->speed && $vimeoCaps->captions, 'Vimeo reports core, conditional speed and caption support');
-$html5 = new \\Jlms\\Plugin\\Jlmsvideo\\Html5\\Provider\\Provider(true);
-$html5Caps = $html5->getCapabilities(new \\Jlms\\Contracts\\Video\\VideoSource('html5', 'media.mp4', 1));
+$html5 = new \Jlms\Plugin\Jlmsvideo\Html5\Provider\Provider(true);
+$html5Caps = $html5->getCapabilities(new \Jlms\Contracts\Video\VideoSource('html5', 'media.mp4', 1));
 expect($html5Caps->position && $html5Caps->duration && $html5Caps->seek && $html5Caps->speed && $html5Caps->captions, 'HTML5 reports native playback, speed and caption support');
-$stream = new \\Jlms\\Plugin\\Jlmsvideo\\Cloudflarestream\\Provider\\Provider(
+$stream = new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider(
     ['playback_enabled' => 1, 'account_id' => str_repeat('a', 32), 'playback_domain' => 'customer-example.cloudflarestream.com',
         'site_host' => 'learn.example.com', 'api_token_ref' => 'stream-token', 'token_ttl_seconds' => 900, 'renew_before_seconds' => 120],
     static fn(string $reference): string => 'secret',
     static fn(): array => []
 );
-$streamSource = new \\Jlms\\Contracts\\Video\\VideoSource('cloudflarestream', str_repeat('b', 32), 1);
+$streamSource = new \Jlms\Contracts\Video\VideoSource('cloudflarestream', str_repeat('b', 32), 1);
 $streamCaps = $stream->getCapabilities($streamSource);
 expect($stream->getDescriptor()->configured && $streamCaps->position && $streamCaps->duration && $streamCaps->seek
     && !$streamCaps->speed && $streamCaps->captions && !$streamCaps->transcript && $streamCaps->expiringPlayback && !$streamCaps->download,
     'Cloudflare Stream reports its configured API and playback capabilities');
-$wrongProvider = $enabled->getCapabilities(new \\Jlms\\Contracts\\Video\\VideoSource('vimeo', '123456789', 1));
+$wrongProvider = $enabled->getCapabilities(new \Jlms\Contracts\Video\VideoSource('vimeo', '123456789', 1));
 expect(!$wrongProvider->position && !$wrongProvider->duration && !$wrongProvider->seek && !$wrongProvider->speed
     && !$wrongProvider->captions && !$wrongProvider->expiringPlayback && !$wrongProvider->download,
     'provider does not claim capabilities for another provider source');
-expect(!(new \\Jlms\\Plugin\\Jlmsvideo\\Youtube\\Provider\\Provider())->getCapabilities($source)->position,
+expect(!(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getCapabilities($source)->position,
     'disabled embed reports no active capabilities');
-expect(!(new \\Jlms\\Plugin\\Jlmsvideo\\Html5\\Provider\\Provider())->getCapabilities(new \\Jlms\\Contracts\\Video\\VideoSource('html5', 'media.mp4', 1))->position,
+expect(!(new \Jlms\Plugin\Jlmsvideo\Html5\Provider\Provider())->getCapabilities(new \Jlms\Contracts\Video\VideoSource('html5', 'media.mp4', 1))->position,
     'disabled HTML5 reports no active capabilities');
 $supportsTrackedLearning = static fn (\Jlms\Contracts\Video\VideoCapabilities $capabilities): bool =>
     $capabilities->position && $capabilities->duration && $capabilities->seek;
