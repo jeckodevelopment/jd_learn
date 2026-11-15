@@ -256,6 +256,11 @@ final class HtmlView extends BaseHtmlView
             if (!$this->selectedItem) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
         }
         ToolbarHelper::title(Text::_('COM_JLMS_CURRICULUM'), 'graduation-cap');
+        // #408: navigation belongs first in the native Joomla toolbar, not the page body.
+        $this->getDocument()->getToolbar()
+            ->linkButton('back-to-course', 'COM_JLMS_PROGRAMME_BACK_COURSE')
+            ->icon('icon-arrow-left')
+            ->url(Route::link('administrator', 'index.php?option=com_jlms&task=course.edit&id=' . (int) $course->id));
         if ($this->editable) {
             ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&new_module=1#jlms-module-form'), 'COM_JLMS_PROGRAMME_ADD_MODULE', 'plus');
         }
