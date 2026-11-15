@@ -246,7 +246,7 @@ if ($guide === false || !str_contains($guide, 'MailTemplateInstaller::templateId
     throw new RuntimeException('Standalone variable guide must use the registered catalog.');
 }
 // Issue #404: the guide shows the Joomla-localized name above its technical template ID.
-if ($guide === false || !str_contains($guide, "'COM_JLMS_MAIL_'")
+if ($guide === false || !str_contains($guide, "'JLMS_MAIL_'")
     || !str_contains($guide, "strtoupper(str_replace(")
     || !str_contains($guide, '$displayTitle')
     || !str_contains($guide, '$this->escape($mailId)')) {
