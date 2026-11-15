@@ -320,6 +320,10 @@ if (($argv[2] ?? '') === 'retained') {
     exit(0);
 }
 
+$managerTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.enrollment.manager_request', '*');
+if (!$managerTemplate || !str_contains((string) $managerTemplate->subject, '{COURSE_TITLE}')) {
+    throw new \RuntimeException('Manager notification Mail Template not installed.');
+}
 $courseUpdatedTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.course.updated', '*');
 if (!$courseUpdatedTemplate || !str_contains((string) $courseUpdatedTemplate->subject, '{COURSE_TITLE}')) {
     throw new \RuntimeException('Significant course update template not installed.');
