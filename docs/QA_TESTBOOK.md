@@ -1,3 +1,11 @@
+## Issue #446 e #448 — toolbar comunicazioni e disponibilità corso
+
+1. Aggiornare JD Learn su Joomla 6/Atum e aprire **Comunica agli iscritti** dal roster. Verificare che **Iscritti al corso** sia il primo comando della toolbar, con icona indietro; in fondo al corpo non deve apparire un link duplicato.
+2. Dal roster aprire **Disponibilità del corso**. Verificare che **Iscritti al corso** sia il primo comando della toolbar e che i quattro comandi di azione siano nella toolbar, senza duplicati nel corpo pagina.
+3. Aprire ciascuna operazione: Chiudi nuove ammissioni, Apri nuove ammissioni, Sospendi erogazione didattica, Riprendi erogazione didattica. Verificare corso e operazione selezionata, impatto, conferma, CSRF e risultato dopo il submit; il ritorno deve mantenere il corso.
+4. Provare entrambi gli stati delle ammissioni e dell’erogazione, inclusi comandi già applicati e combinazioni tra loro. Verificare che audit e messaggi di conferma restino corretti.
+5. Ripetere in IT/EN, desktop/mobile e con ruoli autorizzati e non autorizzati. L’accesso diretto agli URL non deve superare le ACL.
+
 ## Issue #434 — azioni della vista iscritti nella toolbar
 
 1. Aggiornare JD Learn su Joomla 6/Atum e aprire il roster di un corso con un account autorizzato. Verificare che **Iscrizione manuale**, **Comunica agli iscritti** e **Disponibilità del corso** compaiano una sola volta nella toolbar Joomla e non nel corpo della pagina.

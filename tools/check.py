@@ -29,6 +29,17 @@ for name in ('mailqueue', 'mailvariables', 'categoryreassignment'):
  assert not re.search(r'<h1\\b', template, re.I), ('Duplicate H1 beneath toolbar', name)
 assert 'COM_JLMS_MAIL_QUEUE_HELP' in (ROOT/'component/administrator/tmpl/mailqueue/default.php').read_text()
 assert 'COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO' in (ROOT/'component/administrator/tmpl/mailvariables/default.php').read_text()
+message_view=(ROOT/'component/administrator/src/View/Coursemessage/HtmlView.php').read_text()
+message_page=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
+operations_view=(ROOT/'component/administrator/src/View/Courseoperations/HtmlView.php').read_text()
+operations_page=(ROOT/'component/administrator/tmpl/courseoperations/default.php').read_text()
+assert "'COM_JLMS_ENROLLMENTS_TITLE', 'arrow-left'" in message_view
+assert 'view=enrollments' not in message_page
+assert "'COM_JLMS_ENROLLMENTS_TITLE', 'arrow-left'" in operations_view
+for operation in ('admissions_close', 'admissions_open', 'delivery_suspend', 'delivery_resume'):
+ assert operation in operations_view
+assert '<nav aria-label=' not in operations_page
+assert 'view=enrollments' not in operations_page
 roster_view=(ROOT/'component/administrator/src/View/Enrollments/HtmlView.php').read_text()
 roster_template=(ROOT/'component/administrator/tmpl/enrollments/default.php').read_text()
 for action in ('manualenrollment', 'coursemessage', 'courseoperations'):

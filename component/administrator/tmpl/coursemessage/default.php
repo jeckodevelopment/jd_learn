@@ -68,5 +68,4 @@ $mutation=substr($mutation,0,8).'-'.substr($mutation,8,4).'-4'.substr($mutation,
    </form>
   </div></section>
  <?php endif; ?>
- <a href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id='.(int)$this->item['course']->id) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a>
 </section>
