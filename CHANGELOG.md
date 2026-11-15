@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.57.1-dev
+
+- MAIL-H: titoli e descrizioni IT/EN dei 14 modelli email JD Learn nelle viste native Joomla, issue #312 / PR #395. Nessuna modifica ai template personalizzati; accettazione Joomla pendente.
+
 ## 0.57.0-dev
 
 - Sidebar amministrativa JD Learn ridotta a sei voci operative, dashboard aggiornata con **Configurazione & Strumenti** e **Dipendenze categorie**.
