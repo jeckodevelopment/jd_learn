@@ -1,3 +1,17 @@
+## Correzione P0 — composizione singola, variabili valide e anteprima (15 novembre 2026)
+
+Dopo la PR #440 la pagina **Comunica agli iscritti** mostrava **due composizioni sovrapposte**: oggetto/corpo libero e modello Joomla modificabile. Questo generava confusione e poteva causare errori 422 nel passaggio a anteprima quando i campi del modello `{MESSAGE_SUBJECT}`, `{MESSAGE_BODY_TEXT}`, `{MESSAGE_BODY_HTML}` si riferivano implicitamente al vecchio editor separato.
+
+La correzione **mantiene un solo editor**:
+- il modello Joomla `com_jlms.course.message` viene caricato nella lingua dell'amministratore, con fallback nativo;
+- solo una coppia **Oggetto dell'email** / **Messaggio (HTML Joomla)** è modificabile;
+- le tre variabili interne di composizione del modello originario vengono sostituite, *solo nella copia locale*, da brevi testi introduttivi modificabili. Il modello globale rimane intatto; `{COURSE_TITLE}`, `{USER_FULLNAME}`, `{SITE_NAME}` e le relative versioni `_HTML` restano disponibili;
+- la versione testuale alternativa viene generata automaticamente dall'HTML filtrato, non richiesta come terzo editor;
+- conferma, hash, snapshot, test e invio SMTP ricevono la **stessa** copia del modello. Se si reintroducono i vecchi slot `MESSAGE_*` in una composizione diretta, un errore 422 specifico chiarisce come correggere il testo senza produrre un invio ricorsivo;
+- i messaggi legacy precedenti conservano il loro percorso di elaborazione senza ritentativi automatici.
+
+**Collaudo su sito Joomla:** 1) accedere a un corso e aprire `Comunica agli iscritti`; verificare che siano presenti soltanto oggetto, un editor per il messaggio e destinatari, con i valori del modello precaricati; 2) inserire `{USER_FULLNAME_HTML}`, `{COURSE_TITLE_HTML}` nel corpo e `{COURSE_TITLE}` nell'oggetto, quindi generare l'anteprima senza 422, verificando le sostituzioni; 3) controllare che il modello Joomla globale non sia stato modificato; 4) prova singola al solo amministratore autorizzato; 5) accodamento e invio tramite Scheduler con SMTP di test, controllando il contenuto effettivo, gli stati e l'assenza di duplicati; 6) HTML ostile, variabile sconosciuta e vecchi slot ricorsivi: messaggio controllato e nessuna accodatura; 7) schermata IT/EN, desktop/mobile Atum, ACL e CSRF. **L'accettazione manuale Joomla/SMTP resta distinta dal risultato dei test CI.**
+
 ## Composizione da modello Joomla — fase 2 (editor, anteprima e snapshot del job)
 
 La vista `Comunica agli iscritti` precarica `com_jlms.course.message` da Joomla, espone **oggetto**, **testo semplice** e **HTML** modificabili solo per questa comunicazione (editor configurato in Joomla), oltre a oggetto/testo manuale e destinatari. L'amministratore vede l'anteprima renderizzata con il medesimo sistema di sostituzione dei placeholder di Joomla (esempio di destinatario e iframe `sandbox` per HTML). Il modello globale `#__mail_templates` non viene mai modificato.
