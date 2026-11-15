@@ -1347,6 +1347,6 @@ Il solo successo CI non prova l'accettazione SMTP sul sito dell'utente.
 
 **Stato:** implementazione candidata, accettazione manuale non eseguita. La CI non sostituisce questa verifica.
 
-## MAIL-SCHED — PR #424 (collaudo pendente)
+## MAIL-SCHED — PR #424 integrata (collaudo pendente)
 
 Seguire gli scenari dettagliati in [MAIL_SCHEDULER_SETUP.md](MAIL_SCHEDULER_SETUP.md): installazione pulita, task disabilitato a 5 minuti, attivazione, SMTP di prova e invio singolo, fallimento e ripristino, cron Joomla, plugin disabilitato, upgrade con impostazioni personalizzate, task duplicati, disinstallazione, ACL, IT/EN e responsive. La sola CI non costituisce accettazione.
