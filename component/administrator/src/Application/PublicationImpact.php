@@ -129,11 +129,10 @@ final class PublicationImpact
         $after = $this->structure($targetVersionId);
         // Module titles and additions/removals matter; cosmetic module ordering
         // and presentation-only changes do not trigger learner notifications.
-        foreach ([$before['modules'], $after['modules']] as &$modules) {
-            foreach ($modules as &$module) { unset($module['ordering'], $module['settings']); }
-            unset($module);
-        }
-        unset($modules);
+        foreach ($before['modules'] as &$module) { unset($module['ordering'], $module['settings']); }
+        unset($module);
+        foreach ($after['modules'] as &$module) { unset($module['ordering'], $module['settings']); }
+        unset($module);
         return $before !== $after;
     }
 
