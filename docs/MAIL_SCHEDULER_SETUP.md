@@ -1,3 +1,15 @@
+## Diagnostica sicura dei messaggi falliti e codice di uscita 5
+
+Il codice di uscita **5** dello Scheduler segnala l'esito negativo del task: da solo non individua la causa dell'invio. In JD Learn il task ritorna esito negativo se un invio o un'attività di preparazione fallisce; un messaggio in stato **Fallito** potrebbe aver raggiunto il limite di tentativi oppure essere stato scartato per un modello non valido.
+
+La vista **Coda email** mostra ora, soltanto ai ruoli che hanno `core.manage`, la categoria diagnostica per record `retry` e `failed` quando il codice persistito è riconosciuto:
+- **Modello email mancante / variabili non disponibili**: controllare i modelli mail Joomla e i placeholder canonici;
+- **Invio non riuscito / trasporto**: controllare le impostazioni email globali Joomla e i log SMTP.
+
+L'errore di trasporto, anche storico, non viene mai stampato direttamente: la coda usa una whitelist di due messaggi generici per non divulgare indirizzi o dati del server. Errori non riconosciuti non vengono mostrati. Questa diagnosi non prova l'accettazione SMTP, né riavvia messaggi con stato `sending` o `failed`.
+
+**Collaudo da eseguire:** con SMTP funzionante creare un nuovo messaggio; poi simulare un rifiuto SMTP e un modello senza variabili valide. Verificare i due messaggi localizzati IT/EN e l'assenza di dettagli SMTP sensibili. Controllare che utenti non autorizzati non possano aprire Coda email e che gli stati esistenti non vengano alterati. Per i precedenti `sending` riconciliare come `retry` solo dopo conferma della mancata accettazione SMTP e se i tentativi sono inferiori a cinque; correggere prima la causa del fallimento.
+
 ## STAB-MAIL / blocco invii in stato «invio» — gestione errori transport (15/11/2026)
 
 Nel dispatcher `MailQueue::dispatch()`, quando il mailer Joomla falliva, la gestione del retry tentava di eseguire `DatabaseQuery::bind(':error', <espressione ternaria>)`. Poiché Joomla passa il parametro per riferimento, la chiamata poteva generare un errore PHP **prima del salvataggio dello stato**. Il record rimaneva così `sending`, mentre il task poteva risultare fallito: lo stato non dimostrava l'accettazione SMTP. Il valore diagnostico sanitizzato viene ora assegnato prima a una variabile `$safeError` e poi collegato alla query per riferimento. Nessun messaggio SMTP, indirizzo o dettaglio del server viene conservato nell'errore pubblico.

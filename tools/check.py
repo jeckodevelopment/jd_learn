@@ -43,6 +43,19 @@ assert "throw new \\RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404)" in ad
 assert (ROOT/'component/administrator/src/View/Coursemessage/HtmlView.php').is_file()
 assert (ROOT/'component/administrator/src/Model/CoursemessageModel.php').is_file()
 assert (ROOT/'component/administrator/tmpl/coursemessage/default.php').is_file()
+# Failed mail diagnostic display is restricted to known categories and ACL-protected audit.
+audit_mail=(ROOT/'component/administrator/src/Application/MailQueueAuditService.php').read_text()
+mail_queue_page=(ROOT/'component/administrator/tmpl/mailqueue/default.php').read_text()
+assert "'q.created_at', 'q.last_error'" in audit_mail
+assert "match ((string) ($row->last_error ?? ''))" in audit_mail
+assert "unset($row->recipient_email, $row->last_error);" in audit_mail
+assert "COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE" in audit_mail
+assert "COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TRANSPORT" in audit_mail
+assert "$this->escape(Text::_($row->diagnostic_key))" in mail_queue_page
+for locale in ('it-IT', 'en-GB'):
+    definitions=(ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
+    for key in ('COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE', 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TRANSPORT'):
+        assert key+'=' in definitions, (locale,key)
 # Regression #419: Joomla DatabaseQuery::bind() accepts values by reference.
 # Passing a cast expression makes 'Accoda invio' fail with HTTP 500 before INSERT.
 communication_source=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()

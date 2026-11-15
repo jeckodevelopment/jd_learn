@@ -60,7 +60,7 @@ final class MailQueueAuditService
         $query = $this->db->createQuery()->select([
             'q.id', 'q.template_id', 'q.course_id', 'c.title AS course_title', 'q.recipient_email',
             'q.state', 'q.attempts', 'q.available_at', 'q.claimed_at', 'q.sent_at',
-            'q.created_at', 'q.reconciliation_action', 'q.reconciliation_by', 'q.reconciliation_at',
+            'q.created_at', 'q.last_error', 'q.reconciliation_action', 'q.reconciliation_by', 'q.reconciliation_at',
             'q.reconciliation_note',
             '(CASE WHEN q.state = ' . $this->db->quote('sending') . ' AND q.claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' . self::STALE_MINUTES . ' MINUTE) THEN 1 ELSE 0 END) AS is_stale_sending',
         ])->from('#__jlms_mail_queue AS q')->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
@@ -69,7 +69,14 @@ final class MailQueueAuditService
         $rows = $this->db->setQuery($query->order('q.created_at DESC, q.id DESC'), $start, $limit)->loadObjectList();
         foreach ($rows as $row) {
             $row->recipient_masked = self::maskEmail((string) $row->recipient_email);
-            unset($row->recipient_email);
+            // Only show a finite diagnostic category. Never render stored exception
+            // text or legacy SMTP responses (which may contain addresses or secrets).
+            $row->diagnostic_key = match ((string) ($row->last_error ?? '')) {
+                'Mail template is missing or contains unavailable placeholders.' => 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE',
+                'Delivery failed; transport details are withheld.' => 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TRANSPORT',
+                default => null,
+            };
+            unset($row->recipient_email, $row->last_error);
         }
 
         return ['rows' => $rows, 'total' => $total, 'start' => $start, 'limit' => $limit,
