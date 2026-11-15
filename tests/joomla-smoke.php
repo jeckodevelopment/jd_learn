@@ -320,9 +320,9 @@ if (($argv[2] ?? '') === 'retained') {
     exit(0);
 }
 
-$lessonTemplate = \\Joomla\\CMS\\Mail\\MailTemplate::getTemplate('com_jlms.lesson.available', '*');
+$lessonTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.lesson.available', '*');
 if (!$lessonTemplate || !str_contains((string) $lessonTemplate->subject, '{LESSON_TITLE}')) {
-    throw new \\RuntimeException('Lesson release Mail Template not registered in Joomla.');
+    throw new \RuntimeException('Lesson release Mail Template not registered in Joomla.');
 }
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request'=>true]);
 if (!$categoryModel->save(['id'=>0,'parent_id'=>1,'extension'=>'com_jlms.course','title'=>'CI Courses','alias'=>'ci-courses','published'=>1,'language'=>'*','access'=>1])) {
