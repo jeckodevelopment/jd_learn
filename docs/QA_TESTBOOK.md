@@ -1425,7 +1425,7 @@ Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 
 5. Accertare che la trascrizione non cambi soglia, durata, progresso, ripresa, consenso, richieste al provider o completamento del video.
 
 
-## MAIL-E — variabili di contesto email corso/lezione/docente (PR in corso)
+## MAIL-E — variabili di contesto email corso/lezione/docente (PR #464 integrata; accettazione pendente)
 
 1. Aggiornare un sito Joomla 6 con template JD Learn già personalizzati. In **Sistema → Modelli email**, verificare che i tag canonici siano aggiunti ai modelli `com_jlms.lesson.available`, `com_jlms.teacher.assigned` e `com_jlms.course.published`, mentre oggetto, testo, HTML, mittente e opzioni personalizzate restano invariati.
 2. Configurare per un corso descrizione, durata stimata e inizio calendario; inviare un avviso di lezione e un annuncio opt-in. Verificare che descrizione e durata coincidano con il corso, la data sia UTC e che i valori mancanti siano vuoti senza token letterali. Controllare rendering HTML e testo semplice in italiano e inglese.
