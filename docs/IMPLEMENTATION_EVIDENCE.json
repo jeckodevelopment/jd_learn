@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-15",
     "percent": 79,
-    "basis": "PR #407 integrata: sidebar a cinque voci, focus secondario e icona Dipendenze categorie (#394). Intervento UX senza incremento di macro-requisito. Globale (81+81+78+99+68+92+70+70+75)/9 = 79,33% (79% arrotondato); CI 4/4 verde, accettazione manuale Joomla pendente.",
+    "basis": "MAIL-H PR #410 integrated: Joomla HTML escaping applied to raw tokens, while preescaped HTML and sanitized fragments retain their presentation. Fix/hardening only, no requirement coverage increase. Global (81+81+78+99+68+92+70+70+75)/9 = 79,33% (rounded 79%); email 70%. CI green, Joomla/SMTP manual acceptance pending.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -17,13 +17,13 @@
       "certificates": 75
     }
   },
-  "version": "0.57.6-dev",
-  "code_baseline": "d51b2b6645ea863ec2ba6b17af1254ad4861a0ee",
+  "version": "0.57.7-dev",
+  "code_baseline": "56b63e6a350ecd6939bd6a2028fe1bebd38b894c",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43718158974,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43718158974",
+    "run_id": 43719744721,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43719744721",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,15 +51,16 @@
     ]
   },
   "package": {
-    "artifact_id": 14163322587,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43718158974/artifacts/14163322587",
-    "artifact_name": "JD-Learn-0.57.6-dev",
-    "installable_package": "pkg_jlms-0.57.6-dev.zip",
-    "artifact_size_bytes": 676234,
+    "artifact_id": 14164051853,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43719744721/artifacts/14164051853",
+    "artifact_name": "JD-Learn-0.57.7-dev",
+    "installable_package": "pkg_jlms-0.57.7-dev.zip",
+    "artifact_sha256": "54caeed0c54e25271f3e66bb27b2f05cd62ac701d14296781b3a0dc0705f3f41",
+    "artifact_size_bytes": 676441,
     "wrapper_zip": true,
-    "notes": "Pacchetto Joomla interno verificato dalla build 43718158974; PR #407 integrata nel commit d51b2b6645ea863ec2ba6b17af1254ad4861a0ee. SHA-256 riferito allo ZIP installabile interno, non all'archivio wrapper GitHub Actions. Accettazione manuale Atum pendente.",
-    "sha256": "a04908b38860e333cc14d3635078e0fc69160fa758f7758b1d33e796ee68593e",
-    "size_bytes": 676502
+    "notes": "Verified Actions artifact and internal Joomla package (11 child archives); PR #410 merge 56b63e6a350ecd6939bd6a2028fe1bebd38b894c; CI 4/4 passed, Joomla/SMTP manual acceptance pending.",
+    "sha256": "a2c4c51e05b49006f70bc3d839942fc8b0ffcfceffff56976e00a9b972f1a5be",
+    "size_bytes": 676710
   },
   "release_process": {
     "issue": 160,
@@ -87,6 +88,38 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "version": "0.57.6-dev",
+      "ci": {
+        "run_id": 43718158974,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43718158974",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
     {
       "version": "0.57.5-dev",
       "ci": {
@@ -13631,6 +13664,14 @@
     "merge_commit": "7478ba16bc3b6986b5a5d029219bebcfd6eaa7ab",
     "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43716453457",
     "csv_ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43716453572",
+    "manual_acceptance": "pending",
+    "estimated_delta_points": 0
+  },
+  "mail_h_contextual_escaping": {
+    "pull_request": 410,
+    "merge_commit": "56b63e6a350ecd6939bd6a2028fe1bebd38b894c",
+    "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43719744721",
+    "csv_ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43719744723",
     "manual_acceptance": "pending",
     "estimated_delta_points": 0
   }
