@@ -56,6 +56,15 @@ for locale in ('it-IT', 'en-GB'):
     definitions=(ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
     for key in ('COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE', 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TRANSPORT'):
         assert key+'=' in definitions, (locale,key)
+# Template-backed course composer: the native Joomla template is the source,
+# and a per-message snapshot is checked before any future queue persistence.
+composer=(ROOT/'component/administrator/src/Application/CourseMessageTemplate.php').read_text()
+assert "MailTemplate::getTemplate(self::TEMPLATE_ID, $language)" in composer
+assert "'com_jlms.course.message'" in composer
+assert "MailTemplatePlaceholderValidator::unresolved(" in composer
+assert "InputFilter::getInstance([], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS, InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES)" in composer
+assert "COM_JLMS_COMMUNICATION_TEMPLATE_VARIABLES" in composer
+assert "MailTemplate::updateTemplate" not in composer
 # Regression #419: Joomla DatabaseQuery::bind() accepts values by reference.
 # Passing a cast expression makes 'Accoda invio' fail with HTTP 500 before INSERT.
 communication_source=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()

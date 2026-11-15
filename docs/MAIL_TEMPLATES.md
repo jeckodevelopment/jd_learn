@@ -1,3 +1,9 @@
+## Composizione da modello Joomla — fase 1 (base sicura, 1.0.0)
+
+La nuova classe `CourseMessageTemplate` carica la definizione effettiva di `com_jlms.course.message` (incluso il fallback Joomla al modello predefinito), restituisce una copia dei tre campi `subject`, `body`, `htmlbody` e ne valida contenuto e placeholder canonici senza alterare la configurazione globale. Il campo HTML viene filtrato con la funzione nativa Joomla `InputFilter`. Un modello non disponibile o una variabile sconosciuta provoca un errore controllato. Test PHPUnit/smoke sul template installato, test strutturali e matrice requisiti accompagnano la modifica.
+
+**Questa PR è la base tecnica, non cambia ancora la schermata né il dispatcher.** La successiva PR dovrà integrare l'editor HTML nativo, anteprima personalizzata e snapshot per job/recipient al momento dell'invio. Fino a quel merge, non è corretto considerare collaudato il flusso di composizione da modello; continua a valere il percorso esistente. Protezioni imprescindibili: permessi corsi, CSRF, no sovrascrittura del modello globale, no duplicati di invio, variabili canoniche, escaping e verifica in Joomla/SMTP reale.
+
 ## MAIL-H / issue #416 — leggibilità della guida variabili
 
 Nel sommario espandibile di ciascun modello email, il titolo tradotto e l'ID tecnico sono separati da un trattino lungo visibile: `Nome modello — com_jlms.nome_modello`. Gli ID dei template, i tag e i dati restano invariati. **Collaudo manuale Joomla IT/EN:** verificare la separazione dei testi in Atum su desktop/mobile, l'espansione delle schede e la leggibilità degli ID. Nessun invio SMTP coinvolto; copertura funzionale invariata.
