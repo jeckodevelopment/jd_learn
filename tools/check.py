@@ -49,10 +49,9 @@ for language in ['it-IT','en-GB']:
  for suffix in ['.ini','.sys.ini']:
   catalog=(ROOT/'component/administrator/language'/language/('com_jlms'+suffix)).read_text()
   for template_id in mail_ids:
-   key=template_id.replace('.','_').upper()
    for field in ['TITLE','DESC']:
     language_key='COM_JLMS_MAIL_'+template_id.removeprefix('com_jlms.').replace('.','_').upper()+'_'+field
-    assert len(re.findall(r'^'+re.escape(language_key)+r'="[^"]+"
+    assert catalog.count(language_key+'="')==1,(language,suffix,language_key)
 for tag,expected in {
  'it-IT':'Gestisci corsi, programma e risorse didattiche dal pannello amministrativo.',
  'en-GB':'Manage courses, the learning programme and teaching resources from the administrator panel.',
