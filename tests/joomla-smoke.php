@@ -180,6 +180,34 @@ if (str_contains($untrusted['htmlbody'], '<script')) {
 if (!str_contains($untrusted['htmlbody'], '<p>')) {
     throw new \RuntimeException('Safe HTML formatting was removed from the message.');
 }
+// Issue: a single HTML composer must accept documented recipient/course tokens
+// without requiring a second free-message field or self-referential slots.
+$singleComposer = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
+$singleComposer['subject'] = 'Aggiornamento {COURSE_TITLE}';
+$singleComposer['htmlbody'] = '<p>Ciao {USER_FULLNAME_HTML}, novità sul corso {COURSE_TITLE_HTML}.</p><p>{SITE_NAME_HTML}</p>';
+$singleComposer['body'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($singleComposer['htmlbody']);
+$checkedSingle = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($singleComposer, $sampleVars);
+if ($checkedSingle['subject'] !== 'Aggiornamento {COURSE_TITLE}'
+    || !str_contains($checkedSingle['body'], '{USER_FULLNAME_HTML}')
+    || $composerRenderer->render($checkedSingle['subject'], $sampleVars) !== 'Aggiornamento Corso') {
+    throw new \RuntimeException('Single editor rejects standard recipient/course variables.');
+}
+$dangerousPlain = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml(
+    '<p>Messaggio &amp; comunicazione</p><script>alert("bad")</script>'
+);
+if (str_contains($dangerousPlain, 'alert') || !str_contains($dangerousPlain, 'Messaggio & comunicazione')) {
+    throw new \RuntimeException('HTML-derived plain text must be safe and readable.');
+}
+try {
+    \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+        ['subject'=>'{MESSAGE_SUBJECT}', 'body'=>'Testo', 'htmlbody'=>'<p>Testo</p>'], $sampleVars
+    );
+    throw new \RuntimeException('Recursive legacy composer slot should not be accepted.');
+} catch (\RuntimeException $legacy) {
+    if ($legacy->getMessage() !== 'COM_JLMS_COMMUNICATION_TEMPLATE_LEGACY_SLOT') {
+        throw $legacy;
+    }
+}
 // Native editor changes must survive subsequent component upgrades.
 $customSubject = 'Subject edited in Joomla Mail Templates';
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__mail_templates'))
