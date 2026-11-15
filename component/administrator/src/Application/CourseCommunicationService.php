@@ -85,12 +85,16 @@ final class CourseCommunicationService
                 ->where('id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
             $courseLock->setQuery((string) $courseLock . ' FOR UPDATE');
             $this->db->setQuery($courseLock)->loadResult();
+            // Joomla DatabaseQuery::bind() receives its value by reference.
+            // A cast expression here triggers a PHP Error and prevents queueing.
+            $scopeCourseId = (string) $courseId;
+            $ownerUserId = (int) $actor->id;
             $existing = $this->db->createQuery()->select('id')->from('#__jlms_jobs')
                 ->where("kind='course_communication'")
                 ->where("JSON_UNQUOTE(JSON_EXTRACT(scope_json, '$.mutation_id')) = :mutation")
                 ->where("JSON_UNQUOTE(JSON_EXTRACT(scope_json, '$.course_id')) = :scopeCourse")
                 ->where('owner_user_id = :owner')
-                ->bind(':mutation',$mutationId)->bind(':scopeCourse',(string)$courseId)->bind(':owner',(int)$actor->id,ParameterType::INTEGER);
+                ->bind(':mutation', $mutationId)->bind(':scopeCourse', $scopeCourseId)->bind(':owner', $ownerUserId, ParameterType::INTEGER);
             $jobId = (int) $this->db->setQuery($existing)->loadResult();
             if (!$jobId) {
                 $now = gmdate('Y-m-d H:i:s');
