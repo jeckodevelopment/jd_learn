@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Comunicazioni agli iscritti: normalizzazione dei segnaposto storici dei modelli Joomla nella copia locale. Il 422 indica i segnaposto da correggere.
+
 - MAIL-H / SEC-P1: la coda email passa a Joomla `addUnsafeTags()` soltanto i valori grezzi di tipo testo, data o URL. I token `*_HTML` già escapati e i frammenti HTML sanitizzati vengono preservati senza doppio escaping. Ciò migliora la resa dei template HTML personalizzati senza rinunciare alla protezione del testo non affidabile; invariati ID, modelli, placeholder, ACL e flusso SMTP.
 - Verifica diretta del rendering `MailTemplate::replaceTags` in Joomla, test di classificazione token e guardia strutturale contro il precedente escaping indiscriminato. Accettazione manuale Joomla/SMTP ancora da eseguire.
 

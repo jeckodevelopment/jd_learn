@@ -188,9 +188,55 @@ $singleComposer['htmlbody'] = '<p>Ciao {USER_FULLNAME_HTML}, novità sul corso {
 $singleComposer['body'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($singleComposer['htmlbody']);
 $checkedSingle = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($singleComposer, $sampleVars);
 if ($checkedSingle['subject'] !== 'Aggiornamento {COURSE_TITLE}'
-    || !str_contains($checkedSingle['body'], '{USER_FULLNAME_HTML}')
+    || !str_contains($checkedSingle['body'], '{USER_FULLNAME}')
     || $composerRenderer->render($checkedSingle['subject'], $sampleVars) !== 'Aggiornamento Corso') {
     throw new \RuntimeException('Single editor rejects standard recipient/course variables.');
+}
+// Upgrades synchronize the Joomla tag list but preserve the old content.
+$legacyMessage = (object) [
+    'template_id' => 'com_jlms.course.message',
+    'language' => '',
+    'subject' => '[Aggiornamento] {COURSE}: {MESSAGE_SUBJECT}',
+    'body' => "{NAME} — {MESSAGE_BODY_TEXT} — {SITENAME}",
+    'htmlbody' => '<p>Ciao {NAME_HTML}, {COURSE_HTML} — {MESSAGE_BODY_HTML}</p><p>{SITENAME_HTML}</p>',
+];
+$messageTemplate = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::class;
+try {
+    $db->updateObject('#__mail_templates', $legacyMessage, ['template_id', 'language']);
+    $legacyComposition = $messageTemplate::forComposition('it-IT');
+    $legacyComposition['body'] = $messageTemplate::plainTextFromHtml($legacyComposition['htmlbody']);
+    $snapshot = $messageTemplate::validate($legacyComposition, $sampleVars);
+    $renderedSubject = $composerRenderer->render($snapshot['subject'], $sampleVars);
+    $escapedSample = [
+        'USER_FULLNAME' => 'Test & Figli',
+        'USER_FULLNAME_HTML' => 'Test &amp; Figli',
+    ] + $sampleVars;
+    $renderedBody = $composerRenderer->render($snapshot['body'], $escapedSample);
+    $renderedHtml = $composerRenderer->render($snapshot['htmlbody'], $escapedSample, true);
+    if (!str_starts_with($renderedSubject, '[Aggiornamento] Corso: ')
+        || !str_starts_with($renderedBody, 'Ciao Test & Figli, Corso')
+        || !str_contains($renderedHtml, 'Ciao Test &amp; Figli, Corso')
+        || !str_ends_with($renderedHtml, '<p>Sito</p>')
+        || preg_match('/\{[A-Z][A-Z0-9_]*\}/', $renderedSubject . $renderedBody . $renderedHtml)
+        || $messageTemplate::load('*')['htmlbody'] !== $legacyMessage->htmlbody) {
+        throw new \RuntimeException('The upgraded Joomla model must render canonically without changing its saved content.');
+    }
+    $expectedTags = array_diff(array_keys($sampleVars), ['MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML']);
+    if (array_diff($expectedTags, $messageTemplate::tags()) || array_diff($messageTemplate::tags(), $expectedTags)) {
+        throw new \RuntimeException('Composer placeholder help must match the recipient data.');
+    }
+    $legacyComposition['subject'] .= ' {COURSE_URL} {UNKNOWN_TAG}';
+    try {
+        $messageTemplate::validate($legacyComposition, $sampleVars + ['COURSE_URL' => 'https://example.invalid']);
+        throw new \RuntimeException('Placeholders outside the communication catalog must fail closed.');
+    } catch (\Jlms\Component\Jlms\Administrator\Application\CourseMessageVariableException $error) {
+        if ($error->getCode() !== 422 || $error->names !== ['COURSE_URL', 'UNKNOWN_TAG']) {
+            throw $error;
+        }
+    }
+} finally {
+    $defaultMessage = (object) (['template_id' => 'com_jlms.course.message', 'language' => ''] + $templateSource);
+    $db->updateObject('#__mail_templates', $defaultMessage, ['template_id', 'language']);
 }
 $dangerousPlain = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml(
     '<p>Messaggio &amp; comunicazione</p><script>alert("bad")</script>'

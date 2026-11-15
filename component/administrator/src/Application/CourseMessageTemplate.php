@@ -6,6 +6,7 @@ namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\Mail\MailTemplate;
 use Joomla\CMS\Filter\InputFilter;
+use Joomla\CMS\Language\Text;
 use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplatePlaceholderValidator;
 use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller;
 
@@ -34,22 +35,27 @@ final class CourseMessageTemplate
     }
 
     /**
-     * The legacy Joomla default is a wrapper around a second free-message
-     * editor. The composer now has a single subject/body/HTML editor: replace
-     * only wrapper-specific slots in the *local copy*, preserving all recipient
-     * and course placeholders and every administrator customization.
+     * Upgrade only the editable copy. Joomla preserves the content of old
+     * rows, including localized overrides, when tag metadata is synchronized.
      *
      * @return array{subject:string,body:string,htmlbody:string}
      */
     public static function forComposition(string $language = '*'): array
     {
         $source = self::load($language);
-
-        return [
-            'subject' => str_replace('{MESSAGE_SUBJECT}', 'Comunicazione agli iscritti', $source['subject']),
-            'body' => str_replace('{MESSAGE_BODY_TEXT}', 'Scrivi qui il testo della comunicazione.', $source['body']),
-            'htmlbody' => str_replace('{MESSAGE_BODY_HTML}', '<p>Scrivi qui il testo della comunicazione.</p>', $source['htmlbody']),
+        $replacements = [
+            '{NAME}' => '{USER_FULLNAME}',
+            '{NAME_HTML}' => '{USER_FULLNAME_HTML}',
+            '{COURSE}' => '{COURSE_TITLE}',
+            '{COURSE_HTML}' => '{COURSE_TITLE_HTML}',
+            '{SITENAME}' => '{SITE_NAME}',
+            '{SITENAME_HTML}' => '{SITE_NAME_HTML}',
+            '{MESSAGE_SUBJECT}' => Text::_('COM_JLMS_COMMUNICATION_DEFAULT_SUBJECT'),
+            '{MESSAGE_BODY_TEXT}' => Text::_('COM_JLMS_COMMUNICATION_DEFAULT_BODY'),
+            '{MESSAGE_BODY_HTML}' => Text::_('COM_JLMS_COMMUNICATION_DEFAULT_BODY'),
         ];
+
+        return array_map(static fn (string $part): string => strtr($part, $replacements), $source);
     }
 
     /**
@@ -65,7 +71,12 @@ final class CourseMessageTemplate
             InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES
         )->clean($html, 'html');
         $withLines = preg_replace('~<br\s*/?>|</(?:p|div|li|h[1-6])>~i', "\n", $safe) ?? $safe;
-        return trim(html_entity_decode(strip_tags($withLines), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        $text = html_entity_decode(strip_tags($withLines), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return trim(strtr($text, [
+            '{USER_FULLNAME_HTML}' => '{USER_FULLNAME}',
+            '{COURSE_TITLE_HTML}' => '{COURSE_TITLE}',
+            '{SITE_NAME_HTML}' => '{SITE_NAME}',
+        ]));
     }
 
     /**
@@ -108,7 +119,7 @@ final class CourseMessageTemplate
             self::TEMPLATE_ID, $data, $subject, $body, $htmlbody
         );
         if ($missing !== []) {
-            throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_VARIABLES', 422);
+            throw new CourseMessageVariableException($missing);
         }
 
         return ['subject' => $subject, 'body' => $body, 'htmlbody' => $htmlbody];
@@ -117,6 +128,8 @@ final class CourseMessageTemplate
     /** @return list<string> */
     public static function tags(): array
     {
-        return MailTemplateInstaller::tagsFor(self::TEMPLATE_ID);
+        return array_values(array_diff(MailTemplateInstaller::tagsFor(self::TEMPLATE_ID), [
+            'MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML',
+        ]));
     }
 }
