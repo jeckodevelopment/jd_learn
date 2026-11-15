@@ -15,8 +15,8 @@
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 242,
-      "Parziale": 2
+      "Non eseguita": 240,
+      "Parziale": 4
     },
     "Verifica automatica": {
       "Superata": 179,
@@ -38,8 +38,8 @@
       75
     ]
   },
-  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata.",
-  "updated_at": "2026-11-14",
+  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata. Conferma utente positiva PR #421 sulle sole toolbar #406/#408; accettazione parziale UI-02 e MAIL-11, senza estensione a SMTP o requisiti completi.",
+  "updated_at": "2026-11-15",
   "imp_09_mail_c": {
     "pull_request": 313,
     "merge_commit": "53f5e032ae16da9df963e938cfb449c6c249a933",
