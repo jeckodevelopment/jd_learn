@@ -1,3 +1,12 @@
+## MAIL-H — issue #363: anteprima email nella toolbar editor corso (PR candidata, accettazione pendente)
+
+1. Aggiornare Joomla con build `0.57.5-dev`. Aprire **JD Learn → Corsi** e un corso **pubblicato** con un utente autorizzato alla modifica. La toolbar amministrativa deve mostrare **Anteprima email di annuncio**, una sola volta; il vecchio pulsante nel corpo del form non deve esserci.
+2. Fare clic sul pulsante: si apre la pagina di anteprima già esistente, con titolo corso e contenuto previsto. L'apertura è navigazione GET, senza salvataggio, email in coda o invio SMTP. Verificare il pulsante di ritorno e il comportamento di checkout.
+3. Aprire una bozza/non pubblicato: il pulsante **non** compare. Ripetere su corso in checkout da altro utente: nessun pulsante. Un utente senza permesso di modifica non può accedere all'editor né eludere i permessi dell'anteprima passando direttamente l'URL.
+4. Verificare che **Salva**, **Salva e chiudi**, **Salva e programma**, **Versioni** e **Chiudi** funzionino normalmente e che il rendering dell'editor rimanga corretto su schermi desktop e smartphone. Ripetere in amministrazione IT ed EN; verificare assenza di doppio pulsante e nessuna email al semplice caricamento.
+
+**CI automatica e collaudo manuale Joomla sono distinti**. Il fix è una regressione UX, non aumenta la copertura funzionale stimata verso 1.0.0.
+
 ## MAIL-G — nuovi avvisi ai responsabili delle richieste (PR #401, QA pendente)
 
 1. Aggiornare Joomla 6.2 alla build 0.57.4-dev. Verificare **Sistema → Modelli email**: `com_jlms.enrollment.manager_request`, titolo/descrizione IT/EN, token e conservazione delle modifiche a template esistenti.
