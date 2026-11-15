@@ -59,6 +59,27 @@ Factory::$application = $app;
 $app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
+
+$mailEscaping = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog::class;
+$renderTemplate = new \Joomla\CMS\Mail\MailTemplate('com_jlms.enrollment.manager_request', 'en-GB');
+$renderTemplate->addUnsafeTags($mailEscaping::tagsRequiringHtmlEscape('com_jlms.enrollment.manager_request'));
+$replaceTokens = new \ReflectionMethod(\Joomla\CMS\Mail\MailTemplate::class, 'replaceTags');
+$unsafeTitle = '<img src=x onerror=alert(1)>';
+$htmlTitle = htmlspecialchars($unsafeTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$rendered = $replaceTokens->invoke($renderTemplate,
+    '<p>{COURSE_TITLE}</p><p>{COURSE_TITLE_HTML}</p>',
+    ['COURSE_TITLE' => $unsafeTitle, 'COURSE_TITLE_HTML' => $htmlTitle], true);
+if ($rendered !== '<p>' . $htmlTitle . '</p><p>' . $htmlTitle . '</p>') {
+    throw new \RuntimeException('Mail template must escape raw text and avoid double-escaping prepared HTML.');
+}
+$renderFragment = new \Joomla\CMS\Mail\MailTemplate('com_jlms.course.message', 'en-GB');
+$renderFragment->addUnsafeTags($mailEscaping::tagsRequiringHtmlEscape('com_jlms.course.message'));
+$rendered = $replaceTokens->invoke($renderFragment, '<p>{MESSAGE_BODY_HTML}</p><p>{MESSAGE_BODY_TEXT}</p>',
+    ['MESSAGE_BODY_HTML' => '<strong>Allowed</strong>', 'MESSAGE_BODY_TEXT' => '<img src=x onerror=alert(1)>'], true);
+if ($rendered !== '<p><strong>Allowed</strong></p><p>' . $htmlTitle . '</p>') {
+    throw new \RuntimeException('Joomla must preserve sanitized mail HTML and escape raw body text.');
+}
+
 // Native extension installer must create the submenu once and preserve it on upgrade.
 $menuParent = (int) $db->setQuery("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND link='index.php?option=com_jlms&view=dashboard' AND parent_id=1")->loadResult();
 $menuLinks = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();

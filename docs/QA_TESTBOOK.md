@@ -1,3 +1,12 @@
+## MAIL-H — rendering template personalizzati, escaping (PR #410)
+
+1. Installare/aggiornare build `0.57.7-dev` su sito di prova Joomla 6.2. In **Sistema → Modelli email** personalizzare una variante HTML di `com_jlms.enrollment.manager_request`: usare sia `{COURSE_TITLE}` sia `{COURSE_TITLE_HTML}` in paragrafi distinti; verificare che titoli contenenti `&`, `<`, `>` e virgolette vengano mostrati una volta sola senza doppio escaping e senza markup iniettato.
+2. Verificare con `com_jlms.course.message` che `{MESSAGE_BODY_TEXT}` venga escapato in HTML e che `{MESSAGE_BODY_HTML}`, già sanitizzato dal producer, conservi il markup innocuo consentito; ripetere nel plain text e verificare che non appaiano `&amp;lt;` o tag HTML indesiderati.
+3. Verificare modello `com_jlms.course.published` con anteprima immagine e lezioni pubbliche: `{COURSE_IMAGE_HTML}`, `{COURSE_INTRO_HTML}`, `{COURSE_LESSONS_HTML}`, `{UNSUBSCRIBE_URL_HTML}` non devono essere codificati due volte. Il modello personalizzato preesistente deve restare invariato dopo upgrade.
+4. Ripetere in lingua amministrativa IT ed EN, HTML e plain text, controllando retry/outbox e assenza di regressioni su ACL e avvisi ai responsabili. Su template con placeholder inesistenti, il dispatch deve continuare a fallire senza invio o retry infinito.
+
+**Test automatici non sostituiscono l'accettazione SMTP/Joomla su sito di prova.**
+
 ## PR #407 — navigazione amministrativa essenziale e issue #394 (accettazione Joomla pendente)
 
 1. Aggiornare da 0.57.5-dev a 0.57.6-dev su Joomla 6 / Atum. Verificare la sidebar a **cinque** voci nell'ordine: Dashboard, Corsi, Percorsi formativi, Docenti, Banca domande. **Coda email** assente dalla sidebar, presente nella dashboard; nessuna voce obsoleta dopo l'aggiornamento.

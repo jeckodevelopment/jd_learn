@@ -205,7 +205,7 @@ final class MailQueue
                 $mail = new MailTemplate($templateId, $language);
                 $mail->addRecipient((string) $row->recipient_email, (string) $row->recipient_name);
                 $mail->addTemplateData($data);
-                $mail->addUnsafeTags(array_keys($data));
+                $mail->addUnsafeTags(MailTemplateVariableCatalog::tagsRequiringHtmlEscape($templateId));
                 if (!$mail->send()) {
                     throw new \RuntimeException('Joomla mail template delivery returned false.');
                 }

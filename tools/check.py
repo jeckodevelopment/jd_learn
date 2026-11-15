@@ -61,6 +61,12 @@ manager_notice=(ROOT/'component/administrator/src/Application/EnrollmentManagerN
 assert 'EnrollmentRosterService' in manager_notice and 'Access::checkGroup' in manager_notice
 assert "'com_jlms.enrollment.manager_request' => 'manager_request'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert 'managerRequestEligible($row)' in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+mail_queue_source=(ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
+mail_catalog_source=(ROOT/'component/administrator/src/Infrastructure/MailTemplateVariableCatalog.php').read_text()
+assert '$mail->addUnsafeTags(MailTemplateVariableCatalog::tagsRequiringHtmlEscape($templateId));' in mail_queue_source
+assert '$mail->addUnsafeTags(array_keys($data));' not in mail_queue_source
+assert 'tagsRequiringHtmlEscape' in mail_catalog_source
+assert "['text', 'date', 'url']" in mail_catalog_source
 assert 'mail_manager_request_enabled' in (ROOT/'component/administrator/config.xml').read_text()
 assert "'mail_manager_request'" in (ROOT/'component/administrator/src/Model/CourseModel.php').read_text()
 assert 'mail_manager_request' in (ROOT/'component/administrator/forms/course.xml').read_text()
