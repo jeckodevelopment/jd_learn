@@ -15,8 +15,8 @@
       "Fase 2": 35
     },
     "Accettazione Joomla": {
-      "Non eseguita": 240,
-      "Parziale": 4
+      "Non eseguita": 238,
+      "Parziale": 6
     },
     "Verifica automatica": {
       "Superata": 179,
@@ -38,7 +38,7 @@
       75
     ]
   },
-  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata. Conferma utente positiva PR #421 sulle sole toolbar #406/#408; accettazione parziale UI-02 e MAIL-11, senza estensione a SMTP o requisiti completi.",
+  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata. Conferma utente positiva PR #421 sulle sole toolbar #406/#408; accettazione parziale UI-02 e MAIL-11, senza estensione a SMTP o requisiti completi. Conferma manuale utente del 15/11/2026 su PR #418 (issue #411): rimossi H1 duplicati dalle viste Audit coda email, Variabili modelli email e Gestione dipendenze categorie; accettazione parziale MAIL-10 e CAT-01, senza attestare i requisiti completi.",
   "updated_at": "2026-11-15",
   "imp_09_mail_c": {
     "pull_request": 313,
