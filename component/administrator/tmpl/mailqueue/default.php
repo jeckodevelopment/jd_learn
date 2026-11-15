@@ -87,6 +87,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
      <td><?= $row->recipient_masked !== '' ? '<code>' . $this->escape($row->recipient_masked) . '</code>' : '—' ?></td>
      <td><?= Text::_($stateKeys[(string) $row->state] ?? 'COM_JLMS_MAIL_QUEUE_STATE_PENDING') ?>
       <?php if ((int) $row->is_stale_sending === 1) : ?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php endif; ?>
+      <?php if ($row->diagnostic_key !== null && in_array((string) $row->state, ['retry', 'failed'], true)) : ?>
+       <div class="small text-muted"><?= $this->escape(Text::_($row->diagnostic_key)) ?></div>
+      <?php endif; ?>
      </td>
      <td><?= (int) $row->attempts ?></td>
      <td><?= $this->escape((string) $row->created_at) ?></td>
