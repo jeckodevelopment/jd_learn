@@ -200,14 +200,15 @@ runpy.run_path(str(ROOT / 'tools/check_docs_hygiene.py'), run_name='__main__')
 manifest=(ROOT/'component/jlms.xml').read_text()
 submenu=E.fromstring(manifest).find('./administration/submenu')
 assert submenu is not None
-assert [node.attrib.get('link') for node in submenu.findall('menu')]==[
+actual_submenu_links=[node.attrib.get('link') for node in submenu.findall('menu')]
+expected_submenu_links=[
  'option=com_jlms&view=dashboard',
  'option=com_jlms&view=courses',
  'option=com_jlms&view=pathways',
  'option=com_jlms&view=teachers',
- 'option=com_jlms&view=mailqueue',
  'option=com_jlms&view=questionbank',
 ]
+assert actual_submenu_links==expected_submenu_links, {'actual': actual_submenu_links, 'expected': expected_submenu_links}
 dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
 for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES'):
  assert key in dashboard_view
@@ -217,10 +218,10 @@ for tag in ('it-IT','en-GB'):
  for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES','COM_JLMS_DASHBOARD_GROUP_CONFIGURATION'):
   assert len(re.findall(r'^'+key+r'=',messages,re.M))==1,(tag,key)
 
-# Nested Joomla administrator views must map to the component's own primary
-# menu entries and use Joomla Pathway rather than a custom breadcrumb widget.
+# Nested Joomla administrator views select native submenu entries; secondary
+# views select the component root with no operational submenu selected.
 admin_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
-for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']","'mailqueue' => ['mailqueue']"):
+for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']"):
  assert pair in admin_controller,pair
 assert '$menu->setActive((int) $item->id)' in admin_controller
 assert "$app->getPathway()" not in admin_controller
@@ -350,7 +351,6 @@ assert [node.attrib.get('link') for node in submenu.findall('menu')]==[
  'option=com_jlms&view=courses',
  'option=com_jlms&view=pathways',
  'option=com_jlms&view=teachers',
- 'option=com_jlms&view=mailqueue',
  'option=com_jlms&view=questionbank',
 ]
 dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
@@ -363,9 +363,17 @@ for tag in ('it-IT','en-GB'):
   assert len(re.findall(r'^'+key+r'=',messages,re.M))==1,(tag,key)
 
 # Nested Joomla administrator views must map to the component's own primary
-# menu entries and use Joomla Pathway rather than a custom breadcrumb widget.
+# menu entries. Secondary views select the native component root.
 admin_controller=(ROOT/'component/administrator/src/Controller/DisplayController.php').read_text()
-for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']","'mailqueue' => ['mailqueue']"):
+for pair in ("'courses' => ['courses', 'course', 'curriculum'","'pathways' => ['pathways', 'pathway']","'teachers' => ['teachers', 'teacher']","'questionbank' => ['questionbank', 'question']"):
  assert pair in admin_controller,pair
 assert '$menu->setActive((int) $item->id)' in admin_controller
 assert "$app->getPathway()" not in admin_controller
+
+# The dashboard-only email queue stays accessible but has no sidebar entry.
+assert "'COM_JLMS_MAIL_QUEUE', 'icon-envelope'" in dashboard_view
+assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder'," in dashboard_view
+assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder-tree'," not in dashboard_view
+assert "'mailqueue' => ['mailqueue']" not in admin_controller
+assert "(int) ($item->parent_id ?? 0) !== 1" in admin_controller
+assert "(int) ($item->parent_id ?? 0) === 1" in admin_controller

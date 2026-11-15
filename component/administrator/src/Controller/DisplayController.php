@@ -31,7 +31,6 @@ final class DisplayController extends BaseController
             'courses' => ['courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'courseannouncement', 'materials', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'quiz', 'quiztime', 'quizreview', 'quizextend'],
             'pathways' => ['pathways', 'pathway'],
             'teachers' => ['teachers', 'teacher'],
-            'mailqueue' => ['mailqueue'],
             'questionbank' => ['questionbank', 'question'],
         ];
 
@@ -43,10 +42,9 @@ final class DisplayController extends BaseController
             }
         }
 
-        if ($parent === null) {
-            return;
-        }
-
+        // A dashboard-only view selects the JD Learn component root, not a
+        // fictitious operational submenu item. Atum can keep JD Learn expanded
+        // while no submenu link is highlighted (the agreed UX choice A).
         $app = $this->app;
         $menu = $app->getMenu();
         foreach ($menu->getMenu() as $item) {
@@ -56,7 +54,14 @@ final class DisplayController extends BaseController
                 $query = $link;
             }
             parse_str($query, $parameters);
-            if (($parameters['option'] ?? '') !== 'com_jlms' || ($parameters['view'] ?? '') !== $parent) {
+            if (($parameters['option'] ?? '') !== 'com_jlms') {
+                continue;
+            }
+            if ($parent === null) {
+                if ((int) ($item->parent_id ?? 0) !== 1 || ($item->type ?? '') !== 'component') {
+                    continue;
+                }
+            } elseif (($parameters['view'] ?? '') !== $parent || (int) ($item->parent_id ?? 0) === 1) {
                 continue;
             }
             $menu->setActive((int) $item->id);

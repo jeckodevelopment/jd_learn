@@ -74,7 +74,7 @@ final class HtmlView extends BaseHtmlView
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_VIDEO_PLUGINS', 'icon-plug', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0');
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder-tree', 'index.php?option=com_jlms&view=categoryreassignment');
+            $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder', 'index.php?option=com_jlms&view=categoryreassignment');
         }
         if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
         $registry = new VideoProviderRegistry();

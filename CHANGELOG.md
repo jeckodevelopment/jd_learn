@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.57.6-dev
+
+- Navigazione amministrativa compatta: sidebar JD Learn a cinque voci; **Coda email** resta nella dashboard.
+- Le viste secondarie interne a JD Learn selezionano solo il nodo principale nativo del menu (scelta UX A), senza evidenziare voci operative; le viste principali mantengono il rispettivo focus.
+- Issue #394: icona **Dipendenze categorie** corretta con `icon-folder`, classe usata da Joomla; accettazione visiva Atum ancora pendente.
+- Nessuna personalizzazione del menu dei componenti nativi Joomla e nessun uso dell'API Pathway nel backend.
+
+
 ## 0.57.5-dev
 
 - MAIL-H / issue #363: spostato il pulsante **Anteprima email di annuncio** dal corpo del form del corso alla toolbar amministrativa nativa di Joomla. Navigazione soltanto per corsi pubblicati modificabili e non in checkout da altro utente; nessuna email viene accodata alla semplice apertura.
