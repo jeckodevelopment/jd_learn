@@ -63,6 +63,20 @@ Per YouTube l’aula distingue il blocco CSP dello script, il mancato caricament
 L’adapter YouTube crea l’iframe con origine del sito e API abilitate, poi attende il caricamento prima di collegare l’SDK. L’iframe usa un referrer limitato all’origine del sito.
 
 
+
+### Contratto `VideoCapabilities` (IMP-05)
+
+Le capabilities sono relative all’adapter attivo e alla sorgente validata; provider disabilitato/non configurato o sorgente con `providerKey` differente restituisce tutte le flags a `false`. La matrice indica il supporto dell’adapter, non la presenza garantita di una traccia o di una velocità nel singolo video.
+
+| Provider | posizione/durata/seek | velocità | caption | trascrizione LMS | playback a scadenza | download |
+|---|---|---|---|---|---|---|
+| YouTube | sì | sì, se player/video la espongono | sì, lingua preferita all’avvio; nessun selettore JD Learn | no | no | no |
+| Vimeo | sì | sì, se account/video la consentono | sì, tracce interrogabili quando presenti | no | no | no |
+| Cloudflare Stream | sì, se configurato | no | sì, preferenza di avvio; nessun selettore JD Learn | no | sì, token temporaneo | no |
+| HTML5 | sì, se abilitato | sì, secondo supporto browser | sì, tracce native quando presenti | no | no | no |
+
+`transcript` è `false` per tutti gli adapter: la trascrizione editoriale locale è gestita da JD Learn e non dipende dal provider. Le caption non sono generate dal componente. La velocità e le tracce restano facoltative e non modificano le regole di completamento.
+
 ## Preferenze del player (STU-05)
 
 Nel player aula la velocità è una preferenza locale del browser, conservata nel solo localStorage del sito. Il selettore compare solo quando il player e il video segnalano che una velocità diversa da 1× è disponibile. YouTube fornisce i valori per il singolo video; Vimeo viene verificato tramite il suo SDK e può non consentire la funzione secondo account/video; HTML5 usa le velocità del browser. Cloudflare Stream non espone l’impostazione nella sua API e resta senza selettore. La velocità campionata continua a essere inclusa nella telemetria per mantenere corretto il calcolo degli intervalli; la preferenza non modifica la soglia di completamento. La selezione non viene sincronizzata fra dispositivi né salvata nel profilo Joomla.
