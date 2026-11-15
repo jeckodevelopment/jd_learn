@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.57.5-dev
+
+- MAIL-H / issue #363: spostato il pulsante **Anteprima email di annuncio** dal corpo del form del corso alla toolbar amministrativa nativa di Joomla. Navigazione soltanto per corsi pubblicati modificabili e non in checkout da altro utente; nessuna email viene accodata alla semplice apertura.
+- Regressioni browser/strutturali su toolbar, unico link e assenza nel form, percorso di autorizzazione e assenza pulsante per bozze. Nessuna modifica a modello Mail Templates, SMTP, consenso o percentuale di implementazione.
+
 ## 0.57.4-dev
 
 - MAIL-G (PR #401): notifica operativa facoltativa `com_jlms.enrollment.manager_request` ai responsabili realmente autorizzati a gestire le iscrizioni del corso quando è presente una nuova richiesta ancora in attesa. Destinatari derivati da gruppi ACL Joomla e docenti assegnati, con rivalidazione individuale tramite `EnrollmentRosterService::course()` e ricontrollo prima dell'invio.
