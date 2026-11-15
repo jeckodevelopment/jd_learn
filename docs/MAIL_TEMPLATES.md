@@ -1,4 +1,4 @@
-## MAIL-H — escaping per contesto dei placeholder Joomla (candidata `0.57.7-dev`, PR #408)
+## MAIL-H — escaping per contesto dei placeholder Joomla (candidata `0.57.7-dev`, PR #410)
 
 In fase di invio, Joomla `MailTemplate::addUnsafeTags()` richiede di escapare i valori non fidati nel corpo HTML. JD Learn ora marca **solo** i token canonici di tipo `text`, `date`, `url` (es. `{USER_FULLNAME}`, `{COURSE_TITLE}`, `{DASHBOARD_URL}`). I valori già escapati `html-escaped`, `html-escaped-url` e i frammenti `html-fragment` sanitizzati a monte (es. `{USER_FULLNAME_HTML}`, `{MESSAGE_BODY_HTML}`, `{COURSE_LESSONS_HTML}`) non vengono escapati una seconda volta. Il subject e il plain text mantengono la sostituzione naturale senza HTML entities aggiuntive. I template personalizzati nel gestore Joomla non vengono riscritti.
 
