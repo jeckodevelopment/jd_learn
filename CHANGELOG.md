@@ -6,7 +6,7 @@
 
 - Issue #446/#448: azioni e ritorno al roster delle viste Comunicazione e Disponibilità corso trasferiti alla toolbar Joomla.
 
-- Lezioni audio: supporto facoltativo alle trascrizioni, conservate nella versione didattica e mostrate nell’aula solo agli iscritti autorizzati.
+- Lezioni audio e video: trascrizioni facoltative versionate, filtrate e mostrate nell’aula solo agli iscritti autorizzati.
 
 - Issue #434: le azioni di iscrizione manuale, comunicazione agli iscritti e disponibilità del corso sono disponibili nella toolbar nativa del roster.
 
