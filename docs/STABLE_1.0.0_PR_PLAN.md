@@ -26,7 +26,7 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 |---|---|---|
 | IMP-01 · IMP-02 | P0 | Verificare e completare i soli residui di editor corso, versioni, pubblicazione e programma, con persistenza e ACL corrette; nessuna duplicazione delle PR già integrate |
 | IMP-03 · IMP-04 | P1 | Preview autorizzata e fruizione didattica core con progressi/ripresa coerenti, senza effetti collaterali nella sola anteprima |
-| IMP-05 | P1 | Quattro provider video e capability contract; prove reali YouTube, Vimeo, Cloudflare, HTML5 prima del gate finale |
+| IMP-05 | P1 | Quattro provider video e capability contract; trascrizione editoriale locale in PR #456; restano tracce/caption, preferenze, dichiarazione uniforme delle capacità e prove reali YouTube, Vimeo, Cloudflare, HTML5 prima del gate finale |
 | IMP-06 | P1 | Allegati e materiali: ambiti, preview, permessi, storage/retention e cleanup |
 | IMP-07 | P1 | Catalogo/percorsi, categorie/tag Joomla, ricerca, URL, accessibilità pubblica |
 | IMP-08 | P1 | Iscrizioni e roster essenziali, filtri e ACL corso-scoped; nessuna reportistica avanzata |
