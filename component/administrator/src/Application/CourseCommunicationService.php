@@ -70,7 +70,7 @@ final class CourseCommunicationService
         $course = $this->editor($identity, $courseId)['course'];
         $data = $this->templateData('Destinatario di esempio', (string) $course->title, $subject, $body);
         $snapshot = CourseMessageTemplate::validate(
-            $template !== [] ? $template : CourseMessageTemplate::load('*'), $data
+            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
         );
         $renderer = new CourseMessageMailer();
         $rendered = [
@@ -149,7 +149,7 @@ final class CourseCommunicationService
         $course = $this->editor($actor, $courseId)['course'];
         $data = $this->templateData((string) $actor->name, (string) $course->title, $subject, $body);
         $data['__course_message_snapshot'] = CourseMessageTemplate::validate(
-            $template !== [] ? $template : CourseMessageTemplate::load('*'), $data
+            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
         );
         $key = hash('sha256', 'course-message-test:' . $courseId . ':' . $actor->id . ':' . bin2hex(random_bytes(16)));
         (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data);
