@@ -245,6 +245,23 @@ if ($guide === false || !str_contains($guide, 'MailTemplateInstaller::templateId
     || !str_contains($guide, 'jlms-mail-variable-guide')) {
     throw new RuntimeException('Standalone variable guide must use the registered catalog.');
 }
+// Issue #404: the guide shows the Joomla-localized name above its technical template ID.
+if ($guide === false || !str_contains($guide, "'JLMS_MAIL_'")
+    || !str_contains($guide, "strtoupper(str_replace(")
+    || !str_contains($guide, '$displayTitle')
+    || !str_contains($guide, '$this->escape($mailId)')) {
+    throw new RuntimeException('Mail variable guide must expose translated model titles and canonical IDs.');
+}
+foreach (['it-IT', 'en-GB'] as $locale) {
+    $language = file_get_contents(__DIR__ . '/../component/administrator/language/' . $locale . '/com_jlms.ini');
+    foreach (MailTemplateInstaller::templateIds() as $templateId) {
+        $key = 'COM_JLMS_MAIL_' . strtoupper(str_replace(['com_jlms.', '.'], ['', '_'], $templateId)) . '_TITLE';
+        if ($language === false || !str_contains($language, $key . '=')) {
+            throw new RuntimeException('Missing localized mail model title: ' . $locale . '/' . $key);
+        }
+    }
+}
+
 if ($queue === false || str_contains($queue, 'jlms-mail-variable-guide')
     || !str_contains($queue, 'MailTemplateInstaller::templateIds()')) {
     throw new RuntimeException('Mail queue must remain operational and keep the shared filter list.');
