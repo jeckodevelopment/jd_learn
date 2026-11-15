@@ -1,3 +1,7 @@
+## MAIL-H / issue #416 — leggibilità della guida variabili
+
+Nel sommario espandibile di ciascun modello email, il titolo tradotto e l'ID tecnico sono separati da un trattino lungo visibile: `Nome modello — com_jlms.nome_modello`. La modifica è solo di presentazione, lascia invariati ID, tag canonici e template. **Verifica manuale:** in Joomla/Atum italiano e inglese espandere più modelli, controllare la spaziatura del titolo su desktop e mobile e la leggibilità degli ID senza concatenazione. Non comporta nuove funzionalità mail né collaudo SMTP.
+
 ## MAIL-H / UX — titoli amministrativi non duplicati (issue #411)
 
 Nelle viste **Audit coda email** e **Variabili modelli email** il titolo pagina è gestito esclusivamente dalla toolbar nativa Joomla. Il titolo H1 duplicato nel corpo è stato eliminato, mantenendo testo di aiuto, filtri, sezioni espandibili, didascalie delle tabelle e controlli ACL. La stessa regola è applicata alla vista **Gestione dipendenze categorie**, senza alterare il titolo H2 della categoria selezionata né le azioni di ricollocazione. I controller e gli endpoint restano invariati. Verificare su Atum in italiano e inglese, con vista vuota e dati presenti, che compaia un unico titolo di pagina e che gli elementi interattivi siano intatti. I collaudi manuali Joomla restano da eseguire.
