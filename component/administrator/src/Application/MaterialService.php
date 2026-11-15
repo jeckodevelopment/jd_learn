@@ -42,7 +42,7 @@ final class MaterialService
     {
         $lesson = $this->row('lessons', $lessonId);
         if ((int) $lesson->course_version_id !== $versionId || $lesson->kind !== 'text' || (int) $lesson->preview !== 1) {
-            throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422);
+            throw new \\RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422);
         }
     }
 
@@ -169,8 +169,9 @@ final class MaterialService
     /** Public delivery is gated by catalog visibility and the selected text lesson. */
     public function publicLessonPreviewDownload(int $courseId, int $versionId, int $lessonId, int $attachmentId): array
     {
-        $published = 'published'; $now = gmdate('Y-m-d H:i:s');
-        $q = $this->db->createQuery()->select('a.*, f.status AS asset_status')->from('#__jlms_attachments AS a')
+        $published = 'published';
+        $now = gmdate('Y-m-d H:i:s');
+        $q = $this->db->createQuery()->select('a.*')->from('#__jlms_attachments AS a')
             ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->innerJoin("#__jlms_lessons AS l ON l.id = a.lesson_id AND l.course_version_id = a.course_version_id AND l.kind = 'text' AND l.preview = 1")
             ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
@@ -181,7 +182,7 @@ final class MaterialService
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
             ->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':id', $attachmentId, ParameterType::INTEGER)
             ->bind(':published', $published)->bind(':nowUp', $now)->bind(':nowDown', $now);
-        $link = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $link = $this->db->setQuery($q)->loadObject() ?: throw new \\RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $file = $this->open((int) $link->asset_id);
         $file['inline'] = in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true);
         return $file;
@@ -237,7 +238,7 @@ final class MaterialService
         $availability = MaterialAvailability::normalize($publishUp, $publishDown, CourseSchedule::read($course)['timezone']);
         if (!in_array((string) $preview, ['0', '1'], true)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
         $preview = (int) $preview;
-        if ($preview === 1 && $lessonId > 0) { $this->assertPublicPreviewTextLesson($versionId, $lessonId); }
+        if ($preview === 1 && $lessonId > 0) { throw new \RuntimeException('COM_JLMS_PREVIEW_COURSE_SCOPE_ONLY', 422); }
         if (in_array($upload['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
@@ -365,7 +366,7 @@ final class MaterialService
                 if (!is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1
                     || !is_string($description) || strlen($description) > 4096 || !in_array($state, ['0', '1'], true)
                     || !in_array($preview, ['0', '1'], true) || !ctype_digit($order) || strlen($order) > 5) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-                if ($preview === '1' && $link->lesson_id !== null) { $this->assertPublicPreviewTextLesson($versionId, (int) $link->lesson_id); }
+                if ($preview === '1' && $link->lesson_id !== null) { throw new \RuntimeException('COM_JLMS_PREVIEW_COURSE_SCOPE_ONLY', 422); }
                 $availability = array_key_exists('publish_up', $input) || array_key_exists('publish_down', $input)
                     ? MaterialAvailability::normalize($input['publish_up'] ?? $link->publish_up, $input['publish_down'] ?? $link->publish_down, CourseSchedule::read($course)['timezone'])
                     : ['publish_up' => $link->publish_up, 'publish_down' => $link->publish_down];
