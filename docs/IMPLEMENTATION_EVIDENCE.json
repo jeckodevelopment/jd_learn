@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-15",
     "percent": 79,
-    "basis": "Media delle nove macroaree invariata a 78,67% (arrotondata 79%); PR #395 MAIL-H corregge etichette dei modelli email senza completare nuovo requisito. Accettazione Joomla pendente.",
+    "basis": "Candidata MAIL-G PR #397: prima tranche notifiche lezioni programmate, email 64% → 66%. Media (81+81+78+99+68+92+70+66+75)/9 = 78,89%, arrotondata a 79%. Package e CI registrati restano quelli dell'ultima build integrata 0.57.1-dev fino a merge e verifica della nuova candidata; accettazione Joomla/SMTP pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -13,7 +13,7 @@
       "enrollment": 68,
       "joomla_integrations": 92,
       "release_preparation": 70,
-      "email_notifications": 64,
+      "email_notifications": 66,
       "certificates": 75
     }
   },
@@ -13432,5 +13432,12 @@
     "implemented": true,
     "manual_joomla_acceptance": "pending",
     "delta_global_percent_points": 0
+  },
+  "mail_g_lesson_release_candidate": {
+    "pull_request": 397,
+    "scope": "Scheduled lesson release for active enrolment on its version, default OFF, course override and deduplication, access guard before SMTP",
+    "candidate_version": "0.57.2-dev",
+    "estimate_delta_points": 0.22,
+    "manual_acceptance": "pending"
   }
 }
