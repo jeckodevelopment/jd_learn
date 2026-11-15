@@ -1383,3 +1383,12 @@ Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 
 3. Verificare che testo non affidabile venga filtrato, che HTML ammesso mantenga la struttura e che una trascrizione vuota non mostri un controllo vuoto.
 4. Cambiare il tipo di lezione da Audio ad altro e salvare: la trascrizione audio non deve essere resa né riutilizzata; una lezione audio nuova non deve ereditare il testo di un’altra lezione o versione.
 5. Aprire la lezione con un account non iscritto o non autorizzato: non devono essere esposti né il contenuto né la trascrizione. Verificare l’assenza di modifiche a progresso, ripresa audio e completamento.
+
+
+## VID-01 / VID-02 — trascrizione facoltativa delle lezioni video
+
+1. In una bozza creare o modificare una lezione Video e compilare Trascrizione della lezione video con paragrafi e markup ammesso. Salvare, riaprire e verificare che il testo sia conservato nella versione didattica.
+2. Pubblicare la versione e accedere come iscritto autorizzato: il controllo espandibile deve comparire sotto al player, con nome accessibile e traduzioni IT/EN.
+3. Verificare il filtro HTML, la trascrizione vuota senza riquadro, il cambio Video → altro tipo e l’assenza di riuso tra lezioni o versioni.
+4. Verificare l’accesso negato per account non iscritto/non autorizzato: nessuna trascrizione nel markup, nel payload aula o in endpoint separati.
+5. Accertare che la trascrizione non cambi soglia, durata, progresso, ripresa, consenso, richieste al provider o completamento del video.
