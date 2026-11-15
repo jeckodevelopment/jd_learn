@@ -4,7 +4,7 @@
   "current_implementation_estimate": {
     "as_of": "2026-11-15",
     "percent": 79,
-    "basis": "MAIL-H #363 PR #403 merged: announcement preview moved into native Joomla course editor toolbar. Bug fix only; no functional coverage increase. Global (81+81+78+99+68+92+70+70+75)/9 = 79,33% (rounded 79%); email 70%. CI 4/4 green, Joomla acceptance pending.",
+    "basis": "PR #407 integrata: sidebar a cinque voci, focus secondario e icona Dipendenze categorie (#394). Intervento UX senza incremento di macro-requisito. Globale (81+81+78+99+68+92+70+70+75)/9 = 79,33% (79% arrotondato); CI 4/4 verde, accettazione manuale Joomla pendente.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -17,13 +17,13 @@
       "certificates": 75
     }
   },
-  "version": "0.57.5-dev",
-  "code_baseline": "7478ba16bc3b6986b5a5d029219bebcfd6eaa7ab",
+  "version": "0.57.6-dev",
+  "code_baseline": "d51b2b6645ea863ec2ba6b17af1254ad4861a0ee",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43716453457,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43716453457",
+    "run_id": 43718158974,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43718158974",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,16 +51,15 @@
     ]
   },
   "package": {
-    "artifact_id": 14163021830,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43716453457/artifacts/14163021830",
-    "artifact_name": "JD-Learn-0.57.5-dev",
-    "installable_package": "pkg_jlms-0.57.5-dev.zip",
-    "artifact_sha256": "6fbfb0a6db865e9824d025ed0dc1a746e1b5c8b7bd92158159db7d50891e3e0f",
-    "artifact_size_bytes": 676117,
+    "artifact_id": 14163322587,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43718158974/artifacts/14163322587",
+    "artifact_name": "JD-Learn-0.57.6-dev",
+    "installable_package": "pkg_jlms-0.57.6-dev.zip",
+    "artifact_size_bytes": 676234,
     "wrapper_zip": true,
-    "notes": "Wrapper ZIP from GitHub Actions; inner Joomla ZIP SHA256 f8868182214af2f324ce06153d2b6d3caa1cdd28ca1c13341e6cb9ff10eb076a. PR #403 merge 7478ba16bc3b6986b5a5d029219bebcfd6eaa7ab; full CI 4/4 success; manual Joomla/SMTP acceptance pending.",
-    "sha256": "f8868182214af2f324ce06153d2b6d3caa1cdd28ca1c13341e6cb9ff10eb076a",
-    "size_bytes": 676382
+    "notes": "Pacchetto Joomla interno verificato dalla build 43718158974; PR #407 integrata nel commit d51b2b6645ea863ec2ba6b17af1254ad4861a0ee. SHA-256 riferito allo ZIP installabile interno, non all'archivio wrapper GitHub Actions. Accettazione manuale Atum pendente.",
+    "sha256": "a04908b38860e333cc14d3635078e0fc69160fa758f7758b1d33e796ee68593e",
+    "size_bytes": 676502
   },
   "release_process": {
     "issue": 160,
@@ -88,6 +87,38 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "version": "0.57.5-dev",
+      "ci": {
+        "run_id": 43716453457,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43716453457",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
     {
       "version": "0.57.4-dev",
       "ci": {
@@ -13435,19 +13466,18 @@
     }
   ],
   "latest_feature": {
-    "pull_request": 391,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/391",
-    "issue": 391,
-    "merge_commit": "e3639d8544e8a1f5bfbd3e53803e0b35c56f904e",
-    "tested_head": "e6d490110ae756e862a5a4edd85908cf13a2faa4",
-    "feature": "Corretta la traduzione del pulsante Salva & Chiudi nell'editor corso con stringhe dedicate en-GB e it-IT.",
-    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43649969902",
+    "pull_request": 407,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/407",
+    "issue": 394,
+    "merge_commit": "d51b2b6645ea863ec2ba6b17af1254ad4861a0ee",
+    "tested_head": "47c5b1c9ef8defef409c5696a4859a354dd5e97d",
+    "feature": "Sidebar a cinque voci; Coda email solo dashboard; selezione del nodo JD Learn per le viste secondarie; icona Dipendenze categorie corretta (#394).",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43718158974",
     "requirements": [
-      "AUT-01",
-      "SCR-13"
+      "UI-02"
     ],
-    "manual_acceptance": "pending Joomla 6.2 site acceptance; see docs/QA_TESTBOOK.md#issue-391--etichetta-localizzata-salva--chiudi",
-    "residual_implementation": "Bug fix only; no new functional requirement completed. Implementation estimate remains 79% (78.67% unrounded)."
+    "manual_acceptance": "pending Joomla 6 / Atum; see docs/QA_TESTBOOK.md",
+    "residual_implementation": "UX enhancement; no new macro-requirement completed. Implementation estimate remains 79.33% (79% rounded)."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
@@ -13468,7 +13498,7 @@
       "send-time consent/visibility checks and deduplicated outbox"
     ]
   },
-  "runtime_tested_head": "2a171c1a88a9a30fde4fd89eda819106b105bc0e",
+  "runtime_tested_head": "47c5b1c9ef8defef409c5696a4859a354dd5e97d",
   "imp_09_mail_d_registration": {
     "pull_request": 323,
     "merge_commit": "2d889b9e7ca78ebb8bf5965f3b8af298e4bf3e72",
