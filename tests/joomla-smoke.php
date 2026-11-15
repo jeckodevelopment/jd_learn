@@ -130,6 +130,34 @@ foreach ($mailTemplateIds as $templateId) {
         }
     }
 }
+// Course-message composition must load the actual Joomla template and validate a
+// per-send snapshot without changing the global template.
+$templateSource = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::load('*');
+if (!str_contains($templateSource['subject'], '{MESSAGE_SUBJECT}')
+    || !str_contains($templateSource['body'], '{MESSAGE_BODY_TEXT}')
+    || !str_contains($templateSource['htmlbody'], '{MESSAGE_BODY_HTML}')) {
+    throw new \RuntimeException('Course communication must preload the Joomla Mail Template.');
+}
+$sampleVars = [
+    'MESSAGE_SUBJECT' => 'Avviso', 'MESSAGE_BODY_TEXT' => 'Test', 'MESSAGE_BODY_HTML' => 'Test',
+    'USER_FULLNAME' => 'Test', 'USER_FULLNAME_HTML' => 'Test',
+    'COURSE_TITLE' => 'Corso', 'COURSE_TITLE_HTML' => 'Corso',
+    'SITE_NAME' => 'Sito', 'SITE_NAME_HTML' => 'Sito',
+];
+$checked = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($templateSource, $sampleVars);
+if ($checked['subject'] !== $templateSource['subject']) {
+    throw new \RuntimeException('Per-message template snapshot was unexpectedly changed.');
+}
+try {
+    \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+        ['subject' => '{UNSUPPORTED_TAG}', 'body' => 'Text', 'htmlbody' => '<p>Text</p>'], $sampleVars
+    );
+    throw new \RuntimeException('Unsupported mail variables must be rejected.');
+} catch (\RuntimeException $expected) {
+    if ($expected->getMessage() !== 'COM_JLMS_COMMUNICATION_TEMPLATE_VARIABLES') {
+        throw $expected;
+    }
+}
 // Native editor changes must survive subsequent component upgrades.
 $customSubject = 'Subject edited in Joomla Mail Templates';
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__mail_templates'))
