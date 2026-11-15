@@ -9,7 +9,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
-use Jlms\Component\Jlms\Administrator\Domain\AudioTranscript;
+use Jlms\Component\Jlms\Administrator\Domain\LessonTranscript;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
 use Jlms\Contracts\Video\SourceInput;
@@ -477,14 +477,14 @@ final class CurriculumService
         if (!in_array($required, ['0', '1'], true)) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
-        $audioTranscript = $kind === 'audio'
-            ? AudioTranscript::sanitizeInput($input['audio_transcript'] ?? '', $this->filterHtml)
+        $transcript = in_array($kind, ['audio', 'video'], true)
+            ? LessonTranscript::sanitizeInput($input[$kind . '_transcript'] ?? '', $this->filterHtml)
             : '';
         $fields = ['module_id' => $moduleId, 'title' => $title, 'kind' => $kind,
             'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
-            'params_json' => $kind === 'audio' ? AudioTranscript::encode($audioTranscript) : '{}',
+            'params_json' => in_array($kind, ['audio', 'video'], true) ? LessonTranscript::encode($transcript, $kind) : '{}',
             'publish_up' => null, 'publish_down' => null, 'release_after_days' => null];
         $publicPreview = $input['public_preview'] ?? '0';
         if ((!is_string($publicPreview) && !is_int($publicPreview)) || !in_array((string) $publicPreview, ['0', '1'], true)
@@ -507,7 +507,7 @@ final class CurriculumService
                 $duration = $durationProof['duration_ms']; $origin = $durationProof['origin']; $confirmed = true;
             }
             $fields['duration_ms'] = $duration;
-            $fields['params_json'] = json_encode(['video_duration_confirmed'=>$confirmed, 'video_duration_origin'=>$origin], JSON_THROW_ON_ERROR);
+            $fields['params_json'] = json_encode(['video_duration_confirmed'=>$confirmed, 'video_duration_origin'=>$origin, 'video_transcript'=>$transcript], JSON_THROW_ON_ERROR);
             if (!is_string($input['provider_key'] ?? null) || !is_string($input['source_reference'] ?? null)
                 || !is_string($input['privacy_hash'] ?? '')) {
                 throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
@@ -581,9 +581,20 @@ final class CurriculumService
                 $changedSource = $lesson->kind !== $fields['kind'] || $lesson->provider_key !== $fields['provider_key']
                     || $lesson->source_json !== $fields['source_json'] || $lesson->duration_ms != $fields['duration_ms'];
                 $fields['source_revision'] = (int) $lesson->source_revision + (int) $changedSource;
+                if ($fields['kind'] === 'video') {
+                    $params = json_decode((string) $fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
+                    if (!is_array($params)) { $params = []; }
+                    $params['video_transcript'] = $transcript;
+                    $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
+                }
                 $this->update('lessons', $lesson, $fields, $actor);
             } else {
-                if ($fields['kind'] === 'video' && $threshold !== null) { $fields['params_json'] = json_encode(['video_threshold_basis_points'=>$threshold], JSON_THROW_ON_ERROR); }
+                if ($fields['kind'] === 'video' && $threshold !== null) {
+                    $params = json_decode((string) $fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
+                    if (!is_array($params)) { $params = []; }
+                    $params['video_threshold_basis_points'] = $threshold;
+                    $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
+                }
                 $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ?? null, $input['publish_down'] ?? null, $timezone));
                 $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($input['release_after_days'] ?? null);
                 $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_lessons'))
