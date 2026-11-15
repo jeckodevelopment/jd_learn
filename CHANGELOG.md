@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- IMP-06 / PR #465: anteprima pubblica di allegati selezionati nelle lezioni testuali, subordinata alla visibilità pubblica di corso e lezione e alla selezione esplicita del singolo allegato. Accesso rivalidato per versione corrente, catalogo, disponibilità e stato del file. Matrice MAT-02/MAT-04/MAT-08 aggiornata. Merge `075af6c0426fde914a9c818e73cd18637d9fec71`; CI 4/4 superata (run 43766727095), integrità CSV superata (run 43766727134). Pacchetto installabile `pkg_jlms-0.57.7-dev.zip`, SHA-256 `29a48cbfb4b17991c93cbccccbea001d4bd58d5aa2d9495ddd1db84a70844d7d`, nell'[artefatto Actions 14181769192](https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095/artifacts/14181769192) (checksum archivio: `743a81cda8a619f1ad2ff86ff3ef37931d35abb108e1e67a458e840f04b875a4`). Collaudo manuale Joomla ancora pendente; stima globale invariata 79,33% (79% arrotondato).
+
 - Email: completato l'arricchimento dei placeholder approvati per corso, lezione e docente; saluto neutro documentato, fallback senza dati e URL lezione autenticato.
 
 - IMP-05 / PR #460: contratto capability allineato agli adapter YouTube, Vimeo, Cloudflare Stream e HTML5 e alla sorgente richiesta; test di contratto, specifica e testbook aggiornati. CI 4/4 (run 43763377315; CSV 43763377317). Pacchetto installabile `pkg_jlms-0.57.7-dev.zip`, SHA-256 `5b7f184b4da34d46de5f7378925a07006a67ab73bdca8f551243f21d26516440`, incluso nell'artefatto Actions 14181605561 (checksum del contenitore: `55548b257b6e3b21bc2108c82fe136e74ac57a8b48ce1c1230b0f090cfa450dd`). Collaudo Joomla reale pendente.

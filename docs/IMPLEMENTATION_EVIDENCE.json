@@ -18,12 +18,12 @@
     }
   },
   "version": "0.57.7-dev",
-  "code_baseline": "56b63e6a350ecd6939bd6a2028fe1bebd38b894c",
+  "code_baseline": "075af6c0426fde914a9c818e73cd18637d9fec71",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43763377315,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43763377315",
+    "run_id": 43766727095,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,16 +51,16 @@
     ]
   },
   "package": {
-    "artifact_id": 14180606835,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344/artifacts/14180606835",
+    "artifact_id": 14181769192,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095/artifacts/14181769192",
     "artifact_name": "JD-Learn-0.57.7-dev",
     "installable_package": "pkg_jlms-0.57.7-dev.zip",
-    "artifact_sha256": "94f29b3017cb56b0a896d945a80fb71fa03412e62ebe73805228642a0b6d023b",
-    "artifact_size_bytes": 688121,
+    "artifact_sha256": "743a81cda8a619f1ad2ff86ff3ef37931d35abb108e1e67a458e840f04b875a4",
+    "artifact_size_bytes": 689544,
     "wrapper_zip": true,
-    "sha256": "106addf950d16be8b7cae4340d98bcf3961326bda096e963abdfbcdfdfa327f1",
-    "size_bytes": 688399,
-    "notes": "Verified PR #457 artifact. Internal Joomla package SHA-256 verified by reproducible build in both PHP integration jobs; CI 4/4 passed. Manual Joomla/Atum acceptance pending."
+    "sha256": "29a48cbfb4b17991c93cbccccbea001d4bd58d5aa2d9495ddd1db84a70844d7d",
+    "size_bytes": 689849,
+    "notes": "Artefatto verificato della PR #465; estrarre lo ZIP interno pkg_jlms-0.57.7-dev.zip. SHA-256 e dimensione del pacchetto interno rilevati dalla build riproducibile; digest del contenitore Actions registrato separatamente. CI 4/4 superata. Collaudo manuale Joomla pendente."
   },
   "release_process": {
     "issue": 160,
@@ -13592,22 +13592,31 @@
         ]
       },
       "note": "Precedente run di verifica prima del capability contract video integrato da PR #460."
+    },
+    {
+      "feature": "Previous validated evidence retained after recording IMP-06 / PR #465",
+      "ci": {
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43763377315",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43763377315
+      }
     }
   ],
   "latest_feature": {
-    "pull_request": 457,
-    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/457",
-    "issue": 455,
-    "merge_commit": "74dab84cbe617608a8c4a24a5033ab7ab8f0e5cd",
-    "tested_head": "da734b5899144df018cd49b406d604bc73fe9a77",
-    "feature": "Iscritti: ritorno a Corsi e icona Iscrizione manuale; iscrizione manuale: ritorno agli Iscritti dello stesso corso.",
-    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344",
+    "pull_request": 465,
+    "pull_request_url": "https://github.com/jeckodevelopment/jd_learn/pull/465",
+    "merge_commit": "075af6c0426fde914a9c818e73cd18637d9fec71",
+    "tested_head": "fecb2479814cd7de28ff020952c08855431bfbd0",
+    "feature": "IMP-06: allegati selezionabili nell’anteprima pubblica di lezioni testuali, con doppia autorizzazione esplicita; accesso rivalidato sul catalogo e versione correnti.",
+    "automated_verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095",
     "requirements": [
-      "UI-02",
-      "ISC-01"
+      "MAT-02",
+      "MAT-04",
+      "MAT-08"
     ],
-    "manual_acceptance": "pending Joomla 6 / Atum; see docs/QA_TESTBOOK.md",
-    "residual_implementation": "UX navigation; no new macro-requirement completed. Estimate remains 79.33% global and 70% email."
+    "manual_acceptance": "pending Joomla 6; see docs/QA_TESTBOOK.md",
+    "residual_implementation": "Collaudo manuale Joomla ancora pendente. Stima globale invariata 79.33% (79% arrotondato); area video/materiali invariata 99%."
   },
   "imp_09_mail_d_11_2_3": {
     "pull_request": 321,
@@ -13802,5 +13811,22 @@
     "note": "Allineamento del contratto dichiarativo; VID-01/VID-02 restano parziali fino alle prove reali di caption, velocità, consenso e playback sui quattro provider.",
     "package": "pkg_jlms-0.57.7-dev.zip",
     "package_sha256": "5b7f184b4da34d46de5f7378925a07006a67ab73bdca8f551243f21d26516440"
+  },
+  "public_lesson_material_preview": {
+    "pull_request": 465,
+    "merge_commit": "075af6c0426fde914a9c818e73cd18637d9fec71",
+    "reviewed_head": "fecb2479814cd7de28ff020952c08855431bfbd0",
+    "requirements": [
+      "MAT-02",
+      "MAT-04",
+      "MAT-08"
+    ],
+    "verification": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727095",
+    "requirements_csv_validation": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766727134",
+    "artifact_id": 14181769192,
+    "installable_package": "pkg_jlms-0.57.7-dev.zip",
+    "package_sha256": "29a48cbfb4b17991c93cbccccbea001d4bd58d5aa2d9495ddd1db84a70844d7d",
+    "wrapper_sha256": "743a81cda8a619f1ad2ff86ff3ef37931d35abb108e1e67a458e840f04b875a4",
+    "manual_acceptance": "pending"
   }
 }
