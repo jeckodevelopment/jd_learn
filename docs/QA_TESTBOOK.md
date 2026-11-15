@@ -1,3 +1,14 @@
+## MAIL-G — aggiornamenti didattici significativi (PR #399, accettazione pendente)
+
+1. Installare o aggiornare la build 0.57.3-dev su Joomla 6.2; verificare in **Sistema → Modelli email** il modello `com_jlms.course.updated` e relativi titoli/descrizioni IT/EN. Assicurarsi che i modelli già personalizzati non vengano sovrascritti.
+2. Creare due versioni pubblicate con differenze materiali in lezioni, quiz, contenuti, materiali o regole. Pubblicare la nuova versione senza migrare iscritti: Scheduler non deve produrre email di aggiornamento. Ripetere solo salvataggi di bozza: nessun invio.
+3. Migrare esplicitamente un'iscrizione attiva alla nuova versione con modifica sostanziale. Con globale OFF e override Eredita: nessun invio. Con override Abilita, il task deve accodare e inviare un solo messaggio; ripetere Scheduler e conferma idempotente: zero duplicati. Con globale ON e override Disabilita: niente email.
+4. Ripetere con differenza **solo editoriale** (presentazione, titolo promozionale): nessuna notifica; poi provare cambi di programma/quiz e verificare che la modifica sia riconosciuta. Controllare che studenti non migrati non ricevano comunicazioni.
+5. Dopo l'accodamento, sospendere o completare l'iscrizione, bloccare account, disabilitare preferenza, revocare ACL/tassonomia o chiudere edizione: `skipped` e nessun SMTP; dati personali rimossi dalla riga. Verificare versioni errate, utenti con lingua IT/EN e assenza di URL a risorse private.
+6. Provare il task schedulato dopo migrazione recente, SMTP fallito/retry e finestra 48h; controllare sicurezza dei log, escaping HTML dei titoli e preservazione dei dati con upgrade della build precedente.
+
+**Accettazione manuale non eseguita.** La CI non costituisce evidenza SMTP su sito di prova.
+
 ## MAIL-G — disponibilità nuove lezioni (PR #397, accettazione pendente)
 
 1. Installare 0.57.2-dev su Joomla 6.2 e aprire **Sistema → Modelli email** in IT/EN. Verificare `com_jlms.lesson.available`, titolo, descrizione, tag canonici, subject/HTML/testo e conservazione dei template personalizzati in upgrade.
