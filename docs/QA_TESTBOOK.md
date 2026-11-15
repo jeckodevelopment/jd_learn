@@ -7,6 +7,8 @@
 
 La modifica riordina la navigazione del roster. Non cambia le operazioni né i relativi controlli ACL.
 
+**Esito utente, 15 novembre 2026:** confermata la corretta visualizzazione dei pulsanti nella toolbar. La conferma copre la presenza visiva dei pulsanti; gli altri scenari sopra restano da verificare separatamente.
+
 ## MAIL-H — rendering template personalizzati, escaping (PR #410)
 
 1. Installare/aggiornare build `0.57.7-dev` su sito di prova Joomla 6.2. In **Sistema → Modelli email** personalizzare una variante HTML di `com_jlms.enrollment.manager_request`: usare sia `{COURSE_TITLE}` sia `{COURSE_TITLE_HTML}` in paragrafi distinti; verificare che titoli contenenti `&`, `<`, `>` e virgolette vengano mostrati una volta sola senza doppio escaping e senza markup iniettato.
