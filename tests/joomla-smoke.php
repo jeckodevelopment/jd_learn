@@ -347,6 +347,12 @@ if (!$model->save($data + ['state'=>1,'asset_id'=>999999,'current_version_id'=>9
     throw new \RuntimeException('Native draft save failed: ' . $model->getError());
 }
 $id = (int) $model->getState('course.id');
+$managerNotice = new \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice($db);
+$pendingScan = $managerNotice->enqueueDue(3);
+if (($pendingScan['processed'] ?? -1) !== 0 || $pendingScan['failed'] !== 0
+    || \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice::authorized($db, $id, 0)) {
+    throw new \RuntimeException('Pending manager alerts must not send without a real pending request and authorized manager.');
+}
 $record = $model->getItem($id);
 if ($id < 1 || (int) $record->state !== 0 || $record->current_version_id !== null || (int) $record->revision !== 1) {
     throw new \RuntimeException('Draft mass assignment or initial revision invariant failed.');
