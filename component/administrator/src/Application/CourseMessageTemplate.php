@@ -53,6 +53,20 @@ final class CourseMessageTemplate
     }
 
     /**
+     * Derive the text alternative from the same edited HTML source.
+     * Filter markup first so hidden scripts never become plaintext content.
+     */
+    public static function plainTextFromHtml(string $html): string
+    {
+        $safe = (string) InputFilter::getInstance(
+            [], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS,
+            InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES
+        )->clean($html, 'html');
+        $withLines = preg_replace('~<br\s*/?>|</(?:p|div|li|h[1-6])>~i', "\n", $safe) ?? $safe;
+        return trim(html_entity_decode(strip_tags($withLines), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    }
+
+    /**
      * Validate a single-message copy without persisting or changing the Joomla template.
      * The HTML sanitizer does not trust arbitrary administrator-entered markup.
      *
