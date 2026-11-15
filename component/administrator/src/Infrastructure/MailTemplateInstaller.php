@@ -67,15 +67,15 @@ final class MailTemplateInstaller
             ],
             'com_jlms.lesson.available' => [
                 'Nuova lezione disponibile: {LESSON_TITLE}',
-                "Ciao {USER_FULLNAME},\n\nla lezione {LESSON_TITLE} del corso {COURSE_TITLE} è ora disponibile nella tua area personale.\n\n{DASHBOARD_URL}\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'LESSON_TITLE', 'LESSON_TITLE_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'DASHBOARD_URL', 'SITE_NAME', 'SITE_NAME_HTML'],
-                '<p>Ciao {USER_FULLNAME_HTML},</p><p>La lezione <strong>{LESSON_TITLE_HTML}</strong> del corso <strong>{COURSE_TITLE_HTML}</strong> è ora disponibile nella tua area personale.</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME_HTML}</p>',
+                "Ciao {USER_FULLNAME},\n\nla lezione {LESSON_TITLE} del corso {COURSE_TITLE} è ora disponibile.\n{LESSON_DESCRIPTION}\n\n{LESSON_URL}\n\n{COURSE_DESCRIPTION}\nDurata stimata: {COURSE_DURATION}\nInizio corso: {COURSE_START_DATE}\nAssistenza: {CONTACT_EMAIL}\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'LESSON_TITLE', 'LESSON_TITLE_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'LESSON_DESCRIPTION', 'LESSON_URL', 'CONTACT_EMAIL', 'DASHBOARD_URL', 'SITE_NAME', 'SITE_NAME_HTML'],
+                '<p>Ciao {USER_FULLNAME_HTML},</p><p>La lezione <strong>{LESSON_TITLE_HTML}</strong> del corso <strong>{COURSE_TITLE_HTML}</strong> è ora disponibile.</p><p>{LESSON_DESCRIPTION}</p><p><a href="{LESSON_URL}">Apri la lezione</a></p><p>{COURSE_DESCRIPTION}</p><p>Durata stimata: {COURSE_DURATION}<br>Inizio corso: {COURSE_START_DATE}<br>Assistenza: {CONTACT_EMAIL}</p><p>{SITE_NAME_HTML}</p>',
             ],
             'com_jlms.teacher.assigned' => [
                 'Assegnazione al corso: {COURSE_TITLE}',
-                "Ciao {USER_FULLNAME},\n\nsei stato assegnato come docente al corso {COURSE_TITLE}. La gestione del corso rimane soggetta ai permessi Joomla.\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME'],
-                '<p>Ciao {USER_FULLNAME},</p><p>sei stato assegnato come docente al corso <strong>{COURSE_TITLE}</strong>. La gestione del corso rimane soggetta ai permessi Joomla.</p><p>{SITE_NAME}</p>',
+                "Ciao {USER_FULLNAME},\n\nsei stato assegnato come docente ({TEACHER_NAME}) al corso {COURSE_TITLE}. La gestione del corso rimane soggetta ai permessi Joomla.\n\nDescrizione: {COURSE_DESCRIPTION}\nDurata stimata: {COURSE_DURATION}\nInizio corso: {COURSE_START_DATE}\nAssistenza: {CONTACT_EMAIL}\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'COURSE_TITLE', 'TEACHER_NAME', 'COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'CONTACT_EMAIL', 'SITE_NAME'],
+                '<p>Ciao {USER_FULLNAME},</p><p>sei stato assegnato come docente ({TEACHER_NAME}) al corso <strong>{COURSE_TITLE}</strong>. La gestione del corso rimane soggetta ai permessi Joomla.</p><p>{COURSE_DESCRIPTION}</p><p>Durata stimata: {COURSE_DURATION}<br>Inizio corso: {COURSE_START_DATE}<br>Assistenza: {CONTACT_EMAIL}</p><p>{SITE_NAME}</p>',
             ],
             'com_jlms.enrollment.requested' => [
                 'Richiesta di iscrizione ricevuta: {COURSE_TITLE}',
@@ -146,8 +146,8 @@ final class MailTemplateInstaller
             'com_jlms.course.published' => [
                 'Nuovo corso disponibile: {COURSE_TITLE}',
                 "Ciao {USER_FULLNAME},\n\n{COURSE_INTRO_TEXT}\n\nScopri il corso: {COURSE_URL}\n\nLezioni pubbliche:\n{COURSE_LESSONS_TEXT}\n\nRicevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. Per revocare l’adesione: {UNSUBSCRIBE_URL_TEXT}\n\n{SITE_NAME}",
-                ['USER_FULLNAME', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'COURSE_IMAGE_HTML', 'COURSE_INTRO_TEXT', 'COURSE_INTRO_HTML', 'COURSE_LESSONS_TEXT', 'COURSE_LESSONS_HTML', 'COURSE_URL', 'SITE_NAME', 'SITE_NAME_HTML', 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT'],
-                '<p>Ciao {USER_FULLNAME},</p>{COURSE_IMAGE_HTML}<h2>{COURSE_TITLE_HTML}</h2><p>{COURSE_INTRO_HTML}</p>{COURSE_LESSONS_HTML}<p><a href="{COURSE_URL}">Scopri il corso</a></p><p>Ricevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. <a href="{UNSUBSCRIBE_URL_HTML}">Revoca l’adesione</a>.</p><p>{SITE_NAME_HTML}</p>',
+                ['USER_FULLNAME', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'CONTACT_EMAIL', 'COURSE_IMAGE_HTML', 'COURSE_INTRO_TEXT', 'COURSE_INTRO_HTML', 'COURSE_LESSONS_TEXT', 'COURSE_LESSONS_HTML', 'COURSE_URL', 'SITE_NAME', 'SITE_NAME_HTML', 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT'],
+                '<p>Ciao {USER_FULLNAME},</p>{COURSE_IMAGE_HTML}<h2>{COURSE_TITLE_HTML}</h2><p>{COURSE_DESCRIPTION}</p><p>{COURSE_INTRO_HTML}</p>{COURSE_LESSONS_HTML}<p>Durata stimata: {COURSE_DURATION}<br>Inizio corso: {COURSE_START_DATE}<br>Assistenza: {CONTACT_EMAIL}</p><p><a href="{COURSE_URL}">Scopri il corso</a></p><p>Ricevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. <a href="{UNSUBSCRIBE_URL_HTML}">Revoca l’adesione</a>.</p><p>{SITE_NAME_HTML}</p>',
             ],
             'com_jlms.course.consent' => [
                 'Conferma l’adesione alle novità di {SITE_NAME}',

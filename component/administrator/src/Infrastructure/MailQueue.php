@@ -53,6 +53,8 @@ final class MailQueue
             return;
         }
 
+        $data = MailTemplateContext::enrich($this->db, $courseId, $data);
+
         $now = gmdate('Y-m-d H:i:s');
         $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
             ->columns(['event_key', 'template_id', 'course_id', 'recipient_user_id', 'language', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
@@ -88,6 +90,7 @@ final class MailQueue
         if ($params === null || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled('announcement', $global, (string) $params)) {
             return false;
         }
+        $data = MailTemplateContext::enrich($this->db, $courseId, $data);
         $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
             ->columns(['event_key','template_id','course_id','recipient_user_id','recipient_consent_at','language','recipient_email','recipient_name','template_data','state','available_at','created_at'])
             ->values(implode(',', [

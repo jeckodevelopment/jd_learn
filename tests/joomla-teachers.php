@@ -114,10 +114,13 @@ $teacherNoticeCount = static function () use ($db, $course): int {
 teacherExpect($teacherNoticeCount() === 1, 'A newly assigned linked Joomla account receives exactly one teacher notice; unlinked profile receives none');
 $teacherNotice = $db->setQuery("SELECT recipient_user_id,recipient_email,template_data FROM #__jlms_mail_queue WHERE course_id="
     . $course . " AND template_id='com_jlms.teacher.assigned'")->loadObject();
+$teacherMailData = json_decode((string) $teacherNotice->template_data, true);
 teacherExpect((int) $teacherNotice->recipient_user_id === (int) $actor->id
     && (string) $teacherNotice->recipient_email === (string) $actor->email
+    && ($teacherMailData['TEACHER_NAME'] ?? '') === 'Original public teacher'
+    && ($teacherMailData['COURSE_DESCRIPTION'] ?? '') === 'Course presentation for the publication fixture.'
     && !str_contains((string) $teacherNotice->template_data, 'PRIVATE_TEACHER_BIO'),
-    'Teacher notification uses the linked Joomla identity and does not disclose unrelated teacher details');
+    'Teacher notification supplies scoped course/profile context to the linked Joomla identity without disclosing unrelated details');
 
 $directory=$factory->createModel('Teachers','Administrator',['ignore_request'=>true]);$directory->setCurrentUser($actor);
  $teacherRows=$directory->getItems();

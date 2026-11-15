@@ -19,7 +19,7 @@ La seguente tabella è il **contratto richiesto**, non un elenco di variabili gi
 | Canonical | Significato / fallback e disponibilità |
 |---|---|
 | `{USER_FULLNAME}` | Nome completo destinatario; fallback appellativo neutro; non esporre dati di terzi |
-| `{USER_FIRSTNAME}` | Nome proprio se disponibile/ricavabile in modo affidabile, altrimenti saluto neutro (non assumere che il primo token di un nome Joomla sia sempre il nome proprio) |
+| `{USER_FIRSTNAME}` | **Escluso dal catalogo**: JD Learn non ha un campo affidabile per il nome proprio. Usare un saluto neutro nel testo del modello; non derivarlo dal nome completo Joomla. |
 | `{COURSE_TITLE}` | Titolo del corso; escape per output |
 | `{COURSE_DESCRIPTION}` | Descrizione editoriale pubblicabile per l'evento; fallback vuoto o sintesi sicura |
 | `{COURSE_IMAGE_HTML}` | Frammento immagine opzionale con URL pubblico HTTPS, alt e fallback senza immagine; **non** URL privati |
@@ -28,13 +28,13 @@ La seguente tabella è il **contratto richiesto**, non un elenco di variabili gi
 | `{COURSE_START_DATE}` | Data d'inizio se configurata, altrimenti vuoto |
 | `{COURSE_ENDS_AT}` | Data/ora di scadenza per eventi pertinenti |
 | `{LESSON_TITLE}` | Titolo della lezione interessata, solo quando l'evento riguarda una lezione |
-| `{LESSON_DESCRIPTION}` | Descrizione visibile al destinatario, altrimenti vuoto |
-| `{LESSON_URL}` | Link autorizzato alla lezione, non a contenuto riservato a destinatari non ammessi |
-| `{TEACHER_NAME}` | Docente pertinente; fallback neutro, senza elenco arbitrario di persone |
+| `{LESSON_DESCRIPTION}` | Vuota finché non esiste una descrizione autonoma della lezione separata dal corpo didattico protetto |
+| `{LESSON_URL}` | Link alla vista aula autenticata, costruito per l'iscrizione e la lezione interessate |
+| `{TEACHER_NAME}` | Titolo del profilo docente assegnato al destinatario; non pubblicare elenchi arbitrari |
 | `{ENROLLMENT_DATE}` | Data effettiva dell'iscrizione, ove disponibile |
 | `{COMPLETION_DATE}` | Data del completamento effettivo, ove disponibile |
 | `{DASHBOARD_URL}` | URL assoluto area personale autenticata |
-| `{CONTACT_EMAIL}` | Contatto di supporto configurato e valido; nessun indirizzo inventato |
+| `{CONTACT_EMAIL}` | Indirizzo mittente Joomla (`mailfrom`) se valido, altrimenti vuoto; nessun indirizzo inventato |
 | `{SITE_NAME}` | Nome del sito Joomla |
 | `{CERTIFICATE_URL}` | URL alla dashboard/accesso autenticato dell'attestato; nessun link diretto pubblico a PDF privato |
 | `{COURSE_INTRO_TEXT}`, `{COURSE_INTRO_HTML}` | Introduzione sicura per annuncio; fallback descrizione pubblica |
