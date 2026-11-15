@@ -180,6 +180,10 @@ try:
  expected_shortcut_order=['courses','pathways','course_categories','pathway_categories','teachers','question_bank','certificates','mail_queue','mail_templates','dashboard_mail_variables','custom_fields','video_plugins','dashboard_category_dependencies']
  actual_shortcut_order=[identifier.removeprefix('jlms-admin-shortcut-') for identifier in dashboard_shortcuts]
  if actual_shortcut_order!=expected_shortcut_order:raise RuntimeError('Dashboard shortcuts must follow the agreed operational order: '+json.dumps(actual_shortcut_order))
+ # The icon for category dependencies must use a Joomla icon class, not a
+ # non-existent icon-folder-tree selector (#394).
+ if not re.search(r'id="jlms-admin-shortcut-dashboard_category_dependencies"[^>]*>\\s*<span class="jlms-admin-dashboard__shortcut-icon icon-folder"', html):
+  raise RuntimeError('Category dependency shortcut must render Joomla icon-folder (#394)')
  for shortcut,(option,view) in required_shortcuts.items():
   query=dashboard_shortcuts.get(shortcut)
   if not query or query.get('option')!=[option] or query.get('view')!=[view]:
