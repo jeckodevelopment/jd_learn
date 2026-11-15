@@ -26,6 +26,12 @@ use Joomla\CMS\Language\Text;
                         </li>
                     <?php endforeach; ?>
                 </ul>
+                <?php if ($groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION' && $this->mailScheduler && ($this->mailScheduler['state'] !== 'operational' && $this->mailScheduler['state'] !== 'waiting' || $this->mailScheduler['duplicates'])) : ?>
+                    <p class="small alert alert-warning mt-2 mb-0" role="status">
+                        <?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_WARNING')) ?>
+                        <a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a>
+                    </p>
+                <?php endif; ?>
             </section>
         <?php endforeach; ?>
     </nav>
