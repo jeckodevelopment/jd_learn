@@ -53,6 +53,12 @@ final class MailTemplateInstaller
     private static function definitions(): array
     {
         return [
+            'com_jlms.course.updated' => [
+                'Aggiornamento del percorso: {COURSE_TITLE}',
+                "Ciao {USER_FULLNAME},\n\nIl tuo percorso nel corso {COURSE_TITLE} è stato aggiornato a una nuova versione didattica. Trovi le lezioni attualmente disponibili nella tua area personale.\n\n{DASHBOARD_URL}\n\n{SITE_NAME}",
+                ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML', 'DASHBOARD_URL', 'SITE_NAME', 'SITE_NAME_HTML'],
+                '<p>Ciao {USER_FULLNAME_HTML},</p><p>Il tuo percorso nel corso <strong>{COURSE_TITLE_HTML}</strong> è stato aggiornato a una nuova versione didattica.</p><p>Trovi le lezioni attualmente disponibili nella tua area personale.</p><p><a href="{DASHBOARD_URL}">Apri la tua area personale</a></p><p>{SITE_NAME_HTML}</p>',
+            ],
             'com_jlms.lesson.available' => [
                 'Nuova lezione disponibile: {LESSON_TITLE}',
                 "Ciao {USER_FULLNAME},\n\nla lezione {LESSON_TITLE} del corso {COURSE_TITLE} è ora disponibile nella tua area personale.\n\n{DASHBOARD_URL}\n\n{SITE_NAME}",
