@@ -22,8 +22,8 @@
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43761830344,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344",
+    "run_id": 43763377315,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43763377315",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -13560,6 +13560,38 @@
         ]
       },
       "note": "Historical CI baseline before MAIL-G #376; manual Joomla/SMTP acceptance pending."
+    },
+    {
+      "ci": {
+        "run_id": 43761830344,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      "note": "Precedente run di verifica prima del capability contract video integrato da PR #460."
     }
   ],
   "latest_feature": {
