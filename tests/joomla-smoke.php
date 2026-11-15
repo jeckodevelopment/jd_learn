@@ -144,8 +144,14 @@ $sampleVars = [
     'COURSE_TITLE' => 'Corso', 'COURSE_TITLE_HTML' => 'Corso',
     'SITE_NAME' => 'Sito', 'SITE_NAME_HTML' => 'Sito',
 ];
-$checked = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($templateSource, $sampleVars);
-if ($checked['subject'] !== $templateSource['subject']) {
+$composerSource = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
+if (str_contains(implode(' ', $composerSource), '{MESSAGE_SUBJECT}')
+    || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_TEXT}')
+    || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_HTML}')) {
+    throw new \RuntimeException('Legacy free-message fields were not resolved for the single composer.');
+}
+$checked = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($composerSource, $sampleVars);
+if ($checked['subject'] !== $composerSource['subject']) {
     throw new \RuntimeException('Per-message template snapshot was unexpectedly changed.');
 }
 try {
@@ -165,7 +171,7 @@ if ($renderedSubject !== 'Corso: Avviso') {
     throw new \RuntimeException('Course email subject preview differs from Joomla template replacement.');
 }
 $untrusted = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
-    ['subject'=>'{COURSE_TITLE}', 'body'=>'{MESSAGE_BODY_TEXT}', 'htmlbody'=>'<p>{MESSAGE_BODY_HTML}</p><script>alert(1)</script>'],
+    ['subject'=>'{COURSE_TITLE}', 'body'=>'{COURSE_TITLE}', 'htmlbody'=>'<p>{USER_FULLNAME_HTML}</p><script>alert(1)</script>'],
     $sampleVars
 );
 if (str_contains($untrusted['htmlbody'], '<script')) {
