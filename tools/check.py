@@ -200,13 +200,15 @@ runpy.run_path(str(ROOT / 'tools/check_docs_hygiene.py'), run_name='__main__')
 manifest=(ROOT/'component/jlms.xml').read_text()
 submenu=E.fromstring(manifest).find('./administration/submenu')
 assert submenu is not None
-assert [node.attrib.get('link') for node in submenu.findall('menu')]==[
+actual_submenu_links=[node.attrib.get('link') for node in submenu.findall('menu')]
+expected_submenu_links=[
  'option=com_jlms&view=dashboard',
  'option=com_jlms&view=courses',
  'option=com_jlms&view=pathways',
  'option=com_jlms&view=teachers',
  'option=com_jlms&view=questionbank',
 ]
+assert actual_submenu_links==expected_submenu_links, {'actual': actual_submenu_links, 'expected': expected_submenu_links}
 dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
 for key in ('COM_JLMS_DASHBOARD_MAIL_VARIABLES','COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES'):
  assert key in dashboard_view
