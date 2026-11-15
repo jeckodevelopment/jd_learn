@@ -22,8 +22,8 @@
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43761830344,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344",
+    "run_id": 43763377315,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43763377315",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -13560,6 +13560,38 @@
         ]
       },
       "note": "Historical CI baseline before MAIL-G #376; manual Joomla/SMTP acceptance pending."
+    },
+    {
+      "ci": {
+        "run_id": 43761830344,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43761830344",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      "note": "Precedente run di verifica prima del capability contract video integrato da PR #460."
     }
   ],
   "latest_feature": {
@@ -13750,5 +13782,23 @@
     "status": "passed",
     "scope": "Complete user-confirmed test of the PR checklist: toolbar icons and navigation, correct course destination, no duplicate body links, ACL/direct URL, IT/EN, desktop/mobile and manual enrollment flow. Does not constitute full UI-02 or ISC-01 requirement acceptance.",
     "testbook": "docs/QA_TESTBOOK.md"
+  },
+  "video_provider_capability_contract": {
+    "pull_request": 460,
+    "requirement_ids": [
+      "VID-01",
+      "VID-02"
+    ],
+    "summary": "Allineate le capabilities dei quattro provider al supporto dell'adapter, configurazione attiva e providerKey della sorgente; caption support rappresenta capacità adapter e non presenza garantita della traccia.",
+    "merged": true,
+    "merge_commit": "66bdae8050430393344245baf2d7ebc78d057a2e",
+    "ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43763377315",
+    "csv_ci_run": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43763377317",
+    "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43763377315/artifacts/14181605561",
+    "artifact_sha256": "55548b257b6e3b21bc2108c82fe136e74ac57a8b48ce1c1230b0f090cfa450dd",
+    "manual_acceptance": "pending",
+    "implementation_estimate_delta_points": 0,
+    "implementation_estimate_after": 79.33,
+    "note": "Allineamento del contratto dichiarativo; VID-01/VID-02 restano parziali fino alle prove reali di caption, velocità, consenso e playback sui quattro provider."
   }
 }
