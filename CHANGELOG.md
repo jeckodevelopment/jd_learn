@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- IMP-05 / PR #460: contratto capability allineato agli adapter YouTube, Vimeo, Cloudflare Stream e HTML5 e alla sorgente richiesta; test di contratto, specifica e testbook aggiornati. CI 4/4 (run 43763377315; CSV 43763377317). Pacchetto `JD-Learn-0.57.7-dev.zip`, SHA-256 `55548b257b6e3b21bc2108c82fe136e74ac57a8b48ce1c1230b0f090cfa450dd`, artefatto Actions 14181605561. Collaudo Joomla reale pendente.
+
 - Issue #455 / PR #457: toolbar e ritorni tra Corsi, Iscritti e Iscrizione manuale completati; link duplicati rimossi. Collaudo utente completo riuscito il 15/11/2026. CI superata; pacchetto installabile `pkg_jlms-0.57.7-dev.zip` nell'artefatto Actions 14180606835.
 
 - Toolbar: etichette brevi in italiano e inglese per tornare agli iscritti e gestire la disponibilità del corso.
