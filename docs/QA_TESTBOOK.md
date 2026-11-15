@@ -18,7 +18,7 @@
 4. Verificare il corso/ID mantenuto nei percorsi, l'accesso da ruoli autorizzati e il diniego ACL agli altri; ripetere in italiano/inglese e su desktop/mobile.
 5. Verificare anteprima, applicazione iscrizione manuale, ricevuta e filtri/paginazione del roster non modificati. Provare apertura diretta e uso della navigazione nativa Atum.
 
-**Collaudo Joomla/Atum di questa issue: da eseguire.**
+**Esito utente, 15 novembre 2026:** collaudo completo della issue #455 e della PR #457 riuscito. Confermati i ritorni dalla toolbar, l'icona Iscrizione manuale, la rimozione dei link duplicati, le destinazioni e il corso mantenuto, ACL e accesso diretto, IT/EN, desktop/mobile e il normale flusso di iscrizione manuale. La conferma vale per gli scenari della issue; non chiude l'intero requisito UI-02 o ISC-01.
 
 ## Issue #434 — azioni della vista iscritti nella toolbar
 
