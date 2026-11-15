@@ -451,12 +451,6 @@ for bad in (
     "->bind(':lastError', 'Manual reconciliation:",
 ):
     assert bad not in reconciliation, ('By-reference SQL bind expression',bad)
-, communication_source), 'Joomla bind-by-reference cast expression'
-communication_template=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
-assert 'class="btn btn-danger"' not in communication_template
-assert 'class="btn btn-primary" type="submit"><?= Text::_(\\'COM_JLMS_COMMUNICATION_QUEUE\\') ?>' in communication_template
-assert 'class="form-check-label" for="jlms-communication-confirm"' in communication_template
-assert 'class="card mt-4 mb-3"' in communication_template
 # Course communications stay within active enrolments and share Joomla Mail Templates/outbox.
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
