@@ -18,7 +18,7 @@ for file in (root / "component").rglob("*.php"):
 mail_queue = (root / "component/administrator/src/Infrastructure/MailQueue.php").read_text()
 assert "$safeError = $invalidTemplate" in mail_queue
 assert "->bind(':error', $safeError)" in mail_queue
-assert not re.search(r"->bind\\(\\s*['\\\"]:error['\\\"]\\s*,\\s*\\$invalidTemplate\\s*\\?", mail_queue), "by-reference ternary in mail retry error binding"
+assert "->bind(':error', $invalidTemplate ?" not in mail_queue, "by-reference ternary in mail retry error binding"
 assert 'claimed_at = NULL' in mail_queue
 assert 'attempts < 5' in mail_queue
 assert not failures, "updateObject() requires a named mutable object, not a temporary: " + ", ".join(failures)
