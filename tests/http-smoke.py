@@ -110,6 +110,8 @@ try:
  else:raise RuntimeError('Publication fixture sheet missing')
  if 'id="jlms-course-outline"' not in detail or 'Published lesson' not in detail or 'SECRET_LESSON_BODY' in detail:
   raise RuntimeError('Public sheet must show outline without protected lesson body')
+ if 'Undefined property: stdClass::$catalog_access' in detail or 'Warning:' in detail:
+  raise RuntimeError('Public course detail must render without PHP warnings about catalog access metadata')
  url,html=get('/administrator/index.php')
  page=Page(html)
  form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)

@@ -197,7 +197,9 @@ pubExpect(($unchangedCourseSnapshot['fields']['course-reference']['values'][0] ?
 pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id='.$course)->loadResult()===1,'one default edition created');
 $assoc=(new \Joomla\CMS\Workflow\Workflow('com_jlms.course',$app,$db))->getAssociation($course);
 pubExpect((bool)$assoc,'native workflow association exists');
-pubExpect((int)$catalog->course($guest,'en-GB',$course)->id===$course,'published promotional course available without content level');
+$publicCourse = $catalog->course($guest,'en-GB',$course);
+pubExpect((int)$publicCourse->id===$course,'published promotional course available without content level');
+pubExpect(property_exists($publicCourse, 'catalog_access') && (int)$publicCourse->catalog_access === 1, 'public course projection includes the catalog access level used by SEO metadata');
 $previewCounts = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.$course)->loadResult();
 $previewAttemptCounts = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts')->loadResult();
 $publicPreview = $catalog->publicLessonPreview($guest,'en-GB',$course,$lesson);
