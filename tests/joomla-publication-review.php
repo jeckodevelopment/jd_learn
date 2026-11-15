@@ -136,4 +136,9 @@ $expect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE
     &&$db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id='.$current)->loadResult()==='published'
     &&$db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id='.$draft)->loadResult()==='published',
     'approved update activates new version and preserves the assigned version history');
+$changeDetector = new \Jlms\Component\Jlms\Administrator\Application\PublicationImpact($db);
+$expect(!$changeDetector->significantVersionChange($current, $current),
+    'same published teaching version never generates a material-update notice');
+$expect($changeDetector->significantVersionChange($current, $draft),
+    'changed lessons in a published successor version count as a significant teaching update');
 echo json_encode(['publication_review_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;
