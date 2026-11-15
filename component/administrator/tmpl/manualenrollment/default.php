@@ -26,5 +26,4 @@ HTMLHelper::_('behavior.formvalidator'); $i = $this->item;
   </form><?php endif; ?>
   <?php if ($v['receipt']) : $h = $v['receipt']; ?><section id="jlms-manual-receipt"><h3><?= Text::_('COM_JLMS_MANUAL_RECEIPT') ?> #<?= (int) $h->id ?></h3><p><?= $this->escape($h->reason) ?> · <?= (int) $h->actor_user_id ?> · <?= $this->escape($h->created_at) ?> UTC</p></section><?php endif; ?>
  </section><?php endif; ?>
- <a id="jlms-manual-roster" href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id='.(int) $i['course']->id) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a>
 </section>

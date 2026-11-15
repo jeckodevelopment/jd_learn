@@ -8,6 +8,18 @@
 
 **Esito utente, 15 novembre 2026:** confermato che il ritorno al roster e le azioni toolbar delle issue #446/#448 funzionano. Collaudata la funzionalità. La richiesta cosmetica successiva accorcia le etichette in una PR distinta.
 
+**Esito PR #452, 15 novembre 2026:** l'utente conferma che i pulsanti con etichette ridotte si vedono correttamente. La conferma riguarda la sola resa riferita; gli altri scenari della checklist restano aperti.
+
+## Issue #455 — ritorno tra Corsi, iscritti e iscrizione manuale
+
+1. Aggiornare JD Learn su Joomla 6/Atum e aprire il roster di un corso: il primo pulsante toolbar deve tornare a **Corsi** con icona indietro. **Iscrizione manuale** deve mostrare l'icona plus.
+2. Aprire **Iscrizione manuale**: il primo pulsante toolbar deve riportare a **Iscritti** dello stesso corso, con icona indietro.
+3. Verificare che nel corpo di entrambe le viste non compaiano i vecchi link di ritorno duplicati.
+4. Verificare il corso/ID mantenuto nei percorsi, l'accesso da ruoli autorizzati e il diniego ACL agli altri; ripetere in italiano/inglese e su desktop/mobile.
+5. Verificare anteprima, applicazione iscrizione manuale, ricevuta e filtri/paginazione del roster non modificati. Provare apertura diretta e uso della navigazione nativa Atum.
+
+**Collaudo Joomla/Atum di questa issue: da eseguire.**
+
 ## Issue #434 — azioni della vista iscritti nella toolbar
 
 1. Aggiornare JD Learn su Joomla 6/Atum e aprire il roster di un corso con un account autorizzato. Verificare che **Iscrizione manuale**, **Comunica agli iscritti** e **Disponibilità del corso** compaiano una sola volta nella toolbar Joomla e non nel corpo della pagina.

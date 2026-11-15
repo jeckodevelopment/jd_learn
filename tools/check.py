@@ -49,6 +49,17 @@ roster_template=(ROOT/'component/administrator/tmpl/enrollments/default.php').re
 for action in ('manualenrollment', 'coursemessage', 'courseoperations'):
  assert f'view={action}' in roster_view, ('Missing roster toolbar action', action)
  assert f'view={action}' not in roster_template, ('Roster action duplicated in page body', action)
+# Issue #455: keep navigation in the first toolbar slot on both enrollment
+# views, retain the course context, and avoid duplicate body links.
+assert roster_view.index('view=courses') < roster_view.index('view=manualenrollment')
+assert "'COM_JLMS_COURSES', 'arrow-left'" in roster_view
+assert "'COM_JLMS_MANUAL_TITLE', 'plus'" in roster_view
+manual_view=(ROOT/'component/administrator/src/View/Manualenrollment/HtmlView.php').read_text()
+manual_template=(ROOT/'component/administrator/tmpl/manualenrollment/default.php').read_text()
+assert "view=enrollments&id=' . (int) $this->item['course']->id" in manual_view
+assert "'COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT', 'arrow-left'" in manual_view
+assert 'jlms-manual-roster' not in manual_template
+assert 'view=enrollments' not in manual_template
 assert '<h2>' in (ROOT/'component/administrator/tmpl/categoryreassignment/default.php').read_text()
 # Issue #416: translated model titles and IDs require a visible separator.
 mail_variable_guide=(ROOT/'component/administrator/tmpl/mailvariables/default.php').read_text()
