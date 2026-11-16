@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-10 (seconda tranche): inventariati ID e classi CSS, dipendenze JS frontend e registrazioni Web Asset Manager; nuovo gate CI per verificare la corrispondenza fra hook e layout PHP. Nessuna modifica al comportamento applicativo; collaudo Joomla pendente.
+
 - FE-10 (prima tranche): aggiunto hook CSS pubblico `jlms-card` sulle schede frontend esistenti (corsi, percorsi, categorie, area personale), con regole scoped e controllo strutturale. ID, classi preesistenti, ACL e comportamento JS invariati; collaudo Joomla da eseguire.
 
 ## 0.57.7-dev
