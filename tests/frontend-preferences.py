@@ -20,7 +20,7 @@ assert "useStyle('com_jlms.site')" in view
 assert "dashboard/_preferences.php" in page and "_preferences.php" in dashboard
 assert "view=preferences" in dashboard and "view=mycourses" in page
 assert "mailconsent.request" in shared and "mailconsent.revoke" in shared
-assert "form.token" in shared and "name=\\"consent\\"" in shared
+assert "form.token" in shared and 'name="consent"' in shared
 assert "=== 'confirmed'" in shared and "=== 'pending'" in shared
 assert "RouterViewConfiguration('preferences')" in router
 assert "'preferences', 'lessonpreview'" in controller and "'preferences', 'classroom'" in controller
