@@ -23,6 +23,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-01 — Prima tranche in sviluppo:** catalogo corsi a tre/due/una colonna per container, copertine e testi opzionali, ricerca/filtri attivabili per singola voce menu con ereditarietà dalle opzioni generali, paginazione e ordinamento iniziale configurabili. Menu IT/EN e contratto CSS da verificare su Joomla; opzioni di categoria specifiche e rifiniture dei metadati estesi rimangono interventi successivi. Collegare la PR runtime ai requisiti CAT-01/UI-02 e registrare i collaudi. Nessun avanzamento dichiarato prima della prova.
+
+
 **FE-10, seconda tranche (PR #494 integrata; CI completa 4/4 verde, accettazione Joomla pendente):** inventario tecnico di viste/override e selettori frontend realmente utilizzati, test di compatibilità statici per hook JS↔markup e Web Asset Manager, collegamenti alla guida CSS. Nessuna modifica a ACL o output applicativo. Verifica: [Actions 43873221562](https://github.com/jeckodevelopment/jd_learn/actions/runs/43873221562); artefatto installabile [JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43873221562/artifacts/14228857358), ZIP interno `pkg_jlms-0.57.7-dev.zip` SHA-256 `909c2cb38160731b91fa052ae7d4463e063ca7fe0f875fad15f603c7238d24af`. La ricognizione statica non completa il collaudo su diversi template Joomla e non abilita automaticamente FE-01; vedere [FRONTEND_CONTRACT_INVENTORY.md](FRONTEND_CONTRACT_INVENTORY.md).
 
 **Fonte funzionale:** [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md). La realizzazione è pianificata per la 1.0.0 dove indicato; il codice preesistente resta baseline, non va duplicato. Le attività FE sono **ID di lavoro**, non numeri di PR e non prove di implementazione. La modalità immersiva completa rimane valutazione successiva e non gate di rilascio.
