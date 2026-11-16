@@ -1,6 +1,6 @@
 ## P0 YouTube #532 — verifica asset e fase esatta dell'errore (seconda tranche)
 
-1. Aggiornare il pacchetto installabile a build post-fix. Aprire il backend dopo pulizia cache Joomla e verifica in finestra privata. In DevTools > Rete verificare che `video-metadata.js` e `video.js` abbiano una nuova versione nell'URL (o siano effettivamente riscaricati), senza risposte da cache obsolete; controllare anche `player.js` del plugin.
+1. Aggiornare il pacchetto installabile a build post-fix. Aprire il backend dopo pulizia cache Joomla e verifica in finestra privata. In DevTools > Rete verificare che `video-metadata.js` e `video.js` abbiano una chiave di cache aggiornata nell'URL (versione più impronta dei file) (o siano effettivamente riscaricati), senza risposte da cache obsolete; controllare anche `player.js` del plugin.
 2. Provare **Rileva di nuovo**: se errore, annotare il nuovo messaggio distinto (HTTP server 5xx, network, response, adapter, player, referrer/CSP/SDK) e il codice HTTP di `lesson.metadata` senza condividere token CSRF, cookie, sessioni, dati privati.
 3. Con risposta metadata 200, verificare che `adapter_url` sia sotto `/media/plg_jlmsvideo_youtube/js/player.js`, l'asset risponda 200 e `iframe_api`/iframe YouTube si carichino rispettando il consenso. Se l'iframe parte, verificare durata, salvataggio, pubblicazione e fruizione con account iscritto.
 4. Confermare che le politiche CSP, provider plugin/`playback_enabled` e consenso non siano state aggirate. Il fallback manuale di durata non dimostra che il video sia incorporabile.
