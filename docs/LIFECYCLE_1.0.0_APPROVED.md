@@ -37,6 +37,10 @@ La query condivisa `CatalogService::courseQuery()` richiede ora `c.state = 1` an
 
 Un corso con stato diverso da pubblicato (`state != 1`) non può attivare una migrazione di iscrizione verso una nuova versione: l'anteprima presenta un blocco e l'esecuzione ricontrolla la condizione dopo il lock transazionale. La migrazione non altera lo storico se è bloccata. I job di avviso **nuova lezione** e **modifica significativa dopo migrazione** selezionano solo corsi pubblicati; l'outbox ricontrolla lo stato al momento del dispatch così da non inviare notifiche didattiche accodate prima di un'archiviazione. Le comunicazioni amministrative e le attestazioni storiche non sono cancellate automaticamente. Restano da auditare gli altri producer e i diritti storici nel gate LCM-01/LCM-05.
 
+### LCM-01 — storico personale e percentuali dei corsi di consultazione
+
+La dashboard storica mantiene la proiezione delle iscrizioni dalla versione didattica immutabile anche quando il corso è non pubblicato (`0`), archiviato (`2`) o cestinato (`-2`). L'aula rimane indisponibile, ma titolo, stato di completamento e progresso acquisito restano nello storico. Per i corsi in modalità **consultazione** non viene mostrata alcuna percentuale: il riconoscimento del tipo di corso viene effettuato sulla versione assegnata, indipendentemente dallo stato corrente e dalla visibilità nel catalogo. Nessuna mutazione di storico o ampliamento dei permessi. Collaudo Joomla pendente; i PDF già emessi sono gestiti dal servizio attestati con controllo titolarità distinto dal catalogo.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
