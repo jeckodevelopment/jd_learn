@@ -578,7 +578,9 @@ final class LearningService
             ? \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
                 LessonTranscript::decode('video', (string) ($lesson->params_json ?? '{}')), 'HTML')
             : '';
+        $publicTeachers = TeacherProfiles::current($this->db, $actor, $language, (int) $course->id);
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
+            'teachers' => $publicTeachers,
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
                 'prerequisite_blocked' => $blocker !== null, 'schedule_blocked' => $scheduleBlocked,
                 'schedule_state' => $selectedScheduleState,
