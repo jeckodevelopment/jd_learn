@@ -7,7 +7,7 @@
 5. Eseguire upgrade del pacchetto con attestato già emesso e verificare integrità del download; ripetere con lingua IT/EN e backup/restauro, verificando database e storage privato.
 6. Provare documento revocato e account bloccato secondo regole di privacy e retention; controllare gestione errori PDF.
 
-**Prove automatiche:** integrazione Joomla su elenco/documento privato per stati `0/2/-2`, anonimo/utente estraneo e conservazione dopo upgrade. **Accettazione manuale Joomla, prove multi-lingua e restore: pendenti.**
+**Prove automatiche:** il download deve renderizzare correttamente anche un documento `pending_render` con lock SQL parametrizzato. Integrazione Joomla su elenco/documento privato per stati `0/2/-2`, anonimo/utente estraneo e conservazione dopo upgrade. **Accettazione manuale Joomla, prove multi-lingua e restore: pendenti.**
 
 ---
 
