@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metadata><layout title="COM_JLMS_MENU_CATEGORY_TITLE"><message>COM_JLMS_MENU_CATEGORY_DESC</message></layout><fields name="request"><fieldset name="request"><field name="id" type="category" extension="com_jlms.course" label="JCATEGORY" required="true" filter="integer" /></fieldset></fields></metadata>
+<metadata>
+ <layout title="COM_JLMS_MENU_CATEGORY_TITLE"><message>COM_JLMS_MENU_CATEGORY_DESC</message></layout>
+ <fields name="request">
+  <fieldset name="request"><field name="id" type="category" extension="com_jlms.course" label="JCATEGORY" required="true" filter="integer" /></fieldset>
+ </fields>
+ <fields name="params">
+  <fieldset name="basic" label="COM_JLMS_CATEGORY_MENU_SETTINGS">
+   <field name="category_show_subcategories" type="list" label="COM_JLMS_CATEGORY_SHOW_SUBCATEGORIES" description="COM_JLMS_CATEGORY_SHOW_SUBCATEGORIES_DESC" default="1" filter="integer">
+    <option value="1">JYES</option><option value="0">JNO</option>
+   </field>
+   <field name="category_show_courses" type="list" label="COM_JLMS_CATEGORY_SHOW_COURSES" description="COM_JLMS_CATEGORY_SHOW_COURSES_DESC" default="1" filter="integer">
+    <option value="1">JYES</option><option value="0">JNO</option>
+   </field>
+  </fieldset>
+ </fields>
+</metadata>
