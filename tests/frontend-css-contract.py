@@ -11,7 +11,7 @@ LAYOUTS = {
     "component/site/tmpl/courses/default.php": ('jlms-card jlms-course-card', 'jlms-course-card-'),
     "component/site/tmpl/pathways/default.php": ('jlms-card jlms-course-card', 'jlms-pathway-'),
     "component/site/tmpl/categories/default.php": ('jlms-card jlms-category-card', 'jlms-category-card-'),
-    "component/site/tmpl/dashboard/default.php": ('jlms-card jlms-my-course', 'jlms-my-course-'),
+    "component/site/tmpl/dashboard/_courses.php": ('jlms-card jlms-my-course', 'jlms-my-course-'),
 }
 for path, (classes, id_fragment) in LAYOUTS.items():
     source = (ROOT / path).read_text()
@@ -33,4 +33,5 @@ for hook in ("#jlms-classroom-outline-toggle", "#jlms-classroom-outline", "aria-
     assert hook in js, hook
 assert 'data-course-id=' in (ROOT / "component/site/tmpl/courses/default.php").read_text()
 assert 'data-enrollment-id=' in (ROOT / "component/site/tmpl/dashboard/default.php").read_text()
+assert "require __DIR__ . '/_courses.php'" in (ROOT / "component/site/tmpl/dashboard/default.php").read_text()
 print("FE-10 shared CSS hooks and existing classroom JS contract: OK")
