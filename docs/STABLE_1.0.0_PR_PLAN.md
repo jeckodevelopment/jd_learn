@@ -23,6 +23,10 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-02 — Prima tranche in corso di integrazione:** pannello di iscrizione laterale con sticky/fallback, layout in griglia per spazio del componente Joomla e programma pubblico a moduli espandibili con `details`. Il servizio pubblico non restituisce titoli delle lezioni con finestra non attiva o rilascio relativo; nessun corpo/URL didattico esposto. La PR deve mantenere i form/csrf già presenti, aggiornare CAT-02/UI-04 nella matrice, e documentare prove manuali su template e ACL. L'esito CI non equivale ad accettazione e non modifica da solo la percentuale ponderata globale.
+
+
+
 **FE-01, seconda tranche integrata (PR #498; CI 4/4 verde; collaudo Joomla pendente):** filtro per categoria pubblica con visibilità controllabile dalle opzioni generali e della singola voce menu; nessuna categoria riservata nell'elenco e nessun ampliamento di ACL tramite GET. Metadato livello ricavato dalla versione pubblicata e mostrato solo quando esiste. Verifica statica e collaudo Joomla su menu multipli, restrizioni ACL, categorie annidate e paginazione. CAT-01 e UI-02 associati alla PR #498 nella matrice CSV. Merge `f7f49579f81770b7241096ee4e50ae96b36d36c7`, [CI](https://github.com/jeckodevelopment/jd_learn/actions/runs/43881944473), [pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43881944473/artifacts/14233212517) (ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `15e769bbc0fa75f29652644039612ed3715699fa95b0a57879e791ce54481b24`). Non considerare completato FE-01 senza accettazione manuale.
 
 
