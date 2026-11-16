@@ -1,5 +1,7 @@
 # Changelog
 
+- P0 YouTube #532 (PR #539, CI e collaudo Joomla pendenti): ordinato l'avvio concorrente di `lesson.begin` e `video.playback` per stessa iscrizione/lezione per mitigare possibili conflitti DB all'apertura dell'aula. Test regressione di sequencing e isolamento fra lezioni; soglia di copertura, sessioni YouTube, consenso e ACL invariati. Persistenza dell'errore 500 e `video.save` da verificare sul sito; avanzamento 79,56% invariato.
+
 - P0 YouTube #532 (PR #537 integrata, collaudo Safari live pendente): corretto il trasporto metadata dell'editor che su Safari poteva chiamare `fetch` con il receiver `VideoMetadataEditor` anziché con contesto nativo valido; aggiunto test regressione e allineati QA e VID-02. La chiamata manuale a `lesson.metadata` rispondeva con JSON valido nonostante MIME `text/html` (verifica separata ancora aperta). Nessun bypass ACL, CSRF, consenso o policy video. Merge `eb4cafa7b0df6aeffc726522eaea50b61c0bade8`; CI 43970838888 (4/4 verde). Il player YouTube reale non è ancora accettato.
 
 - P0 YouTube #532 (PR #535 integrata, collaudo live pendente): sincronizzata la versione del registro asset WAM alla versione componente (in precedenza `0.45.0` anziché `0.57.7`), automatizzata una chiave di cache composta da versione e impronta degli asset (anche fra pacchetti con la stessa versione) e introdotte verifiche sullo ZIP installabile. L'editor distingue errori server HTTP 5xx, rete, risposta, modulo JS e player, senza esporre dettagli server. L'eventuale recupero dell'embed va verificato su Joomla reale.

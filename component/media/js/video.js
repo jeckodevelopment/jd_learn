@@ -144,6 +144,15 @@ export class VideoLesson {
     let failure = 'startup_request';
     this.message('loading');
     try {
+      // lesson.begin and video.playback both write the enrollment/progress rows.
+      // Wait for the bounded, idempotent start receipt to settle before opening
+      // the video transaction; failure remains visible in the lesson UI.
+      const receipt = globalThis.__jlmsLessonBegin;
+      if (!this.config.preview && receipt && Number(receipt.enrollment) === Number(this.config.enrollment)
+        && Number(receipt.lesson) === Number(this.config.lesson)) {
+        await receipt.settled;
+      }
+      if (generation !== this.generation || !this.allowed()) return;
       const grant = await this.request('playback', {consent: '1'});
       if (!this.allowed() || generation !== this.generation) { if (!this.config.preview && grant.session_id) await this.request('close', {session_id: grant.session_id}); return; }
       // The PHP registry validates keys; Joomla plugins provide this conventional module path.

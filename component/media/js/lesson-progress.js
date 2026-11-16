@@ -54,7 +54,9 @@ if (config && Number.isInteger(Number(config.enrollment)) && Number.isInteger(Nu
   };
 
   feedback(config.labels?.pending || '', 'saving');
-  send(0).then(result => {
+  // A video playback session writes the same enrollment/progress rows. Expose the
+  // bounded lesson-start receipt so video.js can avoid overlapping transactions.
+  const beginReceipt = send(0).then(result => {
     const row = document.querySelector(`#jlms-classroom-lesson-${Number(config.lesson)} > span`);
     if (row) row.textContent = result.data?.state === 'completed'
       ? (config.labels?.completed || '') : (config.labels?.inProgress || '');
@@ -63,4 +65,7 @@ if (config && Number.isInteger(Number(config.enrollment)) && Number.isInteger(Nu
   }).catch(() => {
     feedback(config.labels?.error || '', 'error');
   });
+  globalThis.__jlmsLessonBegin = {
+    enrollment: Number(config.enrollment), lesson: Number(config.lesson), settled: beginReceipt
+  };
 }
