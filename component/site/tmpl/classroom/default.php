@@ -8,6 +8,19 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 $item = $this->item;
 $selected = $item['lesson'];
+$orderedLessons = array_values($item['outline']);
+$previousLesson = null;
+$nextLesson = null;
+// Navigation is strictly editorial and does not mutate learning progress.
+// Adjacent locked lessons remain visible but are not linked.
+foreach ($orderedLessons as $position => $outlineLesson) {
+    if ((int) $outlineLesson->id !== (int) $selected->id) {
+        continue;
+    }
+    $previousLesson = $orderedLessons[$position - 1] ?? null;
+    $nextLesson = $orderedLessons[$position + 1] ?? null;
+    break;
+}
 $currentModule = 0;
 $selectedModule = 0;
 foreach ($item['outline'] as $entry) {
@@ -126,6 +139,29 @@ foreach ($item['outline'] as $entry) {
  </nav></section>
  <?php endforeach; ?></div>
   <?php endif; ?>
+  <nav id="jlms-lesson-navigation" class="jlms-lesson-navigation" aria-label="<?= $this->escape(Text::_('COM_JLMS_LESSON_NAVIGATION')) ?>">
+   <?php foreach (['previous' => $previousLesson, 'next' => $nextLesson] as $direction => $adjacent) : ?>
+    <div class="jlms-lesson-navigation__item jlms-lesson-navigation__item--<?= $direction ?>">
+     <?php if ($adjacent !== null) :
+       $label = Text::_($direction === 'previous' ? 'COM_JLMS_PREVIOUS_LESSON' : 'COM_JLMS_NEXT_LESSON');
+       $available = $adjacent->schedule_state === 'available' && empty($adjacent->prerequisite_blocked);
+     ?>
+      <?php if ($available) : ?>
+       <a class="jlms-lesson-navigation__link" rel="<?= $direction === 'previous' ? 'prev' : 'next' ?>" href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $adjacent->id) ?>">
+        <span class="jlms-lesson-navigation__label"><?= $this->escape($label) ?></span>
+        <span class="jlms-lesson-navigation__title"><?= $this->escape($adjacent->title) ?></span>
+       </a>
+      <?php else : ?>
+       <span class="jlms-lesson-navigation__unavailable">
+        <span class="jlms-lesson-navigation__label"><?= $this->escape($label) ?></span>
+        <span class="jlms-lesson-navigation__title"><?= $this->escape($adjacent->title) ?></span>
+        <span class="jlms-lesson-navigation__reason"><?= Text::_(!empty($adjacent->prerequisite_blocked) ? 'COM_JLMS_PREREQUISITES_INCOMPLETE' : 'COM_JLMS_LESSON_NOT_YET_AVAILABLE') ?></span>
+       </span>
+      <?php endif; ?>
+     <?php endif; ?>
+    </div>
+   <?php endforeach; ?>
+  </nav>
  </article></div>
  <a id="jlms-classroom-back" href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item['course_id']) ?>"><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></a>
 </section>
