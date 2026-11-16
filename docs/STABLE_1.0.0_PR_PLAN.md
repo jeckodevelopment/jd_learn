@@ -23,6 +23,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-06, candidata:** navigazione personale opzionale condivisa fra dashboard, mycourses, mycertificates e preferences; impostazione Sì/No per singola voce menu Joomla (default No). Rendering esclusivamente se la voce menu attiva corrisponde alla vista; link Joomla SEF e voce corrente non cliccabile con aria-current=page. Nessuna nuova sidebar globale o controllo ACL. Test automatici e collaudo Joomla distinti; percentuale di riferimento 79,56% invariata.
+
+
 **FE-05 — Quarta tranche PR #514 integrata (merge `cfad66f49620beb205cecb24425215d4030d21d3`):** la vista `dashboard` diventa **La mia formazione**, con contatori completi per non iniziati/in corso/completati ricavati da una query owner-scoped, totale attestati propri dal servizio esistente e link alle viste autonome `mycourses`, `mycertificates`, `preferences`; ultima attività riprendibile solo dopo proiezione ACL già esistente. Il dettaglio, i filtri, la paginazione e le azioni dei singoli corsi restano nella vista `mycourses`, senza duplicazione. I test HTTP storici vengono trasferiti alla vista `mycourses` mantenendo le verifiche di autorizzazione. Nessuna gamification, modifica al database o invio mutativo per GET. [CI 43928472754](https://github.com/jeckodevelopment/jd_learn/actions/runs/43928472754) 4/4 verde; [artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43928472754/artifacts/14256409058) ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `c4ab11d7b3e57064768b29a8cbee17677134840278b0acfd9759cb77f563e4a8`. FE-05 implementato nel perimetro delle quattro viste, con accettazione Joomla ancora pendente; stima di riferimento 79,56% invariata fino a riconciliazione ponderata.
 
 
