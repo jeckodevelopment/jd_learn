@@ -125,3 +125,33 @@
     #jlms-course-sidebar .jlms-course-sidebar__inner { position: static; }
   }
 }
+
+
+/* FE-03 classroom: syllabus adapts to the component's own width, not the page viewport. */
+#jlms-classroom { container: jlms-classroom / inline-size; min-width: 0; }
+#jlms-classroom-layout { grid-template-columns: minmax(13rem, 1fr) minmax(0, 3fr); align-items: start; }
+#jlms-classroom-outline { min-width: 0; max-height: none; position: sticky;
+  top: var(--jlms-classroom-sticky-offset, 1.5rem); }
+#jlms-classroom-module { min-width: 0; }
+#jlms-classroom .jlms-classroom-module { margin-block: .3rem 1rem; }
+#jlms-classroom .jlms-classroom-module__summary { cursor: pointer; padding: .4rem 0; font-weight: 600; }
+#jlms-classroom .jlms-classroom-module__summary:focus-visible { outline: 3px solid var(--jlms-color-primary); outline-offset: 2px; }
+#jlms-classroom .jlms-classroom-module ol { padding-inline-start: 1.35rem; margin-block: .5rem 1rem; }
+#jlms-classroom .jlms-classroom-lesson { overflow-wrap: anywhere; }
+#jlms-classroom #jlms-lesson-content { min-width: 0; }
+#jlms-classroom #jlms-lesson-body { max-width: 75ch; line-height: 1.65; }
+#jlms-classroom #jlms-lesson-body :is(img, iframe, video, table) { max-width: 100%; }
+#jlms-classroom #jlms-lesson-body table { display: block; overflow-x: auto; }
+@container jlms-classroom (max-width: 48rem) {
+  #jlms-classroom-layout { grid-template-columns: minmax(0, 1fr); }
+  #jlms-classroom-outline { position: static; }
+}
+@media (max-height: 38rem) {
+  #jlms-classroom-outline { position: static; }
+}
+@supports not (container-type: inline-size) {
+  @media (max-width: 60rem) {
+    #jlms-classroom-layout { grid-template-columns: minmax(0, 1fr); }
+    #jlms-classroom-outline { position: static; }
+  }
+}
