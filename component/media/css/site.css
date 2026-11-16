@@ -73,3 +73,6 @@
     #jlms-courses .jlms-course-grid:not(.jlms-course-grid--list) { grid-template-columns: minmax(0, 1fr); }
   }
 }
+
+/* FE-01 category filtering: no global selectors and no dependence on a template framework. */
+#jlms-catalog-category { max-width: min(100%, 20rem); }
