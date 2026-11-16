@@ -23,6 +23,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-03 — Prima tranche proposta:** programma aula per moduli `details/summary` (modulo corrente aperto), toggle responsive per larghezza contenitore con fallback viewport/no JavaScript, sidebar sticky limitata al componente e fallback statico, intestazione compatta con i soli docenti pubblicabili. Preservati i controlli e servizi di progressi, player, quiz e materiali. Test strutturale dedicato, verifiche manuali su ACL, lingue, template Joomla, desktop/mobile e zoom. Collegare UI-04 e STU-01 alla PR runtime. Non dichiarare FE-03 conclusa senza accettazione sul sito di prova.
+
+
 **FE-02 — Prima tranche integrata (PR #500; CI 4/4 verde; collaudo Joomla pendente):** pannello di iscrizione laterale con sticky/fallback, layout in griglia per spazio del componente Joomla e programma pubblico a moduli espandibili con `details`. Il servizio pubblico non restituisce titoli delle lezioni con finestra non attiva o rilascio relativo; nessun corpo/URL didattico esposto. La PR deve mantenere l'ordine dei campi Joomla nativi rispetto all'iscrizione (regressione HTTP intercettata e corretta), i form/csrf già presenti, CAT-02 e UI-04 aggiornati nella matrice; merge `03d4fea5408e1e45684f0b7637c6a4d3df516320`, [CI 43887834828](https://github.com/jeckodevelopment/jd_learn/actions/runs/43887834828), [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43887834828/artifacts/14234663916) contenente `pkg_jlms-0.57.7-dev.zip`, SHA-256 `f59ca41929dcbb37995f2570547a7e9dd12d3a17f1b4a0be89fdabd74ef26f10`. Le prove manuali su template e ACL restano da eseguire. L'esito CI non equivale ad accettazione e non modifica da solo la percentuale ponderata globale.
 
 
