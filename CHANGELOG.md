@@ -1,6 +1,6 @@
 # Changelog
 
-- FE-08 (candidata): opzioni indipendenti per voce menu Joomla per mostrare sottocategorie e corsi nella stessa pagina categoria; default Sì, paginazioni distinte, schede CSS riusate, ACL e filtri mantenuti. Collaudo Joomla pendente.
+- FE-08 (PR #520 integrata): opzioni indipendenti per voce menu Joomla per mostrare sottocategorie e corsi nella stessa pagina categoria; default Sì, paginazioni distinte, schede CSS riusate, ACL e filtri mantenuti. Collaudo Joomla pendente.
 
 - FE-07 (PR #518 integrata): catalogo percorsi con copertina dedicata facoltativa e intro, editor Joomla Media con alt/decorativa e salvataggio in params_json; dettaglio con timeline verticale, progressi autorizzati senza iscrizione aggregata, nuovo menu dettaglio. Test e collaudo Joomla pendenti.
 
