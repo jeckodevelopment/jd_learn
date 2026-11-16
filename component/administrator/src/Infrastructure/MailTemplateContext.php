@@ -48,12 +48,22 @@ final class MailTemplateContext
 
     private static function dateValue(mixed $value): string
     {
-        if (!is_string($value) || trim($value) === '') {
+        if (!is_string($value)) {
+            return '';
+        }
+        $value = trim($value);
+        // Reject relative and impossible dates. Never invent a calendar start
+        // date from the worker's current clock in a learner notification.
+        if (preg_match('/\A\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?\z/D', $value) !== 1) {
             return '';
         }
         try {
-            return (new \DateTimeImmutable($value, new \DateTimeZone('UTC')))
-                ->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s') . ' UTC';
+            $date = new \DateTimeImmutable($value, new \DateTimeZone('UTC'));
+            $errors = \DateTimeImmutable::getLastErrors();
+            if (is_array($errors) && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {
+                return '';
+            }
+            return $date->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s') . ' UTC';
         } catch (\Throwable) {
             return '';
         }
