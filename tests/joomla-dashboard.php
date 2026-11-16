@@ -140,9 +140,34 @@ dashExpect(array_column($read($owner),null,'id')[$active]['access']==='available
 $update('users',(int)$owner->id,['block'=>1]);
 try{dashDenied(fn()=>$read($owner),403,'blocked account cannot read personal history');dashDenied(fn()=>$learning->resumeTarget($owner,'en-GB',$active),403,'blocked account cannot resume');}
 finally{$update('users',(int)$owner->id,['block'=>0]);}
-$update('jlms_courses',$f['course_id'],['state'=>0]);
-try{$c=array_column($read($owner),null,'id');dashExpect(count($c)===25&&$c[$active]['access']==='unavailable'&&$c[$active]['title']!=='','withdrawn catalog preserves historical title and counters');}
-finally{$update('jlms_courses',$f['course_id'],['state'=>1]);}
+// LCM-01: course lifecycle must deny resume but preserve history for every
+// inactive state; teaching mode comes from the immutable enrolled version.
+$versionId=(int)$base->course_version_id;
+$historicalRules=(string)$db->setQuery('SELECT rules_json FROM #__jlms_course_versions WHERE id='.$versionId)->loadResult();
+$consultationRules=json_decode($historicalRules,true,32,JSON_THROW_ON_ERROR);
+$consultationRules['mode']='consultation';
+$consultationRules['completion_policy']='none';
+$consultationRules['sequence_mode']='free';
+try {
+ foreach ([0,2,-2] as $inactiveState) {
+    $update('jlms_courses',$f['course_id'],['state'=>$inactiveState]);
+    $c=array_column($read($owner),null,'id');
+    dashExpect(count($c)===25&&$c[$active]['access']==='unavailable'&&$c[$active]['title']!==''&&$c[$completed]['completed']&&$c[$completed]['percent']===100,
+        'inactive course keeps owner title, completions and historical counters');
+    dashDenied(fn()=>$learning->resumeTarget($owner,'en-GB',$active),404,'inactive course blocks direct resume');
+    $update('jlms_course_versions',$versionId,['rules_json'=>json_encode($consultationRules,JSON_THROW_ON_ERROR)]);
+    $consultationCards=array_column($read($owner),null,'id');
+    dashExpect($consultationCards[$active]['access']==='unavailable'&&$consultationCards[$active]['percent']===null
+        &&!$consultationCards[$active]['progress_applicable']
+        &&$consultationCards[$completed]['percent']===null,
+        'inactive consultation retains no progress percentage even for historical completion');
+    $update('jlms_course_versions',$versionId,['rules_json'=>$historicalRules]);
+ }
+} finally {
+ $update('jlms_course_versions',$versionId,['rules_json'=>$historicalRules]);
+ $update('jlms_courses',$f['course_id'],['state'=>1]);
+}
+dashExpect(array_column($read($owner),null,'id')[$active]['access']==='available','republished course restores classroom availability');
 $serialized=json_encode($read($owner),JSON_THROW_ON_ERROR);
 dashExpect(!str_contains($serialized,'LEARNING_PRIVATE_BODY')&&!str_contains($serialized,'rules_json')&&!str_contains($serialized,'subject_key')&&!str_contains($serialized,'user_id'),'projection contains no private teaching, identity keys or internal rules');
 $app->loadIdentity($owner);$model=$factory->createModel('Dashboard','Site',['ignore_request'=>true]);$model->setState('filter.progress','all');$model->setState('list.limit',20);$model->setState('list.start',20);
