@@ -1623,6 +1623,8 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 
 ## FE-03 — Aula didattica, programma espandibile e header (prima tranche)
 
+**Evidenza automatizzata post-merge:** [PR #502](https://github.com/jeckodevelopment/jd_learn/pull/502), [CI 4/4](https://github.com/jeckodevelopment/jd_learn/actions/runs/43890696148), matrice UI-04/STU-01 allineata. Il collaudo manuale resta da svolgere.
+
 1. Installare il pacchetto e aprire un corso con più moduli/lezioni come iscritto autorizzato. Il modulo che contiene la lezione corrente deve risultare aperto, gli altri chiusi, i titoli accessibili; aprire e richiudere con tastiera (Enter/Spazio).
 2. Con template Joomla desktop stretto a causa di moduli laterali e viewport desktop ampia, il programma deve essere richiamabile dal toggle in base alla **larghezza del componente**, non alla sola viewport. Verificare `aria-expanded` e le etichette IT/EN.
 3. Senza JavaScript, programma visibile e moduli `details` utilizzabili; nessuna lezione privata accessibile per il solo fatto di apparire nella scaletta.
