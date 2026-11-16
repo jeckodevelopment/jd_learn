@@ -59,7 +59,7 @@ for file, spec in PAIRS.items():
     # JS selectors and ID strings are guarded by the inventory and must have
     # matching HTML producers; dynamic records use a separately declared prefix.
     for hook in spec["ids"]:
-        assert re.search(r"['\\"\\x60]#?" + re.escape(hook) + r"['\\"\\x60]", js), (file, hook, "JS selector missing")
+        assert any(q + hook + q in js or q + "#" + hook + q in js for q in ("\u0027", "\u0022", "\u0060")), (file, hook, "JS selector missing")
         assert re.search(r'id="' + re.escape(hook) + r'"', markup), (file, hook, "HTML id missing")
     for prefix in spec.get("dynamic", set()):
         assert prefix in js and 'id="' + prefix in markup, (file, prefix, "dynamic id prefix")
