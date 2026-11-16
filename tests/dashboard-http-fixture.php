@@ -12,6 +12,16 @@ if($mode==='enable'){
  $s=json_decode(file_get_contents($state),true,16,JSON_THROW_ON_ERROR);$q=$db->prepare("UPDATE joomla_extensions SET enabled=?,params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");$q->execute([$s['enabled'],$s['params']]);
  $q=$db->prepare("UPDATE joomla_users SET block=0 WHERE id=? AND username='cidashboard'");$q->execute([$f['owner']]);
  $q=$db->prepare('INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)');$q->execute([$f['owner'],$f['group']]);
+}elseif($mode==='navigation_on'){
+ $menuId=(int)$f['menus']['en-GB'];
+ $q=$db->prepare('SELECT params FROM joomla_menu WHERE id=?');$q->execute([$menuId]);$old=$q->fetchColumn();
+ if($old===false)throw new \RuntimeException('FE-06 fixture menu missing');
+ file_put_contents(dirname($root).'/dashboard-navigation-original.json',json_encode(['id'=>$menuId,'params'=>$old],JSON_THROW_ON_ERROR));
+ $params=json_decode((string)$old,true)?:[];$params['show_personal_navigation']=1;
+ $q=$db->prepare('UPDATE joomla_menu SET params=? WHERE id=?');$q->execute([json_encode($params,JSON_THROW_ON_ERROR),$menuId]);
+}elseif($mode==='navigation_off'){
+ $saved=json_decode(file_get_contents(dirname($root).'/dashboard-navigation-original.json'),true,8,JSON_THROW_ON_ERROR);
+ $q=$db->prepare('UPDATE joomla_menu SET params=? WHERE id=?');$q->execute([$saved['params'],$saved['id']]);
 }elseif($mode==='snapshot'){
  $q=$db->prepare('SELECT id,revision,completed_total,started_at,completed_at,last_activity_at,last_lesson_id FROM joomla_jlms_enrollments WHERE user_id=? ORDER BY id');$q->execute([$f['owner']]);$rows=$q->fetchAll(\PDO::FETCH_ASSOC);
  $q=$db->prepare('SELECT COUNT(*) FROM joomla_jlms_attempts WHERE enrollment_id IN (SELECT id FROM joomla_jlms_enrollments WHERE user_id=?)');$q->execute([$f['owner']]);
