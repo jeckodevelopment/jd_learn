@@ -32,6 +32,11 @@ La query condivisa `CatalogService::courseQuery()` richiede ora `c.state = 1` an
 
 **Limiti:** non equivale al completamento di LCM-01: vanno ancora ricontrollati tutti i flussi laterali, transizioni concorrenti, download, player, notifiche, migrazioni, storico/attestati e accessi per URL diretti in Joomla. Le azioni toolbar, ripristino controllato e protezione delle eliminazioni restano LCM-02 e successivi. Non attribuire accettazione prima dei test manuali.
 
+
+### LCM-01 — migrazioni amministrative e notifiche didattiche
+
+Un corso con stato diverso da pubblicato (`state != 1`) non può attivare una migrazione di iscrizione verso una nuova versione: l'anteprima presenta un blocco e l'esecuzione ricontrolla la condizione dopo il lock transazionale. La migrazione non altera lo storico se è bloccata. I job di avviso **nuova lezione** e **modifica significativa dopo migrazione** selezionano solo corsi pubblicati; l'outbox ricontrolla lo stato al momento del dispatch così da non inviare notifiche didattiche accodate prima di un'archiviazione. Le comunicazioni amministrative e le attestazioni storiche non sono cancellate automaticamente. Restano da auditare gli altri producer e i diritti storici nel gate LCM-01/LCM-05.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
