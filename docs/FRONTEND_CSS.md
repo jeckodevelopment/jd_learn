@@ -31,6 +31,10 @@ Regola CSS disponibile nel WAM `com_jlms.site`, file `component/media/css/site.c
 
 Verifica automatica: `python3 tests/frontend-css-contract.py`. Validazione manuale obbligatoria nel [QA_TESTBOOK.md](QA_TESTBOOK.md). **Questa è una prima base FE-10, non la chiusura dell'inventario completo di CSS/JS/override** e non implica ancora la nuova UX prevista da [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md).
 
+## FE-07 — Percorsi formativi
+
+Catalogo `pathways/default.php`: radici #jlms-pathways, #jlms-pathway-grid; schede `.jlms-pathway-card`, `.jlms-pathway-card__cover` facoltativa (media pubblico locale) e `.jlms-pathway-card__title`. Scheda `pathway/default.php`: #jlms-pathway, copertina opzionale #jlms-pathway-cover, #jlms-pathway-course-count, #jlms-pathway-sequence e lista ordinata #jlms-pathway-courses.jlms-pathway-timeline. I singoli step sono `.jlms-pathway-timeline__item`, `.jlms-pathway-timeline__card`, `.jlms-pathway-timeline__step`, `.jlms-pathway-timeline__title`; ID `jlms-pathway-course-{index}` deterministico. Percentuale aggregata #jlms-pathway-progress e percentuali per corso sono solo autenticate e disponibili; i course link riusano routing/ACL esistenti. Solo CSS scoped, senza JS, layout responsive e override Joomla nativi. L'ordine è editoriale, non implica prerequisiti.
+
 ## FE-06 — Navigazione personale opzionale
 
 Le viste private riusano dashboard/_personal_navigation.php. Il parametro per singola voce menu show_personal_navigation, disattivo di default, controlla il rendering di nav#jlms-personal-navigation. Lista responsive .jlms-personal-navigation__list, collegamenti .jlms-personal-navigation__link e voce corrente .jlms-personal-navigation__current con aria-current=page. CSS confinato a .jlms-dashboard, focus visibile, nessun JavaScript o menu globale duplicato. Override Joomla devono preservare ACL, routing, semantica e accessibilità.
