@@ -218,3 +218,22 @@
 .jlms-dashboard .jlms-personal-navigation__link:focus-visible {
   outline: 3px solid var(--jlms-color-primary, currentColor); outline-offset: 2px;
 }
+
+/* FE-07: public pathway cards and single-column ordered learning sequence. */
+#jlms-pathways .jlms-pathway-card { overflow: hidden; }
+#jlms-pathways .jlms-pathway-card__cover { aspect-ratio: 16 / 9; overflow: hidden; }
+#jlms-pathways .jlms-pathway-card__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#jlms-pathways .jlms-pathway-card__content { min-width: 0; padding: var(--jlms-space-unit, 1rem); }
+#jlms-pathways .jlms-pathway-card__summary { overflow-wrap: anywhere; }
+#jlms-pathway .jlms-pathway-cover { max-width: 60rem; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--jlms-radius, .4rem); }
+#jlms-pathway .jlms-pathway-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#jlms-pathway #jlms-pathway-sequence { max-width: 60rem; margin-block: 1.5rem; }
+#jlms-pathway .jlms-pathway-timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.2rem; counter-reset: none; }
+#jlms-pathway .jlms-pathway-timeline__item { position: relative; padding-inline-start: 2rem; min-width: 0; }
+#jlms-pathway .jlms-pathway-timeline__item::before { content: ""; position: absolute; width: .65rem; height: .65rem; inset-inline-start: 0; top: .7rem; border: 2px solid currentColor; border-radius: 50%; background: var(--jlms-color-surface, transparent); }
+#jlms-pathway .jlms-pathway-timeline__item:not(:last-child)::after { content: ""; position: absolute; inset-inline-start: .37rem; top: 1.6rem; bottom: -1.6rem; border-inline-start: 1px solid currentColor; opacity: .3; }
+#jlms-pathway .jlms-pathway-timeline__card { padding: clamp(.75rem, 2vw, 1.25rem); min-width: 0; }
+#jlms-pathway .jlms-pathway-timeline__step { font-size: .875em; font-weight: 600; }
+#jlms-pathway .jlms-pathway-timeline__title { overflow-wrap: anywhere; }
+#jlms-pathway .jlms-pathway-timeline__title a:focus-visible { outline: 3px solid var(--jlms-color-primary, currentColor); outline-offset: 3px; }
+#jlms-pathway progress { max-width: 100%; }
