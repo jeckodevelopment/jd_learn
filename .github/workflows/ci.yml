@@ -47,6 +47,7 @@ jobs:
           python3 tools/check.py
           python3 tests/frontend-css-contract.py
           python3 tests/frontend-contract-hooks.py
+          python3 tests/frontend-release-gate.py
           python3 tests/frontend-catalog-options.py
           python3 tests/frontend-menu-inheritance.py
           python3 tests/frontend-course-details.py
