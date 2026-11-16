@@ -1646,3 +1646,16 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 6. Eseguire `python3 tests/frontend-lesson-navigation.py`, CI completa e prova d'installazione/aggiornamento Joomla; documentare separatamente esito CI ed esito manuale.
 
 **Esito manuale:** da eseguire. Non dichiarare FE-04 completato dopo questa sola tranche.
+
+
+## FE-04 — Feedback salvataggi lezione/audio (seconda tranche)
+
+1. Aprire una lezione testuale accessibile: `lesson.begin` visualizza brevemente il messaggio di salvataggio in corso, poi la conferma; la conferma scompare dopo circa 5 secondi, senza cambiare lo stato `completed`.
+2. Simulare errore di rete persistente o risposta HTTP 500 per `lesson.begin`: il messaggio di errore resta visibile anche dopo 5 secondi, con `role=alert` e `aria-live=assertive`. La richiesta conserva la stessa chiave idempotente attraverso l'unico retry.
+3. Aprire una lezione audio, avviare la riproduzione e cambiare posizione: `saving` appare soltanto quando viene inviata una posizione nuova e `saved` scompare dopo circa 5 secondi. Non devono apparire messaggi bloccati in stato `saving` se non c'è alcun nuovo salvataggio.
+4. Simulare un errore audio con connessione interrotta: il messaggio persistente non deve essere nascosto da tentativi successivi finché una risposta server non conferma il salvataggio. Riprovare cambiando posizione e verificare che la conferma sostituisca l'errore.
+5. Verificare i feedback con lettore schermo, tastiera, lingue IT/EN, connessione lenta, timeout, pagina chiusa e account non autorizzato. Nessun salvataggio locale viene spacciato per conferma backend.
+6. Regressioni: lezioni video, quiz, completamento manuale, sidebar, allegati, progressi della dashboard. Verificare che i due messaggi non compaiano nelle lezioni bloccate da finestra o prerequisiti.
+7. CI `tests/frontend-progress-feedback.py`, PHP 8.3/MySQL, PHP 8.4/MariaDB, Chromium e pacchetto installabile; separare collaudo Joomla reale da CI verde.
+
+**Accettazione manuale:** pendente, da eseguire sul sito di prova.
