@@ -6,7 +6,7 @@
 4. Verificare che i PDF attestato già rilasciati siano ancora elencati e scaricabili soltanto dal titolare, senza aprire la didattica. Verificare un altro account senza titolarità, utenti bloccati, lingue IT/EN, e uno storico con più di una pagina.
 5. Ripubblicare il corso e verificare che riappaia l'accesso secondo ACL senza modificare la percentuale storica né riaprire iscrizioni per effetto della sola transizione.
 
-**Automazione:** integrazione Joomla sulla dashboard per 0/2/-2, ripresa negata, titoli, completamenti e modalità consultazione; **collaudo manuale Joomla e verifica PDF pendenti**.
+**Automazione:** PR #488 integrata (merge `9993414aed64c1126c8894f5b23af1a542dea10a`); [CI 43853275442](https://github.com/jeckodevelopment/jd_learn/actions/runs/43853275442) 4/4. Integrazione Joomla sulla dashboard per 0/2/-2, ripresa negata, titoli, completamenti e modalità consultazione; **collaudo manuale Joomla e verifica PDF pendenti**.
 
 ---
 
