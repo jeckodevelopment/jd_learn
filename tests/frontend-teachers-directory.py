@@ -17,6 +17,8 @@ assert "t.bio,t.image,t.params_json" in model
 assert "user_id" not in model and "email" not in model and "username" not in model
 assert "get('Items')" in view and "get('Pagination')" in view
 assert "getWebAssetManager()->useStyle('com_jlms.site')" in view
+controller = (root / 'component/site/src/Controller/DisplayController.php').read_text()
+assert "'teachers'" in controller and "in_array(" in controller, 'Teachers directory must be permitted by the frontend controller'
 assert "new RouterViewConfiguration('teachers')" in router
 assert "new RouterViewConfiguration('teacher')" in router
 assert "setParent($teachers)" not in router, "Existing teacher routes must be preserved"
