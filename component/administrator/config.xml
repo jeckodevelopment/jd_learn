@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><config><fieldset name="catalog" label="COM_JLMS_CATALOG_MENU_SETTINGS">
  <field name="catalog_show_filters" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_CATALOG_SHOW_FILTERS" default="1"><option value="0">JNO</option><option value="1">JYES</option></field>
+ <field name="catalog_show_category" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_CATALOG_SHOW_CATEGORY" default="1"><option value="0">JNO</option><option value="1">JYES</option></field>
  <field name="catalog_show_order" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_CATALOG_SHOW_ORDER" default="1"><option value="0">JNO</option><option value="1">JYES</option></field>
  <field name="catalog_show_cover" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_CATALOG_SHOW_COVER" default="1"><option value="0">JNO</option><option value="1">JYES</option></field>
  <field name="catalog_show_summary" type="radio" layout="joomla.form.field.radio.switcher" label="COM_JLMS_CATALOG_SHOW_SUMMARY" default="1"><option value="0">JNO</option><option value="1">JYES</option></field>
