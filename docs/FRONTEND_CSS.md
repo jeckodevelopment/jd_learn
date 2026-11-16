@@ -21,6 +21,16 @@ Override: `administrator/templates/NOME/html/com_jlms/curriculum/default.php`. L
 
 WAM `com_jlms.curriculum` registra `curriculum.css` e il modulo `curriculum.js`, caricato solo per bozze modificabili. CSS confinato alla radice amministrativa; griglia scaletta/riepilogo che passa a una colonna sotto991px. La classe `jlms-sort-enabled` attiva le maniglie solo con JS e nessun editor aperto. Preservare `data-editor-mode`, `data-sort-kind`, `data-item-id`, `data-drag-handle`, nomi/token/scope del form condiviso e attributi tradotti dello stato. Gli attributi sono contratto funzionale, non selettori estetici. Modifiche dell’override non devono introdurre form annidati, ID duplicati o scorciatoie GET mutative. La struttura usa dettagli nativi, titoli, label e link per navigazione/tastiera; il collaudo browser/accessibilità resta richiesto.
 
+## FE-10 — primitive condivise di scheda (prima implementazione)
+
+La classe pubblica **`.jlms-card`** è un hook CSS non funzionale, aggiunto senza rimuovere le classi specifiche: `.jlms-course-card` (catalogo corsi e percorsi), `.jlms-category-card` (categorie) e `.jlms-my-course` (dashboard personale, inclusi gli attestati incorporati). Gli override nativi continuano a trovare ID e classi originari: aggiungere `.jlms-card` è facoltativo per gli override storici. Non è un elemento cliccabile autonomo e non cambia ACL, routing, filtri, URL o autorizzazioni.
+
+Regola CSS disponibile nel WAM `com_jlms.site`, file `component/media/css/site.css`: solo dentro `#jlms-courses`, `#jlms-categories`, `#jlms-dashboard`, `#jlms-pathways`, `.jlms-card` riceve `box-sizing:border-box`, `min-width:0`; titoli e paragrafi discendenti possono andare a capo in presenza di stringhe lunghe. La regola non modifica pulsanti, link o contenuti di altri componenti Joomla. Personalizzazione tramite `templates/NOME/css/user.css` (se disponibile) oppure CSS personalizzato del template, senza modificare file installati. Nessuna sostituzione delle variabili legacy in `:root` in questa PR: verificarne compatibilità prima di migrare eventuali default verso scope più stretti.
+
+**Contratti JS da non rompere:** `#jlms-classroom-outline-toggle`, `#jlms-classroom-outline`, `aria-expanded`, `data-show-label` e `data-hide-label` restano indispensabili all'adattatore attuale `classroom-outline.js`. Gli ID delle card ripetute sono generati dai record, mai dal titolo o dall'indice. Le future migrazioni a `data-jlms-*` richiedono aggiornamento contestuale di JS e test, non sono implicite in FE-10.
+
+Verifica automatica: `python3 tests/frontend-css-contract.py`. Validazione manuale obbligatoria nel [QA_TESTBOOK.md](QA_TESTBOOK.md). **Questa è una prima base FE-10, non la chiusura dell'inventario completo di CSS/JS/override** e non implica ancora la nuova UX prevista da [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md).
+
 ## Catalogo e scheda corso
 
 | Vista | ID stabili | Classi ripetute |

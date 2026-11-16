@@ -17,7 +17,7 @@ use Joomla\CMS\HTML\HTMLHelper;
   <?php $cards = array_filter($this->items, static fn ($item): bool => $item['learning_state'] === $state); if (!$cards) { continue; } ?>
   <section id="jlms-dashboard-<?= str_replace('_', '-', $state) ?>" class="jlms-dashboard-group"><h2><?= Text::_(implode('_', ['COM', 'JLMS', 'DASHBOARD', strtoupper($state)])) ?></h2>
    <div class="jlms-my-course-grid"><?php foreach ($cards as $item) : ?>
-    <article id="jlms-my-course-<?= (int) $item['id'] ?>" class="jlms-my-course" data-enrollment-id="<?= (int) $item['id'] ?>">
+    <article id="jlms-my-course-<?= (int) $item['id'] ?>" class="jlms-card jlms-my-course" data-enrollment-id="<?= (int) $item['id'] ?>">
      <h3 class="jlms-my-course__title"><?= $this->escape($item['title'] !== '' ? $item['title'] : Text::_('COM_JLMS_DASHBOARD_HISTORICAL_COURSE')) ?></h3>
      <p class="jlms-my-course__access"><?= Text::_(implode('_', ['COM', 'JLMS', 'DASHBOARD', 'ACCESS', strtoupper($item['access'])])) ?></p>
      <?php if ($item['percent'] !== null) : ?>
@@ -34,7 +34,7 @@ use Joomla\CMS\HTML\HTMLHelper;
  <?php if ($this->certificates) : ?>
  <section id="jlms-my-certificates" class="jlms-dashboard-group"><h2><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></h2>
   <div class="jlms-my-course-grid"><?php foreach ($this->certificates as $certificate) : ?>
-   <article class="jlms-my-course"><h3><?= $this->escape($certificate['title']) ?></h3>
+   <article class="jlms-card jlms-my-course"><h3><?= $this->escape($certificate['title']) ?></h3>
     <p><?= Text::_('COM_JLMS_CERTIFICATE_ISSUED') ?>: <?= $this->escape($certificate['issued_at']) ?></p>
     <p><?= Text::_('COM_JLMS_CERTIFICATE_CODE') ?>: <?= $this->escape($certificate['serial']) ?></p>
     <?php if ($certificate['status'] === 'ready' || $certificate['status'] === 'pending_render') : ?>
