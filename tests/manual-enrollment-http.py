@@ -87,7 +87,7 @@ try:
  fixture('revoke_operator');apply(manager,url,form,expected=403);fixture('grant_operator')
  _,existing,_,ef=preview(manager,f['http_user']);expect(ef is None and'jlms-manual-existing'in Page(existing).ids,'existing admission is displayed without creation action')
  student=client();login(student,'cimanualhttp','Ci-only-Manual-Password-2026',False)
- _,history,_=request(student,'/index.php?option=com_jlms&view=dashboard&lang=en')
+ _,history,_=request(student,'/index.php?option=com_jlms&view=mycourses&lang=en')
  expect('Manual admission fixture'in history and'PRIVATE_HTTP_MANUAL_REASON'not in history,'learner sees own assignment but no internal reason')
  _,classroom,_=request(student,'/index.php?option=com_jlms&task=enrollment.resume&id='+str(row['id'])+'&lang=en')
  expect('MANUAL_PRIVATE_BODY'in classroom,'manual learner can resume current published lesson')
