@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-04 (prima tranche): navigazione manuale fra lezioni adiacenti nell'aula, con disponibilità e prerequisiti rispettati, link GET non mutativi, etichette IT/EN e CSS responsive; test di contratto. Nessun avanzamento automatico o completamento per cambio lezione. Collaudo Joomla pendente.
+
 - FE-03 (prima tranche): aula con moduli del programma espandibili tramite dettagli nativi, toggle per larghezza del contenitore con fallback, indice sticky/statico secondo spazio disponibile e nomi dei soli docenti pubblici nell'intestazione. Conservati player, ACL e progressi; contratto CSS e test strutturale. Collaudo Joomla pendente.
 
 - FE-02 (prima tranche): scheda corso con pannello di iscrizione e fatti laterale sticky/statico responsive, programma pubblico in moduli nativi espandibili senza JavaScript e filtro server per lezioni con disponibilità temporale non attiva. Form originali, ACL e token mantenuti; documentazione e verifiche statiche aggiunte. Collaudo Joomla pendente.
