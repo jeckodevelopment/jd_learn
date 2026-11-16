@@ -143,8 +143,22 @@ final class CertificateService
         $search = function_exists('mb_substr') ? mb_substr($search, 0, 120) : substr($search, 0, 120);
         $status = (string) ($filters['status'] ?? '');
         if (!in_array($status, ['', 'pending_render', 'ready', 'revoked'], true)) { $status = ''; }
-        $limit = 50;
+        $limit = max(1, min(100, (int) ($filters['limit'] ?? 50)));
         $offset = max(0, min(50000, (int) ($filters['offset'] ?? 0)));
+        // Only known columns/expressions may reach ORDER BY; searchtools
+        // ordering is request-controlled and must never be concatenated raw.
+        $allowedOrders = [
+            'd.issued_at' => 'd.issued_at',
+            'd.serial' => 'd.serial',
+            'certificate_state' => "CASE WHEN d.revoked_at IS NOT NULL THEN 'revoked' ELSE d.status END",
+            'student_name' => "JSON_UNQUOTE(JSON_EXTRACT(d.identity_snapshot_json, '$.name'))",
+            'course_title' => "JSON_UNQUOTE(JSON_EXTRACT(d.identity_snapshot_json, '$.course_title'))",
+            'c.id' => 'c.id',
+        ];
+        $order = (string) ($filters['ordering'] ?? 'd.issued_at');
+        $direction = strtoupper((string) ($filters['direction'] ?? 'DESC'));
+        if (!isset($allowedOrders[$order])) { $order = 'd.issued_at'; }
+        if (!in_array($direction, ['ASC', 'DESC'], true)) { $direction = 'DESC'; }
         $where = $this->db->createQuery()->from('#__jlms_certificates AS c')
             ->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
             ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
@@ -161,7 +175,8 @@ final class CertificateService
         $total = (int) $this->db->setQuery($countQuery)->loadResult();
         $query = clone $where;
         $query->clear('select')->select('c.id AS certificate_id, d.id AS document_id, d.serial, d.status, d.issued_at, d.revoked_at, d.identity_snapshot_json')
-            ->order('d.issued_at DESC, d.id DESC');
+            ->order($allowedOrders[$order] . ' ' . $direction)
+            ->order('d.id DESC');
         $rows = $this->db->setQuery($query, $offset, $limit)->loadObjectList();
         $items = [];
         foreach ($rows as $row) {
