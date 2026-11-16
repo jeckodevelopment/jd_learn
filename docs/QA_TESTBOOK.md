@@ -1607,3 +1607,15 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 7. Confermare CI verde e `python3 tests/frontend-catalog-options.py` prima del merge; dopo il merge installare il pacchetto ZIP Joomla e ripetere lo smoke test.
 
 **Accettazione Joomla manuale:** pendente. CI verde non equivale a requisito accettato.
+
+
+## FE-02 — Scheda corso: sidebar e programma pubblico
+
+1. Installare l'artefatto post-merge e aprire una scheda corso pubblicata con presentazione, copertina, obiettivi, docenti e materiali di anteprima, in Joomla con template standard. Verificare che nessuna sezione vuota venga resa e che breadcrumb, header/footer Joomla rimangano disponibili.
+2. Desktop largo: programma e testo a sinistra, pannello iscrizione a destra; pannello sticky senza coprire il menu del template (anche se il template usa header sticky). Ridurre l'area del componente tramite moduli laterali: verificare transizione a una colonna e pannello statico. Smartphone/zoom 200%: introduzione e descrizione/campi Joomla seguiti dal pannello, quindi docenti e programma, senza scroll orizzontale.
+3. Anonimo: login; autenticato non abilitato: messaggio informativo; automatico e approvazione: **un solo form** con token CSRF/idempotency, rispettando finestra e permessi. Corso completato/archiviato e finestra chiusa non devono consentire un'iscrizione non autorizzata. Confrontare con pacchetto precedente.
+4. Programma: modulo iniziale aperto, gli altri espandibili senza JavaScript; titoli del programma pubblico della versione corrente, lezione futura/scaduta o con rilascio relativo non visibile. Verificare nessuna disclosure di corpo lezioni, URL dei player, allegati non pubblici, quiz o lezioni di altra versione nel sorgente e nei link.
+5. Verificare link alle anteprime esplicitamente consentite, download materiali preview, profili docenti, varianti multilingua IT/EN, permalink/SEF e override Joomla esistenti. Provare tastiera, focus `summary`, lettore di schermo e differenze di contrasto.
+6. Eseguire `python3 tests/frontend-course-details.py`, il gate CSV e la CI completa, verificando che la build installabile venga generata senza regressioni; poi ripetere smoke su sito Joomla.
+
+**Esito:** accettazione manuale non eseguita; il gate strutturale e CI non provano l'interazione reale.

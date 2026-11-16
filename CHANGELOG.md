@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-02 (prima tranche): scheda corso con pannello di iscrizione e fatti laterale sticky/statico responsive, programma pubblico in moduli nativi espandibili senza JavaScript e filtro server per lezioni con disponibilità temporale non attiva. Form originali, ACL e token mantenuti; documentazione e verifiche statiche aggiunte. Collaudo Joomla pendente.
+
 - FE-01 (seconda tranche): filtro per categoria su corsi pubblicati e accessibili, configurabile a livello globale e per voce menu Joomla. Nessuna esposizione di tassonomia riservata tramite il selettore o GET forgiati. Livello/difficoltà mostrato assieme alla durata dalle informazioni della versione pubblicata, con documentazione e test statici. Collaudo Joomla manuale pendente.
 
 - FE-01 (prima tranche): catalogo corsi a griglia responsive su larghezza del contenitore, copertine e descrizioni facoltative, ricerca e filtri configurabili da opzioni globali e voce menu Joomla, paginazione e ordinamento iniziale configurabili. Test menu/XML/lingue e documentazione aggiornati; accettazione Joomla pendente.

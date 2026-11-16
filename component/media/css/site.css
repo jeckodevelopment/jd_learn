@@ -76,3 +76,52 @@
 
 /* FE-01 category filtering: no global selectors and no dependence on a template framework. */
 #jlms-catalog-category { max-width: min(100%, 20rem); }
+
+
+/* FE-02 course detail: single neutral layout, respecting third-party Joomla chrome. */
+#jlms-course { container-type: inline-size; container-name: jlms-course-page; }
+#jlms-course-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(15rem, 1fr);
+  grid-template-areas: "main sidebar" "supplement sidebar";
+  align-items: start;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-block: clamp(1rem, 2vw, 1.75rem);
+}
+#jlms-course-main { grid-area: main; min-width: 0; overflow-wrap: anywhere; }
+#jlms-course-supplemental { grid-area: supplement; min-width: 0; overflow-wrap: anywhere; }
+#jlms-course-sidebar { grid-area: sidebar; min-width: 0; align-self: stretch; }
+#jlms-course-sidebar .jlms-course-sidebar__inner {
+  position: sticky; top: var(--jlms-course-sticky-offset, 1.5rem);
+  display: grid; gap: 1rem; min-width: 0;
+}
+#jlms-course-sidebar #jlms-course-facts { min-width: 0; }
+#jlms-course-sidebar #jlms-course-facts dl { margin: 0; }
+#jlms-course-sidebar #jlms-course-facts dt { font-weight: 600; }
+#jlms-course-sidebar #jlms-course-facts dd { margin: 0 0 .75rem; }
+#jlms-course-sidebar #jlms-course-access { min-width: 0; overflow-wrap: anywhere; }
+#jlms-course-sidebar #jlms-course-access :is(button, .btn) { max-width: 100%; white-space: normal; }
+#jlms-course-main > section, #jlms-course-supplemental > section { margin-block: 1.25rem; }
+#jlms-course-outline .jlms-module { padding: 0; overflow: hidden; }
+#jlms-course-outline .jlms-module__summary {
+  display: list-item; padding: .85rem 1rem; cursor: pointer; font-weight: 600;
+}
+#jlms-course-outline .jlms-module__summary:focus-visible {
+  outline: 3px solid var(--jlms-color-primary); outline-offset: -3px;
+}
+#jlms-course-outline .jlms-module__lessons { margin: 0; padding: 0 1.25rem 1rem 2.4rem; }
+#jlms-course-outline .jlms-module__title { display: inline; }
+#jlms-course-cover img { width: 100%; height: auto; }
+@container jlms-course-page (max-width: 55rem) {
+  #jlms-course-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main" "sidebar" "supplement"; }
+  #jlms-course-sidebar .jlms-course-sidebar__inner { position: static; }
+}
+@media (max-height: 38rem) {
+  #jlms-course-sidebar .jlms-course-sidebar__inner { position: static; }
+}
+@supports not (container-type: inline-size) {
+  @media (max-width: 65rem) {
+    #jlms-course-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "sidebar" "main"; }
+    #jlms-course-sidebar .jlms-course-sidebar__inner { position: static; }
+  }
+}
