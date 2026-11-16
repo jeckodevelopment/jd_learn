@@ -88,6 +88,14 @@ Il nuovo `nav` ha `aria-label` localizzato IT/EN. **Non** contiene form, task mu
 
 CSS scoped a `#jlms-classroom`, due colonne quando possibile, una nei contenitori piccoli, focus tastiera visibile. Override: `templates/NOME/html/com_jlms/classroom/default.php`. Collaudo manuale obbligatorio in [QA_TESTBOOK.md](QA_TESTBOOK.md); smoke CI `python3 tests/frontend-lesson-navigation.py`. Questa tranche **non** completa ancora tutti i requisiti FE-04 di feedback dei progressi.
 
+## FE-04 — Feedback discreto e affidabile dei progressi
+
+I messaggi di `#jlms-lesson-progress-status` e `#jlms-audio-progress-status` distinguono gli stati `saving`, `saved`, `error`, `idle` tramite `data-state`. Lo stato salvato resta visibile circa **5 secondi**, poi viene pulito; gli errori **non** scompaiono automaticamente e utilizzano `role="alert"` con `aria-live="assertive"`, mentre le conferme sono `role="status"` con `aria-live="polite"`. Lo stile è limitato a `#jlms-classroom` e non modifica template esterni.
+
+Il JS della lezione conserva un solo retry e la medesima idempotency key per `lesson.begin`; la risposta del server è sempre autorevole. Il codice audio conserva il proprio retry e mostra `saving` quando invia una posizione nuova; un errore precedente resta visibile fino a una risposta di salvataggio riuscita, senza promettere persistibilità quando il server non l'ha confermata. Nessuna modifica agli endpoint backend, ai timer del playback video, ai quiz o all'azione manuale `lesson.complete`.
+
+Il programma e le classi CSS legacy rimangono disponibili negli override. Il nuovo test statico `tests/frontend-progress-feedback.py` non sostituisce le prove browser e rete del [QA_TESTBOOK.md](QA_TESTBOOK.md). Restano da valutare in una successiva tranche i feedback di altre azioni didattiche non coperte da questi due adapter.
+
 ## Aula testo
 
 Override nativo: `templates/NOME/html/com_jlms/classroom/default.php`. Regioni: `jlms-classroom`, `jlms-classroom-header`, `jlms-learning-progress`, `jlms-progress-meter`, `jlms-course-completed` (condizionale), `jlms-classroom-layout`, `jlms-classroom-outline`, `jlms-lesson-content`, `jlms-lesson-title`, `jlms-lesson-body`, `jlms-complete-form`, `jlms-classroom-back`. Ripetizioni: `jlms-classroom-module-{id}`, `jlms-classroom-lesson-{id}`. Classi omonime per layout/moduli/lezioni; `aria-current` indica la lezione aperta. Griglia a due colonne da desktop e una colonna sotto 48rem, senza dimensioni fisse del testo. Il pulsante `jlms-classroom-outline-toggle` è visibile solo su viewport mobile: controlla `jlms-classroom-outline` tramite `aria-controls` e `aria-expanded`; il modulo `classroom-outline.js` aggiorna label e visibilità. In assenza di JavaScript l’indice resta visibile. Gli override devono conservare questi ID, attributi e label tradotte. Usare le variabili WAM già documentate. Conservare token, key, ID di parent e filtro HTML negli override.
