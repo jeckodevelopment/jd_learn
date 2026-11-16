@@ -1659,3 +1659,16 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 7. CI `tests/frontend-progress-feedback.py`, `node tests/frontend-progress-feedback.mjs` (successo/errore simulato e timer), PHP 8.3/MySQL, PHP 8.4/MariaDB, Chromium e pacchetto installabile; separare collaudo Joomla reale da CI verde.
 
 **Accettazione manuale:** pendente, da eseguire sul sito di prova.
+
+
+## FE-05 — I miei corsi come voce menu autonoma (prima tranche)
+
+1. Dopo l'installazione creare nel gestore menu Joomla una voce **I miei corsi** (`mycourses`) e mantenere la voce già esistente `dashboard`: entrambe devono essere raggiungibili, con il nuovo link contestuale dalla dashboard.
+2. Provare utente anonimo: nessun corso privato o storico deve essere esposto. Provare due utenti autenticati con iscrizioni differenti, verificando che progressi, ID e corsi non si mescolino.
+3. Confrontare le schede di dashboard e mycourses: titoli, percentuali, accessibilità aula, ripresa e stati dello storico devono corrispondere. La nuova vista non deve caricare il blocco attestati né il consenso annunci, che rimangono temporaneamente nella dashboard.
+4. Verificare filtri didattici `all/not_started/in_progress/completed`, paginazione separata da una voce all'altra, refresh, SEF attivo/disattivo, più voci menu e lingue IT/EN.
+5. Provare corsi archiviati, iscrizioni sospese, accessi revocati o scaduti, corsi con lingua diversa e storico senza progresso applicabile. La scheda può rimanere nello storico, ma non deve concedere il pulsante Riprendi quando non disponibile.
+6. Test responsive, zoom 200%, tastiera, CSS del template e override dei template dashboard/mycourses. Nessuna interferenza con moduli, articoli e menu Joomla.
+7. Eseguire `python3 tests/frontend-my-courses.py`, CI completa con installazione e upgrade del package e verificare che i nuovi file `src/Model/MycoursesModel.php`, `src/View/Mycourses/HtmlView.php`, `tmpl/mycourses/default.php` e `default.xml` siano inclusi.
+
+**Esito:** collaudo manuale Joomla pendente; la CI non costituisce accettazione FE-05.
