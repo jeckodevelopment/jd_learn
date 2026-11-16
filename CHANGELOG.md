@@ -1,6 +1,6 @@
 # Changelog
 
-- FE-05 (candidata): dashboard studente “La mia formazione” con contatori owner-scoped dello storico, riepilogo attestati, ultima attività riprendibile se autorizzata e link alle tre viste personali autonome; dettagli/filtri/paginazione mantenuti in I miei corsi. Collaudo Joomla pendente.
+- FE-05 (PR #514 integrata): dashboard studente “La mia formazione” con contatori owner-scoped dello storico, riepilogo attestati, ultima attività riprendibile se autorizzata e link alle tre viste personali autonome; dettagli/filtri/paginazione mantenuti in I miei corsi. Collaudo Joomla pendente.
 
 - FE-05 (PR #512 integrata): vista privata Preferenze JD Learn, menu IT/EN, riuso del consenso facoltativo con double opt-in/revoca e del layout condiviso con dashboard. Collaudo Joomla/SMTP pendente.
 
