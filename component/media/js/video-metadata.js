@@ -1,5 +1,6 @@
 /** Authoring only: official provider preview, no student session or progress writes. */
 export const validDuration = value => Number.isInteger(value) && value >= 1000 && value <= 28800000;
+const providerFailures = new Set(['youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed', 'youtube_timeout']);
 export class VideoMetadataEditor {
   constructor(form, config, host = window, transport = fetch, importer = url => import(url)) {
     Object.assign(this, {form, config, host, transport, importer}); this.generation = 0;
@@ -48,7 +49,15 @@ export class VideoMetadataEditor {
       body.set('task', 'lesson.metadata');
       const response = await this.transport(this.config.url, {method:'POST', body,
         credentials:'same-origin', cache:'no-store', signal:this.abort.signal, headers:{Accept:'application/json'}});
-      const result = await response.json(); if (!response.ok || result.success !== true) throw Error('metadata');
+      const result = await response.json();
+      if (!response.ok || result.success !== true) {
+        const error = new Error('metadata');
+        // The Joomla endpoint emits already-localised, allowlisted 4xx messages.
+        // Never display a raw 5xx response or arbitrary exception in the editor.
+        if (response.status >= 400 && response.status < 500 && typeof result.message === 'string'
+          && result.message.length > 0 && result.message.length <= 400) error.safeMessage = result.message;
+        throw error;
+      }
       if (generation !== this.generation || !this.allowed(provider)) return;
       const data = result.data; if (data.provider !== provider || !/^[a-f0-9]{64}$/.test(data.ticket)) throw Error('source');
       const accept = duration => {
@@ -65,16 +74,23 @@ export class VideoMetadataEditor {
       if (generation !== this.generation || !this.allowed(provider)) return;
       this.container.hidden = false;
       const sample = async () => { if (this.player && generation === this.generation) { const value = await this.player.sample(); return accept(value.duration_ms); } return false; };
-      const player = await adapter.create(this.container, data, (event) => {
+      const player = await adapter.create(this.container, data, (event, reason) => {
         if (generation !== this.generation) return;
-        if (event === 'error') { this.clear(); this.message('failed'); }
+        if (event === 'error') { this.clear(); this.message(providerFailures.has(reason) ? reason : 'failed'); }
         else sample().catch(() => { if (generation === this.generation) this.message('failed'); });
       }, this.abort.signal);
       if (generation !== this.generation || !this.allowed(provider)) { await player.destroy(); return; }
       this.player = player; this.message('play'); await sample();
       let polls = 0;
       this.poller = setInterval(() => { if (++polls > 180) { clearInterval(this.poller); return; } sample().catch(() => { if (generation === this.generation) this.message('failed'); }); }, 500);
-    } catch (error) { if (generation === this.generation && error.name !== 'AbortError') { this.clear(); this.message('failed'); } }
+     } catch (error) {
+      if (generation === this.generation && error.name !== 'AbortError') {
+        this.clear();
+        if (error.safeMessage) this.status.textContent = error.safeMessage;
+        else this.message(providerFailures.has(error.message) ? error.message
+          : error.message === 'player timeout' ? 'youtube_timeout' : 'failed');
+      }
+    }
   }
 }
 if (typeof document !== 'undefined') {
