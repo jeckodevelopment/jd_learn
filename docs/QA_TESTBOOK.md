@@ -1785,3 +1785,8 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 3. Nascondere filtro e ordinamento della categoria: il form non deve apparire, GET `filter[search]`, `filter[order]`, `filter[tag_id]`, `filter[teacher_id]` e `filter[pathway_id]` non devono riattivarlo o modificare i dati. Paginazione e ACL dei corsi rimangono operative.
 4. Confrontare menu salvati prima della modifica e nuove installazioni; nessun cambio degli ACL di pubblicazione, lingua e categorizzazione. Provare anonimato, accessi Joomla differenti e lingue IT/EN.
 5. Provare paginazioni indipendenti di corsi e sottocategorie, selezione ordinamento, filtro disattivo, override template e schermi stretti. Eseguire `python3 tests/frontend-menu-inheritance.py` e la CI completa.
+
+
+## FE-12 — Gate integrato frontend 1.0.0
+
+La matrice operativa, con 10 scenari e stato manuale iniziale **Da eseguire**, è mantenuta in [FRONTEND_FE12_ACCEPTANCE.md](FRONTEND_FE12_ACCEPTANCE.md). Gli esiti CI sono evidenze automatiche parziali, non accettazione WCAG, responsive, ACL o override in Joomla reale. Non chiudere FE-12 senza registrare per ogni caso ambiente, ruolo, lingua, evidenze e risultato.
