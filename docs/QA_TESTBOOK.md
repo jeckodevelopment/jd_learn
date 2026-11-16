@@ -1858,3 +1858,13 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 ## Post-merge PR #539 — esito CI e pacchetto
 
 **PR #539 integrata (P0 #532; merge `bebffec3eb01b3eead93d6a8e96833b5d49eec6e`):** CI verifica completa 4/4 verde [run 43980525575](https://github.com/jeckodevelopment/jd_learn/actions/runs/43980525575), gate CSV [run 43980525067](https://github.com/jeckodevelopment/jd_learn/actions/runs/43980525067). [Artefatto JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43980525575/artifacts/14282058958), digest dell'archivio GitHub Actions `sha256:3f87d34fd71960a20bfc3adbf75d3a523c04c6c0f62eff795be57a95811c1713` (NON checksum dello ZIP Joomla interno). Il frontend serializza `lesson.begin` e `video.playback` per la stessa lezione/iscrizione; test automatici verificati. **Il collaudo reale su Opera+ dell'avvio e del completamento video è pendente; issue #532 rimane aperta.** Avanzamento globale 79,56% invariato.
+
+
+## P0 #532 — handshake frontend YouTube IFrame API, PR #541
+
+**P0 #532 — race YouTube IFrame API (PR #541, CI e test live pendenti):** l'adapter collegava `YT.Player` solo dopo `iframe.onload`, evento di navigazione della pagina YouTube e non garanzia di handshake dell'IFrame API. Ora la API viene collegata subito dopo l'inserimento dell'iframe nel DOM, prima del completamento della navigazione; referrer policy, dominio `youtube-nocookie.com`, ID video, consenso e telemetria restano invariati. Evidenza: l'utente vede il poster, Play resta su spinner in Safari e Chrome; YouTube diretto funziona. L'esito reale della modifica deve essere confermato sul sito di prova. Avanzamento globale 79,56% invariato.
+
+1. Aggiornare il pacchetto sul sito Joomla di prova e pulire la cache asset. Aprire lezione video pubblicata `fcnDmrtj6Sk` da studente iscritto in Safari e Chrome: poster/iframe, click Play, flusso audio/video effettivo e passaggio a stato playing; nessuno spinner persistente.
+2. Verificare che una sola inizializzazione IFrame API avvenga, senza attendere `iframe.onload`; referrer policy `strict-origin-when-cross-origin` e host `youtube-nocookie.com` mantenuti, senza bypass di consenso.
+3. Lasciar riprodurre il video senza seek fino alla soglia della lezione: controllare `video.save`, conteggio copertura effettiva e completamento; ripetere pausa/ripresa e rientro aula. Nessun credito per seek, buffering, poster o solo evento ended.
+4. Se compare ancora spinner, raccogliere evento onError YouTube e richiesta iframe Referer effettivo: non attribuire il risultato all'API senza log live.
