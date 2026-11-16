@@ -35,7 +35,7 @@ assert "CoursePresentation::fromSnapshot" not in VIEW  # view model still suppli
 outline = SERVICE.split('public function outline(', 1)[1].split('public function publicLessonPreview', 1)[0]
 assert "->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')" in outline
 assert 'LessonAvailability::state(' in outline
-assert "!== 'available'" in outline
+assert "=== 'available'" in outline and "if (!$publishable)" in outline
 assert "->select('id, title')" in outline
 assert "->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')" in outline
 assert 'l.body' not in outline and "l.video" not in outline
