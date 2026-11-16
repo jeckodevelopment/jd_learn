@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Structural source/package checks, separate from runtime PHP and database tests."""
 from pathlib import Path
-import re,json,xml.etree.ElementTree as E,zipfile,io
+import re,json,hashlib,xml.etree.ElementTree as E,zipfile,io
 ROOT=Path(__file__).resolve().parents[1]
 count=0
 for base in ['component','libraries','plugins','packages']:
@@ -279,6 +279,15 @@ assert version==component_version,('package/component version mismatch',version,
 # P0 #532: installation must never ship a stale WAM query version.
 source_assets=json.loads((ROOT/'component/media/joomla.asset.json').read_text())
 assert source_assets['version']==version, ('stale source WAM version',source_assets['version'],version)
+asset_sources=[(p.relative_to(ROOT/'component/media').as_posix(),p.read_bytes())
+               for p in (ROOT/'component/media').rglob('*') if p.is_file() and p.name!='joomla.asset.json']
+for key in ('youtube','vimeo','cloudflarestream','html5'):
+ asset_sources.extend((key+'/'+p.relative_to(ROOT/'plugins/jlmsvideo'/key/'media').as_posix(),p.read_bytes())
+                      for p in (ROOT/'plugins/jlmsvideo'/key/'media').rglob('*') if p.is_file())
+fingerprint=hashlib.sha256()
+for name,blob in sorted(asset_sources):
+ fingerprint.update(name.encode('utf-8')+b'\0'+blob+b'\0')
+expected_wam_version=version+'-'+fingerprint.hexdigest()[:12]
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
  with zipfile.ZipFile(package) as z:
@@ -290,7 +299,7 @@ if package.exists():
     names=set(child.namelist())
     if e.attrib['type']=='component':
      bundled=json.loads(child.read('media/joomla.asset.json'))
-     assert bundled['version']==version, ('stale installed component asset version',bundled['version'],version)
+     assert bundled['version']==expected_wam_version, ('stale installed component asset fingerprint',bundled['version'],expected_wam_version)
 
     manifest='jlms.xml' if e.attrib['type'] in ['component','library'] else e.attrib['id']+'.xml'
     x=E.fromstring(child.read(manifest))
