@@ -53,3 +53,6 @@ Questa tabella è una **mappa delle dipendenze**, non autorizza a rinominare uni
 5. **Tracciare:** per ogni PR runtime, aggiornare `REQUIREMENTS_STATUS.csv`, changelog, testbook e contratto CSS; distinguere il progresso implementativo dall'accettazione.
 
 **Residuo FE-10 dopo questa ricognizione:** valutazione della cascata e dei token CSS globali, audit degli hook JS non frontend e verifica visuale su più template Joomla; le funzionalità FE-01–FE-09 restano pianificate separatamente.
+
+
+FE-06 candidata: partial site/tmpl/dashboard/_personal_navigation.php condiviso dalle quattro viste personali; #jlms-personal-navigation, .jlms-personal-navigation__list, .jlms-personal-navigation__link e .jlms-personal-navigation__current; impostazione menu show_personal_navigation=0 per default; senza JavaScript. Collaudo Joomla pendente.
