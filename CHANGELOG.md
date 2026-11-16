@@ -1,6 +1,6 @@
 # Changelog
 
-- FE-06 (candidata): navigazione interna facoltativa nelle quattro viste studente; opzione per singola voce menu Joomla, default No, link SEF, stato corrente accessibile e CSS scoped. Collaudo Joomla pendente.
+- FE-06 (PR #516 integrata): navigazione interna facoltativa nelle quattro viste studente; opzione per singola voce menu Joomla, default No, link SEF, stato corrente accessibile e CSS scoped. Collaudo Joomla pendente.
 
 - FE-05 (PR #514 integrata): dashboard studente “La mia formazione” con contatori owner-scoped dello storico, riepilogo attestati, ultima attività riprendibile se autorizzata e link alle tre viste personali autonome; dettagli/filtri/paginazione mantenuti in I miei corsi. Collaudo Joomla pendente.
 
