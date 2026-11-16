@@ -7,6 +7,8 @@
 5. Come ospite e account autenticato, verificare lingue IT/EN, categorie non pubblicate, in cestino, gruppo di accesso non autorizzato e antenati nascosti. Corsi o categorie non autorizzati non devono comparire né nei collegamenti né nei conteggi di paginazione; URL diretti devono continuare a negare contenuti non visibili.
 6. Verificare responsive 13–15 pollici, smartphone, zoom 200%, navigazione tastiera, focus e override template Joomla; upgrade ZIP mantenendo l'aspetto delle voci menu esistenti.
 
+**Evidenza post-merge:** PR #520, merge `231ed6c1f7d5ea3468e616a94ba3221230575eb5`, [CI 43937676157](https://github.com/jeckodevelopment/jd_learn/actions/runs/43937676157) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43937676157/artifacts/14262196438) ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `ef30b163772df6a3dbadd8b6549ceb96c62d4b1b13539db4595811314ceb9b06`. Collaudo manuale Joomla non ancora registrato.
+
 **Automazione:** tests/frontend-category-sections.py nel gate tools/check.py e suite Joomla categorie/corsi esistenti. Un gate verde non costituisce collaudo manuale.
 
 ---
