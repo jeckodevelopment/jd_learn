@@ -1766,7 +1766,7 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 
 ## FE-09 — Catalogo pubblico docenti (PR #522)
 
-**Stato:** implementazione candidata; verifiche automatiche e accettazione Joomla da registrare separatamente.
+**Stato:** PR #522 integrata, CI 4/4 verde (run 43940346249); pacchetto SHA-256 verificato. Accettazione Joomla manuale da registrare separatamente.
 
 1. Menu → Nuova voce → JD Learn → Elenco docenti; provare IT/EN, SEF abilitato/disabilitato e più voci menu. Aprire ogni profilo dal catalogo.
 2. Confrontare anonimo, utente autenticato con gruppi ACL differenti, docente pubblicato/non pubblicato/cestinato, categoria o antenati pubblicati e accessibili, lingue Joomla. Profilo non visibile deve restare 404 anche con URL diretto.
