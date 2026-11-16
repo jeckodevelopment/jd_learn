@@ -3,7 +3,7 @@
 **Specifica UX approvata (target, non ancora implementato):** [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md). Gli identificatori proposti nella specifica non sono parte del contratto CSS runtime finché non vengono introdotti e documentati nelle singole PR. Questa guida resta il registro del contratto **effettivamente presente** nel codice.
 
 
-Questa guida descrive il contratto corrente per layout, CSS e override. Le sezioni sono organizzate per vista/funzione; per avanzamento e limiti funzionali usare [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+**Inventario implementativo di viste, ID, JS e WAM:** [FRONTEND_CONTRACT_INVENTORY.md](FRONTEND_CONTRACT_INVENTORY.md). Il test `tests/frontend-contract-hooks.py` blocca la rimozione accidentale degli hook noti e viene eseguito nella CI. Il test non sostituisce la verifica manuale di DOM runtime e override.\n\nQuesta guida descrive il contratto corrente per layout, CSS e override. Le sezioni sono organizzate per vista/funzione; per avanzamento e limiti funzionali usare [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 Variabili: `--jlms-color-primary`, `--jlms-color-text`, `--jlms-color-surface`, `--jlms-space-unit`, `--jlms-radius`, `--jlms-content-width`. Si possono impostare nel CSS personalizzato del template. Nessun selettore globale del prodotto modifica il template ospitante.
 

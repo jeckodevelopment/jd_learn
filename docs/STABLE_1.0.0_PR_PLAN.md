@@ -23,6 +23,8 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-10, seconda tranche (PR da integrare):** inventario tecnico di viste/override e selettori frontend realmente utilizzati, test di compatibilità statici per hook JS↔markup e Web Asset Manager, collegamenti alla guida CSS. Nessuna modifica a ACL o output applicativo. La ricognizione statica non completa il collaudo su diversi template Joomla e non abilita automaticamente FE-01; vedere [FRONTEND_CONTRACT_INVENTORY.md](FRONTEND_CONTRACT_INVENTORY.md).
+
 **Fonte funzionale:** [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md). La realizzazione è pianificata per la 1.0.0 dove indicato; il codice preesistente resta baseline, non va duplicato. Le attività FE sono **ID di lavoro**, non numeri di PR e non prove di implementazione. La modalità immersiva completa rimane valutazione successiva e non gate di rilascio.
 
 | Ordine suggerito | ID | Ambito e criteri principali | Gate e dipendenze | Tracciatura |
