@@ -16,6 +16,7 @@ final class CatalogOptions
     private const DEFAULTS = [
         'catalog_show_filters' => '1',
         'catalog_show_order' => '1',
+        'catalog_show_category' => '1',
         'catalog_show_cover' => '1',
         'catalog_show_summary' => '1',
         'catalog_page_size' => '12',
