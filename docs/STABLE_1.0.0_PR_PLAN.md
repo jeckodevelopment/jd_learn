@@ -23,6 +23,10 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-08 candidata (categorie):** nelle opzioni della voce menu Joomla di tipo `category` sono disponibili due impostazioni indipendenti, `category_show_subcategories` e `category_show_courses` (Sì/No, default Sì). La pagina categoria conserva la visualizzazione congiunta e le due paginazioni distinte quando entrambe sono attive; la sezione nascosta non effettua le rispettive query di elenco. L'opzione è applicata solo se la voce menu attiva corrisponde esattamente all'ID categoria, non è abilitabile tramite GET e non modifica i controlli ACL ereditati. Le schede di sottocategorie e corsi usano le classi pubbliche di card. Nessun conteggio non fondato o nuova tabella. Il collaudo manuale Joomla rimane pendente; stima globale di riferimento 79,56% invariata.
+
+
+
 **FE-07 — PR #518 integrata (merge `4b01daddaf5ebff7987c6cddfcab1c73758968ff`):** catalogo pubblico con schede, introduzione e copertina dedicata facoltativa; campo immagine media Joomla nel backend, alt/decorativa e validazione locale tramite CourseArtwork, con dati salvati in params_json esistente. Dettaglio con copertina, sequenza verticale ordinata, numerazione editoriale senza prerequisiti impliciti e progressi personali solo per autenticati quando presenti nella proiezione PathwayService/PathwayProgress. Nessuna iscrizione cumulativa, schema o bypass ACL. Aggiunta voce menu Joomla per dettaglio percorso, traduzioni IT/EN, CSS scoped, test e QA. Ricerca/filtri per catalogo percorsi non introdotti in questa tranche; [CI 43935233607](https://github.com/jeckodevelopment/jd_learn/actions/runs/43935233607) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43935233607/artifacts/14258414878) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `46e7d0a91fc95b0e294121c06caa7769b03ff631ef28eb448b7db1c2be6cd8c5`. Collaudo manuale Joomla pendente e avanzamento globale di riferimento 79,56% invariato.
 
 
