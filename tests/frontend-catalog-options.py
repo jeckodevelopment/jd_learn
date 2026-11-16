@@ -38,6 +38,7 @@ css = (root / "component/media/css/site.css").read_text()
 assert "ComponentHelper::getParams('com_jlms')" in helper
 assert "getMenu()->getActive()" in helper
 assert "($menu->query['view'] ?? '') === 'courses'" in helper
+assert "($menu->query['view'] ?? '') === 'category'" in helper
 assert "CatalogOptions::enabled('catalog_show_filters')" in model
 assert "Factory::getApplication()->getInput()->get('filter'" in model
 assert "CatalogOptions::get('catalog_page_size')" in model
