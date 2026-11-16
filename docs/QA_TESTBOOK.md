@@ -1,3 +1,12 @@
+
+## LCM-01 — blocco migrazioni e notifiche su corsi inattivi
+
+1. Creare due versioni didattiche con una iscrizione migrabile: verificare anteprima e migrazione su corso pubblicato, quindi ripetere su corso non pubblicato (`0`), archiviato (`2`) e cestinato (`-2`). L'anteprima deve risultare bloccata e il POST di migrazione rifiutato anche con hash valido; le iscrizioni originali e i progressi rimangono invariati.
+2. Abilitare le notifiche facoltative di nuova lezione e aggiornamento significativo e predisporre una coda con destinatario e SMTP di prova. Archiviare il corso prima della generazione e accertare che non vengano creati nuovi avvisi didattici.
+3. Accodare un avviso quando il corso è pubblicato, poi archiviarlo **prima del dispatch**: l'outbox deve scartare il messaggio senza inviarlo. Controllare anche non pubblicato e cestinato, entrambe le lingue e gli ACL; ripubblicare e verificare un nuovo evento valido.
+4. Verificare che le email informative già inviate restino nell'audit secondo retention, che lo storico personale e gli attestati già emessi siano preservati e che nessuna nuova migrazione avvenga attraverso una richiesta ripetuta o concorrente.
+
+**Stato:** verifiche automatiche da CI; collaudo manuale Joomla/SMTP non ancora eseguito. LCM-01 resta parziale fino al controllo completo di tutti gli endpoint e dei casi di concorrenza.
 ## LCM-01 — primo gate server-side per corsi non pubblicati, archiviati e cestinati
 
 1. Su Joomla di prova predisporre un corso pubblicato con una lezione, un iscritto attivo e almeno un completamento; annotare progressi, iscrizione e PDF già emessi (se disponibili).

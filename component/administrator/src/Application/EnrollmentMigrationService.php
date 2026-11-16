@@ -56,7 +56,7 @@ final class EnrollmentMigrationService
         if (!in_array($source->status, ['active','completed','suspended'], true) || !(int) $source->user_id) {
             throw new \RuntimeException('COM_JLMS_MIGRATION_SOURCE_INVALID',409);
         }
-        $q = $this->db->createQuery()->select('current_version_id, delivery_enabled')->from('#__jlms_courses')->where('id=:course')
+        $q = $this->db->createQuery()->select('current_version_id, delivery_enabled, state')->from('#__jlms_courses')->where('id=:course')
             ->bind(':course',$course,ParameterType::INTEGER);
         $courseRecord=$this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND',404);
         $targetVersion = (int)$courseRecord->current_version_id;
@@ -150,7 +150,7 @@ final class EnrollmentMigrationService
             'target_edition_id'=>(int)($targetEdition->id??0),
             'learner_name'=>(string)($source->learner_name??''),'mapping'=>$normal,'transfers'=>$eligible,'unmapped'=>$missing,
             'open_attempts'=>$openAttempts,'existing_target_id'=>$existingTarget,
-            'blocked'=>$openAttempts?'COM_JLMS_MIGRATION_OPEN_ATTEMPT':($existingTarget?'COM_JLMS_MIGRATION_TARGET_EXISTS':($mappingConflict?'COM_JLMS_MIGRATION_MAPPING_CONFLICT':(!$courseRecord->delivery_enabled?'COM_JLMS_COURSE_DELIVERY_SUSPENDED':($editionUnavailable?'COM_JLMS_MIGRATION_EDITION_UNAVAILABLE':($editionFull?'COM_JLMS_MIGRATION_EDITION_FULL':null)))))];
+            'blocked'=>(int)$courseRecord->state!==1?'COM_JLMS_LEARNING_DENIED':($openAttempts?'COM_JLMS_MIGRATION_OPEN_ATTEMPT':($existingTarget?'COM_JLMS_MIGRATION_TARGET_EXISTS':($mappingConflict?'COM_JLMS_MIGRATION_MAPPING_CONFLICT':(!$courseRecord->delivery_enabled?'COM_JLMS_COURSE_DELIVERY_SUSPENDED':($editionUnavailable?'COM_JLMS_MIGRATION_EDITION_UNAVAILABLE':($editionFull?'COM_JLMS_MIGRATION_EDITION_FULL':null))))))];
         $plan['hash']=hash('sha256',QuestionDefinition::canonical($plan));
         $plan['completed_source_lessons']=array_map(static fn(object $row): array=>['id'=>(int)$row->lesson_id,'title'=>$row->title],$completed);
         $plan['target_lessons']=array_map(static fn(object $row): array=>['id'=>(int)$row->id,'title'=>$row->title,'required'=>(bool)$row->required],array_values($targetLessons));

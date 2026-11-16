@@ -46,7 +46,7 @@ final class LessonReleaseNotice
             ->where('notice.id IS NULL')->where("v.status = 'published'")
             ->where("ed.status = 'open'")->where("e.status = 'active'")
             ->where('e.completed_at IS NULL')->where('u.block = 0')
-            ->where('c.delivery_enabled = 1')
+            ->where('c.state = 1')->where('c.delivery_enabled = 1')
             ->where('(e.starts_at IS NULL OR e.starts_at <= UTC_TIMESTAMP(6))')
             ->where('(e.ends_at IS NULL OR e.ends_at > UTC_TIMESTAMP(6))')
             ->where('(ed.starts_at IS NULL OR ed.starts_at <= UTC_TIMESTAMP(6))')
