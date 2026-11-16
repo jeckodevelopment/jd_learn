@@ -31,6 +31,10 @@ Regola CSS disponibile nel WAM `com_jlms.site`, file `component/media/css/site.c
 
 Verifica automatica: `python3 tests/frontend-css-contract.py`. Validazione manuale obbligatoria nel [QA_TESTBOOK.md](QA_TESTBOOK.md). **Questa è una prima base FE-10, non la chiusura dell'inventario completo di CSS/JS/override** e non implica ancora la nuova UX prevista da [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md).
 
+## FE-05 — Dashboard riepilogativa (quarta tranche)
+
+La vista `dashboard/default.php` mantiene `#jlms-dashboard.jlms-dashboard` e `#jlms-dashboard-header`. Usa la regione `#jlms-dashboard-summary`, un `dl.jlms-summary-stats` con contatori storici e i link esistenti `#jlms-dashboard-my-courses-link`, `#jlms-dashboard-my-certificates-link`, `#jlms-dashboard-preferences-link` e `#jlms-dashboard-catalog`. L'eventuale `#jlms-dashboard-latest` contiene una ripresa condizionata alla proiezione di autorizzazione. Lo stile dei contatori è confinato a `#jlms-dashboard` e non modifica token globali, componenti Joomla, o i form delle viste autonome. Il layout completo delle iscrizioni è reso solo in `mycourses/default.php`; gli override Joomla non devono reintrodurre contenuti privati né link mutativi.
+
 ## FE-05 — Preferenze personali (terza tranche)
 
 La vista `preferences` usa `#jlms-preferences-view.jlms-dashboard` e il partial `dashboard/_preferences.php`. Gli ID `#jlms-course-announcement-preferences` e `#jlms-mail-consent-state`, il token CSRF e le azioni POST preesistenti sono preservati. Web Asset Manager `com_jlms.site`, senza nuovi JS o stili globali. Override: `templates/NOME/html/com_jlms/preferences/default.php`; collaudo Joomla IT/EN, ACL, menu e SMTP pendente.
