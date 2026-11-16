@@ -31,6 +31,10 @@ Regola CSS disponibile nel WAM `com_jlms.site`, file `component/media/css/site.c
 
 Verifica automatica: `python3 tests/frontend-css-contract.py`. Validazione manuale obbligatoria nel [QA_TESTBOOK.md](QA_TESTBOOK.md). **Questa è una prima base FE-10, non la chiusura dell'inventario completo di CSS/JS/override** e non implica ancora la nuova UX prevista da [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md).
 
+## FE-05 — Preferenze personali (terza tranche)
+
+La vista `preferences` usa `#jlms-preferences-view.jlms-dashboard` e il partial `dashboard/_preferences.php`. Gli ID `#jlms-course-announcement-preferences` e `#jlms-mail-consent-state`, il token CSRF e le azioni POST preesistenti sono preservati. Web Asset Manager `com_jlms.site`, senza nuovi JS o stili globali. Override: `templates/NOME/html/com_jlms/preferences/default.php`; collaudo Joomla IT/EN, ACL, menu e SMTP pendente.
+
 ## FE-05 — I miei attestati (PR #510)
 
 La vista `mycertificates` utilizza la radice `#jlms-my-certificates-view.jlms-dashboard.jlms-my-certificates-view`, la griglia esistente `.jlms-my-course-grid` e le schede `.jlms-card.jlms-my-course`. Il partial `dashboard/_certificates.php` viene riutilizzato anche da `dashboard/default.php`, senza duplicazione di ID per schede ripetute. WAM `com_jlms.site`, nessun JS richiesto. Le regole `.jlms-card` sono estese alla nuova radice senza alterare gli override esistenti. Override nativo: `templates/NOME/html/com_jlms/mycertificates/default.php`; preservare owner-check sul servizio e link al task privato di download. Menu IT/EN, anonimato, ACL, viewport e override da collaudare in Joomla.
