@@ -937,3 +937,23 @@ for bad in (
     "->bind(':lastError', 'Manual reconciliation:",
 ):
     assert bad not in reconciliation, ('By-reference SQL bind expression',bad)
+
+
+# Issue #308: native Joomla certificate list and visible per-course policy.
+certificate_model = (ROOT / 'component/administrator/src/Model/CertificatesModel.php').read_text()
+certificate_view = (ROOT / 'component/administrator/src/View/Certificates/HtmlView.php').read_text()
+certificate_list = (ROOT / 'component/administrator/tmpl/certificates/default.php').read_text()
+certificate_filters = (ROOT / 'component/administrator/forms/filter_certificates.xml').read_text()
+certificate_service = (ROOT / 'component/administrator/src/Application/CertificateService.php').read_text()
+course_editor = (ROOT / 'component/administrator/tmpl/course/edit.php').read_text()
+course_view = (ROOT / 'component/administrator/src/View/Course/HtmlView.php').read_text()
+assert 'extends ListModel' in certificate_model
+assert "'filter_fields'" in certificate_model and "'filter.status'" in certificate_model
+assert "'FilterForm'" in certificate_view and "'Pagination'" in certificate_view
+assert "joomla.searchtools.default" in certificate_list and "getListFooter()" in certificate_list
+assert "searchtools.sort" in certificate_list and "view=certificate&id=" in certificate_list
+assert 'name="fullordering"' in certificate_filters and 'name="limit"' in certificate_filters
+assert 'name="status"' in certificate_filters and 'name="search"' in certificate_filters
+assert "$allowedOrders[$order]" in certificate_service and "'certificate_state'" in certificate_service
+assert "renderField('certificate_enabled')" in course_editor and "jlms-course-certificates" in course_editor
+assert "setFieldAttribute('certificate_enabled', 'disabled', 'true')" in course_view
