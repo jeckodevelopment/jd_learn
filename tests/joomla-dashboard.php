@@ -168,6 +168,50 @@ try {
  $update('jlms_courses',$f['course_id'],['state'=>1]);
 }
 dashExpect(array_column($read($owner),null,'id')[$active]['access']==='available','republished course restores classroom availability');
+// LCM-01: an issued certificate is historical evidence, never gated by
+// the current publication state or by lesson access. A distinct owner still
+// cannot list or download it. Use the default installed immutable PDF template.
+$certificates=$component->getCertificateService();
+$templateId=(int)$db->setQuery("SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1")->loadResult();
+dashExpect($templateId>0,'certificate fixture has the installed default PDF template');
+$completedAt=(string)$db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id='.$completed)->loadResult();
+$serial='LCM01-'.strtoupper(bin2hex(random_bytes(8)));
+$certificate=(object)['enrollment_id'=>$completed,'course_version_id'=>$versionId,
+    'template_id'=>$templateId,'current_document_id'=>null,'issued_at'=>$completedAt,'revision'=>1];
+$db->insertObject('#__jlms_certificates',$certificate,'id');
+$templateSnapshot=(string)$db->setQuery('SELECT template_json FROM #__jlms_certificate_templates WHERE id='.$templateId)->loadResult();
+$identitySnapshot=json_encode(['user_id'=>(int)$owner->id,'name'=>'History Learner',
+    'course_id'=>(int)$f['course_id'],'course_title'=>'Frozen course title',
+    'course_version_id'=>$versionId,'completed_at'=>$completedAt,'language'=>'en-GB'],JSON_THROW_ON_ERROR);
+$document=(object)['certificate_id'=>(int)$certificate->id,'document_no'=>1,
+    'serial'=>$serial,'identity_snapshot_json'=>$identitySnapshot,
+    'template_snapshot_json'=>$templateSnapshot,'status'=>'pending_render','issued_at'=>$completedAt,'revision'=>1];
+$db->insertObject('#__jlms_certificate_documents',$document,'id');
+$update('jlms_certificates',(int)$certificate->id,['current_document_id'=>(int)$document->id]);
+$certDbSnapshot=$db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json FROM #__jlms_certificate_documents WHERE id='.(int)$document->id)->loadAssoc();
+dashExpect($certificates->listForStudent($other)===[],'foreign learner has no access to another issued certificate');
+dashDenied(fn()=>$certificates->download($other,$completed),404,'foreign certificate download denied');
+dashDenied(fn()=>$certificates->download(new \Joomla\CMS\User\User(),$completed),401,'anonymous certificate download denied');
+foreach ([0,2,-2] as $inactiveState) {
+    $update('jlms_courses',$f['course_id'],['state'=>$inactiveState]);
+    try {
+        $issued=$certificates->listForStudent($owner);
+        dashExpect(count($issued)===1&&$issued[0]['enrollment_id']===$completed
+            &&$issued[0]['title']==='Frozen course title'&&$issued[0]['serial']===$serial,
+            'inactive course retains independently owned certificate listing');
+        $file=$certificates->download($owner,$completed);
+        try { dashExpect($file['mime']==='application/pdf'&&$file['size']>100
+            &&str_starts_with((string)fread($file['handle'],8),'%PDF-'),
+            'inactive course retains authenticated private PDF delivery'); }
+        finally { fclose($file['handle']); }
+        dashDenied(fn()=>$learning->resumeTarget($owner,'en-GB',$active),404,
+            'certificate availability does not re-enable lessons');
+        dashExpect($db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json FROM #__jlms_certificate_documents WHERE id='.(int)$document->id)->loadAssoc()===$certDbSnapshot,
+            'archiving never changes certificate identity, serial, issue date or snapshot');
+    } finally { $update('jlms_courses',$f['course_id'],['state'=>1]); }
+}
+dashExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='.$completed)->loadResult()===1,
+    'lifecycle changes do not reissue certificates');
 $serialized=json_encode($read($owner),JSON_THROW_ON_ERROR);
 dashExpect(!str_contains($serialized,'LEARNING_PRIVATE_BODY')&&!str_contains($serialized,'rules_json')&&!str_contains($serialized,'subject_key')&&!str_contains($serialized,'user_id'),'projection contains no private teaching, identity keys or internal rules');
 $app->loadIdentity($owner);$model=$factory->createModel('Dashboard','Site',['ignore_request'=>true]);$model->setState('filter.progress','all');$model->setState('list.limit',20);$model->setState('list.start',20);
