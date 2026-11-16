@@ -10,19 +10,22 @@ if (config && player) {
 
   const position = () => Math.max(0, Math.floor(player.currentTime * 1000));
   let feedbackTimer = 0;
+  let feedbackState = 'idle';
   const setStatus = key => {
     if (!status) return;
     if (feedbackTimer) window.clearTimeout(feedbackTimer);
     feedbackTimer = 0;
-    status.dataset.state = key;
+    feedbackState = key;
+    if (status.dataset) status.dataset.state = key;
     status.textContent = config.labels?.[key] || '';
-    status.setAttribute('role', key === 'error' ? 'alert' : 'status');
-    status.setAttribute('aria-live', key === 'error' ? 'assertive' : 'polite');
+    status.setAttribute?.('role', key === 'error' ? 'alert' : 'status');
+    status.setAttribute?.('aria-live', key === 'error' ? 'assertive' : 'polite');
     if (key === 'saved') {
       feedbackTimer = window.setTimeout(() => {
-        if (status.dataset.state === 'saved') {
+        if (feedbackState === 'saved') {
           status.textContent = '';
-          status.dataset.state = 'idle';
+          feedbackState = 'idle';
+          if (status.dataset) status.dataset.state = 'idle';
         }
       }, 5000);
     }
@@ -62,7 +65,7 @@ if (config && player) {
     queued = null;
     if (value === lastSent) return;
     // Keep a previous error visible until the server actually confirms a save.
-    if (status?.dataset.state !== 'error') setStatus('saving');
+    if (feedbackState !== 'error') setStatus('saving');
     request = send(value, keepalive).finally(() => {
       request = null;
       if (queued !== null && queued !== value) void flush(keepalive);
