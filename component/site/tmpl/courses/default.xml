@@ -6,6 +6,9 @@
    <field name="catalog_show_filters" type="list" label="COM_JLMS_CATALOG_SHOW_FILTERS" default="" filter="cmd">
     <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
    </field>
+   <field name="catalog_show_category" type="list" label="COM_JLMS_CATALOG_SHOW_CATEGORY" default="" filter="cmd">
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
+   </field>
    <field name="catalog_show_order" type="list" label="COM_JLMS_CATALOG_SHOW_ORDER" default="" filter="cmd">
     <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
    </field>

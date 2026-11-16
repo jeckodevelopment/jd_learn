@@ -26,6 +26,9 @@ public string $difficulty = '';
     public array $pathways = [];
     public bool $showFilters = true;
     public bool $showOrder = true;
+    public bool $showCategory = true;
+    public int $categoryChoice = 0;
+    public array $categories = [];
     public bool $showCover = true;
     public bool $showSummary = true;
 
@@ -33,11 +36,14 @@ public string $difficulty = '';
     {
         $this->showFilters = CatalogOptions::enabled('catalog_show_filters');
         $this->showOrder = $this->showFilters && CatalogOptions::enabled('catalog_show_order');
+        $this->showCategory = $this->showFilters && CatalogOptions::enabled('catalog_show_category');
         $this->showCover = CatalogOptions::enabled('catalog_show_cover');
         $this->showSummary = CatalogOptions::enabled('catalog_show_summary');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
+        $this->categoryChoice = $this->getModel()->getCategoryChoice();
+        $this->categories = $this->showCategory ? $this->getModel()->getCategories() : [];
         $this->search = $this->getModel()->getSearch();
         $this->order = $this->getModel()->getOrder();
         $this->tagId = $this->getModel()->getTagId();

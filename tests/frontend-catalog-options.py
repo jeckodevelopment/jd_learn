@@ -12,7 +12,7 @@ menu = ET.parse(catalog / "default.xml").getroot()
 component = ET.parse(root / "component/administrator/config.xml").getroot()
 names = {
     "catalog_show_filters", "catalog_show_order", "catalog_show_cover",
-    "catalog_show_summary", "catalog_page_size", "catalog_default_order",
+    "catalog_show_summary", "catalog_show_category", "catalog_page_size", "catalog_default_order",
 }
 for options in (menu, component):
     fields = {x.attrib["name"]: x for x in options.findall(".//field") if "name" in x.attrib}
@@ -26,7 +26,8 @@ for folder in ("component/site/language", "component/administrator/language"):
         for key in ("COM_JLMS_CATALOG_MENU_SETTINGS", "COM_JLMS_CATALOG_SHOW_FILTERS",
                     "COM_JLMS_CATALOG_SHOW_ORDER", "COM_JLMS_CATALOG_SHOW_COVER",
                     "COM_JLMS_CATALOG_SHOW_SUMMARY", "COM_JLMS_CATALOG_PAGE_SIZE",
-                    "COM_JLMS_CATALOG_DEFAULT_ORDER"):
+                    "COM_JLMS_CATALOG_DEFAULT_ORDER", "COM_JLMS_CATALOG_SHOW_CATEGORY",
+                    "COM_JLMS_CATALOG_CATEGORY", "COM_JLMS_CATALOG_ALL_CATEGORIES"):
             assert key + "=" in content, (language, key)
 
 helper = (root / "component/site/src/Helper/CatalogOptions.php").read_text()
@@ -42,7 +43,19 @@ assert "Factory::getApplication()->getInput()->get('filter'" in model
 assert "CatalogOptions::get('catalog_page_size')" in model
 assert "v.presentation_json AS catalog_presentation_json" in model
 assert "$this->showFilters = CatalogOptions::enabled" in view
+assert "$this->showCategory = $this->showFilters && CatalogOptions::enabled" in view
+assert "getCategoryChoice()" in view and "getCategories()" in view
 assert "<?php if ($this->showFilters) : ?>" in template
+assert "<?php if ($this->showCategory) : ?>" in template
+assert 'name="filter[category_id]"' in template
+assert "COM_JLMS_CATALOG_ALL_CATEGORIES" in template
+assert "catalog_show_category" in helper
+assert "filter.category_choice" in model
+assert "isset($this->getCategories()[$categoryChoice])" in model
+service = (root / "component/administrator/src/Application/CatalogService.php").read_text()
+assert "publicCourseCategories" in service
+assert "DISTINCT cat.id, cat.title" in service
+assert "courseQuery($actor, $language, $scopeCategoryId, false)" in service
 assert "<?php if ($this->showCover) : ?>" in template
 assert "<?php if ($this->showSummary" in template
 assert "CoursePresentation::fromSnapshot" in template

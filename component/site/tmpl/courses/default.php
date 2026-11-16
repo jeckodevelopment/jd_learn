@@ -14,6 +14,15 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
  <form id="jlms-catalog-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . $this->categoryId : '')) ?>">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="courses">
   <?php if ($this->categoryId) : ?><input type="hidden" name="catid" value="<?= $this->categoryId ?>"><?php endif; ?>
+  <?php if ($this->showCategory) : ?>
+  <label for="jlms-catalog-category"><?= Text::_('COM_JLMS_CATALOG_CATEGORY') ?></label>
+  <select id="jlms-catalog-category" name="filter[category_id]">
+   <option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_CATEGORIES') ?></option>
+   <?php foreach ($this->categories as $category) : ?>
+   <option value="<?= (int) $category->id ?>"<?= $this->categoryChoice === (int) $category->id ? ' selected' : '' ?>><?= $this->escape($category->title) ?></option>
+   <?php endforeach; ?>
+  </select>
+  <?php endif; ?>
   <label for="jlms-catalog-search"><?= Text::_('COM_JLMS_CATALOG_SEARCH') ?></label>
   <input id="jlms-catalog-search" type="search" name="filter[search]" value="<?= $this->escape($this->search) ?>" maxlength="100">
   <?php if ($this->showOrder) : ?>
@@ -46,6 +55,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
   }
   $cover = (string) ($presentation['image'] ?? '');
   $duration = (int) ($presentation['estimated_minutes'] ?? 0);
+  $difficulty = (string) ($presentation['difficulty'] ?? '');
+  $difficultyKey = [
+      'beginner' => 'COM_JLMS_COURSE_BEGINNER',
+      'intermediate' => 'COM_JLMS_COURSE_INTERMEDIATE',
+      'advanced' => 'COM_JLMS_COURSE_ADVANCED',
+  ][$difficulty] ?? '';
  ?>
   <article id="jlms-course-card-<?= (int) $item->id ?>" class="jlms-card jlms-course-card" data-course-id="<?= (int) $item->id ?>">
    <?php if ($this->showCover) : ?>
@@ -61,8 +76,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
     <?php if ($this->showSummary && trim((string) $item->summary) !== '') : ?>
      <p class="jlms-course-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr((string) $item->summary, 0, 300)) ?></p>
     <?php endif; ?>
-    <?php if ($duration > 0) : ?>
-     <p class="jlms-course-card__meta"><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', $duration) ?></p>
+    <?php if ($duration > 0 || $difficultyKey !== '') : ?>
+     <p class="jlms-course-card__meta">
+      <?php if ($duration > 0) : ?><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', $duration) ?><?php endif; ?>
+      <?php if ($duration > 0 && $difficultyKey !== '') : ?> · <?php endif; ?>
+      <?php if ($difficultyKey !== '') : ?><?= Text::_($difficultyKey) ?><?php endif; ?>
+     </p>
     <?php endif; ?>
    </div>
   </article>

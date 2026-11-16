@@ -41,6 +41,14 @@ Le opzioni `catalog_show_filters`, `catalog_show_order`, `catalog_show_cover`, `
 
 Override Joomla: `templates/NOME/html/com_jlms/courses/default.php`; mantenere identificativi e controlli server e non rendere nuovamente pubblici metadati protetti. Test statico: `python3 tests/frontend-catalog-options.py`; collaudo reale in [QA_TESTBOOK.md](QA_TESTBOOK.md). Questa tranche **non** modifica scheda corso, categorie o percorsi.
 
+## FE-01 — Filtro per categoria e metadati didattici (seconda tranche)
+
+Il catalogo `courses` aggiunge il controllo facoltativo `#jlms-catalog-category` nel form GET `#jlms-catalog-filters`: `filter[category_id]` seleziona la **categoria diretta** del corso, distinta da `catid` che rimane la limitazione del catalogo alla categoria e ai discendenti già presente nella rotta. Le opzioni provengono da `CatalogService::publicCourseCategories()`, calcolate soltanto sulle schede effettivamente pubblicate e visibili all'utente (stato, versione, accesso, lingua, finestra e categoria/antenati Joomla). Un ID di categoria estraneo alle opzioni visibili produce risultati vuoti; non amplia mai i permessi. Se il form di ricerca o il controllo categoria sono disabilitati, `filter[category_id]` non viene considerato dal modello.
+
+`catalog_show_category` è configurabile in **JD Learn → Opzioni**, con override `Globale/Sì/No` nella voce menu `Catalogo corsi`; valore predefinito Sì. Le etichette sono tradotte IT/EN. Il catalogo mostra inoltre `difficulty` (Base/Intermedio/Avanzato) assieme alla durata solo se il metadato è presente nel **snapshot pubblicato**. In assenza di metadati non viene creato un riquadro vuoto. Nessuna modifica alle descrizioni o ai permessi delle lezioni. CSS scoped per il nuovo controllo, senza introdurre temi grafici proprietari.
+
+Verifica statica `python3 tests/frontend-catalog-options.py`, test Joomla in [QA_TESTBOOK.md](QA_TESTBOOK.md). Restano da verificare comportamento dei template personalizzati, selezione degli aggregati di sottocategorie e accettazione manuale.
+
 ## Catalogo e scheda corso
 
 | Vista | ID stabili | Classi ripetute |

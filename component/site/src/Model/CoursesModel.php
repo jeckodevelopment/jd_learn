@@ -10,6 +10,9 @@ use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
 
 class CoursesModel extends ListModel
 {
+    /** @var array<int, object>|null */
+    private ?array $visibleCatalogCategories = null;
+
     protected function populateState($ordering = 'c.id', $direction = 'DESC')
     {
         parent::populateState($ordering, $direction);
@@ -18,6 +21,9 @@ class CoursesModel extends ListModel
         // A hidden filter form must not allow stale or handcrafted GET filters.
         $filter = CatalogOptions::enabled('catalog_show_filters')
             ? Factory::getApplication()->getInput()->get('filter', [], 'array') : [];
+        $categoryChoice = $filter['category_id'] ?? 0;
+        $this->setState('filter.category_choice', CatalogOptions::enabled('catalog_show_category')
+            && is_scalar($categoryChoice) ? max(0, (int) $categoryChoice) : 0);
         $search = $filter['search'] ?? '';
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
         $defaultOrder = CatalogOptions::get('catalog_default_order');
@@ -47,6 +53,16 @@ class CoursesModel extends ListModel
             (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'), $teacherId, $pathwayId);
         // Only public presentation fields from the published course version.
         $query->select('v.presentation_json AS catalog_presentation_json');
+        $categoryChoice = (int) $this->getState('filter.category_choice');
+        if ($categoryChoice > 0) {
+            if (!isset($this->getCategories()[$categoryChoice])) {
+                // No category enumeration from a forged URL, even under a scoped catalogue.
+                $query->where('1 = 0');
+            } else {
+                $query->where('c.catid = :catalogCategoryChoice')
+                    ->bind(':catalogCategoryChoice', $categoryChoice, \Joomla\Database\ParameterType::INTEGER);
+            }
+        }
         $search = (string) $this->getState('filter.search');
         if ($search !== '') {
             $titleSearch = '%' . $search . '%';
@@ -71,6 +87,25 @@ class CoursesModel extends ListModel
             };
         }
         return $query->order($this->getState('filter.order') === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
+    }
+
+    public function getCategoryChoice(): int
+    {
+        return (int) $this->getState('filter.category_choice');
+    }
+
+    /** Categories containing at least one course visible to this user. */
+    public function getCategories(): array
+    {
+        if ($this->visibleCatalogCategories === null) {
+            $app = Factory::getApplication();
+            $this->visibleCatalogCategories = $app->bootComponent('com_jlms')
+                ->getCatalogService()->publicCourseCategories(
+                    $app->getIdentity(), $app->getLanguage()->getTag(),
+                    (int) $this->getState('filter.category_id')
+                );
+        }
+        return $this->visibleCatalogCategories;
     }
 
     public function getSearch(): string
