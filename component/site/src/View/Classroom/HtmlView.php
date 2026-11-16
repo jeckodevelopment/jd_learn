@@ -49,7 +49,8 @@ final class HtmlView extends BaseHtmlView
                 'resumeMs' => (int) ($this->item['lesson']->resume_ms ?? 0),
                 'token' => \Joomla\CMS\Session\Session::getFormToken(),
                 'url' => \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=audio.save&format=json', false),
-                'labels' => ['saved' => \Joomla\CMS\Language\Text::_('COM_JLMS_AUDIO_RESUME_SAVED'),
+                'labels' => ['saving' => \Joomla\CMS\Language\Text::_('COM_JLMS_AUDIO_RESUME_SAVING'),
+                    'saved' => \Joomla\CMS\Language\Text::_('COM_JLMS_AUDIO_RESUME_SAVED'),
                     'error' => \Joomla\CMS\Language\Text::_('COM_JLMS_AUDIO_RESUME_ERROR')],
             ]);
             $this->getDocument()->getWebAssetManager()->useScript('com_jlms.audio');
