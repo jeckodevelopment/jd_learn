@@ -21,7 +21,17 @@ def archive(entries):
             z.writestr(info,data)
     return out.getvalue()
 def tree(folder):return [(p.relative_to(folder).as_posix(),p.read_bytes()) for p in folder.rglob('*') if p.is_file()]
-parts=[('constituents/lib_jlms.zip',archive(tree(ROOT/'libraries/jlms'))),('constituents/com_jlms.zip',archive(tree(ROOT/'component')))]
+# Stamp the WAM version in the INSTALLABLE component from the package version.
+# The source asset registry can lag between releases; never ship stale query
+# versions for video-metadata.js, video.js or the provider module imports.
+component_entries=[]
+for name,data in tree(ROOT/'component'):
+    if name == 'media/joomla.asset.json':
+        assets=json.loads(data.decode('utf-8'))
+        assets['version']=OUTPUT_VERSION
+        data=(json.dumps(assets,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
+    component_entries.append((name,data))
+parts=[('constituents/lib_jlms.zip',archive(tree(ROOT/'libraries/jlms'))),('constituents/com_jlms.zip',archive(component_entries))]
 for provider in ['youtube','vimeo','cloudflarestream','html5']:
     parts.append(('constituents/plg_jlmsvideo_'+provider+'.zip',archive(tree(ROOT/'plugins/jlmsvideo'/provider))))
 parts.append(('constituents/plg_task_jlms.zip',archive(tree(ROOT/'plugins/task/jlms'))))
