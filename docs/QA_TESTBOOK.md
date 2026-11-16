@@ -1853,3 +1853,8 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 3. Verificare riproduzione di video nuovo pubblicato, `video.save` 200 `success:true`, `lesson_completed` solo dopo copertura reale pari alla soglia (default 90%); non accettare il solo evento `ended` né seek.
 4. Verificare modalità consultazione, altro lesson ID, autoplay/consenso non aggirato, cambio pagina e rientro; verificare assenza di regressioni su testi, documenti e audio.
 5. Se il 500 persiste, acquisire codice HTTP e `request_id` del task effettivo e log PHP/LiteSpeed prima di altre modifiche. Il merge CI non equivale a collaudo sito.
+
+
+## Post-merge PR #539 — esito CI e pacchetto
+
+**PR #539 integrata (P0 #532; merge `bebffec3eb01b3eead93d6a8e96833b5d49eec6e`):** CI verifica completa 4/4 verde [run 43980525575](https://github.com/jeckodevelopment/jd_learn/actions/runs/43980525575), gate CSV [run 43980525067](https://github.com/jeckodevelopment/jd_learn/actions/runs/43980525067). [Artefatto JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43980525575/artifacts/14282058958), digest dell'archivio GitHub Actions `sha256:3f87d34fd71960a20bfc3adbf75d3a523c04c6c0f62eff795be57a95811c1713` (NON checksum dello ZIP Joomla interno). Il frontend serializza `lesson.begin` e `video.playback` per la stessa lezione/iscrizione; test automatici verificati. **Il collaudo reale su Opera+ dell'avvio e del completamento video è pendente; issue #532 rimane aperta.** Avanzamento globale 79,56% invariato.
