@@ -12,7 +12,7 @@ const root={hidden:true,querySelector:sel=>sel==='[role="status"]'?status:sel===
 const form={elements:{namedItem:name=>controls[name.slice(6,-1)]},querySelector:()=>root};
 const host={location:new URL('https://school.example/administrator/index.php'),addEventListener(){}};
 let calls=0,imports=0,destroyed=0;
-const config={policy:'site_consent',url:'/metadata',labels:{consent:'consent',detected:'Duration %s',play:'play',loading:'loading',failed:'failed'}};
+const config={policy:'site_consent',url:'/metadata',labels:{consent:'consent',detected:'Duration %s',play:'play',loading:'loading',failed:'failed',youtube_referrer:'YouTube site identification failed',youtube_csp:'CSP blocked',youtube_timeout:'YouTube timeout'}};
 const ticket='a'.repeat(64);
 globalThis.FormData=class extends Array{constructor(){super(['jform[source_reference]',controls.source_reference.value],['jform[body]','private text'],['task','lesson.save'],['b'.repeat(32),'1']);}};
 const transport=async(_url,options)=>{calls++;check(options.body.get('task'),'lesson.metadata');check(options.body.has('jform[body]'),false);check(options.body.get('b'.repeat(32)),'1');return {ok:true,json:async()=>({success:true,data:{provider:'youtube',duration_ms:null,ticket,options:{reference:'dQw4w9WgXcQ'},adapter_url:'/media/plg_jlmsvideo_youtube/js/player.js'}})};};
@@ -27,6 +27,21 @@ resolve({ok:true,json:async()=>({success:true,data:{provider:'youtube',duration_
 check(controls.duration_ticket.value,'');check(imports,1);
 editor.transport=async()=>({ok:true,json:async()=>({success:true,data:{provider:'youtube',duration_ms:10000,ticket}})});
 await editor.probe(editor.generation);check(controls.sdk_duration_ms.value,'10000');check(imports,1);editor.clear();
+editor.transport=async()=>({ok:false,status:422,json:async()=>({success:false,message:'YouTube provider disabled by administrator'})});
+await editor.probe(editor.generation);
+check(status.textContent,'YouTube provider disabled by administrator');
+editor.transport=async()=>({ok:false,status:503,json:async()=>({success:false,message:'server private trace must not leak'})});
+await editor.probe(editor.generation);
+check(status.textContent,'failed');
+editor.transport=transport;
+editor.importer=async()=>({create:async(_container,_data,emit)=>{emit('error','youtube_referrer');throw new Error('youtube_referrer');}});
+await editor.probe(editor.generation);
+check(status.textContent,'YouTube site identification failed');
+check(controls.duration_ticket.value,'');
+editor.transport=async()=>({ok:true,json:async()=>({success:true,data:{provider:'youtube',duration_ms:null,ticket,options:{reference:'dQw4w9WgXcQ'},adapter_url:'/media/plg_jlmsvideo_youtube/js/player.js'}})});
+editor.importer=async()=>({create:async()=>{throw Error('player timeout');}});
+await editor.probe(editor.generation);
+check(status.textContent,'YouTube timeout');
 globalThis.FormData=original;
 // A temporary Vimeo SDK error must not poison the next preview attempt.
 const vmSource=await readFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url),'utf8');
