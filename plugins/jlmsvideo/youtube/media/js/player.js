@@ -101,29 +101,29 @@ export async function create(container, descriptor, emit, signal) {
       };
       const readyTimer = setTimeout(() => finish(new Error('player timeout')), 30000);
       cancelReady = finish;
-      // The SDK must attach after navigation, when the iframe has its YouTube origin.
-      frame.onload = () => {
-        frame.onload = null;
-        try {
-          player = new globalThis.YT.Player(frame, {
-            events: {
-              onReady: () => finish(),
-              onError: ({data}) => {
-                const reason = data === 153 ? 'youtube_referrer'
-                  : [100, 101, 150].includes(data) ? 'youtube_embed' : 'startup_provider';
-                finish(new Error(reason));
-                emit('error', reason);
-              },
-              onStateChange: ({data}) => emit(({1: 'play', 2: 'pause', 0: 'ended', 3: 'buffering'})[data] || 'position'),
-              onPlaybackRateChange: () => emit('ratechange'),
-            },
-          });
-        } catch (error) {
-          finish(error);
-        }
-      };
+      // Attach the IFrame API as soon as the iframe enters the DOM, before
+      // its navigation can emit an unobserved player-ready message. Waiting
+      // for iframe.onload can race with the YouTube widget handshake (the
+      // document load event is not an IFrame API readiness signal).
       frame.src = url.href;
       container.append(frame);
+      try {
+        player = new globalThis.YT.Player(frame, {
+          events: {
+            onReady: () => finish(),
+            onError: ({data}) => {
+              const reason = data === 153 ? 'youtube_referrer'
+                : [100, 101, 150].includes(data) ? 'youtube_embed' : 'startup_provider';
+              finish(new Error(reason));
+              emit('error', reason);
+            },
+            onStateChange: ({data}) => emit(({1: 'play', 2: 'pause', 0: 'ended', 3: 'buffering'})[data] || 'position'),
+            onPlaybackRateChange: () => emit('ratechange'),
+          },
+        });
+      } catch (error) {
+        finish(error);
+      }
     });
   } catch (error) {
     destroy();
