@@ -11,18 +11,22 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 
 final class HtmlView extends BaseHtmlView
 {
-    public array $result = [];
+    public $items;
+    public $pagination;
+    public $state;
+    public $filterForm;
+    public $activeFilters;
 
     public function display($tpl = null)
     {
         $app = Factory::getApplication();
         $app->setHeader('Cache-Control', 'private, no-store', true);
         try {
-            $this->result = $app->bootComponent('com_jlms')->getCertificateService()->adminList($app->getIdentity(), [
-                'q' => $app->getInput()->getString('q', ''),
-                'status' => $app->getInput()->getCmd('status', ''),
-                'offset' => $app->getInput()->getInt('offset', 0),
-            ]);
+            $this->items = $this->get('Items');
+            $this->pagination = $this->get('Pagination');
+            $this->state = $this->get('State');
+            $this->filterForm = $this->get('FilterForm');
+            $this->activeFilters = $this->get('ActiveFilters');
         } catch (\Throwable $error) {
             if (in_array($error->getMessage(), ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_CERTIFICATE_AUDIT_FAILED'], true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
