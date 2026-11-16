@@ -32,7 +32,7 @@ assert "getPagesLinks()" in LAYOUT
 assert 'name="view" value="mycourses"' in LAYOUT
 assert "view=mycourses" in LAYOUT and "view=mycourses" in DASHBOARD
 assert "RouterViewConfiguration('mycourses')" in ROUTER
-assert "'mycourses'" in CONTROLLER and "'dashboard', 'mycourses', 'mycertificates', 'lessonpreview'" in CONTROLLER
+assert "'mycourses'" in CONTROLLER and "'dashboard', 'mycourses', 'mycertificates', 'preferences', 'lessonpreview'" in CONTROLLER
 manifest = (ROOT / "component/jlms.xml").read_text()
 assert '<folder>tmpl</folder>' in manifest and '<folder>src</folder>' in manifest
 for lang in ("it-IT", "en-GB"):

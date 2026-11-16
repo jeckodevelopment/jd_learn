@@ -23,6 +23,10 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-05 — Terza tranche candidata (Preferenze):** nuova vista privata `preferences`, menu Joomla IT/EN, riuso di `CourseAnnouncementConsent` e delle POST CSRF `mailconsent.request` e `mailconsent.revoke`. I redirect di richiesta, conferma e revoca tornano alla vista dedicata; il layout consenso è condiviso con la dashboard. Nessuna nuova regola di consenso, schema, endpoint o modifica delle notifiche operative. Dashboard riepilogativa e collaudo Joomla/SMTP restano da completare. Stima globale di riferimento 79,56% invariata.
+
+
+
 **FE-05 — Seconda tranche PR #510 integrata (merge `0605c07b6c654e3ff006b9aed79b9bfbc601d676`):** vista autonoma privata `mycertificates` con voce menu Joomla IT/EN, riuso di `CertificateService::listForStudent`, endpoint download già protetto e partial condivisa con dashboard. Nessuna nuova query o ampliamento di accesso; collaudo Joomla su anonimato, multiutente, revoche, storico archiviato e download ancora necessario. [CI 43919671264](https://github.com/jeckodevelopment/jd_learn/actions/runs/43919671264) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43919671264/artifacts/14252108998), ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `2215a89c7676f421aeaa0bf0bd09857b16ec44f442c5fa2e44f654c2d33f6432`. La dashboard mantiene i blocchi preesistenti finché FE-05 non è completato; preferenze e riepilogo restano a piano. Il riferimento di avanzamento ponderato resta 79,56% fino a riconciliazione quantitativa e accettazione.
 
 
