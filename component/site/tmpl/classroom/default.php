@@ -24,15 +24,15 @@ $currentModule = 0;
  <nav id="jlms-classroom-outline" aria-label="<?= Text::_('COM_JLMS_CURRICULUM') ?>">
  <?php foreach ($item['outline'] as $entry) : ?>
   <?php if ((int) $entry->module_id !== $currentModule) : ?>
-   <?php if ($currentModule) : ?></ol></section><?php endif; $currentModule = (int) $entry->module_id; ?>
-   <section id="jlms-classroom-module-<?= $currentModule ?>" class="jlms-classroom-module"><h2><?= $this->escape($entry->module_title) ?></h2><ol>
+   <?php if ($currentModule) : ?></ol></details><?php endif; $currentModule = (int) $entry->module_id; ?>
+   <details id="jlms-classroom-module-<?= $currentModule ?>" class="jlms-classroom-module"<?= (int) $selected->id === (int) $entry->id ? ' open' : '' ?>><summary class="jlms-classroom-module__summary"><span class="jlms-classroom-module__title"><?= $this->escape($entry->module_title) ?></span></summary><ol>
   <?php endif; ?>
   <li id="jlms-classroom-lesson-<?= (int) $entry->id ?>" class="jlms-classroom-lesson">
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $entry->id) ?>"<?= (int) $selected->id === (int) $entry->id ? ' aria-current="page"' : '' ?>><?= $this->escape($entry->title) ?></a>
    <span><?php if ($entry->schedule_state === 'upcoming') : ?><?= Text::sprintf('COM_JLMS_LESSON_UPCOMING', $this->escape($entry->schedule_available_at)) ?><?php elseif ($entry->schedule_state === 'awaiting_start') : ?><?= Text::sprintf('COM_JLMS_LESSON_AWAITING_START', (int) $entry->schedule_after_days) ?><?php elseif ($entry->schedule_state === 'closed') : ?><?= Text::_('COM_JLMS_LESSON_CLOSED') ?><?php elseif (!empty($entry->prerequisite_blocked)) : ?><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?><?php else : ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->state === 'started' ? 'COM_JLMS_LESSON_IN_PROGRESS' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'))) ?><?php endif; ?></span>
   </li>
  <?php endforeach; ?>
- <?php if ($currentModule) : ?></ol></section><?php endif; ?>
+ <?php if ($currentModule) : ?></ol></details><?php endif; ?>
  </nav>
  <article id="jlms-lesson-content" class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
   <p id="jlms-lesson-progress-status" role="status" aria-live="polite"></p>
