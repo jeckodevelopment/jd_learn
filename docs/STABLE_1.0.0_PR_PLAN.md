@@ -30,6 +30,8 @@ Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di i
 **LCM-01 secondo incremento, PR #486 integrata (CI 4/4 verde, Joomla/SMTP pendente):** negare nuove migrazioni delle iscrizioni e notifiche didattiche (eventi nuova lezione e nuova versione) quando lo stato del corso non è `1`, anche se eventi erano già accodati prima dell'archiviazione. Aggiornare test, manuali e requisiti; restano da verificare storia personale, attestati, tutti gli endpoint laterali e le richieste concorrenti prima di dichiarare concluso il gate LCM-01.
 
 
+**LCM-01 storico personale:** preservare le percentuali storiche per corsi di apprendimento, ma non attribuire una percentuale ai corsi di sola consultazione quando lo stato attuale è non pubblicato/archiviato/cestinato. Test di dashboard Joomla su stati 0/2/-2, ripresa negata, storico invariato; verifica PDF e collaudo manuale restano aperti. Nessuna chiusura automatica del requisito.
+
 ## Backlog operativo e dipendenze
 
 | ID | Priorità | Attività / criterio di chiusura |
