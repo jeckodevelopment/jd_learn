@@ -1,3 +1,16 @@
+## LCM-01 — primo gate server-side per corsi non pubblicati, archiviati e cestinati
+
+1. Su Joomla di prova predisporre un corso pubblicato con una lezione, un iscritto attivo e almeno un completamento; annotare progressi, iscrizione e PDF già emessi (se disponibili).
+2. Da backend ritirare la pubblicazione (`state=0`) e verificare che catalogo, URL diretto dell'aula, completamento e nuova iscrizione non consentano accesso o scrittura. Ripetere con corso archiviato (`state=2`) e cestinato (`state=-2`) quando le azioni corrispondenti sono disponibili.
+3. Verificare che gli endpoint di aula, progresso, video e materiali protetti non aggirino il blocco; provare utenti anonimi, iscritti, docenti e utenti con ACL ridotte.
+4. Verificare da database e dalla dashboard personale che iscrizione, progressi, data completamento e attestati restino invariati e consultabili secondo le regole di storico. Il blocco della fruizione non equivale alla cancellazione dello storico.
+5. Ripubblicare il corso su ambiente di prova e verificare che una finestra promozionale scaduta (`publish_down`) da sola non interrompa l'aula già autorizzata; controllare separatamente lo stato di apertura delle iscrizioni.
+6. Ripetere con accessi diretti, concorrenza di richieste e aggiornamento del pacchetto su sito con dati preesistenti, osservando ogni eventuale via laterale ancora non coperta.
+
+**Implementazione:** test automatici di servizio aggiornati per gli stati 0/2/-2 e per la preservazione dei progressi, unitamente al test di transizione archivio. **Collaudo Joomla/accettazione: pendente.** Restano da verificare i flussi laterali LCM-01, le toolbar LCM-02, percorsi LCM-03 e docenti LCM-04.
+
+---
+
 ## Issue #472 — voce menu frontend Percorsi formativi
 
 1. Su Joomla 6 con JD Learn aggiornato, aprire **Menu → Nuova voce di menu → Tipo di voce di menu → JD Learn**: deve essere presente **Percorsi formativi** (in EN **Learning pathways**) con descrizione corretta.
