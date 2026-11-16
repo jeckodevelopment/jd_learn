@@ -1619,3 +1619,16 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 6. Eseguire `python3 tests/frontend-course-details.py`, il gate CSV e la CI completa, verificando che la build installabile venga generata senza regressioni; poi ripetere smoke su sito Joomla.
 
 **Esito:** accettazione manuale non eseguita; il gate strutturale e CI non provano l'interazione reale.
+
+
+## FE-03 — Aula didattica, programma espandibile e header (prima tranche)
+
+1. Installare il pacchetto e aprire un corso con più moduli/lezioni come iscritto autorizzato. Il modulo che contiene la lezione corrente deve risultare aperto, gli altri chiusi, i titoli accessibili; aprire e richiudere con tastiera (Enter/Spazio).
+2. Con template Joomla desktop stretto a causa di moduli laterali e viewport desktop ampia, il programma deve essere richiamabile dal toggle in base alla **larghezza del componente**, non alla sola viewport. Verificare `aria-expanded` e le etichette IT/EN.
+3. Senza JavaScript, programma visibile e moduli `details` utilizzabili; nessuna lezione privata accessibile per il solo fatto di apparire nella scaletta.
+4. Provare larghezza larga, mobile, zoom 200%, smartphone ruotato, viewport bassa, header sticky del template (usando `--jlms-classroom-sticky-offset`): nessuna sovrapposizione o scroll orizzontale, fallback statico quando necessario.
+5. Verificare 0, 1, più docenti; gli account senza profilo pubblico o con ACL non valido non devono mostrare nome/link. Nessuna email/username Joomla nel DOM.
+6. Video con consenso, audio, quiz, testo lungo, materiali e salvataggio progressi: comportamento invariato. Il cambio lezione non attribuisce completamento.
+7. Eseguire `python3 tests/frontend-classroom-layout.py`, `tests/frontend-contract-hooks.py`, il gate CSV e tutte le matrici CI; annotare separatamente collaudo manuale e test automatici.
+
+**Accettazione Joomla manuale:** pendente; primo incremento FE-03 non equivale al completamento di FE-04.

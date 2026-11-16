@@ -9,9 +9,17 @@ use Joomla\CMS\HTML\HTMLHelper;
 $item = $this->item;
 $selected = $item['lesson'];
 $currentModule = 0;
+$selectedModule = 0;
+foreach ($item['outline'] as $entry) {
+    if ((int) $entry->id === (int) $selected->id) { $selectedModule = (int) $entry->module_id; break; }
+}
 ?>
 <section id="jlms-classroom" class="jlms-classroom" data-enrollment-id="<?= (int) $item['enrollment_id'] ?>">
- <header id="jlms-classroom-header"><h1><?= $this->escape($item['title']) ?></h1><a id="jlms-classroom-dashboard" href="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a></header>
+ <header id="jlms-classroom-header"><div class="jlms-classroom-header__heading"><h1><?= $this->escape($item['title']) ?></h1>
+ <?php if (!empty($item['teachers'])) : ?><p id="jlms-classroom-teachers" class="jlms-classroom-teachers">
+ <?= Text::_('COM_JLMS_TEACHERS') ?>:
+ <?php foreach ($item['teachers'] as $index => $teacher) : ?><?= $index ? ', ' : '' ?><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?= $this->escape($teacher['title']) ?></a><?php endforeach; ?>
+ </p><?php endif; ?></div><a id="jlms-classroom-dashboard" href="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a></header>
  <?php if ($item['progress_applicable']) : ?>
  <section id="jlms-learning-progress" aria-label="<?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>">
   <label for="jlms-progress-meter"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $item['percent'] ?>%</label>
@@ -24,15 +32,15 @@ $currentModule = 0;
  <nav id="jlms-classroom-outline" aria-label="<?= Text::_('COM_JLMS_CURRICULUM') ?>">
  <?php foreach ($item['outline'] as $entry) : ?>
   <?php if ((int) $entry->module_id !== $currentModule) : ?>
-   <?php if ($currentModule) : ?></ol></section><?php endif; $currentModule = (int) $entry->module_id; ?>
-   <section id="jlms-classroom-module-<?= $currentModule ?>" class="jlms-classroom-module"><h2><?= $this->escape($entry->module_title) ?></h2><ol>
+   <?php if ($currentModule) : ?></ol></details><?php endif; $currentModule = (int) $entry->module_id; ?>
+   <details id="jlms-classroom-module-<?= $currentModule ?>" class="jlms-classroom-module"<?= $selectedModule === $currentModule ? ' open' : '' ?>><summary class="jlms-classroom-module__summary"><span class="jlms-classroom-module__title"><?= $this->escape($entry->module_title) ?></span></summary><ol>
   <?php endif; ?>
   <li id="jlms-classroom-lesson-<?= (int) $entry->id ?>" class="jlms-classroom-lesson">
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $entry->id) ?>"<?= (int) $selected->id === (int) $entry->id ? ' aria-current="page"' : '' ?>><?= $this->escape($entry->title) ?></a>
    <span><?php if ($entry->schedule_state === 'upcoming') : ?><?= Text::sprintf('COM_JLMS_LESSON_UPCOMING', $this->escape($entry->schedule_available_at)) ?><?php elseif ($entry->schedule_state === 'awaiting_start') : ?><?= Text::sprintf('COM_JLMS_LESSON_AWAITING_START', (int) $entry->schedule_after_days) ?><?php elseif ($entry->schedule_state === 'closed') : ?><?= Text::_('COM_JLMS_LESSON_CLOSED') ?><?php elseif (!empty($entry->prerequisite_blocked)) : ?><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?><?php else : ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->state === 'started' ? 'COM_JLMS_LESSON_IN_PROGRESS' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'))) ?><?php endif; ?></span>
   </li>
  <?php endforeach; ?>
- <?php if ($currentModule) : ?></ol></section><?php endif; ?>
+ <?php if ($currentModule) : ?></ol></details><?php endif; ?>
  </nav>
  <article id="jlms-lesson-content" class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
   <p id="jlms-lesson-progress-status" role="status" aria-live="polite"></p>

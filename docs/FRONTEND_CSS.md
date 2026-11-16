@@ -68,6 +68,18 @@ La modifica è di presentazione e disclosure pubblica; non altera i controller d
 
 Elementi ripetuti: `jlms-course-card-{courseId}`, `jlms-module-{moduleId}`, `jlms-lesson-{lessonId}`; gli ID non dipendono dal titolo o dalla lingua. Le regioni condizionali sono presenti solo quando pertinenti. Override nativi in `templates/NOME/html/com_jlms/courses/default.php` e `course/default.php`; gli override devono conservare escaping, link Joomla e assenza di dati protetti. WAM `com_jlms.site`; variabili CSS già documentate. Le viste categorie e aula sono descritte nelle sezioni dedicate di questa guida.
 
+## FE-03 — Programma espandibile e responsive (prima tranche)
+
+La vista `classroom/default.php` conserva tutti gli hook esistenti (`#jlms-classroom`, `#jlms-classroom-outline-toggle`, `#jlms-classroom-outline`, `#jlms-lesson-content`, player, quiz, materiali, token e form progressi). La nuova presentazione usa `details` e `summary` nativi per ogni modulo `.jlms-classroom-module`; il modulo della lezione corrente è espanso inizialmente. Le lezioni mantengono i collegamenti contestuali e gli stati prodotti dal backend; navigare non accredita alcun completamento.
+
+Con JavaScript attivo, `classroom-outline.js` misura la larghezza del **contenitore del componente** mediante ResizeObserver e, se inferiore o uguale a 768px, mostra il pulsante di apertura/chiusura del programma. In mancanza di ResizeObserver usa `matchMedia` come fallback; senza JavaScript il programma resta visibile e i moduli sono comunque espandibili. L'attributo `aria-expanded` e le etichette `data-show-label` / `data-hide-label` restano gli hook funzionali, non sostituirli negli override.
+
+CSS esclusivamente scoped su `#jlms-classroom`: griglia contenuto + indice che diventa singola colonna tramite container query `jlms-classroom` (fallback media-query); indice sticky quando possibile e statico su layout stretti o viewport basse. Il template può impostare `--jlms-classroom-sticky-offset` per non coprire gli header sticky nativi Joomla. Non usa `fixed` né nasconde il template. Testo lezione con larghezza leggibile, senza limitare la larghezza di video e materiali.
+
+L'intestazione compatta mostra i docenti **soltanto se i loro profili sono pubblicabili e accessibili** tramite `TeacherProfiles::current`; non espone email/username o altri dettagli dell'account Joomla. Questo è il primo incremento FE-03: resta da completare la UX complessiva dell'aula e il collaudo manuale, separati da FE-04 (navigazione e feedback progressi).
+
+Contratto statico `python3 tests/frontend-classroom-layout.py`, aggiunto alla CI; casi Joomla in [QA_TESTBOOK.md](QA_TESTBOOK.md).
+
 ## Aula testo
 
 Override nativo: `templates/NOME/html/com_jlms/classroom/default.php`. Regioni: `jlms-classroom`, `jlms-classroom-header`, `jlms-learning-progress`, `jlms-progress-meter`, `jlms-course-completed` (condizionale), `jlms-classroom-layout`, `jlms-classroom-outline`, `jlms-lesson-content`, `jlms-lesson-title`, `jlms-lesson-body`, `jlms-complete-form`, `jlms-classroom-back`. Ripetizioni: `jlms-classroom-module-{id}`, `jlms-classroom-lesson-{id}`. Classi omonime per layout/moduli/lezioni; `aria-current` indica la lezione aperta. Griglia a due colonne da desktop e una colonna sotto 48rem, senza dimensioni fisse del testo. Il pulsante `jlms-classroom-outline-toggle` è visibile solo su viewport mobile: controlla `jlms-classroom-outline` tramite `aria-controls` e `aria-expanded`; il modulo `classroom-outline.js` aggiorna label e visibilità. In assenza di JavaScript l’indice resta visibile. Gli override devono conservare questi ID, attributi e label tradotte. Usare le variabili WAM già documentate. Conservare token, key, ID di parent e filtro HTML negli override.
