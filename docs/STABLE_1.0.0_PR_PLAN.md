@@ -23,6 +23,10 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-05 — Quarta tranche candidata (dashboard riepilogativa):** la vista `dashboard` diventa **La mia formazione**, con contatori completi per non iniziati/in corso/completati ricavati da una query owner-scoped, totale attestati propri dal servizio esistente e link alle viste autonome `mycourses`, `mycertificates`, `preferences`; ultima attività riprendibile solo dopo proiezione ACL già esistente. Il dettaglio, i filtri, la paginazione e le azioni dei singoli corsi restano nella vista `mycourses`, senza duplicazione. I test HTTP storici vengono trasferiti alla vista `mycourses` mantenendo le verifiche di autorizzazione. Nessuna gamification, modifica al database o invio mutativo per GET. Accettazione Joomla pendente e stima di riferimento 79,56% invariata finché non si aggiorna il modello ponderato.
+
+
+
 **FE-05 — Terza tranche PR #512 integrata (merge `fd20fb97981a868be9e065521eff03948e041b09`):** nuova vista privata `preferences`, menu Joomla IT/EN, riuso di `CourseAnnouncementConsent` e delle POST CSRF `mailconsent.request` e `mailconsent.revoke`. I redirect di richiesta, conferma e revoca tornano alla vista dedicata; il layout consenso è condiviso con la dashboard. Nessuna nuova regola di consenso, schema, endpoint o modifica delle notifiche operative. [CI 43923892421](https://github.com/jeckodevelopment/jd_learn/actions/runs/43923892421) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43923892421/artifacts/14255631013) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `ee1eb8ac0720c826e0ca6ebabc05354bf2a5d71a58838b2ec1ca0a61bb216678`. Dashboard riepilogativa e collaudo Joomla/SMTP restano da completare. Stima globale di riferimento 79,56% invariata.
 
 

@@ -36,7 +36,8 @@ def login(http,name):
  url,html,_=request(http,'/index.php?option=com_users&view=login&lang=en');form=next(x for x in Page(html).forms if'username'in x['fields']and'password'in x['fields'])
  request(http,urljoin(url,form['action']),form['fields']|{'username':name,'password':'Ci-only-Dashboard-Password-2026'})
 def enrollments(html):return set(map(int,re.findall(r'data-enrollment-id="([1-9][0-9]*)"',html)))
-dashboard='/index.php?option=com_jlms&view=dashboard&lang=en'
+dashboard='/index.php?option=com_jlms&view=mycourses&lang=en'
+overview='/index.php?option=com_jlms&view=dashboard&lang=en'
 resume='/index.php?option=com_jlms&task=enrollment.resume&id='
 try:
  fixture('enable');before=json.loads(fixture('snapshot'))
@@ -46,6 +47,7 @@ try:
   try:request(guest,'/index.php?option=com_jlms&view=courses&lang=en');break
   except OSError:time.sleep(.2)
  request(guest,dashboard,expected=401)
+ request(guest,overview,expected=401)
  request(guest,resume+str(f['active'])+'&lang=en',expected=401)
  student=client();login(student,'cidashboard')
  for sef in [0,1]:
@@ -54,6 +56,12 @@ try:
   config.write_text(text)
   url,html,headers=request(student,dashboard)
   page=Page(html)
+  _,summary_html,summary_headers=request(student,overview)
+  summary_page=Page(summary_html)
+  expect('jlms-dashboard-summary' in summary_page.ids and 'jlms-dashboard-my-certificates-link' in summary_page.ids and 'jlms-dashboard-preferences-link' in summary_page.ids,'summary links to autonomous views')
+  expect('jlms-my-courses' not in summary_page.ids and 'jlms-dashboard-filters' not in summary_page.ids and not enrollments(summary_html),'summary does not repeat full history')
+  expect('no-store' in summary_headers.get('Cache-Control','') and 'noindex' in summary_headers.get('X-Robots-Tag',''),'summary is private and not indexed')
+  expect('jlms-dashboard-my-courses-link' in summary_page.ids and 'jlms-dashboard-catalog' in summary_page.ids,'summary keeps existing navigation')
   expect('jlms-dashboard'in page.ids and'jlms-my-courses'in page.ids,'private dashboard CSS regions')
   expect(len(page.ids)==len(set(page.ids)),'no duplicate public IDs')
   expect('no-store'in headers.get('Cache-Control','')and'noindex'in headers.get('X-Robots-Tag','')and'noindex, nofollow'in html,'private non-indexable response')

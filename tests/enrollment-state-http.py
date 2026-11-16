@@ -74,7 +74,7 @@ try:
  _,saved,_=apply(admin,url,form)
  expect('PRIVATE_HTTP_STATE_REASON'in saved and'jlms-enrollment-state-history'in Page(saved).ids,'success shows protected history')
  request(student,resume,expected=403)
- _,history,_=request(student,'/index.php?option=com_jlms&view=dashboard&lang=en')
+ _,history,_=request(student,'/index.php?option=com_jlms&view=mycourses&lang=en')
  expect('PRIVATE_HTTP_STATE_REASON'not in history,'internal reason never reaches learner dashboard')
  suspended=json.loads(fixture('snapshot'));expect(suspended['state']['status']=='suspended'and suspended['history']==before['history']+1,'suspension persisted once')
  apply(admin,url,form)

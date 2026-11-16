@@ -81,7 +81,7 @@ try:
  expect('jlms-manual-access-warning'in Page(saved).ids and'jlms-manual-receipt'in Page(saved).ids,'success still warns that access is unavailable')
  apply(manager,url,form);expect(json.loads(fixture('snapshot'))==after,'explicit retry never duplicates assignment or audit')
  student=client();login(student,'cipreassignhttp','Ci-only-Preassign-Password-2026',False)
- dashboard='/index.php?option=com_jlms&view=dashboard&lang=en';resume='/index.php?option=com_jlms&task=enrollment.resume&id='+str(row['id'])+'&lang=en'
+ dashboard='/index.php?option=com_jlms&view=mycourses&lang=en';resume='/index.php?option=com_jlms&task=enrollment.resume&id='+str(row['id'])+'&lang=en'
  _,history,_=request(student,dashboard)
  expect('Manual admission fixture'in history and'jlms-my-course-resume-'+str(row['id'])not in Page(history).ids,'assigned title visible with no classroom action')
  expect('MANUAL_PRIVATE_BODY'not in history and'PRIVATE_HTTP_PREASSIGN_REASON'not in history,'assignment metadata never exposes lesson or internal reason')

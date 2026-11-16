@@ -316,7 +316,7 @@ assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
 assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
 assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
 assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
-assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/Model/PreferencesModel.php').read_text()
 
 # MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
 assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
@@ -462,7 +462,7 @@ assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
 assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
 assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
 assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
-assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/Model/PreferencesModel.php').read_text()
 
 # MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
 assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
@@ -715,7 +715,7 @@ assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
 assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
 assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
 assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
-assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/Model/PreferencesModel.php').read_text()
 
 # MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
 assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
@@ -861,7 +861,7 @@ assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
 assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
 assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
 assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
-assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/Model/PreferencesModel.php').read_text()
 
 # MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
 assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
@@ -1021,3 +1021,6 @@ assert mail_queue.count("->where('c.state = 1')->where('c.delivery_enabled = 1')
 # FE-05 private preferences contract
 import runpy
 runpy.run_path(str(ROOT/'tests/frontend-preferences.py'), run_name='__main__')
+
+# FE-05: summarize owner activity without repeating autonomous personal views.
+runpy.run_path(str(ROOT/'tests/frontend-learner-summary.py'), run_name='__main__')

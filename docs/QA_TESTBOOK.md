@@ -1,3 +1,17 @@
+## FE-05 — La mia formazione: dashboard riepilogativa (collaudo Joomla pendente)
+
+1. Accedere alla voce menu Joomla **La mia formazione** in IT/EN come utente registrato; verificare su template standard e con override, URL SEF e non-SEF. L'anonimo deve ricevere un rifiuto e nessun dato personale; verificare gli header no-store/noindex.
+2. Preparare più di 20 iscrizioni con stati non iniziato, in corso e completato, incluse iscrizioni su corsi archiviate/cestinate/non pubblicate: i conteggi devono coprire **l'intero storico**, non la pagina corrente di I miei corsi, e non devono riaprire accessi.
+3. Verificare i tre collegamenti a **I miei corsi**, **I miei attestati** e **Preferenze**, e il catalogo; le viste autonome devono mantenere filtri, paginazione, download e consenso invariati.
+4. Un corso in corso con attività recente può presentare **Riprendi** soltanto se l'ACL corrente permette l'accesso; provare sospensione, rimozione dei gruppi, scadenza, revoca e cambio lingua: nessuna CTA verso contenuti non disponibili.
+5. Quando non ci sono corsi, mostrare lo stato vuoto; quando non esistono attestati, mostrare zero. Il numero attestati deve essere basato solo sui documenti propri non revocati.
+6. Con due studenti, verificare la separazione dei dati anche variando i parametri GET `user_id`, `id` e `filter[progress]`. Confrontare la pagina riepilogativa con la vista completa I miei corsi e verificare che la semplice GET non modifichi frequenze o invii email.
+7. Verificare navigazione tastiera, 200% zoom, viewport strette con moduli Joomla laterali, titolo e struttura semantica dei conteggi; installazione/upgrade del ZIP.
+
+**Automazione:** `tests/frontend-learner-summary.py` verifica contratti statici, `tests/dashboard-http.py` verifica la nuova landing insieme ai precedenti scenari di I miei corsi. CI non equivale al collaudo manuale Joomla.
+
+---
+
 ## FE-05 — Preferenze personali (collaudo Joomla pendente)
 
 1. Creare una voce menu Joomla "Preferenze JD Learn" in IT e EN, verificando routing SEF e link dashboard.
