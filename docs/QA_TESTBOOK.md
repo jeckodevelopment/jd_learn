@@ -1,3 +1,16 @@
+## FE-06 — Navigazione personale opzionale, collaudo Joomla pendente
+
+1. Creare le quattro voci menu studente: La mia formazione, I miei corsi, I miei attestati e Preferenze. Verificare che il parametro "Mostra navigazione personale" sia No per default in ciascuna.
+2. Attivarlo solo su una voce; verificare che la barra appaia esclusivamente quando quella voce è attiva. Ripetere sulle quattro viste e con due voci distinte dello stesso tipo.
+3. Controllare il routing con SEF abilitato/disabilitato, voce destinataria assente e lingue IT/EN; accertarsi che un parametro GET non possa attivare la barra.
+4. Verificare landmark con etichetta accessibile, voce corrente non cliccabile, aria-current, tabulazione, focus visibile, zoom 200%, smartphone, template con moduli laterali e nessun ID duplicato.
+5. Con anonimo, account bloccato e due utenti diversi, verificare che i link non aggirino ACL, consenso, download e protezione dei dati personali. Nessuna modifica a corsi, attestati o progressi tramite GET.
+6. Verificare override Joomla, installazione e upgrade; i menu già esistenti devono rimanere privi della barra finché il parametro non viene abilitato.
+
+Automazione: tests/frontend-personal-navigation.py incluso in tools/check.py. La CI non equivale al collaudo manuale.
+
+---
+
 ## FE-05 — La mia formazione: dashboard riepilogativa (collaudo Joomla pendente)
 
 1. Accedere alla voce menu Joomla **La mia formazione** in IT/EN come utente registrato; verificare su template standard e con override, URL SEF e non-SEF. L'anonimo deve ricevere un rifiuto e nessun dato personale; verificare gli header no-store/noindex.
