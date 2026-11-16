@@ -1778,7 +1778,7 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 
 ## FE-11 — Ereditarietà opzioni Joomla del catalogo e delle categorie
 
-**Stato:** PR runtime in verifica; accettazione Joomla pendente.
+**Stato:** FE-11 PR #524 integrata, CI 4/4 verde (run 43944091496), pacchetto SHA-256 `8eb55d809ebb855a6a5537e0d864d3f93c426eacea922d46305e82ee0eb7b515`. Accettazione manuale Joomla pendente.
 
 1. Impostare nelle opzioni globali JD Learn visibilità sottocategorie/corsi della categoria, ricerca/filtri e ordinamento del catalogo, dimensione pagina e ordinamento predefinito. Verificare che menu nuovi con valore Globale ereditino realmente le impostazioni.
 2. Creare due voci menu che puntano a categorie differenti e impostare override contrastanti; verificare isolamento, URL SEF e non-SEF. Aprire poi una categoria figlia da un menu padre: le opzioni del padre non devono sovrascrivere quelle della figlia.

@@ -1,6 +1,6 @@
 # Changelog
 
-- FE-11 (PR in verifica): allineate opzioni globali e override per-menu su categorie e catalogo, inclusi filtri/ordinamento/paginazione e sezioni categoria. Contratti ACL e URL non ampliati; collaudo Joomla pendente.
+- FE-11 (PR #524 integrata): allineate opzioni globali e override per-menu su categorie e catalogo, inclusi filtri/ordinamento/paginazione e sezioni categoria. Contratti ACL e URL non ampliati; collaudo Joomla pendente.
 
 - FE-09 (PR #522 integrata): nuova directory pubblica docenti con menu Joomla IT/EN, profili paginati e schede responsive riusate, selezione server-side ACL/lingua/categorie senza dati degli account. CI e collaudo Joomla pendenti.
 
