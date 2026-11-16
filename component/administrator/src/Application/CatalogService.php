@@ -68,6 +68,20 @@ final class CatalogService
         return $query;
     }
 
+    /**
+     * Category choices must come from the same published, ACL-filtered course
+     * projection as the catalogue. Never list unpublished or private taxonomy.
+     *
+     * @return array<int, object>
+     */
+    public function publicCourseCategories(User $actor, string $language, int $scopeCategoryId = 0): array
+    {
+        $query = $this->courseQuery($actor, $language, $scopeCategoryId, false)
+            ->clear('select')->select('DISTINCT cat.id, cat.title')
+            ->order('cat.title ASC, cat.id ASC');
+        return $this->db->setQuery($query, 0, 500)->loadObjectList('id');
+    }
+
     /** Published teacher choices attached to courses visible in this catalog scope. */
     public function publicTeachers(User $actor, string $language, int $categoryId = 0): array
     {
