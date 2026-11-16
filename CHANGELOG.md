@@ -2,7 +2,7 @@
 
 ## 0.57.7-dev
 
-- LCM-01 — regressione Joomla degli attestati storici: download privato e consultazione per corsi non pubblicati/archiviati/cestinati, utente estraneo e anonimo negati, contenuto e seriale invariati anche dopo upgrade. Nessuna nuova emissione per la sola archiviazione; collaudo manuale ancora pendente.
+- LCM-01 — fix parametrizzazione SQL nella generazione differita degli attestati: il lock `FOR UPDATE` conserva i binding della query per il rendering del PDF. Regressione Joomla degli attestati storici: download privato e consultazione per corsi non pubblicati/archiviati/cestinati, utente estraneo e anonimo negati, contenuto e seriale invariati anche dopo upgrade. Nessuna nuova emissione per la sola archiviazione; collaudo manuale ancora pendente.
 
 - LCM-01 / PR #488 integrata (`9993414aed64c1126c8894f5b23af1a542dea10a`; CI 4/4) — dashboard storica: calcolo della modalità didattica dalla versione iscritta indipendentemente dalla pubblicazione del corso; per i corsi di consultazione archiviati/cestinati la percentuale resta correttamente non applicabile. Test Joomla per stati 0/2/-2, storico, completamento e blocco ripresa; collaudo manuale e attestati pendenti.
 
