@@ -9,7 +9,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 
-final class DashboardModel extends ListModel
+class DashboardModel extends ListModel
 {
     protected function populateState($ordering = 'e.last_activity_at', $direction = 'DESC')
     {
