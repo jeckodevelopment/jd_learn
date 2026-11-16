@@ -8,6 +8,8 @@
 6. Assegnare due utenti differenti: garantire isolamento dei dati, nessuna lettura di frequenze altrui, nessun accesso ai contenuti didattici non autorizzati.
 7. Nuova voce menu Joomla **Dettaglio percorso**: selezionare un percorso pubblicato e verificare routing SEF/non-SEF, breadcrumb e URL diretto. Verificare upgrade dalla versione precedente e conservazione dei percorsi con params_json preesistente.
 
+**Evidenze di merge:** PR #518, merge `4b01daddaf5ebff7987c6cddfcab1c73758968ff`, [CI 43935233607](https://github.com/jeckodevelopment/jd_learn/actions/runs/43935233607) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43935233607/artifacts/14258414878) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `46e7d0a91fc95b0e294121c06caa7769b03ff631ef28eb448b7db1c2be6cd8c5`. Collaudo manuale Joomla non ancora registrato.
+
 **Automazione:** tests/frontend-pathway-layout.py (contratti di sicurezza, dati e layout), test esistenti HTTP dei percorsi e integrazione Joomla CI. La CI non sostituisce il collaudo manuale.
 
 ---
