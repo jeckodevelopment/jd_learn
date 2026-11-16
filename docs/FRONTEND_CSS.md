@@ -31,6 +31,10 @@ Regola CSS disponibile nel WAM `com_jlms.site`, file `component/media/css/site.c
 
 Verifica automatica: `python3 tests/frontend-css-contract.py`. Validazione manuale obbligatoria nel [QA_TESTBOOK.md](QA_TESTBOOK.md). **Questa è una prima base FE-10, non la chiusura dell'inventario completo di CSS/JS/override** e non implica ancora la nuova UX prevista da [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md).
 
+## FE-06 — Navigazione personale opzionale
+
+Le viste private riusano dashboard/_personal_navigation.php. Il parametro per singola voce menu show_personal_navigation, disattivo di default, controlla il rendering di nav#jlms-personal-navigation. Lista responsive .jlms-personal-navigation__list, collegamenti .jlms-personal-navigation__link e voce corrente .jlms-personal-navigation__current con aria-current=page. CSS confinato a .jlms-dashboard, focus visibile, nessun JavaScript o menu globale duplicato. Override Joomla devono preservare ACL, routing, semantica e accessibilità.
+
 ## FE-05 — Dashboard riepilogativa (quarta tranche)
 
 La vista `dashboard/default.php` mantiene `#jlms-dashboard.jlms-dashboard` e `#jlms-dashboard-header`. Usa la regione `#jlms-dashboard-summary`, un `dl.jlms-summary-stats` con contatori storici e i link esistenti `#jlms-dashboard-my-courses-link`, `#jlms-dashboard-my-certificates-link`, `#jlms-dashboard-preferences-link` e `#jlms-dashboard-catalog`. L'eventuale `#jlms-dashboard-latest` contiene una ripresa condizionata alla proiezione di autorizzazione. Lo stile dei contatori è confinato a `#jlms-dashboard` e non modifica token globali, componenti Joomla, o i form delle viste autonome. Il layout completo delle iscrizioni è reso solo in `mycourses/default.php`; gli override Joomla non devono reintrodurre contenuti privati né link mutativi.
