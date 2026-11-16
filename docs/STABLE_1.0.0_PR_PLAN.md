@@ -23,7 +23,7 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
-**FE-05 — Terza tranche candidata (Preferenze):** nuova vista privata `preferences`, menu Joomla IT/EN, riuso di `CourseAnnouncementConsent` e delle POST CSRF `mailconsent.request` e `mailconsent.revoke`. I redirect di richiesta, conferma e revoca tornano alla vista dedicata; il layout consenso è condiviso con la dashboard. Nessuna nuova regola di consenso, schema, endpoint o modifica delle notifiche operative. Dashboard riepilogativa e collaudo Joomla/SMTP restano da completare. Stima globale di riferimento 79,56% invariata.
+**FE-05 — Terza tranche PR #512 integrata (merge `fd20fb97981a868be9e065521eff03948e041b09`):** nuova vista privata `preferences`, menu Joomla IT/EN, riuso di `CourseAnnouncementConsent` e delle POST CSRF `mailconsent.request` e `mailconsent.revoke`. I redirect di richiesta, conferma e revoca tornano alla vista dedicata; il layout consenso è condiviso con la dashboard. Nessuna nuova regola di consenso, schema, endpoint o modifica delle notifiche operative. [CI 43923892421](https://github.com/jeckodevelopment/jd_learn/actions/runs/43923892421) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43923892421/artifacts/14255631013) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `ee1eb8ac0720c826e0ca6ebabc05354bf2a5d71a58838b2ec1ca0a61bb216678`. Dashboard riepilogativa e collaudo Joomla/SMTP restano da completare. Stima globale di riferimento 79,56% invariata.
 
 
 

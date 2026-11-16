@@ -7,6 +7,8 @@
 5. Ripetere con due account, IT/EN, mobile e template Joomla alternativi. Verificare che la dashboard mostri gli stessi dati, e che le email operative non siano disabilitate dalla preferenza promozionale.
 6. Verificare upgrade e link di conferma precedenti, oltre al flusso separato di revoca tramite link.
 
+PR #512 integrata, merge `fd20fb97981a868be9e065521eff03948e041b09`; [CI 43923892421](https://github.com/jeckodevelopment/jd_learn/actions/runs/43923892421) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43923892421/artifacts/14255631013), SHA-256 dello ZIP interno `ee1eb8ac0720c826e0ca6ebabc05354bf2a5d71a58838b2ec1ca0a61bb216678`.
+
 Automazione: tests/frontend-preferences.py richiamato da tools/check.py. Il collaudo manuale Joomla/SMTP non è ancora eseguito.
 
 ---
