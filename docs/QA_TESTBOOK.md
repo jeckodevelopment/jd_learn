@@ -1,3 +1,17 @@
+## FE-07 — Catalogo e dettaglio percorsi formativi (collaudo Joomla pendente)
+
+1. In backend creare/modificare un percorso e impostare una copertina locale facoltativa con il selettore Media Joomla. Salvare, riaprire e verificare persistenza; rimuovere la copertina. Provare file inesistente, path remoto, traversal, file non immagine, immagine troppo grande e alt mancante se non decorativa: il salvataggio deve respingerli. Un'immagine decorativa deve avere alt vuoto.
+2. Catalogo: schede responsive con titolo, introduzione e categoria; immagine soltanto quando configurata, senza placeholder obbligatorio. Verificare lingua IT/EN, 200% zoom, smartphone, mouse e tastiera.
+3. Dettaglio: copertina quando presente, descrizione, conteggio delle relazioni del percorso e sequenza verticale dei corsi in ordine editoriale. Verificare 0, 1 e diversi corsi; nessuna regola di prerequisito dedotta dalla posizione in elenco.
+4. Ospite: vedere solo i dati pubblici e corsi accessibili, senza progresso personale, percentuali o nomi di corsi invisibili. Percorso non pubblicato o categoria non accessibile deve essere negato.
+5. Studente autenticato: mostrare progresso del percorso solo se proiettato dal servizio, e percentuale dei singoli corsi solo quando disponibile e riferita a un'iscrizione. Provare corso completato, sospeso, archiviato, non pubblicato, consultazione senza progresso applicabile e corso rimosso. Nessuna iscrizione automatica di massa.
+6. Assegnare due utenti differenti: garantire isolamento dei dati, nessuna lettura di frequenze altrui, nessun accesso ai contenuti didattici non autorizzati.
+7. Nuova voce menu Joomla **Dettaglio percorso**: selezionare un percorso pubblicato e verificare routing SEF/non-SEF, breadcrumb e URL diretto. Verificare upgrade dalla versione precedente e conservazione dei percorsi con params_json preesistente.
+
+**Automazione:** tests/frontend-pathway-layout.py (contratti di sicurezza, dati e layout), test esistenti HTTP dei percorsi e integrazione Joomla CI. La CI non sostituisce il collaudo manuale.
+
+---
+
 ## FE-06 — Navigazione personale opzionale, collaudo Joomla pendente
 
 1. Creare le quattro voci menu studente: La mia formazione, I miei corsi, I miei attestati e Preferenze. Verificare che il parametro "Mostra navigazione personale" sia No per default in ciascuna.
