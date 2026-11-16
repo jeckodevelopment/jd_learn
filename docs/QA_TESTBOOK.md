@@ -1789,4 +1789,4 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 
 ## FE-12 — Gate integrato frontend 1.0.0
 
-La matrice operativa, con 10 scenari e stato manuale iniziale **Da eseguire**, è mantenuta in [FRONTEND_FE12_ACCEPTANCE.md](FRONTEND_FE12_ACCEPTANCE.md). Gli esiti CI sono evidenze automatiche parziali, non accettazione WCAG, responsive, ACL o override in Joomla reale. Non chiudere FE-12 senza registrare per ogni caso ambiente, ruolo, lingua, evidenze e risultato.
+La matrice operativa, con 10 scenari e stato manuale **Da eseguire**, è mantenuta in [FRONTEND_FE12_ACCEPTANCE.md](FRONTEND_FE12_ACCEPTANCE.md). Gate automatico integrato con PR #526, CI 43946500653 4/4 verde e artefatto 14264109572. Gli esiti CI sono evidenze automatiche parziali, non accettazione WCAG, responsive, ACL o override in Joomla reale. Non chiudere FE-12 senza registrare per ogni caso ambiente, ruolo, lingua, evidenze e risultato.
