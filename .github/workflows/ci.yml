@@ -45,6 +45,7 @@ jobs:
         run: |
           python3 tools/build.py
           python3 tools/check.py
+          python3 tests/frontend-css-contract.py
           python3 tests/database-byref-safety.py
           python3 tests/release-workflow.py
           python3 tests/ftps-publish.py
@@ -121,6 +122,7 @@ jobs:
         run: |
           python3 tools/build.py
           python3 tools/check.py
+          python3 tests/frontend-css-contract.py
           python3 tests/database-byref-safety.py
           cp dist/SHA256SUMS.txt /tmp/first-build.sha256
           python3 tools/build.py
