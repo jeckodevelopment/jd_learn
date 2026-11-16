@@ -51,6 +51,8 @@ jobs:
           python3 tests/frontend-course-details.py
           python3 tests/frontend-classroom-layout.py
           python3 tests/frontend-lesson-navigation.py
+          python3 tests/frontend-progress-feedback.py
+          node tests/frontend-progress-feedback.mjs
           python3 tests/database-byref-safety.py
           python3 tests/release-workflow.py
           python3 tests/ftps-publish.py

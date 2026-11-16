@@ -23,6 +23,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-04 — Seconda tranche in PR:** salvataggi `lesson.begin` e ripresa audio con conferma discreta temporanea (5 s), errori persistenti fino a salvataggio riuscito, indicazione di salvataggio in corso e ARIA differenziata. Retry e chiavi idempotenti preservati; nessuna modifica agli endpoint o agli ACL. Verifiche statiche in CI e casi manuali di fallimento/rete nel testbook. Collegare STU-03 e UI-04 alla PR di implementazione; **non** dichiarare accettazione automatica dal test CI.
+
+
 **FE-04 — Prima tranche integrata (PR #504, CI 4/4 verde; collaudo Joomla pendente):** navigazione manuale Precedente/Successiva, immediatamente adiacente nella scaletta e mai mutativa; accesso solo se la finestra lezione è disponibile e non sono bloccati prerequisiti; stato non interattivo in caso contrario. Link GET Joomla, nessuna azione automatica di completamento. Test strutturale, traduzioni IT/EN, CSS responsive, regressioni su player, quiz e progressi. Matrice STU-03/UI-04, testbook, contratto CSS e changelog aggiornati nella PR #504. Merge `de7d587d70df22b3b1c9f8cdf30ae7b71229e628`; [CI 43894400917](https://github.com/jeckodevelopment/jd_learn/actions/runs/43894400917) 4/4; [gate CSV](https://github.com/jeckodevelopment/jd_learn/actions/runs/43894401046) superato. [Artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43894400917/artifacts/14239625032), ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `8865c84d1a6967409fc3195d2114c9cd166991ad53b1eb4d438272b7b3139c4b`. Accettazione Joomla pendente, FE-04 non completo.
 
 

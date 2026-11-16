@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-04 (seconda tranche): feedback salvataggio lezione e ripresa audio con conferme temporanee e errori persistenti/annunciati; preservati retry, idempotenza e backend. Test statico CI, documentazione e scenari QA aggiornati; collaudo Joomla pendente.
+
 - FE-04 (prima tranche): navigazione manuale fra lezioni adiacenti nell'aula, con disponibilità e prerequisiti rispettati, link GET non mutativi, etichette IT/EN e CSS responsive; test di contratto. Nessun avanzamento automatico o completamento per cambio lezione. Collaudo Joomla pendente.
 
 - FE-03 (prima tranche): aula con moduli del programma espandibili tramite dettagli nativi, toggle per larghezza del contenitore con fallback, indice sticky/statico secondo spazio disponibile e nomi dei soli docenti pubblici nell'intestazione. Conservati player, ACL e progressi; contratto CSS e test strutturale. Collaudo Joomla pendente.

@@ -2,6 +2,25 @@ const config = globalThis.Joomla?.getOptions?.('com_jlms.lessonProgress');
 
 if (config && Number.isInteger(Number(config.enrollment)) && Number.isInteger(Number(config.lesson))) {
   const status = document.querySelector('#jlms-lesson-progress-status');
+  let feedbackTimer = 0;
+  const feedback = (text, state) => {
+    if (!status) return;
+    if (feedbackTimer) globalThis.clearTimeout(feedbackTimer);
+    feedbackTimer = 0;
+    status.textContent = text;
+    status.dataset.state = state;
+    // Failure is never dismissed automatically: the user must know it wasn't saved.
+    status.setAttribute('role', state === 'error' ? 'alert' : 'status');
+    status.setAttribute('aria-live', state === 'error' ? 'assertive' : 'polite');
+    if (state === 'saved') {
+      feedbackTimer = globalThis.setTimeout(() => {
+        if (status.dataset.state === 'saved') {
+          status.textContent = '';
+          status.dataset.state = 'idle';
+        }
+      }, 5000);
+    }
+  };
   const body = new URLSearchParams({ enrollment_id: String(config.enrollment), lesson_id: String(config.lesson),
     idempotency_key: String(config.idempotencyKey), [config.token]: '1' });
 
@@ -34,14 +53,14 @@ if (config && Number.isInteger(Number(config.enrollment)) && Number.isInteger(Nu
     return result;
   };
 
-  if (status) status.textContent = config.labels?.pending || '';
+  feedback(config.labels?.pending || '', 'saving');
   send(0).then(result => {
     const row = document.querySelector(`#jlms-classroom-lesson-${Number(config.lesson)} > span`);
     if (row) row.textContent = result.data?.state === 'completed'
       ? (config.labels?.completed || '') : (config.labels?.inProgress || '');
-    if (status) status.textContent = result.data?.state === 'completed'
-      ? (config.labels?.completed || '') : (config.labels?.started || '');
+    feedback(result.data?.state === 'completed'
+      ? (config.labels?.completed || '') : (config.labels?.started || ''), 'saved');
   }).catch(() => {
-    if (status) status.textContent = config.labels?.error || '';
+    feedback(config.labels?.error || '', 'error');
   });
 }
