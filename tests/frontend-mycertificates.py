@@ -19,7 +19,7 @@ assert "getCertificateService()->listForStudent($app->getIdentity())" in model
 assert "get('Items')" in view and "noindex, nofollow" in view
 assert "useStyle('com_jlms.site')" in view
 assert "dashboard/_certificates.php" in page
-assert "_certificates.php" in dashboard
+assert "view=mycertificates" in dashboard and "certificateCount" in dashboard
 assert "certificate.download&enrollment_id=" in partial
 assert "$this->escape($certificate['serial'])" in partial
 assert "COM_JLMS_MENU_MYCERTIFICATES_TITLE" in menu
