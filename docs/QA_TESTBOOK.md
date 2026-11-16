@@ -1,3 +1,15 @@
+## LCM-01 — dashboard storica e modalità consultazione dopo archiviazione
+
+1. Preparare due iscritti, uno con progresso parziale e uno con corso completato, includendo un corso in modalità consultazione. Registrare titolo, data, progresso e attestati prima delle transizioni.
+2. Portare il corso in stato **Non pubblicato (0)**, **Archiviato (2)** e **Cestinato (-2)**: la dashboard personale deve conservare gli elementi storici (titolo, stato, completamento, avanzamento già acquisito) e indicare aula non disponibile; verificare che il link di ripresa e gli URL diretti non aprano lezioni.
+3. In modalità consultazione, la percentuale deve restare non applicabile anche quando il corso è archiviato/cestinato o completato; lo storico non deve mostrare il valore 0% o 100% erroneamente.
+4. Verificare che i PDF attestato già rilasciati siano ancora elencati e scaricabili soltanto dal titolare, senza aprire la didattica. Verificare un altro account senza titolarità, utenti bloccati, lingue IT/EN, e uno storico con più di una pagina.
+5. Ripubblicare il corso e verificare che riappaia l'accesso secondo ACL senza modificare la percentuale storica né riaprire iscrizioni per effetto della sola transizione.
+
+**Automazione:** integrazione Joomla sulla dashboard per 0/2/-2, ripresa negata, titoli, completamenti e modalità consultazione; **collaudo manuale Joomla e verifica PDF pendenti**.
+
+---
+
 
 ## LCM-01 — blocco migrazioni e notifiche su corsi inattivi
 
