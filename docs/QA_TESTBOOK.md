@@ -1,3 +1,13 @@
+## AUT-03 — Avvisi trascrizioni nel controllo preliminare (collaudo Joomla pendente)
+
+1. In backend aprire un corso con lezione video senza trascrizione; il controllo preliminare deve mostrare un avviso facoltativo, non un blocco. Lo stesso vale per una lezione audio senza trascrizione (con il suo allegato valido).
+2. Inserire una trascrizione significativa e riaprire il preflight: l'avviso relativo deve sparire. Ripetere con testo HTML composto solo da spazi o `&nbsp;`: l'avviso deve restare.
+3. Più lezioni video/audio senza trascrizione devono produrre un avviso aggregato per tipo, senza duplicati. Verificare corsi in modalità consultazione e apprendimento e traduzioni IT/EN.
+4. Verificare che l'assenza della trascrizione **non blocchi** una pubblicazione altrimenti valida. La validazione server di durata/provider/materiali continua indipendente. Controllare le caption nei quattro provider **manualmente**: il preflight non ne conosce la disponibilità.
+5. Eseguire `php tests/run.php` e test d'integrazione Joomla; test automatici non equivalgono all'accettazione manuale.
+
+---
+
 ## FE-08 — Sottocategorie e corsi nella stessa pagina (collaudo Joomla pendente)
 
 1. Creare una voce menu di tipo **Categoria** per una categoria valida; verificare due opzioni indipendenti **Mostra sottocategorie** e **Mostra corsi**, entrambe Sì per default. Aprire la pagina senza modificare il menu e controllare che entrambe le sezioni appaiano.
