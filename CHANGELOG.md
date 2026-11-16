@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-12 (tranche HTTP in verifica): estesi i controlli di rendering Joomla per i cataloghi pubblici categorie, percorsi e docenti; nessuna modifica di prodotto, gate manuale ancora aperto.
+
 - FE-12 (PR #526 integrata, gate strutturale, collaudo pendente): verifica CI contratti frontend (menu, viste, router, WAM, CSS, private SEO) e matrice di accettazione manuale; nessuna dichiarazione di conformità WCAG o collaudo Joomla. Gate finale ancora aperto.
 
 - FE-11 (PR #524 integrata): allineate opzioni globali e override per-menu su categorie e catalogo, inclusi filtri/ordinamento/paginazione e sezioni categoria. Contratti ACL e URL non ampliati; collaudo Joomla pendente.
