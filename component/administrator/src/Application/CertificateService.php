@@ -212,7 +212,7 @@ final class CertificateService
             'issued_at' => (string) $record->issued_at, 'revoked_at' => (string) ($record->revoked_at ?? ''),
             'revocation_reason' => (string) ($record->revocation_reason ?? ''), 'student_name' => (string) ($identitySnapshot['name'] ?? ''),
             'course_title' => (string) ($identitySnapshot['course_title'] ?? ''), 'completed_at' => (string) ($identitySnapshot['completed_at'] ?? ''),
-            'course_version_id' => (int) ($identitySnapshot['course_version_id'] ?? 0), 'template' => $templateSnapshot,
+            'course_version_id' => (int) ($identitySnapshot['course_version_id'] ?? 0), 'revision' => (int) $record->revision, 'template' => $templateSnapshot,
             'audit' => $audit];
     }
 
@@ -241,6 +241,93 @@ final class CertificateService
         $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity->id, 'admin_download');
         return ['handle' => $handle, 'size' => (int) $asset->byte_size, 'mime' => 'application/pdf',
             'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset->sha256 . '"'];
+    }
+
+    /**
+     * Replace only the PDF binary from the original immutable issuance snapshots.
+     * The same certificate/document, code, completion date and template snapshot
+     * remain authoritative; the previous asset is retained for audit/retention.
+     */
+    public function adminRegenerate(User $identity, int $certificateId, int $expectedRevision, string $reason): void
+    {
+        $this->assertCertificateAdministrator($identity);
+        $reason = trim($reason);
+        if ($certificateId < 1 || $expectedRevision < 1 || mb_strlen($reason) < 8 || mb_strlen($reason) > 500) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 422);
+        }
+        $record = $this->adminDocument($certificateId);
+        if (!$record) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        if ($record->revoked_at !== null || $record->status !== 'ready' || (int) $record->asset_id < 1) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
+        }
+        if ((int) $record->revision !== $expectedRevision) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_REVISION_CONFLICT', 409);
+        }
+
+        $snapshot = json_decode((string) $record->identity_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
+        $template = json_decode((string) $record->template_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
+        if (!is_array($snapshot) || !is_array($template)) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
+        }
+        $snapshot['serial'] = (string) $record->serial;
+        $pdf = CertificatePdf::render($snapshot, $template, $this->logoFile((string) ($template['logo_path'] ?? '')));
+        $temporary = tempnam(sys_get_temp_dir(), 'jlms-cert-');
+        if ($temporary === false || file_put_contents($temporary, $pdf, LOCK_EX) !== strlen($pdf)) {
+            if (is_string($temporary)) { @unlink($temporary); }
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
+        try { $staged = $this->storage->stage($temporary, 'certificate.pdf'); }
+        finally { @unlink($temporary); }
+
+        $started = false;
+        $committed = false;
+        try {
+            $this->db->transactionStart(); $started = true;
+            $lock = $this->db->createQuery()
+                ->select('c.current_document_id, d.id, d.revision, d.status, d.revoked_at, d.pdf_asset_id,
+                    d.serial, d.identity_snapshot_json, d.template_snapshot_json')
+                ->from('#__jlms_certificates AS c')
+                ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
+                ->where('c.id = :certificate')->bind(':certificate', $certificateId, ParameterType::INTEGER);
+            $current = $this->db->setQuery((string) $lock . ' FOR UPDATE')->loadObject();
+            if (!$current || (int) $current->id !== (int) $record->document_id
+                || (int) $current->revision !== $expectedRevision
+                || $current->revoked_at !== null || $current->status !== 'ready'
+                || (int) $current->pdf_asset_id < 1) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_REVISION_CONFLICT', 409);
+            }
+            // A concurrent edit/revocation must never change certified inputs
+            // between render and the atomic asset replacement.
+            if ((string) $current->serial !== (string) $record->serial
+                || (string) $current->identity_snapshot_json !== (string) $record->identity_snapshot_json
+                || (string) $current->template_snapshot_json !== (string) $record->template_snapshot_json) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_REVISION_CONFLICT', 409);
+            }
+
+            $now = gmdate('Y-m-d H:i:s');
+            $asset = (object) ($staged + [
+                'asset_revision' => 1, 'status' => 'ready',
+                'scan_json' => '{"engine":"generated","result":"trusted"}',
+                'created_by' => (int) $identity->id, 'modified_by' => (int) $identity->id,
+                'created_at' => $now, 'modified_at' => $now,
+            ]);
+            $this->db->insertObject('#__jlms_assets', $asset, 'id');
+            $newAssetId = (int) $asset->id;
+            $oldAssetId = (int) $current->pdf_asset_id;
+            $document = (object) ['id' => (int) $current->id, 'pdf_asset_id' => $newAssetId,
+                'revision' => $expectedRevision + 1];
+            $this->db->updateObject('#__jlms_certificate_documents', $document, 'id');
+            // Same transaction: audit failure rolls back the new PDF pointer.
+            $this->recordCertificateAudit($certificateId, (int) $current->id, (int) $identity->id,
+                'admin_regenerate', ['reason' => $reason, 'previous_asset_id' => $oldAssetId,
+                    'new_asset_id' => $newAssetId, 'revision' => $expectedRevision + 1,
+                    'sha256' => (string) $staged['sha256']]);
+            $this->db->transactionCommit(); $started = false; $committed = true;
+        } catch (\Throwable $error) {
+            if ($started) { $this->db->transactionRollback(); }
+            if (!$committed) { $this->storage->remove((object) $staged); }
+            throw $error;
+        }
     }
 
     private function assertCertificateAdministrator(User $identity): void
