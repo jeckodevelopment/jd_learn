@@ -96,6 +96,16 @@ Il JS della lezione conserva un solo retry e la medesima idempotency key per `le
 
 Il programma e le classi CSS legacy rimangono disponibili negli override. Il nuovo test statico `tests/frontend-progress-feedback.py` non sostituisce le prove browser e rete del [QA_TESTBOOK.md](QA_TESTBOOK.md). Restano da valutare in una successiva tranche i feedback di altre azioni didattiche non coperte da questi due adapter.
 
+## FE-05 — Prima vista autonoma: I miei corsi
+
+La voce menu Joomla `mycourses` è ora una vista privata autonoma, raggiungibile tramite `index.php?option=com_jlms&view=mycourses`, con configurazione in `component/site/tmpl/mycourses/default.xml`. Il controller impone `Cache-Control: private, no-store` e `X-Robots-Tag: noindex, nofollow`; il documento HTML imposta `robots=noindex,nofollow`.
+
+Il modello `MycoursesModel` estende il modello `DashboardModel`, riutilizzando **gli stessi servizi di autorizzazione, filtro e storico personale**, senza scrivere query proprie. Le schede corsi sono renderizzate una sola volta dal partial PHP `component/site/tmpl/dashboard/_courses.php`, incluso sia nella dashboard esistente sia nella nuova vista autonoma. Restano stabili `#jlms-dashboard`, `#jlms-my-courses`, `.jlms-my-course`, gli ID delle card, i link resume e i controlli progresso. La nuova vista riusa il CSS `com_jlms.site`, senza un secondo stile.
+
+Gli override Joomla possono sovrascrivere `templates/NOME/html/com_jlms/mycourses/default.php` e i layout originali `dashboard/default.php`; il partial incluso dal template installato è condiviso, quindi per personalizzazioni profonde è preferibile usare un override della vista autonoma e un CSS scoped del template, senza alterare le verifiche ACL del modello. L'area personale resta protetta; la dashboard precedente continua a funzionare, con un collegamento contestuale a **I miei corsi**. La separazione di attestati e preferenze e la trasformazione della dashboard in riepilogo saranno tranche successive.
+
+Test statico `python3 tests/frontend-my-courses.py`; collaudo Joomla richiesto in [QA_TESTBOOK.md](QA_TESTBOOK.md).
+
 ## Aula testo
 
 Override nativo: `templates/NOME/html/com_jlms/classroom/default.php`. Regioni: `jlms-classroom`, `jlms-classroom-header`, `jlms-learning-progress`, `jlms-progress-meter`, `jlms-course-completed` (condizionale), `jlms-classroom-layout`, `jlms-classroom-outline`, `jlms-lesson-content`, `jlms-lesson-title`, `jlms-lesson-body`, `jlms-complete-form`, `jlms-classroom-back`. Ripetizioni: `jlms-classroom-module-{id}`, `jlms-classroom-lesson-{id}`. Classi omonime per layout/moduli/lezioni; `aria-current` indica la lezione aperta. Griglia a due colonne da desktop e una colonna sotto 48rem, senza dimensioni fisse del testo. Il pulsante `jlms-classroom-outline-toggle` è visibile solo su viewport mobile: controlla `jlms-classroom-outline` tramite `aria-controls` e `aria-expanded`; il modulo `classroom-outline.js` aggiorna label e visibilità. In assenza di JavaScript l’indice resta visibile. Gli override devono conservare questi ID, attributi e label tradotte. Usare le variabili WAM già documentate. Conservare token, key, ID di parent e filtro HTML negli override.
