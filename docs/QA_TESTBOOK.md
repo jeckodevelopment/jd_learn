@@ -1439,6 +1439,14 @@ Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 
 
 Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catalogo. Verificare che la pagina e i metadati SEO/social si carichino senza warning PHP e che il livello di accesso al catalogo sia presente nel record restituito dal servizio. Provare poi un corso il cui livello catalogo non include l’ospite: deve restare inaccessibile o non indicizzabile secondo le regole già previste, senza warning. Verificare anche un corso visibile all’ospite e con livello contenuto più restrittivo: la scheda pubblica resta consultabile, ma l’accesso didattico conserva i controlli sul livello contenuto.
 
+## CERT-03/08 — rifiuto delle date di completamento non valide (PR #473)
+
+1. Su Joomla di prova, completare realmente un corso abilitato all'attestato; scaricare il PDF e confrontare la data con la data di completamento persistita. Ripetere con studente IT/EN e con data in formato SQL/ISO.
+2. In un ambiente di prova eliminabile, predisporre un documento `pending_render` con snapshot di identità la cui `completed_at` sia vuota, relativa (`tomorrow`) o impossibile (`2026-02-30`): il generatore deve rifiutare il PDF senza sostituire la data odierna. Nessun attestato falso deve essere mostrato come disponibile.
+3. Verificare download consentito al proprietario e negato a ospiti/studenti non proprietari; codice e snapshot certificati non devono variare. I PDF già generati non vengono riscritti.
+
+**Esito:** non eseguito. CI e test unitari non equivalgono ad accettazione manuale. La correzione non completa CERT-08: restano rigenerazione amministrativa e verifica backup/ripristino.
+
 ## MAIL-10/CORE-18 — data di inizio corso nelle email (PR #474)
 
 1. Su Joomla di prova, configurare un evento autorizzato che includa `{COURSE_START_DATE}` e impostare un inizio corso assoluto valido: controllare anteprima, accodamento e email SMTP con data UTC corretta, anche con timezone offset.

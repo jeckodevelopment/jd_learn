@@ -78,8 +78,21 @@ final class CertificatePdf
 
     private static function date(string $value, bool $english): string
     {
-        try { $date = new \DateTimeImmutable($value, new \DateTimeZone('UTC')); }
-        catch (\Throwable) { return ''; }
+        $value = trim($value);
+        // A certificate must never silently use today's date for a missing or
+        // relative timestamp. Completion dates come from persisted SQL/ISO values.
+        if (preg_match('/\A\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?\z/D', $value) !== 1) {
+            return '';
+        }
+        try {
+            $date = new \DateTimeImmutable($value, new \DateTimeZone('UTC'));
+            $errors = \DateTimeImmutable::getLastErrors();
+            if (is_array($errors) && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {
+                return '';
+            }
+        } catch (\Throwable) {
+            return '';
+        }
         return $date->format($english ? 'F j, Y' : 'd/m/Y');
     }
 
