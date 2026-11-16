@@ -1568,3 +1568,15 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 6. Verificare desktop, smartphone, zoom 200%, focus tastiera, contrasto, permessi/ACL e accessibilità; la CI strutturale non prova l'accettazione browser.
 
 **Esito:** da eseguire su Joomla di prova. Non dichiarare copertura FE-10 completa o accettazione sulla base del solo smoke statico.
+
+
+## FE-10 — inventario selettori CSS/JS, WAM e override frontend (seconda tranche)
+
+1. Dopo l'installazione dell'artefatto post-merge, aprire catalogo corsi, scheda corso, categorie, percorsi, area personale, aula, quiz e scheda docente con un template Joomla standard; verificare assenza di errori di rendering.
+2. Usare un template con CSS personalizzato su `.jlms-card` e `.jlms-course-card` e verificare che gli override precedenti senza la classe condivisa funzionino ancora; verificare che non siano influenzati moduli e articoli esterni al componente.
+3. Aprire/chiudere il programma dell'aula, controllare `aria-expanded` e i nomi tradotti; verificare player video, velocità/sottotitoli se disponibili, audio, segnalazione avanzamento e quiz di prova con salvataggio/ripresa.
+4. Usare contenuti/ruoli IT/EN, anonimo/iscritto/utente senza accesso, con SEF attivo/disattivo; confermare che la ricognizione non modifica ACL, contenuti protetti o endpoint.
+5. Ripetere su mobile, larghezza ridotta da moduli Joomla, zoom 200% e navigazione con tastiera. Verificare override nativi delle viste da `templates/NOME/html/com_jlms`.
+6. Per lo sviluppo: eseguire `python3 tests/frontend-css-contract.py` e `python3 tests/frontend-contract-hooks.py`; cambiare intenzionalmente un ID nel markup in branch di prova e verificare che il gate fallisca, quindi ripristinarlo.
+
+**Esito:** collaudo manuale Joomla non eseguito; l'inventario e i test statici verificano la struttura sorgente, non l'interazione browser.
