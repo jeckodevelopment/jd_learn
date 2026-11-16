@@ -36,6 +36,7 @@ outline = SERVICE.split('public function outline(', 1)[1].split('public function
 assert "->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')" in outline
 assert 'LessonAvailability::state(' in outline
 assert "=== 'available'" in outline and "if (!$publishable)" in outline
+assert "catch (\InvalidArgumentException $exception)" in outline
 assert "->select('id, title')" in outline
 assert "->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')" in outline
 assert 'l.body' not in outline and "l.video" not in outline
