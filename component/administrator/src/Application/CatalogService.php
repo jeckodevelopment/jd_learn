@@ -150,7 +150,7 @@ final class CatalogService
             'content_allowed' => $contentAllowed, 'access_requirements_met' => $catalogVisible && $contentAllowed];
     }
 
-    /** Availability for an existing enrollment is independent of catalog publication. */
+    /** Existing enrollment ignores promotional windows, never the course lifecycle state. */
     private function courseQuery(User $actor, string $language, int $categoryId, bool $forEnrolledLearner)
     {
         if ((int) $actor->id) {
@@ -199,7 +199,7 @@ final class CatalogService
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
-    /** A current enrollment can outlive catalog visibility, but not taxonomy or content ACL. */
+    /** An enrolled learner may outlive promotional windows, not withdrawal/archive/trash or ACL. */
     public function enrolledCourse(User $actor, string $language, int $id): object
     {
         $q = $this->courseQuery($actor, $language, 0, true)->where('c.id = :course')->bind(':course', $id, ParameterType::INTEGER);
