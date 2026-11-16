@@ -9,7 +9,24 @@ if (config && player) {
   let timer = 0;
 
   const position = () => Math.max(0, Math.floor(player.currentTime * 1000));
-  const setStatus = key => { if (status) status.textContent = config.labels?.[key] || ''; };
+  let feedbackTimer = 0;
+  const setStatus = key => {
+    if (!status) return;
+    if (feedbackTimer) window.clearTimeout(feedbackTimer);
+    feedbackTimer = 0;
+    status.dataset.state = key;
+    status.textContent = config.labels?.[key] || '';
+    status.setAttribute('role', key === 'error' ? 'alert' : 'status');
+    status.setAttribute('aria-live', key === 'error' ? 'assertive' : 'polite');
+    if (key === 'saved') {
+      feedbackTimer = window.setTimeout(() => {
+        if (status.dataset.state === 'saved') {
+          status.textContent = '';
+          status.dataset.state = 'idle';
+        }
+      }, 5000);
+    }
+  };
   const wait = ms => new Promise(resolve => globalThis.setTimeout(resolve, ms));
   const retryable = error => !error.status || error.status === 408 || error.status === 429 || error.status >= 500;
 
@@ -43,6 +60,8 @@ if (config && player) {
     if (request || queued === null) return request;
     const value = queued;
     queued = null;
+    // Keep a previous error visible until the server actually confirms a save.
+    if (status?.dataset.state !== 'error') setStatus('saving');
     if (value === lastSent) return;
     request = send(value, keepalive).finally(() => {
       request = null;
