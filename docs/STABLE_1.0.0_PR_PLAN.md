@@ -6,6 +6,8 @@
 
 **P0 YouTube #532 — PR #535 integrata:** merge `26f6b94b46c77e2468cc5ab1ede2fc4b5078b37e`; [CI 43963159315](https://github.com/jeckodevelopment/jd_learn/actions/runs/43963159315) 4/4 verde; [artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43963159315/artifacts/14274983577) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `a114132bf1fa303718b1d0954eecce6d6b0c2b54b6e1a49eba7023c8e632b602`. Corretto il registro WAM fermo a 0.45.0 e introdotta una chiave di cache basata su versione e contenuto degli asset/componenti/provider a ogni build; diagnostica dell'editor distinta per HTTP server, rete, JSON, adapter e SDK. **La issue #532 resta aperta** finché non si verifica l'embed YouTube sul sito Joomla reale; non è un collaudo live. Avanzamento globale di riferimento 79,56% invariato.
 
+**P0 YouTube #532 — PR #537 integrata:** merge `eb4cafa7b0df6aeffc726522eaea50b61c0bade8`; [CI 43970838888](https://github.com/jeckodevelopment/jd_learn/actions/runs/43970838888) 4/4 verde; [artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43970838888/artifacts/14279810203) `JD-Learn-0.57.7-dev` (archivio Actions SHA-256 `3e7ec0b42645dcb7fdbb1f13cc96cd48eebad8f47c8a556acd88dd5b07591ca9`; digest dello ZIP interno non verificato qui). Corretto il binding del trasporto metadata su Safari; test JS e collegamento VID-02 nel registro canonico. **Issue P0 #532 aperta** finché una lezione YouTube non viene rilevata, salvata e riprodotta nell'ambiente Joomla reale. Avanzamento 79,56% invariato.
+
 ## Regole di esecuzione
 
 1. Prima di aprire una PR, verificare in `main` che il requisito non sia già implementato. Collegare gli ID alla matrice [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e alle issue aperte.
