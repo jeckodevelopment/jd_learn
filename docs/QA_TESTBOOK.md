@@ -8,7 +8,7 @@
 6. Con due studenti, verificare la separazione dei dati anche variando i parametri GET `user_id`, `id` e `filter[progress]`. Confrontare la pagina riepilogativa con la vista completa I miei corsi e verificare che la semplice GET non modifichi frequenze o invii email.
 7. Verificare navigazione tastiera, 200% zoom, viewport strette con moduli Joomla laterali, titolo e struttura semantica dei conteggi; installazione/upgrade del ZIP.
 
-**Automazione:** `tests/frontend-learner-summary.py` verifica contratti statici, `tests/dashboard-http.py` verifica la nuova landing insieme ai precedenti scenari di I miei corsi. CI non equivale al collaudo manuale Joomla.
+**Evidenza post-merge:** PR #514 integrata (`cfad66f49620beb205cecb24425215d4030d21d3`); [CI 43928472754](https://github.com/jeckodevelopment/jd_learn/actions/runs/43928472754) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43928472754/artifacts/14256409058), ZIP interno `pkg_jlms-0.57.7-dev.zip` SHA-256 `c4ab11d7b3e57064768b29a8cbee17677134840278b0acfd9759cb77f563e4a8`. **Automazione:** `tests/frontend-learner-summary.py` verifica contratti statici, `tests/dashboard-http.py` verifica la nuova landing insieme ai precedenti scenari di I miei corsi. CI non equivale al collaudo manuale Joomla.
 
 ---
 
