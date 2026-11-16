@@ -73,7 +73,9 @@ export async function create(container, descriptor, emit, signal) {
   }
   url.search = parameters;
   frame.title = container.dataset.title || 'YouTube';
-  frame.referrerPolicy = 'strict-origin';
+  // YouTube recommends forwarding the site origin for its embedded-player client identity.
+  // Never suppress Referer: error 153 means the origin was not identified.
+  frame.referrerPolicy = 'strict-origin-when-cross-origin';
   frame.allow = 'encrypted-media; fullscreen; picture-in-picture';
   frame.allowFullscreen = true;
   let player, cancelReady;
