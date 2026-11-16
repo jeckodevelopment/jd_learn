@@ -1,4 +1,4 @@
-**LCM-01 — verifica attestati storici:** test Joomla dei PDF privati su corso non pubblicato, archiviato, cestinato e dopo upgrade; resto del gate: collaudo sito reale, controllo endpoint laterali/concorrenti, backup e ripristino di database e storage. Successivamente LCM-02/03/04. Percentuale globale stimata invariata (79,56%).
+**LCM-01 — verifica attestati storici, PR #490 integrata (merge `622a4ae67cae10d5dec35688d1d550fa064994a1`): test Joomla dei PDF privati su corso non pubblicato, archiviato, cestinato e dopo upgrade; resto del gate: collaudo sito reale, controllo endpoint laterali/concorrenti, backup e ripristino di database e storage. Successivamente LCM-02/03/04. Percentuale globale stimata invariata (79,56%).
 
 **LCM-01 — storico dashboard, PR #488 integrata (`9993414aed64c1126c8894f5b23af1a542dea10a`): terzo incremento per coerenza dei dati didattici della versione associata all'iscrizione anche dopo archiviazione/cestinazione. Prima della chiusura LCM-01 restano la verifica PDF/attestati su Joomla reale, endpoint residui e race delle transizioni; poi LCM-02/03/04. **79,56% globale prudenziale, accettazione ancora distinta dalla CI.**
 
