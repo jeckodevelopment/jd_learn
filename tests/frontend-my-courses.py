@@ -23,7 +23,7 @@ assert "getProgressForm()" in VIEW
 assert "noindex, nofollow" in VIEW
 assert "com_jlms.site" in VIEW
 assert "require __DIR__ . '/../dashboard/_courses.php'" in LAYOUT
-assert "require __DIR__ . '/_courses.php'" in DASHBOARD
+assert "view=mycourses" in DASHBOARD and "jlms-dashboard-summary" in DASHBOARD
 assert "jlms-my-course-resume-" in SHARED and "jlms-my-course-progress-" in SHARED
 assert "data-enrollment-id=" in SHARED
 assert "task=enrollment.resume" in SHARED
