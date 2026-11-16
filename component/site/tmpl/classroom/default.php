@@ -9,6 +9,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 $item = $this->item;
 $selected = $item['lesson'];
 $currentModule = 0;
+$selectedModule = 0;
+foreach ($item['outline'] as $entry) {
+    if ((int) $entry->id === (int) $selected->id) { $selectedModule = (int) $entry->module_id; break; }
+}
 ?>
 <section id="jlms-classroom" class="jlms-classroom" data-enrollment-id="<?= (int) $item['enrollment_id'] ?>">
  <header id="jlms-classroom-header"><h1><?= $this->escape($item['title']) ?></h1><a id="jlms-classroom-dashboard" href="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a></header>
@@ -25,7 +29,7 @@ $currentModule = 0;
  <?php foreach ($item['outline'] as $entry) : ?>
   <?php if ((int) $entry->module_id !== $currentModule) : ?>
    <?php if ($currentModule) : ?></ol></details><?php endif; $currentModule = (int) $entry->module_id; ?>
-   <details id="jlms-classroom-module-<?= $currentModule ?>" class="jlms-classroom-module"<?= (int) $selected->id === (int) $entry->id ? ' open' : '' ?>><summary class="jlms-classroom-module__summary"><span class="jlms-classroom-module__title"><?= $this->escape($entry->module_title) ?></span></summary><ol>
+   <details id="jlms-classroom-module-<?= $currentModule ?>" class="jlms-classroom-module"<?= $selectedModule === $currentModule ? ' open' : '' ?>><summary class="jlms-classroom-module__summary"><span class="jlms-classroom-module__title"><?= $this->escape($entry->module_title) ?></span></summary><ol>
   <?php endif; ?>
   <li id="jlms-classroom-lesson-<?= (int) $entry->id ?>" class="jlms-classroom-lesson">
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $entry->id) ?>"<?= (int) $selected->id === (int) $entry->id ? ' aria-current="page"' : '' ?>><?= $this->escape($entry->title) ?></a>
