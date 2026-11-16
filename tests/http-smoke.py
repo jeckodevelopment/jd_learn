@@ -112,6 +112,25 @@ try:
   raise RuntimeError('Public sheet must show outline without protected lesson body')
  if 'Undefined property: stdClass::$catalog_access' in detail or 'Warning:' in detail:
   raise RuntimeError('Public course detail must render without PHP warnings about catalog access metadata')
+ # FE-12: request the real installed Joomla public frontend rather than a static DOM fixture.
+ # These tests intentionally do not certify manual responsive/WCAG acceptance.
+ for view, root_id, element in (
+     ('categories', 'jlms-categories', 'jlms-categories-list'),
+     ('pathways', 'jlms-pathways', 'jlms-pathway-grid'),
+     ('teachers', 'jlms-teachers', 'jlms-teacher-grid'),
+ ):
+  public_url,public_html=get('/index.php?option=com_jlms&view='+view)
+  if 'id="'+root_id+'"' not in public_html or 'id="'+element+'"' not in public_html:
+   raise RuntimeError('FE-12 public '+view+' view did not render its native DOM')
+  if '<h1' not in public_html:
+   raise RuntimeError('FE-12 public '+view+' view lacks a page heading')
+  if not re.search(r'(?:/media/com_jlms/css/site(?:[.]min)?[.]css|com_jlms/site(?:[.]min)?[.]css)', public_html):
+   raise RuntimeError('FE-12 public '+view+' view did not load the Joomla WAM stylesheet')
+  if 'SECRET_LESSON_BODY' in public_html:
+   raise RuntimeError('FE-12 public '+view+' leaked protected lesson content')
+ print(json.dumps({'fe12_real_joomla_public_views':3,
+                   'checks':['DOM','heading','WAM stylesheet','protected lesson exclusion'],
+                   'status':'passed','scope':'real disposable Joomla HTTP, not visual or manual acceptance'}))
  url,html=get('/administrator/index.php')
  page=Page(html)
  form=next((f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']),None)

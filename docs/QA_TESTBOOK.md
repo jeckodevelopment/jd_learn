@@ -1790,3 +1790,8 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 ## FE-12 — Gate integrato frontend 1.0.0
 
 La matrice operativa, con 10 scenari e stato manuale **Da eseguire**, è mantenuta in [FRONTEND_FE12_ACCEPTANCE.md](FRONTEND_FE12_ACCEPTANCE.md). Gate automatico integrato con PR #526, CI 43946500653 4/4 verde e artefatto 14264109572. Gli esiti CI sono evidenze automatiche parziali, non accettazione WCAG, responsive, ACL o override in Joomla reale. Non chiudere FE-12 senza registrare per ogni caso ambiente, ruolo, lingua, evidenze e risultato.
+
+
+### FE-12 — Controllo HTTP delle viste pubbliche (CI)
+
+Verificare in `tests/http-smoke.py` che su installazione Joomla disposable siano renderizzate le viste `categories`, `pathways`, `teachers`: radice e contenitore, `h1`, CSS Web Asset Manager, nessuna presenza del contenuto lezioni protetto `SECRET_LESSON_BODY`. Ripetere sul sito di prova con menu SEF, IT/EN, template personalizzato e utenti differenti; un esito automatico verde non registra alcun collaudo manuale.

@@ -23,6 +23,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-12 — seconda tranche HTTP candidata (con fix directory docenti):** il test Joomla reale in CI viene esteso a directory docenti, catalogo percorsi e categorie per individuare errori di rendering, WAM, semantica di base e fuoriuscita di testo riservato. Nessun collaudo responsive/WCAG o template manuale dichiarato; il gate FE-12 resta aperto, 79,56% invariato.
+
+
 **FE-12 — gate automatico integrato:** PR #526 integrata (merge `fe32457f939c32a439d75192f65074b1dc960c24`); [CI 43946500653](https://github.com/jeckodevelopment/jd_learn/actions/runs/43946500653) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43946500653/artifacts/14264109572) contenente `pkg_jlms-0.57.7-dev.zip`, SHA-256 `2e318ed0ed11870a2bad26e3307dd593e9d626adf790b8390a0980824a2132a2`. **FE-12 non accettato manualmente:** i 10 scenari sono ancora da eseguire. Stima globale di riferimento 79,56% invariata. Verificati staticamente contratti MVC/menu IT/EN, router, WAM, CSS, SEO privato; corretta traduzione mancante del menu Catalogo percorsi. Il gate finale resta aperto fino al collaudo Joomla, WCAG/override/ACL runtime.
 
 
