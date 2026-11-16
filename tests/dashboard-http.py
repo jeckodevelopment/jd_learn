@@ -51,10 +51,13 @@ try:
  request(guest,resume+str(f['active'])+'&lang=en',expected=401)
  student=client();login(student,'cidashboard')
  # FE-06: menu opt-in defaults off; toggling the active Joomla menu must be effective.
- _,hidden_nav,_=request(student,overview)
+ menu_overview=overview+'&Itemid='+str(f['menus']['en-GB'])
+ _,hidden_nav,_=request(student,menu_overview)
  expect('jlms-personal-navigation' not in Page(hidden_nav).ids,'personal navigation defaults off')
  fixture('navigation_on');navActivated=True
- _,shown_nav,_=request(student,overview)
+ _,direct_nav,_=request(student,overview)
+ expect('jlms-personal-navigation' not in Page(direct_nav).ids,'direct links with unrelated active menu cannot enable local navigation')
+ _,shown_nav,_=request(student,menu_overview)
  shown_page=Page(shown_nav)
  expect('jlms-personal-navigation' in shown_page.ids,'navigation enabled on matching active Joomla menu')
  expect('aria-current="page"' in shown_nav and 'COM_JLMS_PERSONAL_NAV_LABEL' not in shown_nav,'current view and label localized')
