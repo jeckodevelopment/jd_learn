@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-10 (prima tranche): aggiunto hook CSS pubblico `jlms-card` sulle schede frontend esistenti (corsi, percorsi, categorie, area personale), con regole scoped e controllo strutturale. ID, classi preesistenti, ACL e comportamento JS invariati; collaudo Joomla da eseguire.
+
 ## 0.57.7-dev
 
 - LCM-01 / PR #490 integrata (`622a4ae67cae10d5dec35688d1d550fa064994a1`; CI 4/4) — fix parametrizzazione SQL nella generazione differita degli attestati: il lock `FOR UPDATE` conserva i binding della query per il rendering del PDF. Regressione Joomla degli attestati storici: download privato e consultazione per corsi non pubblicati/archiviati/cestinati, utente estraneo e anonimo negati, contenuto e seriale invariati anche dopo upgrade. Nessuna nuova emissione per la sola archiviazione; collaudo manuale ancora pendente.
