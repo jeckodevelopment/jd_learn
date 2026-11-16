@@ -124,7 +124,7 @@ try:
    raise RuntimeError('FE-12 public '+view+' view did not render its native DOM')
   if not re.search(r'<h1\\b',public_html):
    raise RuntimeError('FE-12 public '+view+' view lacks a page heading')
-  if 'com_jlms/site.css' not in public_html and 'com_jlms/site.min.css' not in public_html:
+  if not re.search(r'(?:/media/com_jlms/css/site(?:\\.min)?\\.css|com_jlms/site(?:\\.min)?\\.css)', public_html):
    raise RuntimeError('FE-12 public '+view+' view did not load the Joomla WAM stylesheet')
   if 'SECRET_LESSON_BODY' in public_html:
    raise RuntimeError('FE-12 public '+view+' leaked protected lesson content')
