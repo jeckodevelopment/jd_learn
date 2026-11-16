@@ -1,5 +1,7 @@
 ## AUT-03 — Avvisi trascrizioni nel controllo preliminare (collaudo Joomla pendente)
 
+**Evidenza automatica post-merge:** PR #530 integrata (merge `771b6cd71a1c4dc07d4202c90d57dd4c140a6cab`), [CI 43955475409](https://github.com/jeckodevelopment/jd_learn/actions/runs/43955475409) 4/4 verde, [pacchetto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43955475409/artifacts/14271932231) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `6421b61d36d8c6b245538474f8747bad434b665d62da3183ccaa0bb6ec3f813c`. **Collaudo manuale Joomla ancora da eseguire**; riferimento globale 79,56% invariato.
+
 1. In backend aprire un corso con lezione video senza trascrizione; il controllo preliminare deve mostrare un avviso facoltativo, non un blocco. Lo stesso vale per una lezione audio senza trascrizione (con il suo allegato valido).
 2. Inserire una trascrizione significativa e riaprire il preflight: l'avviso relativo deve sparire. Ripetere con testo HTML composto solo da spazi o `&nbsp;`: l'avviso deve restare.
 3. Più lezioni video/audio senza trascrizione devono produrre un avviso aggregato per tipo, senza duplicati. Verificare corsi in modalità consultazione e apprendimento e traduzioni IT/EN.
