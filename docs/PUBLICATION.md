@@ -2,6 +2,12 @@
 
 La prima pubblicazione è disponibile ed è stata confermata dall’utente sul percorso provato. Questa guida descrive l’uso corrente; per funzioni e collaudi mancanti vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
+## Trascrizioni audio/video nel controllo preliminare
+
+Il controllo preliminare dell'editor avvisa quando una lezione audio o video non dispone di una **trascrizione editoriale** valorizzata: è un miglioramento di accessibilità suggerito e **non un requisito bloccante** per pubblicare. I testi composti solo da spazi o markup HTML senza contenuto significativo equivalgono a una trascrizione assente. L'avviso è aggregato per tipo di lezione anche in presenza di più lezioni.
+
+**Importante:** la trascrizione salvata nel componente non prova la presenza di sottotitoli/caption nel lettore del provider. Le tracce offerte dai provider devono essere verificate separatamente durante il collaudo Joomla e non sono dichiarate assenti dal solo preflight.
+
 ## Modalità di sola consultazione e video
 
 In un corso configurato come **Sola consultazione**, una lezione video non richiede una durata misurata né capacità di telemetria/progresso: il corso non assegna completamenti o percentuali. Il preflight editoriale applica la stessa regola della pubblicazione server. Il provider e la sorgente video devono comunque essere validi e configurati secondo la policy del sito; la modalità non aggira i controlli di accesso o di sicurezza del player.
