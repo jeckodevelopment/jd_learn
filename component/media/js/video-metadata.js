@@ -42,6 +42,7 @@ export class VideoMetadataEditor {
     const provider = this.field('provider_key').value;
     if (!['youtube','vimeo','cloudflarestream'].includes(provider) || !this.allowed(provider)) return;
     this.abort = new AbortController();
+    let stage = 'request';
     try {
       const names = new Set(['course_id','version_id','expected_version_revision','module_id','id','revision','provider_key','source_reference','privacy_hash'].map(name => `jform[${name}]`));
       const body = new URLSearchParams();
@@ -49,11 +50,13 @@ export class VideoMetadataEditor {
       body.set('task', 'lesson.metadata');
       const response = await this.transport(this.config.url, {method:'POST', body,
         credentials:'same-origin', cache:'no-store', signal:this.abort.signal, headers:{Accept:'application/json'}});
+      stage = 'response';
       const result = await response.json();
       if (!response.ok || result.success !== true) {
         const error = new Error('metadata');
         // The Joomla endpoint emits already-localised, allowlisted 4xx messages.
         // Never display a raw 5xx response or arbitrary exception in the editor.
+        error.safeKey = response.status >= 500 ? 'server_unavailable' : null;
         if (response.status >= 400 && response.status < 500 && typeof result.message === 'string'
           && result.message.length > 0 && result.message.length <= 400) error.safeMessage = result.message;
         throw error;
@@ -67,6 +70,7 @@ export class VideoMetadataEditor {
         this.status.textContent = this.config.labels.detected.replace('%s', String(duration / 1000)); return true;
       };
       if (data.duration_ms !== null) { if (!accept(data.duration_ms)) throw Error('duration'); return; }
+      stage = 'adapter';
       const url = new URL(data.adapter_url, this.host.location.href);
       if (url.origin !== this.host.location.origin || !url.pathname.endsWith(`/media/plg_jlmsvideo_${provider}/js/player.js`)) throw Error('adapter');
       url.search = new URL(import.meta.url).search;
@@ -74,6 +78,7 @@ export class VideoMetadataEditor {
       if (generation !== this.generation || !this.allowed(provider)) return;
       this.container.hidden = false;
       const sample = async () => { if (this.player && generation === this.generation) { const value = await this.player.sample(); return accept(value.duration_ms); } return false; };
+      stage = 'player';
       const player = await adapter.create(this.container, data, (event, reason) => {
         if (generation !== this.generation) return;
         if (event === 'error') { this.clear(); this.message(providerFailures.has(reason) ? reason : 'failed'); }
@@ -88,7 +93,11 @@ export class VideoMetadataEditor {
         this.clear();
         if (error.safeMessage) this.status.textContent = error.safeMessage;
         else this.message(providerFailures.has(error.message) ? error.message
-          : error.message === 'player timeout' ? 'youtube_timeout' : 'failed');
+          : error.message === 'player timeout' ? 'youtube_timeout'
+          : error.safeKey || (stage === 'request' ? 'network_error'
+            : stage === 'response' ? 'response_error'
+            : stage === 'adapter' ? 'adapter_error'
+            : stage === 'player' ? 'player_error' : 'failed'));
       }
     }
   }

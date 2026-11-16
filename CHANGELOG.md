@@ -1,5 +1,7 @@
 # Changelog
 
+- P0 YouTube #532 (seconda correzione candidata): sincronizzata la versione del registro asset WAM alla versione componente (in precedenza `0.45.0` anziché `0.57.7`), automatizzata una chiave di cache composta da versione e impronta degli asset (anche fra pacchetti con la stessa versione) e introdotte verifiche sullo ZIP installabile. L'editor distingue errori server HTTP 5xx, rete, risposta, modulo JS e player, senza esporre dettagli server. L'eventuale recupero dell'embed va verificato su Joomla reale.
+
 - P0 YouTube (#532, PR #533 integrata, collaudo reale pendente): il preview editoriale mostra errori specifici per CSP, caricamento SDK, identificazione del sito/referrer e video non incorporabile, oltre ai messaggi 4xx locali autorizzati; i dettagli 5xx restano nascosti. Adeguata la Referrer-Policy dell’iframe a quella documentata da YouTube. Nessun bypass di consenso, ACL o requisito durata; collaudo reale ancora pendente.
 
 - AUT-03 (PR #530 integrata): il controllo preliminare segnala trascrizioni editoriali assenti in lezioni audio/video come avvisi non bloccanti; aggiunti messaggi IT/EN e test, senza confondere trascrizioni con caption del provider.

@@ -4,6 +4,8 @@
 
 **P0 YouTube #532 — PR #533 integrata:** merge `ff4e6a376f5b59e2e4ba5d2af63f1cca9832fb2f`; [CI completa 43958890176](https://github.com/jeckodevelopment/jd_learn/actions/runs/43958890176) 4/4 verde; [artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43958890176/artifacts/14273243043) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `a967b7d871ac5f4a2ff6be69b11ded00d2cb9706e4b8400f6feff985ba616fac`. Diagnostica editoriale YouTube distinta per CSP/SDK/referrer/embed/timeout e messaggi server 4xx controllati; Referrer-Policy impostata alla raccomandazione Google. **Non c'è ancora una verifica su player YouTube live nel sito interessato: issue P0 #532 resta aperta e la funzionalità non è accettata manualmente.** Percentuale globale di riferimento 79,56% invariata.
 
+**P0 YouTube #532 — seconda tranche candidata:** riscontrato registro asset WAM 0.45.0 a fronte di componente 0.57.7; aggiornata chiave di cache con versione pacchetto più impronta degli asset (anche tra build della stessa versione) e pacchettizzazione automatica. Aggiunta diagnostica della fase di guasto (HTTP server, rete, JSON, adapter, SDK) e test regressione. Mantenere aperta #532 fino al collaudo reale backend + aula con asset aggiornati, provider abilitato e policy/consenso verificati; CI da sola non certifica il ripristino.
+
 ## Regole di esecuzione
 
 1. Prima di aprire una PR, verificare in `main` che il requisito non sia già implementato. Collegare gli ID alla matrice [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e alle issue aperte.
