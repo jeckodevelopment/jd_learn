@@ -23,7 +23,7 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
-**FE-02 — Prima tranche in corso di integrazione:** pannello di iscrizione laterale con sticky/fallback, layout in griglia per spazio del componente Joomla e programma pubblico a moduli espandibili con `details`. Il servizio pubblico non restituisce titoli delle lezioni con finestra non attiva o rilascio relativo; nessun corpo/URL didattico esposto. La PR deve mantenere i form/csrf già presenti, aggiornare CAT-02/UI-04 nella matrice, e documentare prove manuali su template e ACL. L'esito CI non equivale ad accettazione e non modifica da solo la percentuale ponderata globale.
+**FE-02 — Prima tranche in corso di integrazione:** pannello di iscrizione laterale con sticky/fallback, layout in griglia per spazio del componente Joomla e programma pubblico a moduli espandibili con `details`. Il servizio pubblico non restituisce titoli delle lezioni con finestra non attiva o rilascio relativo; nessun corpo/URL didattico esposto. La PR deve mantenere l'ordine dei campi Joomla nativi rispetto all'iscrizione (regressione HTTP intercettata e corretta), i form/csrf già presenti, aggiornare CAT-02/UI-04 nella matrice, e documentare prove manuali su template e ACL. L'esito CI non equivale ad accettazione e non modifica da solo la percentuale ponderata globale.
 
 
 
