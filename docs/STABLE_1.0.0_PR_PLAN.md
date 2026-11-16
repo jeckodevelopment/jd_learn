@@ -27,7 +27,7 @@ Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di i
 **LCM-01 primo incremento (PR #484, CI 4/4 verde, collaudo Joomla pendente):** `CatalogService::enrolledCourse()` non consente più accesso con stato corso diverso da pubblicato; test di integrazione su stati `0/2/-2` e archivio aggiornati, insieme alla verifica che le finestre promozionali non revocano da sole una frequenza esistente. Non chiudere LCM-01 finché i percorsi laterali, storico e attestati non sono verificati, e non confondere la CI con l'accettazione Joomla.
 
 
-**LCM-01 secondo incremento:** negare nuove migrazioni delle iscrizioni e notifiche didattiche (eventi nuova lezione e nuova versione) quando lo stato del corso non è `1`, anche se eventi erano già accodati prima dell'archiviazione. Aggiornare test, manuali e requisiti; restano da verificare storia personale, attestati, tutti gli endpoint laterali e le richieste concorrenti prima di dichiarare concluso il gate LCM-01.
+**LCM-01 secondo incremento, PR #486 integrata (CI 4/4 verde, Joomla/SMTP pendente):** negare nuove migrazioni delle iscrizioni e notifiche didattiche (eventi nuova lezione e nuova versione) quando lo stato del corso non è `1`, anche se eventi erano già accodati prima dell'archiviazione. Aggiornare test, manuali e requisiti; restano da verificare storia personale, attestati, tutti gli endpoint laterali e le richieste concorrenti prima di dichiarare concluso il gate LCM-01.
 
 
 ## Backlog operativo e dipendenze

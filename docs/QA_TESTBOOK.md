@@ -6,7 +6,7 @@
 3. Accodare un avviso quando il corso è pubblicato, poi archiviarlo **prima del dispatch**: l'outbox deve scartare il messaggio senza inviarlo. Controllare anche non pubblicato e cestinato, entrambe le lingue e gli ACL; ripubblicare e verificare un nuovo evento valido.
 4. Verificare che le email informative già inviate restino nell'audit secondo retention, che lo storico personale e gli attestati già emessi siano preservati e che nessuna nuova migrazione avvenga attraverso una richiesta ripetuta o concorrente.
 
-**Stato:** verifiche automatiche da CI; collaudo manuale Joomla/SMTP non ancora eseguito. LCM-01 resta parziale fino al controllo completo di tutti gli endpoint e dei casi di concorrenza.
+**Stato:** [PR #486](https://github.com/jeckodevelopment/jd_learn/pull/486) integrata (merge `f17f16b05f3b0d7a8d8cdb6dc46aa4aa333461e6`), [CI 43850378497](https://github.com/jeckodevelopment/jd_learn/actions/runs/43850378497) 4/4 superata; collaudo manuale Joomla/SMTP non ancora eseguito. LCM-01 resta parziale fino al controllo completo di tutti gli endpoint e dei casi di concorrenza.
 ## LCM-01 — primo gate server-side per corsi non pubblicati, archiviati e cestinati
 
 1. Su Joomla di prova predisporre un corso pubblicato con una lezione, un iscritto attivo e almeno un completamento; annotare progressi, iscrizione e PDF già emessi (se disponibili).
