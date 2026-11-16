@@ -1556,3 +1556,15 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 5. Verificare dopo l'upgrade che non siano andate perse emissioni, impostazioni, dati e permessi. CI include un nuovo accesso HTTP reale con login alla vista Attestati; la convalida manuale è separata.
 
 **Esito:** non eseguito sul sito Joomla dell'utente. L'errore originale era mascherato dal generico `COM_JLMS_SAVE_FAILED`.
+
+
+## FE-10 — hook CSS pubblico e riuso schede (prima tranche)
+
+1. Installare il pacchetto post-merge su Joomla 6 e aprire catalogo corsi, catalogo percorsi, elenco categorie e dashboard autenticata (compresi eventuali attestati). Verificare che le schede mantengano contenuti, collegamenti, ordine, filtri e progressi.
+2. Controllare larghezza stretta/contenitore con colonna laterale e titoli lunghi: nessuno scroll orizzontale introdotto dalle schede; titolo leggibile, nessun elemento sovrapposto.
+3. Con browser developer tools verificare che ogni scheda esponga `.jlms-card` **insieme** alla classe specifica preesistente, con ID univoco; verificare che il CSS della card non influenzi articoli e moduli Joomla esterni.
+4. Applicare un override di `courses/default.php` che personalizzi `.jlms-course-card` e un CSS che personalizzi `.jlms-card`: nessuna modifica al markup funzionale necessaria, vecchi override senza classe nuova restano usabili.
+5. Aprire l'aula come studente; verificare toggle programma, lingua IT/EN, stato `aria-expanded`, player e progressi invariati. Ripetere con JavaScript disabilitato per visibilità dell'indice.
+6. Verificare desktop, smartphone, zoom 200%, focus tastiera, contrasto, permessi/ACL e accessibilità; la CI strutturale non prova l'accettazione browser.
+
+**Esito:** da eseguire su Joomla di prova. Non dichiarare copertura FE-10 completa o accettazione sulla base del solo smoke statico.
