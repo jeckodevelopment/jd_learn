@@ -1634,3 +1634,15 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 7. Eseguire `python3 tests/frontend-classroom-layout.py`, `tests/frontend-contract-hooks.py`, il gate CSV e tutte le matrici CI; annotare separatamente collaudo manuale e test automatici.
 
 **Accettazione Joomla manuale:** pendente; primo incremento FE-03 non equivale al completamento di FE-04.
+
+
+## FE-04 — Navigazione manuale Precedente/Successiva, prima tranche
+
+1. Installare il pacchetto post-merge; in un corso con almeno 3 lezioni, aprire la lezione centrale: compaiono entrambi i link, con il titolo corretto. La prima lezione non presenta link Precedente, l'ultima non presenta link Successiva.
+2. Impostare una lezione immediatamente successiva con prerequisito incompleto: la navigazione mostra il titolo e un'indicazione non cliccabile del blocco; dopo aver soddisfatto il prerequisito e ricaricato, il link è nuovamente disponibile. Ripetere con lezione futura e finestra chiusa.
+3. Cambiare lezione con i link, senza completare alcuna attività: verificare che non si crei un progresso `completed` o un tentativo quiz. Il normale stato `started` dell'ultimo accesso è consentito solo dal servizio backend esistente. Ritornare alla precedente e verificare la ripresa.
+4. Provare quiz, audio, video e testo lungo, account diverso, iscrizione revocata, corso sospeso/archiviato e lingua IT/EN. Verificare che un URL costruito manualmente non consenta l'accesso a lezioni non autorizzate.
+5. Testare con JavaScript disabilitato, tastiera, reader di schermo, 200% zoom, smartphone e template Joomla con moduli laterali. Verificare il focus, `aria-label` e la resa a una colonna.
+6. Eseguire `python3 tests/frontend-lesson-navigation.py`, CI completa e prova d'installazione/aggiornamento Joomla; documentare separatamente esito CI ed esito manuale.
+
+**Esito manuale:** da eseguire. Non dichiarare FE-04 completato dopo questa sola tranche.
