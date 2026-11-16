@@ -23,6 +23,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-01, seconda tranche:** filtro per categoria pubblica con visibilità controllabile dalle opzioni generali e della singola voce menu; nessuna categoria riservata nell'elenco e nessun ampliamento di ACL tramite GET. Metadato livello ricavato dalla versione pubblicata e mostrato solo quando esiste. Verifica statica e collaudo Joomla su menu multipli, restrizioni ACL, categorie annidate e paginazione. Collegare la PR effettiva a CAT-01 e UI-02 nella matrice CSV; non considerare completato FE-01 senza accettazione manuale.
+
+
 **FE-01 — Prima tranche integrata (PR #496; CI 4/4 verde, accettazione Joomla pendente):** catalogo corsi a tre/due/una colonna per container, copertine e testi opzionali, ricerca/filtri attivabili per singola voce menu con ereditarietà dalle opzioni generali, paginazione e ordinamento iniziale configurabili. Merge `c8dae63b2fb6748e2dc9c54344023ed621667014`; [Actions 43879445918](https://github.com/jeckodevelopment/jd_learn/actions/runs/43879445918); [artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43879445918/artifacts/14232580225), ZIP interno `pkg_jlms-0.57.7-dev.zip` SHA-256 `c3566d39b0ab0491686bf7efea0ce8d59fe6bad776e124af2f098ea14b635bfd`. Menu IT/EN e contratto CSS da collaudare su Joomla; opzioni di categoria specifiche e rifiniture dei metadati estesi rimangono interventi successivi. CAT-01 e UI-02 collegati alla PR #496 nella matrice CSV; la suite CI non sostituisce la verifica dei parametri per-menu sul sito Joomla. Stima globale invariata in assenza di nuova riconciliazione ponderata e accettazione manuale.
 
 
