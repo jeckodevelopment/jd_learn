@@ -52,6 +52,17 @@ try:
   except OSError:time.sleep(.2)
  page=Page(html);login=next(x for x in page.forms if 'username' in x['fields'] and 'passwd' in x['fields'])
  request(urljoin(urljoin(url,page.base or ''),login['action']),login['fields']|{'username':'cioperator','passwd':'Ci-only-Long-Password-2026'})
+ # Regression: PR #475 initially made Attestati return HTTP 500 because
+ # populateState() called getState() before Joomla marked state initialized.
+ certificate_path='/administrator/index.php?option=com_jlms&view=certificates'
+ _,cert_html=request(certificate_path)
+ expect('id="jlms-admin-certificates"' in cert_html,'Certificate administrator view renders HTTP 200')
+ expect('id="adminForm"' in cert_html and 'name="filter[search]"' in cert_html
+        and 'name="filter[status]"' in cert_html and 'name="list[fullordering]"' in cert_html,
+        'Certificate list native Search Tools are available')
+ _,cert_filtered=request(certificate_path+'?'+urlencode({'filter[status]':'ready','list[limit]':'20'}))
+ expect('id="jlms-admin-certificates"' in cert_filtered,
+        'Certificate list renders with an active Joomla status filter')
  path='/administrator/index.php?option=com_jlms&view=courses'
  def listing(filters=None,order='a.title ASC',limit='20',start='0'):
   fields={'filter[search]':'List UI','filter[published]':'','filter[category_id]':'','filter[access]':'','filter[author_id]':'','filter[teacher_id]':'','filter[language]':'','filter[checked_out]':'','list[fullordering]':order,'list[limit]':limit,'limitstart':start}
