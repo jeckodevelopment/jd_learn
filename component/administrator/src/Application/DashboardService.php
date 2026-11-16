@@ -29,6 +29,49 @@ final class DashboardService
         return $q->order('e.last_activity_at DESC, e.id DESC');
     }
 
+    /**
+     * Read-only, owner-scoped summary for the private learner landing page.
+     * Counts cover the entire history, rather than the paginated My Courses list.
+     * Resume is offered only for a recent activity passing the existing ACL projection.
+     *
+     * @return array{not_started:int,in_progress:int,completed:int,latest:?array}
+     */
+    public function summary(User $identity, string $uiLanguage): array
+    {
+        $base = $this->query($identity);
+        $counts = clone $base;
+        $counts->clear('select')->clear('order')->select([
+            "COUNT(*) AS history_total",
+            "SUM(CASE WHEN e.completed_at IS NOT NULL THEN 1 ELSE 0 END) AS completed_total",
+            "SUM(CASE WHEN e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0) THEN 1 ELSE 0 END) AS active_total",
+        ]);
+        $summary = $this->db->setQuery($counts)->loadObject();
+        $total = (int) ($summary->history_total ?? 0);
+        $completed = (int) ($summary->completed_total ?? 0);
+        $active = (int) ($summary->active_total ?? 0);
+
+        // Only actual learning activity is a candidate for "Continue".
+        // Never infer authorisation from an enrollment's persisted status alone.
+        $recentQuery = $this->query($identity, 'in_progress')
+            ->where('e.last_activity_at IS NOT NULL')
+            ->order('e.last_activity_at DESC, e.id DESC');
+        $recent = $this->db->setQuery($recentQuery, 0, 50)->loadObjectList();
+        $latest = null;
+        foreach ($this->cards($identity, $uiLanguage, $recent ?: []) as $card) {
+            if ($card['access'] === 'available') {
+                $latest = $card;
+                break;
+            }
+        }
+
+        return [
+            'not_started' => max(0, $total - $completed - $active),
+            'in_progress' => $active,
+            'completed' => $completed,
+            'latest' => $latest,
+        ];
+    }
+
     public function cards(User $identity, string $uiLanguage, array $rows): array
     {
         $actor = $this->learning->freshActor($identity);
