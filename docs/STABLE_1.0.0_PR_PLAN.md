@@ -38,7 +38,7 @@ Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di i
 | IMP-09-MAIL-E/F | P0 | Uniformazione placeholder senza alias, producer di contesto corso/lezione/docente e eventi di iscrizione/request/approvazione/rifiuto/annullamento; PR #349–#358, #361/#366/#367 e #464 integrate. Restano validazione in modifica/anteprima e collaudo Joomla/SMTP end-to-end |
 | IMP-09-MAIL-G | P1 | Notifiche nuove lezioni, aggiornamenti significativi dopo migrazione e avvisi ai responsabili implementati in #397/#399/#401; restano i collaudi end-to-end Joomla/SMTP e la riconciliazione del blocco MAIL-G |
 | IMP-09-MAIL-H | P0/P1 | Revisione editoriale/UX IT/EN, template, anteprime, sicurezza rendering e upgrade: #312/#403/#410/#464 integrate. Accettazione Joomla/SMTP pendente |
-| IMP-09-CERT | P0/P1 | Ricognizione CERT-01–08 e regressioni della vista attestati; PR #300/#302/#304/#307 già documentate; issue #308 separata |
+| IMP-09-CERT | P0/P1 | Ricognizione CERT-01–08 e regressioni della vista attestati; PR #300/#302/#304/#307 già documentate; issue #308 risolta da PR #475 (CI 4/4, collaudo Joomla pendente) |
 | IMP-09 / JOO / SECDEV | P0/P1 | Integrazioni Joomla, ACL, localizzazione, privacy, installazione e upgrade senza regressioni |
 | STAB | P0–P2 | Correzioni e rifiniture delle issue aperte, classificazione per reale impatto; blocchi P0 prima del rilascio |
 | DOC-P1–P5 | Gate | Manuali e help contestuale IT/EN, controlli link e coerenza senza trasferire lo storico nel README |
@@ -51,7 +51,7 @@ Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di i
 |---|---|---|
 | [#379](https://github.com/jeckodevelopment/jd_learn/issues/379) — versioni/date/nomi manifest | P2 (label GitHub) | IMP-10 / REL |
 | [#312](https://github.com/jeckodevelopment/jd_learn/issues/312) — traduzioni Mail Templates | P1 | MAIL-H |
-| [#308](https://github.com/jeckodevelopment/jd_learn/issues/308) — elenco attestati Joomla | P1 | CERT / STAB |
+| [#308](https://github.com/jeckodevelopment/jd_learn/issues/308) — elenco attestati Joomla | **Completata (PR #475)** | CERT-01/CERT-06; collaudo Joomla pendente |
 | [#363](https://github.com/jeckodevelopment/jd_learn/issues/363) — pulsante annuncio fuori toolbar | P1 | MAIL-H, fix in PR candidata; collaudo editor/ACL pendente |
 | [#359](https://github.com/jeckodevelopment/jd_learn/issues/359) — etichetta dashboard | P2 | STAB |
 
