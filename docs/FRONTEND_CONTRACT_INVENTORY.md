@@ -9,7 +9,7 @@
 | Catalogo corsi | `courses/default.php` | `#jlms-courses` / `.jlms-catalog` | `.jlms-course-grid`, `.jlms-card.jlms-course-card` | Implementato |
 | Scheda corso | `course/default.php` | `#jlms-course` | `.jlms-module`, `.jlms-lesson`, `.jlms-material` | Implementato |
 | Catalogo percorsi | `pathways/default.php` | `#jlms-pathways` | `.jlms-course-grid`, `.jlms-card.jlms-course-card` | Implementato, stile percorso dedicato in FE-07 |
-| Dettaglio percorso | `pathway/default.php` | `#jlms-pathway` | `.jlms-course-list__item` | Implementato, timeline futura FE-07 |
+| Dettaglio percorso | `pathway/default.php` | `#jlms-pathway` | `.jlms-course-list__item` | Implementato FE-07; collaudo Joomla pendente |
 | Categorie | `categories/default.php` | `#jlms-categories` | `.jlms-category-grid`, `.jlms-card.jlms-category-card` | Implementato |
 | Dettaglio categoria | `category/default.php` | `#jlms-category` | `.jlms-course-grid`, `.jlms-course-card` | Implementato |
 | La mia formazione | `dashboard/default.php` | `#jlms-dashboard`, `#jlms-dashboard-summary` | `.jlms-summary-stats`, `.jlms-card.jlms-my-course` | Quarta tranche FE-05 candidata: sola sintesi, collaudo pendente |
@@ -20,7 +20,7 @@
 | Quiz | `quiz/default.php` | `#jlms-quiz` | `.jlms-quiz-question`, `.jlms-quiz-clear` | Implementato, flusso stabilizzato senza estensioni quiz |
 | Docente | `teacher/default.php` | `#jlms-teacher-profile` | `#jlms-teacher-presentation`, `#jlms-teacher-courses` | Implementato |
 | Modifica docente | `teacheredit/default.php` | `#jlms-teacher-profile-form` | Campi Joomla native | Implementato |
-| Elenco docenti | `teachers/default.php` | Da definire | Da definire | **Non presente** nella ricognizione: FE-09 |
+| Elenco docenti | `teachers/default.php` | `#jlms-teachers` | `.jlms-course-grid`, `.jlms-teacher-card` | Implementato FE-09; collaudo Joomla pendente |
 
 I template nativi sono sotto `component/site/tmpl/`; gli override si trovano in `templates/NOME/html/com_jlms/VISTA/default.php`. I CSS vengono distribuiti via Web Asset Manager (`component/media/joomla.asset.json`): `com_jlms.site` punta a `component/media/css/site.css`. Non richiedere modifiche ai file del core Joomla.
 
@@ -61,4 +61,7 @@ FE-06 candidata: partial site/tmpl/dashboard/_personal_navigation.php condiviso 
 FE-07 candidata: catalogo percorsi `pathways/default.php` con #jlms-pathways e #jlms-pathway-grid, `.jlms-pathway-card__cover`, `.jlms-pathway-card__title`. Dettaglio `pathway/default.php`: #jlms-pathway, #jlms-pathway-cover, #jlms-pathway-sequence, #jlms-pathway-courses.jlms-pathway-timeline, `.jlms-pathway-timeline__item`, `.jlms-pathway-timeline__card`, `.jlms-pathway-timeline__step`; ID stabili per indice. Immagine facoltativa validata nel backend e proiettata dal servizio read-only; progresso soltanto autenticato. Nuovo menu di dettaglio. Collaudo Joomla pendente.
 
 
-FE-08 candidata: `category/default.php` conserva `#jlms-category`, `#jlms-subcategories` e `#jlms-category-courses` con paginazioni distinte. Le sezioni e i rispettivi ID sono condizionali; sottocategorie `.jlms-card.jlms-category-card.jlms-subcategory`, corsi `.jlms-card.jlms-course-card`. Due menu option indipendenti `category_show_subcategories` e `category_show_courses` con default 1, valutate dal helper CategoryOptions soltanto per la voce di menu corrispondente. Collaudo Joomla pendente.
+FE-08 integrata e FE-11 aggiornata: `category/default.php` conserva `#jlms-category`, `#jlms-subcategories` e `#jlms-category-courses` con paginazioni distinte. Le sezioni e i rispettivi ID sono condizionali; sottocategorie `.jlms-card.jlms-category-card.jlms-subcategory`, corsi `.jlms-card.jlms-course-card`. Due opzioni indipendenti `category_show_subcategories` e `category_show_courses` con default globale 1, override menu Globale/Sì/No valutati da CategoryOptions solo per la categoria corrispondente. FE-11 ha uniformato i fallback; collaudo Joomla pendente. Collaudo Joomla pendente.
+
+
+FE-12: il gate strutturale in `tests/frontend-release-gate.py` verifica alcuni invarianti del presente inventario. Il registro di accettazione visuale, funzionale e di sicurezza resta `docs/FRONTEND_FE12_ACCEPTANCE.md`; nessuna prova statica certifica WCAG o override su un sito reale.
