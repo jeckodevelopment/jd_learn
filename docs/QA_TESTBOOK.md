@@ -7,6 +7,8 @@
 5. Con anonimo, account bloccato e due utenti diversi, verificare che i link non aggirino ACL, consenso, download e protezione dei dati personali. Nessuna modifica a corsi, attestati o progressi tramite GET.
 6. Verificare override Joomla, installazione e upgrade; i menu già esistenti devono rimanere privi della barra finché il parametro non viene abilitato.
 
+PR #516 integrata, merge `67985316915ef6d60b25ab0c2de358129f0bf8ee`; [CI 43932007606](https://github.com/jeckodevelopment/jd_learn/actions/runs/43932007606) 4/4 verde (incluso test HTTP Joomla dei parametri menu), [artefatto](https://github.com/jeckodevelopment/jd_learn/actions/runs/43932007606/artifacts/14258847023) ZIP interno pkg_jlms-0.57.7-dev.zip, SHA-256 `6b2add93bb50e901ec33c64f685483dbd9718e094d6222951d7cdd085b06885e`.
+
 Automazione: tests/frontend-personal-navigation.py incluso in tools/check.py. La CI non equivale al collaudo manuale.
 
 ---
