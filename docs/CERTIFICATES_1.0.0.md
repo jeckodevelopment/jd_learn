@@ -54,3 +54,12 @@ Questi scenari vanno aggiunti a `docs/QA_TESTBOOK.md`; l'esecuzione manuale non 
 La prima emissione accoda `com_jlms.certificate.available` nell’outbox esistente, con lingua del profilo Joomla, link autenticato alla dashboard e chiave univoca per documento. Preferenza globale/per corso; la consegna è differita al task Scheduler e usa il mailer Joomla. Replay non crea una seconda notifica; errori di invio non invalidano completamento o attestato.
 
 **Collaudo manuale Joomla:** abilitare gli attestati e le notifiche globali, configurare SMTP di test; completare il corso con uno studente IT e uno EN e verificare in Joomla → Sistema → Modelli email le variabili e il template. Eseguire il job `JD Learn: send queued emails`, verificare una email corretta con link alla dashboard e download disponibile dopo login. Ripetere il completamento e verificare nessuna seconda riga/invio. Disabilitare l’override per corso e verificare che non venga accodata. Rendere temporaneamente indisponibile il mailer prima del job: il certificato deve restare presente, la coda deve ritentare e, ripristinato SMTP, la notifica deve essere consegnata una volta.
+
+
+## CERT-08 — Rigenerazione tecnica amministrativa (PR #477)
+
+Un amministratore autorizzato può rigenerare il **solo file PDF** di un attestato valido e non revocato dal dettaglio nel backend, motivando esplicitamente l'intervento e confermando l'operazione. La richiesta usa POST e CSRF Joomla. Il server applica i permessi di gestione degli attestati e verifica la revisione bloccando le modifiche concorrenti.
+
+La rigenerazione parte esclusivamente dallo snapshot dell'identità e del modello già persistito, non dai dati attuali del corso o dell'utente. Identificativo attestato, documento, codice, data e campi certificati restano invariati; cambia il puntatore alla risorsa privata del PDF con incremento di revisione. Il vecchio asset non viene eliminato durante l'operazione e l'audit registra motivo, vecchio/nuovo asset, checksum e revisione. In caso di errore l'operazione torna allo stato precedente; non vengono emesse nuove notifiche.
+
+**Residui di accettazione:** prova su Joomla dell'operazione e delle condizioni concorrenti/negative; test del ciclo backup/ripristino che comprenda sia database sia storage privato, inclusa verifica di integrità dei PDF.

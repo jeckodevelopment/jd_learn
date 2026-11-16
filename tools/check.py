@@ -957,3 +957,29 @@ assert 'name="status"' in certificate_filters and 'name="search"' in certificate
 assert "$allowedOrders[$order]" in certificate_service and "'certificate_state'" in certificate_service
 assert "renderField('certificate_enabled')" in course_editor and "jlms-course-certificates" in course_editor
 assert "setFieldAttribute('certificate_enabled', 'disabled', 'true')" in course_view
+
+
+# CERT-08: regeneration is an authenticated, CSRF-checked explicit POST and never
+# changes the immutable certificate identity/snapshot or sends a second notice.
+regen_controller = (ROOT / 'component/administrator/src/Controller/CertificateController.php').read_text()
+regen_service = (ROOT / 'component/administrator/src/Application/CertificateService.php').read_text()
+regen_detail = (ROOT / 'component/administrator/tmpl/certificate/default.php').read_text()
+assert "public function regenerate(): void" in regen_controller
+assert "getMethod()) !== 'POST'" in regen_controller and "checkToken('post', false)" in regen_controller
+assert "CurriculumService::id($this->input->post->get('revision'" in regen_controller
+assert "public function adminRegenerate(" in regen_service
+assert "assertCertificateAdministrator($identity)" in regen_service
+assert "FOR UPDATE" in regen_service and "COM_JLMS_CERTIFICATE_REVISION_CONFLICT" in regen_service
+assert "identity_snapshot_json !== (string) $record->identity_snapshot_json" in regen_service
+assert "template_snapshot_json !== (string) $record->template_snapshot_json" in regen_service
+assert "transactionStart()" in regen_service and "recordCertificateAudit($certificateId" in regen_service
+assert "admin_regenerate" in regen_service and "'pdf_asset_id' => $newAssetId" in regen_service
+assert "storage->remove((object) $staged)" in regen_service
+assert "'revision' => (int) $record->revision" in regen_service
+assert 'task" value="certificate.regenerate"' in regen_detail
+assert 'name="confirmation"' in regen_detail and 'name="reason"' in regen_detail
+assert "form.token" in regen_detail and "['status'] === 'ready'" in regen_detail
+for locale in ('it-IT', 'en-GB'):
+    t = (ROOT / 'component/administrator/language' / locale / 'com_jlms.ini').read_text()
+    assert 'COM_JLMS_CERTIFICATE_REGENERATE=' in t
+    assert 'COM_JLMS_CERTIFICATE_REVISION_CONFLICT=' in t
