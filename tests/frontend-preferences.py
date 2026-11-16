@@ -17,7 +17,7 @@ assert "getCourseAnnouncementConsent()->state((int) $identity->id)" in model
 assert "if (!$identity || $identity->guest" in model and "COM_JLMS_LOGIN_REQUIRED" in model
 assert "get('AnnouncementConsent')" in view and "noindex, nofollow" in view
 assert "useStyle('com_jlms.site')" in view
-assert "dashboard/_preferences.php" in page and "_preferences.php" in dashboard
+assert "dashboard/_preferences.php" in page and "view=preferences" in dashboard
 assert "view=preferences" in dashboard and "view=mycourses" in page
 assert "mailconsent.request" in shared and "mailconsent.revoke" in shared
 assert "form.token" in shared and 'name="consent"' in shared
