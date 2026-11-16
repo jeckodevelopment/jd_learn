@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Issue #308 / PR #475: elenco attestati aggiornato alle convenzioni Joomla (Search Tools, filtri, ordinamento e paginazione), mantenendo servizio ACL/audit; nuova scheda Attestati nell'editor corso per configurare eredita/abilita/disabilita, con blocco in checkout. Test strutturali, tracciabilità e scenari QA aggiornati; accettazione Joomla pendente. Percentuale globale invariata in attesa di riconciliazione.
+
 - MAIL-10/CORE-18 / PR #474: il contesto email non trasforma date calendario relative/impossibili in avvii corso validi. Il producer accetta date SQL/ISO assolute, normalizza a UTC e lascia vuoto il campo quando non valido; regressioni PHP aggiunte. Nessuna modifica a template o scheduler; accettazione SMTP/Joomla pendente e stima invariata.
 
 - CERT-03/CERT-08 / PR #473: il rendering dell'attestato PDF rifiuta date di completamento vuote, relative, malformate o impossibili anziché convertirle nella data corrente. Aggiunta regressione su input invalidi e data ISO valida. Nessun cambiamento ai PDF già emessi o all'avanzamento stimato; collaudo Joomla pendente.
