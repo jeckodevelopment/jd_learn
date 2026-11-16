@@ -60,9 +60,9 @@ if (config && player) {
     if (request || queued === null) return request;
     const value = queued;
     queued = null;
+    if (value === lastSent) return;
     // Keep a previous error visible until the server actually confirms a save.
     if (status?.dataset.state !== 'error') setStatus('saving');
-    if (value === lastSent) return;
     request = send(value, keepalive).finally(() => {
       request = null;
       if (queued !== null && queued !== value) void flush(keepalive);
