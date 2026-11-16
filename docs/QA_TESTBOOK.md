@@ -1,3 +1,16 @@
+## FE-08 — Sottocategorie e corsi nella stessa pagina (collaudo Joomla pendente)
+
+1. Creare una voce menu di tipo **Categoria** per una categoria valida; verificare due opzioni indipendenti **Mostra sottocategorie** e **Mostra corsi**, entrambe Sì per default. Aprire la pagina senza modificare il menu e controllare che entrambe le sezioni appaiano.
+2. Provare le quattro combinazioni Sì/Sì, Sì/No, No/Sì e No/No. Ogni opzione deve nascondere solo la rispettiva sezione, inclusi stato vuoto e paginazione. Intestazione/descrizione della categoria e link alle categorie devono rimanere presenti.
+3. Creare due voci menu per la stessa categoria con opzioni differenti; navigare mediante le due voci, con SEF attivo e disattivo, verificando che la scelta non contamini l'altra voce e che un parametro GET artigianale non possa cambiare la configurazione. Su URL diretti senza menu categoria corrispondente deve prevalere il default retrocompatibile.
+4. Con oltre 20 sottocategorie e 20 corsi, verificare paginazioni indipendenti; filtro corsi non deve modificare la pagina sottocategorie. Provare ricerca, ordinamento, filtri, layout griglia/elenco e categorie senza figli o senza corsi.
+5. Come ospite e account autenticato, verificare lingue IT/EN, categorie non pubblicate, in cestino, gruppo di accesso non autorizzato e antenati nascosti. Corsi o categorie non autorizzati non devono comparire né nei collegamenti né nei conteggi di paginazione; URL diretti devono continuare a negare contenuti non visibili.
+6. Verificare responsive 13–15 pollici, smartphone, zoom 200%, navigazione tastiera, focus e override template Joomla; upgrade ZIP mantenendo l'aspetto delle voci menu esistenti.
+
+**Automazione:** tests/frontend-category-sections.py nel gate tools/check.py e suite Joomla categorie/corsi esistenti. Un gate verde non costituisce collaudo manuale.
+
+---
+
 ## FE-07 — Catalogo e dettaglio percorsi formativi (collaudo Joomla pendente)
 
 1. In backend creare/modificare un percorso e impostare una copertina locale facoltativa con il selettore Media Joomla. Salvare, riaprire e verificare persistenza; rimuovere la copertina. Provare file inesistente, path remoto, traversal, file non immagine, immagine troppo grande e alt mancante se non decorativa: il salvataggio deve respingerli. Un'immagine decorativa deve avere alt vuoto.

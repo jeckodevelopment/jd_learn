@@ -59,3 +59,6 @@ FE-06 candidata: partial site/tmpl/dashboard/_personal_navigation.php condiviso 
 
 
 FE-07 candidata: catalogo percorsi `pathways/default.php` con #jlms-pathways e #jlms-pathway-grid, `.jlms-pathway-card__cover`, `.jlms-pathway-card__title`. Dettaglio `pathway/default.php`: #jlms-pathway, #jlms-pathway-cover, #jlms-pathway-sequence, #jlms-pathway-courses.jlms-pathway-timeline, `.jlms-pathway-timeline__item`, `.jlms-pathway-timeline__card`, `.jlms-pathway-timeline__step`; ID stabili per indice. Immagine facoltativa validata nel backend e proiettata dal servizio read-only; progresso soltanto autenticato. Nuovo menu di dettaglio. Collaudo Joomla pendente.
+
+
+FE-08 candidata: `category/default.php` conserva `#jlms-category`, `#jlms-subcategories` e `#jlms-category-courses` con paginazioni distinte. Le sezioni e i rispettivi ID sono condizionali; sottocategorie `.jlms-card.jlms-category-card.jlms-subcategory`, corsi `.jlms-card.jlms-course-card`. Due menu option indipendenti `category_show_subcategories` e `category_show_courses` con default 1, valutate dal helper CategoryOptions soltanto per la voce di menu corrispondente. Collaudo Joomla pendente.
