@@ -6,19 +6,23 @@ namespace Jlms\Component\Jlms\Site\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
 
 class CoursesModel extends ListModel
 {
     protected function populateState($ordering = 'c.id', $direction = 'DESC')
     {
         parent::populateState($ordering, $direction);
-        $this->setState('list.limit', max(1, min(100, (int) $this->state->get('list.limit', 20))));
+        $this->setState('list.limit', (int) CatalogOptions::get('catalog_page_size'));
         $this->setState('filter.category_id', max(0, Factory::getApplication()->getInput()->getInt('catid', 0)));
-        $filter = Factory::getApplication()->getInput()->get('filter', [], 'array');
+        // A hidden filter form must not allow stale or handcrafted GET filters.
+        $filter = CatalogOptions::enabled('catalog_show_filters')
+            ? Factory::getApplication()->getInput()->get('filter', [], 'array') : [];
         $search = $filter['search'] ?? '';
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
-        $order = $filter['order'] ?? 'recent';
-        $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title'], true) ? $order : 'recent');
+        $defaultOrder = CatalogOptions::get('catalog_default_order');
+        $order = CatalogOptions::enabled('catalog_show_order') ? ($filter['order'] ?? $defaultOrder) : $defaultOrder;
+        $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title'], true) ? $order : $defaultOrder);
         $tagId = $filter['tag_id'] ?? 0;
         $this->setState('filter.tag_id', max(0, is_scalar($tagId) ? (int) $tagId : 0));
         $difficulty = $filter['difficulty'] ?? '';
