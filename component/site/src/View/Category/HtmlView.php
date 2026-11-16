@@ -8,6 +8,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Jlms\Component\Jlms\Site\Helper\CategoryNavigationHelper;
+use Jlms\Component\Jlms\Site\Helper\CategoryOptions;
 use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
 
 final class HtmlView extends BaseHtmlView
@@ -15,6 +16,8 @@ final class HtmlView extends BaseHtmlView
     public object $category;
     public array $items = [];
     public array $children = [];
+    public bool $showSubcategories = true;
+    public bool $showCourses = true;
     public $pagination;
     public $childrenPagination;
     public string $search = '';
@@ -32,8 +35,11 @@ public string $difficulty = '';
     public function display($tpl = null)
     {
         $this->category = $this->getModel()->getCategory();
-        $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
+        $options = CategoryOptions::sections((int) $this->category->id);
+        $this->showSubcategories = $options['subcategories'];
+        $this->showCourses = $options['courses'];
+        $this->items = $this->showCourses ? $this->get('Items') : [];
+        $this->pagination = $this->showCourses ? $this->get('Pagination') : null;
         $this->search = $this->getModel()->getSearch();
         $this->order = $this->getModel()->getOrder();
         $this->tagId = $this->getModel()->getTagId();
@@ -47,6 +53,7 @@ $this->difficulty = $this->getModel()->getDifficulty();
         $this->pathways = $this->getModel()->getPathways();
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
         $app = Factory::getApplication();
+        if ($this->showSubcategories) {
         $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);
         $model->setState('filter.parent_id', (int) $this->category->id);
         $model->setState('list.limit', 20);
@@ -54,6 +61,7 @@ $this->difficulty = $this->getModel()->getDifficulty();
         $model->setState('pagination.prefix', 'subcategories_');
         $this->children = $model->getItems();
         $this->childrenPagination = $model->getPagination();
+        }
         CategoryNavigationHelper::addPath((int) $this->category->id);
         try {
             $guestCategory = $app->bootComponent('com_jlms')->getCatalogService()->category(
