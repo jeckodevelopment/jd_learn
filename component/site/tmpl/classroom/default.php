@@ -15,7 +15,11 @@ foreach ($item['outline'] as $entry) {
 }
 ?>
 <section id="jlms-classroom" class="jlms-classroom" data-enrollment-id="<?= (int) $item['enrollment_id'] ?>">
- <header id="jlms-classroom-header"><h1><?= $this->escape($item['title']) ?></h1><a id="jlms-classroom-dashboard" href="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a></header>
+ <header id="jlms-classroom-header"><div class="jlms-classroom-header__heading"><h1><?= $this->escape($item['title']) ?></h1>
+ <?php if (!empty($item['teachers'])) : ?><p id="jlms-classroom-teachers" class="jlms-classroom-teachers">
+ <?= Text::_('COM_JLMS_TEACHERS') ?>:
+ <?php foreach ($item['teachers'] as $index => $teacher) : ?><?= $index ? ', ' : '' ?><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?= $this->escape($teacher['title']) ?></a><?php endforeach; ?>
+ </p><?php endif; ?></div><a id="jlms-classroom-dashboard" href="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a></header>
  <?php if ($item['progress_applicable']) : ?>
  <section id="jlms-learning-progress" aria-label="<?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>">
   <label for="jlms-progress-meter"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $item['percent'] ?>%</label>
