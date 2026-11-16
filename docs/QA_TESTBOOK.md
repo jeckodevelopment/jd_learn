@@ -1594,3 +1594,16 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 8. Eseguire `python3 tests/frontend-catalog-options.py`, `python3 tests/frontend-css-contract.py` e CI completa; installare il pacchetto finale su Joomla di prova.
 
 **Esito:** manuale non eseguito; il test statico e la CI non equivalgono all'accettazione Joomla.
+
+
+## FE-01 — Filtro categoria e metadati di scheda (seconda tranche)
+
+1. Da **JD Learn → Opzioni** verificare **Mostra filtro categoria** = Sì; creare due voci menu `Catalogo corsi`, una che eredita il valore globale, una con override No. Se ricerca globale è No, il controllo categoria deve restare nascosto anche dove la singola opzione categoria è Sì.
+2. Creare corsi pubblicati in categorie principali e sottocategorie; scegliere una categoria dal menu GET e verificare che la griglia mostri soltanto corsi **direttamente** in quella categoria. Testare `catid` già applicato alla pagina per verificare che la selezione non allarghi il perimetro ai fratelli o agli antenati.
+3. Corsi in categorie non pubblicate/riservate, categorie antenate non accessibili, corsi fuori finestra, lingua differente o corso senza versione pubblicata **non** devono comparire nei valori del selettore né nella griglia.
+4. Con ricerca o filtro categoria disattivati, inviare `filter[category_id]` artificialmente: deve essere ignorato. Con filtro abilitato ma ID inventato, il risultato deve essere vuoto, senza mai mostrare tutti i corsi come fallback.
+5. Corsi con metadati `difficulty` e `estimated_minutes` nella versione pubblicata: verificare livello IT/EN e durata. Assenza di metadati: nessun riquadro vuoto. Modificare la bozza senza pubblicare: le card devono continuare a mostrare i valori pubblicati precedenti.
+6. Verificare navigazione SEF, paginazione, ricerca per titolo, tag, docenti e percorsi, modalità legacy elenco, tema Joomla personalizzato, mobile, tastiera, zoom 200% e CSS di override.
+7. Confermare CI verde e `python3 tests/frontend-catalog-options.py` prima del merge; dopo il merge installare il pacchetto ZIP Joomla e ripetere lo smoke test.
+
+**Accettazione Joomla manuale:** pendente. CI verde non equivale a requisito accettato.
