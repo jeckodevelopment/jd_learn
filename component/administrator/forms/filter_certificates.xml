@@ -12,17 +12,11 @@
  <fields name="list">
   <field name="fullordering" type="list" label="JGLOBAL_SORT_BY" class="js-select-submit-on-change" default="d.issued_at DESC" validate="options">
    <option value="d.issued_at DESC">COM_JLMS_CERTIFICATE_ISSUED</option>
-   <option value="d.issued_at ASC">COM_JLMS_CERTIFICATE_ISSUED</option>
    <option value="student_name ASC">COM_JLMS_CERTIFICATE_STUDENT</option>
-   <option value="student_name DESC">COM_JLMS_CERTIFICATE_STUDENT</option>
    <option value="course_title ASC">COM_JLMS_CERTIFICATE_COURSE</option>
-   <option value="course_title DESC">COM_JLMS_CERTIFICATE_COURSE</option>
    <option value="d.serial ASC">COM_JLMS_CERTIFICATE_CODE</option>
-   <option value="d.serial DESC">COM_JLMS_CERTIFICATE_CODE</option>
    <option value="certificate_state ASC">JSTATUS</option>
-   <option value="certificate_state DESC">JSTATUS</option>
    <option value="c.id ASC">JGRID_HEADING_ID</option>
-   <option value="c.id DESC">JGRID_HEADING_ID</option>
   </field>
   <field name="limit" type="limitbox" label="JGLOBAL_LIST_LIMIT" default="20" class="js-select-submit-on-change" />
  </fields>
