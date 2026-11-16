@@ -18,6 +18,7 @@ use Joomla\CMS\HTML\HTMLHelper;
  <section id="jlms-my-certificates" class="jlms-dashboard-group"><h2><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></h2>
   <?php $certificates = $this->certificates; require __DIR__ . '/_certificates.php'; ?>
  </section><?php endif; ?>
+ <a id="jlms-dashboard-my-certificates-link" href="<?= Route::_('index.php?option=com_jlms&view=mycertificates') ?>"><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></a>
  <section id="jlms-course-announcement-preferences" class="jlms-dashboard-group" aria-labelledby="jlms-course-announcement-title">
   <h2 id="jlms-course-announcement-title"><?= Text::_('COM_JLMS_MAIL_CONSENT_HEADING') ?></h2>
   <p><?= Text::_('COM_JLMS_MAIL_CONSENT_EXPLANATION') ?></p>
