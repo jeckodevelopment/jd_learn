@@ -7,7 +7,7 @@
 5. Ripubblicare il corso su ambiente di prova e verificare che una finestra promozionale scaduta (`publish_down`) da sola non interrompa l'aula già autorizzata; controllare separatamente lo stato di apertura delle iscrizioni.
 6. Ripetere con accessi diretti, concorrenza di richieste e aggiornamento del pacchetto su sito con dati preesistenti, osservando ogni eventuale via laterale ancora non coperta.
 
-**Implementazione:** test automatici di servizio aggiornati per gli stati 0/2/-2 e per la preservazione dei progressi, unitamente al test di transizione archivio. **Collaudo Joomla/accettazione: pendente.** Restano da verificare i flussi laterali LCM-01, le toolbar LCM-02, percorsi LCM-03 e docenti LCM-04.
+**Implementazione:** PR #484 integrata (merge `fef7a87a399e9bfafdbeca0c178f0e8629cf4ebf`), CI [43846067260](https://github.com/jeckodevelopment/jd_learn/actions/runs/43846067260) 4/4 superata. Test aggiornati per stati 0/2/-2, progressi, video player e transizione archivio. **Collaudo Joomla/accettazione: pendente.** Restano da verificare i flussi laterali LCM-01, le toolbar LCM-02, percorsi LCM-03 e docenti LCM-04.
 
 ---
 

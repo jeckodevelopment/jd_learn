@@ -2,9 +2,9 @@
   "audited_at": "2026-11-15",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "as_of": "2026-11-15",
+    "as_of": "2026-11-16",
     "percent": 80,
-    "basis": "PR #464 adds missing approved email context producers and regression coverage (+2 points email area); manual Joomla/SMTP acceptance remains pending. Global (81+81+78+99+68+92+70+72+75)/9 = 79.56% (rounded 80%); email 72%.",
+    "basis": "LCM-01 PR #484 adds the server-side course lifecycle gate for existing classrooms and video playback (states 0/2/-2), with integration tests. Scope remains partially covered pending other endpoints and manual Joomla acceptance. Conservative global estimate unchanged: (81+81+78+99+68+92+70+72+75)/9 = 79.56% (rounded 80%); email 72%.",
     "macroareas": {
       "courses": 81,
       "catalogue": 81,
@@ -18,12 +18,12 @@
     }
   },
   "version": "0.57.7-dev",
-  "code_baseline": "2d70bb15d897f0d9f0ed3cbc29e72bf6bb61c28b",
+  "code_baseline": "fef7a87a399e9bfafdbeca0c178f0e8629cf4ebf",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43768526287,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526287",
+    "run_id": 43846067260,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43846067260",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -51,16 +51,16 @@
     ]
   },
   "package": {
-    "artifact_id": 14183930070,
-    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526287/artifacts/14183930070",
+    "artifact_id": 14215421792,
+    "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43846067260/artifacts/14215421792",
     "artifact_name": "JD-Learn-0.57.7-dev",
     "installable_package": "pkg_jlms-0.57.7-dev.zip",
-    "artifact_sha256": "a837d45552a60876effe535ca516a3e9393c1cc9e9bf55511d7b87afbf5c57db",
-    "artifact_size_bytes": 691370,
+    "artifact_sha256": "703c1ea97ed3f1e4884267bda072e0781167d13b3268241d0d39cf304e2bd9c1",
+    "artifact_size_bytes": 695854,
     "wrapper_zip": true,
-    "sha256": "20e3ed07b1d4200d098c6b76c11d9f5bc97dd9e232bcf8eda6d9a7499b98f02b",
-    "size_bytes": 691639,
-    "notes": "Artefatto CI della PR #468. Estrarre lo ZIP contenitore e installare pkg_jlms-0.57.7-dev.zip. Checksum e dimensione interni dalla build; digest contenitore distinto. CI 4/4 verde; accettazione manuale Joomla pendente."
+    "sha256": "b01565a7218cf960dfde04bd8a001c08e3b373d692488d4fedeb6b4ee1719440",
+    "size_bytes": 696113,
+    "notes": "PR #484 / merge fef7a87a399e9bfafdbeca0c178f0e8629cf4ebf, CI 4/4 green. Wrapper GitHub Actions: extract pkg_jlms-0.57.7-dev.zip before installation. Inner ZIP SHA-256 measured by build; GitHub wrapper digest separate. Joomla acceptance remains pending; LCM-01 is partial."
   },
   "release_process": {
     "issue": 160,
