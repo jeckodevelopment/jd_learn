@@ -276,6 +276,9 @@ semver_core=r'(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)'
 assert re.fullmatch(semver_core,version),('non-canonical package version',version)
 assert re.fullmatch(semver_core,component_version),('non-canonical component version',component_version)
 assert version==component_version,('package/component version mismatch',version,component_version)
+# P0 #532: installation must never ship a stale WAM query version.
+source_assets=json.loads((ROOT/'component/media/joomla.asset.json').read_text())
+assert source_assets['version']==version, ('stale source WAM version',source_assets['version'],version)
 package=ROOT/'dist'/f'pkg_jlms-{version}-dev.zip'
 if package.exists():
  with zipfile.ZipFile(package) as z:
@@ -285,6 +288,10 @@ if package.exists():
    with zipfile.ZipFile(io.BytesIO(z.read('constituents/'+e.text))) as child:
     assert child.testzip() is None
     names=set(child.namelist())
+    if e.attrib['type']=='component':
+     bundled=json.loads(child.read('media/joomla.asset.json'))
+     assert bundled['version']==version, ('stale installed component asset version',bundled['version'],version)
+
     manifest='jlms.xml' if e.attrib['type'] in ['component','library'] else e.attrib['id']+'.xml'
     x=E.fromstring(child.read(manifest))
     for files in x.findall('files')+x.findall('administration/files'):
