@@ -23,6 +23,8 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-09 — PR #522 in verifica (non integrata):** introdotto catalogo pubblico dei docenti (`teachers`) con voce menu Joomla IT/EN, elenco paginato, schede fotografiche facoltative e collegamenti ai profili già esistenti. Il modello riusa `TeacherProfiles::available` per proiettare soltanto profili pubblicabili per utente/ACL/lingua/categoria, senza dati account. CI e collaudo Joomla da verificare, nessun aumento percentuale attribuito prima del gate.
+
 **FE-08 — PR #520 integrata (merge `231ed6c1f7d5ea3468e616a94ba3221230575eb5`):** nelle opzioni della voce menu Joomla di tipo `category` sono disponibili due impostazioni indipendenti, `category_show_subcategories` e `category_show_courses` (Sì/No, default Sì). La pagina categoria conserva la visualizzazione congiunta e le due paginazioni distinte quando entrambe sono attive; la sezione nascosta non effettua le rispettive query di elenco. L'opzione è applicata solo se la voce menu attiva corrisponde esattamente all'ID categoria, non è abilitabile tramite GET e non modifica i controlli ACL ereditati. Le schede di sottocategorie e corsi usano le classi pubbliche di card. Nessun conteggio non fondato o nuova tabella. [CI 43937676157](https://github.com/jeckodevelopment/jd_learn/actions/runs/43937676157) 4/4 verde; [pacchetto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43937676157/artifacts/14262196438) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `ef30b163772df6a3dbadd8b6549ceb96c62d4b1b13539db4595811314ceb9b06`. Il collaudo manuale Joomla rimane pendente; stima globale di riferimento 79,56% invariata.
 
 
