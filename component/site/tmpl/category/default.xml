@@ -7,26 +7,17 @@
  <fields name="params">
   <fieldset name="basic" label="COM_JLMS_CATEGORY_MENU_SETTINGS">
    <field name="category_show_subcategories" type="list" label="COM_JLMS_CATEGORY_SHOW_SUBCATEGORIES" description="COM_JLMS_CATEGORY_SHOW_SUBCATEGORIES_DESC" default="" filter="cmd">
-    <option value="">JGLOBAL_USE_GLOBAL</option><option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
    </field>
    <field name="category_show_courses" type="list" label="COM_JLMS_CATEGORY_SHOW_COURSES" description="COM_JLMS_CATEGORY_SHOW_COURSES_DESC" default="" filter="cmd">
-    <option value="1">JYES</option><option value="0">JNO</option>
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
    </field>
   </fieldset>
-    <fieldset name="catalog" label="COM_JLMS_CATALOG_MENU_SETTINGS">
+  <fieldset name="catalog" label="COM_JLMS_CATALOG_MENU_SETTINGS">
    <field name="catalog_show_filters" type="list" label="COM_JLMS_CATALOG_SHOW_FILTERS" default="" filter="cmd">
     <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
    </field>
-   <field name="catalog_show_category" type="list" label="COM_JLMS_CATALOG_SHOW_CATEGORY" default="" filter="cmd">
-    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
-   </field>
    <field name="catalog_show_order" type="list" label="COM_JLMS_CATALOG_SHOW_ORDER" default="" filter="cmd">
-    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
-   </field>
-   <field name="catalog_show_cover" type="list" label="COM_JLMS_CATALOG_SHOW_COVER" default="" filter="cmd">
-    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
-   </field>
-   <field name="catalog_show_summary" type="list" label="COM_JLMS_CATALOG_SHOW_SUMMARY" default="" filter="cmd">
     <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
    </field>
    <field name="catalog_page_size" type="list" label="COM_JLMS_CATALOG_PAGE_SIZE" default="" filter="cmd">
