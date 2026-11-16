@@ -991,3 +991,16 @@ cert_populate = cert_model.split('protected function populateState(', 1)[1].spli
 assert '$this->getState(' not in cert_populate, 'Certificate populateState recursion reintroduced'
 assert "$this->state->get('list.limit'" in cert_populate
 assert "$this->state->get('list.start'" in cert_populate
+
+# Issue #472: expose the existing public pathway catalogue to the Joomla menu manager.
+pathways_menu = ROOT / 'component/site/tmpl/pathways/default.xml'
+pathways_metadata = E.parse(pathways_menu).getroot()
+assert pathways_metadata.find('./layout').attrib['title'] == 'COM_JLMS_MENU_PATHWAYS_TITLE'
+assert pathways_metadata.find('./layout/message').text == 'COM_JLMS_MENU_PATHWAYS_DESC'
+assert (ROOT / 'component/site/tmpl/pathways/default.php').exists()
+assert (ROOT / 'component/site/src/View/Pathways/HtmlView.php').exists()
+for locale in ('it-IT', 'en-GB'):
+ for client in ('site', 'administrator'):
+  translations = (ROOT / 'component' / client / 'language' / locale / 'com_jlms.sys.ini').read_text()
+  assert 'COM_JLMS_MENU_PATHWAYS_TITLE=' in translations
+  assert 'COM_JLMS_MENU_PATHWAYS_DESC=' in translations

@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Issue #472: aggiunta la voce selezionabile **Percorsi formativi** nel gestore menu nativo Joomla, grazie al layout metadata `site/tmpl/pathways/default.xml` con traduzioni IT/EN. Riutilizza il catalogo percorsi frontend e i controlli di visibilità esistenti; nessuna modifica a query, ACL o dati. Collaudo menu/SEF/lingua pendente.
+
 - Vista **Attestati**: ordinamento Search Tools semplificato a una voce per campo (data, studente, corso, codice, stato, ID); direzione invertibile tramite intestazioni cliccabili della tabella. Filtri Stato e ricerca invariati. Collaudo Joomla pendente.
 
 - Fix post-PR #475: corretto HTTP 500 nell'apertura backend **JD Learn → Attestati**. `CertificatesModel::populateState()` usava `getState()` e reinnescava l'inizializzazione Joomla ricorsivamente; ora legge `state->get()` direttamente. Aggiunti controllo anti-regressione e test HTTP autenticato di apertura/filtri della vista. Accettazione sul sito Joomla ancora da verificare.

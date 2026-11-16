@@ -1,3 +1,14 @@
+## Issue #472 — voce menu frontend Percorsi formativi
+
+1. Su Joomla 6 con JD Learn aggiornato, aprire **Menu → Nuova voce di menu → Tipo di voce di menu → JD Learn**: deve essere presente **Percorsi formativi** (in EN **Learning pathways**) con descrizione corretta.
+2. Creare e pubblicare la voce, aprirla sul sito: deve visualizzare la vista `pathways` esistente con i soli percorsi disponibili, paginazione e link ai dettagli. Verificare URL SEF e non SEF.
+3. Provare elenco vuoto e visibilità di percorsi pubblicati, non pubblicati e privati con utente anonimo/autenticato e ACL diversi: nessuna esposizione di contenuti riservati.
+4. Verificare creazione e modifica della voce menu in italiano e inglese, selettore nativo Joomla, navigazione desktop/mobile e compatibilità con gli altri tipi di menu JD Learn.
+
+**Esito:** attende verifica su sito Joomla reale; il test strutturale controlla XML, vista esistente e traduzioni ma non sostituisce il collaudo.
+
+---
+
 ## Attestati — menu di ordinamento senza duplicazioni
 
 1. Aprire **JD Learn → Attestati** con Joomla 6/Atum, anche in assenza di risultati: il menu di ordinamento deve offrire esattamente sei opzioni, una per campo (Emesso il, Studente, Corso, Codice attestato, Stato e ID).
