@@ -73,6 +73,14 @@ $id = (int) $this->item->id;
   <div id="jlms-course-calendar"><?= $this->form->renderFieldset('calendar') ?></div>
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
+ <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-certificates', Text::_('COM_JLMS_CERTIFICATE_SETTINGS')) ?>
+ <section id="jlms-course-certificate-settings" aria-label="<?= Text::_('COM_JLMS_CERTIFICATE_SETTINGS') ?>">
+  <?= $this->form->renderField('certificate_enabled') ?>
+  <?php if ($this->canConfigure) : ?>
+   <p class="small"><a href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('COM_JLMS_CERTIFICATE_GLOBAL_DESC') ?></a></p>
+  <?php endif; ?>
+ </section>
+ <?= HTMLHelper::_('uitab.endTab') ?>
  <?php if ($this->form->getFieldsets('com_fields')) : ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-fields-tab', Text::_('COM_JLMS_COURSE_CUSTOM_FIELDS')) ?>
  <section id="jlms-course-custom-fields">

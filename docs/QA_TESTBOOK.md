@@ -1454,3 +1454,13 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 3. Verificare template personalizzato IT/EN, segnaposto canonici, ACL dell'operatore e consenso del destinatario. Non modificare i template globali durante una singola comunicazione.
 
 **Esito:** non eseguito. Test automatico in `tests/mail-template-variables.php`; accettazione SMTP/Joomla separata.
+
+
+## Issue #308 / PR #475 — elenco Attestati e impostazioni corso native Joomla
+
+1. Aprire **JD Learn → Attestati** con Super User. Controllare Search Tools Joomla, ricerca per studente, corso e codice, stato disponibile/in attesa/revocato, svuotamento filtri, numero risultati e ordinamento per ogni intestazione della tabella. Creare almeno 25 attestati di prova e verificare paginazione e cambio limite, preservando i filtri.
+2. Aprire un attestato dalla tabella; verificare dettaglio, audit e download. Accedere allo stesso URL come utente senza permessi: nessuna visualizzazione/download di dati riservati. Verificare IT/EN, desktop/mobile e tastiera con Atum.
+3. Aprire **Corsi → Nuovo/Modifica → Attestati**, selezionare **Eredita**, **Sì** o **No** e salvare. Riaprire il corso e verificare valore persistito e rispetto del default globale. Un corso in checkout da un altro amministratore non deve permettere la modifica dell'opzione.
+4. Completare realmente un corso in modalità Apprendimento con attestati abilitati; in modalità Sola consultazione o con attestati disabilitati non deve esserci emissione. Provare anche l'upgrade da dati esistenti.
+
+**Esito:** da collaudare sul sito Joomla reale. CI verde non costituisce accettazione manuale.
