@@ -1446,3 +1446,11 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 3. Verificare download consentito al proprietario e negato a ospiti/studenti non proprietari; codice e snapshot certificati non devono variare. I PDF già generati non vengono riscritti.
 
 **Esito:** non eseguito. CI e test unitari non equivalgono ad accettazione manuale. La correzione non completa CERT-08: restano rigenerazione amministrativa e verifica backup/ripristino.
+
+## MAIL-10/CORE-18 — data di inizio corso nelle email (PR #474)
+
+1. Su Joomla di prova, configurare un evento autorizzato che includa `{COURSE_START_DATE}` e impostare un inizio corso assoluto valido: controllare anteprima, accodamento e email SMTP con data UTC corretta, anche con timezone offset.
+2. Preparare nel solo ambiente di prova un corso con `starts_at` mancante, relativo (`tomorrow`) o impossibile (`2026-02-30`). Il contesto email non deve inventare una data; deve usare il fallback vuoto previsto dal producer.
+3. Verificare template personalizzato IT/EN, segnaposto canonici, ACL dell'operatore e consenso del destinatario. Non modificare i template globali durante una singola comunicazione.
+
+**Esito:** non eseguito. Test automatico in `tests/mail-template-variables.php`; accettazione SMTP/Joomla separata.

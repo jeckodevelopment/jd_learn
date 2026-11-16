@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- MAIL-10/CORE-18 / PR #474: il contesto email non trasforma date calendario relative/impossibili in avvii corso validi. Il producer accetta date SQL/ISO assolute, normalizza a UTC e lascia vuoto il campo quando non valido; regressioni PHP aggiunte. Nessuna modifica a template o scheduler; accettazione SMTP/Joomla pendente e stima invariata.
+
 - CERT-03/CERT-08 / PR #473: il rendering dell'attestato PDF rifiuta date di completamento vuote, relative, malformate o impossibili anziché convertirle nella data corrente. Aggiunta regressione su input invalidi e data ISO valida. Nessun cambiamento ai PDF già emessi o all'avanzamento stimato; collaudo Joomla pendente.
 
 - Issue #430 / PR #468: corretta la proiezione del corso pubblico, ora include `catalog_access` letto dalla vista frontend per i metadati SEO e la regola di indicizzazione. Test service e HTTP aggiunti per proprietà presente e assenza di warning PHP. Merge `2d70bb15d897f0d9f0ed3cbc29e72bf6bb61c28b`; CI 4/4 e CSV superati. Pacchetto `pkg_jlms-0.57.7-dev.zip`, SHA-256 `20e3ed07b1d4200d098c6b76c11d9f5bc97dd9e232bcf8eda6d9a7499b98f02b`, [artefatto Actions 14183930070](https://github.com/jeckodevelopment/jd_learn/actions/runs/43768526287/artifacts/14183930070); checksum contenitore `a837d45552a60876effe535ca516a3e9393c1cc9e9bf55511d7b87afbf5c57db`. Collaudo manuale Joomla pendente; stima globale invariata 79,33%.

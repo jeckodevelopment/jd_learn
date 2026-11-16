@@ -6,6 +6,23 @@ require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTempl
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateVariableCatalog.php';
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplatePlaceholderValidator.php';
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateTagUpdater.php';
+require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateContext.php';
+
+// MAIL-10: optional course start dates are absolute, validated and UTC-normalized.
+$courseDateParser = new ReflectionMethod(
+    \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateContext::class, 'dateValue'
+);
+foreach ([null, '', 'tomorrow', '2026-02-30', '2026-13-01', '2026-11-13 junk'] as $invalid) {
+    if ($courseDateParser->invoke(null, $invalid) !== '') {
+        throw new RuntimeException('Unsafe course start date accepted in email context.');
+    }
+}
+if ($courseDateParser->invoke(null, '2026-11-13 12:00:00') !== '2026-11-13 12:00:00 UTC'
+    || $courseDateParser->invoke(null, '2026-11-13T12:00:00Z') !== '2026-11-13 12:00:00 UTC'
+    || $courseDateParser->invoke(null, '2026-11-13T14:00:00+02:00') !== '2026-11-13 12:00:00 UTC') {
+    throw new RuntimeException('Course start date was not normalized safely to UTC.');
+}
+
 
 use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller;
 use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog;
