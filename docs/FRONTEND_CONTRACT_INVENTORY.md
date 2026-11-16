@@ -12,7 +12,7 @@
 | Dettaglio percorso | `pathway/default.php` | `#jlms-pathway` | `.jlms-course-list__item` | Implementato, timeline futura FE-07 |
 | Categorie | `categories/default.php` | `#jlms-categories` | `.jlms-category-grid`, `.jlms-card.jlms-category-card` | Implementato |
 | Dettaglio categoria | `category/default.php` | `#jlms-category` | `.jlms-course-grid`, `.jlms-course-card` | Implementato |
-| Area personale | `dashboard/default.php` | `#jlms-dashboard` | `.jlms-my-course-grid`, `.jlms-card.jlms-my-course` | Implementato; viste autonome future FE-05 |
+| La mia formazione | `dashboard/default.php` | `#jlms-dashboard`, `#jlms-dashboard-summary` | `.jlms-summary-stats`, `.jlms-card.jlms-my-course` | Quarta tranche FE-05 candidata: sola sintesi, collaudo pendente |
 | I miei corsi | `mycourses/default.php` | `#jlms-dashboard` / `.jlms-my-courses-view` | `dashboard/_courses.php` | Implementato; collaudo Joomla pendente |
 | I miei attestati | `mycertificates/default.php` | `#jlms-my-certificates-view` / `.jlms-my-certificates-view` | `dashboard/_certificates.php` | PR #510; collaudo Joomla pendente |
 | Preferenze personali | `preferences/default.php` | `#jlms-preferences-view` | `dashboard/_preferences.php` e servizio consenso esistente | Candidata FE-05; collaudo pendente |
