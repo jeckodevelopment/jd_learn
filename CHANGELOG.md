@@ -1,6 +1,6 @@
 # Changelog
 
-- FE-07 (candidata): catalogo percorsi con copertina dedicata facoltativa e intro, editor Joomla Media con alt/decorativa e salvataggio in params_json; dettaglio con timeline verticale, progressi autorizzati senza iscrizione aggregata, nuovo menu dettaglio. Test e collaudo Joomla pendenti.
+- FE-07 (PR #518 integrata): catalogo percorsi con copertina dedicata facoltativa e intro, editor Joomla Media con alt/decorativa e salvataggio in params_json; dettaglio con timeline verticale, progressi autorizzati senza iscrizione aggregata, nuovo menu dettaglio. Test e collaudo Joomla pendenti.
 
 - FE-06 (PR #516 integrata): navigazione interna facoltativa nelle quattro viste studente; opzione per singola voce menu Joomla, default No, link SEF, stato corrente accessibile e CSS scoped. Collaudo Joomla pendente.
 
