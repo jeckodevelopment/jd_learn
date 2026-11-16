@@ -28,6 +28,18 @@ foreach ([1, 2, 3] as $position) {
  <section id="jlms-course-summary"><h2><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?= nl2br($this->escape((string) $course->summary)) ?></p></section>
  <?php endif; ?>
  <div id="jlms-course-layout" class="jlms-course-layout">
+
+ <div id="jlms-course-main" class="jlms-course-main">
+ <?php if (!empty($presentation['description'])) : ?>
+ <section id="jlms-course-description" class="jlms-course-description"><h2><?= Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?= $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
+ <?php endif; ?>
+ <?php foreach (['objectives' => 'COM_JLMS_COURSE_OBJECTIVES', 'audience' => 'COM_JLMS_COURSE_AUDIENCE', 'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT'] as $field => $label) : ?>
+ <?php if (!empty($presentation[$field])) : ?>
+ <section id="jlms-course-<?= str_replace('_', '-', $field) ?>" class="jlms-course-presentation-section"><h2><?= Text::_($label) ?></h2><p><?= nl2br($this->escape($presentation[$field])) ?></p></section>
+ <?php endif; ?>
+ <?php endforeach; ?>
+ <?php if (trim($fieldOutput[3]) !== '') : ?><div id="jlms-course-fields-after-content" class="jlms-course-fields"><?= $fieldOutput[3] ?></div><?php endif; ?>
+ </div>
  <div id="jlms-course-sidebar" class="jlms-course-sidebar"><div class="jlms-course-sidebar__inner">
  <?php if (!empty($presentation['difficulty']) || !empty($presentation['estimated_minutes'])) : ?>
  <section id="jlms-course-facts"><h2><?= Text::_('COM_JLMS_COURSE_FACTS') ?></h2><dl>
@@ -58,16 +70,7 @@ foreach ([1, 2, 3] as $position) {
  <?php elseif ($this->hasContentAccess && !$this->canStartWindow) : ?><p id="jlms-course-window-closed"><?= Text::_('COM_JLMS_CALENDAR_CLOSED') ?></p>
  <?php elseif ($this->hasContentAccess) : ?><p><?= Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php endif; ?></aside>
  </div></div>
- <div id="jlms-course-main" class="jlms-course-main">
- <?php if (!empty($presentation['description'])) : ?>
- <section id="jlms-course-description" class="jlms-course-description"><h2><?= Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?= $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
- <?php endif; ?>
- <?php foreach (['objectives' => 'COM_JLMS_COURSE_OBJECTIVES', 'audience' => 'COM_JLMS_COURSE_AUDIENCE', 'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT'] as $field => $label) : ?>
- <?php if (!empty($presentation[$field])) : ?>
- <section id="jlms-course-<?= str_replace('_', '-', $field) ?>" class="jlms-course-presentation-section"><h2><?= Text::_($label) ?></h2><p><?= nl2br($this->escape($presentation[$field])) ?></p></section>
- <?php endif; ?>
- <?php endforeach; ?>
- <?php if (trim($fieldOutput[3]) !== '') : ?><div id="jlms-course-fields-after-content" class="jlms-course-fields"><?= $fieldOutput[3] ?></div><?php endif; ?>
+ <div id="jlms-course-supplemental" class="jlms-course-supplemental">
  <?php if (!empty($this->item['teachers'])) : ?><section id="jlms-course-teachers"><h2><?= Text::_('COM_JLMS_TEACHERS') ?></h2>
  <?php foreach ($this->item['teachers'] as $teacher) : ?><article id="jlms-course-teacher-<?= (int) $teacher['id'] ?>" class="jlms-course-teacher"><h3><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?= $this->escape($teacher['title']) ?></a></h3>
  <?php if ($teacher['image'] !== '') : ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/',array_map('rawurlencode',explode('/',$teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php endif; ?>
