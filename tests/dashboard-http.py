@@ -9,7 +9,7 @@ import json,os,re,subprocess,sys,time
 root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
 f=json.loads((root.parent/'dashboard-fixture.json').read_text());base='http://127.0.0.1:8093'
-config=root/'configuration.php';original=config.read_text();log=open(root.parent/'dashboard-http.log','w+');server=None;checks=0
+config=root/'configuration.php';original=config.read_text();log=open(root.parent/'dashboard-http.log','w+');server=None;checks=0;navActivated=False
 class Page(HTMLParser):
  def __init__(self,text):super().__init__(convert_charrefs=True);self.forms=[];self.form=None;self.links=[];self.ids=[];self.feed(text)
  def handle_starttag(self,tag,attrs):
@@ -50,6 +50,17 @@ try:
  request(guest,overview,expected=401)
  request(guest,resume+str(f['active'])+'&lang=en',expected=401)
  student=client();login(student,'cidashboard')
+ # FE-06: menu opt-in defaults off; toggling the active Joomla menu must be effective.
+ _,hidden_nav,_=request(student,overview)
+ expect('jlms-personal-navigation' not in Page(hidden_nav).ids,'personal navigation defaults off')
+ fixture('navigation_on');navActivated=True
+ _,shown_nav,_=request(student,overview)
+ shown_page=Page(shown_nav)
+ expect('jlms-personal-navigation' in shown_page.ids,'navigation enabled on matching active Joomla menu')
+ expect('aria-current="page"' in shown_nav and 'COM_JLMS_PERSONAL_NAV_LABEL' not in shown_nav,'current view and label localized')
+ expect('view=mycourses' in shown_nav and 'view=mycertificates' in shown_nav and 'view=preferences' in shown_nav,'local nav links all other learner views')
+ expect(len(shown_page.ids)==len(set(shown_page.ids)),'local nav does not duplicate IDs')
+ fixture('navigation_off');navActivated=False
  for sef in [0,1]:
   text,count=re.subn(r'public\s+\$sef\s*=\s*[^;]+;',f'public $sef = {sef};',original)
   if count!=1:raise RuntimeError('SEF fixture missing')
@@ -108,6 +119,7 @@ try:
 except Exception:
  log.flush();log.seek(0);print(log.read()[-12000:],file=sys.stderr);raise
 finally:
+ if navActivated: fixture('navigation_off')
  config.write_text(original)
  if server is not None:
   server.terminate()
