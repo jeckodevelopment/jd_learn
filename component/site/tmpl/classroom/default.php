@@ -155,7 +155,7 @@ foreach ($item['outline'] as $entry) {
        <span class="jlms-lesson-navigation__unavailable">
         <span class="jlms-lesson-navigation__label"><?= $this->escape($label) ?></span>
         <span class="jlms-lesson-navigation__title"><?= $this->escape($adjacent->title) ?></span>
-        <span class="jlms-lesson-navigation__reason"><?= Text::_(!empty($adjacent->prerequisite_blocked) ? 'COM_JLMS_PREREQUISITES_INCOMPLETE' : 'COM_JLMS_LESSON_NOT_YET_AVAILABLE') ?></span>
+        <span class="jlms-lesson-navigation__reason"><?= Text::_(!empty($adjacent->prerequisite_blocked) ? 'COM_JLMS_PREREQUISITES_INCOMPLETE' : ($adjacent->schedule_state === 'closed' ? 'COM_JLMS_LESSON_CLOSED' : 'COM_JLMS_LESSON_NOT_YET_AVAILABLE')) ?></span>
        </span>
       <?php endif; ?>
      <?php endif; ?>
