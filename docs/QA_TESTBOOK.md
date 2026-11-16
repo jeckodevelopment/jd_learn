@@ -9,7 +9,7 @@
 7. Verificare che la dashboard precedente continui a mostrare gli attestati senza duplicazione della logica di rendering e che **I miei corsi** mantenga filtri e paginazione.
 8. Verificare installazione pulita e aggiornamento del pacchetto, menu IT/EN e sostituzioni dei template Joomla.
 
-**Automazione:** `tests/frontend-mycertificates.py` verifica il routing, il servizio proprietario, gli header, i template e le traduzioni. Non è una prova di autorizzazione runtime: **collaudo manuale pendente**.
+**Evidenza post-merge:** [PR #510](https://github.com/jeckodevelopment/jd_learn/pull/510) integrata `0605c07b6c654e3ff006b9aed79b9bfbc601d676`; [CI](https://github.com/jeckodevelopment/jd_learn/actions/runs/43919671264) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43919671264/artifacts/14252108998) SHA-256 dello ZIP interno `2215a89c7676f421aeaa0bf0bd09857b16ec44f442c5fa2e44f654c2d33f6432`. **Automazione:** `tests/frontend-mycertificates.py` verifica il routing, il servizio proprietario, gli header, i template e le traduzioni. Non è una prova di autorizzazione runtime: **collaudo manuale pendente**.
 
 ---
 
