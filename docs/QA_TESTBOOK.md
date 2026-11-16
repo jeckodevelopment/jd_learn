@@ -1438,3 +1438,11 @@ Riprodurre l'errore su messaggio `sending` con `claimed_at` anteriore di almeno 
 ## Issue #430 — metadati di accesso nella scheda corso pubblica
 
 Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catalogo. Verificare che la pagina e i metadati SEO/social si carichino senza warning PHP e che il livello di accesso al catalogo sia presente nel record restituito dal servizio. Provare poi un corso il cui livello catalogo non include l’ospite: deve restare inaccessibile o non indicizzabile secondo le regole già previste, senza warning. Verificare anche un corso visibile all’ospite e con livello contenuto più restrittivo: la scheda pubblica resta consultabile, ma l’accesso didattico conserva i controlli sul livello contenuto.
+
+## MAIL-10/CORE-18 — data di inizio corso nelle email (PR #474)
+
+1. Su Joomla di prova, configurare un evento autorizzato che includa `{COURSE_START_DATE}` e impostare un inizio corso assoluto valido: controllare anteprima, accodamento e email SMTP con data UTC corretta, anche con timezone offset.
+2. Preparare nel solo ambiente di prova un corso con `starts_at` mancante, relativo (`tomorrow`) o impossibile (`2026-02-30`). Il contesto email non deve inventare una data; deve usare il fallback vuoto previsto dal producer.
+3. Verificare template personalizzato IT/EN, segnaposto canonici, ACL dell'operatore e consenso del destinatario. Non modificare i template globali durante una singola comunicazione.
+
+**Esito:** non eseguito. Test automatico in `tests/mail-template-variables.php`; accettazione SMTP/Joomla separata.
