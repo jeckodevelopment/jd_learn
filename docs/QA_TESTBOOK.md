@@ -1774,3 +1774,14 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 4. Provare profilo docente, corsi collegati, modifica profilo propria autorizzata e impossibilità di edit altrui; nessuna regressione ai filtri del catalogo corsi.
 5. Ripetere con template differente, colonna laterale, smartphone, tastiera, zoom 200%, screen reader e override `com_jlms/teachers/default.php`.
 6. Verificare l'inclusione nello ZIP dei file `TeachersModel.php`, `View/Teachers/HtmlView.php`, `tmpl/teachers/default.php`, `default.xml`; CI verde non sostituisce collaudo Joomla.
+
+
+## FE-11 — Ereditarietà opzioni Joomla del catalogo e delle categorie
+
+**Stato:** PR runtime in verifica; accettazione Joomla pendente.
+
+1. Impostare nelle opzioni globali JD Learn visibilità sottocategorie/corsi della categoria, ricerca/filtri e ordinamento del catalogo, dimensione pagina e ordinamento predefinito. Verificare che menu nuovi con valore Globale ereditino realmente le impostazioni.
+2. Creare due voci menu che puntano a categorie differenti e impostare override contrastanti; verificare isolamento, URL SEF e non-SEF. Aprire poi una categoria figlia da un menu padre: le opzioni del padre non devono sovrascrivere quelle della figlia.
+3. Nascondere filtro e ordinamento della categoria: il form non deve apparire, GET `filter[search]`, `filter[order]`, `filter[tag_id]`, `filter[teacher_id]` e `filter[pathway_id]` non devono riattivarlo o modificare i dati. Paginazione e ACL dei corsi rimangono operative.
+4. Confrontare menu salvati prima della modifica e nuove installazioni; nessun cambio degli ACL di pubblicazione, lingua e categorizzazione. Provare anonimato, accessi Joomla differenti e lingue IT/EN.
+5. Provare paginazioni indipendenti di corsi e sottocategorie, selezione ordinamento, filtro disattivo, override template e schermi stretti. Eseguire `python3 tests/frontend-menu-inheritance.py` e la CI completa.

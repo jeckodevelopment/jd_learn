@@ -10,14 +10,14 @@ opt=read("component/site/src/Helper/CategoryOptions.php")
 meta=ET.parse(root/"component/site/tmpl/category/default.xml").getroot()
 for key in ("category_show_subcategories","category_show_courses"):
     field=meta.find("./fields[@name='params']/fieldset/field[@name='"+key+"']")
-    assert field is not None and field.get("default")=="1"
-    assert {(v.get("value"),v.text) for v in field.findall("option")}=={("1","JYES"),("0","JNO")}
+    assert field is not None and field.get("default")==""
+    assert {(v.get("value"),v.text) for v in field.findall("option")}=={("","JGLOBAL_USE_GLOBAL"),("1","JYES"),("0","JNO")}
     assert key in opt
 assert "getMenu()->getActive()" in opt
-assert "($menu->query['option'] ?? '') !== 'com_jlms'" in opt
-assert "($menu->query['view'] ?? '') !== 'category'" in opt
-assert "(int) ($menu->query['id'] ?? 0) !== $categoryId" in opt
-assert "return $options;" in opt and "'subcategories' => true" in opt and "'courses' => true" in opt
+assert "($menu->query['option'] ?? '') === 'com_jlms'" in opt
+assert "($menu->query['view'] ?? '') === 'category'" in opt
+assert "(int) ($menu->query['id'] ?? 0) === $categoryId" in opt
+assert "return $options;" in opt and "ComponentHelper::getParams('com_jlms')" in opt
 assert "CategoryOptions::sections((int) $this->category->id)" in view
 assert "$this->showSubcategories = $options['subcategories'];" in view
 assert "$this->showCourses = $options['courses'];" in view
