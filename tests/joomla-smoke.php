@@ -454,6 +454,27 @@ try {
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
 }
+// CERT-08: mutation boundary must reject an anonymous caller before even
+// inspecting the certificate ID; a legitimate admin gets input/404 errors.
+try {
+    $certificateService->adminRegenerate(new \Joomla\CMS\User\User(), 1, 1, 'Technical PDF repair');
+    throw new \RuntimeException('Certificate regeneration must reject unauthorized users.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+}
+try {
+    $certificateService->adminRegenerate($app->getIdentity(), 0, 1, 'Technical PDF repair');
+    throw new \RuntimeException('Certificate regeneration accepted invalid ID.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') { throw $error; }
+}
+try {
+    $certificateService->adminRegenerate($app->getIdentity(), 999999999, 1, 'Technical PDF repair');
+    throw new \RuntimeException('Certificate regeneration accepted an absent certificate.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') { throw $error; }
+}
+
 $factory = $component->getMVCFactory();
 if (($argv[2] ?? '') === 'retained') {
     $record = $db->setQuery("SELECT title, revision FROM #__jlms_courses WHERE alias='test-course'")->loadObject();
