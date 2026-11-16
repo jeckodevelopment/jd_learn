@@ -45,6 +45,8 @@ class CoursesModel extends ListModel
         if ($pathwayId && !isset($this->getPathways()[$pathwayId])) { $pathwayId = -1; }
         $query = $component->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag(),
             (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'), $teacherId, $pathwayId);
+        // Only public presentation fields from the published course version.
+        $query->select('v.presentation_json AS catalog_presentation_json');
         $search = (string) $this->getState('filter.search');
         if ($search !== '') {
             $titleSearch = '%' . $search . '%';
