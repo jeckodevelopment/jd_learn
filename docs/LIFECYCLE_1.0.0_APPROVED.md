@@ -41,6 +41,10 @@ Un corso con stato diverso da pubblicato (`state != 1`) non può attivare una mi
 
 La dashboard storica mantiene la proiezione delle iscrizioni dalla versione didattica immutabile anche quando il corso è non pubblicato (`0`), archiviato (`2`) o cestinato (`-2`). L'aula rimane indisponibile, ma titolo, stato di completamento e progresso acquisito restano nello storico. Per i corsi in modalità **consultazione** non viene mostrata alcuna percentuale: il riconoscimento del tipo di corso viene effettuato sulla versione assegnata, indipendentemente dallo stato corrente e dalla visibilità nel catalogo. Nessuna mutazione di storico o ampliamento dei permessi. Collaudo Joomla pendente; i PDF già emessi sono gestiti dal servizio attestati con controllo titolarità distinto dal catalogo.
 
+### LCM-01 — attestati storici dopo archiviazione o cestinazione
+
+Il servizio `CertificateService::listForStudent()` e il download privato degli attestati si basano su titolarità dell'iscrizione, completamento e documento corrente non revocato, **non** sullo stato editoriale attuale del corso. Questo separa definitivamente la conservazione dell'attestazione dal diritto di riprendere le lezioni. Un test Joomla dedicato prepara un attestato da snapshot immutabili e verifica per stati `0/2/-2` elenco titolare, download PDF autenticato, 404 per utente estraneo, 401 per visitatore, identità del documento invariata, nessuna duplicazione, negazione della ripresa e permanenza del PDF dopo upgrade del pacchetto. Il test di download ha evidenziato un bug nel lock SQL parametrizzato del rendering differito, corretto nella stessa PR; invariata la politica di revoca e i permessi. CI automatica non equivale al collaudo manuale con sito reale.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.

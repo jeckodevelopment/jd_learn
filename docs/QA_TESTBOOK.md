@@ -1,3 +1,16 @@
+## LCM-01 — attestati storici di corsi ritirati, archiviati e cestinati
+
+1. Emissione su corso regolarmente completato: annotare codice, data, titolo, versione, documento e hash del PDF; verificare download privato da area studente.
+2. Passare il corso a stato non pubblicato `0`, archiviato `2`, cestinato `-2`: l'attestato già emesso deve continuare a comparire e a scaricarsi **solo** al titolare. Verificare che aula, lezioni e materiali restino bloccati anche tramite URL diretti.
+3. Tentare download con utente diverso e anonimo: rifiuto senza rivelare documenti, studenti, titoli o codici; verificare anche le viste amministrative e relative ACL.
+4. Controllare che seriale, snapshot identificativo, data di emissione, file e numero attestati non cambino, né si producano nuovi messaggi di disponibilità per effetto della sola archiviazione.
+5. Eseguire upgrade del pacchetto con attestato già emesso e verificare integrità del download; ripetere con lingua IT/EN e backup/restauro, verificando database e storage privato.
+6. Provare documento revocato e account bloccato secondo regole di privacy e retention; controllare gestione errori PDF.
+
+**Prove automatiche:** il download deve renderizzare correttamente anche un documento `pending_render` con lock SQL parametrizzato. Integrazione Joomla su elenco/documento privato per stati `0/2/-2`, anonimo/utente estraneo e conservazione dopo upgrade. **Accettazione manuale Joomla, prove multi-lingua e restore: pendenti.**
+
+---
+
 ## LCM-01 — dashboard storica e modalità consultazione dopo archiviazione
 
 1. Preparare due iscritti, uno con progresso parziale e uno con corso completato, includendo un corso in modalità consultazione. Registrare titolo, data, progresso e attestati prima delle transizioni.
