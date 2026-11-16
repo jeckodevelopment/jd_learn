@@ -297,3 +297,37 @@ assert.equal(captionTrack,'');assert.equal(captionPreference,null);
 await languageLesson.destroy();
 if(previousStorage===undefined) delete globalThis.localStorage; else Object.defineProperty(globalThis,'localStorage',{configurable:true,value:previousStorage});
 console.log(JSON.stringify({player_preference_checks:12,status:'passed',coverage:'dynamic playback speed and caption tracks, local preferences, unsupported player, preview-safe presentation'}));
+
+// A video's playback grant must not overlap the lesson.begin transaction on page load.
+let releaseLessonBegin;
+const lessonBeginPending = new Promise(resolve => { releaseLessonBegin = resolve; });
+globalThis.__jlmsLessonBegin = {enrollment:1, lesson:2, settled:lessonBeginPending};
+const serializedCalls=[];
+const serializedLesson = new VideoLesson({...config,policy:'embed',provider:'youtube'}, root,
+  async url => {
+    serializedCalls.push(url);
+    return {ok:true,json:async()=>({success:true,data:{provider:'youtube',session_id:'serialized',
+      source_revision:1,duration_ms:10000,options:{}}})};
+  }, async () => ({create:async()=>({destroy(){}, sample:async()=>({position_ms:0,duration_ms:10000,rate_milli:1000,playing:false})})}));
+const gatedStart = serializedLesson.start();
+await Promise.resolve();
+assert.deepEqual(serializedCalls,[], 'playback must wait until lesson.begin settles');
+releaseLessonBegin();
+await gatedStart;
+assert.deepEqual(serializedCalls,['/playback']);
+assert.equal(serializedLesson.stopped,false);
+await serializedLesson.stop(false);
+await serializedLesson.destroy();
+// A receipt for another lesson must never delay the current video.
+globalThis.__jlmsLessonBegin = {enrollment:1,lesson:999,settled:new Promise(()=>{})};
+const unrelatedCalls=[];
+const unrelatedLesson = new VideoLesson({...config,policy:'embed',provider:'youtube'},root,
+  async url => {unrelatedCalls.push(url);return {ok:true,json:async()=>({success:true,data:{provider:'youtube',
+    session_id:'unrelated',source_revision:1,duration_ms:10000,options:{}}})};},
+  async()=>({create:async()=>({destroy(){},sample:async()=>({position_ms:0,duration_ms:10000,rate_milli:1000,playing:false})})}));
+await unrelatedLesson.start();
+assert.deepEqual(unrelatedCalls,['/playback']);
+await unrelatedLesson.stop(false);
+await unrelatedLesson.destroy();
+delete globalThis.__jlmsLessonBegin;
+console.log(JSON.stringify({video_lesson_begin_serialization_checks:5,status:'passed'}));
