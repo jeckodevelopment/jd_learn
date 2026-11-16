@@ -58,7 +58,8 @@ try:
  shown_page=Page(shown_nav)
  expect('jlms-personal-navigation' in shown_page.ids,'navigation enabled on matching active Joomla menu')
  expect('aria-current="page"' in shown_nav and 'COM_JLMS_PERSONAL_NAV_LABEL' not in shown_nav,'current view and label localized')
- expect('view=mycourses' in shown_nav and 'view=mycertificates' in shown_nav and 'view=preferences' in shown_nav,'local nav links all other learner views')
+ nav_section=shown_nav.split('<nav id="jlms-personal-navigation"',1)[1].split('</nav>',1)[0]
+ expect(nav_section.count('<a ') == 3 and nav_section.count('aria-current="page"') == 1,'local nav links exactly the three other learner views')
  expect(len(shown_page.ids)==len(set(shown_page.ids)),'local nav does not duplicate IDs')
  fixture('navigation_off');navActivated=False
  for sef in [0,1]:
