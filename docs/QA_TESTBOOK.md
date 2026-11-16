@@ -1,3 +1,16 @@
+## FE-05 — Preferenze personali (collaudo Joomla pendente)
+
+1. Creare una voce menu Joomla "Preferenze JD Learn" in IT e EN, verificando routing SEF e link dashboard.
+2. Verificare accesso diretto da anonimo: richiesta di login senza esposizione dello stato del consenso, header privati/noindex.
+3. Con utente autenticato privo di consenso, effettuare la richiesta opzionale con checkbox non preselezionata e token CSRF; verificare email, stato pending, link di conferma e successivo confirmed.
+4. Revocare il consenso dalla nuova pagina e controllare il ritorno alla vista Preferenze e lo stato aggiornato. Senza token CSRF e da anonimo, la POST deve essere rifiutata.
+5. Ripetere con due account, IT/EN, mobile e template Joomla alternativi. Verificare che la dashboard mostri gli stessi dati, e che le email operative non siano disabilitate dalla preferenza promozionale.
+6. Verificare upgrade e link di conferma precedenti, oltre al flusso separato di revoca tramite link.
+
+Automazione: tests/frontend-preferences.py richiamato da tools/check.py. Il collaudo manuale Joomla/SMTP non è ancora eseguito.
+
+---
+
 ## FE-05 — I miei attestati, vista privata autonoma (collaudo Joomla pendente)
 
 1. In Joomla creare una voce menu JD Learn → **I miei attestati** per IT e EN, accessibile solo agli utenti registrati; verificare SEF, breadcrumb e template override.
