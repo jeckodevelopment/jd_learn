@@ -23,6 +23,10 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-07 candidata (percorsi):** catalogo pubblico con schede, introduzione e copertina dedicata facoltativa; campo immagine media Joomla nel backend, alt/decorativa e validazione locale tramite CourseArtwork, con dati salvati in params_json esistente. Dettaglio con copertina, sequenza verticale ordinata, numerazione editoriale senza prerequisiti impliciti e progressi personali solo per autenticati quando presenti nella proiezione PathwayService/PathwayProgress. Nessuna iscrizione cumulativa, schema o bypass ACL. Aggiunta voce menu Joomla per dettaglio percorso, traduzioni IT/EN, CSS scoped, test e QA. Ricerca/filtri per catalogo percorsi non introdotti in questa tranche; collaudo Joomla pendente e avanzamento globale di riferimento 79,56% invariato.
+
+
+
 **FE-06 — PR #516 integrata (merge `67985316915ef6d60b25ab0c2de358129f0bf8ee`):** navigazione personale opzionale condivisa fra dashboard, mycourses, mycertificates e preferences; impostazione Sì/No per singola voce menu Joomla (default No). Rendering esclusivamente se la voce menu attiva corrisponde alla vista; link Joomla SEF e voce corrente non cliccabile con aria-current=page. Nessuna nuova sidebar globale o controllo ACL. [CI 43932007606](https://github.com/jeckodevelopment/jd_learn/actions/runs/43932007606) 4/4 verde, compreso HTTP Joomla di attivazione menu; [artefatto](https://github.com/jeckodevelopment/jd_learn/actions/runs/43932007606/artifacts/14258847023) con ZIP interno pkg_jlms-0.57.7-dev.zip, SHA-256 `6b2add93bb50e901ec33c64f685483dbd9718e094d6222951d7cdd085b06885e`. Collaudo manuale Joomla pendente; riferimento globale 79,56% invariato.
 
 
