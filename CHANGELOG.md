@@ -1,6 +1,6 @@
 # Changelog
 
-- FE-05 (candidata): vista privata Preferenze JD Learn, menu IT/EN, riuso del consenso facoltativo con double opt-in/revoca e del layout condiviso con dashboard. Collaudo Joomla/SMTP pendente.
+- FE-05 (PR #512 integrata): vista privata Preferenze JD Learn, menu IT/EN, riuso del consenso facoltativo con double opt-in/revoca e del layout condiviso con dashboard. Collaudo Joomla/SMTP pendente.
 
 - FE-05 (seconda tranche, PR #510 integrata): vista personale autonoma “I miei attestati” con menu Joomla e traduzioni IT/EN, servizio attestati già vincolato al titolare, download protetto e partial condivisa con dashboard. Collaudo Joomla pendente.
 
