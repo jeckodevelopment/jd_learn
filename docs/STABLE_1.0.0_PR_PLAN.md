@@ -23,6 +23,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
 
+**FE-05 — Prima tranche in sviluppo:** introdurre `mycourses` come vista autonoma privata e selezionabile dal menu Joomla, riusando interamente `DashboardModel`, `DashboardService` e una sola partial delle card già mostrate in dashboard. Privacy headers, ACL, filtri, paginazione, storico e download/redirect di corso esistenti non devono cambiare. La dashboard corrente conserva per compatibilità gli altri blocchi, finché attestati, preferenze e riepilogo non saranno separati nelle tranche successive. Test XML, routing, contratto CSS e regressioni dashboard; collaudo Joomla e menu IT/EN pendenti. Collegare i requisiti **STU-01 e UI-02** alla PR runtime, aggiornando CSV, CSS guide, testbook e changelog. **FE-05 non concluso** con questa tranche.
+
+
 **FE-04 — Seconda tranche integrata (PR #506; CI 4/4 verde; collaudo Joomla pendente):** salvataggi `lesson.begin` e ripresa audio con conferma discreta temporanea (5 s), errori persistenti fino a salvataggio riuscito, indicazione di salvataggio in corso e ARIA differenziata. Retry e chiavi idempotenti preservati; nessuna modifica agli endpoint o agli ACL. Verifiche statiche in CI e casi manuali di fallimento/rete nel testbook. Matrice STU-03 e UI-04 collegata alla PR #506. Merge `97aac9b4ac9e1963f6d372de8bc4780734928b12`; [CI 43902131817](https://github.com/jeckodevelopment/jd_learn/actions/runs/43902131817) 4/4, [gate CSV](https://github.com/jeckodevelopment/jd_learn/actions/runs/43902131825) verde. [Artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43902131817/artifacts/14243015359), ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `ff5b39470a9ebceb31f65dbaf871d1373424490d4a4839f0cfdea26e36b27a42`. **Collaudo manuale non eseguito; FE-04 non completamente accettato.**
 
 

@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-05 (prima tranche): vista privata autonoma **I miei corsi** selezionabile dal menu Joomla, con modello e schede condivisi con la dashboard esistente, routing/ACL/filtri/paginazione invariati; traduzioni, test e documentazione aggiornati. Attestati, preferenze e riepilogo autonomo rimangono da implementare; collaudo Joomla pendente.
+
 - FE-04 (seconda tranche): feedback salvataggio lezione e ripresa audio con conferme temporanee e errori persistenti/annunciati; preservati retry, idempotenza e backend. Test statico CI, documentazione e scenari QA aggiornati; collaudo Joomla pendente.
 
 - FE-04 (prima tranche): navigazione manuale fra lezioni adiacenti nell'aula, con disponibilità e prerequisiti rispettati, link GET non mutativi, etichette IT/EN e CSS responsive; test di contratto. Nessun avanzamento automatico o completamento per cambio lezione. Collaudo Joomla pendente.

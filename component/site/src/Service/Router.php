@@ -25,6 +25,7 @@ final class Router extends RouterView
         $courses = new RouterViewConfiguration('courses');
         $this->registerView($courses);
         $this->registerView(new RouterViewConfiguration('dashboard'));
+        $this->registerView(new RouterViewConfiguration('mycourses'));
         $categories = new RouterViewConfiguration('categories');
         $this->registerView($categories);
         $category = new RouterViewConfiguration('category');
