@@ -91,7 +91,7 @@
 #jlms-course-main { grid-area: main; min-width: 0; overflow-wrap: anywhere; }
 #jlms-course-sidebar { grid-area: sidebar; min-width: 0; align-self: stretch; }
 #jlms-course-sidebar .jlms-course-sidebar__inner {
-  position: sticky; top: 1.5rem;
+  position: sticky; top: var(--jlms-course-sticky-offset, 1.5rem);
   display: grid; gap: 1rem; min-width: 0;
 }
 #jlms-course-sidebar #jlms-course-facts { min-width: 0; }
