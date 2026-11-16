@@ -2,7 +2,7 @@
 
 ## 0.57.7-dev
 
-- LCM-01 — dashboard storica: calcolo della modalità didattica dalla versione iscritta indipendentemente dalla pubblicazione del corso; per i corsi di consultazione archiviati/cestinati la percentuale resta correttamente non applicabile. Test Joomla per stati 0/2/-2, storico, completamento e blocco ripresa; collaudo manuale e attestati pendenti.
+- LCM-01 / PR #488 integrata (`9993414aed64c1126c8894f5b23af1a542dea10a`; CI 4/4) — dashboard storica: calcolo della modalità didattica dalla versione iscritta indipendentemente dalla pubblicazione del corso; per i corsi di consultazione archiviati/cestinati la percentuale resta correttamente non applicabile. Test Joomla per stati 0/2/-2, storico, completamento e blocco ripresa; collaudo manuale e attestati pendenti.
 
 - LCM-01 / PR #486 integrata (`f17f16b05f3b0d7a8d8cdb6dc46aa4aa333461e6`; CI 4/4): completato il gate per le migrazioni amministrative su corsi non pubblicati/archiviati/cestinati e per le notifiche didattiche di nuove lezioni e aggiornamenti delle versioni (produzione e dispatch). Inattività del corso non cancella iscrizioni, progressi, email storiche o attestati. Aggiunti test di migrazione per stati `0/2/-2`; accettazione Joomla/SMTP pendente.
 
