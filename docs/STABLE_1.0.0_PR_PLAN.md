@@ -32,7 +32,7 @@ Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di i
 
 **LCM-01 storico personale, PR #488 integrata (CI 4/4, collaudo Joomla pendente):** preservare le percentuali storiche per corsi di apprendimento, ma non attribuire una percentuale ai corsi di sola consultazione quando lo stato attuale è non pubblicato/archiviato/cestinato. Test di dashboard Joomla su stati 0/2/-2, ripresa negata, storico invariato; verifica PDF e collaudo manuale restano aperti. Nessuna chiusura automatica del requisito.
 
-**LCM-01 — attestati storici:** ampliare test Joomla per elenco e download privato del PDF con stati corso 0/2/-2, ACL del titolare, identità documento invariata e persistenza dopo upgrade. È verifica di non-regressione, non incremento di funzionalità; collaudo manuale e backup storage restano nel gate LCM-05.
+**LCM-01 — attestati storici, PR #490 integrata (CI 4/4 verde):** ampliare test Joomla per elenco e download privato del PDF con stati corso 0/2/-2, ACL del titolare, identità documento invariata e persistenza dopo upgrade. È verifica di non-regressione, non incremento di funzionalità; collaudo manuale e backup storage restano nel gate LCM-05.
 
 ## Backlog operativo e dipendenze
 
