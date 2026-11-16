@@ -60,7 +60,7 @@ try:
  expect('id="adminForm"' in cert_html and 'name="filter[search]"' in cert_html
         and 'name="filter[status]"' in cert_html and 'name="list[fullordering]"' in cert_html,
         'Certificate list native Search Tools are available')
- _,cert_filtered=request(certificate_path+'?'+urlencode({'filter[status]':'ready','list[limit]':'20'}))
+ _,cert_filtered=request(certificate_path+'&'+urlencode({'filter[status]':'ready','list[limit]':'20'}))
  expect('id="jlms-admin-certificates"' in cert_filtered,
         'Certificate list renders with an active Joomla status filter')
  path='/administrator/index.php?option=com_jlms&view=courses'
