@@ -41,7 +41,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(.75rem, 2vw, 1.25rem);
 }
-#jlms-courses .jlms-course-card {
+#jlms-courses .jlms-course-grid:not(.jlms-course-grid--list) .jlms-course-card {
   display: flex; flex-direction: column; min-width: 0; overflow: hidden;
   padding: 0; border-color: color-mix(in srgb, currentColor 16%, transparent);
 }
