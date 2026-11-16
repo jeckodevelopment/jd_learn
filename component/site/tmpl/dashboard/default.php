@@ -7,6 +7,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 ?>
 <section id="jlms-dashboard" class="jlms-dashboard">
  <header id="jlms-dashboard-header"><h1><?= Text::_('COM_JLMS_MY_COURSES') ?></h1><p><?= Text::_('COM_JLMS_DASHBOARD_INTRO') ?></p></header>
+ <a id="jlms-dashboard-my-courses-link" href="<?= Route::_('index.php?option=com_jlms&view=mycourses') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a>
  <form id="jlms-dashboard-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>">
   <?= $this->progressForm->renderField('progress') ?>
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="dashboard">
