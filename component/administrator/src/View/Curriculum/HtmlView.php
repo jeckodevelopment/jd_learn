@@ -246,7 +246,12 @@ final class HtmlView extends BaseHtmlView
                         'local'=>'COM_JLMS_VIDEO_DURATION_LOCAL','source'=>'COM_JLMS_VIDEO_DURATION_SOURCE',
                         'youtube_csp'=>'COM_JLMS_VIDEO_YOUTUBE_CSP','youtube_sdk'=>'COM_JLMS_VIDEO_YOUTUBE_SDK',
                         'youtube_referrer'=>'COM_JLMS_VIDEO_YOUTUBE_REFERRER','youtube_embed'=>'COM_JLMS_VIDEO_YOUTUBE_EMBED',
-                        'youtube_timeout'=>'COM_JLMS_VIDEO_YOUTUBE_TIMEOUT'])]);
+                        'youtube_timeout'=>'COM_JLMS_VIDEO_YOUTUBE_TIMEOUT',
+                        'server_unavailable'=>'COM_JLMS_VIDEO_METADATA_SERVER_UNAVAILABLE',
+                        'network_error'=>'COM_JLMS_VIDEO_METADATA_NETWORK_ERROR',
+                        'response_error'=>'COM_JLMS_VIDEO_METADATA_RESPONSE_ERROR',
+                        'adapter_error'=>'COM_JLMS_VIDEO_METADATA_ADAPTER_ERROR',
+                        'player_error'=>'COM_JLMS_VIDEO_METADATA_PLAYER_ERROR'])]);
             }
             $this->moduleForm->bind($moduleData);
             $this->lessonForm->bind($lessonData);
