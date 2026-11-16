@@ -72,6 +72,13 @@ if(($argv[2]??'')==='retained'){
     $card=array_values(array_filter($cards,static fn($c)=>$c['id']===$saved['completed']))[0];
     dashExpect($card['learning_state']==='completed'&&$card['access']==='expired'&&$card['percent']===100,'completion and expired access retained independently');
     dashExpect($learning->resumeTarget($user,'en-GB',$saved['active'])['lesson_id']===$saved['lesson'],'resume history retained');
+    $issued=$component->getCertificateService()->listForStudent($user);
+    dashExpect(count($issued)===1&&$issued[0]['enrollment_id']===$saved['completed'],
+        'issued certificate identity and ownership survive package upgrade');
+    $certificateFile=$component->getCertificateService()->download($user,$saved['completed']);
+    try { dashExpect($certificateFile['mime']==='application/pdf'&&$certificateFile['size']>100,
+        'protected PDF remains available after package upgrade'); }
+    finally { fclose($certificateFile['handle']); }
     echo json_encode(['dashboard_retention_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;exit;
 }
 $newUser=static function(string $name)use($f):\Joomla\CMS\User\User{
