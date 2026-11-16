@@ -47,6 +47,18 @@ migrationExpect($plan['blocked']===null,'valid single enrollment migration is en
 $emptyPlan=$service->preview($actor,$course,$enrollment,[]);
 migrationExpect($emptyPlan['transfers']===[]&&count($emptyPlan['unmapped'])===1,'unmapped completion stays only on the source version');
 migrationDenied(fn()=>$service->preview($actor,$course,$enrollment,[$lesson=>999999]),422,'lesson IDs outside the destination version are rejected');
+// LCM-01: inactive courses must not migrate students even with a fresh admin preview.
+foreach ([0, 2, -2] as $inactiveState) {
+ $db->updateObject('#__jlms_courses', (object)['id'=>$course,'state'=>$inactiveState], 'id');
+ $blockedPlan=$service->preview($actor,$course,$enrollment,$mapping);
+ migrationExpect($blockedPlan['blocked']==='COM_JLMS_LEARNING_DENIED','inactive course disables migration preview');
+ migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,(int)migrationRow('enrollments',$enrollment)->revision,
+     $mapping,'Inactive migration refused','1e6d0f21-8c37-4a42-b57a-185fe9d0c001',$blockedPlan['hash'],true),409,
+     'inactive course rejects migration even with current impact hash');
+ migrationExpect(migrationRow('enrollments',$enrollment)->status==='active','blocked migration preserves active enrollment');
+}
+$db->updateObject('#__jlms_courses', (object)['id'=>$course,'state'=>1], 'id');
+migrationExpect($service->preview($actor,$course,$enrollment,$mapping)['blocked']===null,'republished course restores migration eligibility');
 $beforeProgress=(array)$db->setQuery('SELECT * FROM #__jlms_lesson_progress WHERE enrollment_id='.$enrollment.' AND lesson_id='.$lesson)->loadObject();
 $sourceBefore=migrationRow('enrollments',$enrollment);$key='2e6d0f21-8c37-4a42-b57a-185fe9d0c001';
 migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,(int)$sourceBefore->revision,$mapping,'Learner requested transfer',$key,str_repeat('0',64),true),409,'stale preview hash prevents any migration write');
