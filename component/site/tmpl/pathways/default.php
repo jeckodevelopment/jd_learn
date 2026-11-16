@@ -11,7 +11,7 @@ use Joomla\CMS\Router\Route;
  <header id="jlms-pathways-header"><h1><?= Text::_('COM_JLMS_PATHWAYS') ?></h1></header>
  <div id="jlms-pathway-grid" class="jlms-course-grid">
  <?php foreach ($this->items as $item) : ?>
-  <article id="jlms-pathway-<?= (int) $item->id ?>" class="jlms-course-card">
+  <article id="jlms-pathway-<?= (int) $item->id ?>" class="jlms-card jlms-course-card">
    <h2><a href="<?= Route::_('index.php?option=com_jlms&view=pathway&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
    <p class="jlms-course-card__category"><?= $this->escape($item->category_title) ?></p>
    <div class="content"><?= $item->description ?></div>
