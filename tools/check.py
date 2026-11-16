@@ -1017,3 +1017,7 @@ assert migration_code.count("if ($plan['blocked']!==null)") >= 2
 assert "->where('c.state = 1')->where('c.delivery_enabled = 1')" in lesson_notice
 assert "->where('c.state = 1')->where('c.delivery_enabled = 1')" in version_notice
 assert mail_queue.count("->where('c.state = 1')->where('c.delivery_enabled = 1')") >= 2
+
+# FE-05 private preferences contract
+import runpy
+runpy.run_path(str(ROOT/'tests/frontend-preferences.py'), run_name='__main__')
