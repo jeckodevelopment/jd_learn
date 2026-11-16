@@ -24,11 +24,41 @@ foreach ([1, 2, 3] as $position) {
  <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $presentation['image'])))) ?>" alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
  <?php endif; ?>
  <?php if (trim($fieldOutput[2]) !== '') : ?><div id="jlms-course-fields-before-content" class="jlms-course-fields"><?= $fieldOutput[2] ?></div><?php endif; ?>
- <div id="jlms-course-layout" class="jlms-course-layout">
- <div id="jlms-course-main" class="jlms-course-main">
  <?php if (trim((string) $course->summary) !== "") : ?>
  <section id="jlms-course-summary"><h2><?= Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?= nl2br($this->escape((string) $course->summary)) ?></p></section>
  <?php endif; ?>
+ <div id="jlms-course-layout" class="jlms-course-layout">
+ <div id="jlms-course-sidebar" class="jlms-course-sidebar"><div class="jlms-course-sidebar__inner">
+ <?php if (!empty($presentation['difficulty']) || !empty($presentation['estimated_minutes'])) : ?>
+ <section id="jlms-course-facts"><h2><?= Text::_('COM_JLMS_COURSE_FACTS') ?></h2><dl>
+ <?php if (!empty($presentation['difficulty'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_DIFFICULTY') ?></dt><dd id="jlms-course-difficulty"><?= Text::_(['beginner' => 'COM_JLMS_COURSE_BEGINNER', 'intermediate' => 'COM_JLMS_COURSE_INTERMEDIATE', 'advanced' => 'COM_JLMS_COURSE_ADVANCED'][$presentation['difficulty']]) ?></dd><?php endif; ?>
+ <?php if (!empty($presentation['estimated_minutes'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_ESTIMATED_MINUTES') ?></dt><dd id="jlms-course-estimated-duration"><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', (int) $presentation['estimated_minutes']) ?></dd><?php endif; ?>
+ </dl></section>
+ <?php endif; ?>
+
+ <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
+  <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' . base64_encode('index.php?option=com_jlms&view=course&id=' . (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
+ <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'auto') : ?>
+  <form id="jlms-start-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+   <input type="hidden" name="task" value="enrollment.start">
+   <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
+   <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
+   <label class="jlms-course-consent"><input type="checkbox" name="jform[course_announcement_consent]" value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
+   <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_START_RESUME') ?></button>
+  </form>
+ <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'approval') : ?>
+  <form id="jlms-enrollment-request-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+   <input type="hidden" name="task" value="enrollment.request">
+   <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
+   <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
+   <?= HTMLHelper::_('form.token') ?>
+   <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_ENROLLMENT_REQUEST_SUBMIT') ?></button>
+  </form>
+  <p><?= Text::_('COM_JLMS_ENROLLMENT_REQUEST_EXPLANATION') ?></p>
+ <?php elseif ($this->hasContentAccess && !$this->canStartWindow) : ?><p id="jlms-course-window-closed"><?= Text::_('COM_JLMS_CALENDAR_CLOSED') ?></p>
+ <?php elseif ($this->hasContentAccess) : ?><p><?= Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php endif; ?></aside>
+ </div></div>
+ <div id="jlms-course-main" class="jlms-course-main">
  <?php if (!empty($presentation['description'])) : ?>
  <section id="jlms-course-description" class="jlms-course-description"><h2><?= Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?= $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
  <?php endif; ?>
@@ -67,36 +97,7 @@ foreach ([1, 2, 3] as $position) {
   <?php if (($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) : ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id . '&course_material_page=' . ($this->item['public_materials']['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?>
  </nav><?php endif; ?></section><?php endif; ?>
  </div>
- <div id="jlms-course-sidebar" class="jlms-course-sidebar"><div class="jlms-course-sidebar__inner">
- <?php if (!empty($presentation['difficulty']) || !empty($presentation['estimated_minutes'])) : ?>
- <section id="jlms-course-facts"><h2><?= Text::_('COM_JLMS_COURSE_FACTS') ?></h2><dl>
- <?php if (!empty($presentation['difficulty'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_DIFFICULTY') ?></dt><dd id="jlms-course-difficulty"><?= Text::_(['beginner' => 'COM_JLMS_COURSE_BEGINNER', 'intermediate' => 'COM_JLMS_COURSE_INTERMEDIATE', 'advanced' => 'COM_JLMS_COURSE_ADVANCED'][$presentation['difficulty']]) ?></dd><?php endif; ?>
- <?php if (!empty($presentation['estimated_minutes'])) : ?><dt><?= Text::_('COM_JLMS_COURSE_ESTIMATED_MINUTES') ?></dt><dd id="jlms-course-estimated-duration"><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', (int) $presentation['estimated_minutes']) ?></dd><?php endif; ?>
- </dl></section>
- <?php endif; ?>
 
- <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
-  <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' . base64_encode('index.php?option=com_jlms&view=course&id=' . (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
- <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'auto') : ?>
-  <form id="jlms-start-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
-   <input type="hidden" name="task" value="enrollment.start">
-   <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
-   <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
-   <label class="jlms-course-consent"><input type="checkbox" name="jform[course_announcement_consent]" value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
-   <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_START_RESUME') ?></button>
-  </form>
- <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'approval') : ?>
-  <form id="jlms-enrollment-request-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
-   <input type="hidden" name="task" value="enrollment.request">
-   <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
-   <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
-   <?= HTMLHelper::_('form.token') ?>
-   <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_ENROLLMENT_REQUEST_SUBMIT') ?></button>
-  </form>
-  <p><?= Text::_('COM_JLMS_ENROLLMENT_REQUEST_EXPLANATION') ?></p>
- <?php elseif ($this->hasContentAccess && !$this->canStartWindow) : ?><p id="jlms-course-window-closed"><?= Text::_('COM_JLMS_CALENDAR_CLOSED') ?></p>
- <?php elseif ($this->hasContentAccess) : ?><p><?= Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php endif; ?></aside>
- </div></div>
  </div>
  <a id="jlms-course-back" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
 </article>
