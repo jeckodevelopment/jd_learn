@@ -6,6 +6,8 @@
 
 ## Copertura HTTP aggiuntiva in corso
 
+Il test HTTP ha identificato un 404 della directory `teachers` causato dalla sua assenza nell'allowlist del controller `DisplayController`, nonostante la registrazione nel router. La PR ripristina l'accesso pubblico, verificato nel gate HTTP Joomla e nel contratto FE-09. Resta da collaudare con profili pubblicati, ruoli, categorie e lingue nel sito di prova.
+
 La tranche FE-12 HTTP estende `tests/http-smoke.py` con rendering effettivo delle tre viste pubbliche `categories`, `pathways`, `teachers` sul Joomla disposable installato in CI. Controlla radici DOM, titolo di pagina, stylesheet WAM e assenza della stringa di prova per contenuti di lezioni protette. Non verifica CSS visuale, accessibilità completa, ACL multi-ruolo o template terzi; i dieci esiti manuali restano pendenti.
 
 ## Copertura e limiti
