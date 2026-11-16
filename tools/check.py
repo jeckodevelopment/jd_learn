@@ -1021,3 +1021,6 @@ assert mail_queue.count("->where('c.state = 1')->where('c.delivery_enabled = 1')
 # FE-05 private preferences contract
 import runpy
 runpy.run_path(str(ROOT/'tests/frontend-preferences.py'), run_name='__main__')
+
+# FE-05: summarize owner activity without repeating autonomous personal views.
+runpy.run_path(str(ROOT/'tests/frontend-learner-summary.py'), run_name='__main__')
