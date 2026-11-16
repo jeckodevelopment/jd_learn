@@ -2,7 +2,7 @@
 
 ## 0.57.7-dev
 
-- LCM-01, incremento sul lifecycle corsi: il recupero dell'aula per iscritti richiede stato del corso `1`, bloccando anche URL diretti e mutazioni di progresso su corsi non pubblicati, archiviati o cestinati; catalogo e nuove iscrizioni mantengono i blocchi già presenti. Il solo termine della finestra promozionale non revoca gli accessi didattici preesistenti. Test Joomla di integrazione aggiornati; storico e progressi non cancellati. LCM-01 non ancora chiuso integralmente; accettazione reale pendente.
+- LCM-01 / PR #484 integrata (`fef7a87a399e9bfafdbeca0c178f0e8629cf4ebf`; CI 4/4): incremento sul lifecycle corsi: il recupero dell'aula per iscritti richiede stato del corso `1`, bloccando anche URL diretti e mutazioni di progresso su corsi non pubblicati, archiviati o cestinati; catalogo e nuove iscrizioni mantengono i blocchi già presenti. Il solo termine della finestra promozionale non revoca gli accessi didattici preesistenti. Test Joomla di integrazione aggiornati; storico e progressi non cancellati. LCM-01 non ancora chiuso integralmente; accettazione reale pendente.
 
 - Issue #472: aggiunta la voce selezionabile **Percorsi formativi** nel gestore menu nativo Joomla, grazie al layout metadata `site/tmpl/pathways/default.xml` con traduzioni IT/EN. Riutilizza il catalogo percorsi frontend e i controlli di visibilità esistenti; nessuna modifica a query, ACL o dati. Collaudo menu/SEF/lingua pendente.
 
