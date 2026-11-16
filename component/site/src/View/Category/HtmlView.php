@@ -9,6 +9,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Jlms\Component\Jlms\Site\Helper\CategoryNavigationHelper;
 use Jlms\Component\Jlms\Site\Helper\CategoryOptions;
+use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
 use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
 
 final class HtmlView extends BaseHtmlView
@@ -18,6 +19,8 @@ final class HtmlView extends BaseHtmlView
     public array $children = [];
     public bool $showSubcategories = true;
     public bool $showCourses = true;
+    public bool $showFilters = true;
+    public bool $showOrder = true;
     public $pagination;
     public $childrenPagination;
     public string $search = '';
@@ -38,19 +41,21 @@ public string $difficulty = '';
         $options = CategoryOptions::sections((int) $this->category->id);
         $this->showSubcategories = $options['subcategories'];
         $this->showCourses = $options['courses'];
+        $this->showFilters = $this->showCourses && CatalogOptions::enabled('catalog_show_filters');
+        $this->showOrder = $this->showFilters && CatalogOptions::enabled('catalog_show_order');
         $this->items = $this->showCourses ? $this->get('Items') : [];
         $this->pagination = $this->showCourses ? $this->get('Pagination') : null;
         $this->search = $this->getModel()->getSearch();
         $this->order = $this->getModel()->getOrder();
         $this->tagId = $this->getModel()->getTagId();
-        $this->tags = $this->getModel()->getTags();
+        $this->tags = $this->showFilters ? $this->getModel()->getTags() : [];
 $this->difficulty = $this->getModel()->getDifficulty();
         $this->duration = $this->getModel()->getDuration();
         $this->layout = $this->getModel()->getLayout();
         $this->teacherId = $this->getModel()->getTeacherId();
         $this->pathwayId = $this->getModel()->getPathwayId();
-        $this->teachers = $this->getModel()->getTeachers();
-        $this->pathways = $this->getModel()->getPathways();
+        $this->teachers = $this->showFilters ? $this->getModel()->getTeachers() : [];
+        $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
         if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
         $app = Factory::getApplication();
         if ($this->showSubcategories) {
