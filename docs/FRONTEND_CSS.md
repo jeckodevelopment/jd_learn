@@ -292,3 +292,8 @@ Ingresso diretto nella vista courses esistente (`jlms-admin-courses`); nessun nu
 ### Campi corso pubblici (0.41)
 
 I contenitori opzionali `jlms-course-fields-after-title`, `jlms-course-fields-before-content` e `jlms-course-fields-after-content` condividono la classe `jlms-course-fields`. I singoli elementi usano markup/classi dei layout com_fields (`fields-container`, `field-entry` e plugin di tipo), senza CSS globale aggiunto. Gli override nativi sono html/layouts/com_jlms/fields/render.php e html/layouts/com_jlms/field/render.php, con fallback com_fields; il layout corso rimane sovrascrivibile da com_jlms/course/default.php. Non rimuovere i controlli di accesso o trasformare valori editoriali correnti in regole didattiche storiche.
+
+
+### FE-09 — Catalogo docenti (PR #522)
+
+La nuova vista `teachers` usa `#jlms-teachers`, `#jlms-teacher-grid`, `#jlms-teachers-pagination` e le classi condivise `.jlms-catalog`, `.jlms-course-grid`, `.jlms-card`, `.jlms-course-card`. Gli hook specifici sono `.jlms-teacher-card`, `__cover`, `__content`, `__title`, `__summary`. Nessun JavaScript obbligatorio, nessuna classe globale nuova. Override Joomla: `templates/NOME/html/com_jlms/teachers/default.php`. Il CSS è ereditato dalla griglia condivisa; verificare su un template Joomla con colonna laterale e zoom 200%. La pubblicazione è server-side via `TeacherProfiles::available`, mai via CSS.

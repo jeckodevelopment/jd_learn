@@ -1762,3 +1762,15 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 7. Eseguire `python3 tests/frontend-my-courses.py`, CI completa con installazione e upgrade del package e verificare che i nuovi file `src/Model/MycoursesModel.php`, `src/View/Mycourses/HtmlView.php`, `tmpl/mycourses/default.php` e `default.xml` siano inclusi.
 
 **Esito:** collaudo manuale Joomla pendente; la CI non costituisce accettazione FE-05.
+
+
+## FE-09 — Catalogo pubblico docenti (PR #522)
+
+**Stato:** implementazione candidata; verifiche automatiche e accettazione Joomla da registrare separatamente.
+
+1. Menu → Nuova voce → JD Learn → Elenco docenti; provare IT/EN, SEF abilitato/disabilitato e più voci menu. Aprire ogni profilo dal catalogo.
+2. Confrontare anonimo, utente autenticato con gruppi ACL differenti, docente pubblicato/non pubblicato/cestinato, categoria o antenati pubblicati e accessibili, lingue Joomla. Profilo non visibile deve restare 404 anche con URL diretto.
+3. Pagina vuota, più di 20 profili per paginazione, foto assente/presente, alt decorativo, descrizione contenente HTML: nessuno script eseguibile, URL remoto o dato personale dell'account Joomla.
+4. Provare profilo docente, corsi collegati, modifica profilo propria autorizzata e impossibilità di edit altrui; nessuna regressione ai filtri del catalogo corsi.
+5. Ripetere con template differente, colonna laterale, smartphone, tastiera, zoom 200%, screen reader e override `com_jlms/teachers/default.php`.
+6. Verificare l'inclusione nello ZIP dei file `TeachersModel.php`, `View/Teachers/HtmlView.php`, `tmpl/teachers/default.php`, `default.xml`; CI verde non sostituisce collaudo Joomla.

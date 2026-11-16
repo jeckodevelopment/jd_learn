@@ -237,3 +237,13 @@
 #jlms-pathway .jlms-pathway-timeline__title { overflow-wrap: anywhere; }
 #jlms-pathway .jlms-pathway-timeline__title a:focus-visible { outline: 3px solid var(--jlms-color-primary, currentColor); outline-offset: 3px; }
 #jlms-pathway progress { max-width: 100%; }
+
+/* FE-09: public teacher directory; scoped to the component view. */
+#jlms-teachers{color:var(--jlms-color-text);max-width:var(--jlms-content-width);margin-inline:auto}
+#jlms-teachers .jlms-teacher-card{overflow:hidden;min-width:0}
+#jlms-teachers .jlms-teacher-card__cover{aspect-ratio:16 / 9;overflow:hidden}
+#jlms-teachers .jlms-teacher-card__cover img{width:100%;height:100%;object-fit:cover;display:block}
+#jlms-teachers .jlms-teacher-card__content{min-width:0;padding:var(--jlms-space-unit,1rem)}
+#jlms-teachers .jlms-teacher-card__summary{overflow-wrap:anywhere}
+#jlms-teachers a:focus-visible{outline:3px solid var(--jlms-color-primary);outline-offset:3px}
+#jlms-teachers-pagination{margin-block:calc(2 * var(--jlms-space-unit))}

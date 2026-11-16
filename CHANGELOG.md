@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-09 (PR #522 in verifica): nuova directory pubblica docenti con menu Joomla IT/EN, profili paginati e schede responsive riusate, selezione server-side ACL/lingua/categorie senza dati degli account. CI e collaudo Joomla pendenti.
+
 - FE-08 (PR #520 integrata): opzioni indipendenti per voce menu Joomla per mostrare sottocategorie e corsi nella stessa pagina categoria; default Sì, paginazioni distinte, schede CSS riusate, ACL e filtri mantenuti. Collaudo Joomla pendente.
 
 - FE-07 (PR #518 integrata): catalogo percorsi con copertina dedicata facoltativa e intro, editor Joomla Media con alt/decorativa e salvataggio in params_json; dettaglio con timeline verticale, progressi autorizzati senza iscrizione aggregata, nuovo menu dettaglio. Test e collaudo Joomla pendenti.

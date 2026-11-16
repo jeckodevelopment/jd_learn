@@ -39,6 +39,8 @@ final class Router extends RouterView
         $classroom = new RouterViewConfiguration('classroom');
         $classroom->setKey('id');
         $this->registerView($classroom);
+        $teachers = new RouterViewConfiguration('teachers');
+        $this->registerView($teachers);
         $teacher = new RouterViewConfiguration('teacher');
         $teacher->setKey('id');
         $this->registerView($teacher);
