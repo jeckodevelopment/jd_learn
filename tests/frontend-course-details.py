@@ -21,8 +21,9 @@ for task in ('enrollment.start', 'enrollment.request'):
     assert VIEW.count('name="task" value="' + task + '"') == 1, task
 assert VIEW.count("HTMLHelper::_('form.token')") == 2
 assert VIEW.index('id="jlms-course-summary"') < VIEW.index('id="jlms-course-sidebar"')
-assert VIEW.index('id="jlms-course-sidebar"') < VIEW.index('id="jlms-course-main"')
-assert VIEW.index('id="jlms-course-main"') < VIEW.index('id="jlms-course-outline"')
+assert VIEW.index('id="jlms-course-main"') < VIEW.index('id="jlms-course-sidebar"')
+assert VIEW.index('id="jlms-course-description"') < VIEW.index('id="jlms-course-fields-after-content"') < VIEW.index('id="jlms-course-sidebar"')
+assert VIEW.index('id="jlms-course-sidebar"') < VIEW.index('id="jlms-course-outline"')
 assert VIEW.count('<details id="jlms-module-') == 1
 assert VIEW.count('</details>') == 1
 assert 'moduleIndex++ === 0' in VIEW
@@ -42,8 +43,8 @@ assert "->select('id, module_id, title, kind, required, preview, publish_up, pub
 assert 'l.body' not in outline and "l.video" not in outline
 assert "TeacherProfiles::current(" in outline
 
-for css in ("#jlms-course-layout", "grid-template-areas: \"main sidebar\"",
-            'grid-template-areas: "sidebar" "main"', '#jlms-course-sidebar',
+for css in ("#jlms-course-layout", "grid-template-areas: \"main sidebar\" \"supplement sidebar\"",
+            'grid-template-areas: "main" "sidebar" "supplement"', '#jlms-course-sidebar',
             "position: sticky", "position: static", "@container jlms-course-page",
             "#jlms-course-outline .jlms-module__summary:focus-visible"):
     assert css in STYLE, css
