@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-05 (seconda tranche, candidata): vista personale autonoma “I miei attestati” con menu Joomla e traduzioni IT/EN, servizio attestati già vincolato al titolare, download protetto e partial condivisa con dashboard. Collaudo Joomla pendente.
+
 - FE-05 (prima tranche): vista privata autonoma **I miei corsi** selezionabile dal menu Joomla, con modello e schede condivisi con la dashboard esistente, routing/ACL/filtri/paginazione invariati; traduzioni, test e documentazione aggiornati. Attestati, preferenze e riepilogo autonomo rimangono da implementare; collaudo Joomla pendente.
 
 - FE-04 (seconda tranche): feedback salvataggio lezione e ripresa audio con conferme temporanee e errori persistenti/annunciati; preservati retry, idempotenza e backend. Test statico CI, documentazione e scenari QA aggiornati; collaudo Joomla pendente.
