@@ -29,7 +29,7 @@ final class PathwayService
         $all = '*';
         $extension = 'com_jlms.pathway';
         $query = $this->db->createQuery()
-            ->select('p.id, p.title, p.alias, p.description, p.language, p.access, p.catid, cat.title AS category_title')
+            ->select('p.id, p.title, p.alias, p.description, p.params_json, p.language, p.access, p.catid, cat.title AS category_title')
             ->from($this->db->quoteName('#__jlms_pathways', 'p'))
             ->innerJoin($this->db->quoteName('#__categories', 'cat') . ' ON cat.id = p.catid')
             ->where('p.state = 1')

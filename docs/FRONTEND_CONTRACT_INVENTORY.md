@@ -56,3 +56,6 @@ Questa tabella è una **mappa delle dipendenze**, non autorizza a rinominare uni
 
 
 FE-06 candidata: partial site/tmpl/dashboard/_personal_navigation.php condiviso dalle quattro viste personali; #jlms-personal-navigation, .jlms-personal-navigation__list, .jlms-personal-navigation__link e .jlms-personal-navigation__current; impostazione menu show_personal_navigation=0 per default; senza JavaScript. Collaudo Joomla pendente.
+
+
+FE-07 candidata: catalogo percorsi `pathways/default.php` con #jlms-pathways e #jlms-pathway-grid, `.jlms-pathway-card__cover`, `.jlms-pathway-card__title`. Dettaglio `pathway/default.php`: #jlms-pathway, #jlms-pathway-cover, #jlms-pathway-sequence, #jlms-pathway-courses.jlms-pathway-timeline, `.jlms-pathway-timeline__item`, `.jlms-pathway-timeline__card`, `.jlms-pathway-timeline__step`; ID stabili per indice. Immagine facoltativa validata nel backend e proiettata dal servizio read-only; progresso soltanto autenticato. Nuovo menu di dettaglio. Collaudo Joomla pendente.

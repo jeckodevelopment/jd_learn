@@ -10,6 +10,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\User\User;
+use Jlms\Component\Jlms\Administrator\Application\CourseArtwork;
 use Joomla\Database\ParameterType;
 
 final class PathwayModel extends AdminModel
@@ -35,6 +36,11 @@ final class PathwayModel extends AdminModel
             $query = $this->getDatabase()->createQuery()->select('course_id, ordering')->from('#__jlms_pathway_courses')
                 ->where('pathway_id = :pathway')->bind(':pathway', $pathwayId, ParameterType::INTEGER)->order('ordering, course_id');
             $item->courses = $this->getDatabase()->setQuery($query, 0, 100)->loadAssocList();
+            $imageData = json_decode((string) ($item->params_json ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
+            if (!is_array($imageData)) { throw new \RuntimeException('COM_JLMS_PATHWAY_INVALID'); }
+            $item->cover_image = (string) ($imageData['cover_image'] ?? '');
+            $item->cover_alt = (string) ($imageData['cover_alt'] ?? '');
+            $item->cover_decorative = !empty($imageData['cover_decorative']) ? '1' : '0';
         } else {
             $item->courses = [];
         }
@@ -100,7 +106,7 @@ final class PathwayModel extends AdminModel
             $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult()
                 ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
 
-            $allowed = ['id', 'revision', 'title', 'alias', 'description', 'catid', 'access', 'language', 'state', 'courses'];
+            $allowed = ['id', 'revision', 'title', 'alias', 'description', 'catid', 'access', 'language', 'state', 'courses', 'cover_image', 'cover_alt', 'cover_decorative'];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id', 'revision', 'catid', 'access', 'state'] as $key) {
                 if (isset($data[$key]) && ((!is_int($data[$key]) && !is_string($data[$key]))
@@ -155,7 +161,26 @@ final class PathwayModel extends AdminModel
             $data['access'] = (int) ($data['access'] ?? $record->access ?? 1);
             $data['language'] = (string) ($data['language'] ?? $record->language ?? '*');
             $data['state'] = (int) ($data['state'] ?? $record->state ?? 0);
-            $data['params_json'] = (string) ($record->params_json ?? '{}');
+            // Optional public artwork is stored in existing pathway params; never trust raw params_json.
+            $artwork = json_decode((string) ($record->params_json ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
+            if (!is_array($artwork)) { throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID'); }
+            $image = CourseArtwork::path((string) ($data['cover_image'] ?? ($artwork['cover_image'] ?? '')));
+            CourseArtwork::validateLocal($image);
+            $alt = trim((string) ($data['cover_alt'] ?? ($artwork['cover_alt'] ?? '')));
+            $decorative = $data['cover_decorative'] ?? ($artwork['cover_decorative'] ?? false);
+            if (!in_array($decorative, [true, false, 0, 1, '0', '1'], true)
+                || mb_strlen($alt) > 500 || preg_match('/[\x00-\x1f\x7f]/', $alt)) {
+                throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+            }
+            $decorative = in_array($decorative, [true, 1, '1'], true);
+            if ($image !== '' && !$decorative && $alt === '') {
+                throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_ALT_REQUIRED');
+            }
+            $artwork['cover_image'] = $image;
+            $artwork['cover_alt'] = $decorative ? '' : $alt;
+            $artwork['cover_decorative'] = $decorative;
+            unset($data['cover_image'], $data['cover_alt'], $data['cover_decorative']);
+            $data['params_json'] = json_encode($artwork, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             $courses = $this->normalizeCourses($data['courses'] ?? []);
             unset($data['courses'], $data['revision']);
 

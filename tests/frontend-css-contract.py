@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LAYOUTS = {
     "component/site/tmpl/courses/default.php": ('jlms-card jlms-course-card', 'jlms-course-card-'),
-    "component/site/tmpl/pathways/default.php": ('jlms-card jlms-course-card', 'jlms-pathway-'),
+    "component/site/tmpl/pathways/default.php": ('jlms-card jlms-course-card jlms-pathway-card', 'jlms-pathway-'),
     "component/site/tmpl/categories/default.php": ('jlms-card jlms-category-card', 'jlms-category-card-'),
     "component/site/tmpl/dashboard/_courses.php": ('jlms-card jlms-my-course', 'jlms-my-course-'),
 }
