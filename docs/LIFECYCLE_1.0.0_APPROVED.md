@@ -1,6 +1,6 @@
 # Ciclo di vita di corsi, percorsi e docenti — requisiti approvati 1.0.0
 
-Decisione funzionale del 15 novembre 2026. Stato: **requisiti approvati; LCM-01 in implementazione incrementale, collaudo Joomla pendente**. La presenza di un workflow editoriale di archiviazione in JD Learn **non** equivale al blocco della fruizione già acquisita; verificare entrambi separatamente.
+Decisione funzionale del 15 novembre 2026. Stato: **requisiti approvati; primo incremento LCM-01 integrato con PR #484 (CI 4/4); completamento funzionale e collaudo Joomla ancora pendenti**. La presenza di un workflow editoriale di archiviazione in JD Learn **non** equivale al blocco della fruizione già acquisita; verificare entrambi separatamente.
 
 ## Regole generali
 
