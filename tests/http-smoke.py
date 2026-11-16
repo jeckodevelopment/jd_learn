@@ -122,7 +122,7 @@ try:
   public_url,public_html=get('/index.php?option=com_jlms&view='+view)
   if 'id="'+root_id+'"' not in public_html or 'id="'+element+'"' not in public_html:
    raise RuntimeError('FE-12 public '+view+' view did not render its native DOM')
-  if not re.search(r'<h1\\b',public_html):
+  if '<h1' not in public_html:
    raise RuntimeError('FE-12 public '+view+' view lacks a page heading')
   if not re.search(r'(?:/media/com_jlms/css/site(?:[.]min)?[.]css|com_jlms/site(?:[.]min)?[.]css)', public_html):
    raise RuntimeError('FE-12 public '+view+' view did not load the Joomla WAM stylesheet')
