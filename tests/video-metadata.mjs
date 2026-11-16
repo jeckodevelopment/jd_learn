@@ -55,6 +55,24 @@ check(status.textContent,'Local player module missing');
 editor.importer=async()=>({create:async()=>{throw Error('unexpected SDK problem');}});
 await editor.probe(editor.generation);
 check(status.textContent,'Player startup failed');
+// Safari/WebKit may reject a native fetch called with the VideoMetadataEditor receiver.
+const originalFetch = globalThis.fetch;
+let nativeCalls = 0;
+globalThis.fetch = function (_url, options) {
+  check(this === globalThis || this === undefined, true);
+  nativeCalls++;
+  check(options.body.get('task'), 'lesson.metadata');
+  return Promise.resolve({ok:true,status:200,json:async()=>({
+    success:true,data:{provider:'youtube',duration_ms:14000,ticket}
+  })});
+};
+const nativeEditor = new VideoMetadataEditor(form, config, host, undefined, async()=>{throw Error('unexpected adapter');});
+clearTimeout(nativeEditor.timer);
+await nativeEditor.probe(nativeEditor.generation);
+check(nativeCalls, 1);
+check(controls.sdk_duration_ms.value, '14000');
+nativeEditor.clear();
+globalThis.fetch = originalFetch;
 globalThis.FormData=original;
 // A temporary Vimeo SDK error must not poison the next preview attempt.
 const vmSource=await readFile(new URL('../plugins/jlmsvideo/vimeo/media/js/player.js',import.meta.url),'utf8');

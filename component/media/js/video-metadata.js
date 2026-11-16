@@ -2,7 +2,7 @@
 export const validDuration = value => Number.isInteger(value) && value >= 1000 && value <= 28800000;
 const providerFailures = new Set(['youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed', 'youtube_timeout']);
 export class VideoMetadataEditor {
-  constructor(form, config, host = window, transport = fetch, importer = url => import(url)) {
+  constructor(form, config, host = window, transport = (...args) => fetch(...args), importer = url => import(url)) {
     Object.assign(this, {form, config, host, transport, importer}); this.generation = 0;
     this.field = name => form.elements.namedItem(`jform[${name}]`);
     this.root = form.querySelector('#jlms-video-metadata');
