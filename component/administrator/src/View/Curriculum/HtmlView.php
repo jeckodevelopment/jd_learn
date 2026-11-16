@@ -243,7 +243,10 @@ final class HtmlView extends BaseHtmlView
                     'labels'=>array_map(static fn($key):string=>Text::_($key), [
                         'detected'=>'COM_JLMS_VIDEO_DURATION_DETECTED','loading'=>'COM_JLMS_VIDEO_DURATION_LOADING','play'=>'COM_JLMS_VIDEO_DURATION_PLAY',
                         'failed'=>'COM_JLMS_VIDEO_METADATA_FAILED','consent'=>'COM_JLMS_VIDEO_DURATION_CONSENT','manual'=>'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
-                        'local'=>'COM_JLMS_VIDEO_DURATION_LOCAL','source'=>'COM_JLMS_VIDEO_DURATION_SOURCE'])]);
+                        'local'=>'COM_JLMS_VIDEO_DURATION_LOCAL','source'=>'COM_JLMS_VIDEO_DURATION_SOURCE',
+                        'youtube_csp'=>'COM_JLMS_VIDEO_YOUTUBE_CSP','youtube_sdk'=>'COM_JLMS_VIDEO_YOUTUBE_SDK',
+                        'youtube_referrer'=>'COM_JLMS_VIDEO_YOUTUBE_REFERRER','youtube_embed'=>'COM_JLMS_VIDEO_YOUTUBE_EMBED',
+                        'youtube_timeout'=>'COM_JLMS_VIDEO_YOUTUBE_TIMEOUT'])]);
             }
             $this->moduleForm->bind($moduleData);
             $this->lessonForm->bind($lessonData);

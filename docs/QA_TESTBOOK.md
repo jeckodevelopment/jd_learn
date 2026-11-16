@@ -1,3 +1,13 @@
+## P0 #532 — YouTube: durata metadati e player aula (riproduzione reale obbligatoria)
+
+1. Verificare YouTube plugin abilitato sia come estensione sia tramite `playback_enabled` e le opzioni JD Learn relative ai video esterni. Se la policy è `site_consent`, controllare che la CMP esponga `window.JlmsConsent.isAllowed('youtube') === true` dopo il consenso esplicito. Non bypassare la CMP per il test.
+2. Nella bozza di lezione, inserire un video YouTube noto come incorporabile. In DevTools verificare `POST lesson.metadata`, HTTP e messaggio restituito, caricamento dell'asset JS dell'adapter, della SDK `https://www.youtube.com/iframe_api` e dell'iframe `youtube-nocookie.com`; verificare header Referer e CSP. Distinguere errori 153 (identità), 100 (privato/non trovato), 101/150 (embed negato), CSP e timeout; dopo avvio, la durata deve risultare valida e il ticket non deve essere stale.
+3. Creare e salvare, poi pubblicare un corso di apprendimento tracciato: il backend deve confermare la durata (o richiedere fallback manuale esplicito) e non consentire la pubblicazione incompleta. Il fallback manuale non è una riparazione dell'embed e non deve concedere accesso fuori dalle regole Joomla.
+4. Con iscritto autorizzato, aprire il frontend e verificare che l'iframe sia visibile e riproduca audio/video, che play/seek/pausa non generino errori, che il progresso venga registrato solo in modo autorizzato. Testare ospite e iscritto senza livello di accesso: nessuna riproduzione protetta.
+5. Ripetere con consenso rifiutato/revocato, browser con blocco script, assenza provider, corsi consultabili, editor IT/EN, SEF e template di prova. Nessun fallback verso embed diretto non protetto. Registrare console/rete, versione e screenshot. I test CI con SDK simulato **non validano** la riproduzione YouTube live: mantenere aperta l'issue #532 fino al collaudo reale.
+
+---
+
 ## AUT-03 — Avvisi trascrizioni nel controllo preliminare (collaudo Joomla pendente)
 
 **Evidenza automatica post-merge:** PR #530 integrata (merge `771b6cd71a1c4dc07d4202c90d57dd4c140a6cab`), [CI 43955475409](https://github.com/jeckodevelopment/jd_learn/actions/runs/43955475409) 4/4 verde, [pacchetto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43955475409/artifacts/14271932231) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `6421b61d36d8c6b245538474f8747bad434b665d62da3183ccaa0bb6ec3f813c`. **Collaudo manuale Joomla ancora da eseguire**; riferimento globale 79,56% invariato.

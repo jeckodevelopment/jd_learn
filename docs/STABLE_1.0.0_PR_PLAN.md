@@ -2,6 +2,8 @@
 
 > **Aggiornamento organizzativo, 14 novembre 2026.** Il piano resta suddiviso in IMP (implementazione), STAB (stabilizzazione), DOC (documentazione), SEC (sicurezza/privacy) e REL (release). Gli ID sono identificativi di lavoro, **non numeri di PR**. Lo storico precedente alla normalizzazione è preservato integralmente in [STABLE_1.0.0_PR_PLAN_ARCHIVE.md](STABLE_1.0.0_PR_PLAN_ARCHIVE.md). Questo aggiornamento è documentale e **non modifica l'avanzamento funzionale**.
 
+**P0 video YouTube — issue #532 / PR in verifica:** segnalazione di mancata sincronizzazione durata/SDK e video non fruibile. La prima correzione differenzia errori nell'editor, imposta la Referrer-Policy raccomandata e introduce test di regressione. La causa effettiva dell'ambiente segnalato non è ancora accertata senza test browser reale; chiusura issue e release bloccate fino a verifica nel sito Joomla con provider abilitato, consenso/CSP, pubblicazione e player funzionanti.
+
 ## Regole di esecuzione
 
 1. Prima di aprire una PR, verificare in `main` che il requisito non sia già implementato. Collegare gli ID alla matrice [REQUIREMENTS_STATUS.csv](REQUIREMENTS_STATUS.csv) e alle issue aperte.

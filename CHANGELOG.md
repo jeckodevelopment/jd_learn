@@ -1,5 +1,7 @@
 # Changelog
 
+- P0 YouTube (#532, PR in verifica): il preview editoriale mostra errori specifici per CSP, caricamento SDK, identificazione del sito/referrer e video non incorporabile, oltre ai messaggi 4xx locali autorizzati; i dettagli 5xx restano nascosti. Adeguata la Referrer-Policy dell’iframe a quella documentata da YouTube. Nessun bypass di consenso, ACL o requisito durata; collaudo reale ancora pendente.
+
 - AUT-03 (PR #530 integrata): il controllo preliminare segnala trascrizioni editoriali assenti in lezioni audio/video come avvisi non bloccanti; aggiunti messaggi IT/EN e test, senza confondere trascrizioni con caption del provider.
 
 - FE-12 (PR #528 integrata, CI 4/4): corretto il 404 della directory Docenti includendo `teachers` nella allowlist del controller frontend, aggiunto test regressione; estesi i controlli di rendering Joomla per i cataloghi pubblici categorie, percorsi e docenti; nessuna modifica di prodotto, gate manuale ancora aperto.
