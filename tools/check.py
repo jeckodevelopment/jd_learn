@@ -316,7 +316,7 @@ assert "state = 'confirmed'" in consent and "state = 'pending'" in consent
 assert "hash('sha256', $token)" in consent and 'token_expires_at >= UTC_TIMESTAMP()' in consent
 assert 'random_bytes(32)' in consent and 'task=mailconsent.confirm' in consent
 assert "com_jlms.course.consent" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
-assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/View/Dashboard/HtmlView.php').read_text()
+assert "getCourseAnnouncementConsent()->state" in (ROOT/'component/site/src/Model/PreferencesModel.php').read_text()
 
 # MAIL-11.3 anonymous unsubscribe is explicit POST-only, hashed, expiring and one-use.
 assert 'createUnsubscribeUrl' in consent and 'revokeByToken' in consent
