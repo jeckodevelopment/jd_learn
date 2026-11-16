@@ -38,7 +38,7 @@ final class CourseVersionChangeNotice
             ->leftJoin("#__jlms_mail_queue AS notice ON notice.event_key = SHA2(CONCAT('course.version.changed:', m.id), 256)")
             ->where('notice.id IS NULL')->where("source.status = 'migrated'")
             ->where("target.status = 'active'")->where('target.completed_at IS NULL')
-            ->where('u.block = 0')->where('c.delivery_enabled = 1')
+            ->where('u.block = 0')->where('c.state = 1')->where('c.delivery_enabled = 1')
             ->where('m.created_at > DATE_SUB(UTC_TIMESTAMP(6), INTERVAL 2 DAY)')
             ->where('m.created_at <= UTC_TIMESTAMP(6)')
             ->where('(target.starts_at IS NULL OR target.starts_at <= UTC_TIMESTAMP(6))')
