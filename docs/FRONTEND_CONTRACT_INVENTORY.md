@@ -13,6 +13,8 @@
 | Categorie | `categories/default.php` | `#jlms-categories` | `.jlms-category-grid`, `.jlms-card.jlms-category-card` | Implementato |
 | Dettaglio categoria | `category/default.php` | `#jlms-category` | `.jlms-course-grid`, `.jlms-course-card` | Implementato |
 | Area personale | `dashboard/default.php` | `#jlms-dashboard` | `.jlms-my-course-grid`, `.jlms-card.jlms-my-course` | Implementato; viste autonome future FE-05 |
+| I miei corsi | `mycourses/default.php` | `#jlms-dashboard` / `.jlms-my-courses-view` | `dashboard/_courses.php` | Implementato; collaudo Joomla pendente |
+| I miei attestati | `mycertificates/default.php` | `#jlms-my-certificates-view` / `.jlms-my-certificates-view` | `dashboard/_certificates.php` | PR #510; collaudo Joomla pendente |
 | Aula | `classroom/default.php` | `#jlms-classroom` | `.jlms-classroom-layout`, `.jlms-classroom-lesson`, `.jlms-material` | Implementato, redesign FE-03/04 |
 | Quiz | `quiz/default.php` | `#jlms-quiz` | `.jlms-quiz-question`, `.jlms-quiz-clear` | Implementato, flusso stabilizzato senza estensioni quiz |
 | Docente | `teacher/default.php` | `#jlms-teacher-profile` | `#jlms-teacher-presentation`, `#jlms-teacher-courses` | Implementato |
