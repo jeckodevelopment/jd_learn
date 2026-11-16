@@ -1,3 +1,14 @@
+## Attestati — menu di ordinamento senza duplicazioni
+
+1. Aprire **JD Learn → Attestati** con Joomla 6/Atum, anche in assenza di risultati: il menu di ordinamento deve offrire esattamente sei opzioni, una per campo (Emesso il, Studente, Corso, Codice attestato, Stato e ID).
+2. Verificare che il filtro Stato mostri solo Tutti/Disponibile/In attesa/Revocato, senza duplicazioni.
+3. Con almeno due attestati, verificare selezione di ogni campo e inversione crescente/decrescente tramite intestazione cliccabile della tabella; controllare ricerca, paginazione e permanenza dei filtri.
+4. Ripetere in italiano e inglese e con un ruolo privo di autorizzazioni per verificare la protezione della vista.
+
+**Esito:** collaudo Joomla da eseguire; nessuna modifica a query o dati attestati.
+
+---
+
 ## IMP-05 — capability contract provider video
 
 1. Installare il pacchetto candidato su Joomla di prova e verificare che i quattro plugin video risultino disponibili e che soltanto quelli intenzionalmente usati siano abilitati.
