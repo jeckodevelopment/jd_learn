@@ -1464,3 +1464,15 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 4. Completare realmente un corso in modalità Apprendimento con attestati abilitati; in modalità Sola consultazione o con attestati disabilitati non deve esserci emissione. Provare anche l'upgrade da dati esistenti.
 
 **Esito:** da collaudare sul sito Joomla reale. CI verde non costituisce accettazione manuale.
+
+
+## CERT-08 / PR #477 — rigenerazione tecnica PDF senza modifica attestato
+
+1. Emettere un attestato in modalità Apprendimento, salvare i dati certificati (codice, corso, studente, versione, data e documento), poi accedere al dettaglio con un amministratore autorizzato. Compilare motivo (8–500 caratteri), confermare e premere **Rigenera PDF attestato**. Il PDF deve essere disponibile e contenere gli stessi dati. Il registro audit deve mostrare `admin_regenerate`; revisione e ID risorsa PDF devono cambiare.
+2. Senza autenticazione o con utente privo di `jlms.certificates.manage`, la rigenerazione deve essere rifiutata senza accesso ai dati. Senza token CSRF o con richiesta GET/HEAD deve essere rifiutata. Motivo vuoto/corto, conferma assente e ID non valido devono essere rifiutati.
+3. Aprire lo stesso attestato da due sessioni amministrative; rigenerare dalla prima e poi inviare il vecchio form dalla seconda: il secondo tentativo deve essere respinto con conflitto di revisione senza sovrascrivere il PDF più recente. Provare anche un attestato revocato: niente rigenerazione.
+4. Nel solo ambiente di prova provocare indisponibilità dello storage, errore dell'audit e input PDF invalidi: l'asset corrente precedente deve restare collegato e nessuna rigenerazione parziale deve risultare attiva.
+5. Verificare intestazione e lingua IT/EN, mancato invio di nuove mail, assenza di modifica a `identity_snapshot_json`, `template_snapshot_json`, serial e `issued_at`. Ripetere installazione/upgrade preservando attestati precedenti.
+6. Eseguire **backup e ripristino** DB + storage privato su ambiente separato; controllare download, audit e blob storici con SHA-256 prima e dopo. Questo ultimo gate richiede prova operativa e non è soddisfatto dalla CI.
+
+**Esito:** da eseguire sul sito di collaudo. Test automatizzati non equivalgono ad accettazione Joomla.
