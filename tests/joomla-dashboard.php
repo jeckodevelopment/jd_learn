@@ -181,7 +181,8 @@ dashExpect(array_column($read($owner),null,'id')[$active]['access']==='available
 $certificates=$component->getCertificateService();
 $templateId=(int)$db->setQuery("SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1")->loadResult();
 dashExpect($templateId>0,'certificate fixture has the installed default PDF template');
-$completedAt=(string)$db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id='.$completed)->loadResult();
+// DATETIME(6) returns fractional seconds on some database drivers; issuance snapshots use SQL seconds.
+$completedAt=substr((string)$db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id='.$completed)->loadResult(),0,19);
 $serial='LCM01-'.strtoupper(bin2hex(random_bytes(8)));
 $certificate=(object)['enrollment_id'=>$completed,'course_version_id'=>$versionId,
     'template_id'=>$templateId,'current_document_id'=>null,'issued_at'=>$completedAt,'revision'=>1];
