@@ -20,6 +20,33 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 **Decisione sui placeholder MAIL-E:** un solo dizionario canonico, **senza alias retrocompatibili** perché non esiste ancora una release stabile; validazione di template default, upgrade e documentazione devono applicare questa scelta. Le precedenti proposte di alias sono superate.
 
+
+## Piano frontend UX approvato il 16 novembre 2026 — FE-01–FE-12
+
+**Fonte funzionale:** [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md). La realizzazione è pianificata per la 1.0.0 dove indicato; il codice preesistente resta baseline, non va duplicato. Le attività FE sono **ID di lavoro**, non numeri di PR e non prove di implementazione. La modalità immersiva completa rimane valutazione successiva e non gate di rilascio.
+
+| Ordine suggerito | ID | Ambito e criteri principali | Gate e dipendenze | Tracciatura |
+|---|---|---|---|---|
+| 1 | FE-10 | Inventario CSS/JS/override, classi stabili, componenti condivisi, un solo stile nativo; nessuna interferenza col template | Test override, Joomla, WAM e regressioni | FE-10, UI-02 |
+| 2 | FE-01 | Catalogo corsi: griglia responsive, ricerca e filtri opzionali **per voce menu**, paginazione, opzioni ereditarie | Menu IT/EN, istanze multiple, ACL, GET/SEF | FE-01, CAT-01 |
+| 3 | FE-02 | Scheda corso: outline pubblico autorizzato e pannello iscrizione sticky con fallback | Corso pubblico/riservato, iscrizione, visibilità docenti | FE-02, CAT-01 |
+| 4 | FE-03 | Aula: intestazione con docenti, sidebar richiudibile/sticky, moduli espandibili, mobile | Template diversi, input tastiera, revoche, video/audio/testo | FE-03, STU-01 |
+| 5 | FE-04 | Aula: navigazione manuale, azioni contestuali, feedback salvataggio discreto ed errori persistenti | Nessun credito da navigazione; player/quiz, privacy | FE-04, STU-03 |
+| 6 | FE-05 | Dashboard riepilogativa + viste autonome I miei corsi, I miei attestati, Preferenze, XML menu | Storico corsi archiviati, download protetto, URL notifica | FE-05, STU-01, CERT-05 |
+| 7 | FE-06 | Navigazione personale interna opzionale configurabile, senza duplicare menu Joomla | Routing, menu mancanti, accessibilità, dispositivi | FE-06, UI-02 |
+| 8 | FE-07 | Percorsi: griglia, copertina dedicata facoltativa, timeline verticale e progresso personale autorizzato | Proiezione dati, ACL, nessuna iscrizione di massa implicita | FE-07 |
+| 9 | FE-08 | Categorie: sottocategorie e corsi insieme, configurazione di visibilità menu, conteggi pubblici | Gerarchie, lingua, paginazioni distinte | FE-08 |
+| 10 | FE-09 | Elenco pubblico docenti con voce menu e profili sicuri, riuso schede | Privacy account, pubblicazione, ACL | FE-09 |
+| 11 | FE-11 | Parametri menu e fallback generali unificati, catalogo e categorie, menu IT/EN | Upgrade/menu esistenti, per-menu override, browser | FE-11, UI-02 |
+| 12 | FE-12 | Gate integrato UX: accessibilità, responsive, sicurezza, override, documentazione e collaudi manuali | Solo dopo completamento e CI delle PR funzionali | FE-12, SEC-P1–P5 |
+
+**Disciplina di esecuzione:**
+1. Prima del runtime verificare copertura reale dei componenti preesistenti e scegliere PR piccole, non una riscrittura totale del frontend. I FE possono essere raggruppati in PR quando l'intervento è atomico; ordine flessibile secondo dipendenze.
+2. Ogni PR runtime: milestone 1.0.0, numero reale della PR in **REQUIREMENTS_STATUS.csv** per gli ID coinvolti, sezione **Comportamenti da testare** (browser Joomla, ACL, menu IT/EN, tablet/mobile, template diversi, regressioni), test automatici, guida CSS e changelog aggiornati prima del merge.
+3. Ogni PR va seguita fino a CI finale verde e merge, senza scambiare la CI per collaudo; dopo il merge verificare l'artefatto **ZIP installabile** e fornire link e checksum. In caso di test bloccanti non integrare fino alla correzione.
+4. La nuova specifica e i FE inizialmente **Non iniziata / non collaudati** non implicano aumento della percentuale. Aggiornare le stime soltanto dopo evidenza incrementale. La **modalità immersiva** è un'opzione futura da studiare, non un secondo layout obbligatorio per la 1.0.0.
+5. README sintetico, CHANGELOG solo modifiche effettive, CSS contract come contratto implementato, specifica UX come target; nessun riferimento a prodotti o installazioni specifiche.
+
 ## Gestione ciclo di vita approvata il 15 novembre 2026
 
 Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di iscrizioni/fruizione e conservazione dello storico, cestinazione/ripristino di corsi, percorsi e docenti, eliminazione fisica soltanto quando non esistono utenti collegati o dipendenze storiche. Distinguere l'archiviazione editoriale già presente dal nuovo blocco degli accessi. **LCM-01 (P0: primo gate fruizione PR #484 integrata, restanti controlli aperti), LCM-02/03/04 (P1), LCM-05 (gate)**; specifica e collaudi in [LIFECYCLE_1.0.0_APPROVED.md](LIFECYCLE_1.0.0_APPROVED.md). I requisiti nuovi non sono considerati implementati fino a evidenza runtime; stima globale invariata per la sola formalizzazione.
