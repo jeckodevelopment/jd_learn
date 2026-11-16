@@ -193,3 +193,10 @@
 #jlms-classroom :is(#jlms-lesson-progress-status, #jlms-audio-progress-status):empty { display: none; }
 #jlms-classroom :is(#jlms-lesson-progress-status, #jlms-audio-progress-status)[data-state="saving"] { opacity: .72; }
 #jlms-classroom :is(#jlms-lesson-progress-status, #jlms-audio-progress-status)[data-state="error"] { font-weight: 600; }
+
+/* FE-05: compact, scoped definition-list summary; no global theme changes. */
+#jlms-dashboard .jlms-summary-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,8rem),1fr));gap:var(--jlms-space-unit);margin-block:var(--jlms-space-unit) }
+#jlms-dashboard .jlms-summary-stats > div { min-width:0 }
+#jlms-dashboard .jlms-summary-stats dt { font-size:.9em }
+#jlms-dashboard .jlms-summary-stats dd { font-size:1.35em;font-weight:600;margin:0;font-variant-numeric:tabular-nums }
+#jlms-dashboard #jlms-dashboard-latest { max-width:42rem }
