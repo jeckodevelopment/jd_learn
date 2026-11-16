@@ -1,5 +1,7 @@
 # Changelog
 
+- FE-12 (gate strutturale candidato): verifica CI contratti frontend (menu, viste, router, WAM, CSS, private SEO) e matrice di accettazione manuale; nessuna dichiarazione di conformità WCAG o collaudo Joomla. Gate finale ancora aperto.
+
 - FE-11 (PR #524 integrata): allineate opzioni globali e override per-menu su categorie e catalogo, inclusi filtri/ordinamento/paginazione e sezioni categoria. Contratti ACL e URL non ampliati; collaudo Joomla pendente.
 
 - FE-09 (PR #522 integrata): nuova directory pubblica docenti con menu Joomla IT/EN, profili paginati e schede responsive riusate, selezione server-side ACL/lingua/categorie senza dati degli account. CI e collaudo Joomla pendenti.
