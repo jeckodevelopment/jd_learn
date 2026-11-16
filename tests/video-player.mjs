@@ -135,12 +135,13 @@ document.createElement=tag=>({tag,dataset:{},remove(){},set src(value){this.url=
 const box={dataset:{title:'Lesson'},append:frame=>{frames.push(frame);}};
 const youtubeBox = {...box, append: frame => {
   box.append(frame);
-  assert.equal(ytFrame, undefined, 'SDK waits for iframe navigation');
-  queueMicrotask(() => frame.onload?.());
+  assert.equal(ytFrame, undefined, 'SDK attaches only after iframe is inserted into the DOM');
 }};
+
 const yt=await youtube.create(youtubeBox,{options:{reference:'dQw4w9WgXcQ',locale:'it-IT'}},()=>{},new AbortController().signal);
 const ytUrl = new URL(ytFrame.src);
 assert.equal(ytUrl.origin,'https://www.youtube-nocookie.com');
+assert.equal(ytFrame.onload, undefined, 'Do not gate API attachment on iframe load');
 assert.equal(ytUrl.pathname,'/embed/dQw4w9WgXcQ');
 assert.equal(ytUrl.searchParams.get('enablejsapi'),'1');
 assert.equal(ytUrl.searchParams.get('origin'),location.origin);
