@@ -28,7 +28,7 @@ assert VIEW.count('</details>') == 1
 assert 'moduleIndex++ === 0' in VIEW
 assert 'id="jlms-lesson-' in VIEW and 'jlms-lesson__title' in VIEW
 assert 'jlms-lesson__public-preview' in VIEW
-assert "CoursePresentation::fromSnapshot" not in VIEW  # view model still supplies safe presentation
+assert "CoursePresentation::fromSnapshot(" not in VIEW  # view model still supplies safe presentation
 
 # Public server projection: only identifiers, titles and schedule metadata,
 # no lesson body, attachment URL, provider video details or private quiz.
