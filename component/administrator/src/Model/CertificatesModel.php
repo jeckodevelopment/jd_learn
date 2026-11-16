@@ -52,9 +52,12 @@ final class CertificatesModel extends ListModel
             $this->getUserStateFromRequest($this->context . '.filter.' . $name, 'filter_' . $name, '', 'string');
         }
         parent::populateState($ordering, $direction);
-        $limit = (int) $this->getState('list.limit', 20);
+        // populateState() is itself called by getState() until Joomla marks
+        // initialization complete. Calling getState() here causes recursion
+        // and a fatal error when opening the Attestati administrator view.
+        $limit = (int) $this->state->get('list.limit', 20);
         $this->setState('list.limit', $limit === 0 ? 100 : max(1, min(100, $limit)));
-        $this->setState('list.start', max(0, (int) $this->getState('list.start', 0)));
+        $this->setState('list.start', max(0, (int) $this->state->get('list.start', 0)));
     }
 
     private function listing(): array
