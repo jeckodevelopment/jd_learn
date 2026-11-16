@@ -1030,3 +1030,6 @@ runpy.run_path(str(ROOT/'tests/frontend-personal-navigation.py'), run_name='__ma
 
 # FE-07: public pathway cards, accessible ordered sequence and safe artwork.
 runpy.run_path(str(ROOT/'tests/frontend-pathway-layout.py'), run_name='__main__')
+
+# FE-08 native category menu options preserve section-specific ACL projections.
+runpy.run_path(str(ROOT/'tests/frontend-category-sections.py'), run_name='__main__')
