@@ -268,11 +268,18 @@ final class CatalogService
         $q = $this->db->createQuery()->select('id, title')->from('#__jlms_modules')
             ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1000)->loadObjectList('id');
-        $q = $this->db->createQuery()->select('id, module_id, title, kind, required, preview')->from('#__jlms_lessons')
+        $q = $this->db->createQuery()->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')->from('#__jlms_lessons')
             ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
         $lessons = $this->db->setQuery($q, 0, 5000)->loadObjectList();
         $grouped = [];
         foreach ($lessons as $lesson) {
+            // Only publishable programme metadata may appear to anonymous visitors.
+            // Publication windows and enrollment-relative releases are server-authoritative.
+            if (\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
+                $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days
+            ) !== 'available') {
+                continue;
+            }
             $grouped[(int) $lesson->module_id][] = $lesson;
         }
         $query = $this->db->createQuery()->select('*')->from('#__jlms_courses')
