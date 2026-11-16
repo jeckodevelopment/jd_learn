@@ -1794,4 +1794,6 @@ La matrice operativa, con 10 scenari e stato manuale **Da eseguire**, è mantenu
 
 ### FE-12 — Controllo HTTP delle viste pubbliche (CI)
 
+**Evidenza:** PR #528 integrata (merge `48418ddbf4dfa5449a4b8e008a94d64a75c1d224`); [CI 43952710335](https://github.com/jeckodevelopment/jd_learn/actions/runs/43952710335) 4/4 verde; [artefatto](https://github.com/jeckodevelopment/jd_learn/actions/runs/43952710335/artifacts/14269271284) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `f2043d79998e85fe62e2f0930f5c8e965726350029f78c61a7b68427ae7d8650`. Corretto HTTP 404 della vista `teachers` nell'allowlist `DisplayController`; verificati su Joomla disposable le viste `categories`, `pathways`, `teachers`, relativi markup e asset WAM. FE-12 resta aperto: 10 scenari manuali non eseguiti; avanzamento globale 79,56% invariato.
+
 Verificare in `tests/http-smoke.py` che su installazione Joomla disposable siano renderizzate le viste `categories`, `pathways`, `teachers`: radice e contenitore, `h1`, CSS Web Asset Manager, nessuna presenza del contenuto lezioni protetto `SECRET_LESSON_BODY`. Ripetere sul sito di prova con menu SEF, IT/EN, template personalizzato e utenti differenti; un esito automatico verde non registra alcun collaudo manuale.
