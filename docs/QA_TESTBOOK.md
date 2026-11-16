@@ -1656,6 +1656,6 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 4. Simulare un errore audio con connessione interrotta: il messaggio persistente non deve essere nascosto da tentativi successivi finché una risposta server non conferma il salvataggio. Riprovare cambiando posizione e verificare che la conferma sostituisca l'errore.
 5. Verificare i feedback con lettore schermo, tastiera, lingue IT/EN, connessione lenta, timeout, pagina chiusa e account non autorizzato. Nessun salvataggio locale viene spacciato per conferma backend.
 6. Regressioni: lezioni video, quiz, completamento manuale, sidebar, allegati, progressi della dashboard. Verificare che i due messaggi non compaiano nelle lezioni bloccate da finestra o prerequisiti.
-7. CI `tests/frontend-progress-feedback.py`, PHP 8.3/MySQL, PHP 8.4/MariaDB, Chromium e pacchetto installabile; separare collaudo Joomla reale da CI verde.
+7. CI `tests/frontend-progress-feedback.py`, `node tests/frontend-progress-feedback.mjs` (successo/errore simulato e timer), PHP 8.3/MySQL, PHP 8.4/MariaDB, Chromium e pacchetto installabile; separare collaudo Joomla reale da CI verde.
 
 **Accettazione manuale:** pendente, da eseguire sul sito di prova.
