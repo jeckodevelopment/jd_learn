@@ -5,6 +5,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 ?>
 <section id="jlms-dashboard" class="jlms-dashboard jlms-my-courses-view">
+ <?php $currentView = 'mycourses'; require __DIR__ . '/../dashboard/_personal_navigation.php'; ?>
  <header id="jlms-dashboard-header">
   <h1><?= Text::_('COM_JLMS_MY_COURSES') ?></h1>
   <p><?= Text::_('COM_JLMS_DASHBOARD_INTRO') ?></p>

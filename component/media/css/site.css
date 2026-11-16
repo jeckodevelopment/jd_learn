@@ -200,3 +200,21 @@
 #jlms-dashboard .jlms-summary-stats dt { font-size:.9em }
 #jlms-dashboard .jlms-summary-stats dd { font-size:1.35em;font-weight:600;margin:0;font-variant-numeric:tabular-nums }
 #jlms-dashboard #jlms-dashboard-latest { max-width:42rem }
+
+/* FE-06: optional, scoped learner navigation; respects container width and template. */
+.jlms-dashboard .jlms-personal-navigation { margin-block: var(--jlms-space-unit, 1rem); }
+.jlms-dashboard .jlms-personal-navigation__list {
+  display: flex; flex-wrap: wrap; gap: .45rem .65rem; align-items: center;
+  margin: 0; padding: 0; list-style: none;
+}
+.jlms-dashboard .jlms-personal-navigation__item { min-width: 0; }
+.jlms-dashboard :is(.jlms-personal-navigation__link, .jlms-personal-navigation__current) {
+  display: inline-block; padding: .4rem .7rem; border-radius: var(--jlms-radius, .4rem);
+  overflow-wrap: anywhere;
+}
+.jlms-dashboard .jlms-personal-navigation__current {
+  font-weight: 650; border: 1px solid currentColor;
+}
+.jlms-dashboard .jlms-personal-navigation__link:focus-visible {
+  outline: 3px solid var(--jlms-color-primary, currentColor); outline-offset: 2px;
+}

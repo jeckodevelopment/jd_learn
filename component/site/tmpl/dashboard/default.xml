@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metadata><layout title="COM_JLMS_MENU_DASHBOARD_TITLE"><message>COM_JLMS_MENU_DASHBOARD_DESC</message></layout></metadata>
+<metadata>
+ <layout title="COM_JLMS_MENU_DASHBOARD_TITLE"><message>COM_JLMS_MENU_DASHBOARD_DESC</message></layout>
+ <fields name="params">
+  <fieldset name="basic">
+   <field name="show_personal_navigation" type="list" label="COM_JLMS_SHOW_PERSONAL_NAV" description="COM_JLMS_SHOW_PERSONAL_NAV_DESC" default="0" filter="integer">
+    <option value="0">JNO</option>
+    <option value="1">JYES</option>
+   </field>
+  </fieldset>
+ </fields>
+</metadata>
