@@ -115,7 +115,7 @@ try:
  # FE-12: request the real installed Joomla public frontend rather than a static DOM fixture.
  # These tests intentionally do not certify manual responsive/WCAG acceptance.
  for view, root_id, element in (
-     ('categories', 'jlms-categories', 'jlms-category'),
+     ('categories', 'jlms-categories', 'jlms-categories-list'),
      ('pathways', 'jlms-pathways', 'jlms-pathway-grid'),
      ('teachers', 'jlms-teachers', 'jlms-teacher-grid'),
  ):
