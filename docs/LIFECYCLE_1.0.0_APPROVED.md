@@ -26,7 +26,7 @@ Stessi stati e azioni del corso, inclusa archiviazione, storico e protezione del
 
 Consentire pubblicazione/non pubblicazione/cestinazione/ripristino, senza stato Archiviato aggiuntivo. La cessazione dell'attività non elimina l'utente Joomla né i riferimenti storici a corsi/lezioni; l'eliminazione definitiva è vietata se esistono associazioni o registrazioni da preservare.
 
-## Incremento LCM-01 — protezione della fruizione su stato corso
+## Incremento LCM-01 / PR #484 — protezione della fruizione su stato corso
 
 La query condivisa `CatalogService::courseQuery()` richiede ora `c.state = 1` anche per `enrolledCourse()`: i corsi non pubblicati (`0`), archiviati (`2`) o cestinati (`-2`) non possono essere recuperati da `LearningService::authorisedEnrollment()` e dalle chiamate che la utilizzano, comprese aula e mutazioni di completamento. Il catalogo già escludeva i corsi con stato diverso da 1 e le nuove iscrizioni automatiche richiedevano la vista pubblica. Il limite della finestra promozionale (`publish_down`) resta distinto: da solo non interrompe un'iscrizione attiva. I record iscrizione/progresso non vengono modificati dal controllo.
 
