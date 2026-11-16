@@ -12,4 +12,26 @@ certificatePdfExpect(str_contains($pdf, 'Rigoletto'), 'Course title missing');
 $english = CertificatePdf::render(['name' => 'Student', 'course_title' => 'Course', 'serial' => 'XYZ', 'completed_at' => '2026-11-13', 'language' => 'en-GB'], []);
 certificatePdfExpect(str_contains($english, 'Certificate of completion'), 'English fallback missing');
 certificatePdfExpect(str_contains($english, 'November 13, 2026'), 'English date missing');
+foreach (['', 'tomorrow', '2026-02-30', '2026-13-01', '2026-11-13 junk'] as $invalidDate) {
+    try {
+        CertificatePdf::render([
+            'name' => 'Student',
+            'course_title' => 'Course',
+            'serial' => 'XYZ',
+            'completed_at' => $invalidDate,
+            'language' => 'en-GB',
+        ], []);
+        throw new RuntimeException('Invalid completion date accepted: ' . $invalidDate);
+    } catch (RuntimeException $error) {
+        certificatePdfExpect(
+            $error->getMessage() === 'COM_JLMS_CERTIFICATE_RENDER_FAILED',
+            'Unexpected failure for invalid completion date: ' . $invalidDate
+        );
+    }
+}
+$iso = CertificatePdf::render([
+    'name' => 'Student', 'course_title' => 'Course', 'serial' => 'XYZ',
+    'completed_at' => '2026-11-13T12:00:00Z', 'language' => 'en-GB',
+], []);
+certificatePdfExpect(str_contains($iso, 'November 13, 2026'), 'Valid ISO completion date rejected');
 echo "Certificate PDF generation and escaping checks passed\n";
