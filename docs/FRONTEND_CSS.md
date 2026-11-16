@@ -31,6 +31,10 @@ Regola CSS disponibile nel WAM `com_jlms.site`, file `component/media/css/site.c
 
 Verifica automatica: `python3 tests/frontend-css-contract.py`. Validazione manuale obbligatoria nel [QA_TESTBOOK.md](QA_TESTBOOK.md). **Questa è una prima base FE-10, non la chiusura dell'inventario completo di CSS/JS/override** e non implica ancora la nuova UX prevista da [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md).
 
+## FE-05 — I miei attestati (PR #510)
+
+La vista `mycertificates` utilizza la radice `#jlms-my-certificates-view.jlms-dashboard.jlms-my-certificates-view`, la griglia esistente `.jlms-my-course-grid` e le schede `.jlms-card.jlms-my-course`. Il partial `dashboard/_certificates.php` viene riutilizzato anche da `dashboard/default.php`, senza duplicazione di ID per schede ripetute. WAM `com_jlms.site`, nessun JS richiesto. Le regole `.jlms-card` sono estese alla nuova radice senza alterare gli override esistenti. Override nativo: `templates/NOME/html/com_jlms/mycertificates/default.php`; preservare owner-check sul servizio e link al task privato di download. Menu IT/EN, anonimato, ACL, viewport e override da collaudare in Joomla.
+
 ## FE-01 — Catalogo corsi a griglia e opzioni menu
 
 La vista `courses` usa la radice `#jlms-courses` (`.jlms-catalog`) e un contenitore CSS nominato `jlms-catalog`. La griglia `#jlms-course-grid.jlms-course-grid`, esclusa la variante legacy `.jlms-course-grid--list`, distribuisce le schede su tre, due o una colonna in base alla **larghezza del contenitore**, con fallback media query per browser privi di container queries. La variante legacy elenco non viene eliminata in FE-01 per evitare regressioni, ma la modalità predefinita rimane la griglia.

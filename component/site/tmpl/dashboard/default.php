@@ -16,16 +16,9 @@ use Joomla\CMS\HTML\HTMLHelper;
  <?php require __DIR__ . '/_courses.php'; ?>
  <?php if ($this->certificates) : ?>
  <section id="jlms-my-certificates" class="jlms-dashboard-group"><h2><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></h2>
-  <div class="jlms-my-course-grid"><?php foreach ($this->certificates as $certificate) : ?>
-   <article class="jlms-card jlms-my-course"><h3><?= $this->escape($certificate['title']) ?></h3>
-    <p><?= Text::_('COM_JLMS_CERTIFICATE_ISSUED') ?>: <?= $this->escape($certificate['issued_at']) ?></p>
-    <p><?= Text::_('COM_JLMS_CERTIFICATE_CODE') ?>: <?= $this->escape($certificate['serial']) ?></p>
-    <?php if ($certificate['status'] === 'ready' || $certificate['status'] === 'pending_render') : ?>
-     <a class="jlms-my-course__action" href="<?= Route::_('index.php?option=com_jlms&task=certificate.download&enrollment_id=' . (int) $certificate['enrollment_id']) ?>"><?= Text::_('COM_JLMS_CERTIFICATE_DOWNLOAD') ?></a>
-    <?php endif; ?>
-   </article>
-  <?php endforeach; ?></div>
+  <?php $certificates = $this->certificates; require __DIR__ . '/_certificates.php'; ?>
  </section><?php endif; ?>
+ <a id="jlms-dashboard-my-certificates-link" href="<?= Route::_('index.php?option=com_jlms&view=mycertificates') ?>"><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></a>
  <section id="jlms-course-announcement-preferences" class="jlms-dashboard-group" aria-labelledby="jlms-course-announcement-title">
   <h2 id="jlms-course-announcement-title"><?= Text::_('COM_JLMS_MAIL_CONSENT_HEADING') ?></h2>
   <p><?= Text::_('COM_JLMS_MAIL_CONSENT_EXPLANATION') ?></p>

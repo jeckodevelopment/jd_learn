@@ -1,3 +1,18 @@
+## FE-05 — I miei attestati, vista privata autonoma (collaudo Joomla pendente)
+
+1. In Joomla creare una voce menu JD Learn → **I miei attestati** per IT e EN, accessibile solo agli utenti registrati; verificare SEF, breadcrumb e template override.
+2. Con un utente autenticato senza attestati verificare lo stato vuoto localizzato; con uno o più attestati verificare titolo, data, seriale, ordine e download.
+3. Verificare direttamente `index.php?option=com_jlms&view=mycertificates` come anonimo: nessun titolo, codice, elenco né dato personale deve essere esposto; la risposta deve negare l'accesso.
+4. Con due utenti, verificare che ciascuno veda esclusivamente i propri attestati; provare la sostituzione dell'`enrollment_id` nel link PDF e il download anonimo: accesso rifiutato.
+5. Verificare che gli attestati revocati non compaiano; testare `ready` e `pending_render`, e lo storico dei corsi archiviati, non pubblicati o cestinati.
+6. Verificare privacy `Cache-Control: private, no-store`, `X-Robots-Tag: noindex, nofollow`, meta robots, mobile, tastiera e browser back.
+7. Verificare che la dashboard precedente continui a mostrare gli attestati senza duplicazione della logica di rendering e che **I miei corsi** mantenga filtri e paginazione.
+8. Verificare installazione pulita e aggiornamento del pacchetto, menu IT/EN e sostituzioni dei template Joomla.
+
+**Automazione:** `tests/frontend-mycertificates.py` verifica il routing, il servizio proprietario, gli header, i template e le traduzioni. Non è una prova di autorizzazione runtime: **collaudo manuale pendente**.
+
+---
+
 ## LCM-01 — attestati storici di corsi ritirati, archiviati e cestinati
 
 1. Emissione su corso regolarmente completato: annotare codice, data, titolo, versione, documento e hash del PDF; verificare download privato da area studente.
