@@ -103,7 +103,10 @@ final class CertificateService
                 ->where('e.id = :enrollment')->where('e.user_id = :user')->where('e.completed_at IS NOT NULL')
                 ->bind(':document', $documentId, ParameterType::INTEGER)->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
                 ->bind(':user', $userId, ParameterType::INTEGER);
-            $current = $this->db->setQuery((string) $locked . ' FOR UPDATE')->loadObject();
+            // Keep the original bound placeholders when appending the row lock.
+            // Passing a SQL string to the driver here discards the query bindings.
+            $locked->setQuery((string) $locked . ' FOR UPDATE');
+            $current = $this->db->setQuery($locked)->loadObject();
             if (!$current) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
             if ($current->status !== 'pending_render') {
                 $this->db->transactionCommit(); $started = false;
