@@ -1476,3 +1476,14 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 6. Eseguire **backup e ripristino** DB + storage privato su ambiente separato; controllare download, audit e blob storici con SHA-256 prima e dopo. Questo ultimo gate richiede prova operativa e non è soddisfatto dalla CI.
 
 **Esito:** da eseguire sul sito di collaudo. Test automatizzati non equivalgono ad accettazione Joomla.
+
+
+## Regressione PR #475 — Errore HTTP 500 nella vista Attestati
+
+1. Su Joomla di prova, come amministratore con permesso di gestione attestati, aprire **JD Learn → Attestati** senza filtri. La vista deve caricarsi senza HTTP 500, anche con elenco vuoto.
+2. Cercare uno studente, filtrare per `ready` e `revoked`, azzerare filtri, ordinare le colonne e cambiare limite/pagina. Ogni azione deve mantenere il corretto risultato e non generare eccezioni.
+3. Ripetere con un utente senza `jlms.certificates.manage`: l'accesso deve essere negato senza esporre snapshot o PDF.
+4. Aprire il dettaglio e scaricare un documento già disponibile; la correzione non deve cambiare i permessi, gli audit, i dati e le funzioni di rigenerazione appena introdotte.
+5. Verificare dopo l'upgrade che non siano andate perse emissioni, impostazioni, dati e permessi. CI include un nuovo accesso HTTP reale con login alla vista Attestati; la convalida manuale è separata.
+
+**Esito:** non eseguito sul sito Joomla dell'utente. L'errore originale era mascherato dal generico `COM_JLMS_SAVE_FAILED`.

@@ -983,3 +983,11 @@ for locale in ('it-IT', 'en-GB'):
     t = (ROOT / 'component/administrator/language' / locale / 'com_jlms.ini').read_text()
     assert 'COM_JLMS_CERTIFICATE_REGENERATE=' in t
     assert 'COM_JLMS_CERTIFICATE_REVISION_CONFLICT=' in t
+
+
+# PR #475 regression: never call getState() from inside Joomla populateState().
+cert_model = (ROOT / 'component/administrator/src/Model/CertificatesModel.php').read_text()
+cert_populate = cert_model.split('protected function populateState(', 1)[1].split('private function listing(', 1)[0]
+assert '$this->getState(' not in cert_populate, 'Certificate populateState recursion reintroduced'
+assert "$this->state->get('list.limit'" in cert_populate
+assert "$this->state->get('list.start'" in cert_populate

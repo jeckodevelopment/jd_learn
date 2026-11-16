@@ -2,6 +2,8 @@
 
 ## 0.57.7-dev
 
+- Fix post-PR #475: corretto HTTP 500 nell'apertura backend **JD Learn → Attestati**. `CertificatesModel::populateState()` usava `getState()` e reinnescava l'inizializzazione Joomla ricorsivamente; ora legge `state->get()` direttamente. Aggiunti controllo anti-regressione e test HTTP autenticato di apertura/filtri della vista. Accettazione sul sito Joomla ancora da verificare.
+
 - CERT-08 / PR #477: rigenerazione amministrativa protetta del PDF dagli snapshot originali, con conferma, motivo obbligatorio, confronto revisione, sostituzione atomica dello storage privato e audit transazionale; invariati codice, identità, data e documenti. Casi QA di sicurezza, concorrenza e backup/ripristino da accettare su Joomla.
 
 
