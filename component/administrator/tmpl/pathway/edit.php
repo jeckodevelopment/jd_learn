@@ -12,6 +12,7 @@ HTMLHelper::_('behavior.formvalidator');
  <section id="jlms-pathway-editor">
   <p><?= Text::_('COM_JLMS_PATHWAY_NOTICE') ?></p>
   <?= $this->form->renderFieldset('details') ?>
+  <?= $this->form->renderFieldset('artwork') ?>
   <fieldset><legend><?= Text::_('COM_JLMS_PATHWAY_COURSES') ?></legend><?= $this->form->renderFieldset('courses') ?></fieldset>
  </section>
  <input type="hidden" name="task" value=""><?= HTMLHelper::_('form.token') ?>
