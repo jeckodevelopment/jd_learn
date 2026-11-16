@@ -22,7 +22,9 @@ Riferimenti vincolanti: [specifica email approvata](MAIL_TEMPLATES_1.0.0_APPROVE
 
 ## Gestione ciclo di vita approvata il 15 novembre 2026
 
-Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di iscrizioni/fruizione e conservazione dello storico, cestinazione/ripristino di corsi, percorsi e docenti, eliminazione fisica soltanto quando non esistono utenti collegati o dipendenze storiche. Distinguere l'archiviazione editoriale già presente dal nuovo blocco degli accessi. **LCM-01 (P0), LCM-02/03/04 (P1), LCM-05 (gate)**; specifica e collaudi in [LIFECYCLE_1.0.0_APPROVED.md](LIFECYCLE_1.0.0_APPROVED.md). I requisiti nuovi non sono considerati implementati fino a evidenza runtime; stima globale invariata per la sola formalizzazione.
+Inclusa nella 1.0.0: archiviazione didattica di corsi e percorsi con blocco di iscrizioni/fruizione e conservazione dello storico, cestinazione/ripristino di corsi, percorsi e docenti, eliminazione fisica soltanto quando non esistono utenti collegati o dipendenze storiche. Distinguere l'archiviazione editoriale già presente dal nuovo blocco degli accessi. **LCM-01 (P0: primo gate fruizione PR #484, restanti controlli aperti), LCM-02/03/04 (P1), LCM-05 (gate)**; specifica e collaudi in [LIFECYCLE_1.0.0_APPROVED.md](LIFECYCLE_1.0.0_APPROVED.md). I requisiti nuovi non sono considerati implementati fino a evidenza runtime; stima globale invariata per la sola formalizzazione.
+
+**LCM-01 primo incremento:** `CatalogService::enrolledCourse()` non consente più accesso con stato corso diverso da pubblicato; test di integrazione su stati `0/2/-2` e archivio aggiornati, insieme alla verifica che le finestre promozionali non revocano da sole una frequenza esistente. Non chiudere LCM-01 finché i percorsi laterali, storico e attestati non sono verificati, e non confondere la CI con l'accettazione Joomla.
 
 ## Backlog operativo e dipendenze
 

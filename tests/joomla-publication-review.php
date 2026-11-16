@@ -93,7 +93,8 @@ $row=$db->setQuery('SELECT state,current_version_id FROM #__jlms_courses WHERE i
 $expect((int)$row->state===2&&(int)$row->current_version_id===$version&&$stage()==='JARCHIVED','archive hides discovery without changing the live version');
 try{$component->getCatalogService()->course($guest,'en-GB',$course);throw new RuntimeException('Archived course remained in the public catalog');}
 catch(RuntimeException $e){$expect($e->getCode()===404,'archived course is hidden from new catalog visits');}
-$expect((int)$component->getCatalogService()->enrolledCourse($guest,'en-GB',$course)->id===$course,'archived course remains addressable for an existing enrollment');
+try{$component->getCatalogService()->enrolledCourse($guest,'en-GB',$course);throw new RuntimeException('Archived course remained accessible for enrolled classroom');}
+catch(RuntimeException $e){$expect($e->getCode()===404,'archived course denies classroom lookup while retaining its immutable published version');}
 $restoreChoices=$publication->transitions($actor,$course,$version);
 $restore=null;foreach($restoreChoices as $candidate){$options=new Registry($candidate->options);if($options->get('jlms_action')==='restore')$restore=$candidate;}
 $expect($restore!==null,'archived course offers an explicit restore transition');

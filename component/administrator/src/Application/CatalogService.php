@@ -150,7 +150,7 @@ final class CatalogService
             'content_allowed' => $contentAllowed, 'access_requirements_met' => $catalogVisible && $contentAllowed];
     }
 
-    /** Availability for an existing enrollment is independent of catalog publication. */
+    /** Existing enrollment ignores promotional windows, never the course lifecycle state. */
     private function courseQuery(User $actor, string $language, int $categoryId, bool $forEnrolledLearner)
     {
         if ((int) $actor->id) {
@@ -163,10 +163,13 @@ final class CatalogService
             ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.current_version_id AND v.course_id = c.id')
             ->where('v.status = :status')->where('cat.extension = :extension')
-            ->whereIn('cat.access', $levels)
+            // Lifecycle LCM-01: a withdrawn, archived or trashed course cannot
+            // deliver lessons to existing enrollments, even at direct URLs.
+            // Preserve historic enrollments separately in the learner dashboard.
+            ->where('c.state = 1')->whereIn('cat.access', $levels)
             ->where('cat.published = 1')->where('(c.language = :allLanguage OR c.language = :language)');
         if (!$forEnrolledLearner) {
-            $q->where('c.state = 1')->whereIn('c.catalog_access', $levels)
+            $q->whereIn('c.catalog_access', $levels)
                 ->where('(c.publish_up IS NULL OR c.publish_up <= :nowUp)')
                 ->where('(c.publish_down IS NULL OR c.publish_down > :nowDown)');
         }
@@ -196,7 +199,7 @@ final class CatalogService
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
-    /** A current enrollment can outlive catalog visibility, but not taxonomy or content ACL. */
+    /** An enrolled learner may outlive promotional windows, not withdrawal/archive/trash or ACL. */
     public function enrolledCourse(User $actor, string $language, int $id): object
     {
         $q = $this->courseQuery($actor, $language, 0, true)->where('c.id = :course')->bind(':course', $id, ParameterType::INTEGER);

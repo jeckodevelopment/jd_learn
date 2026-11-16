@@ -136,11 +136,17 @@ videoDenied(fn()=>$service->playback(new \Joomla\CMS\User\User(),'en-GB',$enroll
 videoDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lesson,bin2hex(random_bytes(16))),403,'manual completion cannot bypass video');
 $view=$learning->classroom($student,'en-GB',$enrollment,$lesson);
 videoExpect($view['lesson']->kind==='video' && !isset($view['lesson']->source_json),'classroom never exposes reference');
-// Course catalog withdrawal and publication end do not expire an existing video enrollment.
-videoFixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>0,'publish_down'=>'2000-01-01 00:00:00']);
-[, , , $withdrawnVideo]=$learning->videoContext($student,'en-GB',$enrollment,$lesson);
-videoExpect($withdrawnVideo->access_expires_at===null,'course publication end is not a playback deadline');
-videoDenied(fn()=>$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16))),404,'withdrawn course rejects a new learner');
+// LCM-01: withdrawal, archive and trash stop existing video access without
+// deleting progress. A promotional end date alone is not a teaching deadline.
+foreach ([0,2,-2] as $blockedState) {
+ videoFixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>$blockedState,'publish_down'=>'2000-01-01 00:00:00']);
+ videoDenied(fn()=>$learning->videoContext($student,'en-GB',$enrollment,$lesson),404,'inactive course rejects direct video context');
+ videoDenied(fn()=>$service->playback($student,'en-GB',$enrollment,$lesson,true),404,'inactive course rejects video playback');
+ videoDenied(fn()=>$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16))),404,'inactive course rejects a new learner');
+}
+videoFixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>1,'publish_down'=>'2000-01-01 00:00:00']);
+[, , , $availableVideo]=$learning->videoContext($student,'en-GB',$enrollment,$lesson);
+videoExpect($availableVideo->access_expires_at===null,'promotional end date alone is not a playback deadline');
 $a=$service->playback($student,'en-GB',$enrollment,$lesson,true);
 $expiredSession=(object)['id'=>$a['session_id'],'expires_at'=>gmdate('Y-m-d H:i:s',time()-3600)];
 $db->updateObject('#__jlms_progress_sessions',$expiredSession,'id');

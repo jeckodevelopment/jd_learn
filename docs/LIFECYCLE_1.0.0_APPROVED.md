@@ -1,6 +1,6 @@
 # Ciclo di vita di corsi, percorsi e docenti — requisiti approvati 1.0.0
 
-Decisione funzionale del 15 novembre 2026. Stato: **requisiti approvati, implementazione e collaudo pendenti**. La presenza di un workflow editoriale di archiviazione in JD Learn **non** equivale al blocco della fruizione già acquisita; verificare entrambi separatamente.
+Decisione funzionale del 15 novembre 2026. Stato: **requisiti approvati; LCM-01 in implementazione incrementale, collaudo Joomla pendente**. La presenza di un workflow editoriale di archiviazione in JD Learn **non** equivale al blocco della fruizione già acquisita; verificare entrambi separatamente.
 
 ## Regole generali
 
@@ -25,6 +25,12 @@ Stessi stati e azioni del corso, inclusa archiviazione, storico e protezione del
 ## Docenti
 
 Consentire pubblicazione/non pubblicazione/cestinazione/ripristino, senza stato Archiviato aggiuntivo. La cessazione dell'attività non elimina l'utente Joomla né i riferimenti storici a corsi/lezioni; l'eliminazione definitiva è vietata se esistono associazioni o registrazioni da preservare.
+
+## Incremento LCM-01 / PR #484 — protezione della fruizione su stato corso
+
+La query condivisa `CatalogService::courseQuery()` richiede ora `c.state = 1` anche per `enrolledCourse()`: i corsi non pubblicati (`0`), archiviati (`2`) o cestinati (`-2`) non possono essere recuperati da `LearningService::authorisedEnrollment()` e dalle chiamate che la utilizzano, comprese aula e mutazioni di completamento. Il catalogo già escludeva i corsi con stato diverso da 1 e le nuove iscrizioni automatiche richiedevano la vista pubblica. Il limite della finestra promozionale (`publish_down`) resta distinto: da solo non interrompe un'iscrizione attiva. I record iscrizione/progresso non vengono modificati dal controllo.
+
+**Limiti:** non equivale al completamento di LCM-01: vanno ancora ricontrollati tutti i flussi laterali, transizioni concorrenti, download, player, notifiche, migrazioni, storico/attestati e accessi per URL diretti in Joomla. Le azioni toolbar, ripristino controllato e protezione delle eliminazioni restano LCM-02 e successivi. Non attribuire accettazione prima dei test manuali.
 
 ## Piano di implementazione separabile
 
