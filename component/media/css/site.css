@@ -156,3 +156,35 @@
     #jlms-classroom-outline { position: static; }
   }
 }
+
+/* FE-04: manual, non-mutating adjacent lesson navigation. */
+#jlms-classroom .jlms-lesson-navigation {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(.75rem, 2vw, 1.25rem);
+  margin-block: clamp(1.25rem, 3vw, 2rem);
+}
+#jlms-classroom .jlms-lesson-navigation__item { min-width: 0; }
+#jlms-classroom .jlms-lesson-navigation__item--next { text-align: end; }
+#jlms-classroom .jlms-lesson-navigation__link,
+#jlms-classroom .jlms-lesson-navigation__unavailable {
+  display: grid; gap: .25rem; padding: .8rem 1rem;
+  border: 1px solid currentColor; border-radius: var(--jlms-radius);
+  overflow-wrap: anywhere;
+}
+#jlms-classroom .jlms-lesson-navigation__label { font-size: .875em; }
+#jlms-classroom .jlms-lesson-navigation__title { font-weight: 600; }
+#jlms-classroom .jlms-lesson-navigation__unavailable { opacity: .65; }
+#jlms-classroom .jlms-lesson-navigation__reason { font-size: .875em; }
+#jlms-classroom .jlms-lesson-navigation__link:focus-visible {
+  outline: 3px solid var(--jlms-color-primary); outline-offset: 3px;
+}
+@container jlms-classroom (max-width: 34rem) {
+  #jlms-classroom .jlms-lesson-navigation { grid-template-columns: minmax(0, 1fr); }
+  #jlms-classroom .jlms-lesson-navigation__item--next { text-align: start; }
+}
+@supports not (container-type: inline-size) {
+  @media (max-width: 36rem) {
+    #jlms-classroom .jlms-lesson-navigation { grid-template-columns: minmax(0, 1fr); }
+    #jlms-classroom .jlms-lesson-navigation__item--next { text-align: start; }
+  }
+}
