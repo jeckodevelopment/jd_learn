@@ -21,14 +21,22 @@ def archive(entries):
             z.writestr(info,data)
     return out.getvalue()
 def tree(folder):return [(p.relative_to(folder).as_posix(),p.read_bytes()) for p in folder.rglob('*') if p.is_file()]
-# Stamp the WAM version in the INSTALLABLE component from the package version.
-# The source asset registry can lag between releases; never ship stale query
-# versions for video-metadata.js, video.js or the provider module imports.
+# Version the installed WAM assets by package AND content: development builds
+# may retain the same semantic version across several PRs. The fingerprint also
+# covers provider modules imported dynamically with the WAM script query string.
+asset_sources=[(name,data) for name,data in tree(ROOT/'component/media')
+               if name!='joomla.asset.json']
+for key in ('youtube','vimeo','cloudflarestream','html5'):
+    asset_sources += [(key+'/'+name,data) for name,data in tree(ROOT/'plugins/jlmsvideo'/key/'media')]
+asset_digest=hashlib.sha256()
+for name,data in sorted(asset_sources):
+    asset_digest.update(name.encode('utf-8')+b'\0'+data+b'\0')
+asset_version=OUTPUT_VERSION+'-'+asset_digest.hexdigest()[:12]
 component_entries=[]
 for name,data in tree(ROOT/'component'):
     if name == 'media/joomla.asset.json':
         assets=json.loads(data.decode('utf-8'))
-        assets['version']=OUTPUT_VERSION
+        assets['version']=asset_version
         data=(json.dumps(assets,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
     component_entries.append((name,data))
 parts=[('constituents/lib_jlms.zip',archive(tree(ROOT/'libraries/jlms'))),('constituents/com_jlms.zip',archive(component_entries))]
