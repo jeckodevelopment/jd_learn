@@ -4,7 +4,9 @@
 
 **Evidenza automatica post-merge:** PR #526 integrata (merge `fe32457f939c32a439d75192f65074b1dc960c24`); [CI 43946500653](https://github.com/jeckodevelopment/jd_learn/actions/runs/43946500653) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43946500653/artifacts/14264109572) contenente `pkg_jlms-0.57.7-dev.zip`, SHA-256 `2e318ed0ed11870a2bad26e3307dd593e9d626adf790b8390a0980824a2132a2`. **FE-12 non accettato manualmente:** i 10 scenari sono ancora da eseguire. Stima globale di riferimento 79,56% invariata.
 
-## Copertura HTTP aggiuntiva in corso
+## Copertura HTTP aggiuntiva integrata
+
+**Evidenza post-merge:** PR #528 integrata (merge `48418ddbf4dfa5449a4b8e008a94d64a75c1d224`); [CI 43952710335](https://github.com/jeckodevelopment/jd_learn/actions/runs/43952710335) 4/4 verde; [artefatto](https://github.com/jeckodevelopment/jd_learn/actions/runs/43952710335/artifacts/14269271284) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `f2043d79998e85fe62e2f0930f5c8e965726350029f78c61a7b68427ae7d8650`. Corretto HTTP 404 della vista `teachers` nell'allowlist `DisplayController`; verificati su Joomla disposable le viste `categories`, `pathways`, `teachers`, relativi markup e asset WAM. FE-12 resta aperto: 10 scenari manuali non eseguiti; avanzamento globale 79,56% invariato.
 
 Il test HTTP ha identificato un 404 della directory `teachers` causato dalla sua assenza nell'allowlist del controller `DisplayController`, nonostante la registrazione nel router. La PR ripristina l'accesso pubblico, verificato nel gate HTTP Joomla e nel contratto FE-09. Resta da collaudare con profili pubblicati, ruoli, categorie e lingue nel sito di prova.
 
