@@ -53,15 +53,17 @@ final class DashboardService
             $tag = $row->language === '*' ? $uiLanguage : (string) $row->language;
             $state = $row->completed_at !== null ? 'completed' : (($row->started_at !== null || $row->last_activity_at !== null || (int) $row->completed_total > 0) ? 'in_progress' : 'not_started');
             $reason = 'available';
-            $rules = null;
+            // Historical teaching mode belongs to the immutable enrolled version,
+            // not the current catalog: keep consultation progress inapplicable
+            // even when the course has been unpublished, archived or trashed.
+            try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $row->rules_json); }
+            catch (\DomainException) { $rules = null; }
             if (!isset($languages[$tag])) { $reason = 'language'; }
             elseif (!isset($visible[$tag][(int) $row->course_id])) { $reason = 'unavailable'; }
             elseif (!in_array((int) $visible[$tag][(int) $row->course_id]->content_access, $levels, true)) { $reason = 'access'; }
             elseif (!in_array($row->status, ['active', 'completed'], true)) { $reason = in_array($row->status, ['suspended', 'expired', 'cancelled'], true) ? $row->status : 'pending'; }
             elseif ($row->version_status !== 'published' || $row->edition_status !== 'open') { $reason = 'unavailable'; }
             else {
-                try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $row->rules_json); }
-                catch (\DomainException) { $rules = null; }
                 if ($rules === null) { $reason = 'unavailable'; }
                 elseif (($row->starts_at !== null && $row->starts_at > $now) || ($row->edition_starts_at !== null && $row->edition_starts_at > $now)) { $reason = 'not_open'; }
                 elseif (($row->ends_at !== null && $row->ends_at <= $now) || ($row->edition_ends_at !== null && $row->edition_ends_at <= $now)) { $reason = 'expired'; }
