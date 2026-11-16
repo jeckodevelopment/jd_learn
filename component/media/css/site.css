@@ -139,7 +139,8 @@
 #jlms-classroom .jlms-classroom-module ol { padding-inline-start: 1.35rem; margin-block: .5rem 1rem; }
 #jlms-classroom .jlms-classroom-lesson { overflow-wrap: anywhere; }
 #jlms-classroom #jlms-lesson-content { min-width: 0; }
-#jlms-classroom #jlms-lesson-body { max-width: 75ch; line-height: 1.65; }
+#jlms-classroom #jlms-lesson-body { line-height: 1.65; }
+#jlms-classroom #jlms-lesson-body :is(p, ul, ol, blockquote) { max-width: 75ch; }
 #jlms-classroom #jlms-lesson-body :is(img, iframe, video, table) { max-width: 100%; }
 #jlms-classroom #jlms-lesson-body table { display: block; overflow-x: auto; }
 @container jlms-classroom (max-width: 48rem) {
