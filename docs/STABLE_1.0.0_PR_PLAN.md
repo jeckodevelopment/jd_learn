@@ -10,7 +10,7 @@
 4. Distinguere **implementato**, **CI verificata** e **accettato manualmente**. Non attribuire aumenti percentuali alle PR soltanto documentali o a bug fix non incrementali.
 5. README = presentazione/stato sintetico; CHANGELOG = modifiche versionate senza duplicati; IMPLEMENTATION_STATUS = percentuali e copertura; QA_TESTBOOK = collaudi; IMPLEMENTATION_HISTORY = evidenze storiche. Non duplicare registri PR in README e piano.
 
-**AUT-03 — avvisi facoltativi sulle trascrizioni (PR in verifica):** il preflight segnala l'assenza di una trascrizione editoriale nelle lezioni audio e video, senza bloccare la pubblicazione. Il controllo legge `params_json`, interpreta correttamente testo HTML vuoto e deduplica gli avvisi. Non verifica automaticamente i sottotitoli/caption forniti da YouTube, Vimeo, Cloudflare Stream o HTML5. Test unitari e IT/EN inclusi; collaudo Joomla pendente. Avanzamento globale di riferimento 79,56% invariato.
+**AUT-03 — avvisi trascrizioni integrati:** PR #530 integrata (merge `771b6cd71a1c4dc07d4202c90d57dd4c140a6cab`), [CI 43955475409](https://github.com/jeckodevelopment/jd_learn/actions/runs/43955475409) 4/4 verde, [pacchetto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43955475409/artifacts/14271932231) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `6421b61d36d8c6b245538474f8747bad434b665d62da3183ccaa0bb6ec3f813c`. **Collaudo manuale Joomla ancora da eseguire**; riferimento globale 79,56% invariato. L'assenza della trascrizione editoriale audio/video compare nel preflight come avviso non bloccante, senza dedurre le caption esterne.
 
 ## Perimetro approvato della 1.0.0
 
