@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Jlms\Component\Jlms\Site\View\Courses;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Language\Text;
+use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -23,23 +24,31 @@ public string $difficulty = '';
     public int $pathwayId = 0;
     public array $teachers = [];
     public array $pathways = [];
+    public bool $showFilters = true;
+    public bool $showOrder = true;
+    public bool $showCover = true;
+    public bool $showSummary = true;
 
     public function display($tpl = null)
     {
+        $this->showFilters = CatalogOptions::enabled('catalog_show_filters');
+        $this->showOrder = $this->showFilters && CatalogOptions::enabled('catalog_show_order');
+        $this->showCover = CatalogOptions::enabled('catalog_show_cover');
+        $this->showSummary = CatalogOptions::enabled('catalog_show_summary');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
         $this->search = $this->getModel()->getSearch();
         $this->order = $this->getModel()->getOrder();
         $this->tagId = $this->getModel()->getTagId();
-        $this->tags = $this->getModel()->getTags();
+        $this->tags = $this->showFilters ? $this->getModel()->getTags() : [];
 $this->difficulty = $this->getModel()->getDifficulty();
         $this->duration = $this->getModel()->getDuration();
         $this->layout = $this->getModel()->getLayout();
         $this->teacherId = $this->getModel()->getTeacherId();
         $this->pathwayId = $this->getModel()->getPathwayId();
-        $this->teachers = $this->getModel()->getTeachers();
-        $this->pathways = $this->getModel()->getPathways();
+        $this->teachers = $this->showFilters ? $this->getModel()->getTeachers() : [];
+        $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
         if ($this->get('Errors')) {
             throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
         }

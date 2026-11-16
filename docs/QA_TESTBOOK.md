@@ -1580,3 +1580,17 @@ Aprire come ospite la vista frontend di un corso pubblicato e visibile nel catal
 6. Per lo sviluppo: eseguire `python3 tests/frontend-css-contract.py` e `python3 tests/frontend-contract-hooks.py`; cambiare intenzionalmente un ID nel markup in branch di prova e verificare che il gate fallisca, quindi ripristinarlo.
 
 **Esito:** collaudo manuale Joomla non eseguito; l'inventario e i test statici verificano la struttura sorgente, non l'interazione browser.
+
+
+## FE-01 — Catalogo corsi responsive e opzioni della voce menu Joomla
+
+1. In **Componenti → JD Learn → Opzioni** configurare ricerca Sì e 12 corsi per pagina. Creare due voci di menu di tipo **Catalogo corsi**: nella prima ereditare i parametri, nella seconda impostare **Mostra ricerca e filtri = No**, **Corsi per pagina = 6**. Verificare che il primo catalogo mostri la ricerca e il secondo solo le schede, mantenendo paginazione e accessi.
+2. Modificare il valore globale della ricerca a No; verificare ereditarietà e override locale Sì. Verificare che **Globale**, **Sì** e **No** si distinguano anche dopo salvataggio e upgrade, in entrambe le lingue.
+3. Con ricerca disabilitata visitare l'URL con `filter[search]`, `filter[teacher_id]`, `filter[tag_id]`, `filter[layout]` e `filter[order]`: i parametri non devono modificare il risultato né riattivare la modalità elenco; un eventuale filtro server `catid` previsto deve rimanere applicato.
+4. Attivare/disattivare copertina e descrizione breve per voce menu. Prove con corso dotato di immagine e senza immagine; nessuna immagine esterna forzata, testo alternativo conforme, nessun documento/URL di video protetto esposto nel sorgente.
+5. Verificare l'ordinamento predefinito (più recenti / titolo) e il controllo di ordinamento visibile/nascosto. Verificare paginazione per 6, 9, 12 e 24 elementi, e links corretti con SEF attivo e disattivo.
+6. Confrontare template desktop largo e stretto (colonne/moduli laterali), smartphone, zoom 200%, tastiera, focus, lingua IT/EN e override Joomla esistenti; nessuna quarta o quinta colonna, testo leggibile e assenza di scroll orizzontale.
+7. Verificare la variante elenco già esistente come regressione e provare guest, utente autenticato, corso riservato, categorie non pubblicate e finestra promozionale scaduta. ACL e filtri di pubblicazione devono rimanere autorevoli lato server.
+8. Eseguire `python3 tests/frontend-catalog-options.py`, `python3 tests/frontend-css-contract.py` e CI completa; installare il pacchetto finale su Joomla di prova.
+
+**Esito:** manuale non eseguito; il test statico e la CI non equivalgono all'accettazione Joomla.

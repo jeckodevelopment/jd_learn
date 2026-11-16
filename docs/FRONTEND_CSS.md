@@ -31,6 +31,16 @@ Regola CSS disponibile nel WAM `com_jlms.site`, file `component/media/css/site.c
 
 Verifica automatica: `python3 tests/frontend-css-contract.py`. Validazione manuale obbligatoria nel [QA_TESTBOOK.md](QA_TESTBOOK.md). **Questa è una prima base FE-10, non la chiusura dell'inventario completo di CSS/JS/override** e non implica ancora la nuova UX prevista da [FRONTEND_UX_SPECIFICATION.md](FRONTEND_UX_SPECIFICATION.md).
 
+## FE-01 — Catalogo corsi a griglia e opzioni menu
+
+La vista `courses` usa la radice `#jlms-courses` (`.jlms-catalog`) e un contenitore CSS nominato `jlms-catalog`. La griglia `#jlms-course-grid.jlms-course-grid`, esclusa la variante legacy `.jlms-course-grid--list`, distribuisce le schede su tre, due o una colonna in base alla **larghezza del contenitore**, con fallback media query per browser privi di container queries. La variante legacy elenco non viene eliminata in FE-01 per evitare regressioni, ma la modalità predefinita rimane la griglia.
+
+Ogni card conserva `jlms-course-card-ID`, `.jlms-card.jlms-course-card`, `data-course-id`, `.jlms-course-card__title`, `.jlms-course-card__category` e `.jlms-course-card__summary` quando la descrizione è visibile. Nuove classi: `.jlms-course-card__cover` (immagine con `object-fit:cover` o segnaposto neutro), `.jlms-course-card__cover-placeholder`, `.jlms-course-card__content`, `.jlms-course-card__meta`. I due link alla categoria e al dettaglio non sono annidati. Il contenuto grafico usa il **snapshot di presentazione della versione pubblicata**, senza esporre materiale didattico privato.
+
+Le opzioni `catalog_show_filters`, `catalog_show_order`, `catalog_show_cover`, `catalog_show_summary`, `catalog_page_size` e `catalog_default_order` sono configurabili globalmente in `com_jlms` e sovrascrivibili nella voce menu `courses` (vuoto = eredita; `0` e `1` rispettano anche i valori false). I valori globali predefiniti sono rispettivamente `1,1,1,1,12,recent`. La risoluzione applicativa è in `Site/Helper/CatalogOptions.php`, non in CSS o JavaScript. Con ricerca disattivata il server **ignora i filtri GET** passati artificialmente, mentre un `catid` esplicitamente previsto continua a limitare il catalogo. La paginazione resta attiva. L'ordinamento da GET opera solo con ricerca e controllo ordinamento abilitati; in caso contrario si usa il default configurato.
+
+Override Joomla: `templates/NOME/html/com_jlms/courses/default.php`; mantenere identificativi e controlli server e non rendere nuovamente pubblici metadati protetti. Test statico: `python3 tests/frontend-catalog-options.py`; collaudo reale in [QA_TESTBOOK.md](QA_TESTBOOK.md). Questa tranche **non** modifica scheda corso, categorie o percorsi.
+
 ## Catalogo e scheda corso
 
 | Vista | ID stabili | Classi ripetute |

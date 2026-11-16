@@ -1,2 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metadata><layout title="COM_JLMS_MENU_COURSES_TITLE"><message>COM_JLMS_MENU_COURSES_DESC</message></layout></metadata>
+<metadata>
+ <layout title="COM_JLMS_MENU_COURSES_TITLE"><message>COM_JLMS_MENU_COURSES_DESC</message></layout>
+ <fields name="params">
+  <fieldset name="catalog" label="COM_JLMS_CATALOG_MENU_SETTINGS">
+   <field name="catalog_show_filters" type="list" label="COM_JLMS_CATALOG_SHOW_FILTERS" default="" filter="cmd">
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
+   </field>
+   <field name="catalog_show_order" type="list" label="COM_JLMS_CATALOG_SHOW_ORDER" default="" filter="cmd">
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
+   </field>
+   <field name="catalog_show_cover" type="list" label="COM_JLMS_CATALOG_SHOW_COVER" default="" filter="cmd">
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
+   </field>
+   <field name="catalog_show_summary" type="list" label="COM_JLMS_CATALOG_SHOW_SUMMARY" default="" filter="cmd">
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="1">JYES</option><option value="0">JNO</option>
+   </field>
+   <field name="catalog_page_size" type="list" label="COM_JLMS_CATALOG_PAGE_SIZE" default="" filter="cmd">
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="6">6</option><option value="9">9</option><option value="12">12</option><option value="24">24</option>
+   </field>
+   <field name="catalog_default_order" type="list" label="COM_JLMS_CATALOG_DEFAULT_ORDER" default="" filter="cmd">
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="recent">COM_JLMS_CATALOG_ORDER_RECENT</option><option value="title">COM_JLMS_CATALOG_ORDER_TITLE</option>
+   </field>
+  </fieldset>
+ </fields>
+</metadata>

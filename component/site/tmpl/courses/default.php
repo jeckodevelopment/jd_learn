@@ -5,16 +5,21 @@ declare(strict_types=1);
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 ?>
 <section id="jlms-courses" class="jlms-catalog">
  <header id="jlms-catalog-header"><h1><?= Text::_('COM_JLMS_COURSES') ?></h1><a id="jlms-catalog-categories" href="<?= Route::_('index.php?option=com_jlms&view=categories') ?>"><?= Text::_('COM_JLMS_CATEGORIES') ?></a> <a id="jlms-catalog-pathways" href="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>"><?= Text::_('COM_JLMS_PATHWAYS') ?></a></header>
+ <?php if ($this->showFilters) : ?>
  <form id="jlms-catalog-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . $this->categoryId : '')) ?>">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="courses">
   <?php if ($this->categoryId) : ?><input type="hidden" name="catid" value="<?= $this->categoryId ?>"><?php endif; ?>
   <label for="jlms-catalog-search"><?= Text::_('COM_JLMS_CATALOG_SEARCH') ?></label>
   <input id="jlms-catalog-search" type="search" name="filter[search]" value="<?= $this->escape($this->search) ?>" maxlength="100">
+  <?php if ($this->showOrder) : ?>
   <label for="jlms-catalog-order"><?= Text::_('COM_JLMS_CATALOG_ORDER') ?></label>
   <select id="jlms-catalog-order" name="filter[order]"><option value="recent"<?= $this->order === 'recent' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_RECENT') ?></option><option value="title"<?= $this->order === 'title' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_TITLE') ?></option></select>
+  <?php endif; ?>
   <label for="jlms-catalog-tag"><?= Text::_('COM_JLMS_CATALOG_TAG') ?></label>
   <select id="jlms-catalog-tag" name="filter[tag_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) : ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php endforeach; ?></select>
 <label for="jlms-catalog-difficulty"><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY') ?></label>
@@ -29,13 +34,37 @@ use Joomla\CMS\Router\Route;
   <select id="jlms-catalog-pathway" name="filter[pathway_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) : ?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected' : '' ?>><?= $this->escape($pathway->title) ?></option><?php endforeach; ?></select>
   <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
  </form>
+ <?php endif; ?>
  <?php if ($this->categoryId) : ?><p id="jlms-category-filter"><?= Text::_('COM_JLMS_CATEGORY_FILTER_ACTIVE') ?> <a href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php endif; ?>
  <div id="jlms-course-grid" class="jlms-course-grid<?= $this->layout === 'list' ? ' jlms-course-grid--list' : '' ?>" data-layout="<?= $this->escape($this->layout) ?>">
- <?php foreach ($this->items as $item) : ?>
+ <?php foreach ($this->items as $item) :
+  $presentation = [];
+  try {
+      $presentation = CoursePresentation::fromSnapshot((string) ($item->catalog_presentation_json ?? ''));
+  } catch (\InvalidArgumentException | \JsonException $exception) {
+      // An invalid historical snapshot cannot break the whole catalogue.
+  }
+  $cover = (string) ($presentation['image'] ?? '');
+  $duration = (int) ($presentation['estimated_minutes'] ?? 0);
+ ?>
   <article id="jlms-course-card-<?= (int) $item->id ?>" class="jlms-card jlms-course-card" data-course-id="<?= (int) $item->id ?>">
-   <h2 class="jlms-course-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
-   <a class="jlms-course-card__category" href="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $item->catid) ?>"><?= $this->escape($item->category_title) ?></a>
-   <p class="jlms-course-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr((string) $item->summary, 0, 300)) ?></p>
+   <?php if ($this->showCover) : ?>
+    <div class="jlms-course-card__cover">
+     <?php if ($cover !== '') : ?>
+      <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover)))) ?>" alt="<?= $this->escape((string) ($presentation['image_alt'] ?? '')) ?>" loading="lazy" decoding="async">
+     <?php else : ?><span class="jlms-course-card__cover-placeholder" aria-hidden="true"></span><?php endif; ?>
+    </div>
+   <?php endif; ?>
+   <div class="jlms-course-card__content">
+    <a class="jlms-course-card__category" href="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $item->catid) ?>"><?= $this->escape($item->category_title) ?></a>
+    <h2 class="jlms-course-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
+    <?php if ($this->showSummary && trim((string) $item->summary) !== '') : ?>
+     <p class="jlms-course-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr((string) $item->summary, 0, 300)) ?></p>
+    <?php endif; ?>
+    <?php if ($duration > 0) : ?>
+     <p class="jlms-course-card__meta"><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', $duration) ?></p>
+    <?php endif; ?>
+   </div>
   </article>
  <?php endforeach; ?>
  <?php if (!$this->items) : ?><p id="jlms-catalog-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p><?php endif; ?>
