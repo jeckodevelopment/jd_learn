@@ -275,9 +275,15 @@ final class CatalogService
         foreach ($lessons as $lesson) {
             // Only publishable programme metadata may appear to anonymous visitors.
             // Publication windows and enrollment-relative releases are server-authoritative.
-            if (\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
-                $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days
-            ) !== 'available') {
+            try {
+                $publishable = \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
+                    $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days
+                ) === 'available';
+            } catch (\InvalidArgumentException $exception) {
+                // Fail closed on malformed historical scheduling metadata.
+                $publishable = false;
+            }
+            if (!$publishable) {
                 continue;
             }
             $grouped[(int) $lesson->module_id][] = $lesson;
