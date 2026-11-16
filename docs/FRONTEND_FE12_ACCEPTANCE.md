@@ -4,6 +4,10 @@
 
 **Evidenza automatica post-merge:** PR #526 integrata (merge `fe32457f939c32a439d75192f65074b1dc960c24`); [CI 43946500653](https://github.com/jeckodevelopment/jd_learn/actions/runs/43946500653) 4/4 verde; [artefatto Joomla](https://github.com/jeckodevelopment/jd_learn/actions/runs/43946500653/artifacts/14264109572) contenente `pkg_jlms-0.57.7-dev.zip`, SHA-256 `2e318ed0ed11870a2bad26e3307dd593e9d626adf790b8390a0980824a2132a2`. **FE-12 non accettato manualmente:** i 10 scenari sono ancora da eseguire. Stima globale di riferimento 79,56% invariata.
 
+## Copertura HTTP aggiuntiva in corso
+
+La tranche FE-12 HTTP estende `tests/http-smoke.py` con rendering effettivo delle tre viste pubbliche `categories`, `pathways`, `teachers` sul Joomla disposable installato in CI. Controlla radici DOM, titolo di pagina, stylesheet WAM e assenza della stringa di prova per contenuti di lezioni protette. Non verifica CSS visuale, accessibilità completa, ACL multi-ruolo o template terzi; i dieci esiti manuali restano pendenti.
+
 ## Copertura e limiti
 
 - **Gate strutturale CI:** `python3 tests/frontend-release-gate.py` verifica le viste/menu nativi, traduzioni IT/EN, router, registrazione Web Asset Manager, radici DOM, privacy SEO delle viste personali, alcuni contratti CSS e i test prerequisiti. Rimangono attive le suite Joomla e HTTP già previste dalla CI. Controlli strutturali non dimostrano ACL runtime né correttezza del rendering.
