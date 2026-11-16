@@ -43,6 +43,7 @@ Il pacchetto da installare è il **`pkg_jlms-<versione>-dev.zip` interno**; quan
 |---|---|
 | Stato corrente e lavoro residuo | [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) |
 | Piano delle PR verso la stabile | [STABLE_1.0.0_PR_PLAN.md](docs/STABLE_1.0.0_PR_PLAN.md) |
+| Specifica UX frontend approvata (target) e contratto CSS corrente | [FRONTEND_UX_SPECIFICATION.md](docs/FRONTEND_UX_SPECIFICATION.md) · [FRONTEND_CSS.md](docs/FRONTEND_CSS.md) |
 | Requisiti, tracciabilità e decisioni | [REQUIREMENTS_STATUS.csv](docs/REQUIREMENTS_STATUS.csv) · [REQUIREMENTS_CHANGES.md](docs/REQUIREMENTS_CHANGES.md) |
 | Test e accettazione | [QA_TESTBOOK.md](docs/QA_TESTBOOK.md) |
 | Gate CI e revisione dei merge | [CI_MERGE_REVIEW.md](docs/CI_MERGE_REVIEW.md) |
