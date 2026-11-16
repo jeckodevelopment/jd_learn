@@ -219,6 +219,41 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json' => '{"video_duration_confirmed":true}']],
 );
 expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts confirmed video duration in the publication range');
+
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => 60000,
+        'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>&nbsp; </p>"}']],
+);
+expect(in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'empty/HTML-only video transcript is a non-blocking editorial accessibility warning');
+expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['blockers'], true),
+    'missing optional transcript must not block video publication');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => 60000,
+        'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>Spoken dialogue</p>"}']],
+);
+expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'video editorial transcript removes warning without inferring captions');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'audio', 'params_json' => '{}']],
+);
+expect(in_array('COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'optional audio transcript absence generates one editor warning');
+$readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'audio',
+        'params_json' => '{"audio_transcript":"<p>Audio lesson text</p>"}']],
+);
+expect(!in_array('COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'audio editorial transcript removes warning');
+
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],

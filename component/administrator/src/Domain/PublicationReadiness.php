@@ -62,6 +62,21 @@ final class PublicationReadiness
                 }
             }
 
+            // Editorial transcripts are optional accessibility aids. This check
+            // does not establish whether remote providers offer captions or tracks.
+            if (in_array(($lesson->kind ?? ''), ['audio', 'video'], true)) {
+                $mediaParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
+                $key = $lesson->kind === 'video' ? 'video_transcript' : 'audio_transcript';
+                $transcript = is_array($mediaParams) && is_string($mediaParams[$key] ?? null)
+                    ? html_entity_decode(strip_tags($mediaParams[$key]), ENT_QUOTES | ENT_HTML5, 'UTF-8')
+                    : '';
+                if (preg_replace('/[\\s\\p{Z}\\p{Cf}]/u', '', $transcript) === '') {
+                    $warnings[] = $lesson->kind === 'video'
+                        ? 'COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING'
+                        : 'COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING';
+                }
+            }
+
             if (($lesson->kind ?? '') === 'document') {
                 $linked = false;
                 foreach ($attachments as $attachment) {

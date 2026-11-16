@@ -10,6 +10,8 @@
 4. Distinguere **implementato**, **CI verificata** e **accettato manualmente**. Non attribuire aumenti percentuali alle PR soltanto documentali o a bug fix non incrementali.
 5. README = presentazione/stato sintetico; CHANGELOG = modifiche versionate senza duplicati; IMPLEMENTATION_STATUS = percentuali e copertura; QA_TESTBOOK = collaudi; IMPLEMENTATION_HISTORY = evidenze storiche. Non duplicare registri PR in README e piano.
 
+**AUT-03 — avvisi facoltativi sulle trascrizioni (PR in verifica):** il preflight segnala l'assenza di una trascrizione editoriale nelle lezioni audio e video, senza bloccare la pubblicazione. Il controllo legge `params_json`, interpreta correttamente testo HTML vuoto e deduplica gli avvisi. Non verifica automaticamente i sottotitoli/caption forniti da YouTube, Vimeo, Cloudflare Stream o HTML5. Test unitari e IT/EN inclusi; collaudo Joomla pendente. Avanzamento globale di riferimento 79,56% invariato.
+
 ## Perimetro approvato della 1.0.0
 
 **Incluso:** editor e versioni corsi, programma/lezioni, catalogo e percorsi, progressi essenziali, materiali, quattro provider video, iscrizioni/roster essenziali, Mail Templates Joomla e notifiche approvate (MAIL-01–11 con le estensioni approvate), attestati PDF essenziali CERT-01–08, integrazioni Joomla, installazione/update, manuali e gate sicurezza/privacy.
