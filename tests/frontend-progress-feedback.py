@@ -11,11 +11,11 @@ for path, source in (("lesson", LESSON), ("audio", AUDIO)):
                     "setAttribute('aria-live',", "'assertive'", "'polite'",
                     "5000", "clearTimeout", "textContent = ''"):
         assert pattern in source, (path, pattern)
-    assert "status.dataset.state === 'saved'" in source
+    assert ("status.dataset.state === 'saved'" in source or "feedbackState === 'saved'" in source)
     assert "state === 'error'" in LESSON if path == 'lesson' else "key === 'error'" in AUDIO
 assert "send(0).then(" in LESSON and "send(1)" in LESSON
 assert "config.idempotencyKey" in LESSON
-assert "if (status?.dataset.state !== 'error') setStatus('saving')" in AUDIO
+assert "if (feedbackState !== 'error') setStatus('saving')" in AUDIO
 assert "if (value === lastSent) return;" in AUDIO
 assert AUDIO.index("if (value === lastSent) return;") < AUDIO.index("setStatus('saving')")
 assert "COM_JLMS_AUDIO_RESUME_SAVING" in VIEW
