@@ -1,3 +1,13 @@
+## P0 YouTube #532 — verifica asset e fase esatta dell'errore (seconda tranche)
+
+1. Aggiornare il pacchetto installabile a build post-fix. Aprire il backend dopo pulizia cache Joomla e verifica in finestra privata. In DevTools > Rete verificare che `video-metadata.js` e `video.js` abbiano una nuova versione nell'URL (o siano effettivamente riscaricati), senza risposte da cache obsolete; controllare anche `player.js` del plugin.
+2. Provare **Rileva di nuovo**: se errore, annotare il nuovo messaggio distinto (HTTP server 5xx, network, response, adapter, player, referrer/CSP/SDK) e il codice HTTP di `lesson.metadata` senza condividere token CSRF, cookie, sessioni, dati privati.
+3. Con risposta metadata 200, verificare che `adapter_url` sia sotto `/media/plg_jlmsvideo_youtube/js/player.js`, l'asset risponda 200 e `iframe_api`/iframe YouTube si carichino rispettando il consenso. Se l'iframe parte, verificare durata, salvataggio, pubblicazione e fruizione con account iscritto.
+4. Confermare che le politiche CSP, provider plugin/`playback_enabled` e consenso non siano state aggirate. Il fallback manuale di durata non dimostra che il video sia incorporabile.
+5. Ripetere su due browser (normale e privato), dopo upgrade e con sito in sottocartella se applicabile; collaudo manuale resta necessario per chiudere #532.
+
+---
+
 ## P0 #532 — YouTube: durata metadati e player aula (riproduzione reale obbligatoria)
 
 **P0 YouTube #532 — PR #533 integrata:** merge `ff4e6a376f5b59e2e4ba5d2af63f1cca9832fb2f`; [CI completa 43958890176](https://github.com/jeckodevelopment/jd_learn/actions/runs/43958890176) 4/4 verde; [artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43958890176/artifacts/14273243043) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `a967b7d871ac5f4a2ff6be69b11ded00d2cb9706e4b8400f6feff985ba616fac`. Diagnostica editoriale YouTube distinta per CSP/SDK/referrer/embed/timeout e messaggi server 4xx controllati; Referrer-Policy impostata alla raccomandazione Google. **Non c'è ancora una verifica su player YouTube live nel sito interessato: issue P0 #532 resta aperta e la funzionalità non è accettata manualmente.** Percentuale globale di riferimento 79,56% invariata.
