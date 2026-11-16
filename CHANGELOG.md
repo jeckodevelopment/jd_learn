@@ -1,6 +1,6 @@
 # Changelog
 
-- FE-12 (tranche HTTP in verifica): estesi i controlli di rendering Joomla per i cataloghi pubblici categorie, percorsi e docenti; nessuna modifica di prodotto, gate manuale ancora aperto.
+- FE-12 (tranche HTTP in verifica): corretto il 404 della directory Docenti includendo `teachers` nella allowlist del controller frontend, aggiunto test regressione; estesi i controlli di rendering Joomla per i cataloghi pubblici categorie, percorsi e docenti; nessuna modifica di prodotto, gate manuale ancora aperto.
 
 - FE-12 (PR #526 integrata, gate strutturale, collaudo pendente): verifica CI contratti frontend (menu, viste, router, WAM, CSS, private SEO) e matrice di accettazione manuale; nessuna dichiarazione di conformità WCAG o collaudo Joomla. Gate finale ancora aperto.
 
