@@ -114,6 +114,8 @@ $pathwayBase = ['id'=>$pathwayId,'title'=>'CI learning pathway','alias'=>'ci-lea
     'courses'=>$pathwayCourses];
 $beforeRelations = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn();
 $enrollmentsBeforeArchive = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult();
+// LCM-05: a pathway lifecycle change must not mutate its constituent courses.
+$courseStatesBefore = $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList();
 $check((bool)$pathModel->save($pathwayBase + ['revision'=>2,'state'=>2]),
     'archiving a published pathway succeeds: ' . $pathModel->getError());
 $check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === 2,
@@ -122,6 +124,12 @@ $archiveDenied = false;
 try { $service->detail($operator,'en-GB',$pathwayId); }
 catch (\RuntimeException $error) { $archiveDenied = $error->getCode() === 404; }
 $check($archiveDenied,'archived pathway cannot be read through the public detail endpoint');
+$archiveGuestDenied = false;
+try { $service->detail($guest, 'en-GB', $pathwayId); }
+catch (\RuntimeException $error) { $archiveGuestDenied = $error->getCode() === 404; }
+$check($archiveGuestDenied, 'archived pathway direct detail also denies anonymous visitors');
+$check($db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
+    'archiving a pathway never changes the states of its constituent courses');
 $check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
     'archiving preserves pathway course associations');
 $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $enrollmentsBeforeArchive,
@@ -146,6 +154,12 @@ $trashDenied = false;
 try { $service->detail($operator, 'en-GB', $pathwayId); }
 catch (\RuntimeException $error) { $trashDenied = $error->getCode() === 404; }
 $check($trashDenied, 'trashed pathway is inaccessible via direct public URL');
+$trashGuestDenied = false;
+try { $service->detail($guest, 'en-GB', $pathwayId); }
+catch (\RuntimeException $error) { $trashGuestDenied = $error->getCode() === 404; }
+$check($trashGuestDenied, 'trashed pathway direct detail also denies anonymous visitors');
+$check($db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
+    'trashing a pathway never changes the states of its constituent courses');
 $check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
     'trash retains every course association in order');
 $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $enrollmentsBeforeArchive,
@@ -194,6 +208,8 @@ $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $
     'empty trashed pathway is removed');
 $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $beforeBulkEnrollments,
     'protected purge leaves course enrollments untouched');
+$check($db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
+    'permanent deletion of an empty pathway leaves constituent course states untouched');
 $check($pathModel->changeStates([$pathwayId], 0) && $pathModel->changeStates([$pathwayId], 1),
     'the populated pathway is restored for retention testing');
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
