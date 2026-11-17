@@ -45,6 +45,32 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
     </table>
    <?php endif; ?>
    <?= $this->pagination->getListFooter() ?>
+   <?php if ($this->unissuedCompletions !== []) : ?>
+    <section id="jlms-unissued-completions" aria-labelledby="jlms-unissued-title" class="mt-4">
+     <h3 id="jlms-unissued-title"><?= Text::_('COM_JLMS_CERTIFICATE_UNISSUED_TITLE') ?></h3>
+     <p><?= Text::_('COM_JLMS_CERTIFICATE_UNISSUED_HELP') ?></p>
+     <div class="table-responsive">
+      <table class="table" id="jlms-unissued-list">
+       <thead><tr>
+        <th scope="col"><?= Text::_('COM_JLMS_CERTIFICATE_STUDENT') ?></th>
+        <th scope="col"><?= Text::_('COM_JLMS_CERTIFICATE_COURSE') ?></th>
+        <th scope="col"><?= Text::_('COM_JLMS_CERTIFICATE_COMPLETED_AT') ?></th>
+        <th scope="col"><?= Text::_('COM_JLMS_CERTIFICATE_UNISSUED_REASON') ?></th>
+       </tr></thead>
+       <tbody>
+        <?php foreach ($this->unissuedCompletions as $missing) : ?>
+         <tr>
+          <th scope="row"><?= $this->escape($missing['student_name']) ?></th>
+          <td><?= $this->escape($missing['course_title']) ?></td>
+          <td><?= $this->escape($missing['completed_at']) ?></td>
+          <td><?= Text::_('COM_JLMS_CERTIFICATE_DIAG_' . strtoupper($missing['reason'])) ?></td>
+         </tr>
+        <?php endforeach; ?>
+       </tbody>
+      </table>
+     </div>
+    </section>
+   <?php endif; ?>
   </section>
  </div>
  <input type="hidden" name="task" value="">
