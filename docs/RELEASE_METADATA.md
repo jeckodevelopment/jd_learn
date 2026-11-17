@@ -4,7 +4,7 @@
 
 **Un solo numero di versione per l'intero pacchetto distribuito.** `tools/build.py` legge la versione sviluppo da `packages/pkg_jlms.xml` (attualmente `0.57.7`) oppure riceve `--release-version 1.0.0` per produrre la candidata stabile. All'interno dello ZIP produce il manifest del pacchetto principale e i manifest di **11 estensioni figlie** con la medesima versione. Non modifica i manifest del repository; la versione delle singole parti nel codice sorgente è un identificativo storico, non la versione installata del pacchetto.
 
-Per tutte le parti distribuite il nome visibile in Gestione estensioni è `JD Learn` per componente principale e pacchetto, e `JD Learn - <Funzionalità>` per libreria e plugin. I campi tecnici `type`, `group`, `element`, `libraryname`, nomi ZIP e cartelle restano invariati: questo mantiene la continuità negli upgrade Joomla.
+Per tutte le parti distribuite il nome visibile in Gestione estensioni è `JD Learn` per il pacchetto e `JD Learn - <Funzionalità>` per libreria e plugin. Il componente conserva il nome chiave Joomla `COM_JLMS`, visualizzato come JD Learn tramite le traduzioni, per non alterare il riconoscimento dell'estensione durante l'upgrade. I campi tecnici `type`, `group`, `element`, `libraryname`, nomi ZIP e cartelle restano invariati: questo mantiene la continuità negli upgrade Joomla.
 
 ## Data di rilascio
 
