@@ -280,8 +280,8 @@ final class CertificateService
         try { $path = CourseArtwork::path($value); CourseArtwork::validateLocal($path); }
         catch (\Throwable $error) { throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503); }
         // Validated local raster image; the PDF renderer converts non-JPEG formats.
-        if (!preg_match('/\\.(?:jpe?g|png|gif|webp|avif)\\z/iD', $path)) {
-            throw new \\RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        if (!preg_match('/\.(?:jpe?g|png|gif|webp|avif)\z/iD', $path)) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
         return JPATH_ROOT . '/' . $path;
     }
