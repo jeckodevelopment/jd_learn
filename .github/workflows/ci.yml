@@ -110,7 +110,8 @@ jobs:
       - name: Install test runtime extensions
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends python3 nodejs ffmpeg unzip libpng-dev libonig-dev libxml2-dev libzip-dev
+          apt-get install -y --no-install-recommends python3 nodejs ffmpeg unzip libpng-dev libjpeg62-turbo-dev libonig-dev libxml2-dev libzip-dev
+          docker-php-ext-configure gd --with-jpeg
           docker-php-ext-install -j2 pdo_mysql mysqli gd mbstring dom simplexml zip
       - name: Lint every PHP source
         run: python3 -c "import pathlib,subprocess; [subprocess.run(['php','-l',str(p)],check=True) for p in pathlib.Path('.').rglob('*.php')]"
