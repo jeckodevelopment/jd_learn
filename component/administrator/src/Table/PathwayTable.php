@@ -34,7 +34,7 @@ final class PathwayTable extends Table
 
         if ($this->title === '' || mb_strlen($this->title) > 255 || preg_match('//u', $this->title) !== 1
             || $this->alias === '' || strlen($this->alias) > 180 || strlen($this->description) > 65535
-            || preg_match('//u', $this->description) !== 1 || !in_array((int) $this->state, [0, 1], true)) {
+            || preg_match('//u', $this->description) !== 1 || !in_array((int) $this->state, [0, 1, 2], true)) {
             $this->setError('COM_JLMS_PATHWAY_INVALID');
             return false;
         }

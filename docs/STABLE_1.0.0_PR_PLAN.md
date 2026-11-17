@@ -278,3 +278,7 @@ Riscontro Joomla: le lezioni YouTube mai completate partono; una lezione già co
 ### Accettazione P0 video completati — 17 novembre 2026
 
 La PR #573 è integrata e **collaudata positivamente su Joomla reale**: una lezione YouTube completata viene riaperta e riprodotta dall'inizio senza schermata nera. La ripresa dei video non completati era già confermata funzionante. La successiva PR di consolidamento aggiunge il test frontend esplicito sul seek, per impedire di reintrodurre la regressione; non modifica il runtime. Avanzamento globale 79,56% invariato: chiusa la specifica regressione, restano aperti i gate di accettazione non correlati.
+
+### LCM-03 — prima tranche: archiviazione percorsi
+
+L'editor percorso ora prevede lo stato `2 = Archiviato`, con verifica ACL `core.edit.state`, controllo di revisione e salvataggio tramite modello nativo. L'elenco rende visibile lo stato; la proiezione pubblica continua ad ammettere esclusivamente `state = 1`. Archiviare non modifica i corsi associati, le iscrizioni né i progressi; il ripristino conservativo passa per `0 = Non pubblicato`, e soltanto una successiva pubblicazione rende visibile il percorso. Test nativi Joomla coprono archive → 404 → restore → republish e persistenza associazioni. **Residuo LCM-03:** cestinazione, ripristino da cestino e cancellazione fisica condizionata con dipendenze storiche. Collaudo reale ancora richiesto.
