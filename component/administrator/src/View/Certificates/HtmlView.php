@@ -16,6 +16,7 @@ final class HtmlView extends BaseHtmlView
     public $state;
     public $filterForm;
     public $activeFilters;
+    public array $unissuedCompletions = [];
 
     public function display($tpl = null)
     {
@@ -27,6 +28,8 @@ final class HtmlView extends BaseHtmlView
             $this->state = $this->get('State');
             $this->filterForm = $this->get('FilterForm');
             $this->activeFilters = $this->get('ActiveFilters');
+            $this->unissuedCompletions = $app->bootComponent('com_jlms')->getCertificateService()
+                ->adminUnissuedCompletions($app->getIdentity());
         } catch (\Throwable $error) {
             if (in_array($error->getMessage(), ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_CERTIFICATE_AUDIT_FAILED'], true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
