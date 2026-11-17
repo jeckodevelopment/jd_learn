@@ -17,6 +17,19 @@ final class MailTemplateTagUpdater
         'NAME', 'COURSE', 'SITENAME', 'NAME_HTML', 'COURSE_HTML', 'SITENAME_HTML',
     ];
 
+    /** Replace only exact legacy placeholders, leaving all editorial content intact. */
+    public static function migratePlaceholders(string $content): string
+    {
+        return strtr($content, [
+            '{NAME}' => '{USER_FULLNAME}',
+            '{COURSE}' => '{COURSE_TITLE}',
+            '{SITENAME}' => '{SITE_NAME}',
+            '{NAME_HTML}' => '{USER_FULLNAME_HTML}',
+            '{COURSE_HTML}' => '{COURSE_TITLE_HTML}',
+            '{SITENAME_HTML}' => '{SITE_NAME_HTML}',
+        ]);
+    }
+
     /**
      * @param array<string, mixed> $params Decoded Joomla mail template preferences.
      * @param list<string> $canonicalTags Supported JD Learn placeholders.
@@ -47,7 +60,7 @@ final class MailTemplateTagUpdater
     {
         $updated = 0;
         foreach (MailTemplateInstaller::templateIds() as $templateId) {
-            $q = $db->createQuery()->select(['template_id', 'language', 'params'])
+            $q = $db->createQuery()->select(['template_id', 'language', 'params', 'subject', 'body', 'htmlbody'])
                 ->from('#__mail_templates')->where('template_id = :id')
                 ->bind(':id', $templateId, ParameterType::STRING);
             $rows = $db->setQuery($q)->loadObjectList();
@@ -62,15 +75,19 @@ final class MailTemplateTagUpdater
                     throw new \RuntimeException('JD Learn mail template preferences must be an object.');
                 }
                 $merged = self::mergeParams($params, MailTemplateInstaller::tagsFor($templateId));
-                if ($params === $merged) {
-                    continue;
-                }
-                $serialized = json_encode($merged, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
                 $updatedTemplate = (object) [
                     'template_id' => (string) $row->template_id,
                     'language' => (string) $row->language,
-                    'params' => $serialized,
                 ];
+                if ($params !== $merged) {
+                    $updatedTemplate->params = json_encode($merged, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                }
+                foreach (['subject', 'body', 'htmlbody'] as $field) {
+                    $old = (string) ($row->{$field} ?? '');
+                    $new = self::migratePlaceholders($old);
+                    if ($new !== $old) { $updatedTemplate->{$field} = $new; }
+                }
+                if (count(get_object_vars($updatedTemplate)) === 2) { continue; }
                 $db->updateObject('#__mail_templates', $updatedTemplate, ['template_id', 'language']);
                 ++$updated;
             }
