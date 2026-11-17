@@ -1868,3 +1868,8 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 2. Verificare che una sola inizializzazione IFrame API avvenga, senza attendere `iframe.onload`; referrer policy `strict-origin-when-cross-origin` e host `youtube-nocookie.com` mantenuti, senza bypass di consenso.
 3. Lasciar riprodurre il video senza seek fino alla soglia della lezione: controllare `video.save`, conteggio copertura effettiva e completamento; ripetere pausa/ripresa e rientro aula. Nessun credito per seek, buffering, poster o solo evento ended.
 4. Se compare ancora spinner, raccogliere evento onError YouTube e richiesta iframe Referer effettivo: non attribuire il risultato all'API senza log live.
+
+
+## Post-merge PR #541 — esito CI e artefatto
+
+**PR #541 integrata — P0 #532:** merge `2ab0ffa2589a22013a26b2ad9ee7bcefe11c3fd6`; CI 4/4 verde [run 43983276857](https://github.com/jeckodevelopment/jd_learn/actions/runs/43983276857), integrità CSV [run 43983276867](https://github.com/jeckodevelopment/jd_learn/actions/runs/43983276867). [Pacchetto installabile JD Learn 0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43983276857/artifacts/14283797967), digest archivio Actions `sha256:f9feaf56a8d380d2ee0c101304b243613c10402bd57554cfe2ef2e1878fcc24c` (non checksum interno del pacchetto ZIP Joomla). **Riproduzione video e completamento da verificare manualmente su Opera+ prima di chiudere issue #532**. Avanzamento globale 79,56%, invariato.
