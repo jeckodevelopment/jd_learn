@@ -1,5 +1,7 @@
 # Changelog
 
+- Aggiunta emissione amministrativa esplicita e auditabile di attestati per completamenti storici privi del flag nella versione didattica, senza modificare snapshot né emettere automaticamente dopo l'upgrade (issue #553).
+
 - Correzione pre-release: alla pubblicazione di nuove versioni didattiche, la regola di emissione attestati è derivata dalle preferenze globali/per corso e congelata nello snapshot; nessuna modifica retroattiva alle versioni pubblicate (issue #553).
 
 - **PR #551 integrata — issue #547:** merge `2e9a65ab8d9044f9502950514c0a24419d04d03b`, CI completa 4/4 verde [run 44049557136](https://github.com/jeckodevelopment/jd_learn/actions/runs/44049557136), gate CSV verde [run 44049557129](https://github.com/jeckodevelopment/jd_learn/actions/runs/44049557129); [pacchetto installabile JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44049557136/artifacts/14312389981), digest archivio Actions `sha256:01ebeb70fae56e88caa1cbe54ae5d4f6eb7d408e824b8a0a94d7167dfa32da25` (non checksum interno dello ZIP Joomla). Il ritentativo esplicito è possibile solo dopo riparazione di template per iscrizione e completamento con errore validato pre-SMTP, nota e conferma, mai per trasporto incerto; collaudo Joomla/SMTP e correzione reale del modello Rigoletto rimangono pendenti. Avanzamento globale 79,56% invariato.
