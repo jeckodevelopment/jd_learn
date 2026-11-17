@@ -1,5 +1,7 @@
 # Changelog
 
+- Corretto il 503 del primo download di attestati con logo PNG: il renderer PDF accetta JPEG, PNG e, quando supportati da GD, GIF/WebP/AVIF e compone i canali alpha su bianco; i documenti `pending_render` già emessi restano recuperabili senza nuova emissione. Test `tests/certificate-raster-logos.php` e collaudo Joomla richiesti.
+
 - Eliminata la dipendenza dai file temporanei PHP (`sys_get_temp_dir()`/`tempnam`) nella generazione e rigenerazione degli attestati: il PDF generato viene salvato direttamente nello storage privato cifrato, con diagnostica per fase nei log Joomla (issue #564, PR #565).
 
 - Storage gestito automaticamente per attestati e materiali su hosting condiviso: quando non è configurato un percorso esterno, JD Learn crea `media/com_jlms/private`, protegge i file con guardia PHP, access rules e cifratura AES-256-GCM, e permette il rendering `pending_render` senza configurazione manuale (issue #562, PR #563).
