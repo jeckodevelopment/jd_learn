@@ -10,6 +10,8 @@ const elements = Object.fromEntries(['#jlms-player-status','#jlms-player','#jlms
   .map(k => [k, {textContent:'',addEventListener(){},replaceChildren(){}}]));
 elements['#jlms-video-language']={value:'',options:[],addEventListener(){},removeEventListener(){},replaceChildren(){this.options=[];},append(option){this.options.push(option);}};
 elements['#jlms-youtube-finish']={hidden:true};
+elements['#jlms-player'].hidden=false;
+elements['#jlms-youtube-replay']={addEventListener(){},removeEventListener(){}};
 const root = {querySelector:k=>elements[k]};
 let calls = 0;
 const config = {policy:'site_consent',provider:'youtube',enrollment:1,lesson:2,token:'csrf',
@@ -34,14 +36,23 @@ await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue
 // ended YouTube video; a mere ended notification is not completion.
 lesson.youtubeEnded=true;
 assert.equal(elements['#jlms-youtube-finish'].hidden,true);
+let destroyed=0;
+lesson.player={destroy:async()=>destroyed++};
 lesson.transport=async()=>({ok:true,json:async()=>({success:true,data:{next_sequence:3,lesson_completed:true,course_percent:100}})});
 await lesson.flush();
-assert.equal(elements['#jlms-youtube-finish'].hidden,false);
+assert.equal(destroyed,1,'End screen unloads the remote iframe');
+assert.equal(lesson.stopped,true,'End screen tears down the old telemetry session');
+assert.equal(elements['#jlms-player'].hidden,true,'No underlying YouTube recommendation panel');
+assert.equal(elements['#jlms-youtube-finish'].hidden,false,'Native screen replaces the player');
+assert.equal(lesson.queue.length,0);
+lesson.stopped=false;
+lesson.tracking=true;
+lesson.player={destroy:async()=>destroyed++};
 lesson.queue.push({id:3,type:'pause',position_ms:1000,client_ms:2000,rate_milli:1000,playing:false});
 lesson.transport=async()=>({ok:false,status:403,json:async()=>({success:false})});
-let destroyed=0;lesson.player={destroy:async()=>destroyed++};
-await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1);
+await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,2);
 assert.equal(elements['#jlms-youtube-finish'].hidden,true,'Stopping the player hides the finished panel');
+assert.equal(elements['#jlms-player'].hidden,false,'Normal stop restores the original player slot');
 // YouTube can be ready for commands before it knows the duration.
 lesson.session = {session_id:'youtube-test', source_revision:1, duration_ms:10000};
 lesson.stopped = false;
