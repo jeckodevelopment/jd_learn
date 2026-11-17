@@ -2035,3 +2035,12 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 ### Esito collaudo P0 — replay lezioni completate, PR #573 (17/11/2026)
 
 **Esito positivo confermato dall'utente sul sito Joomla reale dopo la PR #573:** la lezione YouTube già completata si riapre e il video riparte regolarmente dall'inizio, senza la schermata nera precedentemente segnalata. La CI associata alla PR #573 è verde; il nuovo test frontend distingue esplicitamente `lesson_completed=true` (nessun seek automatico) da lezione parziale (seek salvato). La conferma copre questa regressione specifica, non costituisce collaudo integrale di tutti i provider, browser e contratti didattici.
+
+### LCM-03 — archiviazione dei percorsi formativi
+
+1. Con `jlms.pathways.manage`, `core.edit` e `core.edit.state`, aprire un percorso pubblicato con due corsi (uno eventualmente già frequentato), impostare **Archiviato** e salvare. Controllare stato in elenco.
+2. Verificare come ospite e studente che percorso e dettaglio via URL diretto non siano più pubblici (404) e non espongano dati.
+3. Confermare che i corsi del percorso mantengano gli stati autonomi, le iscrizioni e gli eventuali attestati; le associazioni rimangano registrate.
+4. Passare ad **Non pubblicato**, controllare che il percorso resti invisibile, poi pubblicarlo nuovamente e verificare ordine e contenuti originari.
+5. Con un ruolo senza `core.edit.state` verificare l'impossibilità di cambiare stato; nessuna transizione tramite POST diretto.
+6. La cestinazione e l'eliminazione condizionata sono **ancora escluse** da questa tranche LCM-03. Accettazione manuale Joomla distinta dalla suite automatica.
