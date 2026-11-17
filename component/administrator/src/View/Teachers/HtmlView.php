@@ -35,6 +35,9 @@ final class HtmlView extends BaseHtmlView
             && $actor->authorise('core.edit.state', 'com_jlms')) {
             if ((string) $this->state->get('filter.published') === '-2') {
                 ToolbarHelper::custom('teacher.restore', 'refresh', 'refresh', 'JTOOLBAR_RESTORE', true);
+                if ($actor->authorise('core.delete', 'com_jlms')) {
+                    ToolbarHelper::deleteList('COM_JLMS_TEACHER_PURGE_CONFIRM', 'teacher.purge');
+                }
             } else {
                 ToolbarHelper::publish('teacher.publish', 'JTOOLBAR_PUBLISH', true);
                 ToolbarHelper::unpublish('teacher.unpublish', 'JTOOLBAR_UNPUBLISH', true);

@@ -13,7 +13,7 @@ final class TeacherController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'trash', 'restore', 'publish', 'unpublish'], true)) {
+        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'trash', 'restore', 'publish', 'unpublish', 'purge'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
@@ -55,6 +55,29 @@ final class TeacherController extends FormController
     public function restore(): void { $this->transition(0); }
     public function publish(): void { $this->transition(1); }
     public function unpublish(): void { $this->transition(0); }
+
+    /** Exactly one teacher, explicitly confirmed in the trash view. */
+    public function purge(): void
+    {
+        if (strtoupper($this->input->getMethod()) !== 'POST') {
+            throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+        }
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException('JINVALID_TOKEN', 403);
+        }
+        $raw = $this->input->post->get('cid', [], 'array');
+        if (count($raw) !== 1 || (!is_int($raw[0]) && !is_string($raw[0]))
+            || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $raw[0])) {
+            throw new \RuntimeException('COM_JLMS_TEACHER_INVALID', 422);
+        }
+        $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
+            ->createModel('Teacher', 'Administrator', ['ignore_request' => true]);
+        if (!$model->purgeUnreferenced((int) $raw[0])) {
+            throw new \RuntimeException((string) $model->getError(), 403);
+        }
+        $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
+            'index.php?option=com_jlms&view=teachers&filter[published]=-2', false));
+    }
 
     protected function allowAdd($data = [])
     {

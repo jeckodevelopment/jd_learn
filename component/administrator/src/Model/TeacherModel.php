@@ -184,6 +184,73 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         }
     }
 
+    /**
+     * Permanently delete only an unreferenced, already trashed teacher profile.
+     * Never touch the linked native Joomla account or course/version records.
+     */
+    public function purgeUnreferenced(int $id): bool
+    {
+        if ($id < 1) {
+            $this->setError(Text::_('COM_JLMS_TEACHER_INVALID'));
+            return false;
+        }
+        $actor = new User((int) $this->getCurrentUser()->id);
+        $actor->clearAccessRights();
+        if (!$actor->id || $actor->block
+            || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.teachers.manage', 'com_jlms')
+            || !$actor->authorise('core.delete', 'com_jlms.teacher.' . $id)) {
+            $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
+        $db = $this->getDatabase();
+        $started = false;
+        try {
+            $db->transactionStart();
+            $started = true;
+            $query = $db->createQuery()->select('id, state, checked_out')->from('#__jlms_teachers')
+                ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+            $query->setQuery((string) $query . ' FOR UPDATE');
+            $record = $db->setQuery($query)->loadObject()
+                ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+            if ((int) $record->state !== -2) {
+                throw new \DomainException('COM_JLMS_TEACHER_INVALID');
+            }
+            if ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id) {
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
+            $related = $db->createQuery()->select('COUNT(*)')->from('#__jlms_course_teachers')
+                ->where('teacher_id = :teacher')->bind(':teacher', $id, ParameterType::INTEGER);
+            if ((int) $db->setQuery($related)->loadResult() > 0) {
+                throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
+            }
+            // Frozen course presentation versions retain the original teacher
+            // object independently of today's course-to-teacher assignments.
+            // JSON_CONTAINS finds the teacher ID inside the snapshot teacher array
+            // (rather than matching an unrelated numeric ID elsewhere in the JSON).
+            $needle = json_encode(['id' => $id], JSON_THROW_ON_ERROR);
+            $versions = $db->createQuery()->select('COUNT(*)')->from('#__jlms_course_versions')
+                ->where("JSON_CONTAINS(presentation_json, :needle, '$.teachers') = 1")
+                ->bind(':needle', $needle);
+            if ((int) $db->setQuery($versions)->loadResult() > 0) {
+                throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
+            }
+            $table = $this->getTable('Teacher');
+            if (!$table->load($id) || !$table->delete($id)) {
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+            }
+            $db->transactionCommit();
+            return true;
+        } catch (\Throwable $error) {
+            if ($started) { $db->transactionRollback(); }
+            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND',
+                'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_DEPENDENCIES'];
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true)
+                ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            return false;
+        }
+    }
+
     public function delete(&$pks) { $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE')); return false; }
     public function publish(&$pks, $value = 1) { $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE')); return false; }
 }
