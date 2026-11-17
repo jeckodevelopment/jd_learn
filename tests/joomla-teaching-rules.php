@@ -189,8 +189,10 @@ ruleExpect((int)ruleRow('certificate_documents',(int)$historicalDocument->id)->p
     'Repeated download preserves the original private PDF asset');
 
 $serviceSource = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_jlms/src/Application/CertificateService.php');
-ruleExpect(is_string($serviceSource) && !str_contains($serviceSource, 'tempnam(')
-    && !str_contains($serviceSource, 'sys_get_temp_dir('),
+$sourceTokens = token_get_all((string) $serviceSource);
+$temporaryCalls = array_filter($sourceTokens, static fn($token):bool => is_array($token)
+    && $token[0] === T_STRING && in_array(strtolower($token[1]), ['tempnam', 'sys_get_temp_dir'], true));
+ruleExpect(is_string($serviceSource) && $temporaryCalls === [],
     'Certificate creation and regeneration do not depend on global PHP temporary paths');
 $storageForCertificates=new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn()=>$certificateParams);
 try { $storageForCertificates->stageGeneratedPdf('invalid PDF'); throw new \RuntimeException('Invalid generated PDF accepted'); }
