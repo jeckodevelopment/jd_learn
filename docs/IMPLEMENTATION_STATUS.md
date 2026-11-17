@@ -1,3 +1,9 @@
+**JD Learn 0.57.7-dev — audit funzionale al 18/11/2026.**
+
+## Audit funzionale UI, accessibilità e prestazioni — PR #603 (18/11/2026)
+
+La [PR #603](https://github.com/jeckodevelopment/jd_learn/pull/603) è integrata in `main`, merge `bf4d62d040a7bc293ad2308ff7e07a71571e82fa`, [CI 4/4 verde #44202943937](https://github.com/jeckodevelopment/jd_learn/actions/runs/44202943937) (controlli preliminari, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6). Aggiunti 22 requisiti STU/PRO/ACC/UI/PERF e 49 criteri: 20 con riferimenti iniziali e 29 ancora da approfondire. Audit cumulativo **129/214 requisiti 1.0.0**, **359 criteri**, **203 con prime evidenze** e **156 `unassessed`**; **85 requisiti attendono la scomposizione**. Gli indicatori performance e WCAG non sono accreditati in assenza dei rispettivi benchmark e audit. **La percentuale globale di completamento funzionale rimane `null`**: il 79,56% è solo una stima storica, non ricalcolata. [Artefatto Actions JD-Learn-0.57.7-dev #14381453503](https://github.com/jeckodevelopment/jd_learn/actions/runs/44202943937/artifacts/14381453503) presente; checksum del pacchetto Joomla interno non verificato. Nessuna modifica runtime o SemVer, nessun collaudo manuale aggiuntivo.
+
 **JD Learn 0.57.7-dev — ricognizione requisiti al 17/11/2026.**
 
 ## Audit funzionale sicurezza, privacy, configurazione e core Joomla — PR #600 (17/11/2026)
