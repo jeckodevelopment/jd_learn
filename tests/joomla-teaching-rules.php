@@ -139,6 +139,23 @@ $oldResult=$video->save($actor,'en-GB',$oldEnrollment,$oldLesson,$oldGrant['sess
 ruleExpect($newResult['lesson_completed']&&$newResult['course_completed']&&!$oldResult['lesson_completed'],'Exact configured threshold applies only to its assigned version');
 $now+=3975;$oldResult=$video->save($actor,'en-GB',$oldEnrollment,$oldLesson,$oldGrant['session_id'],$oldGrant['source_revision'],3,10000,json_encode([$event(4,9000,9000)],JSON_THROW_ON_ERROR));
 ruleExpect($oldResult['lesson_completed']&&$oldResult['course_completed'],'Existing student still completes at original90percent');
+
+$certificateParams=\Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+$previousCertificateSetting=$certificateParams->get('certificate_enabled',0);
+$certificateParams->set('certificate_enabled',1);
+$certificateService=$component->getCertificateService();
+$historicRules=ruleRow('course_versions',$original)->rules_json;
+ruleExpect(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($historicRules)['certificate_enabled']===false,'Historical published fixture originally excluded certificates');
+$certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Administrator approved historical certificate recovery');
+$recovered=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='.(int)$oldEnrollment)->loadResult();
+ruleExpect($recovered===1,'Completed historical enrollment receives exactly one certificate');
+$recoveryAudit=(int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE action='historical_recovery' AND certificate_id IN (SELECT id FROM #__jlms_certificates WHERE enrollment_id=".(int)$oldEnrollment.')')->loadResult();
+ruleExpect($recoveryAudit===1,'Historical recovery records a durable audit entry');
+ruleExpect(ruleRow('course_versions',$original)->rules_json===$historicRules,'Historical recovery never mutates the published rules');
+try { $certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Duplicate historical certificate recovery'); throw new \RuntimeException('Duplicate certificate was issued'); }
+catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode()===409,'Duplicate historical issuance is rejected with HTTP 409'); }
+$certificateParams->set('certificate_enabled',$previousCertificateSetting);
+
 $consultationVideo=(int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id='.(int)$consultationVersion." AND kind='video' ORDER BY id")->loadResult();
 $progressBeforeConsultationPlayback=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE lesson_id='.(int)$consultationVideo)->loadResult();
 $sessionsBeforeConsultationPlayback=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id='.(int)$consultationVideo)->loadResult();
