@@ -1,5 +1,7 @@
 # Changelog
 
+- Corretto il primo download dei PDF degli attestati storici: il rendering accetta timestamp di completamento SQL `DATETIME(6)` con microsecondi; copertura Joomla di transizione `pending_render` → `ready` e download ripetuti, senza fallback verso storage pubblico (issue #560).
+
 - Corretta l'emissione amministrativa di attestati storici: i parametri tipizzati delle query Joomla sono ora associati tramite variabili, con prova integrata del percorso positivo, audit e blocco duplicati (issue #558; PR #559).
 
 - Aggiunta emissione amministrativa esplicita e auditabile di attestati per completamenti storici privi del flag nella versione didattica, senza modificare snapshot né emettere automaticamente dopo l'upgrade (issue #553).
