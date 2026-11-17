@@ -383,3 +383,14 @@ foreach (['USER_FULLNAME','COURSE_TITLE','COMPLETION_DATE','DASHBOARD_URL','SITE
         throw new RuntimeException('Video completion notification omits ' . $requiredTag);
     }
 }
+
+// MAIL-10: administrators can identify invalid token NAMES without exposing
+// recipient addresses, template values or transport exceptions in the outbox.
+$auditSource = file_get_contents(__DIR__ . '/../component/administrator/src/Application/MailQueueAuditService.php');
+$auditView = file_get_contents(__DIR__ . '/../component/administrator/tmpl/mailqueue/default.php');
+if (!str_contains($auditSource, 'MailTemplatePlaceholderValidator::unresolved(')
+    || !str_contains($auditSource, 'unset($row->template_data, $row->language);')
+    || !str_contains($auditView, 'diagnostic_tokens')
+    || !str_contains($auditView, '$this->escape(implode(')) {
+    throw new RuntimeException('Safe mail queue placeholder diagnostics not integrated.');
+}
