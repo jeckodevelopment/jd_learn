@@ -2609,6 +2609,403 @@
         "status": "unassessed",
         "evidence": []
       }
+    ],
+    "STU-05": [
+      {
+        "id": "speed_control",
+        "label": "Controlli velocità e lingua dei player ove disponibili",
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs"
+        ]
+      },
+      {
+        "id": "provider_parity",
+        "label": "Persistenza e comportamento opzioni su ogni provider e dispositivo",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PRO-04": [
+      {
+        "id": "unique_intervals",
+        "label": "Progressi video calcolati su intervalli unici riprodotti",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "threshold",
+        "label": "Soglia didattica video configurabile e validata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/TeachingRules.php",
+          "tests/teaching-rules.php"
+        ]
+      },
+      {
+        "id": "overlap_devices",
+        "label": "Riprese sovrapposte, velocità e concorrenza su browser/provider reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PRO-05": [
+      {
+        "id": "publish_guard",
+        "label": "Validazione delle regole video prima della pubblicazione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "provider_fallbacks",
+        "label": "Ogni provider non tracciabile e fallback senza completamento spurio",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ACC-01": [
+      {
+        "id": "accessible_css",
+        "label": "Stili di focus e comportamento responsive previsti nel frontend",
+        "status": "implemented",
+        "evidence": [
+          "component/media/css/site.css",
+          "docs/FRONTEND_CSS.md"
+        ]
+      },
+      {
+        "id": "wcag_keyboard",
+        "label": "Test WCAG 2.2 AA tastiera, label, focus e lettori di schermo",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "wcag_visual",
+        "label": "Contrasto, zoom e reflow su schermi/dispositivi target",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "captions",
+        "label": "Sottotitoli e trascrizioni in ogni player e contenuto reale",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "UI-01": [
+      {
+        "id": "public_hooks",
+        "label": "Convenzioni ID/classi pubbliche documentate",
+        "status": "implemented",
+        "evidence": [
+          "docs/FRONTEND_CSS.md",
+          "component/media/css/site.css"
+        ]
+      },
+      {
+        "id": "all_views",
+        "label": "Inventario completo di ID/classi su tutte le viste della 1.0.0",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "UI-02": [
+      {
+        "id": "dynamic_ids",
+        "label": "Markup delle liste e delle viste generato con identificatori di record",
+        "status": "implemented",
+        "evidence": [
+          "tests/dashboard-http.py",
+          "tests/roster-http.py"
+        ]
+      },
+      {
+        "id": "uniqueness",
+        "label": "Audit completo assenza di ID duplicati e navigazione etichette",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "UI-03": [
+      {
+        "id": "css_tokens",
+        "label": "Variabili CSS di personalizzazione disponibili",
+        "status": "implemented",
+        "evidence": [
+          "component/media/css/site.css",
+          "docs/FRONTEND_CSS.md"
+        ]
+      },
+      {
+        "id": "all_tokens",
+        "label": "Copertura tipografia, griglie, superfici, colori e overrides per tutte le schermate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "UI-04": [
+      {
+        "id": "scoped_css",
+        "label": "CSS dedicato al namespace del componente",
+        "status": "implemented",
+        "evidence": [
+          "component/media/css/site.css",
+          "docs/FRONTEND_CSS.md"
+        ]
+      },
+      {
+        "id": "cascade_overrides",
+        "label": "Verifica specificità e override con temi Joomla alternativi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "UI-05": [
+      {
+        "id": "layout_contract",
+        "label": "Layout e override frontend Joomla documentati",
+        "status": "implemented",
+        "evidence": [
+          "docs/FRONTEND_CSS.md",
+          "component/site/tmpl/classroom/default.php"
+        ]
+      },
+      {
+        "id": "override_matrix",
+        "label": "Personalizzazione completa senza modifica alle autorizzazioni su tutti i template",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "UI-06": [
+      {
+        "id": "behavior_hooks",
+        "label": "Gestione player/quiz tramite JS dedicato al comportamento",
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "component/media/js/quiz.js"
+        ]
+      },
+      {
+        "id": "semantic_hooks",
+        "label": "Assenza di dipendenze di classi decorative e tenuta ARIA dopo override",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "UI-07": [
+      {
+        "id": "css_manual",
+        "label": "Guida per identificatori CSS e layout",
+        "status": "implemented",
+        "evidence": [
+          "docs/FRONTEND_CSS.md"
+        ]
+      },
+      {
+        "id": "versioned_maps",
+        "label": "Mappe DOM per ogni vista e compatibilità dei contratti pubblici",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-01": [
+      {
+        "id": "concurrency_target",
+        "label": "Carico simultaneo di centinaia di studenti definito e misurato con dataset reale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "environment_capacity",
+        "label": "Capacità hardware e hosting di riferimento dichiarata",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-02": [
+      {
+        "id": "workload_distribution",
+        "label": "Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "distinct_users",
+        "label": "Utenti simulati indipendenti, think time e token reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-03": [
+      {
+        "id": "latency_budget",
+        "label": "p95 HTTP pagine/progressi/quiz entro i limiti su ambiente di riferimento",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "error_rate",
+        "label": "Tasso errori e saturazione misurati e riproducibili",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-04": [
+      {
+        "id": "paginated_queries",
+        "label": "Liste roster/dashboard con filtraggio e paginazione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/DashboardService.php",
+          "tests/joomla-dashboard.php"
+        ]
+      },
+      {
+        "id": "db_plan",
+        "label": "EXPLAIN, verifica indici N+1 e piani query a volume reale",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-05": [
+      {
+        "id": "video_throttle",
+        "label": "Aggregazione di eventi player senza invio per ogni timeupdate",
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs"
+        ]
+      },
+      {
+        "id": "timing_matrix",
+        "label": "Frequenza salvataggi ed error recovery su browser/provider reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-06": [
+      {
+        "id": "private_endpoints",
+        "label": "Controlli HTTP delle viste personali e contenuti protetti",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/DisplayController.php",
+          "tests/dashboard-http.py"
+        ]
+      },
+      {
+        "id": "cache_matrix",
+        "label": "Audit cache reverse proxy/CDN, invalidazione metadati e sessioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-07": [
+      {
+        "id": "provider_stream",
+        "label": "Streaming del provider senza proxy PHP per segmenti remoti",
+        "status": "implemented",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "tests/joomla-cloudflare.php"
+        ]
+      },
+      {
+        "id": "local_range",
+        "label": "Consegna locale protetta tramite Range PHP",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LocalVideoService.php",
+          "tests/html5-http.py"
+        ]
+      },
+      {
+        "id": "throughput",
+        "label": "Benchmark byte range e flussi locali su hosting di riferimento",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-08": [
+      {
+        "id": "email_queue",
+        "label": "Coda di invio email e task Joomla disponibili",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "plugins/task/jlms/src/Extension/Jlms.php"
+        ]
+      },
+      {
+        "id": "large_reports",
+        "label": "Esportazioni pesanti e produzione massiva PDF con worker/batch",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "queue_latency",
+        "label": "Tempi di esecuzione e recupero da guasti per carichi elevati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-09": [
+      {
+        "id": "wam",
+        "label": "Asset gestiti tramite Web Asset Manager Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/media/joomla.asset.json",
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "asset_budgets",
+        "label": "Lazy loading immagini/player e payload per tutte le viste",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-10": [
+      {
+        "id": "repro_environment",
+        "label": "Documentazione di CPU/RAM/database/PHP/cron/cache/latency per benchmark",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "load_results",
+        "label": "Report ripetibile throughput, p95, tasso errori e saturazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PERF-11": [
+      {
+        "id": "configuration",
+        "label": "Opzioni diagnostiche di provider e storage documentate",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/config.xml",
+          "docs/CLOUDFLARE_STREAM.md"
+        ]
+      },
+      {
+        "id": "health_views",
+        "label": "Visibilità e correlazione incidenti task, code, storage, permessi senza PII",
+        "status": "unassessed",
+        "evidence": []
+      }
     ]
   }
 }
