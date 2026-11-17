@@ -193,5 +193,33 @@ teacherExpect($catalog->outline($guest,'en-GB',$course)['teachers']===[],'Native
 $update->published=1;$db->updateObject('#__categories',$update,'id');
 teacherExpect($courseModel->save(array_replace($courseData,['revision'=>(int)$courseModel->getItem($course)->revision,'teacher_ids'=>[$public,$private]])),'Teachers can be updated on a published course while preserving the teaching snapshot');
 teacherExpect($snapshot===$db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='.$version)->loadAssoc(),'All profile changes preserve course snapshot hash and timestamp');
+// LCM-04: reversible teacher trash preserves Joomla users, course links and frozen snapshots.
+$beforeCourseTeachers = TeacherProfiles::selected($db, $course);
+$beforeUsers = $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc();
+$beforeSnapshot = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+teacherExpect($teacherModel->changeStates([$public, $private], -2),
+    'bulk teacher trash succeeds without modifying associations');
+teacherExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id IN (' . $public . ',' . $private . ') AND state=-2')->loadResult() === 2,
+    'both teachers are trashed');
+teacherExpect(TeacherProfiles::available($db, $guest, 'en-GB', [$public, $private]) === [],
+    'trashed teacher profiles are excluded from public visibility');
+teacherExpect(!$teacherModel->changeStates([$public, 999999999], 0),
+    'mixed selection with absent teacher is rolled back atomically');
+teacherExpect((int) $db->setQuery('SELECT state FROM #__jlms_teachers WHERE id=' . $public)->loadResult() === -2,
+    'rollback leaves originally trashed teacher unchanged');
+teacherExpect(!$teacherModel->changeStates([$public], 1),
+    'direct republication from trash is rejected');
+teacherExpect($teacherModel->changeStates([$public, $private], 0),
+    'bulk teacher restoration succeeds to unpublished only');
+teacherExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id IN (' . $public . ',' . $private . ') AND state=0')->loadResult() === 2,
+    'restoration does not republish teacher profiles');
+teacherExpect(TeacherProfiles::selected($db, $course) === $beforeCourseTeachers,
+    'trashed and restored teachers retain all course associations');
+teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $beforeUsers,
+    'teacher lifecycle never changes linked Joomla user status');
+teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $beforeSnapshot,
+    'teacher lifecycle preserves immutable course snapshot');
+teacherExpect($teacherModel->changeStates([$public, $private], 1),
+    'teachers are explicitly republished after restoration');
 file_put_contents($fixture,json_encode(['course'=>$course,'version'=>$version,'ids'=>[$public,$private],'public'=>$public,'private'=>$private,'teacher_category'=>$teacherCategory,'snapshot'=>$snapshot],JSON_THROW_ON_ERROR));
 echo json_encode(['teacher_checks'=>$checks,'status'=>'passed']).PHP_EOL;
