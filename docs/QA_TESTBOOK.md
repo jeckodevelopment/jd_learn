@@ -2096,3 +2096,9 @@ Il test Joomla `tests/joomla-pathways.php` prova ora un attore anonimo contro `c
 `tests/http-smoke.py` verifica tramite sessione amministrativa Joomla disposable i sei endpoint `pathway.trash`, `pathway.restore`, `pathway.archive`, `pathway.publish`, `pathway.unpublish` e `pathway.purge`: richieste GET devono risultare 405 e richieste POST prive di token CSRF devono risultare 403. Dopo i rifiuti il percorso resta presente nella lista amministrativa. La prova è HTTP automatica, non accettazione manuale.
 
 **Comportamenti da collaudare (rinviati):** transizioni legittime con token corretto, token alterato/scaduto, permessi ACL per record e per selezioni miste, conferma dell'eliminazione, controllo dei dati prima e dopo ciascuna operazione, test di regressione con diverse configurazioni hosting. Rimangono anche gli audit Finder/SEO e la verifica reale Joomla.
+
+## LCM-05 — test HTTP di transizioni autorizzate sui percorsi (17/11/2026)
+
+`tests/http-smoke.py` recupera un token CSRF dalla lista amministrativa nativa Joomla e invia POST reali, autenticati, per il ciclo `archive → restore → publish` di un percorso usato nel fixture. Dopo l'archiviazione verifica che il percorso scompaia dal catalogo pubblico; dopo il ripristino deve rimanere non pubblicato; soltanto una pubblicazione esplicita lo rende nuovamente visibile. Il test non usa token sintetici né bypass dei controller.
+
+**Comportamenti da testare su Joomla reale (rinviati):** permessi ACL specifici per singolo percorso e selezioni miste, POST con token scaduto/alterato, conservazione integrale di dati storici e ricerca Finder/SEO, conflitti e race; il test CI non equivale ad accettazione manuale.

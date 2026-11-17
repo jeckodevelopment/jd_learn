@@ -1,4 +1,6 @@
 # Changelog
+- **LCM-05 — transizioni HTTP autorizzate (17/11/2026):** il test HTTP Joomla usa il token CSRF nativo per archiviare, ripristinare senza pubblicazione automatica e ripubblicare esplicitamente un percorso, verificandone la visibilità pubblica. Nessun runtime modificato; restano ACL granulari e accettazione reale.
+
 - **LCM-05 — gate HTTP/CSRF percorsi (17/11/2026):** introdotti test negativi via vero HTTP Joomla disposable sui sei task di transizione/cancellazione percorsi, distinguendo GET (405) e POST senza CSRF (403), e verifica della conservazione della lista. Nessuna modifica runtime né accettazione manuale; verifica dei permessi granulari e delle transizioni positive ancora aperta.
 
 - **LCM-05 — PR #581 e #582 (17/11/2026, CI 4/4 entrambe):** ampliati i test Joomla disposable per URL diretti dei percorsi archiviati/cestinati anche come ospiti, conservazione degli stati dei corsi associati, rifiuto del ripristino e della cancellazione da attore non autorizzato, e verifica dell'immutabilità dei dati dopo il rifiuto. Solo test e documentazione, runtime invariato. Gate LCM-05 parziale; restano HTTP/CSRF, ACL per record, Finder/SEO, upgrade e collaudo manuale. Merge #581 `14ef72b95b07bdfc38295b7ea9a3c741ac5d16cd` e #582 `08a7a9bf72e46996d4aad3eb538291330dbd6275`.
