@@ -110,7 +110,7 @@ final class PathwayModel extends AdminModel
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id', 'revision', 'catid', 'access', 'state'] as $key) {
                 if (isset($data[$key]) && ((!is_int($data[$key]) && !is_string($data[$key]))
-                    || !preg_match('/^[0-9]{1,10}$/D', (string) $data[$key]))) {
+                    || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))) {
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
             }
