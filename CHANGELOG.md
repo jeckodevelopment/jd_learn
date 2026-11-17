@@ -1,4 +1,6 @@
 # Changelog
+- **Audit funzionale 1.0.0 — settima tranche (18/11/2026):** censiti 22 ulteriori requisiti relativi a UI, accessibilità e performance (49 criteri, 20 evidenze iniziali e 29 punti ancora da valutare). Audit progressivo 129/214 requisiti; nessuna modifica runtime, SemVer invariato e nessuna percentuale globale inventata.
+
 - **Audit funzionale 1.0.0 — sesta tranche (17/11/2026):** aggiunti 34 requisiti SIC/PRI/CFG/CORE, 75 criteri (36 prime evidenze e 39 da approfondire). Registro a 107/214 requisiti. Nessun runtime modificato o avanzamento globale arbitrario, SemVer invariato.
 
 - **Audit funzionale 1.0.0 — quinta tranche (17/11/2026):** aggiunti i criteri per NOT-01/02, MAIL-01–11, CERT-01–08 e JOO-01–05 (26 requisiti, 62 criteri: 30 con evidenze iniziali, 32 da approfondire). Audit progressivo 73/214 requisiti; nessun runtime modificato, nessuna modifica SemVer o percentuale di completamento globale non dimostrata.
