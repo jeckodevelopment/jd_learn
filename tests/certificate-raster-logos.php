@@ -40,6 +40,7 @@ try {
         $path = $dir . '/logo.' . $ext;
         assertPdf($writer($im, $path), 'Cannot write ' . $ext);
         $paths[] = $path;
+        echo "Testing raster logo: " . $ext . "\\n";
         $pdf = CertificatePdf::render($identity, $template, $path);
         assertPdf(str_starts_with($pdf, '%PDF-'), 'No PDF for ' . $ext);
         assertPdf(str_contains($pdf, '/DCTDecode'), 'Logo not embedded for ' . $ext);
