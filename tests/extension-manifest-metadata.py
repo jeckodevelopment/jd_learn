@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
 NAMES={
     'lib_jlms':'JD Learn - Contracts',
-    'com_jlms':'JD Learn',
+    'com_jlms':'COM_JLMS',
     'plg_jlmsvideo_youtube':'JD Learn - YouTube',
     'plg_jlmsvideo_vimeo':'JD Learn - Vimeo',
     'plg_jlmsvideo_cloudflarestream':'JD Learn - Cloudflare Stream',
