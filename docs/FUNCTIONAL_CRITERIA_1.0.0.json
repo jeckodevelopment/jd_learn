@@ -893,6 +893,582 @@
         "status": "unassessed",
         "evidence": []
       }
+    ],
+    "LES-01": [
+      {
+        "id": "lesson_fields",
+        "label": "Titolo, disponibilità, obbligatorietà e completamento della lezione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/forms/curriculum_lesson.xml",
+          "tests/joomla-curriculum.php"
+        ]
+      },
+      {
+        "id": "scoped_materials",
+        "label": "Materiali di corso e materiali lezione come ambiti distinti",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "nonmandatory_files",
+        "label": "Materiali extra non trasformati in attività obbligatorie",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "versioned_full_scope",
+        "label": "Combinazioni complete con allegati e versioni assegnate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LES-02": [
+      {
+        "id": "provider_allowlist",
+        "label": "Provider supportati tramite integrazioni autorizzate",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "arbitrary_embeds",
+        "label": "Blocco script e iframe arbitrari in tutti i contesti di editor",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "external_credentials",
+        "label": "Nessuna credenziale trasmessa ai link esterni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LES-03": [
+      {
+        "id": "protected_delivery",
+        "label": "Consegna materiali riservati previa autorizzazione",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/AttachmentController.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "protected_mp4",
+        "label": "Streaming HTTP Range protetto per video locali",
+        "status": "implemented",
+        "evidence": [
+          "tests/html5-http.py"
+        ]
+      },
+      {
+        "id": "public_storage",
+        "label": "Audit assenza di fallback pubblico per tutte le configurazioni hosting",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LES-04": [
+      {
+        "id": "external_storage_scope",
+        "label": "Video gestiti da provider o storage senza transcodifica LMS inclusa",
+        "status": "implemented",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/HTML5_VIDEO.md"
+        ]
+      },
+      {
+        "id": "capacity_policy",
+        "label": "Validazione operativa dei limiti storage e CDN su ambienti reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "VID-01": [
+      {
+        "id": "provider_adapters",
+        "label": "Adapter Joomla e player per provider supportati",
+        "status": "implemented",
+        "evidence": [
+          "plugins/jlmsvideo/youtube/media/js/player.js",
+          "plugins/jlmsvideo/cloudflarestream/media/js/player.js",
+          "tests/video-player.mjs"
+        ]
+      },
+      {
+        "id": "capabilities",
+        "label": "Capacità del player usate per applicare le regole di fruizione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "provider_parity",
+        "label": "Equivalenza delle capacità opzionali e attributi UI su tutti i provider reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "VID-02": [
+      {
+        "id": "editor_fields",
+        "label": "Selezione sorgente, regola e parametri video per lezione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/forms/curriculum_lesson.xml",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "duration_metadata",
+        "label": "Rilevazione e dichiarazione durata entro limiti validati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/VideoDuration.php",
+          "tests/video-duration-http.py"
+        ]
+      },
+      {
+        "id": "transcript",
+        "label": "Trascrizione editoriale versionata separata dalla riproduzione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/LessonTranscript.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "previews_provider",
+        "label": "Anteprima e diagnosi valide per tutti i provider/contesti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "VID-03": [
+      {
+        "id": "watched_intervals",
+        "label": "Salvataggio di intervalli realmente fruiti e progresso server",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "resume",
+        "label": "Ripresa su ultima posizione confermata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/video-player.mjs"
+        ]
+      },
+      {
+        "id": "no_end_only",
+        "label": "Evento fine non implica completamento senza copertura sufficiente",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "browser_matrix",
+        "label": "Comportamento iOS Safari, Android Chrome e browser desktop reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "VID-04": [
+      {
+        "id": "signed_token",
+        "label": "Emissione token protetti Cloudflare lato server",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/cloudflare.php"
+        ]
+      },
+      {
+        "id": "renew_authorized",
+        "label": "Rinnovo autorizzato in base a diritti correnti",
+        "status": "implemented",
+        "evidence": [
+          "tests/cloudflare.php",
+          "tests/video-http.py"
+        ]
+      },
+      {
+        "id": "credential_leaks",
+        "label": "Assenza chiavi e token sensibili in browser, cache e log in tutte le varianti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "remote_posters",
+        "label": "Consenso e protezione risorse remote correlate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "VID-05": [
+      {
+        "id": "current_access",
+        "label": "Revoca applicata alle nuove richieste/rinnovi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "token_expiry",
+        "label": "Tempo residuo e configurazione durata token tracciati e collaudati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "noninstant_limit",
+        "label": "Limiti di revoca e buffer documentati senza garanzie improprie",
+        "status": "implemented",
+        "evidence": [
+          "docs/VIDEO.md"
+        ]
+      }
+    ],
+    "VID-06": [
+      {
+        "id": "consent_gate",
+        "label": "Caricamento condizionato dei player esterni",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "tests/video-player.mjs"
+        ]
+      },
+      {
+        "id": "error_messages",
+        "label": "Messaggi distinti per ogni errore provider o rete",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "no_false_progress",
+        "label": "Errori di player non producono avanzamento",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "cmp_integration",
+        "label": "Verifica con gestore consensi reale e anteprima",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "VID-07": [
+      {
+        "id": "provider_hosted",
+        "label": "Gestione video remota collegata tramite ID/URL autorizzato",
+        "status": "implemented",
+        "evidence": [
+          "docs/VIDEO.md",
+          "component/administrator/forms/curriculum_lesson.xml"
+        ]
+      },
+      {
+        "id": "no_direct_upload_scope",
+        "label": "Upload Joomla e libreria remota completa fuori dal perimetro 1.0.0",
+        "status": "implemented",
+        "evidence": [
+          "docs/VIDEO.md"
+        ]
+      },
+      {
+        "id": "operational_setup",
+        "label": "Validazione pratica dei permessi e credenziali tecniche provider",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "VID-08": [
+      {
+        "id": "resource_identity",
+        "label": "Progressi associati a identità e versione risorsa",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "new_video",
+        "label": "Sostituzione sostanziale legata al workflow di versionamento",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseVersionCopy.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "equivalence",
+        "label": "Tutte le equivalenze di risorsa impediscono il riuso improprio dei progressi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-01": [
+      {
+        "id": "scopes",
+        "label": "Materiali del corso e della lezione distinti",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "frontend_sections",
+        "label": "Sezioni materiali nell'aula e nella scheda corso",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "pagination_limits",
+        "label": "Paginazione e limiti reali upload in entrambi gli ambiti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-02": [
+      {
+        "id": "metadata",
+        "label": "Titolo, MIME, ordine, stato e dati file persistiti",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "server_ownership",
+        "label": "Proprietà derivata dal server, senza fiducia nell'ID manipolato",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "staging_visibility",
+        "label": "File temporanei non esposti pubblicamente",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "public_preview_flags",
+        "label": "Pubblicabilità esplicita coerente con tutte le versioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-03": [
+      {
+        "id": "allowlist",
+        "label": "Allowlist per formati e dimensioni; rifiuto tipi attivi/eseguibili",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MaterialFilePolicy.php",
+          "tests/material-policy.php"
+        ]
+      },
+      {
+        "id": "mime_validation",
+        "label": "Validazione MIME e contenuto in upload",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MaterialFilePolicy.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "scanner",
+        "label": "Scansione con policy fail-closed quando configurata",
+        "status": "implemented",
+        "evidence": [
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "hosting_limits",
+        "label": "Limiti effettivi su hosting differenti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-04": [
+      {
+        "id": "download_acl",
+        "label": "Download autenticato con permessi e riferimenti proprietari",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/AttachmentController.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "preview_scope",
+        "label": "Anteprima pubblica solo esplicita per materiali del corso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "lesson_preconditions",
+        "label": "Vincoli di lezione e prerequisiti in ogni percorso diretto",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-05": [
+      {
+        "id": "protected_stream",
+        "label": "Stream PHP protetto senza dipendenza da Nginx",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/AttachmentController.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "headers",
+        "label": "MIME, Content-Disposition, nosniff e cache privata",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/AttachmentController.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "large_file",
+        "label": "Gestione trasferimento file grandi su hosting reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-06": [
+      {
+        "id": "revisions",
+        "label": "Versioni immutabili e copia separata dell'asset",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "assigned_version",
+        "label": "File consegnati coerentemente con versione del corso assegnata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseVersionCopy.php",
+          "tests/joomla-duplication.php"
+        ]
+      },
+      {
+        "id": "protected_deletion",
+        "label": "Cancellazione definitiva condizionata dai riferimenti storici",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "full_lifecycle",
+        "label": "Ripristino/upgrade/cleanup in tutte le combinazioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-07": [
+      {
+        "id": "no_credit",
+        "label": "Apertura o download allegato non concede progressi didattici",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "mandatory_document",
+        "label": "Documento obbligatorio rappresentato da lezione con regola propria",
+        "status": "implemented",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "retention",
+        "label": "Limiti di conservazione log e controlli privacy operativi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAT-08": [
+      {
+        "id": "editor",
+        "label": "Editor materiali con upload e metadati per corso/lezione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "reorder_replace",
+        "label": "Ordinamento, sostituzione e stato versionato",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "frontend_override",
+        "label": "CSS pubblico e override Joomla per materiali",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "docs/FRONTEND_CSS.md"
+        ]
+      },
+      {
+        "id": "lifecycle_hosting",
+        "label": "Esercizio end-to-end su installazioni Joomla e storage reali",
+        "status": "unassessed",
+        "evidence": []
+      }
     ]
   }
 }

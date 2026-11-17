@@ -328,3 +328,7 @@ Esteso `FUNCTIONAL_CRITERIA_1.0.0.json` a CAT-01/02/03/04 e AUT-01/02/03/04/05, 
 ### Terza tranche audit criteri funzionali: accessi/iscrizioni, esperienza studente, avanzamento
 
 Scomposti in `FUNCTIONAL_CRITERIA_1.0.0.json` 15 requisiti ISC/STU/PRO del perimetro 1.0.0 (47 criteri; 31 con evidenze iniziali, 16 da verificare). Verificare successivamente l'aderenza puntuale di ciascun criterio, con particolare attenzione a ACL e revoche di sessione, rinnovo e versioni, anteprime, percorsi di ripresa, disponibilità e concorrenza multidispositivo. Le attività espressamente rinviate alla fase 2 sono escluse dal calcolo di 1.0.0. Il valore globale rimane `null` finché il perimetro completo non sarà verificato. La prossima tranche comprende lezioni, video, materiali, email, attestati e integrazioni.
+
+### Quarta tranche audit criteri: lezioni, player video, materiali
+
+Aggiungere alla riconciliazione `FUNCTIONAL_CRITERIA_1.0.0.json` i requisiti LES-01–04, VID-01–08 e MAT-01–08 con 68 criteri espliciti. Per ogni criterio implementato registrare almeno un riferimento verificabile a codice o test e lasciare `unassessed` i casi senza copertura sufficientemente stabilita. Riesaminare successivamente casi reali di provider YouTube/Vimeo/Cloudflare/HTML5, sicurezza file, Range, accessi e versionamento; non attribuire collaudi manuali. Copertura audit progressiva 47/214, **non** percentuale di sviluppo. Prossime aree: email/notifiche, attestati, integrazione Joomla e altri gate core. La governance SemVer vigente non cambia.
