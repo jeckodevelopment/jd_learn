@@ -19,3 +19,9 @@ Per verificare il risultato, apri la vista pubblica dei percorsi e la scheda del
 ## Collaudo amministrativo
 
 Su Joomla di prova, con un account autorizzato, apri l'elenco, crea un percorso con almeno due corsi e riordina le righe; salva, modifica e pubblica. Con un account senza `jlms.pathways.manage`, verifica che la voce laterale e la scorciatoia non appaiano e che l'URL diretto sia negato. Ripeti con un account che ha il permesso dedicato ma senza `core.create`: l'elenco è accessibile ma il comando **Nuovo** non deve apparire. Verifica le etichette in italiano e inglese.
+
+## Archiviazione e ripristino
+
+Nell'editor del percorso un amministratore con `core.edit.state` può scegliere **Archiviato** e salvare. Il percorso archiviato non è visibile nel catalogo o nella pagina pubblica diretta (404), ma **non viene eliminato**: categorie, associazioni ai corsi, progressi e iscrizioni ai singoli corsi restano inalterati. L'archiviazione del percorso non archivia automaticamente i corsi associati.
+
+Per riattivarlo impostare prima **Non pubblicato**, verificare contenuti e ordine, quindi selezionare **Pubblicato** con una seconda azione esplicita. Lo stato Archiviato è mostrato nell'elenco amministrativo. La cestinazione e la cancellazione definitiva condizionata sono requisiti separati non ancora disponibili; non simulare l'eliminazione con l'archiviazione.
