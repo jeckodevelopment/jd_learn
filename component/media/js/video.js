@@ -8,7 +8,22 @@ export class VideoLesson {
     this.chain = Promise.resolve(); this.generation = 0;
     this.status = root.querySelector('#jlms-player-status');
     this.youtubeFinish = root.querySelector('#jlms-youtube-finish');
+    this.playerContainer = root.querySelector('#jlms-player');
+    this.replayButton = root.querySelector('#jlms-youtube-replay');
     this.youtubeEnded = false;
+    this.replayFromStart = false;
+    this.onYoutubeReplay = () => {
+      if (!this.stopped || !this.youtubeFinish || this.youtubeFinish.hidden) return;
+      if (!this.allowed()) {
+        this.message(this.config.policy === 'click' ? 'policy' : 'consent');
+        return;
+      }
+      this.replayFromStart = true;
+      this.youtubeFinish.hidden = true;
+      if (this.playerContainer) this.playerContainer.hidden = false;
+      this.start();
+    };
+    this.replayButton?.addEventListener('click', this.onYoutubeReplay);
     this.rateSelect = root.querySelector('#jlms-video-speed');
     this.languageSelect = root.querySelector('#jlms-video-language');
     this.onRateChange = () => this.changePlaybackRate();
@@ -155,6 +170,16 @@ export class VideoLesson {
     }
     return json.data;
   }
+  // Unload the external embed after the server confirms completion. The
+  // native screen occupies exactly the previous video area, never overlays
+  // YouTube content and cannot trap YouTube links or controls.
+  async showYoutubeFinish() {
+    if (this.config.provider !== 'youtube' || !this.youtubeFinish || !this.youtubeEnded
+      || this.stopped || !this.allowed()) return;
+    await this.stop(false);
+    if (this.playerContainer) this.playerContainer.hidden = true;
+    this.youtubeFinish.hidden = false;
+  }
   async start() {
     if (!this.stopped || this.starting) return;
     if (!this.allowed()) { this.message(this.config.policy === 'click' ? 'policy' : 'consent'); return; }
@@ -163,6 +188,7 @@ export class VideoLesson {
     this.message('loading');
     this.youtubeEnded = false;
     if (this.youtubeFinish) this.youtubeFinish.hidden = true;
+    if (this.playerContainer) this.playerContainer.hidden = false;
     try {
       // lesson.begin and video.playback both write the enrollment/progress rows.
       // Wait for the bounded, idempotent start receipt to settle before opening
@@ -192,7 +218,11 @@ export class VideoLesson {
       this.player = player;
       await this.configurePlaybackSpeed(player);
       await this.configureCaptionLanguage(player);
-      if (this.tracking && grant.resume_ms) await player.seek(grant.resume_ms);
+      // A voluntary replay starts at 0 instead of restoring the end position
+      // from the completed lesson. This never changes the server's rules.
+      const replayFromStart = this.replayFromStart;
+      this.replayFromStart = false;
+      if (this.tracking && grant.resume_ms && !replayFromStart) await player.seek(grant.resume_ms);
       if (this.tracking) await this.record('seeked');
       if (this.stopped || generation !== this.generation) return;
       if (this.tracking) { this.sampler = setInterval(() => this.record('position'), 1000); this.schedule(); this.scheduleRenew(); }
@@ -248,7 +278,7 @@ export class VideoLesson {
       // completion of the ended YouTube lesson. It sits below the iframe,
       // never hides, masks or intercepts YouTube controls and links.
       if (this.config.provider === 'youtube' && this.youtubeEnded && result.lesson_completed
-        && this.youtubeFinish) this.youtubeFinish.hidden = false;
+        && this.youtubeFinish) await this.showYoutubeFinish();
       const meter = document.getElementById('jlms-progress-meter');
       if (meter) meter.value = result.course_percent;
     } catch (error) {
@@ -289,6 +319,7 @@ export class VideoLesson {
     ++this.generation; this.stopped = true; this.aborter?.abort();
     this.youtubeEnded = false;
     if (this.youtubeFinish) this.youtubeFinish.hidden = true;
+    if (this.playerContainer) this.playerContainer.hidden = false;
     clearInterval(this.sampler); clearTimeout(this.timer); clearTimeout(this.renewTimer);
     const player = this.player; this.player = null;
     try { await player?.destroy(); } catch { /* Teardown must continue. */ }
@@ -304,6 +335,7 @@ export class VideoLesson {
   }
   async destroy() {
     await this.stop(true);
+    this.replayButton?.removeEventListener('click', this.onYoutubeReplay);
     this.rateSelect?.removeEventListener('change', this.onRateChange);
     this.languageSelect?.removeEventListener('change', this.onLanguageChange);
     window.removeEventListener('jlms:consent-changed', this.onConsent);
