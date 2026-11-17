@@ -1,3 +1,9 @@
+**JD Learn 0.57.7-dev — ricognizione requisiti al 17/11/2026.**
+
+## Audit funzionale sicurezza, privacy, configurazione e core Joomla — PR #600 (17/11/2026)
+
+La [PR #600](https://github.com/jeckodevelopment/jd_learn/pull/600), integrata in `main` al commit `f3f43a56c25af7d2b94723e6413312bb0a67f5c8`, censisce 34 requisiti SIC/PRI/CFG/CORE con 75 criteri (36 con prime evidenze e 39 da approfondire). Il registro `FUNCTIONAL_CRITERIA_1.0.0.json` copre **107/214 requisiti 1.0.0** con **310 criteri** (183 con evidenze iniziali, 127 `unassessed`); 107 requisiti attendono la scomposizione. I riferimenti iniziali a codice/test sono ipotesi di evidenza da riesaminare semanticamente, non attestazioni definitive. **La percentuale globale funzionale resta `null`**, mentre il 79,56% è soltanto una stima storica. La [CI #44195632602](https://github.com/jeckodevelopment/jd_learn/actions/runs/44195632602) è **4/4 verde** sui gate preliminari, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. [Artefatto JD-Learn-0.57.7-dev #14378643349](https://github.com/jeckodevelopment/jd_learn/actions/runs/44195632602/artifacts/14378643349) presente in GitHub Actions; checksum del pacchetto Joomla annidato non verificato. Non sono stati aggiunti collaudi manuali né modifiche al runtime o al SemVer.
+
 **JD Learn 0.57.7-dev — stato della ricognizione al 17/11/2026.**
 
 ## Audit funzionale: email, attestati core e Joomla — PR #598 (17/11/2026)
