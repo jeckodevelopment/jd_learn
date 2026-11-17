@@ -221,5 +221,47 @@ teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_a
     'teacher lifecycle preserves immutable course snapshot');
 teacherExpect($teacherModel->changeStates([$public, $private], 1),
     'teachers are explicitly republished after restoration');
+// LCM-04: permanent removal is a deliberate, single-record action with a
+// conservative dependency gate. Native users and course history are immutable.
+$linkedBefore = $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc();
+$versionBefore = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+teacherExpect(!$teacherModel->purgeUnreferenced($public),
+    'published teacher profile cannot be deleted permanently');
+teacherExpect($teacherModel->changeStates([$public], -2), 'assigned teacher can be trashed');
+teacherExpect(!$teacherModel->purgeUnreferenced($public),
+    'teacher with associated courses cannot be deleted permanently');
+teacherExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $public)->loadResult() === 1,
+    'blocked deletion retains teacher profile');
+teacherExpect(!$teacherModel->purgeUnreferenced(0), 'invalid teacher purge ID denied');
+// Even after an association is removed, the immutable published version
+// must prevent removing a previously published teacher identity.
+$db->setQuery('DELETE FROM #__jlms_course_teachers WHERE course_id=' . $course . ' AND teacher_id=' . $public)->execute();
+teacherExpect(!$teacherModel->purgeUnreferenced($public),
+    'frozen teacher snapshot independently blocks destructive deletion');
+$db->setQuery('INSERT INTO #__jlms_course_teachers (course_id,teacher_id,ordering) VALUES ('
+    . $course . ',' . $public . ',0)')->execute();
+teacherExpect($teacherModel->changeStates([$public], 0)
+    && $teacherModel->changeStates([$public], 1), 'published teacher fixture restored');
+teacherExpect(TeacherProfiles::selected($db, $course) === $beforeCourseTeachers,
+    'protected deletion does not disturb teacher ordering');
+teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $linkedBefore,
+    'deletion attempt never removes or blocks linked Joomla account');
+teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $versionBefore,
+    'frozen presentation remains byte-for-byte identical');
+
+$emptyTeacher = array_replace($teacherBase, [
+    'id'=>0, 'revision'=>1, 'title'=>'Disposable CI empty teacher',
+    'alias'=>'disposable-ci-empty-teacher', 'user_id'=>'', 'state'=>0,
+]);
+teacherExpect($teacherModel->save($emptyTeacher), 'new unlinked and unassigned teacher can be authored');
+$emptyTeacherId=(int)$teacherModel->getState('teacher.id');
+teacherExpect($emptyTeacherId>0, 'empty teacher fixture created');
+teacherExpect($teacherModel->changeStates([$emptyTeacherId], -2), 'empty teacher placed in trash');
+teacherExpect($teacherModel->purgeUnreferenced($emptyTeacherId),
+    'empty unreferenced trashed teacher may be permanently deleted');
+teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id='.$emptyTeacherId)->loadResult()===0,
+    'empty teacher profile record removed');
+teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc()===$linkedBefore,
+    'empty profile deletion never touches Joomla accounts');
 file_put_contents($fixture,json_encode(['course'=>$course,'version'=>$version,'ids'=>[$public,$private],'public'=>$public,'private'=>$private,'teacher_category'=>$teacherCategory,'snapshot'=>$snapshot],JSON_THROW_ON_ERROR));
 echo json_encode(['teacher_checks'=>$checks,'status'=>'passed']).PHP_EOL;
