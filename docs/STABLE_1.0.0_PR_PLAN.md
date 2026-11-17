@@ -233,3 +233,8 @@ La pubblicazione delle nuove versioni didattiche deve congelare il valore effett
 ### Recupero amministrativo attestati storici (#553)
 
 Un completamento precedente alla correzione del flag versione può essere gestito da amministratore con permesso `jlms.certificates.manage`, motivazione obbligatoria e conferma esplicita. L'emissione è idempotente, preserva data del completamento e snapshot originario, produce audit e coda mail. Non esiste backfill automatico. Test manuale in `docs/QA_TESTBOOK.md`.
+
+
+### Regression fix attestati storici (#558)
+
+La PR #559 corregge il binding dei parametri nelle query di recupero e aggiunge un test Joomla end-to-end sul servizio di emissione, sull'audit e sull'idempotenza; validare entrambi i database prima del merge.
