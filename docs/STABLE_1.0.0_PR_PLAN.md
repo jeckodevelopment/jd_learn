@@ -340,3 +340,7 @@ L'audit per criteri in `FUNCTIONAL_CRITERIA_1.0.0.json` copre 73/214 requisiti 1
 ### Sesta tranche — revisione funzionale sicurezza/integrazioni core
 
 Sono scomposti in `FUNCTIONAL_CRITERIA_1.0.0.json` tutti i requisiti `SIC-01/02`, `PRI-01–03`, `CFG-01–06`, `CORE-01–23`, per 75 criteri. Copertura progressiva 107/214, non percentuale completamento del software. Rimangono 107 requisiti da decomporre, più riesame semantico ed esame dei criteri `unassessed`. Le verifiche sull'autenticazione, ACL, privacy, cache, hosting e upgrade non si considerano superate dalla mera esistenza di servizi o test. Nessuna nuova versione applicativa per modifiche all'audit; rispettare SemVer concordato.
+
+### Settima tranche di ricognizione: UI, accessibilità e performance
+
+Il registro dei criteri è esteso a 129/214 requisiti 1.0.0, includendo STU-05, PRO-04/05, ACC-01, UI-01–07 e PERF-01–11. Restano **85 requisiti non scomposti**, criteri `unassessed` da indagare e verifica semantica delle prime evidenze. I vincoli prestazionali (utenti concorrenti, scenario 60/20/15/5, p95) e WCAG non si certificano con la sola presenza di CSS, codice di paginazione o test unitari: occorrono misure e audit dedicati su ambienti rappresentativi. Mantenere la percentuale globale nulla e la versione SemVer invariata per PR di sola documentazione/test.
