@@ -79,3 +79,8 @@ La vista Attestati amministrativa distingue la mancata emissione dalla mancata g
 ## Post-merge PR #549 — diagnosi certificati mancanti
 
 **PR #549 (diagnostica attestati, issue #546)** integrata al commit `013267b788e2033fa5f11ef89bdf3b284c8d47d1`; CI 4/4 verde [run 44048059581](https://github.com/jeckodevelopment/jd_learn/actions/runs/44048059581), gate CSV [run 44048060095](https://github.com/jeckodevelopment/jd_learn/actions/runs/44048060095), [pacchetto JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44048059581/artifacts/14311889571). Lista protetta e limitata delle iscrizioni completate senza attestato, con diagnosi dei gate; nessuna emissione retroattiva forzata. Collaudo Joomla e causa precisa del corso Rigoletto ancora pendenti.
+
+
+## Download attestati storici e configurazione privata (issue #560)
+
+Il record di emissione può essere `pending_render` finché il primo download autorizzato non genera il PDF e lo salva nello storage privato. Il renderer accetta date SQL `DATETIME(6)`, incluse frazioni di secondo, oltre a date SQL senza frazioni; il completamento rimane immutato. Per lo storage, configurare in JD Learn una directory **assoluta**, esistente, scrivibile da PHP e **esterna** alla radice pubblica del sito (`material_storage_root`). Un percorso vuoto, non scrivibile o pubblico provoca `COM_JLMS_STORAGE_UNAVAILABLE` (503): non si effettua alcun salvataggio in una cartella web per aggirare il controllo. Dopo aver corretto la configurazione, riprovare il download; gli attestati ancora `pending_render` non vanno emessi una seconda volta.
