@@ -77,6 +77,35 @@ let consultationSamples=0;consultationPlayer.tracking=false;consultationPlayer.s
 consultationPlayer.player={sample:async()=>{consultationSamples++;throw Error('consultation playback must not sample progress');}};
 await consultationPlayer.record('position');assert.equal(consultationSamples,0);assert.equal(consultationPlayer.queue.length,0);
 await consultationPlayer.destroy();
+// "Watch again" starts a fresh authorized session at 0 and never resumes from
+// the saved end position. The previous external iframe stays unloaded.
+const replayButton={handler:null,addEventListener(_event,callback){this.handler=callback;},removeEventListener(){this.handler=null;}};
+const replayBox={hidden:true,replaceChildren(){}};
+const replayFinish={hidden:false};
+const replayElements={...elements,'#jlms-player':replayBox,'#jlms-youtube-finish':replayFinish,'#jlms-youtube-replay':replayButton};
+const replayRoot={querySelector:key=>replayElements[key]};
+const replaySeekCalls=[];
+let replayGrants=0,replayDestroyed=0;
+const replayLesson=new VideoLesson({...config,policy:'embed'},replayRoot,
+  async () => {
+    replayGrants++;
+    return {ok:true,json:async()=>({success:true,data:{provider:'youtube',session_id:'replay',
+      source_revision:1,duration_ms:10000,resume_ms:9600,options:{}}})};
+  },
+  async()=>({create:async()=>({
+    sample:async()=>({position_ms:0,duration_ms:10000,rate_milli:1000,playing:false}),
+    seek:async ms=>replaySeekCalls.push(ms),destroy:async()=>{replayDestroyed++;},
+  })}));
+replayButton.handler();
+await new Promise(resolve=>setImmediate(resolve));
+assert.equal(replayGrants,1,'Replay requests a fresh authorized playback grant');
+assert.equal(replayBox.hidden,false,'Replay restores the player in its original slot');
+assert.equal(replayFinish.hidden,true,'Replay dismisses the native completion');
+assert.deepEqual(replaySeekCalls,[],'Replay does not seek back to saved video end');
+assert.equal(replayLesson.stopped,false);
+await replayLesson.destroy();
+assert.equal(replayDestroyed,1);
+assert.equal(replayButton.handler,null,'Rewatch listener cleaned up on teardown');
 // The default browser transport keeps the global fetch receiver and loads the adapter after authorization.
 const originalFetch = globalThis.fetch;
 const startup = [];
