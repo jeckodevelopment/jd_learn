@@ -65,3 +65,6 @@ FE-08 integrata e FE-11 aggiornata: `category/default.php` conserva `#jlms-categ
 
 
 FE-12: il gate strutturale in `tests/frontend-release-gate.py` verifica alcuni invarianti del presente inventario. Il registro di accettazione visuale, funzionale e di sicurezza resta `docs/FRONTEND_FE12_ACCEPTANCE.md`; nessuna prova statica certifica WCAG o override su un sito reale.
+
+
+FE-10 / PR #571: nelle lezioni YouTube il contratto `#jlms-player` rimane invariato; `#jlms-youtube-finish` (inizialmente `hidden`) lo sostituisce visivamente **nello stesso slot 16:9** dopo conferma backend del completamento. `#jlms-youtube-replay` ripristina il player nello stesso slot con nuova autorizzazione e playback da 0. Non sono consentiti overlay sull'iframe. Gli override Joomla devono mantenere questi ID e la semantica `hidden` per garantire il completamento accessibile e il replay.
