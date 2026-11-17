@@ -2090,3 +2090,9 @@ Il test nativo `tests/joomla-pathways.php` estende i controlli del ciclo di vita
 ## LCM-05 — negazione server-side delle mutazioni dei percorsi
 
 Il test Joomla `tests/joomla-pathways.php` prova ora un attore anonimo contro `changeStates()` e `purgeEmpty()` con ID di percorsi realmente cestinati. Entrambe le operazioni devono essere negate; gli stati di entrambi i percorsi e le associazioni ai corsi devono rimanere immutati. Il test ripristina l'identità dell'operatore CI prima delle operazioni legittime successive. **Comportamenti da collaudare manualmente (rinviati):** POST diretti con ruoli non autorizzati, token CSRF assente/invalido, permessi ACL specifici di record, conferma per eliminazione, rollback e successiva operazione amministrativa autorizzata. Il solo test del modello non attesta l'intero gate HTTP/CSRF.
+
+## LCM-05 — test HTTP negativi delle transizioni percorso (17/11/2026)
+
+`tests/http-smoke.py` verifica tramite sessione amministrativa Joomla disposable i sei endpoint `pathway.trash`, `pathway.restore`, `pathway.archive`, `pathway.publish`, `pathway.unpublish` e `pathway.purge`: richieste GET devono risultare 405 e richieste POST prive di token CSRF devono risultare 403. Dopo i rifiuti il percorso resta presente nella lista amministrativa. La prova è HTTP automatica, non accettazione manuale.
+
+**Comportamenti da collaudare (rinviati):** transizioni legittime con token corretto, token alterato/scaduto, permessi ACL per record e per selezioni miste, conferma dell'eliminazione, controllo dei dati prima e dopo ciascuna operazione, test di regressione con diverse configurazioni hosting. Rimangono anche gli audit Finder/SEO e la verifica reale Joomla.
