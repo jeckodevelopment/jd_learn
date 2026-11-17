@@ -312,3 +312,7 @@ Estendere il test disposable Joomla dei percorsi con tentativi anonimi di ripris
 ### LCM-05 — HTTP/CSRF su controller percorsi (terzo incremento, 17/11/2026)
 
 Il test HTTP disposable esercita le sei azioni amministrative di cambio stato e cancellazione di un percorso senza passare dalla toolbar: GET deve essere respinto con HTTP 405; POST senza token CSRF con HTTP 403. Il percorso deve rimanere leggibile dall'elenco amministrativo dopo il rifiuto. Non è una modifica runtime. Restano ACL per record, casi con token valido e malformato, Finder/SEO e collaudi manuali.
+
+### LCM-05 — quarto incremento: transizioni HTTP autorizzate dei percorsi
+
+Estendere il fixture HTTP Joomla per esercitare archive → restore (Non pubblicato) → publish con il token CSRF recuperato dal modulo amministrativo nativo. Controllare la visibilità pubblica dopo ogni operazione e preservare il percorso pubblicato per i test già presenti. Nessun cambiamento runtime. Restano ACL per record, token scaduti, Finder/SEO, upgrade e collaudo manuale.
