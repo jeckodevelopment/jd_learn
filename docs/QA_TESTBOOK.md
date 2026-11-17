@@ -1982,3 +1982,12 @@ Dopo l'emissione amministrativa di un attestato storico, verificare che il docum
 ### Regressione 503 attestato in attesa PDF su hosting condiviso (#564, PR #565)
 
 Aggiornare JD Learn, lasciare il percorso di archiviazione personalizzato vuoto e usare un attestato già emesso `pending_render` su un hosting con `open_basedir` o temp di sistema non accessibile: scaricare dal frontend come titolare. Il PDF deve essere generato direttamente nello storage protetto, stato `ready`, secondo download invariato. Non deve essere creato alcun PDF temporaneo non cifrato nella webroot o nella directory PHP globale. Se ancora 503, consultare il log Joomla nella categoria `com_jlms` e rilevare esclusivamente la fase `logo`, `pdf`, `storage` o `database`, senza pubblicare dati personali, percorsi o chiavi. Verificare logo configurato come JPEG valido e cartella gestita scrivibile. Testare inoltre rigenerazione tecnica e due database.
+
+### Collaudo attestati con logo PNG e recupero di PDF in attesa
+
+1. Installare aggiornamento senza disinstallare il componente. Conservare un certificato già emesso con stato **In attesa PDF** e logo PNG congelato nel suo snapshot.
+2. Accedere come studente proprietario e scaricare. Verificare passaggio a **Pronto**, PDF integro, logo leggibile e codice/data/identità invariati; ripetere il download senza emissione duplicata.
+3. Provare nuovi loghi JPEG, PNG, GIF, WebP e AVIF (ultimi secondo GD PHP), includendo PNG trasparente; verificare sfondo bianco, layout e PDF corretti.
+4. Provare immagine inesistente, formato non consentito e utente diverso: errore controllato senza fuga di contenuti; i documenti validi non devono essere alterati.
+5. Per iscrizione completata senza alcun record attestato, usare **Attestati → Corsi completati senza attestato**, distinguendo cause configurative e recupero storico esplicito; non duplicare i record pending.
+6. Controllare log `com_jlms`, audit e compatibilità storage; eseguire `php tests/certificate-raster-logos.php` in CI con GD.
