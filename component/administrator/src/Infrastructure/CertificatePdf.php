@@ -145,15 +145,65 @@ final class CertificatePdf
     /** @return array{0:int,1:string,2:int,3:int} */
     private static function jpeg(string $path): array
     {
-        if (!is_file($path) || is_link($path) || filesize($path) > 2097152) {
+        if (!is_file($path) || is_link($path) || !is_readable($path)) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        }
+        $size = filesize($path);
+        if ($size === false || $size < 1 || $size > 10485760) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
         $info = @getimagesize($path);
         $bytes = @file_get_contents($path);
-        if (!$info || $info['mime'] !== 'image/jpeg' || !$bytes || strlen($bytes) > 2097152
+        if (!$info || !is_string($bytes) || strlen($bytes) !== $size
             || $info[0] < 1 || $info[1] < 1 || $info[0] > 4000 || $info[1] > 4000) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
-        return [7, $bytes, (int) $info[0], (int) $info[1]];
+        $mime = (string) ($info['mime'] ?? '');
+        if (!in_array($mime, ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif'], true)) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        }
+        if ($mime === 'image/jpeg') {
+            return [7, $bytes, (int) $info[0], (int) $info[1]];
+        }
+        // Decode common raster formats via GD; no SVG, remote images or path input.
+        if (!function_exists('imagecreatefromstring') || !function_exists('imagecreatetruecolor')
+            || !function_exists('imagejpeg')) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        }
+        $source = @imagecreatefromstring($bytes);
+        if (!$source instanceof \GdImage) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        }
+        $width = (int) $info[0];
+        $height = (int) $info[1];
+        $canvas = imagecreatetruecolor($width, $height);
+        if (!$canvas instanceof \GdImage) {
+            imagedestroy($source);
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        }
+        try {
+            // Flatten PNG/WebP/AVIF transparency onto white for JPEG embedding.
+            $white = imagecolorallocate($canvas, 255, 255, 255);
+            imagefilledrectangle($canvas, 0, 0, $width - 1, $height - 1, $white);
+            imagealphablending($canvas, true);
+            if (!imagecopy($canvas, $source, 0, 0, 0, 0, $width, $height)) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+            }
+            ob_start();
+            try {
+                $ok = imagejpeg($canvas, null, 88);
+                $converted = ob_get_contents();
+            } finally {
+                ob_end_clean();
+            }
+            if (!$ok || !is_string($converted) || $converted === '') {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+            }
+            return [7, $converted, $width, $height];
+        } finally {
+            imagedestroy($source);
+            imagedestroy($canvas);
+        }
     }
+
 }
