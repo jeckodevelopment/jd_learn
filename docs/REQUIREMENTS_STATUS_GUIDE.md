@@ -34,3 +34,15 @@ Le PR di bug fix e regressione **sono comprese** nella regola se cambiano runtim
 - `docs/QA_TESTBOOK.md`: unico registro dell'accettazione manuale e degli scenari ancora da testare.
 
 È necessario un controllo funzionale puntuale ulteriore delle singole righe, in particolare per MAIL, NOT e integrazioni Joomla. La presente riconciliazione **non dichiara** il completamento di questa attività di accettazione.
+
+## Misura oggettiva di completamento funzionale 1.0.0 (ricognizione progressiva)
+
+**Non utilizzare il 79,56% storico come percentuale verificata dei criteri soddisfatti.** Quel numero resta una precedente stima di macroaree, non deriva dai singoli criteri. La fonte canonica dei requisiti rimane `REQUIREMENTS_STATUS.csv`; l'audit verificabile dei criteri è avviato in `FUNCTIONAL_CRITERIA_1.0.0.json` e validato da `python3 tools/functional_progress.py`.
+
+- Denominatore: solo requisiti in perimetro `1.0.0` o `Misto`, escludendo `Fase 2`; gli elementi misti sono scomposti per la sola parte 1.0.0.
+- Ogni requisito approvato viene scomposto in criteri verificabili, identificati univocamente; ciascuno ha stato `implemented`, `missing` o `unassessed` e riferimenti concreti alle prove nel repository. Lo stato `unassessed` è ignoto, non equivale a zero.
+- All'interno del requisito la frazione provvisoria è `criteri implementati / criteri totali` (pesi uguali espliciti). Nel totale ciascun requisito avrebbe lo stesso peso: non contano il numero di PR, test o righe di codice. Pesi alternativi richiedono una decisione esplicita prima del calcolo e non possono essere cambiati retroattivamente per aumentare il risultato.
+- **Il totale globale non viene pubblicato finché non sono stati scomposti e valutati tutti i requisiti in scope e risolti gli `unassessed`.** Il programma emette `functional_implementation_percent: null` e misura la copertura dell'audit, evitando una falsa precisione.
+- Test CI e accettazione umana sono assi separati: una prova automatica può documentare l'implementazione, ma non costituisce accettazione su un sito reale. Non segnare come implementato un criterio per la sola presenza di un test o di una PR; confrontare anche il codice e i limiti.
+
+La prima tranche audit riguarda LCM-03, LCM-04 e LCM-05; le rispettive frazioni sono **provvisorie** e dipendono dalla successiva conferma della scomposizione. Non rappresentano il completamento generale del software. Il restante catalogo richiede una ricognizione puntuale. Versioning SemVer invariato secondo la governance già approvata (issue #160); questa PR di strumenti/documentazione **non cambia il manifest installabile**.

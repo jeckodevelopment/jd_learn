@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "baseline": "1.0.0",
+  "policy": "equal_requirement_weight",
+  "requirements": {
+    "LCM-03": [
+      {
+        "id": "archive",
+        "label": "Archiviazione percorsi senza variare i corsi",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "trash_restore",
+        "label": "Cestinazione e ripristino senza pubblicazione implicita",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "bulk",
+        "label": "Transizioni massive atomiche e rollback",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "purge",
+        "label": "Eliminazione condizionata del percorso vuoto",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "external_references",
+        "label": "Audit dipendenze storiche esterne non coperte dai vincoli interni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LCM-04": [
+      {
+        "id": "trash_restore",
+        "label": "Cestinazione e ripristino conservativo docenti",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-teachers.php"
+        ]
+      },
+      {
+        "id": "protected_purge",
+        "label": "Blocco cancellazione quando assegnato o citato in versioni storiche",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-teachers.php"
+        ]
+      },
+      {
+        "id": "empty_purge",
+        "label": "Eliminazione di profilo cestinato senza riferimenti",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-teachers.php"
+        ]
+      },
+      {
+        "id": "external_references",
+        "label": "Audit riferimenti di estensioni esterne",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LCM-05": [
+      {
+        "id": "direct_details",
+        "label": "Dettagli diretti percorsi archiviati e cestinati negati",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "anonymous_mutation",
+        "label": "Mutazioni model negate senza autorizzazione",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "get_post_csrf",
+        "label": "GET e POST senza token respinti sui sei task",
+        "status": "implemented",
+        "evidence": [
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "authorized_http",
+        "label": "Archive, restore e publish con token valido",
+        "status": "implemented",
+        "evidence": [
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "granular_acl",
+        "label": "ACL granulari e selezioni miste HTTP",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "finder_seo",
+        "label": "Finder e SEO lifecycle",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "history_upgrade",
+        "label": "Copertura trasversale storico, attestati e upgrade",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ]
+  }
+}

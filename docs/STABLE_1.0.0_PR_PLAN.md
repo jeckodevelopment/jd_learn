@@ -316,3 +316,7 @@ Il test HTTP disposable esercita le sei azioni amministrative di cambio stato e 
 ### LCM-05 — quarto incremento: transizioni HTTP autorizzate dei percorsi
 
 Estendere il fixture HTTP Joomla per esercitare archive → restore (Non pubblicato) → publish con il token CSRF recuperato dal modulo amministrativo nativo. Controllare la visibilità pubblica dopo ogni operazione e preservare il percorso pubblicato per i test già presenti. Nessun cambiamento runtime. Restano ACL per record, token scaduti, Finder/SEO, upgrade e collaudo manuale.
+
+### Misurazione soddisfacimento requisiti 1.0.0 — ricognizione strutturata
+
+L'indicatore principale di sviluppo deve essere calcolato da criteri approvati, non da medie discrezionali delle macroaree né dal volume di PR. `docs/FUNCTIONAL_CRITERIA_1.0.0.json` avvia la ricognizione con evidenze puntuali per LCM-03/04/05; `tools/functional_progress.py` blocca la pubblicazione della percentuale globale fino al completamento dell'audit dell'intera baseline in perimetro. Il 79,56% è solo **stima storica non riconciliata**, da sostituire quando ogni requisito è stato valutato. Non introdurre un cambio SemVer per attività che non modificano il pacchetto distribuito; rispettare issue #160 e le regole release già approvate.
