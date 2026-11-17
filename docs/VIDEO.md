@@ -95,7 +95,7 @@ Quando il player espone le tracce di sottotitoli/caption, l’aula mostra un sel
 
 ## P0 #532 — delega autoplay per playback utente (PR #543)
 
-**P0 #532 — permesso riproduzione IFrame YouTube (PR #543, collaudo Opera+ pendente):** il player JD Learn dichiarava `allow="encrypted-media; fullscreen; picture-in-picture"`, omettendo `autoplay` richiesto dagli esempi ufficiali Google per gli iframe YouTube. La configurazione ora delega il permesso `autoplay` all'iframe, senza attivare autoplay automatico (il parametro resta `autoplay=0`); SDK, consenso, `Referer`, ACL e calcolo dei progressi invariati. Test di regressione sull'attributo `allow` e sul parametro autoplay. L'eventuale blocco residuo va diagnosticato con evidenza dell'evento YouTube, non con ulteriori modifiche speculative. Percentuale globale 79,56% invariata.
+**P0 #532 — permesso riproduzione IFrame YouTube (PR #543, collaudo installazione Joomla di prova pendente):** il player JD Learn dichiarava `allow="encrypted-media; fullscreen; picture-in-picture"`, omettendo `autoplay` richiesto dagli esempi ufficiali Google per gli iframe YouTube. La configurazione ora delega il permesso `autoplay` all'iframe, senza attivare autoplay automatico (il parametro resta `autoplay=0`); SDK, consenso, `Referer`, ACL e calcolo dei progressi invariati. Test di regressione sull'attributo `allow` e sul parametro autoplay. L'eventuale blocco residuo va diagnosticato con evidenza dell'evento YouTube, non con ulteriori modifiche speculative. Percentuale globale 79,56% invariata.
 
 ## Modalità didattica YouTube — fine lezione
 
