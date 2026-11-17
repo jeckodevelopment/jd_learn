@@ -1,4 +1,6 @@
 # Changelog
+- **Audit funzionale 1.0.0 — quinta tranche (17/11/2026):** aggiunti i criteri per NOT-01/02, MAIL-01–11, CERT-01–08 e JOO-01–05 (26 requisiti, 62 criteri: 30 con evidenze iniziali, 32 da approfondire). Audit progressivo 73/214 requisiti; nessun runtime modificato, nessuna modifica SemVer o percentuale di completamento globale non dimostrata.
+
 - **Audit funzionale 1.0.0 — quarta tranche (17/11/2026):** scomposti LES-01–04, VID-01–08 e MAT-01–08 in 68 criteri (44 evidenze iniziali, 24 da approfondire). Totale audit 47/214 requisiti; nessuna percentuale globale anticipata, nessuna variazione runtime o SemVer.
 
 - **Audit funzionale 1.0.0 — terza tranche (17/11/2026):** censiti criteri di accesso/iscrizione, area studente e avanzamento didattico (15 requisiti/47 criteri, 16 punti ancora da approfondire); copertura dell'audit ora 27/214 requisiti. Nessun cambiamento runtime o SemVer, nessuna nuova percentuale globale non dimostrata.
