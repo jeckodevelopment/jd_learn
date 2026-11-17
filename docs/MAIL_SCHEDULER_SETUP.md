@@ -54,3 +54,10 @@ PR [#424](https://github.com/jeckodevelopment/jd_learn/pull/424) integrata in `m
 
 - L'errore «Modello email mancante o variabili non disponibili» in Coda email è una categoria aggregata: non distingue un modello inesistente da un token non presente nei dati. Verificare i modelli Joomla effettivamente salvati, incluse eventuali varianti di lingua precedenti ai tag canonici. Le modifiche ai template degli amministratori non sono mai sovrascritte dall'aggiornamento del componente.
 - Il messaggio fallito rimane `failed` per evitare invii inattesi. Dopo correzione del modello, testare con un **nuovo evento**, verificando il Task JD Learn e la configurazione SMTP.
+
+
+## Diagnostica esatta del modello email in Coda — issue #547
+
+**MAIL-10 — issue #547 (PR #548, test sito Joomla pendente):** nella Coda email amministrativa, per messaggi `failed`/`retry` classificati come errore modello, JD Learn ora rilegge in sola lettura il template Joomla effettivo della lingua della riga e mostra se è assente oppure i **nomi** dei tag canonici non disponibili (massimo 12). Non espone indirizzi, valori delle variabili, dati SMTP, token o eccezioni. Non riscrive i modelli personalizzati, non introduce alias legacy, non modifica lo stato della coda né riavvia gli invii. Verificare anche le varianti lingua e correggere esplicitamente i template obsoleti.
+
+I messaggi storici `failed` mantengono la categoria di errore registrata e permettono all'amministratore autorizzato di identificare i nomi dei segnaposto non disponibili, confrontandoli con i modelli nativi Joomla. Correggere il modello selezionato per la lingua del messaggio senza introdurre sinonimi né sovrascrivere il contenuto.

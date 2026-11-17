@@ -1898,3 +1898,13 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 2. Per un messaggio `com_jlms.enrollment.confirmed` già fallito, confrontare soggetto/testo/HTML del modello nativo Joomla realmente salvato in Sistema → Modelli email (lingua predefinita e traduzione) con i tag canonici `USER_FULLNAME`, `COURSE_TITLE`, `SITE_NAME`, `COURSE_URL`, `ENROLLMENT_DATE`. Non introdurre alias legacy; preservare le personalizzazioni e correggere esplicitamente i placeholder non supportati.
 3. Il record `failed` non viene reinviato automaticamente: non impostarlo su `sent` senza prova SMTP; prevedere una nuova iscrizione di prova dopo la correzione del modello, oppure una funzione esplicita di riaccodamento sicuro oggetto di PR dedicata.
 4. Distinguere corso didatticamente completato da attestato emesso: controllare `certificate_enabled` nel rules JSON della versione pubblicata, abilitazione globale/per corso e presenza di almeno un template attestato attivo. Verificare in lista attestati gli stati `pending_render` e `ready`; non emettere certificati per corsi senza requisiti.
+
+
+## MAIL-10 — dettaglio diagnostico modelli email in Coda (issue #547)
+
+**MAIL-10 — issue #547 (PR #548, test sito Joomla pendente):** nella Coda email amministrativa, per messaggi `failed`/`retry` classificati come errore modello, JD Learn ora rilegge in sola lettura il template Joomla effettivo della lingua della riga e mostra se è assente oppure i **nomi** dei tag canonici non disponibili (massimo 12). Non espone indirizzi, valori delle variabili, dati SMTP, token o eccezioni. Non riscrive i modelli personalizzati, non introduce alias legacy, non modifica lo stato della coda né riavvia gli invii. Verificare anche le varianti lingua e correggere esplicitamente i template obsoleti.
+
+1. Preparare un template `com_jlms.enrollment.confirmed` personalizzato con `{NAME}` obsoleto, un messaggio fallito con dati reali e un amministratore `core.manage`: la Coda mostra «Variabili non disponibili» con il solo nome `NAME`, senza valori email o SMTP. Verificare lingua `it-IT` e fallback `*`.
+2. Testare l'assenza del template Joomla: mostra messaggio «Modello Joomla non trovato»; se il contesto non è leggibile resta solo categoria generica.
+3. Testare trasporto SMTP fallito: nessuna diagnostica su nomi di token. Verificare XSS/escaping di nomi e ACL: studenti e amministratori senza `core.manage` non devono accedere alla Coda.
+4. Dopo correzione manuale del modello in Sistema → Modelli email, verificare nuova notifica di iscrizione; il record storico `failed` non va reinviato automaticamente.

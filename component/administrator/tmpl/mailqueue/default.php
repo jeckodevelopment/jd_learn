@@ -89,6 +89,11 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
       <?php if ((int) $row->is_stale_sending === 1) : ?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php endif; ?>
       <?php if ($row->diagnostic_key !== null && in_array((string) $row->state, ['retry', 'failed'], true)) : ?>
        <div class="small text-muted"><?= $this->escape(Text::_($row->diagnostic_key)) ?></div>
+       <?php if ($row->diagnostic_missing_template) : ?>
+        <div class="small text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_TEMPLATE_NOT_FOUND') ?></div>
+       <?php elseif ($row->diagnostic_tokens !== []) : ?>
+        <div class="small text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_UNRESOLVED_TOKENS') ?>: <?= $this->escape(implode(', ', $row->diagnostic_tokens)) ?></div>
+       <?php endif; ?>
       <?php endif; ?>
      </td>
      <td><?= (int) $row->attempts ?></td>

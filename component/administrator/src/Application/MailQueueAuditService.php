@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\User\User;
+use Joomla\CMS\Mail\MailTemplate;
+use Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplatePlaceholderValidator;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
@@ -59,6 +61,7 @@ final class MailQueueAuditService
 
         $query = $this->db->createQuery()->select([
             'q.id', 'q.template_id', 'q.course_id', 'c.title AS course_title', 'q.recipient_email',
+            'q.language', 'q.template_data',
             'q.state', 'q.attempts', 'q.available_at', 'q.claimed_at', 'q.sent_at',
             'q.created_at', 'q.last_error', 'q.reconciliation_action', 'q.reconciliation_by', 'q.reconciliation_at',
             'q.reconciliation_note',
@@ -76,7 +79,34 @@ final class MailQueueAuditService
                 'Delivery failed; transport details are withheld.' => 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TRANSPORT',
                 default => null,
             };
+            // Administrative diagnostics use only token NAMES, never SMTP details,
+            // recipient addresses or substituted values from template_data.
+            $row->diagnostic_missing_template = false;
+            $row->diagnostic_tokens = [];
+            if ($row->diagnostic_key === 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE'
+                && in_array((string) $row->state, ['retry', 'failed'], true)) {
+                try {
+                    $mailTemplate = MailTemplate::getTemplate((string) $row->template_id, (string) $row->language)
+                        ?? MailTemplate::getTemplate((string) $row->template_id, '*');
+                    if ($mailTemplate === null) {
+                        $row->diagnostic_missing_template = true;
+                    } else {
+                        $context = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
+                        if (is_array($context)) {
+                            $unresolved = MailTemplatePlaceholderValidator::unresolved(
+                                (string) $row->template_id, $context,
+                                (string) $mailTemplate->subject, (string) $mailTemplate->body, (string) $mailTemplate->htmlbody
+                            );
+                            // Names are uppercase ASCII tokens, never values or exception messages.
+                            $row->diagnostic_tokens = array_slice($unresolved, 0, 12);
+                        }
+                    }
+                } catch (\Throwable) {
+                    // Retain the existing generic diagnosis for uninspectable rows.
+                }
+            }
             unset($row->recipient_email, $row->last_error);
+            unset($row->template_data, $row->language);
         }
 
         return ['rows' => $rows, 'total' => $total, 'start' => $start, 'limit' => $limit,
