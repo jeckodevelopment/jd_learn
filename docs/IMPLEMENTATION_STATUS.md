@@ -1,5 +1,11 @@
 **JD Learn 0.57.7-dev — audit funzionale al 17/11/2026.**
 
+## Audit funzionale lezioni, video e materiali — PR #596 (17/11/2026)
+
+La [PR #596](https://github.com/jeckodevelopment/jd_learn/pull/596) è integrata in `main`, merge `1af3c56d2e92fc18255d89445cb8fb201d1d691d`, [CI #44191886625](https://github.com/jeckodevelopment/jd_learn/actions/runs/44191886625) **4/4 verde**: controlli preliminari, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Il registro criteri copre ora **47/214 requisiti nel perimetro 1.0.0**, con 173 criteri censiti, 117 dotati di riferimenti di evidenza iniziale e 56 da approfondire. La percentuale globale da criteri resta **non calcolabile (`null`)** finché l'audit completo non è stato effettuato; il 79,56% resta una stima storica. Nessuna modifica runtime o SemVer: versione 0.57.7-dev. [Artefatto GitHub Actions #14378026112](https://github.com/jeckodevelopment/jd_learn/actions/runs/44191886625/artifacts/14378026112), checksum ZIP Joomla interno non verificato. Non sono stati svolti collaudi manuali di questa tranche.
+
+**JD Learn 0.57.7-dev — audit funzionale al 17/11/2026.**
+
 ## Audit funzionale CAT/AUT — PR #592 (17/11/2026)
 
 La [PR #592](https://github.com/jeckodevelopment/jd_learn/pull/592) è stata integrata con merge `434290743e026c5a2210bb09889ff107109d29d5`, [CI 4/4 verde #44188022680](https://github.com/jeckodevelopment/jd_learn/actions/runs/44188022680) e [artefatto JD-Learn-0.57.7-dev #14376066280](https://github.com/jeckodevelopment/jd_learn/actions/runs/44188022680/artifacts/14376066280). La scomposizione funzionale `docs/FUNCTIONAL_CRITERIA_1.0.0.json` copre adesso **12/214 requisiti 1.0.0**: 9 nuovi CAT/AUT e 3 LCM preesistenti. I nove nuovi requisiti includono 42 criteri (31 con evidenze iniziali, 11 da approfondire). Totale tranche: 58 criteri, di cui 16 da approfondire. **Non è ancora possibile calcolare una percentuale globale attendibile**, e `tools/functional_progress.py` mantiene `functional_implementation_percent = null`. Il 79,56% è una stima storica, non un risultato aggiornato dell'audit. SemVer e runtime invariati, nessuna accettazione Joomla nuova. Lo ZIP interno dell'artefatto non ha checksum verificato in questa ricognizione.
