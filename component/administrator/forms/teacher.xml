@@ -11,5 +11,5 @@
  <field name="user_id" type="user" label="COM_JLMS_TEACHER_USER" filter="integer" />
  <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" default="*"><option value="*">JALL</option></field>
  <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" default="1" filter="integer" required="true" />
- <field name="state" type="list" label="JSTATUS" default="0" filter="integer"><option value="0">JUNPUBLISHED</option><option value="1">JPUBLISHED</option></field>
+ <field name="state" type="list" label="JSTATUS" default="0" filter="integer"><option value="0">JUNPUBLISHED</option><option value="1">JPUBLISHED</option><option value="-2">JTRASHED</option></field>
 </fieldset></form>
