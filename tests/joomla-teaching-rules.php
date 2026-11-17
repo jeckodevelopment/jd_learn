@@ -146,11 +146,34 @@ $certificateParams->set('certificate_enabled',1);
 $certificateService=$component->getCertificateService();
 $historicRules=ruleRow('course_versions',$original)->rules_json;
 ruleExpect(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($historicRules)['certificate_enabled']===false,'Historical published fixture originally excluded certificates');
+// Explicitly exercise SQL DATETIME(6) from real completion history, which must
+// remain renderable without overwriting the immutable certificate snapshot.
+$completedSql=(string)ruleRow('enrollments',$oldEnrollment)->completed_at;
+$microsecondDate=substr($completedSql,0,19).'.123456';
+$db->setQuery('UPDATE #__jlms_enrollments SET completed_at='.$db->quote($microsecondDate).' WHERE id='.(int)$oldEnrollment)->execute();
 $certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Administrator approved historical certificate recovery');
 $recovered=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='.(int)$oldEnrollment)->loadResult();
 ruleExpect($recovered===1,'Completed historical enrollment receives exactly one certificate');
 $recoveryAudit=(int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE action='historical_recovery' AND certificate_id IN (SELECT id FROM #__jlms_certificates WHERE enrollment_id=".(int)$oldEnrollment.')')->loadResult();
 ruleExpect($recoveryAudit===1,'Historical recovery records a durable audit entry');
+
+$historicalDocument=$db->setQuery('SELECT d.id, d.status FROM #__jlms_certificate_documents AS d JOIN #__jlms_certificates AS c ON c.current_document_id=d.id WHERE c.enrollment_id='.(int)$oldEnrollment)->loadObject();
+ruleExpect($historicalDocument->status==='pending_render','Recovered historical certificate is queued for on-demand PDF rendering');
+$certificateDownload=$certificateService->download($actor,$oldEnrollment);
+try { ruleExpect($certificateDownload['mime']==='application/pdf' && $certificateDownload['size']>100
+    && str_starts_with((string)fread($certificateDownload['handle'],8),'%PDF-'),
+    'Historical certificate PDF renders and downloads from SQL DATETIME(6)'); }
+finally { fclose($certificateDownload['handle']); }
+$renderedDocument=ruleRow('certificate_documents',(int)$historicalDocument->id);
+ruleExpect($renderedDocument->status==='ready' && (int)$renderedDocument->pdf_asset_id>0,
+    'Recovered historical certificate is persisted ready after first download');
+$again=$certificateService->download($actor,$oldEnrollment);
+try { ruleExpect($again['mime']==='application/pdf' && $again['size']===$certificateDownload['size'],
+    'Historical certificate is repeatably downloadable without re-render'); }
+finally { fclose($again['handle']); }
+ruleExpect((int)ruleRow('certificate_documents',(int)$historicalDocument->id)->pdf_asset_id===(int)$renderedDocument->pdf_asset_id,
+    'Repeated download preserves the original private PDF asset');
+
 ruleExpect(ruleRow('course_versions',$original)->rules_json===$historicRules,'Historical recovery never mutates the published rules');
 try { $certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Duplicate historical certificate recovery'); throw new \RuntimeException('Duplicate certificate was issued'); }
 catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode()===409,'Duplicate historical issuance is rejected with HTTP 409'); }
