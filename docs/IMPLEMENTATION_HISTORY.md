@@ -1,3 +1,11 @@
+## 17 novembre 2026 — LCM-05, accessi e mutazioni del ciclo di vita dei percorsi (#581 e #582)
+
+La [PR #581](https://github.com/jeckodevelopment/jd_learn/pull/581) aggiunge a `tests/joomla-pathways.php` negazioni di dettaglio diretto per ospiti anonimi su percorsi archiviati e cestinati e controlli che archiviazione, cestinazione e cancellazione del percorso vuoto non modifichino lo stato dei corsi associati. Merge `14ef72b95b07bdfc38295b7ea9a3c741ac5d16cd`, CI [#44178153813](https://github.com/jeckodevelopment/jd_learn/actions/runs/44178153813) 4/4 verde, [artefatto JD-Learn-0.57.7-dev #14369844518](https://github.com/jeckodevelopment/jd_learn/actions/runs/44178153813/artifacts/14369844518).
+
+La [PR #582](https://github.com/jeckodevelopment/jd_learn/pull/582) esercita i metodi `changeStates` e `purgeEmpty` con identità anonima: tentativi respinti, stati e relazioni immutati, poi ripristino dell'operatore CI. Merge `08a7a9bf72e46996d4aad3eb538291330dbd6275`, CI [#44179144122](https://github.com/jeckodevelopment/jd_learn/actions/runs/44179144122) 4/4 verde, [artefatto JD-Learn-0.57.7-dev #14372405535](https://github.com/jeckodevelopment/jd_learn/actions/runs/44179144122/artifacts/14372405535) (artefatto più recente per questi due merge).
+
+**Classificazione:** incrementi di test, nessuna modifica runtime; matrice LCM-05 aggiornata a **Parziale**, accettazione manuale **Non eseguita**, avanzamento ponderato storico **79,56% invariato**. Non è stato verificato il checksum del pacchetto ZIP Joomla annidato; non affermare che i due download attestino collaudi reali. Restano HTTP/CSRF, ACL per record, Finder/SEO, storico/attestati e upgrade, oltre ai collaudi Joomla.
+
 ## 15 novembre 2026 — warning catalog_access nella vista corso (#430 / PR #468, 0.57.7-dev)
 
 La issue [#430](https://github.com/jeckodevelopment/jd_learn/issues/430) è corretta dalla [PR #468](https://github.com/jeckodevelopment/jd_learn/pull/468). Il servizio catalogo applicava già il filtro sul livello catalogo ma non selezionava `catalog_access`; la vista HTML leggeva quella proprietà per determinare metadati e indicizzazione. Aggiunta alla proiezione pubblica. Test di servizio e HTTP controllano la presenza del campo e l’assenza di warning; la matrice traccia CAT-02.
