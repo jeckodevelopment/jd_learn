@@ -326,6 +326,9 @@ final class CurriculumService
             $rules['mode'] = $mode;
             $rules['sequence_mode'] = $mode === 'consultation' ? 'free' : $sequenceMode;
             $rules['completion_policy'] = $mode === 'consultation' ? 'none' : 'all_required';
+            // Consultation never produces course-completion certificates, even when
+            // converting a draft copied from a certificate-enabled learning version.
+            if ($mode === 'consultation') { $rules['certificate_enabled'] = false; }
             $publicPreviews = $input['public_previews'] ?? ($rules['public_previews'] ? '1' : '0');
             if ((!is_string($publicPreviews) && !is_int($publicPreviews)) || !in_array((string) $publicPreviews, ['0', '1'], true)) { throw new \DomainException('COM_JLMS_INVALID_INPUT'); }
             $rules['public_previews'] = (string) $publicPreviews === '1';
