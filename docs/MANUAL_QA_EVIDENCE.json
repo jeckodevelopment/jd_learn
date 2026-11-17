@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "description": "Registro delle verifiche manuali Joomla puntuali; un caso superato non implica accettazione dell'intero requisito.",
+  "updated_at": "2026-11-17",
+  "cases": [
+    {
+      "id": "QA-CERT-EXISTING-PDF-001",
+      "requirement_ids": [
+        "CERT-03",
+        "CERT-05",
+        "CERT-08"
+      ],
+      "title": "Download di un attestato preesistente con logo PNG dopo correzione HTTP 503",
+      "result": "passed",
+      "scope": "partial",
+      "tested_at": "2026-11-17",
+      "build": {
+        "version": "0.57.7-dev",
+        "artifact_url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701/artifacts/14338442764",
+        "pr": 566,
+        "commit": "81df4e888e12b48a6ac25705afa5e18d71cf2c67"
+      },
+      "evidence_url": "https://github.com/jeckodevelopment/jd_learn/blob/main/docs/STABLE_1.0.0_PR_PLAN.md",
+      "evidence_note": "Il piano documenta la conferma utente del download funzionante dopo installazione dell'artefatto PR #566. Sono esclusi stato ready nel backend, integrità seriale/snapshot, formati alternativi, ACL/HEAD, backup e recupero."
+    }
+  ]
+}
