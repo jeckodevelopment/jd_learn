@@ -806,12 +806,6 @@
         "evidence": [
           "tests/joomla-quiz-attempts.php"
         ]
-      },
-      {
-        "id": "submission_states",
-        "label": "Fase 2: stati consegna compiti non inclusi nel perimetro 1.0.0",
-        "status": "missing",
-        "evidence": []
       }
     ],
     "PRO-02": [
