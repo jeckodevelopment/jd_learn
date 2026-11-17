@@ -76,7 +76,9 @@ export async function create(container, descriptor, emit, signal) {
   // YouTube recommends forwarding the site origin for its embedded-player client identity.
   // Never suppress Referer: error 153 means the origin was not identified.
   frame.referrerPolicy = 'strict-origin-when-cross-origin';
-  frame.allow = 'encrypted-media; fullscreen; picture-in-picture';
+  // The IFrame API may invoke playback programmatically after a user's Play action.
+  // Explicitly delegate autoplay permission; keep autoplay=0 (no unsolicited play).
+  frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
   frame.allowFullscreen = true;
   let player, cancelReady;
   const destroy = () => {
