@@ -12,7 +12,7 @@ Ogni manifest distribuito include `<creationDate>YYYY-MM-DD</creationDate>` unif
 
 ## Verifiche automatiche
 
-`tests/extension-manifest-metadata.py` apre lo ZIP del pacchetto, quindi i suoi 11 ZIP inclusi, e verifica per ciascuno versione, data, nome pubblico e tipo/gruppo; il workflow CI esegue il controllo su build sviluppo e stabile. Il controllo fallisce per ogni divergenza. La CI testa anche l'installazione e l'upgrade integrale del pacchetto in Joomla con dati conservati.
+`tests/extension-manifest-metadata.py` apre lo ZIP del pacchetto, quindi i suoi 11 ZIP inclusi, e verifica per ciascuno versione, data, nome pubblico e tipo/gruppo; il workflow CI esegue il controllo su build sviluppo e stabile. Il controllo fallisce per ogni divergenza. La CI esegue gli smoke esistenti sull'installazione e l'aggiornamento Joomla con dati conservati. **La conferma dei valori effettivamente mostrati in Gestione estensioni dopo l'aggiornamento sul sito di prova resta un test manuale obbligatorio**: la fixture dell'installer non è una prova sufficiente dell'aggiornamento dei manifest cache in un ambiente esistente.
 
 Esempi:
 
