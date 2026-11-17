@@ -2071,3 +2071,12 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 4. Ripristinare entrambi: devono tornare Non pubblicati. La pubblicazione diretta dal cestino deve essere negata; pubblicare esplicitamente solo dopo il ripristino.
 5. Con ruolo senza permesso `core.edit.state` o senza visibilità sul singolo docente, verificare il rifiuto di chiamate POST dirette e nessun aggiornamento parziale; GET e CSRF invalido devono essere respinti.
 6. Eseguire dopo upgrade su Joomla reale. Non registrare esito positivo finché il collaudo non sarà svolto.
+
+### LCM-04 — eliminazione condizionata dei docenti (collaudo differito)
+
+1. Cestinare un profilo docente ancora assegnato a un corso; tentare Elimina definitivamente: deve essere negato con motivazione e senza modifiche.
+2. Verificare lo stesso blocco quando l'assegnazione corrente è stata rimossa ma il docente è ancora presente nello snapshot di una versione didattica pubblicata.
+3. Creare un docente di prova privo di associazioni e di versioni storiche che lo menzionino; cestinarlo, confermare l'eliminazione singola e verificare la rimozione del solo profilo.
+4. Controllare che l'account Joomla collegato non sia eliminato, disattivato o modificato e che iscrizioni, attestati, snapshot e altri profili restino intatti.
+5. Tentare operazioni dirette via GET, senza token, con più ID, con profilo non cestinato e senza `core.delete`: nessuna eliminazione.
+6. Verificare compatibilità PHP 8.3/MySQL e PHP 8.4/MariaDB, messaggi IT/EN, checkout, cache e riferimenti di integrazioni esterne. **L'utente ha rinviato i collaudi reali: non segnare questa voce come accettata.**
