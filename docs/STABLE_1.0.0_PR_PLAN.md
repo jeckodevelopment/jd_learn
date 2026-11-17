@@ -248,3 +248,8 @@ Il renderer deve accettare timestamp persistiti SQL `DATETIME(6)` senza alterare
 ### Storage privato gestito automaticamente — PR #563, issue #562
 
 La configurazione standard di attestati e materiali non può dipendere dalla disponibilità di cartelle esterne alla document root. Creare al bisogno cartella gestita sotto l'installazione Joomla, file cifrati e PHP-guarded, denied direct access su Apache/LiteSpeed; preservare accesso autenticato e compatibilità dei blob esistenti in storage esterno configurato. Test su Joomla per attestato `pending_render` senza `material_storage_root`, stato `ready` e PDF effettivo; collaudo su hosting condiviso obbligatorio.
+
+
+### Correzione 503 persistente PDF su shared hosting — issue #564, PR #565
+
+La generazione e rigenerazione PDF usa direttamente lo storage gestito senza file temporanei del sistema operativo; testare `pending_render` → `ready` anche con `open_basedir`, validazione PDF e diagnostica per fase priva di dati sensibili. Copertura nei test Joomla prima del merge e collaudo manuale separato.
