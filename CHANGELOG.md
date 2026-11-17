@@ -1,5 +1,7 @@
 # Changelog
 
+- **LCM-03 — cestino reversibile dei percorsi:** supportato lo stato `-2` con filtro amministrativo Cestinato, ripristino controllato a Non pubblicato e guardia contro la pubblicazione diretta dal cestino. Conservati corsi, iscrizioni e storico, nessuna eliminazione fisica. Test Joomla per transizioni e accesso pubblico; operazioni massive e cancellazione condizionata da completare.
+
 - **LCM-03 — archiviazione percorsi formativi:** aggiunto stato Archiviato nell'editor e nell'elenco, mantenute relazioni e progressi, URL pubblico non disponibile per percorsi archiviati, ripristino tramite stato non pubblicato e pubblicazione esplicita. Test Joomla per le transizioni e la conservazione dati. Cestinazione ed eliminazione condizionata restano da implementare.
 
 - **Collaudo video P0 #573 confermato (17/11/2026):** la riapertura di una lezione già completata riproduce regolarmente dall'inizio su Joomla reale. Aggiunto test di regressione frontend sul mancato seek per lezioni completate e sul resume invariato per quelle parziali; runtime non modificato.

@@ -282,3 +282,7 @@ La PR #573 è integrata e **collaudata positivamente su Joomla reale**: una lezi
 ### LCM-03 — prima tranche: archiviazione percorsi
 
 L'editor percorso ora prevede lo stato `2 = Archiviato`, con verifica ACL `core.edit.state`, controllo di revisione e salvataggio tramite modello nativo. L'elenco rende visibile lo stato; la proiezione pubblica continua ad ammettere esclusivamente `state = 1`. Archiviare non modifica i corsi associati, le iscrizioni né i progressi; il ripristino conservativo passa per `0 = Non pubblicato`, e soltanto una successiva pubblicazione rende visibile il percorso. Test nativi Joomla coprono archive → 404 → restore → republish e persistenza associazioni. **Residuo LCM-03:** cestinazione, ripristino da cestino e cancellazione fisica condizionata con dipendenze storiche. Collaudo reale ancora richiesto.
+
+### LCM-03 — seconda tranche: cestino e ripristino percorsi
+
+Percorsi formativi: stato nativo `-2 = Cestinato` con controllo server-side dei permessi `core.edit.state`, filtro amministrativo dedicato, conservazione di relazioni e storico, non visibilità pubblica. Ripristino conservativo esclusivamente a `0 = Non pubblicato` prima della ripubblicazione esplicita; transizione diretta `-2 → 1` respinta dal backend. Test di integrazione Joomla su stato, accessi diretti e associazioni. Restano selezione multipla e cancellazione fisica condizionata: il requisito LCM-03 rimane Parziale e l'accettazione reale è distinta dalla CI.

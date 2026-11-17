@@ -2044,3 +2044,12 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 4. Passare ad **Non pubblicato**, controllare che il percorso resti invisibile, poi pubblicarlo nuovamente e verificare ordine e contenuti originari.
 5. Con un ruolo senza `core.edit.state` verificare l'impossibilità di cambiare stato; nessuna transizione tramite POST diretto.
 6. La cestinazione e l'eliminazione condizionata sono **ancora escluse** da questa tranche LCM-03. Accettazione manuale Joomla distinta dalla suite automatica.
+
+### LCM-03 — cestinazione e ripristino conservativo dei percorsi (PR successiva a #575)
+
+1. Aprire un percorso pubblicato e scegliere Stato → Cestinato. Verificare che scompaia dall'elenco ordinario e dal catalogo pubblico, compresi gli URL diretti.
+2. Nell'elenco backend selezionare il filtro Cestinato: deve comparire il percorso, modificabile dai ruoli autorizzati.
+3. Verificare nel percorso cestinato l'integrità dell'ordine dei corsi, dei record iscrizione/progresso e degli attestati storici; i corsi restano autonomi.
+4. Tentare una transizione diretta da Cestinato a Pubblicato: deve essere rifiutata. Ripristinare a Non pubblicato: non deve comparire nel catalogo. Pubblicarlo successivamente e verificare la ricomparsa.
+5. Un account senza `core.edit.state` non può cestinare/ripristinare, neppure tramite POST. Eseguire anche il controllo dopo upgrade Joomla.
+6. Restano fuori da questa PR le azioni massive e la cancellazione definitiva condizionata.

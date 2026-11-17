@@ -137,5 +137,30 @@ $check((bool)$pathModel->save($pathwayBase + ['revision'=>4,'state'=>1]),
 $restored = $service->detail($operator,'en-GB',$pathwayId);
 $check(count($restored['courses']) === 2 && $restored['courses'][0]['id'] === $courseId,
     'explicit republication restores the same public pathway course ordering');
+// LCM-03: reversible trash is isolated from course enrolments and the public catalogue.
+$check((bool)$pathModel->save($pathwayBase + ['revision'=>5,'state'=>-2]),
+    'moving a pathway to trash succeeds: ' . $pathModel->getError());
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === -2,
+    'trash is represented by the native state');
+$trashDenied = false;
+try { $service->detail($operator, 'en-GB', $pathwayId); }
+catch (\RuntimeException $error) { $trashDenied = $error->getCode() === 404; }
+$check($trashDenied, 'trashed pathway is inaccessible via direct public URL');
+$check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
+    'trash retains every course association in order');
+$check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $enrollmentsBeforeArchive,
+    'trash does not alter course enrolments');
+$check(!$pathModel->save($pathwayBase + ['revision'=>6,'state'=>1]),
+    'trashed pathway cannot be published directly without draft restoration');
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === -2,
+    'rejected direct publishing leaves trashed record intact');
+$check((bool)$pathModel->save($pathwayBase + ['revision'=>6,'state'=>0]),
+    'restoring from trash to unpublished succeeds');
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === 0,
+    'restoration does not automatically publish');
+$check((bool)$pathModel->save($pathwayBase + ['revision'=>7,'state'=>1]),
+    'explicit republication after trash restoration succeeds');
+$check(count($service->detail($operator, 'en-GB', $pathwayId)['courses']) === 2,
+    'republished pathway preserves all associations');
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
 echo json_encode(['pathway_checks'=>14,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;

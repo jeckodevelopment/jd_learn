@@ -110,7 +110,7 @@ final class PathwayModel extends AdminModel
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id', 'revision', 'catid', 'access', 'state'] as $key) {
                 if (isset($data[$key]) && ((!is_int($data[$key]) && !is_string($data[$key]))
-                    || !preg_match('/^[0-9]{1,10}$/D', (string) $data[$key]))) {
+                    || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))) {
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
             }
@@ -144,6 +144,9 @@ final class PathwayModel extends AdminModel
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             if ($record && $categoryId !== (int) $record->catid) {
+                throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+            }
+            if ($record && (int) $record->state === -2 && isset($data['state']) && (int) $data['state'] !== -2 && (int) $data['state'] !== 0) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
             if (isset($data['state']) && (int) $data['state'] !== (int) ($record->state ?? 0)
