@@ -19,6 +19,7 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
    <table class="table itemList" id="jlms-teacher-list">
     <caption class="visually-hidden"><?= Text::_('COM_JLMS_TEACHERS') ?></caption>
     <thead><tr>
+     <th scope="col" class="w-1 text-center"><?= HTMLHelper::_('grid.checkall') ?></th>
      <th scope="col" class="w-10"><?= HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $order) ?></th>
      <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $direction, $order) ?></th>
      <th scope="col" class="d-none d-md-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $direction, $order) ?></th>
@@ -30,7 +31,8 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
     <tbody>
     <?php foreach ($this->items as $i => $item) : ?>
      <tr class="row<?= $i % 2 ?>" data-teacher-id="<?= (int) $item->id ?>">
-      <td class="text-center"><?= HTMLHelper::_('jgrid.published', (int) $item->state, $i, 'teachers.', false) ?></td>
+      <td class="text-center"><?= HTMLHelper::_('grid.id', $i, (int) $item->id) ?></td>
+      <td class="text-center"><?= (int) $item->state === -2 ? Text::_('JTRASHED') : HTMLHelper::_('jgrid.published', (int) $item->state, $i, 'teachers.', false) ?></td>
       <th scope="row" class="has-context"><a href="<?= Route::_('index.php?option=com_jlms&task=teacher.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
        <div class="small text-body-secondary"><?= Text::_('COM_JLMS_REVISION') ?>: <?= (int) $item->revision ?></div>
       </th>
@@ -47,6 +49,6 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
    <?= $this->pagination->getListFooter() ?>
   </section>
  </div>
- <input type="hidden" name="task" value="">
+ <input type="hidden" name="task" value=""><input type="hidden" name="boxchecked" value="0">
  <?= HTMLHelper::_('form.token') ?>
 </form>
