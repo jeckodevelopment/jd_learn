@@ -126,10 +126,11 @@ final class CertificateService
             if (!CertificatePreferences::enabled($globalEnabled, (string) $row->params_json)) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
+            $courseVersionId = (int) $row->course_version_id;
             $existing = $this->db->createQuery()->select('id')->from('#__jlms_certificates')
                 ->where('enrollment_id = :enrollment')->where('course_version_id = :version')
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
-                ->bind(':version', (int) $row->course_version_id, ParameterType::INTEGER);
+                ->bind(':version', $courseVersionId, ParameterType::INTEGER);
             if ((int) $this->db->setQuery($existing)->loadResult() > 0) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
@@ -143,7 +144,7 @@ final class CertificateService
                 ->from('#__jlms_certificates')->where('enrollment_id = :enrollment')
                 ->where('course_version_id = :version')
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
-                ->bind(':version', (int) $row->course_version_id, ParameterType::INTEGER);
+                ->bind(':version', $courseVersionId, ParameterType::INTEGER);
             $result = $this->db->setQuery($certificate)->loadObject();
             if (!$result || (int) $result->current_document_id < 1) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
