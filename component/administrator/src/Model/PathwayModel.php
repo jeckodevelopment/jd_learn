@@ -146,6 +146,9 @@ final class PathwayModel extends AdminModel
             if ($record && $categoryId !== (int) $record->catid) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
+            if ($record && (int) $record->state === -2 && isset($data['state']) && (int) $data['state'] !== -2 && (int) $data['state'] !== 0) {
+                throw new \\InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+            }
             if (isset($data['state']) && (int) $data['state'] !== (int) ($record->state ?? 0)
                 && !$actor->authorise('core.edit.state', $id ? 'com_jlms.pathway.' . $id : 'com_jlms')) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
