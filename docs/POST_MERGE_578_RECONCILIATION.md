@@ -1,6 +1,6 @@
 # Ricognizione post-merge PR #578 — 17 novembre 2026
 
-> Stato: verifica documentale puntuale della baseline `main`, **non** accettazione finale della versione 1.0.0. Non confondere PR integrate, test automatici e collaudi reali Joomla.
+> Stato: ricognizione iniziale #578, integrata dalla verifica dei merge fino alla #587 (17/11/2026). **non** accettazione finale della versione 1.0.0. Non confondere PR integrate, test automatici e collaudi reali Joomla.
 
 ## Merge confermati
 
@@ -41,3 +41,11 @@ Non inserire mai in issue, PR o documentazione pubblica nomi delle installazioni
 ## Comportamenti da testare
 
 Questa modifica è **solo documentale**. Verificare che tutti i collegamenti alle PR siano corretti, che lo stato di integrazione corrisponda a GitHub e che nessun riferimento di un ambiente di prova compaia nel nuovo testo. Nessun nuovo test funzionale Joomla o esito CI viene dichiarato da questa ricognizione.
+
+## Aggiornamento verificato dopo la ricognizione iniziale (17 novembre 2026)
+
+Sono integrate anche [#579](https://github.com/jeckodevelopment/jd_learn/pull/579) (eliminazione condizionata docenti), [#580](https://github.com/jeckodevelopment/jd_learn/pull/580) (ricognizione documentale), [#581](https://github.com/jeckodevelopment/jd_learn/pull/581), [#582](https://github.com/jeckodevelopment/jd_learn/pull/582), [#584](https://github.com/jeckodevelopment/jd_learn/pull/584), [#586](https://github.com/jeckodevelopment/jd_learn/pull/586) (test di isolamento, autorizzazioni, HTTP/CSRF e transizioni positive dei percorsi), e le rispettive PR documentali [#583](https://github.com/jeckodevelopment/jd_learn/pull/583), [#585](https://github.com/jeckodevelopment/jd_learn/pull/585), [#587](https://github.com/jeckodevelopment/jd_learn/pull/587).
+
+**Riconciliazione funzionale:** LCM-02 non iniziata; LCM-03 parziale per accettazione manuale e verifiche residue, ma azioni massive e cancellazione protetta sono già implementate in #577; LCM-04 parziale con cancellazione condizionata implementata in #579; LCM-05 parziale nonostante i test #581/#582/#584/#586. Le evidenze di test automatici non sostituiscono il collaudo su Joomla reale. La stima 79,56% è storica e invariata fino a una rivalutazione dei nove pesi.
+
+**Rettifica documentale:** le frasi anteriori che descrivono la cancellazione condizionata di docenti/percorsi e i test HTTP/CSRF come interamente da implementare sono superate dai merge successivi. La ricognizione non certifica audit completo di tutti i documenti storici né checksum di un artefatto recente.
