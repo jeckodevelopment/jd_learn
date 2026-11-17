@@ -369,3 +369,17 @@ if ($validator::unresolved('com_jlms.course.completed', $data, 'A literal {lower
 }
 
 echo "Mail template canonical variable checks passed\\n";
+
+// The video-only course completion path must populate all placeholders in the
+// installed com_jlms.course.completed Joomla template, just like text lessons.
+$videoCompletionSource = file_get_contents(__DIR__ . '/../component/administrator/src/Application/VideoProgressService.php');
+if ($videoCompletionSource === false) {
+    throw new RuntimeException('Missing video course completion source.');
+}
+$completionQueue = substr($videoCompletionSource, strpos($videoCompletionSource, "hash('sha256', 'course.completed:'"));
+$completionQueue = substr($completionQueue, 0, strpos($completionQueue, ');'));
+foreach (['USER_FULLNAME','COURSE_TITLE','COMPLETION_DATE','DASHBOARD_URL','SITE_NAME'] as $requiredTag) {
+    if (!str_contains($completionQueue, "'" . $requiredTag . "' =>")) {
+        throw new RuntimeException('Video completion notification omits ' . $requiredTag);
+    }
+}
