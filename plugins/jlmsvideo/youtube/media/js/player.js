@@ -63,7 +63,7 @@ export async function create(container, descriptor, emit, signal) {
   const frame = document.createElement('iframe');
   const url = new URL('https://www.youtube-nocookie.com/embed/' + encodeURIComponent(descriptor.options.reference));
   const parameters = new URLSearchParams({
-    enablejsapi: '1', origin: location.origin, autoplay: '0', controls: '1',
+    enablejsapi: '1', origin: location.origin, autoplay: '0', controls: '1', rel: '0',
     playsinline: '1', hl: (descriptor.options.locale || 'en').split('-')[0],
   });
   const captionLanguage = savedCaptionLanguage();
