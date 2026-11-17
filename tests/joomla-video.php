@@ -180,6 +180,15 @@ $staleThird=json_encode([$event(4,'position',7000,7000)],JSON_THROW_ON_ERROR);
 $r=$save($b,3,$staleThird);videoExpect($r['resume_conflict'] && $r['resume_ms']===5000,'repeated stale writes cannot replace the newer resume');
 
 videoExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult()===1,'completion counted once');
+$persistedResume=(int)$db->setQuery('SELECT resume_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult();
+$completedReplay=$service->playback($student,'en-GB',$enrollment,$lesson,true);
+videoExpect($completedReplay['lesson_completed'] === true && $completedReplay['resume_ms'] === 0,
+    'a completed lesson opens from the beginning rather than seeking to its previous end');
+videoExpect((int)$db->setQuery('SELECT resume_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult() === $persistedResume,
+    'reopening does not erase stored resume, coverage, or historical completion');
+videoExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === 1,
+    'reopening a completed video never counts completion twice');
+$service->close($student,'en-GB',$enrollment,$lesson,$completedReplay['session_id']);
 videoExpect($save($c,1,$otherBatch)['replay'],'completion replay');
 $service->close($student,'en-GB',$enrollment,$lesson,$b['session_id']);
 videoDenied(fn()=>$save($b,2,json_encode([$event(3,'position',6000,6000)],JSON_THROW_ON_ERROR)),409,'closed session cannot write');

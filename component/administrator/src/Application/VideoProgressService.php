@@ -163,7 +163,8 @@ final class VideoProgressService
                 'modified_at' => $date, 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
             return ['tracking' => true, 'session_id' => $session->id, 'source_revision' => (int) $lesson->source_revision, 'next_sequence' => 1,
-                'resume_ms' => (int) $progress->resume_ms, 'duration_ms' => (int) $lesson->duration_ms,
+                'resume_ms' => $progress->state === 'completed' ? 0 : (int) $progress->resume_ms,
+                'lesson_completed' => $progress->state === 'completed', 'duration_ms' => (int) $lesson->duration_ms,
                 'provider' => $descriptor->provider, 'options' => $descriptor->playerOptions,
                 'expires_at' => $descriptor->expiresAt?->getTimestamp()];
         });

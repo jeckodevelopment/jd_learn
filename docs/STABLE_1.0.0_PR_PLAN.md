@@ -270,3 +270,7 @@ Configurazione `rel=0` sul player `youtube-nocookie` per limitare le raccomandaz
 ### P0 — ripristino riproduzione video dopo PR #571
 
 La sostituzione dell'iframe YouTube nello stesso spazio (PR #571) ha causato una regressione dichiarata sul sito di prova. PR #572 ripristina il runtime precedentemente collaudato (#570), lasciando il riquadro fine-lezione esterno. Non riproporre il rimpiazzo del player in 1.0.0 senza prove di avvio/Play/replay SDK reali. Il successivo miglioramento deve mantenere distinta la logica di autorizzazione e telemetria dalla presentazione UI, ed essere verificato in un browser reale Joomla prima dell'accettazione.
+
+### P0 — replay delle lezioni video completate
+
+Riscontro Joomla: le lezioni YouTube mai completate partono; una lezione già completata appare per un attimo e poi risulta nera, con messaggio «Lezione video completata». Correzione mirata: evitare di riapplicare il `resume_ms` finale nei grant delle lezioni completate, restituendo `lesson_completed=true` e posizione iniziale zero; preservare il resume delle lezioni parziali e tutte le prove di frequenza. Test backend per riapertura senza azzeramento e controllo frontend del seek; verifica su browser reale obbligatoria prima dell'accettazione. Priorità P0, milestone 1.0.0.
