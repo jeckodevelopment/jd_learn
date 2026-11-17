@@ -38,15 +38,15 @@ except ValueError:
 CHILD_NAMES={
     'lib_jlms':'JD Learn - Contracts',
     'com_jlms':'COM_JLMS',
-    'plg_jlmsvideo_youtube':'JD Learn - YouTube',
-    'plg_jlmsvideo_vimeo':'JD Learn - Vimeo',
-    'plg_jlmsvideo_cloudflarestream':'JD Learn - Cloudflare Stream',
-    'plg_jlmsvideo_html5':'JD Learn - HTML5',
-    'plg_task_jlms':'JD Learn - Scheduled Tasks',
-    'plg_privacy_jdlearn':'JD Learn - Privacy',
-    'plg_system_jlmsmenu':'JD Learn - Menu Navigation',
-    'plg_finder_jlms':'JD Learn - Smart Search',
-    'plg_user_jdlearnconsent':'JD Learn - User Consent',
+    'plg_jlmsvideo_youtube':'PLG_JLMSVIDEO_YOUTUBE',
+    'plg_jlmsvideo_vimeo':'PLG_JLMSVIDEO_VIMEO',
+    'plg_jlmsvideo_cloudflarestream':'PLG_JLMSVIDEO_CLOUDFLARESTREAM',
+    'plg_jlmsvideo_html5':'PLG_JLMSVIDEO_HTML5',
+    'plg_task_jlms':'PLG_TASK_JLMS',
+    'plg_privacy_jdlearn':'PLG_PRIVACY_JDLEARN',
+    'plg_system_jlmsmenu':'PLG_SYSTEM_JLMSMENU',
+    'plg_finder_jlms':'PLG_FINDER_JLMS',
+    'plg_user_jdlearnconsent':'PLG_USER_JDLEARNCONSENT',
 }
 def stamp_manifest(source,display_name):
     def replace_once(pattern, repl, data, label):
