@@ -1,5 +1,11 @@
 **JD Learn 0.57.7-dev — stato aggiornato al 17/11/2026.**
 
+## LCM-05 — quarto incremento test HTTP, PR #586 (17/11/2026)
+
+La [PR #586](https://github.com/jeckodevelopment/jd_learn/pull/586) ha aggiunto un test HTTP Joomla disposable con token CSRF ottenuto dal form nativo, che verifica `archive → restore → publish` del percorso e la visibilità nel catalogo pubblico ad ogni transizione. Merge `162e01b2acb8ab4cc6f7c89947edc89ee99e6c19`; [CI 4/4 verde #44183798789](https://github.com/jeckodevelopment/jd_learn/actions/runs/44183798789) sui controlli preliminari, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. [Artefatto JD-Learn-0.57.7-dev #14372759614](https://github.com/jeckodevelopment/jd_learn/actions/runs/44183798789/artifacts/14372759614); checksum ZIP Joomla interno non verificato in questa sessione. Runtime invariato, LCM-05 Parziale, collaudo manuale non eseguito, avanzamento globale di riferimento 79,56% invariato. Restano test granulari ACL per record e casi con token alterato/scaduto, Finder/SEO e verifiche dati storici/upgrade.
+
+**JD Learn 0.57.7-dev — stato aggiornato al 17/11/2026.**
+
 ## LCM-05 — HTTP/CSRF percorsi, PR #584 integrata (17 novembre 2026)
 
 La [PR #584](https://github.com/jeckodevelopment/jd_learn/pull/584), merge `4f0bb3a143c371c2abdff55fe0ce71b86ed1144a`, aggiunge copertura HTTP disposable ai sei task di stato/rimozione dei percorsi: GET negato (405) e POST privo di token CSRF negato (403), senza modifiche applicative. CI completa 4/4 verde nel [run #44181420748](https://github.com/jeckodevelopment/jd_learn/actions/runs/44181420748), con gate CSV e PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium superati. [Artefatto Joomla JD-Learn-0.57.7-dev #14371643366](https://github.com/jeckodevelopment/jd_learn/actions/runs/44181420748/artifacts/14371643366) disponibile; lo ZIP annidato non è stato scaricato per verifica del checksum. Requisito LCM-05 **Parziale**, accettazione manuale **Non eseguita**, avanzamento storico di riferimento **79,56% invariato**. Restano controlli HTTP con token valido/scaduto, ACL per record, Finder/SEO, storico e upgrade.
