@@ -1,3 +1,9 @@
+**JD Learn 0.57.7-dev — stato della ricognizione al 17/11/2026.**
+
+## Audit funzionale: email, attestati core e Joomla — PR #598 (17/11/2026)
+
+La [PR #598](https://github.com/jeckodevelopment/jd_learn/pull/598), merge `2b51870b953d87a7565e350725f7b6b631c91138`, estende il registro `FUNCTIONAL_CRITERIA_1.0.0.json` ai 26 requisiti NOT/MAIL/CERT/JOO (62 criteri: 30 con evidenza iniziale e 32 da approfondire). Totale riconciliazione avviata **73/214 requisiti 1.0.0**, 235 criteri (147 con prima evidenza e 88 ancora `unassessed`); **141 requisiti non ancora censiti**. La percentuale globale da criteri rimane **non calcolabile (`null`)**: la copertura dell'audit non è avanzamento software e il 79,56% è solo una stima storica. `ATT-01–05` è fase 2; il core `CERT-01–08` è nel perimetro 1.0.0. [CI 4/4 verde, run 44193835617](https://github.com/jeckodevelopment/jd_learn/actions/runs/44193835617): controlli preliminari, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6. [Artefatto JD-Learn-0.57.7-dev #14377733809](https://github.com/jeckodevelopment/jd_learn/actions/runs/44193835617/artifacts/14377733809) verificato come presente; checksum ZIP Joomla interno non attestato. Nessun runtime modificato, SemVer invariato, nessuna accettazione Joomla manuale aggiuntiva.
+
 **JD Learn 0.57.7-dev — audit funzionale al 17/11/2026.**
 
 ## Audit funzionale lezioni, video e materiali — PR #596 (17/11/2026)
