@@ -60,7 +60,9 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
         run: |
-          python3 tools/build.py --release-version "$VERSION"
+          RELEASE_DATE="$(date -u +%Y-%m-%d)"
+          python3 tools/build.py --release-version "$VERSION" --release-date "$RELEASE_DATE"
+          python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$VERSION.zip" --version "$VERSION" --date "$RELEASE_DATE"
           python3 tools/release_feed.py --version "$VERSION" \
             --zip "dist/pkg_jlms-$VERSION.zip" \
             --url "https://github.com/jeckodevelopment/jd_learn/releases/download/v$VERSION/pkg_jlms-$VERSION.zip" \
