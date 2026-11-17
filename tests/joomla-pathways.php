@@ -162,5 +162,25 @@ $check((bool)$pathModel->save($pathwayBase + ['revision'=>7,'state'=>1]),
     'explicit republication after trash restoration succeeds');
 $check(count($service->detail($operator, 'en-GB', $pathwayId)['courses']) === 2,
     'republished pathway preserves all associations');
+// LCM-03: multi-row operations must commit together and preserve relationships.
+$beforeBulkCourses = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn();
+$beforeBulkEnrollments = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult();
+$check($pathModel->changeStates([$pathwayId, $emptyId], -2), 'bulk trash of two pathways succeeds: ' . $pathModel->getError());
+$check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId . ') AND state=-2')->loadResult() === 2,
+    'both selected pathways are trashed');
+$check(!$pathModel->changeStates([$pathwayId, 999999999], 0),
+    'bulk restore including missing record must roll back every transition');
+$check((int) $db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === -2,
+    'failed bulk selection did not restore first pathway');
+$check(!$pathModel->changeStates([$pathwayId, $pathwayId], 0), 'duplicate identifiers denied');
+$check(!$pathModel->changeStates([$pathwayId], 1), 'bulk action cannot publish directly from trash');
+$check($pathModel->changeStates([$pathwayId, $emptyId], 0), 'bulk restore moves both pathways to unpublished');
+$check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId . ') AND state=0')->loadResult() === 2,
+    'restoration leaves both pathways unpublished');
+$check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeBulkCourses,
+    'bulk actions preserve pathway course links');
+$check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $beforeBulkEnrollments,
+    'bulk actions preserve historical enrollments');
+$check($pathModel->changeStates([$pathwayId, $emptyId], 1), 'explicit mass publication after restore succeeds');
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
 echo json_encode(['pathway_checks'=>14,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;
