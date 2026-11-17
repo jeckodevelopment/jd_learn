@@ -1,3 +1,9 @@
+**JD Learn 0.57.7-dev — stato aggiornato al 17/11/2026.**
+
+## LCM-05 — HTTP/CSRF percorsi, PR #584 integrata (17 novembre 2026)
+
+La [PR #584](https://github.com/jeckodevelopment/jd_learn/pull/584), merge `4f0bb3a143c371c2abdff55fe0ce71b86ed1144a`, aggiunge copertura HTTP disposable ai sei task di stato/rimozione dei percorsi: GET negato (405) e POST privo di token CSRF negato (403), senza modifiche applicative. CI completa 4/4 verde nel [run #44181420748](https://github.com/jeckodevelopment/jd_learn/actions/runs/44181420748), con gate CSV e PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium superati. [Artefatto Joomla JD-Learn-0.57.7-dev #14371643366](https://github.com/jeckodevelopment/jd_learn/actions/runs/44181420748/artifacts/14371643366) disponibile; lo ZIP annidato non è stato scaricato per verifica del checksum. Requisito LCM-05 **Parziale**, accettazione manuale **Non eseguita**, avanzamento storico di riferimento **79,56% invariato**. Restano controlli HTTP con token valido/scaduto, ACL per record, Finder/SEO, storico e upgrade.
+
 **JD Learn 0.57.7-dev — stato implementativo e riconciliazione LCM-05 al 17/11/2026.**
 
 ## LCM-05 — riconciliazione PR #581 e #582 (17 novembre 2026)
