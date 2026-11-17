@@ -202,6 +202,39 @@ catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_C
 ruleExpect(ruleRow('course_versions',$original)->rules_json===$historicRules,'Historical recovery never mutates the published rules');
 try { $certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Duplicate historical certificate recovery'); throw new \RuntimeException('Duplicate certificate was issued'); }
 catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode()===409,'Duplicate historical issuance is rejected with HTTP 409'); }
+// Disposable integration fixture: simulate a completed enrollment whose published
+// snapshot requires a certificate but whose issuance event was missed.
+// All rules are restored after exercising recovery; no production backfill occurs.
+$eligibleRulesOriginal=(string)ruleRow('course_versions',$version)->rules_json;
+$eligibleRules=\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($eligibleRulesOriginal);
+$eligibleRules['mode']='learning';
+$eligibleRules['certificate_enabled']=true;
+$eligibleRulesJson=json_encode($eligibleRules,JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+$db->setQuery('UPDATE #__jlms_course_versions SET rules_json='.$db->quote($eligibleRulesJson).' WHERE id='.(int)$version)->execute();
+try {
+    ruleExpect(ruleRow('enrollments',$newEnrollment)->completed_at!==null,
+        'Eligible issuance recovery fixture has a persisted completion');
+    ruleExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='.(int)$newEnrollment)->loadResult()===0,
+        'Eligible completion has no existing certificate before recovery');
+    $certificateService->adminRecoverMissing($actor,$newEnrollment,'Administrative recovery of missed eligible issuance');
+    $eligibleCertificate=$db->setQuery('SELECT c.id, c.current_document_id, c.issued_at FROM #__jlms_certificates AS c WHERE c.enrollment_id='.(int)$newEnrollment)->loadObject();
+    ruleExpect($eligibleCertificate && (int)$eligibleCertificate->current_document_id>0
+        && (string)$eligibleCertificate->issued_at===(string)ruleRow('enrollments',$newEnrollment)->completed_at,
+        'Eligible recovery preserves completion timestamp and issues exactly one certificate');
+    ruleExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE action='missing_issuance_recovery' AND certificate_id=".(int)$eligibleCertificate->id)->loadResult()===1,
+        'Eligible recovery creates one durable audit entry');
+    try { $certificateService->adminRecoverMissing($actor,$newEnrollment,'Attempt duplicate eligible issuance');
+        throw new \RuntimeException('Duplicate eligible issuance accepted');
+    } catch (\RuntimeException $error) {
+        ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_UNAVAILABLE'&&$error->getCode()===409,
+            'Duplicate eligible issuance rejected without new documents');
+    }
+    ruleExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='.(int)$newEnrollment)->loadResult()===1,
+        'Eligible recovery is idempotent for existing issuance');
+} finally {
+    $db->setQuery('UPDATE #__jlms_course_versions SET rules_json='.$db->quote($eligibleRulesOriginal).' WHERE id='.(int)$version)->execute();
+}
+
 $certificateParams->set('material_storage_root',$previousMaterialRoot);
 $certificateParams->set('certificate_enabled',$previousCertificateSetting);
 
