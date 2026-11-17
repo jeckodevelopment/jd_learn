@@ -1,5 +1,7 @@
 # Changelog
 
+- **P0 — rollback della PR #571:** ripristinato il ciclo di vita del player YouTube già collaudato nella PR #570, dopo segnalazione che i video non partivano su Joomla. Temporaneamente torna il riquadro di completamento sotto al player (non sostituzione in loco). La futura UI nello stesso spazio richiederà una PR separata con test di avvio e replay in browser reale.
+
 - **PR #571 — YouTube e-learning:** dopo fine video **confermata dal backend**, l'iframe viene **rimosso** e sostituito nello stesso spazio 16:9 da «Lezione completata», link contestuale alla lezione successiva e «Rivedi il video». Il replay chiede una nuova sessione autorizzata e inizia da 0, senza recuperare il resume salvato in coda. Non copre il player e non altera le soglie/telemetria; test di regressione JS e collaudo Joomla descritti in `docs/QA_TESTBOOK.md`.
 
 - Migliorata la concentrazione nelle lezioni YouTube: `rel=0` per raccomandazioni dello stesso canale (non eliminabili del tutto), riquadro nativo JD Learn **esterno** all'iframe quando una riproduzione conclusa è confermata come completata dal server e collegamento alla lezione successiva solo se autorizzata. Nessun overlay, nessuna alterazione del tracciamento o dei controlli del provider; gestione anche dopo rinnovo della sessione video. Test e collaudo Joomla documentati.

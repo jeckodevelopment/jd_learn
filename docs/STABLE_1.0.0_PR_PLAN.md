@@ -265,9 +265,8 @@ In Attestati → Corsi completati senza attestato, l'azione `recoverMissing` tra
 
 ### Player YouTube focalizzato sulla lezione (integrazione novembre 2026)
 
-Configurazione `rel=0` sul player `youtube-nocookie` per limitare le raccomandazioni al canale; schermata nativa **al posto dell'iframe scaricato**, nello stesso rapporto 16:9 con conferma solo dopo `ended` e salvataggio `lesson_completed=true`, link alla prossima lezione esclusivamente se accessibile. Nessuna sovrapposizione o alterazione dei controlli YouTube; test end-state, replay, rinnovo sessione, consensi e regressioni. Manuale `docs/VIDEO.md`, QA `docs/QA_TESTBOOK.md`, matrice requisiti `docs/REQUIREMENTS_STATUS.csv`.
+Configurazione `rel=0` sul player `youtube-nocookie` per limitare le raccomandazioni al canale; riquadro nativo sotto il player con conferma solo dopo `ended` e salvataggio `lesson_completed=true`, link alla prossima lezione esclusivamente se accessibile. Nessuna sovrapposizione o alterazione dei controlli YouTube; test end-state, replay, rinnovo sessione, consensi e regressioni. Manuale `docs/VIDEO.md`, QA `docs/QA_TESTBOOK.md`, matrice requisiti `docs/REQUIREMENTS_STATUS.csv`.
 
+### P0 — ripristino riproduzione video dopo PR #571
 
-### PR #571 — chiusura della distrazione a fine video
-
-Aggiorna la PR #570: solo a fine riproduzione convalidata dal server, l'iframe YouTube viene scaricato e rimpiazzato nello stesso spazio da «Lezione completata», «Lezione successiva» soltanto quando raggiungibile e «Rivedi il video», che richiede nuovo grant e ricomincia da 0. Evitare overlay e blocchi dei controlli del provider, preservare ACL/consenso e telemetria. Richiesta accettazione Joomla reale per completamento, replay, responsive, URL next, preview, consultazione e video non completato. Riferimenti `docs/VIDEO.md`, `docs/QA_TESTBOOK.md`, `docs/REQUIREMENTS_STATUS.csv`.
+La sostituzione dell'iframe YouTube nello stesso spazio (PR #571) ha causato una regressione dichiarata sul sito di prova. PR #572 ripristina il runtime precedentemente collaudato (#570), lasciando il riquadro fine-lezione esterno. Non riproporre il rimpiazzo del player in 1.0.0 senza prove di avvio/Play/replay SDK reali. Il successivo miglioramento deve mantenere distinta la logica di autorizzazione e telemetria dalla presentazione UI, ed essere verificato in un browser reale Joomla prima dell'accettazione.
