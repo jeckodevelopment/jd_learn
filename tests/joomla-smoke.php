@@ -473,6 +473,26 @@ try {
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
 }
+// Explicit historical issuance remains restricted to certificate administrators.
+try {
+    $certificateService->adminRecoverHistorical(new \Joomla\CMS\User\User(), 1, 'Approved historical repair');
+    throw new \RuntimeException('Historical recovery accepted an anonymous caller.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+}
+try {
+    $certificateService->adminRecoverHistorical($app->getIdentity(), 1, 'short');
+    throw new \RuntimeException('Historical recovery accepted a missing justification.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') { throw $error; }
+}
+try {
+    $certificateService->adminRecoverHistorical($app->getIdentity(), 999999999, 'Approved historical repair');
+    throw new \RuntimeException('Historical recovery accepted a nonexistent enrollment.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') { throw $error; }
+}
+
 // CERT-08: mutation boundary must reject an anonymous caller before even
 // inspecting the certificate ID; a legitimate admin gets input/404 errors.
 try {
