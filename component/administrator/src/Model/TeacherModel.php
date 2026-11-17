@@ -165,12 +165,13 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                     throw new \DomainException('COM_JLMS_TEACHER_INVALID');
                 }
                 if ((int) $record->state === $target) { continue; }
-                $db->updateObject('#__jlms_teachers', (object)[
+                $update = (object)[
                     'id' => $id, 'state' => $target,
                     'revision' => (int) $record->revision + 1,
                     'modified_at' => Factory::getDate()->toSql(),
                     'modified_by' => (int) $actor->id,
-                ], 'id');
+                ];
+                $db->updateObject('#__jlms_teachers', $update, 'id');
             }
             $db->transactionCommit();
             return true;
