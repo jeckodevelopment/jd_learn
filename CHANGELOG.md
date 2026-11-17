@@ -1,4 +1,5 @@
 # Changelog
+- **LCM-04 — eliminazione protetta dei docenti:** aggiunta rimozione definitiva singola, esplicitamente confermata, soltanto per profili cestinati privi di corsi collegati e riferimenti nelle versioni didattiche congelate. Controlli ACL, CSRF e checkout, test Joomla di protezione storico e account nativi. Nessuna cancellazione a cascata; accettazione manuale differita.
 
 - **LCM-04 — ciclo di vita docenti (prima tranche):** introdotti cestino e ripristino conservativo con filtro e toolbar Joomla, azioni multiple atomiche autorizzate e blocco di ripubblicazione diretta dal cestino. Account Joomla, docenze assegnate e snapshot formativi sono preservati; eliminazione definitiva ancora non disponibile.
 - **LCM-03 — azioni massive e rimozione controllata dei percorsi:** selezioni multiple per pubblicazione, sospensione, archiviazione, cestinazione e ripristino con transazioni atomiche e ACL per record; cancellazione definitiva esplicita soltanto per un percorso già cestinato e senza corsi associati. Test di regressione Joomla per rollback e integrità relazioni, traduzioni e manuali aggiornati. Restano collaudo manuale e audit delle dipendenze esterne.
