@@ -2022,3 +2022,12 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 3. Completare un video e verificare il riquadro nativo **sotto** al player (comportamento noto della PR #570); non deve apparire una schermata in luogo dell'iframe.
 4. Verificare consenso negato/revocato e rinnovo sessione: niente riproduzione senza autorizzazione; nessun errore JS o regressione su Vimeo, HTML5 e Cloudflare Stream.
 5. Registrare come collaudo positivo solo dopo conferma effettiva sul sito Joomla. La regressione rimane priorità P0 fino al riscontro.
+
+### P0 — riproduzione di video già completati
+
+1. Con un utente iscritto completare una lezione video YouTube, controllando la conferma server e il mantenimento del completamento.
+2. Uscire dall'aula e riaprire la stessa lezione: il player deve restare visibile, consentire Play e riprodurre **dall'inizio**, senza lampo seguito da schermata nera e senza seek automatico alla fine.
+3. Ripetere il test dopo ricaricamento pagina e, dove disponibili, su Chrome e Safari; pausa, avanzamento manuale e replay devono continuare a funzionare.
+4. Verificare che progresso storico, copertura, stato completato, numero di lezioni completate, eventuali attestati ed email già emessi rimangano invariati alla sola riapertura; nessun doppio completamento.
+5. Aprire una **diversa** lezione soltanto parzialmente vista: il recupero della posizione salvata deve ancora funzionare. Verificare anche una lezione mai vista, per evitare regressioni sull'avvio.
+6. Controllare il messaggio finale sotto il player, consenso e gli altri provider. Non chiudere la regressione P0 sulla sola base della CI simulata.
