@@ -106,5 +106,36 @@ $check((bool)$pathModel->save($emptyPayload),'empty pathway can be authored: '.$
 $emptyId=(int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='empty-ci-pathway'")->loadResult();
 $emptyDetail=$service->detail($operator,'en-GB',$emptyId);
 $check($emptyDetail['progress']===null && $emptyDetail['required_courses']===0,'empty pathway has no completion percentage');
+// LCM-03: archive hides the public pathway without mutating its course links,
+// student enrollments or historical progress; restoring requires explicit publication.
+$pathwayCourses = [['course_id'=>$courseId,'ordering'=>10],['course_id'=>$hiddenCourseId,'ordering'=>20]];
+$pathwayBase = ['id'=>$pathwayId,'title'=>'CI learning pathway','alias'=>'ci-learning-pathway',
+    'description'=>'<p>Pathway summary</p>','catid'=>$categoryId,'access'=>1,'language'=>'*',
+    'courses'=>$pathwayCourses];
+$beforeRelations = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn();
+$enrollmentsBeforeArchive = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult();
+$check((bool)$pathModel->save($pathwayBase + ['revision'=>2,'state'=>2]),
+    'archiving a published pathway succeeds: ' . $pathModel->getError());
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === 2,
+    'archived pathway state is stored');
+$archiveDenied = false;
+try { $service->detail($operator,'en-GB',$pathwayId); }
+catch (\\RuntimeException $error) { $archiveDenied = $error->getCode() === 404; }
+$check($archiveDenied,'archived pathway cannot be read through the public detail endpoint');
+$check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
+    'archiving preserves pathway course associations');
+$check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $enrollmentsBeforeArchive,
+    'archiving a pathway does not change course enrollments');
+$check((bool)$pathModel->save($pathwayBase + ['revision'=>3,'state'=>0]),
+    'restoring archived pathway to unpublished succeeds: ' . $pathModel->getError());
+$draftDenied = false;
+try { $service->detail($operator,'en-GB',$pathwayId); }
+catch (\\RuntimeException $error) { $draftDenied = $error->getCode() === 404; }
+$check($draftDenied,'restoration does not automatically republish a pathway');
+$check((bool)$pathModel->save($pathwayBase + ['revision'=>4,'state'=>1]),
+    'explicit republication of restored pathway succeeds: ' . $pathModel->getError());
+$restored = $service->detail($operator,'en-GB',$pathwayId);
+$check(count($restored['courses']) === 2 && $restored['courses'][0]['id'] === $courseId,
+    'explicit republication restores the same public pathway course ordering');
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
 echo json_encode(['pathway_checks'=>14,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;
