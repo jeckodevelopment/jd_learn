@@ -81,10 +81,10 @@ foreach ($item['outline'] as $entry) {
     <?php $nextVideoLessonAvailable = $nextLesson !== null && $nextLesson->schedule_state === 'available' && empty($nextLesson->prerequisite_blocked); ?>
     <div id="jlms-youtube-finish" class="jlms-youtube-finish" role="status" aria-live="polite" hidden>
      <p class="jlms-youtube-finish__message"><?= Text::_('COM_JLMS_VIDEO_COMPLETED') ?></p>
-     <button id="jlms-youtube-replay" type="button" class="btn btn-outline-primary jlms-youtube-finish__replay"><?= Text::_('COM_JLMS_VIDEO_REWATCH') ?></button>
      <?php if ($nextVideoLessonAvailable) : ?>
       <a class="btn btn-primary jlms-youtube-finish__next" href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $nextLesson->id) ?>"><?= Text::_('COM_JLMS_NEXT_LESSON') ?>: <?= $this->escape($nextLesson->title) ?></a>
      <?php endif; ?>
+     <button id="jlms-youtube-replay" type="button" class="btn btn-outline-primary jlms-youtube-finish__replay"><?= Text::_('COM_JLMS_VIDEO_REWATCH') ?></button>
     </div>
    <?php endif; ?>
    <?php if (!empty($selected->video_transcript)) : ?><details id="jlms-video-transcript"><summary><?= Text::_('COM_JLMS_LESSON_TRANSCRIPT') ?></summary><div class="jlms-lesson-transcript__content"><?= $selected->video_transcript ?></div></details><?php endif; ?>
