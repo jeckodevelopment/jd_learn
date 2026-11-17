@@ -13,12 +13,48 @@ final class TeacherController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory'], true)) {
+        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'trash', 'restore', 'publish', 'unpublish'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
 
+
+    /** Server-side POST, CSRF and per-record ACL checks for bulk operations. */
+    private function transition(int $target): void
+    {
+        if (strtoupper($this->input->getMethod()) !== 'POST') {
+            throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+        }
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException('JINVALID_TOKEN', 403);
+        }
+        $raw = $this->input->post->get('cid', [], 'array');
+        if ($raw === [] || count($raw) > 100) {
+            throw new \RuntimeException('COM_JLMS_TEACHER_INVALID', 422);
+        }
+        $ids = [];
+        foreach ($raw as $value) {
+            if ((!is_string($value) && !is_int($value))
+                || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $value)) {
+                throw new \RuntimeException('COM_JLMS_TEACHER_INVALID', 422);
+            }
+            $ids[] = (int) $value;
+        }
+        $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
+            ->createModel('Teacher', 'Administrator', ['ignore_request' => true]);
+        if (!$model->changeStates($ids, $target)) {
+            throw new \RuntimeException((string) $model->getError(), 403);
+        }
+        $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
+            'index.php?option=com_jlms&view=teachers'
+            . ($target === 0 ? '&filter[published]=-2' : ''), false));
+    }
+
+    public function trash(): void { $this->transition(-2); }
+    public function restore(): void { $this->transition(0); }
+    public function publish(): void { $this->transition(1); }
+    public function unpublish(): void { $this->transition(0); }
 
     protected function allowAdd($data = [])
     {

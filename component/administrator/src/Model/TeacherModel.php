@@ -53,9 +53,9 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             $allowed = ['id', 'revision', 'title', 'alias', 'catid', 'bio', 'image', 'image_alt', 'image_decorative', 'website', 'language', 'access', 'state', 'user_id', 'com_fields', 'version_note'];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id','revision','catid','access','state'] as $key) {
-                if (array_key_exists($key,$data) && ((!is_int($data[$key]) && !is_string($data[$key])) || !preg_match('/^[0-9]{1,10}$/D',(string) $data[$key]))) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
+                if (array_key_exists($key,$data) && ((!is_int($data[$key]) && !is_string($data[$key])) || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D',(string) $data[$key]))) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
             }
-            if (isset($data['state']) && !in_array((string) $data['state'],['0','1'],true)) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
+            if (isset($data['state']) && !in_array((string) $data['state'],['-2','0','1'],true)) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
             $id = (int) ($data['id'] ?? 0); $record = null;
             if ($id) {
                 $q = $db->createQuery()->select('*')->from('#__jlms_teachers')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
@@ -76,6 +76,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             }
             $catid = (int) ($data['catid'] ?? $record->catid ?? 0);
             if ((!$id || $catid !== (int) $record->catid) && !$actor->authorise('core.create', 'com_jlms.teacher.category.' . $catid)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            if ($record && (int) $record->state === -2 && isset($data['state']) && (int) $data['state'] === 1) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
             if (array_key_exists('state', $data) && (int) $data['state'] !== (int) ($record->state ?? 0) && !$actor->authorise('core.edit.state', $scope)) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
             foreach (['title', 'alias', 'bio', 'image', 'image_alt', 'website', 'language'] as $key) {
                 if (isset($data[$key]) && (!is_string($data[$key]) || preg_match('//u', $data[$key]) !== 1)) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
@@ -125,6 +126,62 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         $data['revision'] = (int) $current->revision;
         $data = array_replace($data, array_intersect_key(json_decode($data['params_json'] ?? '{}', true), array_flip(['website', 'image_alt', 'image_decorative'])));
         return $this->save($data);
+    }
+
+    /** Atomic and authorization-checked bulk teacher lifecycle transitions. */
+    public function changeStates(array $ids, int $target): bool
+    {
+        if (!in_array($target, [-2, 0, 1], true) || count($ids) < 1 || count($ids) > 100
+            || count(array_unique($ids)) !== count($ids)
+            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1))) {
+            $this->setError(Text::_('COM_JLMS_TEACHER_INVALID'));
+            return false;
+        }
+        $actor = new User((int) $this->getCurrentUser()->id);
+        $actor->clearAccessRights();
+        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
+            $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
+        $db = $this->getDatabase();
+        $started = false;
+        try {
+            sort($ids, SORT_NUMERIC);
+            $db->transactionStart();
+            $started = true;
+            foreach ($ids as $id) {
+                $query = $db->createQuery()->select('id, state, revision, checked_out')->from('#__jlms_teachers')
+                    ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                $query->setQuery((string) $query . ' FOR UPDATE');
+                $record = $db->setQuery($query)->loadObject()
+                    ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+                if (!$actor->authorise('core.edit', 'com_jlms.teacher.' . $id)
+                    || !$actor->authorise('core.edit.state', 'com_jlms.teacher.' . $id)
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
+                    throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                }
+                if ((int) $record->state === -2 && $target === 1) {
+                    throw new \DomainException('COM_JLMS_TEACHER_INVALID');
+                }
+                if ((int) $record->state === $target) { continue; }
+                $update = (object)[
+                    'id' => $id, 'state' => $target,
+                    'revision' => (int) $record->revision + 1,
+                    'modified_at' => Factory::getDate()->toSql(),
+                    'modified_by' => (int) $actor->id,
+                ];
+                $db->updateObject('#__jlms_teachers', $update, 'id');
+            }
+            $db->transactionCommit();
+            return true;
+        } catch (\Throwable $error) {
+            if ($started) { $db->transactionRollback(); }
+            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_TEACHER_INVALID'];
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true)
+                ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            return false;
+        }
     }
 
     public function delete(&$pks) { $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE')); return false; }

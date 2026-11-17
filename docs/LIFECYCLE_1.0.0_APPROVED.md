@@ -65,3 +65,7 @@ Il servizio `CertificateService::listForStudent()` e il download privato degli a
 8. Aggiornare un'installazione con dati preesistenti e verificare ACL, multilingua e nessuna regressione.
 
 Non indicare accettazione finché i test su un sito Joomla reale non sono registrati in QA_TESTBOOK.md.
+
+### LCM-04 — prima tranche: cestinazione e ripristino docenti
+
+Il profilo docente utilizza esclusivamente gli stati Pubblicato (1), Non pubblicato (0) e Cestinato (-2): **nessuno stato Archiviato**. Sono presenti filtro Cestinati e toolbar Joomla per azioni massive di pubblicazione, sospensione della pubblicazione, cestinazione e ripristino. Il ripristino torna esclusivamente a Non pubblicato e la transizione diretta dal cestino a Pubblicato è respinta anche lato server. Ogni selezione richiede POST/CSRF, ACL `jlms.teachers.manage`, `core.edit` e `core.edit.state` per elemento; la transazione è atomica. Non vengono eliminati o modificati account Joomla, relazioni con i corsi né snapshot didattici. **Residui:** eliminazione fisica condizionata, verifica completa dei riferimenti storici esterni e accettazione Joomla reale.

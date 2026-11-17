@@ -2062,3 +2062,12 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 4. Cestinare un percorso con corsi associati e provare Elimina definitivamente: deve essere bloccato senza perdere percorso, associazioni, iscrizioni, frequenza o attestati.
 5. Creare e cestinare un percorso vuoto, selezionarne **uno solo** e confermare Elimina definitivamente: il percorso può essere eliminato; gli altri record non devono essere alterati. Tentare due selezioni e un ID inesistente, con esito negato.
 6. Verificare controllo ACL `core.delete`, dialogo di conferma, visualizzazione delle etichette IT/EN, audit e integrità dopo upgrade. La suite automatica non sostituisce questo collaudo Joomla reale.
+
+### LCM-04 — cestinazione e ripristino dei docenti
+
+1. Selezionare due docenti, uno associato a un account Joomla e almeno uno assegnato a un corso; cestinare in massa.
+2. Verificare che scompaiano dalla directory pubblica e dall'elenco amministrativo ordinario; nel filtro Cestinati devono rimanere presenti.
+3. Verificare che gli account Joomla non vengano bloccati o eliminati e che le associazioni ai corsi e gli snapshot di versioni già pubblicate siano invariati.
+4. Ripristinare entrambi: devono tornare Non pubblicati. La pubblicazione diretta dal cestino deve essere negata; pubblicare esplicitamente solo dopo il ripristino.
+5. Con ruolo senza permesso `core.edit.state` o senza visibilità sul singolo docente, verificare il rifiuto di chiamate POST dirette e nessun aggiornamento parziale; GET e CSRF invalido devono essere respinti.
+6. Eseguire dopo upgrade su Joomla reale. Non registrare esito positivo finché il collaudo non sarà svolto.

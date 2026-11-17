@@ -31,6 +31,16 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.create', 'com_jlms') && $actor->authorise('jlms.teachers.manage', 'com_jlms')) {
             ToolbarHelper::addNew('teacher.add');
         }
+        if ($actor->authorise('jlms.teachers.manage', 'com_jlms')
+            && $actor->authorise('core.edit.state', 'com_jlms')) {
+            if ((string) $this->state->get('filter.published') === '-2') {
+                ToolbarHelper::custom('teacher.restore', 'refresh', 'refresh', 'JTOOLBAR_RESTORE', true);
+            } else {
+                ToolbarHelper::publish('teacher.publish', 'JTOOLBAR_PUBLISH', true);
+                ToolbarHelper::unpublish('teacher.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+                ToolbarHelper::trash('teacher.trash');
+            }
+        }
         parent::display($tpl);
     }
 }

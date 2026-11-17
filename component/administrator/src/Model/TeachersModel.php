@@ -64,7 +64,10 @@ final class TeachersModel extends ListModel
         }
         foreach (self::FILTERS as $name) {
             $value = trim((string) $this->getState('filter.' . $name, ''));
-            if ($value === '') { continue; }
+            if ($value === '') {
+                if ($name === 'published') { $query->where('a.state <> -2'); }
+                continue;
+            }
             if ($name === 'search') {
                 if (preg_match('//u', $value) !== 1 || mb_strlen($value) > 200) { $query->where('1=0'); continue; }
                 if (preg_match('/^id:([1-9][0-9]{0,9})$/iD', $value, $match)) {
@@ -74,7 +77,7 @@ final class TeachersModel extends ListModel
                     $query->where('(a.title LIKE :title OR a.alias LIKE :alias)')->bind(':title', $search)->bind(':alias', $search);
                 }
             } elseif ($name === 'published') {
-                if (!in_array($value, ['0', '1'], true)) { $query->where('1=0'); continue; }
+                if (!in_array($value, ['-2', '0', '1'], true)) { $query->where('1=0'); continue; }
                 $state = (int) $value; $query->where('a.state = :state')->bind(':state', $state, ParameterType::INTEGER);
             } else {
                 if ($value !== '*' && !preg_match('/^[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8}){1,2}$/D', $value)) { $query->where('1=0'); continue; }

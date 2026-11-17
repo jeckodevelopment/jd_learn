@@ -19,7 +19,7 @@ final class TeacherTable extends Table
         $this->title = trim((string) $this->title);
         $this->alias = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe((string) ($this->alias ?: $this->title));
         if ($this->title === '' || mb_strlen($this->title) > 255 || preg_match('//u', $this->title) !== 1 || $this->alias === '' || strlen($this->alias) > 180
-            || strlen((string) $this->bio) > 65535 || preg_match('//u', (string) $this->bio) !== 1 || !in_array((int) $this->state, [0, 1], true)) { $this->setError('COM_JLMS_TEACHER_INVALID'); return false; }
+            || strlen((string) $this->bio) > 65535 || preg_match('//u', (string) $this->bio) !== 1 || !in_array((int) $this->state, [-2, 0, 1], true)) { $this->setError('COM_JLMS_TEACHER_INVALID'); return false; }
         $db = $this->getDatabase();
         $catid = (int) $this->catid; $access = (int) $this->access; $language = (string) $this->language;
         $q = $db->createQuery()->select('id')->from('#__categories')->where("extension='com_jlms.teacher' AND published<>-2")->where('id=:id')->bind(':id', $catid, ParameterType::INTEGER);

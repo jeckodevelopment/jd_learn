@@ -2,7 +2,7 @@
 <form>
  <fields name="filter">
   <field name="search" type="text" inputmode="search" label="COM_JLMS_COURSES_SEARCH" description="COM_JLMS_COURSES_SEARCH_HELP" hint="JSEARCH_FILTER" maxlength="200" />
-  <field name="published" type="list" label="JSTATUS" class="js-select-submit-on-change" validate="options"><option value="">JOPTION_SELECT_PUBLISHED</option><option value="1">JPUBLISHED</option><option value="0">JUNPUBLISHED</option></field>
+  <field name="published" type="list" label="JSTATUS" class="js-select-submit-on-change" validate="options"><option value="">JOPTION_SELECT_PUBLISHED</option><option value="1">JPUBLISHED</option><option value="0">JUNPUBLISHED</option><option value="-2">JTRASHED</option></field>
   <field name="language" type="contentlanguage" label="JGRID_HEADING_LANGUAGE" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_LANGUAGE</option><option value="*">JALL</option></field>
  </fields>
  <fields name="list">
