@@ -104,3 +104,7 @@ Gli iframe YouTube sono caricati su `www.youtube-nocookie.com` con `rel=0`: seco
 ### P0: ripristino riproduzione dopo PR #571 (PR #572)
 
 La PR #571, che sostituiva in loco l'iframe YouTube alla fine della lezione, è stata ritirata dal runtime a seguito di regressione segnalata nell'ambiente Joomla: i video non partivano. La PR #572 ripristina il flusso player della PR #570, precedentemente collaudata. Il riquadro finale rimane **sotto** all'iframe; non è ancora stata realizzata la soluzione in loco. Continuano ad applicarsi `rel=0`, tracciamento e guardia server per `lesson_completed`. Il nuovo design dovrà essere rivalutato separatamente con collaudo reale su video iniziale, replay, rinnovo grant e consenso.
+
+### P0 — riapertura delle lezioni già completate
+
+Confermato in collaudo reale: il video mai completato parte, mentre la lezione completata può mostrare «Lezione video completata» e terminare subito per il seek automatico a `resume_ms` prossimo alla durata. Il grant di playback espone `lesson_completed` e, per lezioni completate, `resume_ms=0`; il frontend non applica mai il seek di ripresa quando `lesson_completed=true`. Le lezioni in corso mantengono la ripresa salvata. La riapertura **non** azzera copertura, storico, completamento, iscrizione o attestato e non duplica il conteggio. Il collaudo browser reale rimane necessario prima della chiusura P0.
