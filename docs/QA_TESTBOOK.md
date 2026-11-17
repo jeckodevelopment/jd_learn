@@ -1958,3 +1958,8 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 ### Recupero attestati per completamenti storici (issue #553)
 
 In JD Learn → Attestati, verificare la sezione dei completamenti privi di attestato. Su un completamento di una versione pubblicata prima della correzione con `certificate_enabled=false`, configurare le preferenze globali/per corso per consentire l'emissione; inserire una motivazione di 8–500 caratteri, confermare e premere «Emetti attestato». Verificare record e documento, PDF accessibile, notifica accodata e audit con operatore, motivazione, versione e iscrizione. La versione didattica non deve essere alterata. Ripetere la richiesta: non deve essere emesso un secondo attestato. Verificare POST/CSRF, ACL, modalità consultazione, completamento assente, preferenze OFF, mancanza template e rollback se audit fallisce. Il recupero non deve partire automaticamente durante l'upgrade.
+
+
+### Regressione emissione manuale attestato storico (#558)
+
+Su un completamento storico idoneo con preferenze attestati abilitate, verificare il pulsante di emissione amministrativa con motivazione e conferma. Atteso: nessun HTTP 500, un solo record attestato e documento collegato, audit registrato, versione didattica immutata. Ripetere la richiesta e verificare che il secondo tentativo sia respinto senza duplicazioni. Il percorso positivo viene eseguito anche nella suite Joomla `tests/joomla-teaching-rules.php` su MySQL e MariaDB.
