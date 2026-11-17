@@ -1,5 +1,7 @@
 # Changelog
 
+- Migliorata la concentrazione nelle lezioni YouTube: `rel=0` per raccomandazioni dello stesso canale (non eliminabili del tutto), riquadro nativo JD Learn **esterno** all'iframe quando una riproduzione conclusa è confermata come completata dal server e collegamento alla lezione successiva solo se autorizzata. Nessun overlay, nessuna alterazione del tracciamento o dei controlli del provider; gestione anche dopo rinnovo della sessione video. Test e collaudo Joomla documentati.
+
 - **Issue #379 (P1)**: la build timbra automaticamente nei manifest dello ZIP del package e delle 11 parti la stessa versione, una `creationDate` esplicita e nomi `JD Learn - ...` uniformi; il workflow release riceve la data UTC e la CI verifica ogni ZIP interno. Nessun identificativo tecnico delle estensioni viene rinominato. Collaudo di visualizzazione in Gestione estensioni Joomla pendente.
 
 - Aggiunto il recupero amministrativo puntuale degli attestati **mai emessi** per iscrizioni completate eleggibili (`eligible_missing`), con conferma, motivazione, verifica delle regole pubblicate, transazione, audit, protezione ACL/CSRF e divieto di duplicati. Separato dalla procedura eccezionale per versioni storiche disabilitate e dal rendering PDF `pending_render`; test di integrazione Joomla e smoke aggiunti.
