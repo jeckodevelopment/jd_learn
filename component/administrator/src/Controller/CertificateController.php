@@ -14,7 +14,7 @@ final class CertificateController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['download', 'regenerate', 'recoverhistorical'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!in_array(strtolower($task), ['download', 'regenerate', 'recoverhistorical', 'recovermissing'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
         return parent::execute($task);
     }
 
@@ -51,6 +51,43 @@ final class CertificateController extends BaseController
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
             }
             Log::add('Certificate historical recovery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
+        }
+    }
+
+    /** Explicit recovery for eligible completion without issuance, protected by POST token, ACL and typed inputs. */
+    public function recoverMissing(): void
+    {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        if (strtoupper($this->input->getMethod()) !== 'POST') {
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+        }
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
+        }
+        try {
+            if ((int) $this->input->server->get('CONTENT_LENGTH', 0, 'UINT') > 4096) {
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
+            }
+            $enrollmentId = CurriculumService::id($this->input->post->get('enrollment_id', null, 'RAW'));
+            if ($this->input->post->getString('confirmation', '') !== '1') {
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 422);
+            }
+            $reason = $this->input->post->getString('reason', '');
+            $this->app->bootComponent('com_jlms')->getCertificateService()->adminRecoverMissing(
+                $this->app->getIdentity(), $enrollmentId, $reason
+            );
+            $this->setMessage(Text::_('COM_JLMS_CERTIFICATE_MISSING_RECOVERED'));
+            $this->setRedirect(\Joomla\CMS\Router\Route::link(
+                'administrator', 'index.php?option=com_jlms&view=certificates', false
+            ));
+        } catch (\Throwable $error) {
+            $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_RESOURCE_NOT_FOUND',
+                'COM_JLMS_CERTIFICATE_UNAVAILABLE', 'COM_JLMS_CERTIFICATE_AUDIT_FAILED'];
+            if (in_array($error->getMessage(), $known, true)) {
+                throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
+            }
+            Log::add('Certificate missing issuance recovery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

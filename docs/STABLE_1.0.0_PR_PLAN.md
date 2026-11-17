@@ -256,3 +256,7 @@ La configurazione standard di attestati e materiali non può dipendere dalla dis
 ### Correzione 503 persistente PDF su shared hosting — issue #564, PR #565
 
 La generazione e rigenerazione PDF usa direttamente lo storage gestito senza file temporanei del sistema operativo; testare `pending_render` → `ready` anche con `open_basedir`, validazione PDF e diagnostica per fase priva di dati sensibili. Copertura nei test Joomla prima del merge e collaudo manuale separato.
+
+### Recupero puntuale attestati mancanti — sviluppo 17/11/2026
+
+In Attestati → Corsi completati senza attestato, l'azione `recoverMissing` tratta solo `eligible_missing`: completamento persistito, versione pubblicata in modalità apprendimento, attestati previsti nello snapshot, preferenze abilitate, template esistente, nessuna emissione precedente. POST CSRF, ACL, motivazione e conferma, lock transazionale, audit, data originale e download successivo. Non è backfill in massa e non modifica `pending_render` già emessi. Test e accettazione Jira/Joomla distinti; tenere la copertura parziale fino al collaudo.
