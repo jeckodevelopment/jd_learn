@@ -228,3 +228,8 @@ PR #451 integrata (merge `71c4afcf8cff36058511209b9f2e9dcb34c01b1d`): trascrizio
 ### Correzione certificati pre-release (issue #553)
 
 La pubblicazione delle nuove versioni didattiche deve congelare il valore effettivo di `certificate_enabled` dopo l'applicazione dell'ereditarietà globale/per corso. La modifica non interviene automaticamente sulle versioni già pubblicate; la gestione di completamenti storici privi di attestato richiede una procedura amministrativa distinta con autorizzazione, audit e idempotenza. Test di accettazione in `docs/QA_TESTBOOK.md`.
+
+
+### Recupero amministrativo attestati storici (#553)
+
+Un completamento precedente alla correzione del flag versione può essere gestito da amministratore con permesso `jlms.certificates.manage`, motivazione obbligatoria e conferma esplicita. L'emissione è idempotente, preserva data del completamento e snapshot originario, produce audit e coda mail. Non esiste backfill automatico. Test manuale in `docs/QA_TESTBOOK.md`.
