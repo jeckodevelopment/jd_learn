@@ -265,4 +265,9 @@ In Attestati → Corsi completati senza attestato, l'azione `recoverMissing` tra
 
 ### Player YouTube focalizzato sulla lezione (integrazione novembre 2026)
 
-Configurazione `rel=0` sul player `youtube-nocookie` per limitare le raccomandazioni al canale; riquadro nativo sotto il player con conferma solo dopo `ended` e salvataggio `lesson_completed=true`, link alla prossima lezione esclusivamente se accessibile. Nessuna sovrapposizione o alterazione dei controlli YouTube; test end-state, replay, rinnovo sessione, consensi e regressioni. Manuale `docs/VIDEO.md`, QA `docs/QA_TESTBOOK.md`, matrice requisiti `docs/REQUIREMENTS_STATUS.csv`.
+Configurazione `rel=0` sul player `youtube-nocookie` per limitare le raccomandazioni al canale; schermata nativa **al posto dell'iframe scaricato**, nello stesso rapporto 16:9 con conferma solo dopo `ended` e salvataggio `lesson_completed=true`, link alla prossima lezione esclusivamente se accessibile. Nessuna sovrapposizione o alterazione dei controlli YouTube; test end-state, replay, rinnovo sessione, consensi e regressioni. Manuale `docs/VIDEO.md`, QA `docs/QA_TESTBOOK.md`, matrice requisiti `docs/REQUIREMENTS_STATUS.csv`.
+
+
+### PR #571 — chiusura della distrazione a fine video
+
+Aggiorna la PR #570: solo a fine riproduzione convalidata dal server, l'iframe YouTube viene scaricato e rimpiazzato nello stesso spazio da «Lezione completata», «Lezione successiva» soltanto quando raggiungibile e «Rivedi il video», che richiede nuovo grant e ricomincia da 0. Evitare overlay e blocchi dei controlli del provider, preservare ACL/consenso e telemetria. Richiesta accettazione Joomla reale per completamento, replay, responsive, URL next, preview, consultazione e video non completato. Riferimenti `docs/VIDEO.md`, `docs/QA_TESTBOOK.md`, `docs/REQUIREMENTS_STATUS.csv`.

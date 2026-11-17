@@ -1,5 +1,7 @@
 # Changelog
 
+- **PR #571 — YouTube e-learning:** dopo fine video **confermata dal backend**, l'iframe viene **rimosso** e sostituito nello stesso spazio 16:9 da «Lezione completata», link contestuale alla lezione successiva e «Rivedi il video». Il replay chiede una nuova sessione autorizzata e inizia da 0, senza recuperare il resume salvato in coda. Non copre il player e non altera le soglie/telemetria; test di regressione JS e collaudo Joomla descritti in `docs/QA_TESTBOOK.md`.
+
 - Migliorata la concentrazione nelle lezioni YouTube: `rel=0` per raccomandazioni dello stesso canale (non eliminabili del tutto), riquadro nativo JD Learn **esterno** all'iframe quando una riproduzione conclusa è confermata come completata dal server e collegamento alla lezione successiva solo se autorizzata. Nessun overlay, nessuna alterazione del tracciamento o dei controlli del provider; gestione anche dopo rinnovo della sessione video. Test e collaudo Joomla documentati.
 
 - **Issue #379 (P1)**: la build timbra automaticamente nei manifest dello ZIP del package e delle 11 parti la stessa versione, una `creationDate` esplicita e nomi `JD Learn - ...` uniformi; il workflow release riceve la data UTC e la CI verifica ogni ZIP interno. Nessun identificativo tecnico delle estensioni viene rinominato. Collaudo di visualizzazione in Gestione estensioni Joomla pendente.
