@@ -8,7 +8,7 @@ Per tutte le parti distribuite il nome visibile in Gestione estensioni è `JD Le
 
 ## Data di rilascio
 
-Ogni manifest distribuito include `<creationDate>YYYY-MM-DD</creationDate>` uniforme. Nelle build di sviluppo il valore predefinito è la data del commit Git (oppure `SOURCE_DATE_EPOCH` se fornito); è **deterministico** per checkout invariato. Durante un rilascio ufficiale, il workflow passa esplicitamente `--release-date` con la data UTC dell'effettiva preparazione del rilascio. Non confondere la data con quella di installazione o di compilazione degli ZIP, che rimane fissa per la riproducibilità.
+Ogni manifest distribuito include `<creationDate>YYYY-MM-DD</creationDate>` uniforme. Nelle build di sviluppo il valore predefinito è la data del commit Git (oppure `SOURCE_DATE_EPOCH` se fornito) quando il checkout Git è disponibile; nel job PHP container della CI la data UTC viene fissata una sola volta e passata a ogni invocazione di build tramite `--release-date`. È **deterministico** a parità di data passata e contenuto del checkout. Durante un rilascio ufficiale, il workflow passa esplicitamente `--release-date` con la data UTC dell'effettiva preparazione del rilascio. Non confondere la data con quella di installazione o di compilazione degli ZIP, che rimane fissa per la riproducibilità.
 
 ## Verifiche automatiche
 
