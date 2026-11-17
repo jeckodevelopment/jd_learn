@@ -113,7 +113,8 @@ final class CertificateService
                 ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
                 ->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
                 ->where('e.id = :enrollment')->bind(':enrollment', $enrollmentId, ParameterType::INTEGER);
-            $row = $this->db->setQuery((string) $query . ' FOR UPDATE')->loadObject();
+            $query->setQuery((string) $query . ' FOR UPDATE');
+            $row = $this->db->setQuery($query)->loadObject();
             if (!$row || $row->completed_at === null || $row->status !== 'published') {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
