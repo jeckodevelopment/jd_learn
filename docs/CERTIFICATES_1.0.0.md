@@ -94,3 +94,10 @@ Un hosting condiviso non deve richiedere scrittura fuori da `public_html`. Se `m
 ## Generazione senza cartella temporanea PHP (issue #564, PR #565)
 
 Per il PDF generato internamente, JD Learn non usa più `tempnam(sys_get_temp_dir())`: la funzione `stageGeneratedPdf` valida il PDF e scrive direttamente in storage privato gestito, con cifratura e checksum, oppure nello storage privato esterno preconfigurato. Questo evita i blocchi `open_basedir` su hosting condivisi e la temporanea esposizione di un PDF in chiaro. Per errori di emissione PDF i log operativi Joomla in categoria `com_jlms` registrano solo la fase di fallimento (`logo`, `pdf`, `storage`, `database`) e il tipo di eccezione, senza dati personali o path. Il 503 rimane fail-closed; lo stato `pending_render` può essere recuperato ripetendo il download dopo aver risolto il problema specifico.
+
+## Correzione logo raster e recupero documenti in attesa (PR in verifica)
+
+- Logo attestati: JPEG, PNG, GIF, WebP e AVIF (questi ultimi quando supportati dalla libreria GD di PHP). I raster non-JPEG sono decodificati e ricomposti su fondo bianco, poi incorporati come JPEG nel PDF; SVG e sorgenti remote non sono accettati.
+- La correzione riguarda anche documenti già emessi con stato `pending_render`: al nuovo download autenticato il renderer usa lo snapshot originale con il logo PNG senza creare una nuova emissione, senza cambiare codice, identità, data o audit storico.
+- **Non riemettere** un attestato se il record esiste: riprovare il rendering. Se manca completamente l'emissione, utilizzare la diagnostica delle iscrizioni completate senza attestato e l'eventuale recupero storico amministrativo previsto dalle regole; nessun backfill indiscriminato.
+- Test aggiunto: `php tests/certificate-raster-logos.php`; richiede estensione GD per raster non JPEG. Collaudo Joomla reale ancora richiesto.
