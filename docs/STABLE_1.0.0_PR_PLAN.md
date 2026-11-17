@@ -290,3 +290,7 @@ Percorsi formativi: stato nativo `-2 = Cestinato` con controllo server-side dei 
 ### LCM-03 — azioni massive e rimozione protetta
 
 Tranche successiva alle PR #575/#576: azioni della toolbar Joomla per cambio stato di più percorsi, con POST CSRF, ACL per record, controlli sullo stato e transazione all-or-nothing; il ripristino dal cestino resta Non pubblicato. Cancellazione fisica solo su percorso **singolo**, già cestinato e senza corsi associati, con permesso `core.delete` e conferma UI. Non sono mai cancellati corsi e iscrizioni a cascata. Sono richieste la prova sul sito reale, l'ispezione di eventuali riferimenti esterni ed evidenze di audit prima di dichiarare LCM-03 completamente accettato.
+
+### LCM-04 — prima tranche gestione del ciclo di vita dei docenti
+
+Implementati stati 1/0/-2 senza Archiviato, filtro di stato Cestinati, selezione multipla con toolbar Joomla e transizioni atomiche autenticabili server-side (POST/CSRF, ACL per elemento e revisione). La riattivazione dal cestino è sempre Non pubblicato; non vengono alterati account Joomla, associazioni ai corsi né snapshot didattici. Test Joomla nativi aggiunti. **Residui LCM-04:** cancellazione definitiva condizionata e audit esteso dei riferimenti storici/integrazioni, collaudo manuale rinviato per decisione dell'utente.
