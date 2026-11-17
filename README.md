@@ -1,6 +1,6 @@
 # JD Learn
 
-**Build di sviluppo corrente: `0.57.7-dev`** (non release stabile). Issue #430 corretta: la vista corso riceve ora `catalog_access` nella proiezione pubblica; CI 4/4 verde. Pacchetto installabile e checksum nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json). Collaudo Joomla ancora pendente.
+**Build di sviluppo documentata: `0.57.7-dev`** (non release stabile). La ricognizione delle PR integrate fino alla #578 e dei residui da verificare è in [POST_MERGE_578_RECONCILIATION.md](docs/POST_MERGE_578_RECONCILIATION.md). Pacchetti installabili e checksum vanno verificati per il commit specifico nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json); non si assume che un artefatto storico sia la build più recente.
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
@@ -17,9 +17,9 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-La copertura **implementativa stimata** verso la 1.0.0 è **80% (79,56% non arrotondato)**; non rappresenta l'accettazione manuale. Dopo la PR #464 l'area email è stimata al 72% (+2 punti), con accettazione Joomla/SMTP ancora pendente. La stima usa la media delle nove macroaree; la fonte corrente è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md) e i dettagli sono nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json). Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
+La copertura **implementativa stimata** verso la 1.0.0 è **80% (79,56% non arrotondato)**; non rappresenta l'accettazione manuale. L'area email è stimata al 72%, con accettazione Joomla/SMTP ancora pendente. La stima usa la media delle nove macroaree; la fonte corrente è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md) e i dettagli sono nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json). Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
 
-Le integrazioni più recenti riguardano le notifiche email approvate, la compatibilità con Joomla 6.2 e l’allineamento delle viste amministrative e delle toolbar agli schemi Joomla. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
+Le integrazioni più recenti riguardano replay video e regressioni YouTube, recupero attestati, metadati release e ciclo di vita di percorsi e docenti (PR #570–#578). La stima percentuale precedente a queste PR non è stata ricalcolata. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
 
 ## Installazione e sviluppo
 
@@ -41,6 +41,7 @@ Il pacchetto da installare è il **`pkg_jlms-<versione>-dev.zip` interno**; quan
 
 | Argomento | Documento |
 |---|---|
+| Ricognizione dei merge fino alla PR #578 | [POST_MERGE_578_RECONCILIATION.md](docs/POST_MERGE_578_RECONCILIATION.md) |
 | Stato corrente e lavoro residuo | [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) |
 | Piano delle PR verso la stabile | [STABLE_1.0.0_PR_PLAN.md](docs/STABLE_1.0.0_PR_PLAN.md) |
 | Specifica UX frontend approvata (target) e contratto CSS corrente | [FRONTEND_UX_SPECIFICATION.md](docs/FRONTEND_UX_SPECIFICATION.md) · [FRONTEND_CSS.md](docs/FRONTEND_CSS.md) · [FRONTEND_CONTRACT_INVENTORY.md](docs/FRONTEND_CONTRACT_INVENTORY.md) |
