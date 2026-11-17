@@ -1,5 +1,7 @@
 # Changelog
 
+- Corretta l'emissione amministrativa di attestati storici: i parametri tipizzati delle query Joomla sono ora associati tramite variabili, con prova integrata del percorso positivo, audit e blocco duplicati (issue #558; PR #559).
+
 - Aggiunta emissione amministrativa esplicita e auditabile di attestati per completamenti storici privi del flag nella versione didattica, senza modificare snapshot né emettere automaticamente dopo l'upgrade (issue #553).
 
 - Correzione pre-release: alla pubblicazione di nuove versioni didattiche, la regola di emissione attestati è derivata dalle preferenze globali/per corso e congelata nello snapshot; nessuna modifica retroattiva alle versioni pubblicate (issue #553).
