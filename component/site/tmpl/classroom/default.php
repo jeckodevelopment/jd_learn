@@ -77,6 +77,15 @@ foreach ($item['outline'] as $entry) {
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
+   <?php if ($selected->provider_key === 'youtube') : ?>
+    <?php $nextVideoLessonAvailable = $nextLesson !== null && $nextLesson->schedule_state === 'available' && empty($nextLesson->prerequisite_blocked); ?>
+    <div id="jlms-youtube-finish" class="jlms-youtube-finish" role="status" aria-live="polite" hidden>
+     <p class="jlms-youtube-finish__message"><?= Text::_('COM_JLMS_VIDEO_COMPLETED') ?></p>
+     <?php if ($nextVideoLessonAvailable) : ?>
+      <a class="btn btn-primary jlms-youtube-finish__next" href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $nextLesson->id) ?>"><?= Text::_('COM_JLMS_NEXT_LESSON') ?>: <?= $this->escape($nextLesson->title) ?></a>
+     <?php endif; ?>
+    </div>
+   <?php endif; ?>
    <?php if (!empty($selected->video_transcript)) : ?><details id="jlms-video-transcript"><summary><?= Text::_('COM_JLMS_LESSON_TRANSCRIPT') ?></summary><div class="jlms-lesson-transcript__content"><?= $selected->video_transcript ?></div></details><?php endif; ?>
    <div id="jlms-video-speed-control" hidden>
     <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
