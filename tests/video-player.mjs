@@ -149,6 +149,8 @@ assert.equal(ytUrl.searchParams.get('autoplay'),'0');
 assert.equal(ytUrl.searchParams.get('cc_lang_pref'),'fr-ca');
 assert.equal(ytUrl.searchParams.get('cc_load_policy'),'1');
 assert.equal(ytFrame.referrerPolicy,'strict-origin-when-cross-origin');
+assert.equal(ytFrame.allow,'autoplay; encrypted-media; fullscreen; picture-in-picture');
+assert.equal(ytUrl.searchParams.get('autoplay'),'0', 'No automatic playback without user action');
 assert.equal((await yt.sample()).position_ms,1500);assert.deepEqual(await yt.playbackRates(),[0.5,1,1.5]);assert.equal(await yt.setPlaybackRate(1.5),1.5);yt.destroy();assert.equal(ytDestroyed,1);
 const aborted=new AbortController();aborted.abort();await assert.rejects(youtube.create(box,{options:{}},()=>{},aborted.signal));
 globalThis.localStorage={getItem:()=>'<script>'};
