@@ -170,6 +170,65 @@ final class ProtectedMaterialStorage
         return $metadata + ['storage' => 'local', 'storage_key' => $key];
     }
 
+    /**
+     * Store a trusted internally generated PDF directly. No plaintext temporary
+     * files are written: shared hosts can restrict sys_get_temp_dir() and the
+     * managed path can sit below the public webroot.
+     */
+    public function stageGeneratedPdf(string $pdf): array
+    {
+        $size = strlen($pdf);
+        if ($size < 32 || $size > $this->limit()
+            || !str_starts_with($pdf, '%PDF-')
+            || !str_contains(substr($pdf, -1024), '%%EOF')
+            || (new \finfo(FILEINFO_MIME_TYPE))->buffer($pdf) !== 'application/pdf') {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        }
+
+        $root = $this->root();
+        $managed = $this->managed();
+        $key = bin2hex(random_bytes(32)) . ($managed ? '.php' : '.blob');
+        $path = $root . DIRECTORY_SEPARATOR . $key;
+        $digest = hash('sha256', $pdf);
+        $payload = $pdf;
+        if ($managed) {
+            $nonce = random_bytes(12);
+            $tag = '';
+            $encrypted = openssl_encrypt($pdf, 'aes-256-gcm', $this->encryptionKey(), OPENSSL_RAW_DATA, $nonce, $tag);
+            if (!is_string($encrypted) || strlen($tag) !== 16) {
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
+            $payload = self::GUARDED_HEADER . $nonce . $tag . $encrypted;
+        }
+        $file = @fopen($path, 'xb');
+        if ($file === false) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        try {
+            if (!@chmod($path, 0600)) {
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
+            $written = 0;
+            $length = strlen($payload);
+            while ($written < $length) {
+                $part = @fwrite($file, substr($payload, $written, 65536));
+                if ($part === false || $part === 0) {
+                    throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                }
+                $written += $part;
+            }
+        } catch (\Throwable $error) {
+            fclose($file);
+            @unlink($path);
+            throw $error;
+        }
+        fclose($file);
+        if (!hash_equals(hash('sha256', $payload), (string) @hash_file('sha256', $path))) {
+            @unlink($path);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
+        return ['mime_type' => 'application/pdf', 'byte_size' => $size, 'sha256' => $digest,
+            'original_name' => 'certificate.pdf', 'storage' => 'local', 'storage_key' => $key];
+    }
+
     public function open(object $asset)
     {
         if (($asset->storage ?? '') !== 'local'
