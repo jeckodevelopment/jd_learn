@@ -18,20 +18,81 @@ final class ProtectedMaterialStorage
         return ($this->configuration)();
     }
 
+    /** Shared-hosting default: a private directory managed by JD Learn. */
+    private function managed(): bool
+    {
+        return trim((string) $this->config()->get('material_storage_root', '')) === '';
+    }
+
+    private function managedRoot(): string
+    {
+        $siteRoot = realpath(JPATH_ROOT);
+        if ($siteRoot === false) { throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        $path = $siteRoot;
+        foreach (['media', 'com_jlms', 'private'] as $part) {
+            $path .= DIRECTORY_SEPARATOR . $part;
+            if (is_link($path)) { throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+            if (!is_dir($path) && (!@mkdir($path, $part === 'private' ? 0700 : 0755) && !is_dir($path))) {
+                throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
+            if (!is_dir($path) || realpath($path) !== $path) {
+                throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
+        }
+        if (!is_writable($path)) { throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+
+        // Apache/LiteSpeed deny direct HTTP access; encrypted guarded PHP blobs
+        // remain confidential even on servers ignoring .htaccess (e.g. Nginx).
+        $this->guard($path . '/.htaccess', "<IfModule mod_authz_core.c>\\nRequire all denied\\n</IfModule>\\n<IfModule !mod_authz_core.c>\\nDeny from all\\n</IfModule>\\n");
+        $this->guard($path . '/index.php', "<?php http_response_code(404); exit;\\n");
+        return $path;
+    }
+
+    private function guard(string $path, string $content): void
+    {
+        if (is_link($path)) { throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        if (!is_file($path)) {
+            $handle = @fopen($path, 'xb');
+            if ($handle !== false) {
+                try {
+                    if (@fwrite($handle, $content) !== strlen($content) || !@chmod($path, 0600)) {
+                        throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                    }
+                } finally { fclose($handle); }
+            }
+        }
+        if (!is_file($path) || !hash_equals(hash('sha256', $content), hash_file('sha256', $path))) {
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
+    }
+
+    private function encryptionKey(): string
+    {
+        $siteSecret = (string) \\Joomla\\CMS\\Factory::getConfig()->get('secret', '');
+        if ($siteSecret === '' || !function_exists('openssl_encrypt')) {
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
+        return hash_hkdf('sha256', $siteSecret, 32, 'JD Learn managed asset v1');
+    }
+
     public function root(): string
     {
-        $configured = (string) $this->config()->get('material_storage_root', '');
+        if ($this->managed()) { return $this->managedRoot(); }
+
+        // Existing external private roots remain supported for advanced hosting
+        // setups and pre-existing .blob assets; no implicit relocation.
+        $configured = trim((string) $this->config()->get('material_storage_root', ''));
         $absolute = str_starts_with($configured, '/') || (strlen($configured) > 2 && ctype_alpha($configured[0])
-            && $configured[1] === ':' && in_array($configured[2], ['/', '\\'], true));
-        if (!$absolute) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+            && $configured[1] === ':' && in_array($configured[2], ['/', '\\\\'], true));
+        if (!$absolute) { throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
         $root = realpath($configured);
-        if ($configured === '' || $root === false || !is_dir($root) || !is_writable($root) || is_link($configured)) {
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        if ($root === false || !is_dir($root) || !is_writable($root) || is_link($configured)) {
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         foreach ([JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT, $_SERVER['DOCUMENT_ROOT'] ?? ''] as $public) {
             $base = $public !== '' ? realpath($public) : false;
             if ($base && ($root === $base || str_starts_with($root . DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR))) {
-                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         }
         return $root;
@@ -54,73 +115,127 @@ final class ProtectedMaterialStorage
         return min($limits);
     }
 
+    private const GUARDED_HEADER = "<?php http_response_code(404); exit; __halt_compiler(); ?>\\n";
+
     /** Trusted local file source; HTTP callers must first verify is_uploaded_file(). */
     public function stage(string $source, string $name): array
     {
         $root = $this->root();
         if (is_link($source) || !is_file($source)) {
-            throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
+            throw new \\RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }
         $metadata = MaterialFilePolicy::inspect($source, $name, $this->limit());
-        $key = bin2hex(random_bytes(32)) . '.blob';
+        $managed = $this->managed();
+        $key = bin2hex(random_bytes(32)) . ($managed ? '.php' : '.blob');
         $path = $root . DIRECTORY_SEPARATOR . $key;
         $input = @fopen($source, 'rb');
         $output = @fopen($path, 'xb');
         if (!$input || !$output) {
             if (is_resource($input)) { fclose($input); }
             if (is_resource($output)) { fclose($output); }
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         try {
-            if (!@chmod($path, 0600)) {
-                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            if (!@chmod($path, 0600)) { throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+            if ($managed) {
+                // GCM authenticates the bytes and hides private content even if a
+                // reverse proxy misserves a PHP file as a static download.
+                $plain = stream_get_contents($input, $metadata['byte_size'] + 1);
+                if ($plain === false || strlen($plain) !== $metadata['byte_size']) {
+                    throw new \\RuntimeException('COM_JLMS_FILE_INVALID', 422);
+                }
+                $iv = random_bytes(12);
+                $tag = '';
+                $encrypted = openssl_encrypt($plain, 'aes-256-gcm', $this->encryptionKey(), OPENSSL_RAW_DATA, $iv, $tag);
+                if (!is_string($encrypted) || strlen($tag) !== 16) {
+                    throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                }
+                $payload = self::GUARDED_HEADER . $iv . $tag . $encrypted;
+                if (fwrite($output, $payload) !== strlen($payload)) {
+                    throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                }
+            } else {
+                if (stream_copy_to_stream($input, $output, $metadata['byte_size'] + 1) !== $metadata['byte_size']) {
+                    throw new \\RuntimeException('COM_JLMS_FILE_INVALID', 422);
+                }
             }
-            $copied = stream_copy_to_stream($input, $output, $metadata['byte_size'] + 1);
-            if ($copied !== $metadata['byte_size']) {
-                throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
-            }
-        } catch (\Throwable $error) {
-            fclose($input); fclose($output); unlink($path); throw $error;
+        } catch (\\Throwable $error) {
+            fclose($input); fclose($output); @unlink($path); throw $error;
         }
         fclose($input); fclose($output);
-        if (!hash_equals($metadata['sha256'], hash_file('sha256', $path))) {
-            unlink($path);
-            throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
+        if (!$managed && !hash_equals($metadata['sha256'], hash_file('sha256', $path))) {
+            @unlink($path);
+            throw new \\RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }
         return $metadata + ['storage' => 'local', 'storage_key' => $key];
     }
 
     public function open(object $asset)
     {
-        if ($asset->storage !== 'local' || preg_match('/\A[a-f0-9]{64}\.blob\z/D', $asset->storage_key) !== 1) {
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        if (($asset->storage ?? '') !== 'local'
+            || preg_match('/\\A[a-f0-9]{64}\\.(?:blob|php)\\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
+        $managed = str_ends_with($asset->storage_key, '.php');
+        if ($managed && !$this->managed()) {
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $path = $this->root() . DIRECTORY_SEPARATOR . $asset->storage_key;
-        if (is_link($path) || !is_file($path)) {
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
-        }
+        if (is_link($path) || !is_file($path)) { throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
         $handle = @fopen($path, 'rb');
         $stat = $handle ? fstat($handle) : false;
-        if (!$stat || ($stat['mode'] & 0170000) !== 0100000 || $stat['size'] !== (int) $asset->byte_size) {
+        if (!$stat || ($stat['mode'] & 0170000) !== 0100000) {
             if (is_resource($handle)) { fclose($handle); }
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
+        if ($managed) {
+            // Never return the on-disk wrapper/ciphertext as the document.
+            try {
+                $prefix = fread($handle, strlen(self::GUARDED_HEADER));
+                $iv = fread($handle, 12);
+                $tag = fread($handle, 16);
+                $encrypted = stream_get_contents($handle, MaterialFilePolicy::MAX_BYTES + 1);
+                if ($prefix !== self::GUARDED_HEADER || strlen((string) $iv) !== 12
+                    || strlen((string) $tag) !== 16 || $encrypted === false
+                    || strlen($encrypted) !== (int) $asset->byte_size) {
+                    throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                }
+                $plain = openssl_decrypt($encrypted, 'aes-256-gcm', $this->encryptionKey(), OPENSSL_RAW_DATA, $iv, $tag);
+                if (!is_string($plain) || strlen($plain) !== (int) $asset->byte_size
+                    || !hash_equals((string) $asset->sha256, hash('sha256', $plain))) {
+                    throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                }
+                $decoded = fopen('php://temp/maxmemory:1048576', 'w+b');
+                if ($decoded === false || fwrite($decoded, $plain) !== strlen($plain)) {
+                    if (is_resource($decoded)) { fclose($decoded); }
+                    throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                }
+                rewind($decoded);
+                return $decoded;
+            } finally { fclose($handle); }
+        }
+        if ($stat['size'] !== (int) $asset->byte_size) {
+            fclose($handle);
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $hash = hash_init('sha256');
         hash_update_stream($hash, $handle);
         if (!hash_equals((string) $asset->sha256, hash_final($hash))) {
             fclose($handle);
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \\RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         rewind($handle);
         return $handle;
     }
 
-    /** Remove only a private immutable blob addressed by its validated storage key. */
+    /** Remove only an immutable blob addressed by its validated random key. */
     public function remove(object $asset): bool
     {
-        if (($asset->storage ?? '') !== 'local' || preg_match('/\A[a-f0-9]{64}\.blob\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
+        if (($asset->storage ?? '') !== 'local'
+            || preg_match('/\\A[a-f0-9]{64}\\.(?:blob|php)\\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
             return false;
         }
+        if (str_ends_with($asset->storage_key, '.php') && !$this->managed()) { return false; }
         $path = $this->root() . DIRECTORY_SEPARATOR . $asset->storage_key;
         if (is_link($path)) { return false; }
         return !file_exists($path) || (is_file($path) && @unlink($path));
