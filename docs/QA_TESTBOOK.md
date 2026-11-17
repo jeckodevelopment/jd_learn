@@ -2014,12 +2014,3 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 3. Testare lezione successiva non accessibile, lezione terminale, versione consultazione/non tracciata, preview, errore/offline e consenso revocato: nessuna navigazione verso contenuti bloccati e nessuna falsa dichiarazione di completamento.
 4. Riprendere la riproduzione o interrompere/revocare il consenso: il riquadro si nasconde. Verificare progressi, copertura e resume invariati e che YouTube possa ancora mostrare consigli all'interno del suo iframe, non sopprimibili da JD Learn.
 5. Verificare l'evento `ended` anche dopo un rinnovo della sessione/provider; nessuna regressione nel player HTML5/Vimeo/Cloudflare Stream. Test automatico `node tests/video-player.mjs`.
-
-
-### PR #571 — schermata YouTube al posto del video, non sotto
-
-1. Aggiornare JD Learn dalla build della PR #571, aprire una lezione YouTube incompleta con prossima lezione accessibile. Durante la visione il player rimane 16:9 con comandi YouTube normali, senza riquadro di fine e senza sovrapposizioni.
-2. Terminare la riproduzione senza aver raggiunto i requisiti di completamento: il video **non** deve essere sostituito dalla schermata di completamento. Se il salvataggio fallisce o è offline, il video rimane; non devono comparire completamenti fittizi.
-3. Dopo `ended` e conferma server `lesson_completed=true`, verificare che **l'iframe scompaia** (non solamente coperto), che il riquadro nativo occupi **lo stesso spazio 16:9** e che gli «Altri video» non restino visibili. Confermare la CTA della lezione successiva, quando accessibile.
-4. Premere «Rivedi il video»: verificare richiesta della nuova sessione autorizzata, consenso rispettato, ritorno del player **nello stesso punto della pagina**, video dall'inizio (non dal tempo di ripresa vicino alla fine), e tracking/replay regolari. Verificare che il replay non elimini la precedente attestazione di completamento.
-5. Testare un'ultima lezione, una prossima lezione bloccata o programmata, preview/autore, lezione in sola consultazione, revoca consenso, interruzione e refresh, nonché rinnovo sessione Stream/YouTube. Non devono esserci CTA verso lezioni bloccate o regressioni su Vimeo/HTML5/Cloudflare. Test: `node tests/video-player.mjs`.
