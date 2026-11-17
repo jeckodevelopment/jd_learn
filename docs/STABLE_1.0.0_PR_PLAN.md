@@ -294,3 +294,7 @@ Tranche successiva alle PR #575/#576: azioni della toolbar Joomla per cambio sta
 ### LCM-04 — prima tranche gestione del ciclo di vita dei docenti
 
 Implementati stati 1/0/-2 senza Archiviato, filtro di stato Cestinati, selezione multipla con toolbar Joomla e transizioni atomiche autenticabili server-side (POST/CSRF, ACL per elemento e revisione). La riattivazione dal cestino è sempre Non pubblicato; non vengono alterati account Joomla, associazioni ai corsi né snapshot didattici. Test Joomla nativi aggiunti. **Residui LCM-04:** cancellazione definitiva condizionata e audit esteso dei riferimenti storici/integrazioni, collaudo manuale rinviato per decisione dell'utente.
+
+### LCM-04 — cancellazione definitiva protetta dei docenti
+
+La tranche successiva alla PR #578 introduce la cancellazione singola, confermata, soltanto di un profilo docente Cestinato senza associazioni a corsi correnti o riferimenti a versioni didattiche immutabili. ACL per asset docente, CSRF, POST, checkout e verifica transazionale sono obbligatori. Nessun utente Joomla o dato didattico viene eliminato a cascata. Test nativi Joomla per divieto in presenza di assegnazioni o snapshot e per rimozione di profilo davvero inutilizzato. **Residuo:** audit dei riferimenti esterni/estensioni e accettazione Joomla reale; collaudi manuali differiti dall'utente.
