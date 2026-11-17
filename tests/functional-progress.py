@@ -21,7 +21,7 @@ class FunctionalProgressTests(unittest.TestCase):
         output = module.calculate(self.rows, self.criteria)
         self.assertIsNone(output["functional_implementation_percent"])
         self.assertEqual(output["progress_status"], "not_yet_measurable")
-        self.assertEqual(output["audited_requirements"], 73)
+        self.assertEqual(output["audited_requirements"], 107)
 
     def test_completed_requirement_is_explicitly_audited(self):
         output = module.calculate(self.rows, self.criteria)
@@ -52,6 +52,14 @@ class FunctionalProgressTests(unittest.TestCase):
         self.assertIn("JOO-03", output["criteria_by_requirement"])
         self.assertNotIn("ATT-01", output["criteria_by_requirement"])
         self.assertGreater(output["criteria_by_requirement"]["CERT-08"]["unassessed_criteria"], 0)
+        self.assertIsNone(output["functional_implementation_percent"])
+
+    def test_security_privacy_core_partially_audited(self):
+        output = module.calculate(self.rows, self.criteria)
+        self.assertIn("SIC-01", output["criteria_by_requirement"])
+        self.assertIn("PRI-02", output["criteria_by_requirement"])
+        self.assertIn("CORE-14", output["criteria_by_requirement"])
+        self.assertGreater(output["criteria_by_requirement"]["CORE-14"]["unassessed_criteria"], 0)
         self.assertIsNone(output["functional_implementation_percent"])
 
     def test_no_evidence_cannot_be_marked_implemented(self):
