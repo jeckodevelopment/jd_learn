@@ -1,5 +1,7 @@
 # Changelog
 
+- **Issue #379 (P1)**: la build timbra automaticamente nei manifest dello ZIP del package e delle 11 parti la stessa versione, una `creationDate` esplicita e nomi `JD Learn - ...` uniformi; il workflow release riceve la data UTC e la CI verifica ogni ZIP interno. Nessun identificativo tecnico delle estensioni viene rinominato. Collaudo di visualizzazione in Gestione estensioni Joomla pendente.
+
 - Aggiunto il recupero amministrativo puntuale degli attestati **mai emessi** per iscrizioni completate eleggibili (`eligible_missing`), con conferma, motivazione, verifica delle regole pubblicate, transazione, audit, protezione ACL/CSRF e divieto di duplicati. Separato dalla procedura eccezionale per versioni storiche disabilitate e dal rendering PDF `pending_render`; test di integrazione Joomla e smoke aggiunti.
 
 - **PR #566 integrata e collaudo utente positivo (17/11/2026):** download dell'attestato precedentemente in errore HTTP 503 con logo PNG riuscito su Joomla 6.2.0. Restano da verificare formalmente stato `ready`, confronto snapshot/seriale, formati diversi dal PNG, ACL/HEAD e recupero di emissioni assenti. [CI 4/4](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701); [pacchetto](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701/artifacts/14338442764).
