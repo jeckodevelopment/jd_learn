@@ -2080,3 +2080,9 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 4. Controllare che l'account Joomla collegato non sia eliminato, disattivato o modificato e che iscrizioni, attestati, snapshot e altri profili restino intatti.
 5. Tentare operazioni dirette via GET, senza token, con più ID, con profilo non cestinato e senza `core.delete`: nessuna eliminazione.
 6. Verificare compatibilità PHP 8.3/MySQL e PHP 8.4/MariaDB, messaggi IT/EN, checkout, cache e riferimenti di integrazioni esterne. **L'utente ha rinviato i collaudi reali: non segnare questa voce come accettata.**
+
+## LCM-05 — regressioni automatiche isolamento percorsi (17/11/2026)
+
+Il test nativo `tests/joomla-pathways.php` estende i controlli del ciclo di vita su percorsi pubblicati: i dettagli diretti di un percorso archiviato o cestinato devono restituire 404 anche per un visitatore anonimo, non soltanto per l'operatore autenticato. Il confronto dei record `#__jlms_courses` prima/dopo archiviazione, cestinazione ed eliminazione di un percorso vuoto dimostra che tali operazioni non modificano gli stati dei corsi associati. Il test esistente continua a verificare relazioni e iscrizioni.
+
+**Comportamenti da collaudare su Joomla (rinviati):** aprire l'URL diretto di un percorso archiviato/cestinato come visitatore e come iscritto; verificare 404, assenza nel catalogo, invariabilità degli stati dei corsi condivisi e loro fruibilità autonoma quando pubblicati. Verificare inoltre controlli ACL, multilingua, Finder e SEO. Questi test aggiunti non chiudono LCM-05 e non dimostrano la compatibilità di integrazioni esterne, né costituiscono accettazione manuale.
