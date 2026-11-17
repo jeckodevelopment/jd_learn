@@ -243,3 +243,8 @@ La PR #559 corregge il binding dei parametri nelle query di recupero e aggiunge 
 ### Regressione download PDF attestati storici (issue #560)
 
 Il renderer deve accettare timestamp persistiti SQL `DATETIME(6)` senza alterare lo snapshot; il test Joomla deve verificare il percorso positivo di primo rendering da `pending_render`, il successivo `ready`, l'asset privato, la ripetibilità del download e l'ACL. Lo storage resta obbligatoriamente configurato fuori dal document root, senza fallback pubblico.
+
+
+### Storage privato gestito automaticamente — PR #563, issue #562
+
+La configurazione standard di attestati e materiali non può dipendere dalla disponibilità di cartelle esterne alla document root. Creare al bisogno cartella gestita sotto l'installazione Joomla, file cifrati e PHP-guarded, denied direct access su Apache/LiteSpeed; preservare accesso autenticato e compatibilità dei blob esistenti in storage esterno configurato. Test su Joomla per attestato `pending_render` senza `material_storage_root`, stato `ready` e PDF effettivo; collaudo su hosting condiviso obbligatorio.

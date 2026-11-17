@@ -1968,3 +1968,12 @@ Su un completamento storico idoneo con preferenze attestati abilitate, verificar
 ### PDF attestato storico: primo download (`pending_render`, issue #560)
 
 Dopo l'emissione amministrativa di un attestato storico, verificare che il documento parta da `pending_render`. Accedere come titolare e scaricare il PDF: la risposta deve essere PDF valido, il documento deve diventare `ready` con asset privato persistito e il secondo download deve utilizzare lo stesso asset. Ripetere con data di completamento SQL `DATETIME(6)` con microsecondi e senza microsecondi, e con corso archiviato. Con storage privato assente/non scrivibile, verificare errore 503 senza creazione di file nel webroot e con indicazione operativa in amministrazione; configurare `material_storage_root` come directory assoluta esterna al document root e scrivibile da PHP. Non registrare né diffondere percorsi o domini reali di installazioni nei report pubblici.
+
+
+### Storage gestito per hosting condiviso (issue #562, PR #563)
+
+1. Su nuova installazione o upgrade con campo root materiali vuoto, emettere un attestato e scaricarlo dal frontend: deve passare da `pending_render` a `ready`, file PDF scaricabile e successivo download senza duplicazione.
+2. Verificare cartella auto-creata `media/com_jlms/private`, con `.htaccess` e `index.php` di blocco accesso diretto e documenti salvati cifrati in file `.php` opachi; non devono essere presenti file `.pdf` pubblicamente servibili. Provare URL diretto ai file via HTTP: nessun contenuto dell'attestato deve essere rivelato anche con web server che ignora `.htaccess`.
+3. Sia con Apache/LiteSpeed sia con Nginx+PHP verificare protezione e accesso esclusivamente attraverso controller autorizzato.
+4. Prove negative: root sostituita con symlink, directory senza permessi, contenuto cifrato manomesso, configurazione segreta Joomla modificata: rifiuto senza consegna di dati o conversione in storage pubblico.
+5. Opzione avanzata: storage privato esterno preconfigurato mantiene compatibilità file `.blob`; backup deve comprendere database, `media/com_jlms/private` e secret del file Joomla `configuration.php`.

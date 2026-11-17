@@ -143,6 +143,9 @@ ruleExpect($oldResult['lesson_completed']&&$oldResult['course_completed'],'Exist
 $certificateParams=\Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
 $previousCertificateSetting=$certificateParams->get('certificate_enabled',0);
 $certificateParams->set('certificate_enabled',1);
+$previousMaterialRoot=$certificateParams->get('material_storage_root','');
+$certificateParams->set('material_storage_root','');
+
 $certificateService=$component->getCertificateService();
 $historicRules=ruleRow('course_versions',$original)->rules_json;
 ruleExpect(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($historicRules)['certificate_enabled']===false,'Historical published fixture originally excluded certificates');
@@ -167,6 +170,17 @@ finally { fclose($certificateDownload['handle']); }
 $renderedDocument=ruleRow('certificate_documents',(int)$historicalDocument->id);
 ruleExpect($renderedDocument->status==='ready' && (int)$renderedDocument->pdf_asset_id>0,
     'Recovered historical certificate is persisted ready after first download');
+
+$storedAsset=ruleRow('assets',(int)$renderedDocument->pdf_asset_id);
+ruleExpect(preg_match('/\\A[a-f0-9]{64}\\.php\\z/D',(string)$storedAsset->storage_key)===1,
+    'Shared-hosting storage uses an opaque guarded PHP filename by default');
+$storageRoot=(new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn()=>$certificateParams))->root();
+$rawAsset=file_get_contents($storageRoot.DIRECTORY_SEPARATOR.$storedAsset->storage_key);
+ruleExpect(is_string($rawAsset)&&str_starts_with($rawAsset,'<?php http_response_code(404); exit; __halt_compiler(); ?>')
+    && !str_contains($rawAsset,'%PDF-'),
+    'Managed asset is guarded and encrypted, never a publicly readable PDF');
+ruleExpect(is_file($storageRoot.'/.htaccess') && is_file($storageRoot.'/index.php'),
+    'Managed private storage provisions native server access guards');
 $again=$certificateService->download($actor,$oldEnrollment);
 try { ruleExpect($again['mime']==='application/pdf' && $again['size']===$certificateDownload['size'],
     'Historical certificate is repeatably downloadable without re-render'); }
@@ -177,6 +191,7 @@ ruleExpect((int)ruleRow('certificate_documents',(int)$historicalDocument->id)->p
 ruleExpect(ruleRow('course_versions',$original)->rules_json===$historicRules,'Historical recovery never mutates the published rules');
 try { $certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Duplicate historical certificate recovery'); throw new \RuntimeException('Duplicate certificate was issued'); }
 catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode()===409,'Duplicate historical issuance is rejected with HTTP 409'); }
+$certificateParams->set('material_storage_root',$previousMaterialRoot);
 $certificateParams->set('certificate_enabled',$previousCertificateSetting);
 
 $consultationVideo=(int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id='.(int)$consultationVersion." AND kind='video' ORDER BY id")->loadResult();
