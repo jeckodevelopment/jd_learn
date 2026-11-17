@@ -13874,5 +13874,43 @@
     "package_sha256": "20e3ed07b1d4200d098c6b76c11d9f5bc97dd9e232bcf8eda6d9a7499b98f02b",
     "wrapper_sha256": "a837d45552a60876effe535ca516a3e9393c1cc9e9bf55511d7b87afbf5c57db",
     "manual_acceptance": "pending"
+  },
+  "post_merge_578_reconciliation": {
+    "review_date": "2026-11-18",
+    "status": "partial_reconciliation_pending_acceptance",
+    "historical_estimate_as_of": "2026-11-16",
+    "historical_estimate_unrounded_percent": 79.56,
+    "global_functional_progress_percent": null,
+    "reason": "Historical 9-area estimate is not a fresh functional coverage metric. Criteria audit in main is incomplete and initial evidence references do not prove requirements complete.",
+    "confirmed_merged_prs": [
+      574,
+      575,
+      576,
+      577,
+      578,
+      595,
+      600
+    ],
+    "superseded_prs": [
+      589
+    ],
+    "privacy": "PR #595 anonymizes identified references in five documentation files; repository-wide exhaustive historical and binary audit not certified.",
+    "functional_criteria_audit": {
+      "requirements_in_scope": 214,
+      "requirements_assessed": 107,
+      "criteria": 310,
+      "initial_evidence": 183,
+      "unassessed": 127,
+      "source": "docs/FUNCTIONAL_CRITERIA_1.0.0.json",
+      "meaning": "initial evidence is not acceptance"
+    },
+    "manual_acceptance": "pending for LCM-03/04 and remaining Joomla/SMTP/video/security/release scenarios",
+    "ci": "PR #600 verification 4/4 green per docs/IMPLEMENTATION_HISTORY.md; this is not proof of manual acceptance",
+    "next_steps": [
+      "finish remaining 107 requirement decompositions and semantic evidence validation",
+      "verify full privacy scan without altering historic audit trail",
+      "reconcile release package and CI against current main head",
+      "update functional percent only after auditable weighted criteria validation"
+    ]
   }
 }
