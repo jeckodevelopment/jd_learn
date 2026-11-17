@@ -207,13 +207,9 @@ final class CertificateService
         $identity['serial'] = (string) $record->serial;
         $logoFile = $this->logoFile((string) ($template['logo_path'] ?? ''));
         $pdf = CertificatePdf::render($identity, $template, $logoFile);
-        $temporary = tempnam(sys_get_temp_dir(), 'jlms-cert-');
-        if ($temporary === false || file_put_contents($temporary, $pdf, LOCK_EX) !== strlen($pdf)) {
-            if (is_string($temporary)) { @unlink($temporary); }
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
-        }
-        try { $staged = $this->storage->stage($temporary, 'certificate.pdf'); }
-        finally { @unlink($temporary); }
+        // Avoid sys_get_temp_dir(): it may be outside open_basedir on shared
+        // hosting, and plaintext PDFs must not be staged below public_html.
+        $staged = $this->storage->stageGeneratedPdf($pdf);
 
         $started = false;
         $committed = false;
@@ -397,13 +393,9 @@ final class CertificateService
         }
         $snapshot['serial'] = (string) $record->serial;
         $pdf = CertificatePdf::render($snapshot, $template, $this->logoFile((string) ($template['logo_path'] ?? '')));
-        $temporary = tempnam(sys_get_temp_dir(), 'jlms-cert-');
-        if ($temporary === false || file_put_contents($temporary, $pdf, LOCK_EX) !== strlen($pdf)) {
-            if (is_string($temporary)) { @unlink($temporary); }
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
-        }
-        try { $staged = $this->storage->stage($temporary, 'certificate.pdf'); }
-        finally { @unlink($temporary); }
+        // Avoid sys_get_temp_dir(): it may be outside open_basedir on shared
+        // hosting, and plaintext PDFs must not be staged below public_html.
+        $staged = $this->storage->stageGeneratedPdf($pdf);
 
         $started = false;
         $committed = false;
