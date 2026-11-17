@@ -152,7 +152,8 @@ ruleExpect($recovered===1,'Completed historical enrollment receives exactly one 
 $recoveryAudit=(int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE action='historical_recovery' AND certificate_id IN (SELECT id FROM #__jlms_certificates WHERE enrollment_id=".(int)$oldEnrollment.')')->loadResult();
 ruleExpect($recoveryAudit===1,'Historical recovery records a durable audit entry');
 ruleExpect(ruleRow('course_versions',$original)->rules_json===$historicRules,'Historical recovery never mutates the published rules');
-ruleDenied(fn()=>$certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Duplicate historical certificate recovery'),'COM_JLMS_CERTIFICATE_UNAVAILABLE');
+try { $certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Duplicate historical certificate recovery'); throw new \RuntimeException('Duplicate certificate was issued'); }
+catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode()===409,'Duplicate historical issuance is rejected with HTTP 409'); }
 $certificateParams->set('certificate_enabled',$previousCertificateSetting);
 
 $consultationVideo=(int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id='.(int)$consultationVersion." AND kind='video' ORDER BY id")->loadResult();
