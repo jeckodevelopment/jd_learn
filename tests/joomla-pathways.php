@@ -201,6 +201,18 @@ $check($pathModel->changeStates([$pathwayId, $emptyId], -2), 'prepare both pathw
 $check(!$pathModel->purgeEmpty($pathwayId), 'pathway with associated courses cannot be deleted');
 $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId)->loadResult() === 2,
     'blocked permanent deletion leaves pathway courses intact');
+// LCM-05: direct model mutations must enforce server-side permissions even
+// when a caller bypasses the administration toolbar and submits valid IDs.
+$pathModel->setCurrentUser(new Joomla\CMS\User\User());
+$check(!$pathModel->changeStates([$pathwayId, $emptyId], 0),
+    'anonymous actor cannot restore trashed pathways through the model');
+$check(!$pathModel->purgeEmpty($emptyId),
+    'anonymous actor cannot permanently delete a trashed empty pathway');
+$check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId . ') AND state=-2')->loadResult() === 2,
+    'denied mutation leaves both trashed pathway records unchanged');
+$check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeBulkCourses,
+    'unauthorised lifecycle requests preserve course associations');
+$pathModel->setCurrentUser($operator);
 $check(!$pathModel->purgeEmpty(0), 'invalid permanent deletion identifier rejected');
 $check(!$pathModel->purgeEmpty(999999999), 'nonexistent pathway deletion rejected');
 $check($pathModel->purgeEmpty($emptyId), 'only an empty trashed pathway can be deleted');

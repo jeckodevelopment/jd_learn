@@ -302,3 +302,7 @@ La tranche successiva alla PR #578 introduce la cancellazione singola, confermat
 ### LCM-05 — primo incremento test di isolamento percorsi (17/11/2026)
 
 Estendere `tests/joomla-pathways.php` con accessi diretti anonimi negati ai percorsi archiviati e cestinati e controlli di invariabilità degli stati dei corsi associati durante archiviazione, cestinazione ed eliminazione del percorso vuoto. Non modificare runtime, percentuale di avanzamento o stato di accettazione. Restano nel gate LCM-05: ACL/CSRF per controller, catalogo/Finder/SEO, audit endpoint, upgrade e collaudi Joomla reali.
+
+### LCM-05 — secondo incremento: autorizzazioni server-side percorsi
+
+Estendere il test disposable Joomla dei percorsi con tentativi anonimi di ripristino massivo e cancellazione definitiva di un percorso vuoto già cestinato. Il modello deve negare entrambe le mutazioni conservando stato, record e associazioni. Controlli HTTP/CSRF, ACL specifici, Finder, upgrade e collaudo reale rimangono aperti. Nessun cambiamento runtime o incremento della percentuale storica sulla base del solo test.
