@@ -1,4 +1,6 @@
 # Changelog
+- **Audit funzionale 1.0.0 — quarta tranche (17/11/2026):** scomposti LES-01–04, VID-01–08 e MAT-01–08 in 68 criteri (44 evidenze iniziali, 24 da approfondire). Totale audit 47/214 requisiti; nessuna percentuale globale anticipata, nessuna variazione runtime o SemVer.
+
 - **Audit funzionale 1.0.0 — terza tranche (17/11/2026):** censiti criteri di accesso/iscrizione, area studente e avanzamento didattico (15 requisiti/47 criteri, 16 punti ancora da approfondire); copertura dell'audit ora 27/214 requisiti. Nessun cambiamento runtime o SemVer, nessuna nuova percentuale globale non dimostrata.
 
 - **Audit funzionale 1.0.0 — seconda tranche (17/11/2026):** aggiunta la scomposizione con evidenze di CAT-01–04 e AUT-01–05 (42 criteri, di cui 11 ancora da approfondire), oltre agli LCM già in audit. Nessuna modifica runtime o SemVer; nessuna nuova percentuale globale finché tutta la baseline in perimetro non è riconciliata.
