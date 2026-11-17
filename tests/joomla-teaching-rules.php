@@ -188,6 +188,15 @@ finally { fclose($again['handle']); }
 ruleExpect((int)ruleRow('certificate_documents',(int)$historicalDocument->id)->pdf_asset_id===(int)$renderedDocument->pdf_asset_id,
     'Repeated download preserves the original private PDF asset');
 
+$serviceSource = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_jlms/src/Application/CertificateService.php');
+ruleExpect(is_string($serviceSource) && !str_contains($serviceSource, 'tempnam(')
+    && !str_contains($serviceSource, 'sys_get_temp_dir('),
+    'Certificate creation and regeneration do not depend on global PHP temporary paths');
+$storageForCertificates=new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn()=>$certificateParams);
+try { $storageForCertificates->stageGeneratedPdf('invalid PDF'); throw new \RuntimeException('Invalid generated PDF accepted'); }
+catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_RENDER_FAILED', 'Generated PDF content is strictly validated before storage'); }
+
+
 ruleExpect(ruleRow('course_versions',$original)->rules_json===$historicRules,'Historical recovery never mutates the published rules');
 try { $certificateService->adminRecoverHistorical($actor,$oldEnrollment,'Duplicate historical certificate recovery'); throw new \RuntimeException('Duplicate certificate was issued'); }
 catch (\RuntimeException $error) { ruleExpect($error->getMessage()==='COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode()===409,'Duplicate historical issuance is rejected with HTTP 409'); }
