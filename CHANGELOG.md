@@ -1,5 +1,7 @@
 # Changelog
 
+- Storage gestito automaticamente per attestati e materiali su hosting condiviso: quando non è configurato un percorso esterno, JD Learn crea `media/com_jlms/private`, protegge i file con guardia PHP, access rules e cifratura AES-256-GCM, e permette il rendering `pending_render` senza configurazione manuale (issue #562, PR #563).
+
 - Corretto il primo download dei PDF degli attestati storici: il rendering accetta timestamp di completamento SQL `DATETIME(6)` con microsecondi; copertura Joomla di transizione `pending_render` → `ready` e download ripetuti, senza fallback verso storage pubblico (issue #560).
 
 - Corretta l'emissione amministrativa di attestati storici: i parametri tipizzati delle query Joomla sono ora associati tramite variabili, con prova integrata del percorso positivo, audit e blocco duplicati (issue #558; PR #559).
