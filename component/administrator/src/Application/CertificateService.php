@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\Application;
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Joomla\CMS\Log\Log;
 use Jlms\Component\Jlms\Administrator\Infrastructure\CertificatePdf;
 use Jlms\Component\Jlms\Administrator\Infrastructure\MaterialFilePolicy;
 use Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage;
@@ -205,15 +206,26 @@ final class CertificateService
         $template = json_decode((string) $record->template_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($identity) || !is_array($template)) { throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503); }
         $identity['serial'] = (string) $record->serial;
-        $logoFile = $this->logoFile((string) ($template['logo_path'] ?? ''));
-        $pdf = CertificatePdf::render($identity, $template, $logoFile);
-        $temporary = tempnam(sys_get_temp_dir(), 'jlms-cert-');
-        if ($temporary === false || file_put_contents($temporary, $pdf, LOCK_EX) !== strlen($pdf)) {
-            if (is_string($temporary)) { @unlink($temporary); }
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        try {
+            $logoFile = $this->logoFile((string) ($template['logo_path'] ?? ''));
+        } catch (\Throwable $error) {
+            $this->logRenderFailure('logo', $error);
+            throw $error;
         }
-        try { $staged = $this->storage->stage($temporary, 'certificate.pdf'); }
-        finally { @unlink($temporary); }
+        try {
+            $pdf = CertificatePdf::render($identity, $template, $logoFile);
+        } catch (\Throwable $error) {
+            $this->logRenderFailure('pdf', $error);
+            throw $error;
+        }
+        try {
+            // Do not use sys_get_temp_dir(): some shared hosts disallow it,
+            // and no unencrypted PDF should be staged under public_html.
+            $staged = $this->storage->stageGeneratedPdf($pdf);
+        } catch (\Throwable $error) {
+            $this->logRenderFailure('storage', $error);
+            throw $error;
+        }
 
         $started = false;
         $committed = false;
@@ -248,8 +260,18 @@ final class CertificateService
         } catch (\Throwable $error) {
             if ($started) { $this->db->transactionRollback(); }
             if (!$committed) { $this->storage->remove((object) $staged); }
+            $this->logRenderFailure('database', $error);
             throw $error;
         }
+    }
+
+    /** Log only operational phase and exception type, never names, paths or PDF data. */
+    private function logRenderFailure(string $phase, \Throwable $error): void
+    {
+        Log::add('Certificate PDF generation failure phase=' . $phase
+            . '; error_type=' . get_debug_type($error)
+            . '; error_code=' . (int) $error->getCode(),
+            Log::ERROR, 'com_jlms');
     }
 
     private function logoFile(string $value): ?string
@@ -397,13 +419,9 @@ final class CertificateService
         }
         $snapshot['serial'] = (string) $record->serial;
         $pdf = CertificatePdf::render($snapshot, $template, $this->logoFile((string) ($template['logo_path'] ?? '')));
-        $temporary = tempnam(sys_get_temp_dir(), 'jlms-cert-');
-        if ($temporary === false || file_put_contents($temporary, $pdf, LOCK_EX) !== strlen($pdf)) {
-            if (is_string($temporary)) { @unlink($temporary); }
-            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
-        }
-        try { $staged = $this->storage->stage($temporary, 'certificate.pdf'); }
-        finally { @unlink($temporary); }
+        // Avoid sys_get_temp_dir(): it may be outside open_basedir on shared
+        // hosting, and plaintext PDFs must not be staged below public_html.
+        $staged = $this->storage->stageGeneratedPdf($pdf);
 
         $started = false;
         $committed = false;
