@@ -616,6 +616,29 @@ try:
  expect('CI learning pathway' in get('/administrator/index.php?option=com_jlms&view=pathways')[1],
         'Rejected lifecycle requests preserve the pathway admin listing')
  print(json.dumps({'pathway_lifecycle_http_guards':12,'status':'passed'}))
+ # LCM-05: with the native form token, the administrator must be able to
+ # archive, conservatively restore and explicitly republish the same pathway.
+ admin_forms=Page(pathway_admin).forms
+ pathway_form=next((form for form in admin_forms if form['id']=='adminForm'),None)
+ expect(pathway_form is not None,'Native pathway list supplies an administration form')
+ csrf_field=next((key for key,value in pathway_form['fields'].items()
+                  if re.fullmatch(r'[0-9a-f]{32}',key) and value=='1'),None)
+ expect(csrf_field is not None,'Native pathway form exposes a session CSRF token')
+ def pathway_transition(task):
+  endpoint=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.'+task})
+  body=urlencode([(csrf_field,'1'),('cid[]',str(pathway_id))]).encode()
+  with http.open(Request(endpoint,data=body,method='POST'),timeout=20) as response:
+   response.read()
+ def pathway_public_visible():
+  with public_http.open(base+'/index.php?option=com_jlms&view=pathways',timeout=15) as response:
+   return 'CI learning pathway' in response.read().decode('utf-8')
+ pathway_transition('archive')
+ expect(not pathway_public_visible(),'Authenticated HTTP archive hides pathway from public catalogue')
+ pathway_transition('restore')
+ expect(not pathway_public_visible(),'Authenticated HTTP restore does not automatically republish pathway')
+ pathway_transition('publish')
+ expect(pathway_public_visible(),'Explicit authenticated HTTP publish restores pathway visibility')
+ print(json.dumps({'pathway_lifecycle_authorized_http_checks':5,'status':'passed'}))
  _,pathway_editor=get('/administrator/index.php?option=com_jlms&task=pathway.edit&id='+str(pathways['pathway']))
  expect('id="jlms-pathway-editor"' in pathway_editor and 'jform[title]' in pathway_editor and 'jform[courses]' in pathway_editor,
         'Authenticated administrator can edit pathway details and course associations')
