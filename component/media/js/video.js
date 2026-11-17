@@ -192,7 +192,9 @@ export class VideoLesson {
       this.player = player;
       await this.configurePlaybackSpeed(player);
       await this.configureCaptionLanguage(player);
-      if (this.tracking && grant.resume_ms) await player.seek(grant.resume_ms);
+      // A completed lesson can always be rewatched from the beginning without
+      // resetting its completion record or launching an end-of-video seek.
+      if (this.tracking && !grant.lesson_completed && grant.resume_ms) await player.seek(grant.resume_ms);
       if (this.tracking) await this.record('seeked');
       if (this.stopped || generation !== this.generation) return;
       if (this.tracking) { this.sampler = setInterval(() => this.record('position'), 1000); this.schedule(); this.scheduleRenew(); }
