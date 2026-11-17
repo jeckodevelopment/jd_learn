@@ -21,7 +21,7 @@ class FunctionalProgressTests(unittest.TestCase):
         output = module.calculate(self.rows, self.criteria)
         self.assertIsNone(output["functional_implementation_percent"])
         self.assertEqual(output["progress_status"], "not_yet_measurable")
-        self.assertEqual(output["audited_requirements"], 107)
+        self.assertEqual(output["audited_requirements"], 129)
 
     def test_completed_requirement_is_explicitly_audited(self):
         output = module.calculate(self.rows, self.criteria)
@@ -60,6 +60,13 @@ class FunctionalProgressTests(unittest.TestCase):
         self.assertIn("PRI-02", output["criteria_by_requirement"])
         self.assertIn("CORE-14", output["criteria_by_requirement"])
         self.assertGreater(output["criteria_by_requirement"]["CORE-14"]["unassessed_criteria"], 0)
+        self.assertIsNone(output["functional_implementation_percent"])
+
+    def test_performance_evidence_is_not_a_load_benchmark(self):
+        output = module.calculate(self.rows, self.criteria)
+        self.assertEqual(output["criteria_by_requirement"]["PERF-01"]["implemented_criteria"], 0)
+        self.assertGreater(output["criteria_by_requirement"]["PERF-03"]["unassessed_criteria"], 0)
+        self.assertIn("ACC-01", output["criteria_by_requirement"])
         self.assertIsNone(output["functional_implementation_percent"])
 
     def test_no_evidence_cannot_be_marked_implemented(self):
