@@ -13,7 +13,8 @@ def call(*args,expected=0):
     p=subprocess.run([sys.executable,*map(str,args)],cwd=root,text=True,capture_output=True)
     if (p.returncode==0)!=(expected==0):
         raise AssertionError(f'Unexpected exit {p.returncode}: {args}: {p.stdout} {p.stderr}')
-call('tools/build.py','--release-version','1.0.0')
+call('tools/build.py','--release-version','1.0.0','--release-date','2026-11-17')
+call('tests/extension-manifest-metadata.py','--zip','dist/pkg_jlms-1.0.0.zip','--version','1.0.0','--date','2026-11-17')
 archive=root/'dist/pkg_jlms-1.0.0.zip'
 assert archive.is_file()
 with zipfile.ZipFile(archive) as z:

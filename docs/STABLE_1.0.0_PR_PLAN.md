@@ -1,5 +1,7 @@
 # Piano operativo delle PR — JD Learn 1.0.0
 
+**Issue #379 — uniformità dei metadati, P1:** una sola versione/data di rilascio e nomi pubblici `JD Learn - ...` per tutte le 11 parti Joomla. Build deterministica `tools/build.py`, controllo degli ZIP annidati `tests/extension-manifest-metadata.py`, workflow release con data esplicita, test di installazione e upgrade CI. Registrare il collaudo della Gestione estensioni su Joomla prima dell'accettazione finale. Milestone 1.0.0; governance PR/label in `docs/RELEASE_METADATA.md`.
+
 **Accettazione CERT-03/05/08 (17/11/2026, PR #566):** dopo l'installazione dell'artefatto della [PR #566](https://github.com/jeckodevelopment/jd_learn/pull/566), confermato il download funzionante dell'attestato preesistente bloccato da HTTP 503 con logo PNG. Diagnosi originale log: `phase=logo`, runtime `error_code=503`. Merge `81df4e888e12b48a6ac25705afa5e18d71cf2c67`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701); [pacchetto JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701/artifacts/14338442764). **Non ancora documentate come verificate:** conferma backend dello stato `ready`, immutabilità seriale e snapshot mediante confronto, altri formati e trasparenza, ACL/HEAD, backup/ripristino e recupero di completamenti senza emissione.
 
 

@@ -2002,3 +2002,7 @@ Aggiornare JD Learn, lasciare il percorso di archiviazione personalizzato vuoto 
 3. Ripetere il POST identico e verificare HTTP 409 e nessun duplicato; provare studente anonimo o amministratore senza permesso, token CSRF assente, motivazione insufficiente, iscrizione non completata, regola `certificate_enabled=false`, preferenze disattivate o template assente.
 4. Un documento già emesso `pending_render` deve rimanere escluso dalla lista: il suo download deve generare solo il PDF originale senza una seconda emissione.
 5. Il recupero eccezionale di una versione storica con attestati disattivati resta distinto, con motivazione e conferma. Nessun recupero automatico o bulk.
+
+## REL-03 / issue #379 — metadati dei manifest e nomi in Gestione estensioni
+
+Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema → Gestisci → Estensioni** che le 11 estensioni figlie (plugin, libreria e componente) e il package abbiano identica versione e data `creationDate` (visibile in colonna Data) e i nomi uniformi `JD Learn - ...`. Controllare installazione pulita, upgrade dalla precedente build, assenza di duplicati e funzionalità dei provider. La CI verifica gli ZIP interni con `tests/extension-manifest-metadata.py`, ma il risultato visualizzato dalla gestione Joomla è un collaudo manuale ancora da eseguire. Procedura dettagliata in `docs/RELEASE_METADATA.md`.
