@@ -223,3 +223,8 @@ PR #427 integrata: merge `58811c6817a91b372e0814479281e068d6a037f5`, CI [4372836
 ## IMP-04 — trascrizione delle lezioni audio
 
 PR #451 integrata (merge `71c4afcf8cff36058511209b9f2e9dcb34c01b1d`): trascrizione audio facoltativa per LES-01/SCR-06, storage versionato, filtro HTML e resa accessibile in aula. CI completa superata nel run [43758841101](https://github.com/jeckodevelopment/jd_learn/actions/runs/43758841101); pacchetto `pkg_jlms-0.57.7-dev.zip`, SHA-256 `b12aec38c78fbb1157d4dee0e2c64df1e1d12192ff5a48ad462a5d7aae6d0ffd`, nell'[artefatto](https://github.com/jeckodevelopment/jd_learn/actions/runs/43758841101/artifacts/14179616865). Accettazione manuale Joomla ancora pendente; macro-requisito parziale, nessuna variazione della stima globale 79% (79,33%).
+
+
+### Correzione certificati pre-release (issue #553)
+
+La pubblicazione delle nuove versioni didattiche deve congelare il valore effettivo di `certificate_enabled` dopo l'applicazione dell'ereditarietà globale/per corso. La modifica non interviene automaticamente sulle versioni già pubblicate; la gestione di completamenti storici privi di attestato richiede una procedura amministrativa distinta con autorizzazione, audit e idempotenza. Test di accettazione in `docs/QA_TESTBOOK.md`.
