@@ -1953,3 +1953,8 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 - Ripetere con globale OFF, override del corso su abilitato e su disabilitato; verificare lo snapshot risolto al momento della pubblicazione, anche dopo la modifica delle preferenze.
 - Verificare che le versioni pubblicate **prima** della correzione non vengano riscritte dall'upgrade e che i completamenti storici senza attestato non generino emissioni automatiche. Un eventuale recupero deve essere autorizzato e auditabile separatamente.
 - Verificare che i corsi in modalità consultazione non emettano attestati.
+
+
+### Recupero attestati per completamenti storici (issue #553)
+
+In JD Learn → Attestati, verificare la sezione dei completamenti privi di attestato. Su un completamento di una versione pubblicata prima della correzione con `certificate_enabled=false`, configurare le preferenze globali/per corso per consentire l'emissione; inserire una motivazione di 8–500 caratteri, confermare e premere «Emetti attestato». Verificare record e documento, PDF accessibile, notifica accodata e audit con operatore, motivazione, versione e iscrizione. La versione didattica non deve essere alterata. Ripetere la richiesta: non deve essere emesso un secondo attestato. Verificare POST/CSRF, ACL, modalità consultazione, completamento assente, preferenze OFF, mancanza template e rollback se audit fallisce. Il recupero non deve partire automaticamente durante l'upgrade.
