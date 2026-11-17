@@ -248,20 +248,13 @@
 #jlms-teachers a:focus-visible{outline:3px solid var(--jlms-color-primary);outline-offset:3px}
 #jlms-teachers-pagination{margin-block:calc(2 * var(--jlms-space-unit))}
 
-/* Native completion takes the exact slot vacated by the unloaded YouTube iframe.
-   No overlay, obscured controls, or extra vertical content below the player. */
+/* YouTube learning completion is outside the provider iframe (never an overlay). */
 #jlms-video-region .jlms-youtube-finish:not([hidden]) {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: clamp(.75rem, 2vw, 1.25rem);
-  width: 100%; aspect-ratio: 16 / 9; min-height: 0;
-  padding: clamp(1rem, 3vw, 2rem);
-  text-align: center; background: var(--jlms-color-surface, #f5f5f5);
+  display: flex; align-items: center; flex-wrap: wrap; gap: .5rem 1rem;
+  margin-block: var(--jlms-space-unit, 1rem);
+  padding: var(--jlms-space-unit, 1rem);
   border: 1px solid var(--jlms-color-border, currentColor);
   border-radius: var(--jlms-radius, .4rem);
 }
-#jlms-video-region .jlms-youtube-finish__message { margin: 0; font-weight: 650; }
-#jlms-video-region .jlms-youtube-finish__replay,
-#jlms-video-region .jlms-youtube-finish__next { max-width: 100%; overflow-wrap: anywhere; }
-#jlms-video-region .jlms-youtube-finish :is(a,button):focus-visible {
-  outline: 3px solid var(--jlms-color-primary, currentColor); outline-offset: 3px;
-}
+#jlms-video-region .jlms-youtube-finish__message { margin: 0; font-weight: 600; }
+#jlms-video-region .jlms-youtube-finish__next:focus-visible { outline: 3px solid var(--jlms-color-primary, currentColor); outline-offset: 3px; }
