@@ -1327,16 +1327,16 @@ La CI deve verificare installazione/upgrade dello schema, preferenza disabilitat
 
 # CERT-B — PDF personalizzabile e download protetto (PR #302 integrata; 0.56.6-dev)
 
-**Prerequisiti:** installare la candidata su Joomla di prova con storage materiali privato configurato; predisporre un JPEG locale nella cartella media consentita; attivare attestati globali e per il corso di test; usare uno studente A completabile, uno studente B e un account anonimo.
+**Prerequisiti:** installare la candidata su Joomla di prova con storage privato gestito automaticamente o con cartella esterna privata valida; predisporre un PNG o JPEG locale nella cartella media consentita; attivare attestati globali e per il corso di test; usare uno studente A completabile, uno studente B e un account anonimo.
 
 **Collaudo manuale Joomla da eseguire**
 
 1. In Configurazione componente → Attestati impostare intestazione, sottotitolo, piè pagina, colore e logo JPEG locale. Completare il corso come studente A. Atteso: nel pannello studente compare un attestato e il PDF scaricato riporta nome, titolo del corso, data, codice, testi e logo configurati.
 2. Aprire il PDF in italiano e con account inglese; verificare testo e date/localizzazione, nomi accentati, nomi lunghi e titolo corso lungo. Atteso: una pagina A4 orizzontale leggibile, contenuti non interpretati come markup e file PDF valido.
-3. Rimuovere o impostare un logo PNG/URL remoto e avviare una nuova emissione di prova. Atteso: il renderer rifiuta il formato/percorso non supportato senza esporre file e senza rompere l’aula; ripristinare poi un JPEG valido.
+3. Configurare un logo PNG (anche trasparente) e generare il PDF. Atteso: PDF scaricabile con logo; un URL remoto o un SVG devono essere rifiutati senza esporre file e senza rompere l’aula. GIF/WebP/AVIF richiedono supporto GD appropriato.
 4. Accedere all’URL di download come A, come B, anonimo e con un enrollment_id inesistente. Atteso: A scarica il proprio PDF; B, anonimo e ID inesistente non ricevono il documento di A. Il percorso non è enumerabile tramite seriale o URL asset.
 5. Verificare intestazioni `Content-Type: application/pdf`, `Cache-Control: private, no-store`, `X-Robots-Tag: noindex, nofollow`; ripetere con HEAD. Atteso: HEAD non invia il corpo.
-6. Ripetere il download e confrontare seriale/contenuti: lo stesso attestato resta identico. Controllare che il blob risieda nello storage privato esterno alla web root, con permessi restrittivi e che l’upgrade non lo elimini.
+6. Ripetere il download e confrontare seriale/contenuti: lo stesso attestato resta identico. Controllare che il blob risieda nello storage protetto gestito cifrato oppure nello storage privato esterno già configurato, con permessi restrittivi e che l’upgrade non lo elimini.
 
 **Esito sito Joomla:** Non eseguito. Questa procedura non copre ancora vista amministrativa, audit né backup/ripristino, previsti nelle PR successive/IMP-10.
 
@@ -1983,7 +1983,10 @@ Dopo l'emissione amministrativa di un attestato storico, verificare che il docum
 
 Aggiornare JD Learn, lasciare il percorso di archiviazione personalizzato vuoto e usare un attestato già emesso `pending_render` su un hosting con `open_basedir` o temp di sistema non accessibile: scaricare dal frontend come titolare. Il PDF deve essere generato direttamente nello storage protetto, stato `ready`, secondo download invariato. Non deve essere creato alcun PDF temporaneo non cifrato nella webroot o nella directory PHP globale. Se ancora 503, consultare il log Joomla nella categoria `com_jlms` e rilevare esclusivamente la fase `logo`, `pdf`, `storage` o `database`, senza pubblicare dati personali, percorsi o chiavi. Verificare logo configurato come JPEG valido e cartella gestita scrivibile. Testare inoltre rigenerazione tecnica e due database.
 
-### Collaudo attestati con logo PNG e recupero di PDF in attesa
+### Collaudo attestati con logo PNG e recupero di PDF in attesa — PR #566 integrata
+
+**Esito collaudo utente (17/11/2026, Joomla 6.2.0):** dopo l'installazione dell'artefatto della [PR #566](https://github.com/jeckodevelopment/jd_learn/pull/566), confermato il download funzionante dell'attestato preesistente bloccato da HTTP 503 con logo PNG. Diagnosi originale log: `phase=logo`, runtime `error_code=503`. Merge `81df4e888e12b48a6ac25705afa5e18d71cf2c67`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701); [pacchetto JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701/artifacts/14338442764). **Non ancora documentate come verificate:** conferma backend dello stato `ready`, immutabilità seriale e snapshot mediante confronto, altri formati e trasparenza, ACL/HEAD, backup/ripristino e recupero di completamenti senza emissione.
+
 
 1. Installare aggiornamento senza disinstallare il componente. Conservare un certificato già emesso con stato **In attesa PDF** e logo PNG congelato nel suo snapshot.
 2. Accedere come studente proprietario e scaricare. Verificare passaggio a **Pronto**, PDF integro, logo leggibile e codice/data/identità invariati; ripetere il download senza emissione duplicata.

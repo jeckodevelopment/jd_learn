@@ -1,5 +1,7 @@
 # Changelog
 
+- **PR #566 integrata e collaudo utente positivo (17/11/2026):** download dell'attestato precedentemente in errore HTTP 503 con logo PNG riuscito su Joomla 6.2.0. Restano da verificare formalmente stato `ready`, confronto snapshot/seriale, formati diversi dal PNG, ACL/HEAD e recupero di emissioni assenti. [CI 4/4](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701); [pacchetto](https://github.com/jeckodevelopment/jd_learn/actions/runs/44106325701/artifacts/14338442764).
+
 - Corretto il 503 del primo download di attestati con logo PNG: il renderer PDF accetta JPEG, PNG e, quando supportati da GD, GIF/WebP/AVIF e compone i canali alpha su bianco; i documenti `pending_render` già emessi restano recuperabili senza nuova emissione. Test `tests/certificate-raster-logos.php` e collaudo Joomla richiesti.
 
 - Eliminata la dipendenza dai file temporanei PHP (`sys_get_temp_dir()`/`tempnam`) nella generazione e rigenerazione degli attestati: il PDF generato viene salvato direttamente nello storage privato cifrato, con diagnostica per fase nei log Joomla (issue #564, PR #565).
