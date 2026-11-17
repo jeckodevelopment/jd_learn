@@ -1,6 +1,6 @@
 # JD Learn
 
-**Build di sviluppo documentata: `0.57.7-dev`** (non release stabile). La ricognizione delle PR integrate fino alla #578 e dei residui da verificare è in [POST_MERGE_578_RECONCILIATION.md](docs/POST_MERGE_578_RECONCILIATION.md). Pacchetti installabili e checksum vanno verificati per il commit specifico nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json); non si assume che un artefatto storico sia la build più recente.
+**Build di sviluppo documentata: `0.57.7-dev`** (non release stabile). La ricognizione iniziale delle PR fino alla #578 è in [POST_MERGE_578_RECONCILIATION.md](docs/POST_MERGE_578_RECONCILIATION.md). Pacchetti installabili e checksum vanno verificati per il commit specifico nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json); non si assume che un artefatto storico sia la build più recente.
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
@@ -19,7 +19,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 La copertura **implementativa stimata** verso la 1.0.0 è **80% (79,56% non arrotondato)**; non rappresenta l'accettazione manuale. L'area email è stimata al 72%, con accettazione Joomla/SMTP ancora pendente. La stima usa la media delle nove macroaree; la fonte corrente è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md) e i dettagli sono nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json). Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
 
-Le integrazioni più recenti riguardano replay video e regressioni YouTube, recupero attestati, metadati release e ciclo di vita di percorsi e docenti (PR #570–#578). La stima percentuale precedente a queste PR non è stata ricalcolata. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
+Le integrazioni recenti includono replay video, recupero attestati, ciclo di vita percorsi/docenti (PR #570–#579) e gate di test LCM-05 (PR #581–#587). La stima percentuale precedente a queste PR non è stata ricalcolata; la ricognizione post-#587 è in [POST_MERGE_578_RECONCILIATION.md](docs/POST_MERGE_578_RECONCILIATION.md). Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
 
 ## Installazione e sviluppo
 
