@@ -1,3 +1,9 @@
+**JD Learn 0.57.7-dev — audit funzionale al 17/11/2026.**
+
+## Audit funzionale CAT/AUT — PR #592 (17/11/2026)
+
+La [PR #592](https://github.com/jeckodevelopment/jd_learn/pull/592) è stata integrata con merge `434290743e026c5a2210bb09889ff107109d29d5`, [CI 4/4 verde #44188022680](https://github.com/jeckodevelopment/jd_learn/actions/runs/44188022680) e [artefatto JD-Learn-0.57.7-dev #14376066280](https://github.com/jeckodevelopment/jd_learn/actions/runs/44188022680/artifacts/14376066280). La scomposizione funzionale `docs/FUNCTIONAL_CRITERIA_1.0.0.json` copre adesso **12/214 requisiti 1.0.0**: 9 nuovi CAT/AUT e 3 LCM preesistenti. I nove nuovi requisiti includono 42 criteri (31 con evidenze iniziali, 11 da approfondire). Totale tranche: 58 criteri, di cui 16 da approfondire. **Non è ancora possibile calcolare una percentuale globale attendibile**, e `tools/functional_progress.py` mantiene `functional_implementation_percent = null`. Il 79,56% è una stima storica, non un risultato aggiornato dell'audit. SemVer e runtime invariati, nessuna accettazione Joomla nuova. Lo ZIP interno dell'artefatto non ha checksum verificato in questa ricognizione.
+
 **JD Learn 0.57.7-dev — stato al 17 novembre 2026.**
 
 ## Misurazione funzionale basata sui criteri — prima tranche PR #588 (17/11/2026)
