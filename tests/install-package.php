@@ -72,9 +72,11 @@ $package = \Joomla\CMS\Installer\InstallerHelper::unpack($packagePath, true);
 $installer = new \Joomla\CMS\Installer\Installer();
 $installer->setDatabase($db);
 try {
-    $ok = $installer->install($package['extractdir']);
+    // The fixture has already installed a previous package version: exercise
+    // Joomla's actual update route instead of a second fresh-install call.
+    $ok = $installer->update($package['extractdir']);
     if (!$ok) {
-        throw new \RuntimeException('Native package installation failed: ' . json_encode($app->getMessageQueue(),JSON_THROW_ON_ERROR));
+        throw new \RuntimeException('Native package upgrade failed: ' . json_encode($app->getMessageQueue(),JSON_THROW_ON_ERROR));
     }
     $privacyPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='privacy' AND element='jdlearn'")->loadResult();
     if ($privacyPlugin === null || (int) $privacyPlugin !== 1) {
