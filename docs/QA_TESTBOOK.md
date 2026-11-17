@@ -1883,3 +1883,8 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 2. Premere Play in Chrome e Safari sulla stessa lezione; verificare che audio/video si riproducano normalmente (non solo poster o spinner), monitorando eventuali messaggi provider.
 3. Dopo riproduzione reale, verificare `video.save`, copertura cumulata e completamento solo dopo soglia; testare pausa/ripresa, salto in avanti, cambio lezione e stato storico.
 4. Se persiste spinner, acquisire evento YouTube IFrame API `onError`/`onStateChange` e header Referer dell'iframe in contesto pagina senza divulgare cookie/token.
+
+
+## Post-merge PR #543 — build installabile e QA reale pendente
+
+**PR #543 integrata (P0 YouTube #532):** merge `a695e4c24179b1933c3856c65f802baab1ab7deb`; CI completa 4/4 verde [run 43984520221](https://github.com/jeckodevelopment/jd_learn/actions/runs/43984520221), gate CSV verde [run 43984520239](https://github.com/jeckodevelopment/jd_learn/actions/runs/43984520239). [Pacchetto JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43984520221/artifacts/14285480650); digest dell'archivio Actions `sha256:21074ebe6c878571a47e907e05926edd7598d168b6a6b97f742daa1def8c78ad` (non checksum dello ZIP Joomla interno). Aggiunto il permesso `autoplay` all'iframe YouTube ma confermato `autoplay=0`: serve un click utente, consenso preservato. **La riproduzione e il completamento su Opera+ sono da collaudare, issue #532 aperta**. Avanzamento 79,56% invariato.
