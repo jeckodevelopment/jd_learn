@@ -166,11 +166,18 @@ final class CertificatePdf
             return [7, $bytes, (int) $info[0], (int) $info[1]];
         }
         // Decode common raster formats via GD; no SVG, remote images or path input.
-        if (!function_exists('imagecreatefromstring') || !function_exists('imagecreatetruecolor')
+        $decoders = [
+            'image/png' => 'imagecreatefrompng',
+            'image/gif' => 'imagecreatefromgif',
+            'image/webp' => 'imagecreatefromwebp',
+            'image/avif' => 'imagecreatefromavif',
+        ];
+        $decoder = $decoders[$mime] ?? '';
+        if (!function_exists($decoder) || !function_exists('imagecreatetruecolor')
             || !function_exists('imagejpeg')) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
-        $source = @imagecreatefromstring($bytes);
+        $source = @$decoder($path);
         if (!$source instanceof \GdImage) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
