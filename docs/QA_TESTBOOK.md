@@ -2006,3 +2006,11 @@ Aggiornare JD Learn, lasciare il percorso di archiviazione personalizzato vuoto 
 ## REL-03 / issue #379 — metadati dei manifest e nomi in Gestione estensioni
 
 Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema → Gestisci → Estensioni** che le 11 estensioni figlie (plugin, libreria e componente) e il package abbiano identica versione e data `creationDate` (visibile in colonna Data) e i nomi uniformi `JD Learn - ...`. Controllare installazione pulita, upgrade dalla precedente build, assenza di duplicati e funzionalità dei provider. La CI verifica gli ZIP interni con `tests/extension-manifest-metadata.py`, ma il risultato visualizzato dalla gestione Joomla è un collaudo manuale ancora da eseguire. Procedura dettagliata in `docs/RELEASE_METADATA.md`.
+
+### Modalità didattica YouTube — collaudo in Joomla
+
+1. In una lezione YouTube aprire l'aula: URL iframe su `youtube-nocookie.com`, `rel=0`; comandi nativi YouTube (volume, sottotitoli, pausa, barra, fullscreen) funzionanti e nessun overlay che copra il provider.
+2. Completare la visione valida secondo la soglia didattica, attendere il salvataggio del progresso: soltanto dopo il riconoscimento server `lesson_completed=true` il riquadro esterno mostra **Lezione video completata**. Se disponibile, deve offrire **Lezione successiva** con URL Joomla corretto.
+3. Testare lezione successiva non accessibile, lezione terminale, versione consultazione/non tracciata, preview, errore/offline e consenso revocato: nessuna navigazione verso contenuti bloccati e nessuna falsa dichiarazione di completamento.
+4. Riprendere la riproduzione o interrompere/revocare il consenso: il riquadro si nasconde. Verificare progressi, copertura e resume invariati e che YouTube possa ancora mostrare consigli all'interno del suo iframe, non sopprimibili da JD Learn.
+5. Verificare l'evento `ended` anche dopo un rinnovo della sessione/provider; nessuna regressione nel player HTML5/Vimeo/Cloudflare Stream. Test automatico `node tests/video-player.mjs`.

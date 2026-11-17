@@ -7,6 +7,8 @@ export class VideoLesson {
     this.queue = []; this.pending = null; this.id = 0; this.sequence = 1; this.stopped = true; this.tracking = true;
     this.chain = Promise.resolve(); this.generation = 0;
     this.status = root.querySelector('#jlms-player-status');
+    this.youtubeFinish = root.querySelector('#jlms-youtube-finish');
+    this.youtubeEnded = false;
     this.rateSelect = root.querySelector('#jlms-video-speed');
     this.languageSelect = root.querySelector('#jlms-video-language');
     this.onRateChange = () => this.changePlaybackRate();
@@ -26,6 +28,22 @@ export class VideoLesson {
     window.addEventListener('pageshow', this.onPageShow);
     window.addEventListener('offline', this.onOffline);
     document.addEventListener('visibilitychange', this.onVisibility);
+  }
+  handleAdapterEvent(event, reason) {
+    if (event === 'error') {
+      this.message(providerErrors.has(reason) ? reason : 'startup_provider');
+      this.stop(false);
+      return;
+    }
+    if (this.config.provider === 'youtube') {
+      if (event === 'play') {
+        this.youtubeEnded = false;
+        if (this.youtubeFinish) this.youtubeFinish.hidden = true;
+      } else if (event === 'ended') this.youtubeEnded = true;
+    }
+    if (this.tracking) this.record(event).then(() => {
+      if (['pause', 'ended'].includes(event)) this.flush();
+    });
   }
   allowed() {
     return this.config.provider === 'html5' || this.config.policy === 'embed' || (this.config.policy === 'site_consent'
@@ -143,6 +161,8 @@ export class VideoLesson {
     const generation = ++this.generation; this.starting = true;
     let failure = 'startup_request';
     this.message('loading');
+    this.youtubeEnded = false;
+    if (this.youtubeFinish) this.youtubeFinish.hidden = true;
     try {
       // lesson.begin and video.playback both write the enrollment/progress rows.
       // Wait for the bounded, idempotent start receipt to settle before opening
@@ -167,10 +187,7 @@ export class VideoLesson {
       if (!this.allowed() || generation !== this.generation) { if (!this.config.preview && grant.session_id) await this.request('close', {session_id: grant.session_id}); return; }
       this.adapter = adapter; this.stopped = false;
       failure = 'startup_provider';
-      const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => {
-        if (event === 'error') { this.message(providerErrors.has(reason) ? reason : 'startup_provider'); this.stop(false); }
-        else if (this.tracking) this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
-      }, this.aborter.signal);
+      const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => this.handleAdapterEvent(event, reason), this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player;
       await this.configurePlaybackSpeed(player);
@@ -227,6 +244,11 @@ export class VideoLesson {
       const result = await this.request('save', this.pending, keepalive);
       this.sequence = result.next_sequence; this.pending = null;
       this.message(result.lesson_completed ? 'completed' : 'saved');
+      // Only show a JD Learn call to action after the server confirms
+      // completion of the ended YouTube lesson. It sits below the iframe,
+      // never hides, masks or intercepts YouTube controls and links.
+      if (this.config.provider === 'youtube' && this.youtubeEnded && result.lesson_completed
+        && this.youtubeFinish) this.youtubeFinish.hidden = false;
       const meter = document.getElementById('jlms-progress-meter');
       if (meter) meter.value = result.course_percent;
     } catch (error) {
@@ -252,10 +274,7 @@ export class VideoLesson {
       if (this.stopped || generation !== this.generation || !this.allowed()) return;
       const sample = await this.player.sample(); this.replacing = true;
       await this.player.destroy(); this.player = null;
-      const player = await this.adapter.create(this.root.querySelector('#jlms-player'), grant, event => {
-        if (event === 'error') { this.message('error'); this.stop(false); }
-        else this.record(event);
-      },this.aborter.signal);
+      const player = await this.adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => this.handleAdapterEvent(event, reason),this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player; this.previous = null; this.session.options = grant.options;
       await this.configurePlaybackSpeed(player);
@@ -268,6 +287,8 @@ export class VideoLesson {
   }
   async stop(save) {
     ++this.generation; this.stopped = true; this.aborter?.abort();
+    this.youtubeEnded = false;
+    if (this.youtubeFinish) this.youtubeFinish.hidden = true;
     clearInterval(this.sampler); clearTimeout(this.timer); clearTimeout(this.renewTimer);
     const player = this.player; this.player = null;
     try { await player?.destroy(); } catch { /* Teardown must continue. */ }

@@ -247,3 +247,14 @@
 #jlms-teachers .jlms-teacher-card__summary{overflow-wrap:anywhere}
 #jlms-teachers a:focus-visible{outline:3px solid var(--jlms-color-primary);outline-offset:3px}
 #jlms-teachers-pagination{margin-block:calc(2 * var(--jlms-space-unit))}
+
+/* YouTube learning completion is outside the provider iframe (never an overlay). */
+#jlms-video-region .jlms-youtube-finish:not([hidden]) {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .5rem 1rem;
+  margin-block: var(--jlms-space-unit, 1rem);
+  padding: var(--jlms-space-unit, 1rem);
+  border: 1px solid var(--jlms-color-border, currentColor);
+  border-radius: var(--jlms-radius, .4rem);
+}
+#jlms-video-region .jlms-youtube-finish__message { margin: 0; font-weight: 600; }
+#jlms-video-region .jlms-youtube-finish__next:focus-visible { outline: 3px solid var(--jlms-color-primary, currentColor); outline-offset: 3px; }

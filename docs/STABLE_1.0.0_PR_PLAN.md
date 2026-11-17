@@ -262,3 +262,7 @@ La generazione e rigenerazione PDF usa direttamente lo storage gestito senza fil
 ### Recupero puntuale attestati mancanti — sviluppo 17/11/2026
 
 In Attestati → Corsi completati senza attestato, l'azione `recoverMissing` tratta solo `eligible_missing`: completamento persistito, versione pubblicata in modalità apprendimento, attestati previsti nello snapshot, preferenze abilitate, template esistente, nessuna emissione precedente. POST CSRF, ACL, motivazione e conferma, lock transazionale, audit, data originale e download successivo. Non è backfill in massa e non modifica `pending_render` già emessi. Test e accettazione Jira/Joomla distinti; tenere la copertura parziale fino al collaudo.
+
+### Player YouTube focalizzato sulla lezione (integrazione novembre 2026)
+
+Configurazione `rel=0` sul player `youtube-nocookie` per limitare le raccomandazioni al canale; riquadro nativo sotto il player con conferma solo dopo `ended` e salvataggio `lesson_completed=true`, link alla prossima lezione esclusivamente se accessibile. Nessuna sovrapposizione o alterazione dei controlli YouTube; test end-state, replay, rinnovo sessione, consensi e regressioni. Manuale `docs/VIDEO.md`, QA `docs/QA_TESTBOOK.md`, matrice requisiti `docs/REQUIREMENTS_STATUS.csv`.

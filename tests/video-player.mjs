@@ -9,6 +9,7 @@ globalThis.document = {hidden:false, addEventListener(){},removeEventListener(){
 const elements = Object.fromEntries(['#jlms-player-status','#jlms-player','#jlms-video-language-control']
   .map(k => [k, {textContent:'',addEventListener(){},replaceChildren(){}}]));
 elements['#jlms-video-language']={value:'',options:[],addEventListener(){},removeEventListener(){},replaceChildren(){this.options=[];},append(option){this.options.push(option);}};
+elements['#jlms-youtube-finish']={hidden:true};
 const root = {querySelector:k=>elements[k]};
 let calls = 0;
 const config = {policy:'site_consent',provider:'youtube',enrollment:1,lesson:2,token:'csrf',
@@ -29,9 +30,18 @@ lesson.transport=async (_url,options)=>{
 await lesson.flush();assert.ok(lesson.pending);assert.equal(lesson.sequence,1);assert.equal(elements['#jlms-player-status'].textContent,'offline');
 lesson.queue.push({id:2,type:'pause',position_ms:1000,client_ms:1000,rate_milli:1000,playing:false});
 await lesson.flush();assert.equal(bodies[0],bodies[1]);assert.equal(lesson.queue.length,1);assert.equal(lesson.sequence,2);assert.equal(elements['#jlms-player-status'].textContent,'saved');
+// A completed lesson CTA becomes visible only after a server-confirmed
+// ended YouTube video; a mere ended notification is not completion.
+lesson.youtubeEnded=true;
+assert.equal(elements['#jlms-youtube-finish'].hidden,true);
+lesson.transport=async()=>({ok:true,json:async()=>({success:true,data:{next_sequence:3,lesson_completed:true,course_percent:100}})});
+await lesson.flush();
+assert.equal(elements['#jlms-youtube-finish'].hidden,false);
+lesson.queue.push({id:3,type:'pause',position_ms:1000,client_ms:2000,rate_milli:1000,playing:false});
 lesson.transport=async()=>({ok:false,status:403,json:async()=>({success:false})});
 let destroyed=0;lesson.player={destroy:async()=>destroyed++};
 await lesson.flush();assert.equal(lesson.stopped,true);assert.equal(destroyed,1);
+assert.equal(elements['#jlms-youtube-finish'].hidden,true,'Stopping the player hides the finished panel');
 // YouTube can be ready for commands before it knows the duration.
 lesson.session = {session_id:'youtube-test', source_revision:1, duration_ms:10000};
 lesson.stopped = false;
@@ -146,6 +156,7 @@ assert.equal(ytUrl.pathname,'/embed/dQw4w9WgXcQ');
 assert.equal(ytUrl.searchParams.get('enablejsapi'),'1');
 assert.equal(ytUrl.searchParams.get('origin'),location.origin);
 assert.equal(ytUrl.searchParams.get('autoplay'),'0');
+assert.equal(ytUrl.searchParams.get('rel'),'0','Keep related recommendations to the source channel where supported');
 assert.equal(ytUrl.searchParams.get('cc_lang_pref'),'fr-ca');
 assert.equal(ytUrl.searchParams.get('cc_load_policy'),'1');
 assert.equal(ytFrame.referrerPolicy,'strict-origin-when-cross-origin');
