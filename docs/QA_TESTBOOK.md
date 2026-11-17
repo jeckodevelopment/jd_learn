@@ -2031,3 +2031,7 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 4. Verificare che progresso storico, copertura, stato completato, numero di lezioni completate, eventuali attestati ed email già emessi rimangano invariati alla sola riapertura; nessun doppio completamento.
 5. Aprire una **diversa** lezione soltanto parzialmente vista: il recupero della posizione salvata deve ancora funzionare. Verificare anche una lezione mai vista, per evitare regressioni sull'avvio.
 6. Controllare il messaggio finale sotto il player, consenso e gli altri provider. Non chiudere la regressione P0 sulla sola base della CI simulata.
+
+### Esito collaudo P0 — replay lezioni completate, PR #573 (17/11/2026)
+
+**Esito positivo confermato dall'utente sul sito Joomla reale dopo la PR #573:** la lezione YouTube già completata si riapre e il video riparte regolarmente dall'inizio, senza la schermata nera precedentemente segnalata. La CI associata alla PR #573 è verde; il nuovo test frontend distingue esplicitamente `lesson_completed=true` (nessun seek automatico) da lezione parziale (seek salvato). La conferma copre questa regressione specifica, non costituisce collaudo integrale di tutti i provider, browser e contratti didattici.
