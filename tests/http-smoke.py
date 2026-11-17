@@ -593,6 +593,29 @@ try:
  expect(len(re.findall(r'<h1\b',pathway_admin))==1,'Pathways title appears once in the Joomla toolbar')
  expect('id="jlms-admin-pathways"' in pathway_admin and 'CI learning pathway' in pathway_admin,
         'Authenticated administrator sees the native pathway list')
+ # LCM-05: exercise the actual Joomla administrator HTTP controller guards.
+ # Invalid requests must fail before any state-changing model call.
+ pathway_id=int(pathways['pathway'])
+ lifecycle_tasks=('trash','restore','archive','publish','unpublish','purge')
+ for lifecycle_task in lifecycle_tasks:
+  task_url=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.'+lifecycle_task})
+  try:
+   with http.open(Request(task_url,method='GET'),timeout=15) as response:
+    response.read()
+  except HTTPError as error:
+   expect(error.code==405,'Pathway '+lifecycle_task+' GET must be rejected with HTTP 405')
+  else:
+   raise RuntimeError('Pathway '+lifecycle_task+' accepted a GET request')
+  try:
+   with http.open(Request(task_url,data=urlencode({'cid[]':str(pathway_id)}).encode(),method='POST'),timeout=15) as response:
+    response.read()
+  except HTTPError as error:
+   expect(error.code==403,'Pathway '+lifecycle_task+' POST without CSRF token must return HTTP 403')
+  else:
+   raise RuntimeError('Pathway '+lifecycle_task+' accepted POST without CSRF token')
+ expect('CI learning pathway' in get('/administrator/index.php?option=com_jlms&view=pathways')[1],
+        'Rejected lifecycle requests preserve the pathway admin listing')
+ print(json.dumps({'pathway_lifecycle_http_guards':12,'status':'passed'}))
  _,pathway_editor=get('/administrator/index.php?option=com_jlms&task=pathway.edit&id='+str(pathways['pathway']))
  expect('id="jlms-pathway-editor"' in pathway_editor and 'jform[title]' in pathway_editor and 'jform[courses]' in pathway_editor,
         'Authenticated administrator can edit pathway details and course associations')
