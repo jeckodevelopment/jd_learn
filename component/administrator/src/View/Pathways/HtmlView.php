@@ -34,6 +34,9 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.edit.state', 'com_jlms')) {
             if ($this->stateFilter === 'trashed') {
                 ToolbarHelper::custom('pathway.restore', 'refresh', 'refresh', 'JTOOLBAR_RESTORE', true);
+                if ($actor->authorise('core.delete', 'com_jlms')) {
+                    ToolbarHelper::deleteList('COM_JLMS_PATHWAY_PURGE_CONFIRM', 'pathway.purge');
+                }
             } else {
                 ToolbarHelper::publish('pathway.publish', 'JTOOLBAR_PUBLISH', true);
                 ToolbarHelper::unpublish('pathway.unpublish', 'JTOOLBAR_UNPUBLISH', true);
