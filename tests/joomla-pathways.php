@@ -120,7 +120,7 @@ $check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $path
     'archived pathway state is stored');
 $archiveDenied = false;
 try { $service->detail($operator,'en-GB',$pathwayId); }
-catch (\\RuntimeException $error) { $archiveDenied = $error->getCode() === 404; }
+catch (\RuntimeException $error) { $archiveDenied = $error->getCode() === 404; }
 $check($archiveDenied,'archived pathway cannot be read through the public detail endpoint');
 $check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
     'archiving preserves pathway course associations');
@@ -130,7 +130,7 @@ $check((bool)$pathModel->save($pathwayBase + ['revision'=>3,'state'=>0]),
     'restoring archived pathway to unpublished succeeds: ' . $pathModel->getError());
 $draftDenied = false;
 try { $service->detail($operator,'en-GB',$pathwayId); }
-catch (\\RuntimeException $error) { $draftDenied = $error->getCode() === 404; }
+catch (\RuntimeException $error) { $draftDenied = $error->getCode() === 404; }
 $check($draftDenied,'restoration does not automatically republish a pathway');
 $check((bool)$pathModel->save($pathwayBase + ['revision'=>4,'state'=>1]),
     'explicit republication of restored pathway succeeds: ' . $pathModel->getError());
