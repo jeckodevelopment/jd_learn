@@ -1,3 +1,5 @@
+**Ricognizione post-merge #587 (17/11/2026):** LCM-03 comprende già azioni massive e cancellazione protetta (#577), LCM-04 comprende cancellazione condizionata docenti (#579), LCM-05 ha test HTTP/CSRF negativi e positivi (#584/#586). LCM-02 resta non iniziata; LCM-03/04/05 restano parziali e richiedono verifiche residue e collaudo Joomla. Stima 79,56% storica, non ricalcolata. [Dettagli](POST_MERGE_578_RECONCILIATION.md).
+
 **JD Learn 0.57.7-dev — stato aggiornato al 17/11/2026.**
 
 ## LCM-05 — quarto incremento test HTTP, PR #586 (17/11/2026)
