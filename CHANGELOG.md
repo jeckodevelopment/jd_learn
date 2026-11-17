@@ -1,5 +1,7 @@
 # Changelog
 
+- **P0 — replay di una lezione video già completata:** eliminata la ripresa automatica dalla posizione finale per le lezioni completate, mantenendo la ripresa delle lezioni parziali. Il grant indica esplicitamente `lesson_completed`, e il frontend salta il seek in questo caso. Conservati storico, copertura, stato e attestati; aggiunto test di regressione backend. Da confermare su Joomla reale.
+
 - **P0 — rollback della PR #571:** ripristinato il ciclo di vita del player YouTube già collaudato nella PR #570, dopo segnalazione che i video non partivano su Joomla. Temporaneamente torna il riquadro di completamento sotto al player (non sostituzione in loco). La futura UI nello stesso spazio richiederà una PR separata con test di avvio e replay in browser reale.
 
 - **PR #571 — YouTube e-learning:** dopo fine video **confermata dal backend**, l'iframe viene **rimosso** e sostituito nello stesso spazio 16:9 da «Lezione completata», link contestuale alla lezione successiva e «Rivedi il video». Il replay chiede una nuova sessione autorizzata e inizia da 0, senza recuperare il resume salvato in coda. Non copre il player e non altera le soglie/telemetria; test di regressione JS e collaudo Joomla descritti in `docs/QA_TESTBOOK.md`.
