@@ -1,4 +1,6 @@
 # Changelog
+- **LCM-05 — PR #581 e #582 (17/11/2026, CI 4/4 entrambe):** ampliati i test Joomla disposable per URL diretti dei percorsi archiviati/cestinati anche come ospiti, conservazione degli stati dei corsi associati, rifiuto del ripristino e della cancellazione da attore non autorizzato, e verifica dell'immutabilità dei dati dopo il rifiuto. Solo test e documentazione, runtime invariato. Gate LCM-05 parziale; restano HTTP/CSRF, ACL per record, Finder/SEO, upgrade e collaudo manuale. Merge #581 `14ef72b95b07bdfc38295b7ea9a3c741ac5d16cd` e #582 `08a7a9bf72e46996d4aad3eb538291330dbd6275`.
+
 - **LCM-04 — eliminazione protetta dei docenti:** aggiunta rimozione definitiva singola, esplicitamente confermata, soltanto per profili cestinati privi di corsi collegati e riferimenti nelle versioni didattiche congelate. Controlli ACL, CSRF e checkout, test Joomla di protezione storico e account nativi. Nessuna cancellazione a cascata; accettazione manuale differita.
 
 - **LCM-04 — ciclo di vita docenti (prima tranche):** introdotti cestino e ripristino conservativo con filtro e toolbar Joomla, azioni multiple atomiche autorizzate e blocco di ripubblicazione diretta dal cestino. Account Joomla, docenze assegnate e snapshot formativi sono preservati; eliminazione definitiva ancora non disponibile.
