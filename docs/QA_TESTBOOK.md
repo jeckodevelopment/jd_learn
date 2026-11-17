@@ -1908,3 +1908,14 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 2. Testare l'assenza del template Joomla: mostra messaggio «Modello Joomla non trovato»; se il contesto non è leggibile resta solo categoria generica.
 3. Testare trasporto SMTP fallito: nessuna diagnostica su nomi di token. Verificare XSS/escaping di nomi e ACL: studenti e amministratori senza `core.manage` non devono accedere alla Coda.
 4. Dopo correzione manuale del modello in Sistema → Modelli email, verificare nuova notifica di iscrizione; il record storico `failed` non va reinviato automaticamente.
+
+
+## P0 #546 — completamento senza attestato, diagnosi amministrativa
+
+**CERT-06 / P0 #546 — diagnosi attestati mancanti (PR #549, CI e collaudo Joomla pendenti):** nuova sezione in JD Learn → Attestati, accessibile solo con `core.manage` e `jlms.certificates.manage`, che mostra in sola lettura le ultime 25 iscrizioni realmente completate senza emissione completa. Espone la causa: regole della versione pubblicata senza rilascio attestati, preferenze globali/corso disabilitate, modello attestato assente, configurazione invalida oppure emissione attesa ma assente/documento non collegato. Nessuna emissione automatica retroattiva, modifica delle regole storiche, invio email o variazione della percentuale di completamento. Test nativi Joomla su ACL, limiti e categorie di esito. Avanzamento globale 79,56% invariato.
+
+1. Completare un corso Rigoletto senza `certificate_enabled` nella versione pubblicata: nella sezione 'Corsi completati senza attestato' della vista Attestati deve comparire il corso con ragione 'rilascio non previsto dalle regole della versione'. Non creare attestati automaticamente.
+2. Abilitare il rilascio nella bozza di una nuova versione e pubblicarla: non alterare iscrizioni storiche; testare un nuovo completamento con regole congelate corrette, preferenze globali/corso e modello attestato attivo.
+3. Per un corso completato e abilitato, simulare assenza attestato e verificare diagnosi 'Emissione attesa ma assente' oppure 'Emissione presente senza documento', senza rettifiche automatiche.
+4. ACL: anonimato o amministratori senza `jlms.certificates.manage` non possono leggere le diagnosi. Mostrare massimo 25 iscrizioni; nessuna comunicazione a studenti e nessuna nuova riga di certificato durante la visita della pagina.
+5. Verificare in Joomla il percorso di download del PDF `pending_render`/`ready` per gli attestati realmente emessi, non confondere PDF non ancora renderizzato con emissione mancante.
