@@ -1,6 +1,6 @@
 # Ricognizione post-merge PR #578 — 17 novembre 2026
 
-> Stato: ricognizione iniziale #578, integrata dalla verifica dei merge fino alla #587 (17/11/2026). **non** accettazione finale della versione 1.0.0. Non confondere PR integrate, test automatici e collaudi reali Joomla.
+> Stato: ricognizione iniziale #578, integrata dalla verifica dei merge fino alla #587 (17/11/2026). **non è** accettazione finale della versione 1.0.0. Non confondere PR integrate, test automatici e collaudi reali Joomla.
 
 ## Merge confermati
 
