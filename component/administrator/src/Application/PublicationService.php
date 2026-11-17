@@ -179,6 +179,11 @@ final class PublicationService
     {
         $versionId = (int) $version->id;
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
+        // Resolve certificate inheritance once at publication, freezing the effective
+        // policy for future enrollments. Already published snapshots are untouched.
+        $globalCertificates = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('certificate_enabled', 0);
+        $rules['certificate_enabled'] = $rules['mode'] === 'learning'
+            && CertificatePreferences::enabled($globalCertificates, (string) ($course->params_json ?? '{}'));
         // Prerequisite edges are a supported learner rule; validate the graph before freezing it.
         $orphan=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
             ->leftJoin('#__jlms_lessons AS l ON l.id=q.lesson_id AND l.course_version_id=q.course_version_id')
@@ -377,7 +382,7 @@ final class PublicationService
         $now = gmdate('Y-m-d H:i:s');
         $update = (object) ['id' => $versionId, 'status' => 'published', 'title_snapshot' => $course->title,
             'presentation_json' => $presentation, 'fields_snapshot_json' => $courseFieldsSnapshot,
-            'structure_hash' => $hash, 'published_at' => $now,
+            'structure_hash' => $hash, 'rules_json' => json_encode($rules, JSON_THROW_ON_ERROR), 'published_at' => $now,
             'revision' => (int) $version->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
         $this->db->updateObject('#__jlms_course_versions', $update, 'id');
         $calendar=CourseSchedule::read($course);
