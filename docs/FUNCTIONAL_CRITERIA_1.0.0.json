@@ -126,6 +126,371 @@
         "status": "unassessed",
         "evidence": []
       }
+    ],
+    "CAT-01": [
+      {
+        "id": "catalog_layout",
+        "label": "Viste catalogo griglia/elenco e paginazione",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/courses/default.php",
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "search_order",
+        "label": "Ricerca e ordinamento titolo/descrizione",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/CoursesModel.php",
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "filters",
+        "label": "Filtri principali categoria, docente, percorso, difficoltà, durata e tag",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/CoursesModel.php",
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "language_available",
+        "label": "Combinazioni lingua e soli corsi disponibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "protected_metadata",
+        "label": "Assenza informazioni riservate nelle combinazioni complete dei filtri",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CAT-02": [
+      {
+        "id": "presentation",
+        "label": "Programma e presentazione con obiettivi, destinatari e prerequisiti",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/course/default.php",
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "teacher",
+        "label": "Profili docenti e rimandi ai corsi visibili",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/TeacherProfiles.php",
+          "tests/joomla-teachers.php"
+        ]
+      },
+      {
+        "id": "duration",
+        "label": "Durata stimata distinta dal tempo effettivo di fruizione",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/course/default.php",
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "actions",
+        "label": "Tutte le varianti di pulsanti secondo accesso e stato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "completion_criteria",
+        "label": "Visualizzazione completa regole di completamento e attestati disponibili",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CAT-03": [
+      {
+        "id": "ordered",
+        "label": "Percorsi con elenco ordinato dei corsi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "progress",
+        "label": "Aggregazione del progresso personale senza concedere accesso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayProgress.php",
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "visibility",
+        "label": "Protezione identità dei corsi non accessibili nel percorso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "tests/joomla-pathways.php"
+        ]
+      },
+      {
+        "id": "frontend",
+        "label": "Scheda e catalogo pubblici dei percorsi",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/pathway/default.php",
+          "tests/http-smoke.py"
+        ]
+      }
+    ],
+    "CAT-04": [
+      {
+        "id": "menus_sef",
+        "label": "Viste menu e URL SEF nelle rotte supportate",
+        "status": "implemented",
+        "evidence": [
+          "tests/associations-http.py",
+          "tests/categories-http.py"
+        ]
+      },
+      {
+        "id": "metadata",
+        "label": "Metadati editoriali e presentazione pubblica",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CoursePresentation.php",
+          "tests/joomla-course-presentation.php"
+        ]
+      },
+      {
+        "id": "finder",
+        "label": "Integrazione Smart Search con perimetro ACL verificato",
+        "status": "unassessed",
+        "evidence": [
+          "plugins/finder/jlms/src/Extension/Jlms.php"
+        ]
+      },
+      {
+        "id": "robots_security",
+        "label": "Esclusione sistematica di contenuti personali/protetti dall'indicizzazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "seo_combinations",
+        "label": "Combinazioni menu, lingue, breadcrumb e immagini social",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "AUT-01": [
+      {
+        "id": "course_editor",
+        "label": "Editor e salvataggio corsi inclusi quelli pubblicati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/http-smoke.py"
+        ]
+      },
+      {
+        "id": "curriculum",
+        "label": "Programma contestuale con moduli e lezioni",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "tests/joomla-curriculum-builder.php"
+        ]
+      },
+      {
+        "id": "reordering",
+        "label": "Riordino e operazioni copia/spostamento con interfaccia dedicata",
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/curriculum.js",
+          "tests/joomla-curriculum-builder.php"
+        ]
+      },
+      {
+        "id": "duplication",
+        "label": "Duplicazione di corso, modulo e lezione",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-duplication.php",
+          "component/administrator/src/Application/CourseVersionCopy.php"
+        ]
+      },
+      {
+        "id": "native_workflows",
+        "label": "Gestione nativa Joomla toolbar, filtri e storico editoriale",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/tmpl/courses/default.php",
+          "tests/joomla-courses-ui.php"
+        ]
+      },
+      {
+        "id": "corner_cases",
+        "label": "Recupero completo degli input e regole avanzate su ogni errore editoriale",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "AUT-02": [
+      {
+        "id": "workflow",
+        "label": "Transizioni bozza, revisione, pubblicazione e archivio",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/WorkflowInstaller.php",
+          "tests/joomla-publication-review.php"
+        ]
+      },
+      {
+        "id": "permissions",
+        "label": "Pubblicazione riservata a ruoli autorizzati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "preview",
+        "label": "Anteprima senza modifiche alle statistiche reali",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-publication-review.php",
+          "component/administrator/src/Application/PublicationService.php"
+        ]
+      },
+      {
+        "id": "working_copy",
+        "label": "Modifiche su copia lavoro senza ritiro automatico versione corrente",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseVersionCopy.php",
+          "tests/joomla-publication.php"
+        ]
+      }
+    ],
+    "AUT-03": [
+      {
+        "id": "required_lessons",
+        "label": "Blocco corsi privi di contenuto didattico obbligatorio valido",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/PublicationReadiness.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "quiz_prerequisites",
+        "label": "Validazione quiz e prerequisiti prima della pubblicazione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/PublicationReadiness.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "material_duration",
+        "label": "Segnalazione risorse non disponibili e durate errate",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/MaterialAvailability.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "consultation",
+        "label": "Modalità consultazione distinta dall'apprendimento tracciato",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/PublicationReadiness.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "subtitle_provider",
+        "label": "Avvisi completi per sottotitoli e provider senza tracciamento",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "AUT-04": [
+      {
+        "id": "editorial_history",
+        "label": "Cronologia Joomla e modifica editoriale ordinaria senza ritiro",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "working_version",
+        "label": "Copia completa del programma di lavoro e pubblicazione separata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseVersionCopy.php",
+          "tests/joomla-publication-impact.php"
+        ]
+      },
+      {
+        "id": "impact",
+        "label": "Conferma di impatto per nuova versione didattica",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationImpact.php",
+          "tests/joomla-publication-impact.php"
+        ]
+      },
+      {
+        "id": "enrollment_mapping",
+        "label": "Migrazione iscritti solo esplicita con equivalenze",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "historical_integrity",
+        "label": "Tutela risultati e attestati in ogni variante di ripristino",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "AUT-05": [
+      {
+        "id": "localization",
+        "label": "Interfaccia traducibile e contenuti con lingua assegnata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-associations.php"
+        ]
+      },
+      {
+        "id": "native_associations",
+        "label": "Associazioni Joomla fra traduzioni dei corsi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Helper/AssociationsHelper.php",
+          "tests/joomla-associations.php"
+        ]
+      },
+      {
+        "id": "separate_enrollments",
+        "label": "Iscrizioni distinte fra traduzioni dei corsi",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-associations.php",
+          "docs/MULTILINGUAL.md"
+        ]
+      }
     ]
   }
 }
