@@ -15,7 +15,7 @@ final class CertificateIssuer
 {
     public function __construct(private readonly DatabaseInterface $db) {}
 
-    public function issueForCompletedEnrollment(int $enrollmentId, int $courseVersionId, string $completedAt): bool
+    public function issueForCompletedEnrollment(int $enrollmentId, int $courseVersionId, string $completedAt, bool $explicitAdminRecovery = false): bool
     {
         $q = $this->db->createQuery()->select('e.id, e.user_id, e.course_id, e.course_version_id, e.completed_at, u.name, u.email, u.params AS user_params, c.title, c.params_json, c.language, v.title_snapshot, v.rules_json')
             ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id = e.user_id')
@@ -27,7 +27,7 @@ final class CertificateIssuer
         if (!$row) { return false; }
         $rules = json_decode((string) $row->rules_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
-            || ($rules['certificate_enabled'] ?? false) !== true) { return false; }
+            || (!$explicitAdminRecovery && ($rules['certificate_enabled'] ?? false) !== true)) { return false; }
         $params = ComponentHelper::getParams('com_jlms');
         if (!CertificatePreferences::enabled((bool) $params->get('certificate_enabled', 0), (string) $row->params_json)) {
             return false;
