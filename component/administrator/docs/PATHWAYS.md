@@ -25,3 +25,9 @@ Su Joomla di prova, con un account autorizzato, apri l'elenco, crea un percorso 
 Nell'editor del percorso un amministratore con `core.edit.state` può scegliere **Archiviato** e salvare. Il percorso archiviato non è visibile nel catalogo o nella pagina pubblica diretta (404), ma **non viene eliminato**: categorie, associazioni ai corsi, progressi e iscrizioni ai singoli corsi restano inalterati. L'archiviazione del percorso non archivia automaticamente i corsi associati.
 
 Per riattivarlo impostare prima **Non pubblicato**, verificare contenuti e ordine, quindi selezionare **Pubblicato** con una seconda azione esplicita. Lo stato Archiviato è mostrato nell'elenco amministrativo. La cestinazione e la cancellazione definitiva condizionata sono requisiti separati non ancora disponibili; non simulare l'eliminazione con l'archiviazione.
+
+## Cestino dei percorsi
+
+Nell'editor il campo Stato può essere impostato su **Cestinato** da chi dispone del permesso Joomla `core.edit.state`. Il percorso scompare dall'elenco ordinario e dal frontend ma conserva le associazioni ai corsi, iscrizioni e progressi indipendenti. Per visualizzare i percorsi cestinati usare il filtro **Cestinato** nell'elenco amministrativo. Aprire il percorso, impostare **Non pubblicato** e salvare per ripristinarlo; **Pubblicato** richiede successiva scelta esplicita. Un percorso cestinato non può essere ripubblicato direttamente con una singola richiesta, anche se inviata all'endpoint.
+
+Questa tranche non abilita ancora eliminazione fisica né operazioni massive; nessuna cancellazione a cascata viene eseguita. Anche la configurazione degli altri corsi rimane indipendente.
