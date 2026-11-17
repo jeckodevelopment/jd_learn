@@ -1983,6 +1983,632 @@
         "status": "unassessed",
         "evidence": []
       }
+    ],
+    "SIC-01": [
+      {
+        "id": "joomla_auth",
+        "label": "Autenticazione e controlli accesso tramite servizi Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "request_guards",
+        "label": "Controlli ACL e CSRF sui flussi amministrativi esercitati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/ManualenrollmentController.php",
+          "tests/manual-enrollment-http.py"
+        ]
+      },
+      {
+        "id": "object_acl",
+        "label": "Copertura degli accessi orizzontali per ogni record e task",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "all_input_paths",
+        "label": "Validazione contenuti, query e token su tutte le superfici",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SIC-02": [
+      {
+        "id": "upload_policy",
+        "label": "Formati, MIME e dimensioni controllati nell'upload",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MaterialFilePolicy.php",
+          "tests/material-policy.php"
+        ]
+      },
+      {
+        "id": "safe_delivery",
+        "label": "Accesso ai file tramite controller protetto",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/AttachmentController.php",
+          "tests/materials-http.py"
+        ]
+      },
+      {
+        "id": "isolation",
+        "label": "Audit storage e scansione in tutti gli hosting supportati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PRI-01": [
+      {
+        "id": "scoped_data",
+        "label": "Dati di iscrizione e audit collegati ad account/corso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "tests/joomla-manual-enrollment.php"
+        ]
+      },
+      {
+        "id": "retention_options",
+        "label": "Politiche distinte di conservazione per ciascun dato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "erasure_preview",
+        "label": "Anteprima anonimizzazione/cancellazione con eccezioni motivate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PRI-02": [
+      {
+        "id": "privacy_plugin",
+        "label": "Plugin privacy Joomla per esportazione e gestione richieste",
+        "status": "implemented",
+        "evidence": [
+          "plugins/privacy/jdlearn/src/Extension/Jdlearn.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "all_data_classes",
+        "label": "Completezza export e richieste su tutti gli oggetti 1.0.0",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "deletion_backups",
+        "label": "Cancellazione e backup coerenti con policy amministrativa",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PRI-03": [
+      {
+        "id": "video_consent",
+        "label": "Player esterno caricato condizionatamente alle impostazioni",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "tests/video-player.mjs"
+        ]
+      },
+      {
+        "id": "consent_matrix",
+        "label": "Consenso rifiutato/non disponibile su provider e browser reali",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "no_external_telemetry",
+        "label": "Verifica globale dei tracciamenti esterni e poster remoti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CFG-01": [
+      {
+        "id": "quiz_override",
+        "label": "Servizio di regole temporali e override autorizzati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizDeadlineService.php",
+          "tests/joomla-quiz-time.php"
+        ]
+      },
+      {
+        "id": "precedence_matrix",
+        "label": "Ordine di precedenza per tutte le configurazioni e opzioni menu",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CFG-02": [
+      {
+        "id": "assigned_version",
+        "label": "Vincoli didattici legati alla versione assegnata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "snapshot_all",
+        "label": "Snapshot di tentativi/attestati su upgrade e modifiche globali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CFG-03": [
+      {
+        "id": "http_messages",
+        "label": "Validazioni e rifiuti su controller iscrizioni",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/ManualenrollmentController.php",
+          "tests/manual-enrollment-http.py"
+        ]
+      },
+      {
+        "id": "error_taxonomy",
+        "label": "Tassonomia errori completa, log di correlazione e non divulgazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CFG-04": [
+      {
+        "id": "video_docs",
+        "label": "Guida per provider e requisiti del video",
+        "status": "implemented",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/CLOUDFLARE_STREAM.md"
+        ]
+      },
+      {
+        "id": "full_manual",
+        "label": "Completezza manuali autore, studente, ACL, backup e recovery",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CFG-05": [
+      {
+        "id": "baseline_specs",
+        "label": "Specifica funzionale e progettazione tecnica versionate",
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md"
+        ]
+      },
+      {
+        "id": "complete_trace",
+        "label": "Corrispondenza completa mockup, checklist, stati e criteri implementati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CFG-06": [
+      {
+        "id": "build_checks",
+        "label": "Automatismi di build e controlli preliminari presenti",
+        "status": "implemented",
+        "evidence": [
+          "tools/build.py",
+          "tests/install-package.php"
+        ]
+      },
+      {
+        "id": "release_gates",
+        "label": "Copertura totale delle verifiche sicurezza, prestazioni e accessibilità",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-01": [
+      {
+        "id": "native_categories",
+        "label": "Categorie core Joomla per corsi e catalogo",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "tests/joomla-categories.php"
+        ]
+      },
+      {
+        "id": "all_hierarchy",
+        "label": "Gerarchia, permessi, lingua e ordinamento in ogni contesto",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-02": [
+      {
+        "id": "native_users",
+        "label": "Utenti Joomla usati per identità e accessi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "auth_variants",
+        "label": "MFA, recupero account e provider configurati in tutti i percorsi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-03": [
+      {
+        "id": "native_levels",
+        "label": "Gruppi e viewing access levels Joomla nel controllo corso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "cross_context",
+        "label": "Coerenza senza livelli proprietari in tutte le viste e le iscrizioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-04": [
+      {
+        "id": "edit_acl",
+        "label": "Controlli editor e ruoli Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseEditorAccess.php",
+          "tests/joomla-editor-access.php"
+        ]
+      },
+      {
+        "id": "record_acl",
+        "label": "ACL su singolo record/docente e selezioni multiple in tutti i contesti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "teacher_edit",
+        "label": "Modifiche di profilo docente e limitazioni campi/pubblicazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-05": [
+      {
+        "id": "overrides",
+        "label": "Layout sovrascrivibili e CSS dedicato",
+        "status": "implemented",
+        "evidence": [
+          "component/media/css/site.css",
+          "docs/FRONTEND_CSS.md"
+        ]
+      },
+      {
+        "id": "layout_coverage",
+        "label": "Override verificati per tutte le viste e i moduli distribuiti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-06": [
+      {
+        "id": "language_files",
+        "label": "File lingua Joomla IT/EN",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/language/it-IT/com_jlms.ini",
+          "component/site/language/en-GB/com_jlms.ini"
+        ]
+      },
+      {
+        "id": "strings",
+        "label": "Copertura di tutte le stringhe, errori, email, contenuti e schermate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-07": [
+      {
+        "id": "associations",
+        "label": "Associazioni traduzioni e routing multilingua",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-associations.php"
+        ]
+      },
+      {
+        "id": "menu_matrix",
+        "label": "Tutti i filtri lingua e menu multilingua autorizzati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-08": [
+      {
+        "id": "privacy_plugin",
+        "label": "Plugin com_privacy installabile",
+        "status": "implemented",
+        "evidence": [
+          "plugins/privacy/jdlearn/src/Extension/Jdlearn.php",
+          "tests/install-package.php"
+        ]
+      },
+      {
+        "id": "scope",
+        "label": "Tutte le classi personali e tempi di conservazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-09": [
+      {
+        "id": "tags",
+        "label": "Tag nativi per corsi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Table/CourseTable.php",
+          "component/administrator/src/Infrastructure/EditorialInstaller.php"
+        ]
+      },
+      {
+        "id": "tags_context",
+        "label": "Registrazione ed esposizione dei tag in tutte le entità previste",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-10": [
+      {
+        "id": "fields",
+        "label": "Campi custom Joomla integrati nei form",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Extension/JlmsComponent.php",
+          "tests/joomla-course-fields.php"
+        ]
+      },
+      {
+        "id": "teacher_scoping",
+        "label": "Campi docente e lezione con ACL e lingua in tutti gli scenari",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-11": [
+      {
+        "id": "editor",
+        "label": "Editor per contenuti didattici tramite flusso Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "tests/joomla-curriculum.php"
+        ]
+      },
+      {
+        "id": "content_events",
+        "label": "Eventi content plugin e filtri in tutti i contesti authoring",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-12": [
+      {
+        "id": "media",
+        "label": "Asset pubblici di corso gestiti tramite selezione immagini",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseArtwork.php",
+          "tests/joomla-course-presentation.php"
+        ]
+      },
+      {
+        "id": "media_providers",
+        "label": "Provider media e separazione risorse protette in tutti i contesti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-13": [
+      {
+        "id": "native_routes",
+        "label": "Viste menu e URL SEF per catalogo e categorie",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "tests/categories-http.py"
+        ]
+      },
+      {
+        "id": "all_routes",
+        "label": "Route docenti, breadcrumb e accessi diretti con associazioni lingua",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-14": [
+      {
+        "id": "finder_plugin",
+        "label": "Plugin Smart Search Joomla installabile",
+        "status": "implemented",
+        "evidence": [
+          "plugins/finder/jlms/src/Extension/Jlms.php",
+          "tests/install-package.php"
+        ]
+      },
+      {
+        "id": "index_acl",
+        "label": "Aggiornamento indici e visibilità su ogni cambio ACL, stato e lingua",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-15": [
+      {
+        "id": "workflow",
+        "label": "Servizi workflow per pubblicazione corsi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-publication.php"
+        ]
+      },
+      {
+        "id": "native_workflow",
+        "label": "Transizioni e permessi per lezioni e tutte le entità editoriali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-16": [
+      {
+        "id": "history",
+        "label": "Storico editoriale e restore programmi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-programme-restore.php"
+        ]
+      },
+      {
+        "id": "all_entities",
+        "label": "Ristabilimento dello storico, check-in/out e versioni assegnate in ogni scenario",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-17": [
+      {
+        "id": "audit",
+        "label": "Audit delle transizioni didattiche",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/AssessmentAudit.php",
+          "tests/joomla-enrollment-state.php"
+        ]
+      },
+      {
+        "id": "joomla_actions",
+        "label": "Plugin User Actions Log nativo per operazioni previste",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-18": [
+      {
+        "id": "mail_templates",
+        "label": "Integrazione Mail Templates e coda Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailTemplateInstaller.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "smtp",
+        "label": "Verifica SMTP e personalizzazioni tradotte su tutti gli eventi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-19": [
+      {
+        "id": "task",
+        "label": "Task Joomla per attività pianificate",
+        "status": "implemented",
+        "evidence": [
+          "plugins/task/jlms/src/Extension/Jlms.php",
+          "tests/joomla-quiz-attempts.php"
+        ]
+      },
+      {
+        "id": "idempotent_tasks",
+        "label": "Diagnostica e ritentativi sicuri per task non puntuali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-20": [
+      {
+        "id": "course_ui",
+        "label": "Gestione corsi con liste/editor e programma contestuale",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/tmpl/course/edit.php",
+          "tests/joomla-courses-ui.php"
+        ]
+      },
+      {
+        "id": "native_completeness",
+        "label": "Ogni toolbar, filtro, batch, errore e ripresa input",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-21": [
+      {
+        "id": "assets",
+        "label": "Web Asset Manager Joomla per script e stili",
+        "status": "implemented",
+        "evidence": [
+          "component/media/joomla.asset.json",
+          "tests/dashboard-http.py"
+        ]
+      },
+      {
+        "id": "private_cache",
+        "label": "Test cache/sessione su tutti gli endpoint personali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-22": [
+      {
+        "id": "install",
+        "label": "Manifest e migrazioni Joomla nel pacchetto",
+        "status": "implemented",
+        "evidence": [
+          "component/script.php",
+          "tests/install-package.php"
+        ]
+      },
+      {
+        "id": "release_updates",
+        "label": "Update server e rollback di migrazione in hosting variabili",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CORE-23": [
+      {
+        "id": "providers",
+        "label": "Registry per plugin provider video",
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderRegistry.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "event_contracts",
+        "label": "Eventi LMS pubblici, payload minimo e plugin terzi supportati",
+        "status": "unassessed",
+        "evidence": []
+      }
     ]
   }
 }
