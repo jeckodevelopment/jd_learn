@@ -365,3 +365,8 @@ La PR [#464](https://github.com/jeckodevelopment/jd_learn/pull/464), integrata, 
 | `CONTACT_EMAIL` | `mailfrom` del sito Joomla solo se è un indirizzo valido; altrimenti vuoto | Lezione, docente, annuncio |
 
 Tutti i valori di testo vengono escapati dal renderer Joomla nei template HTML. Non esiste un campo affidabile per il nome proprio: `USER_FIRSTNAME` non è registrato e i modelli devono usare un saluto neutro se non vogliono mostrare il nome completo.
+
+
+## Migrazione token legacy nei modelli Joomla (issue #554)
+
+Durante installazione/upgrade, la sincronizzazione dei Mail Templates aggiorna nei soli modelli `com_jlms.*` i placeholder esatti precedenti: `{NAME}` → `{USER_FULLNAME}`, `{COURSE}` → `{COURSE_TITLE}`, `{SITENAME}` → `{SITE_NAME}`, incluse le rispettive varianti `_HTML`. La modifica riguarda oggetto, corpo testuale e HTML di tutte le righe lingua esistenti. Ogni altro testo, contenuto personalizzato, allegato, mittente e opzione del modello resta invariato. L'operazione è idempotente e non introduce alias runtime. Dopo l'upgrade verificare in Sistema → Modelli email il modello interessato, riprovare un messaggio in errore con le funzionalità di ritentativo controllato, quindi verificare la consegna SMTP. La modifica non riaccoda automaticamente invii falliti.
