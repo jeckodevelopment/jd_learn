@@ -85,6 +85,29 @@ await automatic.start();
 assert.deepEqual(startup, ['/playback','https://school.example/media/plg_jlmsvideo_youtube/js/player.js']);
 assert.equal(automatic.stopped, false);
 await automatic.stop(false);
+// Regression PR #573: reopening a completed lesson must never seek to its
+// persisted last position; a partially watched lesson still resumes normally.
+for (const [completed, expectedSeeks] of [[true, []], [false, [3000]]]) {
+  const seeks = [];
+  const replay = new VideoLesson({...config, policy:'embed'}, root,
+    async () => ({ok:true,json:async()=>({success:true,data:{
+      provider:'youtube', session_id:'replay-session', source_revision:1,
+      duration_ms:10000, tracking:true, resume_ms:completed ? 9999 : 3000,
+      lesson_completed:completed, options:{},
+    }})}),
+    async () => ({create:async()=>({
+      seek:async ms => {seeks.push(ms);},
+      sample:async()=>({position_ms:0,duration_ms:10000,rate_milli:1000,playing:false}),
+      destroy(){},
+    })}));
+  await replay.start();
+  assert.deepEqual(seeks,expectedSeeks,
+    completed ? 'Completed lesson must start at zero' : 'Partial lesson must resume at saved position');
+  assert.equal(replay.stopped,false);
+  await replay.stop(false);
+  replay.session=null;
+  await replay.destroy();
+}
 const extensionCalls=[];
 const extension = new VideoLesson({...config, policy:'embed', provider:'demo_provider'}, root, async url => {
   extensionCalls.push(url);

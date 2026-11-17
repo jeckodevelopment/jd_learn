@@ -1,5 +1,7 @@
 # Changelog
 
+- **Collaudo video P0 #573 confermato (17/11/2026):** la riapertura di una lezione già completata riproduce regolarmente dall'inizio su Joomla reale. Aggiunto test di regressione frontend sul mancato seek per lezioni completate e sul resume invariato per quelle parziali; runtime non modificato.
+
 - **P0 — replay di una lezione video già completata:** eliminata la ripresa automatica dalla posizione finale per le lezioni completate, mantenendo la ripresa delle lezioni parziali. Il grant indica esplicitamente `lesson_completed`, e il frontend salta il seek in questo caso. Conservati storico, copertura, stato e attestati; aggiunto test di regressione backend. Da confermare su Joomla reale.
 
 - **P0 — rollback della PR #571:** ripristinato il ciclo di vita del player YouTube già collaudato nella PR #570, dopo segnalazione che i video non partivano su Joomla. Temporaneamente torna il riquadro di completamento sotto al player (non sostituzione in loco). La futura UI nello stesso spazio richiederà una PR separata con test di avvio e replay in browser reale.

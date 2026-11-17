@@ -274,3 +274,7 @@ La sostituzione dell'iframe YouTube nello stesso spazio (PR #571) ha causato una
 ### P0 — replay delle lezioni video completate
 
 Riscontro Joomla: le lezioni YouTube mai completate partono; una lezione già completata appare per un attimo e poi risulta nera, con messaggio «Lezione video completata». Correzione mirata: evitare di riapplicare il `resume_ms` finale nei grant delle lezioni completate, restituendo `lesson_completed=true` e posizione iniziale zero; preservare il resume delle lezioni parziali e tutte le prove di frequenza. Test backend per riapertura senza azzeramento e controllo frontend del seek; verifica su browser reale obbligatoria prima dell'accettazione. Priorità P0, milestone 1.0.0.
+
+### Accettazione P0 video completati — 17 novembre 2026
+
+La PR #573 è integrata e **collaudata positivamente su Joomla reale**: una lezione YouTube completata viene riaperta e riprodotta dall'inizio senza schermata nera. La ripresa dei video non completati era già confermata funzionante. La successiva PR di consolidamento aggiunge il test frontend esplicito sul seek, per impedire di reintrodurre la regressione; non modifica il runtime. Avanzamento globale 79,56% invariato: chiusa la specifica regressione, restano aperti i gate di accettazione non correlati.
