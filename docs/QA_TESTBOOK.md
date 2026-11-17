@@ -2014,3 +2014,11 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 3. Testare lezione successiva non accessibile, lezione terminale, versione consultazione/non tracciata, preview, errore/offline e consenso revocato: nessuna navigazione verso contenuti bloccati e nessuna falsa dichiarazione di completamento.
 4. Riprendere la riproduzione o interrompere/revocare il consenso: il riquadro si nasconde. Verificare progressi, copertura e resume invariati e che YouTube possa ancora mostrare consigli all'interno del suo iframe, non sopprimibili da JD Learn.
 5. Verificare l'evento `ended` anche dopo un rinnovo della sessione/provider; nessuna regressione nel player HTML5/Vimeo/Cloudflare Stream. Test automatico `node tests/video-player.mjs`.
+
+### P0 — verifica ripristino player dopo rollback PR #571 (PR #572)
+
+1. Aggiornare senza disinstallare JD Learn. Aprire due lezioni YouTube, una mai vista e una già completata; verificare che **entrambe** mostrino il player e che premendo Play inizino a riprodurre il video.
+2. Verificare pausa, fullscreen, sottotitoli, seek, salvataggio progresso e ripresa su Chrome e Safari dove disponibili, sia con nuovo grant sia dopo ricaricamento pagina.
+3. Completare un video e verificare il riquadro nativo **sotto** al player (comportamento noto della PR #570); non deve apparire una schermata in luogo dell'iframe.
+4. Verificare consenso negato/revocato e rinnovo sessione: niente riproduzione senza autorizzazione; nessun errore JS o regressione su Vimeo, HTML5 e Cloudflare Stream.
+5. Registrare come collaudo positivo solo dopo conferma effettiva sul sito Joomla. La regressione rimane priorità P0 fino al riscontro.
