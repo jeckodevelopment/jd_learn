@@ -44,6 +44,7 @@ jobs:
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
+          python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$(git log -1 --format=%cs)"
           python3 tools/check.py
           python3 tests/frontend-css-contract.py
           python3 tests/frontend-contract-hooks.py
@@ -135,6 +136,7 @@ jobs:
       - name: Structural and reproducible package checks
         run: |
           python3 tools/build.py
+          python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$(git log -1 --format=%cs)"
           python3 tools/check.py
           python3 tests/frontend-css-contract.py
           python3 tests/frontend-contract-hooks.py
