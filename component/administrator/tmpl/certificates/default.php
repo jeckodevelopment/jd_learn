@@ -8,6 +8,14 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
+$unissuedReasonLabels = [
+ 'version_disabled' => 'COM_JLMS_CERTIFICATE_DIAG_VERSION_DISABLED',
+ 'preferences_disabled' => 'COM_JLMS_CERTIFICATE_DIAG_PREFERENCES_DISABLED',
+ 'template_missing' => 'COM_JLMS_CERTIFICATE_DIAG_TEMPLATE_MISSING',
+ 'eligible_missing' => 'COM_JLMS_CERTIFICATE_DIAG_ELIGIBLE_MISSING',
+ 'document_missing' => 'COM_JLMS_CERTIFICATE_DIAG_DOCUMENT_MISSING',
+ 'invalid_configuration' => 'COM_JLMS_CERTIFICATE_DIAG_INVALID_CONFIGURATION',
+];
 $this->getDocument()->getWebAssetManager()->useScript('table.columns');
 $order = $this->escape((string) $this->state->get('list.ordering', 'd.issued_at'));
 $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'));
@@ -63,7 +71,7 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
           <th scope="row"><?= $this->escape($missing['student_name']) ?></th>
           <td><?= $this->escape($missing['course_title']) ?></td>
           <td><?= $this->escape($missing['completed_at']) ?></td>
-          <td><?= Text::_('COM_JLMS_CERTIFICATE_DIAG_' . strtoupper($missing['reason'])) ?></td>
+          <td><?= Text::_($unissuedReasonLabels[$missing['reason']] ?? 'COM_JLMS_CERTIFICATE_DIAG_INVALID_CONFIGURATION') ?></td>
          </tr>
         <?php endforeach; ?>
        </tbody>
