@@ -1873,3 +1873,13 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 ## Post-merge PR #541 — esito CI e artefatto
 
 **PR #541 integrata — P0 #532:** merge `2ab0ffa2589a22013a26b2ad9ee7bcefe11c3fd6`; CI 4/4 verde [run 43983276857](https://github.com/jeckodevelopment/jd_learn/actions/runs/43983276857), integrità CSV [run 43983276867](https://github.com/jeckodevelopment/jd_learn/actions/runs/43983276867). [Pacchetto installabile JD Learn 0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43983276857/artifacts/14283797967), digest archivio Actions `sha256:f9feaf56a8d380d2ee0c101304b243613c10402bd57554cfe2ef2e1878fcc24c` (non checksum interno del pacchetto ZIP Joomla). **Riproduzione video e completamento da verificare manualmente su Opera+ prima di chiudere issue #532**. Avanzamento globale 79,56%, invariato.
+
+
+## P0 #532 — consenso e delega riproduzione iframe YouTube, PR #543
+
+**P0 #532 — permesso riproduzione IFrame YouTube (PR #543, collaudo Opera+ pendente):** il player JD Learn dichiarava `allow="encrypted-media; fullscreen; picture-in-picture"`, omettendo `autoplay` richiesto dagli esempi ufficiali Google per gli iframe YouTube. La configurazione ora delega il permesso `autoplay` all'iframe, senza attivare autoplay automatico (il parametro resta `autoplay=0`); SDK, consenso, `Referer`, ACL e calcolo dei progressi invariati. Test di regressione sull'attributo `allow` e sul parametro autoplay. L'eventuale blocco residuo va diagnosticato con evidenza dell'evento YouTube, non con ulteriori modifiche speculative. Percentuale globale 79,56% invariata.
+
+1. Installare il pacchetto su Joomla di prova; verificare iframe `allow` contenente `autoplay` e URL embed con `autoplay=0`, nessuna partenza senza consenso e senza Play.
+2. Premere Play in Chrome e Safari sulla stessa lezione; verificare che audio/video si riproducano normalmente (non solo poster o spinner), monitorando eventuali messaggi provider.
+3. Dopo riproduzione reale, verificare `video.save`, copertura cumulata e completamento solo dopo soglia; testare pausa/ripresa, salto in avanti, cambio lezione e stato storico.
+4. Se persiste spinner, acquisire evento YouTube IFrame API `onError`/`onStateChange` e header Referer dell'iframe in contesto pagina senza divulgare cookie/token.
