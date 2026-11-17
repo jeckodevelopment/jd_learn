@@ -266,3 +266,7 @@ In Attestati → Corsi completati senza attestato, l'azione `recoverMissing` tra
 ### Player YouTube focalizzato sulla lezione (integrazione novembre 2026)
 
 Configurazione `rel=0` sul player `youtube-nocookie` per limitare le raccomandazioni al canale; riquadro nativo sotto il player con conferma solo dopo `ended` e salvataggio `lesson_completed=true`, link alla prossima lezione esclusivamente se accessibile. Nessuna sovrapposizione o alterazione dei controlli YouTube; test end-state, replay, rinnovo sessione, consensi e regressioni. Manuale `docs/VIDEO.md`, QA `docs/QA_TESTBOOK.md`, matrice requisiti `docs/REQUIREMENTS_STATUS.csv`.
+
+### P0 — ripristino riproduzione video dopo PR #571
+
+La sostituzione dell'iframe YouTube nello stesso spazio (PR #571) ha causato una regressione dichiarata sul sito di prova. PR #572 ripristina il runtime precedentemente collaudato (#570), lasciando il riquadro fine-lezione esterno. Non riproporre il rimpiazzo del player in 1.0.0 senza prove di avvio/Play/replay SDK reali. Il successivo miglioramento deve mantenere distinta la logica di autorizzazione e telemetria dalla presentazione UI, ed essere verificato in un browser reale Joomla prima dell'accettazione.
