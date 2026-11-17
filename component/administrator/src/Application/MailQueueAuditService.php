@@ -124,6 +124,12 @@ final class MailQueueAuditService
             throw new \InvalidArgumentException('COM_JLMS_MAIL_QUEUE_RECONCILE_INVALID');
         }
 
+        // A template validation failure occurs before SMTP is contacted. Only
+        // this explicit case is safe for a manual failed->retry transition.
+        if ($action === 'retry' && $this->retryFailedTemplate($queueId, (int) $actor->id, $note)) {
+            return;
+        }
+
         $q = $this->db->createQuery()->select('id,attempts')->from('#__jlms_mail_queue')
             ->where('id = :id')->where("state = 'sending'")
             ->where('claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' . self::STALE_MINUTES . ' MINUTE)')
@@ -167,6 +173,61 @@ final class MailQueueAuditService
         if ($this->db->getAffectedRows() !== 1) {
             throw new \RuntimeException('COM_JLMS_MAIL_QUEUE_NOT_RECONCILABLE', 409);
         }
+    }
+
+    /**
+     * Requeue a pre-SMTP template failure only after the Joomla template has
+     * been repaired. Never retry generic transport failures or unknown sends.
+     */
+    private function retryFailedTemplate(int $id, int $actorId, string $note): bool
+    {
+        $errorMarker = 'Mail template is missing or contains unavailable placeholders.';
+        $query = $this->db->createQuery()->select(
+            'id, template_id, language, template_data, attempts, recipient_email'
+        )->from('#__jlms_mail_queue')->where('id = :id')
+            ->where("state = 'failed'")
+            ->where('last_error = :marker')->where('attempts < 5')
+            ->where("template_id IN ('com_jlms.enrollment.confirmed', 'com_jlms.course.completed')")
+            ->bind(':id', $id, ParameterType::INTEGER)->bind(':marker', $errorMarker);
+        $row = $this->db->setQuery($query)->loadObject();
+        if (!$row) { return false; }
+
+        try {
+            $template = MailTemplate::getTemplate((string) $row->template_id, (string) $row->language)
+                ?? MailTemplate::getTemplate((string) $row->template_id, '*');
+            $values = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
+            if ($template === null || !is_array($values)
+                || !filter_var((string) $row->recipient_email, FILTER_VALIDATE_EMAIL)
+                || MailTemplatePlaceholderValidator::unresolved(
+                    (string) $row->template_id, $values,
+                    (string) $template->subject, (string) $template->body, (string) $template->htmlbody
+                ) !== []) {
+                throw new \RuntimeException('COM_JLMS_MAIL_QUEUE_TEMPLATE_STILL_INVALID', 409);
+            }
+        } catch (\Throwable) {
+            throw new \RuntimeException('COM_JLMS_MAIL_QUEUE_TEMPLATE_STILL_INVALID', 409);
+        }
+
+        $retry = 'retry';
+        $action = 'retry';
+        $lastError = 'Manual reconciliation: ' . mb_substr($note, 0, 1000 - mb_strlen('Manual reconciliation: '));
+        $update = $this->db->createQuery()->update('#__jlms_mail_queue')
+            ->set('state = :retry')->set('available_at = UTC_TIMESTAMP(6)')
+            ->set('claimed_at = NULL')->set('reconciliation_action = :action')
+            ->set('reconciliation_by = :actor')->set('reconciliation_at = UTC_TIMESTAMP(6)')
+            ->set('reconciliation_note = :note')->set('last_error = :lastError')
+            ->where('id = :id')->where("state = 'failed'")
+            ->where('last_error = :marker')->where('attempts < 5')
+            ->where("template_id IN ('com_jlms.enrollment.confirmed', 'com_jlms.course.completed')")
+            ->bind(':retry', $retry)->bind(':action', $action)
+            ->bind(':actor', $actorId, ParameterType::INTEGER)
+            ->bind(':note', $note)->bind(':lastError', $lastError)
+            ->bind(':id', $id, ParameterType::INTEGER)->bind(':marker', $errorMarker);
+        $this->db->setQuery($update)->execute();
+        if ($this->db->getAffectedRows() !== 1) {
+            throw new \RuntimeException('COM_JLMS_MAIL_QUEUE_NOT_RECONCILABLE', 409);
+        }
+        return true;
     }
 
     private function filters(string $state, string $template): array

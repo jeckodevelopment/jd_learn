@@ -394,3 +394,14 @@ if (!str_contains($auditSource, 'MailTemplatePlaceholderValidator::unresolved(')
     || !str_contains($auditView, '$this->escape(implode(')) {
     throw new RuntimeException('Safe mail queue placeholder diagnostics not integrated.');
 }
+
+// A failed template validation is pre-SMTP and may be manually retried only
+// after repair; uncertain transport failures must never be auto-requeued.
+$mailAuditSource = file_get_contents(__DIR__ . '/../component/administrator/src/Application/MailQueueAuditService.php');
+if ($mailAuditSource === false || !str_contains($mailAuditSource, 'private function retryFailedTemplate(')
+    || !str_contains($mailAuditSource, "state = 'failed'")
+    || !str_contains($mailAuditSource, 'MailTemplatePlaceholderValidator::unresolved(')
+    || !str_contains($mailAuditSource, "template_id IN ('com_jlms.enrollment.confirmed', 'com_jlms.course.completed')")
+    || !str_contains($mailAuditSource, 'getAffectedRows() !== 1')) {
+    throw new RuntimeException('Failed pre-SMTP template retry guard is missing.');
+}
