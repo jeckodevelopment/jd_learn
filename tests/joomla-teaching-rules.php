@@ -174,7 +174,7 @@ ruleExpect($renderedDocument->status==='ready' && (int)$renderedDocument->pdf_as
 $storedAsset=ruleRow('assets',(int)$renderedDocument->pdf_asset_id);
 ruleExpect(preg_match('/\\A[a-f0-9]{64}\\.php\\z/D',(string)$storedAsset->storage_key)===1,
     'Shared-hosting storage uses an opaque guarded PHP filename by default');
-$storageRoot=(new \\Jlms\\Component\\Jlms\\Administrator\\Infrastructure\\ProtectedMaterialStorage(static fn()=>$certificateParams))->root();
+$storageRoot=(new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn()=>$certificateParams))->root();
 $rawAsset=file_get_contents($storageRoot.DIRECTORY_SEPARATOR.$storedAsset->storage_key);
 ruleExpect(is_string($rawAsset)&&str_starts_with($rawAsset,'<?php http_response_code(404); exit; __halt_compiler(); ?>')
     && !str_contains($rawAsset,'%PDF-'),
