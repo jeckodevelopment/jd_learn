@@ -9,6 +9,11 @@ use Joomla\CMS\Router\Route;
 ?>
 <form action="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>" method="post" id="adminForm" name="adminForm">
  <section id="jlms-admin-pathways">
+  <label for="jlms-pathway-state-filter"><?= Text::_('JSTATUS') ?></label>
+  <select id="jlms-pathway-state-filter" name="filter_pathway_state" class="form-select w-auto" onchange="this.form.submit()">
+   <option value="active"<?= $this->stateFilter === 'active' ? ' selected' : '' ?>><?= Text::_('JGLOBAL_FILTER_SELECT_STATUS') ?></option>
+   <option value="trashed"<?= $this->stateFilter === 'trashed' ? ' selected' : '' ?>><?= Text::_('JTRASHED') ?></option>
+  </select>
   <table class="table">
    <caption class="visually-hidden"><?= Text::_('COM_JLMS_PATHWAYS') ?></caption>
    <thead><tr><th scope="col"><?= Text::_('JGLOBAL_TITLE') ?></th><th scope="col"><?= Text::_('JSTATUS') ?></th><th scope="col"><?= Text::_('COM_JLMS_REVISION') ?></th></tr></thead>
