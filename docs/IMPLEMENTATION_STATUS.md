@@ -1,3 +1,9 @@
+**JD Learn 0.57.7-dev — stato al 17 novembre 2026.**
+
+## Misurazione funzionale basata sui criteri — prima tranche PR #588 (17/11/2026)
+
+La [PR #588](https://github.com/jeckodevelopment/jd_learn/pull/588) (merge `d4b4eacf6ba1b70c81c6a2ec2017e189e96e8df6`) introduce `docs/FUNCTIONAL_CRITERIA_1.0.0.json`, il calcolo `tools/functional_progress.py` e test di coerenza in CI. [Workflow 44186361405](https://github.com/jeckodevelopment/jd_learn/actions/runs/44186361405) 4/4 verde. Audit avviato su 3 dei 214 requisiti in perimetro (LCM-03/04/05); **non esiste ancora una nuova percentuale globale verificata** e il calcolo emette `functional_implementation_percent: null`. Il 79,56% rimane esclusivamente una precedente **stima storica di macroaree, non un indicatore aggiornato dei requisiti soddisfatti**. Il sistema non confonde CI, implementazione e collaudo. Versione applicativa mantenuta a 0.57.7-dev senza modifiche del pacchetto. [Artefatto CI #14375416462](https://github.com/jeckodevelopment/jd_learn/actions/runs/44186361405/artifacts/14375416462) verificato come presente in GitHub Actions; checksum dello ZIP interno non verificato.
+
 **JD Learn 0.57.7-dev — stato aggiornato al 17/11/2026.**
 
 ## LCM-05 — quarto incremento test HTTP, PR #586 (17/11/2026)
