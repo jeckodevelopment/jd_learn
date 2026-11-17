@@ -332,3 +332,7 @@ Scomposti in `FUNCTIONAL_CRITERIA_1.0.0.json` 15 requisiti ISC/STU/PRO del perim
 ### Quarta tranche audit criteri: lezioni, player video, materiali
 
 Aggiungere alla riconciliazione `FUNCTIONAL_CRITERIA_1.0.0.json` i requisiti LES-01–04, VID-01–08 e MAT-01–08 con 68 criteri espliciti. Per ogni criterio implementato registrare almeno un riferimento verificabile a codice o test e lasciare `unassessed` i casi senza copertura sufficientemente stabilita. Riesaminare successivamente casi reali di provider YouTube/Vimeo/Cloudflare/HTML5, sicurezza file, Range, accessi e versionamento; non attribuire collaudi manuali. Copertura audit progressiva 47/214, **non** percentuale di sviluppo. Prossime aree: email/notifiche, attestati, integrazione Joomla e altri gate core. La governance SemVer vigente non cambia.
+
+### Quinta tranche dell'audit funzionale: MAIL/NOT, CERT e JOO
+
+L'audit per criteri in `FUNCTIONAL_CRITERIA_1.0.0.json` copre 73/214 requisiti 1.0.0, inclusi i 26 requisiti notifiche, attestati e Joomla della quinta tranche. Sono necessari riesame dei criteri `unassessed`, prove SMTP e download PDF, controllo ACL, idempotenza, installazione e backup/upgrade. I requisiti ATT di fase 2 sono deliberatamente esclusi; CERT riguarda invece l'attestato core della 1.0.0. L'indicatore globale rimane non calcolabile fino alla riconciliazione completa e non deve essere confuso con la copertura dell'audit. Il versioning SemVer approvato resta invariato.
