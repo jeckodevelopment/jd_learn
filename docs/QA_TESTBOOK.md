@@ -1994,3 +1994,11 @@ Aggiornare JD Learn, lasciare il percorso di archiviazione personalizzato vuoto 
 4. Provare immagine inesistente, formato non consentito e utente diverso: errore controllato senza fuga di contenuti; i documenti validi non devono essere alterati.
 5. Per iscrizione completata senza alcun record attestato, usare **Attestati → Corsi completati senza attestato**, distinguendo cause configurative e recupero storico esplicito; non duplicare i record pending.
 6. Controllare log `com_jlms`, audit e compatibilità storage; eseguire `php tests/certificate-raster-logos.php` in CI con GD.
+
+### CERT — recupero puntuale delle iscrizioni completate senza emissione
+
+1. Pubblicare un corso di prova in modalità apprendimento con attestati abilitati; creare un'iscrizione completata **senza record certificato** (fixture controllata). In Attestati → Corsi completati senza attestato, la diagnosi deve essere **Emissione attesa ma assente** e deve apparire il pulsante **Recupera attestato mancante**.
+2. Inserire motivazione (almeno 8 caratteri), confermare e inviare. Verificare una sola emissione, data completamento originale, record documento `pending_render`, audit `missing_issuance_recovery`, quindi download frontend → `ready`.
+3. Ripetere il POST identico e verificare HTTP 409 e nessun duplicato; provare studente anonimo o amministratore senza permesso, token CSRF assente, motivazione insufficiente, iscrizione non completata, regola `certificate_enabled=false`, preferenze disattivate o template assente.
+4. Un documento già emesso `pending_render` deve rimanere escluso dalla lista: il suo download deve generare solo il PDF originale senza una seconda emissione.
+5. Il recupero eccezionale di una versione storica con attestati disattivati resta distinto, con motivazione e conferma. Nessun recupero automatico o bulk.
