@@ -161,6 +161,73 @@ final class CertificateService
         }
     }
 
+    /**
+     * Explicit manual recovery for a completed enrollment whose published
+     * version already requires a certificate, but no issuance was recorded.
+     * Never rewrites the frozen rules; preserves the original completion date.
+     */
+    public function adminRecoverMissing(User $identity, int $enrollmentId, string $reason): void
+    {
+        $this->assertCertificateAdministrator($identity);
+        $reason = trim($reason);
+        if ($enrollmentId < 1 || mb_strlen($reason) < 8 || mb_strlen($reason) > 500) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 422);
+        }
+        $this->db->transactionStart();
+        try {
+            $query = $this->db->createQuery()
+                ->select('e.id, e.course_version_id, e.completed_at, c.params_json, v.rules_json, v.status')
+                ->from('#__jlms_enrollments AS e')
+                ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
+                ->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
+                ->where('e.id = :enrollment')->bind(':enrollment', $enrollmentId, ParameterType::INTEGER);
+            $query->setQuery((string) $query . ' FOR UPDATE');
+            $row = $this->db->setQuery($query)->loadObject();
+            if (!$row || $row->completed_at === null || $row->status !== 'published') {
+                throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            }
+            $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $row->rules_json);
+            if ($rules['mode'] !== 'learning' || $rules['certificate_enabled'] !== true) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
+            }
+            $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('certificate_enabled', 0);
+            if (!CertificatePreferences::enabled($globalEnabled, (string) $row->params_json)) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
+            }
+            $courseVersionId = (int) $row->course_version_id;
+            $existing = $this->db->createQuery()->select('id')->from('#__jlms_certificates')
+                ->where('enrollment_id = :enrollment')->where('course_version_id = :version')
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':version', $courseVersionId, ParameterType::INTEGER);
+            if ((int) $this->db->setQuery($existing)->loadResult() > 0) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
+            }
+            $issued = (new CertificateIssuer($this->db))->issueForCompletedEnrollment(
+                $enrollmentId, (int) $row->course_version_id, (string) $row->completed_at, false
+            );
+            if (!$issued) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
+            }
+            $certificate = $this->db->createQuery()->select('id, current_document_id')
+                ->from('#__jlms_certificates')->where('enrollment_id = :enrollment')
+                ->where('course_version_id = :version')
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':version', $courseVersionId, ParameterType::INTEGER);
+            $result = $this->db->setQuery($certificate)->loadObject();
+            if (!$result || (int) $result->current_document_id < 1) {
+                throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
+            }
+            $this->recordCertificateAudit((int) $result->id, (int) $result->current_document_id,
+                (int) $identity->id, 'missing_issuance_recovery',
+                ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $row->course_version_id,
+                    'reason' => $reason, 'published_rules_respected' => true]);
+            $this->db->transactionCommit();
+        } catch (\Throwable $error) {
+            $this->db->transactionRollback();
+            throw $error;
+        }
+    }
+
     /** @return array{handle:resource,size:int,mime:string,name:string,etag:string} */
     public function download(User $identity, int $enrollmentId): array
     {
