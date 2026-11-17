@@ -336,3 +336,7 @@ Aggiungere alla riconciliazione `FUNCTIONAL_CRITERIA_1.0.0.json` i requisiti LES
 ### Quinta tranche dell'audit funzionale: MAIL/NOT, CERT e JOO
 
 L'audit per criteri in `FUNCTIONAL_CRITERIA_1.0.0.json` copre 73/214 requisiti 1.0.0, inclusi i 26 requisiti notifiche, attestati e Joomla della quinta tranche. Sono necessari riesame dei criteri `unassessed`, prove SMTP e download PDF, controllo ACL, idempotenza, installazione e backup/upgrade. I requisiti ATT di fase 2 sono deliberatamente esclusi; CERT riguarda invece l'attestato core della 1.0.0. L'indicatore globale rimane non calcolabile fino alla riconciliazione completa e non deve essere confuso con la copertura dell'audit. Il versioning SemVer approvato resta invariato.
+
+### Sesta tranche — revisione funzionale sicurezza/integrazioni core
+
+Sono scomposti in `FUNCTIONAL_CRITERIA_1.0.0.json` tutti i requisiti `SIC-01/02`, `PRI-01–03`, `CFG-01–06`, `CORE-01–23`, per 75 criteri. Copertura progressiva 107/214, non percentuale completamento del software. Rimangono 107 requisiti da decomporre, più riesame semantico ed esame dei criteri `unassessed`. Le verifiche sull'autenticazione, ACL, privacy, cache, hosting e upgrade non si considerano superate dalla mera esistenza di servizi o test. Nessuna nuova versione applicativa per modifiche all'audit; rispettare SemVer concordato.
