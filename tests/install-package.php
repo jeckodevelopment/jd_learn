@@ -147,6 +147,7 @@ try {
             || (string) ($metadata['creationDate'] ?? '') !== $expectedDate
             || (string) $extension->name !== $displayName) {
             throw new \RuntimeException('Installed extension metadata mismatch: ' . $type . '/' . $folder . '/' . $element
+                . '; installed_file_version=' . (is_file(JPATH_ADMINISTRATOR . '/components/com_jlms/jlms.xml') ? (string) @simplexml_load_file(JPATH_ADMINISTRATOR . '/components/com_jlms/jlms.xml')->version : 'absent')
                 . '; got ' . json_encode(['version' => $metadata['version'] ?? null,
                     'creationDate' => $metadata['creationDate'] ?? null, 'name' => $extension->name]));
         }
