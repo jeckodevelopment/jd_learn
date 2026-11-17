@@ -182,5 +182,19 @@ $check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathwa
 $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $beforeBulkEnrollments,
     'bulk actions preserve historical enrollments');
 $check($pathModel->changeStates([$pathwayId, $emptyId], 1), 'explicit mass publication after restore succeeds');
+// Single-record protected permanent delete: populated pathways always denied.
+$check($pathModel->changeStates([$pathwayId, $emptyId], -2), 'prepare both pathways for protected purge');
+$check(!$pathModel->purgeEmpty($pathwayId), 'pathway with associated courses cannot be deleted');
+$check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId)->loadResult() === 2,
+    'blocked permanent deletion leaves pathway courses intact');
+$check(!$pathModel->purgeEmpty(0), 'invalid permanent deletion identifier rejected');
+$check(!$pathModel->purgeEmpty(999999999), 'nonexistent pathway deletion rejected');
+$check($pathModel->purgeEmpty($emptyId), 'only an empty trashed pathway can be deleted');
+$check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $emptyId)->loadResult() === 0,
+    'empty trashed pathway is removed');
+$check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $beforeBulkEnrollments,
+    'protected purge leaves course enrollments untouched');
+$check($pathModel->changeStates([$pathwayId], 0) && $pathModel->changeStates([$pathwayId], 1),
+    'the populated pathway is restored for retention testing');
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
 echo json_encode(['pathway_checks'=>14,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;
