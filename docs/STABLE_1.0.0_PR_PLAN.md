@@ -320,3 +320,7 @@ Estendere il fixture HTTP Joomla per esercitare archive → restore (Non pubblic
 ### Misurazione soddisfacimento requisiti 1.0.0 — ricognizione strutturata
 
 L'indicatore principale di sviluppo deve essere calcolato da criteri approvati, non da medie discrezionali delle macroaree né dal volume di PR. `docs/FUNCTIONAL_CRITERIA_1.0.0.json` avvia la ricognizione con evidenze puntuali per LCM-03/04/05; `tools/functional_progress.py` blocca la pubblicazione della percentuale globale fino al completamento dell'audit dell'intera baseline in perimetro. Il 79,56% è solo **stima storica non riconciliata**, da sostituire quando ogni requisito è stato valutato. Non introdurre un cambio SemVer per attività che non modificano il pacchetto distribuito; rispettare issue #160 e le regole release già approvate.
+
+### Seconda tranche di riconciliazione funzionale — catalogo e authoring
+
+Esteso `FUNCTIONAL_CRITERIA_1.0.0.json` a CAT-01/02/03/04 e AUT-01/02/03/04/05, con 42 criteri per le due aree. Tre assi distinti: criterio implementato con riferimenti a codice/test; criterio da verificare; collaudo Joomla reale. La nuova copertura di audit è 12/214 requisiti in perimetro; non interpretarla come percentuale di software completato. Prossima ricognizione: iscrizioni, avanzamento didattico, materiali/video, notifiche email, attestati e integrazioni; riesaminare le righe LCM-01/02 ancora erroneamente indicate come `Non iniziata` se il codice e gli scenari dimostrano implementazioni già presenti.

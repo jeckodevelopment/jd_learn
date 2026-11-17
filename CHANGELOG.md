@@ -1,4 +1,6 @@
 # Changelog
+- **Audit funzionale 1.0.0 — seconda tranche (17/11/2026):** aggiunta la scomposizione con evidenze di CAT-01–04 e AUT-01–05 (42 criteri, di cui 11 ancora da approfondire), oltre agli LCM già in audit. Nessuna modifica runtime o SemVer; nessuna nuova percentuale globale finché tutta la baseline in perimetro non è riconciliata.
+
 - **LCM-05 — transizioni HTTP autorizzate (17/11/2026):** il test HTTP Joomla usa il token CSRF nativo per archiviare, ripristinare senza pubblicazione automatica e ripubblicare esplicitamente un percorso, verificandone la visibilità pubblica. Nessun runtime modificato; restano ACL granulari e accettazione reale.
 
 - **LCM-05 — gate HTTP/CSRF percorsi (17/11/2026):** introdotti test negativi via vero HTTP Joomla disposable sui sei task di transizione/cancellazione percorsi, distinguendo GET (405) e POST senza CSRF (403), e verifica della conservazione della lista. Nessuna modifica runtime né accettazione manuale; verifica dei permessi granulari e delle transizioni positive ancora aperta.

@@ -21,7 +21,17 @@ class FunctionalProgressTests(unittest.TestCase):
         output = module.calculate(self.rows, self.criteria)
         self.assertIsNone(output["functional_implementation_percent"])
         self.assertEqual(output["progress_status"], "not_yet_measurable")
-        self.assertEqual(output["audited_requirements"], 3)
+        self.assertEqual(output["audited_requirements"], 12)
+
+    def test_completed_requirement_is_explicitly_audited(self):
+        output = module.calculate(self.rows, self.criteria)
+        self.assertTrue(output["criteria_by_requirement"]["CAT-03"]["complete_audit"])
+        self.assertTrue(output["criteria_by_requirement"]["AUT-02"]["complete_audit"])
+
+    def test_legacy_partial_remains_not_fully_audited(self):
+        output = module.calculate(self.rows, self.criteria)
+        self.assertFalse(output["criteria_by_requirement"]["CAT-04"]["complete_audit"])
+        self.assertIsNone(output["functional_implementation_percent"])
 
     def test_no_evidence_cannot_be_marked_implemented(self):
         changed = copy.deepcopy(self.criteria)
