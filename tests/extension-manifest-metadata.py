@@ -21,6 +21,17 @@ NAMES={
     'plg_finder_jlms':'PLG_FINDER_JLMS',
     'plg_user_jdlearnconsent':'PLG_USER_JDLEARNCONSENT',
 }
+DISPLAY={
+    'plg_jlmsvideo_youtube':'JD Learn - YouTube',
+    'plg_jlmsvideo_vimeo':'JD Learn - Vimeo',
+    'plg_jlmsvideo_cloudflarestream':'JD Learn - Cloudflare Stream',
+    'plg_jlmsvideo_html5':'JD Learn - HTML5',
+    'plg_task_jlms':'JD Learn - Scheduled Tasks',
+    'plg_privacy_jdlearn':'JD Learn - Privacy',
+    'plg_system_jlmsmenu':'JD Learn - Menu Navigation',
+    'plg_finder_jlms':'JD Learn - Smart Search',
+    'plg_user_jdlearnconsent':'JD Learn - User Consent',
+}
 p=argparse.ArgumentParser()
 p.add_argument('--zip',type=Path,required=True)
 p.add_argument('--version',required=True)
@@ -51,6 +62,10 @@ with zipfile.ZipFile(args.zip) as package:
             if key.startswith('plg_'):
                 assert root.get('type')=='plugin'
                 assert root.get('group')==key.split('_')[1]
+                for lang in ('it-IT','en-GB'):
+                    sys_path=f'language/{lang}/{key}.sys.ini'
+                    sys_data=inner.read(sys_path).decode('utf-8')
+                    assert f'{NAMES[key]}="{DISPLAY[key]}"' in sys_data.splitlines(),(key,lang,'display translation')
             elif key=='com_jlms':
                 assert root.get('type')=='component'
             elif key=='lib_jlms':
