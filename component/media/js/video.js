@@ -29,6 +29,22 @@ export class VideoLesson {
     window.addEventListener('offline', this.onOffline);
     document.addEventListener('visibilitychange', this.onVisibility);
   }
+  handleAdapterEvent(event, reason) {
+    if (event === 'error') {
+      this.message(providerErrors.has(reason) ? reason : 'startup_provider');
+      this.stop(false);
+      return;
+    }
+    if (this.config.provider === 'youtube') {
+      if (event === 'play') {
+        this.youtubeEnded = false;
+        if (this.youtubeFinish) this.youtubeFinish.hidden = true;
+      } else if (event === 'ended') this.youtubeEnded = true;
+    }
+    if (this.tracking) this.record(event).then(() => {
+      if (['pause', 'ended'].includes(event)) this.flush();
+    });
+  }
   allowed() {
     return this.config.provider === 'html5' || this.config.policy === 'embed' || (this.config.policy === 'site_consent'
       && window.JlmsConsent?.isAllowed(this.config.provider) === true);
@@ -171,18 +187,7 @@ export class VideoLesson {
       if (!this.allowed() || generation !== this.generation) { if (!this.config.preview && grant.session_id) await this.request('close', {session_id: grant.session_id}); return; }
       this.adapter = adapter; this.stopped = false;
       failure = 'startup_provider';
-      const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => {
-        if (event === 'error') { this.message(providerErrors.has(reason) ? reason : 'startup_provider'); this.stop(false); }
-        else {
-          if (this.config.provider === 'youtube') {
-            if (event === 'play') {
-              this.youtubeEnded = false;
-              if (this.youtubeFinish) this.youtubeFinish.hidden = true;
-            } else if (event === 'ended') this.youtubeEnded = true;
-          }
-          if (this.tracking) this.record(event).then(() => { if (['pause', 'ended'].includes(event)) this.flush(); });
-        }
-      }, this.aborter.signal);
+      const player = await adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => this.handleAdapterEvent(event, reason), this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player;
       await this.configurePlaybackSpeed(player);
@@ -269,10 +274,7 @@ export class VideoLesson {
       if (this.stopped || generation !== this.generation || !this.allowed()) return;
       const sample = await this.player.sample(); this.replacing = true;
       await this.player.destroy(); this.player = null;
-      const player = await this.adapter.create(this.root.querySelector('#jlms-player'), grant, event => {
-        if (event === 'error') { this.message('error'); this.stop(false); }
-        else this.record(event);
-      },this.aborter.signal);
+      const player = await this.adapter.create(this.root.querySelector('#jlms-player'), grant, (event, reason) => this.handleAdapterEvent(event, reason),this.aborter.signal);
       if (this.stopped || generation !== this.generation || !this.allowed()) { await player.destroy(); return; }
       this.player = player; this.previous = null; this.session.options = grant.options;
       await this.configurePlaybackSpeed(player);
