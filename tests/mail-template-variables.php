@@ -212,6 +212,18 @@ foreach (['it-IT', 'en-GB'] as $locale) {
 }
 
 
+
+// Upgrades migrate only legacy placeholders in installed Joomla templates.
+$legacy = 'Hello {NAME}, {COURSE} on {SITENAME}; {NAME_HTML} / {COURSE_HTML} / {SITENAME_HTML}. Keep {CUSTOM} and {COURSE_TITLE}.';
+$canonical = 'Hello {USER_FULLNAME}, {COURSE_TITLE} on {SITE_NAME}; {USER_FULLNAME_HTML} / {COURSE_TITLE_HTML} / {SITE_NAME_HTML}. Keep {CUSTOM} and {COURSE_TITLE}.';
+$migrated = MailTemplateTagUpdater::migratePlaceholders($legacy);
+if ($migrated !== $canonical || MailTemplateTagUpdater::migratePlaceholders($migrated) !== $canonical) {
+    throw new RuntimeException('Installed mail placeholder migration must preserve content and be idempotent.');
+}
+if (MailTemplateTagUpdater::migratePlaceholders('{COURSE_TITLE} {NAME_SUFFIX} {NAME}') !== '{COURSE_TITLE} {NAME_SUFFIX} {USER_FULLNAME}') {
+    throw new RuntimeException('Mail placeholder migration must match exact legacy tokens only.');
+}
+
 // Joomla upgrades must expose new canonical variables without changing editorial
 // content or non-tag mailer settings, including on localized template rows.
 $originalParams = [
