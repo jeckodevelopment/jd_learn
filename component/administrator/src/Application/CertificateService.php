@@ -37,6 +37,62 @@ final class CertificateService
         return $items;
     }
 
+    /**
+     * Read-only, bounded administrative diagnosis of course completions that
+     * have no certificate issuance. Never creates a certificate or changes
+     * the frozen publication rules associated with the enrollment.
+     *
+     * @return list<array{enrollment_id:int,student_name:string,course_title:string,completed_at:string,reason:string}>
+     */
+    public function adminUnissuedCompletions(User $identity, int $limit = 25): array
+    {
+        $this->assertCertificateAdministrator($identity);
+        $limit = max(1, min(50, $limit));
+        $query = $this->db->createQuery()
+            ->select('e.id AS enrollment_id, e.completed_at, u.name AS student_name, c.title AS course_title,
+                c.params_json, v.rules_json, cert.id AS certificate_id, cert.current_document_id')
+            ->from('#__jlms_enrollments AS e')
+            ->innerJoin('#__users AS u ON u.id = e.user_id')
+            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
+            ->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
+            ->leftJoin('#__jlms_certificates AS cert ON cert.enrollment_id = e.id AND cert.course_version_id = e.course_version_id')
+            ->where('e.completed_at IS NOT NULL')
+            ->where('(cert.id IS NULL OR cert.current_document_id IS NULL)')
+            ->order('e.completed_at DESC, e.id DESC');
+        $records = $this->db->setQuery($query, 0, $limit)->loadObjectList();
+        if (!$records) { return []; }
+        $activeTemplate = $this->db->createQuery()->select('id')->from('#__jlms_certificate_templates')
+            ->where('state = 1')->order('id ASC');
+        $templateExists = (int) $this->db->setQuery($activeTemplate, 0, 1)->loadResult() > 0;
+        $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('certificate_enabled', 0);
+        $result = [];
+        foreach ($records as $record) {
+            $reason = 'eligible_missing';
+            try {
+                $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $record->rules_json);
+                if (($rules['mode'] ?? 'learning') !== 'learning' || ($rules['certificate_enabled'] ?? false) !== true) {
+                    $reason = 'version_disabled';
+                } elseif (!CertificatePreferences::enabled($globalEnabled, (string) $record->params_json)) {
+                    $reason = 'preferences_disabled';
+                } elseif (!$templateExists) {
+                    $reason = 'template_missing';
+                } elseif ($record->certificate_id !== null && $record->current_document_id === null) {
+                    $reason = 'document_missing';
+                }
+            } catch (\Throwable) {
+                $reason = 'invalid_configuration';
+            }
+            $result[] = [
+                'enrollment_id' => (int) $record->enrollment_id,
+                'student_name' => (string) $record->student_name,
+                'course_title' => (string) $record->course_title,
+                'completed_at' => (string) $record->completed_at,
+                'reason' => $reason,
+            ];
+        }
+        return $result;
+    }
+
     /** @return array{handle:resource,size:int,mime:string,name:string,etag:string} */
     public function download(User $identity, int $enrollmentId): array
     {
