@@ -1,3 +1,7 @@
+## 17 novembre 2026 — riconciliazione trasversale dopo PR #587
+
+Verificati merge #574–#579, #580–#582, #583–#587. LCM-03 e LCM-04 parziali nonostante cancellazione protetta implementata; LCM-05 parziale con copertura HTTP/CSRF estesa. Nessuna accettazione Joomla manuale dedotta dai test CI; percentuale storica 79,56% invariata. Riferimento: [ricognizione](POST_MERGE_578_RECONCILIATION.md).
+
 ## 17 novembre 2026 — quarto incremento LCM-05, test HTTP autorizzato (#586)
 
 La [PR #586](https://github.com/jeckodevelopment/jd_learn/pull/586) integra il controllo positivo sul controller HTTP Joomla del ciclo `archive → restore → publish` con CSRF ottenuto dal form nativo e verifica di visibilità pubblica. Merge `162e01b2acb8ab4cc6f7c89947edc89ee99e6c19`, [run CI 44183798789](https://github.com/jeckodevelopment/jd_learn/actions/runs/44183798789) 4/4 superato, [artefatto 14372759614, JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44183798789/artifacts/14372759614). Non attestato checksum interno ZIP; nessuna modifica runtime. Stato LCM-05 Parziale, accettazione manuale Non eseguita, avanzamento globale storico 79,56% invariato. Le prove ACL granulari e token scaduti/alterati restano pendenti.
