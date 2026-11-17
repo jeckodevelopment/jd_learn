@@ -1963,3 +1963,8 @@ In JD Learn → Attestati, verificare la sezione dei completamenti privi di atte
 ### Regressione emissione manuale attestato storico (#558)
 
 Su un completamento storico idoneo con preferenze attestati abilitate, verificare il pulsante di emissione amministrativa con motivazione e conferma. Atteso: nessun HTTP 500, un solo record attestato e documento collegato, audit registrato, versione didattica immutata. Ripetere la richiesta e verificare che il secondo tentativo sia respinto senza duplicazioni. Il percorso positivo viene eseguito anche nella suite Joomla `tests/joomla-teaching-rules.php` su MySQL e MariaDB.
+
+
+### PDF attestato storico: primo download (`pending_render`, issue #560)
+
+Dopo l'emissione amministrativa di un attestato storico, verificare che il documento parta da `pending_render`. Accedere come titolare e scaricare il PDF: la risposta deve essere PDF valido, il documento deve diventare `ready` con asset privato persistito e il secondo download deve utilizzare lo stesso asset. Ripetere con data di completamento SQL `DATETIME(6)` con microsecondi e senza microsecondi, e con corso archiviato. Con storage privato assente/non scrivibile, verificare errore 503 senza creazione di file nel webroot e con indicazione operativa in amministrazione; configurare `material_storage_root` come directory assoluta esterna al document root e scrivibile da PHP. Non registrare né diffondere percorsi o domini reali di installazioni nei report pubblici.
