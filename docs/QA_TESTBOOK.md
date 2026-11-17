@@ -1977,3 +1977,8 @@ Dopo l'emissione amministrativa di un attestato storico, verificare che il docum
 3. Sia con Apache/LiteSpeed sia con Nginx+PHP verificare protezione e accesso esclusivamente attraverso controller autorizzato.
 4. Prove negative: root sostituita con symlink, directory senza permessi, contenuto cifrato manomesso, configurazione segreta Joomla modificata: rifiuto senza consegna di dati o conversione in storage pubblico.
 5. Opzione avanzata: storage privato esterno preconfigurato mantiene compatibilità file `.blob`; backup deve comprendere database, `media/com_jlms/private` e secret del file Joomla `configuration.php`.
+
+
+### Regressione 503 attestato in attesa PDF su hosting condiviso (#564, PR #565)
+
+Aggiornare JD Learn, lasciare il percorso di archiviazione personalizzato vuoto e usare un attestato già emesso `pending_render` su un hosting con `open_basedir` o temp di sistema non accessibile: scaricare dal frontend come titolare. Il PDF deve essere generato direttamente nello storage protetto, stato `ready`, secondo download invariato. Non deve essere creato alcun PDF temporaneo non cifrato nella webroot o nella directory PHP globale. Se ancora 503, consultare il log Joomla nella categoria `com_jlms` e rilevare esclusivamente la fase `logo`, `pdf`, `storage` o `database`, senza pubblicare dati personali, percorsi o chiavi. Verificare logo configurato come JPEG valido e cartella gestita scrivibile. Testare inoltre rigenerazione tecnica e due database.
