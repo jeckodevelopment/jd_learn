@@ -79,9 +79,10 @@ final class CertificatePdf
     private static function date(string $value, bool $english): string
     {
         $value = trim($value);
+        // Persisted SQL DATETIME(6) may contain up to six fractional digits.
         // A certificate must never silently use today's date for a missing or
         // relative timestamp. Completion dates come from persisted SQL/ISO values.
-        if (preg_match('/\A\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?\z/D', $value) !== 1) {
+        if (preg_match('/\A\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})?)?\z/D', $value) !== 1) {
             return '';
         }
         try {

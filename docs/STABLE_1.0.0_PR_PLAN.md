@@ -238,3 +238,8 @@ Un completamento precedente alla correzione del flag versione può essere gestit
 ### Regression fix attestati storici (#558)
 
 La PR #559 corregge il binding dei parametri nelle query di recupero e aggiunge un test Joomla end-to-end sul servizio di emissione, sull'audit e sull'idempotenza; validare entrambi i database prima del merge.
+
+
+### Regressione download PDF attestati storici (issue #560)
+
+Il renderer deve accettare timestamp persistiti SQL `DATETIME(6)` senza alterare lo snapshot; il test Joomla deve verificare il percorso positivo di primo rendering da `pending_render`, il successivo `ready`, l'asset privato, la ripetibilità del download e l'ACL. Lo storage resta obbligatoriamente configurato fuori dal document root, senza fallback pubblico.
