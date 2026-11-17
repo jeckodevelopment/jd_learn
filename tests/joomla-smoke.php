@@ -443,6 +443,25 @@ if (!$mailConsent->revokeByToken($tokenTwo) || $mailConsent->state((int) $userId
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();
 $certificateService = $component->getCertificateService();
 $certificateService->adminList($app->getIdentity(), ['q' => 'CERT-C-PROBE', 'status' => 'ready', 'offset' => 0]);
+$unissued = $certificateService->adminUnissuedCompletions($app->getIdentity(), 25);
+if (!is_array($unissued) || count($unissued) > 25) {
+    throw new \RuntimeException('Certificate non-issuance diagnosis must be bounded.');
+}
+foreach ($unissued as $entry) {
+    if (!in_array($entry['reason'] ?? '', [
+        'version_disabled', 'preferences_disabled', 'template_missing',
+        'eligible_missing', 'document_missing', 'invalid_configuration',
+    ], true)) {
+        throw new \RuntimeException('Certificate non-issuance diagnosis returned an invalid status.');
+    }
+}
+try {
+    $certificateService->adminUnissuedCompletions(new \Joomla\CMS\User\User());
+    throw new \RuntimeException('Certificate non-issuance diagnosis must reject anonymous users.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+}
+
 $auditActorId = (int) $userId;
 $auditAction = 'admin_list';
 $auditCount = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_audit')
