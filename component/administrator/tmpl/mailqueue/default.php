@@ -126,6 +126,24 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
          <?php endif; ?>
         </div>
        </details>
+      <?php elseif ((string) $row->state === 'failed' && (int) $row->attempts < 5
+         && $row->diagnostic_key === 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE'
+         && in_array((string) $row->template_id, ['com_jlms.enrollment.confirmed', 'com_jlms.course.completed'], true)) : ?>
+       <details>
+        <summary><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY_TEMPLATE_ONLY') ?></summary>
+        <div class="card card-body mt-2">
+         <p><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY_TEMPLATE_WARNING') ?></p>
+         <form method="post" action="<?= Route::_('index.php?option=com_jlms&task=mailqueue.reconcile') ?>">
+          <input type="hidden" name="jform[id]" value="<?= (int) $row->id ?>">
+          <input type="hidden" name="jform[action]" value="retry">
+          <label class="form-label" for="jlms-mail-queue-template-note-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_NOTE') ?></label>
+          <textarea class="form-control mb-2" id="jlms-mail-queue-template-note-<?= (int) $row->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-template-confirm-<?= (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-template-confirm-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
+          <button class="btn btn-warning" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY') ?></button>
+          <?= HTMLHelper::_('form.token') ?>
+         </form>
+        </div>
+       </details>
       <?php elseif ($row->reconciliation_action) : ?>
        <div><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILED') ?>: <?= Text::_($actionKeys[(string) $row->reconciliation_action] ?? 'COM_JLMS_MAIL_QUEUE_ACTION_SENT') ?></div>
        <small><?= $this->escape((string) $row->reconciliation_at) ?></small>
