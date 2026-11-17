@@ -270,6 +270,135 @@ final class PathwayModel extends AdminModel
         return $courseIds;
     }
 
+    /**
+     * Atomic list actions. Each transition is authorized against the pathway's
+     * Joomla asset and rechecked after the database row has been locked.
+     * No course association or learner history is touched.
+     *
+     * @param list<int> $ids
+     */
+    public function changeStates(array $ids, int $target): bool
+    {
+        if (!in_array($target, [-2, 0, 1, 2], true) || $ids === [] || count($ids) > 100
+            || count(array_unique($ids)) !== count($ids)
+            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1)) > 0) {
+            $this->setError(Text::_('COM_JLMS_PATHWAY_INVALID'));
+            return false;
+        }
+
+        $actor = new User((int) $this->getCurrentUser()->id);
+        $actor->clearAccessRights();
+        if (!$actor->id || $actor->block
+            || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')) {
+            $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
+
+        $db = $this->getDatabase();
+        $started = false;
+        try {
+            // Lock in canonical order to prevent conflicting concurrent bulk actions.
+            sort($ids, SORT_NUMERIC);
+            $db->transactionStart();
+            $started = true;
+            foreach ($ids as $id) {
+                $query = $db->createQuery()->select('id, state, revision')->from('#__jlms_pathways')
+                    ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                $query->setQuery((string) $query . ' FOR UPDATE');
+                $record = $db->setQuery($query)->loadObject()
+                    ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+                if (!$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
+                    || !$actor->authorise('core.edit.state', 'com_jlms.pathway.' . $id)) {
+                    throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                }
+                // Restoration never silently republishes a trashed pathway.
+                if ((int) $record->state === -2 && !in_array($target, [-2, 0], true)) {
+                    throw new \DomainException('COM_JLMS_PATHWAY_INVALID');
+                }
+                if ((int) $record->state === $target) {
+                    continue;
+                }
+                $update = (object) [
+                    'id' => $id,
+                    'state' => $target,
+                    'revision' => (int) $record->revision + 1,
+                    'modified_at' => Factory::getDate()->toSql(),
+                    'modified_by' => (int) $actor->id,
+                ];
+                $db->updateObject('#__jlms_pathways', $update, 'id');
+            }
+            $db->transactionCommit();
+            return true;
+        } catch (\Throwable $error) {
+            if ($started) {
+                $db->transactionRollback();
+            }
+            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_PATHWAY_INVALID'];
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true)
+                ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            return false;
+        }
+    }
+
+    /**
+     * Permanent deletion is intentionally single-record and conservative:
+     * only an already trashed pathway with no course relationships is eligible.
+     * Course links and historical learning data are NEVER cascaded.
+     */
+    public function purgeEmpty(int $id): bool
+    {
+        if ($id < 1) {
+            $this->setError(Text::_('COM_JLMS_PATHWAY_INVALID'));
+            return false;
+        }
+        $actor = new User((int) $this->getCurrentUser()->id);
+        $actor->clearAccessRights();
+        if (!$actor->id || $actor->block
+            || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')
+            || !$actor->authorise('core.delete', 'com_jlms.pathway.' . $id)) {
+            $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
+        $db = $this->getDatabase();
+        $started = false;
+        try {
+            $db->transactionStart();
+            $started = true;
+            $query = $db->createQuery()->select('id, state')->from('#__jlms_pathways')
+                ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+            $query->setQuery((string) $query . ' FOR UPDATE');
+            $record = $db->setQuery($query)->loadObject()
+                ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+            if ((int) $record->state !== -2) {
+                throw new \DomainException('COM_JLMS_PATHWAY_INVALID');
+            }
+            $countQuery = $db->createQuery()->select('COUNT(*)')->from('#__jlms_pathway_courses')
+                ->where('pathway_id = :id')->bind(':id', $id, ParameterType::INTEGER);
+            if ((int) $db->setQuery($countQuery)->loadResult() !== 0) {
+                throw new \DomainException('COM_JLMS_PATHWAY_DEPENDENCIES');
+            }
+            // Joomla's table deletion also removes the matching ACL asset.
+            // Never call this method on a populated pathway.
+            $table = $this->getTable('Pathway');
+            if (!$table->load($id) || !$table->delete($id)) {
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+            }
+            $db->transactionCommit();
+            return true;
+        } catch (\Throwable $error) {
+            if ($started) {
+                $db->transactionRollback();
+            }
+            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND',
+                'COM_JLMS_PATHWAY_INVALID', 'COM_JLMS_PATHWAY_DEPENDENCIES'];
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true)
+                ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            return false;
+        }
+    }
+
     public function delete(&$pks)
     {
         $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE'));

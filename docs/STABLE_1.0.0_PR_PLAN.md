@@ -286,3 +286,7 @@ L'editor percorso ora prevede lo stato `2 = Archiviato`, con verifica ACL `core.
 ### LCM-03 — seconda tranche: cestino e ripristino percorsi
 
 Percorsi formativi: stato nativo `-2 = Cestinato` con controllo server-side dei permessi `core.edit.state`, filtro amministrativo dedicato, conservazione di relazioni e storico, non visibilità pubblica. Ripristino conservativo esclusivamente a `0 = Non pubblicato` prima della ripubblicazione esplicita; transizione diretta `-2 → 1` respinta dal backend. Test di integrazione Joomla su stato, accessi diretti e associazioni. Restano selezione multipla e cancellazione fisica condizionata: il requisito LCM-03 rimane Parziale e l'accettazione reale è distinta dalla CI.
+
+### LCM-03 — azioni massive e rimozione protetta
+
+Tranche successiva alle PR #575/#576: azioni della toolbar Joomla per cambio stato di più percorsi, con POST CSRF, ACL per record, controlli sullo stato e transazione all-or-nothing; il ripristino dal cestino resta Non pubblicato. Cancellazione fisica solo su percorso **singolo**, già cestinato e senza corsi associati, con permesso `core.delete` e conferma UI. Non sono mai cancellati corsi e iscrizioni a cascata. Sono richieste la prova sul sito reale, l'ispezione di eventuali riferimenti esterni ed evidenze di audit prima di dichiarare LCM-03 completamente accettato.

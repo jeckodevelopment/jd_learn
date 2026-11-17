@@ -2053,3 +2053,12 @@ Eseguire aggiornamento tramite pacchetto JD Learn e controllare in **Sistema →
 4. Tentare una transizione diretta da Cestinato a Pubblicato: deve essere rifiutata. Ripristinare a Non pubblicato: non deve comparire nel catalogo. Pubblicarlo successivamente e verificare la ricomparsa.
 5. Un account senza `core.edit.state` non può cestinare/ripristinare, neppure tramite POST. Eseguire anche il controllo dopo upgrade Joomla.
 6. Restano fuori da questa PR le azioni massive e la cancellazione definitiva condizionata.
+
+### LCM-03 — selezioni multiple e cancellazione definitiva dei percorsi
+
+1. Selezionare due percorsi in elenco: Cestina deve spostarli entrambi. Filtrare Cestinati, selezionarli e scegliere Ripristina; entrambi tornano Non pubblicati.
+2. Con un account privo di `core.edit.state` o di permesso su uno dei due percorsi, tentare l'azione via POST con token valido: nessuna riga deve cambiare; token non valido e GET devono essere rifiutati.
+3. Verificare che Pubblica direttamente su un percorso Cestinato sia vietato anche via POST, e che dopo Ripristina la pubblicazione esplicita funzioni.
+4. Cestinare un percorso con corsi associati e provare Elimina definitivamente: deve essere bloccato senza perdere percorso, associazioni, iscrizioni, frequenza o attestati.
+5. Creare e cestinare un percorso vuoto, selezionarne **uno solo** e confermare Elimina definitivamente: il percorso può essere eliminato; gli altri record non devono essere alterati. Tentare due selezioni e un ID inesistente, con esito negato.
+6. Verificare controllo ACL `core.delete`, dialogo di conferma, visualizzazione delle etichette IT/EN, audit e integrità dopo upgrade. La suite automatica non sostituisce questo collaudo Joomla reale.

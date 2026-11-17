@@ -1,4 +1,5 @@
 # Changelog
+- **LCM-03 — azioni massive e rimozione controllata dei percorsi:** selezioni multiple per pubblicazione, sospensione, archiviazione, cestinazione e ripristino con transazioni atomiche e ACL per record; cancellazione definitiva esplicita soltanto per un percorso già cestinato e senza corsi associati. Test di regressione Joomla per rollback e integrità relazioni, traduzioni e manuali aggiornati. Restano collaudo manuale e audit delle dipendenze esterne.
 
 - **LCM-03 — cestino reversibile dei percorsi:** supportato lo stato `-2` con filtro amministrativo Cestinato, ripristino controllato a Non pubblicato e guardia contro la pubblicazione diretta dal cestino. Conservati corsi, iscrizioni e storico, nessuna eliminazione fisica. Test Joomla per transizioni e accesso pubblico; operazioni massive e cancellazione condizionata da completare.
 
