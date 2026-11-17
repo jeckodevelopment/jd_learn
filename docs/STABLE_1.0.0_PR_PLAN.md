@@ -324,3 +324,7 @@ L'indicatore principale di sviluppo deve essere calcolato da criteri approvati, 
 ### Seconda tranche di riconciliazione funzionale — catalogo e authoring
 
 Esteso `FUNCTIONAL_CRITERIA_1.0.0.json` a CAT-01/02/03/04 e AUT-01/02/03/04/05, con 42 criteri per le due aree. Tre assi distinti: criterio implementato con riferimenti a codice/test; criterio da verificare; collaudo Joomla reale. La nuova copertura di audit è 12/214 requisiti in perimetro; non interpretarla come percentuale di software completato. Prossima ricognizione: iscrizioni, avanzamento didattico, materiali/video, notifiche email, attestati e integrazioni; riesaminare le righe LCM-01/02 ancora erroneamente indicate come `Non iniziata` se il codice e gli scenari dimostrano implementazioni già presenti.
+
+### Terza tranche audit criteri funzionali: accessi/iscrizioni, esperienza studente, avanzamento
+
+Scomposti in `FUNCTIONAL_CRITERIA_1.0.0.json` 15 requisiti ISC/STU/PRO del perimetro 1.0.0 (47 criteri; 31 con evidenze iniziali, 16 da verificare). Verificare successivamente l'aderenza puntuale di ciascun criterio, con particolare attenzione a ACL e revoche di sessione, rinnovo e versioni, anteprime, percorsi di ripresa, disponibilità e concorrenza multidispositivo. Le attività espressamente rinviate alla fase 2 sono escluse dal calcolo di 1.0.0. Il valore globale rimane `null` finché il perimetro completo non sarà verificato. La prossima tranche comprende lezioni, video, materiali, email, attestati e integrazioni.
