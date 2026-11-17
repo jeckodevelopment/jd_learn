@@ -111,7 +111,7 @@ jobs:
       - name: Install test runtime extensions
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends git python3 nodejs ffmpeg unzip libpng-dev libjpeg62-turbo-dev libonig-dev libxml2-dev libzip-dev
+          apt-get install -y --no-install-recommends python3 nodejs ffmpeg unzip libpng-dev libjpeg62-turbo-dev libonig-dev libxml2-dev libzip-dev
           docker-php-ext-configure gd --with-jpeg
           docker-php-ext-install -j2 pdo_mysql mysqli gd mbstring dom simplexml zip
       - name: Lint every PHP source
@@ -135,8 +135,9 @@ jobs:
         run: php tests/database.php
       - name: Structural and reproducible package checks
         run: |
-          python3 tools/build.py
-          python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$(git log -1 --format=%cs)"
+          JD_LEARN_PACKAGE_DATE="$(date -u +%Y-%m-%d)"
+          python3 tools/build.py --release-date "$JD_LEARN_PACKAGE_DATE"
+          python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$JD_LEARN_PACKAGE_DATE"
           python3 tools/check.py
           python3 tests/frontend-css-contract.py
           python3 tests/frontend-contract-hooks.py
@@ -144,7 +145,7 @@ jobs:
           python3 tests/frontend-course-details.py
           python3 tests/database-byref-safety.py
           cp dist/SHA256SUMS.txt /tmp/first-build.sha256
-          python3 tools/build.py
+          python3 tools/build.py --release-date "$JD_LEARN_PACKAGE_DATE"
           diff /tmp/first-build.sha256 dist/SHA256SUMS.txt
       - name: Check out the previous increment for an actual upgrade test
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
