@@ -491,6 +491,414 @@
           "docs/MULTILINGUAL.md"
         ]
       }
+    ],
+    "ISC-01": [
+      {
+        "id": "joomla_level",
+        "label": "Livello di accesso corso basato su viewing access levels Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "auto_enrollment",
+        "label": "Iscrizione didattica automatica all'avvio autorizzato",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "manual_enrollment",
+        "label": "Iscrizione amministrativa esplicita con controlli",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "tests/joomla-manual-enrollment.php"
+        ]
+      },
+      {
+        "id": "edge_authorization",
+        "label": "Combinazioni complete di vincoli, ruolo e iscrizioni in sospeso",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ISC-02": [
+      {
+        "id": "states",
+        "label": "Transizioni principali di stato delle iscrizioni",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentStateService.php",
+          "tests/joomla-enrollment-state.php"
+        ]
+      },
+      {
+        "id": "completion_separate",
+        "label": "Conclusione didattica distinta dallo stato di accesso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-enrollment-state.php"
+        ]
+      },
+      {
+        "id": "state_combinations",
+        "label": "Tutte le transizioni e gli stati con scadenza e annullamento",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ISC-04": [
+      {
+        "id": "identity_access",
+        "label": "Identità, livello Joomla e accesso al corso controllati in fruizione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "version_enrollment",
+        "label": "Versione e iscrizione validate prima della fruizione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "prerequisites",
+        "label": "Prerequisiti e disponibilità lezione in tutte le combinazioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "public_preview",
+        "label": "Anteprima pubblica priva di effetti su completamenti/attestati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ISC-05": [
+      {
+        "id": "reactivation",
+        "label": "Riattivazione dell'accesso tramite servizio stato iscrizioni",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentStateService.php",
+          "tests/joomla-enrollment-state.php"
+        ]
+      },
+      {
+        "id": "existing_progress",
+        "label": "Conservazione progressi dopo riattivazione in casi standard",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-enrollment-state.php"
+        ]
+      },
+      {
+        "id": "new_edition",
+        "label": "Nuova edizione distinta dalla riattivazione in tutti i flussi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ISC-06": [
+      {
+        "id": "joomla_boundary",
+        "label": "Permessi commerciali derivati dai gruppi Joomla senza gateway proprietario",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "tests/joomla-manual-enrollment.php"
+        ]
+      },
+      {
+        "id": "subscription_independence",
+        "label": "Iscrizioni didattiche indipendenti dal ciclo di pagamento",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "docs/MANUAL_ENROLLMENT.md"
+        ]
+      }
+    ],
+    "ISC-07": [
+      {
+        "id": "request_auth",
+        "label": "Controlli di autorizzazione per operazioni protette",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "revocation",
+        "label": "Revoca in corso di sessione su token video/download/quiz",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "preserve_history",
+        "label": "Storico e progressi conservati dopo revoca nelle casistiche previste",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ISC-08": [
+      {
+        "id": "single_access",
+        "label": "Livello Joomla unico per il corso senza scala commerciale separata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "lesson_scope",
+        "label": "Restrizioni di lezione non possono ampliare l'accesso al corso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "mixed_pathways",
+        "label": "Percorsi multi-accesso non estendono i permessi sui corsi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "tests/joomla-pathways.php"
+        ]
+      }
+    ],
+    "STU-01": [
+      {
+        "id": "dashboard",
+        "label": "Elenco personale dei corsi con avanzamento e stato",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/DashboardService.php",
+          "tests/joomla-dashboard.php"
+        ]
+      },
+      {
+        "id": "separate_completed",
+        "label": "Corsi completati distinti da in corso e non iniziati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/DashboardService.php",
+          "tests/dashboard-http.py"
+        ]
+      },
+      {
+        "id": "resume",
+        "label": "Ripresa dalla prossima attività accessibile",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/DashboardService.php",
+          "tests/joomla-dashboard.php"
+        ]
+      },
+      {
+        "id": "blocked_reason",
+        "label": "Diagnostica completa di ogni blocco e azione proposta",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "STU-02": [
+      {
+        "id": "classroom",
+        "label": "Aula e indice moduli/lezioni navigabile",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "tests/learning-http.py"
+        ]
+      },
+      {
+        "id": "navigation",
+        "label": "Navigazione precedente/successiva e materiali contestuali",
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "tests/learning-http.py"
+        ]
+      },
+      {
+        "id": "mobile",
+        "label": "Indice mobile e adattamento senza scroll eccessivo in tutte le risoluzioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "STU-03": [
+      {
+        "id": "account_progress",
+        "label": "Persistenza progressi per account",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "video_resume",
+        "label": "Ripresa video dall'ultima posizione confermata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "cross_device",
+        "label": "Coerenza su dispositivo diverso e stati di errore salvataggio",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "STU-04": [
+      {
+        "id": "sequencing",
+        "label": "Navigazione didattica con regole di sequenza e prerequisiti",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "optional",
+        "label": "Lezioni opzionali escluse dal blocco salvo prerequisiti espliciti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "availability_dates",
+        "label": "Date di disponibilità e lezioni irraggiungibili",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PRO-01": [
+      {
+        "id": "lesson_states",
+        "label": "Stati non iniziata/in corso/completata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "quiz_states",
+        "label": "Tentativi ed esiti quiz separati dagli stati didattici core",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-quiz-attempts.php"
+        ]
+      },
+      {
+        "id": "submission_states",
+        "label": "Fase 2: stati consegna compiti non inclusi nel perimetro 1.0.0",
+        "status": "missing",
+        "evidence": []
+      }
+    ],
+    "PRO-02": [
+      {
+        "id": "required_denominator",
+        "label": "Denominatore sulle attività obbligatorie della versione assegnata",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "no_early_100",
+        "label": "Nessun 100% prima del completamento reale",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "no_empty_certificate",
+        "label": "Nessun attestato di completamento con zero obbligatorie",
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-learning.php"
+        ]
+      }
+    ],
+    "PRO-03": [
+      {
+        "id": "required_activities",
+        "label": "Completamento soltanto con tutte le attività obbligatorie soddisfatte",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "server_timestamp",
+        "label": "Stato e data di completamento scritti dal server",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-learning.php"
+        ]
+      },
+      {
+        "id": "approval_quiz",
+        "label": "Interazioni di quiz e approvazioni in tutte le combinazioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PRO-06": [
+      {
+        "id": "retry_idempotency",
+        "label": "Ripetizione eventi senza duplicazione del progresso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "resume_conflict",
+        "label": "Posizioni video obsolete non sovrascrivono progressi confermati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ]
+      },
+      {
+        "id": "cert_no_duplicates",
+        "label": "Unicità attestati e completamenti fra endpoint concorrenti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "multi_device",
+        "label": "Concorrenza reale di dispositivi diversi",
+        "status": "unassessed",
+        "evidence": []
+      }
     ]
   }
 }
