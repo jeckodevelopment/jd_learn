@@ -308,3 +308,7 @@ Estendere `tests/joomla-pathways.php` con accessi diretti anonimi negati ai perc
 ### LCM-05 — secondo incremento: autorizzazioni server-side percorsi
 
 Estendere il test disposable Joomla dei percorsi con tentativi anonimi di ripristino massivo e cancellazione definitiva di un percorso vuoto già cestinato. Il modello deve negare entrambe le mutazioni conservando stato, record e associazioni. Controlli HTTP/CSRF, ACL specifici, Finder, upgrade e collaudo reale rimangono aperti. Nessun cambiamento runtime o incremento della percentuale storica sulla base del solo test.
+
+### LCM-05 — HTTP/CSRF su controller percorsi (terzo incremento, 17/11/2026)
+
+Il test HTTP disposable esercita le sei azioni amministrative di cambio stato e cancellazione di un percorso senza passare dalla toolbar: GET deve essere respinto con HTTP 405; POST senza token CSRF con HTTP 403. Il percorso deve rimanere leggibile dall'elenco amministrativo dopo il rifiuto. Non è una modifica runtime. Restano ACL per record, casi con token valido e malformato, Finder/SEO e collaudi manuali.
