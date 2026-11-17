@@ -493,6 +493,26 @@ try {
     if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') { throw $error; }
 }
 
+// Missing issuance recovery is a separate, explicit action: never a background backfill.
+try {
+    $certificateService->adminRecoverMissing(new \Joomla\CMS\User\User(), 1, 'Approved missing issuance recovery');
+    throw new \RuntimeException('Missing issuance recovery accepted an anonymous caller.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+}
+try {
+    $certificateService->adminRecoverMissing($app->getIdentity(), 1, 'short');
+    throw new \RuntimeException('Missing issuance recovery accepted an invalid justification.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') { throw $error; }
+}
+try {
+    $certificateService->adminRecoverMissing($app->getIdentity(), 999999999, 'Approved missing issuance recovery');
+    throw new \RuntimeException('Missing issuance recovery accepted an unknown enrollment.');
+} catch (\RuntimeException $error) {
+    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') { throw $error; }
+}
+
 // CERT-08: mutation boundary must reject an anonymous caller before even
 // inspecting the certificate ID; a legitimate admin gets input/404 errors.
 try {
