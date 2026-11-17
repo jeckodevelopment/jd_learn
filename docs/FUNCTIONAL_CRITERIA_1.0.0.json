@@ -1469,6 +1469,520 @@
         "status": "unassessed",
         "evidence": []
       }
+    ],
+    "NOT-01": [
+      {
+        "id": "template_events",
+        "label": "Template nativi per eventi operativi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailTemplateInstaller.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "queue_producers",
+        "label": "Produttori di eventi in servizi di apprendimento/iscrizione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "coverage",
+        "label": "Copertura completa dei tipi evento, preferenze e localizzazioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "delivery",
+        "label": "Invio SMTP e notifiche reali su installazione Joomla",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "NOT-02": [
+      {
+        "id": "outbox",
+        "label": "Accodamento persistente separato dalla transazione didattica",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "tests/database.php"
+        ]
+      },
+      {
+        "id": "retry",
+        "label": "Ritentativi e trattamento degli stati di invio",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "stale_delivery",
+        "label": "Riconciliazione dei messaggi in invio e invii effettivi in tutti gli scenari",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "privacy_retention",
+        "label": "Retention e controllo della visibilità dei log",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-01": [
+      {
+        "id": "preferences",
+        "label": "Opzioni globali e per corso per abilitazione attestati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificatePreferences.php",
+          "component/administrator/config.xml"
+        ]
+      },
+      {
+        "id": "negative",
+        "label": "Nessuna emissione nei percorsi disabilitati con tutte le modalità",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-02": [
+      {
+        "id": "issuer",
+        "label": "Emittente attestati invocato dai completamenti server",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "tests/joomla-teaching-rules.php"
+        ]
+      },
+      {
+        "id": "all_events",
+        "label": "Idempotenza di tutti i produttori e recupero degli aventi diritto senza PDF",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-03": [
+      {
+        "id": "pdf",
+        "label": "Generazione PDF e campi certificati",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/CertificatePdf.php",
+          "tests/certificate-pdf.php"
+        ]
+      },
+      {
+        "id": "visual_locales",
+        "label": "Impaginazione IT/EN e loghi vari su tutti gli ambienti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "error_headers",
+        "label": "Stato file, errori download e header HTTP negativi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-04": [
+      {
+        "id": "serial",
+        "label": "Emittente e persistenza identificativi univoci",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "tests/joomla-teaching-rules.php"
+        ]
+      },
+      {
+        "id": "race",
+        "label": "Emissione concorrente, retry e immutabilità delle versioni in tutti gli scenari",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-05": [
+      {
+        "id": "frontend",
+        "label": "Controller autenticato di download studente",
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/CertificateController.php",
+          "component/administrator/src/Application/CertificateService.php"
+        ]
+      },
+      {
+        "id": "acl_http",
+        "label": "Accesso anonimo e di utenti estranei; HEAD, cache e file asset",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "repeat",
+        "label": "Ripetibilità del documento senza rigenerazioni spurie",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-06": [
+      {
+        "id": "admin",
+        "label": "Elenco, dettaglio e download dall'amministrazione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/CertificateController.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "scoped_acl",
+        "label": "ACL, visibilità per ruolo e casi limite su installazione reale",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-07": [
+      {
+        "id": "notice",
+        "label": "Accodamento dell'avviso di disponibilità",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "component/administrator/src/Infrastructure/MailQueue.php"
+        ]
+      },
+      {
+        "id": "failure_replay",
+        "label": "Errore SMTP e replay con garanzia di singola notifica",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "CERT-08": [
+      {
+        "id": "recovery",
+        "label": "Servizio per recupero e gestione PDF",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificateService.php",
+          "component/administrator/src/Infrastructure/CertificatePdf.php"
+        ]
+      },
+      {
+        "id": "immutability",
+        "label": "Codice e dati certificati immutati con rigenerazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "upgrade_backup",
+        "label": "Backup e ripristino con attestati e log preservati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-01": [
+      {
+        "id": "native_templates",
+        "label": "Installer dei modelli email Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailTemplateInstaller.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "custom_upgrade",
+        "label": "Conservazione personalizzazioni IT/EN su tutti gli upgrade",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-02": [
+      {
+        "id": "outbox_events",
+        "label": "Outbox per transizioni d'iscrizione e completamento",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "event_matrix",
+        "label": "Copertura di tutte le transizioni e deduplicazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-03": [
+      {
+        "id": "lesson_notice",
+        "label": "Notifiche per rilascio lezioni e variazioni didattiche",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LessonReleaseNotice.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "no_editorial_noise",
+        "label": "Nessuna notifica per salvataggi ordinari in ogni variante",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "bulk_performance",
+        "label": "Validazione carichi e preferenze di notifica",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-04": [
+      {
+        "id": "reminder",
+        "label": "Servizio promemoria scadenze corsi",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseExpiryReminderService.php",
+          "plugins/task/jlms/src/Extension/Jlms.php"
+        ]
+      },
+      {
+        "id": "threshold",
+        "label": "Scheduler e soglie su tutti i casi temporali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-05": [
+      {
+        "id": "settings",
+        "label": "Preferenze di abilitazione email globali e per corso",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MailPreferences.php",
+          "component/administrator/config.xml"
+        ]
+      },
+      {
+        "id": "inheritance",
+        "label": "Ereditarietà delle preferenze per tutti gli eventi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-06": [
+      {
+        "id": "queue",
+        "label": "Infrastruttura per comunicazioni a destinatari didattici",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "docs/MAIL_TEMPLATES.md"
+        ]
+      },
+      {
+        "id": "selection",
+        "label": "Selezione destinatari attivi e sottoinsiemi autorizzati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-07": [
+      {
+        "id": "send_authorization",
+        "label": "Controlli di invio nei servizi di gestione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "teacher_acl",
+        "label": "Docente limitato al proprio corso e protezione indirizzi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-08": [
+      {
+        "id": "preview",
+        "label": "Renderer di anteprima delle comunicazioni",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseAnnouncementPreviewRenderer.php",
+          "tests/courses-ui-http.py"
+        ]
+      },
+      {
+        "id": "double_submit",
+        "label": "Controlli su doppio invio, test destinatario e conteggi corretti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-09": [
+      {
+        "id": "outbox_scheduler",
+        "label": "Outbox e task di dispatch in Joomla",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "plugins/task/jlms/src/Extension/Jlms.php"
+        ]
+      },
+      {
+        "id": "audit",
+        "label": "Tracciamento stati e tentativi di invio",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MailQueueAuditService.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "delivery_conflict",
+        "label": "Idempotenza completa e backoff su errori SMTP reali",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-10": [
+      {
+        "id": "audit_view",
+        "label": "Registro eventi ed esiti di invio",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MailQueueAuditService.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "retention",
+        "label": "Retention e minimizzazione PII in ogni contesto",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "MAIL-11": [
+      {
+        "id": "opt_in",
+        "label": "Consenso per annunci dei corsi e revoca",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseAnnouncementConsent.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "campaign",
+        "label": "Campagne, deduplicazione e anteprime a prova di errori",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "JOO-01": [
+      {
+        "id": "package",
+        "label": "Build installabile Joomla con estensioni",
+        "status": "implemented",
+        "evidence": [
+          "tools/build.py",
+          "tests/install-package.php"
+        ]
+      },
+      {
+        "id": "native_integration",
+        "label": "Uso di ACL e componenti Joomla senza modifiche core",
+        "status": "implemented",
+        "evidence": [
+          "component/script.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "update_server",
+        "label": "Update server e governance di distribuzione release",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "JOO-02": [
+      {
+        "id": "overrides",
+        "label": "CSS e layout nativi con override",
+        "status": "implemented",
+        "evidence": [
+          "component/media/css/site.css",
+          "docs/FRONTEND_CSS.md"
+        ]
+      },
+      {
+        "id": "theme_matrix",
+        "label": "Compatibilità completa con template alternativi e tutte le risoluzioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "JOO-03": [
+      {
+        "id": "install_upgrade",
+        "label": "Installazione e upgrade con dati esistenti",
+        "status": "implemented",
+        "evidence": [
+          "component/script.php",
+          "tests/install-package.php"
+        ]
+      },
+      {
+        "id": "backup_restore",
+        "label": "Backup/rollback e disinstallazione con preservazione dati verificati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "JOO-04": [
+      {
+        "id": "scheduler",
+        "label": "Plugin Task Joomla per operazioni pianificate",
+        "status": "implemented",
+        "evidence": [
+          "plugins/task/jlms/src/Extension/Jlms.php",
+          "tests/joomla-smoke.php"
+        ]
+      },
+      {
+        "id": "health",
+        "label": "Monitoraggio ultima esecuzione e task in ritardo in tutti gli scenari",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "JOO-05": [
+      {
+        "id": "pagination",
+        "label": "Elenchi e navigazione dati con paginazione",
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/DashboardService.php",
+          "tests/joomla-dashboard.php"
+        ]
+      },
+      {
+        "id": "load",
+        "label": "Benchmark centinaia di studenti simultanei, sicurezza cache e query",
+        "status": "unassessed",
+        "evidence": []
+      }
     ]
   }
 }
