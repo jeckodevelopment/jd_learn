@@ -1938,3 +1938,10 @@ La chiamata manuale POST a `lesson.metadata` ha restituito HTTP 200 con corpo JS
 2. Provare senza correggere il modello o con template mancante: risposta controllata «modello ancora non valido», record failed invariato e nessuna chiamata SMTP.
 3. Rifiutare `retry` da messaggi failed per errore trasporto o da altri template/snapshot; non consentire requeue dei casi `sending` se non con la procedura stale separata. Verificare massimo 5 tentativi, race di due amministratori, ACL e CSRF.
 4. Verificare che la correzione non alteri contenuti personalizzati, lingua, destinatario né regole didattiche; niente duplicazione per retry concorrenti.
+
+
+## Post-merge PR #551 — retry controllato dopo riparazione modello email
+
+**PR #551 integrata — issue #547:** merge `2e9a65ab8d9044f9502950514c0a24419d04d03b`, CI completa 4/4 verde [run 44049557136](https://github.com/jeckodevelopment/jd_learn/actions/runs/44049557136), gate CSV verde [run 44049557129](https://github.com/jeckodevelopment/jd_learn/actions/runs/44049557129); [pacchetto installabile JD-Learn-0.57.7-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44049557136/artifacts/14312389981), digest archivio Actions `sha256:01ebeb70fae56e88caa1cbe54ae5d4f6eb7d408e824b8a0a94d7167dfa32da25` (non checksum interno dello ZIP Joomla). Il ritentativo esplicito è possibile solo dopo riparazione di template per iscrizione e completamento con errore validato pre-SMTP, nota e conferma, mai per trasporto incerto; collaudo Joomla/SMTP e correzione reale del modello Rigoletto rimangono pendenti. Avanzamento globale 79,56% invariato.
+
+**Verifica da fare su Opera+:** installare il pacchetto dell'ultima CI, aprire Coda email ID 5, leggere il nome del token non disponibile, correggere il template in Joomla mantenendo l'eventuale personalizzazione; se la notifica è ancora pertinente usare l'azione di ritentativo con nota e conferma, verificando il passaggio a retry e la spedizione UNA sola volta dal task schedulato. Non considerare il rilascio accettato senza questa prova.
