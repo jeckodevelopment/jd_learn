@@ -14,6 +14,7 @@ final class HtmlView extends BaseHtmlView
 {
     public array $items = [];
     public $pagination;
+    public string $stateFilter = 'active';
 
     public function display($tpl = null)
     {
@@ -23,6 +24,7 @@ final class HtmlView extends BaseHtmlView
             || !$actor->authorise('jlms.pathways.manage', 'com_jlms')) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
+        $this->stateFilter = (string) ($this->getModel()->getState('filter.pathway_state') ?: 'active');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         ToolbarHelper::title(Text::_('COM_JLMS_PATHWAYS'), 'map-signs');
