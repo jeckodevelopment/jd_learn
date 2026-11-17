@@ -298,3 +298,7 @@ Implementati stati 1/0/-2 senza Archiviato, filtro di stato Cestinati, selezione
 ### LCM-04 — cancellazione definitiva protetta dei docenti
 
 La tranche successiva alla PR #578 introduce la cancellazione singola, confermata, soltanto di un profilo docente Cestinato senza associazioni a corsi correnti o riferimenti a versioni didattiche immutabili. ACL per asset docente, CSRF, POST, checkout e verifica transazionale sono obbligatori. Nessun utente Joomla o dato didattico viene eliminato a cascata. Test nativi Joomla per divieto in presenza di assegnazioni o snapshot e per rimozione di profilo davvero inutilizzato. **Residuo:** audit dei riferimenti esterni/estensioni e accettazione Joomla reale; collaudi manuali differiti dall'utente.
+
+### LCM-05 — primo incremento test di isolamento percorsi (17/11/2026)
+
+Estendere `tests/joomla-pathways.php` con accessi diretti anonimi negati ai percorsi archiviati e cestinati e controlli di invariabilità degli stati dei corsi associati durante archiviazione, cestinazione ed eliminazione del percorso vuoto. Non modificare runtime, percentuale di avanzamento o stato di accettazione. Restano nel gate LCM-05: ACL/CSRF per controller, catalogo/Finder/SEO, audit endpoint, upgrade e collaudi Joomla reali.
