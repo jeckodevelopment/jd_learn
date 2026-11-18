@@ -1039,8 +1039,17 @@
       {
         "id": "public_storage",
         "label": "Audit assenza di fallback pubblico per tutte le configurazioni hosting",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Infrastructure/ProtectedMaterialStorage.php"
+        ],
+        "review": {
+          "reason": "Il percorso esterno rifiuta la radice pubblica. La modalità gestita usa un contenitore cifrato con un guard. Per escludere esposizioni in tutte le topologie supportate serve la verifica dell’hosting e dei proxy.",
+          "references": [
+            "component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function root",
+            "component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#reverse proxy misserves"
+          ]
+        }
       }
     ],
     "LES-04": [
@@ -1083,8 +1092,20 @@
       {
         "id": "provider_parity",
         "label": "Equivalenza delle capacità opzionali e attributi UI su tutti i provider reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il selettore deriva le opzioni dai valori dichiarati dal player. La fixture verifica velocità e tracce con sorgenti simulate. La disponibilità effettiva varia per sorgente e va rilevata sui quattro provider reali.",
+          "references": [
+            "component/media/js/video.js#configurePlaybackSpeed",
+            "tests/video-player.mjs#dynamic playback speed and caption tracks",
+            "docs/VIDEO.md#La velocità è disponibile"
+          ]
+        }
       }
     ],
     "VID-02": [
@@ -1152,8 +1173,17 @@
       {
         "id": "browser_matrix",
         "label": "Comportamento iOS Safari, Android Chrome e browser desktop reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Le fixture usano sostituti degli SDK e dell’elemento media, senza decodifica nativa. Manca un esito per la matrice iOS Safari, Android Chrome e browser desktop con media reali.",
+          "references": [
+            "tests/video-player.mjs#Stream SDK double",
+            "tests/video-player.mjs#no browser decoder"
+          ]
+        }
       }
     ],
     "VID-04": [
@@ -1201,8 +1231,20 @@
       {
         "id": "token_expiry",
         "label": "Tempo residuo e configurazione durata token tracciati e collaudati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Manifest e provider definiscono durata e anticipo configurabili, e l’endpoint riporta la scadenza. Il test di rinnovo è simulato. Resta da verificare la diagnosi e il tempo residuo in una sessione reale.",
+          "references": [
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#token_ttl_seconds",
+            "component/administrator/src/Application/VideoProgressService.php#public function renew",
+            "tests/video-player.mjs#cloudflare_client_renew_checks"
+          ]
+        }
       },
       {
         "id": "noninstant_limit",
@@ -1241,8 +1283,20 @@
       {
         "id": "cmp_integration",
         "label": "Verifica con gestore consensi reale e anteprima",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs",
+          "docs/PRIVACY_COOKIES.md"
+        ],
+        "review": {
+          "reason": "Il controller browser risponde al segnale di cambio consenso e la fixture copre revoca mentre gli SDK sono in inizializzazione. La matrice di anteprima e revoca con una CMP effettiva richiede un collaudo dedicato.",
+          "references": [
+            "component/media/js/video.js#jlms:consent-changed",
+            "tests/video-player.mjs#A revoked consent must also settle",
+            "docs/PRIVACY_COOKIES.md#Configurazione del consenso video e integrazione con la CMP"
+          ]
+        }
       }
     ],
     "VID-07": [
@@ -1387,8 +1441,18 @@
       {
         "id": "hosting_limits",
         "label": "Limiti effettivi su hosting differenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "component/administrator/src/Infrastructure/ProtectedMaterialStorage.php"
+        ],
+        "review": {
+          "reason": "I limiti vengono applicati durante staging e upload. Le soglie effettive di web server, proxy e PHP devono essere misurate su hosting differenti.",
+          "references": [
+            "component/administrator/src/Application/MaterialService.php#UPLOAD_ERR_INI_SIZE",
+            "component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function limit"
+          ]
+        }
       }
     ],
     "MAT-04": [
@@ -1413,8 +1477,19 @@
       {
         "id": "lesson_preconditions",
         "label": "Vincoli di lezione e prerequisiti in ogni percorso diretto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il percorso diretto legge l’allegato e verifica la lezione proprietaria nel contesto dell’iscrizione. Il servizio didattico verifica disponibilità e prerequisiti prima di consegnare il contesto; la preview pubblica ha un percorso distinto.",
+          "references": [
+            "component/administrator/src/Application/MaterialService.php#public function download",
+            "component/administrator/src/Application/LearningService.php#public function resourceContext",
+            "component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewDownload"
+          ]
+        }
       }
     ],
     "MAT-05": [
@@ -2167,8 +2242,18 @@
       {
         "id": "consent_matrix",
         "label": "Consenso rifiutato/non disponibile su provider e browser reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Il player verifica consenso prima della richiesta e il test simula lo stato negato e la revoca. Non c’è qui una prova di ciascuna combinazione su browser e provider reali.",
+          "references": [
+            "component/media/js/video.js#if (!this.allowed())",
+            "tests/video-player.mjs#A revoked consent must also settle"
+          ]
+        }
       },
       {
         "id": "no_external_telemetry",
@@ -2689,8 +2774,19 @@
       {
         "id": "provider_parity",
         "label": "Persistenza e comportamento opzioni su ogni provider e dispositivo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Le preferenze sono conservate nello storage locale del browser. I test verificano persistenza e player privi di supporto con sostituti. Manca la prova di ripristino e comportamento sui dispositivi e provider reali.",
+          "references": [
+            "component/media/js/video.js#jdlearn.video.speed.v1",
+            "component/media/js/video.js#jdlearn.video.language.v1",
+            "tests/video-player.mjs#player_preference_checks"
+          ]
+        }
       }
     ],
     "PRO-04": [
@@ -2715,8 +2811,18 @@
       {
         "id": "overlap_devices",
         "label": "Riprese sovrapposte, velocità e concorrenza su browser/provider reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-video.php",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Il backend ha una prova su più sessioni di unione intervalli e conflitto di posizione. Non esercita due dispositivi reali con pause e velocità applicate dai provider.",
+          "references": [
+            "tests/joomla-video.php#cross-tab interval union completes exactly",
+            "tests/video-player.mjs#player_preference_checks"
+          ]
+        }
       }
     ],
     "PRO-05": [
@@ -2955,8 +3061,17 @@
       {
         "id": "timing_matrix",
         "label": "Frequenza salvataggi ed error recovery su browser/provider reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/media/js/video.js"
+        ],
+        "review": {
+          "reason": "Il frontend pianifica invii periodici, conserva un batch pendente e distingue errore temporaneo da rifiuto. Mancano misure sulla matrice dei browser e provider reali in perdita e recupero rete.",
+          "references": [
+            "component/media/js/video.js#async flush",
+            "component/media/js/video.js#16000 + Math.random() * 8000"
+          ]
+        }
       }
     ],
     "PERF-06": [
@@ -3596,20 +3711,55 @@
       {
         "id": "criterion_03",
         "label": "Azioni Riprendi, Rivedi e Attestato rispettano le autorizzazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/dashboard/_courses.php",
+          "component/administrator/src/Application/LearningService.php",
+          "component/administrator/src/Application/CertificateService.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "La card offre Riprendi o Rivedi per il solo stato disponibile. Il server ricontrolla proprietà e accesso corrente all’iscrizione. Nell’area attestati la lista e il download sono vincolati al proprietario.",
+          "references": [
+            "component/site/tmpl/dashboard/_courses.php#$item['access'] === 'available'",
+            "component/administrator/src/Application/LearningService.php#public function resumeTarget",
+            "component/administrator/src/Application/CertificateService.php#public function listForStudent",
+            "tests/joomla-dashboard.php#foreign certificate download denied"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Lo storico mantiene il corso non più accessibile senza rivelare materiali protetti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/dashboard/_courses.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "La vista storica mostra titolo e contatori senza materiale protetto. La fixture copre corso inattivo, conservazione dello storico e rifiuto di accesso didattico diretto.",
+          "references": [
+            "component/site/tmpl/dashboard/_courses.php#COM_JLMS_DASHBOARD_HISTORICAL_COURSE",
+            "tests/joomla-dashboard.php#inactive course keeps owner title",
+            "tests/joomla-dashboard.php#inactive course blocks direct resume"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Stato vuoto con collegamento al catalogo autorizzato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/site/tmpl/dashboard/_courses.php",
+          "component/site/tmpl/mycourses/default.php"
+        ],
+        "review": {
+          "reason": "Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.",
+          "references": [
+            "component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty",
+            "component/site/tmpl/mycourses/default.php#_courses.php"
+          ]
+        }
       }
     ],
     "SCR-06": [
@@ -3649,8 +3799,19 @@
       {
         "id": "criterion_06",
         "label": "La ripresa preferisce l'ultima attività iniziata ancora disponibile, altrimenti la prima obbligatoria non completata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "Il risolutore preferisce l’ultima lezione della versione assegnata quando disponibile e passa alla prima obbligatoria incompleta se la precedente non è valida. La fixture esercita entrambe le scelte e un puntatore a una versione diversa.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#public function resumeTarget",
+            "tests/joomla-dashboard.php#resume keeps last valid activity",
+            "tests/joomla-dashboard.php#cross-version last activity falls back"
+          ]
+        }
       },
       {
         "id": "criterion_07",
@@ -4286,20 +4447,51 @@
       {
         "id": "criterion_05",
         "label": "Per il progresso video unire gli intervalli già fruiti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ],
+        "review": {
+          "reason": "Il salvataggio unisce gli intervalli nuovi a quelli persistiti. La fixture Joomla verifica il completamento tramite contributi parziali da due sessioni.",
+          "references": [
+            "component/administrator/src/Application/VideoProgressService.php#Coverage::merge",
+            "tests/joomla-video.php#cross-tab interval union completes exactly"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "la ripresa usa l'ultima posizione confermata della sessione valida, non il massimo tempo mai raggiunto, per permettere ripassi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ],
+        "review": {
+          "reason": "Il server usa la posizione dell’ultimo evento accettato. Una sessione con revisione superata non può sostituire la posizione salvata da un’altra sessione.",
+          "references": [
+            "component/administrator/src/Application/VideoProgressService.php#$progress->resume_ms = $telemetry",
+            "tests/joomla-video.php#stale session keeps the newer resume"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "Identificativi di evento unici e validazione del tempo plausibile impediscono conteggi duplicati o salti attribuiti come visione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Domain/VideoTelemetry.php",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Gli ID devono crescere all’interno della sessione. I campioni fuori dal budget temporale, discontinui o incompatibili con la velocità non producono un intervallo. Il batch ripetuto con stesso hash viene riconosciuto senza doppio accredito.",
+          "references": [
+            "component/administrator/src/Domain/VideoTelemetry.php#last_event_id",
+            "component/administrator/src/Domain/VideoTelemetry.php#$spent + $cost",
+            "component/administrator/src/Application/VideoProgressService.php#last_batch_hash"
+          ]
+        }
       },
       {
         "id": "criterion_08",
@@ -4430,8 +4622,19 @@
       {
         "id": "criterion_02",
         "label": "Default Stream: token temporaneo 15 minuti, rinnovo anticipato con nuova verifica autorizzativa",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Il provider usa 900 secondi per impostazione iniziale, calcola l’anticipo e il rinnovo torna attraverso il controllo corrente di accesso del componente.",
+          "references": [
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#token_ttl_seconds",
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#renew_after_seconds",
+            "component/administrator/src/Application/VideoProgressService.php#public function renew"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -4448,14 +4651,34 @@
       {
         "id": "criterion_05",
         "label": "Token già emesso e buffer mantengono la validità residua",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php"
+        ],
+        "review": {
+          "reason": "La guida documenta la vita residua del token e del buffer. Per confermare il comportamento effettivo dopo revoca servono misure su sessione Stream e browser reali.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#validità residua",
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#min($now + $c"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "non promettere invalidazione immediata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "La guida dichiara esplicitamente la validità residua dopo revoca. Il percorso di rinnovo può negare nuove autorizzazioni e non promette di revocare lato provider il token già consegnato.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#validità residua",
+            "component/administrator/src/Application/VideoProgressService.php#public function renew"
+          ]
+        }
       },
       {
         "id": "criterion_07",
@@ -4466,8 +4689,17 @@
       {
         "id": "criterion_08",
         "label": "Download disabilitato per default",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php"
+        ],
+        "review": {
+          "reason": "La richiesta di firma imposta il download a false e il provider rifiuta una risposta che abilita il download.",
+          "references": [
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#'downloadable' => false",
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#isset($claims['downloadable'])"
+          ]
+        }
       },
       {
         "id": "criterion_09",
@@ -4568,38 +4800,98 @@
       {
         "id": "criterion_02",
         "label": "Verificare titolo vuoto, spazi, limite 255",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Table/CourseTable.php",
+          "component/administrator/forms/course.xml"
+        ],
+        "review": {
+          "reason": "Il controllo server normalizza gli spazi esterni, rifiuta titoli vuoti e misura la lunghezza in caratteri prima della scrittura. Il form imposta lo stesso limite.",
+          "references": [
+            "component/administrator/src/Table/CourseTable.php#$this->title = trim",
+            "component/administrator/forms/course.xml#name=\"title\""
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "descrizione breve 500",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-editor-access.php"
+        ],
+        "review": {
+          "reason": "Il modello rifiuta un riepilogo nuovo o modificato oltre 500 caratteri. La fixture accetta 500 caratteri Unicode e rifiuta 501 senza incremento della revisione.",
+          "references": [
+            "component/administrator/src/Model/CourseModel.php#::strlen($summary) > 500",
+            "tests/joomla-editor-access.php#500 Unicode characters accepted",
+            "tests/joomla-editor-access.php#501 characters rejected"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "durate positive",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "component/administrator/src/Application/CoursePresentation.php"
+        ],
+        "review": {
+          "reason": "Il metodo didattico consente valore assente dove previsto, ma rifiuta durata dichiarata al di sotto di un secondo o oltre otto ore. Il valore stimato della presentazione usa la validazione di intero positivo.",
+          "references": [
+            "component/administrator/src/Application/CurriculumService.php#public static function duration",
+            "component/administrator/src/Application/CoursePresentation.php#DecimalId::parse"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "alias duplicato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Table/CourseTable.php",
+          "tests/joomla-editor-access.php"
+        ],
+        "review": {
+          "reason": "Il controllo normalizza l’alias e cerca un altro record con lo stesso valore nella medesima categoria e lingua. Il test verifica anche il riuso in altra categoria.",
+          "references": [
+            "component/administrator/src/Table/CourseTable.php#alias = :alias",
+            "tests/joomla-editor-access.php#Duplicate normalized alias rejected"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "lingua/categoria/accesso inesistenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Table/CourseTable.php"
+        ],
+        "review": {
+          "reason": "Il controllo della tabella valida la lingua rispetto a Joomla, la categoria rispetto all’estensione e entrambi i livelli di accesso rispetto ai livelli esistenti.",
+          "references": [
+            "component/administrator/src/Table/CourseTable.php#lang_code",
+            "component/administrator/src/Table/CourseTable.php#published<>-2",
+            "component/administrator/src/Table/CourseTable.php#['catalog_access', 'content_access']"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "date invertite",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseSchedule.php"
+        ],
+        "review": {
+          "reason": "La fusione del calendario valida separatamente le finestre editoriale e didattica e rifiuta date finali precedenti o uguali all’inizio.",
+          "references": [
+            "component/administrator/src/Application/CourseSchedule.php#private static function validate",
+            "component/administrator/src/Application/CourseSchedule.php#public static function merge"
+          ]
+        }
       },
       {
         "id": "criterion_08",
@@ -4610,8 +4902,18 @@
       {
         "id": "criterion_09",
         "label": "Le descrizioni sono sanificate secondo configurazione Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "component/administrator/src/Application/CoursePresentation.php"
+        ],
+        "review": {
+          "reason": "Il modello passa le descrizioni al filtro Joomla, poi applica la politica HTML della presentazione prima di serializzare.",
+          "references": [
+            "component/administrator/src/Model/CourseModel.php#ComponentHelper::filterText",
+            "component/administrator/src/Application/CoursePresentation.php#public static function merge"
+          ]
+        }
       },
       {
         "id": "criterion_10",
@@ -4624,14 +4926,37 @@
       {
         "id": "criterion_01",
         "label": "Validare appartenenza univoca modulo/versione e lezione/modulo, ordine senza perdita di elementi, dipendenze disponibili e assenza di cicli",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il servizio vincola modulo e lezione alla bozza, impone che il riordino contenga tutti e soli gli ID attuali e rifiuta dipendenze fuori versione e cicli. La fruizione verifica i prerequisiti e la raggiungibilità temporale.",
+          "references": [
+            "component/administrator/src/Application/CurriculumService.php#public function saveLesson",
+            "component/administrator/src/Application/CurriculumService.php#private function savePrerequisites",
+            "component/administrator/src/Application/CurriculumService.php#public function saveOrder",
+            "component/administrator/src/Application/LearningService.php#public function assertEnrollmentScheduleReachable"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "La duplicazione crea contenuti in bozza e nuovi ID, non iscrizioni, tentativi, attestati o diritti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "component/administrator/src/Application/CourseVersionCopy.php"
+        ],
+        "review": {
+          "reason": "La duplicazione crea nuovi ID per corso, versione, moduli e lezioni. La versione copiata torna in bozza. Il servizio copia struttura, definizioni quiz e allegati autorizzati, senza copiare tentativi, iscrizioni, attestati o regole ACL dell’asset di origine.",
+          "references": [
+            "component/administrator/src/Model/CourseModel.php#public function duplicate",
+            "component/administrator/src/Application/CourseVersionCopy.php#public function copy",
+            "component/administrator/src/Application/CourseVersionCopy.php#private function nodes"
+          ]
+        }
       }
     ],
     "DAT-04": [
@@ -4644,8 +4969,18 @@
       {
         "id": "criterion_02",
         "label": "Validare percorsi, MIME e dimensioni upload dei materiali core",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php",
+          "component/administrator/src/Infrastructure/ProtectedMaterialStorage.php"
+        ],
+        "review": {
+          "reason": "L’upload accetta soltanto file ricevuti da PHP. Lo storage verifica limite e tipo del file, rifiuta sorgenti non regolari o link e genera la chiave di storage indipendentemente dal nome in input.",
+          "references": [
+            "component/administrator/src/Application/MaterialService.php#is_uploaded_file",
+            "component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#MaterialFilePolicy::inspect"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -4891,52 +5226,132 @@
       {
         "id": "criterion_07",
         "label": "Operazioni comuni: descrizione, capacita, normalizzazione/validazione sorgente, metadati, descrittore playback e asset frontend",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderInterface.php",
+          "libraries/jlms/src/Video/VideoProviderRegistry.php"
+        ],
+        "review": {
+          "reason": "L’interfaccia pubblica tipizzata dichiara tutte e sette le operazioni. La factory può restituire soltanto oggetti conformi con chiave e major coerenti.",
+          "references": [
+            "libraries/jlms/src/Video/VideoProviderInterface.php#public function getDescriptor",
+            "libraries/jlms/src/Video/VideoProviderInterface.php#public function getFrontendAdapterAsset",
+            "libraries/jlms/src/Video/VideoProviderRegistry.php#instanceof VideoProviderInterface"
+          ]
+        }
       },
       {
         "id": "criterion_08",
         "label": "Contratto dettagliato nell'allegato Servizi_endpoint_LMS_Joomla_1.0.md",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md"
+        ],
+        "review": {
+          "reason": "L’allegato descrive registrazione, input, output e responsabilità delle sette operazioni, più il contratto browser e la distinzione fra token e segreti.",
+          "references": [
+            "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.2 Registrazione e contratto PHP",
+            "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player nel browser"
+          ]
+        }
       }
     ],
     "PVD-03": [
       {
         "id": "criterion_01",
         "label": "Player uniforme",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js"
+        ],
+        "review": {
+          "reason": "Il player dell’aula riceve una sessione dal componente e carica l’adapter indicato. Il frontend gestisce montaggio e telemetria attraverso lo stesso ciclo di vita.",
+          "references": [
+            "component/media/js/video.js#const grant = await this.request",
+            "component/media/js/video.js#const player = await adapter.create"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Eventi player normalizzati e distruzione ordinata al cambio lezione/consenso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js"
+        ],
+        "review": {
+          "reason": "Il player inoltra gli eventi normalizzati all’unico gestore e distrugge le istanze in stop e durante i cambi di generazione. Consenso e uscita dalla pagina usano questo ciclo.",
+          "references": [
+            "component/media/js/video.js#handleAdapterEvent",
+            "component/media/js/video.js#jlms:consent-changed",
+            "component/media/js/video.js#try { await player?.destroy()"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Il nucleo mantiene le regole di copertura, salvataggio e completamento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Il servizio del componente aggrega gli intervalli, applica la soglia dello snapshot didattico e aggiorna lezioni e corso nella stessa transazione.",
+          "references": [
+            "component/administrator/src/Application/VideoProgressService.php#VideoTelemetry::consume",
+            "component/administrator/src/Application/VideoProgressService.php#Coverage::isComplete",
+            "component/administrator/src/Application/VideoProgressService.php#newCourseCompletion"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "L'adapter dichiara le capacita effettive della sorgente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderInterface.php",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "L’interfaccia richiede capacità per sorgente. Il descrittore di riproduzione riporta quelle effettive e il servizio verifica entrambe le dichiarazioni per le lezioni tracciate.",
+          "references": [
+            "libraries/jlms/src/Video/VideoProviderInterface.php#public function getCapabilities",
+            "component/administrator/src/Application/VideoProgressService.php#$actual = $descriptor->capabilities"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "una regola non supportata non puo essere pubblicata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php"
+        ],
+        "review": {
+          "reason": "La pubblicazione con tracciamento rifiuta provider non configurati o privi di posizione, durata o seek. La consultazione è trattata come modalità distinta.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED",
+            "component/administrator/src/Application/PublicationService.php#$capabilities = $provider->getCapabilities"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Nessuna chiamata remota a ogni evento di progresso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Gli eventi vengono accodati nel browser e inviati in batch. Il salvataggio valida il contesto e aggiorna la copertura localmente. La creazione remota del descrittore appartiene a playback e rinnovo.",
+          "references": [
+            "component/media/js/video.js#this.queue.push(event)",
+            "component/administrator/src/Application/VideoProgressService.php#public function save",
+            "component/administrator/src/Application/VideoProgressService.php#public function renew",
+            "component/administrator/src/Application/VideoProgressService.php#Remote work is always outside"
+          ]
+        }
       }
     ],
     "PVD-04": [
@@ -4949,8 +5364,19 @@
       {
         "id": "criterion_02",
         "label": "AccessPolicyService verifica l'accesso prima del plugin",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il controllo di proprietà dell’iscrizione, accesso corrente, versione, finestra e prerequisiti precede la selezione e l’invocazione del provider.",
+          "references": [
+            "component/administrator/src/Application/VideoProgressService.php#private function context",
+            "component/administrator/src/Application/LearningService.php#public function videoContext",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -4961,8 +5387,19 @@
       {
         "id": "criterion_04",
         "label": "Parametri API server separati dai token playback temporanei restituibili al browser",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php",
+          "plugins/jlmsvideo/cloudflarestream/src/Extension/Cloudflarestream.php"
+        ],
+        "review": {
+          "reason": "Il provider Stream risolve il riferimento al segreto sul server per l’header dell’API. Il descrittore browser contiene dominio, token temporaneo e opzioni player.",
+          "references": [
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#Bearer ",
+            "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#$options =",
+            "plugins/jlmsvideo/cloudflarestream/src/Extension/Cloudflarestream.php#EnvironmentSecretProvider"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -4975,14 +5412,36 @@
       {
         "id": "criterion_01",
         "label": "Provider disabilitato o non configurato produce errore controllato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderRegistry.php",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Una chiave assente dal registro e un descrittore non configurato convergono entrambi in errore controllato di indisponibilità prima di creare la sessione.",
+          "references": [
+            "libraries/jlms/src/Video/VideoProviderRegistry.php#PROVIDER_UNAVAILABLE",
+            "component/administrator/src/Application/VideoProgressService.php#private function context"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Errori dei quattro provider non provocano completamenti falsi o perdita di progressi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php",
+          "docs/specifications/Matrice_collaudo_plugin_video_1.0.csv"
+        ],
+        "review": {
+          "reason": "La transazione video annulla le scritture fallite e la fixture verifica conflitti senza perdere la posizione salvata. Per generalizzare ai quattro provider servono le prove della matrice sugli errori esterni effettivi.",
+          "references": [
+            "component/administrator/src/Application/VideoProgressService.php#transactionRollback",
+            "tests/joomla-video.php#stale session keeps the newer resume",
+            "docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#Risultato atteso"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -5005,14 +5464,35 @@
       {
         "id": "criterion_02",
         "label": "Progressi e completamento usano le interfacce comuni senza dipendenze dal provider",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderInterface.php",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Il provider fornisce descrittore e capacità. Copertura, soglie ed esito di completamento usano telemetria e regole comuni nel servizio centrale.",
+          "references": [
+            "libraries/jlms/src/Video/VideoProviderInterface.php#public function createPlaybackDescriptor",
+            "component/administrator/src/Application/VideoProgressService.php#VideoTelemetry::consume",
+            "component/administrator/src/Application/VideoProgressService.php#Coverage::isComplete"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Incompatibilità di versione o capacità vengono rifiutate in modo esplicito",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderRegistry.php",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Il registro rifiuta major incompatibili o factory incongrue. Il servizio rifiuta le capacità richieste mancanti sia prima sia dopo la creazione del descrittore.",
+          "references": [
+            "libraries/jlms/src/Video/VideoProviderRegistry.php#PROVIDER_CONTRACT_MISMATCH",
+            "component/administrator/src/Application/VideoProgressService.php#$actual = $descriptor->capabilities"
+          ]
+        }
       }
     ],
     "HTTP-01": [
@@ -5428,8 +5908,19 @@
       {
         "id": "criterion_04",
         "label": "Tutti installati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "tests/joomla-smoke.php"
+        ],
+        "review": {
+          "reason": "Il manifest installa il gruppo con YouTube, Vimeo, Cloudflare Stream e HTML5. Lo smoke Joomla verifica la registrazione dei quattro elementi dopo l’installazione del pacchetto.",
+          "references": [
+            "packages/pkg_jlms.xml#plg_jlmsvideo_youtube.zip",
+            "packages/pkg_jlms.xml#plg_jlmsvideo_html5.zip",
+            "tests/joomla-smoke.php#Four video providers were not registered"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -5468,14 +5959,33 @@
       {
         "id": "criterion_02",
         "label": "Il documento Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md contiene le schede e i dizionari dei parametri",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md"
+        ],
+        "review": {
+          "reason": "Il documento dedica una sezione a ciascun provider e un dizionario dei parametri comuni e specifici a tutti e quattro.",
+          "references": [
+            "docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#5. Plugin YouTube",
+            "docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#8. Plugin HTML5",
+            "docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#10. Dizionario dei parametri"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Servizi_endpoint_LMS_Joomla_1.0.md il contratto comune",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md"
+        ],
+        "review": {
+          "reason": "L’allegato documenta il contratto comune, le responsabilità, le interfacce PHP e gli eventi del player.",
+          "references": [
+            "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.2 Registrazione e contratto PHP",
+            "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player nel browser"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -5506,8 +6016,17 @@
       {
         "id": "criterion_02",
         "label": "La matrice dedicata Matrice_collaudo_plugin_video_1.0.csv copre contratto comune e quattro provider",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Matrice_collaudo_plugin_video_1.0.csv"
+        ],
+        "review": {
+          "reason": "La matrice contiene scenari comuni e gruppi separati per YouTube, Vimeo, Cloudflare Stream e HTML5. Le colonne di esito richiedono build ed evidenza.",
+          "references": [
+            "docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#PV-COMMON-01",
+            "docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#Plugin/gruppo,Funzionalita"
+          ]
+        }
       },
       {
         "id": "criterion_03",
