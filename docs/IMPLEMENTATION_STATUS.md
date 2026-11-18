@@ -1,3 +1,7 @@
+**JD Learn 0.60.6-dev — messaggio di sospensione didattica nei percorsi (LCM-05, 18/11/2026).**
+
+La scheda frontend dei percorsi distingue il corso visibile ma sospeso dai corsi riservati per ACL. Il messaggio localizzato `COM_JLMS_COURSE_DELIVERY_SUSPENDED` appare solo se la risorsa è già visibile all'utente autorizzato, altrimenti permane il messaggio generico. Test Joomla su sospensione e riabilitazione, test frontend statico; nessuna modifica dati o schema. Accettazione manuale Joomla non eseguita; requisito LCM-05 parziale e percentuale globale non consolidata.
+
 **JD Learn 0.60.5-dev — coerenza accessibilità dei corsi nei percorsi, LCM-05 (18/11/2026).**
 
 `PathwayService::detail()` distingue la visibilità promozionale di un corso pubblicato dall'accesso all'aula: se `delivery_enabled=0`, il corso rimane identificabile nella scheda del percorso quando autorizzato ma non risulta fruibile. Lo storico di iscrizione e lo stato didattico non sono cambiati. Test Joomla su sospensione e riabilitazione dell'erogazione. Nessuna migrazione schema. LCM-05 resta Parziale; accettazione Joomla manuale non eseguita e percentuale globale non consolidata.
