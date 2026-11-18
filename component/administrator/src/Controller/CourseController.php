@@ -13,7 +13,7 @@ final class CourseController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme', 'programmerules', 'trash', 'restore'], true)) {
+        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme', 'programmerules', 'trash', 'restore', 'purge'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         if (in_array(strtolower($task), ['programme', 'programmerules'], true)) { $this->registerTask($task, 'save'); }
@@ -54,6 +54,29 @@ final class CourseController extends FormController
 
     public function trash(): void { $this->lifecycle(-2); }
     public function restore(): void { $this->lifecycle(0); }
+
+    /** Destructive operation: exactly one trashed, unreferenced course. */
+    public function purge(): void
+    {
+        if (strtoupper($this->input->getMethod()) !== 'POST') {
+            throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+        }
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException('JINVALID_TOKEN', 403);
+        }
+        $raw = $this->input->post->get('cid', [], 'array');
+        if (count($raw) !== 1 || (!is_int($raw[0]) && !is_string($raw[0]))
+            || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $raw[0])) {
+            throw new \RuntimeException('COM_JLMS_INVALID_COURSE', 422);
+        }
+        $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
+            ->createModel('Course', 'Administrator', ['ignore_request' => true]);
+        if (!$model->purgeEmpty((int) $raw[0])) {
+            throw new \RuntimeException((string) $model->getError(), 403);
+        }
+        $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
+            'index.php?option=com_jlms&view=courses&filter[published]=-2', false));
+    }
 
     protected function postSaveHook(\Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = [])
     {
