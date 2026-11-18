@@ -545,5 +545,26 @@ final class PublicationService
             $this->permittedChange = null;
             $this->stateChangeResult = null;
         }
+        // Smart Search must observe the committed archive/restore state.
+        // The workflow may dispatch events while the SQL transaction is open;
+        // this follow-up is the authoritative refresh after persistence.
+        if (in_array($action, ['archive', 'restore'], true)) {
+            try {
+                \Joomla\CMS\Plugin\PluginHelper::importPlugin('finder');
+                $savedCourse = $this->row('courses', $courseId);
+                $this->app->getDispatcher()->dispatch('onFinderAfterSave',
+                    new \Joomla\CMS\Event\Finder\AfterSaveEvent('onFinderAfterSave', [
+                        'context' => 'com_jlms.course', 'subject' => $savedCourse, 'isNew' => false,
+                    ]));
+            } catch (\Throwable) {
+                // Search infrastructure cannot reverse a committed transition.
+                try {
+                    \Joomla\CMS\Log\Log::add(
+                        'Archive/restore Finder refresh failed; course id=' . $courseId,
+                        \Joomla\CMS\Log\Log::WARNING, 'com_jlms'
+                    );
+                } catch (\Throwable) {}
+            }
+        }
     }
 }
