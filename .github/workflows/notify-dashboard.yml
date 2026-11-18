@@ -1,0 +1,44 @@
+name: Notify JD Learn release dashboard
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  notify-dashboard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Dispatch dashboard refresh
+        env:
+          DASHBOARD_DISPATCH_TOKEN: ${{ secrets.DASHBOARD_DISPATCH_TOKEN }}
+          SOURCE_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${DASHBOARD_DISPATCH_TOKEN}" ]; then
+            echo "::warning::DASHBOARD_DISPATCH_TOKEN is not configured. Scheduled dashboard refresh remains active."
+            echo "Cross-repository dashboard dispatch inactive: configure DASHBOARD_DISPATCH_TOKEN with Contents write on jeckodevelopment/jd-learn-dashboard." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # GITHUB_TOKEN is scoped to jd_learn and cannot dispatch another repository.
+          # Fine-grained token needs Contents: read/write on jd-learn-dashboard only.
+          payload=$(printf '{"event_type":"jdlearn-main-updated","client_payload":{"source_sha":"%s"}}' "$SOURCE_SHA")
+          http_code=$(curl --silent --show-error --location --retry 2 --retry-delay 3 \
+            --output /tmp/dashboard-dispatch-response.txt --write-out '%{http_code}' \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${DASHBOARD_DISPATCH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            --data "$payload" \
+            "https://api.github.com/repos/jeckodevelopment/jd-learn-dashboard/dispatches")
+          if [ "$http_code" != "204" ]; then
+            echo "::error::Dashboard dispatch failed: HTTP $http_code"
+            cat /tmp/dashboard-dispatch-response.txt
+            exit 1
+          fi
+          echo "Dashboard refresh dispatched for JD Learn commit ${SOURCE_SHA}" >> "$GITHUB_STEP_SUMMARY"
