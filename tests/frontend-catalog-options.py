@@ -52,6 +52,18 @@ assert 'name="filter[category_id]"' in template
 assert "COM_JLMS_CATALOG_ALL_CATEGORIES" in template
 assert "catalog_show_category" in helper
 assert "filter.category_choice" in model
+assert "['recent', 'title', 'duration']" in model
+assert "['recent', 'title', 'duration']" in helper
+assert "v.presentation_json, '$.details.estimated_minutes'" in model
+assert "($minutes IS NULL) ASC, $minutes ASC, c.id ASC" in model
+assert 'value="duration"' in template
+for fieldset in (menu, component):
+    order_field = fieldset.find(".//field[@name='catalog_default_order']")
+    assert "duration" in [o.get("value") for o in order_field.findall("option")]
+for language in ("it-IT", "en-GB"):
+    ini = (root / "component/site/language" / language / "com_jlms.ini").read_text()
+    assert "COM_JLMS_CATALOG_ORDER_DURATION=" in ini
+
 assert "COM_JLMS_CATALOG_CLEAR_FILTERS" in template
 assert 'id="jlms-catalog-clear-filters"' in template
 assert "$this->showFilters && ($this->search !== ''" in template
