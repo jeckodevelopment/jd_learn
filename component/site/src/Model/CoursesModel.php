@@ -97,6 +97,12 @@ class CoursesModel extends ListModel
         return $query->order($order === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
     }
 
+    /** Prevent reuse of personalised catalogue results across Joomla identities. */
+    protected function getStoreId($id = '')
+    {
+        return parent::getStoreId($id . ':actor:' . (int) Factory::getApplication()->getIdentity()->id);
+    }
+
     /** Visible frozen teacher names for the currently paginated catalogue courses only. */
     public function getCardTeachers(array $items): array
     {
@@ -117,6 +123,18 @@ class CoursesModel extends ListModel
             }
         }
         return $result;
+    }
+
+    /** Owner-only enrollment state, using the same validated projection as My Courses. */
+    public function getCardEnrollmentStates(array $items): array
+    {
+        $app = Factory::getApplication();
+        $identity = $app->getIdentity();
+        if (!(int) $identity->id || $identity->guest || $identity->block || !$items) { return []; }
+        $ids = array_map(static fn (object $item): int => (int) $item->id, $items);
+        return $app->bootComponent('com_jlms')->getDashboardService()->catalogStates(
+            $identity, $app->getLanguage()->getTag(), $ids
+        );
     }
 
     public function getCategoryChoice(): int

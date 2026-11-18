@@ -1,3 +1,14 @@
+## SCR-01/card — stato individuale dell'iscrizione nel catalogo (18/11/2026)
+
+1. Come ospite, il catalogo non deve mostrare né interrogare alcuno storico personale. La card deve mostrare soltanto azione pubblica e modalità promozionale.
+2. Come utente con iscrizione propria attiva, verificare **Non iniziati/In corso/Completati** e collegamento **Riprendi/Rivedi** quando il servizio dashboard consente accesso. Il collegamento deve usare l'ID dell'iscrizione, non l'ID del corso, e passare dalle autorizzazioni di enrollment.resume.
+3. Sospendere/annullare/scadere l'iscrizione o rimuovere ACL/disattivare erogazione: la card non deve mostrare Riprendi; deve mantenere Esamina il corso e un avviso di disponibilità coerente. Testare versioni/edizioni chiuse e lingua non disponibile.
+4. Utenti A e B sullo stesso corso: ciascuno visualizza solo il proprio stato, inclusa navigazione avanti/indietro. Verificare assenza di leak mediante caching, login/logout e utenti bloccati.
+5. Con iscrizione corrente presente non deve essere mostrata una falsa offerta di nuova iscrizione auto/approval. Richiesta di approvazione non convertita in iscrizione: non dedurre che sia attiva; questo caso resta da coprire separatamente.
+6. Verificare griglia/elenco, filtri, paginazione, IT/EN, tastiera e mobile. Più iscrizioni storiche a un corso: prevalga la più recente fra quelle interrogate.
+
+**Automazione:** verifica strutturale con suite CI. **Collaudo Joomla manuale:** In attesa; requisito SCR-01/card non dichiarato completamente collaudato.
+
 ## SCR-01/card — docenti visibili nel catalogo (18/11/2026)
 
 1. Pubblicare un corso con due docenti pubblici, diversi e visibili: la card deve mostrarne i nomi con link alle rispettive schede e mantenere ordine della versione pubblicata, in griglia e in elenco.

@@ -72,6 +72,24 @@ final class DashboardService
         ];
     }
 
+    /** Read-only owner states for the currently visible catalogue page, never a global enrollment scan. */
+    public function catalogStates(User $identity, string $uiLanguage, array $courseIds): array
+    {
+        if (!$courseIds) { return []; }
+        $courseIds = array_values(array_unique(array_filter(array_map('intval', $courseIds), static fn (int $id): bool => $id > 0)));
+        if (!$courseIds || count($courseIds) > 50) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        $query = $this->query($identity)->whereIn('e.course_id', $courseIds)->clear('order')->order('e.id DESC');
+        // Dashboard cards already apply fresh owner, ACL, version and edition eligibility checks.
+        $rows = $this->db->setQuery($query, 0, 50)->loadObjectList();
+        $cards = $this->cards($identity, $uiLanguage, $rows ?: []);
+        $states = [];
+        foreach ($cards as $index => $card) {
+            $id = (int) $rows[$index]->course_id;
+            if (!isset($states[$id])) { $states[$id] = $card; }
+        }
+        return $states;
+    }
+
     public function cards(User $identity, string $uiLanguage, array $rows): array
     {
         $actor = $this->learning->freshActor($identity);
