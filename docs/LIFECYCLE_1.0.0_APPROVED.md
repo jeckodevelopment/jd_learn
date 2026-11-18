@@ -53,6 +53,10 @@ Il workflow di archiviazione imposta admissions_open=0 e delivery_enabled=0 nell
 
 Le operazioni amministrative esistenti `admissions_open` e `delivery_resume` sono ammesse solo se lo stato editoriale del corso è Pubblicato (`state=1`). Anteprima e conferma server-side condividono il blocco, per impedire la riapertura anticipata mentre il corso è archiviato, cestinato o non pubblicato. Chiudere le ammissioni o sospendere l'erogazione rimane possibile. Non è previsto alcun automatismo in fase di Restore; la riattivazione rimane esplicita e soggetta a permessi, motivazione e audit. Test Joomla per tentativi negativi e storico invariato; accettazione reale pendente.
 
+### LCM-01 — riattivazione della singola iscrizione (0.60.3)
+
+Il passaggio amministrativo di un'iscrizione da Sospesa ad Attiva è consentito soltanto quando lo stato del corso è Pubblicato e `delivery_enabled=1`. Il comando non è un'alternativa per riaprire un corso archiviato: editor e POST applicativo condividono lo stesso gate, e la conferma serializza il corso prima dell'iscrizione. Restano permesse le operazioni di sospensione e annullamento secondo le regole ordinarie. I test Joomla negano la riattivazione su corsi archiviati, non pubblicati, cestinati o con erogazione sospesa, senza scrivere audit né notifiche. Accettazione reale e verifica altri endpoint ancora pendenti.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
