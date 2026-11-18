@@ -50,8 +50,11 @@ def validate(body: str, milestone: str | None, labels: list[str], paths: set[str
     for title in REQUIRED_SECTIONS:
         if title not in sections:
             errors.append(f"PR body is missing the '## {title}' section")
-        elif not visible(sections[title]):
-            errors.append(f"PR section '{title}' is empty")
+        else:
+            lines = [line.strip() for line in visible(sections[title]).splitlines()]
+            filled = any(line and not re.fullmatch(r"(?:[-*]\\s*)?\\[[^\\]]+\\]", line) for line in lines)
+            if not filled:
+                errors.append(f"PR section '{title}' is empty or still has a placeholder")
     bug = visible(sections.get("Risolve un bug?", ""))
     selected = re.findall(r"(?im)^\s*-\s*\[[xX]\]\s*(Sì|No|Non applicabile)\b", bug)
     if len(selected) != 1:
