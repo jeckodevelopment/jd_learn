@@ -1,3 +1,13 @@
+## CAT-02 — riepilogo delle regole di completamento nella scheda corso (PR in verifica, 18/11/2026)
+
+1. Aprire come ospite la scheda pubblica di un corso con versione didattica pubblicata in modalità apprendimento: sotto il calendario e prima del programma compare `Come si completa il corso` con lezioni obbligatorie, ordine di fruizione e soglia di completamento video.
+2. Per una versione con attestato abilitato nelle regole pubblicate verificare `previsto` e la nota che distingue configurazione/emissione effettiva; per una versione senza attestato verificare che sia indicato come non previsto.
+3. Per un corso di sola consultazione verificare che non siano promessi completamento, tracciamento o attestato; nessuna esposizione delle regole quiz private o di contenuti di lezioni non ancora disponibili.
+4. Controllare IT/EN, accessibilità di titoli e paragrafi, sito desktop/smartphone e assenza di regressioni di login, iscrizione, curriculum e permessi ACL.
+5. Provare soglia video non intera (basis points) e modalità di sequenza libera/sequenziale; il testo deve coincidere con le regole della versione **pubblicata**, non con bozze in lavorazione. L'abilitazione globale dell'emissione può impedire comunque un attestato previsto.
+
+Verifica automatica Joomla: `tests/joomla-course-presentation.php` esteso. Collaudo manuale Joomla da acquisire.
+
 ## QUI-02 — cestino conservativo banca domande (PR #653 integrata, 18/11/2026)
 
 ## STA-02 — durata quiz e finestra didattica (PR #648 integrata, 18/11/2026)

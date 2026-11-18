@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (CAT-02, 18/11/2026) — regole di completamento nella scheda pubblica:** proiezione sicura della policy della versione pubblicata (lezioni obbligatorie, sequenza, soglia video, eventuale attestato previsto) con testi IT/EN e nota sulle condizioni di emissione reale. La consultazione non promette attestati. Nessuna esposizione dei contenuti riservati o modifica alla didattica; test Joomla esteso, collaudo manuale pendente.
+
 - **0.60.8-dev (QUI-02, PR #653, 18/11/2026) — cestino banca domande:** nuove azioni Cestina/Ripristina con CSRF e ACL `core.edit.state`, filtro Cestinate e preservazione delle revisioni immutabili, anche se già usate nei quiz. Ripristino conservativo come bozza; eliminazione definitiva solo dal cestino e bloccata per riferimenti. Test Joomla estesi; collaudo manuale pendente.
 
 

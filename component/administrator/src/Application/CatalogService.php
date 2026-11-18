@@ -301,7 +301,8 @@ final class CatalogService
             ->bind(':windowCourse',$id,ParameterType::INTEGER)->bind(':windowVersion',$version,ParameterType::INTEGER);
         $edition=$this->db->setQuery($q)->loadObject();
         $startWindow=$edition && $edition->status==='open' && CourseSchedule::within($edition->starts_at,$edition->ends_at);
-        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'public_previews' => $rules['public_previews'], 'presentation' => $presentation, 'teachers' => $teachers, 'calendar'=>$calendar, 'start_window_open'=>$startWindow];
+        $completion = ['mode'=>$rules['mode'], 'policy'=>$rules['completion_policy'], 'certificate_planned'=>$rules['mode']==='learning' && $rules['certificate_enabled'], 'video_threshold_basis_points'=>$rules['video_threshold_basis_points'], 'sequence_mode'=>$rules['sequence_mode']];
+        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'completion'=>$completion, 'public_previews' => $rules['public_previews'], 'presentation' => $presentation, 'teachers' => $teachers, 'calendar'=>$calendar, 'start_window_open'=>$startWindow];
     }
 
     /** Return only an explicitly previewable text lesson from the current public course version. */
