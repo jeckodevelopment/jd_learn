@@ -16,12 +16,12 @@ Descrive la modifica.
 ## Requisiti implementati
 CAT-01 / language_available
 ## Documentazione allineata
-docs/FUNCTIONAL_AUDIT_CURRENT.md rigenerato.
+- [x] Report e riepiloghi generati.
 ## Collaudo manuale Joomla
 Stato: In attesa
-La prova sarà riportata in seguito.
+Casi da provare:\n- Accesso consentito e negato secondo i permessi previsti; riferire l’esito in seguito.
 ## Comportamenti da testare
-- La CI convalida il registro.
+- La CI convalida il registro e non accredita l’accettazione manuale.
 ## Controlli automatici
 La CI della PR.
 """
