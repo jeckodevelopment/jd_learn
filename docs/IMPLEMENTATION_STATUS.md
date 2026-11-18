@@ -4,7 +4,7 @@ La PR di implementazione 0.60.0 introduce un comando Purga per il singolo corso 
 
 PR #614: filtro Cestinati e azioni atomiche con ACL/CSRF, ripristino sempre non pubblicato, preservazione dello storico. Non introdotta la cancellazione definitiva: LCM-02 rimane parziale finché è verificata la politica di eliminazione fisica dei corsi privi di dipendenze e conclusa l'accettazione Joomla.
 
-La PR #613 introduce il filtro e badge archivio nella lista amministrativa, con fixture Joomla. LCM-02 resta parziale: cestino e ripristino non implementati. Il vecchio audit riportato sotto è storico e non una percentuale globale convalidata.
+**Stato storico dopo la PR #613 (superato dalle PR #614 e #615):** la PR #613 aveva introdotto filtro e badge archivio nella lista amministrativa, con fixture Joomla; in quel momento cestino e ripristino non erano ancora implementati. La PR #614 li ha successivamente introdotti, mentre la #615 ha aggiunto la purga protetta per corsi senza dipendenze storiche. LCM-02 resta parziale e richiede verifica della cancellazione fisica e collaudo Joomla. Il vecchio audit riportato sotto è storico e non una percentuale globale convalidata.
 
 ## Audit funzionale UI, accessibilità e prestazioni — PR #603 (18/11/2026)
 
