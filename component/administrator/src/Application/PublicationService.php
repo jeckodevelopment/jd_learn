@@ -504,10 +504,11 @@ final class PublicationService
                 // only changes whether a new learner can find or start the course.
             } elseif ($action === 'archive' && $version->status === 'published'
                 && (int) $course->current_version_id === $versionId && (int) $course->state === 1 && $state === 2) {
-                // Archiving hides the course from discovery while preserving the live version and enrollments.
+                // Preserve student history, but explicitly close both gates.
+                // Restoring later must never reopen them automatically.
             } elseif ($action === 'restore' && $version->status === 'published'
                 && (int) $course->current_version_id === $versionId && (int) $course->state === 2 && $state === 1) {
-                // Restore the same immutable version and its learner history.
+                // Restore the same immutable version, leaving admissions and delivery closed.
             } else {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
             }
@@ -525,6 +526,11 @@ final class PublicationService
             $update = (object) ['id' => $courseId,
                 'revision' => (int) $course->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
             if ($version->status === 'draft' && $action === 'publish') { $update->current_version_id = $versionId; }
+            if ($action === 'archive') {
+                $update->admissions_open = 0;
+                $update->delivery_enabled = 0;
+            }
+            // Restoring the Joomla workflow stage never mutates those gates.
             $this->db->updateObject('#__jlms_courses', $update, 'id');
             $this->permittedChange = [$courseId, $state];
             if (!$workflow->executeTransition([$courseId], $transitionId) || $this->stateChangeResult !== true
