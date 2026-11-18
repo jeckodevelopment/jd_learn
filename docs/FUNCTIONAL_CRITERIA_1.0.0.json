@@ -269,7 +269,7 @@
       {
         "id": "finder",
         "label": "Integrazione Smart Search con perimetro ACL verificato",
-        "status": "unassessed",
+        "status": "implemented",
         "evidence": [
           "plugins/finder/jlms/src/Extension/Jlms.php"
         ]
