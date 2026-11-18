@@ -69,6 +69,10 @@ Nella vista di dettaglio del percorso un corso Pubblicato ma con erogazione dida
 
 La vista di dettaglio di un percorso comunica esplicitamente che l'erogazione didattica di un corso visibile è sospesa, senza confonderla con un diniego di autorizzazione. Il flag `delivery_suspended` è esposto soltanto quando il corso è catalogabile per il soggetto e il suo livello di contenuto è autorizzato; per i corsi `restricted` la scheda non rivela lo stato operativo. Il riavvio esplicito dell'erogazione elimina il messaggio. Copertura Joomla e frontend statica; accettazione reale da eseguire.
 
+### LCM-05 — notifiche Smart Search dopo transizioni corso (0.60.7)
+
+Cestinazione e ripristino dei corsi eseguiti con aggiornamento diretto sul modello notificano il plugin Finder dopo il commit tramite evento Joomla `onFinderAfterSave` e snapshot persistito del corso. Il plugin Finder applica il filtro di indicizzazione dei soli corsi pubblicati; l'eventuale errore di refresh non altera il successo dell'operazione editoriale. Il test Joomla verifica gli eventi dopo cestinazione e ripristino, con ammissioni ed erogazione chiuse. Collaudo end-to-end Smart Search, categoria, cache e SEO resta pendente.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
