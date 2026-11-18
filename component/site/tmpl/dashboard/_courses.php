@@ -21,5 +21,5 @@ use Joomla\CMS\Router\Route;
    <?php endforeach; ?></div>
   </section>
  <?php endforeach; ?>
- <?php if (!$this->items) : ?><p id="jlms-dashboard-empty"><?= Text::_('COM_JLMS_DASHBOARD_EMPTY') ?></p><?php endif; ?>
+ <?php if (!$this->items) : ?><p id="jlms-dashboard-empty"><?= Text::_('COM_JLMS_DASHBOARD_EMPTY') ?> <a id="jlms-dashboard-empty-catalog" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php endif; ?>
  </div>
