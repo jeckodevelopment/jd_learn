@@ -31,6 +31,13 @@ class PullRequestMetadataTests(unittest.TestCase):
     def test_pending_manual_joomla_test_is_allowed(self):
         self.assertEqual([], gate.validate(BODY, "1.0.0", ["P1"], {"component/site/src/Controller/X.php"}))
 
+    def test_manual_test_marked_executed_requires_observed_result(self):
+        body = BODY.replace("Stato: In attesa", "Stato: Eseguito")
+        errors = gate.validate(body, "1.0.0", ["P1"], {"component/site/X.php"})
+        self.assertTrue(any("observed result" in error for error in errors))
+        body = body.replace("Stato: Eseguito", "Stato: Eseguito\\nRisultato: confermato")
+        self.assertEqual([], gate.validate(body, "1.0.0", ["P1"], {"component/site/X.php"}))
+
     def test_missing_priority_is_rejected(self):
         errors = gate.validate(BODY, "1.0.0", [], {"README.md"})
         self.assertTrue(any("priority label" in error for error in errors))
