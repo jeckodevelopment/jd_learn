@@ -163,8 +163,9 @@ final class QuestionBankService
             ->innerJoin('#__categories AS c ON c.id=q.catid AND c.extension=' . $db->quote('com_jlms.question'));
         if ($rawCategory!==''&&!$category) { $base->where('1=0'); }
         elseif ($category) { $base->where('q.catid=:category')->bind(':category', $category, ParameterType::INTEGER); }
-        if ($state!==''&&!in_array($state,['0','1'],true)) { $base->where('1=0'); }
-        elseif (in_array($state, ['0','1'], true)) { $v=(int)$state; $base->where('q.state=:state')->bind(':state',$v,ParameterType::INTEGER); }
+        if ($state!==''&&!in_array($state,['0','1','-2'],true)) { $base->where('1=0'); }
+        elseif (in_array($state, ['0','1','-2'], true)) { $v=(int)$state; $base->where('q.state=:state')->bind(':state',$v,ParameterType::INTEGER); }
+        else { $base->where('q.state IN (0,1)'); }
         if ($language !== '') {
             if ($language !== '*' && !preg_match('/\A[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8}){1,2}\z/D', $language)) { $base->where('1=0'); }
             else { $base->where('q.language=:language')->bind(':language',$language); }
@@ -181,7 +182,8 @@ final class QuestionBankService
             foreach ($rows as $row) {
                 $asset='com_jlms.question.'.(int)$row->id;
                 if (!$actor->authorise('jlms.quiz.manage',$asset)) { continue; }
-                $row->can_duplicate=$actor->authorise('core.create','com_jlms.question.category.'.(int)$row->catid);
+                $row->can_duplicate=(int)$row->state!==-2&&$actor->authorise('core.create','com_jlms.question.category.'.(int)$row->catid);
+                $row->can_change_state=$actor->authorise('core.edit.state',$asset);
                 $row->can_delete=$actor->authorise('core.delete',$asset);
                 if ($total >= $start && count($items) < $limit) { $items[]=$row; }
                 $total++;
