@@ -82,6 +82,14 @@ assert "<?php if ($this->showCover) : ?>" in template
 assert "<?php if ($this->showSummary" in template
 assert "CoursePresentation::fromSnapshot" in template
 assert "getCardTeachers($this->items)" in view
+assert "getCardEnrollmentStates($this->items)" in view
+assert "getDashboardService()->catalogStates(" in model
+assert "$identity->guest || $identity->block" in model
+assert "cardEnrollmentStates[(int) $item->id]" in template
+assert "enrollment['access'] === 'available'" in template
+assert "task=enrollment.resume&id=" in template
+assert "$enrollment === null && (int) $item->admissions_open" in template
+
 assert "TeacherProfiles::visible(" in model
 assert "catalog_presentation_json" in model.split("public function getCardTeachers", 1)[1]
 assert "cardTeachers[(int) $item->id]" in template
@@ -108,3 +116,10 @@ assert "container-name: jlms-catalog" in css
 assert ".jlms-course-grid--list" in css
 assert "jlms-course-card__cover-placeholder" in css
 print("FE-01 menu configuration, i18n and catalogue display contracts: OK")
+
+dash = (root / "component/administrator/src/Application/DashboardService.php").read_text()
+assert "public function catalogStates(User $identity" in dash
+assert "->whereIn('e.course_id', $courseIds)" in dash
+assert "->getAuthorisedViewLevels()" in dash
+assert "$this->cards($identity, $uiLanguage, $rows ?: [])" in dash
+assert "if (!isset($states[$id]))" in dash
