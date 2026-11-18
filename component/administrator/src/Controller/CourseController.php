@@ -13,13 +13,47 @@ final class CourseController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme', 'programmerules'], true)) {
+        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme', 'programmerules', 'trash', 'restore'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         if (in_array(strtolower($task), ['programme', 'programmerules'], true)) { $this->registerTask($task, 'save'); }
         return parent::execute($task);
     }
 
+
+    /** Bulk trash/restore: POST + CSRF + per-course native ACL in the model. */
+    private function lifecycle(int $target): void
+    {
+        if (strtoupper($this->input->getMethod()) !== 'POST') {
+            throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+        }
+        if (!$this->checkToken('post', false)) {
+            throw new \RuntimeException('JINVALID_TOKEN', 403);
+        }
+        $raw = $this->input->post->get('cid', [], 'array');
+        if ($raw === [] || count($raw) > 100) {
+            throw new \RuntimeException('COM_JLMS_INVALID_COURSE', 422);
+        }
+        $ids = [];
+        foreach ($raw as $id) {
+            if ((!is_int($id) && !is_string($id))
+                || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $id)) {
+                throw new \RuntimeException('COM_JLMS_INVALID_COURSE', 422);
+            }
+            $ids[] = (int) $id;
+        }
+        $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
+            ->createModel('Course', 'Administrator', ['ignore_request' => true]);
+        if (!$model->changeStates($ids, $target)) {
+            throw new \RuntimeException((string) $model->getError(), 403);
+        }
+        $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
+            'index.php?option=com_jlms&view=courses'
+            . ($target === 0 ? '&filter[published]=-2' : ''), false));
+    }
+
+    public function trash(): void { $this->lifecycle(-2); }
+    public function restore(): void { $this->lifecycle(0); }
 
     protected function postSaveHook(\Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = [])
     {

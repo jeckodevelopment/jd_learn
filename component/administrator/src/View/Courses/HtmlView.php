@@ -30,8 +30,17 @@ final class HtmlView extends BaseHtmlView
             ToolbarHelper::addNew('course.add');
         }
         if ($this->items) {
-            ToolbarHelper::editList('course.edit');
-            ToolbarHelper::custom('courses.programme', 'list', 'list', 'COM_JLMS_CURRICULUM', true);
+            if ((string) $this->state->get('filter.published') !== '-2') {
+                ToolbarHelper::editList('course.edit');
+                ToolbarHelper::custom('courses.programme', 'list', 'list', 'COM_JLMS_CURRICULUM', true);
+            }
+            if ($actor->authorise('core.edit.state', 'com_jlms')) {
+                if ((string) $this->state->get('filter.published') === '-2') {
+                    ToolbarHelper::custom('course.restore', 'refresh', 'refresh', 'JTOOLBAR_RESTORE', true);
+                } else {
+                    ToolbarHelper::trash('course.trash');
+                }
+            }
         }
         if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
         parent::display($tpl);

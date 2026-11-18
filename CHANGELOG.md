@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.59.0 (18/11/2026) — Cestino corsi:** azioni native di cestinazione e ripristino, singole/massive (100 max), POST/CSRF, ACL Joomla per corso e lock transazionale con rollback; filtri Cestinati e badge coerente. Il ripristino torna a Non pubblicato senza riaprire automaticamente iscrizioni o accessi; versioni, progressi e attestati non vengono cancellati. Cancellazione fisica ancora vietata. Fixture Joomla e HTTP ampliate, accettazione manuale pendente.
+
 - **0.58.0 (18/11/2026) — Stati dei corsi in amministrazione:** aggiunti filtro Archiviati e badge coerente nella lista Corsi; verifica su fixture Joomla del filtro stato 2 e rifiuto di input stato non autorizzato. Non vengono introdotti cestino o cancellazione definitiva. Versione MINOR perché la capability amministrativa è nuova e retrocompatibile.
 - **Audit funzionale 1.0.0 — settima tranche (18/11/2026):** censiti 22 ulteriori requisiti relativi a UI, accessibilità e performance (49 criteri, 20 evidenze iniziali e 29 punti ancora da valutare). Audit progressivo 129/214 requisiti; nessuna modifica runtime, SemVer invariato e nessuna percentuale globale inventata.
 

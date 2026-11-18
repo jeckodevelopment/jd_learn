@@ -53,6 +53,10 @@ Il servizio `CertificateService::listForStudent()` e il download privato degli a
 4. **LCM-04 (P1):** gestione docenti e associazioni storiche; mai eliminare l'account Joomla associato.
 5. **LCM-05 (gate):** test automatici/UI Joomla, ACL/CSRF, retrocompatibilità e upgrade dati, catalogo/Finder/SEO, link diretti, storico personale/attestati, documentazione e collaudi.
 
+### LCM-02 — cestinazione e ripristino conservativo corsi (PR #614)
+
+Dal pacchetto 0.59.0 la vista Corsi espone il filtro Cestinati e toolbar native per cestinare/ripristinare, anche in selezioni massive entro 100 ID. Il controller applica POST, CSRF e validazione stretta; il modello applica ACL `core.manage`, `core.edit`, `core.edit.state` per ciascun corso, lock InnoDB e rollback in caso di diniego. La cestinazione imposta `state=-2`; il ripristino esclusivamente da `-2` imposta `state=0`, **mai 1**, senza cancellare versioni o riferimenti di iscrizione. In ogni altro stato, il comando Restore è respinto. I test su database Joomla e richieste HTTP coprono le nuove operazioni; il collaudo manuale resta separato. La purga fisica rimane deliberatamente bloccata, in attesa di un controllo esplicito delle dipendenze interne/esterne. Il workflow editoriale di archiviazione (`state=2`) rimane distinto dal cestino.
+
 ## Comportamenti da testare sul sito Joomla
 
 1. Pubblicare e archiviare un corso con un iscritto incompleto e uno completato; entrambi mantengono stato/progressi e attestati, ma non aprono lezioni/materiali/player e non possono iscriversi nuovamente.

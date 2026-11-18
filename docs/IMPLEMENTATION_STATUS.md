@@ -1,4 +1,6 @@
-**JD Learn 0.58.0-dev — filtro Archiviati per i corsi (18/11/2026).**
+**JD Learn 0.59.0-dev — cestinazione/ripristino conservativo corsi (18/11/2026).**
+
+PR #614: filtro Cestinati e azioni atomiche con ACL/CSRF, ripristino sempre non pubblicato, preservazione dello storico. Non introdotta la cancellazione definitiva: LCM-02 rimane parziale finché è verificata la politica di eliminazione fisica dei corsi privi di dipendenze e conclusa l'accettazione Joomla.
 
 La PR #613 introduce il filtro e badge archivio nella lista amministrativa, con fixture Joomla. LCM-02 resta parziale: cestino e ripristino non implementati. Il vecchio audit riportato sotto è storico e non una percentuale globale convalidata.
 
