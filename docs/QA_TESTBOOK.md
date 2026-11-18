@@ -1,3 +1,13 @@
+## SCR-01/card — docenti visibili nel catalogo (18/11/2026)
+
+1. Pubblicare un corso con due docenti pubblici, diversi e visibili: la card deve mostrarne i nomi con link alle rispettive schede e mantenere ordine della versione pubblicata, in griglia e in elenco.
+2. Rendere uno dei docenti non pubblicato, non accessibile all'utente o in altra lingua: non deve comparire, pur lasciando invariata la scheda del corso; verificare il profilo con categoria antenata non pubblicata/non accessibile.
+3. Modificare il nome o l'associazione del docente in bozza e non ripubblicare: il catalogo continua a mostrare la versione congelata (se il profilo resta visibile). Ripubblicare e verificare l'aggiornamento.
+4. Guest e autenticato con ACL diverse: ogni card espone solo docenti autorizzati; nessuna email/account privato, bio non esposta nella card. Course senza docenti: nessuna etichetta vuota.
+5. Verificare lingua IT/EN, tastiera, responsive, filtri, categoria scoped e paginazione. Un vecchio snapshot malformato non deve produrre pagina 500.
+
+**Gate automatico:** frontend contract e CI. **Collaudo manuale Joomla:** In attesa. Lo stato personale di iscrizione e altri residui SCR-01 restano da completare.
+
 ## SCR-01 — azione disponibile nelle schede del catalogo (18/11/2026)
 
 1. Catalogo pubblico: ogni scheda mostra **Esamina il corso**; il titolo e l'azione rimandano allo stesso corso, senza creare iscrizioni/progressi. Verificare link in griglia ed elenco, mouse e tastiera.
