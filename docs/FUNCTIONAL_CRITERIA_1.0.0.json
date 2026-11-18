@@ -3081,8 +3081,13 @@
       {
         "id": "direct_actions",
         "label": "Autorizzazioni applicate lato server anche tramite URL e richieste dirette",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/CoursesController.php",
+          "component/administrator/src/Application/CourseEditorAccess.php",
+          "tests/courses-ui-http.py",
+          "tests/joomla-editor-access.php"
+        ]
       },
       {
         "id": "advanced_deferred",
@@ -3095,8 +3100,12 @@
       {
         "id": "admin_gate",
         "label": "Accesso backend JD Learn subordinato alle autorizzazioni Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseEditorAccess.php",
+          "component/administrator/src/Model/CoursesModel.php",
+          "tests/joomla-editor-access.php"
+        ]
       },
       {
         "id": "provider_credentials",
@@ -3147,8 +3156,12 @@
       {
         "id": "direct_url",
         "label": "Prove autorizzative su URL diretti e richieste manipolate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/CoursesController.php",
+          "tests/courses-ui-http.py",
+          "tests/learning-http.py"
+        ]
       },
       {
         "id": "query_resources",
@@ -5006,8 +5019,13 @@
       {
         "id": "criterion_04",
         "label": "La presenza di un token CSRF non equivale a un permesso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/CoursesController.php",
+          "component/administrator/src/Application/CourseEditorAccess.php",
+          "tests/courses-ui-http.py",
+          "tests/joomla-editor-access.php"
+        ]
       },
       {
         "id": "criterion_05",
