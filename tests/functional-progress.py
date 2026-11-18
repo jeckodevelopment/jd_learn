@@ -21,7 +21,8 @@ class FunctionalProgressTests(unittest.TestCase):
         output = module.calculate(self.rows, self.criteria)
         self.assertIsNone(output["functional_implementation_percent"])
         self.assertEqual(output["progress_status"], "not_yet_measurable")
-        self.assertEqual(output["audited_requirements"], 129)
+        self.assertEqual(output["audited_requirements"], len(self.criteria["requirements"]))
+        self.assertGreaterEqual(output["audited_requirements"], 141)
 
     def test_completed_requirement_is_explicitly_audited(self):
         output = module.calculate(self.rows, self.criteria)
