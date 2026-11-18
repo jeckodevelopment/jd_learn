@@ -2,10 +2,10 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **329**.
-- Mancanti con lacuna accertata: **17**.
-- Esaminati con esito non verificabile: **21**.
-- Da esaminare: **390**.
+- Implementati: **341**.
+- Mancanti con lacuna accertata: **25**.
+- Esaminati con esito non verificabile: **51**.
+- Da esaminare: **340**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -35,6 +35,14 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#course-message-test:](../component/administrator/src/Application/CourseCommunicationService.php)
+- `UI-01/all_views` — Inventario completo di ID/classi su tutte le viste della 1.0.0. L’inventario elenca le viste principali. Le viste lessonpreview e mailconsentrevoke distribuite non compaiono nella tabella, quindi resta da completare la copertura.
+  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Viste pubbliche: contratto e override](../docs/FRONTEND_CONTRACT_INVENTORY.md)
+  - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
+  - [component/site/tmpl/mailconsentrevoke/default.php#jlms](../component/site/tmpl/mailconsentrevoke/default.php)
+- `UI-07/versioned_maps` — Mappe DOM per ogni vista e compatibilità dei contratti pubblici. I contratti frontend principali e gli hook JavaScript sono tracciati. La mappa non è disponibile per ogni vista distribuita e riporta ancora prove di compatibilità pendenti.
+  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Contratti JavaScript indispensabili](../docs/FRONTEND_CONTRACT_INVENTORY.md)
+  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Residuo FE-10](../docs/FRONTEND_CONTRACT_INVENTORY.md)
+  - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
 - `STA-02/deadline_start` — Non consentire un tentativo quando il tempo residuo viola il limite dichiarato. L’avvio controlla che la finestra sia aperta al momento della richiesta. La scadenza del tentativo viene però calcolata sommando l’intera durata al tempo corrente, senza verificare il residuo rispetto alla finestra didattica.
   - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
@@ -75,6 +83,25 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Controller/CertificateController.php#public function download](../component/site/src/Controller/CertificateController.php)
   - [component/administrator/src/Application/CertificateService.php#public function download](../component/administrator/src/Application/CertificateService.php)
   - [component/administrator/src/Application/CertificateService.php#private function document](../component/administrator/src/Application/CertificateService.php)
+- `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
+  - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+- `DOC-05/criterion_01` — Guida contestuale presente nelle schermate amministrative core. Il piano descrive l’azione Guida e prevede la relativa tranche. I percorsi nativi del corso e del roster esaminati non espongono l’aiuto contestuale richiesto.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+  - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper](../component/administrator/src/View/Courses/HtmlView.php)
+  - [component/administrator/src/View/Enrollments/HtmlView.php#function](../component/administrator/src/View/Enrollments/HtmlView.php)
+- `DOC-05/criterion_02` — Collegamenti ai capitoli pertinenti e non obsoleti. La mappa di capitoli localizzati per ciascuna schermata amministrativa è un’attività della tranche di aiuto contestuale. Le guide già disponibili non costituiscono i collegamenti contestuali della schermata.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+  - [component/administrator/docs/README.md#La distribuzione](../component/administrator/docs/README.md)
+- `DOC-05/criterion_03` — Contenuto disponibile in italiano e inglese. L’aiuto contestuale previsto deve essere disponibile per schermata in IT e EN. Il piano indica la tranche di implementazione e il manuale distribuito esaminato è in italiano.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+  - [component/administrator/docs/README.md#La distribuzione](../component/administrator/docs/README.md)
+- `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L’inventario preliminare include la preferenza di velocità. Il codice usa anche una chiave locale per la preferenza lingua/sottotitoli, non presente nella tabella.
+  - [docs/PRIVACY_COOKIES.md#Inventario preliminare](../docs/PRIVACY_COOKIES.md)
+  - [component/media/js/video.js#jdlearn.video.language.v1](../component/media/js/video.js)
+- `SEC-P4/criterion_04` — Guida amministrativa privacy in IT/EN. La guida pubblicata documenta il bridge e la procedura in italiano, senza la corrispondente guida amministrativa inglese richiesta dal gate.
+  - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video](../docs/PRIVACY_COOKIES.md)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
 
 ## Verifiche ancora necessarie
 
@@ -124,6 +151,16 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Infrastructure/MailQueue.php#public function dispatch](../component/administrator/src/Infrastructure/MailQueue.php)
   - [component/administrator/src/Infrastructure/MailQueue.php#$delay = min(3600](../component/administrator/src/Infrastructure/MailQueue.php)
   - [docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash](../docs/MAIL_SCHEDULER_SETUP.md)
+- `JOO-02/theme_matrix` — Compatibilità completa con template alternativi e tutte le risoluzioni. Il registro FE-12 distingue la prova documentale e HTTP dalla compatibilità visuale. Rimangono le esecuzioni con template e risoluzioni differenti.
+  - [docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+  - [tests/frontend-release-gate.py#NOT VERIFIED: WCAG](../tests/frontend-release-gate.py)
+- `JOO-03/backup_restore` — Backup/rollback e disinstallazione con preservazione dati verificati. La CI verifica l’upgrade retained. Il recupero completo di sito e file dopo rollback, e la preservazione dichiarata in disinstallazione, richiedono esiti operativi.
+  - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)
+  - [.github/workflows/ci.yml#Upgrade the full package with retained data](../.github/workflows/ci.yml)
+- `JOO-05/load` — Benchmark centinaia di studenti simultanei, sicurezza cache e query. La progettazione fissa carico, dataset e soglie. I controlli d’integrazione coprono correttezza dei flussi, mentre servono misure di scala, query e cache.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#JOO-05](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+  - [.github/workflows/ci.yml#Upgrade the full package with retained data](../.github/workflows/ci.yml)
 - `PRI-03/consent_matrix` — Consenso rifiutato/non disponibile su provider e browser reali. Il player verifica consenso prima della richiesta e il test simula lo stato negato e la revoca. Non c’è qui una prova di ciascuna combinazione su browser e provider reali.
   - [component/media/js/video.js#if (!this.allowed())](../component/media/js/video.js)
   - [tests/video-player.mjs#A revoked consent must also settle](../tests/video-player.mjs)
@@ -134,16 +171,95 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PRO-04/overlap_devices` — Riprese sovrapposte, velocità e concorrenza su browser/provider reali. Il backend ha una prova su più sessioni di unione intervalli e conflitto di posizione. Non esercita due dispositivi reali con pause e velocità applicate dai provider.
   - [tests/joomla-video.php#cross-tab interval union completes exactly](../tests/joomla-video.php)
   - [tests/video-player.mjs#player_preference_checks](../tests/video-player.mjs)
+- `ACC-01/wcag_keyboard` — Test WCAG 2.2 AA tastiera, label, focus e lettori di schermo. Il gate strutturale verifica markup e contratti. La navigazione da tastiera, l’ordine del focus e l’uso di lettori di schermo richiedono gli esiti FE-12.
+  - [docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+  - [tests/frontend-release-gate.py#NOT VERIFIED: WCAG](../tests/frontend-release-gate.py)
+- `ACC-01/wcag_visual` — Contrasto, zoom e reflow su schermi/dispositivi target. Il controllo sorgenti non misura contrasto, zoom o reflow nel tema effettivo. Servono esiti visivi nei browser e risoluzioni target.
+  - [docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+  - [tests/frontend-release-gate.py#NOT VERIFIED: WCAG](../tests/frontend-release-gate.py)
+- `ACC-01/captions` — Sottotitoli e trascrizioni in ogni player e contenuto reale. Trascrizione locale e controlli traccia sono documentati con supporto variabile per provider. La disponibilità e qualità sul contenuto reale vanno verificate per ciascun player.
+  - [docs/VIDEO.md#La trascrizione della lezione video](../docs/VIDEO.md)
+  - [tests/video-player.mjs#player_preference_checks](../tests/video-player.mjs)
+- `UI-02/uniqueness` — Audit completo assenza di ID duplicati e navigazione etichette. Due fixture HTTP controllano ID unici su viste e condizioni selezionate. Serve la verifica estesa a tutte le configurazioni, più la navigazione di label e riferimenti ARIA nelle viste renderizzate.
+  - [tests/categories-http.py#public view has no duplicate IDs](../tests/categories-http.py)
+  - [tests/dashboard-http.py#local nav does not duplicate IDs](../tests/dashboard-http.py)
+  - [docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+- `UI-04/cascade_overrides` — Verifica specificità e override con temi Joomla alternativi. L’inventario individua token e radici di stili, mentre il registro di accettazione richiede ancora verifica su template diversi.
+  - [docs/FRONTEND_CONTRACT_INVENTORY.md#CSS: baseline da preservare](../docs/FRONTEND_CONTRACT_INVENTORY.md)
+  - [docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+- `UI-05/override_matrix` — Personalizzazione completa senza modifica alle autorizzazioni su tutti i template. Il registro prevede override per vista e verifiche di autorizzazione. La compatibilità effettiva dei comportamenti dopo override richiede una prova Joomla.
+  - [docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Criteri di compatibilità](../docs/FRONTEND_CONTRACT_INVENTORY.md)
+- `PERF-01/concurrency_target` — Carico simultaneo di centinaia di studenti definito e misurato con dataset reale. Il disegno specifica volumi di 300 e 500 studenti e dimensione dei dati. Per confermare il risultato occorre eseguire e registrare il benchmark con quei carichi.
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-01 — Definizione del carico](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+- `PERF-01/environment_capacity` — Capacità hardware e hosting di riferimento dichiarata. Le specifiche fissano i parametri da riportare. Serve la scheda dell’hosting effettivamente usato con risorse hardware e limiti operativi.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+- `PERF-02/distinct_users` — Utenti simulati indipendenti, think time e token reali. Il modello realistico prescrive utenti indipendenti e tempi di interazione. Occorre una prova con sessioni e token operativi, oltre alle fixture funzionali.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-02 — Modello realistico](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+- `PERF-03/latency_budget` — p95 HTTP pagine/progressi/quiz entro i limiti su ambiente di riferimento. I limiti p95 sono specificati per le tre classi di richieste. Serve il report di misurazione end-to-end su ambiente di riferimento.
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-03 — Budget di risposta](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+- `PERF-03/error_rate` — Tasso errori e saturazione misurati e riproducibili. Il disegno definisce soglie di errore e integrità dei dati. Il tasso effettivo e la saturazione richiedono una prova ripetibile sotto carico.
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+- `PERF-04/db_plan` — EXPLAIN, verifica indici N+1 e piani query a volume reale. Lo schema e i test di integrazione coprono il database operativo. Il requisito aggiunge piani EXPLAIN e verifica a volume reale, che richiedono dataset e misurazioni dedicati.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-04](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [component/administrator/sql/install.mysql.utf8mb4.sql#ENGINE=InnoDB](../component/administrator/sql/install.mysql.utf8mb4.sql)
 - `PERF-05/timing_matrix` — Frequenza salvataggi ed error recovery su browser/provider reali. Il frontend pianifica invii periodici, conserva un batch pendente e distingue errore temporaneo da rifiuto. Mancano misure sulla matrice dei browser e provider reali in perdita e recupero rete.
   - [component/media/js/video.js#async flush](../component/media/js/video.js)
   - [component/media/js/video.js#16000 + Math.random() * 8000](../component/media/js/video.js)
+- `PERF-06/cache_matrix` — Audit cache reverse proxy/CDN, invalidazione metadati e sessioni. Le risposte private hanno controlli applicativi, ma i risultati di cache, sessione e invalidazione dipendono dal reverse proxy o CDN effettivo.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-06](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [component/site/src/Controller/VideoController.php#private, no-store](../component/site/src/Controller/VideoController.php)
+- `PERF-07/throughput` — Benchmark byte range e flussi locali su hosting di riferimento. I flussi locali hanno modalità di consegna documentate. Throughput e comportamento byte range sotto carico dipendono dall’hosting scelto.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-07 — Video e file](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/HTML5_VIDEO.md#Range](../docs/HTML5_VIDEO.md)
+- `PERF-08/queue_latency` — Tempi di esecuzione e recupero da guasti per carichi elevati. Esistono worker a lotti. Latenza sotto carico e recupero operativo richiedono un’esecuzione misurata con campioni rappresentativi.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-08](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [component/administrator/src/Application/CourseCommunicationService.php#public function process](../component/administrator/src/Application/CourseCommunicationService.php)
+- `PERF-10/repro_environment` — Documentazione di CPU/RAM/database/PHP/cron/cache/latency per benchmark. La specifica elenca le caratteristiche da dichiarare per il benchmark. Per verificarlo occorre il profilo dell’ambiente realmente misurato.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+- `PERF-10/load_results` — Report ripetibile throughput, p95, tasso errori e saturazione. Le soglie sono definite. Serve il report con throughput, p95, errori e saturazione misurati e procedura ripetibile.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
 - `EDGE-12/criterion_05` — Token già emesso e buffer mantengono la validità residua. La guida documenta la vita residua del token e del buffer. Per confermare il comportamento effettivo dopo revoca servono misure su sessione Stream e browser reali.
   - [docs/CLOUDFLARE_STREAM.md#validità residua](../docs/CLOUDFLARE_STREAM.md)
   - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#min($now + $c](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+- `REL-01/criterion_03` — Nessun caso obbligatorio lasciato senza esito. Il registro frontend contiene scenari obbligatori con stato da eseguire. Occorrono esiti della build candidata anche per il gate di sicurezza e gli altri casi di accettazione.
+  - [docs/FRONTEND_FE12_ACCEPTANCE.md#Stato iniziale](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#Regole di esecuzione](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
+- `REL-02/criterion_03` — Il report prestazionale contiene l'ambiente e i risultati reali, non solo il numero di utenti virtuali impostato. Il piano definisce ambiente e soglie. Serve un report del benchmark con il profilo del sistema e risultati effettivamente misurati.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+- `REL-02/criterion_04` — Testare i provider reali su browser supportati con contenuti autorizzati. Le fixture frontend usano SDK simulati. Il collaudo con contenuti autorizzati e browser supportati resta un esito separato.
+  - [docs/QA_TESTBOOK.md#I test CI con SDK simulato](../docs/QA_TESTBOOK.md)
+  - [tests/video-player.mjs#Stream SDK double](../tests/video-player.mjs)
 - `PVD-05/criterion_02` — Errori dei quattro provider non provocano completamenti falsi o perdita di progressi. La transazione video annulla le scritture fallite e la fixture verifica conflitti senza perdere la posizione salvata. Per generalizzare ai quattro provider servono le prove della matrice sugli errori esterni effettivi.
   - [component/administrator/src/Application/VideoProgressService.php#transactionRollback](../component/administrator/src/Application/VideoProgressService.php)
   - [tests/joomla-video.php#stale session keeps the newer resume](../tests/joomla-video.php)
   - [docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#Risultato atteso](../docs/specifications/Matrice_collaudo_plugin_video_1.0.csv)
+- `DOC-02/criterion_04` — Istruzioni confrontate con tutte le schermate amministrative core. Il piano prevede il confronto con ogni schermata e registra solo un primo censimento limitato ai form iniziali. La verifica schermata per schermata resta aperta.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#Ricognizione iniziale](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+- `DOC-03/criterion_04` — Procedure verificabili da persone non sviluppatrici. Il piano richiede procedure eseguibili da utenti non sviluppatori e walkthrough con i diversi ruoli. L’evidenza di quelle prove deve ancora essere registrata.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+  - [docs/LEARNER_DASHBOARD.md#Collaudo e perimetro residuo](../docs/LEARNER_DASHBOARD.md)
+- `DOC-08/criterion_03` — Gate documentale e accettazione registrata prima della release. Il gate documentale è specificato. Il progetto deve registrare l’esito della revisione della candidata prima di poterlo accettare.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+  - [docs/RELEASE_PROCEDURE.md#Stato: **workflow predisposto](../docs/RELEASE_PROCEDURE.md)
+- `DOC-09/criterion_01` — Troubleshooting SMTP con diagnosi e rimedi verificati. La guida documenta errori di template, trasporto e riconciliazione. Le prove di effettiva consegna e di recupero SMTP sono segnate come collaudo da eseguire.
+  - [docs/MAIL_SCHEDULER_SETUP.md#Collaudo Joomla/SMTP](../docs/MAIL_SCHEDULER_SETUP.md)
+- `SEC-P4/criterion_02` — Integrazione CMP/consenso dei provider video verificata. Il codice ha un bridge e la guida spiega il collegamento. Il gate richiede un esito con CMP effettiva e provider reali.
+  - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video](../docs/PRIVACY_COOKIES.md)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
+- `SEC-P4/criterion_03` — Scansioni browser per richieste e storage pre-consenso. Il piano elenca le misure pre/post consenso e dopo revoca. Gli esiti delle scansioni browser reali non sono documentati nell’inventario preliminare.
+  - [docs/PRIVACY_COOKIES.md#Piano di verifica obbligatorio](../docs/PRIVACY_COOKIES.md)
+- `SEC-P5/criterion_04` — Decisione go/no-go motivata e registrata. Il gate finale prevede una decisione motivata legata alla build e ai risultati. La procedura di release è predisposta e la separata decisione go/no-go resta da registrare.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#go/no-go](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
+  - [docs/RELEASE_PROCEDURE.md#gate IMP-10](../docs/RELEASE_PROCEDURE.md)
 - `LCM-01/criterion_01` — Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti. L’archiviazione chiude ammissioni e didattica. I contesti di aula, quiz e risorse risalgono all’iscrizione e al corso, ma resta da tracciare la copertura di tutti gli endpoint diretti compresi gli ingressi amministrativi e i retry.
   - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
   - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
@@ -188,6 +304,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CourseCommunicationService.php#private function authorized](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#unset($row->email)](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function course](../component/administrator/src/Application/EnrollmentRosterService.php)
+- `JOO-01/update_server` — Update server e governance di distribuzione release. Il package espone il feed HTTPS. Il workflow separa preparazione, pubblicazione controllata e verifica dell’asset con checksum. Il collaudo dell’aggiornamento reale resta un gate.
+  - [packages/pkg_jlms.xml#<updateservers>](../packages/pkg_jlms.xml)
+  - [.github/workflows/release.yml#inputs.publish == true](../.github/workflows/release.yml)
+  - [docs/RELEASE_PROCEDURE.md#Avvio del workflow](../docs/RELEASE_PROCEDURE.md)
+- `PERF-02/workload_distribution` — Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento. Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#Distribuzione di riferimento: 60% video](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#mix60%video](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
 - `REP-02/roster` — Elenco iscritti per corso con stato accesso e avanzamento. La query è limitata al corso scelto. Il layout mostra separatamente stato dell’iscrizione, stato didattico e percentuale quando definita. La fixture verifica righe di più iscritti ed esclusione di un altro corso.
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function query](../component/administrator/src/Application/EnrollmentRosterService.php)
   - [component/administrator/tmpl/enrollments/default.php#COM_JLMS_ROSTER_PROGRESS](../component/administrator/tmpl/enrollments/default.php)
@@ -398,6 +521,18 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DAT-04/criterion_02` — Validare percorsi, MIME e dimensioni upload dei materiali core. L’upload accetta soltanto file ricevuti da PHP. Lo storage verifica limite e tipo del file, rifiuta sorgenti non regolari o link e genera la chiave di storage indipendentemente dal nome in input.
   - [component/administrator/src/Application/MaterialService.php#is_uploaded_file](../component/administrator/src/Application/MaterialService.php)
   - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#MaterialFilePolicy::inspect](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+- `REL-03/criterion_03` — La documentazione è parte della verifica, non un'attività facoltativa successiva. Il processo pre-release include un gate documentale con walkthrough, revisione tecnica, verifiche di accessibilità e copertura IT/EN.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#Criteri di qualità verificabili](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+- `REL-04/criterion_03` — Estensione abbonamenti: assegnazione/revoca gruppi e flussi commerciali. Le responsabilità di abbonamento e assegnazione dei gruppi sono esplicitamente attribuite all’estensione commerciale. Il scope esclude il commercio dal prodotto.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#REL-04](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
+  - [docs/RELEASE_SCOPE.md#prima versione stabile](../docs/RELEASE_SCOPE.md)
+- `REL-04/criterion_04` — Gestore sito: configurazione ambientale, informative/consensi e conservazione. La guida operativa attribuisce configurazione dei provider, CMP e classificazione delle tecnologie al gestore. Il piano privacy assegna la policy al titolare del sito.
+  - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video](../docs/PRIVACY_COOKIES.md)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#titolare del sito](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
+- `REL-04/criterion_05` — Provider video: disponibilità e distribuzione secondo contratto. Il contratto distingue la distribuzione a carico del provider da policy, persistenza e completamento a carico del componente LMS.
+  - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#REL-04](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
 - `PVD-02/criterion_07` — Operazioni comuni: descrizione, capacita, normalizzazione/validazione sorgente, metadati, descrittore playback e asset frontend. L’interfaccia pubblica tipizzata dichiara tutte e sette le operazioni. La factory può restituire soltanto oggetti conformi con chiave e major coerenti.
   - [libraries/jlms/src/Video/VideoProviderInterface.php#public function getDescriptor](../libraries/jlms/src/Video/VideoProviderInterface.php)
   - [libraries/jlms/src/Video/VideoProviderInterface.php#public function getFrontendAdapterAsset](../libraries/jlms/src/Video/VideoProviderInterface.php)
@@ -445,6 +580,21 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PVD-06/criterion_03` — Incompatibilità di versione o capacità vengono rifiutate in modo esplicito. Il registro rifiuta major incompatibili o factory incongrue. Il servizio rifiuta le capacità richieste mancanti sia prima sia dopo la creazione del descrittore.
   - [libraries/jlms/src/Video/VideoProviderRegistry.php#PROVIDER_CONTRACT_MISMATCH](../libraries/jlms/src/Video/VideoProviderRegistry.php)
   - [component/administrator/src/Application/VideoProgressService.php#$actual = $descriptor->capabilities](../component/administrator/src/Application/VideoProgressService.php)
+- `SECDEV-01/criterion_01` — Implementare controller, model, view e tmpl con le classi e convenzioni MVC Joomla. Il provider del componente registra le factory MVC, router e dispatcher di Joomla. Le viste pubbliche usano model/view/templating Joomla con layout nativi.
+  - [component/administrator/services/provider.php#new MVCFactory](../component/administrator/services/provider.php)
+  - [component/site/src/Model/CoursesModel.php#extends ListModel](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/View/Course/HtmlView.php#extends BaseHtmlView](../component/site/src/View/Course/HtmlView.php)
+- `SECDEV-01/criterion_02` — servizi applicativi condivisi tramite dependency injection. Il container registra servizi di pubblicazione, didattica, quiz e storage con dipendenze iniettate. Il componente espone le istanze condivise ai controller.
+  - [component/administrator/services/provider.php#QuestionBankService::class](../component/administrator/services/provider.php)
+  - [component/administrator/services/provider.php#PublicationService::class](../component/administrator/services/provider.php)
+- `SECDEV-01/criterion_04` — Nessun motore MVC o bootstrap parallelo. I percorsi site e backend passano dal dispatcher Joomla e dalle relative factory, senza un bootstrap applicativo parallelo nel pacchetto.
+  - [component/administrator/services/provider.php#ComponentDispatcherFactory](../component/administrator/services/provider.php)
+  - [component/administrator/services/provider.php#setMVCFactory](../component/administrator/services/provider.php)
+  - [component/jlms.xml#<extension](../component/jlms.xml)
+- `SECDEV-08/criterion_02` — Build riproducibile, pacchetto senza segreti/file dev, checksum, changelog e aggiornamenti Joomla su HTTPS. Il builder produce ZIP deterministico e checksum. Il workflow di rilascio verifica l’asset rispetto al candidato e il manifest dichiara il feed di aggiornamento su HTTPS.
+  - [tools/build.py#SHA256SUMS.txt](../tools/build.py)
+  - [.github/workflows/release.yml#public release asset checksum mismatch](../.github/workflows/release.yml)
+  - [packages/pkg_jlms.xml#<updateservers>](../packages/pkg_jlms.xml)
 - `PBASE-01/criterion_04` — Tutti installati. Il manifest installa il gruppo con YouTube, Vimeo, Cloudflare Stream e HTML5. Lo smoke Joomla verifica la registrazione dei quattro elementi dopo l’installazione del pacchetto.
   - [packages/pkg_jlms.xml#plg_jlmsvideo_youtube.zip](../packages/pkg_jlms.xml)
   - [packages/pkg_jlms.xml#plg_jlmsvideo_html5.zip](../packages/pkg_jlms.xml)
@@ -469,6 +619,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [.github/workflows/ci.yml#Upgrade the full package with retained data and enabled providers](../.github/workflows/ci.yml)
   - [tests/joomla-smoke.php#retained-data mode](../tests/joomla-smoke.php)
   - [tests/install-package.php#preserve the registration consent plugin state](../tests/install-package.php)
+- `DOC-02/criterion_01` — Manuale amministratore copre corsi, versioni, programma e iscritti. Le guide distribuite coprono editor, programma e versione, e la guida roster descrive iscrizioni, permessi e filtri operativi.
+  - [component/administrator/docs/README.md#La versione attiva](../component/administrator/docs/README.md)
+  - [docs/COURSE_EDITOR.md#Recuperare un programma storico](../docs/COURSE_EDITOR.md)
+  - [docs/ENROLLMENT_ROSTER.md#Filtri e paginazione](../docs/ENROLLMENT_ROSTER.md)
+- `DOC-04/criterion_03` — Upgrade, scheduler e troubleshooting documentati. La procedura spiega upgrade e recupero. La guida scheduler descrive task, configurazione, diagnosi e riconciliazione.
+  - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)
+  - [docs/MAIL_SCHEDULER_SETUP.md#Diagnostica sicura](../docs/MAIL_SCHEDULER_SETUP.md)
 - `LCM-01/criterion_02` — preservare storico personale, frequenze, progressi e attestati. L’archiviazione cambia lo stato del corso attraverso il workflow e chiude le due abilitazioni sul corso conservando la versione pubblicata. La transazione non elimina iscrizioni, progressi o attestati.
   - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
   - [tests/joomla-publication-review.php#archive](../tests/joomla-publication-review.php)

@@ -2222,8 +2222,20 @@
       {
         "id": "update_server",
         "label": "Update server e governance di distribuzione release",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          ".github/workflows/release.yml",
+          "docs/RELEASE_PROCEDURE.md"
+        ],
+        "review": {
+          "reason": "Il package espone il feed HTTPS. Il workflow separa preparazione, pubblicazione controllata e verifica dell’asset con checksum. Il collaudo dell’aggiornamento reale resta un gate.",
+          "references": [
+            "packages/pkg_jlms.xml#<updateservers>",
+            ".github/workflows/release.yml#inputs.publish == true",
+            "docs/RELEASE_PROCEDURE.md#Avvio del workflow"
+          ]
+        }
       }
     ],
     "JOO-02": [
@@ -2239,8 +2251,18 @@
       {
         "id": "theme_matrix",
         "label": "Compatibilità completa con template alternativi e tutte le risoluzioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/FRONTEND_FE12_ACCEPTANCE.md",
+          "tests/frontend-release-gate.py"
+        ],
+        "review": {
+          "reason": "Il registro FE-12 distingue la prova documentale e HTTP dalla compatibilità visuale. Rimangono le esecuzioni con template e risoluzioni differenti.",
+          "references": [
+            "docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08",
+            "tests/frontend-release-gate.py#NOT VERIFIED: WCAG"
+          ]
+        }
       }
     ],
     "JOO-03": [
@@ -2256,8 +2278,18 @@
       {
         "id": "backup_restore",
         "label": "Backup/rollback e disinstallazione con preservazione dati verificati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/RELEASE_PROCEDURE.md",
+          ".github/workflows/ci.yml"
+        ],
+        "review": {
+          "reason": "La CI verifica l’upgrade retained. Il recupero completo di sito e file dopo rollback, e la preservazione dichiarata in disinstallazione, richiedono esiti operativi.",
+          "references": [
+            "docs/RELEASE_PROCEDURE.md#Gestione errori e recupero",
+            ".github/workflows/ci.yml#Upgrade the full package with retained data"
+          ]
+        }
       }
     ],
     "JOO-04": [
@@ -2290,8 +2322,20 @@
       {
         "id": "load",
         "label": "Benchmark centinaia di studenti simultanei, sicurezza cache e query",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md",
+          ".github/workflows/ci.yml"
+        ],
+        "review": {
+          "reason": "La progettazione fissa carico, dataset e soglie. I controlli d’integrazione coprono correttezza dei flussi, mentre servono misure di scala, query e cache.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#JOO-05",
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi",
+            ".github/workflows/ci.yml#Upgrade the full package with retained data"
+          ]
+        }
       }
     ],
     "SIC-01": [
@@ -3024,20 +3068,50 @@
       {
         "id": "wcag_keyboard",
         "label": "Test WCAG 2.2 AA tastiera, label, focus e lettori di schermo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/FRONTEND_FE12_ACCEPTANCE.md",
+          "tests/frontend-release-gate.py"
+        ],
+        "review": {
+          "reason": "Il gate strutturale verifica markup e contratti. La navigazione da tastiera, l’ordine del focus e l’uso di lettori di schermo richiedono gli esiti FE-12.",
+          "references": [
+            "docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate",
+            "tests/frontend-release-gate.py#NOT VERIFIED: WCAG"
+          ]
+        }
       },
       {
         "id": "wcag_visual",
         "label": "Contrasto, zoom e reflow su schermi/dispositivi target",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/FRONTEND_FE12_ACCEPTANCE.md",
+          "tests/frontend-release-gate.py"
+        ],
+        "review": {
+          "reason": "Il controllo sorgenti non misura contrasto, zoom o reflow nel tema effettivo. Servono esiti visivi nei browser e risoluzioni target.",
+          "references": [
+            "docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate",
+            "tests/frontend-release-gate.py#NOT VERIFIED: WCAG"
+          ]
+        }
       },
       {
         "id": "captions",
         "label": "Sottotitoli e trascrizioni in ogni player e contenuto reale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Trascrizione locale e controlli traccia sono documentati con supporto variabile per provider. La disponibilità e qualità sul contenuto reale vanno verificate per ciascun player.",
+          "references": [
+            "docs/VIDEO.md#La trascrizione della lezione video",
+            "tests/video-player.mjs#player_preference_checks"
+          ]
+        }
       }
     ],
     "UI-01": [
@@ -3053,8 +3127,20 @@
       {
         "id": "all_views",
         "label": "Inventario completo di ID/classi su tutte le viste della 1.0.0",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/FRONTEND_CONTRACT_INVENTORY.md",
+          "component/site/tmpl/lessonpreview/default.php",
+          "component/site/tmpl/mailconsentrevoke/default.php"
+        ],
+        "review": {
+          "reason": "L’inventario elenca le viste principali. Le viste lessonpreview e mailconsentrevoke distribuite non compaiono nella tabella, quindi resta da completare la copertura.",
+          "references": [
+            "docs/FRONTEND_CONTRACT_INVENTORY.md#Viste pubbliche: contratto e override",
+            "component/site/tmpl/lessonpreview/default.php#jlms",
+            "component/site/tmpl/mailconsentrevoke/default.php#jlms"
+          ]
+        }
       }
     ],
     "UI-02": [
@@ -3070,8 +3156,20 @@
       {
         "id": "uniqueness",
         "label": "Audit completo assenza di ID duplicati e navigazione etichette",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/categories-http.py",
+          "tests/dashboard-http.py",
+          "docs/FRONTEND_FE12_ACCEPTANCE.md"
+        ],
+        "review": {
+          "reason": "Due fixture HTTP controllano ID unici su viste e condizioni selezionate. Serve la verifica estesa a tutte le configurazioni, più la navigazione di label e riferimenti ARIA nelle viste renderizzate.",
+          "references": [
+            "tests/categories-http.py#public view has no duplicate IDs",
+            "tests/dashboard-http.py#local nav does not duplicate IDs",
+            "docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate"
+          ]
+        }
       }
     ],
     "UI-03": [
@@ -3104,8 +3202,18 @@
       {
         "id": "cascade_overrides",
         "label": "Verifica specificità e override con temi Joomla alternativi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/FRONTEND_CONTRACT_INVENTORY.md",
+          "docs/FRONTEND_FE12_ACCEPTANCE.md"
+        ],
+        "review": {
+          "reason": "L’inventario individua token e radici di stili, mentre il registro di accettazione richiede ancora verifica su template diversi.",
+          "references": [
+            "docs/FRONTEND_CONTRACT_INVENTORY.md#CSS: baseline da preservare",
+            "docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08"
+          ]
+        }
       }
     ],
     "UI-05": [
@@ -3121,8 +3229,18 @@
       {
         "id": "override_matrix",
         "label": "Personalizzazione completa senza modifica alle autorizzazioni su tutti i template",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/FRONTEND_FE12_ACCEPTANCE.md",
+          "docs/FRONTEND_CONTRACT_INVENTORY.md"
+        ],
+        "review": {
+          "reason": "Il registro prevede override per vista e verifiche di autorizzazione. La compatibilità effettiva dei comportamenti dopo override richiede una prova Joomla.",
+          "references": [
+            "docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08",
+            "docs/FRONTEND_CONTRACT_INVENTORY.md#Criteri di compatibilità"
+          ]
+        }
       }
     ],
     "UI-06": [
@@ -3154,50 +3272,121 @@
       {
         "id": "versioned_maps",
         "label": "Mappe DOM per ogni vista e compatibilità dei contratti pubblici",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/FRONTEND_CONTRACT_INVENTORY.md",
+          "component/site/tmpl/lessonpreview/default.php"
+        ],
+        "review": {
+          "reason": "I contratti frontend principali e gli hook JavaScript sono tracciati. La mappa non è disponibile per ogni vista distribuita e riporta ancora prove di compatibilità pendenti.",
+          "references": [
+            "docs/FRONTEND_CONTRACT_INVENTORY.md#Contratti JavaScript indispensabili",
+            "docs/FRONTEND_CONTRACT_INVENTORY.md#Residuo FE-10",
+            "component/site/tmpl/lessonpreview/default.php#jlms"
+          ]
+        }
       }
     ],
     "PERF-01": [
       {
         "id": "concurrency_target",
         "label": "Carico simultaneo di centinaia di studenti definito e misurato con dataset reale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md",
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md"
+        ],
+        "review": {
+          "reason": "Il disegno specifica volumi di 300 e 500 studenti e dimensione dei dati. Per confermare il risultato occorre eseguire e registrare il benchmark con quei carichi.",
+          "references": [
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi",
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-01 — Definizione del carico"
+          ]
+        }
       },
       {
         "id": "environment_capacity",
         "label": "Capacità hardware e hosting di riferimento dichiarata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md"
+        ],
+        "review": {
+          "reason": "Le specifiche fissano i parametri da riportare. Serve la scheda dell’hosting effettivamente usato con risorse hardware e limiti operativi.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova",
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi"
+          ]
+        }
       }
     ],
     "PERF-02": [
       {
         "id": "workload_distribution",
         "label": "Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md"
+        ],
+        "review": {
+          "reason": "Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#Distribuzione di riferimento: 60% video",
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#mix60%video"
+          ]
+        }
       },
       {
         "id": "distinct_users",
         "label": "Utenti simulati indipendenti, think time e token reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md"
+        ],
+        "review": {
+          "reason": "Il modello realistico prescrive utenti indipendenti e tempi di interazione. Occorre una prova con sessioni e token operativi, oltre alle fixture funzionali.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-02 — Modello realistico",
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi"
+          ]
+        }
       }
     ],
     "PERF-03": [
       {
         "id": "latency_budget",
         "label": "p95 HTTP pagine/progressi/quiz entro i limiti su ambiente di riferimento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md",
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md"
+        ],
+        "review": {
+          "reason": "I limiti p95 sono specificati per le tre classi di richieste. Serve il report di misurazione end-to-end su ambiente di riferimento.",
+          "references": [
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95",
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-03 — Budget di risposta"
+          ]
+        }
       },
       {
         "id": "error_rate",
         "label": "Tasso errori e saturazione misurati e riproducibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md",
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md"
+        ],
+        "review": {
+          "reason": "Il disegno definisce soglie di errore e integrità dei dati. Il tasso effettivo e la saturazione richiedono una prova ripetibile sotto carico.",
+          "references": [
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95",
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova"
+          ]
+        }
       }
     ],
     "PERF-04": [
@@ -3213,8 +3402,18 @@
       {
         "id": "db_plan",
         "label": "EXPLAIN, verifica indici N+1 e piani query a volume reale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "component/administrator/sql/install.mysql.utf8mb4.sql"
+        ],
+        "review": {
+          "reason": "Lo schema e i test di integrazione coprono il database operativo. Il requisito aggiunge piani EXPLAIN e verifica a volume reale, che richiedono dataset e misurazioni dedicati.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-04",
+            "component/administrator/sql/install.mysql.utf8mb4.sql#ENGINE=InnoDB"
+          ]
+        }
       }
     ],
     "PERF-05": [
@@ -3256,8 +3455,18 @@
       {
         "id": "cache_matrix",
         "label": "Audit cache reverse proxy/CDN, invalidazione metadati e sessioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "component/site/src/Controller/VideoController.php"
+        ],
+        "review": {
+          "reason": "Le risposte private hanno controlli applicativi, ma i risultati di cache, sessione e invalidazione dipendono dal reverse proxy o CDN effettivo.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-06",
+            "component/site/src/Controller/VideoController.php#private, no-store"
+          ]
+        }
       }
     ],
     "PERF-07": [
@@ -3282,8 +3491,18 @@
       {
         "id": "throughput",
         "label": "Benchmark byte range e flussi locali su hosting di riferimento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/HTML5_VIDEO.md"
+        ],
+        "review": {
+          "reason": "I flussi locali hanno modalità di consegna documentate. Throughput e comportamento byte range sotto carico dipendono dall’hosting scelto.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-07 — Video e file",
+            "docs/HTML5_VIDEO.md#Range"
+          ]
+        }
       }
     ],
     "PERF-08": [
@@ -3305,8 +3524,18 @@
       {
         "id": "queue_latency",
         "label": "Tempi di esecuzione e recupero da guasti per carichi elevati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "component/administrator/src/Application/CourseCommunicationService.php"
+        ],
+        "review": {
+          "reason": "Esistono worker a lotti. Latenza sotto carico e recupero operativo richiedono un’esecuzione misurata con campioni rappresentativi.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-08",
+            "component/administrator/src/Application/CourseCommunicationService.php#public function process"
+          ]
+        }
       }
     ],
     "PERF-09": [
@@ -3330,14 +3559,32 @@
       {
         "id": "repro_environment",
         "label": "Documentazione di CPU/RAM/database/PHP/cron/cache/latency per benchmark",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md"
+        ],
+        "review": {
+          "reason": "La specifica elenca le caratteristiche da dichiarare per il benchmark. Per verificarlo occorre il profilo dell’ambiente realmente misurato.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova"
+          ]
+        }
       },
       {
         "id": "load_results",
         "label": "Report ripetibile throughput, p95, tasso errori e saturazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md"
+        ],
+        "review": {
+          "reason": "Le soglie sono definite. Serve il report con throughput, p95, errori e saturazione misurati e procedura ripetibile.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova",
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95"
+          ]
+        }
       }
     ],
     "PERF-11": [
@@ -5554,8 +5801,18 @@
       {
         "id": "criterion_03",
         "label": "Nessun caso obbligatorio lasciato senza esito",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/FRONTEND_FE12_ACCEPTANCE.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il registro frontend contiene scenari obbligatori con stato da eseguire. Occorrono esiti della build candidata anche per il gate di sicurezza e gli altri casi di accettazione.",
+          "references": [
+            "docs/FRONTEND_FE12_ACCEPTANCE.md#Stato iniziale",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#Regole di esecuzione"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -5592,14 +5849,34 @@
       {
         "id": "criterion_03",
         "label": "Il report prestazionale contiene l'ambiente e i risultati reali, non solo il numero di utenti virtuali impostato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md"
+        ],
+        "review": {
+          "reason": "Il piano definisce ambiente e soglie. Serve un report del benchmark con il profilo del sistema e risultati effettivamente misurati.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova",
+            "docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Testare i provider reali su browser supportati con contenuti autorizzati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QA_TESTBOOK.md",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Le fixture frontend usano SDK simulati. Il collaudo con contenuti autorizzati e browser supportati resta un esito separato.",
+          "references": [
+            "docs/QA_TESTBOOK.md#I test CI con SDK simulato",
+            "tests/video-player.mjs#Stream SDK double"
+          ]
+        }
       }
     ],
     "REL-03": [
@@ -5618,8 +5895,17 @@
       {
         "id": "criterion_03",
         "label": "La documentazione è parte della verifica, non un'attività facoltativa successiva",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il processo pre-release include un gate documentale con walkthrough, revisione tecnica, verifiche di accessibilità e copertura IT/EN.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5",
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#Criteri di qualità verificabili"
+          ]
+        }
       }
     ],
     "REL-04": [
@@ -5638,20 +5924,50 @@
       {
         "id": "criterion_03",
         "label": "Estensione abbonamenti: assegnazione/revoca gruppi e flussi commerciali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/RELEASE_SCOPE.md"
+        ],
+        "review": {
+          "reason": "Le responsabilità di abbonamento e assegnazione dei gruppi sono esplicitamente attribuite all’estensione commerciale. Il scope esclude il commercio dal prodotto.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#REL-04",
+            "docs/RELEASE_SCOPE.md#prima versione stabile"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Gestore sito: configurazione ambientale, informative/consensi e conservazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/PRIVACY_COOKIES.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La guida operativa attribuisce configurazione dei provider, CMP e classificazione delle tecnologie al gestore. Il piano privacy assegna la policy al titolare del sito.",
+          "references": [
+            "docs/PRIVACY_COOKIES.md#Configurazione del consenso video",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#titolare del sito"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Provider video: disponibilità e distribuzione secondo contratto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md",
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md"
+        ],
+        "review": {
+          "reason": "Il contratto distingue la distribuzione a carico del provider da policy, persistenza e completamento a carico del componente LMS.",
+          "references": [
+            "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player",
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#REL-04"
+          ]
+        }
       },
       {
         "id": "criterion_06",
@@ -6166,14 +6482,35 @@
       {
         "id": "criterion_01",
         "label": "Implementare controller, model, view e tmpl con le classi e convenzioni MVC Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "component/site/src/Model/CoursesModel.php",
+          "component/site/src/View/Course/HtmlView.php"
+        ],
+        "review": {
+          "reason": "Il provider del componente registra le factory MVC, router e dispatcher di Joomla. Le viste pubbliche usano model/view/templating Joomla con layout nativi.",
+          "references": [
+            "component/administrator/services/provider.php#new MVCFactory",
+            "component/site/src/Model/CoursesModel.php#extends ListModel",
+            "component/site/src/View/Course/HtmlView.php#extends BaseHtmlView"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "servizi applicativi condivisi tramite dependency injection",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/services/provider.php"
+        ],
+        "review": {
+          "reason": "Il container registra servizi di pubblicazione, didattica, quiz e storage con dipendenze iniettate. Il componente espone le istanze condivise ai controller.",
+          "references": [
+            "component/administrator/services/provider.php#QuestionBankService::class",
+            "component/administrator/services/provider.php#PublicationService::class"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -6184,8 +6521,19 @@
       {
         "id": "criterion_04",
         "label": "Nessun motore MVC o bootstrap parallelo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "component/jlms.xml"
+        ],
+        "review": {
+          "reason": "I percorsi site e backend passano dal dispatcher Joomla e dalle relative factory, senza un bootstrap applicativo parallelo nel pacchetto.",
+          "references": [
+            "component/administrator/services/provider.php#ComponentDispatcherFactory",
+            "component/administrator/services/provider.php#setMVCFactory",
+            "component/jlms.xml#<extension"
+          ]
+        }
       }
     ],
     "SECDEV-02": [
@@ -6377,8 +6725,20 @@
       {
         "id": "criterion_02",
         "label": "Build riproducibile, pacchetto senza segreti/file dev, checksum, changelog e aggiornamenti Joomla su HTTPS",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "tools/build.py",
+          ".github/workflows/release.yml",
+          "packages/pkg_jlms.xml"
+        ],
+        "review": {
+          "reason": "Il builder produce ZIP deterministico e checksum. Il workflow di rilascio verifica l’asset rispetto al candidato e il manifest dichiara il feed di aggiornamento su HTTPS.",
+          "references": [
+            "tools/build.py#SHA256SUMS.txt",
+            ".github/workflows/release.yml#public release asset checksum mismatch",
+            "packages/pkg_jlms.xml#<updateservers>"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -6625,8 +6985,20 @@
       {
         "id": "criterion_01",
         "label": "Manuale amministratore copre corsi, versioni, programma e iscritti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/docs/README.md",
+          "docs/COURSE_EDITOR.md",
+          "docs/ENROLLMENT_ROSTER.md"
+        ],
+        "review": {
+          "reason": "Le guide distribuite coprono editor, programma e versione, e la guida roster descrive iscrizioni, permessi e filtri operativi.",
+          "references": [
+            "component/administrator/docs/README.md#La versione attiva",
+            "docs/COURSE_EDITOR.md#Recuperare un programma storico",
+            "docs/ENROLLMENT_ROSTER.md#Filtri e paginazione"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -6643,8 +7015,17 @@
       {
         "id": "criterion_04",
         "label": "Istruzioni confrontate con tutte le schermate amministrative core",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il piano prevede il confronto con ogni schermata e registra solo un primo censimento limitato ai form iniziali. La verifica schermata per schermata resta aperta.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#Ricognizione iniziale",
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5"
+          ]
+        }
       }
     ],
     "DOC-03": [
@@ -6663,14 +7044,34 @@
       {
         "id": "criterion_03",
         "label": "Schermate illustrative accessibili e coerenti con la UI",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/LEARNER_DASHBOARD.md",
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.",
+          "references": [
+            "docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi",
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Procedure verificabili da persone non sviluppatrici",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "docs/LEARNER_DASHBOARD.md"
+        ],
+        "review": {
+          "reason": "Il piano richiede procedure eseguibili da utenti non sviluppatori e walkthrough con i diversi ruoli. L’evidenza di quelle prove deve ancora essere registrata.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5",
+            "docs/LEARNER_DASHBOARD.md#Collaudo e perimetro residuo"
+          ]
+        }
       }
     ],
     "DOC-04": [
@@ -6689,8 +7090,18 @@
       {
         "id": "criterion_03",
         "label": "Upgrade, scheduler e troubleshooting documentati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/RELEASE_PROCEDURE.md",
+          "docs/MAIL_SCHEDULER_SETUP.md"
+        ],
+        "review": {
+          "reason": "La procedura spiega upgrade e recupero. La guida scheduler descrive task, configurazione, diagnosi e riconciliazione.",
+          "references": [
+            "docs/RELEASE_PROCEDURE.md#Gestione errori e recupero",
+            "docs/MAIL_SCHEDULER_SETUP.md#Diagnostica sicura"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -6703,20 +7114,52 @@
       {
         "id": "criterion_01",
         "label": "Guida contestuale presente nelle schermate amministrative core",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "component/administrator/src/View/Courses/HtmlView.php",
+          "component/administrator/src/View/Enrollments/HtmlView.php"
+        ],
+        "review": {
+          "reason": "Il piano descrive l’azione Guida e prevede la relativa tranche. I percorsi nativi del corso e del roster esaminati non espongono l’aiuto contestuale richiesto.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3",
+            "component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper",
+            "component/administrator/src/View/Enrollments/HtmlView.php#function"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Collegamenti ai capitoli pertinenti e non obsoleti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "component/administrator/docs/README.md"
+        ],
+        "review": {
+          "reason": "La mappa di capitoli localizzati per ciascuna schermata amministrativa è un’attività della tranche di aiuto contestuale. Le guide già disponibili non costituiscono i collegamenti contestuali della schermata.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3",
+            "component/administrator/docs/README.md#La distribuzione"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Contenuto disponibile in italiano e inglese",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "component/administrator/docs/README.md"
+        ],
+        "review": {
+          "reason": "L’aiuto contestuale previsto deve essere disponibile per schermata in IT e EN. Il piano indica la tranche di implementazione e il manuale distribuito esaminato è in italiano.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3",
+            "component/administrator/docs/README.md#La distribuzione"
+          ]
+        }
       }
     ],
     "DOC-06": [
@@ -6775,16 +7218,34 @@
       {
         "id": "criterion_03",
         "label": "Gate documentale e accettazione registrata prima della release",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "docs/RELEASE_PROCEDURE.md"
+        ],
+        "review": {
+          "reason": "Il gate documentale è specificato. Il progetto deve registrare l’esito della revisione della candidata prima di poterlo accettare.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5",
+            "docs/RELEASE_PROCEDURE.md#Stato: **workflow predisposto"
+          ]
+        }
       }
     ],
     "DOC-09": [
       {
         "id": "criterion_01",
         "label": "Troubleshooting SMTP con diagnosi e rimedi verificati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MAIL_SCHEDULER_SETUP.md"
+        ],
+        "review": {
+          "reason": "La guida documenta errori di template, trasporto e riconciliazione. Le prove di effettiva consegna e di recupero SMTP sono segnate come collaudo da eseguire.",
+          "references": [
+            "docs/MAIL_SCHEDULER_SETUP.md#Collaudo Joomla/SMTP"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -6877,26 +7338,64 @@
       {
         "id": "criterion_01",
         "label": "Inventario di cookie e storage locali del frontend e dei player",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRIVACY_COOKIES.md",
+          "component/media/js/video.js"
+        ],
+        "review": {
+          "reason": "L’inventario preliminare include la preferenza di velocità. Il codice usa anche una chiave locale per la preferenza lingua/sottotitoli, non presente nella tabella.",
+          "references": [
+            "docs/PRIVACY_COOKIES.md#Inventario preliminare",
+            "component/media/js/video.js#jdlearn.video.language.v1"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Integrazione CMP/consenso dei provider video verificata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRIVACY_COOKIES.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il codice ha un bridge e la guida spiega il collegamento. Il gate richiede un esito con CMP effettiva e provider reali.",
+          "references": [
+            "docs/PRIVACY_COOKIES.md#Configurazione del consenso video",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Scansioni browser per richieste e storage pre-consenso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRIVACY_COOKIES.md"
+        ],
+        "review": {
+          "reason": "Il piano elenca le misure pre/post consenso e dopo revoca. Gli esiti delle scansioni browser reali non sono documentati nell’inventario preliminare.",
+          "references": [
+            "docs/PRIVACY_COOKIES.md#Piano di verifica obbligatorio"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Guida amministrativa privacy in IT/EN",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRIVACY_COOKIES.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La guida pubblicata documenta il bridge e la procedura in italiano, senza la corrispondente guida amministrativa inglese richiesta dal gate.",
+          "references": [
+            "docs/PRIVACY_COOKIES.md#Configurazione del consenso video",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4"
+          ]
+        }
       }
     ],
     "SEC-P5": [
@@ -6921,8 +7420,18 @@
       {
         "id": "criterion_04",
         "label": "Decisione go/no-go motivata e registrata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/RELEASE_PROCEDURE.md"
+        ],
+        "review": {
+          "reason": "Il gate finale prevede una decisione motivata legata alla build e ai risultati. La procedura di release è predisposta e la separata decisione go/no-go resta da registrare.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#go/no-go",
+            "docs/RELEASE_PROCEDURE.md#gate IMP-10"
+          ]
+        }
       }
     ],
     "LCM-01": [
