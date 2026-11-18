@@ -7,6 +7,8 @@ Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: 
 **54.12%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
 Il registro contiene 426 criteri implementati con evidenza, 63 lacune accertate, 268 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
 
+La percentuale funzionale globale rigorosa resta **non determinabile** finché i criteri non verificabili non vengono risolti.
+
 ## Collaudo manuale Joomla
 
 **4.67%** — requisiti con almeno un esito registrato (10/214). È copertura per requisito, non percentuale di casi di test superati.
