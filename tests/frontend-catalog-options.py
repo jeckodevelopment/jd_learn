@@ -83,6 +83,8 @@ assert "<?php if ($this->showSummary" in template
 assert "CoursePresentation::fromSnapshot" in template
 assert 'class="jlms-course-card__action"' in template
 assert "COM_JLMS_CATALOG_VIEW_COURSE" in template
+assert "href=\"<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>\"" in template
+assert "COM_JLMS_CATALOG_APPROVAL_REQUIRED" in template and "COM_JLMS_CATALOG_AUTO_ENROLLMENT" in template
 assert "COM_JLMS_CATALOG_AUTO_ENROLLMENT" in template
 assert "COM_JLMS_CATALOG_APPROVAL_REQUIRED" in template
 assert "item->admissions_open === 1" in template
