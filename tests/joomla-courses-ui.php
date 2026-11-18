@@ -116,7 +116,7 @@ listExpect($get()===[$ids['Alpha'],$ids['Bravo'],$ids['Zebra']]&&(int)$list->get
 $list->setState('filter.published','1');listExpect($get()===[$ids['Alpha']]&&(int)$list->getTotal()===1,'Published filter shares the total query');
 $list->setState('filter.published','0');listExpect($get()===[$ids['Bravo'],$ids['Zebra']]&&(int)$list->getTotal()===2,'Filter changes invalidate cached items and totals');
 $list->setState('filter.published','2');listExpect($get()===[]&&(int)$list->getTotal()===0,'Archived filter accepts state 2 and excludes active/draft fixtures');
-$list->setState('filter.published','-2');listExpect($get()===[],'Unsupported trash state fails closed rather than broadening results');
+$list->setState('filter.published','-2');listExpect($get()===[],'Trashed filter excludes ordinary active and draft fixtures');
 $list->setState('filter.published','');$list->setState('filter.category_id',(string)$categories['parent']);listExpect(count($get())===3,'Category filter includes native descendants');
 $list->setState('filter.category_id',(string)$categories['child']);listExpect($get()===[$ids['Alpha']],'Child category filter is precise');
 $list->setState('filter.category_id','');$list->setState('filter.author_id',(string)$editor);listExpect($get()===[$ids['Bravo']],'Native author filter');
@@ -142,6 +142,33 @@ try {
 } finally {
  $db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id='.(int)$ids['Bravo'])->execute();
 }
+// LCM-02: native reversible course trash/restore with a preserved programme.
+$courseModel=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
+$originalVersion=$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult();
+$learningBefore=[
+ $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
+ $db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
+];
+listExpect($courseModel->changeStates([$ids['Alpha']],-2),'Published course can be moved to trash');
+listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===-2,'Course is trashed without deleting the record');
+$trashedList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);
+$trashedList->setState('list.limit',100);$trashedList->setState('list.start',0);
+$trashedList->setState('filter.search','List UI');$trashedList->setState('filter.published','-2');
+listExpect(array_map(static fn($r):int=>(int)$r->id,$trashedList->getItems())===[$ids['Alpha']],'Trashed course appears in the dedicated state filter');
+$ordinaryList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);
+$ordinaryList->setState('list.limit',100);$ordinaryList->setState('list.start',0);$ordinaryList->setState('filter.search','List UI');
+listExpect(!in_array($ids['Alpha'],array_map(static fn($r):int=>(int)$r->id,$ordinaryList->getItems()),true),'Ordinary list excludes trashed course');
+listExpect($courseModel->changeStates([$ids['Alpha']],0),'Restore from trash uses a separate action');
+listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===0,'Restored course is unpublished, never republished');
+listExpect($db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===$originalVersion,'Restored course keeps its frozen version pointer');
+listExpect([
+ $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
+ $db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
+]===$learningBefore,'Bulk transitions preserve enrollment/version history');
+listExpect(!$courseModel->changeStates([$ids['Alpha']],0),'Restoring a course not in the trash is rejected');
+listExpect(!$courseModel->changeStates([$ids['Alpha'],$ids['Alpha']],-2),'Duplicate bulk IDs rejected without mutation');
+// Test fixture cleanup: production lifecycle deliberately forbids implicit publication.
+$db->setQuery('UPDATE #__jlms_courses SET state=1 WHERE id='.(int)$ids['Alpha'])->execute();
 $restricted=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);$restricted->setCurrentUser(new \Joomla\CMS\User\User($editor));$restricted->setState('list.limit',100);$restricted->setState('list.start',0);$restricted->setState('filter.search','id:'.$ids['Alpha']);
 listExpect(count($restricted->getItems())===0&&(int)$restricted->getTotal()===0,'Filters and totals cannot expose an uneditable course');
 $rows=$db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN ('.implode(',',$ids).') ORDER BY id')->loadAssocList();
