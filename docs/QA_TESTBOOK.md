@@ -1,3 +1,13 @@
+## LCM-05 — indicatore disponibilità nei percorsi (0.60.5-dev)
+
+1. Aprire un percorso pubblicato contenente un corso pubblicato e fruibile: l'azione di accesso al corso segue gli attuali livelli Joomla.
+2. Sospendere l'erogazione del corso senza archiviarlo: la scheda del percorso mantiene il corso visibile agli utenti autorizzati ma lo indica come non disponibile alla fruizione. Il link diretto all'aula deve essere negato.
+3. Verificare con utente privo del livello di visibilità didattica che il corso rimanga riservato e non esponga contenuti privati.
+4. Verificare che iscrizioni e cronologia didattica non cambino per il solo stato operativo; riabilitare l'erogazione e verificare il ritorno alla normale disponibilità.
+5. Ripetere con corso archiviato/non pubblicato/cestinato e con ruoli Joomla distinti, IT/EN e mobile.
+
+Test automatico `tests/joomla-pathways.php`; accettazione manuale **non eseguita**.
+
 ## LCM-02 / LCM-01 — cestino corsi con chiusura dei flag (0.60.4-dev)
 
 1. Su un corso Pubblicato con iscrizioni ed erogazione abilitate, scegliere **Cestina** dal backend: il corso scompare dalle viste pubbliche e `admissions_open`/`delivery_enabled` sono impostati a 0.

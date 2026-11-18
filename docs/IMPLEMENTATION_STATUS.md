@@ -1,3 +1,7 @@
+**JD Learn 0.60.5-dev — coerenza accessibilità dei corsi nei percorsi, LCM-05 (18/11/2026).**
+
+`PathwayService::detail()` distingue la visibilità promozionale di un corso pubblicato dall'accesso all'aula: se `delivery_enabled=0`, il corso rimane identificabile nella scheda del percorso quando autorizzato ma non risulta fruibile. Lo storico di iscrizione e lo stato didattico non sono cambiati. Test Joomla su sospensione e riabilitazione dell'erogazione. Nessuna migrazione schema. LCM-05 resta Parziale; accettazione Joomla manuale non eseguita e percentuale globale non consolidata.
+
 **JD Learn 0.60.4-dev — cestino conservativo dei corsi, LCM-02/LCM-01 (18/11/2026).**
 
 `CourseModel::changeStates()` chiude ammissioni ed erogazione nello stesso aggiornamento transazionale della cestinazione (`state=-2`), anche se entrambi i flag erano precedentemente abilitati. Restore torna allo stato Non pubblicato senza aprirli né alterare versioni o iscrizioni. Test Joomla automatici sulla coppia di flag e sulla conservazione dei record; accettazione reale da eseguire. LCM-01 e LCM-02 rimangono Parziali, avanzamento globale non consolidato.

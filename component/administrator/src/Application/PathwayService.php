@@ -125,6 +125,9 @@ final class PathwayService
             $enrollment = $enrollments[$courseId] ?? null;
             $state = 'not_enrolled';
             $access = in_array((int) $course->content_access, $levels, true) ? 'available' : 'restricted';
+            // LCM-05: catalog visibility does not imply classroom availability.
+            // Keep restricted content hidden; expose a suspended course only as unavailable.
+            if ($access === 'available' && (int) $course->delivery_enabled !== 1) { $access = 'unavailable'; }
             $percent = 0;
             $progressApplicable = true;
 
