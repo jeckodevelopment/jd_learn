@@ -1,3 +1,12 @@
+## SCR-01 — azzeramento filtri in catalogo senza risultati (18/11/2026)
+
+1. Catalogo pubblico: cercare una stringa inesistente; stato vuoto e collegamento «Azzera filtri». Seguire il collegamento: ricerca e filtri azzerati, pagina iniziale, corsi visibili secondo ACL.
+2. Ripetere con filtri categoria, tag, difficoltà, durata, docente, percorso in combinazione; azzeramento completo senza conservare parametri `filter[...]` e senza cambiare permessi.
+3. Entrare in un catalogo limitato da `catid`, applicare un filtro senza risultati e azzerarlo: `catid` deve restare nell'URL, senza allargare l'ambito del catalogo.
+4. Senza filtri attivi, nessun link di azzeramento; con filtri disabilitati nelle opzioni Joomla, nessun link. Verificare IT/EN, tastiera, mobile e browser back/forward.
+
+Verifica automatica: `tests/frontend-catalog-options.py` e suite CI. Collaudo Joomla reale ancora pendente. Il requisito SCR-01 rimane parziale per gli altri criteri.
+
 ## SCR-05 — collegamento al catalogo nello stato vuoto dei corsi (18/11/2026)
 
 1. Accedere come studente senza iscrizioni e aprire **I miei corsi**: nello stato vuoto compare il collegamento localizzato **Tutti i corsi**; verificare che conduca al catalogo filtrato da visibilità e ACL Joomla senza produrre iscrizioni.

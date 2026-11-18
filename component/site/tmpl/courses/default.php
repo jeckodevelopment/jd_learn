@@ -86,7 +86,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
    </div>
   </article>
  <?php endforeach; ?>
- <?php if (!$this->items) : ?><p id="jlms-catalog-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p><?php endif; ?>
+ <?php if (!$this->items) : ?>
+  <p id="jlms-catalog-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p>
+  <?php if ($this->showFilters && ($this->search !== '' || $this->categoryChoice > 0 || $this->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->teacherId > 0 || $this->pathwayId > 0)) : ?>
+   <p id="jlms-catalog-clear-filters"><a href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . (int) $this->categoryId : '')) ?>"><?= Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
+  <?php endif; ?>
+ <?php endif; ?>
  </div>
  <nav id="jlms-catalog-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
 </section>
