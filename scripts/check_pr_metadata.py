@@ -52,7 +52,7 @@ def validate(body: str, milestone: str | None, labels: list[str], paths: set[str
             errors.append(f"PR body is missing the '## {title}' section")
         else:
             lines = [line.strip() for line in visible(sections[title]).splitlines()]
-            filled = any(line and not re.fullmatch(r"(?:[-*]\\s*)?\\[[^\\]]+\\]", line) for line in lines)
+            filled = any(line and not re.fullmatch(r"(?:[-*]\s*)?\\[[^\\]]+\\]", line) for line in lines)
             if not filled:
                 errors.append(f"PR section '{title}' is empty or still has a placeholder")
     bug = visible(sections.get("Risolve un bug?", ""))
@@ -63,10 +63,10 @@ def validate(body: str, milestone: str | None, labels: list[str], paths: set[str
     if not re.search(r"\bN/A\b|\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b", requirements):
         errors.append("List requirement IDs, or N/A with a reason")
     manual = visible(sections.get("Collaudo manuale Joomla", ""))
-    manual_state = re.search(r"(?im)^\\s*Stato:\\s*(In attesa|Non applicabile|Eseguito)\\b", manual)
+    manual_state = re.search(r"(?im)^\s*Stato:\s*(In attesa|Non applicabile|Eseguito)\b", manual)
     if not manual_state:
         errors.append("Set manual Joomla test status to In attesa, Non applicabile, or Eseguito")
-    elif manual_state.group(1) == "Eseguito" and not re.search(r"(?im)^\\s*Risultato:\\s*\\S.+", manual):
+    elif manual_state.group(1) == "Eseguito" and not re.search(r"(?im)^\s*Risultato:\s*\S.+", manual):
         errors.append("Manual Joomla tests marked Eseguito must include the observed result")
     manual_cases = manual.split("Casi da provare", 1)[-1]
     case_items = [
