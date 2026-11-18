@@ -83,7 +83,11 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
       <?php endforeach; ?>
      </p>
     <?php endif; ?>
-    <?php if ((int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
+    <?php $enrollment = $this->cardEnrollmentStates[(int) $item->id] ?? null; ?>
+    <?php if ($enrollment !== null) : ?>
+     <p class="jlms-course-card__learning-state"><?= Text::_('COM_JLMS_DASHBOARD_' . strtoupper($enrollment['learning_state'])) ?><?php if ($enrollment['access'] !== 'available') : ?> · <?= Text::_('COM_JLMS_DASHBOARD_ACCESS_' . strtoupper($enrollment['access'])) ?><?php endif; ?></p>
+    <?php endif; ?>
+    <?php if ($enrollment === null && (int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
      <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval' ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
     <?php endif; ?>
     <?php if ($duration > 0 || $difficultyKey !== '') : ?>
@@ -93,7 +97,11 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
       <?php if ($difficultyKey !== '') : ?><?= Text::_($difficultyKey) ?><?php endif; ?>
      </p>
     <?php endif; ?>
+    <?php if ($enrollment !== null && $enrollment['access'] === 'available' && (int) $item->delivery_enabled === 1) : ?>
+     <a class="jlms-course-card__action jlms-course-card__resume" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $enrollment['id']) ?>"><?= Text::_($enrollment['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : 'COM_JLMS_DASHBOARD_RESUME') ?></a>
+    <?php else : ?>
     <a class="jlms-course-card__action" href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_CATALOG_VIEW_COURSE') ?></a>
+    <?php endif; ?>
    </div>
   </article>
  <?php endforeach; ?>
