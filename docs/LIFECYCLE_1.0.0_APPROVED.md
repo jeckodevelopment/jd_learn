@@ -57,6 +57,10 @@ Le operazioni amministrative esistenti `admissions_open` e `delivery_resume` son
 
 Il passaggio amministrativo di un'iscrizione da Sospesa ad Attiva è consentito soltanto quando lo stato del corso è Pubblicato e `delivery_enabled=1`. Il comando non è un'alternativa per riaprire un corso archiviato: editor e POST applicativo condividono lo stesso gate, e la conferma serializza il corso prima dell'iscrizione. Restano permesse le operazioni di sospensione e annullamento secondo le regole ordinarie. I test Joomla negano la riattivazione su corsi archiviati, non pubblicati, cestinati o con erogazione sospesa, senza scrivere audit né notifiche. Accettazione reale e verifica altri endpoint ancora pendenti.
 
+### LCM-02 — cestinazione con blocco operativo conservativo (0.60.4)
+
+Cestinare un corso non deve lasciare impostazioni operative pre-armate: la stessa transazione di `CourseModel::changeStates()` imposta `admissions_open=0` e `delivery_enabled=0` quando porta lo stato a Cestinato (`-2`). Il ripristino editoriale allo stato Non pubblicato mantiene i due flag a zero. La riapertura è possibile solo successivamente e con i comandi autorizzati, mai in modo implicito. Le versioni didattiche, iscrizioni, progressi e attestati restano conservati. Test Joomla di cestinazione/ripristino su un corso precedentemente operativo, accettazione reale ancora pendente.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
