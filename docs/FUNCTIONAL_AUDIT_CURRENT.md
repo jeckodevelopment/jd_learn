@@ -3,9 +3,9 @@
 Requisiti in perimetro: **214**. Criteri: **757**.
 
 - Implementati: **391**.
-- Mancanti con lacuna accertata: **25**.
-- Esaminati con esito non verificabile: **82**.
-- Da esaminare: **259**.
+- Mancanti con lacuna accertata: **26**.
+- Esaminati con esito non verificabile: **132**.
+- Da esaminare: **208**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -27,6 +27,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#course-message-test:](../component/administrator/src/Application/CourseCommunicationService.php)
+- `JOO-04/health` — Monitoraggio ultima esecuzione e task in ritardo in tutti gli scenari. È presente una diagnostica limitata alle attività di comunicazione e alla coda email. La vista segnala solo lo stato del task mail e non costituisce il monitoraggio dell'ultima esecuzione e dei ritardi per tutte le attività pianificate richieste dal criterio.
+  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
+  - [docs/REQUIREMENTS_STATUS.csv#L73-L73](../docs/REQUIREMENTS_STATUS.csv#L73-L73)
 - `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. L’infrastruttura scrive direttamente nel modello nativo User Actions Log per una lista di azioni specifiche. Il pacchetto non contiene il plugin actionlog richiesto e la pubblicazione non rientra nelle azioni di quel modello.
   - [component/administrator/src/Infrastructure/AssessmentAudit.php#bootComponent](../component/administrator/src/Infrastructure/AssessmentAudit.php)
   - [packages/pkg_jlms.xml#<files](../packages/pkg_jlms.xml)
@@ -241,6 +244,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `NOT-02/stale_delivery` — Riconciliazione dei messaggi in invio e invii effettivi in tutti gli scenari. Il servizio riconcilia record stale in modo condizionato con nota. La decisione di ritentare o attestare l’invio dipende dall’effettiva accettazione SMTP, non osservabile dal solo stato della coda.
   - [component/administrator/src/Application/MailQueueAuditService.php#public function reconcile](../component/administrator/src/Application/MailQueueAuditService.php)
   - [docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash](../docs/MAIL_SCHEDULER_SETUP.md)
+- `NOT-02/privacy_retention` — Retention e controllo della visibilità dei log. La coda e le viste di comunicazione hanno controlli e conservazione propri, ma il registro documenta ancora dati correlati e retention da completare per token, campagne, outbox e audit; la verifica completa di minimizzazione e visibilità operativa non è attestata.
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L15-L15](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L15-L15)
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L24](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L24)
 - `CERT-03/visual_locales` — Impaginazione IT/EN e loghi vari su tutti gli ambienti. La fixture verifica il renderer PDF con più formati di logo. Una prova dei PDF su tutti gli ambienti, delle varianti linguistiche e dell’impaginazione resta necessaria.
   - [tests/certificate-raster-logos.php#CertificatePdf::render](../tests/certificate-raster-logos.php)
   - [component/administrator/src/Application/CertificateService.php#private function logoFile](../component/administrator/src/Application/CertificateService.php)
@@ -268,9 +274,106 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#JOO-05](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
   - [.github/workflows/ci.yml#Upgrade the full package with retained data](../.github/workflows/ci.yml)
+- `SIC-01/object_acl` — Copertura degli accessi orizzontali per ogni record e task. I test confermano ricontrolli di accesso anche sui replay di alcune mutazioni didattiche, ma la copertura richiesta comprende ogni record, task e ruolo: il gate di revisione sistematica ACL/IDOR non risulta eseguito.
+  - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `SIC-01/all_input_paths` — Validazione contenuti, query e token su tutte le superfici. Il flusso didattico documenta validazione e protezioni per endpoint selezionati; non esiste evidenza di verifica completa di contenuti, query e token su tutte le superfici del componente. La review sistematica e i test negativi restano gate aperti.
+  - [docs/LEARNING.md#L17-L17](../docs/LEARNING.md#L17-L17)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `SIC-02/isolation` — Audit storage e scansione in tutti gli hosting supportati. Scansione ClamAV e storage privato hanno un percorso CI documentato, ma la scansione reale degli hosting supportati e la configurazione/isolamento degli ambienti di produzione richiedono prove sul sito target ancora da eseguire.
+  - [docs/MATERIALS.md#L34-L36](../docs/MATERIALS.md#L34-L36)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17)
+- `PRI-01/retention_options` — Politiche distinte di conservazione per ciascun dato. La retention dipende da politiche distinte per classi di dati e dal titolare del sito; la documentazione richiede ancora di definire minimizzazione e periodi per storico e log, senza attestare l'intera matrice per progressi, attestati, email e backup.
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L32-L32](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L32-L32)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L9-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L9-L9)
+- `PRI-01/erasure_preview` — Anteprima anonimizzazione/cancellazione con eccezioni motivate. Il flusso di esportazione/rimozione del plugin privacy esiste, ma la preview di anonimizzazione/cancellazione con eccezioni richiede completamento e prove sui diversi stati e dati correlati ancora elencati come pendenti.
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15)
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L26](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L26)
+- `PRI-02/all_data_classes` — Completezza export e richieste su tutti gli oggetti 1.0.0. L'integrazione Joomla Privacy dichiara un sottoinsieme di dati e documenta residui da verificare per token, campagne, outbox e audit; non è dimostrata la completezza di export e richieste per tutti gli oggetti del rilascio.
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15)
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L26](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L26)
+- `PRI-02/deletion_backups` — Cancellazione e backup coerenti con policy amministrativa. La pulizia dei materiali è limitata agli asset orfani registrati e dichiara esplicitamente che non sostituisce il backup; non sono documentate prove coerenti di cancellazione e recupero per tutte le classi di dati e policy amministrative.
+  - [docs/MATERIALS.md#L23-L23](../docs/MATERIALS.md#L23-L23)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L9-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L9-L9)
 - `PRI-03/consent_matrix` — Consenso rifiutato/non disponibile su provider e browser reali. Il player verifica consenso prima della richiesta e il test simula lo stato negato e la revoca. Non c’è qui una prova di ciascuna combinazione su browser e provider reali.
   - [component/media/js/video.js#if (!this.allowed())](../component/media/js/video.js)
   - [tests/video-player.mjs#A revoked consent must also settle](../tests/video-player.mjs)
+- `PRI-03/no_external_telemetry` — Verifica globale dei tracciamenti esterni e poster remoti. La documentazione dei video applica consenso e caricamento differito degli SDK in contesti coperti, ma richiede ancora test reali su provider, CSP e consenso; una verifica globale di tutti i poster e tracciamenti esterni non è attestata.
+  - [docs/VIDEO.md#L23-L23](../docs/VIDEO.md#L23-L23)
+  - [docs/QA_TESTBOOK.md#L579-L579](../docs/QA_TESTBOOK.md#L579-L579)
+- `CORE-01/all_hierarchy` — Gerarchia, permessi, lingua e ordinamento in ogni contesto. Sono riscontrabili integrazione nativa delle categorie, gerarchia e un set di test dedicato; la matrice richiesta include però permessi, lingua e ordinamento in ogni contesto, non attestati da una verifica completa end-to-end.
+  - [docs/CATEGORIES.md#L3-L9](../docs/CATEGORIES.md#L3-L9)
+  - [tests/joomla-categories.php#L1-L30](../tests/joomla-categories.php#L1-L30)
+- `CORE-02/auth_variants` — MFA, recupero account e provider configurati in tutti i percorsi. I controlli applicativi ricontrollano l'identità e l'accesso Joomla in flussi selezionati. MFA, recupero account e provider d'identità sono configurazioni del sito e non è disponibile una prova di tutti i percorsi/supporti d'autenticazione del deployment.
+  - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `CORE-03/cross_context` — Coerenza senza livelli proprietari in tutte le viste e le iscrizioni. Le prove coprono accesso didattico e iscrizione in contesti specifici, ma non dimostrano la coerenza di ogni vista, transizione e ruolo senza livelli proprietari sull'intero perimetro.
+  - [docs/LEARNING.md#L17-L23](../docs/LEARNING.md#L17-L23)
+  - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
+  - [tests/joomla-manual-enrollment.php#L1-L20](../tests/joomla-manual-enrollment.php#L1-L20)
+- `CORE-04/record_acl` — ACL su singolo record/docente e selezioni multiple in tutti i contesti. Il test editoriale dimostra grant di categoria, deny per singolo corso e revoca in sessione per le operazioni coperte. Il criterio estende il controllo a docenti, selezioni multiple e tutti i contesti; la matrice completa non è stata eseguita.
+  - [tests/joomla-editor-access.php#L101-L116](../tests/joomla-editor-access.php#L101-L116)
+  - [docs/EDITOR_PERMISSIONS.md#L1-L15](../docs/EDITOR_PERMISSIONS.md#L1-L15)
+- `CORE-04/teacher_edit` — Modifiche di profilo docente e limitazioni campi/pubblicazione. Il modello docente applica capacità di gestione e permessi record sulle modifiche note; non è attestata l'intera matrice di campi, pubblicazione e accessi multipli per tutti i ruoli e contesti richiesti.
+  - [component/administrator/src/Model/TeacherModel.php#L21-L78](../component/administrator/src/Model/TeacherModel.php#L21-L78)
+  - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
+- `CORE-05/layout_coverage` — Override verificati per tutte le viste e i moduli distribuiti. Il contratto CSS descrive override e hook per diverse viste e alcuni test automatici ne controllano parti; non risultano verificati tutti gli override delle viste e dei moduli distribuiti sui template/viewport supportati.
+  - [docs/FRONTEND_CSS.md#L90-L93](../docs/FRONTEND_CSS.md#L90-L93)
+  - [docs/FRONTEND_CSS.md#L113-L113](../docs/FRONTEND_CSS.md#L113-L113)
+  - [tests/http-smoke.py#L1-L25](../tests/http-smoke.py#L1-L25)
+- `CORE-06/strings` — Copertura di tutte le stringhe, errori, email, contenuti e schermate. Sono presenti cataloghi lingua italiani e inglesi e controlli su flussi localizzati selezionati; la completezza richiesta comprende tutti gli errori, email, contenuti e schermate e necessita di una revisione integrale non documentata.
+  - [component/administrator/language/it-IT/com_jlms.ini#L1-L20](../component/administrator/language/it-IT/com_jlms.ini#L1-L20)
+  - [component/site/language/en-GB/com_jlms.ini#L1-L20](../component/site/language/en-GB/com_jlms.ini#L1-L20)
+  - [docs/MULTILINGUAL.md#L32-L32](../docs/MULTILINGUAL.md#L32-L32)
+- `CORE-07/menu_matrix` — Tutti i filtri lingua e menu multilingua autorizzati. Associazioni native e filtri lingua sono implementati e i test verificano scenari concreti di lingua, ACL e navigazione SEF; non attestano l'intera matrice di tutte le voci menu autorizzate e configurazioni Joomla.
+  - [tests/joomla-associations.php#L132-L176](../tests/joomla-associations.php#L132-L176)
+  - [docs/MULTILINGUAL.md#L24-L32](../docs/MULTILINGUAL.md#L24-L32)
+- `CORE-08/scope` — Tutte le classi personali e tempi di conservazione. Il plugin Privacy integra dati applicativi selezionati, ma la retention per ogni classe personale e il relativo perimetro di rimozione restano da definire e verificare con la policy del titolare.
+  - [plugins/privacy/jdlearn/src/Extension/Jdlearn.php#L1-L30](../plugins/privacy/jdlearn/src/Extension/Jdlearn.php#L1-L30)
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15)
+  - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L32-L32](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L32-L32)
+- `CORE-09/tags_context` — Registrazione ed esposizione dei tag in tutte le entità previste. L'integrazione con tag Joomla è presente nel modello editoriale del corso, ma le evidenze selezionate non dimostrano registrazione ed esposizione di tag in tutte le entità previste dal criterio.
+  - [component/administrator/src/Model/CourseModel.php#L1-L35](../component/administrator/src/Model/CourseModel.php#L1-L35)
+  - [component/administrator/src/Infrastructure/EditorialInstaller.php#L1-L58](../component/administrator/src/Infrastructure/EditorialInstaller.php#L1-L58)
+- `CORE-10/teacher_scoping` — Campi docente e lezione con ACL e lingua in tutti gli scenari. Il modello docente lato sito restringe i corsi ai profili associati e il form integra campi Joomla; la copertura completa di ACL e lingua su ogni combinazione di profili, docenti, corsi e lezioni non è attestata.
+  - [component/site/src/Model/TeacherModel.php#L21-L40](../component/site/src/Model/TeacherModel.php#L21-L40)
+  - [component/administrator/src/Model/TeacherModel.php#L21-L34](../component/administrator/src/Model/TeacherModel.php#L21-L34)
+  - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
+- `CORE-11/content_events` — Eventi content plugin e filtri in tutti i contesti authoring. Esistono contratti di authoring e servizi per il programma didattico, ma l'evidenza non dimostra eventi e filtri del Content Plugin Joomla per tutti i contesti e flussi di authoring richiesti.
+  - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
+  - [component/administrator/src/Application/CurriculumService.php#L1-L35](../component/administrator/src/Application/CurriculumService.php#L1-L35)
+  - [tests/joomla-curriculum.php#L1-L30](../tests/joomla-curriculum.php#L1-L30)
+- `CORE-12/media_providers` — Provider media e separazione risorse protette in tutti i contesti. Sono implementati provider media e presentazione protetta in alcuni flussi; le guide documentano ancora prerequisiti e prove reali dei provider, quindi non è dimostrata la separazione delle risorse protette in tutti i contesti.
+  - [docs/COURSE_EDITOR.md#L1-L30](../docs/COURSE_EDITOR.md#L1-L30)
+  - [docs/VIDEO.md#L1-L23](../docs/VIDEO.md#L1-L23)
+  - [component/administrator/src/Application/CoursePresentation.php#L1-L40](../component/administrator/src/Application/CoursePresentation.php#L1-L40)
+- `CORE-13/all_routes` — Route docenti, breadcrumb e accessi diretti con associazioni lingua. Sono presenti rotte di catalogo, categoria e profilo docente con verifiche in test selezionati. Il criterio comprende accessi diretti, breadcrumb e associazioni lingua su tutte le route; questa copertura combinata non è registrata come completata.
+  - [component/administrator/src/Controller/DisplayController.php#L1-L30](../component/administrator/src/Controller/DisplayController.php#L1-L30)
+  - [tests/categories-http.py#L1-L30](../tests/categories-http.py#L1-L30)
+  - [tests/associations-http.py#L1-L30](../tests/associations-http.py#L1-L30)
+- `CORE-14/index_acl` — Aggiornamento indici e visibilità su ogni cambio ACL, stato e lingua. Il plugin Finder reagisce a salvataggio, eliminazione e cambio stato e filtra i risultati secondo la visibilità; la verifica di ogni variazione ACL, stato e lingua su tutte le entità non risulta completa.
+  - [plugins/finder/jlms/src/Extension/Jlms.php#L29-L77](../plugins/finder/jlms/src/Extension/Jlms.php#L29-L77)
+  - [docs/CATEGORIES.md#L17-L17](../docs/CATEGORIES.md#L17-L17)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `CORE-15/native_workflow` — Transizioni e permessi per lezioni e tutte le entità editoriali. Il workflow nativo del corso applica transizioni con test Joomla; la richiesta copre anche lezioni e tutte le entità editoriali e relative autorizzazioni, una matrice più ampia non provata integralmente.
+  - [docs/PUBLICATION.md#L27-L27](../docs/PUBLICATION.md#L27-L27)
+  - [component/administrator/src/Application/PublicationService.php#L1-L40](../component/administrator/src/Application/PublicationService.php#L1-L40)
+  - [tests/joomla-publication.php#L1-L30](../tests/joomla-publication.php#L1-L30)
+- `CORE-16/all_entities` — Ristabilimento dello storico, check-in/out e versioni assegnate in ogni scenario. Test di upgrade e ripristino esistono per entità core specifiche, ma non attestano storico, check-in/out e versioni assegnate per ogni entità e scenario richiesto.
+  - [tests/joomla-programme-restore.php#L80-L110](../tests/joomla-programme-restore.php#L80-L110)
+  - [tests/joomla-smoke.php#L1-L30](../tests/joomla-smoke.php#L1-L30)
+- `CORE-18/smtp` — Verifica SMTP e personalizzazioni tradotte su tutti gli eventi. La coda e i modelli nativi sono integrati e CI esercita la logica locale; la verifica SMTP, le personalizzazioni tradotte e la consegna per ogni evento richiedono collaudi Joomla/SMTP esplicitamente pendenti.
+  - [docs/MAIL_TEMPLATES.md#L13-L13](../docs/MAIL_TEMPLATES.md#L13-L13)
+  - [docs/MAIL_SCHEDULER_SETUP.md#L17-L17](../docs/MAIL_SCHEDULER_SETUP.md#L17-L17)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `CORE-19/idempotent_tasks` — Diagnostica e ritentativi sicuri per task non puntuali. Il task Scheduler quiz implementa routine idempotenti e dispone di test nativi; diagnostica, ritentativi sicuri e puntualità per tutte le attività restano oltre il perimetro delle prove di quel singolo task.
+  - [plugins/task/jlms/src/Extension/Jlms.php#L1-L45](../plugins/task/jlms/src/Extension/Jlms.php#L1-L45)
+  - [docs/QUIZ_RUNTIME.md#L48-L58](../docs/QUIZ_RUNTIME.md#L48-L58)
+  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
+- `CORE-20/native_completeness` — Ogni toolbar, filtro, batch, errore e ripresa input. Sono presenti viste e test Joomla nativi per corsi, programma e iscrizione manuale; non è stata verificata la completezza di ogni toolbar, filtro, operazione batch, errore e ripristino input nell'intero backend.
+  - [docs/COURSE_EDITOR.md#L1-L30](../docs/COURSE_EDITOR.md#L1-L30)
+  - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
+  - [tests/joomla-courses-ui.php#L1-L30](../tests/joomla-courses-ui.php#L1-L30)
 - `CORE-21/private_cache` — Test cache/sessione su tutti gli endpoint personali. Video, download e pagine personali hanno politiche private e fixture HTTP rappresentative. Serve il censimento dei task personali e una prova coerente di cache e sessione per ognuno.
   - [component/site/src/Controller/VideoController.php#private, no-store](../component/site/src/Controller/VideoController.php)
   - [component/site/src/Controller/CertificateController.php#private, no-store](../component/site/src/Controller/CertificateController.php)
@@ -278,6 +381,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `CORE-22/release_updates` — Update server e rollback di migrazione in hosting variabili. Il feed e la pipeline esistono. La compatibilità del rollback di dati e migrazioni in hosting diversi richiede esecuzioni documentate.
   - [packages/pkg_jlms.xml#<updateservers>](../packages/pkg_jlms.xml)
   - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)
+- `CORE-23/event_contracts` — Eventi LMS pubblici, payload minimo e plugin terzi supportati. La registry dei provider definisce contratti media e gli eventi interni hanno test mirati, ma la compatibilità pubblica con plugin terzi, payload minimo e tutti gli eventi LMS non è provata sull'intero contratto richiesto.
+  - [libraries/jlms/src/Video/VideoProviderRegistry.php#L1-L40](../libraries/jlms/src/Video/VideoProviderRegistry.php#L1-L40)
+  - [docs/VIDEO.md#L1-L23](../docs/VIDEO.md#L1-L23)
+  - [tests/joomla-smoke.php#L1-L30](../tests/joomla-smoke.php#L1-L30)
 - `STU-05/provider_parity` — Persistenza e comportamento opzioni su ogni provider e dispositivo. Le preferenze sono conservate nello storage locale del browser. I test verificano persistenza e player privi di supporto con sostituti. Manca la prova di ripristino e comportamento sui dispositivi e provider reali.
   - [component/media/js/video.js#jdlearn.video.speed.v1](../component/media/js/video.js)
   - [component/media/js/video.js#jdlearn.video.language.v1](../component/media/js/video.js)
@@ -298,12 +405,20 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/categories-http.py#public view has no duplicate IDs](../tests/categories-http.py)
   - [tests/dashboard-http.py#local nav does not duplicate IDs](../tests/dashboard-http.py)
   - [docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate](../docs/FRONTEND_FE12_ACCEPTANCE.md)
+- `UI-03/all_tokens` — Copertura tipografia, griglie, superfici, colori e overrides per tutte le schermate. Il foglio di stile definisce token e contratti per viste specifiche, ma non è stata misurata la copertura visiva di tipografia, superfici, griglie e overrides su tutte le schermate distribuite e sui temi target.
+  - [docs/FRONTEND_CSS.md#L1-L10](../docs/FRONTEND_CSS.md#L1-L10)
+  - [docs/FRONTEND_CSS.md#L90-L93](../docs/FRONTEND_CSS.md#L90-L93)
+  - [tests/http-smoke.py#L1-L20](../tests/http-smoke.py#L1-L20)
 - `UI-04/cascade_overrides` — Verifica specificità e override con temi Joomla alternativi. L’inventario individua token e radici di stili, mentre il registro di accettazione richiede ancora verifica su template diversi.
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#CSS: baseline da preservare](../docs/FRONTEND_CONTRACT_INVENTORY.md)
   - [docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08](../docs/FRONTEND_FE12_ACCEPTANCE.md)
 - `UI-05/override_matrix` — Personalizzazione completa senza modifica alle autorizzazioni su tutti i template. Il registro prevede override per vista e verifiche di autorizzazione. La compatibilità effettiva dei comportamenti dopo override richiede una prova Joomla.
   - [docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08](../docs/FRONTEND_FE12_ACCEPTANCE.md)
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Criteri di compatibilità](../docs/FRONTEND_CONTRACT_INVENTORY.md)
+- `UI-06/semantic_hooks` — Assenza di dipendenze di classi decorative e tenuta ARIA dopo override. I contratti documentano hook stabili e regioni ARIA per viste selezionate; l'assenza di dipendenze decorative e la tenuta dopo override richiedono verifiche automatizzate/manuali su tutte le viste e override, non attestate integralmente.
+  - [docs/FRONTEND_CSS.md#L90-L93](../docs/FRONTEND_CSS.md#L90-L93)
+  - [docs/FRONTEND_CSS.md#L113-L113](../docs/FRONTEND_CSS.md#L113-L113)
+  - [tests/video-player.mjs#L1-L20](../tests/video-player.mjs#L1-L20)
 - `PERF-01/concurrency_target` — Carico simultaneo di centinaia di studenti definito e misurato con dataset reale. Il disegno specifica volumi di 300 e 500 studenti e dimensione dei dati. Per confermare il risultato occorre eseguire e registrare il benchmark con quei carichi.
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Target:300 studenti attivi](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-01 — Definizione del carico](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
@@ -331,14 +446,86 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PERF-07/throughput` — Benchmark byte range e flussi locali su hosting di riferimento. I flussi locali hanno modalità di consegna documentate. Throughput e comportamento byte range sotto carico dipendono dall’hosting scelto.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-07 — Video e file](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/HTML5_VIDEO.md#Range](../docs/HTML5_VIDEO.md)
+- `PERF-08/large_reports` — Esportazioni pesanti e produzione massiva PDF con worker/batch. Sono presenti limiti e query a batch in alcuni servizi, ma non sono documentati benchmark di esportazioni pesanti o produzione massiva di PDF tramite worker per la candidata 1.0.0.
+  - [docs/PUBLICATION.md#L76-L76](../docs/PUBLICATION.md#L76-L76)
+  - [docs/CERTIFICATES_1.0.0.md#L39-L42](../docs/CERTIFICATES_1.0.0.md#L39-L42)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
 - `PERF-08/queue_latency` — Tempi di esecuzione e recupero da guasti per carichi elevati. Esistono worker a lotti. Latenza sotto carico e recupero operativo richiedono un’esecuzione misurata con campioni rappresentativi.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-08](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [component/administrator/src/Application/CourseCommunicationService.php#public function process](../component/administrator/src/Application/CourseCommunicationService.php)
+- `PERF-09/asset_budgets` — Lazy loading immagini/player e payload per tutte le viste. Asset e player hanno caricamento condizionale in flussi descritti; non è presente una misurazione di budget payload/lazy loading per tutte le viste incluse nel rilascio.
+  - [component/media/joomla.asset.json#L1-L20](../component/media/joomla.asset.json#L1-L20)
+  - [docs/FRONTEND_CSS.md#L90-L93](../docs/FRONTEND_CSS.md#L90-L93)
+  - [tests/http-smoke.py#L1-L20](../tests/http-smoke.py#L1-L20)
 - `PERF-10/repro_environment` — Documentazione di CPU/RAM/database/PHP/cron/cache/latency per benchmark. La specifica elenca le caratteristiche da dichiarare per il benchmark. Per verificarlo occorre il profilo dell’ambiente realmente misurato.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
 - `PERF-10/load_results` — Report ripetibile throughput, p95, tasso errori e saturazione. Le soglie sono definite. Serve il report con throughput, p95, errori e saturazione misurati e procedura ripetibile.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#PERF-10 — Ambiente e prova](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#Soglie p95](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
+- `PERF-11/health_views` — Visibilità e correlazione incidenti task, code, storage, permessi senza PII. Sono disponibili controlli operativi per coda email, materiali e provider specifici, ma non una verifica completa di visibilità e correlazione senza PII degli incidenti di tutti i task, code, storage e permessi.
+  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
+  - [docs/MATERIALS.md#L23-L23](../docs/MATERIALS.md#L23-L23)
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+- `ACL-DET-02/masked_secrets` — Segreti mascherati nei form e assenti nelle risposte di consultazione. Il provider Cloudflare usa segreti lato server e dispone di test mirati; l'assenza di esposizione nei form e in tutte le risposte di consultazione richiede una review completa delle superfici core non attestata.
+  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
+  - [tests/cloudflare.php#L1-L30](../tests/cloudflare.php#L1-L30)
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+- `ACL-DET-02/secret_lifecycle` — Nessuna esposizione dei segreti in cache e log delle operazioni core. I test e la documentazione coprono la gestione di credenziali provider, ma la verifica trasversale di cache, log e operazioni di tutti i servizi core resta parte del gate di sicurezza ancora aperto.
+  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
+  - [tests/cloudflare.php#L1-L30](../tests/cloudflare.php#L1-L30)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `ACL-DET-04/permission_matrix` — Mappatura delle operazioni core a capacità e asset Joomla. I servizi e test verificano autorizzazioni Joomla in flussi specifici; non è disponibile una mappatura completa di tutte le operazioni core a capacità e asset Joomla con esiti verificati.
+  - [docs/LEARNING.md#L17-L23](../docs/LEARNING.md#L17-L23)
+  - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L7-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L7-L7)
+- `ACL-DET-04/query_resources` — Prove autorizzative su query e risorse protette. Prove negative su accesso a corso e lezione sono presenti per l'aula, ma il criterio copre ogni query e risorsa protetta dell'applicazione e richiede un audit di accesso per l'intero perimetro.
+  - [component/administrator/src/Application/LearningService.php#L120-L145](../component/administrator/src/Application/LearningService.php#L120-L145)
+  - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `ACL-DET-04/cross_role` — Negazione e concessione verificate con matrice dei ruoli pertinenti. La suite include scenari di identità e accesso selezionati, ma non una matrice completa di concessioni e dinieghi per tutti i ruoli pertinenti e le operazioni core.
+  - [tests/joomla-learning.php#L1-L30](../tests/joomla-learning.php#L1-L30)
+  - [tests/joomla-editor-access.php#L101-L116](../tests/joomla-editor-access.php#L101-L116)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `STA-01/uniform_time` — Istanti memorizzati in formato temporale uniforme. Il quiz memorizza e applica deadline in UTC e le guide documentano tempi server; l'uniformità di ogni istante persistito nell'intero perimetro core non è stata ricondotta a una verifica completa.
+  - [docs/QUIZ_RUNTIME.md#L21-L23](../docs/QUIZ_RUNTIME.md#L21-L23)
+  - [tests/joomla-quiz-deadline.php#L1-L30](../tests/joomla-quiz-deadline.php#L1-L30)
+  - [docs/LEARNING.md#L17-L23](../docs/LEARNING.md#L17-L23)
+- `STA-01/timezone_display` — Fuso orario esplicitato in messaggi e scadenze. Alcuni messaggi di scadenza espongono UTC e fuso del corso; la verifica di un fuso esplicito in tutti i messaggi e le scadenze del rilascio non è attestata.
+  - [docs/QUIZ_DEADLINE_EXTENSION.md#L9-L11](../docs/QUIZ_DEADLINE_EXTENSION.md#L9-L11)
+  - [docs/QUIZ_RUNTIME.md#L21-L21](../docs/QUIZ_RUNTIME.md#L21-L21)
+  - [tests/joomla-quiz-deadline.php#L1-L30](../tests/joomla-quiz-deadline.php#L1-L30)
+- `STA-01/dst` — Cambio fuso o ora legale non riapre attività scadute nel perimetro core. Le scadenze core sono basate su UTC e ci sono test con orologio controllato, ma non è documentata l'esecuzione di una matrice completa di cambio fuso/ora legale per tutte le attività scadute.
+  - [docs/QUIZ_RUNTIME.md#L21-L23](../docs/QUIZ_RUNTIME.md#L21-L23)
+  - [docs/QUIZ_DEADLINE_EXTENSION.md#L19-L27](../docs/QUIZ_DEADLINE_EXTENSION.md#L19-L27)
+  - [tests/joomla-quiz-time.php#L1-L30](../tests/joomla-quiz-time.php#L1-L30)
+- `STA-02/immutable_window` — Finestre di disponibilità applicate al tentativo conservate. Il tentativo conserva uno snapshot delle regole e le prove includono upgrade e modifiche di deadline; non è attestata l'applicazione immutabile delle finestre a tutte le combinazioni di modifica globale/corso e tentativo.
+  - [docs/QUIZ_DEADLINE_EXTENSION.md#L19-L27](../docs/QUIZ_DEADLINE_EXTENSION.md#L19-L27)
+  - [tests/joomla-quiz-time.php#L1-L30](../tests/joomla-quiz-time.php#L1-L30)
+  - [docs/QUIZ_RUNTIME.md#L58-L58](../docs/QUIZ_RUNTIME.md#L58-L58)
+- `STA-03/distinct_reasons` — Messaggi distinti per revoca, indisponibilità corso, scadenza e timer. Il runtime distingue scadenza del quiz e revoca dell'accesso in flussi specifici; non è provata la distinzione di tutti i messaggi per revoca, disponibilità corso, scadenza e timer in ogni contesto utente.
+  - [docs/QUIZ_RUNTIME.md#L21-L23](../docs/QUIZ_RUNTIME.md#L21-L23)
+  - [component/administrator/src/Application/QuizAttemptService.php#L1-L40](../component/administrator/src/Application/QuizAttemptService.php#L1-L40)
+  - [tests/joomla-quiz-attempts.php#L1-L30](../tests/joomla-quiz-attempts.php#L1-L30)
+- `STA-03/cross_context` — Verifica delle transizioni fra aula, quiz, iscrizione e accesso. Quiz, iscrizione e accesso applicano controlli correnti in test mirati; resta da provare la matrice completa delle transizioni fra aula, quiz, iscrizione e accessi diretti.
+  - [docs/QUIZ_RUNTIME.md#L23-L23](../docs/QUIZ_RUNTIME.md#L23-L23)
+  - [tests/joomla-quiz-attempts.php#L206-L231](../tests/joomla-quiz-attempts.php#L206-L231)
+  - [tests/joomla-enrollment-state.php#L1-L30](../tests/joomla-enrollment-state.php#L1-L30)
+- `SCR-01/url_filters` — Ricerca, filtri e ordinamento persistono in URL, anche back/forward. Il catalogo applica filtri server e conserva parametri di navigazione in viste esaminate; non è attestata la persistenza con back/forward per tutti i filtri e ordinamenti del criterio.
+  - [component/administrator/src/Application/CatalogService.php#L1-L40](../component/administrator/src/Application/CatalogService.php#L1-L40)
+  - [tests/joomla-publication.php#L1-L30](../tests/joomla-publication.php#L1-L30)
+  - [docs/PUBLICATION.md#L1-L30](../docs/PUBLICATION.md#L1-L30)
+- `SCR-01/pagination` — Cambio filtro torna a pagina uno; default 12 e limiti server. Il catalogo dispone di paginazione e limiti lato server, ma non è documentata una verifica completa che cambio filtro riporti a pagina uno e rispetti default 12 e limiti in tutti i percorsi.
+  - [component/administrator/src/Application/CatalogService.php#L1-L40](../component/administrator/src/Application/CatalogService.php#L1-L40)
+  - [tests/http-smoke.py#L1-L30](../tests/http-smoke.py#L1-L30)
+  - [docs/FRONTEND_CSS.md#L90-L93](../docs/FRONTEND_CSS.md#L90-L93)
+- `SCR-01/acl_results` — Nessuna informazione promozionale riservata nei risultati. Il servizio del catalogo filtra la visibilità pubblica secondo stato, accesso, lingua e categorie; la prova di assenza di ogni informazione promozionale riservata in tutte le varianti di risultato non è completa.
+  - [component/administrator/src/Application/CatalogService.php#L1-L40](../component/administrator/src/Application/CatalogService.php#L1-L40)
+  - [docs/CATEGORIES.md#L17-L17](../docs/CATEGORIES.md#L17-L17)
+  - [tests/joomla-publication.php#L203-L211](../tests/joomla-publication.php#L203-L211)
+- `SCR-02/dependencies` — Eliminazione e spostamento con riepilogo dipendenze corsi. Il modello categoria usa dati e vincoli Joomla e i test coprono la cancellazione di categorie collegate; il riepilogo completo delle dipendenze in ogni eliminazione/spostamento di corsi richiesto dal criterio non risulta attestato.
+  - [component/site/src/Model/CategoryModel.php#L1-L28](../component/site/src/Model/CategoryModel.php#L1-L28)
+  - [tests/joomla-categories.php#L1-L30](../tests/joomla-categories.php#L1-L30)
+  - [docs/CATEGORIES.md#L31-L35](../docs/CATEGORIES.md#L31-L35)
 - `LIFE-02/criterion_02` — Non consentire la cancellazione definitiva di una categoria con corsi senza scelta esplicita di ricollocazione, né lasciare riferimenti orfani. Il servizio richiede una destinazione valida per le dipendenze e aggiorna le relazioni in transazione. Per qualificare ogni cancellazione definitiva restano da tracciare gli ingressi nativi e i casi concorrenti.
   - [component/administrator/src/Application/CategoryReassignmentService.php#public function inspect](../component/administrator/src/Application/CategoryReassignmentService.php)
   - [component/administrator/src/Application/CategoryReassignmentService.php#public function reassign](../component/administrator/src/Application/CategoryReassignmentService.php)
