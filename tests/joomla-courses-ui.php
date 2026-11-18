@@ -146,12 +146,16 @@ try {
 $courseModel=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
 $originalVersion=$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult();
 $originalRevision=(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult();
+$originalGates=$db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadAssoc();
+// Deliberately pre-arm the course to ensure trash closes both gates atomically.
+$db->setQuery('UPDATE #__jlms_courses SET admissions_open=1, delivery_enabled=1 WHERE id='.(int)$ids['Alpha'])->execute();
 $learningBefore=[
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
 ];
 listExpect($courseModel->changeStates([$ids['Alpha']],-2),'Published course can be moved to trash');
 listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===-2,'Course is trashed without deleting the record');
+listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadAssoc()==['admissions_open'=>0,'delivery_enabled'=>0],'Trash closes both gates for a previously open course');
 listExpect(!$courseModel->purgeEmpty($ids['Alpha']),'Purge rejects trashed course with frozen teaching version');
 listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===1,'Denied purge leaves trashed course intact');
 $trashedList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);
@@ -163,6 +167,7 @@ $ordinaryList->setState('list.limit',100);$ordinaryList->setState('list.start',0
 listExpect(!in_array($ids['Alpha'],array_map(static fn($r):int=>(int)$r->id,$ordinaryList->getItems()),true),'Ordinary list excludes trashed course');
 listExpect($courseModel->changeStates([$ids['Alpha']],0),'Restore from trash uses a separate action');
 listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===0,'Restored course is unpublished, never republished');
+listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadAssoc()==['admissions_open'=>0,'delivery_enabled'=>0],'Restore never opens gates closed by trash');
 listExpect($db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===$originalVersion,'Restored course keeps its frozen version pointer');
 listExpect([
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
@@ -171,7 +176,7 @@ listExpect([
 listExpect(!$courseModel->changeStates([$ids['Alpha']],0),'Restoring a course not in the trash is rejected');
 listExpect(!$courseModel->changeStates([$ids['Alpha'],$ids['Alpha']],-2),'Duplicate bulk IDs rejected without mutation');
 // Test fixture cleanup: production lifecycle deliberately forbids implicit publication.
-$db->setQuery('UPDATE #__jlms_courses SET state=1, revision='.(int)$originalRevision.' WHERE id='.(int)$ids['Alpha'])->execute();
+$db->setQuery('UPDATE #__jlms_courses SET state=1, admissions_open='.(int)$originalGates['admissions_open'].', delivery_enabled='.(int)$originalGates['delivery_enabled'].', revision='.(int)$originalRevision.' WHERE id='.(int)$ids['Alpha'])->execute();
 // Guarded purge: an unused, unversioned course may be deleted from trash.
 $emptyModel=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
 listExpect($emptyModel->save([
