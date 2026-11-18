@@ -111,6 +111,20 @@ stateExpect($service->editor($actor,$course,$enrollment)['impact']['previous_sta
 stateExpect($service->apply($manager,...$command)===$event&&$count()===1,'same transport retry creates one event');
 stateDenied(fn()=>$learning->resumeTarget($owner,'en-GB',$enrollment),403,'suspension denies classroom resume');
 stateDenied(fn()=>$learning->complete($owner,'en-GB',$enrollment,$f['lesson'],bin2hex(random_bytes(16))),403,'suspension denies new learning writes');
+// Reactivation of an individual enrollment cannot pre-arm an archived or suspended course.
+$courseBefore=$db->setQuery('SELECT state,delivery_enabled FROM #__jlms_courses WHERE id='.(int)$course)->loadAssoc();
+$historyBefore=$count();
+try {
+    foreach ([['state'=>2,'delivery_enabled'=>0],['state'=>0,'delivery_enabled'=>1],['state'=>1,'delivery_enabled'=>0],['state'=>-2,'delivery_enabled'=>0]] as $blockedCourse) {
+        $db->setQuery('UPDATE #__jlms_courses SET state='.(int)$blockedCourse['state'].', delivery_enabled='.(int)$blockedCourse['delivery_enabled'].' WHERE id='.(int)$course)->execute();
+        $blocked=$service->editor($actor,$course,$enrollment,'active');
+        stateExpect($blocked['impact']['blocked']!==null,'individual reactivation gated by course state and delivery');
+        stateDenied(fn()=>$service->apply($actor,...stateCommand($blocked)),409,'direct reactivation rejected for inactive course');
+        stateExpect($count()===$historyBefore,'blocked individual reactivation does not create history');
+    }
+} finally {
+    $db->setQuery('UPDATE #__jlms_courses SET state='.(int)$courseBefore['state'].', delivery_enabled='.(int)$courseBefore['delivery_enabled'].' WHERE id='.(int)$course)->execute();
+}
 $changed=$command;$changed[4]='Changed reason';stateDenied(fn()=>$service->apply($manager,...$changed),409,'UUID reuse with changed payload rejected');
 $next=$service->editor($actor,$course,$enrollment,'active');$reactivate=stateCommand($next);
 $broken=new \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService($db,$learning,$component->getEnrollmentRosterService(),static function():void{throw new \RuntimeException('COM_JLMS_ENROLLMENT_STATE_AUDIT_FAILED',503);});
