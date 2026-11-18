@@ -1633,14 +1633,36 @@
       {
         "id": "coverage",
         "label": "Copertura completa dei tipi evento, preferenze e localizzazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "component/administrator/src/Application/QuizAttemptService.php"
+        ],
+        "review": {
+          "reason": "Il completamento da lezione o video accoda l’evento course.completed. Il ramo quiz aggiorna lo stato e invoca l’emissione dell’attestato, ma non accoda l’equivalente evento di completamento.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#'course.completed:'",
+            "component/administrator/src/Application/VideoProgressService.php#'course.completed:'",
+            "component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer"
+          ]
+        }
       },
       {
         "id": "delivery",
         "label": "Invio SMTP e notifiche reali su installazione Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "docs/MAIL_SCHEDULER_SETUP.md"
+        ],
+        "review": {
+          "reason": "Il task inoltra la coda al trasporto Joomla. L’esito effettivo su SMTP e le notifiche per destinatario richiedono l’evidenza operativa prevista dal testbook.",
+          "references": [
+            "component/administrator/src/Infrastructure/MailQueue.php#public function dispatch",
+            "docs/MAIL_SCHEDULER_SETUP.md#Collaudo Joomla/SMTP"
+          ]
+        }
       }
     ],
     "NOT-02": [
@@ -1665,8 +1687,18 @@
       {
         "id": "stale_delivery",
         "label": "Riconciliazione dei messaggi in invio e invii effettivi in tutti gli scenari",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/MailQueueAuditService.php",
+          "docs/MAIL_SCHEDULER_SETUP.md"
+        ],
+        "review": {
+          "reason": "Il servizio riconcilia record stale in modo condizionato con nota. La decisione di ritentare o attestare l’invio dipende dall’effettiva accettazione SMTP, non osservabile dal solo stato della coda.",
+          "references": [
+            "component/administrator/src/Application/MailQueueAuditService.php#public function reconcile",
+            "docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash"
+          ]
+        }
       },
       {
         "id": "privacy_retention",
@@ -1688,8 +1720,19 @@
       {
         "id": "negative",
         "label": "Nessuna emissione nei percorsi disabilitati con tutte le modalità",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "L’emissione automatica condivide il controllo di modalità learning, abilitazione nello snapshot, preferenze correnti e modello attivo. Il recupero esplicito con motivazione è un ingresso amministrativo distinto.",
+          "references": [
+            "component/administrator/src/Application/CertificateIssuer.php#public function issueForCompletedEnrollment",
+            "component/administrator/src/Application/CertificateIssuer.php#explicitAdminRecovery",
+            "component/administrator/src/Application/CertificateService.php#public function adminRecoverHistorical"
+          ]
+        }
       }
     ],
     "CERT-02": [
@@ -1722,8 +1765,18 @@
       {
         "id": "visual_locales",
         "label": "Impaginazione IT/EN e loghi vari su tutti gli ambienti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/certificate-raster-logos.php",
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "La fixture verifica il renderer PDF con più formati di logo. Una prova dei PDF su tutti gli ambienti, delle varianti linguistiche e dell’impaginazione resta necessaria.",
+          "references": [
+            "tests/certificate-raster-logos.php#CertificatePdf::render",
+            "component/administrator/src/Application/CertificateService.php#private function logoFile"
+          ]
+        }
       },
       {
         "id": "error_headers",
@@ -1762,14 +1815,35 @@
       {
         "id": "acl_http",
         "label": "Accesso anonimo e di utenti estranei; HEAD, cache e file asset",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/CertificateController.php",
+          "component/administrator/src/Application/CertificateService.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "Il download ammette GET e HEAD, imposta no-store e passa dal servizio anche per HEAD. Il servizio vincola proprietario, stato e asset PDF. Le fixture verificano rifiuto per utente estraneo e ospite.",
+          "references": [
+            "component/site/src/Controller/CertificateController.php#public function download",
+            "component/administrator/src/Application/CertificateService.php#private function document",
+            "tests/joomla-dashboard.php#anonymous certificate download denied"
+          ]
+        }
       },
       {
         "id": "repeat",
         "label": "Ripetibilità del documento senza rigenerazioni spurie",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "Il download rende solo i record pending_render. Un record pronto apre l’asset con MIME e stato controllati e riusa seriale e hash, senza generare il PDF a ogni richiesta.",
+          "references": [
+            "component/administrator/src/Application/CertificateService.php#public function download",
+            "component/administrator/src/Application/CertificateService.php#public function adminRegenerate"
+          ]
+        }
       }
     ],
     "CERT-06": [
@@ -1785,8 +1859,17 @@
       {
         "id": "scoped_acl",
         "label": "ACL, visibilità per ruolo e casi limite su installazione reale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "La diagnostica amministrativa applica una verifica dedicata e un limite di righe. La matrice di ruoli e casi limite su installazione reale richiede una verifica separata.",
+          "references": [
+            "component/administrator/src/Application/CertificateService.php#public function adminUnissuedCompletions",
+            "component/administrator/src/Application/CertificateService.php#private function assertCertificateAdministrator"
+          ]
+        }
       }
     ],
     "CERT-07": [
@@ -1802,8 +1885,20 @@
       {
         "id": "failure_replay",
         "label": "Errore SMTP e replay con garanzia di singola notifica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "docs/MAIL_SCHEDULER_SETUP.md"
+        ],
+        "review": {
+          "reason": "L’evento attestato ha una chiave stabile per documento e usa la coda. Le fixture non accertano l’accettazione dal trasporto e il comportamento dopo un esito SMTP incerto.",
+          "references": [
+            "component/administrator/src/Application/CertificateIssuer.php#certificate.available:",
+            "component/administrator/src/Infrastructure/MailQueue.php#public function dispatch",
+            "docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash"
+          ]
+        }
       }
     ],
     "CERT-08": [
@@ -1819,14 +1914,34 @@
       {
         "id": "immutability",
         "label": "Codice e dati certificati immutati con rigenerazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "La rigenerazione acquisisce gli snapshot congelati e confronta dati certificati e seriale dopo il lock. Aggiorna solo asset e revisione del documento, con audit nella stessa transazione.",
+          "references": [
+            "component/administrator/src/Application/CertificateService.php#public function adminRegenerate",
+            "component/administrator/src/Application/CertificateService.php#A concurrent edit/revocation",
+            "component/administrator/src/Application/CertificateService.php#admin_regenerate"
+          ]
+        }
       },
       {
         "id": "upgrade_backup",
         "label": "Backup e ripristino con attestati e log preservati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-dashboard.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La fixture retained verifica identità del certificato e download dopo upgrade. Non prova il ripristino di backup combinato di database, storage e audit.",
+          "references": [
+            "tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade",
+            "docs/QA_TESTBOOK.md#backup e ripristino"
+          ]
+        }
       }
     ],
     "MAIL-01": [
@@ -1859,8 +1974,20 @@
       {
         "id": "event_matrix",
         "label": "Copertura di tutte le transizioni e deduplicazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/LearningService.php",
+          "component/administrator/src/Application/CertificateIssuer.php"
+        ],
+        "review": {
+          "reason": "La conclusione da quiz non invia l’evento di completamento corso che viene generato dai flussi lezione e video. Il caso di attestato è una notifica distinta e condizionata.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer",
+            "component/administrator/src/Application/LearningService.php#'course.completed:'",
+            "component/administrator/src/Application/CertificateIssuer.php#certificate.available:"
+          ]
+        }
       }
     ],
     "MAIL-03": [
@@ -1933,8 +2060,18 @@
       {
         "id": "selection",
         "label": "Selezione destinatari attivi e sottoinsiemi autorizzati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseCommunicationService.php"
+        ],
+        "review": {
+          "reason": "La composizione valida ID univoci e restringe l’insieme alle iscrizioni attive sul corso, account sbloccati e indirizzi validi. Il worker rivalida ogni destinatario.",
+          "references": [
+            "component/administrator/src/Application/CourseCommunicationService.php#public function preview",
+            "component/administrator/src/Application/CourseCommunicationService.php#private function activeIds",
+            "component/administrator/src/Application/CourseCommunicationService.php#private function recipient"
+          ]
+        }
       }
     ],
     "MAIL-07": [
@@ -1950,8 +2087,19 @@
       {
         "id": "teacher_acl",
         "label": "Docente limitato al proprio corso e protezione indirizzi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseCommunicationService.php",
+          "component/administrator/src/Application/EnrollmentRosterService.php"
+        ],
+        "review": {
+          "reason": "La composizione autorizza il corso con il roster. Per il docente senza gestione generale occorre assegnazione attiva al corso. La lista di composizione rimuove gli indirizzi prima di passare dati al layout.",
+          "references": [
+            "component/administrator/src/Application/CourseCommunicationService.php#private function authorized",
+            "component/administrator/src/Application/CourseCommunicationService.php#unset($row->email)",
+            "component/administrator/src/Application/EnrollmentRosterService.php#public function course"
+          ]
+        }
       }
     ],
     "MAIL-08": [
@@ -1967,8 +2115,18 @@
       {
         "id": "double_submit",
         "label": "Controlli su doppio invio, test destinatario e conteggi corretti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/CourseCommunicationService.php"
+        ],
+        "review": {
+          "reason": "La conferma di accodamento riusa il job per lo stesso identificativo. Il percorso di invio test, invece, crea un identificativo distinto a ogni POST: un doppio invio di prova può accodare due messaggi.",
+          "references": [
+            "component/administrator/src/Application/CourseCommunicationService.php#public function queue",
+            "component/administrator/src/Application/CourseCommunicationService.php#public function test",
+            "component/administrator/src/Application/CourseCommunicationService.php#course-message-test:"
+          ]
+        }
       }
     ],
     "MAIL-09": [
@@ -1993,8 +2151,19 @@
       {
         "id": "delivery_conflict",
         "label": "Idempotenza completa e backoff su errori SMTP reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailQueue.php",
+          "docs/MAIL_SCHEDULER_SETUP.md"
+        ],
+        "review": {
+          "reason": "Il dispatcher reclama le righe e applica retry con backoff. I casi di accettazione remota incerta e recupero senza consegna doppia richiedono un trasporto SMTP testato.",
+          "references": [
+            "component/administrator/src/Infrastructure/MailQueue.php#public function dispatch",
+            "component/administrator/src/Infrastructure/MailQueue.php#$delay = min(3600",
+            "docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash"
+          ]
+        }
       }
     ],
     "MAIL-10": [
@@ -3404,8 +3573,19 @@
       {
         "id": "server_clock",
         "label": "Scadenze determinate dall'orologio server e non dal browser",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il servizio assegna e valuta il timer con l’orologio iniettato lato server. Il worker chiude un tentativo scaduto anche senza browser.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function expireIfDue",
+            "component/administrator/src/Application/QuizAttemptService.php#public function expireDue",
+            "tests/joomla-quiz-attempts.php#scheduled routine closes due attempt without browser"
+          ]
+        }
       },
       {
         "id": "timezone_display",
@@ -3430,20 +3610,52 @@
       {
         "id": "deadline_start",
         "label": "Non consentire un tentativo quando il tempo residuo viola il limite dichiarato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "L’avvio controlla che la finestra sia aperta al momento della richiesta. La scadenza del tentativo viene però calcolata sommando l’intera durata al tempo corrente, senza verificare il residuo rispetto alla finestra didattica.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#public function start",
+            "component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules",
+            "component/administrator/src/Application/LearningService.php#private static function window"
+          ]
+        }
       },
       {
         "id": "truncate_explicit",
         "label": "Troncamento eventuale esplicito e mostrato prima dell'avvio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php"
+        ],
+        "review": {
+          "reason": "Il timer è assegnato dopo l’avvio alla durata intera prevista nelle regole. Il ramo di creazione non calcola o presenta un eventuale troncamento rispetto alla finestra.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#public function start",
+            "component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules",
+            "component/administrator/src/Application/QuizAttemptService.php#private function dto"
+          ]
+        }
       },
       {
         "id": "extensions_audit",
         "label": "Proroghe individuali autorizzate e tracciate, se nel perimetro del rilascio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizDeadlineService.php",
+          "tests/joomla-quiz-deadline.php"
+        ],
+        "review": {
+          "reason": "L’estensione controlla l’ambito della valutazione e registra scadenza precedente e nuova, motivazione, operatore e riferimento di audit. Lo snapshot delle risposte resta distinto.",
+          "references": [
+            "component/administrator/src/Application/QuizDeadlineService.php#previous_deadline",
+            "component/administrator/src/Application/QuizDeadlineService.php#quiz_deadline_extended",
+            "tests/joomla-quiz-deadline.php#concurrent answer save invalidates"
+          ]
+        }
       }
     ],
     "STA-03": [
@@ -3456,14 +3668,36 @@
       {
         "id": "revocation_priority",
         "label": "Revoca prevale sulle nuove risposte e mutazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "La mutazione verifica il contesto e i livelli correnti prima del replay, della lettura del tentativo e delle scritture. La stessa eccezione di finestra per un quiz già avviato non disattiva il controllo del livello.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#public function mutate",
+            "component/administrator/src/Application/QuizAttemptService.php#private function context",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment"
+          ]
+        }
       },
       {
         "id": "authorized_autoclose",
         "label": "Chiusura automatica gestisce solo risposte già autorizzate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il job acquisisce i record scaduti e valuta solo gli snapshot e le risposte già persistite. La fixture copre account bloccato e ripetizione del job senza doppio conteggio.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function grade",
+            "tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account",
+            "tests/joomla-quiz-attempts.php#duplicate expiry worker does not count twice"
+          ]
+        }
       },
       {
         "id": "cross_context",
@@ -4185,26 +4419,68 @@
       {
         "id": "criterion_02",
         "label": "Verificare disponibilità di corso/versione, stato e accesso delle categorie applicabili, account, livello del corso, iscrizione didattica e prerequisiti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "component/administrator/src/Application/CatalogService.php"
+        ],
+        "review": {
+          "reason": "La catena del contesto aula verifica proprietà, account, livello, corso, categorie, snapshot di versione ed edizione. Prima di restituire contenuti valuta disponibilità e prerequisiti della lezione.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment",
+            "component/administrator/src/Application/LearningService.php#public function classroom",
+            "component/administrator/src/Application/CatalogService.php#private function courseQuery"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Il livello della scheda riguarda soltanto la presentazione promozionale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il livello catalogo filtra il percorso promozionale. Il percorso discente usa un ramo distinto, poi applica il livello didattico e l’iscrizione.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#private function courseQuery",
+            "component/administrator/src/Application/CatalogService.php#if (!$forEnrolledLearner)",
+            "component/administrator/src/Application/LearningService.php#private function enrolledCourse"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Le categorie limitano la visibilità secondo le proprie regole e non concedono mai accesso alle lezioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Categoria e ascendenti restringono la query. Per i contenuti il contesto richiede separatamente livello didattico e proprietà dell’iscrizione.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#An unpublished/restricted ancestor",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "L'implementazione deve verificare esplicitamente le categorie ascendenti: il viewing access level non va confuso con l'ereditarietà dei permessi di modifica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/CourseEditorAccess.php"
+        ],
+        "review": {
+          "reason": "La query delle categorie usa confini lft/rgt, stato, lingua e livelli autorizzati degli ascendenti. Il percorso editoriale usa capacità distinte sull’asset Joomla.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#An unpublished/restricted ancestor",
+            "component/administrator/src/Application/CourseEditorAccess.php#function canEdit"
+          ]
+        }
       },
       {
         "id": "criterion_06",
@@ -4221,8 +4497,19 @@
       {
         "id": "criterion_08",
         "label": "Un account Joomla bloccato non scarica attestati tramite vecchi collegamenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/site/src/Controller/CertificateController.php",
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "Il controller inoltra l’identità al servizio. Il download verifica ID, proprietario e stato del documento, ma JD Learn non rivalida lo stato corrente di blocco dell’account su questo percorso. Resta da verificare il comportamento della sessione Joomla già aperta.",
+          "references": [
+            "component/site/src/Controller/CertificateController.php#public function download",
+            "component/administrator/src/Application/CertificateService.php#public function download",
+            "component/administrator/src/Application/CertificateService.php#private function document"
+          ]
+        }
       }
     ],
     "EDGE-02": [
@@ -4235,32 +4522,83 @@
       {
         "id": "criterion_02",
         "label": "Anteprime pubbliche solo per lezioni marcate e corso configurato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "tests/joomla-publication.php"
+        ],
+        "review": {
+          "reason": "Il servizio richiede versione pubblica corrente, flag di corso, lezione testuale esplicitamente marcata e disponibilità valida.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#public function publicLessonPreview",
+            "tests/joomla-publication.php#publicLessonPreview"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "consentono la visualizzazione ma non iscrizioni anonime, tentativi valutativi o attestati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/LessonpreviewModel.php",
+          "component/administrator/src/Application/CatalogService.php"
+        ],
+        "review": {
+          "reason": "Il modello di anteprima legge solamente corso, lezione e allegati consentiti. L’apertura non chiama i servizi di iscrizione, tentativi o rilascio attestati.",
+          "references": [
+            "component/site/src/Model/LessonpreviewModel.php#public function getItem",
+            "component/administrator/src/Application/CatalogService.php#public function publicLessonPreview"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "I materiali hanno una scelta autonoma di pubblicabilità: non diventano pubblici per associazione alla lezione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/MaterialService.php"
+        ],
+        "review": {
+          "reason": "Anche se la lezione è pubblicabile, list e download impongono a.preview = 1 sul singolo allegato e verificano versione e lezione proprietarie.",
+          "references": [
+            "component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewList",
+            "component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewDownload"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Guardare un'anteprima senza avviare il corso non riconosce automaticamente frequenza personale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/LessonpreviewModel.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "L’anteprima carica dati attraverso query read-only di catalogo e materiali. Le mutazioni della frequenza sono in un servizio distinto, che richiede identità e iscrizione autorizzata.",
+          "references": [
+            "component/site/src/Model/LessonpreviewModel.php#public function getItem",
+            "component/administrator/src/Application/LearningService.php#public function complete"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Corso consultabile senza attività obbligatorie: progresso non applicabile e nessun attestato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "La consultazione non accumula completamento automatico e l’emissione richiede learning. La copertura del dashboard verifica assenza di percentuale anche nello storico.",
+          "references": [
+            "component/administrator/src/Application/VideoProgressService.php#!$consultation && Coverage::isComplete",
+            "component/administrator/src/Application/CertificateIssuer.php#explicitAdminRecovery",
+            "tests/joomla-dashboard.php#inactive consultation retains no progress percentage"
+          ]
+        }
       },
       {
         "id": "criterion_07",
@@ -4323,38 +4661,96 @@
       {
         "id": "criterion_02",
         "label": "Ogni corso necessario pesa allo stesso modo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayProgress.php"
+        ],
+        "review": {
+          "reason": "Ogni corso per cui si applica il progresso incrementa di uno il denominatore. La somma non applica pesi per durata, attività o iscritti.",
+          "references": [
+            "component/administrator/src/Application/PathwayProgress.php#public static function summarize"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Percentuale = somma delle percentuali dei corsi richiesti / numero dei corsi richiesti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "component/administrator/src/Application/PathwayProgress.php"
+        ],
+        "review": {
+          "reason": "Il servizio aggrega la percentuale del singolo corso con media aritmetica intera dei corsi applicabili. I percorsi senza termini non producono una percentuale.",
+          "references": [
+            "component/administrator/src/Application/PathwayService.php#PathwayProgress::summarize",
+            "component/administrator/src/Application/PathwayProgress.php#floor($sum / $required)"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "corso non iniziato o senza iscrizione vale zero",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "component/administrator/src/Application/PathwayProgress.php"
+        ],
+        "review": {
+          "reason": "Il valore iniziale è zero e la riga conserva lo stato not_enrolled se manca l’iscrizione. Questo criterio prescrive il conteggio a zero, mentre SCR-04/criterion_03 richiede un gate diverso: la baseline necessita chiarimento.",
+          "references": [
+            "component/administrator/src/Application/PathwayService.php#$state = 'not_enrolled'",
+            "component/administrator/src/Application/PathwayProgress.php#public static function summarize"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Corsi non autorizzati contano zero senza rivelare contenuti non pubblicabili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "component/site/tmpl/pathway/default.php"
+        ],
+        "review": {
+          "reason": "Se il corso non è visibile la proiezione invia ID nullo, titolo vuoto e zero. La card usa un segnaposto senza collegamento al corso.",
+          "references": [
+            "component/administrator/src/Application/PathwayService.php#if (!isset($visibleCourses[$courseId]))",
+            "component/site/tmpl/pathway/default.php#COM_JLMS_PATHWAY_COURSE_UNAVAILABLE"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "etichetta “percorso con corsi non disponibili” dove consentita",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/pathway/default.php",
+          "component/administrator/src/Application/PathwayProgress.php"
+        ],
+        "review": {
+          "reason": "Il layout mostra l’avviso di corsi indisponibili insieme all’aggregato personale quando il servizio segnala almeno un corso non disponibile.",
+          "references": [
+            "component/site/tmpl/pathway/default.php#jlms-pathway-unavailable",
+            "component/administrator/src/Application/PathwayProgress.php#public static function summarize"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "Un percorso senza corsi necessari non espone percentuale né completamento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayProgress.php",
+          "component/site/tmpl/pathway/default.php"
+        ],
+        "review": {
+          "reason": "Il riepilogo restituisce null con denominatore zero. Il layout nasconde la barra e mostra il messaggio per assenza di corsi applicabili.",
+          "references": [
+            "component/administrator/src/Application/PathwayProgress.php#$required > 0",
+            "component/site/tmpl/pathway/default.php#jlms-pathway-empty"
+          ]
+        }
       },
       {
         "id": "criterion_08",
@@ -4379,44 +4775,118 @@
       {
         "id": "criterion_02",
         "label": "Alla perdita del livello o al blocco account, interrompere salvataggi/consegne e mostrare accesso non disponibile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/LearningService.php",
+          "component/media/js/quiz.js"
+        ],
+        "review": {
+          "reason": "Il server ricontrolla l’identità prima di modificare il tentativo. In caso di diniego il client blocca nuovi invii e svuota il payload pendente.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#public function mutate",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment",
+            "component/media/js/quiz.js#halted = true; pending = null"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Le risposte già confermate restano",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il diniego avviene prima delle scritture sulle risposte. La chiusura usa le risposte già persistite e non riceve risposte da una sessione revocata.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function context",
+            "component/administrator/src/Application/QuizAttemptService.php#private function grade",
+            "tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Se il tentativo ha timer, la scadenza originale chiude e valuta le risposte salvate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il timer server scade al deadline persistito anche se l’account è bloccato, e il worker valuta le sole risposte salvate. La chiusura ripetuta non riconta il tentativo.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function expireIfDue",
+            "tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "senza timer il tentativo rimane aperto ma non utilizzabile fino al ripristino dell'accesso o annullamento autorizzato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php"
+        ],
+        "review": {
+          "reason": "Il job seleziona solo tentativi con scadenza non nulla e raggiunta. Un tentativo senza timer resta aperto e ogni nuovo accesso continua a passare dal controllo corrente.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#public function expireDue",
+            "component/administrator/src/Application/QuizAttemptService.php#private function context"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Il browser non accumula risposte da consegnare dopo la revoca",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/quiz.js"
+        ],
+        "review": {
+          "reason": "Il client azzera il payload pendente e mette in halt la sessione al diniego. Le chiamate di salvataggio successive non riprendono in quella sessione bloccata.",
+          "references": [
+            "component/media/js/quiz.js#halted = true; pending = null",
+            "component/media/js/quiz.js#if (busy || halted)"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "La sola scadenza didattica può consentire di concludere un tentativo già iniziato entro il limite originario, come annunciato prima dell'avvio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il percorso di mutazione ammette un tentativo già aperto dopo la sola scadenza didattica. Il percorso per un tentativo nuovo richiede la finestra piena; il timer originario rimane controllato dal server.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function context",
+            "component/administrator/src/Application/QuizAttemptService.php#public function start",
+            "tests/joomla-quiz-attempts.php#existing attempt may finish after educational window ends",
+            "tests/joomla-quiz-attempts.php#window grace does not allow new attempts"
+          ]
+        }
       },
       {
         "id": "criterion_08",
         "label": "Si distinguono quindi scadenza didattica e perdita dell'autorizzazione Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "La scadenza della finestra didattica è gestita nello stesso contesto con una deroga circoscritta. L’identità, la proprietà, lo stato del corso e il livello Joomla vengono validati a prescindere dalla deroga.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function context",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment",
+            "component/administrator/src/Application/LearningService.php#private function enrolledCourse"
+          ]
+        }
       }
     ],
     "EDGE-08": [
@@ -4429,20 +4899,53 @@
       {
         "id": "criterion_02",
         "label": "Una sola attività di quiz attiva per la stessa iscrizione/quiz, anche da più dispositivi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/sql/install.mysql.utf8mb4.sql",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il lock per iscrizione serializza la creazione. La tabella dei tentativi attivi impone una sola riga per iscrizione e quiz. La fixture avvia due processi distinti sulla stessa iscrizione.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function active",
+            "component/administrator/sql/install.mysql.utf8mb4.sql#PRIMARY KEY (`enrollment_id`,`quiz_id`)",
+            "tests/joomla-quiz-attempts.php#two independent database connections"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Aggiornamenti portano una revisione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il server include la revisione nel tentativo, richiede il valore atteso al salvataggio, aggiorna la revisione e conserva il risultato dei replay.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#public function mutate",
+            "component/administrator/src/Application/QuizAttemptService.php#result_revision",
+            "tests/joomla-quiz-attempts.php#stale tab cannot overwrite answers"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "una revisione obsoleta riceve conflitto e non sovrascrive una risposta più recente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Una revisione superata viene respinta prima della scrittura delle risposte. La fixture verifica il rifiuto di una seconda scheda.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#if((int)$a->revision!==$revision)",
+            "tests/joomla-quiz-attempts.php#stale tab cannot overwrite answers"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -4510,14 +5013,34 @@
       {
         "id": "criterion_02",
         "label": "Due azioni distinte: Chiudi nuove iscrizioni mantiene l'aula agli iscritti aventi diritto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseOperationsService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il comando di ammissione modifica soltanto admissions_open. La fruizione già autorizzata controlla delivery_enabled separatamente.",
+          "references": [
+            "component/administrator/src/Application/CourseOperationsService.php#admissions_open",
+            "component/administrator/src/Application/LearningService.php#private function enrolledCourse"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Sospendi erogazione blocca l'aula anche agli iscritti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseOperationsService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il comando di erogazione modifica delivery_enabled. Il contesto aula nega l’accesso all’iscritto quando il flag è chiuso.",
+          "references": [
+            "component/administrator/src/Application/CourseOperationsService.php#delivery_enabled",
+            "component/administrator/src/Application/LearningService.php#COM_JLMS_COURSE_DELIVERY_SUSPENDED"
+          ]
+        }
       },
       {
         "id": "criterion_04",

@@ -2,10 +2,10 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **292**.
-- Mancanti con lacuna accertata: **11**.
-- Esaminati con esito non verificabile: **14**.
-- Da esaminare: **440**.
+- Implementati: **329**.
+- Mancanti con lacuna accertata: **17**.
+- Esaminati con esito non verificabile: **21**.
+- Da esaminare: **390**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -23,6 +23,26 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `CAT-02/completion_criteria` — Visualizzazione completa regole di completamento e attestati disponibili. Il programma mostra lezioni richieste/opzionali e il calendario. La proiezione restituita alla scheda non include un riepilogo delle regole di completamento e della disponibilità dell’attestato.
   - [component/administrator/src/Application/CatalogService.php#public function outline](../component/administrator/src/Application/CatalogService.php)
   - [component/site/tmpl/course/default.php#jlms-course-outline](../component/site/tmpl/course/default.php)
+- `NOT-01/coverage` — Copertura completa dei tipi evento, preferenze e localizzazioni. Il completamento da lezione o video accoda l’evento course.completed. Il ramo quiz aggiorna lo stato e invoca l’emissione dell’attestato, ma non accoda l’equivalente evento di completamento.
+  - [component/administrator/src/Application/LearningService.php#'course.completed:'](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/VideoProgressService.php#'course.completed:'](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer](../component/administrator/src/Application/QuizAttemptService.php)
+- `MAIL-02/event_matrix` — Copertura di tutte le transizioni e deduplicazione. La conclusione da quiz non invia l’evento di completamento corso che viene generato dai flussi lezione e video. Il caso di attestato è una notifica distinta e condizionata.
+  - [component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/LearningService.php#'course.completed:'](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/CertificateIssuer.php#certificate.available:](../component/administrator/src/Application/CertificateIssuer.php)
+- `MAIL-08/double_submit` — Controlli su doppio invio, test destinatario e conteggi corretti. La conferma di accodamento riusa il job per lo stesso identificativo. Il percorso di invio test, invece, crea un identificativo distinto a ogni POST: un doppio invio di prova può accodare due messaggi.
+  - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [component/administrator/src/Application/CourseCommunicationService.php#course-message-test:](../component/administrator/src/Application/CourseCommunicationService.php)
+- `STA-02/deadline_start` — Non consentire un tentativo quando il tempo residuo viola il limite dichiarato. L’avvio controlla che la finestra sia aperta al momento della richiesta. La scadenza del tentativo viene però calcolata sommando l’intera durata al tempo corrente, senza verificare il residuo rispetto alla finestra didattica.
+  - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/LearningService.php#private static function window](../component/administrator/src/Application/LearningService.php)
+- `STA-02/truncate_explicit` — Troncamento eventuale esplicito e mostrato prima dell'avvio. Il timer è assegnato dopo l’avvio alla durata intera prevista nelle regole. Il ramo di creazione non calcola o presenta un eventuale troncamento rispetto alla finestra.
+  - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#private function dto](../component/administrator/src/Application/QuizAttemptService.php)
 - `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. La pagina consente solo recente e titolo. Durata e altri ordinamenti editoriali non sono selezionabili. Il filtro per fascia di durata non ordina i risultati.
   - [component/site/src/Model/CoursesModel.php#['recent', 'title']](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#return $query->order](../component/site/src/Model/CoursesModel.php)
@@ -51,6 +71,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/CourseModel.php#public function purgeEmpty](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList](../component/administrator/src/View/Courses/HtmlView.php)
   - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM](../component/administrator/language/it-IT/com_jlms.ini)
+- `EDGE-01/criterion_08` — Un account Joomla bloccato non scarica attestati tramite vecchi collegamenti. Il controller inoltra l’identità al servizio. Il download verifica ID, proprietario e stato del documento, ma JD Learn non rivalida lo stato corrente di blocco dell’account su questo percorso. Resta da verificare il comportamento della sessione Joomla già aperta.
+  - [component/site/src/Controller/CertificateController.php#public function download](../component/site/src/Controller/CertificateController.php)
+  - [component/administrator/src/Application/CertificateService.php#public function download](../component/administrator/src/Application/CertificateService.php)
+  - [component/administrator/src/Application/CertificateService.php#private function document](../component/administrator/src/Application/CertificateService.php)
 
 ## Verifiche ancora necessarie
 
@@ -77,6 +101,29 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `MAT-03/hosting_limits` — Limiti effettivi su hosting differenti. I limiti vengono applicati durante staging e upload. Le soglie effettive di web server, proxy e PHP devono essere misurate su hosting differenti.
   - [component/administrator/src/Application/MaterialService.php#UPLOAD_ERR_INI_SIZE](../component/administrator/src/Application/MaterialService.php)
   - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function limit](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+- `NOT-01/delivery` — Invio SMTP e notifiche reali su installazione Joomla. Il task inoltra la coda al trasporto Joomla. L’esito effettivo su SMTP e le notifiche per destinatario richiedono l’evidenza operativa prevista dal testbook.
+  - [component/administrator/src/Infrastructure/MailQueue.php#public function dispatch](../component/administrator/src/Infrastructure/MailQueue.php)
+  - [docs/MAIL_SCHEDULER_SETUP.md#Collaudo Joomla/SMTP](../docs/MAIL_SCHEDULER_SETUP.md)
+- `NOT-02/stale_delivery` — Riconciliazione dei messaggi in invio e invii effettivi in tutti gli scenari. Il servizio riconcilia record stale in modo condizionato con nota. La decisione di ritentare o attestare l’invio dipende dall’effettiva accettazione SMTP, non osservabile dal solo stato della coda.
+  - [component/administrator/src/Application/MailQueueAuditService.php#public function reconcile](../component/administrator/src/Application/MailQueueAuditService.php)
+  - [docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash](../docs/MAIL_SCHEDULER_SETUP.md)
+- `CERT-03/visual_locales` — Impaginazione IT/EN e loghi vari su tutti gli ambienti. La fixture verifica il renderer PDF con più formati di logo. Una prova dei PDF su tutti gli ambienti, delle varianti linguistiche e dell’impaginazione resta necessaria.
+  - [tests/certificate-raster-logos.php#CertificatePdf::render](../tests/certificate-raster-logos.php)
+  - [component/administrator/src/Application/CertificateService.php#private function logoFile](../component/administrator/src/Application/CertificateService.php)
+- `CERT-06/scoped_acl` — ACL, visibilità per ruolo e casi limite su installazione reale. La diagnostica amministrativa applica una verifica dedicata e un limite di righe. La matrice di ruoli e casi limite su installazione reale richiede una verifica separata.
+  - [component/administrator/src/Application/CertificateService.php#public function adminUnissuedCompletions](../component/administrator/src/Application/CertificateService.php)
+  - [component/administrator/src/Application/CertificateService.php#private function assertCertificateAdministrator](../component/administrator/src/Application/CertificateService.php)
+- `CERT-07/failure_replay` — Errore SMTP e replay con garanzia di singola notifica. L’evento attestato ha una chiave stabile per documento e usa la coda. Le fixture non accertano l’accettazione dal trasporto e il comportamento dopo un esito SMTP incerto.
+  - [component/administrator/src/Application/CertificateIssuer.php#certificate.available:](../component/administrator/src/Application/CertificateIssuer.php)
+  - [component/administrator/src/Infrastructure/MailQueue.php#public function dispatch](../component/administrator/src/Infrastructure/MailQueue.php)
+  - [docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash](../docs/MAIL_SCHEDULER_SETUP.md)
+- `CERT-08/upgrade_backup` — Backup e ripristino con attestati e log preservati. La fixture retained verifica identità del certificato e download dopo upgrade. Non prova il ripristino di backup combinato di database, storage e audit.
+  - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
+  - [docs/QA_TESTBOOK.md#backup e ripristino](../docs/QA_TESTBOOK.md)
+- `MAIL-09/delivery_conflict` — Idempotenza completa e backoff su errori SMTP reali. Il dispatcher reclama le righe e applica retry con backoff. I casi di accettazione remota incerta e recupero senza consegna doppia richiedono un trasporto SMTP testato.
+  - [component/administrator/src/Infrastructure/MailQueue.php#public function dispatch](../component/administrator/src/Infrastructure/MailQueue.php)
+  - [component/administrator/src/Infrastructure/MailQueue.php#$delay = min(3600](../component/administrator/src/Infrastructure/MailQueue.php)
+  - [docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash](../docs/MAIL_SCHEDULER_SETUP.md)
 - `PRI-03/consent_matrix` — Consenso rifiutato/non disponibile su provider e browser reali. Il player verifica consenso prima della richiesta e il test simula lo stato negato e la revoca. Non c’è qui una prova di ciascuna combinazione su browser e provider reali.
   - [component/media/js/video.js#if (!this.allowed())](../component/media/js/video.js)
   - [tests/video-player.mjs#A revoked consent must also settle](../tests/video-player.mjs)
@@ -118,6 +165,29 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/MaterialService.php#public function download](../component/administrator/src/Application/MaterialService.php)
   - [component/administrator/src/Application/LearningService.php#public function resourceContext](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewDownload](../component/administrator/src/Application/MaterialService.php)
+- `CERT-01/negative` — Nessuna emissione nei percorsi disabilitati con tutte le modalità. L’emissione automatica condivide il controllo di modalità learning, abilitazione nello snapshot, preferenze correnti e modello attivo. Il recupero esplicito con motivazione è un ingresso amministrativo distinto.
+  - [component/administrator/src/Application/CertificateIssuer.php#public function issueForCompletedEnrollment](../component/administrator/src/Application/CertificateIssuer.php)
+  - [component/administrator/src/Application/CertificateIssuer.php#explicitAdminRecovery](../component/administrator/src/Application/CertificateIssuer.php)
+  - [component/administrator/src/Application/CertificateService.php#public function adminRecoverHistorical](../component/administrator/src/Application/CertificateService.php)
+- `CERT-05/acl_http` — Accesso anonimo e di utenti estranei; HEAD, cache e file asset. Il download ammette GET e HEAD, imposta no-store e passa dal servizio anche per HEAD. Il servizio vincola proprietario, stato e asset PDF. Le fixture verificano rifiuto per utente estraneo e ospite.
+  - [component/site/src/Controller/CertificateController.php#public function download](../component/site/src/Controller/CertificateController.php)
+  - [component/administrator/src/Application/CertificateService.php#private function document](../component/administrator/src/Application/CertificateService.php)
+  - [tests/joomla-dashboard.php#anonymous certificate download denied](../tests/joomla-dashboard.php)
+- `CERT-05/repeat` — Ripetibilità del documento senza rigenerazioni spurie. Il download rende solo i record pending_render. Un record pronto apre l’asset con MIME e stato controllati e riusa seriale e hash, senza generare il PDF a ogni richiesta.
+  - [component/administrator/src/Application/CertificateService.php#public function download](../component/administrator/src/Application/CertificateService.php)
+  - [component/administrator/src/Application/CertificateService.php#public function adminRegenerate](../component/administrator/src/Application/CertificateService.php)
+- `CERT-08/immutability` — Codice e dati certificati immutati con rigenerazione. La rigenerazione acquisisce gli snapshot congelati e confronta dati certificati e seriale dopo il lock. Aggiorna solo asset e revisione del documento, con audit nella stessa transazione.
+  - [component/administrator/src/Application/CertificateService.php#public function adminRegenerate](../component/administrator/src/Application/CertificateService.php)
+  - [component/administrator/src/Application/CertificateService.php#A concurrent edit/revocation](../component/administrator/src/Application/CertificateService.php)
+  - [component/administrator/src/Application/CertificateService.php#admin_regenerate](../component/administrator/src/Application/CertificateService.php)
+- `MAIL-06/selection` — Selezione destinatari attivi e sottoinsiemi autorizzati. La composizione valida ID univoci e restringe l’insieme alle iscrizioni attive sul corso, account sbloccati e indirizzi validi. Il worker rivalida ogni destinatario.
+  - [component/administrator/src/Application/CourseCommunicationService.php#public function preview](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [component/administrator/src/Application/CourseCommunicationService.php#private function activeIds](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [component/administrator/src/Application/CourseCommunicationService.php#private function recipient](../component/administrator/src/Application/CourseCommunicationService.php)
+- `MAIL-07/teacher_acl` — Docente limitato al proprio corso e protezione indirizzi. La composizione autorizza il corso con il roster. Per il docente senza gestione generale occorre assegnazione attiva al corso. La lista di composizione rimuove gli indirizzi prima di passare dati al layout.
+  - [component/administrator/src/Application/CourseCommunicationService.php#private function authorized](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [component/administrator/src/Application/CourseCommunicationService.php#unset($row->email)](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [component/administrator/src/Application/EnrollmentRosterService.php#public function course](../component/administrator/src/Application/EnrollmentRosterService.php)
 - `REP-02/roster` — Elenco iscritti per corso con stato accesso e avanzamento. La query è limitata al corso scelto. Il layout mostra separatamente stato dell’iscrizione, stato didattico e percentuale quando definita. La fixture verifica righe di più iscritti ed esclusione di un altro corso.
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function query](../component/administrator/src/Application/EnrollmentRosterService.php)
   - [component/administrator/tmpl/enrollments/default.php#COM_JLMS_ROSTER_PROGRESS](../component/administrator/tmpl/enrollments/default.php)
@@ -131,6 +201,22 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function course](../component/administrator/src/Application/EnrollmentRosterService.php)
   - [tests/joomla-roster.php#direct course ID cannot bypass scope](../tests/joomla-roster.php)
   - [tests/joomla-roster.php#explicit course deny refreshes stale identity](../tests/joomla-roster.php)
+- `STA-01/server_clock` — Scadenze determinate dall'orologio server e non dal browser. Il servizio assegna e valuta il timer con l’orologio iniettato lato server. Il worker chiude un tentativo scaduto anche senza browser.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function expireIfDue](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#public function expireDue](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#scheduled routine closes due attempt without browser](../tests/joomla-quiz-attempts.php)
+- `STA-02/extensions_audit` — Proroghe individuali autorizzate e tracciate, se nel perimetro del rilascio. L’estensione controlla l’ambito della valutazione e registra scadenza precedente e nuova, motivazione, operatore e riferimento di audit. Lo snapshot delle risposte resta distinto.
+  - [component/administrator/src/Application/QuizDeadlineService.php#previous_deadline](../component/administrator/src/Application/QuizDeadlineService.php)
+  - [component/administrator/src/Application/QuizDeadlineService.php#quiz_deadline_extended](../component/administrator/src/Application/QuizDeadlineService.php)
+  - [tests/joomla-quiz-deadline.php#concurrent answer save invalidates](../tests/joomla-quiz-deadline.php)
+- `STA-03/revocation_priority` — Revoca prevale sulle nuove risposte e mutazioni. La mutazione verifica il contesto e i livelli correnti prima del replay, della lettura del tentativo e delle scritture. La stessa eccezione di finestra per un quiz già avviato non disattiva il controllo del livello.
+  - [component/administrator/src/Application/QuizAttemptService.php#public function mutate](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#private function context](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+- `STA-03/authorized_autoclose` — Chiusura automatica gestisce solo risposte già autorizzate. Il job acquisisce i record scaduti e valuta solo gli snapshot e le risposte già persistite. La fixture copre account bloccato e ripetizione del job senza doppio conteggio.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function grade](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account](../tests/joomla-quiz-attempts.php)
+  - [tests/joomla-quiz-attempts.php#duplicate expiry worker does not count twice](../tests/joomla-quiz-attempts.php)
 - `SCR-05/criterion_03` — Azioni Riprendi, Rivedi e Attestato rispettano le autorizzazioni. La card offre Riprendi o Rivedi per il solo stato disponibile. Il server ricontrolla proprietà e accesso corrente all’iscrizione. Nell’area attestati la lista e il download sono vincolati al proprietario.
   - [component/site/tmpl/dashboard/_courses.php#$item['access'] === 'available'](../component/site/tmpl/dashboard/_courses.php)
   - [component/administrator/src/Application/LearningService.php#public function resumeTarget](../component/administrator/src/Application/LearningService.php)
@@ -167,6 +253,90 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/CourseModel.php#Remove only this item](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM](../component/administrator/language/it-IT/com_jlms.ini)
   - [tests/joomla-courses-ui.php#Confirmed purge removes only this course editorial revisions](../tests/joomla-courses-ui.php)
+- `EDGE-01/criterion_02` — Verificare disponibilità di corso/versione, stato e accesso delle categorie applicabili, account, livello del corso, iscrizione didattica e prerequisiti. La catena del contesto aula verifica proprietà, account, livello, corso, categorie, snapshot di versione ed edizione. Prima di restituire contenuti valuta disponibilità e prerequisiti della lezione.
+  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/LearningService.php#public function classroom](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
+- `EDGE-01/criterion_03` — Il livello della scheda riguarda soltanto la presentazione promozionale. Il livello catalogo filtra il percorso promozionale. Il percorso discente usa un ramo distinto, poi applica il livello didattico e l’iscrizione.
+  - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
+  - [component/administrator/src/Application/CatalogService.php#if (!$forEnrolledLearner)](../component/administrator/src/Application/CatalogService.php)
+  - [component/administrator/src/Application/LearningService.php#private function enrolledCourse](../component/administrator/src/Application/LearningService.php)
+- `EDGE-01/criterion_04` — Le categorie limitano la visibilità secondo le proprie regole e non concedono mai accesso alle lezioni. Categoria e ascendenti restringono la query. Per i contenuti il contesto richiede separatamente livello didattico e proprietà dell’iscrizione.
+  - [component/administrator/src/Application/CatalogService.php#An unpublished/restricted ancestor](../component/administrator/src/Application/CatalogService.php)
+  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+- `EDGE-01/criterion_05` — L'implementazione deve verificare esplicitamente le categorie ascendenti: il viewing access level non va confuso con l'ereditarietà dei permessi di modifica. La query delle categorie usa confini lft/rgt, stato, lingua e livelli autorizzati degli ascendenti. Il percorso editoriale usa capacità distinte sull’asset Joomla.
+  - [component/administrator/src/Application/CatalogService.php#An unpublished/restricted ancestor](../component/administrator/src/Application/CatalogService.php)
+  - [component/administrator/src/Application/CourseEditorAccess.php#function canEdit](../component/administrator/src/Application/CourseEditorAccess.php)
+- `EDGE-02/criterion_02` — Anteprime pubbliche solo per lezioni marcate e corso configurato. Il servizio richiede versione pubblica corrente, flag di corso, lezione testuale esplicitamente marcata e disponibilità valida.
+  - [component/administrator/src/Application/CatalogService.php#public function publicLessonPreview](../component/administrator/src/Application/CatalogService.php)
+  - [tests/joomla-publication.php#publicLessonPreview](../tests/joomla-publication.php)
+- `EDGE-02/criterion_03` — consentono la visualizzazione ma non iscrizioni anonime, tentativi valutativi o attestati. Il modello di anteprima legge solamente corso, lezione e allegati consentiti. L’apertura non chiama i servizi di iscrizione, tentativi o rilascio attestati.
+  - [component/site/src/Model/LessonpreviewModel.php#public function getItem](../component/site/src/Model/LessonpreviewModel.php)
+  - [component/administrator/src/Application/CatalogService.php#public function publicLessonPreview](../component/administrator/src/Application/CatalogService.php)
+- `EDGE-02/criterion_04` — I materiali hanno una scelta autonoma di pubblicabilità: non diventano pubblici per associazione alla lezione. Anche se la lezione è pubblicabile, list e download impongono a.preview = 1 sul singolo allegato e verificano versione e lezione proprietarie.
+  - [component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewList](../component/administrator/src/Application/MaterialService.php)
+  - [component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewDownload](../component/administrator/src/Application/MaterialService.php)
+- `EDGE-02/criterion_05` — Guardare un'anteprima senza avviare il corso non riconosce automaticamente frequenza personale. L’anteprima carica dati attraverso query read-only di catalogo e materiali. Le mutazioni della frequenza sono in un servizio distinto, che richiede identità e iscrizione autorizzata.
+  - [component/site/src/Model/LessonpreviewModel.php#public function getItem](../component/site/src/Model/LessonpreviewModel.php)
+  - [component/administrator/src/Application/LearningService.php#public function complete](../component/administrator/src/Application/LearningService.php)
+- `EDGE-02/criterion_06` — Corso consultabile senza attività obbligatorie: progresso non applicabile e nessun attestato. La consultazione non accumula completamento automatico e l’emissione richiede learning. La copertura del dashboard verifica assenza di percentuale anche nello storico.
+  - [component/administrator/src/Application/VideoProgressService.php#!$consultation && Coverage::isComplete](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/CertificateIssuer.php#explicitAdminRecovery](../component/administrator/src/Application/CertificateIssuer.php)
+  - [tests/joomla-dashboard.php#inactive consultation retains no progress percentage](../tests/joomla-dashboard.php)
+- `EDGE-04/criterion_02` — Ogni corso necessario pesa allo stesso modo. Ogni corso per cui si applica il progresso incrementa di uno il denominatore. La somma non applica pesi per durata, attività o iscritti.
+  - [component/administrator/src/Application/PathwayProgress.php#public static function summarize](../component/administrator/src/Application/PathwayProgress.php)
+- `EDGE-04/criterion_03` — Percentuale = somma delle percentuali dei corsi richiesti / numero dei corsi richiesti. Il servizio aggrega la percentuale del singolo corso con media aritmetica intera dei corsi applicabili. I percorsi senza termini non producono una percentuale.
+  - [component/administrator/src/Application/PathwayService.php#PathwayProgress::summarize](../component/administrator/src/Application/PathwayService.php)
+  - [component/administrator/src/Application/PathwayProgress.php#floor($sum / $required)](../component/administrator/src/Application/PathwayProgress.php)
+- `EDGE-04/criterion_04` — corso non iniziato o senza iscrizione vale zero. Il valore iniziale è zero e la riga conserva lo stato not_enrolled se manca l’iscrizione. Questo criterio prescrive il conteggio a zero, mentre SCR-04/criterion_03 richiede un gate diverso: la baseline necessita chiarimento.
+  - [component/administrator/src/Application/PathwayService.php#$state = 'not_enrolled'](../component/administrator/src/Application/PathwayService.php)
+  - [component/administrator/src/Application/PathwayProgress.php#public static function summarize](../component/administrator/src/Application/PathwayProgress.php)
+- `EDGE-04/criterion_05` — Corsi non autorizzati contano zero senza rivelare contenuti non pubblicabili. Se il corso non è visibile la proiezione invia ID nullo, titolo vuoto e zero. La card usa un segnaposto senza collegamento al corso.
+  - [component/administrator/src/Application/PathwayService.php#if (!isset($visibleCourses[$courseId]))](../component/administrator/src/Application/PathwayService.php)
+  - [component/site/tmpl/pathway/default.php#COM_JLMS_PATHWAY_COURSE_UNAVAILABLE](../component/site/tmpl/pathway/default.php)
+- `EDGE-04/criterion_06` — etichetta “percorso con corsi non disponibili” dove consentita. Il layout mostra l’avviso di corsi indisponibili insieme all’aggregato personale quando il servizio segnala almeno un corso non disponibile.
+  - [component/site/tmpl/pathway/default.php#jlms-pathway-unavailable](../component/site/tmpl/pathway/default.php)
+  - [component/administrator/src/Application/PathwayProgress.php#public static function summarize](../component/administrator/src/Application/PathwayProgress.php)
+- `EDGE-04/criterion_07` — Un percorso senza corsi necessari non espone percentuale né completamento. Il riepilogo restituisce null con denominatore zero. Il layout nasconde la barra e mostra il messaggio per assenza di corsi applicabili.
+  - [component/administrator/src/Application/PathwayProgress.php#$required > 0](../component/administrator/src/Application/PathwayProgress.php)
+  - [component/site/tmpl/pathway/default.php#jlms-pathway-empty](../component/site/tmpl/pathway/default.php)
+- `EDGE-05/criterion_02` — Alla perdita del livello o al blocco account, interrompere salvataggi/consegne e mostrare accesso non disponibile. Il server ricontrolla l’identità prima di modificare il tentativo. In caso di diniego il client blocca nuovi invii e svuota il payload pendente.
+  - [component/administrator/src/Application/QuizAttemptService.php#public function mutate](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+  - [component/media/js/quiz.js#halted = true; pending = null](../component/media/js/quiz.js)
+- `EDGE-05/criterion_03` — Le risposte già confermate restano. Il diniego avviene prima delle scritture sulle risposte. La chiusura usa le risposte già persistite e non riceve risposte da una sessione revocata.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function context](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#private function grade](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account](../tests/joomla-quiz-attempts.php)
+- `EDGE-05/criterion_04` — Se il tentativo ha timer, la scadenza originale chiude e valuta le risposte salvate. Il timer server scade al deadline persistito anche se l’account è bloccato, e il worker valuta le sole risposte salvate. La chiusura ripetuta non riconta il tentativo.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function expireIfDue](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account](../tests/joomla-quiz-attempts.php)
+- `EDGE-05/criterion_05` — senza timer il tentativo rimane aperto ma non utilizzabile fino al ripristino dell'accesso o annullamento autorizzato. Il job seleziona solo tentativi con scadenza non nulla e raggiunta. Un tentativo senza timer resta aperto e ogni nuovo accesso continua a passare dal controllo corrente.
+  - [component/administrator/src/Application/QuizAttemptService.php#public function expireDue](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#private function context](../component/administrator/src/Application/QuizAttemptService.php)
+- `EDGE-05/criterion_06` — Il browser non accumula risposte da consegnare dopo la revoca. Il client azzera il payload pendente e mette in halt la sessione al diniego. Le chiamate di salvataggio successive non riprendono in quella sessione bloccata.
+  - [component/media/js/quiz.js#halted = true; pending = null](../component/media/js/quiz.js)
+  - [component/media/js/quiz.js#if (busy || halted)](../component/media/js/quiz.js)
+- `EDGE-05/criterion_07` — La sola scadenza didattica può consentire di concludere un tentativo già iniziato entro il limite originario, come annunciato prima dell'avvio. Il percorso di mutazione ammette un tentativo già aperto dopo la sola scadenza didattica. Il percorso per un tentativo nuovo richiede la finestra piena; il timer originario rimane controllato dal server.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function context](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#existing attempt may finish after educational window ends](../tests/joomla-quiz-attempts.php)
+  - [tests/joomla-quiz-attempts.php#window grace does not allow new attempts](../tests/joomla-quiz-attempts.php)
+- `EDGE-05/criterion_08` — Si distinguono quindi scadenza didattica e perdita dell'autorizzazione Joomla. La scadenza della finestra didattica è gestita nello stesso contesto con una deroga circoscritta. L’identità, la proprietà, lo stato del corso e il livello Joomla vengono validati a prescindere dalla deroga.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function context](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/LearningService.php#private function enrolledCourse](../component/administrator/src/Application/LearningService.php)
+- `EDGE-08/criterion_02` — Una sola attività di quiz attiva per la stessa iscrizione/quiz, anche da più dispositivi. Il lock per iscrizione serializza la creazione. La tabella dei tentativi attivi impone una sola riga per iscrizione e quiz. La fixture avvia due processi distinti sulla stessa iscrizione.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function active](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/sql/install.mysql.utf8mb4.sql#PRIMARY KEY (`enrollment_id`,`quiz_id`)](../component/administrator/sql/install.mysql.utf8mb4.sql)
+  - [tests/joomla-quiz-attempts.php#two independent database connections](../tests/joomla-quiz-attempts.php)
+- `EDGE-08/criterion_03` — Aggiornamenti portano una revisione. Il server include la revisione nel tentativo, richiede il valore atteso al salvataggio, aggiorna la revisione e conserva il risultato dei replay.
+  - [component/administrator/src/Application/QuizAttemptService.php#public function mutate](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#result_revision](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#stale tab cannot overwrite answers](../tests/joomla-quiz-attempts.php)
+- `EDGE-08/criterion_04` — una revisione obsoleta riceve conflitto e non sovrascrive una risposta più recente. Una revisione superata viene respinta prima della scrittura delle risposte. La fixture verifica il rifiuto di una seconda scheda.
+  - [component/administrator/src/Application/QuizAttemptService.php#if((int)$a->revision!==$revision)](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#stale tab cannot overwrite answers](../tests/joomla-quiz-attempts.php)
 - `EDGE-08/criterion_05` — Per il progresso video unire gli intervalli già fruiti. Il salvataggio unisce gli intervalli nuovi a quelli persistiti. La fixture Joomla verifica il completamento tramite contributi parziali da due sessioni.
   - [component/administrator/src/Application/VideoProgressService.php#Coverage::merge](../component/administrator/src/Application/VideoProgressService.php)
   - [tests/joomla-video.php#cross-tab interval union completes exactly](../tests/joomla-video.php)
@@ -177,6 +347,12 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Domain/VideoTelemetry.php#last_event_id](../component/administrator/src/Domain/VideoTelemetry.php)
   - [component/administrator/src/Domain/VideoTelemetry.php#$spent + $cost](../component/administrator/src/Domain/VideoTelemetry.php)
   - [component/administrator/src/Application/VideoProgressService.php#last_batch_hash](../component/administrator/src/Application/VideoProgressService.php)
+- `EDGE-09/criterion_02` — Due azioni distinte: Chiudi nuove iscrizioni mantiene l'aula agli iscritti aventi diritto. Il comando di ammissione modifica soltanto admissions_open. La fruizione già autorizzata controlla delivery_enabled separatamente.
+  - [component/administrator/src/Application/CourseOperationsService.php#admissions_open](../component/administrator/src/Application/CourseOperationsService.php)
+  - [component/administrator/src/Application/LearningService.php#private function enrolledCourse](../component/administrator/src/Application/LearningService.php)
+- `EDGE-09/criterion_03` — Sospendi erogazione blocca l'aula anche agli iscritti. Il comando di erogazione modifica delivery_enabled. Il contesto aula nega l’accesso all’iscritto quando il flag è chiuso.
+  - [component/administrator/src/Application/CourseOperationsService.php#delivery_enabled](../component/administrator/src/Application/CourseOperationsService.php)
+  - [component/administrator/src/Application/LearningService.php#COM_JLMS_COURSE_DELIVERY_SUSPENDED](../component/administrator/src/Application/LearningService.php)
 - `EDGE-12/criterion_02` — Default Stream: token temporaneo 15 minuti, rinnovo anticipato con nuova verifica autorizzativa. Il provider usa 900 secondi per impostazione iniziale, calcola l’anticipo e il rinnovo torna attraverso il controllo corrente di accesso del componente.
   - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#token_ttl_seconds](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
   - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#renew_after_seconds](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
