@@ -1,3 +1,7 @@
+**JD Learn 0.60.2-dev — LCM-01, blocco della riattivazione anticipata (18/11/2026).**
+
+CourseOperationsService rifiuta le operazioni `admissions_open` e `delivery_resume` se il corso non è Pubblicato, anche quando la modifica viene richiesta direttamente anziché dall'interfaccia. Chiudere e sospendere resta permesso; l'archivio e il ripristino non riaprono i flag. Test Joomla sull'anteprima, tentativo di applicazione e assenza di nuovi audit per operazioni bloccate. LCM-01 resta Parziale per audit trasversale e collaudo reale. Percentuale funzionale globale non consolidata.
+
 **JD Learn 0.60.1-dev — correzione LCM-01: ripristino archivio senza riapertura automatica (18/11/2026).**
 
 Il workflow Archive chiude admissions_open e delivery_enabled nella stessa transazione; Restore ritorna allo stato editoriale Pubblicato senza riaprire né iscrizioni né aula. Il recupero diretto dell'aula era già protetto da LearningService con HTTP 403 quando delivery_enabled=0; ora il ripristino dell'archivio mantiene quel blocco. Occorre un comando amministrativo dedicato per riattivare la fruizione. Test Joomla automatici ampliati; collaudo manuale e audit degli endpoint laterali ancora pendenti. Nessuna percentuale funzionale globale estrapolata.
