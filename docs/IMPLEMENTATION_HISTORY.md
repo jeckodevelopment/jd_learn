@@ -1,3 +1,9 @@
+## 18 novembre 2026 — SCR-01: azione esplicita nelle schede catalogo (PR #675)
+
+[PR #675](https://github.com/jeckodevelopment/jd_learn/pull/675) integrata con squash `ef1911265ad754436b5b87d139c79a0454d217cd`. [CI #44415053155](https://github.com/jeckodevelopment/jd_learn/actions/runs/44415053155) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6); [integrità requisiti #44415053128](https://github.com/jeckodevelopment/jd_learn/actions/runs/44415053128) superata. [Artefatto JD-Learn-0.60.8-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44415053155/artifacts/14478148732), digest **dell'archivio GitHub Actions**, non dello ZIP Joomla contenuto, `sha256:7ac7c1f9ec5570f08b1208453729465b2fa65cd1965c957d0ddcc0356c23e04b`.
+
+Le card catalogo mostrano un collegamento esplicito ai dettagli, senza iscrizione diretta, e una modalità informativa di ammissione quando aperta ed erogabile (auto o approvazione). La pagina del corso rimane autoritativa su ACL, autenticazione e iscrizione. Localizzazione IT/EN e regressione frontend aggiornate. **Collaudo manuale Joomla pendente**: confronto modalità e finestre, guest/autorizzati/già iscritti, grid/list, traduzioni, filtri e permessi. `SCR-01/card` resta parziale per stato individuale iscrizione e docenti; globale non determinabile, SemVer invariato `0.60.8-dev`.
+
 ## 18 novembre 2026 — SCR-01: ordinamento crescente per durata del catalogo (PR #672)
 
 Riconciliazione post-merge formalizzata nella [PR documentale #673](https://github.com/jeckodevelopment/jd_learn/pull/673), separata dalle evidenze di test funzionale.
