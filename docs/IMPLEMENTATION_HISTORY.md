@@ -1,5 +1,7 @@
 ## 18 novembre 2026 — SCR-01: ordinamento crescente per durata del catalogo (PR #672)
 
+Riconciliazione post-merge formalizzata nella [PR documentale #673](https://github.com/jeckodevelopment/jd_learn/pull/673), separata dalle evidenze di test funzionale.
+
 [PR #672](https://github.com/jeckodevelopment/jd_learn/pull/672) integrata con squash `52be71fd69495341f5e70f09ff54ed31fe53da37`. [CI #44411232827](https://github.com/jeckodevelopment/jd_learn/actions/runs/44411232827) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6); [integrità matrice #44411232820](https://github.com/jeckodevelopment/jd_learn/actions/runs/44411232820) superata. [Artefatto installabile JD-Learn-0.60.8-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44411232827/artifacts/14478185261); digest **dell'archivio GitHub Actions** `sha256:42c330db2385483bdea10ddf2f5cc1f7f762e1e173d994f16c2d3519cd50b14a`, non dello ZIP Joomla interno.
 
 Aggiunto ordinamento crescente per durata, con tie-break deterministico e durata sconosciuta in coda, basato sui metadati della versione pubblicata; impostabile da catalogo, configurazione globale e voce menu. Testi IT/EN frontend e backend. Audit SCR-01 aggiornato con riferimenti verificabili, ma il requisito resta parziale per gli ordinamenti editoriali/data e altri criteri. **Collaudo manuale Joomla pendente** su ordinamenti con durate uguali/nulle, versione bozza versus pubblicata, menu/global, filtri/ACL e IT/EN. Nessun incremento arbitrario della percentuale globale, tuttora non determinabile.
