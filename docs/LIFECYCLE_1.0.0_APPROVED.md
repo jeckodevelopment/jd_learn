@@ -49,6 +49,10 @@ Il servizio `CertificateService::listForStudent()` e il download privato degli a
 
 Il workflow di archiviazione imposta admissions_open=0 e delivery_enabled=0 nella stessa transazione del passaggio allo stato Archiviato. La transizione inversa porta lo stato editoriale a Pubblicato conservando la versione didattica immutabile, ma non riapre automaticamente ammissioni o fruizione. LearningService applica già delivery_enabled all'accesso per gli iscritti, inclusi i link diretti, restituendo HTTP 403 per il corso sospeso. La modifica al workflow garantisce che il blocco rimanga attivo anche dopo il ripristino. Per riaprire iscrizioni o didattica servono comandi espliciti con audit e permessi. I test Joomla verificano flag prima/dopo ripristino, diniego dell'aula e permanenza della versione. Rimangono audit trasversale e accettazione reale.
 
+### LCM-01 — gate sulle operazioni manuali di riattivazione (0.60.2)
+
+Le operazioni amministrative esistenti `admissions_open` e `delivery_resume` sono ammesse solo se lo stato editoriale del corso è Pubblicato (`state=1`). Anteprima e conferma server-side condividono il blocco, per impedire la riapertura anticipata mentre il corso è archiviato, cestinato o non pubblicato. Chiudere le ammissioni o sospendere l'erogazione rimane possibile. Non è previsto alcun automatismo in fase di Restore; la riattivazione rimane esplicita e soggetta a permessi, motivazione e audit. Test Joomla per tentativi negativi e storico invariato; accettazione reale pendente.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
