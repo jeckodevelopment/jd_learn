@@ -97,6 +97,12 @@ class CoursesModel extends ListModel
         return $query->order($order === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
     }
 
+    /** Prevent reuse of personalised catalogue results across Joomla identities. */
+    protected function getStoreId($id = '')
+    {
+        return parent::getStoreId($id . ':actor:' . (int) Factory::getApplication()->getIdentity()->id);
+    }
+
     /** Visible frozen teacher names for the currently paginated catalogue courses only. */
     public function getCardTeachers(array $items): array
     {
