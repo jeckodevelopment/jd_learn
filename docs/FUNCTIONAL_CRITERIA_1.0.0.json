@@ -4509,58 +4509,87 @@
       {
         "id": "criterion_01",
         "label": "I quattro plugin video previsti sono distribuiti nel pacchetto base",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "tools/build.py",
+          "tests/joomla-smoke.php"
+        ]
       },
       {
         "id": "criterion_02",
         "label": "Il registro dei provider supporta un contratto di estensione versionato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderRegistry.php",
+          "libraries/jlms/src/Video/ProviderDescriptor.php"
+        ]
       },
       {
         "id": "criterion_03",
         "label": "Attivazione e disattivazione seguono lo stato nativo dei plugin Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "plugins/jlmsvideo/youtube/src/Extension/Youtube.php",
+          "tests/joomla-smoke.php"
+        ]
       }
     ],
     "PVD-02": [
       {
         "id": "criterion_01",
         "label": "Registro e contratto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderRegistryInterface.php",
+          "libraries/jlms/src/Video/VideoProviderRegistry.php"
+        ]
       },
       {
         "id": "criterion_02",
         "label": "Il componente importa il gruppo nei contesti necessari ed emette il proprio evento `onJlmsRegisterVideoProviders`",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "libraries/jlms/src/Event/RegisterVideoProvidersEvent.php",
+          "tests/joomla-smoke.php"
+        ]
       },
       {
         "id": "criterion_03",
         "label": "i plugin registrano factory in un registry",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "plugins/jlmsvideo/youtube/src/Extension/Youtube.php",
+          "plugins/jlmsvideo/vimeo/src/Extension/Vimeo.php",
+          "libraries/jlms/src/Video/VideoProviderRegistry.php"
+        ]
       },
       {
         "id": "criterion_04",
         "label": "L'evento è del progetto, non un evento core preesistente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Event/RegisterVideoProvidersEvent.php"
+        ]
       },
       {
         "id": "criterion_05",
         "label": "Provider key univoca e contratto con versione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/ProviderDescriptor.php",
+          "libraries/jlms/src/Video/VideoProviderRegistry.php"
+        ]
       },
       {
         "id": "criterion_06",
         "label": "errori su collisione o incompatibilita",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderRegistry.php"
+        ]
       },
       {
         "id": "criterion_07",
@@ -4669,8 +4698,12 @@
       {
         "id": "criterion_01",
         "label": "Il contratto consente di registrare un provider aggiuntivo senza modificare il modello del corso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "libraries/jlms/src/Video/VideoProviderRegistryInterface.php",
+          "libraries/jlms/src/Video/VideoProviderRegistry.php",
+          "tests/video-player.mjs"
+        ]
       },
       {
         "id": "criterion_02",
@@ -5065,20 +5098,30 @@
       {
         "id": "criterion_01",
         "label": "Inclusione nella distribuzione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "tools/build.py"
+        ]
       },
       {
         "id": "criterion_02",
         "label": "Lo ZIP base installabile deve contenere il componente e i quattro plugin dedicati: YouTube, Vimeo, Cloudflare Stream e HTML5 locale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "tools/build.py"
+        ]
       },
       {
         "id": "criterion_03",
         "label": "Sono modulari e gestiti dal core Joomla, ma non componenti da acquistare/scaricare separatamente per ottenere le funzioni descritte",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "plugins/jlmsvideo/html5/html5.xml",
+          "plugins/jlmsvideo/vimeo/vimeo.xml"
+        ]
       },
       {
         "id": "criterion_04",
