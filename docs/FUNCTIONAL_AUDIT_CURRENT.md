@@ -2,10 +2,10 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **383**.
-- Mancanti con lacuna accertata: **27**.
-- Esaminati con esito non verificabile: **58**.
-- Da esaminare: **289**.
+- Implementati: **391**.
+- Mancanti con lacuna accertata: **25**.
+- Esaminati con esito non verificabile: **82**.
+- Da esaminare: **259**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -23,14 +23,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `CAT-02/completion_criteria` — Visualizzazione completa regole di completamento e attestati disponibili. Il programma mostra lezioni richieste/opzionali e il calendario. La proiezione restituita alla scheda non include un riepilogo delle regole di completamento e della disponibilità dell’attestato.
   - [component/administrator/src/Application/CatalogService.php#public function outline](../component/administrator/src/Application/CatalogService.php)
   - [component/site/tmpl/course/default.php#jlms-course-outline](../component/site/tmpl/course/default.php)
-- `NOT-01/coverage` — Copertura completa dei tipi evento, preferenze e localizzazioni. Il completamento da lezione o video accoda l’evento course.completed. Il ramo quiz aggiorna lo stato e invoca l’emissione dell’attestato, ma non accoda l’equivalente evento di completamento.
-  - [component/administrator/src/Application/LearningService.php#'course.completed:'](../component/administrator/src/Application/LearningService.php)
-  - [component/administrator/src/Application/VideoProgressService.php#'course.completed:'](../component/administrator/src/Application/VideoProgressService.php)
-  - [component/administrator/src/Application/QuizAttemptService.php#'course.completed:'](../component/administrator/src/Application/QuizAttemptService.php)
-- `MAIL-02/event_matrix` — Copertura di tutte le transizioni e deduplicazione. La conclusione da quiz non invia l’evento di completamento corso che viene generato dai flussi lezione e video. Il caso di attestato è una notifica distinta e condizionata.
-  - [component/administrator/src/Application/QuizAttemptService.php#'course.completed:'](../component/administrator/src/Application/QuizAttemptService.php)
-  - [component/administrator/src/Application/LearningService.php#'course.completed:'](../component/administrator/src/Application/LearningService.php)
-  - [component/administrator/src/Application/CertificateIssuer.php#certificate.available:](../component/administrator/src/Application/CertificateIssuer.php)
 - `MAIL-08/double_submit` — Controlli su doppio invio, test destinatario e conteggi corretti. La conferma di accodamento riusa il job per lo stesso identificativo. Il percorso di invio test, invece, crea un identificativo distinto a ogni POST: un doppio invio di prova può accodare due messaggi.
   - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
@@ -125,27 +117,121 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `LCM-05/history_upgrade` — Copertura trasversale storico, attestati e upgrade. Le fixture retained conservano progressi e attestati. La combinazione trasversale di transizioni, ruoli, storico e backup/ripristino richiede esecuzioni ulteriori.
   - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
   - [docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)](../docs/LIFECYCLE_1.0.0_APPROVED.md)
+- `CAT-04/robots_security` — Esclusione sistematica di contenuti personali/protetti dall'indicizzazione. La vista corso imposta noindex/nofollow per i contenuti non accessibili e il plugin Finder ha controlli di stato/accesso. Il criterio richiede però l’esclusione sistematica di ogni contenuto personale o protetto da indicizzazione: il repository non contiene una verifica end-to-end dell’intero insieme di rotte e motori/installazioni Joomla.
+  - [component/site/src/View/Course/HtmlView.php#noindex, nofollow](../component/site/src/View/Course/HtmlView.php)
+  - [plugins/finder/jlms/src/Extension/Jlms.php#public function onFinderChangeState](../plugins/finder/jlms/src/Extension/Jlms.php)
+  - [docs/LEARNING.md#noindex/nofollow](../docs/LEARNING.md)
 - `CAT-04/seo_combinations` — Combinazioni menu, lingue, breadcrumb e immagini social. Il template e i servizi forniscono metadati pubblici, percorso Joomla e route. Restano le combinazioni di menu, lingua, breadcrumb e immagine social su installazione effettiva.
   - [component/site/src/View/Course/HtmlView.php#PublicMetadataHelper::apply](../component/site/src/View/Course/HtmlView.php)
   - [docs/FUNCTIONAL_AUDIT_CAT04_FINDER.md#seo_combinations](../docs/FUNCTIONAL_AUDIT_CAT04_FINDER.md)
+- `AUT-01/corner_cases` — Recupero completo degli input e regole avanzate su ogni errore editoriale. Il modello e i test rifiutano input non validi, modifiche non autorizzate e revisioni obsolete in alcuni form. Il criterio estende il recupero completo dei dati inseriti e le regole avanzate a ogni errore editoriale; manca una prova che copra tutti i form, i rami di errore e la ripresentazione dei dati dopo il fallimento.
+  - [tests/joomla-course-presentation.php#Invalid presentation rejected](../tests/joomla-course-presentation.php)
+  - [tests/joomla-course-presentation.php#Stale revision cannot overwrite presentation](../tests/joomla-course-presentation.php)
+  - [docs/IMPLEMENTATION_GAPS.md#R-03](../docs/IMPLEMENTATION_GAPS.md)
+- `AUT-03/subtitle_provider` — Avvisi completi per sottotitoli e provider senza tracciamento. La readiness avvisa quando manca la trascrizione editoriale locale. Il codice dichiara esplicitamente che tale controllo non accerta caption o tracce dei provider remoti; l’esito completo per ciascun provider e le relative combinazioni di tracciamento richiede verifica ulteriore.
+  - [component/administrator/src/Domain/PublicationReadiness.php#Editorial transcripts are optional accessibility aids.](../component/administrator/src/Domain/PublicationReadiness.php)
+  - [docs/VIDEO.md#non espongono qui un elenco interrogabile](../docs/VIDEO.md)
+- `AUT-04/enrollment_mapping` — Migrazione iscritti solo esplicita con equivalenze. La pubblicazione di una nuova versione richiede una revisione esplicita dell’impatto e il codice modella le differenze didattiche. Le prove disponibili non coprono l’intera matrice di equivalenze e assegnazioni degli iscritti durante migrazione, inclusi i casi limite con progressi e quiz aperti.
+  - [component/administrator/src/Application/PublicationService.php#public function updateImpact](../component/administrator/src/Application/PublicationService.php)
+  - [tests/joomla-publication-impact.php#Existing module and quiz definition changes are recognised without exposing questions](../tests/joomla-publication-impact.php)
+  - [docs/PUBLICATION.md#nessuna conferma implicita di aggiornamenti](../docs/PUBLICATION.md)
+- `AUT-04/historical_integrity` — Tutela risultati e attestati in ogni variante di ripristino. I test verificano che le modifiche editoriali non riscrivano lo snapshot congelato e che parte dello storico didattico sopravviva agli aggiornamenti. Non coprono tutte le varianti di ripristino richieste, soprattutto l’interazione completa tra attestati, backup e migrazioni.
+  - [tests/joomla-publication.php#later editorial field changes do not rewrite the frozen course snapshot](../tests/joomla-publication.php)
+  - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
+  - [docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)](../docs/LIFECYCLE_1.0.0_APPROVED.md)
+- `ISC-01/edge_authorization` — Combinazioni complete di vincoli, ruolo e iscrizioni in sospeso. L’ammissione manuale rivalida la disponibilità editoriale e la didattica ricontrolla utente, livello, iscrizione, edizione e accesso. Le fixture non esauriscono tutte le combinazioni di vincoli, ruolo e richieste pending descritte dal criterio; le richieste approval hanno un flusso distinto.
+  - [component/administrator/src/Application/ManualEnrollmentService.php#Administrative assignment does not grant viewing rights](../component/administrator/src/Application/ManualEnrollmentService.php)
+  - [docs/LEARNING.md#richieste/approvazioni restano da implementare](../docs/LEARNING.md)
+  - [tests/joomla-learning.php#edition capacity excludes additional enrollment](../tests/joomla-learning.php)
+- `ISC-05/new_edition` — Nuova edizione distinta dalla riattivazione in tutti i flussi. La pubblicazione crea un’edizione default una sola volta e la riattivazione non estende finestre scadute. Non risulta una prova completa di tutti i flussi che distinguono la creazione esplicita di una nuova edizione dalla semplice riattivazione, incluse assegnazioni, storico e rinnovi concorrenti.
+  - [tests/joomla-publication.php#one default edition created](../tests/joomla-publication.php)
+  - [tests/joomla-publication.php#republish creates no duplicate edition](../tests/joomla-publication.php)
+  - [tests/joomla-enrollment-state.php#reactivation does not extend expired window](../tests/joomla-enrollment-state.php)
+- `ISC-07/revocation` — Revoca in corso di sessione su token video/download/quiz. Il contesto quiz e quello video rivalidano l’autorizzazione nelle operazioni protette e nei replay; le fixture coprono revoca di accesso in alcuni percorsi. Il criterio include token video, download e quiz durante sessione: non è disponibile una verifica completa e concorrente di tutti i tipi di risorsa.
+  - [component/administrator/src/Application/QuizAttemptService.php#private function context](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/VideoProgressService.php#private function context](../component/administrator/src/Application/VideoProgressService.php)
+  - [tests/joomla-video.php#revoked access even on replay](../tests/joomla-video.php)
+- `ISC-07/preserve_history` — Storico e progressi conservati dopo revoca nelle casistiche previste. La sospensione/cancellazione conserva progressi e dati di assegnazione e Cloudflare documenta la conservazione dello storico dopo revoca. La prova sistematica di ogni modalità di revoca e risorsa protetta, inclusi download, quiz e ripristino, resta incompleta.
+  - [tests/joomla-enrollment-state.php#state history retained](../tests/joomla-enrollment-state.php)
+  - [docs/CLOUDFLARE_STREAM.md#storico e progressi non vengono cancellati](../docs/CLOUDFLARE_STREAM.md)
+  - [tests/joomla-enrollment-state.php#cancellation preserves prior learning and assignment data](../tests/joomla-enrollment-state.php)
+- `STU-01/blocked_reason` — Diagnostica completa di ogni blocco e azione proposta. DashboardService calcola cause distinte di indisponibilità e il test copre sospensione, annullamento e finestra non aperta. Non è dimostrata la completezza di ogni causa/blocco né l’azione proposta e disponibile per ciascun ruolo e contesto.
+  - [component/administrator/src/Application/DashboardService.php#$reason = 'available'](../component/administrator/src/Application/DashboardService.php)
+  - [tests/joomla-dashboard.php#distinct classroom block reasons](../tests/joomla-dashboard.php)
+  - [docs/LEARNER_DASHBOARD.md#access](../docs/LEARNER_DASHBOARD.md)
+- `STU-02/mobile` — Indice mobile e adattamento senza scroll eccessivo in tutte le risoluzioni. La guida descrive un indice comprimibile su smartphone e la disposizione responsive. Il criterio specifica tutte le risoluzioni e l’assenza di scroll eccessivo; servono verifiche visuali browser su viewport reali per accertare tali esiti.
+  - [docs/LEARNING.md#Su smartphone l’indice del programma è comprimibile](../docs/LEARNING.md)
+  - [docs/FRONTEND_CSS.md#mobile](../docs/FRONTEND_CSS.md)
+  - [docs/QA_TESTBOOK.md#viewport](../docs/QA_TESTBOOK.md)
+- `STU-03/cross_device` — Coerenza su dispositivo diverso e stati di errore salvataggio. Lo stato didattico è persistito dal server e i client mostrano errori di salvataggio. La preferenza player è invece locale al browser; non è disponibile una prova end-to-end che confronti dispositivi diversi e le rispettive riconciliazioni di errori/retry.
+  - [docs/LEARNER_DASHBOARD.md#Il titolo proviene dallo snapshot](../docs/LEARNER_DASHBOARD.md)
+  - [docs/LEARNING.md#La preferenza velocità video](../docs/LEARNING.md)
+  - [docs/LEARNING.md#La PR #187 usa una chiave di idempotenza](../docs/LEARNING.md)
+- `PRO-03/approval_quiz` — Interazioni di quiz e approvazioni in tutte le combinazioni. Il flusso didattico tratta quiz e accesso sotto ACL correnti; le richieste e approvazioni hanno un servizio amministrativo dedicato. Il criterio richiede l’intera matrice combinata fra approvazione, accesso e interazione quiz; le prove presenti coprono i due rami separati, non tutte le loro interazioni.
+  - [component/administrator/src/Application/LearningService.php#COM_JLMS_ENROLLMENT_MODE_PENDING](../component/administrator/src/Application/LearningService.php)
+  - [tests/joomla-enrollment-state.php#approval](../tests/joomla-enrollment-state.php)
+  - [tests/joomla-quiz-attempts.php#attempt from another quiz cannot be submitted through this lesson](../tests/joomla-quiz-attempts.php)
+- `PRO-06/cert_no_duplicates` — Unicità attestati e completamenti fra endpoint concorrenti. Le transizioni di completamento sono protette da chiave idempotente e i test verificano l’unicità della coda quiz; l’emissione attestati ha un vincolo/servizio proprio. Non è stata dimostrata la deduplicazione fra tutti gli endpoint di completamento e l’emissione concorrente dell’attestato nei diversi percorsi.
+  - [component/administrator/src/Application/QuizAttemptService.php#course.completed:](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/CertificateIssuer.php#certificate.available:](../component/administrator/src/Application/CertificateIssuer.php)
+  - [tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message](../tests/joomla-quiz-attempts.php)
+- `PRO-06/multi_device` — Concorrenza reale di dispositivi diversi. La CI usa processi concorrenti e il server serializza gli aggiornamenti per iscrizione. Il criterio chiede coerenza su dispositivi reali diversi e stati d’errore del browser; la concorrenza dei processi simulati non sostituisce quel collaudo multipiattaforma.
+  - [docs/QUIZ_RUNTIME.md#due processi concorrenti](../docs/QUIZ_RUNTIME.md)
+  - [docs/LEARNING.md#La stessa lezione completata da più schede conta una volta](../docs/LEARNING.md)
+  - [docs/LEARNING.md#funzionamento offline](../docs/LEARNING.md)
+- `LES-02/arbitrary_embeds` — Blocco script e iframe arbitrari in tutti i contesti di editor. I test dimostrano la rimozione di script, iframe, immagini di tracciamento e attributi attivi dalla presentazione corso e dal corpo lezione. Il criterio copre tutti i contesti dell’editor, incluse le estensioni/contenuti Joomla aggiuntivi; manca una verifica completa di tali ingressi e delle configurazioni installate.
+  - [tests/joomla-course-presentation.php#Active markup, tracking images and unsafe attributes removed even for super user](../tests/joomla-course-presentation.php)
+  - [tests/joomla-learning.php#delivery strips active markup](../tests/joomla-learning.php)
+  - [docs/VIDEO.md#Non inserire credenziali nelle sorgenti](../docs/VIDEO.md)
+- `LES-02/external_credentials` — Nessuna credenziale trasmessa ai link esterni. La documentazione vieta credenziali nelle sorgenti e il playback Cloudflare tiene il segreto API lato server. Non risulta una scansione completa di tutti i tipi di link esterni e di tutte le superfici editoriali per provare l’assenza di credenziali incorporate.
+  - [docs/VIDEO.md#Non inserire credenziali nelle sorgenti](../docs/VIDEO.md)
+  - [docs/CLOUDFLARE_STREAM.md#La credenziale amministrativa](../docs/CLOUDFLARE_STREAM.md)
+  - [tests/video-http.py#Authorised consent POST returns safe playback descriptor](../tests/video-http.py)
 - `LES-03/public_storage` — Audit assenza di fallback pubblico per tutte le configurazioni hosting. Il percorso esterno rifiuta la radice pubblica. La modalità gestita usa un contenitore cifrato con un guard. Per escludere esposizioni in tutte le topologie supportate serve la verifica dell’hosting e dei proxy.
   - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function root](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
   - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#reverse proxy misserves](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+- `LES-04/capacity_policy` — Validazione operativa dei limiti storage e CDN su ambienti reali. Il codice applica limiti operativi in alcuni flussi e la documentazione esplicita limiti e prerequisiti del provider. La validazione di storage/CDN su hosting reali richiede un ambiente e configurazioni che le prove simulate del repository non attestano.
+  - [docs/VIDEO.md#benchmark 300/500 studenti](../docs/VIDEO.md)
+  - [docs/CLOUDFLARE_STREAM.md#Carichi elevati](../docs/CLOUDFLARE_STREAM.md)
 - `VID-01/provider_parity` — Equivalenza delle capacità opzionali e attributi UI su tutti i provider reali. Il selettore deriva le opzioni dai valori dichiarati dal player. La fixture verifica velocità e tracce con sorgenti simulate. La disponibilità effettiva varia per sorgente e va rilevata sui quattro provider reali.
   - [component/media/js/video.js#configurePlaybackSpeed](../component/media/js/video.js)
   - [tests/video-player.mjs#dynamic playback speed and caption tracks](../tests/video-player.mjs)
   - [docs/VIDEO.md#La velocità è disponibile](../docs/VIDEO.md)
+- `VID-02/previews_provider` — Anteprima e diagnosi valide per tutti i provider/contesti. Sono presenti adapter e test mock per le interazioni di playback e anteprima, ma la validità di preview e diagnosi nelle combinazioni provider/browser del criterio richiede prove con sorgenti reali e configurazioni Joomla effettive.
+  - [docs/VIDEO.md#Le prove con video reali](../docs/VIDEO.md)
+  - [tests/video-player.mjs#SDK attaches only after iframe is inserted into the DOM](../tests/video-player.mjs)
+  - [tests/joomla-video.php#safe descriptor](../tests/joomla-video.php)
 - `VID-03/browser_matrix` — Comportamento iOS Safari, Android Chrome e browser desktop reali. Le fixture usano sostituti degli SDK e dell’elemento media, senza decodifica nativa. Manca un esito per la matrice iOS Safari, Android Chrome e browser desktop con media reali.
   - [tests/video-player.mjs#Stream SDK double](../tests/video-player.mjs)
   - [tests/video-player.mjs#no browser decoder](../tests/video-player.mjs)
+- `VID-04/credential_leaks` — Assenza chiavi e token sensibili in browser, cache e log in tutte le varianti. Il descrittore non contiene la credenziale amministrativa e i token Cloudflare sono temporanei e visibili soltanto al discente autorizzato. L’assenza di fughe in cache/log su tutte le varianti e gli hosting non è dimostrata dalle fixture, che non usano credenziali reali né scansioni dei log del sito.
+  - [docs/CLOUDFLARE_STREAM.md#La credenziale amministrativa](../docs/CLOUDFLARE_STREAM.md)
+  - [docs/CLOUDFLARE_STREAM.md#Nessuna risposta remota](../docs/CLOUDFLARE_STREAM.md)
+  - [docs/CLOUDFLARE_STREAM.md#Nessuna chiave reale o chiamata Cloudflare viene utilizzata in CI](../docs/CLOUDFLARE_STREAM.md)
+- `VID-04/remote_posters` — Consenso e protezione risorse remote correlate. La configurazione attuale non emette poster remoti aggiuntivi in Cloudflare e applica consenso prima della creazione dell’iframe. Il criterio estende la protezione a tutte le risorse correlate e provider; manca la scansione browser reale delle richieste prima/dopo consenso e revoca.
+  - [docs/CLOUDFLARE_STREAM.md#nessun poster remoto aggiuntivo](../docs/CLOUDFLARE_STREAM.md)
+  - [docs/VIDEO.md#Il consenso apre il player e la revoca lo rimuove](../docs/VIDEO.md)
+  - [docs/VIDEO.md#Le prove con video reali](../docs/VIDEO.md)
 - `VID-05/token_expiry` — Tempo residuo e configurazione durata token tracciati e collaudati. Manifest e provider definiscono durata e anticipo configurabili, e l’endpoint riporta la scadenza. Il test di rinnovo è simulato. Resta da verificare la diagnosi e il tempo residuo in una sessione reale.
   - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#token_ttl_seconds](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
   - [component/administrator/src/Application/VideoProgressService.php#public function renew](../component/administrator/src/Application/VideoProgressService.php)
   - [tests/video-player.mjs#cloudflare_client_renew_checks](../tests/video-player.mjs)
+- `VID-06/error_messages` — Messaggi distinti per ogni errore provider o rete. Sono documentati messaggi specifici per diversi errori Cloudflare e diagnosi distinte per YouTube. Il criterio richiede esiti distinti per ogni errore/provider/rete; i mock e le istruzioni non attestano ogni risposta reale di tutti e quattro i provider e i browser supportati.
+  - [docs/CLOUDFLARE_STREAM.md#Messaggi distinti per configurazione/segreto assente](../docs/CLOUDFLARE_STREAM.md)
+  - [docs/VIDEO.md#errori CSP, SDK, referrer e non-incorporabilità sono distinti](../docs/VIDEO.md)
+  - [docs/VIDEO.md#Le prove con video reali](../docs/VIDEO.md)
 - `VID-06/cmp_integration` — Verifica con gestore consensi reale e anteprima. Il controller browser risponde al segnale di cambio consenso e la fixture copre revoca mentre gli SDK sono in inizializzazione. La matrice di anteprima e revoca con una CMP effettiva richiede un collaudo dedicato.
   - [component/media/js/video.js#jlms:consent-changed](../component/media/js/video.js)
   - [tests/video-player.mjs#A revoked consent must also settle](../tests/video-player.mjs)
   - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video e integrazione con la CMP](../docs/PRIVACY_COOKIES.md)
+- `VID-07/operational_setup` — Validazione pratica dei permessi e credenziali tecniche provider. La guida Cloudflare elenca permessi, credenziali e prerequisiti, ma il criterio richiede la validazione pratica dei permessi e delle credenziali tecniche dei provider. Non ci sono prove con account reali e impostazioni host/provider effettive.
+  - [docs/CLOUDFLARE_STREAM.md#Configurazione](../docs/CLOUDFLARE_STREAM.md)
+  - [docs/CLOUDFLARE_STREAM.md#Nessuna chiave reale o chiamata Cloudflare viene utilizzata in CI](../docs/CLOUDFLARE_STREAM.md)
+  - [docs/VIDEO.md#richiedono ancora un ambiente di collaudo](../docs/VIDEO.md)
+- `VID-08/equivalence` — Tutte le equivalenze di risorsa impediscono il riuso improprio dei progressi. Il servizio lega la sessione video a un fingerprint della sorgente e i test coprono replay e cambi di revisione. Non è documentata la matrice completa delle equivalenze fra tutte le varianti di risorsa/provider e non riuso dei progressi.
+  - [component/administrator/src/Application/VideoProgressService.php#private static function fingerprint](../component/administrator/src/Application/VideoProgressService.php)
+  - [tests/joomla-video.php#cross-tab interval union completes exactly](../tests/joomla-video.php)
+  - [tests/video-http.py#HTTP replay is idempotent](../tests/video-http.py)
 - `MAT-03/hosting_limits` — Limiti effettivi su hosting differenti. I limiti vengono applicati durante staging e upload. Le soglie effettive di web server, proxy e PHP devono essere misurate su hosting differenti.
   - [component/administrator/src/Application/MaterialService.php#UPLOAD_ERR_INI_SIZE](../component/administrator/src/Application/MaterialService.php)
   - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function limit](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
@@ -297,6 +383,19 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Implementazione riscontrata
 
+- `CAT-01/protected_metadata` — Assenza informazioni riservate nelle combinazioni complete dei filtri. La query pubblica del catalogo seleziona soltanto i campi di presentazione pubblica della versione pubblicata; il modello mantiene filtri e risultati nel servizio catalogo autorizzato. I test HTTP esercitano il catalogo e i suoi filtri.
+  - [component/site/src/Model/CoursesModel.php#Only public presentation fields from the published course version.](../component/site/src/Model/CoursesModel.php)
+  - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
+  - [tests/http-smoke.py#Public catalog title/summary search and title ordering did not apply](../tests/http-smoke.py)
+- `ISC-02/state_combinations` — Tutte le transizioni e gli stati con scadenza e annullamento. Il servizio limita le transizioni a active/suspended/cancelled con preview, conferma, revisione e audit. Le fixture verificano cancellazione idempotente, divieto di riattivare cancellati, blocco sui completati/quiz aperti e conservazione dello storico. Le scadenze di accesso sono distinte dallo stato e testate separatamente.
+  - [component/administrator/src/Application/EnrollmentStateService.php#public function apply](../component/administrator/src/Application/EnrollmentStateService.php)
+  - [tests/joomla-enrollment-state.php#valid cancellation preview](../tests/joomla-enrollment-state.php)
+  - [tests/joomla-enrollment-state.php#completed enrollment cannot be cancelled](../tests/joomla-enrollment-state.php)
+  - [tests/joomla-dashboard.php#completed history remains visible after window expiry](../tests/joomla-dashboard.php)
+- `ISC-04/prerequisites` — Prerequisiti e disponibilità lezione in tutte le combinazioni. Ogni route protetta usa il controllo server-side dei prerequisiti e della modalità sequenziale nella versione assegnata; il blocco precede la restituzione del contenuto. La specifica corrente documenta inoltre le finestre assolute e relative e il rifiuto dell’ammissione quando una lezione obbligatoria non è raggiungibile.
+  - [component/administrator/src/Application/LearningService.php#private function prerequisiteBlocker](../component/administrator/src/Application/LearningService.php)
+  - [docs/LEARNING.md#Dalla 0.41.35-dev i prerequisiti espliciti](../docs/LEARNING.md)
+  - [component/administrator/src/Application/LearningService.php#schedule_blocked](../component/administrator/src/Application/LearningService.php)
 - `ISC-04/public_preview` — Anteprima pubblica priva di effetti su completamenti/attestati. L’anteprima pubblica legge il corso, una lezione testuale della versione corrente con anteprima abilitata e gli allegati pubblicabili. Il percorso non richiama il flusso di iscrizione, completamento o emissione degli attestati.
   - [component/site/src/Model/LessonpreviewModel.php#public function getItem](../component/site/src/Model/LessonpreviewModel.php)
   - [component/administrator/src/Application/CatalogService.php#public function publicLessonPreview](../component/administrator/src/Application/CatalogService.php)
@@ -308,10 +407,25 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/LearningService.php#public function videoContext](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/LearningService.php#public function audioLessonContext](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/LearningService.php#public function resourceContext](../component/administrator/src/Application/LearningService.php)
+- `STU-04/optional` — Lezioni opzionali escluse dal blocco salvo prerequisiti espliciti. Le lezioni opzionali non entrano nel conteggio del completamento richiesto; i prerequisiti espliciti restano una regola separata. La fixture Joomla verifica che un’attività opzionale non attribuisca credito richiesto.
+  - [tests/joomla-learning.php#optional lesson gives no required credit](../tests/joomla-learning.php)
+  - [component/administrator/src/Application/LearningService.php#private function prerequisiteBlocker](../component/administrator/src/Application/LearningService.php)
+  - [docs/LEARNING.md#Percentuale = completate obbligatorie](../docs/LEARNING.md)
+- `STU-04/availability_dates` — Date di disponibilità e lezioni irraggiungibili. Le finestre assolute e il drip relativo sono valutati nel servizio didattico; la lezione non disponibile resta bloccata e il contenuto è omesso. La fixture verifica data futura, messaggio della data di rilascio e assenza del corpo.
+  - [tests/joomla-learning.php#future required lesson displays its release time without exposing content](../tests/joomla-learning.php)
+  - [component/administrator/src/Application/LearningService.php#schedule_blocked](../component/administrator/src/Application/LearningService.php)
+  - [docs/LEARNING.md#Apertura assoluta e relativa si intersecano](../docs/LEARNING.md)
+- `LES-01/versioned_full_scope` — Combinazioni complete con allegati e versioni assegnate. La copia di una versione associa gli allegati al nuovo identificativo di versione e rimappa quelli collegati alle lezioni copiate; i test di duplicazione verificano la parità degli allegati e il mancato trasferimento dei dati di apprendimento.
+  - [component/administrator/src/Application/CourseVersionCopy.php#$attachments = array_filter($this->rows](../component/administrator/src/Application/CourseVersionCopy.php)
+  - [tests/joomla-duplication.php#Copied attachments reuse immutable assets with new links](../tests/joomla-duplication.php)
+  - [tests/joomla-duplication.php#Course duplication never copies or modifies learning data](../tests/joomla-duplication.php)
 - `MAT-04/lesson_preconditions` — Vincoli di lezione e prerequisiti in ogni percorso diretto. Il percorso diretto legge l’allegato e verifica la lezione proprietaria nel contesto dell’iscrizione. Il servizio didattico verifica disponibilità e prerequisiti prima di consegnare il contesto; la preview pubblica ha un percorso distinto.
   - [component/administrator/src/Application/MaterialService.php#public function download](../component/administrator/src/Application/MaterialService.php)
   - [component/administrator/src/Application/LearningService.php#public function resourceContext](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewDownload](../component/administrator/src/Application/MaterialService.php)
+- `NOT-01/coverage` — Copertura completa dei tipi evento, preferenze e localizzazioni. PR #643 aggiunge l’accodamento di com_jlms.course.completed alla prima transizione di completamento quiz con la chiave enrollment-scoped condivisa con lezione/video. La fixture Joomla verifica che venga accodato un solo messaggio. SMTP reale e accettazione manuale restano fuori da questa classificazione implementativa.
+  - [component/administrator/src/Application/QuizAttemptService.php#'course.completed:'](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message](../tests/joomla-quiz-attempts.php)
 - `CERT-01/negative` — Nessuna emissione nei percorsi disabilitati con tutte le modalità. L’emissione automatica condivide il controllo di modalità learning, abilitazione nello snapshot, preferenze correnti e modello attivo. Il recupero esplicito con motivazione è un ingresso amministrativo distinto.
   - [component/administrator/src/Application/CertificateIssuer.php#public function issueForCompletedEnrollment](../component/administrator/src/Application/CertificateIssuer.php)
   - [component/administrator/src/Application/CertificateIssuer.php#explicitAdminRecovery](../component/administrator/src/Application/CertificateIssuer.php)
@@ -327,6 +441,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CertificateService.php#public function adminRegenerate](../component/administrator/src/Application/CertificateService.php)
   - [component/administrator/src/Application/CertificateService.php#A concurrent edit/revocation](../component/administrator/src/Application/CertificateService.php)
   - [component/administrator/src/Application/CertificateService.php#admin_regenerate](../component/administrator/src/Application/CertificateService.php)
+- `MAIL-02/event_matrix` — Copertura di tutte le transizioni e deduplicazione. Il ramo quiz ora produce l’evento di completamento corso in modo idempotente nella stessa transazione del progresso; il test Joomla controlla un solo evento dopo il quiz conclusivo. L’invio SMTP effettivo resta da accettare separatamente.
+  - [component/administrator/src/Application/QuizAttemptService.php#course.completed:](../component/administrator/src/Application/QuizAttemptService.php)
+  - [tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message](../tests/joomla-quiz-attempts.php)
+  - [component/administrator/src/Application/LearningService.php#course.completed:](../component/administrator/src/Application/LearningService.php)
 - `MAIL-06/selection` — Selezione destinatari attivi e sottoinsiemi autorizzati. La composizione valida ID univoci e restringe l’insieme alle iscrizioni attive sul corso, account sbloccati e indirizzi validi. Il worker rivalida ogni destinatario.
   - [component/administrator/src/Application/CourseCommunicationService.php#public function preview](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#private function activeIds](../component/administrator/src/Application/CourseCommunicationService.php)
