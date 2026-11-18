@@ -142,6 +142,8 @@ quizExpect((int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions
 quizReject(fn()=>$bank->delete($actor,$id),409,'hard delete still blocked while referenced');
 $bank->trash($actor,$id,true);
 quizExpect((int)$db->setQuery('SELECT state FROM #__jlms_questions WHERE id='.$id)->loadResult()===0,'referenced question restores as draft');
+// Restore original fixture publication flag so downstream quiz publication checks retain their setup.
+$db->setQuery('UPDATE #__jlms_questions SET state=1 WHERE id='.(int)$id)->execute();
 quizExpect($config['data']['threshold']==='70.25'&&$config['data']['time_minutes']===15,'exact basis-point threshold and time configuration');
 quizExpect((int)$config['data']['questions'][0]['revision_id']===$firstRevision,'explicit older immutable revision remains pinned');
 quizExpect(!str_contains(json_encode($config,JSON_THROW_ON_ERROR),'PRIVATE_CORRECT_EXPLANATION')&&!str_contains(json_encode($config,JSON_THROW_ON_ERROR),'"correct"'),'quiz editor DTO contains no answer key');
