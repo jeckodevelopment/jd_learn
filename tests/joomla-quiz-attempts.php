@@ -118,6 +118,14 @@ attemptReject(fn()=>$learning->complete($student,'en-GB',$enrollment,$lesson,bin
 $pre=$service->state($student,'en-GB',$enrollment,$lesson);attemptExpect($pre['can_start']&&$pre['questions']===[]&&$pre['used_attempts']===0,'reading before start does not consume attempt or expose questions');
 attemptReject(fn()=>$service->start($other,'en-GB',$enrollment,$lesson,attemptKey()),404,'foreign enrollment rejected');
 attemptReject(fn()=>$service->start(new \Joomla\CMS\User\User(),'en-GB',$enrollment,$lesson,attemptKey()),401,'guest rejected');
+// STA-02: a closing enrollment must not consume a timed attempt that cannot finish.
+$nearClose=gmdate('Y-m-d H:i:s',$now+30);
+$db->updateObject('#__jlms_enrollments',(object)['id'=>$enrollment,'ends_at'=>$nearClose],'id',true);
+attemptExpect(!$service->state($student,'en-GB',$enrollment,$lesson)['can_start'],'quiz start disabled when less than full timer remains');
+attemptReject(fn()=>$service->start($student,'en-GB',$enrollment,$lesson,attemptKey()),403,'quiz start rejects insufficient learning window');
+attemptExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id='.$enrollment)->loadResult()===0,'rejected quiz start does not create attempts');
+$db->updateObject('#__jlms_enrollments',(object)['id'=>$enrollment,'ends_at'=>null],'id',true);
+attemptExpect($service->state($student,'en-GB',$enrollment,$lesson)['can_start'],'quiz can start after closing boundary is removed');
 $key=attemptKey();$a=$service->start($student,'en-GB',$enrollment,$lesson,$key);$aid=$a['attempt']['id'];
 attemptExpect(count($a['questions'])===2&&$a['attempt']['max_points']===5&&$a['attempt']['deadline']===$now+60,'server snapshot and timer');
 attemptExpect(!str_contains(json_encode($a,JSON_THROW_ON_ERROR),'"correct"')&&!str_contains(json_encode($a,JSON_THROW_ON_ERROR),'PRIVATE_CORRECT_EXPLANATION'),'open DTO never leaks grading or explanations');
