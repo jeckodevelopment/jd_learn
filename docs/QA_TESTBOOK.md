@@ -1,3 +1,12 @@
+## SCR-05 — collegamento al catalogo nello stato vuoto dei corsi (18/11/2026)
+
+1. Accedere come studente senza iscrizioni e aprire **I miei corsi**: nello stato vuoto compare il collegamento localizzato **Tutti i corsi**; verificare che conduca al catalogo filtrato da visibilità e ACL Joomla senza produrre iscrizioni.
+2. Attivare un filtro progresso che produca zero risultati: mostrare il messaggio vuoto e lo stesso collegamento, navigabile da tastiera.
+3. Accedere con iscrizioni visibili: mantenere le card, azioni di ripresa e l'ordinario link al catalogo, senza duplicare link nel messaggio vuoto.
+4. Verificare lingua italiana e inglese, output mobile e desktop, ACL del catalogo e assenza di dati di altri utenti.
+
+**CI:** verificare markup e lint PHP; **accettazione manuale Joomla:** pendente. Nessun cambiamento di schema, SemVer o percentuale funzionale globale fino alla riconciliazione.
+
 ## CAT-02 — riepilogo delle regole di completamento nella scheda corso (PR #657 integrata, 18/11/2026)
 
 1. Aprire come ospite la scheda pubblica di un corso con versione didattica pubblicata in modalità apprendimento: sotto il calendario e prima del programma compare `Come si completa il corso` con lezioni obbligatorie, ordine di fruizione e soglia di completamento video.

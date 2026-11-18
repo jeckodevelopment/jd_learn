@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (SCR-05, 18/11/2026) — navigazione dallo stato vuoto:** nella vista personale «I miei corsi» il messaggio senza risultati include un collegamento localizzato al catalogo, senza duplicare il link standard quando sono presenti card. Nessuna variazione a iscrizioni, ACL, schema o SemVer; collaudo Joomla pendente.
+
 - **0.60.8-dev (CAT-02, PR #657, 18/11/2026) — regole di completamento nella scheda pubblica:** proiezione sicura della policy della versione pubblicata (lezioni obbligatorie, sequenza, soglia video, eventuale attestato previsto) con testi IT/EN e nota sulle condizioni di emissione reale. La consultazione non promette attestati. Nessuna esposizione dei contenuti riservati o modifica alla didattica; test Joomla esteso, collaudo manuale pendente.
 
 - **0.60.8-dev (QUI-02, PR #653, 18/11/2026) — cestino banca domande:** nuove azioni Cestina/Ripristina con CSRF e ACL `core.edit.state`, filtro Cestinate e preservazione delle revisioni immutabili, anche se già usate nei quiz. Ripristino conservativo come bozza; eliminazione definitiva solo dal cestino e bloccata per riferimenti. Test Joomla estesi; collaudo manuale pendente.
