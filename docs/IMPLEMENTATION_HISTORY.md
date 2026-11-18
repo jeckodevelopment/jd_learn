@@ -1,3 +1,18 @@
+## 18 novembre 2026 — riconciliazione criteri JD Learn 1.0.0 completata (PR #664 e #665)
+
+La [PR #664](https://github.com/jeckodevelopment/jd_learn/pull/664) ha riesaminato il lotto 14 (50 criteri) ed è stata integrata con squash `cffa0e562f7779dfb494d5461c14e8e998ce1d45`. CI [#44404719722](https://github.com/jeckodevelopment/jd_learn/actions/runs/44404719722) e controllo matrice CSV [#44404719816](https://github.com/jeckodevelopment/jd_learn/actions/runs/44404719816) superati.
+
+La [PR #665](https://github.com/jeckodevelopment/jd_learn/pull/665) ha riesaminato gli ultimi 58 criteri ed è stata integrata con squash `d059e60bcad11fd57d1ccbe4cb3fb76c9cb0f9d8`. CI [#44405226043](https://github.com/jeckodevelopment/jd_learn/actions/runs/44405226043) e controllo CSV [#44405225924](https://github.com/jeckodevelopment/jd_learn/actions/runs/44405225924) superati.
+
+Il registro 1.0.0 è ora interamente classificato: **214 requisiti, 757 criteri; 426 implementati, 63 mancanti con lacuna accertata, 268 non verificabili, zero da esaminare**. La percentuale funzionale globale resta `null` nel calcolo riproducibile perché gli esiti non verificabili non costituiscono evidenza positiva o negativa. Nessuna accettazione Joomla è stata attribuita ai collaudi non eseguiti. Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) contiene motivazioni e riferimenti per criterio.
+
+### Comportamenti da testare
+
+- Verificare riferimenti e coerenza di registro, CSV e report con `tools/functional_audit.py --check`.
+- Eseguire `tools/functional_progress.py`: 214 requisiti esaminati e percentuale globale `null` in presenza di criteri non verificabili.
+- Trattare i 63 gap confermati separatamente dai 268 casi che necessitano ulteriori prove.
+- Collaudo manuale Joomla: non dichiarato come eseguito dai PR documentali.
+
 ## 18 novembre 2026 — riconciliazione funzionale, lotto 13 (PR #661)
 
 [PR #661](https://github.com/jeckodevelopment/jd_learn/pull/661) integrata con squash `717338660536dbd7567cca949895a627e5f46057`. Riesaminati 50 criteri su lifecycle, provider, identità, dati e gate di release. Totale: 425 implementati, 32 lacune confermate, 192 non verificabili e 108 da esaminare; percentuale globale non determinabile. CI [#44402600304](https://github.com/jeckodevelopment/jd_learn/actions/runs/44402600304) e integrità CSV [#44402600233](https://github.com/jeckodevelopment/jd_learn/actions/runs/44402600233) verdi. Mancano ancora record di accettazione funzionale/non funzionale completa e candidata stabile 1.0.0.
