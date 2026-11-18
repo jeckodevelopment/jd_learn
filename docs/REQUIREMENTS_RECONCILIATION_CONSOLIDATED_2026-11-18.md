@@ -2,7 +2,9 @@
 
 ## Perimetro e metodologia
 
-**214/214 requisiti** di scope 1.0.0 censiti, **757 criteri atomici**. Distribuzione corrente: **233 implementati con riferimento a evidenze**, **3 mancanti con riscontro specifico**, **521 non ancora verificati**. Il totale della matrice CSV è 249, di cui 35 esclusi perché fase 2.
+**214/214 requisiti** di scope 1.0.0 censiti, **757 criteri atomici**. Distribuzione corrente: **237 implementati con riferimento a evidenze**, **0 mancanti con riscontro specifico ancora aperti nel campione LCM-02**, **520 non ancora verificati**. Il totale della matrice CSV è 249, di cui 35 esclusi perché fase 2.
+
+Questa è una fotografia successiva alla PR #614; la tabella sottostante è un'istantanea storica anteriore e non rappresenta gli stati correnti dei singoli criteri. La fonte corrente è `FUNCTIONAL_CRITERIA_1.0.0.json`.
 
 La riconciliazione **non è conclusa sul merito tecnico**: l'inventario è concluso, non lo è l'audit delle 521 verifiche residue. La metrica globale resta volutamente `null`: assegnare `missing` a un requisito solo perché non è stato ancora verificato sarebbe scorretto. Il limite matematico inferiore del grado di implementazione attestato da evidenze di file è **35.69%** (peso uguale per requisito, non è una stima del completamento reale); quello superiore è **99.77%** e non ha valore predittivo perché gli elementi non verificati potrebbero non essere implementati.
 
@@ -10,11 +12,11 @@ La riconciliazione **non è conclusa sul merito tecnico**: l'inventario è concl
 
 **11 requisiti** sono etichettati `Completata` nel CSV storico pur avendo complessivamente **32 criteri `unassessed`**. La dicitura legacy non costituisce evidenza sufficiente per cambiare stato nella matrice verificata. ID: `PRO-03`, `CERT-06`, `CERT-07`, `MAIL-11`, `QUI-02`, `REP-02`, `ACL-DET-03`, `SCR-04`, `SCR-14`, `EDGE-04`, `PBASE-01`.
 
-## Gap implementativi dimostrati
+## Gap implementativi già affrontati nella 0.59.0
 
-- `LCM-02/criterion_01` — **missing**: la vista amministrativa `component/administrator/src/View/Courses/HtmlView.php` offre creazione, modifica e programma ma non cestinazione/ripristino nel toolbar.
-- `LCM-02/criterion_02` — **missing nel suo insieme**: **parzialmente risolto nella 0.58.0** il filtro per `2` (archiviato) e il badge; restano da realizzare la vista/filtro del cestino (`-2`) e le operazioni di ripristino controllato. La classificazione `missing` resta conservativa finché il criterio intero non è soddisfatto.
-- `LCM-02/criterion_04` — **missing**: non è esposta una transizione di ripristino dal cestino nella UI dei corsi; il workflow `PublicationService` supporta il ripristino di corsi **archiviati**, non lo svuotamento del cestino.
+- `LCM-02/criterion_01` — **risolto con PR #614** (storico): la vista amministrativa `component/administrator/src/View/Courses/HtmlView.php` offre creazione, modifica e programma ma non cestinazione/ripristino nel toolbar.
+- `LCM-02/criterion_02` — **risolto con PR #614** (storico): **parzialmente risolto nella 0.58.0** il filtro per `2` (archiviato) e il badge; restano da realizzare la vista/filtro del cestino (`-2`) e le operazioni di ripristino controllato. La classificazione `missing` resta conservativa finché il criterio intero non è soddisfatto.
+- `LCM-02/criterion_04` — **risolto con PR #614** (storico): non è esposta una transizione di ripristino dal cestino nella UI dei corsi; il workflow `PublicationService` supporta il ripristino di corsi **archiviati**, non lo svuotamento del cestino.
 - `LCM-02/criterion_05` — **implemented, conservativo**: `CourseModel::delete()` nega sempre la cancellazione fisica, quindi la nega anche in presenza di iscritti o dipendenze. Questo **non** risolve l'obbligo futuro di consentire l'eliminazione sicura degli oggetti privi di dipendenze.
 
 Una criticità già documentata resta il ripristino `archive -> publish` con potenziale riapertura dell'accesso: non promossa a `missing` senza verificare le combinazioni dei flag `admissions_open` e `delivery_enabled`.
