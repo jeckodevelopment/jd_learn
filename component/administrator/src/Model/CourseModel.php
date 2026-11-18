@@ -552,13 +552,14 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             if ((int) $db->setQuery($association)->loadResult() > 0) {
                 throw new \DomainException('COM_JLMS_COURSE_DEPENDENCIES');
             }
-            // Version history has referential and audit value even for an otherwise
-            // unused course. Never erase it as a side effect.
-            $history = $db->createQuery()->select('COUNT(*)')->from('#__history')
+            // Joomla creates editorial revisions even for a never-used course.
+            // Those belong to the course being permanently removed; teaching
+            // versions and learner history above MUST be empty before this point.
+            // Remove only this item's Joomla editorial revisions explicitly, in
+            // the same transaction; never cascade into another object.
+            $history = $db->createQuery()->delete('#__history')
                 ->where('item_id = :history')->bind(':history', $this->typeAlias . '.' . $id);
-            if ((int) $db->setQuery($history)->loadResult() > 0) {
-                throw new \DomainException('COM_JLMS_COURSE_DEPENDENCIES');
-            }
+            $db->setQuery($history)->execute();
 
             $table = $this->getTable('Course');
             if (!$table->load($id) || !$table->delete($id)) {
