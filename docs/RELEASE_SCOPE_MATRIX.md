@@ -1,5 +1,8 @@
 # Mappatura del perimetro della prima versione stabile
 
+> Stato aggiornato al 18/11/2026: versione 0.58.0 aggiunge il filtro Archiviati (`state=2`) nella vista amministrativa Corsi, con badge dedicato e verifica nativa. Non include cestinazione/ripristino dei corsi: `LCM-02` resta aperto. Vedere `REQUIREMENTS_RECONCILIATION_CONSOLIDATED_2026-11-18.md`.
+
+
 Riferimento decisionale: [RELEASE_SCOPE.md](RELEASE_SCOPE.md). Questa mappa applica il perimetro approvato alla specifica funzionale 1.5 e alla matrice requisiti/test. Mantiene gli ID e il testo baseline; quando un requisito contiene più funzionalità, specifica il sottoinsieme incluso e rinvia gli altri criteri. Le righe indicate come parziali non sono accettate finché gli scenari non sono eseguiti sul sottoinsieme esplicitato.
 
 ## Inclusi nella prima versione stabile
