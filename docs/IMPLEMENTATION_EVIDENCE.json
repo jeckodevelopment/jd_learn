@@ -88,7 +88,70 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
-{"version":"0.57.7-dev","ci":{"run_id":44179144122,"url":"https://github.com/jeckodevelopment/jd_learn/actions/runs/44179144122","status":"completed","conclusion":"success","standard_jobs":4,"jobs":[{"name":"Candidate plan and lightweight checks","status":"completed","conclusion":"success"},{"name":"PHP 8.3 / mysql:8.4","status":"completed","conclusion":"success"},{"name":"PHP 8.4 / mariadb:10.6","status":"completed","conclusion":"success"},{"name":"Curriculum navigation in Chromium (controlled fixture)","status":"completed","conclusion":"success"}]}},{"version":"0.57.7-dev","ci":{"run_id":44178153813,"url":"https://github.com/jeckodevelopment/jd_learn/actions/runs/44178153813","status":"completed","conclusion":"success","standard_jobs":4,"jobs":[{"name":"Candidate plan and lightweight checks","status":"completed","conclusion":"success"},{"name":"PHP 8.3 / mysql:8.4","status":"completed","conclusion":"success"},{"name":"PHP 8.4 / mariadb:10.6","status":"completed","conclusion":"success"},{"name":"Curriculum navigation in Chromium (controlled fixture)","status":"completed","conclusion":"success"}]}},
+    {
+      "version": "0.57.7-dev",
+      "ci": {
+        "run_id": 44179144122,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/44179144122",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.57.7-dev",
+      "ci": {
+        "run_id": 44178153813,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/44178153813",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
     {
       "version": "0.57.7-dev",
       "ci": {
@@ -13881,7 +13944,7 @@
     "historical_estimate_as_of": "2026-11-16",
     "historical_estimate_unrounded_percent": 79.56,
     "global_functional_progress_percent": null,
-    "reason": "Historical 9-area estimate is not a fresh functional coverage metric. Criteria audit in main is incomplete and initial evidence references do not prove requirements complete.",
+    "reason": "Audit snapshot after merged #603/#604; historical 79.56% is not current functional completion; 203 initial evidence references are not acceptance.",
     "confirmed_merged_prs": [
       574,
       575,
@@ -13889,7 +13952,15 @@
       577,
       578,
       595,
-      600
+      596,
+      597,
+      598,
+      599,
+      600,
+      601,
+      602,
+      603,
+      604
     ],
     "superseded_prs": [
       589
@@ -13897,20 +13968,21 @@
     "privacy": "PR #595 anonymizes identified references in five documentation files; repository-wide exhaustive historical and binary audit not certified.",
     "functional_criteria_audit": {
       "requirements_in_scope": 214,
-      "requirements_assessed": 107,
-      "criteria": 310,
-      "initial_evidence": 183,
-      "unassessed": 127,
+      "requirements_assessed": 129,
+      "requirements_remaining": 85,
+      "criteria": 359,
+      "initial_evidence": 203,
+      "unassessed": 156,
       "source": "docs/FUNCTIONAL_CRITERIA_1.0.0.json",
-      "meaning": "initial evidence is not acceptance"
+      "meaning": "Initial code/test references are not validated acceptance; no overall completion percentage can be derived."
     },
     "manual_acceptance": "pending for LCM-03/04 and remaining Joomla/SMTP/video/security/release scenarios",
-    "ci": "PR #600 verification 4/4 green per docs/IMPLEMENTATION_HISTORY.md; this is not proof of manual acceptance",
+    "ci": "PR #603 CI 4/4 green, workflow 44202943937, recorded in docs/IMPLEMENTATION_HISTORY.md; no manual acceptance inferred.",
     "next_steps": [
-      "finish remaining 107 requirement decompositions and semantic evidence validation",
-      "verify full privacy scan without altering historic audit trail",
-      "reconcile release package and CI against current main head",
-      "update functional percent only after auditable weighted criteria validation"
+      "decompose remaining 85 requirements and validate semantic evidence",
+      "perform repository-wide privacy scan, including historical and binary content",
+      "verify release package and CI against current main head",
+      "compute functional progress only after auditable weighted acceptance criteria validation"
     ]
   }
 }
