@@ -1,11 +1,13 @@
 # Riepilogo progetto/release JD Learn 1.0.0
 
-Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: `docs/FUNCTIONAL_CRITERIA_1.0.0.json` e `docs/REQUIREMENTS_STATUS.csv`.
+Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: `docs/FUNCTIONAL_CRITERIA_1.0.0.json` e `docs/REQUIREMENTS_STATUS.csv`. Il JSON `docs/REQUIREMENTS_RECONCILIATION.json` espone gli stessi indicatori al dashboard di progetto.
 
 ## Sviluppo documentato (minimo confermato)
 
 **54.12%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
 Il registro contiene 426 criteri implementati con evidenza, 63 lacune accertate, 268 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
+
+La percentuale funzionale globale rigorosa resta **non determinabile** finché i criteri non verificabili non vengono risolti.
 
 ## Collaudo manuale Joomla
 

@@ -14,6 +14,8 @@ from functional_progress import CRITERIA, REGISTER, ROOT, calculate
 
 REPORT = ROOT / "docs/FUNCTIONAL_AUDIT_CURRENT.md"
 DASHBOARD = ROOT / "docs/RELEASE_DASHBOARD.md"
+RECONCILIATION = ROOT / "docs/REQUIREMENTS_RECONCILIATION.json"
+IMPLEMENTATION_EVIDENCE = ROOT / "docs/IMPLEMENTATION_EVIDENCE.json"
 AUDIT_COLUMN = "Audit funzionale 1.0.0 per criterio"
 REVIEWED = {"implemented", "missing", "unverifiable"}
 
@@ -125,7 +127,7 @@ def generate_dashboard(progress):
     unassessed = sum(x["unassessed_criteria"] for x in c.values())
     return "\n".join([
         "# Riepilogo progetto/release JD Learn 1.0.0", "",
-        "Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: `docs/FUNCTIONAL_CRITERIA_1.0.0.json` e `docs/REQUIREMENTS_STATUS.csv`.", "",
+        "Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: `docs/FUNCTIONAL_CRITERIA_1.0.0.json` e `docs/REQUIREMENTS_STATUS.csv`. Il JSON `docs/REQUIREMENTS_RECONCILIATION.json` espone gli stessi indicatori al dashboard di progetto.", "",
         "## Sviluppo documentato (minimo confermato)", "",
         f"**{floor:.2f}%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope ({progress['in_scope_requirements']} requisiti).",
         f"Il registro contiene {implemented} criteri implementati con evidenza, {missing} lacune accertate, {unverifiable} non verificabili e {unassessed} non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.", "",
@@ -140,6 +142,56 @@ def generate_dashboard(progress):
         "La verifica automatica CI è un asse separato e non modifica il dato di accettazione Joomla. Un esito parziale conta come collaudo avviato; un esito fallito conta nella copertura perché è stato eseguito, ma resta distinto dai superati.",
         ""
     ])
+
+def generate_reconciliation(rows, progress, summary, evidence):
+    counts = summary.get("counts", {})
+    summary["counts"] = {
+        field: dict(Counter(row[field] for row in rows))
+        for field in counts
+    }
+    old_progress = summary.get("implementation_progress", {})
+    historical = old_progress.get("historical_macroarea_estimate")
+    if historical is None:
+        areas = old_progress.get("areas", [])
+        historical = {
+            "as_of": "2026-11-16",
+            "percent": round(sum(areas) / len(areas), 2) if areas else None,
+            "rounded_percent": old_progress.get("percent"),
+            "areas": areas,
+            "method": old_progress.get("method", "Historical macroarea estimate; superseded by criterion-based metrics."),
+            "status": "historical; do not display as current progress",
+        }
+    manual = progress["manual_acceptance"]
+    summary["implementation_progress"] = {
+        "percent": progress["development_evidence_floor_percent"],
+        "development_evidence_floor_percent": progress["development_evidence_floor_percent"],
+        "manual_acceptance_coverage_percent": manual["coverage_percent"],
+        "manual_acceptance": manual,
+        "method": "Equal-weight average by in-scope requirement of documented implemented criteria divided by criteria per requirement. Unverifiable and unassessed criteria count as zero. Manual acceptance is a separate axis.",
+        "axes": [
+            {"id": "development", "label": "Sviluppo documentato (minimo confermato)",
+             "percent": progress["development_evidence_floor_percent"]},
+            {"id": "manual_acceptance", "label": "Collaudo manuale Joomla (requisiti con esito almeno parziale)",
+             "percent": manual["coverage_percent"]},
+        ],
+        "historical_macroarea_estimate": historical,
+    }
+    old_estimate = evidence.get("current_implementation_estimate", {})
+    evidence_history = evidence.get("historical_macroarea_estimate", old_estimate)
+    evidence["historical_macroarea_estimate"] = evidence_history
+    evidence["current_implementation_estimate"] = {
+        "percent": progress["development_evidence_floor_percent"],
+        "development_evidence_floor_percent": progress["development_evidence_floor_percent"],
+        "manual_acceptance_coverage_percent": manual["coverage_percent"],
+        "manual_acceptance": manual,
+        "basis": "Criterion-based evidence floor with equal weight per in-scope requirement; unverifiable and unassessed criteria count as zero. Manual acceptance is calculated independently from REQUIREMENTS_STATUS.csv.",
+        "source": "docs/RELEASE_DASHBOARD.md",
+    }
+    return (
+        json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
+        json.dumps(evidence, indent=2, ensure_ascii=False) + "\n",
+    )
+
 
 def generate_matrix(rows, columns, inventory):
     if AUDIT_COLUMN not in columns:
@@ -161,7 +213,7 @@ def main():
     actions.add_argument("--collect", type=int, metavar="LIMIT", help="List candidates without classifying")
     actions.add_argument("--apply", type=Path, metavar="DECISIONS", help="Apply reviewed JSON decisions")
     actions.add_argument("--check", action="store_true", help="Validate the ledger and generated files")
-    actions.add_argument("--sync", action="store_true", help="Regenerate the audit report and CSV from the canonical criteria ledger")
+    actions.add_argument("--sync", action="store_true", help="Regenerate reports, dashboard and status summaries from canonical ledgers")
     args = parser.parse_args()
     with REGISTER.open(encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
@@ -183,21 +235,39 @@ def main():
                     raise ValueError(f"Inconsistent review: {unit['id']}")
             elif unit["status"] in {"missing", "unverifiable"}:
                 raise ValueError(f"Missing review: {unit['id']}")
+    progress = calculate(rows, inventory)
     report = generate_report(rows, inventory)
+    dashboard = generate_dashboard(progress)
+    summary = read_json(RECONCILIATION)
+    evidence = read_json(IMPLEMENTATION_EVIDENCE)
+    reconciliation_json, implementation_evidence_json = generate_reconciliation(rows, progress, summary, evidence)
     matrix = generate_matrix(rows, reader.fieldnames, inventory)
     original_matrix = REGISTER.read_bytes()
     encoding = "utf-8-sig" if original_matrix.startswith(b"\xef\xbb\xbf") else "utf-8"
     if b"\r\n" not in original_matrix.splitlines(keepends=True)[0]:
         matrix = matrix.replace("\r\n", "\n")
     if args.check:
-        if REPORT.read_text(encoding="utf-8") != report or matrix.encode(encoding) != original_matrix:
-            raise ValueError("Functional audit report or matrix differs from the criteria ledger")
+        mismatches = []
+        if REPORT.read_text(encoding="utf-8") != report:
+            mismatches.append("functional audit report")
+        if DASHBOARD.read_text(encoding="utf-8") != dashboard:
+            mismatches.append("release dashboard")
+        if read_json(RECONCILIATION) != json.loads(reconciliation_json):
+            mismatches.append("requirements reconciliation JSON")
+        if read_json(IMPLEMENTATION_EVIDENCE) != json.loads(implementation_evidence_json):
+            mismatches.append("implementation evidence JSON")
+        if matrix.encode(encoding) != original_matrix:
+            mismatches.append("requirements matrix")
+        if mismatches:
+            raise ValueError("Generated files differ from canonical ledgers: " + ", ".join(mismatches))
         return
     if args.apply:
         CRITERIA.write_text(json.dumps(inventory, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     REGISTER.write_bytes(matrix.encode(encoding))
     REPORT.write_text(report, encoding="utf-8")
     DASHBOARD.write_text(dashboard, encoding="utf-8")
+    RECONCILIATION.write_text(reconciliation_json, encoding="utf-8")
+    IMPLEMENTATION_EVIDENCE.write_text(implementation_evidence_json, encoding="utf-8")
 
 
 if __name__ == "__main__":
