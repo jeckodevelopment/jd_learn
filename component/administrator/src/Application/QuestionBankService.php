@@ -68,6 +68,7 @@ final class QuestionBankService
             $now = gmdate('Y-m-d H:i:s'); $version = 1;
             if ($id) {
                 $record = $this->row($id, true); $this->access($actor, 'com_jlms.question.' . $id, true, $record);
+                if ((int)$record->state === -2) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT',409); }
                 if ((int) $record->revision !== $expected || ($record->checked_out && (int) $record->checked_out !== (int) $actor->id)) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409); }
                 if ((int) $record->catid !== $category && !$actor->authorise('core.create', 'com_jlms.question.category.' . $category)) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403); }
                 if (!$table->load($id)) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
@@ -197,6 +198,40 @@ final class QuestionBankService
         unset($option);
         $source['id']=0; $source['revision']=1; $source['state']=0;
         return $this->save($identity,$source);
+    }
+
+    /** Conservative native trash: preserve all revision and attempt references. Restore as unpublished. */
+    public function trash(User $identity,int $id,bool $restore=false):void
+    {
+        $this->transaction(function()use($identity,$id,$restore):void{
+            $actor=$this->learning->freshActor($identity);
+            $row=$this->row($id,true);
+            $asset='com_jlms.question.'.$id;
+            $this->access($actor,$asset,false,$row);
+            if(!$actor->authorise('core.edit.state',$asset)){
+                throw new \RuntimeException('COM_JLMS_LEARNING_DENIED',403);
+            }
+            if($row->checked_out&&(int)$row->checked_out!==(int)$actor->id){
+                throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT',409);
+            }
+            $current=(int)$row->state;
+            if($restore?$current!==-2:!in_array($current,[0,1],true)){
+                throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT',409);
+            }
+            $next=$restore?0:-2;
+            $now=gmdate('Y-m-d H:i:s');
+            $revision=(int)$row->revision+1;
+            $q=$this->db->createQuery()->update('#__jlms_questions')
+                ->set('state = '.$next)
+                ->set('revision = '.$revision)
+                ->set('modified_at = '.$this->db->quote($now))
+                ->set('modified_by = '.(int)$actor->id)
+                ->where('id = '.$id)->where('revision = '.(int)$row->revision);
+            $this->db->setQuery($q)->execute();
+            if($this->db->getAffectedRows()!==1){
+                throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT',409);
+            }
+        });
     }
 
     public function delete(User $identity, int $id): void
