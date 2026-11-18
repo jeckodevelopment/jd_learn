@@ -1,5 +1,7 @@
 # Sospensione e riattivazione
 
+La riattivazione di una singola iscrizione sospesa richiede un corso **Pubblicato** con **erogazione didattica abilitata**: le iscrizioni non possono essere riattivate mentre il corso è archiviato, non pubblicato, cestinato o sospeso operativamente. La richiesta viene nuovamente controllata nella transazione server. Le sospensioni e cancellazioni autorizzate non sono soggette a questo requisito di riapertura.
+
 Dal backend **Corsi → Iscritti → Sospensione e riattivazione** si apre `view=enrollmentstate&id=ID_CORSO&enrollment_id=ID_ISCRIZIONE`. L’anteprima GET propone il target opposto per iscrizioni attive/sospese; `target_status=active|suspended` consente di richiedere esplicitamente una delle due anteprime. Il comando POST contiene sempre un target esplicito: non è un toggle dipendente dal momento del reinvio.
 
 ## Effetti e limiti
