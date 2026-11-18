@@ -71,7 +71,10 @@ final class CoursesModel extends ListModel
         if ($ids) { $q->whereIn('a.id', $ids); } else { $q->where('1=0'); }
         foreach (self::FILTERS as $name) {
             $value = $this->getState('filter.' . $name, '');
-            if ($value === null || $value === '') { continue; }
+            if ($value === null || $value === '') {
+                if ($name === 'published') { $q->where('a.state <> -2'); }
+                continue;
+            }
             if (!is_scalar($value)) { $q->where('1=0'); continue; }
             $value = trim((string) $value);
             if ($value === '') { continue; }
@@ -84,7 +87,7 @@ final class CoursesModel extends ListModel
                     $q->where('(a.title LIKE :title_search OR a.alias LIKE :alias_search)')->bind(':title_search', $search)->bind(':alias_search', $search);
                 }
             } elseif ($name === 'published') {
-                if (!in_array($value, ['0','1','2'], true)) { $q->where('1=0'); continue; }
+                if (!in_array($value, ['-2','0','1','2'], true)) { $q->where('1=0'); continue; }
                 $state = (int) $value; $q->where('a.state=:state')->bind(':state', $state, ParameterType::INTEGER);
             } elseif ($name === 'language') {
                 if ($value !== '*' && !preg_match('/^[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8}){1,2}$/D', $value)) { $q->where('1=0'); continue; }
