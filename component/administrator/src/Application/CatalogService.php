@@ -182,6 +182,11 @@ final class CatalogService
             // Preserve historic enrollments separately in the learner dashboard.
             ->where('c.state = 1')->whereIn('cat.access', $levels)
             ->where('cat.published = 1')->where('(c.language = :allLanguage OR c.language = :language)');
+        if ($forEnrolledLearner) {
+            // A restored archive is published again for editorial management,
+            // but delivery remains suspended until explicitly resumed.
+            $q->where('c.delivery_enabled = 1');
+        }
         if (!$forEnrolledLearner) {
             $q->whereIn('c.catalog_access', $levels)
                 ->where('(c.publish_up IS NULL OR c.publish_up <= :nowUp)')
