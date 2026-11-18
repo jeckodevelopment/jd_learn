@@ -434,6 +434,69 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         return $this->save($data);
     }
 
+    /**
+     * Reversible, atomic bulk lifecycle transitions. They never touch
+     * enrollments, frozen versions, lesson progress or certificates.
+     * Restoring a trashed course always returns to unpublished state 0.
+     *
+     * @param list<int> $ids
+     */
+    public function changeStates(array $ids, int $target): bool
+    {
+        if (!in_array($target, [-2, 0], true) || $ids === [] || count($ids) > 100
+            || count(array_unique($ids)) !== count($ids)
+            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1))) {
+            $this->setError(Text::_('COM_JLMS_INVALID_COURSE'));
+            return false;
+        }
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->getCurrentUser());
+        $db = $this->getDatabase();
+        $started = false;
+        try {
+            sort($ids, SORT_NUMERIC);
+            $db->transactionStart();
+            $started = true;
+            foreach ($ids as $id) {
+                $query = $db->createQuery()->select('id, state, revision, checked_out')
+                    ->from('#__jlms_courses')->where('id = :id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
+                $query->setQuery((string) $query . ' FOR UPDATE');
+                $record = $db->setQuery($query)->loadObject()
+                    ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+                $asset = 'com_jlms.course.' . $id;
+                if (!$actor->authorise('core.edit', $asset)
+                    || !$actor->authorise('core.edit.state', $asset)
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
+                    throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                }
+                // No arbitrary unpublish: only trash from active/draft/archive,
+                // or conservative restore from the trash. Never republish here.
+                if ($target === 0 && (int) $record->state !== -2) {
+                    throw new \DomainException('COM_JLMS_INVALID_COURSE');
+                }
+                if ($target === -2 && !in_array((int) $record->state, [-2, 0, 1, 2], true)) {
+                    throw new \DomainException('COM_JLMS_INVALID_COURSE');
+                }
+                if ((int) $record->state === $target) { continue; }
+                $update = (object) [
+                    'id' => $id, 'state' => $target,
+                    'revision' => (int) $record->revision + 1,
+                    'modified_at' => Factory::getDate()->toSql(),
+                    'modified_by' => (int) $actor->id,
+                ];
+                $db->updateObject('#__jlms_courses', $update, 'id');
+            }
+            $db->transactionCommit();
+            return true;
+        } catch (\Throwable $error) {
+            if ($started) { $db->transactionRollback(); }
+            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_INVALID_COURSE'];
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true)
+                ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            return false;
+        }
+    }
+
     public function delete(&$pks)
     {
         $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE'));
