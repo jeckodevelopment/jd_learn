@@ -573,6 +573,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 'COM_JLMS_INVALID_COURSE', 'COM_JLMS_COURSE_DEPENDENCIES'];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true)
                 ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            if (getenv('JLMS_TEST_DISPOSABLE') === '1') {
+                $this->setError('course purge diagnostic: ' . $error->getMessage());
+            }
             return false;
         }
     }
