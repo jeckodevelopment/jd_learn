@@ -2,10 +2,10 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **425**.
-- Mancanti con lacuna accertata: **32**.
-- Esaminati con esito non verificabile: **192**.
-- Da esaminare: **108**.
+- Implementati: **426**.
+- Mancanti con lacuna accertata: **37**.
+- Esaminati con esito non verificabile: **236**.
+- Da esaminare: **58**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -107,6 +107,31 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `REL-03/criterion_01` — Documentazione del rilascio. Non è stata pubblicata una candidata installabile stabile 1.0.0 con checksum e documentazione finale verificati; gli artefatti attuali sono build di sviluppo.
   - [README.md#L3-L17](../README.md#L3-L17)
   - [docs/RELEASE_PROCEDURE.md#L1-L30](../docs/RELEASE_PROCEDURE.md#L1-L30)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `HTTP-06/criterion_03` — Casi limite previsti in RELEASE_SCOPE_MATRIX.md tracciati come accettazione distinta. La tracciabilità delle acceptance cases è definita come requisito distinto, ma manca il registro completo dei casi limite eseguiti con esito e riferimenti a build per la candidata 1.0.0.
+  - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `SECDEV-03/criterion_03` — Test contro SQL injection, XSS, mass assignment e formule CSV. I test positivi e negativi esistenti coprono superfici selezionate, ma la suite completa contro SQL injection, XSS, mass assignment e formule CSV non è documentata come eseguita per tutte le superfici.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `SECDEV-07/criterion_01` — Processo verificabile. Il gate approvato richiede threat model e revisione sistematica tracciata; il repository documenta ancora il piano e non contiene il rapporto finale di esecuzione.
+  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
+  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `SECDEV-07/criterion_02` — Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi. Non risulta un inventario/lockfile e una scansione completa di stile, analisi statica, segreti e dipendenze con evidenze della candidata; il gate di hardening rimane aperto.
+  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
+  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `SECDEV-07/criterion_03` — OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite. La documentazione cita genericamente OWASP ASVS ma non fissa una versione; il requisito chiede un riferimento versionato esplicitamente.
+  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
+  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
   - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
@@ -268,6 +293,22 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `MAT-03/hosting_limits` — Limiti effettivi su hosting differenti. I limiti vengono applicati durante staging e upload. Le soglie effettive di web server, proxy e PHP devono essere misurate su hosting differenti.
   - [component/administrator/src/Application/MaterialService.php#UPLOAD_ERR_INI_SIZE](../component/administrator/src/Application/MaterialService.php)
   - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function limit](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+- `MAT-05/large_file` — Gestione trasferimento file grandi su hosting reali. Il repository contiene codice e prove per flussi specifici collegati a gestione trasferimento file grandi su hosting reali, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
+- `MAT-06/full_lifecycle` — Ripristino/upgrade/cleanup in tutte le combinazioni. Il repository contiene codice e prove per flussi specifici collegati a ripristino/upgrade/cleanup in tutte le combinazioni, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
+- `MAT-07/retention` — Limiti di conservazione log e controlli privacy operativi. Il repository contiene codice e prove per flussi specifici collegati a limiti di conservazione log e controlli privacy operativi, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
+- `MAT-08/lifecycle_hosting` — Esercizio end-to-end su installazioni Joomla e storage reali. Il repository contiene codice e prove per flussi specifici collegati a esercizio end-to-end su installazioni joomla e storage reali, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
 - `NOT-01/delivery` — Invio SMTP e notifiche reali su installazione Joomla. Il task inoltra la coda al trasporto Joomla. L’esito effettivo su SMTP e le notifiche per destinatario richiedono l’evidenza operativa prevista dal testbook.
   - [component/administrator/src/Infrastructure/MailQueue.php#public function dispatch](../component/administrator/src/Infrastructure/MailQueue.php)
   - [docs/MAIL_SCHEDULER_SETUP.md#Collaudo Joomla/SMTP](../docs/MAIL_SCHEDULER_SETUP.md)
@@ -805,6 +846,166 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/VIDEO.md#L53-L53](../docs/VIDEO.md#L53-L53)
   - [docs/QUIZ_RUNTIME.md#L58-L58](../docs/QUIZ_RUNTIME.md#L58-L58)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17)
+- `HTTP-01/criterion_01` — I task HTTP core della matrice RELEASE_SCOPE_MATRIX.md sono documentati e raggiungibili. Il repository contiene codice e prove per flussi specifici collegati a i task http core della matrice release_scope_matrix.md sono documentati e raggiungibili, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-01/criterion_02` — Le richieste dirette rispettano autenticazione e autorizzazione per oggetto. Il repository contiene codice e prove per flussi specifici collegati a le richieste dirette rispettano autenticazione e autorizzazione per oggetto, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-01/criterion_03` — I metodi e codici di errore sono coerenti con il trasporto Joomla MVC. Il repository contiene codice e prove per flussi specifici collegati a i metodi e codici di errore sono coerenti con il trasporto joomla mvc, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-02/criterion_01` — Trasporto Joomla. Il repository contiene codice e prove per flussi specifici collegati a trasporto joomla, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-02/criterion_04` — Il catalogo delle azioni non introduce gateway pagamento, servizi account paralleli o un cron pubblico. Il repository contiene codice e prove per flussi specifici collegati a il catalogo delle azioni non introduce gateway pagamento, servizi account paralleli o un cron pubblico, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-03/criterion_01` — Metodi e policy. Il repository contiene codice e prove per flussi specifici collegati a metodi e policy, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-03/criterion_02` — GET per letture, POST per azioni/mutazioni nel trasporto MVC, sessione Joomla, permessi backend e CSRF su POST. Il repository contiene codice e prove per flussi specifici collegati a get per letture, post per azioni/mutazioni nel trasporto mvc, sessione joomla, permessi backend e csrf su post, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-03/criterion_03` — Tutti gli endpoint controllano oggetto e accesso correnti. Il repository contiene codice e prove per flussi specifici collegati a tutti gli endpoint controllano oggetto e accesso correnti, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-03/criterion_04` — GET non modifica voti, iscrizioni o completamenti. Il repository contiene codice e prove per flussi specifici collegati a get non modifica voti, iscrizioni o completamenti, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-03/criterion_05` — Errori con stato HTTP, codice applicativo e correlazione senza informazioni riservate. Il repository contiene codice e prove per flussi specifici collegati a errori con stato http, codice applicativo e correlazione senza informazioni riservate, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-03/criterion_06` — Dati personali e token non in cache condivisa. Il repository contiene codice e prove per flussi specifici collegati a dati personali e token non in cache condivisa, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-04/criterion_01` — Le azioni HTTP core mantengono idempotenza dove richiesta. Il repository contiene codice e prove per flussi specifici collegati a le azioni http core mantengono idempotenza dove richiesta, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/QUIZ_RUNTIME.md#L1-L25](../docs/QUIZ_RUNTIME.md#L1-L25)
+  - [component/administrator/src/Application/QuizAttemptService.php#L1-L25](../component/administrator/src/Application/QuizAttemptService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-04/criterion_02` — Scritture concorrenti non creano iscrizioni o progressi duplicati. Il repository contiene codice e prove per flussi specifici collegati a scritture concorrenti non creano iscrizioni o progressi duplicati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/QUIZ_RUNTIME.md#L1-L25](../docs/QUIZ_RUNTIME.md#L1-L25)
+  - [component/administrator/src/Application/QuizAttemptService.php#L1-L25](../component/administrator/src/Application/QuizAttemptService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-04/criterion_03` — Errori e retry preservano lo stato consistente dell'oggetto. Il repository contiene codice e prove per flussi specifici collegati a errori e retry preservano lo stato consistente dell'oggetto, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/QUIZ_RUNTIME.md#L1-L25](../docs/QUIZ_RUNTIME.md#L1-L25)
+  - [component/administrator/src/Application/QuizAttemptService.php#L1-L25](../component/administrator/src/Application/QuizAttemptService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-05/criterion_01` — Le risposte HTTP core non espongono segreti né risorse protette. Il repository contiene codice e prove per flussi specifici collegati a le risposte http core non espongono segreti né risorse protette, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-05/criterion_03` — Errori applicativi espongono codici controllati, senza dettagli privati. Il repository contiene codice e prove per flussi specifici collegati a errori applicativi espongono codici controllati, senza dettagli privati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `HTTP-06/criterion_01` — Contratti HTTP core verificati con test positivi e negativi. Il repository contiene codice e prove per flussi specifici collegati a contratti http core verificati con test positivi e negativi, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-01/criterion_03` — Controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica. Il repository contiene codice e prove per flussi specifici collegati a controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-02/criterion_01` — Applicare la matrice CORE-01–23 e le best practices Joomla/PHP, PSR-12, namespace e contratti tipizzati/documentati. Il repository contiene codice e prove per flussi specifici collegati a applicare la matrice core-01–23 e le best practices joomla/php, psr-12, namespace e contratti tipizzati/documentati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-02/criterion_02` — Usare runtime supportati e verificare API della patch target. Il repository contiene codice e prove per flussi specifici collegati a usare runtime supportati e verificare api della patch target, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-02/criterion_03` — nessuna modifica del core o dipendenza intenzionale da API rimosse. Il repository contiene codice e prove per flussi specifici collegati a nessuna modifica del core o dipendenza intenzionale da api rimosse, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-02/criterion_04` — Motivare ogni servizio core non pertinente senza duplicarlo automaticamente. Il repository contiene codice e prove per flussi specifici collegati a motivare ogni servizio core non pertinente senza duplicarlo automaticamente, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-03/criterion_01` — Input, query e output. Il repository contiene codice e prove per flussi specifici collegati a input, query e output, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-03/criterion_02` — Validazione server, campi allowlist, query con binding tramite servizi Joomla, output contestualmente codificato e HTML filtrato. Il repository contiene codice e prove per flussi specifici collegati a validazione server, campi allowlist, query con binding tramite servizi joomla, output contestualmente codificato e html filtrato, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-03/criterion_04` — Nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile. Il repository contiene codice e prove per flussi specifici collegati a nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-04/criterion_01` — Identita, autorizzazioni e richieste. Il repository contiene codice e prove per flussi specifici collegati a identita, autorizzazioni e richieste, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-04/criterion_02` — Utenti/sessioni e livelli Joomla. Il repository contiene codice e prove per flussi specifici collegati a utenti/sessioni e livelli joomla, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-04/criterion_03` — controllo oggetto/parent a ogni operazione, CSRF su mutazioni browser, metodo HTTP, concorrenza e idempotenza. Il repository contiene codice e prove per flussi specifici collegati a controllo oggetto/parent a ogni operazione, csrf su mutazioni browser, metodo http, concorrenza e idempotenza, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-04/criterion_05` — I job e i plugin non acquisiscono privilegi generici da super user. Il repository contiene codice e prove per flussi specifici collegati a i job e i plugin non acquisiscono privilegi generici da super user, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-05/criterion_01` — File e chiamate esterne. Il repository contiene codice e prove per flussi specifici collegati a file e chiamate esterne, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-05/criterion_02` — Upload/storage protetti, MIME/limiti, percorsi generati, nessun eseguibile o estrazione ZIP automatica. Il repository contiene codice e prove per flussi specifici collegati a upload/storage protetti, mime/limiti, percorsi generati, nessun eseguibile o estrazione zip automatica, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-05/criterion_03` — API provider su HTTPS verificato e host ammessi, timeout/retry e protezione SSRF anche sui redirect. Il repository contiene codice e prove per flussi specifici collegati a api provider su https verificato e host ammessi, timeout/retry e protezione ssrf anche sui redirect, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-05/criterion_04` — nessun fetch di URL server arbitrari. Il repository contiene codice e prove per flussi specifici collegati a nessun fetch di url server arbitrari, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-05/criterion_05` — Nessun ripiego pubblico dopo errore di sicurezza. Il repository contiene codice e prove per flussi specifici collegati a nessun ripiego pubblico dopo errore di sicurezza, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-06/criterion_01` — Segreti e dati. Il repository contiene codice e prove per flussi specifici collegati a segreti e dati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-06/criterion_02` — SecretProvider/configurazione server protetta, chiavi separate dal database ove necessarie, nessun segreto nei form lezione, DTO, export, log o pacchetti. Il repository contiene codice e prove per flussi specifici collegati a secretprovider/configurazione server protetta, chiavi separate dal database ove necessarie, nessun segreto nei form lezione, dto, export, log o pacchetti, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-06/criterion_03` — Primitive crittografiche sicure mantenute, cache personale corretta, risposte quiz non anticipate e nessuna crittografia proprietaria improvvisata. Il repository contiene codice e prove per flussi specifici collegati a primitive crittografiche sicure mantenute, cache personale corretta, risposte quiz non anticipate e nessuna crittografia proprietaria improvvisata, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-06/criterion_04` — Un normale campo password del form non viene considerato automaticamente cifratura a riposo. Il repository contiene codice e prove per flussi specifici collegati a un normale campo password del form non viene considerato automaticamente cifratura a riposo, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-07/criterion_04` — Vulnerabilita critiche/alte confermate e pertinenti non risolte bloccano la distribuzione. Il repository contiene codice e prove per flussi specifici collegati a vulnerabilita critiche/alte confermate e pertinenti non risolte bloccano la distribuzione, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
+  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-07/criterion_05` — non applicabilita e falsi positivi motivati. Il repository contiene codice e prove per flussi specifici collegati a non applicabilita e falsi positivi motivati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
+  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
+  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
 - `DOC-02/criterion_04` — Istruzioni confrontate con tutte le schermate amministrative core. Il piano prevede il confronto con ogni schermata e registra solo un primo censimento limitato ai form iniziali. La verifica schermata per schermata resta aperta.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#Ricognizione iniziale](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
@@ -870,6 +1071,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/MaterialService.php#public function download](../component/administrator/src/Application/MaterialService.php)
   - [component/administrator/src/Application/LearningService.php#public function resourceContext](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewDownload](../component/administrator/src/Application/MaterialService.php)
+- `MAT-06/protected_deletion` — Cancellazione definitiva condizionata dai riferimenti storici. La pulizia è limitata a file orfani non referenziati e controlla le relazioni storiche prima di eliminare record/blob; il testbook verifica anche che materiali ancora collegati restino disponibili.
+  - [docs/MATERIALS.md#L1-L25](../docs/MATERIALS.md#L1-L25)
+  - [component/administrator/src/Application/MaterialService.php#L1-L25](../component/administrator/src/Application/MaterialService.php#L1-L25)
+  - [tests/material-policy.php#L1-L25](../tests/material-policy.php#L1-L25)
 - `NOT-01/coverage` — Copertura completa dei tipi evento, preferenze e localizzazioni. PR #643 aggiunge l’accodamento di com_jlms.course.completed alla prima transizione di completamento quiz con la chiave enrollment-scoped condivisa con lezione/video. La fixture Joomla verifica che venga accodato un solo messaggio. SMTP reale e accettazione manuale restano fuori da questa classificazione implementativa.
   - [component/administrator/src/Application/QuizAttemptService.php#'course.completed:'](../component/administrator/src/Application/QuizAttemptService.php)
   - [tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message](../tests/joomla-quiz-attempts.php)

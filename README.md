@@ -1,6 +1,6 @@
 # JD Learn
 
-**Build di sviluppo documentata: `0.60.8-dev`** (non release stabile). La ricognizione delle PR integrate fino alla #578 e dei residui da verificare è in [POST_MERGE_578_RECONCILIATION.md](docs/POST_MERGE_578_RECONCILIATION.md). Pacchetti installabili e checksum vanno verificati per il commit specifico nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json); non si assume che un artefatto storico sia la build più recente.
+**Build di sviluppo documentata: `0.60.8-dev`** (non release stabile). L’audit funzionale 1.0.0 copre 214 requisiti e 757 criteri; il punteggio globale resta non determinabile finché sono presenti criteri non verificabili. Consulta il [report corrente](docs/FUNCTIONAL_AUDIT_CURRENT.md) per stati, lacune ed evidenze. Pacchetti installabili e checksum vanno verificati per il commit specifico nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json); non si assume che un artefatto storico sia la build più recente.
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
@@ -61,3 +61,4 @@ JD Learn Credentials / Open Badges è pianificato separatamente e non rientra ne
 ## Regole per contribuire
 
 Ogni PR deve indicare requisiti e issue interessati, descrivere i **Comportamenti da testare** in Joomla, aggiornare tracciabilità e guide pertinenti e verificare la CI. Il **README non è un diario delle PR**: lo storico delle modifiche va nel changelog, le evidenze operative e i test nei rispettivi documenti. Una PR esclusivamente documentale non aumenta la percentuale di implementazione.
+
