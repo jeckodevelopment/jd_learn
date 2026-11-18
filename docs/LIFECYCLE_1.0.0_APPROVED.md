@@ -61,6 +61,10 @@ Il passaggio amministrativo di un'iscrizione da Sospesa ad Attiva è consentito 
 
 Cestinare un corso non deve lasciare impostazioni operative pre-armate: la stessa transazione di `CourseModel::changeStates()` imposta `admissions_open=0` e `delivery_enabled=0` quando porta lo stato a Cestinato (`-2`). Il ripristino editoriale allo stato Non pubblicato mantiene i due flag a zero. La riapertura è possibile solo successivamente e con i comandi autorizzati, mai in modo implicito. Le versioni didattiche, iscrizioni, progressi e attestati restano conservati. Test Joomla di cestinazione/ripristino su un corso precedentemente operativo, accettazione reale ancora pendente.
 
+### LCM-05 — indicatore di disponibilità nei percorsi (0.60.5)
+
+Nella vista di dettaglio del percorso un corso Pubblicato ma con erogazione didattica disabilitata rimane visibile ai soggetti autorizzati come elemento del programma, ma non può essere indicato come fruibile. `PathwayService::detail()` restituisce accesso `unavailable`, preservando lo stato personale di apprendimento. Gli utenti privi di livelli Joomla continuano a visualizzare il corso come `restricted`; nessuna esposizione di informazioni private aggiuntive. Alla riattivazione amministrativa dell'erogazione, il normale indicatore di accesso torna disponibile. Test Joomla automatici; collaudo reale ancora pendente.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
