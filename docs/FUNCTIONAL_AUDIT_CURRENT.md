@@ -26,9 +26,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `NOT-01/coverage` — Copertura completa dei tipi evento, preferenze e localizzazioni. Il completamento da lezione o video accoda l’evento course.completed. Il ramo quiz aggiorna lo stato e invoca l’emissione dell’attestato, ma non accoda l’equivalente evento di completamento.
   - [component/administrator/src/Application/LearningService.php#'course.completed:'](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/VideoProgressService.php#'course.completed:'](../component/administrator/src/Application/VideoProgressService.php)
-  - [component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#'course.completed:'](../component/administrator/src/Application/QuizAttemptService.php)
 - `MAIL-02/event_matrix` — Copertura di tutte le transizioni e deduplicazione. La conclusione da quiz non invia l’evento di completamento corso che viene generato dai flussi lezione e video. Il caso di attestato è una notifica distinta e condizionata.
-  - [component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/QuizAttemptService.php#'course.completed:'](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/LearningService.php#'course.completed:'](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/CertificateIssuer.php#certificate.available:](../component/administrator/src/Application/CertificateIssuer.php)
 - `MAIL-08/double_submit` — Controlli su doppio invio, test destinatario e conteggi corretti. La conferma di accodamento riusa il job per lo stesso identificativo. Il percorso di invio test, invece, crea un identificativo distinto a ogni POST: un doppio invio di prova può accodare due messaggi.
