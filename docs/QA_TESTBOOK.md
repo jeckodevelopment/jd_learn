@@ -1,3 +1,13 @@
+## LCM-05 — Smart Search dopo cestinazione/ripristino corsi (0.60.7-dev)
+
+1. Indicare un corso pubblicato e senza programmazione temporale in Smart Search e verificarne la presenza nell'indice.
+2. Cestinare il corso da toolbar: verificare l'assenza del risultato dopo il refresh automatico, anche con cache, URL diretto e filtri Joomla.
+3. Ripristinare da Cestinato a Non pubblicato: il risultato non deve tornare disponibile e ammissioni ed erogazione restano chiuse.
+4. Pubblicare esplicitamente secondo il workflow approvato e verificare il ritorno del risultato quando tutte le altre condizioni Smart Search sono soddisfatte.
+5. Ripetere azione massiva e rollback con ID non valido e profili ACL differenti; verificare che una failure del Finder non annulli la modifica editoriale già confermata.
+
+Test Joomla automatico degli eventi post-commit in `tests/joomla-courses-ui.php`. La verifica dell'indice Finder sul sito reale è **pendente**.
+
 ## LCM-05 — messaggio distinto per erogazione sospesa nei percorsi (0.60.6-dev)
 
 1. Su un percorso pubblicato con corso pubblicato e didattica fruibile, verificare che non compaia il messaggio di sospensione.
