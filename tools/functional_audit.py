@@ -247,12 +247,19 @@ def main():
     if b"\r\n" not in original_matrix.splitlines(keepends=True)[0]:
         matrix = matrix.replace("\r\n", "\n")
     if args.check:
-        if (REPORT.read_text(encoding="utf-8") != report
-                or DASHBOARD.read_text(encoding="utf-8") != dashboard
-                or read_json(RECONCILIATION) != json.loads(reconciliation_json)
-                or read_json(IMPLEMENTATION_EVIDENCE) != json.loads(implementation_evidence_json)
-                or matrix.encode(encoding) != original_matrix):
-            raise ValueError("Functional audit reports, progress dashboard, evidence summaries or matrix differ from canonical ledgers")
+        mismatches = []
+        if REPORT.read_text(encoding="utf-8") != report:
+            mismatches.append("functional audit report")
+        if DASHBOARD.read_text(encoding="utf-8") != dashboard:
+            mismatches.append("release dashboard")
+        if read_json(RECONCILIATION) != json.loads(reconciliation_json):
+            mismatches.append("requirements reconciliation JSON")
+        if read_json(IMPLEMENTATION_EVIDENCE) != json.loads(implementation_evidence_json):
+            mismatches.append("implementation evidence JSON")
+        if matrix.encode(encoding) != original_matrix:
+            mismatches.append("requirements matrix")
+        if mismatches:
+            raise ValueError("Generated files differ from canonical ledgers: " + ", ".join(mismatches))
         return
     if args.apply:
         CRITERIA.write_text(json.dumps(inventory, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
