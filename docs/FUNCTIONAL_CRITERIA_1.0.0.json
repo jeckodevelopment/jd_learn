@@ -5636,26 +5636,44 @@
       {
         "id": "criterion_01",
         "label": "Toolbar Joomla per cestinazione e ripristino dei corsi",
-        "status": "missing",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/View/Courses/HtmlView.php",
+          "component/administrator/src/Controller/CourseController.php",
+          "component/administrator/tmpl/courses/default.php",
+          "tests/courses-ui-http.py"
+        ]
       },
       {
         "id": "criterion_02",
         "label": "Filtri e viste amministrative del lifecycle corsi",
-        "status": "missing",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/forms/filter_courses.xml",
+          "component/administrator/src/Model/CoursesModel.php",
+          "component/administrator/tmpl/courses/default.php",
+          "tests/joomla-courses-ui.php"
+        ]
       },
       {
         "id": "criterion_03",
         "label": "Cestinazione non distrugge progressi o storico didattico",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-courses-ui.php",
+          "docs/LIFECYCLE_1.0.0_APPROVED.md"
+        ]
       },
       {
         "id": "criterion_04",
         "label": "Ripristino conservativo non riapre automaticamente accessi",
-        "status": "missing",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-courses-ui.php",
+          "tests/courses-ui-http.py"
+        ]
       },
       {
         "id": "criterion_05",
