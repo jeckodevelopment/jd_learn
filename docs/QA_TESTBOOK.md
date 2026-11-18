@@ -1,4 +1,4 @@
-## NOT-01 / MAIL-02 — completamento corso tramite quiz (PR in verifica)
+## NOT-01 / MAIL-02 — completamento corso tramite quiz (PR #643 integrata)
 
 1. In un corso con una lezione quiz obbligatoria come ultimo requisito, completare e superare il quiz con un iscritto attivo: il corso diventa completato e viene creata una sola comunicazione `com_jlms.course.completed` nella Coda email.
 2. Verificare che il messaggio contenga data completamento, titolo corso e URL dashboard; eseguire il task email con template IT/EN e recapito controllato.
@@ -6,7 +6,7 @@
 4. Ripetere con quiz non superato, altro tipo di lezione conclusiva e certificato disabilitato; il messaggio parte solo al primo completamento reale ed è indipendente dall'eventuale attestato.
 5. Ripetere con un template email non valido e verificare rollback atomico della progressione, poi correggere il modello prima di ritentare.
 
-Verifica automatica prevista: `tests/joomla-quiz-attempts.php`. Accettazione manuale Joomla/SMTP pendente.
+Verifica automatica superata in CI #44387407274: `tests/joomla-quiz-attempts.php`. Accettazione manuale Joomla/SMTP pendente.
 
 ## LCM-05 — Finder dopo archiviazione/ripristino corso (0.60.8-dev)
 
