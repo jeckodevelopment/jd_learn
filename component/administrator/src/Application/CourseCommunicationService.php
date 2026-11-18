@@ -139,8 +139,11 @@ final class CourseCommunicationService
     }
 
     /** Test delivery is restricted to the authorized actor; roster addresses are never accepted. */
-    public function test(User $identity, int $courseId, string $subject, string $body, array $template = []): void
+    public function test(User $identity, int $courseId, string $subject, string $body, string $mutationId, array $template = []): void
     {
+        if (!preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/iD', $mutationId)) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
         $actor = $this->authorized($identity, $courseId);
         $subject = trim($subject); $body = trim($body);
         if ($subject === '' || mb_strlen($subject) > 300 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body === '' || mb_strlen($body) > 16000 || !filter_var($actor->email, FILTER_VALIDATE_EMAIL)) {
@@ -151,7 +154,7 @@ final class CourseCommunicationService
         $data['__course_message_snapshot'] = CourseMessageTemplate::validate(
             $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
         );
-        $key = hash('sha256', 'course-message-test:' . $courseId . ':' . $actor->id . ':' . bin2hex(random_bytes(16)));
+        $key = hash('sha256', 'course-message-test:' . $courseId . ':' . $actor->id . ':' . strtolower($mutationId));
         (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data);
     }
 

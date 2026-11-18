@@ -1,3 +1,5 @@
+**JD Learn 0.60.8-dev — MAIL-08, deduplicazione invio test (PR in verifica, 18/11/2026).** La chiave evento per le mail di prova è ora deterministica per corso, attore e mutation ID UUID v4 originato dal form; il reinvio dello stesso POST non accoda un secondo messaggio. Da verificare in CI e con collaudo Joomla/SMTP reale. La correzione non modifica automaticamente la percentuale globale, tuttora non consolidata.
+
 **JD Learn 0.60.8-dev — NOT-01 / MAIL-02, completamento da quiz (PR #643 integrata, 18/11/2026).** Il flusso quiz accoda la notifica di completamento corso, riusando la chiave univoca per iscrizione già utilizzata dai percorsi lezione/video. CI #44387407274 completata 4/4 verde e gate requisiti #44387407332 verde; il collaudo Joomla/SMTP reale resta da eseguire. Artefatto Actions #14465298593 (ZIP Joomla interno non verificato separatamente). Non aggiornare la percentuale globale finché non termina l'audit completo dei 757 criteri.
 
 **JD Learn 0.60.8-dev — Smart Search su workflow Archive/Restore, LCM-05 (18/11/2026).**

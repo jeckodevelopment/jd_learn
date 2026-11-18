@@ -1,3 +1,13 @@
+## MAIL-08 — doppio invio della mail di prova (PR in verifica, 18/11/2026)
+
+1. Aprire Comunicazione corso come amministratore autorizzato, compilare modello e destinatari, generare Anteprima e fare **Invia prova**: attendere una sola riga `com_jlms.course.message` diretta esclusivamente all'amministratore.
+2. Ripetere identicamente il medesimo POST `coursemessage.test` (stesso `mutation_id`, anche contemporaneamente): l'evento deve comparire **una sola volta** nella coda e non generare due invii SMTP.
+3. Tornare alla schermata, creare una nuova anteprima e fare intenzionalmente un altro invio di prova: la nuova richiesta ha un identificativo diverso e deve generare una nuova email.
+4. Manomettere il campo `mutation_id` (mancante, stringa arbitraria o UUID non v4) e ripetere con CSRF/ACL non validi: HTTP 400/403 e nessun nuovo messaggio.
+5. Controllare lingua e preferenze notifica, nessun invio agli iscritti, nessuna regressione di `coursemessage.queue` e della conferma esplicita.
+
+**Accettazione Joomla/SMTP manuale ancora pendente**; la CI verifica sintassi e integrazioni del pacchetto.
+
 ## NOT-01 / MAIL-02 — completamento corso tramite quiz (PR #643 integrata)
 
 1. In un corso con una lezione quiz obbligatoria come ultimo requisito, completare e superare il quiz con un iscritto attivo: il corso diventa completato e viene creata una sola comunicazione `com_jlms.course.completed` nella Coda email.

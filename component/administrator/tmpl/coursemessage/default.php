@@ -53,7 +53,7 @@ $mutation=substr($mutation,0,8).'-'.substr($mutation,8,4).'-4'.substr($mutation,
    <p class="small text-muted"><?= Text::_('COM_JLMS_COMMUNICATION_PREVIEW_SAMPLE') ?></p>
    <p><?= Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT',$preview['count']) ?></p>
    <form class="mb-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.test') ?>">
-    <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><?= HTMLHelper::_('form.token') ?>
+    <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><input type="hidden" name="jform[mutation_id]" value="<?= $this->escape($mutation) ?>"><?= HTMLHelper::_('form.token') ?>
     <?php foreach (['subject','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
     <button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_COMMUNICATION_SEND_TEST') ?></button>
    </form>
