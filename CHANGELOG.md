@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (SCR-01, 18/11/2026) — ordinamento per durata:** disponibile nel catalogo e nelle opzioni predefinite globali/menu l'ordinamento crescente per durata stimata. Valore ricavato dalla versione pubblicata del corso, con durate non definite in fondo e paginazione deterministica; i filtri di accesso/lingua non cambiano. Test di regressione strutturale aggiunti; collaudo Joomla pendente.
+
 - **0.60.8-dev (SCR-01, 18/11/2026) — azzeramento filtri catalogo:** in assenza di risultati con filtri attivi viene mostrata un'azione localizzata «Azzera filtri», che ripristina la ricerca senza cancellare l'eventuale categoria di partenza (catid). Controllo strutturale aggiunto; accettazione Joomla pendente e nessun incremento percentuale arbitrario.
 
 - **0.60.8-dev (SCR-05, 18/11/2026) — navigazione dallo stato vuoto:** nella vista personale «I miei corsi» il messaggio senza risultati include un collegamento localizzato al catalogo, senza duplicare il link standard quando sono presenti card. Nessuna variazione a iscrizioni, ACL, schema o SemVer; collaudo Joomla pendente.

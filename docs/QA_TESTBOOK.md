@@ -1,3 +1,13 @@
+## SCR-01 — ordinamento del catalogo per durata (18/11/2026)
+
+1. Pubblicare corsi di 15, 45 e 120 minuti e uno senza durata. Ordinare per **Durata (crescente)**: 15, 45, 120, durata sconosciuta in fondo; ripetere su più pagine con durata uguale per verificare stabilità.
+2. Modificare la durata in una bozza senza pubblicarla: l'ordinamento deve rimanere quello della versione pubblicata. Pubblicare l'aggiornamento e ripetere.
+3. Impostare la durata come ordinamento predefinito in opzioni componente e override della voce menu catalogo; verificare precedenza menu/globale, e il ritorno a titolo/più recenti.
+4. Verificare combinazioni con categoria, tag, lingua, permessi ACL, filtro durata per intervallo, catalogo vuoto e navigazione avanti/indietro; opzione di ordinamento nascosta deve ignorare il parametro GET forgiato.
+5. Controllare testi IT/EN e presentazione responsive/tastiera; verificare paginazione con duplicati di durata.
+
+**Automazione:** test struttura frontend e suite CI; **accettazione manuale Joomla:** pendente. Requisito SCR-01 ancora parziale; SemVer invariato.
+
 ## SCR-01 — azzeramento filtri in catalogo senza risultati (18/11/2026)
 
 1. Catalogo pubblico: cercare una stringa inesistente; stato vuoto e collegamento «Azzera filtri». Seguire il collegamento: ricerca e filtri azzerati, pagina iniziale, corsi visibili secondo ACL.

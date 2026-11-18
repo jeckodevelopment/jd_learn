@@ -31,7 +31,7 @@ final class CatalogOptions
 
         $allowed = match ($key) {
             'catalog_page_size' => ['6', '9', '12', '24'],
-            'catalog_default_order' => ['recent', 'title'],
+            'catalog_default_order' => ['recent', 'title', 'duration'],
             default => ['0', '1'],
         };
 

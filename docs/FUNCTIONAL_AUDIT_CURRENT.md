@@ -54,9 +54,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#private function dto](../component/administrator/src/Application/QuizAttemptService.php)
-- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. La pagina consente solo recente e titolo. Durata e altri ordinamenti editoriali non sono selezionabili. Il filtro per fascia di durata non ordina i risultati.
-  - [component/site/src/Model/CoursesModel.php#['recent', 'title']](../component/site/src/Model/CoursesModel.php)
-  - [component/site/src/Model/CoursesModel.php#return $query->order](../component/site/src/Model/CoursesModel.php)
+- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il catalogo ora offre recente, titolo e durata crescente della versione pubblicata, ma l'ordinamento per data editoriale e altri ordinamenti richiesti non sono disponibili. Il collaudo Joomla dell'ordinamento per durata è ancora pendente.
+  - [component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration']](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'](../component/site/src/Model/CoursesModel.php)
   - [component/site/tmpl/courses/default.php#name="filter[order]"](../component/site/tmpl/courses/default.php)
 - `SCR-01/card` — Scheda include metadati principali e azione disponibile. La card espone titolo, categoria e, se configurati, riepilogo, durata e difficoltà. Offre il link alla scheda ma non proietta l’azione didattica disponibile per l’utente.
   - [component/site/tmpl/courses/default.php#jlms-course-card__title](../component/site/tmpl/courses/default.php)
