@@ -1,7 +1,7 @@
 name: JD Learn verification
 on:
   pull_request:
-    types: [opened, reopened, synchronize, ready_for_review, converted_to_draft]
+    types: [opened, reopened, synchronize, ready_for_review, converted_to_draft, edited, labeled, unlabeled, milestoned, demilestoned]
   workflow_dispatch:
     inputs:
       matrix:
