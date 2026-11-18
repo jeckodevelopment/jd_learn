@@ -16,7 +16,7 @@ Le cause emerse e la checklist prima di dichiarare pronto un candidato sono racc
 
 ## Procedura
 
-Aprire la PR in bozza, preparare e raggruppare le modifiche, aggiornare subito la documentazione e controllare localmente quanto disponibile. Marcarla pronta per la revisione solo quando il candidato è completo: l’evento ready_for_review avvia la verifica di integrazione.
+Aprire la PR in bozza e compilare il modello: descrivere il cambiamento, indicare se corregge un bug e i requisiti interessati, e aggiornare la documentazione pertinente nella stessa PR. Per i criteri funzionali, modificare il registro canonico e rigenerare CSV/report con `python3 tools/functional_audit.py --sync`; la CI esegue `--check` e il calcolo riproducibile a ogni PR. Aggiornare CHANGELOG e README solo secondo i rispettivi ruoli. Indicare i casi manuali Joomla da provare; il loro stato può restare **In attesa** fino a quando l’utente comunica l’esito, senza bloccare una PR con CI superata. Marcarla pronta per la revisione quando codice, test automatici e documentazione sono completi.
 
 Se occorrono altre modifiche di implementazione dopo l’avvio, riportare prima la PR in bozza e raggruppare le correzioni; il passaggio successivo a pronta avvia la nuova verifica necessaria. Anche un push accidentale su una PR già pronta invalida il precedente candidato e viene verificato: non si deve poter considerare valido un esito su codice superato. La concorrenza annulla l’esecuzione obsoleta sullo stesso riferimento.
 
