@@ -128,6 +128,7 @@ final class PathwayService
             // LCM-05: catalog visibility does not imply classroom availability.
             // Keep restricted content hidden; expose a suspended course only as unavailable.
             if ($access === 'available' && (int) $course->delivery_enabled !== 1) { $access = 'unavailable'; }
+            $deliverySuspended = $access === 'unavailable' && (int) $course->delivery_enabled !== 1;
             $percent = 0;
             $progressApplicable = true;
 
@@ -168,6 +169,7 @@ final class PathwayService
                 'title' => (string) $course->title,
                 'summary' => (string) $course->summary,
                 'category_title' => (string) $course->category_title,
+                'delivery_suspended' => $deliverySuspended,
                 'access' => $access,
                 'learning_state' => $state,
                 'percent' => $access === 'available' ? $percent : 0,
