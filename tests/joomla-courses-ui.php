@@ -131,6 +131,17 @@ $list->setState('filter.checked_out','');$list->setState('filter.search','id:'.$
 $list->setState('filter.search',"' OR 1=1 --");listExpect($get()===[],'Search is bound SQL input');
 $list->setState('filter.search','List UI');$list->setState('filter.published',['1']);listExpect($get()===[],'Malformed filters fail closed');
 $list->setState('filter.published','');$list->setState('list.ordering','a.title; DROP TABLE #__jlms_courses');$list->setState('list.direction','DESC; DELETE');listExpect(count($get())===3,'SQL ordering is allowlisted');
+// Verify the archived state against an actual record without changing retained fixtures.
+$db->setQuery('UPDATE #__jlms_courses SET state=2 WHERE id='.(int)$ids['Bravo'])->execute();
+try {
+ $archivedList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);
+ $archivedList->setState('list.limit',100);$archivedList->setState('list.start',0);
+ $archivedList->setState('filter.search','List UI');$archivedList->setState('filter.published','2');
+ $archiveIds=array_map(static fn($row):int=>(int)$row->id,$archivedList->getItems());
+ listExpect($archiveIds===[$ids['Bravo']]&&(int)$archivedList->getTotal()===1,'Archived state filter returns exactly archived records');
+} finally {
+ $db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id='.(int)$ids['Bravo'])->execute();
+}
 $restricted=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);$restricted->setCurrentUser(new \Joomla\CMS\User\User($editor));$restricted->setState('list.limit',100);$restricted->setState('list.start',0);$restricted->setState('filter.search','id:'.$ids['Alpha']);
 listExpect(count($restricted->getItems())===0&&(int)$restricted->getTotal()===0,'Filters and totals cannot expose an uneditable course');
 $rows=$db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN ('.implode(',',$ids).') ORDER BY id')->loadAssocList();
