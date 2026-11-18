@@ -1,3 +1,7 @@
+**JD Learn 0.60.7-dev — refresh Smart Search post-commit su cestinazione/ripristino corsi (LCM-05, 18/11/2026).**
+
+Le transizioni massive `CourseModel::changeStates()` notificano il Finder dopo il commit con lo snapshot aggiornato del corso, evitando indici non aggiornati per Cestinato e Ripristinato. Una failure nell'infrastruttura di indicizzazione non cambia l'esito della transizione già salvata. Test Joomla verifica i due eventi e lo stato persistito, inclusi i flag di ammissione/erogazione. Reindicizzazione end-to-end sul sito Joomla reale e controllo link Smart Search pendenti; LCM-05 Parziale, percentuale globale non consolidata.
+
 **JD Learn 0.60.6-dev — messaggio di sospensione didattica nei percorsi (LCM-05, 18/11/2026).**
 
 La scheda frontend dei percorsi distingue il corso visibile ma sospeso dai corsi riservati per ACL. Il messaggio localizzato `COM_JLMS_COURSE_DELIVERY_SUSPENDED` appare solo se la risorsa è già visibile all'utente autorizzato, altrimenti permane il messaggio generico. Test Joomla su sospensione e riabilitazione, test frontend statico; nessuna modifica dati o schema. Accettazione manuale Joomla non eseguita; requisito LCM-05 parziale e percentuale globale non consolidata.
