@@ -41,11 +41,19 @@ jobs:
         run: |
           python3 tests/pr-requirements-coverage.py
           python3 scripts/check_pr_requirements_coverage.py --base-ref "origin/$JD_LEARN_BASE_REF" --pr "$JD_LEARN_PR_NUMBER"
+      - name: Enforce PR content and metadata
+        if: github.event_name == 'pull_request'
+        env:
+          JD_LEARN_BASE_REF: ${{ github.base_ref }}
+        run: python3 scripts/check_pr_metadata.py --base-ref "origin/$JD_LEARN_BASE_REF"
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
           python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$(git log -1 --format=%cs)"
           python3 tools/check.py
+          python3 tools/functional_audit.py --check
+          python3 tools/functional_progress.py > "$RUNNER_TEMP/functional-progress.json"
+          python3 tests/pr_metadata.py
           python3 tests/frontend-css-contract.py
           python3 tests/frontend-contract-hooks.py
           python3 tests/frontend-release-gate.py
