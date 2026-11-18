@@ -70,3 +70,26 @@ La ricognizione è estesa a **34 requisiti**: `SIC-01/02`, `PRI-01–03`, `CFG-0
 ### Settima tranche: UI, accessibilità, video progress e prestazioni (18/11/2026)
 
 Aggiunti 22 requisiti (STU-05, PRO-04/05, ACC-01, UI-01–07, PERF-01–11) scomposti in 49 criteri: **20 con prime evidenze individuate** e **29 `unassessed`**. Il registro copre ora **129/214 requisiti** in perimetro, con **359 criteri** (203 con evidenze iniziali, 156 ancora da approfondire). La presenza di codice relativo a paginazione, cache e player **non dimostra** prestazioni o conformità WCAG: in assenza di benchmark p95, test carico e audit accessibilità, i criteri pertinenti rimangono `unassessed`. Gli aspetti espressamente di fase 2 non vengono accreditati alla 1.0.0. I riferimenti iniziali sono da validare nel merito; la percentuale funzionale globale resta `null` e il 79,56% resta una stima storica. SemVer invariato.
+
+## Audit per criterio della 1.0.0
+
+Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) e la colonna
+`Audit funzionale 1.0.0 per criterio` sono generati dal
+[registro dei criteri](FUNCTIONAL_CRITERIA_1.0.0.json). Le fonti già presenti
+nella matrice sono piste di ricerca. La classificazione richiede una revisione
+puntuale del comportamento, con motivazione e riferimenti al codice o ai test.
+
+- `python3 tools/functional_audit.py --collect 75` elenca un lotto di criteri da esaminare.
+- `python3 tools/functional_audit.py --apply percorso.json` applica una lista
+  di decisioni con i campi `requirement`, `criterion`, `status`, `reason`
+  e `references`. Ogni riferimento ha forma `percorso#simbolo` oppure
+  `percorso#L10-L20`.
+- `python3 tools/functional_audit.py --check` controlla riferimenti e coerenza dei file generati.
+- `python3 tools/functional_progress.py` calcola le frazioni per requisito.
+
+Usare `implemented` per l'implementazione riscontrata, `missing` per una lacuna
+accertata e `unverifiable` quando la revisione individua una prova ulteriore
+necessaria. `unassessed` indica un criterio ancora da esaminare. Il punteggio
+globale resta nullo finché ci sono criteri senza esito determinato. Il report
+riporta le lacune e le prove residue. La matrice conserva i campi dedicati
+alle evidenze automatiche e all'accettazione manuale Joomla.

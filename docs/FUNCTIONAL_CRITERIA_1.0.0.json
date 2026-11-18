@@ -39,8 +39,16 @@
       {
         "id": "external_references",
         "label": "Audit dipendenze storiche esterne non coperte dai vincoli interni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Model/PathwayModel.php"
+        ],
+        "review": {
+          "reason": "La purga del percorso controlla le relazioni rappresentate dal modello. Un audit dei riferimenti di estensioni esterne richiede l’inventario delle integrazioni e delle relative tabelle.",
+          "references": [
+            "component/administrator/src/Model/PathwayModel.php#public function purgeEmpty"
+          ]
+        }
       }
     ],
     "LCM-04": [
@@ -666,8 +674,20 @@
       {
         "id": "lesson_scope",
         "label": "Restrizioni di lezione non possono ampliare l'accesso al corso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "I contesti per quiz, video, audio e materiali protetti risolvono un’iscrizione autorizzata prima di risolvere una lezione, vincolata alla versione assegnata. Disponibilità e prerequisiti possono restringere ulteriormente quel contesto.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment",
+            "component/administrator/src/Application/LearningService.php#public function quizContext",
+            "component/administrator/src/Application/LearningService.php#public function videoContext",
+            "component/administrator/src/Application/LearningService.php#public function audioLessonContext",
+            "component/administrator/src/Application/LearningService.php#public function resourceContext"
+          ]
+        }
       },
       {
         "id": "mixed_pathways",
@@ -3692,14 +3712,38 @@
       {
         "id": "criterion_03",
         "label": "La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "component/administrator/src/View/Courses/HtmlView.php",
+          "component/administrator/language/it-IT/com_jlms.ini"
+        ],
+        "review": {
+          "reason": "Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.",
+          "references": [
+            "component/administrator/src/Model/CourseModel.php#public function purgeEmpty",
+            "component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList",
+            "component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Nessuna eliminazione a cascata non dichiarata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "component/administrator/language/it-IT/com_jlms.ini",
+          "tests/joomla-courses-ui.php"
+        ],
+        "review": {
+          "reason": "La purga controlla prima le dipendenze didattiche e poi rimuove esplicitamente soltanto le revisioni editoriali del corso. La conferma IT/EN dichiara tale rimozione e il test verifica la cancellazione delle revisioni del corso selezionato.",
+          "references": [
+            "component/administrator/src/Model/CourseModel.php#Remove only this item",
+            "component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM",
+            "tests/joomla-courses-ui.php#Confirmed purge removes only this course editorial revisions"
+          ]
+        }
       }
     ],
     "LIFE-02": [
@@ -5616,14 +5660,34 @@
       {
         "id": "criterion_01",
         "label": "Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "L’archiviazione chiude ammissioni e didattica. I contesti di aula, quiz e risorse risalgono all’iscrizione e al corso, ma resta da tracciare la copertura di tutti gli endpoint diretti compresi gli ingressi amministrativi e i retry.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#Preserve student history",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "preservare storico personale, frequenze, progressi e attestati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-publication-review.php"
+        ],
+        "review": {
+          "reason": "L’archiviazione cambia lo stato del corso attraverso il workflow e chiude le due abilitazioni sul corso conservando la versione pubblicata. La transazione non elimina iscrizioni, progressi o attestati.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#Preserve student history",
+            "tests/joomla-publication-review.php#archive"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -5691,8 +5755,19 @@
       {
         "id": "criterion_06",
         "label": "Controlli ACL sulle operazioni singole e massive",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/CourseController.php",
+          "component/administrator/src/Model/CourseModel.php"
+        ],
+        "review": {
+          "reason": "Le richieste singole e massive di cestinazione/ripristino passano dagli stessi controlli POST/CSRF e da core.edit e core.edit.state per ogni asset. Il rifiuto di una riga provoca il rollback. La purga singola richiede core.delete sul corso.",
+          "references": [
+            "component/administrator/src/Controller/CourseController.php#private function lifecycle",
+            "component/administrator/src/Model/CourseModel.php#public function changeStates",
+            "component/administrator/src/Model/CourseModel.php#public function purgeEmpty"
+          ]
+        }
       }
     ]
   }

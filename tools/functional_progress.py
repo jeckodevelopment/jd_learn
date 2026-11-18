@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REGISTER = ROOT / "docs/REQUIREMENTS_STATUS.csv"
 CRITERIA = ROOT / "docs/FUNCTIONAL_CRITERIA_1.0.0.json"
-STATES = {"implemented", "missing", "unassessed"}
+STATES = {"implemented", "missing", "unassessed", "unverifiable"}
 
 def calculate(rows, criteria):
     included = {r["Requisito"]: r for r in rows if r["Perimetro 1.0.0"] != "Fase 2"}
@@ -30,25 +30,29 @@ def calculate(rows, criteria):
                     raise ValueError("Missing or unsafe evidence " + str(rel))
         done = sum(u["status"] == "implemented" for u in units)
         unknown = sum(u["status"] == "unassessed" for u in units)
+        unverifiable = sum(u["status"] == "unverifiable" for u in units)
         audited[requirement_id] = {
             "implemented_criteria": done,
             "criteria": len(units),
             "unassessed_criteria": unknown,
+            "unverifiable_criteria": unverifiable,
+            "missing_criteria": len(units) - done - unknown - unverifiable,
             "provisional_fraction": round(done / len(units), 6),
             "complete_audit": unknown == 0,
         }
     all_audited = len(audited) == len(included) and all(v["complete_audit"] for v in audited.values())
+    resolved = all_audited and not any(v["unverifiable_criteria"] for v in audited.values())
     # Equal weight per requirement, not per technical test. A global percentage
     # must not be published until every baseline requirement has audited criteria.
     overall = (round(100 * sum(v["provisional_fraction"] for v in audited.values()) / len(included), 2)
-               if all_audited else None)
+               if resolved else None)
     return {
         "baseline": "1.0.0", "in_scope_requirements": len(included),
         "audited_requirements": len(audited),
         "fully_reviewed_requirements": sum(v["complete_audit"] for v in audited.values()),
         "not_yet_audited_requirements": len(included) - len(audited),
         "functional_implementation_percent": overall,
-        "progress_status": "complete" if all_audited else "not_yet_measurable",
+        "progress_status": "complete" if resolved else "not_yet_measurable",
         "criteria_by_requirement": audited,
         "note": "Provisional criterion fractions are NOT a global score; tests and manual acceptance are separate axes.",
     }

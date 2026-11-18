@@ -1,5 +1,7 @@
 **JD Learn 0.60.7-dev — refresh Smart Search post-commit su cestinazione/ripristino corsi (LCM-05, 18/11/2026).**
 
+**Audit funzionale 1.0.0.** Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) riporta gli esiti per criterio e le lacune accertate. La percentuale funzionale globale è ancora in corso di determinazione.
+
 Le transizioni massive `CourseModel::changeStates()` notificano il Finder dopo il commit con lo snapshot aggiornato del corso, evitando indici non aggiornati per Cestinato e Ripristinato. Una failure nell'infrastruttura di indicizzazione non cambia l'esito della transizione già salvata. Test Joomla verifica i due eventi e lo stato persistito, inclusi i flag di ammissione/erogazione. Reindicizzazione end-to-end sul sito Joomla reale e controllo link Smart Search pendenti; LCM-05 Parziale, percentuale globale non consolidata.
 
 **JD Learn 0.60.6-dev — messaggio di sospensione didattica nei percorsi (LCM-05, 18/11/2026).**
