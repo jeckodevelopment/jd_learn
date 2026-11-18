@@ -35,7 +35,7 @@ class PullRequestMetadataTests(unittest.TestCase):
         body = BODY.replace("Stato: In attesa", "Stato: Eseguito")
         errors = gate.validate(body, "1.0.0", ["P1"], {"component/site/X.php"})
         self.assertTrue(any("observed result" in error for error in errors))
-        body = body.replace("Stato: Eseguito", "Stato: Eseguito\\nRisultato: confermato")
+        body = body.replace("Stato: Eseguito", "Stato: Eseguito\nRisultato: confermato")
         self.assertEqual([], gate.validate(body, "1.0.0", ["P1"], {"component/site/X.php"}))
 
     def test_missing_priority_is_rejected(self):
