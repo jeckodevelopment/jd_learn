@@ -480,10 +480,15 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 if ((int) $record->state === $target) { continue; }
                 $update = (object) [
                     'id' => $id, 'state' => $target,
+                    // Trash always closes both gates. Restore must leave them closed.
                     'revision' => (int) $record->revision + 1,
                     'modified_at' => Factory::getDate()->toSql(),
                     'modified_by' => (int) $actor->id,
                 ];
+                if ($target === -2) {
+                    $update->admissions_open = 0;
+                    $update->delivery_enabled = 0;
+                }
                 $db->updateObject('#__jlms_courses', $update, 'id');
             }
             $db->transactionCommit();
