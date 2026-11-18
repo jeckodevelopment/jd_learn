@@ -145,6 +145,7 @@ try {
 // LCM-02: native reversible course trash/restore with a preserved programme.
 $courseModel=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
 $originalVersion=$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult();
+$originalRevision=(int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult();
 $learningBefore=[
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
@@ -168,7 +169,7 @@ listExpect([
 listExpect(!$courseModel->changeStates([$ids['Alpha']],0),'Restoring a course not in the trash is rejected');
 listExpect(!$courseModel->changeStates([$ids['Alpha'],$ids['Alpha']],-2),'Duplicate bulk IDs rejected without mutation');
 // Test fixture cleanup: production lifecycle deliberately forbids implicit publication.
-$db->setQuery('UPDATE #__jlms_courses SET state=1 WHERE id='.(int)$ids['Alpha'])->execute();
+$db->setQuery('UPDATE #__jlms_courses SET state=1, revision='.(int)$originalRevision.' WHERE id='.(int)$ids['Alpha'])->execute();
 $restricted=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);$restricted->setCurrentUser(new \Joomla\CMS\User\User($editor));$restricted->setState('list.limit',100);$restricted->setState('list.start',0);$restricted->setState('filter.search','id:'.$ids['Alpha']);
 listExpect(count($restricted->getItems())===0&&(int)$restricted->getTotal()===0,'Filters and totals cannot expose an uneditable course');
 $rows=$db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN ('.implode(',',$ids).') ORDER BY id')->loadAssocList();
