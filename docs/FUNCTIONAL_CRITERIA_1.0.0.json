@@ -5636,13 +5636,13 @@
       {
         "id": "criterion_01",
         "label": "Toolbar Joomla per cestinazione e ripristino dei corsi",
-        "status": "unassessed",
+        "status": "missing",
         "evidence": []
       },
       {
         "id": "criterion_02",
         "label": "Filtri e viste amministrative del lifecycle corsi",
-        "status": "unassessed",
+        "status": "missing",
         "evidence": []
       },
       {
@@ -5654,14 +5654,16 @@
       {
         "id": "criterion_04",
         "label": "Ripristino conservativo non riapre automaticamente accessi",
-        "status": "unassessed",
+        "status": "missing",
         "evidence": []
       },
       {
         "id": "criterion_05",
         "label": "Eliminazione fisica bloccata in presenza di iscritti o dipendenze storiche",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php"
+        ]
       },
       {
         "id": "criterion_06",
