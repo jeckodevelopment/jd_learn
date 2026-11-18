@@ -44,3 +44,7 @@ Nel repository **JD Learn**, aprire **Settings → Secrets and variables → Act
 ## Impatto sul componente
 
 Nessuna modifica al codice Joomla, alla versione del pacchetto, ai requisiti funzionali, alle migrazioni o ai test applicativi. Questa automazione è infrastruttura di progetto, documentata soltanto sotto `.github/`.
+
+## Collaudo attivazione dopo configurazione (18 novembre 2026)
+
+Dopo l'inserimento del secret nel repository sorgente, un nuovo merge su `main` costituisce un test end-to-end: controllare l'invio dell'evento, l'esecuzione di refresh sul repository dashboard e il timestamp generato. L'esito va considerato confermato solo dopo la lettura del nuovo `data/snapshot.json`; la sola presenza del secret o un esito positivo dei test del componente non costituiscono prova di sincronizzazione.
