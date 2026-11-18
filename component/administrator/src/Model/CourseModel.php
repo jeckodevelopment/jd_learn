@@ -497,6 +497,91 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         }
     }
 
+    /**
+     * Permanently remove a single never-used course. Nonempty curriculum,
+     * students, pathways, mail or history always block deletion. Foreign keys
+     * provide an additional RESTRICT guard, never a substitute for this audit.
+     */
+    public function purgeEmpty(int $id): bool
+    {
+        if ($id < 1) {
+            $this->setError(Text::_('COM_JLMS_INVALID_COURSE'));
+            return false;
+        }
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->getCurrentUser());
+        if (!$actor->authorise('core.delete', 'com_jlms.course.' . $id)) {
+            $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
+        $db = $this->getDatabase();
+        $started = false;
+        try {
+            $db->transactionStart();
+            $started = true;
+            $query = $db->createQuery()->select('id, state, checked_out, current_version_id')
+                ->from('#__jlms_courses')->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+            $query->setQuery((string) $query . ' FOR UPDATE');
+            $record = $db->setQuery($query)->loadObject()
+                ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+            if ((int) $record->state !== -2 || $record->current_version_id !== null) {
+                throw new \DomainException('COM_JLMS_INVALID_COURSE');
+            }
+            if ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id) {
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
+
+            // All known direct course references, including non-FK outbox and
+            // campaign records, must be absent. Never delete related rows.
+            foreach ([
+                '#__jlms_course_versions', '#__jlms_editions',
+                '#__jlms_enrollments', '#__jlms_course_teachers',
+                '#__jlms_pathway_courses', '#__jlms_course_operations',
+                '#__jlms_mail_queue', '#__jlms_course_announcement_campaigns',
+            ] as $tableName) {
+                $related = $db->createQuery()->select('COUNT(*)')
+                    ->from($db->quoteName($tableName))
+                    ->where('course_id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                if ((int) $db->setQuery($related)->loadResult() > 0) {
+                    throw new \DomainException('COM_JLMS_COURSE_DEPENDENCIES');
+                }
+            }
+            // Joomla multilingual associations are not represented by JD Learn FKs.
+            $association = $db->createQuery()->select('COUNT(*)')->from('#__associations')
+                ->where('id = :id')->where('context = :context')
+                ->bind(':id', $id, ParameterType::INTEGER)->bind(':context', $this->associationsContext);
+            if ((int) $db->setQuery($association)->loadResult() > 0) {
+                throw new \DomainException('COM_JLMS_COURSE_DEPENDENCIES');
+            }
+            // Joomla creates editorial revisions even for a never-used course.
+            // Those belong to the course being permanently removed; teaching
+            // versions and learner history above MUST be empty before this point.
+            // Remove only this item's Joomla editorial revisions explicitly, in
+            // the same transaction; never cascade into another object.
+            $historyKey = $this->typeAlias . '.' . $id;
+            $history = $db->createQuery()->delete('#__history')
+                ->where('item_id = :history')->bind(':history', $historyKey);
+            $db->setQuery($history)->execute();
+
+            $table = $this->getTable('Course');
+            if (!$table->load($id) || !$table->delete($id)) {
+                throw new \RuntimeException(getenv('JLMS_TEST_DISPOSABLE') === '1'
+                    ? 'course table delete failed: ' . $table->getError() : 'COM_JLMS_SAVE_FAILED');
+            }
+            $db->transactionCommit();
+            return true;
+        } catch (\Throwable $error) {
+            if ($started) { $db->transactionRollback(); }
+            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND',
+                'COM_JLMS_INVALID_COURSE', 'COM_JLMS_COURSE_DEPENDENCIES'];
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true)
+                ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            if (getenv('JLMS_TEST_DISPOSABLE') === '1') {
+                $this->setError('course purge diagnostic: ' . $error->getMessage());
+            }
+            return false;
+        }
+    }
+
     public function delete(&$pks)
     {
         $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE'));

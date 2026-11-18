@@ -121,6 +121,9 @@ try:
  new_id=int(parse_qs(urlparse(saved_url).query)['id'][0])
  _,reopened=request('/administrator/index.php?option=com_jlms&task=course.edit&id='+str(new_id))
  expect('Preserved on opening programme' in reopened,'Save-and-open preserves submitted course content')
+ # Destructive course purge is never available via GET or without CSRF.
+ request('/administrator/index.php?option=com_jlms&task=course.purge',expected=405)
+ request(path,{'task':'course.purge','cid[]':str(f['courses']['Alpha'])},expected=403)
  # Course trash/restore over HTTP: disallow GET, missing CSRF, then restore to draft.
  request('/administrator/index.php?option=com_jlms&task=course.trash',expected=405)
  request(path,{'task':'course.trash','cid[]':str(new_id)},expected=403)

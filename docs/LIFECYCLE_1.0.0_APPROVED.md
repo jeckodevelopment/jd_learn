@@ -57,6 +57,12 @@ Il servizio `CertificateService::listForStudent()` e il download privato degli a
 
 Dal pacchetto 0.59.0 la vista Corsi espone il filtro Cestinati e toolbar native per cestinare/ripristinare, anche in selezioni massive entro 100 ID. Il controller applica POST, CSRF e validazione stretta; il modello applica ACL `core.manage`, `core.edit`, `core.edit.state` per ciascun corso, lock InnoDB e rollback in caso di diniego. La cestinazione imposta `state=-2`; il ripristino esclusivamente da `-2` imposta `state=0`, **mai 1**, senza cancellare versioni o riferimenti di iscrizione. In ogni altro stato, il comando Restore è respinto. I test su database Joomla e richieste HTTP coprono le nuove operazioni; il collaudo manuale resta separato. La purga fisica rimane deliberatamente bloccata, in attesa di un controllo esplicito delle dipendenze interne/esterne. Il workflow editoriale di archiviazione (`state=2`) rimane distinto dal cestino.
 
+### LCM-02 — purga condizionata (0.60.0)
+
+Solo dalla vista Cestinati è possibile chiedere la cancellazione fisica di **un singolo** corso mediante conferma, POST, token CSRF e permesso `core.delete` sull'asset specifico. La transazione blocca la riga prima di verificare stato `-2`, check-out e assenza di versione attiva, versioni salvate, edizioni, iscrizioni, docenti, percorsi, operazioni, notifiche/campagne, associazioni multilingue. La cronologia **editoriale Joomla del medesimo corso vuoto** viene eliminata esplicitamente nella stessa transazione, perché l'operazione elimina definitivamente il suo oggetto; nessuna versione didattica, frequenza, attestato o altra cronologia degli studenti può essere eliminata. La cancellazione usa la tabella Joomla nativa, con vincoli FK `ON DELETE RESTRICT` come ulteriore protezione; **non cancella mai a cascata** dati didattici. In presenza di un qualsiasi riferimento, blocca la purga con un messaggio e conserva tutti i dati.
+
+Sono documentati test di negazione su versione didattica esistente e richiesta diretta senza metodo/token. Rimane da confermare in CI il caso positivo di corso realmente privo di qualsiasi storico, oltre alla verifica dei riferimenti di estensioni terze e al collaudo manuale. Non attribuire automaticamente completamento di `LCM-02` o accettazione finale.
+
 ## Comportamenti da testare sul sito Joomla
 
 1. Pubblicare e archiviare un corso con un iscritto incompleto e uno completato; entrambi mantengono stato/progressi e attestati, ma non aprono lezioni/materiali/player e non possono iscriversi nuovamente.
