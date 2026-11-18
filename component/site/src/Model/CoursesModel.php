@@ -119,6 +119,18 @@ class CoursesModel extends ListModel
         return $result;
     }
 
+    /** Owner-only enrollment state, using the same validated projection as My Courses. */
+    public function getCardEnrollmentStates(array $items): array
+    {
+        $app = Factory::getApplication();
+        $identity = $app->getIdentity();
+        if (!(int) $identity->id || $identity->guest || $identity->block || !$items) { return []; }
+        $ids = array_map(static fn (object $item): int => (int) $item->id, $items);
+        return $app->bootComponent('com_jlms')->getDashboardService()->catalogStates(
+            $identity, $app->getLanguage()->getTag(), $ids
+        );
+    }
+
     public function getCategoryChoice(): int
     {
         return (int) $this->getState('filter.category_choice');
