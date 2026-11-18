@@ -1,4 +1,4 @@
-## STA-02 — durata quiz e finestra didattica (PR in verifica, 18/11/2026)
+## STA-02 — durata quiz e finestra didattica (PR #648 integrata, 18/11/2026)
 
 1. Su un corso con quiz a tempo di 60 secondi e un'iscrizione in scadenza tra 30 secondi, verificare che il frontend non offra l'avvio (`can_start=false`). Una richiesta diretta di avvio deve ricevere HTTP 403, senza nuova riga di tentativo o consumo del limite.
 2. Rimuovere la scadenza e ripetere: il quiz può partire e conserva i 60 secondi dichiarati. Provare una finestra con tempo esattamente sufficiente.
@@ -6,7 +6,7 @@
 4. Verificare che una sessione già avviata e con scadenza salvata non venga alterata retroattivamente, né cambino i tentativi esistenti; controllare riapertura, proroga autorizzata e deadline già persistita.
 5. Verificare fusi orari e date UTC, ruoli ACL, accesso da smartphone e il messaggio localizzato di finestra non disponibile. Non viene introdotta alcuna modalità di troncamento implicito: se il timer non entra nella finestra, l'avvio è rifiutato.
 
-Test Joomla disposable: `tests/joomla-quiz-attempts.php`. Accettazione manuale su sito Joomla di prova pendente.
+Test Joomla disposable: `tests/joomla-quiz-attempts.php` superato nella CI #44393803890. Accettazione manuale su sito Joomla di prova pendente.
 
 ## MAIL-08 — doppio invio della mail di prova (PR #646 integrata, 18/11/2026)
 
