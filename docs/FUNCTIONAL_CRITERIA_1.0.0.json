@@ -5631,8 +5631,9 @@
         "status": "implemented",
         "evidence": [
           "component/administrator/src/Application/PublicationService.php",
-          "component/administrator/src/Application/CatalogService.php",
-          "tests/joomla-publication-review.php"
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-publication-review.php",
+          "tests/joomla-learning.php"
         ]
       }
     ],
