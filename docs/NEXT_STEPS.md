@@ -1,6 +1,6 @@
 # Prossimi passi verso JD Learn 1.0.0
 
-**Priorità corrente: completare la riconciliazione funzionale 1.0.0.** Al `main` `a175b812e52655375f6fa181c3af004a1aeeb515` (18 novembre 2026), il registro copre 214 requisiti e 757 criteri: 425 implementati, 32 lacune accertate, 192 non verificabili e 108 non ancora esaminati. La percentuale globale è non determinabile. Continuare in lotti, valutando codice e test, registrando evidenze ancorate e tenendo distinti CI e accettazione Joomla. Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) è la lista operativa dei residui.
+**Priorità corrente: completare la riconciliazione funzionale 1.0.0.** Nel lotto 14 sono stati riesaminati altri 50 criteri: 426 implementati, 37 lacune accertate, 236 non verificabili e 58 da esaminare, su 214 requisiti e 757 criteri. La percentuale globale resta non determinabile. Valutare i residui in lotti, con evidenze ancorate e distinguendo CI e accettazione Joomla. Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) contiene il dettaglio operativo.
 
 Gli snapshot storici sottostanti documentano priorità e stime del rispettivo periodo; non rappresentano lo stato corrente e non sostituiscono il registro audit.
 
@@ -127,4 +127,5 @@ Corretto il passaggio illegale di oggetti temporanei a `DatabaseDriver::updateOb
 **Compatibilità Joomla 6.2.0:** eseguire sul sito di prova il collaudo CORE-10 della [PR #378](https://github.com/jeckodevelopment/jd_learn/pull/378) per le issue #374 e #306. Verificare il form lezione, i tre contesti e i permessi nel [testbook](QA_TESTBOOK.md).
 
 **Post-merge MAIL-G (#376, 14 novembre 2026):** PR [#376](https://github.com/jeckodevelopment/jd_learn/pull/376) integrata con merge `387b6d28a66f64ab89d2eba50849d09bfff98c06`. CI [43630634077](https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077) **4/4 verde** (compreso test Joomla con notifica unica al docente con account associato; nessuna notifica al docente senza account); [validazione requisiti](https://github.com/jeckodevelopment/jd_learn/actions/runs/43630633929) superata. Artefatto [JD-Learn-0.56.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/43630634077/artifacts/14128431017), che è un **contenitore Actions da estrarre** per ottenere `pkg_jlms-0.56.21-dev.zip` realmente installabile; SHA-256 dello ZIP interno `5fc55817dab76cce76b85b27b6cfde2ee5350e3084a1c567e2a4410414fb100c`. Accettazione SMTP/utente su Joomla 6.2.0 **pendente**, mentre l'installazione della precedente 0.56.20-dev è stata confermata dall'utente. **Stima sviluppo: ~80% (arrotondata), delta stimato +0,2 punti percentuali non formalizzati rispetto al post-MAIL-F**; il solo evento docente di MAIL-G non completa tutto il blocco. 
+
 
