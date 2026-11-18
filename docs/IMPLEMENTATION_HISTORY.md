@@ -1,3 +1,7 @@
+## 18 novembre 2026 — riconciliazione funzionale, lotto 13 (PR #661)
+
+[PR #661](https://github.com/jeckodevelopment/jd_learn/pull/661) integrata con squash `717338660536dbd7567cca949895a627e5f46057`. Riesaminati 50 criteri su lifecycle, provider, identità, dati e gate di release. Totale: 425 implementati, 32 lacune confermate, 192 non verificabili e 108 da esaminare; percentuale globale non determinabile. CI [#44402600304](https://github.com/jeckodevelopment/jd_learn/actions/runs/44402600304) e integrità CSV [#44402600233](https://github.com/jeckodevelopment/jd_learn/actions/runs/44402600233) verdi. Mancano ancora record di accettazione funzionale/non funzionale completa e candidata stabile 1.0.0.
+
 ## 18 novembre 2026 — riconciliazione funzionale, lotto 12 (PR #658)
 
 [PR #658](https://github.com/jeckodevelopment/jd_learn/pull/658) integrata con squash `06a520483a9c2f60e03b0a13f539096c2e04592c`. Riesaminati 50 criteri con evidenze puntuali. Conteggio aggiornato: 413 implementati, 27 lacune confermate, 159 non verificabili e 158 ancora da esaminare; percentuale globale non determinabile. CI [#44400877902](https://github.com/jeckodevelopment/jd_learn/actions/runs/44400877902) e integrità CSV [#44400877816](https://github.com/jeckodevelopment/jd_learn/actions/runs/44400877816) verdi. La lacuna dell'avviso di uscita per modifiche quiz non confermate è registrata separatamente; nessuna accettazione Joomla è stata inferita.
