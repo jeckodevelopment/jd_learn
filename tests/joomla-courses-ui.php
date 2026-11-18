@@ -115,6 +115,8 @@ $get=static fn():array=>array_map(static fn($row):int=>(int)$row->id,$list->getI
 listExpect($get()===[$ids['Alpha'],$ids['Bravo'],$ids['Zebra']]&&(int)$list->getTotal()===3,'Native list sorting, search and total agree');
 $list->setState('filter.published','1');listExpect($get()===[$ids['Alpha']]&&(int)$list->getTotal()===1,'Published filter shares the total query');
 $list->setState('filter.published','0');listExpect($get()===[$ids['Bravo'],$ids['Zebra']]&&(int)$list->getTotal()===2,'Filter changes invalidate cached items and totals');
+$list->setState('filter.published','2');listExpect($get()===[]&&(int)$list->getTotal()===0,'Archived filter accepts state 2 and excludes active/draft fixtures');
+$list->setState('filter.published','-2');listExpect($get()===[],'Unsupported trash state fails closed rather than broadening results');
 $list->setState('filter.published','');$list->setState('filter.category_id',(string)$categories['parent']);listExpect(count($get())===3,'Category filter includes native descendants');
 $list->setState('filter.category_id',(string)$categories['child']);listExpect($get()===[$ids['Alpha']],'Child category filter is precise');
 $list->setState('filter.category_id','');$list->setState('filter.author_id',(string)$editor);listExpect($get()===[$ids['Bravo']],'Native author filter');
