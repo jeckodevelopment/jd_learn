@@ -2970,8 +2970,20 @@
       {
         "id": "precedence_matrix",
         "label": "Ordine di precedenza per tutte le configurazioni e opzioni menu",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_DEADLINE_EXTENSION.md",
+          "docs/QUIZ_RUNTIME.md",
+          "docs/RELEASE_SCOPE_MATRIX.md"
+        ],
+        "review": {
+          "reason": "Sono implementate precedenze specifiche, tra cui la durata quiz prorogata e i controlli di accesso correnti; non è stata verificata la matrice di precedenza di tutte le configurazioni globali e opzioni menu.",
+          "references": [
+            "docs/QUIZ_DEADLINE_EXTENSION.md#L9-L27",
+            "docs/QUIZ_RUNTIME.md#L21-L23",
+            "docs/RELEASE_SCOPE_MATRIX.md#L1-L25"
+          ]
+        }
       }
     ],
     "CFG-02": [
@@ -2987,8 +2999,20 @@
       {
         "id": "snapshot_all",
         "label": "Snapshot di tentativi/attestati su upgrade e modifiche globali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PUBLICATION.md",
+          "docs/CERTIFICATES_1.0.0.md",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Tentativi e attestati conservano snapshot in percorsi verificati, ma non è attestata la copertura di tutti gli snapshot durante upgrade e modifica di impostazioni globali.",
+          "references": [
+            "docs/PUBLICATION.md#L76-L84",
+            "docs/CERTIFICATES_1.0.0.md#L39-L42",
+            "tests/joomla-quiz-attempts.php#L1-L30"
+          ]
+        }
       }
     ],
     "CFG-03": [
@@ -3004,8 +3028,20 @@
       {
         "id": "error_taxonomy",
         "label": "Tassonomia errori completa, log di correlazione e non divulgazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Provider, quiz e mail hanno messaggi e log controllati in flussi specifici; manca la prova di una tassonomia unificata completa, correlazione e non divulgazione per ogni errore del componente.",
+          "references": [
+            "docs/VIDEO.md#L25-L25",
+            "docs/MANUAL_ENROLLMENT.md#L25-L27",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7"
+          ]
+        }
       }
     ],
     "CFG-04": [
@@ -3021,8 +3057,20 @@
       {
         "id": "full_manual",
         "label": "Completezza manuali autore, studente, ACL, backup e recovery",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "docs/AUTHORING.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Sono pubblicate guide per autore, studente e amministratore in aree specifiche; non è attestata la completezza di un manuale con ACL, backup e procedure di recovery per l'intero prodotto.",
+          "references": [
+            "README.md#L29-L39",
+            "docs/AUTHORING.md#L1-L31",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17"
+          ]
+        }
       }
     ],
     "CFG-05": [
@@ -3038,8 +3086,20 @@
       {
         "id": "complete_trace",
         "label": "Corrispondenza completa mockup, checklist, stati e criteri implementati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
+          "docs/QA_TESTBOOK.md",
+          "docs/FUNCTIONAL_CRITERIA_1.0.0.json"
+        ],
+        "review": {
+          "reason": "Le specifiche, il testbook e il registro definiscono tracciabilità parziale; non è stata verificata la corrispondenza completa fra mockup, checklist, stati e criteri implementati per tutti i requisiti.",
+          "references": [
+            "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#L1-L20",
+            "docs/QA_TESTBOOK.md#L1013-L1013",
+            "docs/FUNCTIONAL_CRITERIA_1.0.0.json#L1-L20"
+          ]
+        }
       }
     ],
     "CFG-06": [
@@ -3055,8 +3115,20 @@
       {
         "id": "release_gates",
         "label": "Copertura totale delle verifiche sicurezza, prestazioni e accessibilità",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/VIDEO.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Sono definiti gate di sicurezza, prestazioni e accessibilità, ma il documento li qualifica come piano e non come audit eseguito; i risultati globali non sono ancora disponibili.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L9",
+            "docs/VIDEO.md#L53-L53",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       }
     ],
     "CORE-01": [
@@ -3803,8 +3875,18 @@
       {
         "id": "provider_fallbacks",
         "label": "Ogni provider non tracciabile e fallback senza completamento spurio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Il player valida capacità, policy e provider e rifiuta condizioni non supportate; la prova di fallback senza completamento spurio per ogni provider non è completa, e la guida richiede ancora prove reali con i provider.",
+          "references": [
+            "docs/VIDEO.md#L23-L25",
+            "tests/video-player.mjs#L216-L216"
+          ]
+        }
       }
     ],
     "ACC-01": [
@@ -5414,8 +5496,19 @@
       {
         "id": "criterion_01",
         "label": "Indice moduli/lezioni, titolo, contenuto, materiali, avanzamento, precedente/successiva e indicatore salvataggio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "L'aula espone indice, lezione, materiali, navigazione e feedback del progresso in viste specifiche; il criterio combina tutti questi elementi e indicatore di salvataggio, per i quali non è attestata una verifica completa dell'intera esperienza.",
+          "references": [
+            "component/site/tmpl/classroom/default.php#L43-L53",
+            "component/site/tmpl/classroom/default.php#L130-L151",
+            "docs/LEARNING.md#L35-L41"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -5429,20 +5522,54 @@
       {
         "id": "criterion_03",
         "label": "per testi/documenti/audio, pulsante Segna come completata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "docs/LEARNING.md",
+          "tests/learning-http.py"
+        ],
+        "review": {
+          "reason": "Per le lezioni per cui il progresso manuale è applicabile, il template aula rende il POST protetto di completamento e il servizio aggiorna la stessa riga di progresso; il contratto esclude accredito al semplice accesso.",
+          "references": [
+            "component/site/tmpl/classroom/default.php#L110-L121",
+            "docs/LEARNING.md#L35-L35",
+            "tests/learning-http.py#L62-L74"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Per video richiesti il pulsante non sostituisce la soglia, salvo scelta editoriale esplicita di regola manuale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "tests/joomla-video.php",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "La soglia video è applicata dal servizio di progresso e il pulsante manuale è distinto dal tracking; non è attestata tutta la matrice delle eccezioni editoriali con soglia e regola manuale esplicita.",
+          "references": [
+            "docs/VIDEO.md#L43-L43",
+            "tests/joomla-video.php#L110-L140",
+            "docs/LEARNING.md#L35-L35"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "In sequenziale, clic su attività bloccata mostra prerequisito e link all'attività da completare",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "Una lezione bloccata per prerequisito mostra un avviso accessibile e collega direttamente l'attività richiesta; i test controllano il blocco prima di aprire o completare la lezione.",
+          "references": [
+            "component/site/tmpl/classroom/default.php#L64-L67",
+            "tests/joomla-learning.php#L154-L159"
+          ]
+        }
       },
       {
         "id": "criterion_06",
@@ -5464,86 +5591,230 @@
       {
         "id": "criterion_07",
         "label": "nessun reindirizzamento a contenuto revocato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "tests/learning-http.py",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "La route di aula e le mutazioni ricontrollano l'accesso lato server; i test negano l'accesso diretto quando categoria, corso o iscrizione sono revocati e preservano il progresso.",
+          "references": [
+            "tests/learning-http.py#L77-L87",
+            "tests/joomla-learning.php#L223-L234"
+          ]
+        }
       }
     ],
     "SCR-07": [
       {
         "id": "criterion_01",
         "label": "Errori di salvataggio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/quiz.js",
+          "tests/quiz-player.mjs"
+        ],
+        "review": {
+          "reason": "Il quiz mostra errore o conflitto dopo un salvataggio non riuscito e ferma il tab nei rifiuti definitivi; i test verificano offline, replay e conflitto.",
+          "references": [
+            "component/media/js/quiz.js#L43-L46",
+            "tests/quiz-player.mjs#L7-L11",
+            "tests/quiz-player.mjs#L44-L50"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Mostrare Salvataggio…, Salvato alle…, Salvataggio non riuscito",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/quiz.js",
+          "tests/quiz-player.mjs"
+        ],
+        "review": {
+          "reason": "Il client espone stati saving/saved/error e associa all'ultima conferma l'ora server localizzata; la suite JS controlla gli stati positivi e negativi.",
+          "references": [
+            "component/media/js/quiz.js#L34-L43",
+            "component/media/js/quiz.js#L79-L91",
+            "tests/quiz-player.mjs#L34-L50"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Conservare temporaneamente in memoria le modifiche non confermate, riprovare con limiti e segnalare il rischio di perdita uscendo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/media/js/quiz.js",
+          "docs/QUIZ_RUNTIME.md"
+        ],
+        "review": {
+          "reason": "Le risposte restano nel form e i tentativi incerti usano retry limitati, ma il client quiz non registra una guardia di uscita per avvertire del rischio di perdere modifiche non confermate. La guida dichiara che la chiusura improvvisa può perdere l'ultimo segmento.",
+          "references": [
+            "component/media/js/quiz.js#L33-L46",
+            "component/media/js/quiz.js#L79-L91",
+            "docs/QUIZ_RUNTIME.md#L17-L17"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Non mostrare come persistenti dati che il server non ha accettato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/quiz.js",
+          "tests/quiz-player.mjs"
+        ],
+        "review": {
+          "reason": "Il client aggiorna il baseline solo dopo una risposta server riuscita e conserva il form dopo un fallimento o una risposta obsoleta; i test verificano retry identico e conflitto senza sovrascrittura.",
+          "references": [
+            "component/media/js/quiz.js#L79-L91",
+            "tests/quiz-player.mjs#L44-L50"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "non conservare risposte o credenziali in archivi pubblici del browser",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/quiz.js",
+          "docs/QUIZ_RUNTIME.md",
+          "tests/quiz-player.mjs"
+        ],
+        "review": {
+          "reason": "Le risposte del quiz sono inviate al server e mantenute nel DOM/baseline in memoria; il runtime documenta esplicitamente che non vengono salvate in localStorage.",
+          "references": [
+            "component/media/js/quiz.js#L33-L43",
+            "docs/QUIZ_RUNTIME.md#L17-L17",
+            "tests/quiz-player.mjs#L34-L50"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Gli intervalli di salvataggio sono quelli PERF-05: l'ultimo segmento non confermato può dover essere rivisto dopo un arresto improvviso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/quiz.js",
+          "docs/QUIZ_RUNTIME.md"
+        ],
+        "review": {
+          "reason": "L'autosalvataggio del quiz opera ogni 20 secondi e la documentazione chiarisce che l'ultimo segmento non confermato può andare perso in caso di chiusura improvvisa.",
+          "references": [
+            "component/media/js/quiz.js#L127-L127",
+            "docs/QUIZ_RUNTIME.md#L17-L17"
+          ]
+        }
       }
     ],
     "SCR-08": [
       {
         "id": "criterion_01",
         "label": "Contenuto esterno bloccato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs",
+          "tests/joomla-video.php"
+        ],
+        "review": {
+          "reason": "La policy bloccata mostra uno stato locale e impedisce l'avvio del player esterno prima della condizione configurata; l'accesso HTTP al playback richiede un consenso esplicito.",
+          "references": [
+            "component/media/js/video.js#L18-L21",
+            "tests/video-player.mjs#L15-L18",
+            "tests/joomla-video.php#L116-L133"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Placeholder locale con provider, motivo e azione disponibile (preferenze di consenso, riprova o assistenza)",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "L'aula usa messaggi locali di consenso, offline ed errore per descrivere lo stato e l'azione necessaria; il test controlla la schermata di consenso senza chiamate remote.",
+          "references": [
+            "component/media/js/video.js#L18-L21",
+            "tests/video-player.mjs#L15-L18",
+            "docs/VIDEO.md#L11-L13"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Nessun poster/SDK remoto prima delle condizioni configurate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "L'SDK/iframe viene creato solo dopo consenso e grant di playback dal server; i test simulano il blocco prima di qualsiasi richiesta e verificano la revoca.",
+          "references": [
+            "component/media/js/video.js#L160-L176",
+            "tests/video-player.mjs#L15-L18",
+            "tests/video-player.mjs#L218-L218"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Un link esterno alternativo non deve aggirare una scelta di consenso o un controllo di accesso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/video.js",
+          "tests/joomla-video.php"
+        ],
+        "review": {
+          "reason": "Non viene offerto un link esterno alternativo che aggiri il controllo; l'avvio del provider passa dal gate del consenso e dal grant server con autorizzazione corrente.",
+          "references": [
+            "component/media/js/video.js#L49-L49",
+            "component/media/js/video.js#L160-L176",
+            "tests/joomla-video.php#L133-L169"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "l'alternativa formativa va configurata esplicitamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il comportamento non abilita automaticamente contenuti o provider alternativi; la configurazione esplicita di un'alternativa formativa per tutti i percorsi bloccati non è dimostrata dal codice/test esaminato.",
+          "references": [
+            "docs/VIDEO.md#L11-L13",
+            "docs/VIDEO.md#L53-L53",
+            "docs/QA_TESTBOOK.md#L628-L644"
+          ]
+        }
       }
     ],
     "SCR-13": [
       {
         "id": "criterion_01",
         "label": "Editor corso e programma seguono i pattern Joomla previsti dagli scenari AC-129–AC-134",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/AUTHORING.md",
+          "tests/joomla-curriculum-builder.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Editor e programma usano modelli e form nativi Joomla e dispongono di test su viste specifiche; l'aderenza completa agli scenari AC-129–AC-134 in tutti i flussi resta da verificare nella checklist manuale.",
+          "references": [
+            "docs/AUTHORING.md#L1-L31",
+            "tests/joomla-curriculum-builder.php#L1-L30",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -5720,32 +5991,92 @@
       {
         "id": "criterion_01",
         "label": "Configurazione/diagnostica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MAIL_SCHEDULER_SETUP.md",
+          "docs/CLOUDFLARE_STREAM.md",
+          "docs/MATERIALS.md"
+        ],
+        "review": {
+          "reason": "Esistono diagnostiche di configurazione per mail, provider e storage, ma non una vista completa che verifichi tutte le dipendenze e i controlli iniziali previsti.",
+          "references": [
+            "docs/MAIL_SCHEDULER_SETUP.md#L27-L29",
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "docs/MATERIALS.md#L3-L5"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/config.xml",
+          "docs/MAIL_TEMPLATES.md",
+          "docs/MATERIALS.md"
+        ],
+        "review": {
+          "reason": "Parametri globali e configurazioni native esistono per diverse aree; non è attestata un'unica copertura di valori ereditati, provider, template, task, storage e controlli iniziali.",
+          "references": [
+            "component/administrator/config.xml#L1-L25",
+            "docs/MAIL_TEMPLATES.md#L1-L13",
+            "docs/MATERIALS.md#L3-L5"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Mostrare funzionalità non configurate con ragione e istruzioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/MAIL_SCHEDULER_SETUP.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Alcune guide indicano esplicitamente prerequisiti e limiti quando una funzione non è configurata; la copertura di tutte le funzioni inattive con causa e istruzioni non è documentata come completa.",
+          "references": [
+            "docs/VIDEO.md#L11-L19",
+            "docs/MAIL_SCHEDULER_SETUP.md#L27-L29",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "nessuna credenziale leggibile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php",
+          "tests/cloudflare.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il provider dei segreti e i campi di credenziali selezionati sono server-side; non è dimostrata l'assenza di valori leggibili in ogni form, risposta diagnostica, cache e log del componente.",
+          "references": [
+            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23",
+            "tests/cloudflare.php#L1-L30",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "tests/joomla-video-duration.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Le prove disponibili coprono configurazioni e metadati provider; non è attestata una matrice completa che escluda effetti esterni reali da ogni controllo di connessione e diagnostica.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "tests/joomla-video-duration.php#L77-L93",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       }
     ],
     "LIFE-01": [
@@ -5809,8 +6140,20 @@
       {
         "id": "criterion_01",
         "label": "Categoria e docenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/TEACHERS.md",
+          "component/administrator/src/Application/TeacherProfiles.php",
+          "tests/joomla-teachers.php"
+        ],
+        "review": {
+          "reason": "Categorie e docenti sono integrati con i modelli nativi e profili associati, ma la copertura completa di assegnazioni/consultazioni per tutte le categorie e i ruoli previsti non è stata attestata.",
+          "references": [
+            "docs/TEACHERS.md#L3-L5",
+            "component/administrator/src/Application/TeacherProfiles.php#L1-L40",
+            "tests/joomla-teachers.php#L1-L30"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -5864,22 +6207,58 @@
       {
         "id": "criterion_05",
         "label": "le assegnazioni operative e il nome già presente in attestati storici sono gestiti separatamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/TeacherProfiles.php",
+          "docs/TEACHERS.md",
+          "tests/joomla-course-presentation.php"
+        ],
+        "review": {
+          "reason": "Le assegnazioni operative e gli snapshot dei docenti nei corsi sono gestiti separatamente nei flussi implementati; non è documentata una prova completa di conservazione del nome storico in ogni ciclo di assegnazione e upgrade.",
+          "references": [
+            "component/administrator/src/Application/TeacherProfiles.php#L1-L40",
+            "docs/TEACHERS.md#L1-L14",
+            "tests/joomla-course-presentation.php#L179-L190"
+          ]
+        }
       }
     ],
     "LIFE-03": [
       {
         "id": "criterion_01",
         "label": "Le transizioni del lifecycle core corrispondono alla matrice RELEASE_SCOPE_MATRIX.md",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PUBLICATION.md",
+          "docs/RELEASE_SCOPE_MATRIX.md",
+          "tests/joomla-publication.php"
+        ],
+        "review": {
+          "reason": "Transizioni specifiche sono state testate nel modello Joomla, ma non è stata confrontata in modo completo ogni transizione core con RELEASE_SCOPE_MATRIX.md.",
+          "references": [
+            "docs/PUBLICATION.md#L27-L27",
+            "docs/RELEASE_SCOPE_MATRIX.md#L1-L25",
+            "tests/joomla-publication.php#L1-L30"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Le transizioni sono controllate lato server anche tramite richieste dirette",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "tests/manual-enrollment-http.py",
+          "docs/RELEASE_SCOPE_MATRIX.md"
+        ],
+        "review": {
+          "reason": "I servizi applicano controlli server-side per operazioni protette selezionate; non è attestata la negazione tramite richieste dirette per ogni transizione di lifecycle del perimetro.",
+          "references": [
+            "component/administrator/src/Application/ManualEnrollmentService.php#L1-L40",
+            "tests/manual-enrollment-http.py#L1-L30",
+            "docs/RELEASE_SCOPE_MATRIX.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -5903,28 +6282,76 @@
       {
         "id": "criterion_01",
         "label": "Le condizioni di accesso core restano coerenti durante le transizioni di lifecycle",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "plugins/privacy/jdlearn/src/Extension/Jdlearn.php",
+          "docs/LEARNING.md",
+          "docs/RELEASE_SCOPE_MATRIX.md"
+        ],
+        "review": {
+          "reason": "I controlli di accesso sono ricontrollati in diversi passaggi di lifecycle e fruizione; non è dimostrata la coerenza di tutte le condizioni d'accesso durante ogni transizione core.",
+          "references": [
+            "plugins/privacy/jdlearn/src/Extension/Jdlearn.php#L1-L30",
+            "docs/LEARNING.md#L35-L41",
+            "docs/RELEASE_SCOPE_MATRIX.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Le operazioni negate non modificano dati né autorizzazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-learning.php",
+          "tests/joomla-manual-enrollment.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Sono presenti test che verificano richieste negate senza mutare progressi e iscrizioni in scenari specifici; la prova per tutte le operazioni negate e autorizzazioni non è completa.",
+          "references": [
+            "tests/joomla-learning.php#L223-L234",
+            "tests/joomla-manual-enrollment.php#L1-L30",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Le eccezioni e i limiti core sono riconciliati con RELEASE_SCOPE_MATRIX.md",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/RELEASE_SCOPE_MATRIX.md",
+          "docs/PUBLICATION.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "I limiti delle transizioni core sono documentati in più guide e nella matrice di release, ma la riconciliazione di tutte le eccezioni richieste non è stata chiusa.",
+          "references": [
+            "docs/RELEASE_SCOPE_MATRIX.md#L1-L25",
+            "docs/PUBLICATION.md#L27-L54",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7"
+          ]
+        }
       }
     ],
     "EDGE-01": [
       {
         "id": "criterion_01",
         "label": "Catena di accesso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/LEARNING.md",
+          "tests/learning-http.py",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "La catena di avvio e aula usa iscrizione Joomla, route protette e controllo server del servizio; il test HTTP apre l'aula autenticata e nega accesso non valido.",
+          "references": [
+            "docs/LEARNING.md#L17-L23",
+            "tests/learning-http.py#L62-L74",
+            "tests/joomla-learning.php#L174-L182"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -5995,14 +6422,38 @@
       {
         "id": "criterion_06",
         "label": "Una voce di menu nascosta non protegge una risorsa",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "tests/learning-http.py",
+          "tests/joomla-learning.php",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "La route diretta dell'aula ricontrolla proprietario, permessi, stato e visibilità; i test negano accesso diretto dopo revoca, quindi la sola presenza o assenza di una voce menu non determina l'autorizzazione.",
+          "references": [
+            "tests/learning-http.py#L66-L87",
+            "tests/joomla-learning.php#L223-L234",
+            "docs/LEARNING.md#L41-L41"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "un URL diretto applica gli stessi controlli del servizio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/learning-http.py",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "Le richieste dirette arrivano allo stesso servizio che rivalida account, iscrizione, corso e lezione, con test HTTP e service che negano route dopo revoca.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#L120-L145",
+            "tests/learning-http.py#L77-L87",
+            "tests/joomla-learning.php#L223-L234"
+          ]
+        }
       },
       {
         "id": "criterion_08",
@@ -6026,8 +6477,20 @@
       {
         "id": "criterion_01",
         "label": "Anteprima e consultazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PUBLICATION.md",
+          "tests/joomla-publication.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "L'anteprima editoriale e la modalità di consultazione hanno gate e test mirati; il criterio complessivo richiede la verifica di ogni vista e assenza di effetti persistenti in tutti i contenuti previsti.",
+          "references": [
+            "docs/PUBLICATION.md#L27-L54",
+            "tests/joomla-publication.php#L203-L211",
+            "docs/QA_TESTBOOK.md#L579-L583"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -6130,20 +6593,54 @@
       {
         "id": "criterion_01",
         "label": "Sequenza e rilascio delle lezioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/LEARNING.md",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "Le lezioni supportano modalità sequenziale e finestre assolute/relative; i servizi determinano l'accesso e i test negano il completamento prima dell'apertura.",
+          "references": [
+            "docs/LEARNING.md#L23-L23",
+            "tests/joomla-learning.php#L154-L168"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "In modalità sequenziale usare dipendenze dichiarate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/LEARNING.md",
+          "tests/joomla-learning.php",
+          "component/administrator/src/Application/CurriculumService.php"
+        ],
+        "review": {
+          "reason": "In modalità sequenziale la pubblicazione congela i prerequisiti dichiarati e aula e percorsi protetti li applicano prima di mostrare contenuti.",
+          "references": [
+            "docs/LEARNING.md#L23-L23",
+            "tests/joomla-learning.php#L154-L168",
+            "component/administrator/src/Application/CurriculumService.php#L1-L40"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "alla creazione proporre la precedente attività obbligatoria come prerequisito",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/CurriculumService.php",
+          "tests/joomla-curriculum-builder.php"
+        ],
+        "review": {
+          "reason": "Il modello didattico supporta prerequisiti espliciti e il sequenziale costruisce dipendenze dall'ordine; l'evidenza esaminata non dimostra che l'interfaccia di creazione proponga sempre la precedente attività obbligatoria.",
+          "references": [
+            "docs/LEARNING.md#L23-L23",
+            "component/administrator/src/Application/CurriculumService.php#L1-L40",
+            "tests/joomla-curriculum-builder.php#L1-L30"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -6164,14 +6661,34 @@
       {
         "id": "criterion_05",
         "label": "In modalità libera sono comunque possibili prerequisiti espliciti, segnalati nella scheda",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/site/tmpl/classroom/default.php"
+        ],
+        "review": {
+          "reason": "Le guide distinguono modalità libera e prerequisiti espliciti; la vista aula indica e collega l'attività che blocca l'apertura.",
+          "references": [
+            "docs/LEARNING.md#L23-L23",
+            "component/site/tmpl/classroom/default.php#L64-L67"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Una lezione futura obbligatoria resta nel denominatore del progresso e non permette completamenti anticipati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/LEARNING.md",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "Le lezioni future obbligatorie rimangono nella regola del progresso e il servizio nega il completamento anticipato; i test verificano entrambi gli invarianti.",
+          "references": [
+            "docs/LEARNING.md#L35-L35",
+            "tests/joomla-learning.php#L154-L168"
+          ]
+        }
       },
       {
         "id": "criterion_07",
@@ -6194,8 +6711,20 @@
       {
         "id": "criterion_01",
         "label": "Percorso aggregato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/PathwayProgress.php",
+          "component/administrator/src/Application/PathwayService.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il servizio aggrega progressi e accesso di un percorso, ma la verifica di tutte le varianti dell'esperienza aggregata e delle relative esclusioni 1.0.0 non è attestata integralmente.",
+          "references": [
+            "component/administrator/src/Application/PathwayProgress.php#L1-L40",
+            "component/administrator/src/Application/PathwayService.php#L1-L40",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -6294,22 +6823,56 @@
       {
         "id": "criterion_08",
         "label": "Nessuna certificazione di percorso nel rilascio 1",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/CERTIFICATES_1.0.0.md",
+          "docs/CREDENTIALS_IMPLEMENTATION_PLAN.md"
+        ],
+        "review": {
+          "reason": "Il perimetro della prima stabile esclude la certificazione di percorso; gli attestati inclusi sono di completamento per singolo corso e Credentials resta fase successiva.",
+          "references": [
+            "docs/CERTIFICATES_1.0.0.md#L20-L22",
+            "docs/CREDENTIALS_IMPLEMENTATION_PLAN.md#L1-L10"
+          ]
+        }
       },
       {
         "id": "criterion_09",
         "label": "L'associazione non cambia gruppi, livelli o iscrizioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "docs/CREDENTIALS_IMPLEMENTATION_PLAN.md",
+          "tests/joomla-smoke.php"
+        ],
+        "review": {
+          "reason": "Il collegamento a un percorso conserva identità e iscrizioni dei corsi; la specifica separa il percorso aggregato dai livelli e non assegna gruppi Joomla.",
+          "references": [
+            "component/administrator/src/Application/PathwayService.php#L1-L40",
+            "docs/CREDENTIALS_IMPLEMENTATION_PLAN.md#L1-L10",
+            "tests/joomla-smoke.php#L1-L30"
+          ]
+        }
       }
     ],
     "EDGE-05": [
       {
         "id": "criterion_01",
         "label": "Revoca durante quiz",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "tests/joomla-quiz-attempts.php",
+          "tests/quiz-attempts-http.py"
+        ],
+        "review": {
+          "reason": "Una revoca corrente blocca le nuove mutazioni del quiz senza ripristinare accesso dal replay; i test coprono richiesta HTTP e verifica del servizio.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L23-L23",
+            "tests/joomla-quiz-attempts.php#L150-L184",
+            "tests/quiz-attempts-http.py#L1-L30"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -6432,8 +6995,20 @@
       {
         "id": "criterion_01",
         "label": "Concorrenza e disconnessione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "tests/joomla-quiz-attempts.php",
+          "tests/quiz-player.mjs"
+        ],
+        "review": {
+          "reason": "La suite verifica retry immutabile e processi concorrenti in casi quiz selezionati; la gestione completa di disconnessione e tutte le combinazioni di concorrenza dell'intero core non è attestata.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L19-L23",
+            "tests/joomla-quiz-attempts.php#L120-L150",
+            "tests/quiz-player.mjs#L7-L11"
+          ]
+        }
       },
       {
         "id": "criterion_02",

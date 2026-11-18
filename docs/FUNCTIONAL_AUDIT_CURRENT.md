@@ -2,10 +2,10 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **391**.
-- Mancanti con lacuna accertata: **26**.
-- Esaminati con esito non verificabile: **132**.
-- Da esaminare: **208**.
+- Implementati: **413**.
+- Mancanti con lacuna accertata: **27**.
+- Esaminati con esito non verificabile: **159**.
+- Da esaminare: **158**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -78,6 +78,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
   - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
+- `SCR-07/criterion_03` — Conservare temporaneamente in memoria le modifiche non confermate, riprovare con limiti e segnalare il rischio di perdita uscendo. Le risposte restano nel form e i tentativi incerti usano retry limitati, ma il client quiz non registra una guardia di uscita per avvertire del rischio di perdere modifiche non confermate. La guida dichiara che la chiusura improvvisa può perdere l'ultimo segmento.
+  - [component/media/js/quiz.js#L33-L46](../component/media/js/quiz.js#L33-L46)
+  - [component/media/js/quiz.js#L79-L91](../component/media/js/quiz.js#L79-L91)
+  - [docs/QUIZ_RUNTIME.md#L17-L17](../docs/QUIZ_RUNTIME.md#L17-L17)
 - `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.
   - [component/administrator/src/Model/CourseModel.php#public function purgeEmpty](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList](../component/administrator/src/View/Courses/HtmlView.php)
@@ -301,6 +305,30 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PRI-03/no_external_telemetry` — Verifica globale dei tracciamenti esterni e poster remoti. La documentazione dei video applica consenso e caricamento differito degli SDK in contesti coperti, ma richiede ancora test reali su provider, CSP e consenso; una verifica globale di tutti i poster e tracciamenti esterni non è attestata.
   - [docs/VIDEO.md#L23-L23](../docs/VIDEO.md#L23-L23)
   - [docs/QA_TESTBOOK.md#L579-L579](../docs/QA_TESTBOOK.md#L579-L579)
+- `CFG-01/precedence_matrix` — Ordine di precedenza per tutte le configurazioni e opzioni menu. Sono implementate precedenze specifiche, tra cui la durata quiz prorogata e i controlli di accesso correnti; non è stata verificata la matrice di precedenza di tutte le configurazioni globali e opzioni menu.
+  - [docs/QUIZ_DEADLINE_EXTENSION.md#L9-L27](../docs/QUIZ_DEADLINE_EXTENSION.md#L9-L27)
+  - [docs/QUIZ_RUNTIME.md#L21-L23](../docs/QUIZ_RUNTIME.md#L21-L23)
+  - [docs/RELEASE_SCOPE_MATRIX.md#L1-L25](../docs/RELEASE_SCOPE_MATRIX.md#L1-L25)
+- `CFG-02/snapshot_all` — Snapshot di tentativi/attestati su upgrade e modifiche globali. Tentativi e attestati conservano snapshot in percorsi verificati, ma non è attestata la copertura di tutti gli snapshot durante upgrade e modifica di impostazioni globali.
+  - [docs/PUBLICATION.md#L76-L84](../docs/PUBLICATION.md#L76-L84)
+  - [docs/CERTIFICATES_1.0.0.md#L39-L42](../docs/CERTIFICATES_1.0.0.md#L39-L42)
+  - [tests/joomla-quiz-attempts.php#L1-L30](../tests/joomla-quiz-attempts.php#L1-L30)
+- `CFG-03/error_taxonomy` — Tassonomia errori completa, log di correlazione e non divulgazione. Provider, quiz e mail hanno messaggi e log controllati in flussi specifici; manca la prova di una tassonomia unificata completa, correlazione e non divulgazione per ogni errore del componente.
+  - [docs/VIDEO.md#L25-L25](../docs/VIDEO.md#L25-L25)
+  - [docs/MANUAL_ENROLLMENT.md#L25-L27](../docs/MANUAL_ENROLLMENT.md#L25-L27)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `CFG-04/full_manual` — Completezza manuali autore, studente, ACL, backup e recovery. Sono pubblicate guide per autore, studente e amministratore in aree specifiche; non è attestata la completezza di un manuale con ACL, backup e procedure di recovery per l'intero prodotto.
+  - [README.md#L29-L39](../README.md#L29-L39)
+  - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17)
+- `CFG-05/complete_trace` — Corrispondenza completa mockup, checklist, stati e criteri implementati. Le specifiche, il testbook e il registro definiscono tracciabilità parziale; non è stata verificata la corrispondenza completa fra mockup, checklist, stati e criteri implementati per tutti i requisiti.
+  - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#L1-L20](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#L1-L20)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+  - [docs/FUNCTIONAL_CRITERIA_1.0.0.json#L1-L20](../docs/FUNCTIONAL_CRITERIA_1.0.0.json#L1-L20)
+- `CFG-06/release_gates` — Copertura totale delle verifiche sicurezza, prestazioni e accessibilità. Sono definiti gate di sicurezza, prestazioni e accessibilità, ma il documento li qualifica come piano e non come audit eseguito; i risultati globali non sono ancora disponibili.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L9)
+  - [docs/VIDEO.md#L53-L53](../docs/VIDEO.md#L53-L53)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `CORE-01/all_hierarchy` — Gerarchia, permessi, lingua e ordinamento in ogni contesto. Sono riscontrabili integrazione nativa delle categorie, gerarchia e un set di test dedicato; la matrice richiesta include però permessi, lingua e ordinamento in ogni contesto, non attestati da una verifica completa end-to-end.
   - [docs/CATEGORIES.md#L3-L9](../docs/CATEGORIES.md#L3-L9)
   - [tests/joomla-categories.php#L1-L30](../tests/joomla-categories.php#L1-L30)
@@ -392,6 +420,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PRO-04/overlap_devices` — Riprese sovrapposte, velocità e concorrenza su browser/provider reali. Il backend ha una prova su più sessioni di unione intervalli e conflitto di posizione. Non esercita due dispositivi reali con pause e velocità applicate dai provider.
   - [tests/joomla-video.php#cross-tab interval union completes exactly](../tests/joomla-video.php)
   - [tests/video-player.mjs#player_preference_checks](../tests/video-player.mjs)
+- `PRO-05/provider_fallbacks` — Ogni provider non tracciabile e fallback senza completamento spurio. Il player valida capacità, policy e provider e rifiuta condizioni non supportate; la prova di fallback senza completamento spurio per ogni provider non è completa, e la guida richiede ancora prove reali con i provider.
+  - [docs/VIDEO.md#L23-L25](../docs/VIDEO.md#L23-L25)
+  - [tests/video-player.mjs#L216-L216](../tests/video-player.mjs#L216-L216)
 - `ACC-01/wcag_keyboard` — Test WCAG 2.2 AA tastiera, label, focus e lettori di schermo. Il gate strutturale verifica markup e contratti. La navigazione da tastiera, l’ordine del focus e l’uso di lettori di schermo richiedono gli esiti FE-12.
   - [docs/FRONTEND_FE12_ACCEPTANCE.md#Registro di gate](../docs/FRONTEND_FE12_ACCEPTANCE.md)
   - [tests/frontend-release-gate.py#NOT VERIFIED: WCAG](../tests/frontend-release-gate.py)
@@ -526,9 +557,89 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Model/CategoryModel.php#L1-L28](../component/site/src/Model/CategoryModel.php#L1-L28)
   - [tests/joomla-categories.php#L1-L30](../tests/joomla-categories.php#L1-L30)
   - [docs/CATEGORIES.md#L31-L35](../docs/CATEGORIES.md#L31-L35)
+- `SCR-06/criterion_01` — Indice moduli/lezioni, titolo, contenuto, materiali, avanzamento, precedente/successiva e indicatore salvataggio. L'aula espone indice, lezione, materiali, navigazione e feedback del progresso in viste specifiche; il criterio combina tutti questi elementi e indicatore di salvataggio, per i quali non è attestata una verifica completa dell'intera esperienza.
+  - [component/site/tmpl/classroom/default.php#L43-L53](../component/site/tmpl/classroom/default.php#L43-L53)
+  - [component/site/tmpl/classroom/default.php#L130-L151](../component/site/tmpl/classroom/default.php#L130-L151)
+  - [docs/LEARNING.md#L35-L41](../docs/LEARNING.md#L35-L41)
+- `SCR-06/criterion_04` — Per video richiesti il pulsante non sostituisce la soglia, salvo scelta editoriale esplicita di regola manuale. La soglia video è applicata dal servizio di progresso e il pulsante manuale è distinto dal tracking; non è attestata tutta la matrice delle eccezioni editoriali con soglia e regola manuale esplicita.
+  - [docs/VIDEO.md#L43-L43](../docs/VIDEO.md#L43-L43)
+  - [tests/joomla-video.php#L110-L140](../tests/joomla-video.php#L110-L140)
+  - [docs/LEARNING.md#L35-L35](../docs/LEARNING.md#L35-L35)
+- `SCR-08/criterion_05` — l'alternativa formativa va configurata esplicitamente. Il comportamento non abilita automaticamente contenuti o provider alternativi; la configurazione esplicita di un'alternativa formativa per tutti i percorsi bloccati non è dimostrata dal codice/test esaminato.
+  - [docs/VIDEO.md#L11-L13](../docs/VIDEO.md#L11-L13)
+  - [docs/VIDEO.md#L53-L53](../docs/VIDEO.md#L53-L53)
+  - [docs/QA_TESTBOOK.md#L628-L644](../docs/QA_TESTBOOK.md#L628-L644)
+- `SCR-13/criterion_01` — Editor corso e programma seguono i pattern Joomla previsti dagli scenari AC-129–AC-134. Editor e programma usano modelli e form nativi Joomla e dispongono di test su viste specifiche; l'aderenza completa agli scenari AC-129–AC-134 in tutti i flussi resta da verificare nella checklist manuale.
+  - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
+  - [tests/joomla-curriculum-builder.php#L1-L30](../tests/joomla-curriculum-builder.php#L1-L30)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `SCR-16/criterion_01` — Configurazione/diagnostica. Esistono diagnostiche di configurazione per mail, provider e storage, ma non una vista completa che verifichi tutte le dipendenze e i controlli iniziali previsti.
+  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+  - [docs/MATERIALS.md#L3-L5](../docs/MATERIALS.md#L3-L5)
+- `SCR-16/criterion_02` — Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali. Parametri globali e configurazioni native esistono per diverse aree; non è attestata un'unica copertura di valori ereditati, provider, template, task, storage e controlli iniziali.
+  - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
+  - [docs/MAIL_TEMPLATES.md#L1-L13](../docs/MAIL_TEMPLATES.md#L1-L13)
+  - [docs/MATERIALS.md#L3-L5](../docs/MATERIALS.md#L3-L5)
+- `SCR-16/criterion_03` — Mostrare funzionalità non configurate con ragione e istruzioni. Alcune guide indicano esplicitamente prerequisiti e limiti quando una funzione non è configurata; la copertura di tutte le funzioni inattive con causa e istruzioni non è documentata come completa.
+  - [docs/VIDEO.md#L11-L19](../docs/VIDEO.md#L11-L19)
+  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `SCR-16/criterion_04` — nessuna credenziale leggibile. Il provider dei segreti e i campi di credenziali selezionati sono server-side; non è dimostrata l'assenza di valori leggibili in ogni form, risposta diagnostica, cache e log del componente.
+  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
+  - [tests/cloudflare.php#L1-L30](../tests/cloudflare.php#L1-L30)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `SCR-16/criterion_05` — Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore. Le prove disponibili coprono configurazioni e metadati provider; non è attestata una matrice completa che escluda effetti esterni reali da ogni controllo di connessione e diagnostica.
+  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
+  - [tests/joomla-video-duration.php#L77-L93](../tests/joomla-video-duration.php#L77-L93)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `LIFE-02/criterion_01` — Categoria e docenti. Categorie e docenti sono integrati con i modelli nativi e profili associati, ma la copertura completa di assegnazioni/consultazioni per tutte le categorie e i ruoli previsti non è stata attestata.
+  - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
+  - [component/administrator/src/Application/TeacherProfiles.php#L1-L40](../component/administrator/src/Application/TeacherProfiles.php#L1-L40)
+  - [tests/joomla-teachers.php#L1-L30](../tests/joomla-teachers.php#L1-L30)
 - `LIFE-02/criterion_02` — Non consentire la cancellazione definitiva di una categoria con corsi senza scelta esplicita di ricollocazione, né lasciare riferimenti orfani. Il servizio richiede una destinazione valida per le dipendenze e aggiorna le relazioni in transazione. Per qualificare ogni cancellazione definitiva restano da tracciare gli ingressi nativi e i casi concorrenti.
   - [component/administrator/src/Application/CategoryReassignmentService.php#public function inspect](../component/administrator/src/Application/CategoryReassignmentService.php)
   - [component/administrator/src/Application/CategoryReassignmentService.php#public function reassign](../component/administrator/src/Application/CategoryReassignmentService.php)
+- `LIFE-02/criterion_05` — le assegnazioni operative e il nome già presente in attestati storici sono gestiti separatamente. Le assegnazioni operative e gli snapshot dei docenti nei corsi sono gestiti separatamente nei flussi implementati; non è documentata una prova completa di conservazione del nome storico in ogni ciclo di assegnazione e upgrade.
+  - [component/administrator/src/Application/TeacherProfiles.php#L1-L40](../component/administrator/src/Application/TeacherProfiles.php#L1-L40)
+  - [docs/TEACHERS.md#L1-L14](../docs/TEACHERS.md#L1-L14)
+  - [tests/joomla-course-presentation.php#L179-L190](../tests/joomla-course-presentation.php#L179-L190)
+- `LIFE-03/criterion_01` — Le transizioni del lifecycle core corrispondono alla matrice RELEASE_SCOPE_MATRIX.md. Transizioni specifiche sono state testate nel modello Joomla, ma non è stata confrontata in modo completo ogni transizione core con RELEASE_SCOPE_MATRIX.md.
+  - [docs/PUBLICATION.md#L27-L27](../docs/PUBLICATION.md#L27-L27)
+  - [docs/RELEASE_SCOPE_MATRIX.md#L1-L25](../docs/RELEASE_SCOPE_MATRIX.md#L1-L25)
+  - [tests/joomla-publication.php#L1-L30](../tests/joomla-publication.php#L1-L30)
+- `LIFE-03/criterion_02` — Le transizioni sono controllate lato server anche tramite richieste dirette. I servizi applicano controlli server-side per operazioni protette selezionate; non è attestata la negazione tramite richieste dirette per ogni transizione di lifecycle del perimetro.
+  - [component/administrator/src/Application/ManualEnrollmentService.php#L1-L40](../component/administrator/src/Application/ManualEnrollmentService.php#L1-L40)
+  - [tests/manual-enrollment-http.py#L1-L30](../tests/manual-enrollment-http.py#L1-L30)
+  - [docs/RELEASE_SCOPE_MATRIX.md#L1-L25](../docs/RELEASE_SCOPE_MATRIX.md#L1-L25)
+- `LIFE-09/criterion_01` — Le condizioni di accesso core restano coerenti durante le transizioni di lifecycle. I controlli di accesso sono ricontrollati in diversi passaggi di lifecycle e fruizione; non è dimostrata la coerenza di tutte le condizioni d'accesso durante ogni transizione core.
+  - [plugins/privacy/jdlearn/src/Extension/Jdlearn.php#L1-L30](../plugins/privacy/jdlearn/src/Extension/Jdlearn.php#L1-L30)
+  - [docs/LEARNING.md#L35-L41](../docs/LEARNING.md#L35-L41)
+  - [docs/RELEASE_SCOPE_MATRIX.md#L1-L25](../docs/RELEASE_SCOPE_MATRIX.md#L1-L25)
+- `LIFE-09/criterion_02` — Le operazioni negate non modificano dati né autorizzazioni. Sono presenti test che verificano richieste negate senza mutare progressi e iscrizioni in scenari specifici; la prova per tutte le operazioni negate e autorizzazioni non è completa.
+  - [tests/joomla-learning.php#L223-L234](../tests/joomla-learning.php#L223-L234)
+  - [tests/joomla-manual-enrollment.php#L1-L30](../tests/joomla-manual-enrollment.php#L1-L30)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `LIFE-09/criterion_03` — Le eccezioni e i limiti core sono riconciliati con RELEASE_SCOPE_MATRIX.md. I limiti delle transizioni core sono documentati in più guide e nella matrice di release, ma la riconciliazione di tutte le eccezioni richieste non è stata chiusa.
+  - [docs/RELEASE_SCOPE_MATRIX.md#L1-L25](../docs/RELEASE_SCOPE_MATRIX.md#L1-L25)
+  - [docs/PUBLICATION.md#L27-L54](../docs/PUBLICATION.md#L27-L54)
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
+- `EDGE-02/criterion_01` — Anteprima e consultazione. L'anteprima editoriale e la modalità di consultazione hanno gate e test mirati; il criterio complessivo richiede la verifica di ogni vista e assenza di effetti persistenti in tutti i contenuti previsti.
+  - [docs/PUBLICATION.md#L27-L54](../docs/PUBLICATION.md#L27-L54)
+  - [tests/joomla-publication.php#L203-L211](../tests/joomla-publication.php#L203-L211)
+  - [docs/QA_TESTBOOK.md#L579-L583](../docs/QA_TESTBOOK.md#L579-L583)
+- `EDGE-03/criterion_03` — alla creazione proporre la precedente attività obbligatoria come prerequisito. Il modello didattico supporta prerequisiti espliciti e il sequenziale costruisce dipendenze dall'ordine; l'evidenza esaminata non dimostra che l'interfaccia di creazione proponga sempre la precedente attività obbligatoria.
+  - [docs/LEARNING.md#L23-L23](../docs/LEARNING.md#L23-L23)
+  - [component/administrator/src/Application/CurriculumService.php#L1-L40](../component/administrator/src/Application/CurriculumService.php#L1-L40)
+  - [tests/joomla-curriculum-builder.php#L1-L30](../tests/joomla-curriculum-builder.php#L1-L30)
+- `EDGE-04/criterion_01` — Percorso aggregato. Il servizio aggrega progressi e accesso di un percorso, ma la verifica di tutte le varianti dell'esperienza aggregata e delle relative esclusioni 1.0.0 non è attestata integralmente.
+  - [component/administrator/src/Application/PathwayProgress.php#L1-L40](../component/administrator/src/Application/PathwayProgress.php#L1-L40)
+  - [component/administrator/src/Application/PathwayService.php#L1-L40](../component/administrator/src/Application/PathwayService.php#L1-L40)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `EDGE-08/criterion_01` — Concorrenza e disconnessione. La suite verifica retry immutabile e processi concorrenti in casi quiz selezionati; la gestione completa di disconnessione e tutte le combinazioni di concorrenza dell'intero core non è attestata.
+  - [docs/QUIZ_RUNTIME.md#L19-L23](../docs/QUIZ_RUNTIME.md#L19-L23)
+  - [tests/joomla-quiz-attempts.php#L120-L150](../tests/joomla-quiz-attempts.php#L120-L150)
+  - [tests/quiz-player.mjs#L7-L11](../tests/quiz-player.mjs#L7-L11)
 - `EDGE-12/criterion_05` — Token già emesso e buffer mantengono la validità residua. La guida documenta la vita residua del token e del buffer. Per confermare il comportamento effettivo dopo revoca servono misure su sessione Stream e browser reali.
   - [docs/CLOUDFLARE_STREAM.md#validità residua](../docs/CLOUDFLARE_STREAM.md)
   - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#min($now + $c](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
@@ -741,10 +852,54 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/tmpl/dashboard/_courses.php#COM_JLMS_DASHBOARD_HISTORICAL_COURSE](../component/site/tmpl/dashboard/_courses.php)
   - [tests/joomla-dashboard.php#inactive course keeps owner title](../tests/joomla-dashboard.php)
   - [tests/joomla-dashboard.php#inactive course blocks direct resume](../tests/joomla-dashboard.php)
+- `SCR-06/criterion_03` — per testi/documenti/audio, pulsante Segna come completata. Per le lezioni per cui il progresso manuale è applicabile, il template aula rende il POST protetto di completamento e il servizio aggiorna la stessa riga di progresso; il contratto esclude accredito al semplice accesso.
+  - [component/site/tmpl/classroom/default.php#L110-L121](../component/site/tmpl/classroom/default.php#L110-L121)
+  - [docs/LEARNING.md#L35-L35](../docs/LEARNING.md#L35-L35)
+  - [tests/learning-http.py#L62-L74](../tests/learning-http.py#L62-L74)
+- `SCR-06/criterion_05` — In sequenziale, clic su attività bloccata mostra prerequisito e link all'attività da completare. Una lezione bloccata per prerequisito mostra un avviso accessibile e collega direttamente l'attività richiesta; i test controllano il blocco prima di aprire o completare la lezione.
+  - [component/site/tmpl/classroom/default.php#L64-L67](../component/site/tmpl/classroom/default.php#L64-L67)
+  - [tests/joomla-learning.php#L154-L159](../tests/joomla-learning.php#L154-L159)
 - `SCR-06/criterion_06` — La ripresa preferisce l'ultima attività iniziata ancora disponibile, altrimenti la prima obbligatoria non completata. Il risolutore preferisce l’ultima lezione della versione assegnata quando disponibile e passa alla prima obbligatoria incompleta se la precedente non è valida. La fixture esercita entrambe le scelte e un puntatore a una versione diversa.
   - [component/administrator/src/Application/LearningService.php#public function resumeTarget](../component/administrator/src/Application/LearningService.php)
   - [tests/joomla-dashboard.php#resume keeps last valid activity](../tests/joomla-dashboard.php)
   - [tests/joomla-dashboard.php#cross-version last activity falls back](../tests/joomla-dashboard.php)
+- `SCR-06/criterion_07` — nessun reindirizzamento a contenuto revocato. La route di aula e le mutazioni ricontrollano l'accesso lato server; i test negano l'accesso diretto quando categoria, corso o iscrizione sono revocati e preservano il progresso.
+  - [tests/learning-http.py#L77-L87](../tests/learning-http.py#L77-L87)
+  - [tests/joomla-learning.php#L223-L234](../tests/joomla-learning.php#L223-L234)
+- `SCR-07/criterion_01` — Errori di salvataggio. Il quiz mostra errore o conflitto dopo un salvataggio non riuscito e ferma il tab nei rifiuti definitivi; i test verificano offline, replay e conflitto.
+  - [component/media/js/quiz.js#L43-L46](../component/media/js/quiz.js#L43-L46)
+  - [tests/quiz-player.mjs#L7-L11](../tests/quiz-player.mjs#L7-L11)
+  - [tests/quiz-player.mjs#L44-L50](../tests/quiz-player.mjs#L44-L50)
+- `SCR-07/criterion_02` — Mostrare Salvataggio…, Salvato alle…, Salvataggio non riuscito. Il client espone stati saving/saved/error e associa all'ultima conferma l'ora server localizzata; la suite JS controlla gli stati positivi e negativi.
+  - [component/media/js/quiz.js#L34-L43](../component/media/js/quiz.js#L34-L43)
+  - [component/media/js/quiz.js#L79-L91](../component/media/js/quiz.js#L79-L91)
+  - [tests/quiz-player.mjs#L34-L50](../tests/quiz-player.mjs#L34-L50)
+- `SCR-07/criterion_04` — Non mostrare come persistenti dati che il server non ha accettato. Il client aggiorna il baseline solo dopo una risposta server riuscita e conserva il form dopo un fallimento o una risposta obsoleta; i test verificano retry identico e conflitto senza sovrascrittura.
+  - [component/media/js/quiz.js#L79-L91](../component/media/js/quiz.js#L79-L91)
+  - [tests/quiz-player.mjs#L44-L50](../tests/quiz-player.mjs#L44-L50)
+- `SCR-07/criterion_05` — non conservare risposte o credenziali in archivi pubblici del browser. Le risposte del quiz sono inviate al server e mantenute nel DOM/baseline in memoria; il runtime documenta esplicitamente che non vengono salvate in localStorage.
+  - [component/media/js/quiz.js#L33-L43](../component/media/js/quiz.js#L33-L43)
+  - [docs/QUIZ_RUNTIME.md#L17-L17](../docs/QUIZ_RUNTIME.md#L17-L17)
+  - [tests/quiz-player.mjs#L34-L50](../tests/quiz-player.mjs#L34-L50)
+- `SCR-07/criterion_06` — Gli intervalli di salvataggio sono quelli PERF-05: l'ultimo segmento non confermato può dover essere rivisto dopo un arresto improvviso. L'autosalvataggio del quiz opera ogni 20 secondi e la documentazione chiarisce che l'ultimo segmento non confermato può andare perso in caso di chiusura improvvisa.
+  - [component/media/js/quiz.js#L127-L127](../component/media/js/quiz.js#L127-L127)
+  - [docs/QUIZ_RUNTIME.md#L17-L17](../docs/QUIZ_RUNTIME.md#L17-L17)
+- `SCR-08/criterion_01` — Contenuto esterno bloccato. La policy bloccata mostra uno stato locale e impedisce l'avvio del player esterno prima della condizione configurata; l'accesso HTTP al playback richiede un consenso esplicito.
+  - [component/media/js/video.js#L18-L21](../component/media/js/video.js#L18-L21)
+  - [tests/video-player.mjs#L15-L18](../tests/video-player.mjs#L15-L18)
+  - [tests/joomla-video.php#L116-L133](../tests/joomla-video.php#L116-L133)
+- `SCR-08/criterion_02` — Placeholder locale con provider, motivo e azione disponibile (preferenze di consenso, riprova o assistenza). L'aula usa messaggi locali di consenso, offline ed errore per descrivere lo stato e l'azione necessaria; il test controlla la schermata di consenso senza chiamate remote.
+  - [component/media/js/video.js#L18-L21](../component/media/js/video.js#L18-L21)
+  - [tests/video-player.mjs#L15-L18](../tests/video-player.mjs#L15-L18)
+  - [docs/VIDEO.md#L11-L13](../docs/VIDEO.md#L11-L13)
+- `SCR-08/criterion_03` — Nessun poster/SDK remoto prima delle condizioni configurate. L'SDK/iframe viene creato solo dopo consenso e grant di playback dal server; i test simulano il blocco prima di qualsiasi richiesta e verificano la revoca.
+  - [component/media/js/video.js#L160-L176](../component/media/js/video.js#L160-L176)
+  - [tests/video-player.mjs#L15-L18](../tests/video-player.mjs#L15-L18)
+  - [tests/video-player.mjs#L218-L218](../tests/video-player.mjs#L218-L218)
+- `SCR-08/criterion_04` — Un link esterno alternativo non deve aggirare una scelta di consenso o un controllo di accesso. Non viene offerto un link esterno alternativo che aggiri il controllo; l'avvio del provider passa dal gate del consenso e dal grant server con autorizzazione corrente.
+  - [component/media/js/video.js#L49-L49](../component/media/js/video.js#L49-L49)
+  - [component/media/js/video.js#L160-L176](../component/media/js/video.js#L160-L176)
+  - [tests/joomla-video.php#L133-L169](../tests/joomla-video.php#L133-L169)
 - `SCR-13/criterion_02` — Salvataggio e navigazione nel programma non perdono dati non confermati. L’editor controlla lo stato modificato prima di uscire e chiede conferma al browser. Il riordino non viene eseguito su un form con input pendente.
   - [component/media/js/curriculum.js#initUnsavedEditor](../component/media/js/curriculum.js)
   - [component/media/js/curriculum.js#Reordering reloads record revisions](../component/media/js/curriculum.js)
@@ -798,6 +953,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/CourseModel.php#Reversible, atomic bulk lifecycle transitions](../component/administrator/src/Model/CourseModel.php)
   - [tests/joomla-dashboard.php#inactive course keeps owner title](../tests/joomla-dashboard.php)
   - [tests/joomla-dashboard.php#archiving never changes certificate identity](../tests/joomla-dashboard.php)
+- `EDGE-01/criterion_01` — Catena di accesso. La catena di avvio e aula usa iscrizione Joomla, route protette e controllo server del servizio; il test HTTP apre l'aula autenticata e nega accesso non valido.
+  - [docs/LEARNING.md#L17-L23](../docs/LEARNING.md#L17-L23)
+  - [tests/learning-http.py#L62-L74](../tests/learning-http.py#L62-L74)
+  - [tests/joomla-learning.php#L174-L182](../tests/joomla-learning.php#L174-L182)
 - `EDGE-01/criterion_02` — Verificare disponibilità di corso/versione, stato e accesso delle categorie applicabili, account, livello del corso, iscrizione didattica e prerequisiti. La catena del contesto aula verifica proprietà, account, livello, corso, categorie, snapshot di versione ed edizione. Prima di restituire contenuti valuta disponibilità e prerequisiti della lezione.
   - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/LearningService.php#public function classroom](../component/administrator/src/Application/LearningService.php)
@@ -812,6 +971,14 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `EDGE-01/criterion_05` — L'implementazione deve verificare esplicitamente le categorie ascendenti: il viewing access level non va confuso con l'ereditarietà dei permessi di modifica. La query delle categorie usa confini lft/rgt, stato, lingua e livelli autorizzati degli ascendenti. Il percorso editoriale usa capacità distinte sull’asset Joomla.
   - [component/administrator/src/Application/CatalogService.php#An unpublished/restricted ancestor](../component/administrator/src/Application/CatalogService.php)
   - [component/administrator/src/Application/CourseEditorAccess.php#function canEdit](../component/administrator/src/Application/CourseEditorAccess.php)
+- `EDGE-01/criterion_06` — Una voce di menu nascosta non protegge una risorsa. La route diretta dell'aula ricontrolla proprietario, permessi, stato e visibilità; i test negano accesso diretto dopo revoca, quindi la sola presenza o assenza di una voce menu non determina l'autorizzazione.
+  - [tests/learning-http.py#L66-L87](../tests/learning-http.py#L66-L87)
+  - [tests/joomla-learning.php#L223-L234](../tests/joomla-learning.php#L223-L234)
+  - [docs/LEARNING.md#L41-L41](../docs/LEARNING.md#L41-L41)
+- `EDGE-01/criterion_07` — un URL diretto applica gli stessi controlli del servizio. Le richieste dirette arrivano allo stesso servizio che rivalida account, iscrizione, corso e lezione, con test HTTP e service che negano route dopo revoca.
+  - [component/administrator/src/Application/LearningService.php#L120-L145](../component/administrator/src/Application/LearningService.php#L120-L145)
+  - [tests/learning-http.py#L77-L87](../tests/learning-http.py#L77-L87)
+  - [tests/joomla-learning.php#L223-L234](../tests/joomla-learning.php#L223-L234)
 - `EDGE-02/criterion_02` — Anteprime pubbliche solo per lezioni marcate e corso configurato. Il servizio richiede versione pubblica corrente, flag di corso, lezione testuale esplicitamente marcata e disponibilità valida.
   - [component/administrator/src/Application/CatalogService.php#public function publicLessonPreview](../component/administrator/src/Application/CatalogService.php)
   - [tests/joomla-publication.php#publicLessonPreview](../tests/joomla-publication.php)
@@ -831,9 +998,22 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `EDGE-02/criterion_07` — la modalità va dichiarata, altrimenti la pubblicazione senza obblighi è rifiutata. La pubblicazione rifiuta un corso senza attività obbligatorie a meno che le regole dichiarino la modalità consultazione. Rifiuta anche obblighi in consultazione.
   - [component/administrator/src/Application/PublicationService.php#(!$required && $rules['mode'] !== 'consultation')](../component/administrator/src/Application/PublicationService.php)
   - [component/administrator/src/Application/PublicationService.php#$rules['mode'] === 'consultation' && $required > 0](../component/administrator/src/Application/PublicationService.php)
+- `EDGE-03/criterion_01` — Sequenza e rilascio delle lezioni. Le lezioni supportano modalità sequenziale e finestre assolute/relative; i servizi determinano l'accesso e i test negano il completamento prima dell'apertura.
+  - [docs/LEARNING.md#L23-L23](../docs/LEARNING.md#L23-L23)
+  - [tests/joomla-learning.php#L154-L168](../tests/joomla-learning.php#L154-L168)
+- `EDGE-03/criterion_02` — In modalità sequenziale usare dipendenze dichiarate. In modalità sequenziale la pubblicazione congela i prerequisiti dichiarati e aula e percorsi protetti li applicano prima di mostrare contenuti.
+  - [docs/LEARNING.md#L23-L23](../docs/LEARNING.md#L23-L23)
+  - [tests/joomla-learning.php#L154-L168](../tests/joomla-learning.php#L154-L168)
+  - [component/administrator/src/Application/CurriculumService.php#L1-L40](../component/administrator/src/Application/CurriculumService.php#L1-L40)
 - `EDGE-03/criterion_04` — L'autore conferma la catena e il sistema impedisce cicli. Il servizio controlla tutti i nodi e rifiuta nuove dipendenze che creano cicli; pubblicazione e progressione ricontrollano le condizioni della catena.
   - [component/administrator/src/Application/CurriculumService.php#private function savePrerequisites](../component/administrator/src/Application/CurriculumService.php)
   - [component/administrator/src/Application/PublicationService.php#prerequisiteMap](../component/administrator/src/Application/PublicationService.php)
+- `EDGE-03/criterion_05` — In modalità libera sono comunque possibili prerequisiti espliciti, segnalati nella scheda. Le guide distinguono modalità libera e prerequisiti espliciti; la vista aula indica e collega l'attività che blocca l'apertura.
+  - [docs/LEARNING.md#L23-L23](../docs/LEARNING.md#L23-L23)
+  - [component/site/tmpl/classroom/default.php#L64-L67](../component/site/tmpl/classroom/default.php#L64-L67)
+- `EDGE-03/criterion_06` — Una lezione futura obbligatoria resta nel denominatore del progresso e non permette completamenti anticipati. Le lezioni future obbligatorie rimangono nella regola del progresso e il servizio nega il completamento anticipato; i test verificano entrambi gli invarianti.
+  - [docs/LEARNING.md#L35-L35](../docs/LEARNING.md#L35-L35)
+  - [tests/joomla-learning.php#L154-L168](../tests/joomla-learning.php#L154-L168)
 - `EDGE-03/criterion_07` — Scadenze di corso e lezioni non possono rendere irraggiungibile un requisito: validazione bloccante prima della pubblicazione. La pubblicazione verifica la raggiungibilità delle lezioni obbligatorie rispetto alla finestra di corso. Il servizio di iscrizione controlla inoltre la raggiungibilità nel contesto dell’edizione.
   - [component/administrator/src/Application/PublicationService.php#LessonAvailability::reachable](../component/administrator/src/Application/PublicationService.php)
   - [component/administrator/src/Application/LearningService.php#public function assertEnrollmentScheduleReachable](../component/administrator/src/Application/LearningService.php)
@@ -854,6 +1034,17 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `EDGE-04/criterion_07` — Un percorso senza corsi necessari non espone percentuale né completamento. Il riepilogo restituisce null con denominatore zero. Il layout nasconde la barra e mostra il messaggio per assenza di corsi applicabili.
   - [component/administrator/src/Application/PathwayProgress.php#$required > 0](../component/administrator/src/Application/PathwayProgress.php)
   - [component/site/tmpl/pathway/default.php#jlms-pathway-empty](../component/site/tmpl/pathway/default.php)
+- `EDGE-04/criterion_08` — Nessuna certificazione di percorso nel rilascio 1. Il perimetro della prima stabile esclude la certificazione di percorso; gli attestati inclusi sono di completamento per singolo corso e Credentials resta fase successiva.
+  - [docs/CERTIFICATES_1.0.0.md#L20-L22](../docs/CERTIFICATES_1.0.0.md#L20-L22)
+  - [docs/CREDENTIALS_IMPLEMENTATION_PLAN.md#L1-L10](../docs/CREDENTIALS_IMPLEMENTATION_PLAN.md#L1-L10)
+- `EDGE-04/criterion_09` — L'associazione non cambia gruppi, livelli o iscrizioni. Il collegamento a un percorso conserva identità e iscrizioni dei corsi; la specifica separa il percorso aggregato dai livelli e non assegna gruppi Joomla.
+  - [component/administrator/src/Application/PathwayService.php#L1-L40](../component/administrator/src/Application/PathwayService.php#L1-L40)
+  - [docs/CREDENTIALS_IMPLEMENTATION_PLAN.md#L1-L10](../docs/CREDENTIALS_IMPLEMENTATION_PLAN.md#L1-L10)
+  - [tests/joomla-smoke.php#L1-L30](../tests/joomla-smoke.php#L1-L30)
+- `EDGE-05/criterion_01` — Revoca durante quiz. Una revoca corrente blocca le nuove mutazioni del quiz senza ripristinare accesso dal replay; i test coprono richiesta HTTP e verifica del servizio.
+  - [docs/QUIZ_RUNTIME.md#L23-L23](../docs/QUIZ_RUNTIME.md#L23-L23)
+  - [tests/joomla-quiz-attempts.php#L150-L184](../tests/joomla-quiz-attempts.php#L150-L184)
+  - [tests/quiz-attempts-http.py#L1-L30](../tests/quiz-attempts-http.py#L1-L30)
 - `EDGE-05/criterion_02` — Alla perdita del livello o al blocco account, interrompere salvataggi/consegne e mostrare accesso non disponibile. Il server ricontrolla l’identità prima di modificare il tentativo. In caso di diniego il client blocca nuovi invii e svuota il payload pendente.
   - [component/administrator/src/Application/QuizAttemptService.php#public function mutate](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
