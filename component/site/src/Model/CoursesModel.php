@@ -28,7 +28,7 @@ class CoursesModel extends ListModel
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
         $defaultOrder = CatalogOptions::get('catalog_default_order');
         $order = CatalogOptions::enabled('catalog_show_order') ? ($filter['order'] ?? $defaultOrder) : $defaultOrder;
-        $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title'], true) ? $order : $defaultOrder);
+        $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title', 'duration'], true) ? $order : $defaultOrder);
         $tagId = $filter['tag_id'] ?? 0;
         $this->setState('filter.tag_id', max(0, is_scalar($tagId) ? (int) $tagId : 0));
         $difficulty = $filter['difficulty'] ?? '';
@@ -86,7 +86,14 @@ class CoursesModel extends ListModel
                 'over-120' => $query->where("$minutes > 120"),
             };
         }
-        return $query->order($this->getState('filter.order') === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
+        $order = (string) $this->getState('filter.order');
+        if ($order === 'duration') {
+            // Sort by the immutable PUBLISHED snapshot displayed on each card, not the editable draft.
+            // Unknown durations come last, and ID makes pagination deterministic.
+            $minutes = "CAST(JSON_UNQUOTE(JSON_EXTRACT(v.presentation_json, '$.details.estimated_minutes')) AS UNSIGNED)";
+            return $query->order("($minutes IS NULL) ASC, $minutes ASC, c.id ASC");
+        }
+        return $query->order($order === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
     }
 
     public function getCategoryChoice(): int
