@@ -12,6 +12,7 @@ final class HtmlView extends BaseHtmlView
 {
     public array $items = [];
     public array $cardTeachers = [];
+    public array $cardEnrollmentStates = [];
     public $pagination;
     public int $categoryId = 0;
     public string $search = '';
@@ -42,6 +43,7 @@ public string $difficulty = '';
         $this->showSummary = CatalogOptions::enabled('catalog_show_summary');
         $this->items = $this->get('Items');
         $this->cardTeachers = $this->getModel()->getCardTeachers($this->items);
+        $this->cardEnrollmentStates = $this->getModel()->getCardEnrollmentStates($this->items);
         $this->pagination = $this->get('Pagination');
         $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
         $this->categoryChoice = $this->getModel()->getCategoryChoice();
