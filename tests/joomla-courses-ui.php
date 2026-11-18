@@ -153,9 +153,16 @@ $learningBefore=[
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
 ];
+$finderStates=[];
+$finderWitness=static function ($event) use (&$finderStates, $db, $ids): void {
+    if ($event->getContext() !== 'com_jlms.course' || (int)$event->getItem()->id !== (int)$ids['Alpha']) { return; }
+    $finderStates[]=$db->setQuery('SELECT state,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadAssoc();
+};
+$app->getDispatcher()->addListener('onFinderAfterSave',$finderWitness);
 listExpect($courseModel->changeStates([$ids['Alpha']],-2),'Published course can be moved to trash');
 listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===-2,'Course is trashed without deleting the record');
 listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadAssoc()==['admissions_open'=>0,'delivery_enabled'=>0],'Trash closes both gates for a previously open course');
+listExpect(count($finderStates)===1 && (int)$finderStates[0]['state']===-2 && (int)$finderStates[0]['admissions_open']===0 && (int)$finderStates[0]['delivery_enabled']===0,'Finder refresh after trash observes committed state and closed gates');
 listExpect(!$courseModel->purgeEmpty($ids['Alpha']),'Purge rejects trashed course with frozen teaching version');
 listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===1,'Denied purge leaves trashed course intact');
 $trashedList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);
@@ -168,6 +175,8 @@ listExpect(!in_array($ids['Alpha'],array_map(static fn($r):int=>(int)$r->id,$ord
 listExpect($courseModel->changeStates([$ids['Alpha']],0),'Restore from trash uses a separate action');
 listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===0,'Restored course is unpublished, never republished');
 listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadAssoc()==['admissions_open'=>0,'delivery_enabled'=>0],'Restore never opens gates closed by trash');
+listExpect(count($finderStates)===2 && (int)$finderStates[1]['state']===0 && (int)$finderStates[1]['admissions_open']===0 && (int)$finderStates[1]['delivery_enabled']===0,'Finder refresh after restore observes committed unpublished and gated state');
+$app->getDispatcher()->removeListener('onFinderAfterSave',$finderWitness);
 listExpect($db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===$originalVersion,'Restored course keeps its frozen version pointer');
 listExpect([
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$ids['Alpha'])->loadResult(),
