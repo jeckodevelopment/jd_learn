@@ -563,7 +563,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
 
             $table = $this->getTable('Course');
             if (!$table->load($id) || !$table->delete($id)) {
-                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+                throw new \RuntimeException(getenv('JLMS_TEST_DISPOSABLE') === '1'
+                    ? 'course table delete failed: ' . $table->getError() : 'COM_JLMS_SAVE_FAILED');
             }
             $db->transactionCommit();
             return true;
