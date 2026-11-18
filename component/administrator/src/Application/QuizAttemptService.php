@@ -227,13 +227,13 @@ final class QuizAttemptService
             $course=$this->db->setQuery($q)->loadObject();
             $actor=new User((int)$e->user_id);
             $name=trim((string)$actor->name);
-            (new \\Jlms\\Component\\Jlms\\Administrator\\Infrastructure\\MailQueue($this->db))->enqueue(
+            (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
                 $courseId,hash('sha256','course.completed:'.$enrollment),'com_jlms.course.completed',
                 (string)($actor->getParam('language','')?:$course->language),(string)$actor->email,$name,
                 ['USER_FULLNAME'=>$name,'COURSE_TITLE'=>(string)$course->title,
                     'COMPLETION_DATE'=>$finished,
-                    'DASHBOARD_URL'=>\\Joomla\\CMS\\Uri\\Uri::root().'index.php?option=com_jlms&view=dashboard',
-                    'SITE_NAME'=>(string)\\Joomla\\CMS\\Factory::getApplication()->get('sitename')]
+                    'DASHBOARD_URL'=>\Joomla\CMS\Uri\Uri::root().'index.php?option=com_jlms&view=dashboard',
+                    'SITE_NAME'=>(string)\Joomla\CMS\Factory::getApplication()->get('sitename')]
             );
             (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment,(int)$e->course_version_id,$finished);
         }
