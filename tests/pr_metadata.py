@@ -19,7 +19,8 @@ CAT-01 / language_available
 - [x] Report e riepiloghi generati.
 ## Collaudo manuale Joomla
 Stato: In attesa
-Casi da provare:\n- Accesso consentito e negato secondo i permessi previsti; riferire l’esito in seguito.
+Casi da provare:
+- Accesso consentito e negato secondo i permessi previsti; riferire l’esito in seguito.
 ## Comportamenti da testare
 - La CI convalida il registro e non accredita l’accettazione manuale.
 ## Controlli automatici
