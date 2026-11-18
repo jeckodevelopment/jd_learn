@@ -73,6 +73,10 @@ La vista di dettaglio di un percorso comunica esplicitamente che l'erogazione di
 
 Cestinazione e ripristino dei corsi eseguiti con aggiornamento diretto sul modello notificano il plugin Finder dopo il commit tramite evento Joomla `onFinderAfterSave` e snapshot persistito del corso. Il plugin Finder applica il filtro di indicizzazione dei soli corsi pubblicati; l'eventuale errore di refresh non altera il successo dell'operazione editoriale. Il test Joomla verifica gli eventi dopo cestinazione e ripristino, con ammissioni ed erogazione chiuse. Collaudo end-to-end Smart Search, categoria, cache e SEO resta pendente.
 
+### LCM-05 — Finder dopo Archive/Restore del workflow (0.60.8)
+
+Le transizioni Joomla di archiviazione e ripristino passano da `PublicationService::transition()`: oltre agli eventi eventualmente emessi dal workflow prima del commit, il servizio invia una notifica Finder con lo stato già persistito, così l'indice possa escludere il corso archiviato e riconsiderare quello ripristinato solo secondo i propri filtri. I gate `admissions_open` e `delivery_enabled` restano chiusi al ripristino. Il refresh non è parte della transazione: il suo fallimento viene registrato e non annulla il workflow. Test Joomla su eventi e campi salvati; collaudo E2E Finder/SEO ancora pendente.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.
