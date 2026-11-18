@@ -141,8 +141,8 @@ final class CourseCommunicationService
     /** Test delivery is restricted to the authorized actor; roster addresses are never accepted. */
     public function test(User $identity, int $courseId, string $subject, string $body, string $mutationId, array $template = []): void
     {
-        if (!preg_match('/\\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\\z/iD', $mutationId)) {
-            throw new \\RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        if (!preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/iD', $mutationId)) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $actor = $this->authorized($identity, $courseId);
         $subject = trim($subject); $body = trim($body);
