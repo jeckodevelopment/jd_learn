@@ -14,6 +14,14 @@ Le tre dimensioni sono indipendenti:
 
 I criteri MAIL, DOC e SEC sono valutati con prudenza: il collegamento a PR integrate non prova da solo ogni criterio. Le verifiche specifiche restano necessarie e l'avanzamento si aggiorna solo quando una modifica implementativa giustifica un incremento della macroarea. La PR #464 ha aggiornato di 2 punti l'area email grazie ai producer di contesto approvati, senza attribuire accettazione Joomla/SMTP. In particolare il requisito MAIL-03 (nuove lezioni/cambi didattici rilevanti) non ha ancora una PR implementativa specifica identificata.
 
+## Indicatori distinti nel riepilogo release
+
+Il [riepilogo progetto/release](RELEASE_DASHBOARD.md) pubblica due dati indipendenti, rigenerati dal registro e verificati da `tools/functional_audit.py --check`:
+
+- **Sviluppo documentato (minimo confermato)**: media a peso uguale per requisito della frazione di criteri con stato `implemented` e riferimenti verificabili. I criteri `missing`, `unverifiable` e `unassessed` non contribuiscono al numeratore; quindi il dato è un limite inferiore documentato, non un’affermazione che ogni elemento restante sia assente dal codice.
+- **Collaudo manuale Joomla**: requisiti con accettazione `Parziale`, `Superata` o `Fallita` divisi per requisiti in scope. È copertura di requisiti con esito registrato; il numero di superati integralmente è esposto a parte. `Non eseguita` resta nel denominatore, senza bloccare la registrazione futura degli esiti manuali.
+- La percentuale funzionale globale rigorosa continua a non essere pubblicata finché restano criteri non verificabili. La verifica CI non aggiorna mai l’accettazione manuale.
+
 ## Manutenzione obbligatoria per ogni PR
 
 1. **Prima del merge**, ogni PR che modifica codice applicativo, plugin, librerie, manifest o packaging deve aggiornare il CSV e aggiungere il **numero effettivo della PR** nella colonna `PR implementazione` delle righe coinvolte. Il numero va inserito una sola volta, separato da `;`, senza `#` o URL.

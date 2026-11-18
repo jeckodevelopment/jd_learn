@@ -15,9 +15,9 @@ spec.loader.exec_module(module)
 class FunctionalProgressTests(unittest.TestCase):
     def setUp(self):
         self.rows = [
-            {"Requisito": "A", "Perimetro 1.0.0": "1.0.0"},
-            {"Requisito": "B", "Perimetro 1.0.0": "Misto"},
-            {"Requisito": "C", "Perimetro 1.0.0": "Fase 2"},
+            {"Requisito": "A", "Perimetro 1.0.0": "1.0.0", "Accettazione Joomla": "Parziale"},
+            {"Requisito": "B", "Perimetro 1.0.0": "Misto", "Accettazione Joomla": "Non eseguita"},
+            {"Requisito": "C", "Perimetro 1.0.0": "Fase 2", "Accettazione Joomla": "Superata"},
         ]
         self.criteria = {"requirements": {
             "A": [
@@ -62,8 +62,17 @@ class FunctionalProgressTests(unittest.TestCase):
     def test_equal_requirement_weights_and_missing_criterion(self):
         output = module.calculate(self.rows, self.criteria)
         self.assertEqual(output["functional_implementation_percent"], 25.0)
+        self.assertEqual(output["development_evidence_floor_percent"], 25.0)
+        self.assertEqual(output["manual_acceptance"]["coverage_percent"], 50.0)
+        self.assertEqual(output["manual_acceptance"]["requirements_partial"], 1)
+        self.assertEqual(output["manual_acceptance"]["requirements_passed"], 0)
         self.assertEqual(output["criteria_by_requirement"]["A"]["missing_criteria"], 1)
         self.assertNotIn("C", output["criteria_by_requirement"])
+
+    def test_manual_acceptance_is_validated(self):
+        self.rows[0]["Accettazione Joomla"] = "Auto superata"
+        with self.assertRaisesRegex(ValueError, "Invalid Joomla acceptance state"):
+            module.calculate(self.rows, self.criteria)
 
     def test_no_evidence_cannot_be_marked_implemented(self):
         self.criteria["requirements"]["A"][0]["evidence"] = []

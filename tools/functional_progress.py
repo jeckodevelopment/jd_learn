@@ -40,6 +40,18 @@ def calculate(rows, criteria):
             "provisional_fraction": round(done / len(units), 6),
             "complete_audit": unknown == 0,
         }
+    # Evidence floor: equal weight per in-scope requirement; unassessed and
+    # unverifiable criteria contribute zero and remain explicitly visible.
+    development_floor = round(100 * sum(v["provisional_fraction"] for v in audited.values()) / len(included), 2)
+    acceptance_states = {"Non eseguita", "Parziale", "Superata", "Fallita"}
+    acceptance_counts = {state: 0 for state in acceptance_states}
+    for requirement_id, row in included.items():
+        state = row.get("Accettazione Joomla", "").strip()
+        if state not in acceptance_states:
+            raise ValueError("Invalid Joomla acceptance state for " + requirement_id + ": " + state)
+        acceptance_counts[state] += 1
+    acceptance_started = acceptance_counts["Parziale"] + acceptance_counts["Superata"] + acceptance_counts["Fallita"]
+
     all_audited = len(audited) == len(included) and all(v["complete_audit"] for v in audited.values())
     resolved = all_audited and not any(v["unverifiable_criteria"] for v in audited.values())
     # Equal weight per requirement, not per technical test. A global percentage
@@ -52,6 +64,17 @@ def calculate(rows, criteria):
         "fully_reviewed_requirements": sum(v["complete_audit"] for v in audited.values()),
         "not_yet_audited_requirements": len(included) - len(audited),
         "functional_implementation_percent": overall,
+        "development_evidence_floor_percent": development_floor,
+        "development_evidence_floor_policy": "equal_requirement_weight; unassessed and unverifiable criteria count as zero",
+        "manual_acceptance": {
+            "requirements_with_recorded_result": acceptance_started,
+            "requirements_not_run": acceptance_counts["Non eseguita"],
+            "requirements_partial": acceptance_counts["Parziale"],
+            "requirements_passed": acceptance_counts["Superata"],
+            "requirements_failed": acceptance_counts["Fallita"],
+            "coverage_percent": round(100 * acceptance_started / len(included), 2),
+            "fully_accepted_percent": round(100 * acceptance_counts["Superata"] / len(included), 2),
+        },
         "progress_status": "complete" if resolved else "not_yet_measurable",
         "criteria_by_requirement": audited,
         "note": "Provisional criterion fractions are NOT a global score; tests and manual acceptance are separate axes.",
