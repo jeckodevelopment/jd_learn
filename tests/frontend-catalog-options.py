@@ -123,3 +123,8 @@ assert "->whereIn('e.course_id', $courseIds)" in dash
 assert "->getAuthorisedViewLevels()" in dash
 assert "$this->cards($identity, $uiLanguage, $rows ?: [])" in dash
 assert "if (!isset($states[$id]))" in dash
+
+assert "getStoreId($id = '')" in model
+assert "getIdentity()->id" in model
+dash = (root / "component/administrator/src/Application/DashboardService.php").read_text()
+assert "->clear('order')->order('e.id DESC')" in dash
