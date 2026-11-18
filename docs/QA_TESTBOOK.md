@@ -1,3 +1,14 @@
+## QUI-02 — cestino conservativo banca domande (PR in verifica, 18/11/2026)
+
+1. Come amministratore con `core.edit.state`, scegliere **Cestina** su una domanda non utilizzata: sparisce dall'elenco normale e compare con stato `Cestinata` nel filtro dedicato, mantenendo ID, revisioni e permessi.
+2. Dal filtro Cestinate selezionare **Ripristina**: ritorna **Non pubblicata**, senza pubblicazione automatica; le revisioni storiche e l'asset restano invariati.
+3. Ripetere con una domanda già referenziata da quiz/tentativi: è possibile cestinare e ripristinare senza eliminare gli snapshot. La cancellazione definitiva resta bloccata se esistono dipendenze.
+4. Verificare che **Elimina** compaia solo nel cestino per domande non in uso e che l'eliminazione non comprometta revisioni di altre domande.
+5. Collaudare POST privi di token CSRF, utente privo di `core.edit.state`, check-out di altro autore, doppio invio Cestina/Ripristina, filtro per categorie/lingue e modifica tentata di una domanda cestinata: nessuna modifica non autorizzata.
+6. Confermare che una domanda ripristinata rimanga bozza anche se originariamente pubblicata; ripubblicazione solo con azione esplicita e relativi permessi.
+
+Test CI Joomla: `tests/joomla-quiz-authoring.php`. Accettazione manuale Joomla non ancora eseguita.
+
 ## STA-02 — durata quiz e finestra didattica (PR #648 integrata, 18/11/2026)
 
 1. Su un corso con quiz a tempo di 60 secondi e un'iscrizione in scadenza tra 30 secondi, verificare che il frontend non offra l'avvio (`can_start=false`). Una richiesta diretta di avvio deve ricevere HTTP 403, senza nuova riga di tentativo o consumo del limite.
