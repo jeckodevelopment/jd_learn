@@ -1,3 +1,13 @@
+## SCR-01 — azione disponibile nelle schede del catalogo (18/11/2026)
+
+1. Catalogo pubblico: ogni scheda mostra **Esamina il corso**; il titolo e l'azione rimandano allo stesso corso, senza creare iscrizioni/progressi. Verificare link in griglia ed elenco, mouse e tastiera.
+2. Un corso pubblicato con ammissioni/erogazione attive, modalità auto, mostra **Iscrizione automatica disponibile**; quello con approvazione mostra **Iscrizione soggetta ad approvazione**. La successiva pagina dettaglio deve applicare ACL, autenticazione e validazioni reali.
+3. Corso con ammissioni chiuse o erogazione sospesa: niente promessa di modalità disponibile; resta il link informativo alla scheda. Lo stesso vale per modalità esplicita o non riconosciuta.
+4. Confrontare guest, utente privo di accesso, utente autorizzato e già iscritto: non deve apparire sulla card un'azione di iscrizione diretta né un falso stato individuale; la pagina corso resta autoritativa.
+5. Confermare nessun dato privato nella card, testi IT/EN, CSS responsive, navigazione tastiera e compatibilità con filtri/paginazione.
+
+**Automazione:** `tests/frontend-catalog-options.py` e CI. **Collaudo manuale Joomla:** in attesa. SCR-01/card ancora parziale per lo stato effettivo dell'iscrizione e i docenti per scheda.
+
 ## SCR-01 — ordinamento del catalogo per durata (18/11/2026)
 
 1. Pubblicare corsi di 15, 45 e 120 minuti e uno senza durata. Ordinare per **Durata (crescente)**: 15, 45, 120, durata sconosciuta in fondo; ripetere su più pagine con durata uguale per verificare stabilità.

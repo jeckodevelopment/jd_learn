@@ -81,6 +81,21 @@ assert "courseQuery($actor, $language, $scopeCategoryId, false)" in service
 assert "<?php if ($this->showCover) : ?>" in template
 assert "<?php if ($this->showSummary" in template
 assert "CoursePresentation::fromSnapshot" in template
+assert 'class="jlms-course-card__action"' in template
+assert "COM_JLMS_CATALOG_VIEW_COURSE" in template
+assert "href=\"<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>\"" in template
+assert "COM_JLMS_CATALOG_APPROVAL_REQUIRED" in template and "COM_JLMS_CATALOG_AUTO_ENROLLMENT" in template
+assert "COM_JLMS_CATALOG_AUTO_ENROLLMENT" in template
+assert "COM_JLMS_CATALOG_APPROVAL_REQUIRED" in template
+assert "item->admissions_open === 1" in template
+assert "item->delivery_enabled === 1" in template
+assert "['auto', 'approval']" in template
+assert "jlms-course-card__action:focus-visible" not in template  # focus style inherited from #jlms-courses a
+for language in ("it-IT", "en-GB"):
+    ini = (root / "component/site/language" / language / "com_jlms.ini").read_text()
+    for key in ("COM_JLMS_CATALOG_VIEW_COURSE", "COM_JLMS_CATALOG_AUTO_ENROLLMENT", "COM_JLMS_CATALOG_APPROVAL_REQUIRED"):
+        assert key + "=" in ini
+
 assert 'class="jlms-card jlms-course-card"' in template
 assert "container-name: jlms-catalog" in css
 assert ".jlms-course-grid--list" in css

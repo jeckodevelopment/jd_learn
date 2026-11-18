@@ -76,6 +76,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
     <?php if ($this->showSummary && trim((string) $item->summary) !== '') : ?>
      <p class="jlms-course-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr((string) $item->summary, 0, 300)) ?></p>
     <?php endif; ?>
+    <?php if ((int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
+     <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval' ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
+    <?php endif; ?>
     <?php if ($duration > 0 || $difficultyKey !== '') : ?>
      <p class="jlms-course-card__meta">
       <?php if ($duration > 0) : ?><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', $duration) ?><?php endif; ?>
@@ -83,6 +86,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
       <?php if ($difficultyKey !== '') : ?><?= Text::_($difficultyKey) ?><?php endif; ?>
      </p>
     <?php endif; ?>
+    <a class="jlms-course-card__action" href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_CATALOG_VIEW_COURSE') ?></a>
    </div>
   </article>
  <?php endforeach; ?>
