@@ -215,8 +215,20 @@
       {
         "id": "protected_metadata",
         "label": "Assenza informazioni riservate nelle combinazioni complete dei filtri",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/CoursesModel.php",
+          "component/administrator/src/Application/CatalogService.php",
+          "tests/http-smoke.py"
+        ],
+        "review": {
+          "reason": "La query pubblica del catalogo seleziona soltanto i campi di presentazione pubblica della versione pubblicata; il modello mantiene filtri e risultati nel servizio catalogo autorizzato. I test HTTP esercitano il catalogo e i suoi filtri.",
+          "references": [
+            "component/site/src/Model/CoursesModel.php#Only public presentation fields from the published course version.",
+            "component/administrator/src/Application/CatalogService.php#private function courseQuery",
+            "tests/http-smoke.py#Public catalog title/summary search and title ordering did not apply"
+          ]
+        }
       }
     ],
     "CAT-02": [
@@ -349,8 +361,20 @@
       {
         "id": "robots_security",
         "label": "Esclusione sistematica di contenuti personali/protetti dall'indicizzazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/site/src/View/Course/HtmlView.php",
+          "plugins/finder/jlms/src/Extension/Jlms.php",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "La vista corso imposta noindex/nofollow per i contenuti non accessibili e il plugin Finder ha controlli di stato/accesso. Il criterio richiede però l’esclusione sistematica di ogni contenuto personale o protetto da indicizzazione: il repository non contiene una verifica end-to-end dell’intero insieme di rotte e motori/installazioni Joomla.",
+          "references": [
+            "component/site/src/View/Course/HtmlView.php#noindex, nofollow",
+            "plugins/finder/jlms/src/Extension/Jlms.php#public function onFinderChangeState",
+            "docs/LEARNING.md#noindex/nofollow"
+          ]
+        }
       },
       {
         "id": "seo_combinations",
@@ -418,8 +442,19 @@
       {
         "id": "corner_cases",
         "label": "Recupero completo degli input e regole avanzate su ogni errore editoriale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-course-presentation.php",
+          "docs/IMPLEMENTATION_GAPS.md"
+        ],
+        "review": {
+          "reason": "Il modello e i test rifiutano input non validi, modifiche non autorizzate e revisioni obsolete in alcuni form. Il criterio estende il recupero completo dei dati inseriti e le regole avanzate a ogni errore editoriale; manca una prova che copra tutti i form, i rami di errore e la ripresentazione dei dati dopo il fallimento.",
+          "references": [
+            "tests/joomla-course-presentation.php#Invalid presentation rejected",
+            "tests/joomla-course-presentation.php#Stale revision cannot overwrite presentation",
+            "docs/IMPLEMENTATION_GAPS.md#R-03"
+          ]
+        }
       }
     ],
     "AUT-02": [
@@ -500,8 +535,18 @@
       {
         "id": "subtitle_provider",
         "label": "Avvisi completi per sottotitoli e provider senza tracciamento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Domain/PublicationReadiness.php",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "La readiness avvisa quando manca la trascrizione editoriale locale. Il codice dichiara esplicitamente che tale controllo non accerta caption o tracce dei provider remoti; l’esito completo per ciascun provider e le relative combinazioni di tracciamento richiede verifica ulteriore.",
+          "references": [
+            "component/administrator/src/Domain/PublicationReadiness.php#Editorial transcripts are optional accessibility aids.",
+            "docs/VIDEO.md#non espongono qui un elenco interrogabile"
+          ]
+        }
       }
     ],
     "AUT-04": [
@@ -535,14 +580,38 @@
       {
         "id": "enrollment_mapping",
         "label": "Migrazione iscritti solo esplicita con equivalenze",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-publication-impact.php",
+          "docs/PUBLICATION.md"
+        ],
+        "review": {
+          "reason": "La pubblicazione di una nuova versione richiede una revisione esplicita dell’impatto e il codice modella le differenze didattiche. Le prove disponibili non coprono l’intera matrice di equivalenze e assegnazioni degli iscritti durante migrazione, inclusi i casi limite con progressi e quiz aperti.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#public function updateImpact",
+            "tests/joomla-publication-impact.php#Existing module and quiz definition changes are recognised without exposing questions",
+            "docs/PUBLICATION.md#nessuna conferma implicita di aggiornamenti"
+          ]
+        }
       },
       {
         "id": "historical_integrity",
         "label": "Tutela risultati e attestati in ogni variante di ripristino",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-publication.php",
+          "tests/joomla-dashboard.php",
+          "docs/LIFECYCLE_1.0.0_APPROVED.md"
+        ],
+        "review": {
+          "reason": "I test verificano che le modifiche editoriali non riscrivano lo snapshot congelato e che parte dello storico didattico sopravviva agli aggiornamenti. Non coprono tutte le varianti di ripristino richieste, soprattutto l’interazione completa tra attestati, backup e migrazioni.",
+          "references": [
+            "tests/joomla-publication.php#later editorial field changes do not rewrite the frozen course snapshot",
+            "tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade",
+            "docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)"
+          ]
+        }
       }
     ],
     "AUT-05": [
@@ -605,8 +674,20 @@
       {
         "id": "edge_authorization",
         "label": "Combinazioni complete di vincoli, ruolo e iscrizioni in sospeso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "docs/LEARNING.md",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "L’ammissione manuale rivalida la disponibilità editoriale e la didattica ricontrolla utente, livello, iscrizione, edizione e accesso. Le fixture non esauriscono tutte le combinazioni di vincoli, ruolo e richieste pending descritte dal criterio; le richieste approval hanno un flusso distinto.",
+          "references": [
+            "component/administrator/src/Application/ManualEnrollmentService.php#Administrative assignment does not grant viewing rights",
+            "docs/LEARNING.md#richieste/approvazioni restano da implementare",
+            "tests/joomla-learning.php#edition capacity excludes additional enrollment"
+          ]
+        }
       }
     ],
     "ISC-02": [
@@ -631,8 +712,21 @@
       {
         "id": "state_combinations",
         "label": "Tutte le transizioni e gli stati con scadenza e annullamento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentStateService.php",
+          "tests/joomla-enrollment-state.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "Il servizio limita le transizioni a active/suspended/cancelled con preview, conferma, revisione e audit. Le fixture verificano cancellazione idempotente, divieto di riattivare cancellati, blocco sui completati/quiz aperti e conservazione dello storico. Le scadenze di accesso sono distinte dallo stato e testate separatamente.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentStateService.php#public function apply",
+            "tests/joomla-enrollment-state.php#valid cancellation preview",
+            "tests/joomla-enrollment-state.php#completed enrollment cannot be cancelled",
+            "tests/joomla-dashboard.php#completed history remains visible after window expiry"
+          ]
+        }
       }
     ],
     "ISC-04": [
@@ -657,8 +751,19 @@
       {
         "id": "prerequisites",
         "label": "Prerequisiti e disponibilità lezione in tutte le combinazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "Ogni route protetta usa il controllo server-side dei prerequisiti e della modalità sequenziale nella versione assegnata; il blocco precede la restituzione del contenuto. La specifica corrente documenta inoltre le finestre assolute e relative e il rifiuto dell’ammissione quando una lezione obbligatoria non è raggiungibile.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#private function prerequisiteBlocker",
+            "docs/LEARNING.md#Dalla 0.41.35-dev i prerequisiti espliciti",
+            "component/administrator/src/Application/LearningService.php#schedule_blocked"
+          ]
+        }
       },
       {
         "id": "public_preview",
@@ -702,8 +807,19 @@
       {
         "id": "new_edition",
         "label": "Nuova edizione distinta dalla riattivazione in tutti i flussi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-publication.php",
+          "tests/joomla-enrollment-state.php"
+        ],
+        "review": {
+          "reason": "La pubblicazione crea un’edizione default una sola volta e la riattivazione non estende finestre scadute. Non risulta una prova completa di tutti i flussi che distinguono la creazione esplicita di una nuova edizione dalla semplice riattivazione, incluse assegnazioni, storico e rinnovi concorrenti.",
+          "references": [
+            "tests/joomla-publication.php#one default edition created",
+            "tests/joomla-publication.php#republish creates no duplicate edition",
+            "tests/joomla-enrollment-state.php#reactivation does not extend expired window"
+          ]
+        }
       }
     ],
     "ISC-06": [
@@ -739,14 +855,37 @@
       {
         "id": "revocation",
         "label": "Revoca in corso di sessione su token video/download/quiz",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php"
+        ],
+        "review": {
+          "reason": "Il contesto quiz e quello video rivalidano l’autorizzazione nelle operazioni protette e nei replay; le fixture coprono revoca di accesso in alcuni percorsi. Il criterio include token video, download e quiz durante sessione: non è disponibile una verifica completa e concorrente di tutti i tipi di risorsa.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function context",
+            "component/administrator/src/Application/VideoProgressService.php#private function context",
+            "tests/joomla-video.php#revoked access even on replay"
+          ]
+        }
       },
       {
         "id": "preserve_history",
         "label": "Storico e progressi conservati dopo revoca nelle casistiche previste",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-enrollment-state.php",
+          "docs/CLOUDFLARE_STREAM.md"
+        ],
+        "review": {
+          "reason": "La sospensione/cancellazione conserva progressi e dati di assegnazione e Cloudflare documenta la conservazione dello storico dopo revoca. La prova sistematica di ogni modalità di revoca e risorsa protetta, inclusi download, quiz e ripristino, resta incompleta.",
+          "references": [
+            "tests/joomla-enrollment-state.php#state history retained",
+            "docs/CLOUDFLARE_STREAM.md#storico e progressi non vengono cancellati",
+            "tests/joomla-enrollment-state.php#cancellation preserves prior learning and assignment data"
+          ]
+        }
       }
     ],
     "ISC-08": [
@@ -818,8 +957,20 @@
       {
         "id": "blocked_reason",
         "label": "Diagnostica completa di ogni blocco e azione proposta",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/DashboardService.php",
+          "tests/joomla-dashboard.php",
+          "docs/LEARNER_DASHBOARD.md"
+        ],
+        "review": {
+          "reason": "DashboardService calcola cause distinte di indisponibilità e il test copre sospensione, annullamento e finestra non aperta. Non è dimostrata la completezza di ogni causa/blocco né l’azione proposta e disponibile per ciascun ruolo e contesto.",
+          "references": [
+            "component/administrator/src/Application/DashboardService.php#$reason = 'available'",
+            "tests/joomla-dashboard.php#distinct classroom block reasons",
+            "docs/LEARNER_DASHBOARD.md#access"
+          ]
+        }
       }
     ],
     "STU-02": [
@@ -844,8 +995,20 @@
       {
         "id": "mobile",
         "label": "Indice mobile e adattamento senza scroll eccessivo in tutte le risoluzioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "docs/FRONTEND_CSS.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La guida descrive un indice comprimibile su smartphone e la disposizione responsive. Il criterio specifica tutte le risoluzioni e l’assenza di scroll eccessivo; servono verifiche visuali browser su viewport reali per accertare tali esiti.",
+          "references": [
+            "docs/LEARNING.md#Su smartphone l’indice del programma è comprimibile",
+            "docs/FRONTEND_CSS.md#mobile",
+            "docs/QA_TESTBOOK.md#viewport"
+          ]
+        }
       }
     ],
     "STU-03": [
@@ -870,8 +1033,19 @@
       {
         "id": "cross_device",
         "label": "Coerenza su dispositivo diverso e stati di errore salvataggio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNER_DASHBOARD.md",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "Lo stato didattico è persistito dal server e i client mostrano errori di salvataggio. La preferenza player è invece locale al browser; non è disponibile una prova end-to-end che confronti dispositivi diversi e le rispettive riconciliazioni di errori/retry.",
+          "references": [
+            "docs/LEARNER_DASHBOARD.md#Il titolo proviene dallo snapshot",
+            "docs/LEARNING.md#La preferenza velocità video",
+            "docs/LEARNING.md#La PR #187 usa una chiave di idempotenza"
+          ]
+        }
       }
     ],
     "STU-04": [
@@ -887,14 +1061,38 @@
       {
         "id": "optional",
         "label": "Lezioni opzionali escluse dal blocco salvo prerequisiti espliciti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-learning.php",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "Le lezioni opzionali non entrano nel conteggio del completamento richiesto; i prerequisiti espliciti restano una regola separata. La fixture Joomla verifica che un’attività opzionale non attribuisca credito richiesto.",
+          "references": [
+            "tests/joomla-learning.php#optional lesson gives no required credit",
+            "component/administrator/src/Application/LearningService.php#private function prerequisiteBlocker",
+            "docs/LEARNING.md#Percentuale = completate obbligatorie"
+          ]
+        }
       },
       {
         "id": "availability_dates",
         "label": "Date di disponibilità e lezioni irraggiungibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-learning.php",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "Le finestre assolute e il drip relativo sono valutati nel servizio didattico; la lezione non disponibile resta bloccata e il contenuto è omesso. La fixture verifica data futura, messaggio della data di rilascio e assenza del corpo.",
+          "references": [
+            "tests/joomla-learning.php#future required lesson displays its release time without exposing content",
+            "component/administrator/src/Application/LearningService.php#schedule_blocked",
+            "docs/LEARNING.md#Apertura assoluta e relativa si intersecano"
+          ]
+        }
       }
     ],
     "PRO-01": [
@@ -966,8 +1164,20 @@
       {
         "id": "approval_quiz",
         "label": "Interazioni di quiz e approvazioni in tutte le combinazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-enrollment-state.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Il flusso didattico tratta quiz e accesso sotto ACL correnti; le richieste e approvazioni hanno un servizio amministrativo dedicato. Il criterio richiede l’intera matrice combinata fra approvazione, accesso e interazione quiz; le prove presenti coprono i due rami separati, non tutte le loro interazioni.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#COM_JLMS_ENROLLMENT_MODE_PENDING",
+            "tests/joomla-enrollment-state.php#approval",
+            "tests/joomla-quiz-attempts.php#attempt from another quiz cannot be submitted through this lesson"
+          ]
+        }
       }
     ],
     "PRO-06": [
@@ -992,14 +1202,37 @@
       {
         "id": "cert_no_duplicates",
         "label": "Unicità attestati e completamenti fra endpoint concorrenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "review": {
+          "reason": "Le transizioni di completamento sono protette da chiave idempotente e i test verificano l’unicità della coda quiz; l’emissione attestati ha un vincolo/servizio proprio. Non è stata dimostrata la deduplicazione fra tutti gli endpoint di completamento e l’emissione concorrente dell’attestato nei diversi percorsi.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#course.completed:",
+            "component/administrator/src/Application/CertificateIssuer.php#certificate.available:",
+            "tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message"
+          ]
+        }
       },
       {
         "id": "multi_device",
         "label": "Concorrenza reale di dispositivi diversi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "La CI usa processi concorrenti e il server serializza gli aggiornamenti per iscrizione. Il criterio chiede coerenza su dispositivi reali diversi e stati d’errore del browser; la concorrenza dei processi simulati non sostituisce quel collaudo multipiattaforma.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#due processi concorrenti",
+            "docs/LEARNING.md#La stessa lezione completata da più schede conta una volta",
+            "docs/LEARNING.md#funzionamento offline"
+          ]
+        }
       }
     ],
     "LES-01": [
@@ -1033,8 +1266,19 @@
       {
         "id": "versioned_full_scope",
         "label": "Combinazioni complete con allegati e versioni assegnate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseVersionCopy.php",
+          "tests/joomla-duplication.php"
+        ],
+        "review": {
+          "reason": "La copia di una versione associa gli allegati al nuovo identificativo di versione e rimappa quelli collegati alle lezioni copiate; i test di duplicazione verificano la parità degli allegati e il mancato trasferimento dei dati di apprendimento.",
+          "references": [
+            "component/administrator/src/Application/CourseVersionCopy.php#$attachments = array_filter($this->rows",
+            "tests/joomla-duplication.php#Copied attachments reuse immutable assets with new links",
+            "tests/joomla-duplication.php#Course duplication never copies or modifies learning data"
+          ]
+        }
       }
     ],
     "LES-02": [
@@ -1050,14 +1294,38 @@
       {
         "id": "arbitrary_embeds",
         "label": "Blocco script e iframe arbitrari in tutti i contesti di editor",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-course-presentation.php",
+          "tests/joomla-learning.php",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "I test dimostrano la rimozione di script, iframe, immagini di tracciamento e attributi attivi dalla presentazione corso e dal corpo lezione. Il criterio copre tutti i contesti dell’editor, incluse le estensioni/contenuti Joomla aggiuntivi; manca una verifica completa di tali ingressi e delle configurazioni installate.",
+          "references": [
+            "tests/joomla-course-presentation.php#Active markup, tracking images and unsafe attributes removed even for super user",
+            "tests/joomla-learning.php#delivery strips active markup",
+            "docs/VIDEO.md#Non inserire credenziali nelle sorgenti"
+          ]
+        }
       },
       {
         "id": "external_credentials",
         "label": "Nessuna credenziale trasmessa ai link esterni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/CLOUDFLARE_STREAM.md",
+          "tests/video-http.py"
+        ],
+        "review": {
+          "reason": "La documentazione vieta credenziali nelle sorgenti e il playback Cloudflare tiene il segreto API lato server. Non risulta una scansione completa di tutti i tipi di link esterni e di tutte le superfici editoriali per provare l’assenza di credenziali incorporate.",
+          "references": [
+            "docs/VIDEO.md#Non inserire credenziali nelle sorgenti",
+            "docs/CLOUDFLARE_STREAM.md#La credenziale amministrativa",
+            "tests/video-http.py#Authorised consent POST returns safe playback descriptor"
+          ]
+        }
       }
     ],
     "LES-03": [
@@ -1107,8 +1375,18 @@
       {
         "id": "capacity_policy",
         "label": "Validazione operativa dei limiti storage e CDN su ambienti reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/CLOUDFLARE_STREAM.md"
+        ],
+        "review": {
+          "reason": "Il codice applica limiti operativi in alcuni flussi e la documentazione esplicita limiti e prerequisiti del provider. La validazione di storage/CDN su hosting reali richiede un ambiente e configurazioni che le prove simulate del repository non attestano.",
+          "references": [
+            "docs/VIDEO.md#benchmark 300/500 studenti",
+            "docs/CLOUDFLARE_STREAM.md#Carichi elevati"
+          ]
+        }
       }
     ],
     "VID-01": [
@@ -1181,8 +1459,20 @@
       {
         "id": "previews_provider",
         "label": "Anteprima e diagnosi valide per tutti i provider/contesti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "tests/video-player.mjs",
+          "tests/joomla-video.php"
+        ],
+        "review": {
+          "reason": "Sono presenti adapter e test mock per le interazioni di playback e anteprima, ma la validità di preview e diagnosi nelle combinazioni provider/browser del criterio richiede prove con sorgenti reali e configurazioni Joomla effettive.",
+          "references": [
+            "docs/VIDEO.md#Le prove con video reali",
+            "tests/video-player.mjs#SDK attaches only after iframe is inserted into the DOM",
+            "tests/joomla-video.php#safe descriptor"
+          ]
+        }
       }
     ],
     "VID-03": [
@@ -1250,14 +1540,35 @@
       {
         "id": "credential_leaks",
         "label": "Assenza chiavi e token sensibili in browser, cache e log in tutte le varianti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md"
+        ],
+        "review": {
+          "reason": "Il descrittore non contiene la credenziale amministrativa e i token Cloudflare sono temporanei e visibili soltanto al discente autorizzato. L’assenza di fughe in cache/log su tutte le varianti e gli hosting non è dimostrata dalle fixture, che non usano credenziali reali né scansioni dei log del sito.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#La credenziale amministrativa",
+            "docs/CLOUDFLARE_STREAM.md#Nessuna risposta remota",
+            "docs/CLOUDFLARE_STREAM.md#Nessuna chiave reale o chiamata Cloudflare viene utilizzata in CI"
+          ]
+        }
       },
       {
         "id": "remote_posters",
         "label": "Consenso e protezione risorse remote correlate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "La configurazione attuale non emette poster remoti aggiuntivi in Cloudflare e applica consenso prima della creazione dell’iframe. Il criterio estende la protezione a tutte le risorse correlate e provider; manca la scansione browser reale delle richieste prima/dopo consenso e revoca.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#nessun poster remoto aggiuntivo",
+            "docs/VIDEO.md#Il consenso apre il player e la revoca lo rimuove",
+            "docs/VIDEO.md#Le prove con video reali"
+          ]
+        }
       }
     ],
     "VID-05": [
@@ -1310,8 +1621,19 @@
       {
         "id": "error_messages",
         "label": "Messaggi distinti per ogni errore provider o rete",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Sono documentati messaggi specifici per diversi errori Cloudflare e diagnosi distinte per YouTube. Il criterio richiede esiti distinti per ogni errore/provider/rete; i mock e le istruzioni non attestano ogni risposta reale di tutti e quattro i provider e i browser supportati.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#Messaggi distinti per configurazione/segreto assente",
+            "docs/VIDEO.md#errori CSP, SDK, referrer e non-incorporabilità sono distinti",
+            "docs/VIDEO.md#Le prove con video reali"
+          ]
+        }
       },
       {
         "id": "no_false_progress",
@@ -1362,8 +1684,19 @@
       {
         "id": "operational_setup",
         "label": "Validazione pratica dei permessi e credenziali tecniche provider",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "La guida Cloudflare elenca permessi, credenziali e prerequisiti, ma il criterio richiede la validazione pratica dei permessi e delle credenziali tecniche dei provider. Non ci sono prove con account reali e impostazioni host/provider effettive.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#Configurazione",
+            "docs/CLOUDFLARE_STREAM.md#Nessuna chiave reale o chiamata Cloudflare viene utilizzata in CI",
+            "docs/VIDEO.md#richiedono ancora un ambiente di collaudo"
+          ]
+        }
       }
     ],
     "VID-08": [
@@ -1388,8 +1721,20 @@
       {
         "id": "equivalence",
         "label": "Tutte le equivalenze di risorsa impediscono il riuso improprio dei progressi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/joomla-video.php",
+          "tests/video-http.py"
+        ],
+        "review": {
+          "reason": "Il servizio lega la sessione video a un fingerprint della sorgente e i test coprono replay e cambi di revisione. Non è documentata la matrice completa delle equivalenze fra tutte le varianti di risorsa/provider e non riuso dei progressi.",
+          "references": [
+            "component/administrator/src/Application/VideoProgressService.php#private static function fingerprint",
+            "tests/joomla-video.php#cross-tab interval union completes exactly",
+            "tests/video-http.py#HTTP replay is idempotent"
+          ]
+        }
       }
     ],
     "MAT-01": [
@@ -1675,18 +2020,16 @@
       {
         "id": "coverage",
         "label": "Copertura completa dei tipi evento, preferenze e localizzazioni",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Application/LearningService.php",
-          "component/administrator/src/Application/VideoProgressService.php",
-          "component/administrator/src/Application/QuizAttemptService.php"
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "tests/joomla-quiz-attempts.php"
         ],
         "review": {
-          "reason": "Il completamento da lezione o video accoda l’evento course.completed. Il ramo quiz aggiorna lo stato e invoca l’emissione dell’attestato, ma non accoda l’equivalente evento di completamento.",
+          "reason": "PR #643 aggiunge l’accodamento di com_jlms.course.completed alla prima transizione di completamento quiz con la chiave enrollment-scoped condivisa con lezione/video. La fixture Joomla verifica che venga accodato un solo messaggio. SMTP reale e accettazione manuale restano fuori da questa classificazione implementativa.",
           "references": [
-            "component/administrator/src/Application/LearningService.php#'course.completed:'",
-            "component/administrator/src/Application/VideoProgressService.php#'course.completed:'",
-            "component/administrator/src/Application/QuizAttemptService.php#'course.completed:'"
+            "component/administrator/src/Application/QuizAttemptService.php#'course.completed:'",
+            "tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message"
           ]
         }
       },
@@ -2016,18 +2359,18 @@
       {
         "id": "event_matrix",
         "label": "Copertura di tutte le transizioni e deduplicazione",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Application/QuizAttemptService.php",
-          "component/administrator/src/Application/LearningService.php",
-          "component/administrator/src/Application/CertificateIssuer.php"
+          "tests/joomla-quiz-attempts.php",
+          "component/administrator/src/Application/LearningService.php"
         ],
         "review": {
-          "reason": "La conclusione da quiz non invia l’evento di completamento corso che viene generato dai flussi lezione e video. Il caso di attestato è una notifica distinta e condizionata.",
+          "reason": "Il ramo quiz ora produce l’evento di completamento corso in modo idempotente nella stessa transazione del progresso; il test Joomla controlla un solo evento dopo il quiz conclusivo. L’invio SMTP effettivo resta da accettare separatamente.",
           "references": [
-            "component/administrator/src/Application/QuizAttemptService.php#'course.completed:'",
-            "component/administrator/src/Application/LearningService.php#'course.completed:'",
-            "component/administrator/src/Application/CertificateIssuer.php#certificate.available:"
+            "component/administrator/src/Application/QuizAttemptService.php#course.completed:",
+            "tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message",
+            "component/administrator/src/Application/LearningService.php#course.completed:"
           ]
         }
       }

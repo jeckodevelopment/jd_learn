@@ -57,7 +57,9 @@ def apply_decisions(inventory, decisions):
         update = {"status": decision["status"], "evidence": paths,
                   "review": {"reason": decision["reason"], "references": decision["references"]}}
         if unit["status"] != "unassessed" and any(unit.get(k) != v for k, v in update.items()):
-            raise ValueError(f"Decision conflicts with a previously reviewed criterion: {key}")
+            expected_status = decision.get("supersedes_status")
+            if expected_status != unit["status"]:
+                raise ValueError(f"Decision conflicts with a previously reviewed criterion: {key}")
         unit.update(update)
 
 
