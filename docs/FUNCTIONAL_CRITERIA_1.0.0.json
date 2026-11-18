@@ -5377,7 +5377,7 @@
           "component/site/tmpl/courses/default.php"
         ],
         "review": {
-          "reason": "La card espone titolo, categoria e, se configurati, riepilogo, durata e difficoltà. Offre il link alla scheda ma non proietta l’azione didattica disponibile per l’utente.",
+          "reason": "La card espone ora un'azione primaria esplicita verso la scheda corso e segnala la modalità di iscrizione quando ammissioni ed erogazione sono attive; restano non proiettati lo stato individuale del discente e i docenti associati, quindi il criterio rimane parziale e il collaudo Joomla è pendente.",
           "references": [
             "component/site/tmpl/courses/default.php#jlms-course-card__title",
             "component/site/tmpl/courses/default.php#jlms-course-card__meta"
