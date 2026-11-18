@@ -2,10 +2,10 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **255**.
-- Mancanti con lacuna accertata: **10**.
-- Esaminati con esito non verificabile: **2**.
-- Da esaminare: **490**.
+- Implementati: **292**.
+- Mancanti con lacuna accertata: **11**.
+- Esaminati con esito non verificabile: **14**.
+- Da esaminare: **440**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -44,6 +44,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/PathwayService.php#hasPersonalProgress](../component/administrator/src/Application/PathwayService.php)
   - [component/administrator/src/Application/PathwayService.php#not_enrolled](../component/administrator/src/Application/PathwayService.php)
   - [component/administrator/src/Application/PathwayProgress.php#public static function summarize](../component/administrator/src/Application/PathwayProgress.php)
+- `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
+  - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
+  - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
 - `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.
   - [component/administrator/src/Model/CourseModel.php#public function purgeEmpty](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList](../component/administrator/src/View/Courses/HtmlView.php)
@@ -53,6 +56,47 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 - `LCM-03/external_references` — Audit dipendenze storiche esterne non coperte dai vincoli interni. La purga del percorso controlla le relazioni rappresentate dal modello. Un audit dei riferimenti di estensioni esterne richiede l’inventario delle integrazioni e delle relative tabelle.
   - [component/administrator/src/Model/PathwayModel.php#public function purgeEmpty](../component/administrator/src/Model/PathwayModel.php)
+- `LES-03/public_storage` — Audit assenza di fallback pubblico per tutte le configurazioni hosting. Il percorso esterno rifiuta la radice pubblica. La modalità gestita usa un contenitore cifrato con un guard. Per escludere esposizioni in tutte le topologie supportate serve la verifica dell’hosting e dei proxy.
+  - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function root](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+  - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#reverse proxy misserves](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+- `VID-01/provider_parity` — Equivalenza delle capacità opzionali e attributi UI su tutti i provider reali. Il selettore deriva le opzioni dai valori dichiarati dal player. La fixture verifica velocità e tracce con sorgenti simulate. La disponibilità effettiva varia per sorgente e va rilevata sui quattro provider reali.
+  - [component/media/js/video.js#configurePlaybackSpeed](../component/media/js/video.js)
+  - [tests/video-player.mjs#dynamic playback speed and caption tracks](../tests/video-player.mjs)
+  - [docs/VIDEO.md#La velocità è disponibile](../docs/VIDEO.md)
+- `VID-03/browser_matrix` — Comportamento iOS Safari, Android Chrome e browser desktop reali. Le fixture usano sostituti degli SDK e dell’elemento media, senza decodifica nativa. Manca un esito per la matrice iOS Safari, Android Chrome e browser desktop con media reali.
+  - [tests/video-player.mjs#Stream SDK double](../tests/video-player.mjs)
+  - [tests/video-player.mjs#no browser decoder](../tests/video-player.mjs)
+- `VID-05/token_expiry` — Tempo residuo e configurazione durata token tracciati e collaudati. Manifest e provider definiscono durata e anticipo configurabili, e l’endpoint riporta la scadenza. Il test di rinnovo è simulato. Resta da verificare la diagnosi e il tempo residuo in una sessione reale.
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#token_ttl_seconds](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+  - [component/administrator/src/Application/VideoProgressService.php#public function renew](../component/administrator/src/Application/VideoProgressService.php)
+  - [tests/video-player.mjs#cloudflare_client_renew_checks](../tests/video-player.mjs)
+- `VID-06/cmp_integration` — Verifica con gestore consensi reale e anteprima. Il controller browser risponde al segnale di cambio consenso e la fixture copre revoca mentre gli SDK sono in inizializzazione. La matrice di anteprima e revoca con una CMP effettiva richiede un collaudo dedicato.
+  - [component/media/js/video.js#jlms:consent-changed](../component/media/js/video.js)
+  - [tests/video-player.mjs#A revoked consent must also settle](../tests/video-player.mjs)
+  - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video e integrazione con la CMP](../docs/PRIVACY_COOKIES.md)
+- `MAT-03/hosting_limits` — Limiti effettivi su hosting differenti. I limiti vengono applicati durante staging e upload. Le soglie effettive di web server, proxy e PHP devono essere misurate su hosting differenti.
+  - [component/administrator/src/Application/MaterialService.php#UPLOAD_ERR_INI_SIZE](../component/administrator/src/Application/MaterialService.php)
+  - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#public function limit](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+- `PRI-03/consent_matrix` — Consenso rifiutato/non disponibile su provider e browser reali. Il player verifica consenso prima della richiesta e il test simula lo stato negato e la revoca. Non c’è qui una prova di ciascuna combinazione su browser e provider reali.
+  - [component/media/js/video.js#if (!this.allowed())](../component/media/js/video.js)
+  - [tests/video-player.mjs#A revoked consent must also settle](../tests/video-player.mjs)
+- `STU-05/provider_parity` — Persistenza e comportamento opzioni su ogni provider e dispositivo. Le preferenze sono conservate nello storage locale del browser. I test verificano persistenza e player privi di supporto con sostituti. Manca la prova di ripristino e comportamento sui dispositivi e provider reali.
+  - [component/media/js/video.js#jdlearn.video.speed.v1](../component/media/js/video.js)
+  - [component/media/js/video.js#jdlearn.video.language.v1](../component/media/js/video.js)
+  - [tests/video-player.mjs#player_preference_checks](../tests/video-player.mjs)
+- `PRO-04/overlap_devices` — Riprese sovrapposte, velocità e concorrenza su browser/provider reali. Il backend ha una prova su più sessioni di unione intervalli e conflitto di posizione. Non esercita due dispositivi reali con pause e velocità applicate dai provider.
+  - [tests/joomla-video.php#cross-tab interval union completes exactly](../tests/joomla-video.php)
+  - [tests/video-player.mjs#player_preference_checks](../tests/video-player.mjs)
+- `PERF-05/timing_matrix` — Frequenza salvataggi ed error recovery su browser/provider reali. Il frontend pianifica invii periodici, conserva un batch pendente e distingue errore temporaneo da rifiuto. Mancano misure sulla matrice dei browser e provider reali in perdita e recupero rete.
+  - [component/media/js/video.js#async flush](../component/media/js/video.js)
+  - [component/media/js/video.js#16000 + Math.random() * 8000](../component/media/js/video.js)
+- `EDGE-12/criterion_05` — Token già emesso e buffer mantengono la validità residua. La guida documenta la vita residua del token e del buffer. Per confermare il comportamento effettivo dopo revoca servono misure su sessione Stream e browser reali.
+  - [docs/CLOUDFLARE_STREAM.md#validità residua](../docs/CLOUDFLARE_STREAM.md)
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#min($now + $c](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+- `PVD-05/criterion_02` — Errori dei quattro provider non provocano completamenti falsi o perdita di progressi. La transazione video annulla le scritture fallite e la fixture verifica conflitti senza perdere la posizione salvata. Per generalizzare ai quattro provider servono le prove della matrice sugli errori esterni effettivi.
+  - [component/administrator/src/Application/VideoProgressService.php#transactionRollback](../component/administrator/src/Application/VideoProgressService.php)
+  - [tests/joomla-video.php#stale session keeps the newer resume](../tests/joomla-video.php)
+  - [docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#Risultato atteso](../docs/specifications/Matrice_collaudo_plugin_video_1.0.csv)
 - `LCM-01/criterion_01` — Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti. L’archiviazione chiude ammissioni e didattica. I contesti di aula, quiz e risorse risalgono all’iscrizione e al corso, ma resta da tracciare la copertura di tutti gli endpoint diretti compresi gli ingressi amministrativi e i retry.
   - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
   - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
@@ -70,6 +114,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/LearningService.php#public function videoContext](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/LearningService.php#public function audioLessonContext](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/LearningService.php#public function resourceContext](../component/administrator/src/Application/LearningService.php)
+- `MAT-04/lesson_preconditions` — Vincoli di lezione e prerequisiti in ogni percorso diretto. Il percorso diretto legge l’allegato e verifica la lezione proprietaria nel contesto dell’iscrizione. Il servizio didattico verifica disponibilità e prerequisiti prima di consegnare il contesto; la preview pubblica ha un percorso distinto.
+  - [component/administrator/src/Application/MaterialService.php#public function download](../component/administrator/src/Application/MaterialService.php)
+  - [component/administrator/src/Application/LearningService.php#public function resourceContext](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewDownload](../component/administrator/src/Application/MaterialService.php)
 - `REP-02/roster` — Elenco iscritti per corso con stato accesso e avanzamento. La query è limitata al corso scelto. Il layout mostra separatamente stato dell’iscrizione, stato didattico e percentuale quando definita. La fixture verifica righe di più iscritti ed esclusione di un altro corso.
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function query](../component/administrator/src/Application/EnrollmentRosterService.php)
   - [component/administrator/tmpl/enrollments/default.php#COM_JLMS_ROSTER_PROGRESS](../component/administrator/tmpl/enrollments/default.php)
@@ -83,6 +131,19 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function course](../component/administrator/src/Application/EnrollmentRosterService.php)
   - [tests/joomla-roster.php#direct course ID cannot bypass scope](../tests/joomla-roster.php)
   - [tests/joomla-roster.php#explicit course deny refreshes stale identity](../tests/joomla-roster.php)
+- `SCR-05/criterion_03` — Azioni Riprendi, Rivedi e Attestato rispettano le autorizzazioni. La card offre Riprendi o Rivedi per il solo stato disponibile. Il server ricontrolla proprietà e accesso corrente all’iscrizione. Nell’area attestati la lista e il download sono vincolati al proprietario.
+  - [component/site/tmpl/dashboard/_courses.php#$item['access'] === 'available'](../component/site/tmpl/dashboard/_courses.php)
+  - [component/administrator/src/Application/LearningService.php#public function resumeTarget](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/CertificateService.php#public function listForStudent](../component/administrator/src/Application/CertificateService.php)
+  - [tests/joomla-dashboard.php#foreign certificate download denied](../tests/joomla-dashboard.php)
+- `SCR-05/criterion_04` — Lo storico mantiene il corso non più accessibile senza rivelare materiali protetti. La vista storica mostra titolo e contatori senza materiale protetto. La fixture copre corso inattivo, conservazione dello storico e rifiuto di accesso didattico diretto.
+  - [component/site/tmpl/dashboard/_courses.php#COM_JLMS_DASHBOARD_HISTORICAL_COURSE](../component/site/tmpl/dashboard/_courses.php)
+  - [tests/joomla-dashboard.php#inactive course keeps owner title](../tests/joomla-dashboard.php)
+  - [tests/joomla-dashboard.php#inactive course blocks direct resume](../tests/joomla-dashboard.php)
+- `SCR-06/criterion_06` — La ripresa preferisce l'ultima attività iniziata ancora disponibile, altrimenti la prima obbligatoria non completata. Il risolutore preferisce l’ultima lezione della versione assegnata quando disponibile e passa alla prima obbligatoria incompleta se la precedente non è valida. La fixture esercita entrambe le scelte e un puntatore a una versione diversa.
+  - [component/administrator/src/Application/LearningService.php#public function resumeTarget](../component/administrator/src/Application/LearningService.php)
+  - [tests/joomla-dashboard.php#resume keeps last valid activity](../tests/joomla-dashboard.php)
+  - [tests/joomla-dashboard.php#cross-version last activity falls back](../tests/joomla-dashboard.php)
 - `SCR-14/criterion_01` — Roster essenziale per corso mostra stato e avanzamento dell'iscritto. La tabella visualizza stato di accesso e stato di avanzamento come campi distinti, usando il corso autorizzato come ambito della query.
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function query](../component/administrator/src/Application/EnrollmentRosterService.php)
   - [component/administrator/tmpl/enrollments/default.php#COM_JLMS_ROSTER_PROGRESS](../component/administrator/tmpl/enrollments/default.php)
@@ -106,6 +167,122 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/CourseModel.php#Remove only this item](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM](../component/administrator/language/it-IT/com_jlms.ini)
   - [tests/joomla-courses-ui.php#Confirmed purge removes only this course editorial revisions](../tests/joomla-courses-ui.php)
+- `EDGE-08/criterion_05` — Per il progresso video unire gli intervalli già fruiti. Il salvataggio unisce gli intervalli nuovi a quelli persistiti. La fixture Joomla verifica il completamento tramite contributi parziali da due sessioni.
+  - [component/administrator/src/Application/VideoProgressService.php#Coverage::merge](../component/administrator/src/Application/VideoProgressService.php)
+  - [tests/joomla-video.php#cross-tab interval union completes exactly](../tests/joomla-video.php)
+- `EDGE-08/criterion_06` — la ripresa usa l'ultima posizione confermata della sessione valida, non il massimo tempo mai raggiunto, per permettere ripassi. Il server usa la posizione dell’ultimo evento accettato. Una sessione con revisione superata non può sostituire la posizione salvata da un’altra sessione.
+  - [component/administrator/src/Application/VideoProgressService.php#$progress->resume_ms = $telemetry](../component/administrator/src/Application/VideoProgressService.php)
+  - [tests/joomla-video.php#stale session keeps the newer resume](../tests/joomla-video.php)
+- `EDGE-08/criterion_07` — Identificativi di evento unici e validazione del tempo plausibile impediscono conteggi duplicati o salti attribuiti come visione. Gli ID devono crescere all’interno della sessione. I campioni fuori dal budget temporale, discontinui o incompatibili con la velocità non producono un intervallo. Il batch ripetuto con stesso hash viene riconosciuto senza doppio accredito.
+  - [component/administrator/src/Domain/VideoTelemetry.php#last_event_id](../component/administrator/src/Domain/VideoTelemetry.php)
+  - [component/administrator/src/Domain/VideoTelemetry.php#$spent + $cost](../component/administrator/src/Domain/VideoTelemetry.php)
+  - [component/administrator/src/Application/VideoProgressService.php#last_batch_hash](../component/administrator/src/Application/VideoProgressService.php)
+- `EDGE-12/criterion_02` — Default Stream: token temporaneo 15 minuti, rinnovo anticipato con nuova verifica autorizzativa. Il provider usa 900 secondi per impostazione iniziale, calcola l’anticipo e il rinnovo torna attraverso il controllo corrente di accesso del componente.
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#token_ttl_seconds](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#renew_after_seconds](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+  - [component/administrator/src/Application/VideoProgressService.php#public function renew](../component/administrator/src/Application/VideoProgressService.php)
+- `EDGE-12/criterion_06` — non promettere invalidazione immediata. La guida dichiara esplicitamente la validità residua dopo revoca. Il percorso di rinnovo può negare nuove autorizzazioni e non promette di revocare lato provider il token già consegnato.
+  - [docs/CLOUDFLARE_STREAM.md#validità residua](../docs/CLOUDFLARE_STREAM.md)
+  - [component/administrator/src/Application/VideoProgressService.php#public function renew](../component/administrator/src/Application/VideoProgressService.php)
+- `EDGE-12/criterion_08` — Download disabilitato per default. La richiesta di firma imposta il download a false e il provider rifiuta una risposta che abilita il download.
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#'downloadable' => false](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#isset($claims['downloadable'])](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+- `DAT-01/criterion_02` — Verificare titolo vuoto, spazi, limite 255. Il controllo server normalizza gli spazi esterni, rifiuta titoli vuoti e misura la lunghezza in caratteri prima della scrittura. Il form imposta lo stesso limite.
+  - [component/administrator/src/Table/CourseTable.php#$this->title = trim](../component/administrator/src/Table/CourseTable.php)
+  - [component/administrator/forms/course.xml#name="title"](../component/administrator/forms/course.xml)
+- `DAT-01/criterion_03` — descrizione breve 500. Il modello rifiuta un riepilogo nuovo o modificato oltre 500 caratteri. La fixture accetta 500 caratteri Unicode e rifiuta 501 senza incremento della revisione.
+  - [component/administrator/src/Model/CourseModel.php#::strlen($summary) > 500](../component/administrator/src/Model/CourseModel.php)
+  - [tests/joomla-editor-access.php#500 Unicode characters accepted](../tests/joomla-editor-access.php)
+  - [tests/joomla-editor-access.php#501 characters rejected](../tests/joomla-editor-access.php)
+- `DAT-01/criterion_04` — durate positive. Il metodo didattico consente valore assente dove previsto, ma rifiuta durata dichiarata al di sotto di un secondo o oltre otto ore. Il valore stimato della presentazione usa la validazione di intero positivo.
+  - [component/administrator/src/Application/CurriculumService.php#public static function duration](../component/administrator/src/Application/CurriculumService.php)
+  - [component/administrator/src/Application/CoursePresentation.php#DecimalId::parse](../component/administrator/src/Application/CoursePresentation.php)
+- `DAT-01/criterion_05` — alias duplicato. Il controllo normalizza l’alias e cerca un altro record con lo stesso valore nella medesima categoria e lingua. Il test verifica anche il riuso in altra categoria.
+  - [component/administrator/src/Table/CourseTable.php#alias = :alias](../component/administrator/src/Table/CourseTable.php)
+  - [tests/joomla-editor-access.php#Duplicate normalized alias rejected](../tests/joomla-editor-access.php)
+- `DAT-01/criterion_06` — lingua/categoria/accesso inesistenti. Il controllo della tabella valida la lingua rispetto a Joomla, la categoria rispetto all’estensione e entrambi i livelli di accesso rispetto ai livelli esistenti.
+  - [component/administrator/src/Table/CourseTable.php#lang_code](../component/administrator/src/Table/CourseTable.php)
+  - [component/administrator/src/Table/CourseTable.php#published<>-2](../component/administrator/src/Table/CourseTable.php)
+  - [component/administrator/src/Table/CourseTable.php#['catalog_access', 'content_access']](../component/administrator/src/Table/CourseTable.php)
+- `DAT-01/criterion_07` — date invertite. La fusione del calendario valida separatamente le finestre editoriale e didattica e rifiuta date finali precedenti o uguali all’inizio.
+  - [component/administrator/src/Application/CourseSchedule.php#private static function validate](../component/administrator/src/Application/CourseSchedule.php)
+  - [component/administrator/src/Application/CourseSchedule.php#public static function merge](../component/administrator/src/Application/CourseSchedule.php)
+- `DAT-01/criterion_09` — Le descrizioni sono sanificate secondo configurazione Joomla. Il modello passa le descrizioni al filtro Joomla, poi applica la politica HTML della presentazione prima di serializzare.
+  - [component/administrator/src/Model/CourseModel.php#ComponentHelper::filterText](../component/administrator/src/Model/CourseModel.php)
+  - [component/administrator/src/Application/CoursePresentation.php#public static function merge](../component/administrator/src/Application/CoursePresentation.php)
+- `DAT-02/criterion_01` — Validare appartenenza univoca modulo/versione e lezione/modulo, ordine senza perdita di elementi, dipendenze disponibili e assenza di cicli. Il servizio vincola modulo e lezione alla bozza, impone che il riordino contenga tutti e soli gli ID attuali e rifiuta dipendenze fuori versione e cicli. La fruizione verifica i prerequisiti e la raggiungibilità temporale.
+  - [component/administrator/src/Application/CurriculumService.php#public function saveLesson](../component/administrator/src/Application/CurriculumService.php)
+  - [component/administrator/src/Application/CurriculumService.php#private function savePrerequisites](../component/administrator/src/Application/CurriculumService.php)
+  - [component/administrator/src/Application/CurriculumService.php#public function saveOrder](../component/administrator/src/Application/CurriculumService.php)
+  - [component/administrator/src/Application/LearningService.php#public function assertEnrollmentScheduleReachable](../component/administrator/src/Application/LearningService.php)
+- `DAT-02/criterion_02` — La duplicazione crea contenuti in bozza e nuovi ID, non iscrizioni, tentativi, attestati o diritti. La duplicazione crea nuovi ID per corso, versione, moduli e lezioni. La versione copiata torna in bozza. Il servizio copia struttura, definizioni quiz e allegati autorizzati, senza copiare tentativi, iscrizioni, attestati o regole ACL dell’asset di origine.
+  - [component/administrator/src/Model/CourseModel.php#public function duplicate](../component/administrator/src/Model/CourseModel.php)
+  - [component/administrator/src/Application/CourseVersionCopy.php#public function copy](../component/administrator/src/Application/CourseVersionCopy.php)
+  - [component/administrator/src/Application/CourseVersionCopy.php#private function nodes](../component/administrator/src/Application/CourseVersionCopy.php)
+- `DAT-04/criterion_02` — Validare percorsi, MIME e dimensioni upload dei materiali core. L’upload accetta soltanto file ricevuti da PHP. Lo storage verifica limite e tipo del file, rifiuta sorgenti non regolari o link e genera la chiave di storage indipendentemente dal nome in input.
+  - [component/administrator/src/Application/MaterialService.php#is_uploaded_file](../component/administrator/src/Application/MaterialService.php)
+  - [component/administrator/src/Infrastructure/ProtectedMaterialStorage.php#MaterialFilePolicy::inspect](../component/administrator/src/Infrastructure/ProtectedMaterialStorage.php)
+- `PVD-02/criterion_07` — Operazioni comuni: descrizione, capacita, normalizzazione/validazione sorgente, metadati, descrittore playback e asset frontend. L’interfaccia pubblica tipizzata dichiara tutte e sette le operazioni. La factory può restituire soltanto oggetti conformi con chiave e major coerenti.
+  - [libraries/jlms/src/Video/VideoProviderInterface.php#public function getDescriptor](../libraries/jlms/src/Video/VideoProviderInterface.php)
+  - [libraries/jlms/src/Video/VideoProviderInterface.php#public function getFrontendAdapterAsset](../libraries/jlms/src/Video/VideoProviderInterface.php)
+  - [libraries/jlms/src/Video/VideoProviderRegistry.php#instanceof VideoProviderInterface](../libraries/jlms/src/Video/VideoProviderRegistry.php)
+- `PVD-02/criterion_08` — Contratto dettagliato nell'allegato Servizi_endpoint_LMS_Joomla_1.0.md. L’allegato descrive registrazione, input, output e responsabilità delle sette operazioni, più il contratto browser e la distinzione fra token e segreti.
+  - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.2 Registrazione e contratto PHP](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+  - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player nel browser](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+- `PVD-03/criterion_01` — Player uniforme. Il player dell’aula riceve una sessione dal componente e carica l’adapter indicato. Il frontend gestisce montaggio e telemetria attraverso lo stesso ciclo di vita.
+  - [component/media/js/video.js#const grant = await this.request](../component/media/js/video.js)
+  - [component/media/js/video.js#const player = await adapter.create](../component/media/js/video.js)
+- `PVD-03/criterion_02` — Eventi player normalizzati e distruzione ordinata al cambio lezione/consenso. Il player inoltra gli eventi normalizzati all’unico gestore e distrugge le istanze in stop e durante i cambi di generazione. Consenso e uscita dalla pagina usano questo ciclo.
+  - [component/media/js/video.js#handleAdapterEvent](../component/media/js/video.js)
+  - [component/media/js/video.js#jlms:consent-changed](../component/media/js/video.js)
+  - [component/media/js/video.js#try { await player?.destroy()](../component/media/js/video.js)
+- `PVD-03/criterion_03` — Il nucleo mantiene le regole di copertura, salvataggio e completamento. Il servizio del componente aggrega gli intervalli, applica la soglia dello snapshot didattico e aggiorna lezioni e corso nella stessa transazione.
+  - [component/administrator/src/Application/VideoProgressService.php#VideoTelemetry::consume](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/VideoProgressService.php#Coverage::isComplete](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/VideoProgressService.php#newCourseCompletion](../component/administrator/src/Application/VideoProgressService.php)
+- `PVD-03/criterion_04` — L'adapter dichiara le capacita effettive della sorgente. L’interfaccia richiede capacità per sorgente. Il descrittore di riproduzione riporta quelle effettive e il servizio verifica entrambe le dichiarazioni per le lezioni tracciate.
+  - [libraries/jlms/src/Video/VideoProviderInterface.php#public function getCapabilities](../libraries/jlms/src/Video/VideoProviderInterface.php)
+  - [component/administrator/src/Application/VideoProgressService.php#$actual = $descriptor->capabilities](../component/administrator/src/Application/VideoProgressService.php)
+- `PVD-03/criterion_05` — una regola non supportata non puo essere pubblicata. La pubblicazione con tracciamento rifiuta provider non configurati o privi di posizione, durata o seek. La consultazione è trattata come modalità distinta.
+  - [component/administrator/src/Application/PublicationService.php#COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED](../component/administrator/src/Application/PublicationService.php)
+  - [component/administrator/src/Application/PublicationService.php#$capabilities = $provider->getCapabilities](../component/administrator/src/Application/PublicationService.php)
+- `PVD-03/criterion_06` — Nessuna chiamata remota a ogni evento di progresso. Gli eventi vengono accodati nel browser e inviati in batch. Il salvataggio valida il contesto e aggiorna la copertura localmente. La creazione remota del descrittore appartiene a playback e rinnovo.
+  - [component/media/js/video.js#this.queue.push(event)](../component/media/js/video.js)
+  - [component/administrator/src/Application/VideoProgressService.php#public function save](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/VideoProgressService.php#public function renew](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/VideoProgressService.php#Remote work is always outside](../component/administrator/src/Application/VideoProgressService.php)
+- `PVD-04/criterion_02` — AccessPolicyService verifica l'accesso prima del plugin. Il controllo di proprietà dell’iscrizione, accesso corrente, versione, finestra e prerequisiti precede la selezione e l’invocazione del provider.
+  - [component/administrator/src/Application/VideoProgressService.php#private function context](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/LearningService.php#public function videoContext](../component/administrator/src/Application/LearningService.php)
+  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+- `PVD-04/criterion_04` — Parametri API server separati dai token playback temporanei restituibili al browser. Il provider Stream risolve il riferimento al segreto sul server per l’header dell’API. Il descrittore browser contiene dominio, token temporaneo e opzioni player.
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#Bearer ](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+  - [plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php#$options =](../plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php)
+  - [plugins/jlmsvideo/cloudflarestream/src/Extension/Cloudflarestream.php#EnvironmentSecretProvider](../plugins/jlmsvideo/cloudflarestream/src/Extension/Cloudflarestream.php)
+- `PVD-05/criterion_01` — Provider disabilitato o non configurato produce errore controllato. Una chiave assente dal registro e un descrittore non configurato convergono entrambi in errore controllato di indisponibilità prima di creare la sessione.
+  - [libraries/jlms/src/Video/VideoProviderRegistry.php#PROVIDER_UNAVAILABLE](../libraries/jlms/src/Video/VideoProviderRegistry.php)
+  - [component/administrator/src/Application/VideoProgressService.php#private function context](../component/administrator/src/Application/VideoProgressService.php)
+- `PVD-06/criterion_02` — Progressi e completamento usano le interfacce comuni senza dipendenze dal provider. Il provider fornisce descrittore e capacità. Copertura, soglie ed esito di completamento usano telemetria e regole comuni nel servizio centrale.
+  - [libraries/jlms/src/Video/VideoProviderInterface.php#public function createPlaybackDescriptor](../libraries/jlms/src/Video/VideoProviderInterface.php)
+  - [component/administrator/src/Application/VideoProgressService.php#VideoTelemetry::consume](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/VideoProgressService.php#Coverage::isComplete](../component/administrator/src/Application/VideoProgressService.php)
+- `PVD-06/criterion_03` — Incompatibilità di versione o capacità vengono rifiutate in modo esplicito. Il registro rifiuta major incompatibili o factory incongrue. Il servizio rifiuta le capacità richieste mancanti sia prima sia dopo la creazione del descrittore.
+  - [libraries/jlms/src/Video/VideoProviderRegistry.php#PROVIDER_CONTRACT_MISMATCH](../libraries/jlms/src/Video/VideoProviderRegistry.php)
+  - [component/administrator/src/Application/VideoProgressService.php#$actual = $descriptor->capabilities](../component/administrator/src/Application/VideoProgressService.php)
+- `PBASE-01/criterion_04` — Tutti installati. Il manifest installa il gruppo con YouTube, Vimeo, Cloudflare Stream e HTML5. Lo smoke Joomla verifica la registrazione dei quattro elementi dopo l’installazione del pacchetto.
+  - [packages/pkg_jlms.xml#plg_jlmsvideo_youtube.zip](../packages/pkg_jlms.xml)
+  - [packages/pkg_jlms.xml#plg_jlmsvideo_html5.zip](../packages/pkg_jlms.xml)
+  - [tests/joomla-smoke.php#Four video providers were not registered](../tests/joomla-smoke.php)
+- `PBASE-03/criterion_02` — Il documento Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md contiene le schede e i dizionari dei parametri. Il documento dedica una sezione a ciascun provider e un dizionario dei parametri comuni e specifici a tutti e quattro.
+  - [docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#5. Plugin YouTube](../docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
+  - [docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#8. Plugin HTML5](../docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
+  - [docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#10. Dizionario dei parametri](../docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
+- `PBASE-03/criterion_03` — Servizi_endpoint_LMS_Joomla_1.0.md il contratto comune. L’allegato documenta il contratto comune, le responsabilità, le interfacce PHP e gli eventi del player.
+  - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.2 Registrazione e contratto PHP](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+  - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player nel browser](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+- `PBASE-04/criterion_02` — La matrice dedicata Matrice_collaudo_plugin_video_1.0.csv copre contratto comune e quattro provider. La matrice contiene scenari comuni e gruppi separati per YouTube, Vimeo, Cloudflare Stream e HTML5. Le colonne di esito richiedono build ed evidenza.
+  - [docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#PV-COMMON-01](../docs/specifications/Matrice_collaudo_plugin_video_1.0.csv)
+  - [docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#Plugin/gruppo,Funzionalita](../docs/specifications/Matrice_collaudo_plugin_video_1.0.csv)
 - `DOC-01/criterion_01` — Guida installazione descrive requisiti minimi Joomla, PHP e database. La sezione di installazione elenca Joomla, PHP, MySQL, MariaDB e motore/codifica richiesti.
   - [README.md#Requisiti documentati](../README.md)
 - `DOC-01/criterion_03` — Procedure di upgrade, backup e rollback documentate. Il README rimanda all’upgrade e la procedura di rilascio distingue la verifica operativa dell’aggiornamento dal ripristino dei siti tramite backup.
