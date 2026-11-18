@@ -134,6 +134,7 @@ def main():
     actions.add_argument("--collect", type=int, metavar="LIMIT", help="List candidates without classifying")
     actions.add_argument("--apply", type=Path, metavar="DECISIONS", help="Apply reviewed JSON decisions")
     actions.add_argument("--check", action="store_true", help="Validate the ledger and generated files")
+    actions.add_argument("--sync", action="store_true", help="Regenerate the audit report and CSV from the canonical criteria ledger")
     args = parser.parse_args()
     with REGISTER.open(encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
@@ -165,7 +166,8 @@ def main():
         if REPORT.read_text(encoding="utf-8") != report or matrix.encode(encoding) != original_matrix:
             raise ValueError("Functional audit report or matrix differs from the criteria ledger")
         return
-    CRITERIA.write_text(json.dumps(inventory, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    if args.apply:
+        CRITERIA.write_text(json.dumps(inventory, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     REGISTER.write_bytes(matrix.encode(encoding))
     REPORT.write_text(report, encoding="utf-8")
 
