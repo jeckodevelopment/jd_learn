@@ -267,3 +267,6 @@
 /* SCR-01: visible teacher references in catalogue cards. */
 #jlms-courses .jlms-course-card__teachers { margin: 0; font-size: .875rem; overflow-wrap: anywhere; }
 #jlms-courses .jlms-course-card__teachers a { display: inline-block; margin-inline-start: .35rem; }
+
+/* SCR-01 personalised catalogue indicator, no private data in public/guest cards. */
+#jlms-courses .jlms-course-card__learning-state { margin: 0; font-size: .875rem; font-weight: 600; }
