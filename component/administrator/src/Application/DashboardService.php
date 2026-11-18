@@ -78,7 +78,7 @@ final class DashboardService
         if (!$courseIds) { return []; }
         $courseIds = array_values(array_unique(array_filter(array_map('intval', $courseIds), static fn (int $id): bool => $id > 0)));
         if (!$courseIds || count($courseIds) > 50) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-        $query = $this->query($identity)->whereIn('e.course_id', $courseIds)->order('e.id DESC');
+        $query = $this->query($identity)->whereIn('e.course_id', $courseIds)->clear('order')->order('e.id DESC');
         // Dashboard cards already apply fresh owner, ACL, version and edition eligibility checks.
         $rows = $this->db->setQuery($query, 0, 50)->loadObjectList();
         $cards = $this->cards($identity, $uiLanguage, $rows ?: []);
