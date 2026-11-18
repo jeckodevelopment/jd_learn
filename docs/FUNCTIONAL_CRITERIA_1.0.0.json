@@ -1759,8 +1759,19 @@
       {
         "id": "pagination_limits",
         "label": "Paginazione e limiti reali upload in entrambi gli ambiti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Upload e paginazione hanno limiti server in ambiti documentati, ma non è attestata la verifica dei limiti reali in entrambi gli ambiti su hosting supportati e con file di confine.",
+          "references": [
+            "docs/MATERIALS.md#L3-L5",
+            "docs/MATERIALS.md#L23-L29",
+            "docs/QA_TESTBOOK.md#L1183-L1186"
+          ]
+        }
       }
     ],
     "MAT-02": [
@@ -1794,8 +1805,20 @@
       {
         "id": "public_preview_flags",
         "label": "Pubblicabilità esplicita coerente con tutte le versioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "tests/joomla-publication.php",
+          "tests/joomla-curriculum.php"
+        ],
+        "review": {
+          "reason": "Anteprima pubblica richiede flag espliciti di corso, lezione e allegato e i test verificano casi selezionati; la coerenza di ogni combinazione con tutte le versioni non è attestata.",
+          "references": [
+            "docs/MATERIALS.md#L15-L29",
+            "tests/joomla-publication.php#L203-L211",
+            "tests/joomla-curriculum.php#L121-L121"
+          ]
+        }
       }
     ],
     "MAT-03": [
@@ -7113,16 +7136,40 @@
       {
         "id": "criterion_08",
         "label": "Gli eventi client restano una stima, non una prova di identità o presenza",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/VIDEO.md",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/video-player.mjs"
+        ],
+        "review": {
+          "reason": "Il runtime tratta gli eventi player come segnali client e applica controlli server di sessione/progresso; non li usa come prova autonoma d'identità o presenza.",
+          "references": [
+            "docs/VIDEO.md#L43-L43",
+            "component/administrator/src/Application/VideoProgressService.php#L1-L25",
+            "tests/video-player.mjs#L1-L32"
+          ]
+        }
       }
     ],
     "EDGE-09": [
       {
         "id": "criterion_01",
         "label": "Corsi ritirati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/PUBLICATION.md",
+          "tests/joomla-learning.php",
+          "tests/learning-http.py"
+        ],
+        "review": {
+          "reason": "Il lifecycle del corso ritirato blocca l'aula e le mutazioni agli iscritti esistenti, preservando lo storico; test Joomla verificano negazione e invarianza dei progressi.",
+          "references": [
+            "docs/PUBLICATION.md#L27-L27",
+            "tests/joomla-learning.php#L223-L234",
+            "tests/learning-http.py#L77-L87"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -7226,8 +7273,20 @@
       {
         "id": "criterion_08",
         "label": "Ripristino dal cestino in bozza e controllo di tutte le dipendenze",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PUBLICATION.md",
+          "docs/QA_TESTBOOK.md",
+          "component/administrator/src/Application/PublicationService.php"
+        ],
+        "review": {
+          "reason": "Il ripristino di un corso può generare una bozza e sono documentati controlli di dipendenza, ma il criterio estende il recupero dal cestino a tutte le dipendenze e scenari; non è attestata la matrice completa.",
+          "references": [
+            "docs/PUBLICATION.md#L27-L27",
+            "docs/QA_TESTBOOK.md#L1013-L1013",
+            "component/administrator/src/Application/PublicationService.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_09",
@@ -7249,8 +7308,20 @@
       {
         "id": "criterion_01",
         "label": "Versioni e revisioni native",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PUBLICATION.md",
+          "component/administrator/src/Application/PublicationService.php",
+          "docs/REQUIREMENTS_CHANGES.md"
+        ],
+        "review": {
+          "reason": "Modelli e tabelle usano revisioni e versioni Joomla in flussi selezionati; non è attestato il supporto nativo e coerente a versioni/storico per tutte le entità del criterio.",
+          "references": [
+            "docs/PUBLICATION.md#L76-L84",
+            "component/administrator/src/Application/PublicationService.php#L1-L25",
+            "docs/REQUIREMENTS_CHANGES.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -7285,8 +7356,20 @@
       {
         "id": "criterion_04",
         "label": "Salvare o ripristinare titolo, presentazione e profilo docente aggiorna i dati correnti secondo ACL, senza cambiare la versione attiva o i risultati assegnati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PUBLICATION.md",
+          "tests/joomla-course-fields-public.php",
+          "docs/TEACHERS.md"
+        ],
+        "review": {
+          "reason": "Campi editoriali e profili docente sono salvati con ACL in flussi testati e le versioni pubblicate conservano snapshot; l'intera operazione di salvataggio/ripristino senza alterare ogni versione assegnata non è attestata.",
+          "references": [
+            "docs/PUBLICATION.md#L76-L84",
+            "tests/joomla-course-fields-public.php#L90-L110",
+            "docs/TEACHERS.md#L3-L9"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -7309,14 +7392,37 @@
       {
         "id": "criterion_06",
         "label": "I valori custom pertinenti alla fruizione sono acquisiti nello snapshot di pubblicazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "tests/joomla-course-fields-public.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "I campi custom pertinenti vengono acquisiti nello snapshot alla pubblicazione; i test verificano conservazione degli assegnamenti e dei valori correnti dopo upgrade.",
+          "references": [
+            "tests/joomla-course-fields-public.php#L90-L100",
+            "tests/joomla-course-fields-public.php#L127-L140",
+            "docs/QA_TESTBOOK.md#L554-L567"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "definizioni e campi decorativi correnti rimangono nel core",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/CoursePresentation.php",
+          "tests/joomla-course-presentation.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La presentazione corrente e i valori decorativi restano affidati a modelli e campi Joomla; non è provata la conservazione di definizioni e valori per ogni entità e variante del core.",
+          "references": [
+            "component/administrator/src/Application/CoursePresentation.php#L1-L25",
+            "tests/joomla-course-presentation.php#L110-L130",
+            "docs/QA_TESTBOOK.md#L554-L567"
+          ]
+        }
       },
       {
         "id": "criterion_08",
@@ -7339,16 +7445,40 @@
       {
         "id": "criterion_09",
         "label": "Gli URL storici rimangono autorizzati e non indicizzabili autonomamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CATEGORIES.md",
+          "plugins/finder/jlms/src/Extension/Jlms.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il Finder include solo schede promozionali pubbliche e i servizi verificano l'accesso corrente; l'autorizzazione di tutti gli URL storici e l'assenza di indicizzazione autonoma per tutti i percorsi non sono attestate integralmente.",
+          "references": [
+            "docs/CATEGORIES.md#L17-L17",
+            "plugins/finder/jlms/src/Extension/Jlms.php#L29-L77",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       }
     ],
     "EDGE-12": [
       {
         "id": "criterion_01",
         "label": "Protezione provider",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "tests/cloudflare.php"
+        ],
+        "review": {
+          "reason": "Provider e token temporanei sono sottoposti a controlli di autorizzazione in percorsi testati; la protezione completa di tutti i provider, host e richieste su ambienti reali non è conclusa.",
+          "references": [
+            "docs/VIDEO.md#L11-L19",
+            "component/administrator/src/Application/VideoProgressService.php#L1-L25",
+            "tests/cloudflare.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -7370,14 +7500,38 @@
       {
         "id": "criterion_03",
         "label": "durata configurabile e dichiarata in diagnostica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "docs/VIDEO.md",
+          "tests/cloudflare.php"
+        ],
+        "review": {
+          "reason": "Durate e policy sono configurate e mostrate in alcuni diagnostici; non è documentata una dichiarazione completa e coerente della durata in ogni provider e vista.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "docs/VIDEO.md#L19-L25",
+            "tests/cloudflare.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Non superare una scadenza didattica nota quando il modello di fruizione la rende vincolante",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "docs/VIDEO.md",
+          "tests/joomla-learning.php"
+        ],
+        "review": {
+          "reason": "Le scadenze didattiche e i timer quiz sono applicati lato server nei flussi corrispondenti; la compatibilità del limite su ogni modello/provider di fruizione non è attestata.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L21-L23",
+            "docs/VIDEO.md#L43-L53",
+            "tests/joomla-learning.php#L154-L168"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -7414,8 +7568,20 @@
       {
         "id": "criterion_07",
         "label": "Poster riservati non caricati da endpoint pubblici",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/HTML5_VIDEO.md",
+          "tests/joomla-video.php",
+          "tests/html5-http.py"
+        ],
+        "review": {
+          "reason": "I video HTML5 sono serviti da endpoint protetti con controllo di enrollment e storage privato; non sono esposti poster o file attraverso un URL pubblico dello storage.",
+          "references": [
+            "docs/HTML5_VIDEO.md#L15-L31",
+            "tests/joomla-video.php#L141-L169",
+            "tests/html5-http.py#L1-L30"
+          ]
+        }
       },
       {
         "id": "criterion_08",
@@ -7435,16 +7601,40 @@
       {
         "id": "criterion_09",
         "label": "Configurazione errata di dominio/privacy produce errore distinto, non ripiego a link pubblico o provider alternativo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/CLOUDFLARE_STREAM.md",
+          "tests/cloudflare.php"
+        ],
+        "review": {
+          "reason": "Configurazioni errate generano errori distinti e il player adotta controlli conservativi; la verifica di ogni errore di dominio/privacy senza alcun fallback su tutti i provider resta incompleta.",
+          "references": [
+            "docs/VIDEO.md#L23-L25",
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "tests/cloudflare.php#L1-L25"
+          ]
+        }
       }
     ],
     "EDGE-13": [
       {
         "id": "criterion_01",
         "label": "Iscrizione e identità",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/PREASSIGNMENT.md",
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "tests/joomla-preassignment.php"
+        ],
+        "review": {
+          "reason": "L'iscrizione è legata all'ID account Joomla e il servizio verifica identità e diritto corrente prima di ammettere o restituire i dati.",
+          "references": [
+            "docs/PREASSIGNMENT.md#L1-L25",
+            "component/administrator/src/Application/ManualEnrollmentService.php#L1-L25",
+            "tests/joomla-preassignment.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -7464,8 +7654,20 @@
       {
         "id": "criterion_03",
         "label": "Duplicazioni concorrenti restituiscono la stessa iscrizione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/PREASSIGNMENT.md",
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "tests/joomla-preassignment.php"
+        ],
+        "review": {
+          "reason": "L'ammissione serializza i duplicati concorrenti sul lock dell'edizione e riusa la stessa iscrizione invece di crearne una seconda; il test usa due processi sincronizzati.",
+          "references": [
+            "docs/PREASSIGNMENT.md#L1-L25",
+            "component/administrator/src/Application/ManualEnrollmentService.php#L1-L25",
+            "tests/joomla-preassignment.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -7487,28 +7689,76 @@
       {
         "id": "criterion_05",
         "label": "Il LMS non aggiunge gruppi commerciali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentStateService.php",
+          "docs/ENROLLMENT_ROSTER.md",
+          "docs/MANUAL_ENROLLMENT.md"
+        ],
+        "review": {
+          "reason": "I servizi di lifecycle operano sull'iscrizione e dichiarano di non assegnare gruppi Joomla; i test verificano lo stato del corso senza introdurre livelli commerciali.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentStateService.php#L1-L25",
+            "docs/ENROLLMENT_ROSTER.md#L7-L9",
+            "docs/MANUAL_ENROLLMENT.md#L3-L15"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Account ricreato con stessa email non eredita lo storico",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/ENROLLMENT_ROSTER.md",
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "L'identità storica è collegata all'ID utente Joomla, ma non è attestato un test completo che ricrei un account con stessa email e dimostri la non eredità in tutti i dati del rilascio.",
+          "references": [
+            "docs/ENROLLMENT_ROSTER.md#L7-L9",
+            "component/administrator/src/Application/ManualEnrollmentService.php#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "trasferimenti fra identità sono fuori perimetro e non avvengono tramite import",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PREASSIGNMENT.md",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/ENROLLMENT_ROSTER.md"
+        ],
+        "review": {
+          "reason": "Le iscrizioni manuali accettano account esistenti e non importano credenziali; un audit esaustivo di trasferimenti d'identità e di ogni possibile import core non è documentato.",
+          "references": [
+            "docs/PREASSIGNMENT.md#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L3-L15",
+            "docs/ENROLLMENT_ROSTER.md#L7-L9"
+          ]
+        }
       }
     ],
     "EDGE-14": [
       {
         "id": "criterion_01",
         "label": "Rimozione delle configurazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/script.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il pacchetto installa e aggiorna configurazioni note; la rimozione delle configurazioni in disinstallazione e la conservazione selettiva di ogni dato/configurazione non sono verificate su tutte le installazioni supportate.",
+          "references": [
+            "component/script.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -7529,34 +7779,94 @@
       {
         "id": "criterion_03",
         "label": "corso non fruibile con avviso amministrativo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/MATERIALS.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La fruizione viene bloccata quando i prerequisiti di corso/provider mancano in percorsi specifici; la presenza di un avviso amministrativo corretto in ogni stato non è dimostrata.",
+          "references": [
+            "docs/VIDEO.md#L11-L19",
+            "docs/MATERIALS.md#L3-L5",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Provider disabilitato non cancella i video né consente completamenti manuali impliciti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/QA_TESTBOOK.md",
+          "tests/joomla-video.php"
+        ],
+        "review": {
+          "reason": "Il codice non deve cancellare video remoti disabilitando un provider e il completamento dipende dal server; le combinazioni di disabilitazione, riattivazione e completamento non risultano testate integralmente.",
+          "references": [
+            "docs/VIDEO.md#L11-L13",
+            "docs/QA_TESTBOOK.md#L628-L644",
+            "tests/joomla-video.php#L116-L169"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Modello attestato usato non eliminabile senza conservare gli snapshot già emessi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CERTIFICATES_1.0.0.md",
+          "tests/joomla-dashboard.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Gli attestati emessi conservano snapshot e i template usati hanno controlli di riferimento; la negazione di eliminazione per tutti i modelli effettivamente referenziati non è provata attraverso ogni lifecycle.",
+          "references": [
+            "docs/CERTIFICATES_1.0.0.md#L61-L69",
+            "tests/joomla-dashboard.php#L178-L194",
+            "docs/QA_TESTBOOK.md#L1442-L1444"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Un aggiornamento del pacchetto conserva template email personalizzati, permessi, file di override e identificatori dei documenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MAIL_TEMPLATES.md",
+          "tests/joomla-course-fields-public.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Upgrade e conservazione dei template email sono documentati e testati per casi selezionati; il criterio include anche ACL, override e document identifiers e richiede una verifica completa su installazioni preesistenti.",
+          "references": [
+            "docs/MAIL_TEMPLATES.md#L372-L372",
+            "tests/joomla-course-fields-public.php#L90-L100",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17"
+          ]
+        }
       }
     ],
     "DAT-01": [
       {
         "id": "criterion_01",
         "label": "Dati editoriali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/AUTHORING.md",
+          "component/administrator/src/Application/CurriculumService.php",
+          "tests/run.php"
+        ],
+        "review": {
+          "reason": "I form e servizi didattici accettano dati editoriali tipizzati e convalide specifiche; la copertura di tutti i campi e limiti del criterio non è dimostrata da una matrice completa.",
+          "references": [
+            "docs/AUTHORING.md#L1-L31",
+            "component/administrator/src/Application/CurriculumService.php#L1-L25",
+            "tests/run.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -7657,8 +7967,20 @@
       {
         "id": "criterion_08",
         "label": "I limiti non troncano silenziosamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "tests/run.php",
+          "docs/AUTHORING.md"
+        ],
+        "review": {
+          "reason": "I limiti dei campi e delle collezioni sono validati dal server; superamenti non sono troncati silenziosamente e vengono restituiti come errori controllati.",
+          "references": [
+            "component/administrator/src/Application/CurriculumService.php#L1-L25",
+            "tests/run.php#L1-L25",
+            "docs/AUTHORING.md#L1-L20"
+          ]
+        }
       },
       {
         "id": "criterion_09",
@@ -7679,8 +8001,20 @@
       {
         "id": "criterion_10",
         "label": "i campi custom conservano i vincoli definiti nel core",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/AUTHORING.md",
+          "tests/joomla-course-fields-public.php",
+          "component/administrator/src/Application/CurriculumService.php"
+        ],
+        "review": {
+          "reason": "I campi custom restano integrati con com_fields e vincoli core in viste verificate; la conservazione di ogni constraint nel salvataggio, restore e snapshot non è attestata.",
+          "references": [
+            "docs/AUTHORING.md#L1-L31",
+            "tests/joomla-course-fields-public.php#L90-L110",
+            "component/administrator/src/Application/CurriculumService.php#L1-L25"
+          ]
+        }
       }
     ],
     "DAT-02": [
@@ -7724,8 +8058,20 @@
       {
         "id": "criterion_01",
         "label": "Validare provider e formato della sorgente prima della pubblicazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/material-policy.php"
+        ],
+        "review": {
+          "reason": "Prima della pubblicazione, il servizio valida provider, sorgente e formato; gli upload materiali validano MIME, limiti e stato di scansione.",
+          "references": [
+            "docs/MATERIALS.md#L32-L36",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "tests/material-policy.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -7746,48 +8092,130 @@
       {
         "id": "criterion_03",
         "label": "Gli errori di risorse/provider sono espliciti e non producono accesso pubblico accidentale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/material-policy.php"
+        ],
+        "review": {
+          "reason": "Gli errori di storage/provider sono espliciti e il flusso si chiude in modo sicuro senza rendere pubblici asset o link di ripiego.",
+          "references": [
+            "docs/MATERIALS.md#L23-L29",
+            "component/administrator/src/Application/MaterialService.php#L389-L444",
+            "tests/material-policy.php#L1-L25"
+          ]
+        }
       }
     ],
     "DAT-08": [
       {
         "id": "criterion_01",
         "label": "Configurazione sicura",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "docs/VIDEO.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Le guide documentano configurazioni conservative e storage privato; la verifica end-to-end di tutte le scelte sicure d'installazione per ogni hosting non è attestata.",
+          "references": [
+            "docs/MATERIALS.md#L3-L5",
+            "docs/VIDEO.md#L11-L13",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Alla prima installazione componenti/provider non configurati rimangono disabilitati, senza credenziali dimostrative né contenuti pubblicati automaticamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/QUIZ_RUNTIME.md",
+          "component/script.php"
+        ],
+        "review": {
+          "reason": "Provider esterni e task richiedono configurazione esplicita e non inseriscono credenziali dimostrative; la prima installazione sicura di ogni plugin e contenuto non è stata provata integralmente.",
+          "references": [
+            "docs/VIDEO.md#L11-L13",
+            "docs/QUIZ_RUNTIME.md#L48-L52",
+            "component/script.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Impostare lingua fallback, contatto supporto, storage riservato e task",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "docs/MAIL_SCHEDULER_SETUP.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Lingua, contatto, storage e task dipendono anche dalla configurazione del sito; non è documentata una prova completa d'installazione che imposti e verifichi ogni parametro richiesto.",
+          "references": [
+            "docs/MATERIALS.md#L3-L5",
+            "docs/MAIL_SCHEDULER_SETUP.md#L27-L35",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "i corsi senza test o attestato non richiedono parametri di funzioni disattivate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "docs/CERTIFICATES_1.0.0.md",
+          "docs/PUBLICATION.md"
+        ],
+        "review": {
+          "reason": "Corsi senza quiz o attestato non richiedono l'attivazione di quelle funzioni opzionali; i gate sono applicati alla pubblicazione soltanto quando la funzione è selezionata.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L3-L7",
+            "docs/CERTIFICATES_1.0.0.md#L20-L22",
+            "docs/PUBLICATION.md#L54-L54"
+          ]
+        }
       }
     ],
     "REL-01": [
       {
         "id": "criterion_01",
         "label": "Accettazione funzionale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/QA_TESTBOOK.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/FUNCTIONAL_AUDIT_CURRENT.md"
+        ],
+        "review": {
+          "reason": "Non esiste ancora un record di accettazione funzionale completa della candidata 1.0.0 con esiti e riferimenti per i requisiti; l'audit del codice è distinto dall'accettazione.",
+          "references": [
+            "docs/QA_TESTBOOK.md#L1013-L1013",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3",
+            "docs/FUNCTIONAL_AUDIT_CURRENT.md#L1-L15"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Per ogni requisito del rilascio 1, almeno una prova prevista nella matrice, eseguita con risultato e riferimento al build",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/FUNCTIONAL_AUDIT_CURRENT.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La matrice non ha una prova eseguita con risultato e build per ogni requisito; risultano ancora criteri da esaminare e verifiche non eseguibili senza collaudo reale.",
+          "references": [
+            "docs/FUNCTIONAL_AUDIT_CURRENT.md#L1-L15",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -7808,34 +8236,90 @@
       {
         "id": "criterion_04",
         "label": "anomalie registrate con gravità, riproduzione e decisione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/IMPLEMENTATION_HISTORY.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Anomalie e regressioni sono tracciate in issue e report per interventi specifici; non è attestato un registro completo di tutte le anomalie candidate con gravità, riproduzione e decisione finale.",
+          "references": [
+            "docs/IMPLEMENTATION_HISTORY.md#L1-L20",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Le funzioni differite non possono comparire come completate nel report",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/FUNCTIONAL_AUDIT_CURRENT.md",
+          "docs/CREDENTIALS_IMPLEMENTATION_PLAN.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il report distingue fase 2 e limitazioni in più voci, ma la verifica che nessuna funzione differita compaia come completata richiede una revisione integrale della candidata.",
+          "references": [
+            "docs/FUNCTIONAL_AUDIT_CURRENT.md#L1-L15",
+            "docs/CREDENTIALS_IMPLEMENTATION_PLAN.md#L1-L10",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Le opzioni disattivate hanno comportamento testato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/QUIZ_RUNTIME.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Esistono test per modalità e opzioni disattivate selezionate; non è disponibile l'esecuzione documentata per tutte le opzioni disattivate del rilascio.",
+          "references": [
+            "docs/VIDEO.md#L11-L13",
+            "docs/QUIZ_RUNTIME.md#L48-L52",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       }
     ],
     "REL-02": [
       {
         "id": "criterion_01",
         "label": "Accettazione non funzionale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La candidata non ha un verbale completo di accettazione non funzionale che raccolga esiti automatici e manuali; la CI ordinaria non equivale a tale gate.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L17",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Prove accessibilità automatiche e manuali, controllo ID unici, test sicurezza degli oggetti e dei ruoli, carico misto e picco, aggiornamento con dati esistenti e ripristino",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/VIDEO.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Audit accessibilità manuale, test di carico misto/picco, verifica integrale di sicurezza e restore release non sono stati eseguiti come set per la candidata 1.0.0.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L17",
+            "docs/VIDEO.md#L53-L53",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -7874,14 +8358,38 @@
       {
         "id": "criterion_01",
         "label": "Documentazione del rilascio",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "README.md",
+          "docs/RELEASE_PROCEDURE.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Non è stata pubblicata una candidata installabile stabile 1.0.0 con checksum e documentazione finale verificati; gli artefatti attuali sono build di sviluppo.",
+          "references": [
+            "README.md#L3-L17",
+            "docs/RELEASE_PROCEDURE.md#L1-L30",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Consegnare ZIP installabile, checksum, changelog, guida amministrazione/autore/studente, guida personalizzazione, mappa permessi e istruzioni task/storage/provider",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "docs/IMPLEMENTATION_STATUS.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Guide amministrative, autore e studente sono distribuite in più documenti; la consegna coordinata di tutte le guide, personalizzazione, permessi e procedure su package candidato non è stata verificata.",
+          "references": [
+            "README.md#L29-L39",
+            "docs/IMPLEMENTATION_STATUS.md#L1-L10",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -7903,14 +8411,38 @@
       {
         "id": "criterion_01",
         "label": "Separazione delle responsabilità",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/ENROLLMENT_ROSTER.md",
+          "docs/RELEASE_SCOPE_MATRIX.md"
+        ],
+        "review": {
+          "reason": "Le guide separano identità Joomla, iscrizioni e fruizione in diversi flussi; il controllo di separazione di tutte le responsabilità del prodotto resta da completare sull'intero perimetro.",
+          "references": [
+            "docs/MANUAL_ENROLLMENT.md#L3-L15",
+            "docs/ENROLLMENT_ROSTER.md#L7-L9",
+            "docs/RELEASE_SCOPE_MATRIX.md#L1-L20"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Prodotto: identità Joomla, livelli, fruizione, progressi, valutazione e attestati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "docs/CERTIFICATES_1.0.0.md",
+          "docs/RELEASE_SCOPE_MATRIX.md"
+        ],
+        "review": {
+          "reason": "Il prodotto implementa identità, livelli, fruizione, progressi, valutazioni e attestati in aree distinte; non è stata verificata la corrispondenza completa di tutte le responsabilità alla release.",
+          "references": [
+            "docs/LEARNING.md#L17-L41",
+            "docs/CERTIFICATES_1.0.0.md#L10-L22",
+            "docs/RELEASE_SCOPE_MATRIX.md#L1-L20"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -7963,8 +8495,20 @@
       {
         "id": "criterion_06",
         "label": "Nessun errore esterno deve generare dati didattici falsi o aprire contenuti protetti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "docs/VIDEO.md",
+          "docs/MATERIALS.md"
+        ],
+        "review": {
+          "reason": "I servizi di quiz, video e materiali negano accesso o progresso in errori selezionati, ma non è dimostrato che ogni errore esterno in ogni provider e servizio eviti dati falsi e aperture protette.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L21-L29",
+            "docs/VIDEO.md#L23-L25",
+            "docs/MATERIALS.md#L23-L29"
+          ]
+        }
       }
     ],
     "PVD-01": [
@@ -8188,8 +8732,20 @@
       {
         "id": "criterion_01",
         "label": "Autorizzazione e segreti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "libraries/jlms/src/Video/VideoProviderInterface.php"
+        ],
+        "review": {
+          "reason": "I provider richiedono autorizzazione corrente e i segreti sono server-side nei percorsi esaminati; la matrice completa di permessi e segreti per ogni provider non è stata chiusa.",
+          "references": [
+            "docs/VIDEO.md#L11-L19",
+            "component/administrator/src/Application/VideoProgressService.php#L1-L25",
+            "libraries/jlms/src/Video/VideoProviderInterface.php#L1-L16"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -8211,8 +8767,20 @@
       {
         "id": "criterion_03",
         "label": "Il provider non assegna livelli, voti o attestati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/VIDEO.md",
+          "libraries/jlms/src/Video/VideoProviderInterface.php",
+          "component/administrator/src/Application/VideoProgressService.php"
+        ],
+        "review": {
+          "reason": "Il contratto dei provider riguarda riproduzione e metadati; voti, livelli e attestati sono assegnati dai servizi core, non dall'adapter video.",
+          "references": [
+            "docs/VIDEO.md#L43-L53",
+            "libraries/jlms/src/Video/VideoProviderInterface.php#L1-L16",
+            "component/administrator/src/Application/VideoProgressService.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -8234,8 +8802,20 @@
       {
         "id": "criterion_05",
         "label": "cache personale/no-store e nessuna chiave privata nei payload",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/QUIZ_RUNTIME.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Le risposte private usano no-store e non includono chiavi private nei payload documentati; l'audit di tutte le cache personali e tutte le risposte provider non è attestato.",
+          "references": [
+            "docs/VIDEO.md#L35-L43",
+            "docs/QUIZ_RUNTIME.md#L29-L42",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7"
+          ]
+        }
       }
     ],
     "PVD-05": [
@@ -8276,8 +8856,20 @@
       {
         "id": "criterion_03",
         "label": "Compatibilità dei plugin verificata con le versioni Joomla/PHP supportate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VIDEO.md",
+          "docs/QUIZ_RUNTIME.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "CI copre Joomla 6 e PHP 8.3/8.4 in configurazioni nominate; la compatibilità dei plugin con ogni minor/versione supportata e ambiente Joomla corrente resta da certificare.",
+          "references": [
+            "docs/VIDEO.md#L53-L53",
+            "docs/QUIZ_RUNTIME.md#L58-L58",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L17-L17"
+          ]
+        }
       }
     ],
     "PVD-06": [

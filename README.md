@@ -17,7 +17,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-Il [report dell’audit funzionale](docs/FUNCTIONAL_AUDIT_CURRENT.md) riporta i criteri implementati, le lacune confermate e le verifiche residue. Il report corrente registra 413 implementati, 27 mancanti, 159 non verificabili e 158 ancora da esaminare. La percentuale globale 1.0.0 resta non determinabile. Lo [stato di implementazione](docs/IMPLEMENTATION_STATUS.md) documenta le funzionalità correnti. Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
+Il [report dell’audit funzionale](docs/FUNCTIONAL_AUDIT_CURRENT.md) riporta i criteri implementati, le lacune confermate e le verifiche residue. Il report corrente registra 425 implementati, 32 mancanti, 192 non verificabili e 108 ancora da esaminare. La percentuale globale 1.0.0 resta non determinabile. Lo [stato di implementazione](docs/IMPLEMENTATION_STATUS.md) documenta le funzionalità correnti. Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
 
 ## Installazione e sviluppo
 
