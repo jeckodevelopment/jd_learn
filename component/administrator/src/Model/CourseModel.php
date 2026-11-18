@@ -557,8 +557,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             // versions and learner history above MUST be empty before this point.
             // Remove only this item's Joomla editorial revisions explicitly, in
             // the same transaction; never cascade into another object.
+            $historyKey = $this->typeAlias . '.' . $id;
             $history = $db->createQuery()->delete('#__history')
-                ->where('item_id = :history')->bind(':history', $this->typeAlias . '.' . $id);
+                ->where('item_id = :history')->bind(':history', $historyKey);
             $db->setQuery($history)->execute();
 
             $table = $this->getTable('Course');
