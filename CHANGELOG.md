@@ -1,5 +1,7 @@
 # Changelog
 
+- **Unreleased (NOT-01 / MAIL-02) — notifica completamento da quiz:** l'ultimo quiz obbligatorio che completa il corso accoda `com_jlms.course.completed` con la stessa chiave idempotente dei percorsi lezione/video e con tutti i token canonici. La notifica entra nella transazione di progresso; i reinvii non duplicano l'evento. Test su Joomla disposable, accettazione SMTP reale pendente. Nessuna migrazione schema.
+
 - **0.60.8 (18/11/2026) — refresh Smart Search dopo archiviazione/ripristino workflow:** `PublicationService::transition()` notifica nuovamente il Finder dopo il commit per le azioni Archive/Restore, con stato del corso già salvato. La notifica integra gli eventi nativi del workflow, che possono avvenire dentro la transazione. Errori nell'indice non annullano una transizione confermata. Test Joomla controlla stato e flag operativi osservati dagli eventi, PATCH senza migrazioni; collaudo E2E Finder pendente.
 
 - **0.60.7 (18/11/2026) — Smart Search dopo cestinazione e ripristino corsi:** le transizioni di stato massive di `CourseModel::changeStates()` emettono la notifica Finder `onFinderAfterSave` solo dopo il commit, richiedendo l'aggiornamento dell'indice in base allo stato realmente salvato. L'eventuale indisponibilità di Smart Search è registrata nei log e non annulla il salvataggio del ciclo di vita. Test Joomla con listener e verifica di stato/flag osservati post-commit. PATCH senza schema; accettazione manuale e prova E2E Finder ancora pendenti.

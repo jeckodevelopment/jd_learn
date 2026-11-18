@@ -144,6 +144,10 @@ $passed=$service->mutate($student,'en-GB',$enrollment,$lesson,$a['attempt']['id'
 attemptExpect($passed['attempt']['passed']&&$passed['course_completed']&&$passed['course_percent']===100&&$passed['feedback_available'],'exact set grading passes and completes course');
 attemptExpect($service->mutate($student,'en-GB',$enrollment,$lesson,$a['attempt']['id'],1,$submit,$body,true)['replay'],'final submit idempotent');
 attemptExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult()===1,'completion counts once');
+// Quiz is the last required lesson: completion mail must be queued exactly once.
+$completionKey=hash('sha256','course.completed:'.$enrollment);
+$completionCount=(int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key=".$db->quote($completionKey))->loadResult();
+attemptExpect($completionCount===1,'quiz completion enqueues exactly one course.completed message');
 $passedAttempt=$a['attempt']['id'];$completedAt=$db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult();
 $now+=61;$a=$service->start($student,'en-GB',$enrollment,$lesson,attemptKey());
 attemptExpect(!$service->state($student,'en-GB',$enrollment,$lesson,$passedAttempt)['feedback_available'],'no historical answer key while another attempt is active');

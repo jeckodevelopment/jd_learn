@@ -1686,7 +1686,7 @@
           "references": [
             "component/administrator/src/Application/LearningService.php#'course.completed:'",
             "component/administrator/src/Application/VideoProgressService.php#'course.completed:'",
-            "component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer"
+            "component/administrator/src/Application/QuizAttemptService.php#'course.completed:'"
           ]
         }
       },
@@ -2025,7 +2025,7 @@
         "review": {
           "reason": "La conclusione da quiz non invia l’evento di completamento corso che viene generato dai flussi lezione e video. Il caso di attestato è una notifica distinta e condizionata.",
           "references": [
-            "component/administrator/src/Application/QuizAttemptService.php#if($newCourseCompletion)(new CertificateIssuer",
+            "component/administrator/src/Application/QuizAttemptService.php#'course.completed:'",
             "component/administrator/src/Application/LearningService.php#'course.completed:'",
             "component/administrator/src/Application/CertificateIssuer.php#certificate.available:"
           ]
