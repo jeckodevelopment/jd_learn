@@ -1,3 +1,13 @@
+## LCM-01 — riattivazione individuale iscrizione (0.60.3-dev)
+
+1. Sospendere una singola iscrizione in corso Pubblicato e verificare l'accesso all'aula negato.
+2. Archiviare il corso; riattivazione individuale da backend e POST diretto con token valido devono essere respinte senza audit, notifiche o aggiornamenti iscrizione.
+3. Ripetere con corso non pubblicato e cestinato. Ripristinare lo stato Pubblicato con erogazione chiusa: riattivazione sempre negata.
+4. Riabilitare esplicitamente l'erogazione e riattivare l'iscrizione con motivo, audit e ACL: la cronologia didattica resta invariata.
+5. Verificare che sospensione/cancellazione permesse non siano impedite dal nuovo gate e che le richieste concorrenti non aggirino le verifiche.
+
+Accettazione manuale **non eseguita**; regressione automatica in `tests/joomla-enrollment-state.php`.
+
 ## LCM-01 — PR #619, blocco riattivazione anticipata (0.60.2-dev)
 
 1. Su corso Pubblicato, chiudere iscrizioni e sospendere didattica da Operazioni corso; registrare motivo e audit.
