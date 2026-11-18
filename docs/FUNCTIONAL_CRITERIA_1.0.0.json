@@ -129,8 +129,18 @@
       {
         "id": "granular_acl",
         "label": "ACL granulari e selezioni miste HTTP",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-pathways.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «ACL granulari e selezioni miste HTTP», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "tests/joomla-pathways.php#L1-L25",
+            "docs/QA_TESTBOOK.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "finder_seo",
@@ -2225,8 +2235,18 @@
       {
         "id": "all_events",
         "label": "Idempotenza di tutti i produttori e recupero degli aventi diritto senza PDF",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Idempotenza di tutti i produttori e recupero degli aventi diritto senza PDF», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Application/CertificateIssuer.php#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25"
+          ]
+        }
       }
     ],
     "CERT-03": [
@@ -2258,8 +2278,18 @@
       {
         "id": "error_headers",
         "label": "Stato file, errori download e header HTTP negativi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Infrastructure/CertificatePdf.php",
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Stato file, errori download e header HTTP negativi», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Infrastructure/CertificatePdf.php#L1-L25",
+            "component/administrator/src/Application/CertificateService.php#L1-L25"
+          ]
+        }
       }
     ],
     "CERT-04": [
@@ -2275,8 +2305,18 @@
       {
         "id": "race",
         "label": "Emissione concorrente, retry e immutabilità delle versioni in tutti gli scenari",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/CertificateIssuer.php",
+          "component/administrator/sql/install.mysql.utf8mb4.sql"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Emissione concorrente, retry e immutabilità delle versioni in tutti gli scenari», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Application/CertificateIssuer.php#L1-L25",
+            "component/administrator/sql/install.mysql.utf8mb4.sql#L1-L25"
+          ]
+        }
       }
     ],
     "CERT-05": [
@@ -2434,8 +2474,18 @@
       {
         "id": "custom_upgrade",
         "label": "Conservazione personalizzazioni IT/EN su tutti gli upgrade",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailTemplateInstaller.php",
+          "docs/MAIL_TEMPLATES.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Conservazione personalizzazioni IT/EN su tutti gli upgrade», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Infrastructure/MailTemplateInstaller.php#L1-L25",
+            "docs/MAIL_TEMPLATES.md#L1-L25"
+          ]
+        }
       }
     ],
     "MAIL-02": [
@@ -2480,14 +2530,34 @@
       {
         "id": "no_editorial_noise",
         "label": "Nessuna notifica per salvataggi ordinari in ogni variante",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/LessonReleaseNotice.php",
+          "component/administrator/src/Infrastructure/MailQueue.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Nessuna notifica per salvataggi ordinari in ogni variante», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Application/LessonReleaseNotice.php#L1-L25",
+            "component/administrator/src/Infrastructure/MailQueue.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "bulk_performance",
         "label": "Validazione carichi e preferenze di notifica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/LessonReleaseNotice.php",
+          "component/administrator/src/Infrastructure/MailQueue.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Validazione carichi e preferenze di notifica», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Application/LessonReleaseNotice.php#L1-L25",
+            "component/administrator/src/Infrastructure/MailQueue.php#L1-L25"
+          ]
+        }
       }
     ],
     "MAIL-04": [
@@ -2503,8 +2573,18 @@
       {
         "id": "threshold",
         "label": "Scheduler e soglie su tutti i casi temporali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/CourseExpiryReminderService.php",
+          "plugins/task/jlms/src/Extension/Jlms.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Scheduler e soglie su tutti i casi temporali», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Application/CourseExpiryReminderService.php#L1-L25",
+            "plugins/task/jlms/src/Extension/Jlms.php#L1-L25"
+          ]
+        }
       }
     ],
     "MAIL-05": [
@@ -2520,8 +2600,18 @@
       {
         "id": "inheritance",
         "label": "Ereditarietà delle preferenze per tutti gli eventi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/MailPreferences.php",
+          "component/administrator/config.xml"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Ereditarietà delle preferenze per tutti gli eventi», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Application/MailPreferences.php#L1-L25",
+            "component/administrator/config.xml#L1-L25"
+          ]
+        }
       }
     ],
     "MAIL-06": [
@@ -2656,8 +2746,18 @@
       {
         "id": "retention",
         "label": "Retention e minimizzazione PII in ogni contesto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/MailQueueAuditService.php",
+          "docs/MAIL_TEMPLATES.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Retention e minimizzazione PII in ogni contesto», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Application/MailQueueAuditService.php#L1-L25",
+            "docs/MAIL_TEMPLATES.md#L1-L25"
+          ]
+        }
       }
     ],
     "MAIL-11": [
@@ -2673,8 +2773,18 @@
       {
         "id": "campaign",
         "label": "Campagne, deduplicazione e anteprime a prova di errori",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Infrastructure/MailTemplateInstaller.php",
+          "component/administrator/src/Application/CourseAnnouncementConsent.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Campagne, deduplicazione e anteprime a prova di errori», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/src/Infrastructure/MailTemplateInstaller.php#L1-L25",
+            "component/administrator/src/Application/CourseAnnouncementConsent.php#L1-L25"
+          ]
+        }
       }
     ],
     "JOO-01": [
@@ -9960,8 +10070,18 @@
       {
         "id": "criterion_01",
         "label": "Rilascio e manutenzione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "component/script.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Rilascio e manutenzione», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "component/script.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -9984,20 +10104,50 @@
       {
         "id": "criterion_03",
         "label": "Collaudare installazione, aggiornamenti con dati/configurazioni esistenti e recupero",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "component/script.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Collaudare installazione, aggiornamenti con dati/configurazioni esistenti e recupero», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "component/script.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "ripetere le verifiche pertinenti per modifiche sensibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "component/script.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «ripetere le verifiche pertinenti per modifiche sensibili», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "component/script.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Nessuna checklist viene dichiarata superata prima dell'esecuzione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "component/script.php"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Nessuna checklist viene dichiarata superata prima dell'esecuzione», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "component/script.php#L1-L25"
+          ]
+        }
       }
     ],
     "PBASE-01": [
@@ -10049,36 +10199,86 @@
       {
         "id": "criterion_05",
         "label": "attivazione e segreti sono configurazione del sito, senza credenziali o contenuti pubblicati automaticamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «attivazione e segreti sono configurazione del sito, senza credenziali o contenuti pubblicati automaticamente», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "packages/pkg_jlms.xml#L1-L19",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       }
     ],
     "PBASE-02": [
       {
         "id": "criterion_01",
         "label": "Specifiche per singolo plugin",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Specifiche per singolo plugin», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "README.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Il solo contratto astratto non e documentazione sufficiente dei quattro plugin",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "README.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Il solo contratto astratto non e documentazione sufficiente dei quattro plugin» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       }
     ],
     "PBASE-03": [
       {
         "id": "criterion_01",
         "label": "Guide e contratti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Guide e contratti», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -10114,28 +10314,68 @@
       {
         "id": "criterion_04",
         "label": "Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "README.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Contratto, manuali, changelog e test seguono ogni modifica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "README.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Contratto, manuali, changelog e test seguono ogni modifica», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "assenza di documentazione di un plugin base blocca l'accettazione del pacchetto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "README.md",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «assenza di documentazione di un plugin base blocca l'accettazione del pacchetto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "README.md#L1-L25",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       }
     ],
     "PBASE-04": [
       {
         "id": "criterion_01",
         "label": "Collaudo completo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Collaudo completo», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "packages/pkg_jlms.xml#L1-L19",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -10155,14 +10395,34 @@
       {
         "id": "criterion_03",
         "label": "Verificare incluso/attivo/configurato come stati diversi, dipendenze compatibili e update che preserva stato, segreti esterni, riferimenti, dati e override",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Verificare incluso/attivo/configurato come stati diversi, dipendenze compatibili e update che preserva stato, segreti esterni, riferimenti, dati e override», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "packages/pkg_jlms.xml#L1-L19",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Nessuna cancellazione remota di video all'installazione/disinstallazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "docs/VIDEO.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Nessuna cancellazione remota di video all'installazione/disinstallazione», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "packages/pkg_jlms.xml#L1-L19",
+            "docs/VIDEO.md#L1-L25"
+          ]
+        }
       }
     ],
     "DOC-01": [
@@ -10183,8 +10443,18 @@
       {
         "id": "criterion_02",
         "label": "Primo avvio, configurazione iniziale e dipendenze documentati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Primo avvio, configurazione iniziale e dipendenze documentati», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -10244,14 +10514,34 @@
       {
         "id": "criterion_02",
         "label": "Manuale copre provider video, email e attestati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/COURSE_EDITOR.md",
+          "docs/MAIL_TEMPLATES.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Manuale copre provider video, email e attestati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/COURSE_EDITOR.md#L1-L25",
+            "docs/MAIL_TEMPLATES.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Manuale copre ACL, privacy e manutenzione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/COURSE_EDITOR.md",
+          "docs/MAIL_TEMPLATES.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Manuale copre ACL, privacy e manutenzione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/COURSE_EDITOR.md#L1-L25",
+            "docs/MAIL_TEMPLATES.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -10273,14 +10563,34 @@
       {
         "id": "criterion_01",
         "label": "Manuale docente spiega flussi core effettivamente disponibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "docs/TEACHERS.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Manuale docente spiega flussi core effettivamente disponibili», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "docs/TEACHERS.md#L1-L14"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Manuale studente spiega catalogo, iscrizione, aula e completamento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "docs/TEACHERS.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Manuale studente spiega catalogo, iscrizione, aula e completamento», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "docs/TEACHERS.md#L1-L14"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -10319,14 +10629,34 @@
       {
         "id": "criterion_01",
         "label": "Struttura del pacchetto e servizi core descritti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "docs/CI_POLICY.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Struttura del pacchetto e servizi core descritti», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "docs/CI_POLICY.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Contratti plugin e architettura database documentati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "docs/CI_POLICY.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Contratti plugin e architettura database documentati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "docs/CI_POLICY.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -10347,8 +10677,18 @@
       {
         "id": "criterion_04",
         "label": "Procedure tecniche riproducibili e versionate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "docs/CI_POLICY.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Procedure tecniche riproducibili e versionate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "docs/CI_POLICY.md#L1-L25"
+          ]
+        }
       }
     ],
     "DOC-05": [
@@ -10407,54 +10747,134 @@
       {
         "id": "criterion_01",
         "label": "Campi non ovvi dispongono di descrizioni localizzate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/forms/course.xml",
+          "component/administrator/config.xml"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Campi non ovvi dispongono di descrizioni localizzate», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/forms/course.xml#L1-L25",
+            "component/administrator/config.xml#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Tooltip indicano scopo e formato dei valori",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/forms/course.xml",
+          "component/administrator/config.xml"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Tooltip indicano scopo e formato dei valori», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/forms/course.xml#L1-L25",
+            "component/administrator/config.xml#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Tooltip indicano limiti, effetti ed eventuali avvertenze",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/forms/course.xml",
+          "component/administrator/config.xml"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Tooltip indicano limiti, effetti ed eventuali avvertenze», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "component/administrator/forms/course.xml#L1-L25",
+            "component/administrator/config.xml#L1-L25"
+          ]
+        }
       }
     ],
     "DOC-07": [
       {
         "id": "criterion_01",
         "label": "Operazioni ad alto rischio hanno procedure guidate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Operazioni ad alto rischio hanno procedure guidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Test di configurazione espongono errori specifici e azionabili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Test di configurazione espongono errori specifici e azionabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Messaggi non invitano a operazioni insicure o prive di autorizzazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Messaggi non invitano a operazioni insicure o prive di autorizzazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       }
     ],
     "DOC-08": [
       {
         "id": "criterion_01",
         "label": "Matrice collega ogni flusso core alla relativa documentazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Matrice collega ogni flusso core alla relativa documentazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Nessun flusso core dichiarato completo senza guida",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Nessun flusso core dichiarato completo senza guida» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -10491,88 +10911,200 @@
       {
         "id": "criterion_02",
         "label": "Troubleshooting video e provider con esiti riproducibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Troubleshooting video e provider con esiti riproducibili», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Troubleshooting storage e ACL con controlli sicuri",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «Troubleshooting storage e ACL con controlli sicuri», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "FAQ e CI documentate con procedure collaudate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/PRODUCT_DOCUMENTATION_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene riferimenti pertinenti al criterio «FAQ e CI documentate con procedure collaudate», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "references": [
+            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "DOC-10": [
       {
         "id": "criterion_01",
         "label": "Note rilascio e changelog corrispondono alla candidata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "CHANGELOG.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Note rilascio e changelog corrispondono alla candidata» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "CHANGELOG.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Incompatibilità e limitazioni note esplicitate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "CHANGELOG.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Incompatibilità e limitazioni note esplicitate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "CHANGELOG.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Riferimenti al pacchetto installabile e versione coerenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "CHANGELOG.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Riferimenti al pacchetto installabile e versione coerenti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "CHANGELOG.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Documentazione della release verificata rispetto agli artefatti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/VERSIONING.md",
+          "CHANGELOG.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/VERSIONING.md#L1-L25",
+            "CHANGELOG.md#L1-L25"
+          ]
+        }
       }
     ],
     "SEC-P1": [
       {
         "id": "criterion_01",
         "label": "Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "findings tracciati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «findings tracciati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       }
     ],
     "SEC-P2": [
       {
         "id": "criterion_01",
         "label": "Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "nessun finding critico/alto irrisolto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «nessun finding critico/alto irrisolto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       }
     ],
     "SEC-P3": [
       {
         "id": "criterion_01",
         "label": "Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "verifiche con account di prova",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «verifiche con account di prova» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       }
     ],
     "SEC-P4": [
@@ -10643,20 +11175,44 @@
       {
         "id": "criterion_01",
         "label": "Test negativi end-to-end pertinenti alla release candidate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Test negativi end-to-end pertinenti alla release candidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Penetration/risk review con ambito e risultati tracciabili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Penetration/risk review con ambito e risultati tracciabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Vulnerabilità riesaminate e mitigazioni documentate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "La revisione del criterio «Vulnerabilità riesaminate e mitigazioni documentate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "references": [
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+          ]
+        }
       },
       {
         "id": "criterion_04",

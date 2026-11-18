@@ -1,6 +1,6 @@
 # Prossimi passi verso JD Learn 1.0.0
 
-**Priorità corrente: completare la riconciliazione funzionale 1.0.0.** Nel lotto 14 sono stati riesaminati altri 50 criteri: 426 implementati, 37 lacune accertate, 236 non verificabili e 58 da esaminare, su 214 requisiti e 757 criteri. La percentuale globale resta non determinabile. Valutare i residui in lotti, con evidenze ancorate e distinguendo CI e accettazione Joomla. Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) contiene il dettaglio operativo.
+**Riconciliazione funzionale 1.0.0 completata su tutti i 757 criteri.** Il registro copre 214 requisiti: 426 criteri implementati, 63 lacune accertate e 268 non verificabili; nessuno è rimasto da esaminare. La percentuale globale è non determinabile finché persistono esiti non verificabili. Priorità successive: affrontare le lacune accertate, eseguire le verifiche mancanti e chiudere i gate di release, mantenendo separati CI e accettazione Joomla. Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) è il dettaglio operativo.
 
 Gli snapshot storici sottostanti documentano priorità e stime del rispettivo periodo; non rappresentano lo stato corrente e non sostituiscono il registro audit.
 

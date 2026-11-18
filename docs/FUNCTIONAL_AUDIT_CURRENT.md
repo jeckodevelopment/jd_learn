@@ -3,9 +3,9 @@
 Requisiti in perimetro: **214**. Criteri: **757**.
 
 - Implementati: **426**.
-- Mancanti con lacuna accertata: **37**.
-- Esaminati con esito non verificabile: **236**.
-- Da esaminare: **58**.
+- Mancanti con lacuna accertata: **63**.
+- Esaminati con esito non verificabile: **268**.
+- Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
 Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono distinti dall’esecuzione dei test e dall’accettazione manuale Joomla.
@@ -133,9 +133,33 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `PBASE-02/criterion_02` — Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi. La revisione del criterio «Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-02/criterion_03` — Il solo contratto astratto non e documentazione sufficiente dei quattro plugin. La revisione del criterio «Il solo contratto astratto non e documentazione sufficiente dei quattro plugin» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-03/criterion_04` — Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile. La revisione del criterio «Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-03/criterion_06` — assenza di documentazione di un plugin base blocca l'accettazione del pacchetto. La revisione del criterio «assenza di documentazione di un plugin base blocca l'accettazione del pacchetto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `DOC-02/criterion_02` — Manuale copre provider video, email e attestati. La revisione del criterio «Manuale copre provider video, email e attestati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/COURSE_EDITOR.md#L1-L25](../docs/COURSE_EDITOR.md#L1-L25)
+  - [docs/MAIL_TEMPLATES.md#L1-L25](../docs/MAIL_TEMPLATES.md#L1-L25)
+- `DOC-02/criterion_03` — Manuale copre ACL, privacy e manutenzione. La revisione del criterio «Manuale copre ACL, privacy e manutenzione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/COURSE_EDITOR.md#L1-L25](../docs/COURSE_EDITOR.md#L1-L25)
+  - [docs/MAIL_TEMPLATES.md#L1-L25](../docs/MAIL_TEMPLATES.md#L1-L25)
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
   - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+- `DOC-04/criterion_02` — Contratti plugin e architettura database documentati. La revisione del criterio «Contratti plugin e architettura database documentati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
+- `DOC-04/criterion_04` — Procedure tecniche riproducibili e versionate. La revisione del criterio «Procedure tecniche riproducibili e versionate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
 - `DOC-05/criterion_01` — Guida contestuale presente nelle schermate amministrative core. Il piano descrive l’azione Guida e prevede la relativa tranche. I percorsi nativi del corso e del roster esaminati non espongono l’aiuto contestuale richiesto.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
   - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper](../component/administrator/src/View/Courses/HtmlView.php)
@@ -146,12 +170,57 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-05/criterion_03` — Contenuto disponibile in italiano e inglese. L’aiuto contestuale previsto deve essere disponibile per schermata in IT e EN. Il piano indica la tranche di implementazione e il manuale distribuito esaminato è in italiano.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
   - [component/administrator/docs/README.md#La distribuzione](../component/administrator/docs/README.md)
+- `DOC-07/criterion_01` — Operazioni ad alto rischio hanno procedure guidate. La revisione del criterio «Operazioni ad alto rischio hanno procedure guidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `DOC-07/criterion_02` — Test di configurazione espongono errori specifici e azionabili. La revisione del criterio «Test di configurazione espongono errori specifici e azionabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `DOC-07/criterion_03` — Messaggi non invitano a operazioni insicure o prive di autorizzazione. La revisione del criterio «Messaggi non invitano a operazioni insicure o prive di autorizzazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `DOC-08/criterion_01` — Matrice collega ogni flusso core alla relativa documentazione. La revisione del criterio «Matrice collega ogni flusso core alla relativa documentazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `DOC-08/criterion_02` — Nessun flusso core dichiarato completo senza guida. La revisione del criterio «Nessun flusso core dichiarato completo senza guida» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `DOC-10/criterion_01` — Note rilascio e changelog corrispondono alla candidata. La revisione del criterio «Note rilascio e changelog corrispondono alla candidata» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
+- `DOC-10/criterion_02` — Incompatibilità e limitazioni note esplicitate. La revisione del criterio «Incompatibilità e limitazioni note esplicitate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
+- `DOC-10/criterion_03` — Riferimenti al pacchetto installabile e versione coerenti. La revisione del criterio «Riferimenti al pacchetto installabile e versione coerenti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
+- `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
+- `SEC-P1/criterion_01` — Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code. La revisione del criterio «Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
+- `SEC-P1/criterion_02` — findings tracciati. La revisione del criterio «findings tracciati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
+- `SEC-P2/criterion_01` — Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider. La revisione del criterio «Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
+- `SEC-P2/criterion_02` — nessun finding critico/alto irrisolto. La revisione del criterio «nessun finding critico/alto irrisolto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
+- `SEC-P3/criterion_01` — Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti. La revisione del criterio «Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
+- `SEC-P3/criterion_02` — verifiche con account di prova. La revisione del criterio «verifiche con account di prova» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L’inventario preliminare include la preferenza di velocità. Il codice usa anche una chiave locale per la preferenza lingua/sottotitoli, non presente nella tabella.
   - [docs/PRIVACY_COOKIES.md#Inventario preliminare](../docs/PRIVACY_COOKIES.md)
   - [component/media/js/video.js#jdlearn.video.language.v1](../component/media/js/video.js)
 - `SEC-P4/criterion_04` — Guida amministrativa privacy in IT/EN. La guida pubblicata documenta il bridge e la procedura in italiano, senza la corrispondente guida amministrativa inglese richiesta dal gate.
   - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video](../docs/PRIVACY_COOKIES.md)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
+- `SEC-P5/criterion_01` — Test negativi end-to-end pertinenti alla release candidate. La revisione del criterio «Test negativi end-to-end pertinenti alla release candidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
+- `SEC-P5/criterion_02` — Penetration/risk review con ambito e risultati tracciabili. La revisione del criterio «Penetration/risk review con ambito e risultati tracciabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
+- `SEC-P5/criterion_03` — Vulnerabilità riesaminate e mitigazioni documentate. La revisione del criterio «Vulnerabilità riesaminate e mitigazioni documentate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 
 ## Verifiche ancora necessarie
 
@@ -160,6 +229,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `LCM-04/external_references` — Audit riferimenti di estensioni esterne. Il lifecycle docente protegge le referenze conosciute nel repository. Occorre l’inventario delle estensioni installate e delle relazioni esterne per generalizzare.
   - [component/administrator/src/Model/TeacherModel.php#public function changeStates](../component/administrator/src/Model/TeacherModel.php)
   - [tests/joomla-teachers.php#teacher lifecycle preserves immutable course snapshot](../tests/joomla-teachers.php)
+- `LCM-05/granular_acl` — ACL granulari e selezioni miste HTTP. Il repository contiene riferimenti pertinenti al criterio «ACL granulari e selezioni miste HTTP», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [tests/joomla-pathways.php#L1-L25](../tests/joomla-pathways.php#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
 - `LCM-05/finder_seo` — Finder e SEO lifecycle. Il workflow e il modello inviano la notifica dopo il commit. Le fixture osservano il dispatcher. Rimane il collaudo dell’indice effettivo con cutoff di accesso, lingua e metadati SEO.
   - [component/administrator/src/Application/PublicationService.php#Archive/restore Finder refresh failed](../component/administrator/src/Application/PublicationService.php)
   - [component/administrator/src/Model/CourseModel.php#private function refreshLifecycleFinder](../component/administrator/src/Model/CourseModel.php)
@@ -318,9 +390,18 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `NOT-02/privacy_retention` — Retention e controllo della visibilità dei log. La coda e le viste di comunicazione hanno controlli e conservazione propri, ma il registro documenta ancora dati correlati e retention da completare per token, campagne, outbox e audit; la verifica completa di minimizzazione e visibilità operativa non è attestata.
   - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L15-L15](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L15-L15)
   - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L24](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L24-L24)
+- `CERT-02/all_events` — Idempotenza di tutti i produttori e recupero degli aventi diritto senza PDF. Il repository contiene riferimenti pertinenti al criterio «Idempotenza di tutti i produttori e recupero degli aventi diritto senza PDF», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Application/CertificateIssuer.php#L1-L25](../component/administrator/src/Application/CertificateIssuer.php#L1-L25)
+  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
 - `CERT-03/visual_locales` — Impaginazione IT/EN e loghi vari su tutti gli ambienti. La fixture verifica il renderer PDF con più formati di logo. Una prova dei PDF su tutti gli ambienti, delle varianti linguistiche e dell’impaginazione resta necessaria.
   - [tests/certificate-raster-logos.php#CertificatePdf::render](../tests/certificate-raster-logos.php)
   - [component/administrator/src/Application/CertificateService.php#private function logoFile](../component/administrator/src/Application/CertificateService.php)
+- `CERT-03/error_headers` — Stato file, errori download e header HTTP negativi. Il repository contiene riferimenti pertinenti al criterio «Stato file, errori download e header HTTP negativi», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Infrastructure/CertificatePdf.php#L1-L25](../component/administrator/src/Infrastructure/CertificatePdf.php#L1-L25)
+  - [component/administrator/src/Application/CertificateService.php#L1-L25](../component/administrator/src/Application/CertificateService.php#L1-L25)
+- `CERT-04/race` — Emissione concorrente, retry e immutabilità delle versioni in tutti gli scenari. Il repository contiene riferimenti pertinenti al criterio «Emissione concorrente, retry e immutabilità delle versioni in tutti gli scenari», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Application/CertificateIssuer.php#L1-L25](../component/administrator/src/Application/CertificateIssuer.php#L1-L25)
+  - [component/administrator/sql/install.mysql.utf8mb4.sql#L1-L25](../component/administrator/sql/install.mysql.utf8mb4.sql#L1-L25)
 - `CERT-06/scoped_acl` — ACL, visibilità per ruolo e casi limite su installazione reale. La diagnostica amministrativa applica una verifica dedicata e un limite di righe. La matrice di ruoli e casi limite su installazione reale richiede una verifica separata.
   - [component/administrator/src/Application/CertificateService.php#public function adminUnissuedCompletions](../component/administrator/src/Application/CertificateService.php)
   - [component/administrator/src/Application/CertificateService.php#private function assertCertificateAdministrator](../component/administrator/src/Application/CertificateService.php)
@@ -331,10 +412,31 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `CERT-08/upgrade_backup` — Backup e ripristino con attestati e log preservati. La fixture retained verifica identità del certificato e download dopo upgrade. Non prova il ripristino di backup combinato di database, storage e audit.
   - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
   - [docs/QA_TESTBOOK.md#backup e ripristino](../docs/QA_TESTBOOK.md)
+- `MAIL-01/custom_upgrade` — Conservazione personalizzazioni IT/EN su tutti gli upgrade. Il repository contiene riferimenti pertinenti al criterio «Conservazione personalizzazioni IT/EN su tutti gli upgrade», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Infrastructure/MailTemplateInstaller.php#L1-L25](../component/administrator/src/Infrastructure/MailTemplateInstaller.php#L1-L25)
+  - [docs/MAIL_TEMPLATES.md#L1-L25](../docs/MAIL_TEMPLATES.md#L1-L25)
+- `MAIL-03/no_editorial_noise` — Nessuna notifica per salvataggi ordinari in ogni variante. Il repository contiene riferimenti pertinenti al criterio «Nessuna notifica per salvataggi ordinari in ogni variante», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Application/LessonReleaseNotice.php#L1-L25](../component/administrator/src/Application/LessonReleaseNotice.php#L1-L25)
+  - [component/administrator/src/Infrastructure/MailQueue.php#L1-L25](../component/administrator/src/Infrastructure/MailQueue.php#L1-L25)
+- `MAIL-03/bulk_performance` — Validazione carichi e preferenze di notifica. Il repository contiene riferimenti pertinenti al criterio «Validazione carichi e preferenze di notifica», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Application/LessonReleaseNotice.php#L1-L25](../component/administrator/src/Application/LessonReleaseNotice.php#L1-L25)
+  - [component/administrator/src/Infrastructure/MailQueue.php#L1-L25](../component/administrator/src/Infrastructure/MailQueue.php#L1-L25)
+- `MAIL-04/threshold` — Scheduler e soglie su tutti i casi temporali. Il repository contiene riferimenti pertinenti al criterio «Scheduler e soglie su tutti i casi temporali», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Application/CourseExpiryReminderService.php#L1-L25](../component/administrator/src/Application/CourseExpiryReminderService.php#L1-L25)
+  - [plugins/task/jlms/src/Extension/Jlms.php#L1-L25](../plugins/task/jlms/src/Extension/Jlms.php#L1-L25)
+- `MAIL-05/inheritance` — Ereditarietà delle preferenze per tutti gli eventi. Il repository contiene riferimenti pertinenti al criterio «Ereditarietà delle preferenze per tutti gli eventi», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Application/MailPreferences.php#L1-L25](../component/administrator/src/Application/MailPreferences.php#L1-L25)
+  - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
 - `MAIL-09/delivery_conflict` — Idempotenza completa e backoff su errori SMTP reali. Il dispatcher reclama le righe e applica retry con backoff. I casi di accettazione remota incerta e recupero senza consegna doppia richiedono un trasporto SMTP testato.
   - [component/administrator/src/Infrastructure/MailQueue.php#public function dispatch](../component/administrator/src/Infrastructure/MailQueue.php)
   - [component/administrator/src/Infrastructure/MailQueue.php#$delay = min(3600](../component/administrator/src/Infrastructure/MailQueue.php)
   - [docs/MAIL_SCHEDULER_SETUP.md#potrebbe essere avvenuta prima del crash](../docs/MAIL_SCHEDULER_SETUP.md)
+- `MAIL-10/retention` — Retention e minimizzazione PII in ogni contesto. Il repository contiene riferimenti pertinenti al criterio «Retention e minimizzazione PII in ogni contesto», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Application/MailQueueAuditService.php#L1-L25](../component/administrator/src/Application/MailQueueAuditService.php#L1-L25)
+  - [docs/MAIL_TEMPLATES.md#L1-L25](../docs/MAIL_TEMPLATES.md#L1-L25)
+- `MAIL-11/campaign` — Campagne, deduplicazione e anteprime a prova di errori. Il repository contiene riferimenti pertinenti al criterio «Campagne, deduplicazione e anteprime a prova di errori», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/src/Infrastructure/MailTemplateInstaller.php#L1-L25](../component/administrator/src/Infrastructure/MailTemplateInstaller.php#L1-L25)
+  - [component/administrator/src/Application/CourseAnnouncementConsent.php#L1-L25](../component/administrator/src/Application/CourseAnnouncementConsent.php#L1-L25)
 - `JOO-02/theme_matrix` — Compatibilità completa con template alternativi e tutte le risoluzioni. Il registro FE-12 distingue la prova documentale e HTTP dalla compatibilità visuale. Rimangono le esecuzioni con template e risoluzioni differenti.
   - [docs/FRONTEND_FE12_ACCEPTANCE.md#FE12-08](../docs/FRONTEND_FE12_ACCEPTANCE.md)
   - [tests/frontend-release-gate.py#NOT VERIFIED: WCAG](../tests/frontend-release-gate.py)
@@ -1006,17 +1108,77 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
   - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
+- `SECDEV-08/criterion_01` — Rilascio e manutenzione. Il repository contiene riferimenti pertinenti al criterio «Rilascio e manutenzione», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [component/script.php#L1-L25](../component/script.php#L1-L25)
+- `SECDEV-08/criterion_03` — Collaudare installazione, aggiornamenti con dati/configurazioni esistenti e recupero. Il repository contiene riferimenti pertinenti al criterio «Collaudare installazione, aggiornamenti con dati/configurazioni esistenti e recupero», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [component/script.php#L1-L25](../component/script.php#L1-L25)
+- `SECDEV-08/criterion_04` — ripetere le verifiche pertinenti per modifiche sensibili. Il repository contiene riferimenti pertinenti al criterio «ripetere le verifiche pertinenti per modifiche sensibili», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [component/script.php#L1-L25](../component/script.php#L1-L25)
+- `SECDEV-08/criterion_05` — Nessuna checklist viene dichiarata superata prima dell'esecuzione. Il repository contiene riferimenti pertinenti al criterio «Nessuna checklist viene dichiarata superata prima dell'esecuzione», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [component/script.php#L1-L25](../component/script.php#L1-L25)
+- `PBASE-01/criterion_05` — attivazione e segreti sono configurazione del sito, senza credenziali o contenuti pubblicati automaticamente. Il repository contiene riferimenti pertinenti al criterio «attivazione e segreti sono configurazione del sito, senza credenziali o contenuti pubblicati automaticamente», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [packages/pkg_jlms.xml#L1-L19](../packages/pkg_jlms.xml#L1-L19)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-02/criterion_01` — Specifiche per singolo plugin. Il repository contiene riferimenti pertinenti al criterio «Specifiche per singolo plugin», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-03/criterion_01` — Guide e contratti. Il repository contiene riferimenti pertinenti al criterio «Guide e contratti», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-03/criterion_05` — Contratto, manuali, changelog e test seguono ogni modifica. Il repository contiene riferimenti pertinenti al criterio «Contratto, manuali, changelog e test seguono ogni modifica», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [README.md#L1-L25](../README.md#L1-L25)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-04/criterion_01` — Collaudo completo. Il repository contiene riferimenti pertinenti al criterio «Collaudo completo», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [packages/pkg_jlms.xml#L1-L19](../packages/pkg_jlms.xml#L1-L19)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-04/criterion_03` — Verificare incluso/attivo/configurato come stati diversi, dipendenze compatibili e update che preserva stato, segreti esterni, riferimenti, dati e override. Il repository contiene riferimenti pertinenti al criterio «Verificare incluso/attivo/configurato come stati diversi, dipendenze compatibili e update che preserva stato, segreti esterni, riferimenti, dati e override», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [packages/pkg_jlms.xml#L1-L19](../packages/pkg_jlms.xml#L1-L19)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `PBASE-04/criterion_04` — Nessuna cancellazione remota di video all'installazione/disinstallazione. Il repository contiene riferimenti pertinenti al criterio «Nessuna cancellazione remota di video all'installazione/disinstallazione», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [packages/pkg_jlms.xml#L1-L19](../packages/pkg_jlms.xml#L1-L19)
+  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
+- `DOC-01/criterion_02` — Primo avvio, configurazione iniziale e dipendenze documentati. Il repository contiene riferimenti pertinenti al criterio «Primo avvio, configurazione iniziale e dipendenze documentati», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
 - `DOC-02/criterion_04` — Istruzioni confrontate con tutte le schermate amministrative core. Il piano prevede il confronto con ogni schermata e registra solo un primo censimento limitato ai form iniziali. La verifica schermata per schermata resta aperta.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#Ricognizione iniziale](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
+- `DOC-03/criterion_01` — Manuale docente spiega flussi core effettivamente disponibili. Il repository contiene riferimenti pertinenti al criterio «Manuale docente spiega flussi core effettivamente disponibili», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [docs/TEACHERS.md#L1-L14](../docs/TEACHERS.md#L1-L14)
+- `DOC-03/criterion_02` — Manuale studente spiega catalogo, iscrizione, aula e completamento. Il repository contiene riferimenti pertinenti al criterio «Manuale studente spiega catalogo, iscrizione, aula e completamento», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
+  - [docs/TEACHERS.md#L1-L14](../docs/TEACHERS.md#L1-L14)
 - `DOC-03/criterion_04` — Procedure verificabili da persone non sviluppatrici. Il piano richiede procedure eseguibili da utenti non sviluppatori e walkthrough con i diversi ruoli. L’evidenza di quelle prove deve ancora essere registrata.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
   - [docs/LEARNER_DASHBOARD.md#Collaudo e perimetro residuo](../docs/LEARNER_DASHBOARD.md)
+- `DOC-04/criterion_01` — Struttura del pacchetto e servizi core descritti. Il repository contiene riferimenti pertinenti al criterio «Struttura del pacchetto e servizi core descritti», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
+  - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
+- `DOC-06/criterion_01` — Campi non ovvi dispongono di descrizioni localizzate. Il repository contiene riferimenti pertinenti al criterio «Campi non ovvi dispongono di descrizioni localizzate», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/forms/course.xml#L1-L25](../component/administrator/forms/course.xml#L1-L25)
+  - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
+- `DOC-06/criterion_02` — Tooltip indicano scopo e formato dei valori. Il repository contiene riferimenti pertinenti al criterio «Tooltip indicano scopo e formato dei valori», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/forms/course.xml#L1-L25](../component/administrator/forms/course.xml#L1-L25)
+  - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
+- `DOC-06/criterion_03` — Tooltip indicano limiti, effetti ed eventuali avvertenze. Il repository contiene riferimenti pertinenti al criterio «Tooltip indicano limiti, effetti ed eventuali avvertenze», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [component/administrator/forms/course.xml#L1-L25](../component/administrator/forms/course.xml#L1-L25)
+  - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
 - `DOC-08/criterion_03` — Gate documentale e accettazione registrata prima della release. Il gate documentale è specificato. Il progetto deve registrare l’esito della revisione della candidata prima di poterlo accettare.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P5](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
   - [docs/RELEASE_PROCEDURE.md#Stato: **workflow predisposto](../docs/RELEASE_PROCEDURE.md)
 - `DOC-09/criterion_01` — Troubleshooting SMTP con diagnosi e rimedi verificati. La guida documenta errori di template, trasporto e riconciliazione. Le prove di effettiva consegna e di recupero SMTP sono segnate come collaudo da eseguire.
   - [docs/MAIL_SCHEDULER_SETUP.md#Collaudo Joomla/SMTP](../docs/MAIL_SCHEDULER_SETUP.md)
+- `DOC-09/criterion_02` — Troubleshooting video e provider con esiti riproducibili. Il repository contiene riferimenti pertinenti al criterio «Troubleshooting video e provider con esiti riproducibili», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
+- `DOC-09/criterion_03` — Troubleshooting storage e ACL con controlli sicuri. Il repository contiene riferimenti pertinenti al criterio «Troubleshooting storage e ACL con controlli sicuri», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
+- `DOC-09/criterion_04` — FAQ e CI documentate con procedure collaudate. Il repository contiene riferimenti pertinenti al criterio «FAQ e CI documentate con procedure collaudate», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
+  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
 - `SEC-P4/criterion_02` — Integrazione CMP/consenso dei provider video verificata. Il codice ha un bridge e la guida spiega il collegamento. Il gate richiede un esito con CMP effettiva e provider reali.
   - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video](../docs/PRIVACY_COOKIES.md)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
