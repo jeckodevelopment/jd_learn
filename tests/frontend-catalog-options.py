@@ -52,6 +52,15 @@ assert 'name="filter[category_id]"' in template
 assert "COM_JLMS_CATALOG_ALL_CATEGORIES" in template
 assert "catalog_show_category" in helper
 assert "filter.category_choice" in model
+assert "COM_JLMS_CATALOG_CLEAR_FILTERS" in template
+assert 'id="jlms-catalog-clear-filters"' in template
+assert "$this->showFilters && ($this->search !== ''" in template
+assert "($this->categoryId ? '&catid=' . (int) $this->categoryId : '')" in template
+assert "filter[search]" not in template.split('id="jlms-catalog-clear-filters"')[1].split("<?php endif; ?>")[0]
+for language in ("it-IT", "en-GB"):
+    ini = (root / "component/site/language" / language / "com_jlms.ini").read_text()
+    assert "COM_JLMS_CATALOG_CLEAR_FILTERS=" in ini
+
 assert "isset($this->getCategories()[$categoryChoice])" in model
 service = (root / "component/administrator/src/Application/CatalogService.php").read_text()
 assert "publicCourseCategories" in service
