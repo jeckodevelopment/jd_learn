@@ -3283,14 +3283,23 @@
       {
         "id": "category_contents",
         "label": "Categoria mostra titolo descrizione, sottocategorie e corsi accessibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/category/default.php",
+          "component/site/src/Model/CategoryModel.php",
+          "component/site/src/Model/CategoriesModel.php",
+          "tests/frontend-category-sections.py"
+        ]
       },
       {
         "id": "hidden_children",
         "label": "Nessuna fuga di quantità o titoli delle sottocategorie nascoste",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/site/src/Model/CategoriesModel.php",
+          "tests/frontend-category-sections.py"
+        ]
       },
       {
         "id": "dependencies",
@@ -3309,14 +3318,20 @@
       {
         "id": "presentation",
         "label": "Scheda mostra dati editoriali, obiettivi, destinatari e programma",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/course/default.php",
+          "tests/frontend-course-details.py"
+        ]
       },
       {
         "id": "protected_program",
         "label": "Programma pubblico non espone URL media né metadati riservati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "tests/frontend-course-details.py"
+        ]
       },
       {
         "id": "access_cta",
@@ -3341,14 +3356,22 @@
       {
         "id": "criterion_01",
         "label": "Elenco ordinato di corsi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "component/site/tmpl/pathway/default.php",
+          "tests/joomla-pathways.php"
+        ]
       },
       {
         "id": "criterion_02",
         "label": "ogni elemento mostra il proprio accesso e stato personale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "component/site/tmpl/pathway/default.php",
+          "tests/frontend-pathway-layout.py"
+        ]
       },
       {
         "id": "criterion_03",
@@ -3359,8 +3382,11 @@
       {
         "id": "criterion_04",
         "label": "evitare un 100% del percorso calcolato ignorando corsi bloccati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayProgress.php",
+          "tests/joomla-pathways.php"
+        ]
       },
       {
         "id": "criterion_05",
@@ -3373,14 +3399,22 @@
       {
         "id": "criterion_01",
         "label": "Separare lo stato dell'apprendimento dallo stato di disponibilità del corso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/dashboard/_courses.php",
+          "component/site/src/Model/DashboardModel.php",
+          "tests/frontend-my-courses.py"
+        ]
       },
       {
         "id": "criterion_02",
         "label": "Filtri e paginazione dei corsi personali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/DashboardModel.php",
+          "component/site/tmpl/mycourses/default.php",
+          "tests/frontend-my-courses.py"
+        ]
       },
       {
         "id": "criterion_03",
@@ -3411,8 +3445,11 @@
       {
         "id": "criterion_02",
         "label": "Aprire una lezione non la completa",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/classroom/default.php",
+          "tests/frontend-lesson-navigation.py"
+        ]
       },
       {
         "id": "criterion_03",
