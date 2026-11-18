@@ -3,9 +3,9 @@
 Dal roster degli iscritti al corso, aprire aprire **Disponibilità del corso**. I quattro comandi sono indipendenti:
 
 - **Chiudi nuove ammissioni** blocca gli avvii automatici e le assegnazioni manuali/preassegnazioni. Il corso resta visibile secondo pubblicazione, lingua e livelli Joomla; iscrizioni già esistenti restano fruibili se i loro normali controlli di accesso lo consentono.
-- **Apri nuove ammissioni** ripristina i percorsi di ammissione già previsti da modalità, edizione, lingua, ACL e capienza.
+- **Apri nuove ammissioni** è disponibile solo per corsi nello stato Pubblicato (`state=1`) e ripristina i percorsi di ammissione già previsti da modalità, edizione, lingua, ACL e capienza.
 - **Sospendi erogazione** blocca le azioni didattiche protette per tutte le iscrizioni del corso senza modificarne stato o progressi. Quiz e risposte salvate restano memorizzati; i quiz temporizzati seguono comunque la loro scadenza server. Le risorse già trasferite al browser e i token provider già emessi non sono revocati retroattivamente.
-- **Riprendi erogazione** ripristina la fruizione, subordinata agli accessi Joomla correnti, allo stato dell’iscrizione e alle finestre temporali. Non riapre tentativi chiusi né altera timer, risposte o progressi.
+- **Riprendi erogazione** è disponibile solo per corsi nello stato Pubblicato (`state=1`) e ripristina la fruizione, subordinata agli accessi Joomla correnti, allo stato dell’iscrizione e alle finestre temporali. Non riapre tentativi chiusi né altera timer, risposte o progressi.
 
 Ogni comando GET mostra un’anteprima con iscritti attivi/completati e tentativi quiz aperti. Per applicare la modifica servono motivo, conferma e token CSRF Joomla. Il POST verifica di nuovo autorizzazione per corso, revisione e hash dell’anteprima in transazione. Se lo stato è cambiato, la richiesta va ripreparata. Il comando imposta un valore esplicito e non è un toggle al reinvio.
 
