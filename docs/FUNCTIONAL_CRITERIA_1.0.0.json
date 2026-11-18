@@ -5628,8 +5628,12 @@
       {
         "id": "criterion_03",
         "label": "riattivazione senza riapertura automatica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "component/administrator/src/Application/CatalogService.php",
+          "tests/joomla-publication-review.php"
+        ]
       }
     ],
     "LCM-02": [
