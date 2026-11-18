@@ -3336,6 +3336,2234 @@
         "status": "unassessed",
         "evidence": []
       }
+    ],
+    "SCR-04": [
+      {
+        "id": "criterion_01",
+        "label": "Elenco ordinato di corsi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "ogni elemento mostra il proprio accesso e stato personale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Percentuale aggregata solo se lo studente ha iscrizioni e requisiti definiti per i corsi necessari",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "evitare un 100% del percorso calcolato ignorando corsi bloccati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Nella prima release nessun rilascio di attestato di percorso né migrazione automatica fra percorsi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-05": [
+      {
+        "id": "criterion_01",
+        "label": "Separare lo stato dell'apprendimento dallo stato di disponibilità del corso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Filtri e paginazione dei corsi personali",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Azioni Riprendi, Rivedi e Attestato rispettano le autorizzazioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Lo storico mantiene il corso non più accessibile senza rivelare materiali protetti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Stato vuoto con collegamento al catalogo autorizzato",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-06": [
+      {
+        "id": "criterion_01",
+        "label": "Indice moduli/lezioni, titolo, contenuto, materiali, avanzamento, precedente/successiva e indicatore salvataggio",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Aprire una lezione non la completa",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "per testi/documenti/audio, pulsante Segna come completata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Per video richiesti il pulsante non sostituisce la soglia, salvo scelta editoriale esplicita di regola manuale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "In sequenziale, clic su attività bloccata mostra prerequisito e link all'attività da completare",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "La ripresa preferisce l'ultima attività iniziata ancora disponibile, altrimenti la prima obbligatoria non completata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "nessun reindirizzamento a contenuto revocato",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-07": [
+      {
+        "id": "criterion_01",
+        "label": "Errori di salvataggio",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Mostrare Salvataggio…, Salvato alle…, Salvataggio non riuscito",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Conservare temporaneamente in memoria le modifiche non confermate, riprovare con limiti e segnalare il rischio di perdita uscendo",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Non mostrare come persistenti dati che il server non ha accettato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "non conservare risposte o credenziali in archivi pubblici del browser",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Gli intervalli di salvataggio sono quelli PERF-05: l'ultimo segmento non confermato può dover essere rivisto dopo un arresto improvviso",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-08": [
+      {
+        "id": "criterion_01",
+        "label": "Contenuto esterno bloccato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Placeholder locale con provider, motivo e azione disponibile (preferenze di consenso, riprova o assistenza)",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Nessun poster/SDK remoto prima delle condizioni configurate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Un link esterno alternativo non deve aggirare una scelta di consenso o un controllo di accesso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "l'alternativa formativa va configurata esplicitamente",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-13": [
+      {
+        "id": "criterion_01",
+        "label": "Editor corso e programma seguono i pattern Joomla previsti dagli scenari AC-129–AC-134",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Salvataggio e navigazione nel programma non perdono dati non confermati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Duplicazione e riordino conservano riferimenti e separazione degli oggetti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Le operazioni amministrative sono protette da autorizzazione lato server",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-14": [
+      {
+        "id": "criterion_01",
+        "label": "Roster essenziale per corso mostra stato e avanzamento dell'iscritto",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Le azioni singole del roster richiedono permessi e ambito del corso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Il roster soddisfa gli scenari core AC-128 con stati e filtri previsti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-15": [
+      {
+        "id": "criterion_01",
+        "label": "Ammissione singola con controllo stato e autorizzazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Sospensione singola con conservazione dello storico",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Riattivazione singola senza riaprire accessi impropri",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Migrazione didattica esplicita non quiz con consenso amministrativo e tracciabilità",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-16": [
+      {
+        "id": "criterion_01",
+        "label": "Configurazione/diagnostica",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Mostrare funzionalità non configurate con ragione e istruzioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "nessuna credenziale leggibile",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LIFE-01": [
+      {
+        "id": "criterion_01",
+        "label": "Un corso con iscrizioni, tentativi o attestati non è eliminabile definitivamente con un normale comando editoriale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Cestinamento/archiviazione e cancellazione dei dati sono operazioni diverse",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Nessuna eliminazione a cascata non dichiarata",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LIFE-02": [
+      {
+        "id": "criterion_01",
+        "label": "Categoria e docenti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Non consentire la cancellazione definitiva di una categoria con corsi senza scelta esplicita di ricollocazione, né lasciare riferimenti orfani",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Il docente si gestisce tramite profilo e associazione ai corsi, senza tassonomia docente visibile",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Rimuoverlo dalla visualizzazione pubblica non cancella lezioni, risultati o storico",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "le assegnazioni operative e il nome già presente in attestati storici sono gestiti separatamente",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LIFE-03": [
+      {
+        "id": "criterion_01",
+        "label": "Le transizioni del lifecycle core corrispondono alla matrice RELEASE_SCOPE_MATRIX.md",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Le transizioni sono controllate lato server anche tramite richieste dirette",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "I riferimenti didattici e lo storico sopravvivono alle transizioni consentite",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LIFE-09": [
+      {
+        "id": "criterion_01",
+        "label": "Le condizioni di accesso core restano coerenti durante le transizioni di lifecycle",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Le operazioni negate non modificano dati né autorizzazioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Le eccezioni e i limiti core sono riconciliati con RELEASE_SCOPE_MATRIX.md",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-01": [
+      {
+        "id": "criterion_01",
+        "label": "Catena di accesso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Verificare disponibilità di corso/versione, stato e accesso delle categorie applicabili, account, livello del corso, iscrizione didattica e prerequisiti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Il livello della scheda riguarda soltanto la presentazione promozionale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Le categorie limitano la visibilità secondo le proprie regole e non concedono mai accesso alle lezioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "L'implementazione deve verificare esplicitamente le categorie ascendenti: il viewing access level non va confuso con l'ereditarietà dei permessi di modifica",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Una voce di menu nascosta non protegge una risorsa",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "un URL diretto applica gli stessi controlli del servizio",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Un account Joomla bloccato non scarica attestati tramite vecchi collegamenti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-02": [
+      {
+        "id": "criterion_01",
+        "label": "Anteprima e consultazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Anteprime pubbliche solo per lezioni marcate e corso configurato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "consentono la visualizzazione ma non iscrizioni anonime, tentativi valutativi o attestati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "I materiali hanno una scelta autonoma di pubblicabilità: non diventano pubblici per associazione alla lezione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Guardare un'anteprima senza avviare il corso non riconosce automaticamente frequenza personale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Corso consultabile senza attività obbligatorie: progresso non applicabile e nessun attestato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "la modalità va dichiarata, altrimenti la pubblicazione senza obblighi è rifiutata",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-03": [
+      {
+        "id": "criterion_01",
+        "label": "Sequenza e rilascio delle lezioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "In modalità sequenziale usare dipendenze dichiarate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "alla creazione proporre la precedente attività obbligatoria come prerequisito",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "L'autore conferma la catena e il sistema impedisce cicli",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "In modalità libera sono comunque possibili prerequisiti espliciti, segnalati nella scheda",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Una lezione futura obbligatoria resta nel denominatore del progresso e non permette completamenti anticipati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "Scadenze di corso e lezioni non possono rendere irraggiungibile un requisito: validazione bloccante prima della pubblicazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-04": [
+      {
+        "id": "criterion_01",
+        "label": "Percorso aggregato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Ogni corso necessario pesa allo stesso modo",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Percentuale = somma delle percentuali dei corsi richiesti / numero dei corsi richiesti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "corso non iniziato o senza iscrizione vale zero",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Corsi non autorizzati contano zero senza rivelare contenuti non pubblicabili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "etichetta “percorso con corsi non disponibili” dove consentita",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "Un percorso senza corsi necessari non espone percentuale né completamento",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Nessuna certificazione di percorso nel rilascio 1",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_09",
+        "label": "L'associazione non cambia gruppi, livelli o iscrizioni",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-05": [
+      {
+        "id": "criterion_01",
+        "label": "Revoca durante quiz",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Alla perdita del livello o al blocco account, interrompere salvataggi/consegne e mostrare accesso non disponibile",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Le risposte già confermate restano",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Se il tentativo ha timer, la scadenza originale chiude e valuta le risposte salvate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "senza timer il tentativo rimane aperto ma non utilizzabile fino al ripristino dell'accesso o annullamento autorizzato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Il browser non accumula risposte da consegnare dopo la revoca",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "La sola scadenza didattica può consentire di concludere un tentativo già iniziato entro il limite originario, come annunciato prima dell'avvio",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Si distinguono quindi scadenza didattica e perdita dell'autorizzazione Joomla",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-08": [
+      {
+        "id": "criterion_01",
+        "label": "Concorrenza e disconnessione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Una sola attività di quiz attiva per la stessa iscrizione/quiz, anche da più dispositivi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Aggiornamenti portano una revisione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "una revisione obsoleta riceve conflitto e non sovrascrive una risposta più recente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Per il progresso video unire gli intervalli già fruiti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "la ripresa usa l'ultima posizione confermata della sessione valida, non il massimo tempo mai raggiunto, per permettere ripassi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "Identificativi di evento unici e validazione del tempo plausibile impediscono conteggi duplicati o salti attribuiti come visione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Gli eventi client restano una stima, non una prova di identità o presenza",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-09": [
+      {
+        "id": "criterion_01",
+        "label": "Corsi ritirati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Due azioni distinte: Chiudi nuove iscrizioni mantiene l'aula agli iscritti aventi diritto",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Sospendi erogazione blocca l'aula anche agli iscritti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Entrambe richiedono motivo e riepilogo",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Per una sospensione di erogazione il quiz segue EDGE-05 come blocco di fruizione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "uno già concluso resta storico",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "Il ritiro dal catalogo e il termine della pubblicazione della scheda non sostituiscono queste scelte",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Ripristino dal cestino in bozza e controllo di tutte le dipendenze",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_09",
+        "label": "Versioni storiche non vengono eliminate automaticamente quando si pubblica la successiva",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-11": [
+      {
+        "id": "criterion_01",
+        "label": "Versioni e revisioni native",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Ogni iscrizione conserva una versione didattica",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "le revisioni editoriali sono gestite da Joomla Content History",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Salvare o ripristinare titolo, presentazione e profilo docente aggiorna i dati correnti secondo ACL, senza cambiare la versione attiva o i risultati assegnati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Ripristinare una struttura con requisiti diversi prepara una nuova versione in bozza",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "I valori custom pertinenti alla fruizione sono acquisiti nello snapshot di pubblicazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "definizioni e campi decorativi correnti rimangono nel core",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Categoria, livelli e disponibilità sono controllati correntemente, senza concedere diritti storici",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_09",
+        "label": "Gli URL storici rimangono autorizzati e non indicizzabili autonomamente",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-12": [
+      {
+        "id": "criterion_01",
+        "label": "Protezione provider",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Default Stream: token temporaneo 15 minuti, rinnovo anticipato con nuova verifica autorizzativa",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "durata configurabile e dichiarata in diagnostica",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Non superare una scadenza didattica nota quando il modello di fruizione la rende vincolante",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Token già emesso e buffer mantengono la validità residua",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "non promettere invalidazione immediata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "Poster riservati non caricati da endpoint pubblici",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Download disabilitato per default",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_09",
+        "label": "Configurazione errata di dominio/privacy produce errore distinto, non ripiego a link pubblico o provider alternativo",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-13": [
+      {
+        "id": "criterion_01",
+        "label": "Iscrizione e identità",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Per il primo avvio selezionare la versione pubblicata corrente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Duplicazioni concorrenti restituiscono la stessa iscrizione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Un'iscrizione manuale/import può preassegnare il corso a un utente senza livello, ma non abilitarlo alla fruizione: mostrare l'avviso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Il LMS non aggiunge gruppi commerciali",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Account ricreato con stessa email non eredita lo storico",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "trasferimenti fra identità sono fuori perimetro e non avvengono tramite import",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "EDGE-14": [
+      {
+        "id": "criterion_01",
+        "label": "Rimozione delle configurazioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Livello Joomla eliminato o categoria mancante: nessun fallback a Public",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "corso non fruibile con avviso amministrativo",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Provider disabilitato non cancella i video né consente completamenti manuali impliciti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Modello attestato usato non eliminabile senza conservare gli snapshot già emessi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Un aggiornamento del pacchetto conserva template email personalizzati, permessi, file di override e identificatori dei documenti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DAT-01": [
+      {
+        "id": "criterion_01",
+        "label": "Dati editoriali",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Verificare titolo vuoto, spazi, limite 255",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "descrizione breve 500",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "durate positive",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "alias duplicato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "lingua/categoria/accesso inesistenti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "date invertite",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "I limiti non troncano silenziosamente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_09",
+        "label": "Le descrizioni sono sanificate secondo configurazione Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_10",
+        "label": "i campi custom conservano i vincoli definiti nel core",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DAT-02": [
+      {
+        "id": "criterion_01",
+        "label": "Validare appartenenza univoca modulo/versione e lezione/modulo, ordine senza perdita di elementi, dipendenze disponibili e assenza di cicli",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "La duplicazione crea contenuti in bozza e nuovi ID, non iscrizioni, tentativi, attestati o diritti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DAT-04": [
+      {
+        "id": "criterion_01",
+        "label": "Validare provider e formato della sorgente prima della pubblicazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Validare percorsi, MIME e dimensioni upload dei materiali core",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Gli errori di risorse/provider sono espliciti e non producono accesso pubblico accidentale",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DAT-08": [
+      {
+        "id": "criterion_01",
+        "label": "Configurazione sicura",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Alla prima installazione componenti/provider non configurati rimangono disabilitati, senza credenziali dimostrative né contenuti pubblicati automaticamente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Impostare lingua fallback, contatto supporto, storage riservato e task",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "i corsi senza test o attestato non richiedono parametri di funzioni disattivate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "REL-01": [
+      {
+        "id": "criterion_01",
+        "label": "Accettazione funzionale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Per ogni requisito del rilascio 1, almeno una prova prevista nella matrice, eseguita con risultato e riferimento al build",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Nessun caso obbligatorio lasciato senza esito",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "anomalie registrate con gravità, riproduzione e decisione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Le funzioni differite non possono comparire come completate nel report",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Le opzioni disattivate hanno comportamento testato",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "REL-02": [
+      {
+        "id": "criterion_01",
+        "label": "Accettazione non funzionale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Prove accessibilità automatiche e manuali, controllo ID unici, test sicurezza degli oggetti e dei ruoli, carico misto e picco, aggiornamento con dati esistenti e ripristino",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Il report prestazionale contiene l'ambiente e i risultati reali, non solo il numero di utenti virtuali impostato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Testare i provider reali su browser supportati con contenuti autorizzati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "REL-03": [
+      {
+        "id": "criterion_01",
+        "label": "Documentazione del rilascio",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Consegnare ZIP installabile, checksum, changelog, guida amministrazione/autore/studente, guida personalizzazione, mappa permessi e istruzioni task/storage/provider",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "La documentazione è parte della verifica, non un'attività facoltativa successiva",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "REL-04": [
+      {
+        "id": "criterion_01",
+        "label": "Separazione delle responsabilità",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Prodotto: identità Joomla, livelli, fruizione, progressi, valutazione e attestati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Estensione abbonamenti: assegnazione/revoca gruppi e flussi commerciali",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Gestore sito: configurazione ambientale, informative/consensi e conservazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Provider video: disponibilità e distribuzione secondo contratto",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Nessun errore esterno deve generare dati didattici falsi o aprire contenuti protetti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PVD-01": [
+      {
+        "id": "criterion_01",
+        "label": "I quattro plugin video previsti sono distribuiti nel pacchetto base",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Il registro dei provider supporta un contratto di estensione versionato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Attivazione e disattivazione seguono lo stato nativo dei plugin Joomla",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PVD-02": [
+      {
+        "id": "criterion_01",
+        "label": "Registro e contratto",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Il componente importa il gruppo nei contesti necessari ed emette il proprio evento `onJlmsRegisterVideoProviders`",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "i plugin registrano factory in un registry",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "L'evento è del progetto, non un evento core preesistente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Provider key univoca e contratto con versione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "errori su collisione o incompatibilita",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_07",
+        "label": "Operazioni comuni: descrizione, capacita, normalizzazione/validazione sorgente, metadati, descrittore playback e asset frontend",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_08",
+        "label": "Contratto dettagliato nell'allegato Servizi_endpoint_LMS_Joomla_1.0.md",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PVD-03": [
+      {
+        "id": "criterion_01",
+        "label": "Player uniforme",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Eventi player normalizzati e distruzione ordinata al cambio lezione/consenso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Il nucleo mantiene le regole di copertura, salvataggio e completamento",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "L'adapter dichiara le capacita effettive della sorgente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "una regola non supportata non puo essere pubblicata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Nessuna chiamata remota a ogni evento di progresso",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PVD-04": [
+      {
+        "id": "criterion_01",
+        "label": "Autorizzazione e segreti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "AccessPolicyService verifica l'accesso prima del plugin",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Il provider non assegna livelli, voti o attestati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Parametri API server separati dai token playback temporanei restituibili al browser",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "cache personale/no-store e nessuna chiave privata nei payload",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PVD-05": [
+      {
+        "id": "criterion_01",
+        "label": "Provider disabilitato o non configurato produce errore controllato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Errori dei quattro provider non provocano completamenti falsi o perdita di progressi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Compatibilità dei plugin verificata con le versioni Joomla/PHP supportate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PVD-06": [
+      {
+        "id": "criterion_01",
+        "label": "Il contratto consente di registrare un provider aggiuntivo senza modificare il modello del corso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Progressi e completamento usano le interfacce comuni senza dipendenze dal provider",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Incompatibilità di versione o capacità vengono rifiutate in modo esplicito",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "HTTP-01": [
+      {
+        "id": "criterion_01",
+        "label": "I task HTTP core della matrice RELEASE_SCOPE_MATRIX.md sono documentati e raggiungibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Le richieste dirette rispettano autenticazione e autorizzazione per oggetto",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "I metodi e codici di errore sono coerenti con il trasporto Joomla MVC",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "HTTP-02": [
+      {
+        "id": "criterion_01",
+        "label": "Trasporto Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Nel rilascio 1 le azioni browser usano controller MVC site/backend del componente, con task dichiarati e formato JSON o raw",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "API REST per applicazioni esterne restano differite e si integreranno nei Web Services core",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Il catalogo delle azioni non introduce gateway pagamento, servizi account paralleli o un cron pubblico",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "HTTP-03": [
+      {
+        "id": "criterion_01",
+        "label": "Metodi e policy",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "GET per letture, POST per azioni/mutazioni nel trasporto MVC, sessione Joomla, permessi backend e CSRF su POST",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Tutti gli endpoint controllano oggetto e accesso correnti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "GET non modifica voti, iscrizioni o completamenti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Errori con stato HTTP, codice applicativo e correlazione senza informazioni riservate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Dati personali e token non in cache condivisa",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "HTTP-04": [
+      {
+        "id": "criterion_01",
+        "label": "Le azioni HTTP core mantengono idempotenza dove richiesta",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Scritture concorrenti non creano iscrizioni o progressi duplicati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Errori e retry preservano lo stato consistente dell'oggetto",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "HTTP-05": [
+      {
+        "id": "criterion_01",
+        "label": "Le risposte HTTP core non espongono segreti né risorse protette",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Token CSRF e permessi vengono verificati separatamente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Errori applicativi espongono codici controllati, senza dettagli privati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "HTTP-06": [
+      {
+        "id": "criterion_01",
+        "label": "Contratti HTTP core verificati con test positivi e negativi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Il trasporto browser resta integrato nel ciclo vita Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Casi limite previsti in RELEASE_SCOPE_MATRIX.md tracciati come accettazione distinta",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-01": [
+      {
+        "id": "criterion_01",
+        "label": "Implementare controller, model, view e tmpl con le classi e convenzioni MVC Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "servizi applicativi condivisi tramite dependency injection",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Nessun motore MVC o bootstrap parallelo",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-02": [
+      {
+        "id": "criterion_01",
+        "label": "Applicare la matrice CORE-01–23 e le best practices Joomla/PHP, PSR-12, namespace e contratti tipizzati/documentati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Usare runtime supportati e verificare API della patch target",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "nessuna modifica del core o dipendenza intenzionale da API rimosse",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Motivare ogni servizio core non pertinente senza duplicarlo automaticamente",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-03": [
+      {
+        "id": "criterion_01",
+        "label": "Input, query e output",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Validazione server, campi allowlist, query con binding tramite servizi Joomla, output contestualmente codificato e HTML filtrato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Test contro SQL injection, XSS, mass assignment e formule CSV",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-04": [
+      {
+        "id": "criterion_01",
+        "label": "Identita, autorizzazioni e richieste",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Utenti/sessioni e livelli Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "controllo oggetto/parent a ogni operazione, CSRF su mutazioni browser, metodo HTTP, concorrenza e idempotenza",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "La presenza di un token CSRF non equivale a un permesso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "I job e i plugin non acquisiscono privilegi generici da super user",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-05": [
+      {
+        "id": "criterion_01",
+        "label": "File e chiamate esterne",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Upload/storage protetti, MIME/limiti, percorsi generati, nessun eseguibile o estrazione ZIP automatica",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "API provider su HTTPS verificato e host ammessi, timeout/retry e protezione SSRF anche sui redirect",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "nessun fetch di URL server arbitrari",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Nessun ripiego pubblico dopo errore di sicurezza",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-06": [
+      {
+        "id": "criterion_01",
+        "label": "Segreti e dati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "SecretProvider/configurazione server protetta, chiavi separate dal database ove necessarie, nessun segreto nei form lezione, DTO, export, log o pacchetti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Primitive crittografiche sicure mantenute, cache personale corretta, risposte quiz non anticipate e nessuna crittografia proprietaria improvvisata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Un normale campo password del form non viene considerato automaticamente cifratura a riposo",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-07": [
+      {
+        "id": "criterion_01",
+        "label": "Processo verificabile",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Vulnerabilita critiche/alte confermate e pertinenti non risolte bloccano la distribuzione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "non applicabilita e falsi positivi motivati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SECDEV-08": [
+      {
+        "id": "criterion_01",
+        "label": "Rilascio e manutenzione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Build riproducibile, pacchetto senza segreti/file dev, checksum, changelog e aggiornamenti Joomla su HTTPS",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Collaudare installazione, aggiornamenti con dati/configurazioni esistenti e recupero",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "ripetere le verifiche pertinenti per modifiche sensibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Nessuna checklist viene dichiarata superata prima dell'esecuzione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PBASE-01": [
+      {
+        "id": "criterion_01",
+        "label": "Inclusione nella distribuzione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Lo ZIP base installabile deve contenere il componente e i quattro plugin dedicati: YouTube, Vimeo, Cloudflare Stream e HTML5 locale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Sono modulari e gestiti dal core Joomla, ma non componenti da acquistare/scaricare separatamente per ottenere le funzioni descritte",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Tutti installati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "attivazione e segreti sono configurazione del sito, senza credenziali o contenuti pubblicati automaticamente",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PBASE-02": [
+      {
+        "id": "criterion_01",
+        "label": "Specifiche per singolo plugin",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Il solo contratto astratto non e documentazione sufficiente dei quattro plugin",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PBASE-03": [
+      {
+        "id": "criterion_01",
+        "label": "Guide e contratti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Il documento Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md contiene le schede e i dizionari dei parametri",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Servizi_endpoint_LMS_Joomla_1.0.md il contratto comune",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Contratto, manuali, changelog e test seguono ogni modifica",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "assenza di documentazione di un plugin base blocca l'accettazione del pacchetto",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "PBASE-04": [
+      {
+        "id": "criterion_01",
+        "label": "Collaudo completo",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "La matrice dedicata Matrice_collaudo_plugin_video_1.0.csv copre contratto comune e quattro provider",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Verificare incluso/attivo/configurato come stati diversi, dipendenze compatibili e update che preserva stato, segreti esterni, riferimenti, dati e override",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Nessuna cancellazione remota di video all'installazione/disinstallazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-01": [
+      {
+        "id": "criterion_01",
+        "label": "Guida installazione descrive requisiti minimi Joomla, PHP e database",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Primo avvio, configurazione iniziale e dipendenze documentati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Procedure di upgrade, backup e rollback documentate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Installazione pulita e aggiornamento con dati esistenti verificati con evidenze",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-02": [
+      {
+        "id": "criterion_01",
+        "label": "Manuale amministratore copre corsi, versioni, programma e iscritti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Manuale copre provider video, email e attestati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Manuale copre ACL, privacy e manutenzione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Istruzioni confrontate con tutte le schermate amministrative core",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-03": [
+      {
+        "id": "criterion_01",
+        "label": "Manuale docente spiega flussi core effettivamente disponibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Manuale studente spiega catalogo, iscrizione, aula e completamento",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Schermate illustrative accessibili e coerenti con la UI",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Procedure verificabili da persone non sviluppatrici",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-04": [
+      {
+        "id": "criterion_01",
+        "label": "Struttura del pacchetto e servizi core descritti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Contratti plugin e architettura database documentati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Upgrade, scheduler e troubleshooting documentati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Procedure tecniche riproducibili e versionate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-05": [
+      {
+        "id": "criterion_01",
+        "label": "Guida contestuale presente nelle schermate amministrative core",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Collegamenti ai capitoli pertinenti e non obsoleti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Contenuto disponibile in italiano e inglese",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-06": [
+      {
+        "id": "criterion_01",
+        "label": "Campi non ovvi dispongono di descrizioni localizzate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Tooltip indicano scopo e formato dei valori",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Tooltip indicano limiti, effetti ed eventuali avvertenze",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-07": [
+      {
+        "id": "criterion_01",
+        "label": "Operazioni ad alto rischio hanno procedure guidate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Test di configurazione espongono errori specifici e azionabili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Messaggi non invitano a operazioni insicure o prive di autorizzazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-08": [
+      {
+        "id": "criterion_01",
+        "label": "Matrice collega ogni flusso core alla relativa documentazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Nessun flusso core dichiarato completo senza guida",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Gate documentale e accettazione registrata prima della release",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-09": [
+      {
+        "id": "criterion_01",
+        "label": "Troubleshooting SMTP con diagnosi e rimedi verificati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Troubleshooting video e provider con esiti riproducibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Troubleshooting storage e ACL con controlli sicuri",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "FAQ e CI documentate con procedure collaudate",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "DOC-10": [
+      {
+        "id": "criterion_01",
+        "label": "Note rilascio e changelog corrispondono alla candidata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Incompatibilità e limitazioni note esplicitate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Riferimenti al pacchetto installabile e versione coerenti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Documentazione della release verificata rispetto agli artefatti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SEC-P1": [
+      {
+        "id": "criterion_01",
+        "label": "Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "findings tracciati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SEC-P2": [
+      {
+        "id": "criterion_01",
+        "label": "Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "nessun finding critico/alto irrisolto",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SEC-P3": [
+      {
+        "id": "criterion_01",
+        "label": "Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "verifiche con account di prova",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SEC-P4": [
+      {
+        "id": "criterion_01",
+        "label": "Inventario di cookie e storage locali del frontend e dei player",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Integrazione CMP/consenso dei provider video verificata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Scansioni browser per richieste e storage pre-consenso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Guida amministrativa privacy in IT/EN",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SEC-P5": [
+      {
+        "id": "criterion_01",
+        "label": "Test negativi end-to-end pertinenti alla release candidate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Penetration/risk review con ambito e risultati tracciabili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Vulnerabilità riesaminate e mitigazioni documentate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Decisione go/no-go motivata e registrata",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LCM-01": [
+      {
+        "id": "criterion_01",
+        "label": "Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "preservare storico personale, frequenze, progressi e attestati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "riattivazione senza riapertura automatica",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "LCM-02": [
+      {
+        "id": "criterion_01",
+        "label": "Toolbar Joomla per cestinazione e ripristino dei corsi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Filtri e viste amministrative del lifecycle corsi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Cestinazione non distrugge progressi o storico didattico",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Ripristino conservativo non riapre automaticamente accessi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Eliminazione fisica bloccata in presenza di iscritti o dipendenze storiche",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Controlli ACL sulle operazioni singole e massive",
+        "status": "unassessed",
+        "evidence": []
+      }
     ]
   }
 }
