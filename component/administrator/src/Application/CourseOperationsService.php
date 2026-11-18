@@ -22,7 +22,7 @@ final class CourseOperationsService
         $course = $this->roster->course($actor, $courseId);
         $field = self::FIELDS[substr($operation, 0, strrpos($operation, '_'))];
         $target = str_ends_with($operation, '_open') || str_ends_with($operation, '_resume') ? 1 : 0;
-        $q = $this->db->createQuery()->select('id,title,revision,' . $field . ' AS current_value')->from('#__jlms_courses')
+        $q = $this->db->createQuery()->select('id,title,state,revision,' . $field . ' AS current_value')->from('#__jlms_courses')
             ->where('id=:course')->bind(':course',$courseId,ParameterType::INTEGER);
         $course = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND',404);
         $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')->where('course_id=:course')->where("status IN ('active','completed')")
@@ -33,7 +33,9 @@ final class CourseOperationsService
         $attempts = (int)$this->db->setQuery($q)->loadResult();
         $state = ['course_id'=>$courseId,'revision'=>(int)$course->revision,'operation'=>$operation,'current'=>(int)$course->current_value,'target'=>$target,'learners'=>$learners,'open_attempts'=>$attempts];
         $state['hash'] = hash('sha256', QuestionDefinition::canonical($state));
-        $state['blocked'] = $state['current'] === $target;
+        // Reopening delivery or admissions is forbidden until the course is explicitly restored to Published.
+        // Otherwise an operator could pre-arm a suspended or archived course and bypass the restore gate.
+        $state['blocked'] = $state['current'] === $target || ($target === 1 && (int) $course->state !== 1);
         return ['course'=>$course,'impact'=>$state];
     }
 
