@@ -85,6 +85,25 @@ $check((bool)$pathModel->save(['id'=>$pathwayId,'revision'=>1,'title'=>'CI learn
 $detail = $service->detail($operator,'en-GB',$pathwayId);
 $check(count($detail['courses'])===2 && $detail['courses'][0]['id']===$courseId,'visible course is first in its authored order');
 $check($detail['courses'][1]['id']===null && $detail['courses'][1]['title']==='','draft course becomes an unidentified placeholder');
+
+// LCM-05: a published course with disabled delivery remains catalog-visible but
+// must not be presented as a usable classroom inside a learning pathway.
+$initialDelivery=(int)$db->setQuery('SELECT delivery_enabled FROM #__jlms_courses WHERE id='.(int)$courseId)->loadResult();
+try {
+    $db->setQuery('UPDATE #__jlms_courses SET delivery_enabled=0 WHERE id='.(int)$courseId)->execute();
+    $suspendedPathway=$service->detail($operator,'en-GB',$pathwayId);
+    $check((int)$suspendedPathway['courses'][0]['id']===$courseId
+        && $suspendedPathway['courses'][0]['access']==='unavailable'
+        && $suspendedPathway['courses'][0]['learning_state']!=='unavailable',
+        'published but delivery-suspended course retains catalog and learning status without promising access');
+    $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$courseId)->loadResult()===1,
+        'delivery suspension is read-only for pathway enrollment history');
+} finally {
+    $db->setQuery('UPDATE #__jlms_courses SET delivery_enabled='.(int)$initialDelivery.' WHERE id='.(int)$courseId)->execute();
+}
+$deliveryRestored=$service->detail($operator,'en-GB',$pathwayId);
+$check($deliveryRestored['courses'][0]['access']==='available','restored delivery returns pathway course to its previous availability');
+
 $check($detail['progress']===0 && $detail['required_courses']===2,'not-started and inaccessible courses contribute zero to aggregate');
 $guest = new Joomla\CMS\User\User();
 $guestDetail = $service->detail($guest,'en-GB',$pathwayId);
