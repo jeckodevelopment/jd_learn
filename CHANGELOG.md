@@ -1,6 +1,6 @@
 # Changelog
 
-- **0.60.1 (18/11/2026) — Ripristino archivio senza riapertura automatica:** archiviare un corso chiude ammissioni e fruizione, conservando le versioni e lo storico; il ripristino editoriale allo stato Pubblicato mantiene entrambi i blocchi fino a un'azione amministrativa esplicita. L'aula per iscritti verifica anche il flag delivery_enabled. Test Joomla delle transizioni e della protezione dei link diretti. Correzione PATCH senza modifiche allo schema.
+- **0.60.1 (18/11/2026) — Ripristino archivio senza riapertura automatica:** archiviare un corso chiude ammissioni e fruizione, conservando le versioni e lo storico; il ripristino editoriale allo stato Pubblicato mantiene entrambi i blocchi fino a un'azione amministrativa esplicita. Il gate di fruizione di LearningService mantiene il rifiuto HTTP 403 quando delivery_enabled è 0. Test Joomla delle transizioni e della protezione dei link diretti. Correzione PATCH senza modifiche allo schema.
 
 - **0.60.0 (18/11/2026) — Purga condizionata dei corsi:** comando irreversibile disponibile solo nel cestino, su un singolo corso per volta, con controllo POST/CSRF, `core.delete`, check-out e verifica transazionale di versioni didattiche, iscritti, percorsi, docenti, email, operazioni e cronologia. Nessuna cancellazione a cascata: si rifiuta ogni record con dipendenze protette. Test Joomla negativi e richieste HTTP dirette; accettazione su installazione reale pendente.
 
