@@ -1,3 +1,7 @@
+**JD Learn 0.60.8-dev — Smart Search su workflow Archive/Restore, LCM-05 (18/11/2026).**
+
+Il percorso nativo di archiviazione e ripristino del corso notifica esplicitamente Smart Search dopo il commit, leggendo il record aggiornato. La transizione completata non viene annullata da guasti del Finder; i test Joomla verificano notifiche sullo stato Archiviato e Pubblicato con ammissioni e didattica chiuse. Il test end-to-end del motore Finder e la verifica manuale su sito reale restano da eseguire; LCM-05 Parziale, avanzamento globale non consolidato.
+
 **JD Learn 0.60.7-dev — refresh Smart Search post-commit su cestinazione/ripristino corsi (LCM-05, 18/11/2026).**
 
 Le transizioni massive `CourseModel::changeStates()` notificano il Finder dopo il commit con lo snapshot aggiornato del corso, evitando indici non aggiornati per Cestinato e Ripristinato. Una failure nell'infrastruttura di indicizzazione non cambia l'esito della transizione già salvata. Test Joomla verifica i due eventi e lo stato persistito, inclusi i flag di ammissione/erogazione. Reindicizzazione end-to-end sul sito Joomla reale e controllo link Smart Search pendenti; LCM-05 Parziale, percentuale globale non consolidata.
