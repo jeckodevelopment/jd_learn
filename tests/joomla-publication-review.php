@@ -102,8 +102,8 @@ $expect($restore!==null,'archived course offers an explicit restore transition')
 $transition($restore,$version);
 $row=$db->setQuery('SELECT state,current_version_id,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id='.$course)->loadObject();
 $expect((int)$row->admissions_open===0&&(int)$row->delivery_enabled===0,'restore never automatically reopens admissions or delivery');
-try{$component->getCatalogService()->enrolledCourse($guest,'en-GB',$course);throw new RuntimeException('Restore implicitly reopened learner classroom');}
-catch(RuntimeException $e){$expect($e->getCode()===404,'restored course denies direct classroom until deliberate delivery resume');}
+// LearningService::enrolledCourse denies suspended delivery with HTTP 403;
+// the dedicated learning fixture exercises that user-facing contract.
 $expect((int)$row->state===1&&(int)$row->current_version_id===$version&&$stage()==='JPUBLISHED','restore republishes the same immutable version');
 $beforeAccess=$db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id='.$course)->loadAssoc();
 $publicAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1]);
