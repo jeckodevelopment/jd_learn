@@ -84,7 +84,7 @@ final class CoursesModel extends ListModel
                     $q->where('(a.title LIKE :title_search OR a.alias LIKE :alias_search)')->bind(':title_search', $search)->bind(':alias_search', $search);
                 }
             } elseif ($name === 'published') {
-                if (!in_array($value, ['0','1'], true)) { $q->where('1=0'); continue; }
+                if (!in_array($value, ['0','1','2'], true)) { $q->where('1=0'); continue; }
                 $state = (int) $value; $q->where('a.state=:state')->bind(':state', $state, ParameterType::INTEGER);
             } elseif ($name === 'language') {
                 if ($value !== '*' && !preg_match('/^[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8}){1,2}$/D', $value)) { $q->where('1=0'); continue; }
