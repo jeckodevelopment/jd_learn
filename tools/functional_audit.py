@@ -12,7 +12,8 @@ import re
 
 from functional_progress import CRITERIA, REGISTER, ROOT, calculate
 
-REPORT = ROOT / "docs/FUNCTIONAL_AUDIT_CURRENT.md"\nDASHBOARD = ROOT / "docs/RELEASE_DASHBOARD.md"
+REPORT = ROOT / "docs/FUNCTIONAL_AUDIT_CURRENT.md"
+DASHBOARD = ROOT / "docs/RELEASE_DASHBOARD.md"
 AUDIT_COLUMN = "Audit funzionale 1.0.0 per criterio"
 REVIEWED = {"implemented", "missing", "unverifiable"}
 
@@ -195,7 +196,8 @@ def main():
     if args.apply:
         CRITERIA.write_text(json.dumps(inventory, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     REGISTER.write_bytes(matrix.encode(encoding))
-    REPORT.write_text(report, encoding="utf-8")\n    DASHBOARD.write_text(dashboard, encoding="utf-8")
+    REPORT.write_text(report, encoding="utf-8")
+    DASHBOARD.write_text(dashboard, encoding="utf-8")
 
 
 if __name__ == "__main__":
