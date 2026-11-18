@@ -12,7 +12,7 @@ import re
 
 from functional_progress import CRITERIA, REGISTER, ROOT, calculate
 
-REPORT = ROOT / "docs/FUNCTIONAL_AUDIT_CURRENT.md"
+REPORT = ROOT / "docs/FUNCTIONAL_AUDIT_CURRENT.md"\nDASHBOARD = ROOT / "docs/RELEASE_DASHBOARD.md"
 AUDIT_COLUMN = "Audit funzionale 1.0.0 per criterio"
 REVIEWED = {"implemented", "missing", "unverifiable"}
 
@@ -114,6 +114,32 @@ def generate_report(rows, inventory):
     return "\n".join(lines)
 
 
+def generate_dashboard(progress):
+    manual = progress["manual_acceptance"]
+    floor = progress["development_evidence_floor_percent"]
+    c = progress["criteria_by_requirement"]
+    implemented = sum(x["implemented_criteria"] for x in c.values())
+    missing = sum(x["missing_criteria"] for x in c.values())
+    unverifiable = sum(x["unverifiable_criteria"] for x in c.values())
+    unassessed = sum(x["unassessed_criteria"] for x in c.values())
+    return "\n".join([
+        "# Riepilogo progetto/release JD Learn 1.0.0", "",
+        "Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: `docs/FUNCTIONAL_CRITERIA_1.0.0.json` e `docs/REQUIREMENTS_STATUS.csv`.", "",
+        "## Sviluppo documentato (minimo confermato)", "",
+        f"**{floor:.2f}%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope ({progress['in_scope_requirements']} requisiti).",
+        f"Il registro contiene {implemented} criteri implementati con evidenza, {missing} lacune accertate, {unverifiable} non verificabili e {unassessed} non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.", "",
+        "La percentuale funzionale globale rigorosa resta **" + (f"{progress['functional_implementation_percent']:.2f}%" if progress["functional_implementation_percent"] is not None else "non determinabile") + "** finché i criteri non verificabili non vengono risolti.", "",
+        "## Collaudo manuale Joomla", "",
+        f"**{manual['coverage_percent']:.2f}%** — requisiti con almeno un esito registrato ({manual['requirements_with_recorded_result']}/{progress['in_scope_requirements']}). È copertura per requisito, non percentuale di casi di test superati.",
+        f"- Parziale / avviato: **{manual['requirements_partial']}**",
+        f"- Superato integralmente: **{manual['requirements_passed']}** ({manual['fully_accepted_percent']:.2f}% del perimetro)",
+        f"- Fallito: **{manual['requirements_failed']}**",
+        f"- Non eseguito: **{manual['requirements_not_run']}**",
+        "",
+        "La verifica automatica CI è un asse separato e non modifica il dato di accettazione Joomla. Un esito parziale conta come collaudo avviato; un esito fallito conta nella copertura perché è stato eseguito, ma resta distinto dai superati.",
+        ""
+    ])
+
 def generate_matrix(rows, columns, inventory):
     if AUDIT_COLUMN not in columns:
         columns = [*columns, AUDIT_COLUMN]
@@ -169,7 +195,7 @@ def main():
     if args.apply:
         CRITERIA.write_text(json.dumps(inventory, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     REGISTER.write_bytes(matrix.encode(encoding))
-    REPORT.write_text(report, encoding="utf-8")
+    REPORT.write_text(report, encoding="utf-8")\n    DASHBOARD.write_text(dashboard, encoding="utf-8")
 
 
 if __name__ == "__main__":

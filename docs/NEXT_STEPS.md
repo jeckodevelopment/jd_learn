@@ -1,6 +1,6 @@
 # Prossimi passi verso JD Learn 1.0.0
 
-**Riconciliazione funzionale 1.0.0 completata su tutti i 757 criteri.** Il registro copre 214 requisiti: 426 criteri implementati, 63 lacune accertate e 268 non verificabili; nessuno è rimasto da esaminare. La percentuale globale è non determinabile finché persistono esiti non verificabili. Priorità successive: affrontare le lacune accertate, eseguire le verifiche mancanti e chiudere i gate di release, mantenendo separati CI e accettazione Joomla. Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) è il dettaglio operativo.
+**Riconciliazione funzionale 1.0.0 completata su tutti i 757 criteri.** Il registro copre 214 requisiti: 426 criteri implementati, 63 lacune accertate e 268 non verificabili; nessuno è rimasto da esaminare. La percentuale funzionale globale rigorosa è non determinabile finché persistono esiti non verificabili. Il [riepilogo progetto/release](RELEASE_DASHBOARD.md) mostra separatamente il minimo di sviluppo documentato e la copertura dei collaudi manuali. Priorità successive: affrontare le lacune accertate, eseguire le verifiche mancanti e chiudere i gate di release, mantenendo separati CI e accettazione Joomla. Il [report corrente](FUNCTIONAL_AUDIT_CURRENT.md) è il dettaglio operativo.
 
 Gli snapshot storici sottostanti documentano priorità e stime del rispettivo periodo; non rappresentano lo stato corrente e non sostituiscono il registro audit.
 
