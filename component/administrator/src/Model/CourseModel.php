@@ -492,6 +492,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $db->updateObject('#__jlms_courses', $update, 'id');
             }
             $db->transactionCommit();
+            // Finder indexes must reflect the committed lifecycle state, never a
+            // pending transaction. A search refresh failure cannot undo the edit.
+            $this->refreshLifecycleFinder($ids);
             return true;
         } catch (\Throwable $error) {
             if ($started) { $db->transactionRollback(); }
@@ -499,6 +502,42 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $this->setError(Text::_(in_array($error->getMessage(), $known, true)
                 ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             return false;
+        }
+    }
+
+    /**
+     * Signal course state changes to Smart Search after committing the lifecycle
+     * transaction. The Finder extension owns index/deindex behavior.
+     *
+     * @param list<int> $ids
+     */
+    private function refreshLifecycleFinder(array $ids): void
+    {
+        try {
+            \Joomla\CMS\Plugin\PluginHelper::importPlugin('finder');
+            $dispatcher = Factory::getApplication()->getDispatcher();
+            foreach ($ids as $id) {
+                $courseQuery = $this->getDatabase()->createQuery()->select('*')
+                    ->from('#__jlms_courses')->where('id = :id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
+                $course = $this->getDatabase()->setQuery($courseQuery)->loadObject();
+                if ($course) {
+                    $dispatcher->dispatch('onFinderAfterSave', new \Joomla\CMS\Event\Finder\AfterSaveEvent(
+                        'onFinderAfterSave', [
+                            'context' => 'com_jlms.course', 'subject' => $course, 'isNew' => false,
+                        ]
+                    ));
+                }
+            }
+        } catch (\Throwable) {
+            // Indexing is a best-effort follow-up: an operational search failure
+            // must not change the already committed lifecycle outcome.
+            try {
+                \Joomla\CMS\Log\Log::add(
+                    'Course lifecycle Finder refresh failed; course count=' . count($ids),
+                    \Joomla\CMS\Log\Log::WARNING, 'com_jlms'
+                );
+            } catch (\Throwable) {}
         }
     }
 
