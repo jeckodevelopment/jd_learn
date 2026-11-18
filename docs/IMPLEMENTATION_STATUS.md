@@ -1,6 +1,6 @@
 **JD Learn 0.60.0-dev — eliminazione protetta dei corsi privi di storico (18/11/2026).**
 
-La PR di implementazione 0.60.0 introduce un comando Purga per il singolo corso cestinato: blocca versioni, iscrizioni, relazioni, mail e audit, con ACL e transazione. La cancellazione del record senza dipendenze e il collaudo reale devono essere verificati separatamente; non si dichiara concluso l'audit completo LCM-02.
+La PR di implementazione 0.60.0 introduce un comando Purga per il singolo corso cestinato: blocca versioni, iscrizioni, relazioni, mail e audit, e rimuove le sole revisioni editoriali del corso vuoto confermato, con ACL e transazione. La cancellazione del record senza dipendenze e il collaudo reale devono essere verificati separatamente; non si dichiara concluso l'audit completo LCM-02.
 
 PR #614: filtro Cestinati e azioni atomiche con ACL/CSRF, ripristino sempre non pubblicato, preservazione dello storico. Non introdotta la cancellazione definitiva: LCM-02 rimane parziale finché è verificata la politica di eliminazione fisica dei corsi privi di dipendenze e conclusa l'accettazione Joomla.
 
