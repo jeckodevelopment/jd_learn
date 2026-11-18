@@ -3006,6 +3006,336 @@
         "status": "unassessed",
         "evidence": []
       }
+    ],
+    "QUI-02": [
+      {
+        "id": "admin_list",
+        "label": "Lista banca domande distinta dal form, coerente con pattern articoli Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "create_edit",
+        "label": "Creazione e modifica con validazione risposte, punti e spiegazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "duplicate",
+        "label": "Duplicazione autonoma della domanda senza alterare l'originale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "delete_acl",
+        "label": "Cestinazione/eliminazione protetta da ACL e dipendenze su tentativi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "versioning",
+        "label": "Versionamento delle domande e preservazione riferimenti ai tentativi precedenti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "REP-02": [
+      {
+        "id": "roster",
+        "label": "Elenco iscritti per corso con stato accesso e avanzamento",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "dates",
+        "label": "Primo e ultimo evento registrati e mostrati correttamente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "results",
+        "label": "Risultati e attestati visibili solo nel perimetro 1.0.0",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "acl_scope",
+        "label": "Accesso limitato ai corsi assegnati e ruoli autorizzati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ACL-DET-01": [
+      {
+        "id": "distinct_permissions",
+        "label": "Pubblicazione, lettura risultati e cancellazione usano capacità distinte",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "teacher_is_not_admin",
+        "label": "Il docente presente nella scheda pubblica non riceve privilegi amministrativi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "direct_actions",
+        "label": "Autorizzazioni applicate lato server anche tramite URL e richieste dirette",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "advanced_deferred",
+        "label": "Export, rettifiche e report avanzati distinti dal core 1.0.0",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ACL-DET-02": [
+      {
+        "id": "admin_gate",
+        "label": "Accesso backend JD Learn subordinato alle autorizzazioni Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "provider_credentials",
+        "label": "Autore senza necessità di leggere credenziali del provider",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "masked_secrets",
+        "label": "Segreti mascherati nei form e assenti nelle risposte di consultazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "secret_lifecycle",
+        "label": "Nessuna esposizione dei segreti in cache e log delle operazioni core",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ACL-DET-03": [
+      {
+        "id": "preview_marked",
+        "label": "Anteprima amministrativa visibilmente distinta dalla frequenza reale",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "preview_no_progress",
+        "label": "Anteprima non crea progressi, tentativi, attestati o statistiche studente",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "real_enrollment",
+        "label": "Amministratore studente usa il normale percorso di iscrizione e autorizzazione",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "ACL-DET-04": [
+      {
+        "id": "permission_matrix",
+        "label": "Mappatura delle operazioni core a capacità e asset Joomla",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "direct_url",
+        "label": "Prove autorizzative su URL diretti e richieste manipolate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "query_resources",
+        "label": "Prove autorizzative su query e risorse protette",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "cross_role",
+        "label": "Negazione e concessione verificate con matrice dei ruoli pertinenti",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "STA-01": [
+      {
+        "id": "uniform_time",
+        "label": "Istanti memorizzati in formato temporale uniforme",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "server_clock",
+        "label": "Scadenze determinate dall'orologio server e non dal browser",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "timezone_display",
+        "label": "Fuso orario esplicitato in messaggi e scadenze",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "dst",
+        "label": "Cambio fuso o ora legale non riapre attività scadute nel perimetro core",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "STA-02": [
+      {
+        "id": "immutable_window",
+        "label": "Finestre di disponibilità applicate al tentativo conservate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "deadline_start",
+        "label": "Non consentire un tentativo quando il tempo residuo viola il limite dichiarato",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "truncate_explicit",
+        "label": "Troncamento eventuale esplicito e mostrato prima dell'avvio",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "extensions_audit",
+        "label": "Proroghe individuali autorizzate e tracciate, se nel perimetro del rilascio",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "STA-03": [
+      {
+        "id": "distinct_reasons",
+        "label": "Messaggi distinti per revoca, indisponibilità corso, scadenza e timer",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "revocation_priority",
+        "label": "Revoca prevale sulle nuove risposte e mutazioni",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "authorized_autoclose",
+        "label": "Chiusura automatica gestisce solo risposte già autorizzate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "cross_context",
+        "label": "Verifica delle transizioni fra aula, quiz, iscrizione e accesso",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-01": [
+      {
+        "id": "url_filters",
+        "label": "Ricerca, filtri e ordinamento persistono in URL, anche back/forward",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "pagination",
+        "label": "Cambio filtro torna a pagina uno; default 12 e limiti server",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "sorts",
+        "label": "Ordinamenti editoriali, titolo, data e durata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "card",
+        "label": "Scheda include metadati principali e azione disponibile",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "empty_error",
+        "label": "Stati senza risultati, azzera filtri ed errore recuperabile",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "acl_results",
+        "label": "Nessuna informazione promozionale riservata nei risultati",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-02": [
+      {
+        "id": "category_contents",
+        "label": "Categoria mostra titolo descrizione, sottocategorie e corsi accessibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "hidden_children",
+        "label": "Nessuna fuga di quantità o titoli delle sottocategorie nascoste",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "dependencies",
+        "label": "Eliminazione e spostamento con riepilogo dipendenze corsi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "no_granted_access",
+        "label": "Elenco categoria non concede automaticamente accesso ai corsi",
+        "status": "unassessed",
+        "evidence": []
+      }
+    ],
+    "SCR-03": [
+      {
+        "id": "presentation",
+        "label": "Scheda mostra dati editoriali, obiettivi, destinatari e programma",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "protected_program",
+        "label": "Programma pubblico non espone URL media né metadati riservati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "access_cta",
+        "label": "Azione primaria coerente con stato/iscrizione/permessi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "teacher_links",
+        "label": "Rimandi a docenti e contenuti pubblicamente accessibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "course_rules",
+        "label": "Regole di completamento e attestati disponibili presentate correttamente",
+        "status": "unassessed",
+        "evidence": []
+      }
     ]
   }
 }
