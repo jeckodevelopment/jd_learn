@@ -2,7 +2,7 @@
 <form>
  <fields name="filter">
   <field name="search" type="text" inputmode="search" label="COM_JLMS_COURSES_SEARCH" description="COM_JLMS_COURSES_SEARCH_HELP" hint="JSEARCH_FILTER" maxlength="200" />
-  <field name="published" type="list" label="JSTATUS" class="js-select-submit-on-change" validate="options"><option value="">JOPTION_SELECT_PUBLISHED</option><option value="1">JPUBLISHED</option><option value="0">JUNPUBLISHED</option><option value="2">JARCHIVED</option></field>
+  <field name="published" type="list" label="JSTATUS" class="js-select-submit-on-change" validate="options"><option value="">JOPTION_SELECT_PUBLISHED</option><option value="1">JPUBLISHED</option><option value="0">JUNPUBLISHED</option><option value="2">JARCHIVED</option><option value="-2">JTRASHED</option></field>
   <field name="category_id" type="Coursefiltercategory" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" extension="com_jlms.course" published="0,1,2" label="JCATEGORY" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_CATEGORY</option></field>
   <field name="access" type="accesslevel" label="JGRID_HEADING_ACCESS" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_ACCESS</option></field>
   <field name="author_id" type="Courseauthors" addfieldprefix="Jlms\Component\Jlms\Administrator\Field" label="JAUTHOR" class="js-select-submit-on-change"><option value="">JOPTION_SELECT_AUTHOR</option></field>
