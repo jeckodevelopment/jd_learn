@@ -80,6 +80,20 @@ foreach ([1, 2, 3] as $position) {
  <?php foreach (['publish_up'=>'COM_JLMS_CALENDAR_PUBLISH_UP','publish_down'=>'COM_JLMS_CALENDAR_PUBLISH_DOWN','starts_at'=>'COM_JLMS_CALENDAR_START','ends_at'=>'COM_JLMS_CALENDAR_END'] as $key=>$label) : if ($calendar[$key]===null) { continue; } ?>
  <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::display($calendar[$key],$calendar['timezone'],true)) ?></dd><?php endforeach; ?></dl>
  <p><?= Text::_('COM_JLMS_CALENDAR_POLICY') ?></p></section><?php endif; ?>
+ <?php if (!empty($this->item['completion'])) : $completion=$this->item['completion']; ?>
+ <section id="jlms-course-completion" aria-labelledby="jlms-course-completion-title">
+  <h2 id="jlms-course-completion-title"><?= Text::_('COM_JLMS_COURSE_COMPLETION_TITLE') ?></h2>
+  <?php if ($completion['mode']==='consultation') : ?>
+   <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE') ?></p>
+  <?php else : ?>
+   <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_COURSE_COMPLETION_ALL_REQUIRED') ?></p>
+   <p id="jlms-course-completion-sequence"><?= Text::_($completion['sequence_mode']==='sequential'?'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL':'COM_JLMS_COURSE_COMPLETION_FREE') ?></p>
+   <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent((int)$completion['video_threshold_basis_points'])) ?></p>
+   <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned']?'COM_JLMS_COURSE_CERTIFICATE_PLANNED':'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
+   <?php if ($completion['certificate_planned']) : ?><p class="small" id="jlms-course-certificate-caveat"><?= Text::_('COM_JLMS_COURSE_CERTIFICATE_CONDITIONAL') ?></p><?php endif; ?>
+  <?php endif; ?>
+ </section>
+ <?php endif; ?>
  <section id="jlms-course-outline"><h2><?= Text::_('COM_JLMS_CURRICULUM') ?></h2>
  <?php $moduleIndex = 0; foreach ($this->item['modules'] as $module) : ?>
   <details id="jlms-module-<?= (int) $module->id ?>" class="jlms-module"<?= $moduleIndex++ === 0 ? ' open' : '' ?>><summary class="jlms-module__summary"><h3 class="jlms-module__title"><?= $this->escape($module->title) ?></h3></summary>
