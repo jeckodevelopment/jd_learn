@@ -152,6 +152,8 @@ $learningBefore=[
 ];
 listExpect($courseModel->changeStates([$ids['Alpha']],-2),'Published course can be moved to trash');
 listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===-2,'Course is trashed without deleting the record');
+listExpect(!$courseModel->purgeEmpty($ids['Alpha']),'Purge rejects trashed course with frozen teaching version');
+listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id='.(int)$ids['Alpha'])->loadResult()===1,'Denied purge leaves trashed course intact');
 $trashedList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);
 $trashedList->setState('list.limit',100);$trashedList->setState('list.start',0);
 $trashedList->setState('filter.search','List UI');$trashedList->setState('filter.published','-2');
