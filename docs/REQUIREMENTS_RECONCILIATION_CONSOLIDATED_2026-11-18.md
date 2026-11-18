@@ -13,7 +13,7 @@ La riconciliazione **non è conclusa sul merito tecnico**: l'inventario è concl
 ## Gap implementativi dimostrati
 
 - `LCM-02/criterion_01` — **missing**: la vista amministrativa `component/administrator/src/View/Courses/HtmlView.php` offre creazione, modifica e programma ma non cestinazione/ripristino nel toolbar.
-- `LCM-02/criterion_02` — **missing**: in `component/administrator/src/Model/CoursesModel.php`, il filtro di stato accetta solo `0` e `1`, senza gestire `2` archiviato e `-2` cestinato, e il badge della lista riduce i valori a pubblicato/non pubblicato.
+- `LCM-02/criterion_02` — **missing nel suo insieme**: **parzialmente risolto nella 0.58.0** il filtro per `2` (archiviato) e il badge; restano da realizzare la vista/filtro del cestino (`-2`) e le operazioni di ripristino controllato. La classificazione `missing` resta conservativa finché il criterio intero non è soddisfatto.
 - `LCM-02/criterion_04` — **missing**: non è esposta una transizione di ripristino dal cestino nella UI dei corsi; il workflow `PublicationService` supporta il ripristino di corsi **archiviati**, non lo svuotamento del cestino.
 - `LCM-02/criterion_05` — **implemented, conservativo**: `CourseModel::delete()` nega sempre la cancellazione fisica, quindi la nega anche in presenza di iscritti o dipendenze. Questo **non** risolve l'obbligo futuro di consentire l'eliminazione sicura degli oggetti privi di dipendenze.
 
