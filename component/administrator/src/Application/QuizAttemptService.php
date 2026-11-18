@@ -80,11 +80,13 @@ final class QuizAttemptService
     /** Earliest UTC boundary that can close a quiz, across all active learning windows. */
     private function quizClosingAt(object $enrollment, object $lesson): ?int
     {
+        $editionId=(int)$enrollment->edition_id;
+        $courseId=(int)$enrollment->course_id;
         $q=$this->db->createQuery()->select('ends_at')->from('#__jlms_editions')
-            ->where('id = :edition')->bind(':edition',(int)$enrollment->edition_id,ParameterType::INTEGER);
+            ->where('id = :edition')->bind(':edition',$editionId,ParameterType::INTEGER);
         $editionEnd=$this->db->setQuery($q)->loadResult();
         $q=$this->db->createQuery()->select('publish_down, params_json')->from('#__jlms_courses')
-            ->where('id = :course')->bind(':course',(int)$enrollment->course_id,ParameterType::INTEGER);
+            ->where('id = :course')->bind(':course',$courseId,ParameterType::INTEGER);
         $course=$this->db->setQuery($q)->loadObject();
         if(!$course)throw new \RuntimeException('COM_JLMS_LEARNING_DENIED',403);
         $schedule=CourseSchedule::read($course);
