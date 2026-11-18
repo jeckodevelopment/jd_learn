@@ -5180,13 +5180,25 @@
     "DOC-01": [
       {
         "id": "criterion_01",
-        "label": "Guida installazione, requisiti Joomla/PHP/DB, primo avvio, upgrade, rollback e backup",
+        "label": "Guida installazione descrive requisiti minimi Joomla, PHP e database",
         "status": "unassessed",
         "evidence": []
       },
       {
         "id": "criterion_02",
-        "label": "prove di installazione pulita e upgrade con dati",
+        "label": "Primo avvio, configurazione iniziale e dipendenze documentati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Procedure di upgrade, backup e rollback documentate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Installazione pulita e aggiornamento con dati esistenti verificati con evidenze",
         "status": "unassessed",
         "evidence": []
       }
@@ -5194,13 +5206,25 @@
     "DOC-02": [
       {
         "id": "criterion_01",
-        "label": "Manuale amministratore completo per corsi, versioni, lezioni, iscritti, provider, ACL, email, attestati, privacy e manutenzione",
+        "label": "Manuale amministratore copre corsi, versioni, programma e iscritti",
         "status": "unassessed",
         "evidence": []
       },
       {
         "id": "criterion_02",
-        "label": "tutte le schermate verificate",
+        "label": "Manuale copre provider video, email e attestati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Manuale copre ACL, privacy e manutenzione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Istruzioni confrontate con tutte le schermate amministrative core",
         "status": "unassessed",
         "evidence": []
       }
@@ -5208,7 +5232,25 @@
     "DOC-03": [
       {
         "id": "criterion_01",
-        "label": "Manuale docente e studente con percorsi tipici, screenshot accessibili e prove eseguibili da utenti non sviluppatori",
+        "label": "Manuale docente spiega flussi core effettivamente disponibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Manuale studente spiega catalogo, iscrizione, aula e completamento",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Schermate illustrative accessibili e coerenti con la UI",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Procedure verificabili da persone non sviluppatrici",
         "status": "unassessed",
         "evidence": []
       }
@@ -5216,7 +5258,25 @@
     "DOC-04": [
       {
         "id": "criterion_01",
-        "label": "Riferimento tecnico su struttura pacchetto, servizi, plugin, database, upgrade, scheduler e troubleshooting, con procedure verificabili",
+        "label": "Struttura del pacchetto e servizi core descritti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Contratti plugin e architettura database documentati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Upgrade, scheduler e troubleshooting documentati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Procedure tecniche riproducibili e versionate",
         "status": "unassessed",
         "evidence": []
       }
@@ -5224,7 +5284,19 @@
     "DOC-05": [
       {
         "id": "criterion_01",
-        "label": "Guida contestuale IT/EN per schermate amministrative Joomla, collegata ai capitoli pertinenti del manuale",
+        "label": "Guida contestuale presente nelle schermate amministrative core",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Collegamenti ai capitoli pertinenti e non obsoleti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Contenuto disponibile in italiano e inglese",
         "status": "unassessed",
         "evidence": []
       }
@@ -5232,7 +5304,19 @@
     "DOC-06": [
       {
         "id": "criterion_01",
-        "label": "Descrizioni e tooltip localizzati per campi e azioni non ovvie, con scopo, formato, limiti, effetti e avvertenze",
+        "label": "Campi non ovvi dispongono di descrizioni localizzate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Tooltip indicano scopo e formato dei valori",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Tooltip indicano limiti, effetti ed eventuali avvertenze",
         "status": "unassessed",
         "evidence": []
       }
@@ -5240,7 +5324,19 @@
     "DOC-07": [
       {
         "id": "criterion_01",
-        "label": "Procedure guidate, test di configurazione e messaggi attuabili per operazioni ad alto rischio",
+        "label": "Operazioni ad alto rischio hanno procedure guidate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Test di configurazione espongono errori specifici e azionabili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Messaggi non invitano a operazioni insicure o prive di autorizzazione",
         "status": "unassessed",
         "evidence": []
       }
@@ -5248,7 +5344,19 @@
     "DOC-08": [
       {
         "id": "criterion_01",
-        "label": "Matrice di copertura documentale e gate prima della release: nessun flusso core senza guida e accettazione registrata",
+        "label": "Matrice collega ogni flusso core alla relativa documentazione",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Nessun flusso core dichiarato completo senza guida",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Gate documentale e accettazione registrata prima della release",
         "status": "unassessed",
         "evidence": []
       }
@@ -5256,7 +5364,25 @@
     "DOC-09": [
       {
         "id": "criterion_01",
-        "label": "Manuale di troubleshooting e FAQ per SMTP, video, storage, ACL e CI con soluzioni collaudate",
+        "label": "Troubleshooting SMTP con diagnosi e rimedi verificati",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Troubleshooting video e provider con esiti riproducibili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Troubleshooting storage e ACL con controlli sicuri",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "FAQ e CI documentate con procedure collaudate",
         "status": "unassessed",
         "evidence": []
       }
@@ -5264,7 +5390,25 @@
     "DOC-10": [
       {
         "id": "criterion_01",
-        "label": "Note di rilascio, changelog, incompatibilità, limiti noti e riferimenti al package coerenti con la versione candidata",
+        "label": "Note rilascio e changelog corrispondono alla candidata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Incompatibilità e limitazioni note esplicitate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Riferimenti al pacchetto installabile e versione coerenti",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Documentazione della release verificata rispetto agli artefatti",
         "status": "unassessed",
         "evidence": []
       }
@@ -5314,7 +5458,25 @@
     "SEC-P4": [
       {
         "id": "criterion_01",
-        "label": "Inventario cookie/storage, integrazione CMP e video, scansioni browser e guida IT/EN per amministratori",
+        "label": "Inventario di cookie e storage locali del frontend e dei player",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Integrazione CMP/consenso dei provider video verificata",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Scansioni browser per richieste e storage pre-consenso",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Guida amministrativa privacy in IT/EN",
         "status": "unassessed",
         "evidence": []
       }
@@ -5322,7 +5484,25 @@
     "SEC-P5": [
       {
         "id": "criterion_01",
-        "label": "Test negativi E2E, penetration/risk review della release candidate, riesame vulnerabilità e gate go/no-go documentato",
+        "label": "Test negativi end-to-end pertinenti alla release candidate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Penetration/risk review con ambito e risultati tracciabili",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Vulnerabilità riesaminate e mitigazioni documentate",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Decisione go/no-go motivata e registrata",
         "status": "unassessed",
         "evidence": []
       }
@@ -5350,7 +5530,37 @@
     "LCM-02": [
       {
         "id": "criterion_01",
-        "label": "Corsi: toolbar e filtri Joomla, cestinazione/ripristino, eliminazione fisica vietata in presenza di utenti o dipendenze storiche",
+        "label": "Toolbar Joomla per cestinazione e ripristino dei corsi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_02",
+        "label": "Filtri e viste amministrative del lifecycle corsi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_03",
+        "label": "Cestinazione non distrugge progressi o storico didattico",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_04",
+        "label": "Ripristino conservativo non riapre automaticamente accessi",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_05",
+        "label": "Eliminazione fisica bloccata in presenza di iscritti o dipendenze storiche",
+        "status": "unassessed",
+        "evidence": []
+      },
+      {
+        "id": "criterion_06",
+        "label": "Controlli ACL sulle operazioni singole e massive",
         "status": "unassessed",
         "evidence": []
       }
