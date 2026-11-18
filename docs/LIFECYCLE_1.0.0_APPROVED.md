@@ -47,7 +47,7 @@ Il servizio `CertificateService::listForStudent()` e il download privato degli a
 
 ### LCM-01 — ripristino dell'archivio senza riapertura automatica (0.60.1)
 
-Il workflow di archiviazione imposta admissions_open=0 e delivery_enabled=0 nella stessa transazione del passaggio allo stato Archiviato. La transizione inversa porta lo stato editoriale a Pubblicato conservando la versione didattica immutabile, ma non riapre automaticamente ammissioni o fruizione. Il catalogo applica delivery_enabled anche al recupero del corso per l'aula, inclusi i link diretti. Per riaprire iscrizioni o didattica servono comandi espliciti con audit e permessi. I test Joomla verificano flag prima/dopo ripristino, diniego dell'aula e permanenza della versione. Rimangono audit trasversale e accettazione reale.
+Il workflow di archiviazione imposta admissions_open=0 e delivery_enabled=0 nella stessa transazione del passaggio allo stato Archiviato. La transizione inversa porta lo stato editoriale a Pubblicato conservando la versione didattica immutabile, ma non riapre automaticamente ammissioni o fruizione. LearningService applica già delivery_enabled all'accesso per gli iscritti, inclusi i link diretti, restituendo HTTP 403 per il corso sospeso. La modifica al workflow garantisce che il blocco rimanga attivo anche dopo il ripristino. Per riaprire iscrizioni o didattica servono comandi espliciti con audit e permessi. I test Joomla verificano flag prima/dopo ripristino, diniego dell'aula e permanenza della versione. Rimangono audit trasversale e accettazione reale.
 
 ## Piano di implementazione separabile
 
