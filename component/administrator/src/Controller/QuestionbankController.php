@@ -14,7 +14,7 @@ final class QuestionbankController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['save','checkout','checkin','duplicate','delete'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!in_array(strtolower($task), ['save','checkout','checkin','duplicate','delete','trash','restore'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
         return parent::execute($task);
     }
     private function perform(string $action): void
@@ -68,6 +68,10 @@ final class QuestionbankController extends BaseController
                 $copy=$service->duplicate($this->app->getIdentity(),$id);
                 $this->setMessage(Text::_('COM_JLMS_QUESTION_DUPLICATED'));
                 $this->setRedirect(Route::link('administrator','index.php?option=com_jlms&view=question&id='.$copy,false));
+            } elseif ($action==='trash'||$action==='restore') {
+                $service->trash($this->app->getIdentity(),$id,$action==='restore');
+                $this->setMessage(Text::_($action==='restore'?'JLIB_APPLICATION_SUCCESS_ITEM_RESTORED':'JLIB_APPLICATION_SUCCESS_ITEM_TRASHED'));
+                $this->setRedirect(Route::link('administrator','index.php?option=com_jlms&view=questionbank&filter[published]='.($action==='restore'?'0':'-2'),false));
             } else {
                 $service->delete($this->app->getIdentity(),$id);
                 $this->setMessage(Text::_('COM_JLMS_QUESTION_DELETED'));
@@ -82,4 +86,6 @@ final class QuestionbankController extends BaseController
     }
     public function duplicate(): void { $this->mutate('duplicate'); }
     public function delete(): void { $this->mutate('delete'); }
+    public function trash(): void { $this->mutate('trash'); }
+    public function restore(): void { $this->mutate('restore'); }
 }

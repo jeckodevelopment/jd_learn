@@ -1,3 +1,5 @@
+## QUI-02 — cestino conservativo banca domande (PR in verifica, 18/11/2026)
+
 ## STA-02 — durata quiz e finestra didattica (PR #648 integrata, 18/11/2026)
 
 1. Su un corso con quiz a tempo di 60 secondi e un'iscrizione in scadenza tra 30 secondi, verificare che il frontend non offra l'avvio (`can_start=false`). Una richiesta diretta di avvio deve ricevere HTTP 403, senza nuova riga di tentativo o consumo del limite.
