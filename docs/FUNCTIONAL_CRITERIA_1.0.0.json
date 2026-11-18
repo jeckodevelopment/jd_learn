@@ -3660,14 +3660,21 @@
       {
         "id": "criterion_01",
         "label": "Un corso con iscrizioni, tentativi o attestati non è eliminabile definitivamente con un normale comando editoriale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-publication-review.php"
+        ]
       },
       {
         "id": "criterion_02",
         "label": "Cestinamento/archiviazione e cancellazione dei dati sono operazioni diverse",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-publication-review.php"
+        ]
       },
       {
         "id": "criterion_03",
