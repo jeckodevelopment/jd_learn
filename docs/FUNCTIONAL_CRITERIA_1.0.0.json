@@ -79,8 +79,18 @@
       {
         "id": "external_references",
         "label": "Audit riferimenti di estensioni esterne",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Model/TeacherModel.php",
+          "tests/joomla-teachers.php"
+        ],
+        "review": {
+          "reason": "Il lifecycle docente protegge le referenze conosciute nel repository. Occorre l’inventario delle estensioni installate e delle relazioni esterne per generalizzare.",
+          "references": [
+            "component/administrator/src/Model/TeacherModel.php#public function changeStates",
+            "tests/joomla-teachers.php#teacher lifecycle preserves immutable course snapshot"
+          ]
+        }
       }
     ],
     "LCM-05": [
@@ -125,14 +135,36 @@
       {
         "id": "finder_seo",
         "label": "Finder e SEO lifecycle",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "component/administrator/src/Model/CourseModel.php",
+          "docs/IMPLEMENTATION_HISTORY.md"
+        ],
+        "review": {
+          "reason": "Il workflow e il modello inviano la notifica dopo il commit. Le fixture osservano il dispatcher. Rimane il collaudo dell’indice effettivo con cutoff di accesso, lingua e metadati SEO.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#Archive/restore Finder refresh failed",
+            "component/administrator/src/Model/CourseModel.php#private function refreshLifecycleFinder",
+            "docs/IMPLEMENTATION_HISTORY.md#test E2E dell"
+          ]
+        }
       },
       {
         "id": "history_upgrade",
         "label": "Copertura trasversale storico, attestati e upgrade",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "tests/joomla-dashboard.php",
+          "docs/LIFECYCLE_1.0.0_APPROVED.md"
+        ],
+        "review": {
+          "reason": "Le fixture retained conservano progressi e attestati. La combinazione trasversale di transizioni, ruoli, storico e backup/ripristino richiede esecuzioni ulteriori.",
+          "references": [
+            "tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade",
+            "docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)"
+          ]
+        }
       }
     ],
     "CAT-01": [
@@ -323,8 +355,18 @@
       {
         "id": "seo_combinations",
         "label": "Combinazioni menu, lingue, breadcrumb e immagini social",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/site/src/View/Course/HtmlView.php",
+          "docs/FUNCTIONAL_AUDIT_CAT04_FINDER.md"
+        ],
+        "review": {
+          "reason": "Il template e i servizi forniscono metadati pubblici, percorso Joomla e route. Restano le combinazioni di menu, lingua, breadcrumb e immagine social su installazione effettiva.",
+          "references": [
+            "component/site/src/View/Course/HtmlView.php#PublicMetadataHelper::apply",
+            "docs/FUNCTIONAL_AUDIT_CAT04_FINDER.md#seo_combinations"
+          ]
+        }
       }
     ],
     "AUT-01": [
@@ -2868,8 +2910,20 @@
       {
         "id": "joomla_actions",
         "label": "Plugin User Actions Log nativo per operazioni previste",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Infrastructure/AssessmentAudit.php",
+          "packages/pkg_jlms.xml",
+          "component/administrator/src/Application/PublicationService.php"
+        ],
+        "review": {
+          "reason": "L’infrastruttura scrive direttamente nel modello nativo User Actions Log per una lista di azioni specifiche. Il pacchetto non contiene il plugin actionlog richiesto e la pubblicazione non rientra nelle azioni di quel modello.",
+          "references": [
+            "component/administrator/src/Infrastructure/AssessmentAudit.php#bootComponent",
+            "packages/pkg_jlms.xml#<files",
+            "component/administrator/src/Application/PublicationService.php#function transition"
+          ]
+        }
       }
     ],
     "CORE-18": [
@@ -2936,8 +2990,20 @@
       {
         "id": "private_cache",
         "label": "Test cache/sessione su tutti gli endpoint personali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/site/src/Controller/VideoController.php",
+          "component/site/src/Controller/CertificateController.php",
+          "tests/dashboard-http.py"
+        ],
+        "review": {
+          "reason": "Video, download e pagine personali hanno politiche private e fixture HTTP rappresentative. Serve il censimento dei task personali e una prova coerente di cache e sessione per ognuno.",
+          "references": [
+            "component/site/src/Controller/VideoController.php#private, no-store",
+            "component/site/src/Controller/CertificateController.php#private, no-store",
+            "tests/dashboard-http.py#local nav does not duplicate IDs"
+          ]
+        }
       }
     ],
     "CORE-22": [
@@ -2953,8 +3019,18 @@
       {
         "id": "release_updates",
         "label": "Update server e rollback di migrazione in hosting variabili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "packages/pkg_jlms.xml",
+          "docs/RELEASE_PROCEDURE.md"
+        ],
+        "review": {
+          "reason": "Il feed e la pipeline esistono. La compatibilità del rollback di dati e migrazioni in hosting diversi richiede esecuzioni documentate.",
+          "references": [
+            "packages/pkg_jlms.xml#<updateservers>",
+            "docs/RELEASE_PROCEDURE.md#Gestione errori e recupero"
+          ]
+        }
       }
     ],
     "CORE-23": [
@@ -3608,32 +3684,88 @@
       {
         "id": "admin_list",
         "label": "Lista banca domande distinta dal form, coerente con pattern articoli Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/QuestionbankModel.php",
+          "component/administrator/src/Model/QuestionModel.php",
+          "component/administrator/src/Application/QuestionBankService.php"
+        ],
+        "review": {
+          "reason": "Il backend dispone di una vista Questionbank con lista paginata e di un form Question separato. L’elenco autorizza le righe e determina le azioni consentite.",
+          "references": [
+            "component/administrator/src/Model/QuestionbankModel.php#function",
+            "component/administrator/src/Model/QuestionModel.php#function",
+            "component/administrator/src/Application/QuestionBankService.php#public function adminListing"
+          ]
+        }
       },
       {
         "id": "create_edit",
         "label": "Creazione e modifica con validazione risposte, punti e spiegazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuestionBankService.php",
+          "tests/joomla-quiz-authoring.php"
+        ],
+        "review": {
+          "reason": "Il salvataggio normalizza la definizione e usa revisione attesa e permessi. Le risposte e spiegazioni sono conservate nei campi separati della revisione della domanda.",
+          "references": [
+            "component/administrator/src/Application/QuestionBankService.php#public function save",
+            "component/administrator/src/Application/QuestionBankService.php#QuestionDefinition::normalise",
+            "tests/joomla-quiz-authoring.php#real question saved"
+          ]
+        }
       },
       {
         "id": "duplicate",
         "label": "Duplicazione autonoma della domanda senza alterare l'originale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuestionBankService.php",
+          "tests/joomla-quiz-authoring.php"
+        ],
+        "review": {
+          "reason": "La duplicazione riparte con ID zero, stato bozza e nuove chiavi opzione. La fixture controlla che la definizione copiata resti separata dall’originale.",
+          "references": [
+            "component/administrator/src/Application/QuestionBankService.php#public function duplicate",
+            "tests/joomla-quiz-authoring.php#question duplication creates a separate unpublished draft"
+          ]
+        }
       },
       {
         "id": "delete_acl",
         "label": "Cestinazione/eliminazione protetta da ACL e dipendenze su tentativi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/QuestionBankService.php",
+          "component/administrator/src/Controller/QuestionbankController.php"
+        ],
+        "review": {
+          "reason": "L’eliminazione controlla core.delete, check-out e riferimenti a quiz e tentativi. Il salvataggio ammette solo stati 0 e 1, e il controller non espone una transizione di cestinazione.",
+          "references": [
+            "component/administrator/src/Application/QuestionBankService.php#public function delete",
+            "component/administrator/src/Application/QuestionBankService.php#QuestionDefinition::integer",
+            "component/administrator/src/Controller/QuestionbankController.php#public function delete"
+          ]
+        }
       },
       {
         "id": "versioning",
         "label": "Versionamento delle domande e preservazione riferimenti ai tentativi precedenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuestionBankService.php",
+          "tests/joomla-quiz-authoring.php",
+          "component/administrator/src/Application/QuizAttemptService.php"
+        ],
+        "review": {
+          "reason": "Ogni modifica scrive una nuova revisione. Il quiz può conservare una revisione esplicita e il runtime congela i riferimenti dei tentativi. La fixture confronta la vecchia revisione prima e dopo la modifica.",
+          "references": [
+            "component/administrator/src/Application/QuestionBankService.php#current_revision_id",
+            "tests/joomla-quiz-authoring.php#entire old revision remains byte-for-byte unchanged",
+            "component/administrator/src/Application/QuizAttemptService.php#public_snapshot_json"
+          ]
+        }
       }
     ],
     "REP-02": [
@@ -3678,8 +3810,20 @@
       {
         "id": "results",
         "label": "Risultati e attestati visibili solo nel perimetro 1.0.0",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/RELEASE_SCOPE_MATRIX.md",
+          "component/administrator/src/Application/EnrollmentRosterService.php",
+          "component/administrator/src/Application/CertificateService.php"
+        ],
+        "review": {
+          "reason": "Il roster espone i soli contatori, stati e date del perimetro core. Gli esiti di quiz, l’export e gli attestati sono esclusi da AC-128. Le viste degli attestati sono distinte e protette.",
+          "references": [
+            "docs/RELEASE_SCOPE_MATRIX.md#Scenario specifico del roster core",
+            "component/administrator/src/Application/EnrollmentRosterService.php#public function query",
+            "component/administrator/src/Application/CertificateService.php#public function listForStudent"
+          ]
+        }
       },
       {
         "id": "acl_scope",
@@ -3703,14 +3847,40 @@
       {
         "id": "distinct_permissions",
         "label": "Pubblicazione, lettura risultati e cancellazione usano capacità distinte",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuestionBankService.php",
+          "component/administrator/src/Application/QuizTimeService.php",
+          "component/administrator/src/Application/PublicationService.php",
+          "docs/EDITOR_PERMISSIONS.md"
+        ],
+        "review": {
+          "reason": "La cancellazione della domanda usa core.delete. La gestione di valutazione usa capacità esplicite per corso. La pubblicazione valida l’operazione del workflow, con permessi distinti da lettura e cancellazione.",
+          "references": [
+            "component/administrator/src/Application/QuestionBankService.php#public function delete",
+            "component/administrator/src/Application/QuizTimeService.php#jlms.assessment.correct",
+            "component/administrator/src/Application/PublicationService.php#permitsStateChange",
+            "docs/EDITOR_PERMISSIONS.md#Il cambio stato richiede"
+          ]
+        }
       },
       {
         "id": "teacher_is_not_admin",
         "label": "Il docente presente nella scheda pubblica non riceve privilegi amministrativi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/TeacherProfiles.php",
+          "component/administrator/src/Application/CourseEditorAccess.php",
+          "component/administrator/src/Application/EnrollmentRosterService.php"
+        ],
+        "review": {
+          "reason": "L’associazione al profilo abilita la presentazione del docente. Il controllo di accesso amministrativo richiede capacità Joomla esplicite e il roster controlla l’asset anche per un docente assegnato.",
+          "references": [
+            "component/administrator/src/Application/TeacherProfiles.php#public static function current",
+            "component/administrator/src/Application/CourseEditorAccess.php#public static function fresh",
+            "component/administrator/src/Application/EnrollmentRosterService.php#public function course"
+          ]
+        }
       },
       {
         "id": "direct_actions",
@@ -3726,8 +3896,17 @@
       {
         "id": "advanced_deferred",
         "label": "Export, rettifiche e report avanzati distinti dal core 1.0.0",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/RELEASE_SCOPE_MATRIX.md"
+        ],
+        "review": {
+          "reason": "La matrice separa il roster operativo dai report su coorte, KPI, export e rettifiche amministrative avanzate.",
+          "references": [
+            "docs/RELEASE_SCOPE_MATRIX.md#KPI e report avanzati",
+            "docs/RELEASE_SCOPE_MATRIX.md#Rettifiche/reset amministrativi"
+          ]
+        }
       }
     ],
     "ACL-DET-02": [
@@ -3744,8 +3923,20 @@
       {
         "id": "provider_credentials",
         "label": "Autore senza necessità di leggere credenziali del provider",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CoursepreviewModel.php",
+          "plugins/jlmsvideo/cloudflarestream/cloudflarestream.xml",
+          "plugins/jlmsvideo/cloudflarestream/src/Extension/Cloudflarestream.php"
+        ],
+        "review": {
+          "reason": "Il form editoriale gestisce riferimenti alla sorgente. Il provider Stream risolve la credenziale per riferimento sul server, mentre l’anteprima riceve solo opzioni riproduzione.",
+          "references": [
+            "component/administrator/src/Model/CoursepreviewModel.php#createPlaybackDescriptor",
+            "plugins/jlmsvideo/cloudflarestream/cloudflarestream.xml#api_token_ref",
+            "plugins/jlmsvideo/cloudflarestream/src/Extension/Cloudflarestream.php#EnvironmentSecretProvider"
+          ]
+        }
       },
       {
         "id": "masked_secrets",
@@ -3764,20 +3955,50 @@
       {
         "id": "preview_marked",
         "label": "Anteprima amministrativa visibilmente distinta dalla frequenza reale",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/tmpl/coursepreview/default.php"
+        ],
+        "review": {
+          "reason": "La vista dedicata mostra un avviso di anteprima e distingue la simulazione dei livelli dal normale percorso discente.",
+          "references": [
+            "component/administrator/tmpl/coursepreview/default.php#COM_JLMS_COURSE_PREVIEW_NOTICE",
+            "component/administrator/tmpl/coursepreview/default.php#COM_JLMS_ACCESS_PREVIEW_NOTICE"
+          ]
+        }
       },
       {
         "id": "preview_no_progress",
         "label": "Anteprima non crea progressi, tentativi, attestati o statistiche studente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CoursepreviewModel.php"
+        ],
+        "review": {
+          "reason": "Il modello legge outline e lezione autorizzata. Per il player crea un contesto anteprima con iscrizione zero e non invoca il servizio di progressi.",
+          "references": [
+            "component/administrator/src/Model/CoursepreviewModel.php#public function getPreview",
+            "component/administrator/src/Model/CoursepreviewModel.php#new \\Jlms\\Contracts\\Video\\PlaybackContext",
+            "component/administrator/src/Model/CoursepreviewModel.php#null, true, $courseId, $versionId"
+          ]
+        }
       },
       {
         "id": "real_enrollment",
         "label": "Amministratore studente usa il normale percorso di iscrizione e autorizzazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/EnrollmentController.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il controller pubblico passa l’identità al servizio didattico. Il servizio usa livello corrente, modalità, finestra e iscrizione senza un ingresso speciale per amministratori.",
+          "references": [
+            "component/site/src/Controller/EnrollmentController.php#public function start",
+            "component/administrator/src/Application/LearningService.php#public function start",
+            "component/administrator/src/Application/LearningService.php#private function course"
+          ]
+        }
       }
     ],
     "ACL-DET-04": [
@@ -4051,8 +4272,20 @@
       {
         "id": "no_granted_access",
         "label": "Elenco categoria non concede automaticamente accesso ai corsi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/CoursesModel.php",
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "La categoria seleziona i corsi tramite la query di visibilità. L’accesso didattico richiede ancora il livello di contenuto e un’iscrizione autorizzata.",
+          "references": [
+            "component/site/src/Model/CoursesModel.php#protected function getListQuery",
+            "component/administrator/src/Application/CatalogService.php#private function courseQuery",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment"
+          ]
+        }
       }
     ],
     "SCR-03": [
@@ -4094,8 +4327,18 @@
       {
         "id": "teacher_links",
         "label": "Rimandi a docenti e contenuti pubblicamente accessibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/tmpl/course/default.php",
+          "component/administrator/src/Application/TeacherProfiles.php"
+        ],
+        "review": {
+          "reason": "La scheda usa profili docenti proiettati dal servizio e rende il collegamento alla vista del docente. Il servizio filtra visibilità e lingua dei profili.",
+          "references": [
+            "component/site/tmpl/course/default.php#jlms-course-teachers",
+            "component/administrator/src/Application/TeacherProfiles.php#public static function current"
+          ]
+        }
       },
       {
         "id": "course_rules",
@@ -4164,8 +4407,18 @@
       {
         "id": "criterion_05",
         "label": "Nella prima release nessun rilascio di attestato di percorso né migrazione automatica fra percorsi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "docs/RELEASE_SCOPE_MATRIX.md"
+        ],
+        "review": {
+          "reason": "Il percorso aggrega le iscrizioni esistenti e il suo servizio di dettaglio legge senza creare migrazioni o attestati. Questi comportamenti non sono richiesti per il percorso core.",
+          "references": [
+            "component/administrator/src/Application/PathwayService.php#PathwayProgress::summarize",
+            "docs/RELEASE_SCOPE_MATRIX.md#Rinviati alla fase 2"
+          ]
+        }
       }
     ],
     "SCR-05": [
@@ -4381,20 +4634,51 @@
       {
         "id": "criterion_02",
         "label": "Salvataggio e navigazione nel programma non perdono dati non confermati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/media/js/curriculum.js",
+          "tests/curriculum-browser.mjs"
+        ],
+        "review": {
+          "reason": "L’editor controlla lo stato modificato prima di uscire e chiede conferma al browser. Il riordino non viene eseguito su un form con input pendente.",
+          "references": [
+            "component/media/js/curriculum.js#initUnsavedEditor",
+            "component/media/js/curriculum.js#Reordering reloads record revisions",
+            "tests/curriculum-browser.mjs#beforeunload"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Duplicazione e riordino conservano riferimenti e separazione degli oggetti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseVersionCopy.php",
+          "component/administrator/src/Application/CurriculumService.php"
+        ],
+        "review": {
+          "reason": "La copia rimappa moduli, lezioni e riferimenti degli allegati. Il riordino accetta soltanto gli ID attesi nella stessa bozza e aggiorna l’ordine nella stessa transazione.",
+          "references": [
+            "component/administrator/src/Application/CourseVersionCopy.php#private function nodes",
+            "component/administrator/src/Application/CurriculumService.php#public function saveOrder"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Le operazioni amministrative sono protette da autorizzazione lato server",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "component/administrator/src/Controller/CoursesController.php"
+        ],
+        "review": {
+          "reason": "Il servizio autorizza l’asset del corso e valida la relazione corso/versione prima della scrittura. Il controller amministrativo verifica token e metodo.",
+          "references": [
+            "component/administrator/src/Application/CurriculumService.php#private function draft",
+            "component/administrator/src/Controller/CoursesController.php#checkToken"
+          ]
+        }
       }
     ],
     "SCR-14": [
@@ -4419,8 +4703,20 @@
       {
         "id": "criterion_02",
         "label": "Le azioni singole del roster richiedono permessi e ambito del corso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentApprovalService.php",
+          "component/administrator/src/Application/EnrollmentStateService.php",
+          "component/administrator/src/Application/EnrollmentMigrationService.php"
+        ],
+        "review": {
+          "reason": "I servizi delle azioni singole verificano corso, asset e record. Le decisioni di ammissione, cambio stato e migrazione ricontrollano il contesto prima della mutazione.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentApprovalService.php#public function decide",
+            "component/administrator/src/Application/EnrollmentStateService.php#private function scope",
+            "component/administrator/src/Application/EnrollmentMigrationService.php#public function apply"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -4491,8 +4787,19 @@
       {
         "id": "criterion_04",
         "label": "Migrazione didattica esplicita non quiz con consenso amministrativo e tracciabilità",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Controller/EnrollmentmigrationController.php",
+          "component/administrator/src/Application/EnrollmentMigrationService.php"
+        ],
+        "review": {
+          "reason": "La migrazione richiede conferma e fingerprint, filtra le lezioni quiz, conserva il record di origine, crea il nuovo riferimento e registra l’audit.",
+          "references": [
+            "component/administrator/src/Controller/EnrollmentmigrationController.php#confirmation",
+            "component/administrator/src/Application/EnrollmentMigrationService.php#kind <> 'quiz'",
+            "component/administrator/src/Application/EnrollmentMigrationService.php#course_version_enrollment_migrated"
+          ]
+        }
       }
     ],
     "SCR-16": [
@@ -4594,20 +4901,51 @@
       {
         "id": "criterion_02",
         "label": "Non consentire la cancellazione definitiva di una categoria con corsi senza scelta esplicita di ricollocazione, né lasciare riferimenti orfani",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/src/Application/CategoryReassignmentService.php"
+        ],
+        "review": {
+          "reason": "Il servizio richiede una destinazione valida per le dipendenze e aggiorna le relazioni in transazione. Per qualificare ogni cancellazione definitiva restano da tracciare gli ingressi nativi e i casi concorrenti.",
+          "references": [
+            "component/administrator/src/Application/CategoryReassignmentService.php#public function inspect",
+            "component/administrator/src/Application/CategoryReassignmentService.php#public function reassign"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Il docente si gestisce tramite profilo e associazione ai corsi, senza tassonomia docente visibile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/TeacherProfiles.php",
+          "component/site/tmpl/course/default.php"
+        ],
+        "review": {
+          "reason": "Il gestore usa profili Joomla specifici e associazioni al corso. La presentazione pubblica proietta i profili autorizzati senza usare un tag come identità del docente.",
+          "references": [
+            "component/administrator/src/Application/TeacherProfiles.php#public static function assignment",
+            "component/administrator/src/Application/TeacherProfiles.php#public static function current",
+            "component/site/tmpl/course/default.php#jlms-course-teachers"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Rimuoverlo dalla visualizzazione pubblica non cancella lezioni, risultati o storico",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/TeacherModel.php",
+          "tests/joomla-teachers.php"
+        ],
+        "review": {
+          "reason": "La disattivazione opera sul profilo. La fixture controlla che lo snapshot didattico e lo stato utente associato restino invariati.",
+          "references": [
+            "component/administrator/src/Model/TeacherModel.php#public function changeStates",
+            "tests/joomla-teachers.php#teacher lifecycle never changes linked Joomla user status",
+            "tests/joomla-teachers.php#teacher lifecycle preserves immutable course snapshot"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -4632,8 +4970,19 @@
       {
         "id": "criterion_03",
         "label": "I riferimenti didattici e lo storico sopravvivono alle transizioni consentite",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "Il lifecycle aggiorna solo stato e gate, e i percorsi di ripristino preservano la versione didattica. La fixture conserva progressi e storico attestati per i corsi inattivi.",
+          "references": [
+            "component/administrator/src/Model/CourseModel.php#Reversible, atomic bulk lifecycle transitions",
+            "tests/joomla-dashboard.php#inactive course keeps owner title",
+            "tests/joomla-dashboard.php#archiving never changes certificate identity"
+          ]
+        }
       }
     ],
     "LIFE-09": [
@@ -4850,8 +5199,17 @@
       {
         "id": "criterion_07",
         "label": "la modalità va dichiarata, altrimenti la pubblicazione senza obblighi è rifiutata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php"
+        ],
+        "review": {
+          "reason": "La pubblicazione rifiuta un corso senza attività obbligatorie a meno che le regole dichiarino la modalità consultazione. Rifiuta anche obblighi in consultazione.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#(!$required && $rules['mode'] !== 'consultation')",
+            "component/administrator/src/Application/PublicationService.php#$rules['mode'] === 'consultation' && $required > 0"
+          ]
+        }
       }
     ],
     "EDGE-03": [
@@ -4876,8 +5234,18 @@
       {
         "id": "criterion_04",
         "label": "L'autore conferma la catena e il sistema impedisce cicli",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "component/administrator/src/Application/PublicationService.php"
+        ],
+        "review": {
+          "reason": "Il servizio controlla tutti i nodi e rifiuta nuove dipendenze che creano cicli; pubblicazione e progressione ricontrollano le condizioni della catena.",
+          "references": [
+            "component/administrator/src/Application/CurriculumService.php#private function savePrerequisites",
+            "component/administrator/src/Application/PublicationService.php#prerequisiteMap"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -4894,8 +5262,18 @@
       {
         "id": "criterion_07",
         "label": "Scadenze di corso e lezioni non possono rendere irraggiungibile un requisito: validazione bloccante prima della pubblicazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "La pubblicazione verifica la raggiungibilità delle lezioni obbligatorie rispetto alla finestra di corso. Il servizio di iscrizione controlla inoltre la raggiungibilità nel contesto dell’edizione.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#LessonAvailability::reachable",
+            "component/administrator/src/Application/LearningService.php#public function assertEnrollmentScheduleReachable"
+          ]
+        }
       }
     ],
     "EDGE-04": [
@@ -5292,26 +5670,69 @@
       {
         "id": "criterion_04",
         "label": "Entrambe richiedono motivo e riepilogo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseOperationsService.php",
+          "docs/COURSE_OPERATIONS.md"
+        ],
+        "review": {
+          "reason": "La preview delle due leve produce un riepilogo con iscritti e tentativi. L’applicazione richiede motivazione, conferma e fingerprint della situazione letta.",
+          "references": [
+            "component/administrator/src/Application/CourseOperationsService.php#open_attempts",
+            "docs/COURSE_OPERATIONS.md#Ogni comando GET"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Per una sospensione di erogazione il quiz segue EDGE-05 come blocco di fruizione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "Il contesto quiz riusa il motore Learning e la sospensione blocca l’erogazione. La chiusura temporizzata resta affidata al job server.",
+          "references": [
+            "component/administrator/src/Application/QuizAttemptService.php#private function context",
+            "component/administrator/src/Application/LearningService.php#COM_JLMS_COURSE_DELIVERY_SUSPENDED",
+            "component/administrator/src/Application/QuizAttemptService.php#public function expireDue"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "uno già concluso resta storico",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CourseOperationsService.php",
+          "docs/COURSE_OPERATIONS.md"
+        ],
+        "review": {
+          "reason": "Le azioni operative aggiornano i flag del corso senza cambiare progressi o risultato dei tentativi. L’audit documenta l’impatto prima dell’azione.",
+          "references": [
+            "component/administrator/src/Application/CourseOperationsService.php#open_attempts",
+            "docs/COURSE_OPERATIONS.md#Non vengono assegnati gruppi Joomla"
+          ]
+        }
       },
       {
         "id": "criterion_07",
         "label": "Il ritiro dal catalogo e il termine della pubblicazione della scheda non sostituiscono queste scelte",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/COURSE_OPERATIONS.md"
+        ],
+        "review": {
+          "reason": "La query promozionale applica finestra di catalogo. La query per iscritti la tratta separatamente e verifica disponibilità didattica nel servizio.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#if (!$forEnrolledLearner)",
+            "component/administrator/src/Application/LearningService.php#private function enrolledCourse",
+            "docs/COURSE_OPERATIONS.md#I quattro comandi sono indipendenti"
+          ]
+        }
       },
       {
         "id": "criterion_08",
@@ -5322,8 +5743,17 @@
       {
         "id": "criterion_09",
         "label": "Versioni storiche non vengono eliminate automaticamente quando si pubblica la successiva",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/PublicationService.php"
+        ],
+        "review": {
+          "reason": "La pubblicazione mantiene immutabile la versione già attiva. Il cambio di versione aggiorna il riferimento corrente senza purgare le versioni precedenti.",
+          "references": [
+            "component/administrator/src/Application/PublicationService.php#current_version_id = $versionId",
+            "component/administrator/src/Application/PublicationService.php#Republish the current immutable version"
+          ]
+        }
       }
     ],
     "EDGE-11": [
@@ -5336,14 +5766,32 @@
       {
         "id": "criterion_02",
         "label": "Ogni iscrizione conserva una versione didattica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "La nuova iscrizione punta alla versione dell’edizione corrente. Le operazioni protette rileggono la versione assegnata all’iscrizione, distinta dalla versione corrente del catalogo.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#public function start",
+            "component/administrator/src/Application/LearningService.php#row('course_versions', (int) $enrollment->course_version_id)"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "le revisioni editoriali sono gestite da Joomla Content History",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Model/CourseModel.php"
+        ],
+        "review": {
+          "reason": "Il modello implementa il contratto versioning di Joomla e usa il salvataggio/ripristino Content History per i dati editoriali.",
+          "references": [
+            "component/administrator/src/Model/CourseModel.php#function saveHistory",
+            "component/administrator/src/Model/CourseModel.php#function loadHistory"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -5354,8 +5802,20 @@
       {
         "id": "criterion_05",
         "label": "Ripristinare una struttura con requisiti diversi prepara una nuova versione in bozza",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CurriculumService.php",
+          "component/administrator/src/Application/CourseVersionCopy.php",
+          "docs/COURSE_EDITOR.md"
+        ],
+        "review": {
+          "reason": "Il ripristino del programma valida origine e permessi e copia la struttura in una nuova versione bozza con riferimenti rimappati.",
+          "references": [
+            "component/administrator/src/Application/CurriculumService.php#public function restoreVersion",
+            "component/administrator/src/Application/CourseVersionCopy.php#public function copy",
+            "docs/COURSE_EDITOR.md#Recuperare un programma storico"
+          ]
+        }
       },
       {
         "id": "criterion_06",
@@ -5372,8 +5832,20 @@
       {
         "id": "criterion_08",
         "label": "Categoria, livelli e disponibilità sono controllati correntemente, senza concedere diritti storici",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-dashboard.php"
+        ],
+        "review": {
+          "reason": "Il contesto storico di fruizione continua a controllare livelli e categorie correnti. La fixture prova la revoca nella sessione e il diniego su stati inattivi.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#private function courseQuery",
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment",
+            "tests/joomla-dashboard.php#old actor object cannot bypass current revocation"
+          ]
+        }
       },
       {
         "id": "criterion_09",
@@ -5488,8 +5960,17 @@
       {
         "id": "criterion_02",
         "label": "Per il primo avvio selezionare la versione pubblicata corrente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "L’avvio determina la versione da current_version_id e l’edizione della versione, poi ricontrolla ambito e stato nella transazione.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#public function start",
+            "component/administrator/src/Application/LearningService.php#current_version_id"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -5500,8 +5981,19 @@
       {
         "id": "criterion_04",
         "label": "Un'iscrizione manuale/import può preassegnare il corso a un utente senza livello, ma non abilitarlo alla fruizione: mostrare l'avviso",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/ManualEnrollmentService.php",
+          "component/administrator/src/Application/LearningService.php"
+        ],
+        "review": {
+          "reason": "La preassegnazione è esplicita e può salvare un’iscrizione senza livello; il contesto dello studente applica ancora il livello. La procedura mostra l’avviso.",
+          "references": [
+            "component/administrator/src/Application/ManualEnrollmentService.php#public function editor",
+            "component/administrator/src/Application/ManualEnrollmentService.php#lack of a viewing level",
+            "component/administrator/src/Application/LearningService.php#private function enrolledCourse"
+          ]
+        }
       },
       {
         "id": "criterion_05",
@@ -5532,8 +6024,18 @@
       {
         "id": "criterion_02",
         "label": "Livello Joomla eliminato o categoria mancante: nessun fallback a Public",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/ManualEnrollmentService.php"
+        ],
+        "review": {
+          "reason": "Le query richiedono categoria esistente e livello valido/autorizzato. Il percorso di assegnazione verifica esplicitamente i livelli Joomla e le categorie ascendenti.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#private function courseQuery",
+            "component/administrator/src/Application/ManualEnrollmentService.php#private function assignmentCourse"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -6364,14 +6866,36 @@
       {
         "id": "criterion_02",
         "label": "Nel rilascio 1 le azioni browser usano controller MVC site/backend del componente, con task dichiarati e formato JSON o raw",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/VideoController.php",
+          "component/site/src/Controller/CertificateController.php",
+          "component/administrator/services/provider.php"
+        ],
+        "review": {
+          "reason": "Le azioni browser passano dal dispatcher Joomla e dai controller site/backend. I task video mostrano risposta JSON, mentre l’endpoint PDF usa la consegna raw.",
+          "references": [
+            "component/site/src/Controller/VideoController.php#public function execute",
+            "component/site/src/Controller/CertificateController.php#MaterialDownload::send",
+            "component/administrator/services/provider.php#ComponentDispatcherFactory"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "API REST per applicazioni esterne restano differite e si integreranno nei Web Services core",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/HEADLESS_API_RELEASE3_ROADMAP.md",
+          "docs/LEARNING.md"
+        ],
+        "review": {
+          "reason": "La superficie Web Services esterna ha un piano separato. I flussi del rilascio usano gli entry point MVC del componente.",
+          "references": [
+            "docs/HEADLESS_API_RELEASE3_ROADMAP.md#Suddivisione incrementale del rilascio 3",
+            "docs/LEARNING.md#Superficie MVC"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -6448,8 +6972,22 @@
       {
         "id": "criterion_02",
         "label": "Token CSRF e permessi vengono verificati separatamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Controller/VideoController.php",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "component/administrator/src/Controller/CoursesController.php",
+          "component/administrator/src/Application/CurriculumService.php"
+        ],
+        "review": {
+          "reason": "Video e programma verificano il token prima di usare il servizio. L’autorizzazione all’oggetto avviene separatamente nel servizio e resta necessaria anche con token valido.",
+          "references": [
+            "component/site/src/Controller/VideoController.php#checkToken",
+            "component/administrator/src/Application/VideoProgressService.php#private function context",
+            "component/administrator/src/Controller/CoursesController.php#checkToken",
+            "component/administrator/src/Application/CurriculumService.php#private function draft"
+          ]
+        }
       },
       {
         "id": "criterion_03",
@@ -6468,8 +7006,20 @@
       {
         "id": "criterion_02",
         "label": "Il trasporto browser resta integrato nel ciclo vita Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          ".github/workflows/ci.yml",
+          "component/administrator/services/provider.php",
+          "component/site/src/Controller/VideoController.php"
+        ],
+        "review": {
+          "reason": "I test Joomla esercitano i task MVC su installazione effimera e il componente dichiara la propria factory/dispatcher Joomla. Le azioni usano sessione, form token o endpoint Joomla.",
+          "references": [
+            ".github/workflows/ci.yml#Native video classroom, CSRF and progress endpoints over HTTP",
+            "component/administrator/services/provider.php#ComponentDispatcherFactory",
+            "component/site/src/Controller/VideoController.php#checkToken"
+          ]
+        }
       },
       {
         "id": "criterion_03",
