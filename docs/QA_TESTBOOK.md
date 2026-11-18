@@ -1,4 +1,4 @@
-## QUI-02 — cestino conservativo banca domande (PR in verifica, 18/11/2026)
+## QUI-02 — cestino conservativo banca domande (PR #653 integrata, 18/11/2026)
 
 ## STA-02 — durata quiz e finestra didattica (PR #648 integrata, 18/11/2026)
 
