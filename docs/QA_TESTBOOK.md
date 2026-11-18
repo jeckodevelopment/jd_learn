@@ -1,3 +1,12 @@
+## LCM-01 — PR #619, blocco riattivazione anticipata (0.60.2-dev)
+
+1. Su corso Pubblicato, chiudere iscrizioni e sospendere didattica da Operazioni corso; registrare motivo e audit.
+2. Archiviare e tentare `admissions_open` e `delivery_resume` dal backend: anteprima bloccata e nessun comando eseguibile. Con POST diretto e CSRF valido il server deve rifiutare senza riaprire flag, creare audit o alterare revisioni.
+3. Ripristinare lo stato Pubblicato: entrambi i flag restano chiusi. Solo dopo il ripristino riaprire esplicitamente, con permessi Joomla, motivazione e tracciatura.
+4. Ripetere da utente senza permesso e verificare il divieto; verificare inoltre storico iscrizioni, progressi e PDF, accessi via URL diretto, lingue IT/EN e upgrade da 0.60.1.
+
+Stato: **da collaudare manualmente** su installazione Joomla; test automatico in `tests/joomla-manual-enrollment.php` da verificare in CI.
+
 ## P0 YouTube #532 — verifica asset e fase esatta dell'errore (seconda tranche)
 
 **P0 YouTube #532 — PR #535 integrata:** merge `26f6b94b46c77e2468cc5ab1ede2fc4b5078b37e`; [CI 43963159315](https://github.com/jeckodevelopment/jd_learn/actions/runs/43963159315) 4/4 verde; [artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/43963159315/artifacts/14274983577) con ZIP interno `pkg_jlms-0.57.7-dev.zip`, SHA-256 `a114132bf1fa303718b1d0954eecce6d6b0c2b54b6e1a49eba7023c8e632b602`. Corretto il registro WAM fermo a 0.45.0 e introdotta una chiave di cache basata su versione e contenuto degli asset/componenti/provider a ogni build; diagnostica dell'editor distinta per HTTP server, rete, JSON, adapter e SDK. **La issue #532 resta aperta** finché non si verifica l'embed YouTube sul sito Joomla reale; non è un collaudo live. Avanzamento globale di riferimento 79,56% invariato.

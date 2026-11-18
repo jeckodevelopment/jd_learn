@@ -87,6 +87,21 @@ $staleKey=manualKey();manualDenied(fn()=>$operations->apply($manager,$course,'ad
 $operationCount=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id='.$course)->loadResult();
 $operations->apply($manager,$course,'admissions_close',$closed['impact']['revision'],'Fixture closure',$closedKey,$closed['impact']['hash']);
 manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id='.$course)->loadResult()===$operationCount,'identical course operation retry is idempotent');
+// Archived courses must not be pre-armed: restore is editorial only and leaves both gates closed.
+$db->setQuery('UPDATE #__jlms_courses SET state=2, delivery_enabled=0 WHERE id='.(int)$course)->execute();
+try {
+    foreach (['admissions_open', 'delivery_resume'] as $blockedOperation) {
+        $blocked=$operations->editor($manager,$course,$blockedOperation);
+        manualExpect($blocked['impact']['blocked']===true,'archived course cannot pre-arm '.$blockedOperation);
+        manualDenied(
+            fn()=>$operations->apply($manager,$course,$blockedOperation,$blocked['impact']['revision'],'Archive gate negative fixture',manualKey(),$blocked['impact']['hash']),
+            409,'archived course operation denied '.$blockedOperation
+        );
+    }
+    manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id='.$course)->loadResult()===$operationCount,'archived operations leave audit untouched');
+} finally {
+    $db->setQuery('UPDATE #__jlms_courses SET state=1, delivery_enabled=1 WHERE id='.(int)$course)->execute();
+}
 $opened=$operations->editor($manager,$course,'admissions_open');$brokenOperations=new \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService($db,$component->getEnrollmentRosterService(),static function():void{throw new \RuntimeException('COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED',503);});
 manualDenied(fn()=>$brokenOperations->apply($manager,$course,'admissions_open',$opened['impact']['revision'],'Fixture reopening',manualKey(),$opened['impact']['hash']),503,'course operation audit failure is not successful');
 manualExpect((int)$db->setQuery('SELECT admissions_open FROM #__jlms_courses WHERE id='.$course)->loadResult()===0&&(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id='.$course)->loadResult()===$operationCount,'audit failure rolls back course and history');
