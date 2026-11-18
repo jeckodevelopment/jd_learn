@@ -84,8 +84,24 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
      </p>
     <?php endif; ?>
     <?php $enrollment = $this->cardEnrollmentStates[(int) $item->id] ?? null; ?>
-    <?php if ($enrollment !== null) : ?>
-     <p class="jlms-course-card__learning-state"><?= Text::_('COM_JLMS_DASHBOARD_' . strtoupper($enrollment['learning_state'])) ?><?php if ($enrollment['access'] !== 'available') : ?> · <?= Text::_('COM_JLMS_DASHBOARD_ACCESS_' . strtoupper($enrollment['access'])) ?><?php endif; ?></p>
+    <?php if ($enrollment !== null) :
+     $learningLabel = [
+         'not_started' => 'COM_JLMS_DASHBOARD_NOT_STARTED',
+         'in_progress' => 'COM_JLMS_DASHBOARD_IN_PROGRESS',
+         'completed' => 'COM_JLMS_DASHBOARD_COMPLETED',
+     ][$enrollment['learning_state']] ?? 'COM_JLMS_DASHBOARD_NOT_STARTED';
+     $accessLabel = [
+         'language' => 'COM_JLMS_DASHBOARD_ACCESS_LANGUAGE',
+         'unavailable' => 'COM_JLMS_DASHBOARD_ACCESS_UNAVAILABLE',
+         'access' => 'COM_JLMS_DASHBOARD_ACCESS_ACCESS',
+         'suspended' => 'COM_JLMS_DASHBOARD_ACCESS_SUSPENDED',
+         'expired' => 'COM_JLMS_DASHBOARD_ACCESS_EXPIRED',
+         'cancelled' => 'COM_JLMS_DASHBOARD_ACCESS_CANCELLED',
+         'pending' => 'COM_JLMS_DASHBOARD_ACCESS_PENDING',
+         'not_open' => 'COM_JLMS_DASHBOARD_ACCESS_NOT_OPEN',
+     ][$enrollment['access']] ?? 'COM_JLMS_DASHBOARD_ACCESS_UNAVAILABLE';
+    ?>
+     <p class="jlms-course-card__learning-state"><?= Text::_($learningLabel) ?><?php if ($enrollment['access'] !== 'available') : ?> · <?= Text::_($accessLabel) ?><?php endif; ?></p>
     <?php endif; ?>
     <?php if ($enrollment === null && (int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
      <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval' ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
