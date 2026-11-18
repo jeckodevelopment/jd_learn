@@ -1924,8 +1924,20 @@
       {
         "id": "large_file",
         "label": "Gestione trasferimento file grandi su hosting reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a gestione trasferimento file grandi su hosting reali, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/QA_TESTBOOK.md#L1-L25"
+          ]
+        }
       }
     ],
     "MAT-06": [
@@ -1950,14 +1962,38 @@
       {
         "id": "protected_deletion",
         "label": "Cancellazione definitiva condizionata dai riferimenti storici",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/material-policy.php"
+        ],
+        "review": {
+          "reason": "La pulizia è limitata a file orfani non referenziati e controlla le relazioni storiche prima di eliminare record/blob; il testbook verifica anche che materiali ancora collegati restino disponibili.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "tests/material-policy.php#L1-L25"
+          ]
+        }
       },
       {
         "id": "full_lifecycle",
         "label": "Ripristino/upgrade/cleanup in tutte le combinazioni",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a ripristino/upgrade/cleanup in tutte le combinazioni, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/QA_TESTBOOK.md#L1-L25"
+          ]
+        }
       }
     ],
     "MAT-07": [
@@ -1982,8 +2018,20 @@
       {
         "id": "retention",
         "label": "Limiti di conservazione log e controlli privacy operativi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a limiti di conservazione log e controlli privacy operativi, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/QA_TESTBOOK.md#L1-L25"
+          ]
+        }
       }
     ],
     "MAT-08": [
@@ -2017,8 +2065,20 @@
       {
         "id": "lifecycle_hosting",
         "label": "Esercizio end-to-end su installazioni Joomla e storage reali",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a esercizio end-to-end su installazioni joomla e storage reali, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/QA_TESTBOOK.md#L1-L25"
+          ]
+        }
       }
     ],
     "NOT-01": [
@@ -8921,28 +8981,76 @@
       {
         "id": "criterion_01",
         "label": "I task HTTP core della matrice RELEASE_SCOPE_MATRIX.md sono documentati e raggiungibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a i task http core della matrice release_scope_matrix.md sono documentati e raggiungibili, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Le richieste dirette rispettano autenticazione e autorizzazione per oggetto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a le richieste dirette rispettano autenticazione e autorizzazione per oggetto, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "I metodi e codici di errore sono coerenti con il trasporto Joomla MVC",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a i metodi e codici di errore sono coerenti con il trasporto joomla mvc, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "HTTP-02": [
       {
         "id": "criterion_01",
         "label": "Trasporto Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a trasporto joomla, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -8981,74 +9089,206 @@
       {
         "id": "criterion_04",
         "label": "Il catalogo delle azioni non introduce gateway pagamento, servizi account paralleli o un cron pubblico",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a il catalogo delle azioni non introduce gateway pagamento, servizi account paralleli o un cron pubblico, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "HTTP-03": [
       {
         "id": "criterion_01",
         "label": "Metodi e policy",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a metodi e policy, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "GET per letture, POST per azioni/mutazioni nel trasporto MVC, sessione Joomla, permessi backend e CSRF su POST",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a get per letture, post per azioni/mutazioni nel trasporto mvc, sessione joomla, permessi backend e csrf su post, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Tutti gli endpoint controllano oggetto e accesso correnti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a tutti gli endpoint controllano oggetto e accesso correnti, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "GET non modifica voti, iscrizioni o completamenti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a get non modifica voti, iscrizioni o completamenti, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Errori con stato HTTP, codice applicativo e correlazione senza informazioni riservate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a errori con stato http, codice applicativo e correlazione senza informazioni riservate, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_06",
         "label": "Dati personali e token non in cache condivisa",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a dati personali e token non in cache condivisa, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "HTTP-04": [
       {
         "id": "criterion_01",
         "label": "Le azioni HTTP core mantengono idempotenza dove richiesta",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a le azioni http core mantengono idempotenza dove richiesta, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L1-L25",
+            "component/administrator/src/Application/QuizAttemptService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Scritture concorrenti non creano iscrizioni o progressi duplicati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a scritture concorrenti non creano iscrizioni o progressi duplicati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L1-L25",
+            "component/administrator/src/Application/QuizAttemptService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Errori e retry preservano lo stato consistente dell'oggetto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/QUIZ_RUNTIME.md",
+          "component/administrator/src/Application/QuizAttemptService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a errori e retry preservano lo stato consistente dell'oggetto, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/QUIZ_RUNTIME.md#L1-L25",
+            "component/administrator/src/Application/QuizAttemptService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "HTTP-05": [
       {
         "id": "criterion_01",
         "label": "Le risposte HTTP core non espongono segreti né risorse protette",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a le risposte http core non espongono segreti né risorse protette, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -9073,16 +9313,40 @@
       {
         "id": "criterion_03",
         "label": "Errori applicativi espongono codici controllati, senza dettagli privati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a errori applicativi espongono codici controllati, senza dettagli privati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "HTTP-06": [
       {
         "id": "criterion_01",
         "label": "Contratti HTTP core verificati con test positivi e negativi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a contratti http core verificati con test positivi e negativi, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -9105,8 +9369,22 @@
       {
         "id": "criterion_03",
         "label": "Casi limite previsti in RELEASE_SCOPE_MATRIX.md tracciati come accettazione distinta",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La tracciabilità delle acceptance cases è definita come requisito distinto, ma manca il registro completo dei casi limite eseguiti con esito e riferimenti a build per la candidata 1.0.0.",
+          "references": [
+            "docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       }
     ],
     "SECDEV-01": [
@@ -9146,8 +9424,20 @@
       {
         "id": "criterion_03",
         "label": "Controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -9171,72 +9461,206 @@
       {
         "id": "criterion_01",
         "label": "Applicare la matrice CORE-01–23 e le best practices Joomla/PHP, PSR-12, namespace e contratti tipizzati/documentati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a applicare la matrice core-01–23 e le best practices joomla/php, psr-12, namespace e contratti tipizzati/documentati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Usare runtime supportati e verificare API della patch target",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a usare runtime supportati e verificare api della patch target, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "nessuna modifica del core o dipendenza intenzionale da API rimosse",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a nessuna modifica del core o dipendenza intenzionale da api rimosse, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Motivare ogni servizio core non pertinente senza duplicarlo automaticamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "component/administrator/services/provider.php",
+          "docs/MANUAL_ENROLLMENT.md",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a motivare ogni servizio core non pertinente senza duplicarlo automaticamente, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "component/administrator/services/provider.php#L1-L25",
+            "docs/MANUAL_ENROLLMENT.md#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "SECDEV-03": [
       {
         "id": "criterion_01",
         "label": "Input, query e output",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a input, query e output, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Validazione server, campi allowlist, query con binding tramite servizi Joomla, output contestualmente codificato e HTML filtrato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a validazione server, campi allowlist, query con binding tramite servizi joomla, output contestualmente codificato e html filtrato, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Test contro SQL injection, XSS, mass assignment e formule CSV",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "I test positivi e negativi esistenti coprono superfici selezionate, ma la suite completa contro SQL injection, XSS, mass assignment e formule CSV non è documentata come eseguita per tutte le superfici.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "SECDEV-04": [
       {
         "id": "criterion_01",
         "label": "Identita, autorizzazioni e richieste",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a identita, autorizzazioni e richieste, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Utenti/sessioni e livelli Joomla",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a utenti/sessioni e livelli joomla, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "controllo oggetto/parent a ogni operazione, CSRF su mutazioni browser, metodo HTTP, concorrenza e idempotenza",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a controllo oggetto/parent a ogni operazione, csrf su mutazioni browser, metodo http, concorrenza e idempotenza, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -9252,98 +9676,284 @@
       {
         "id": "criterion_05",
         "label": "I job e i plugin non acquisiscono privilegi generici da super user",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/LEARNING.md",
+          "component/administrator/src/Application/LearningService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a i job e i plugin non acquisiscono privilegi generici da super user, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/LEARNING.md#L1-L25",
+            "component/administrator/src/Application/LearningService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "SECDEV-05": [
       {
         "id": "criterion_01",
         "label": "File e chiamate esterne",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a file e chiamate esterne, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Upload/storage protetti, MIME/limiti, percorsi generati, nessun eseguibile o estrazione ZIP automatica",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a upload/storage protetti, mime/limiti, percorsi generati, nessun eseguibile o estrazione zip automatica, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "API provider su HTTPS verificato e host ammessi, timeout/retry e protezione SSRF anche sui redirect",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a api provider su https verificato e host ammessi, timeout/retry e protezione ssrf anche sui redirect, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "nessun fetch di URL server arbitrari",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a nessun fetch di url server arbitrari, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "Nessun ripiego pubblico dopo errore di sicurezza",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/MATERIALS.md",
+          "component/administrator/src/Application/MaterialService.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a nessun ripiego pubblico dopo errore di sicurezza, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/MATERIALS.md#L1-L25",
+            "component/administrator/src/Application/MaterialService.php#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "SECDEV-06": [
       {
         "id": "criterion_01",
         "label": "Segreti e dati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a segreti e dati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "SecretProvider/configurazione server protetta, chiavi separate dal database ove necessarie, nessun segreto nei form lezione, DTO, export, log o pacchetti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a secretprovider/configurazione server protetta, chiavi separate dal database ove necessarie, nessun segreto nei form lezione, dto, export, log o pacchetti, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Primitive crittografiche sicure mantenute, cache personale corretta, risposte quiz non anticipate e nessuna crittografia proprietaria improvvisata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a primitive crittografiche sicure mantenute, cache personale corretta, risposte quiz non anticipate e nessuna crittografia proprietaria improvvisata, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Un normale campo password del form non viene considerato automaticamente cifratura a riposo",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          "docs/CLOUDFLARE_STREAM.md",
+          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a un normale campo password del form non viene considerato automaticamente cifratura a riposo, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            "docs/CLOUDFLARE_STREAM.md#L1-L25",
+            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "SECDEV-07": [
       {
         "id": "criterion_01",
         "label": "Processo verificabile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          ".github/workflows/ci.yml",
+          "docs/IMPLEMENTATION_EVIDENCE.json",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Il gate approvato richiede threat model e revisione sistematica tracciata; il repository documenta ancora il piano e non contiene il rapporto finale di esecuzione.",
+          "references": [
+            ".github/workflows/ci.yml#L1-L25",
+            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          ".github/workflows/ci.yml",
+          "docs/IMPLEMENTATION_EVIDENCE.json",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "Non risulta un inventario/lockfile e una scansione completa di stile, analisi statica, segreti e dipendenze con evidenze della candidata; il gate di hardening rimane aperto.",
+          "references": [
+            ".github/workflows/ci.yml#L1-L25",
+            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          ".github/workflows/ci.yml",
+          "docs/IMPLEMENTATION_EVIDENCE.json",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+          "docs/QA_TESTBOOK.md"
+        ],
+        "review": {
+          "reason": "La documentazione cita genericamente OWASP ASVS ma non fissa una versione; il requisito chiede un riferimento versionato esplicitamente.",
+          "references": [
+            ".github/workflows/ci.yml#L1-L25",
+            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
+            "docs/QA_TESTBOOK.md#L1013-L1013"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Vulnerabilita critiche/alte confermate e pertinenti non risolte bloccano la distribuzione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          ".github/workflows/ci.yml",
+          "docs/IMPLEMENTATION_EVIDENCE.json",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a vulnerabilita critiche/alte confermate e pertinenti non risolte bloccano la distribuzione, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            ".github/workflows/ci.yml#L1-L25",
+            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       },
       {
         "id": "criterion_05",
         "label": "non applicabilita e falsi positivi motivati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "unverifiable",
+        "evidence": [
+          ".github/workflows/ci.yml",
+          "docs/IMPLEMENTATION_EVIDENCE.json",
+          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+        ],
+        "review": {
+          "reason": "Il repository contiene codice e prove per flussi specifici collegati a non applicabilita e falsi positivi motivati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "references": [
+            ".github/workflows/ci.yml#L1-L25",
+            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+          ]
+        }
       }
     ],
     "SECDEV-08": [
