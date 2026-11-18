@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (SCR-01, 18/11/2026) — azzeramento filtri catalogo:** in assenza di risultati con filtri attivi viene mostrata un'azione localizzata «Azzera filtri», che ripristina la ricerca senza cancellare l'eventuale categoria di partenza (catid). Controllo strutturale aggiunto; accettazione Joomla pendente e nessun incremento percentuale arbitrario.
+
 - **0.60.8-dev (SCR-05, 18/11/2026) — navigazione dallo stato vuoto:** nella vista personale «I miei corsi» il messaggio senza risultati include un collegamento localizzato al catalogo, senza duplicare il link standard quando sono presenti card. Nessuna variazione a iscrizioni, ACL, schema o SemVer; collaudo Joomla pendente.
 
 - **0.60.8-dev (CAT-02, PR #657, 18/11/2026) — regole di completamento nella scheda pubblica:** proiezione sicura della policy della versione pubblicata (lezioni obbligatorie, sequenza, soglia video, eventuale attestato previsto) con testi IT/EN e nota sulle condizioni di emissione reale. La consultazione non promette attestati. Nessuna esposizione dei contenuti riservati o modifica alla didattica; test Joomla esteso, collaudo manuale pendente.
