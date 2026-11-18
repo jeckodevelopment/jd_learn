@@ -62,6 +62,24 @@ def validate(body: str, milestone: str | None, labels: list[str], paths: set[str
     manual = visible(sections.get("Collaudo manuale Joomla", ""))
     if not re.search(r"(?im)^\s*Stato:\s*(In attesa|Non applicabile|Eseguito)\b", manual):
         errors.append("Set manual Joomla test status to In attesa, Non applicabile, or Eseguito")
+    manual_cases = manual.split("Casi da provare", 1)[-1]
+    case_items = [
+        line.strip()[2:].strip() for line in manual_cases.splitlines()
+        if re.match(r"^\s*-\s+", line)
+    ]
+    if not any(item and not re.fullmatch(r"\[[^\]]+\]", item) for item in case_items):
+        if not re.search(r"(?im)^\s*(?:-\s*)?N/A\b.+", manual_cases):
+            errors.append("List manual Joomla cases to run later, or N/A with a reason")
+    behaviors = visible(sections.get("Comportamenti da testare", ""))
+    behavior_items = [
+        line.strip()[2:].strip() for line in behaviors.splitlines()
+        if re.match(r"^\s*-\s+", line)
+    ]
+    if not any(item and not re.fullmatch(r"\[[^\]]+\]", item) for item in behavior_items):
+        errors.append("List concrete behaviors and expected results to test")
+    documentation = visible(sections.get("Documentazione allineata", ""))
+    if not re.search(r"(?im)^\s*-\s*\[[xX]\]", documentation):
+        errors.append("Select the documentation updates completed, or N/A with a reason")
     # Pending manual acceptance is intentionally allowed; it is not a merge blocker.
     if milestone != "1.0.0":
         errors.append("PR must target milestone 1.0.0 for the current stable baseline")
