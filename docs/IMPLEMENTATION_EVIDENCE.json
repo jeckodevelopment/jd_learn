@@ -2,20 +2,20 @@
   "audited_at": "2026-11-15",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "as_of": "2026-11-16",
-    "percent": 80,
-    "basis": "LCM-01 PR #490 adds Joomla integration tests proving existing certificates remain owned and downloadable after course states 0/2/-2 and after upgrade, while classroom resume is denied. The tests found and fixed an SQL binding regression in pending PDF rendering. Prior PRs #484/#486/#488 cover learning access, administrative migration/notifications and historical dashboard. Conservative weighted estimate unchanged (81+81+78+99+68+92+70+72+75)/9 = 79.56% (rounded 80%). Manual Joomla acceptance, backup/storage restore and remaining endpoint/race audit pending.",
-    "macroareas": {
-      "courses": 81,
-      "catalogue": 81,
-      "learning_progress": 78,
-      "video_materials": 99,
-      "enrollment": 68,
-      "joomla_integrations": 92,
-      "release_preparation": 70,
-      "email_notifications": 72,
-      "certificates": 75
-    }
+    "percent": 54.12,
+    "development_evidence_floor_percent": 54.12,
+    "manual_acceptance_coverage_percent": 4.67,
+    "manual_acceptance": {
+      "requirements_with_recorded_result": 10,
+      "requirements_not_run": 204,
+      "requirements_partial": 10,
+      "requirements_passed": 0,
+      "requirements_failed": 0,
+      "coverage_percent": 4.67,
+      "fully_accepted_percent": 0
+    },
+    "basis": "Criterion-based evidence floor with equal weight per in-scope requirement; unverifiable and unassessed criteria count as zero. Manual acceptance is calculated independently from REQUIREMENTS_STATUS.csv.",
+    "source": "docs/RELEASE_DASHBOARD.md"
   },
   "version": "0.57.7-dev",
   "code_baseline": "622a4ae67cae10d5dec35688d1d550fa064994a1",
@@ -13984,5 +13984,21 @@
       "verify release package and CI against current main head",
       "compute functional progress only after auditable weighted acceptance criteria validation"
     ]
+  },
+  "historical_macroarea_estimate": {
+    "as_of": "2026-11-16",
+    "percent": 80,
+    "basis": "LCM-01 PR #490 adds Joomla integration tests proving existing certificates remain owned and downloadable after course states 0/2/-2 and after upgrade, while classroom resume is denied. The tests found and fixed an SQL binding regression in pending PDF rendering. Prior PRs #484/#486/#488 cover learning access, administrative migration/notifications and historical dashboard. Conservative weighted estimate unchanged (81+81+78+99+68+92+70+72+75)/9 = 79.56% (rounded 80%). Manual Joomla acceptance, backup/storage restore and remaining endpoint/race audit pending.",
+    "macroareas": {
+      "courses": 81,
+      "catalogue": 81,
+      "learning_progress": 78,
+      "video_materials": 99,
+      "enrollment": 68,
+      "joomla_integrations": 92,
+      "release_preparation": 70,
+      "email_notifications": 72,
+      "certificates": 75
+    }
   }
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check traceability/documentation consistency, not functional requirement acceptance."""
 from pathlib import Path
-import csv,json,re,collections,xml.etree.ElementTree as E
+import csv,json,re,collections,xml.etree.ElementTree as E,importlib.util
 ROOT=Path(__file__).resolve().parents[1]
 def read_csv(path):
  with (ROOT/path).open(encoding='utf-8-sig',newline='')as stream:return list(csv.DictReader(stream))
@@ -34,7 +34,17 @@ def check_reconciliation(rows,evidence):
  for field,counts in summary['counts'].items():
   assert dict(collections.Counter(r[field]for r in rows))==counts,('Reconciliation summary drift',field)
  progress=summary['implementation_progress']
- assert round(sum(progress['areas'])/len(progress['areas']))==progress['percent'], 'Progress arithmetic drift'
+ spec=importlib.util.spec_from_file_location('functional_progress',ROOT/'tools/functional_progress.py')
+ module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+ criteria=json.loads((ROOT/'docs/FUNCTIONAL_CRITERIA_1.0.0.json').read_text())
+ metrics=module.calculate(rows,criteria)
+ assert progress['percent']==metrics['development_evidence_floor_percent'], 'Development dashboard drift'
+ assert progress['manual_acceptance_coverage_percent']==metrics['manual_acceptance']['coverage_percent'], 'Manual acceptance dashboard drift'
+ assert progress['manual_acceptance']==metrics['manual_acceptance'], 'Manual acceptance breakdown drift'
+ current=evidence['current_implementation_estimate']
+ assert current['percent']==metrics['development_evidence_floor_percent'], 'Evidence development metric drift'
+ assert current['manual_acceptance_coverage_percent']==metrics['manual_acceptance']['coverage_percent'], 'Evidence manual acceptance metric drift'
+ assert current['manual_acceptance']==metrics['manual_acceptance'], 'Evidence manual acceptance breakdown drift'
 def check_status():
  baseline=read_csv('docs/specifications/Matrice_requisiti_test_LMS_1.0.csv')
  rows=read_csv('docs/REQUIREMENTS_STATUS.csv')
