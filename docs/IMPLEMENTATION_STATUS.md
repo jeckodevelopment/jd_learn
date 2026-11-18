@@ -1,3 +1,7 @@
+**JD Learn 0.60.1-dev — correzione LCM-01: ripristino archivio senza riapertura automatica (18/11/2026).**
+
+Il workflow Archive chiude admissions_open e delivery_enabled nella stessa transazione; Restore ritorna allo stato editoriale Pubblicato senza riaprire né iscrizioni né aula. Il recupero diretto dell'aula era già protetto da LearningService con HTTP 403 quando delivery_enabled=0; ora il ripristino dell'archivio mantiene quel blocco. Occorre un comando amministrativo dedicato per riattivare la fruizione. Test Joomla automatici ampliati; collaudo manuale e audit degli endpoint laterali ancora pendenti. Nessuna percentuale funzionale globale estrapolata.
+
 **JD Learn 0.60.0-dev — eliminazione protetta dei corsi privi di storico (18/11/2026).**
 
 La PR di implementazione 0.60.0 introduce un comando Purga per il singolo corso cestinato: blocca versioni, iscrizioni, relazioni, mail e audit, e rimuove le sole revisioni editoriali del corso vuoto confermato, con ACL e transazione. La cancellazione del record senza dipendenze e il collaudo reale devono essere verificati separatamente; non si dichiara concluso l'audit completo LCM-02.

@@ -89,7 +89,8 @@ $archiveChoices=$publication->transitions($actor,$course,$version);
 $archive=null;foreach($archiveChoices as $candidate){$options=new Registry($candidate->options);if($options->get('jlms_action')==='archive')$archive=$candidate;}
 $expect($archive!==null,'published course offers an explicit archive transition');
 $transition($archive,$version);
-$row=$db->setQuery('SELECT state,current_version_id FROM #__jlms_courses WHERE id='.$course)->loadObject();
+$row=$db->setQuery('SELECT state,current_version_id,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id='.$course)->loadObject();
+$expect((int)$row->admissions_open===0&&(int)$row->delivery_enabled===0,'archive closes both admissions and lesson delivery in one transition');
 $expect((int)$row->state===2&&(int)$row->current_version_id===$version&&$stage()==='JARCHIVED','archive hides discovery without changing the live version');
 try{$component->getCatalogService()->course($guest,'en-GB',$course);throw new RuntimeException('Archived course remained in the public catalog');}
 catch(RuntimeException $e){$expect($e->getCode()===404,'archived course is hidden from new catalog visits');}
@@ -99,7 +100,10 @@ $restoreChoices=$publication->transitions($actor,$course,$version);
 $restore=null;foreach($restoreChoices as $candidate){$options=new Registry($candidate->options);if($options->get('jlms_action')==='restore')$restore=$candidate;}
 $expect($restore!==null,'archived course offers an explicit restore transition');
 $transition($restore,$version);
-$row=$db->setQuery('SELECT state,current_version_id FROM #__jlms_courses WHERE id='.$course)->loadObject();
+$row=$db->setQuery('SELECT state,current_version_id,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id='.$course)->loadObject();
+$expect((int)$row->admissions_open===0&&(int)$row->delivery_enabled===0,'restore never automatically reopens admissions or delivery');
+// LearningService::enrolledCourse denies suspended delivery with HTTP 403;
+// the dedicated learning fixture exercises that user-facing contract.
 $expect((int)$row->state===1&&(int)$row->current_version_id===$version&&$stage()==='JPUBLISHED','restore republishes the same immutable version');
 $beforeAccess=$db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id='.$course)->loadAssoc();
 $publicAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1]);
