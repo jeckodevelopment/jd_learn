@@ -66,7 +66,8 @@ final class CoursemessageController extends BaseController
     {
         try {
             [$raw,$course]=$this->read();
-            $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->test($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$raw['template']??[]);
+            if (!is_string($raw['mutation_id']??null)) { throw new \\RuntimeException('COM_JLMS_INVALID_INPUT',400); }
+            $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->test($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$raw['mutation_id'],$raw['template']??[]);
             $this->setMessage(Text::_('COM_JLMS_COMMUNICATION_TEST_QUEUED')); $this->redirectTo($course);
         } catch (\Throwable $error) { $this->fail($error); }
     }
