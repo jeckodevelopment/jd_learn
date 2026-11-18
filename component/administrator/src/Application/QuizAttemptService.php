@@ -218,7 +218,25 @@ final class QuizAttemptService
         $touch=(object)['id'=>$enrollment,'completed_total'=>$total,'completed_at'=>$finished,'last_activity_at'=>self::date($time),'last_lesson_id'=>$lesson,
             'revision'=>(int)$e->revision+1,'modified_at'=>self::date($time),'modified_by'=>$e->user_id];$this->db->updateObject('#__jlms_enrollments',$touch,'id',true);
         $e->completed_total=$total;$e->completed_at=$finished;$e->revision=$touch->revision;
-        if($newCourseCompletion)(new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment,(int)$e->course_version_id,$finished);
+        if($newCourseCompletion){
+            // Match the lesson/video completion event and reuse the same enrollment-scoped
+            // idempotency key. Queueing participates in the progress transaction.
+            $courseId=(int)$e->course_id;
+            $q=$this->db->createQuery()->select('title, language')->from('#__jlms_courses')
+                ->where('id = :course')->bind(':course',$courseId,ParameterType::INTEGER);
+            $course=$this->db->setQuery($q)->loadObject();
+            $actor=new User((int)$e->user_id);
+            $name=trim((string)$actor->name);
+            (new \\Jlms\\Component\\Jlms\\Administrator\\Infrastructure\\MailQueue($this->db))->enqueue(
+                $courseId,hash('sha256','course.completed:'.$enrollment),'com_jlms.course.completed',
+                (string)($actor->getParam('language','')?:$course->language),(string)$actor->email,$name,
+                ['USER_FULLNAME'=>$name,'COURSE_TITLE'=>(string)$course->title,
+                    'COMPLETION_DATE'=>$finished,
+                    'DASHBOARD_URL'=>\\Joomla\\CMS\\Uri\\Uri::root().'index.php?option=com_jlms&view=dashboard',
+                    'SITE_NAME'=>(string)\\Joomla\\CMS\\Factory::getApplication()->get('sitename')]
+            );
+            (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment,(int)$e->course_version_id,$finished);
+        }
     }
     public function state(User $identity,string $language,int $enrollment,int $lesson,int $attempt=0,bool $compact=false):array
     {
