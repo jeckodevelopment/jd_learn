@@ -131,10 +131,10 @@ try:
  lifecycle_token=next(k for k in token_form['fields'] if re.fullmatch('[a-f0-9]{32}',k))
  trashed_url,trashed_html=request(path,{'task':'course.trash',lifecycle_token:'1','cid[]':str(new_id)})
  expect('JTRASHED' not in trashed_html,'Trash results render translated status')
- trashed_url,trashed_html=listing({'filter[published]':'-2','filter[search]':''})
+ trashed_url,trashed_html=listing({'filter[published]':'-2','filter[search]':'Saved directly into programme'})
  expect(visible(trashed_html)==[new_id],'Trashed view shows selected course only')
  _,restored_html=request(path,{'task':'course.restore',lifecycle_token:'1','cid[]':str(new_id)})
- draft_url,draft_html=listing({'filter[published]':'0','filter[search]':''})
+ draft_url,draft_html=listing({'filter[published]':'0','filter[search]':'Saved directly into programme'})
  expect(new_id in visible(draft_html),'Restored course appears as unpublished, not published')
  # Restricted editor: native backend login in a fresh session.
  client=build_opener(HTTPCookieProcessor(CookieJar()))
