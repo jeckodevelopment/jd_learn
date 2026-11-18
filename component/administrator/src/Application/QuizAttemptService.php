@@ -77,6 +77,36 @@ final class QuizAttemptService
     {
         for($i=count($rows)-1;$i>0;$i--){$j=random_int(0,$i);[$rows[$i],$rows[$j]]=[$rows[$j],$rows[$i]];}return $rows;
     }
+    /** Earliest UTC boundary that can close a quiz, across all active learning windows. */
+    private function quizClosingAt(object $enrollment, object $lesson): ?int
+    {
+        $editionId=(int)$enrollment->edition_id;
+        $courseId=(int)$enrollment->course_id;
+        $q=$this->db->createQuery()->select('ends_at')->from('#__jlms_editions')
+            ->where('id = :edition')->bind(':edition',$editionId,ParameterType::INTEGER);
+        $editionEnd=$this->db->setQuery($q)->loadResult();
+        $q=$this->db->createQuery()->select('publish_down, params_json')->from('#__jlms_courses')
+            ->where('id = :course')->bind(':course',$courseId,ParameterType::INTEGER);
+        $course=$this->db->setQuery($q)->loadObject();
+        if(!$course)throw new \RuntimeException('COM_JLMS_LEARNING_DENIED',403);
+        $schedule=CourseSchedule::read($course);
+        $dates=[$lesson->publish_down,$enrollment->ends_at,$editionEnd,$schedule['publish_down'],$schedule['ends_at']];
+        $limits=[];
+        foreach($dates as $date){
+            if($date!==null&&$date!=='')$limits[]=self::timestamp((string)$date);
+        }
+        return $limits?min($limits):null;
+    }
+
+    /** Do not consume an attempt when its full advertised timer cannot fit. */
+    private function assertQuizStartWindow(object $enrollment,object $lesson,int $now,int $duration):void
+    {
+        $end=$this->quizClosingAt($enrollment,$lesson);
+        if($end!==null&&($end<=$now||($duration>0&&$duration>$end-$now))){
+            throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW',403);
+        }
+    }
+
     public function start(User $identity,string $language,int $enrollment,int $lesson,string $key):array
     {
         self::key($key);
@@ -90,6 +120,7 @@ final class QuizAttemptService
             [$quiz,$rules,$pool]=$this->snapshots->published($lesson,(int)$l->course_version_id);$history=$this->history($enrollment,$quizId);
             $rules=$this->time->rules($rules,$enrollment,$quizId);
             if(($rules['max_attempts']>0&&$history['used']>=$rules['max_attempts'])||($history['last_closed']!==null&&$history['last_closed']+$rules['retry_seconds']>$now))throw new \RuntimeException('COM_JLMS_QUIZ_LIMIT',409);
+            $this->assertQuizStartWindow($e,$l,$now,(int)$rules['time_seconds']);
             if($rules['mode']==='random')$pool=array_slice(self::shuffle($pool),0,$rules['draw_count']);
             if($rules['shuffle_questions'])$pool=self::shuffle($pool);
             $rules['lesson_required']=(int)$l->required;$rules['source_revision']=(int)$l->source_revision;
@@ -260,6 +291,10 @@ final class QuizAttemptService
         $originalTime=(int)$rules['time_seconds'];$effectiveTime=$a&&$a->deadline_at!==null?max(0,self::timestamp($a->deadline_at)-self::timestamp($a->started_at)):$originalTime;
         $now=($this->clock)();$next=$history['last_closed']===null?$now:$history['last_closed']+$rules['retry_seconds'];$eligible=!$active;
         try{if(!$active)$this->learning->quizContext($identity,$language,$enrollment,(int)$l->id,false,false);}catch(\RuntimeException $error){if($error->getMessage()!=='COM_JLMS_LEARNING_WINDOW')throw $error;$eligible=false;}
+        if(!$active&&$eligible){
+            $end=$this->quizClosingAt($e,$l);
+            if($end!==null&&($end<=$now||($nextRules['time_seconds']>0&&$nextRules['time_seconds']>$end-$now)))$eligible=false;
+        }
         $remaining=$rules['max_attempts']===0?null:max(0,$rules['max_attempts']-$history['used']);
         $dto=['enrollment_id'=>$enrollment,'lesson_id'=>(int)$l->id,'title'=>$l->title,'server_now'=>$now,'assessment'=>$rules['assessment'],
             'base_time_seconds'=>$rules['base_time_seconds']??$rules['time_seconds'],'extra_time_seconds'=>$rules['extra_time_seconds']??0,'next_time_seconds'=>$nextRules['time_seconds'],'next_extra_time_seconds'=>$nextRules['extra_time_seconds'],'original_time_seconds'=>$originalTime,'extension_seconds'=>max(0,$effectiveTime-$originalTime),'feedback_policy'=>$rules['feedback'],'question_count'=>$rules['draw_count'],'threshold'=>$rules['threshold'],'time_seconds'=>$effectiveTime,'used_attempts'=>$history['used'],'remaining_attempts'=>$remaining,

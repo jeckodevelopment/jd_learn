@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (STA-02, 18/11/2026) — guardia sull'avvio dei quiz a tempo:** prima di creare un tentativo, il server verifica che la durata intera rientri nella prima scadenza applicabile tra lezione, corso, edizione e iscrizione. Se insufficiente, restituisce la condizione di finestra didattica chiusa senza creare tentativi e il DTO non propone l'avvio. Nessun troncamento implicito né modifica ai tentativi già salvati. Test di regressione Joomla, collaudo manuale pendente.
+
 - **0.60.8-dev (MAIL-08, PR #646, 18/11/2026) — invio test idempotente:** l'invio di prova di una comunicazione usa un identificativo UUID v4 per la richiesta, passato dal form al controller e utilizzato per l'evento univoco in outbox; un doppio POST con lo stesso identificativo non genera una nuova riga. Una nuova anteprima consente una prova volontaria distinta. Nessun cambiamento allo Scheduler, ai destinatari o allo schema; collaudo manuale Joomla/SMTP pendente.
 
 - **0.60.8-dev (18/11/2026, PR #643; NOT-01 / MAIL-02) — notifica completamento da quiz:** l'ultimo quiz obbligatorio che completa il corso accoda `com_jlms.course.completed` con la stessa chiave idempotente dei percorsi lezione/video e con tutti i token canonici. La notifica entra nella transazione di progresso; i reinvii non duplicano l'evento. Test su Joomla disposable, accettazione SMTP reale pendente. Nessuna migrazione schema.
