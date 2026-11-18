@@ -1,3 +1,13 @@
+## LCM-05 — Finder dopo archiviazione/ripristino corso (0.60.8-dev)
+
+1. Indicizzare un corso Pubblicato e visibile a Smart Search; accertare la presenza nei risultati.
+2. Dal programma didattico selezionare Archive: stato Archiviato, ammissioni ed erogazione chiuse; verificare che il risultato sparisca da Smart Search e che l'URL diretto non apra la didattica.
+3. Eseguire Restore del workflow: stato editoriale Pubblicato, ma didattica/ammissioni ancora chiuse; verificare eventuale risultato promozionale secondo i filtri Finder, senza possibilità di accedere all'aula.
+4. Provare evento Finder non disponibile, archiviazione negata e transizione fallita: nessuna notifica post-commit per operazione annullata; nessuna perdita di dati.
+5. Verificare cache, SEO, categorizzazione, ruoli Joomla e upgrade da 0.60.7-dev.
+
+Test Joomla `tests/joomla-publication-review.php` osserva gli eventi e lo snapshot persistito; verifica end-to-end Smart Search su sito reale non ancora eseguita.
+
 ## LCM-05 — Smart Search dopo cestinazione/ripristino corsi (0.60.7-dev)
 
 1. Indicare un corso pubblicato e senza programmazione temporale in Smart Search e verificarne la presenza nell'indice.
