@@ -115,6 +115,8 @@ $get=static fn():array=>array_map(static fn($row):int=>(int)$row->id,$list->getI
 listExpect($get()===[$ids['Alpha'],$ids['Bravo'],$ids['Zebra']]&&(int)$list->getTotal()===3,'Native list sorting, search and total agree');
 $list->setState('filter.published','1');listExpect($get()===[$ids['Alpha']]&&(int)$list->getTotal()===1,'Published filter shares the total query');
 $list->setState('filter.published','0');listExpect($get()===[$ids['Bravo'],$ids['Zebra']]&&(int)$list->getTotal()===2,'Filter changes invalidate cached items and totals');
+$list->setState('filter.published','2');listExpect($get()===[]&&(int)$list->getTotal()===0,'Archived filter accepts state 2 and excludes active/draft fixtures');
+$list->setState('filter.published','-2');listExpect($get()===[],'Unsupported trash state fails closed rather than broadening results');
 $list->setState('filter.published','');$list->setState('filter.category_id',(string)$categories['parent']);listExpect(count($get())===3,'Category filter includes native descendants');
 $list->setState('filter.category_id',(string)$categories['child']);listExpect($get()===[$ids['Alpha']],'Child category filter is precise');
 $list->setState('filter.category_id','');$list->setState('filter.author_id',(string)$editor);listExpect($get()===[$ids['Bravo']],'Native author filter');
@@ -129,6 +131,17 @@ $list->setState('filter.checked_out','');$list->setState('filter.search','id:'.$
 $list->setState('filter.search',"' OR 1=1 --");listExpect($get()===[],'Search is bound SQL input');
 $list->setState('filter.search','List UI');$list->setState('filter.published',['1']);listExpect($get()===[],'Malformed filters fail closed');
 $list->setState('filter.published','');$list->setState('list.ordering','a.title; DROP TABLE #__jlms_courses');$list->setState('list.direction','DESC; DELETE');listExpect(count($get())===3,'SQL ordering is allowlisted');
+// Verify the archived state against an actual record without changing retained fixtures.
+$db->setQuery('UPDATE #__jlms_courses SET state=2 WHERE id='.(int)$ids['Bravo'])->execute();
+try {
+ $archivedList=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);
+ $archivedList->setState('list.limit',100);$archivedList->setState('list.start',0);
+ $archivedList->setState('filter.search','List UI');$archivedList->setState('filter.published','2');
+ $archiveIds=array_map(static fn($row):int=>(int)$row->id,$archivedList->getItems());
+ listExpect($archiveIds===[$ids['Bravo']]&&(int)$archivedList->getTotal()===1,'Archived state filter returns exactly archived records');
+} finally {
+ $db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id='.(int)$ids['Bravo'])->execute();
+}
 $restricted=$factory->createModel('Courses','Administrator',['ignore_request'=>true]);$restricted->setCurrentUser(new \Joomla\CMS\User\User($editor));$restricted->setState('list.limit',100);$restricted->setState('list.start',0);$restricted->setState('filter.search','id:'.$ids['Alpha']);
 listExpect(count($restricted->getItems())===0&&(int)$restricted->getTotal()===0,'Filters and totals cannot expose an uneditable course');
 $rows=$db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN ('.implode(',',$ids).') ORDER BY id')->loadAssocList();

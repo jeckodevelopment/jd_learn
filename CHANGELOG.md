@@ -1,4 +1,6 @@
 # Changelog
+
+- **0.58.0 (18/11/2026) — Stati dei corsi in amministrazione:** aggiunti filtro Archiviati e badge coerente nella lista Corsi; verifica su fixture Joomla del filtro stato 2 e rifiuto di input stato non autorizzato. Non vengono introdotti cestino o cancellazione definitiva. Versione MINOR perché la capability amministrativa è nuova e retrocompatibile.
 - **Audit funzionale 1.0.0 — settima tranche (18/11/2026):** censiti 22 ulteriori requisiti relativi a UI, accessibilità e performance (49 criteri, 20 evidenze iniziali e 29 punti ancora da valutare). Audit progressivo 129/214 requisiti; nessuna modifica runtime, SemVer invariato e nessuna percentuale globale inventata.
 
 - **Audit funzionale 1.0.0 — sesta tranche (17/11/2026):** aggiunti 34 requisiti SIC/PRI/CFG/CORE, 75 criteri (36 prime evidenze e 39 da approfondire). Registro a 107/214 requisiti. Nessun runtime modificato o avanzamento globale arbitrario, SemVer invariato.

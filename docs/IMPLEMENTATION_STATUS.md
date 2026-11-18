@@ -1,4 +1,6 @@
-**JD Learn 0.57.7-dev — audit funzionale al 18/11/2026.**
+**JD Learn 0.58.0-dev — filtro Archiviati per i corsi (18/11/2026).**
+
+La PR #613 introduce il filtro e badge archivio nella lista amministrativa, con fixture Joomla. LCM-02 resta parziale: cestino e ripristino non implementati. Il vecchio audit riportato sotto è storico e non una percentuale globale convalidata.
 
 ## Audit funzionale UI, accessibilità e prestazioni — PR #603 (18/11/2026)
 
