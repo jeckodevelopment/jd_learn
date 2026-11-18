@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.3 (18/11/2026) — Gate LCM-01 sulle singole iscrizioni:** la riattivazione di un'iscrizione sospesa è consentita solo se il corso è Pubblicato e l'erogazione didattica è abilitata. L'anteprima e la conferma sotto lock del corso bloccano archiviati, non pubblicati, cestinati e corsi con didattica sospesa; sospensione e annullamento delle iscrizioni rimangono disponibili secondo le regole preesistenti. Test Joomla senza nuove scritture né notifiche per richieste respinte. PATCH senza schema; collaudo manuale pendente.
+
 - **0.60.2 (18/11/2026) — Gate LCM-01 sulle operazioni amministrative:** la riapertura delle iscrizioni e la ripresa delle lezioni non sono consentite finché il corso non è nello stato Pubblicato. Questo impedisce di riarmare in anticipo un corso archiviato, non pubblicato o cestinato e di riaprire implicitamente gli accessi al successivo ripristino. La sospensione resta consentita. Regressione Joomla su anteprima, applicazione e audit, senza modifiche allo schema; accettazione manuale pendente.
 
 - **0.60.1 (18/11/2026) — Ripristino archivio senza riapertura automatica:** archiviare un corso chiude ammissioni e fruizione, conservando le versioni e lo storico; il ripristino editoriale allo stato Pubblicato mantiene entrambi i blocchi fino a un'azione amministrativa esplicita. Il gate di fruizione di LearningService mantiene il rifiuto HTTP 403 quando delivery_enabled è 0. Test Joomla delle transizioni e della protezione dei link diretti. Correzione PATCH senza modifiche allo schema.
