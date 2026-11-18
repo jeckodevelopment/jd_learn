@@ -1,3 +1,13 @@
+## LCM-02 / LCM-01 — cestino corsi con chiusura dei flag (0.60.4-dev)
+
+1. Su un corso Pubblicato con iscrizioni ed erogazione abilitate, scegliere **Cestina** dal backend: il corso scompare dalle viste pubbliche e `admissions_open`/`delivery_enabled` sono impostati a 0.
+2. Verificare che URL diretti, nuove iscrizioni e ripresa dell'aula non aggirino i blocchi, senza eliminare progressi, iscrizioni e attestati.
+3. Eseguire **Ripristina**: il corso torna Non pubblicato e entrambi i flag restano chiusi. Verificare nessuna riapertura automatica al successivo passaggio editoriale.
+4. Ripetere con ruoli Joomla limitati e azioni massive, inclusi errori su un elemento: rollback e assenza di modifiche parziali.
+5. Verificare upgrade da 0.60.3-dev e assenza di migrazioni schema.
+
+CI Joomla: `tests/joomla-courses-ui.php`. Accettazione Joomla reale **non eseguita**.
+
 ## LCM-01 — riattivazione individuale iscrizione (0.60.3-dev)
 
 1. Sospendere una singola iscrizione in corso Pubblicato e verificare l'accesso all'aula negato.

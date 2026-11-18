@@ -1,3 +1,7 @@
+**JD Learn 0.60.4-dev — cestino conservativo dei corsi, LCM-02/LCM-01 (18/11/2026).**
+
+`CourseModel::changeStates()` chiude ammissioni ed erogazione nello stesso aggiornamento transazionale della cestinazione (`state=-2`), anche se entrambi i flag erano precedentemente abilitati. Restore torna allo stato Non pubblicato senza aprirli né alterare versioni o iscrizioni. Test Joomla automatici sulla coppia di flag e sulla conservazione dei record; accettazione reale da eseguire. LCM-01 e LCM-02 rimangono Parziali, avanzamento globale non consolidato.
+
 **JD Learn 0.60.3-dev — protezione riattivazione di singole iscrizioni LCM-01 (18/11/2026).**
 
 `EnrollmentStateService` impedisce la riattivazione individuale da Sospesa ad Attiva se il corso non è Pubblicato o se la didattica è sospesa. Lock del corso prima del lock dell'iscrizione per serializzare con Archive e operazioni di sospensione. Test Joomla sulle quattro combinazioni editoriali negative, senza audit o scritture. Nessuna accettazione Joomla reale attribuita. LCM-01 rimane Parziale e la percentuale funzionale globale resta non consolidata.

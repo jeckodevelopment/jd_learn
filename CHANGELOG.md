@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.4 (18/11/2026) — Cestino corsi, chiusura conservativa degli accessi:** la cestinazione di un corso imposta `admissions_open=0` e `delivery_enabled=0` nella stessa transazione del passaggio a `state=-2`. Il ripristino allo stato Non pubblicato preserva entrambi i blocchi e la versione didattica. Il test Joomla verifica entrambi i flag prima e dopo ripristino e l'integrità dello storico, senza modifiche allo schema; accettazione manuale pendente. PATCH LCM-02/LCM-01.
+
 - **0.60.3 (18/11/2026) — Gate LCM-01 sulle singole iscrizioni:** la riattivazione di un'iscrizione sospesa è consentita solo se il corso è Pubblicato e l'erogazione didattica è abilitata. L'anteprima e la conferma sotto lock del corso bloccano archiviati, non pubblicati, cestinati e corsi con didattica sospesa; sospensione e annullamento delle iscrizioni rimangono disponibili secondo le regole preesistenti. Test Joomla senza nuove scritture né notifiche per richieste respinte. PATCH senza schema; collaudo manuale pendente.
 
 - **0.60.2 (18/11/2026) — Gate LCM-01 sulle operazioni amministrative:** la riapertura delle iscrizioni e la ripresa delle lezioni non sono consentite finché il corso non è nello stato Pubblicato. Questo impedisce di riarmare in anticipo un corso archiviato, non pubblicato o cestinato e di riaprire implicitamente gli accessi al successivo ripristino. La sospensione resta consentita. Regressione Joomla su anteprima, applicazione e audit, senza modifiche allo schema; accettazione manuale pendente.
