@@ -61,11 +61,20 @@ class FunctionalProgressTests(unittest.TestCase):
 
     def test_equal_requirement_weights_and_missing_criterion(self):
         output = module.calculate(self.rows, self.criteria)
-        self.assertEqual(output["functional_implementation_percent"], 25.0)\n        self.assertEqual(output["development_evidence_floor_percent"], 25.0)\n        self.assertEqual(output["manual_acceptance"]["coverage_percent"], 50.0)\n        self.assertEqual(output["manual_acceptance"]["requirements_partial"], 1)\n        self.assertEqual(output["manual_acceptance"]["requirements_passed"], 0)
+        self.assertEqual(output["functional_implementation_percent"], 25.0)
+        self.assertEqual(output["development_evidence_floor_percent"], 25.0)
+        self.assertEqual(output["manual_acceptance"]["coverage_percent"], 50.0)
+        self.assertEqual(output["manual_acceptance"]["requirements_partial"], 1)
+        self.assertEqual(output["manual_acceptance"]["requirements_passed"], 0)
         self.assertEqual(output["criteria_by_requirement"]["A"]["missing_criteria"], 1)
         self.assertNotIn("C", output["criteria_by_requirement"])
 
-    def test_manual_acceptance_is_validated(self):\n        self.rows[0]["Accettazione Joomla"] = "Auto superata"\n        with self.assertRaisesRegex(ValueError, "Invalid Joomla acceptance state"):\n            module.calculate(self.rows, self.criteria)\n\n    def test_no_evidence_cannot_be_marked_implemented(self):
+    def test_manual_acceptance_is_validated(self):
+        self.rows[0]["Accettazione Joomla"] = "Auto superata"
+        with self.assertRaisesRegex(ValueError, "Invalid Joomla acceptance state"):
+            module.calculate(self.rows, self.criteria)
+
+    def test_no_evidence_cannot_be_marked_implemented(self):
         self.criteria["requirements"]["A"][0]["evidence"] = []
         with self.assertRaisesRegex(ValueError, "lacks evidence"):
             module.calculate(self.rows, self.criteria)
