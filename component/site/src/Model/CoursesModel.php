@@ -111,7 +111,7 @@ class CoursesModel extends ListModel
                 $result[$id] = TeacherProfiles::visible(
                     $db, $actor, $language, (string) ($course->catalog_presentation_json ?? '')
                 );
-            } catch (\\JsonException | \\RuntimeException | \\TypeError $error) {
+            } catch (\JsonException | \RuntimeException | \TypeError $error) {
                 // A malformed historical snapshot must not break the public catalogue.
                 $result[$id] = [];
             }
