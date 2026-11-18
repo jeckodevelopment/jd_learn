@@ -1053,5 +1053,6 @@ runpy.run_path(str(ROOT/'tests/frontend-category-sections.py'), run_name='__main
 # Functional criterion reconciliation: no unsupported completion percentage.
 import subprocess as _progress_subprocess
 import sys as _progress_sys
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tools/functional_audit.py'), '--check'], check=True)
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tools/functional_progress.py')], check=True)
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/functional-progress.py')], check=True)

@@ -1,95 +1,80 @@
 #!/usr/bin/env python3
 """Guard functional progress from premature or fabricated percentages."""
-import copy
+import csv
 import importlib.util
+import json
 import unittest
 from pathlib import Path
 
-root = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location("functional_progress", root / "tools/functional_progress.py")
+ROOT = Path(__file__).resolve().parents[1]
+spec = importlib.util.spec_from_file_location("functional_progress", ROOT / "tools/functional_progress.py")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
+
 class FunctionalProgressTests(unittest.TestCase):
     def setUp(self):
-        import csv, json
-        with (root / "docs/REQUIREMENTS_STATUS.csv").open(encoding="utf-8-sig", newline="") as handle:
-            self.rows = list(csv.DictReader(handle))
-        self.criteria = json.loads((root / "docs/FUNCTIONAL_CRITERIA_1.0.0.json").read_text())
+        self.rows = [
+            {"Requisito": "A", "Perimetro 1.0.0": "1.0.0"},
+            {"Requisito": "B", "Perimetro 1.0.0": "Misto"},
+            {"Requisito": "C", "Perimetro 1.0.0": "Fase 2"},
+        ]
+        self.criteria = {"requirements": {
+            "A": [
+                {"id": "a", "status": "implemented", "evidence": ["tools/functional_progress.py"]},
+                {"id": "b", "status": "missing", "evidence": []},
+            ],
+            "B": [{"id": "a", "status": "missing", "evidence": []}],
+        }}
 
-    def test_no_global_percentage_before_full_reconciliation(self):
-        output = module.calculate(self.rows, self.criteria)
-        self.assertIsNone(output["functional_implementation_percent"])
-        self.assertEqual(output["progress_status"], "not_yet_measurable")
-        self.assertEqual(output["audited_requirements"], len(self.criteria["requirements"]))
+    def test_ledger_covers_current_scope(self):
+        with module.REGISTER.open(encoding="utf-8-sig", newline="") as stream:
+            rows = list(csv.DictReader(stream))
+        criteria = json.loads(module.CRITERIA.read_text(encoding="utf-8"))
+        output = module.calculate(rows, criteria)
         self.assertEqual(output["audited_requirements"], output["in_scope_requirements"])
         self.assertEqual(output["not_yet_audited_requirements"], 0)
-        self.assertGreaterEqual(output["audited_requirements"], 214)
-        self.assertLess(output["fully_reviewed_requirements"], output["audited_requirements"])
+        for requirement in ("ISC-04", "CERT-03", "MAIL-09", "JOO-03", "SIC-01",
+                            "PRI-02", "CORE-14", "ACC-01", "PERF-01"):
+            self.assertIn(requirement, output["criteria_by_requirement"])
+        for requirement in ("PRO-07", "ATT-01"):
+            self.assertNotIn(requirement, output["criteria_by_requirement"])
 
-    def test_completed_requirement_is_explicitly_audited(self):
+    def test_unassessed_criterion_blocks_score(self):
+        self.criteria["requirements"]["A"][1]["status"] = "unassessed"
         output = module.calculate(self.rows, self.criteria)
-        self.assertTrue(output["criteria_by_requirement"]["CAT-03"]["complete_audit"])
-        self.assertTrue(output["criteria_by_requirement"]["AUT-02"]["complete_audit"])
-
-    def test_legacy_partial_remains_not_fully_audited(self):
-        output = module.calculate(self.rows, self.criteria)
-        self.assertFalse(output["criteria_by_requirement"]["CAT-04"]["complete_audit"])
         self.assertIsNone(output["functional_implementation_percent"])
+        self.assertFalse(output["criteria_by_requirement"]["A"]["complete_audit"])
 
-    def test_in_scope_learning_criteria_and_phase_two_exclusion(self):
+    def test_unverifiable_criterion_blocks_score_after_review(self):
+        self.criteria["requirements"]["A"][1]["status"] = "unverifiable"
         output = module.calculate(self.rows, self.criteria)
-        self.assertTrue(output["criteria_by_requirement"]["PRO-02"]["complete_audit"])
-        self.assertNotIn("PRO-07", output["criteria_by_requirement"])
-        self.assertEqual(output["criteria_by_requirement"]["ISC-04"]["unassessed_criteria"], 2)
-
-    def test_materials_video_scope_still_incomplete(self):
-        output = module.calculate(self.rows, self.criteria)
-        self.assertGreater(output["criteria_by_requirement"]["VID-03"]["unassessed_criteria"], 0)
-        self.assertGreater(output["criteria_by_requirement"]["MAT-06"]["unassessed_criteria"], 0)
         self.assertIsNone(output["functional_implementation_percent"])
+        self.assertTrue(output["criteria_by_requirement"]["A"]["complete_audit"])
+        self.assertEqual(output["criteria_by_requirement"]["A"]["unverifiable_criteria"], 1)
 
-    def test_certificates_and_mail_are_distinct_from_phase_two(self):
+    def test_incomplete_inventory_blocks_score(self):
+        del self.criteria["requirements"]["B"]
         output = module.calculate(self.rows, self.criteria)
-        self.assertIn("CERT-03", output["criteria_by_requirement"])
-        self.assertIn("MAIL-09", output["criteria_by_requirement"])
-        self.assertIn("JOO-03", output["criteria_by_requirement"])
-        self.assertNotIn("ATT-01", output["criteria_by_requirement"])
-        self.assertGreater(output["criteria_by_requirement"]["CERT-08"]["unassessed_criteria"], 0)
         self.assertIsNone(output["functional_implementation_percent"])
+        self.assertEqual(output["not_yet_audited_requirements"], 1)
 
-    def test_security_privacy_core_partially_audited(self):
+    def test_equal_requirement_weights_and_missing_criterion(self):
         output = module.calculate(self.rows, self.criteria)
-        self.assertIn("SIC-01", output["criteria_by_requirement"])
-        self.assertIn("PRI-02", output["criteria_by_requirement"])
-        self.assertIn("CORE-14", output["criteria_by_requirement"])
-        self.assertGreater(output["criteria_by_requirement"]["CORE-14"]["unassessed_criteria"], 0)
-        self.assertIsNone(output["functional_implementation_percent"])
-
-    def test_performance_evidence_is_not_a_load_benchmark(self):
-        output = module.calculate(self.rows, self.criteria)
-        self.assertEqual(output["criteria_by_requirement"]["PERF-01"]["implemented_criteria"], 0)
-        self.assertGreater(output["criteria_by_requirement"]["PERF-03"]["unassessed_criteria"], 0)
-        self.assertIn("ACC-01", output["criteria_by_requirement"])
-        self.assertIsNone(output["functional_implementation_percent"])
+        self.assertEqual(output["functional_implementation_percent"], 25.0)
+        self.assertEqual(output["criteria_by_requirement"]["A"]["missing_criteria"], 1)
+        self.assertNotIn("C", output["criteria_by_requirement"])
 
     def test_no_evidence_cannot_be_marked_implemented(self):
-        changed = copy.deepcopy(self.criteria)
-        changed["requirements"]["LCM-05"][0]["evidence"] = []
+        self.criteria["requirements"]["A"][0]["evidence"] = []
         with self.assertRaisesRegex(ValueError, "lacks evidence"):
-            module.calculate(self.rows, changed)
-
-    def test_missing_criterion_is_not_credited(self):
-        output = module.calculate(self.rows, self.criteria)
-        lcm = output["criteria_by_requirement"]["LCM-05"]
-        self.assertLess(lcm["provisional_fraction"], 1)
-        self.assertGreater(lcm["unassessed_criteria"], 0)
+            module.calculate(self.rows, self.criteria)
 
     def test_out_of_scope_is_rejected(self):
-        changed = copy.deepcopy(self.criteria)
-        changed["requirements"]["NOT-A-REQUIREMENT"] = changed["requirements"]["LCM-03"]
+        self.criteria["requirements"]["C"] = self.criteria["requirements"]["A"]
         with self.assertRaisesRegex(ValueError, "Unknown or excluded"):
-            module.calculate(self.rows, changed)
+            module.calculate(self.rows, self.criteria)
+
 
 if __name__ == "__main__":
     unittest.main()

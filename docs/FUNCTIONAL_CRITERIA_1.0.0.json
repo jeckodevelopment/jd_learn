@@ -166,8 +166,19 @@
       {
         "id": "language_available",
         "label": "Combinazioni lingua e soli corsi disponibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/site/src/Model/CoursesModel.php"
+        ],
+        "review": {
+          "reason": "La query usa la lingua corrente e valida lo stato pubblicato. Il catalogo non offre il filtro per la sola fruizione disponibile e il modello non applica quel vincolo. La visibilità della scheda e l’erogazione sono indipendenti.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#private function courseQuery",
+            "component/site/src/Model/CoursesModel.php#protected function populateState",
+            "component/site/src/Model/CoursesModel.php#protected function getListQuery"
+          ]
+        }
       },
       {
         "id": "protected_metadata",
@@ -207,14 +218,35 @@
       {
         "id": "actions",
         "label": "Tutte le varianti di pulsanti secondo accesso e stato",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/site/src/View/Course/HtmlView.php",
+          "component/site/tmpl/course/default.php"
+        ],
+        "review": {
+          "reason": "La scheda sceglie fra login, un pulsante combinato di avvio/ripresa e richiesta di ammissione a partire dal livello e dalla modalità del corso. Non legge lo stato di iscrizione del discente per mostrare azioni distinte.",
+          "references": [
+            "component/site/src/View/Course/HtmlView.php#public function display",
+            "component/site/tmpl/course/default.php#COM_JLMS_START_RESUME",
+            "component/site/tmpl/course/default.php#COM_JLMS_ENROLLMENT_REQUEST_SUBMIT"
+          ]
+        }
       },
       {
         "id": "completion_criteria",
         "label": "Visualizzazione completa regole di completamento e attestati disponibili",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/site/tmpl/course/default.php"
+        ],
+        "review": {
+          "reason": "Il programma mostra lezioni richieste/opzionali e il calendario. La proiezione restituita alla scheda non include un riepilogo delle regole di completamento e della disponibilità dell’attestato.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#public function outline",
+            "component/site/tmpl/course/default.php#jlms-course-outline"
+          ]
+        }
       }
     ],
     "CAT-03": [
@@ -589,8 +621,22 @@
       {
         "id": "public_preview",
         "label": "Anteprima pubblica priva di effetti su completamenti/attestati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/site/src/Model/LessonpreviewModel.php",
+          "component/administrator/src/Application/CatalogService.php",
+          "component/administrator/src/Application/MaterialService.php",
+          "tests/joomla-publication.php"
+        ],
+        "review": {
+          "reason": "L’anteprima pubblica legge il corso, una lezione testuale della versione corrente con anteprima abilitata e gli allegati pubblicabili. Il percorso non richiama il flusso di iscrizione, completamento o emissione degli attestati.",
+          "references": [
+            "component/site/src/Model/LessonpreviewModel.php#public function getItem",
+            "component/administrator/src/Application/CatalogService.php#public function publicLessonPreview",
+            "component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewList",
+            "tests/joomla-publication.php#publicLessonPreview"
+          ]
+        }
       }
     ],
     "ISC-05": [
@@ -3063,14 +3109,40 @@
       {
         "id": "roster",
         "label": "Elenco iscritti per corso con stato accesso e avanzamento",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentRosterService.php",
+          "component/administrator/tmpl/enrollments/default.php",
+          "tests/joomla-roster.php"
+        ],
+        "review": {
+          "reason": "La query è limitata al corso scelto. Il layout mostra separatamente stato dell’iscrizione, stato didattico e percentuale quando definita. La fixture verifica righe di più iscritti ed esclusione di un altro corso.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentRosterService.php#public function query",
+            "component/administrator/tmpl/enrollments/default.php#COM_JLMS_ROSTER_PROGRESS",
+            "tests/joomla-roster.php#another course is excluded"
+          ]
+        }
       },
       {
         "id": "dates",
         "label": "Primo e ultimo evento registrati e mostrati correttamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/LearningService.php",
+          "component/administrator/src/Application/VideoProgressService.php",
+          "component/administrator/src/Application/EnrollmentRosterService.php",
+          "component/administrator/tmpl/enrollments/default.php"
+        ],
+        "review": {
+          "reason": "I flussi di lezione conservano il primo avvio e aggiornano l’ultima attività. La query del roster proietta entrambi e il layout distingue primo e ultimo evento, indicando UTC.",
+          "references": [
+            "component/administrator/src/Application/LearningService.php#started_at' => $enrollment->started_at ?: $now",
+            "component/administrator/src/Application/VideoProgressService.php#started_at' => $enrollment->started_at ?: $date",
+            "component/administrator/src/Application/EnrollmentRosterService.php#e.last_activity_at",
+            "component/administrator/tmpl/enrollments/default.php#COM_JLMS_ROSTER_FIRST"
+          ]
+        }
       },
       {
         "id": "results",
@@ -3081,8 +3153,19 @@
       {
         "id": "acl_scope",
         "label": "Accesso limitato ai corsi assegnati e ruoli autorizzati",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentRosterService.php",
+          "tests/joomla-roster.php"
+        ],
+        "review": {
+          "reason": "Il servizio richiede la capacità di gestione sull’asset del corso e, per chi non ha gestione amministrativa del componente, un profilo docente attivo assegnato al corso. La fixture controlla diniego su altro corso e revoca di permesso.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentRosterService.php#public function course",
+            "tests/joomla-roster.php#direct course ID cannot bypass scope",
+            "tests/joomla-roster.php#explicit course deny refreshes stale identity"
+          ]
+        }
       }
     ],
     "ACL-DET-01": [
@@ -3290,20 +3373,49 @@
       {
         "id": "sorts",
         "label": "Ordinamenti editoriali, titolo, data e durata",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/site/src/Model/CoursesModel.php",
+          "component/site/tmpl/courses/default.php"
+        ],
+        "review": {
+          "reason": "La pagina consente solo recente e titolo. Durata e altri ordinamenti editoriali non sono selezionabili. Il filtro per fascia di durata non ordina i risultati.",
+          "references": [
+            "component/site/src/Model/CoursesModel.php#['recent', 'title']",
+            "component/site/src/Model/CoursesModel.php#return $query->order",
+            "component/site/tmpl/courses/default.php#name=\"filter[order]\""
+          ]
+        }
       },
       {
         "id": "card",
         "label": "Scheda include metadati principali e azione disponibile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/site/tmpl/courses/default.php"
+        ],
+        "review": {
+          "reason": "La card espone titolo, categoria e, se configurati, riepilogo, durata e difficoltà. Offre il link alla scheda ma non proietta l’azione didattica disponibile per l’utente.",
+          "references": [
+            "component/site/tmpl/courses/default.php#jlms-course-card__title",
+            "component/site/tmpl/courses/default.php#jlms-course-card__meta"
+          ]
+        }
       },
       {
         "id": "empty_error",
         "label": "Stati senza risultati, azzera filtri ed errore recuperabile",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/site/tmpl/courses/default.php"
+        ],
+        "review": {
+          "reason": "Il layout ha un messaggio per zero risultati e un collegamento per uscire dalla categoria. Non offre azzera filtri per la ricerca generale né uno stato di errore recuperabile nel catalogo.",
+          "references": [
+            "component/site/tmpl/courses/default.php#jlms-catalog-empty",
+            "component/site/tmpl/courses/default.php#jlms-category-filter"
+          ]
+        }
       },
       {
         "id": "acl_results",
@@ -3369,8 +3481,19 @@
       {
         "id": "access_cta",
         "label": "Azione primaria coerente con stato/iscrizione/permessi",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/site/src/View/Course/HtmlView.php",
+          "component/site/tmpl/course/default.php"
+        ],
+        "review": {
+          "reason": "Il modello della scheda non distingue l’iscrizione esistente da quella da creare. Il layout usa la stessa azione per avvio e ripresa nella modalità automatica e mostra la richiesta nella modalità ad approvazione.",
+          "references": [
+            "component/site/src/View/Course/HtmlView.php#public function display",
+            "component/site/tmpl/course/default.php#COM_JLMS_START_RESUME",
+            "component/site/tmpl/course/default.php#COM_JLMS_ENROLLMENT_REQUEST_SUBMIT"
+          ]
+        }
       },
       {
         "id": "teacher_links",
@@ -3381,8 +3504,18 @@
       {
         "id": "course_rules",
         "label": "Regole di completamento e attestati disponibili presentate correttamente",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/CatalogService.php",
+          "component/site/tmpl/course/default.php"
+        ],
+        "review": {
+          "reason": "Le indicazioni richiesta/opzionale nel programma non presentano le regole complessive di completamento o la disponibilità dell’attestato.",
+          "references": [
+            "component/administrator/src/Application/CatalogService.php#public function outline",
+            "component/site/tmpl/course/default.php#jlms-course-outline"
+          ]
+        }
       }
     ],
     "SCR-04": [
@@ -3409,8 +3542,19 @@
       {
         "id": "criterion_03",
         "label": "Percentuale aggregata solo se lo studente ha iscrizioni e requisiti definiti per i corsi necessari",
-        "status": "unassessed",
-        "evidence": []
+        "status": "missing",
+        "evidence": [
+          "component/administrator/src/Application/PathwayService.php",
+          "component/administrator/src/Application/PathwayProgress.php"
+        ],
+        "review": {
+          "reason": "Il servizio restituisce l’aggregato a ogni utente autenticato. Un corso necessario privo di iscrizione entra comunque come zero nel calcolo. Manca il gate richiesto sulle iscrizioni e sui requisiti definiti.",
+          "references": [
+            "component/administrator/src/Application/PathwayService.php#hasPersonalProgress",
+            "component/administrator/src/Application/PathwayService.php#not_enrolled",
+            "component/administrator/src/Application/PathwayProgress.php#public static function summarize"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -3615,8 +3759,20 @@
       {
         "id": "criterion_01",
         "label": "Roster essenziale per corso mostra stato e avanzamento dell'iscritto",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentRosterService.php",
+          "component/administrator/tmpl/enrollments/default.php",
+          "tests/joomla-roster.php"
+        ],
+        "review": {
+          "reason": "La tabella visualizza stato di accesso e stato di avanzamento come campi distinti, usando il corso autorizzato come ambito della query.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentRosterService.php#public function query",
+            "component/administrator/tmpl/enrollments/default.php#COM_JLMS_ROSTER_PROGRESS",
+            "tests/joomla-roster.php#course roster includes more than one student"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -3627,28 +3783,68 @@
       {
         "id": "criterion_03",
         "label": "Il roster soddisfa gli scenari core AC-128 con stati e filtri previsti",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentRosterService.php",
+          "tests/joomla-roster.php"
+        ],
+        "review": {
+          "reason": "La query valida e applica filtri su stato, avanzamento, versione e partecipante. I test verificano ricerca, isolamento del corso, paginazione e distinzione tra sospensione e avanzamento.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentRosterService.php#public function filterOptions",
+            "tests/joomla-roster.php#completion filter independent of expiration",
+            "tests/joomla-roster.php#native list total and pagination"
+          ]
+        }
       }
     ],
     "SCR-15": [
       {
         "id": "criterion_01",
         "label": "Ammissione singola con controllo stato e autorizzazione",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentApprovalService.php"
+        ],
+        "review": {
+          "reason": "La decisione di ammissione autorizza l’operatore nel corso, vincola la richiesta alla sua edizione e richiede stato pendente e revisione corrente. Per approvare ricontrolla pubblicazione, ammissioni, edizione e accesso del discente.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentApprovalService.php#public function decide",
+            "component/administrator/src/Application/EnrollmentApprovalService.php#Publication, category hierarchy"
+          ]
+        }
       },
       {
         "id": "criterion_02",
         "label": "Sospensione singola con conservazione dello storico",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentStateService.php"
+        ],
+        "review": {
+          "reason": "La mutazione individuale verifica l’ambito e registra un evento audit. Modifica lo stato e la revisione dell’iscrizione lasciando intatti i dati di completamento e attività.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentStateService.php#private function scope",
+            "component/administrator/src/Application/EnrollmentStateService.php#previous_status",
+            "component/administrator/src/Application/EnrollmentStateService.php#updateObject"
+          ]
+        }
       },
       {
         "id": "criterion_03",
         "label": "Riattivazione singola senza riaprire accessi impropri",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "component/administrator/src/Application/EnrollmentStateService.php"
+        ],
+        "review": {
+          "reason": "La riattivazione richiede iscrizione sospesa e corso pubblicato con erogazione attiva. L’applicazione ricontrolla il piano dopo i lock di corso e iscrizione, con il corso e l’iscrizione autorizzati.",
+          "references": [
+            "component/administrator/src/Application/EnrollmentStateService.php#private function scope",
+            "component/administrator/src/Application/EnrollmentStateService.php#course_delivery_enabled === 1",
+            "component/administrator/src/Application/EnrollmentStateService.php#public function apply"
+          ]
+        }
       },
       {
         "id": "criterion_04",
@@ -5330,8 +5526,16 @@
       {
         "id": "criterion_01",
         "label": "Guida installazione descrive requisiti minimi Joomla, PHP e database",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "README.md"
+        ],
+        "review": {
+          "reason": "La sezione di installazione elenca Joomla, PHP, MySQL, MariaDB e motore/codifica richiesti.",
+          "references": [
+            "README.md#Requisiti documentati"
+          ]
+        }
       },
       {
         "id": "criterion_02",
@@ -5342,14 +5546,37 @@
       {
         "id": "criterion_03",
         "label": "Procedure di upgrade, backup e rollback documentate",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          "README.md",
+          "docs/RELEASE_PROCEDURE.md"
+        ],
+        "review": {
+          "reason": "Il README rimanda all’upgrade e la procedura di rilascio distingue la verifica operativa dell’aggiornamento dal ripristino dei siti tramite backup.",
+          "references": [
+            "README.md#Per dettagli su upgrade",
+            "docs/RELEASE_PROCEDURE.md#Gestione errori e recupero",
+            "docs/RELEASE_PROCEDURE.md#backup/ripristino verificati"
+          ]
+        }
       },
       {
         "id": "criterion_04",
         "label": "Installazione pulita e aggiornamento con dati esistenti verificati con evidenze",
-        "status": "unassessed",
-        "evidence": []
+        "status": "implemented",
+        "evidence": [
+          ".github/workflows/ci.yml",
+          "tests/joomla-smoke.php",
+          "tests/install-package.php"
+        ],
+        "review": {
+          "reason": "Il workflow esegue installazione su fixture Joomla e upgrade del pacchetto con dati conservati. Le asserzioni retained rileggono dati e configurazioni dopo l’aggiornamento. L’esito qui riguarda la copertura automatica.",
+          "references": [
+            ".github/workflows/ci.yml#Upgrade the full package with retained data and enabled providers",
+            "tests/joomla-smoke.php#retained-data mode",
+            "tests/install-package.php#preserve the registration consent plugin state"
+          ]
+        }
       }
     ],
     "DOC-02": [

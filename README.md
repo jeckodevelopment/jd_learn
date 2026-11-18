@@ -17,9 +17,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-La copertura **implementativa stimata** verso la 1.0.0 è **80% (79,56% non arrotondato)**; non rappresenta l'accettazione manuale. L'area email è stimata al 72%, con accettazione Joomla/SMTP ancora pendente. La stima usa la media delle nove macroaree; la fonte corrente è [Stato di implementazione](docs/IMPLEMENTATION_STATUS.md) e i dettagli sono nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json). Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
-
-Le integrazioni più recenti riguardano replay video e regressioni YouTube, recupero attestati, metadati release e ciclo di vita di percorsi e docenti (PR #570–#578). La stima percentuale precedente a queste PR non è stata ricalcolata. Verificare versione e build effettiva sul [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json), senza dedurre lo stato del rilascio da una PR candidata.
+Il [report dell’audit funzionale](docs/FUNCTIONAL_AUDIT_CURRENT.md) riporta i criteri implementati, le lacune confermate e le verifiche residue. Il punteggio globale della 1.0.0 è in corso di determinazione. Lo [stato di implementazione](docs/IMPLEMENTATION_STATUS.md) documenta le funzionalità correnti. Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
 
 ## Installazione e sviluppo
 
