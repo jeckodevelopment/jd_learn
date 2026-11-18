@@ -18,7 +18,7 @@ final class EnrollmentStateService
     {
         $actor = $this->learning->freshActor($identity);
         $c = $this->roster->course($actor, $course);
-        $q = $this->db->createQuery()->select('e.*, u.name AS learner_name, u.email AS learner_email, c.title AS course_title, c.language AS course_language, c.params_json AS course_params')
+        $q = $this->db->createQuery()->select('e.*, u.name AS learner_name, u.email AS learner_email, c.title AS course_title, c.language AS course_language, c.params_json AS course_params, c.state AS course_state, c.delivery_enabled AS course_delivery_enabled')
             ->from('#__jlms_enrollments AS e')->leftJoin('#__users AS u ON u.id = e.user_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->where('e.id = :enrollment')->where('e.course_id = :course')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
@@ -45,7 +45,7 @@ final class EnrollmentStateService
         $last = $this->latest($id); $revision = $last ? (int) $last->revision_no : 0;
         $allowed = match ($target) {
             'suspended' => in_array($e->status, ['active', 'completed'], true),
-            'active' => $e->status === 'suspended',
+            'active' => $e->status === 'suspended' && (int) $e->course_state === 1 && (int) $e->course_delivery_enabled === 1,
             'cancelled' => in_array($e->status, ['active', 'suspended'], true)
                 && $e->completed_at === null && count($attempts) === 0,
         };
@@ -82,6 +82,12 @@ final class EnrollmentStateService
         $this->scope($identity, $course, $enrollment);
         $this->db->transactionStart();
         try {
+            // Serialize with editorial course transitions before locking the enrollment.
+            // Prevent archive/suspension racing a reactivation confirmation.
+            $courseLock = $this->db->createQuery()->select('id')->from('#__jlms_courses')
+                ->where('id = :course')->bind(':course', $course, ParameterType::INTEGER);
+            $courseLock->setQuery((string) $courseLock . ' FOR UPDATE');
+            if (!$this->db->setQuery($courseLock)->loadResult()) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
             $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id = :id')->where('course_id = :course')
                 ->bind(':id', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE');
