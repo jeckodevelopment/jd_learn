@@ -88,10 +88,19 @@ $expect($current===$version&&$stage()==='JPUBLISHED','review approval publishes 
 $archiveChoices=$publication->transitions($actor,$course,$version);
 $archive=null;foreach($archiveChoices as $candidate){$options=new Registry($candidate->options);if($options->get('jlms_action')==='archive')$archive=$candidate;}
 $expect($archive!==null,'published course offers an explicit archive transition');
+$finderLifecycle=[];
+$finderLifecycleWitness=static function ($event) use (&$finderLifecycle,$db,$course): void {
+    if ($event->getContext() !== 'com_jlms.course' || (int)$event->getItem()->id !== (int)$course) { return; }
+    $snapshot=$db->setQuery('SELECT state,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id='.(int)$course)->loadAssoc();
+    $snapshot['event_state']=(int)$event->getItem()->state;
+    $finderLifecycle[]=$snapshot;
+};
+$app->getDispatcher()->addListener('onFinderAfterSave',$finderLifecycleWitness);
 $transition($archive,$version);
 $row=$db->setQuery('SELECT state,current_version_id,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id='.$course)->loadObject();
 $expect((int)$row->admissions_open===0&&(int)$row->delivery_enabled===0,'archive closes both admissions and lesson delivery in one transition');
 $expect((int)$row->state===2&&(int)$row->current_version_id===$version&&$stage()==='JARCHIVED','archive hides discovery without changing the live version');
+$expect($finderLifecycle!==[] && (int)end($finderLifecycle)['state']===2 && (int)end($finderLifecycle)['event_state']===2 && (int)end($finderLifecycle)['admissions_open']===0 && (int)end($finderLifecycle)['delivery_enabled']===0,'archive publishes committed Finder refresh with gates closed');
 try{$component->getCatalogService()->course($guest,'en-GB',$course);throw new RuntimeException('Archived course remained in the public catalog');}
 catch(RuntimeException $e){$expect($e->getCode()===404,'archived course is hidden from new catalog visits');}
 try{$component->getCatalogService()->enrolledCourse($guest,'en-GB',$course);throw new RuntimeException('Archived course remained accessible for enrolled classroom');}
@@ -105,6 +114,8 @@ $expect((int)$row->admissions_open===0&&(int)$row->delivery_enabled===0,'restore
 // LearningService::enrolledCourse denies suspended delivery with HTTP 403;
 // the dedicated learning fixture exercises that user-facing contract.
 $expect((int)$row->state===1&&(int)$row->current_version_id===$version&&$stage()==='JPUBLISHED','restore republishes the same immutable version');
+$expect($finderLifecycle!==[] && (int)end($finderLifecycle)['state']===1 && (int)end($finderLifecycle)['event_state']===1 && (int)end($finderLifecycle)['admissions_open']===0 && (int)end($finderLifecycle)['delivery_enabled']===0,'restore publishes committed Finder refresh while both gates remain closed');
+$app->getDispatcher()->removeListener('onFinderAfterSave',$finderLifecycleWitness);
 $beforeAccess=$db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id='.$course)->loadAssoc();
 $publicAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1]);
 $registeredAccess=$component->getCatalogService()->accessPreview($actor,$course,'en-GB',[1,2]);
