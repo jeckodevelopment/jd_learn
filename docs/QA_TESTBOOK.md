@@ -1,3 +1,13 @@
+## LCM-05 — messaggio distinto per erogazione sospesa nei percorsi (0.60.6-dev)
+
+1. Su un percorso pubblicato con corso pubblicato e didattica fruibile, verificare che non compaia il messaggio di sospensione.
+2. Sospendere l'erogazione del corso: la scheda percorso dell'utente con accesso deve mostrare un messaggio chiaro di sospensione didattica (IT/EN), non un generico errore di autorizzazione.
+3. Accedere come utente privo del livello Joomla del corso: permane l'avviso generico di accesso riservato, senza informazioni sul flag di erogazione.
+4. Riabilitare la didattica: il messaggio di sospensione scompare, lo stato didattico e le iscrizioni restano invariati.
+5. Verificare la scheda da mobile/desktop e un corso non pubblicato, archiviato o cestinato: nessuna divulgazione tramite URL diretti.
+
+Test automatici: `tests/joomla-pathways.php`, `tests/frontend-pathway-layout.py`. Accettazione Joomla reale non eseguita.
+
 ## LCM-05 — indicatore disponibilità nei percorsi (0.60.5-dev)
 
 1. Aprire un percorso pubblicato contenente un corso pubblicato e fruibile: l'azione di accesso al corso segue gli attuali livelli Joomla.

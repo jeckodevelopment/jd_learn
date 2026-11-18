@@ -36,6 +36,10 @@ assert "if (!$this->isGuest)" in detail
 assert "$course['percent'] !== null" in detail
 assert "$course['id'] !== null" in detail
 assert "COM_JLMS_PATHWAY_SEQUENCE_INFO" in detail
+assert "!empty($course['delivery_suspended'])" in detail
+assert "COM_JLMS_COURSE_DELIVERY_SUSPENDED" in detail
+assert "COM_JLMS_PATHWAY_COURSE_RESTRICTED" in detail
+assert "'delivery_suspended' => $deliverySuspended" in service
 assert "task=enrollment.start" not in detail and 'task=enrollment.start' not in catalog
 assert '#jlms-pathway .jlms-pathway-timeline' in css
 assert '#jlms-pathways .jlms-pathway-card__cover' in css

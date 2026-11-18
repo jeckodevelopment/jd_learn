@@ -49,6 +49,8 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
        <?php if ($course['access'] === 'available' && $course['learning_state'] !== 'not_enrolled' && $course['percent'] !== null) : ?>
         <label for="jlms-pathway-course-progress-<?= (int) $index ?>"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $course['percent'] ?>%</label>
         <progress id="jlms-pathway-course-progress-<?= (int) $index ?>" max="100" value="<?= (int) $course['percent'] ?>"><?= (int) $course['percent'] ?>%</progress>
+       <?php elseif ($course['access'] === 'unavailable' && !empty($course['delivery_suspended'])) : ?>
+        <p><?= Text::_('COM_JLMS_COURSE_DELIVERY_SUSPENDED') ?></p>
        <?php elseif ($course['access'] !== 'available') : ?>
         <p><?= Text::_('COM_JLMS_PATHWAY_COURSE_RESTRICTED') ?></p>
        <?php endif; ?>

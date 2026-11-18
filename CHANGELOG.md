@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.6 (18/11/2026) — Messaggio di sospensione didattica nei percorsi:** le schede dei percorsi formativi mostrano il messaggio localizzato di erogazione sospesa anziché il messaggio generico di contenuto riservato, solo per i corsi a cui l'utente ha diritto di visibilità. Gli utenti con accesso riservato continuano a ricevere il messaggio generico, senza esposizione dello stato operativo. Regressione Joomla e verifica statica del template; nessuna migrazione schema e collaudo manuale pendente.
+
 - **0.60.5 (18/11/2026) — Disponibilità dei corsi nei percorsi:** quando un corso resta pubblicato nel catalogo ma la didattica è sospesa (`delivery_enabled=0`), la scheda del percorso formativo non lo presenta più come fruibile. L'accesso è indicato come non disponibile, senza cancellare iscrizioni o alterare gli stati di avanzamento registrati. Al ripristino esplicito dell'erogazione torna l'indicatore normale. Test Joomla sulla scheda percorso e ripristino, PATCH senza schema; accettazione manuale pendente.
 
 - **0.60.4 (18/11/2026) — Cestino corsi, chiusura conservativa degli accessi:** la cestinazione di un corso imposta `admissions_open=0` e `delivery_enabled=0` nella stessa transazione del passaggio a `state=-2`. Il ripristino allo stato Non pubblicato preserva entrambi i blocchi e la versione didattica. Il test Joomla verifica entrambi i flag prima e dopo ripristino e l'integrità dello storico, senza modifiche allo schema; accettazione manuale pendente. PATCH LCM-02/LCM-01.

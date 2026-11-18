@@ -65,6 +65,10 @@ Cestinare un corso non deve lasciare impostazioni operative pre-armate: la stess
 
 Nella vista di dettaglio del percorso un corso Pubblicato ma con erogazione didattica disabilitata rimane visibile ai soggetti autorizzati come elemento del programma, ma non può essere indicato come fruibile. `PathwayService::detail()` restituisce accesso `unavailable`, preservando lo stato personale di apprendimento. Gli utenti privi di livelli Joomla continuano a visualizzare il corso come `restricted`; nessuna esposizione di informazioni private aggiuntive. Alla riattivazione amministrativa dell'erogazione, il normale indicatore di accesso torna disponibile. Test Joomla automatici; collaudo reale ancora pendente.
 
+### LCM-05 — messaggio mirato di sospensione (0.60.6)
+
+La vista di dettaglio di un percorso comunica esplicitamente che l'erogazione didattica di un corso visibile è sospesa, senza confonderla con un diniego di autorizzazione. Il flag `delivery_suspended` è esposto soltanto quando il corso è catalogabile per il soggetto e il suo livello di contenuto è autorizzato; per i corsi `restricted` la scheda non rivela lo stato operativo. Il riavvio esplicito dell'erogazione elimina il messaggio. Copertura Joomla e frontend statica; accettazione reale da eseguire.
+
 ## Piano di implementazione separabile
 
 1. **LCM-01 (P0):** audit stato attuale, semantica unificata e tutela iscrizioni, storico, attestati; introdurre check lato server per corsi archiviati/non pubblicati/cestinati in tutti i flussi di accesso e iscrizione.

@@ -95,6 +95,7 @@ try {
     $suspendedPathway=$service->detail($operator,'en-GB',$pathwayId);
     $check((int)$suspendedPathway['courses'][0]['id']===$courseId
         && $suspendedPathway['courses'][0]['access']==='unavailable'
+        && $suspendedPathway['courses'][0]['delivery_suspended']===true
         && $suspendedPathway['courses'][0]['learning_state']!=='unavailable',
         'published but delivery-suspended course retains catalog and learning status without promising access');
     $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.(int)$courseId)->loadResult()===$initialEnrollments,
@@ -104,6 +105,8 @@ try {
 }
 $deliveryRestored=$service->detail($operator,'en-GB',$pathwayId);
 $check($deliveryRestored['courses'][0]['access']==='available','restored delivery returns pathway course to its previous availability');
+$check($deliveryRestored['courses'][0]['delivery_suspended']===false,'re-enabled delivery clears suspension display state');
+$check(empty($service->detail(new Joomla\CMS\User\User(),'en-GB',$pathwayId)['courses'][0]['delivery_suspended']),'guest without content rights cannot inspect course delivery suspension');
 
 $check($detail['progress']===0 && $detail['required_courses']===2,'not-started and inaccessible courses contribute zero to aggregate');
 $guest = new Joomla\CMS\User\User();
