@@ -63,8 +63,11 @@ def validate(body: str, milestone: str | None, labels: list[str], paths: set[str
     if not re.search(r"\bN/A\b|\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b", requirements):
         errors.append("List requirement IDs, or N/A with a reason")
     manual = visible(sections.get("Collaudo manuale Joomla", ""))
-    if not re.search(r"(?im)^\s*Stato:\s*(In attesa|Non applicabile|Eseguito)\b", manual):
+    manual_state = re.search(r"(?im)^\\s*Stato:\\s*(In attesa|Non applicabile|Eseguito)\\b", manual)
+    if not manual_state:
         errors.append("Set manual Joomla test status to In attesa, Non applicabile, or Eseguito")
+    elif manual_state.group(1) == "Eseguito" and not re.search(r"(?im)^\\s*Risultato:\\s*\\S.+", manual):
+        errors.append("Manual Joomla tests marked Eseguito must include the observed result")
     manual_cases = manual.split("Casi da provare", 1)[-1]
     case_items = [
         line.strip()[2:].strip() for line in manual_cases.splitlines()
