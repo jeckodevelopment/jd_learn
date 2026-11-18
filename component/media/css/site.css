@@ -263,3 +263,7 @@
 #jlms-courses .jlms-course-card__action { display: inline-flex; align-self: flex-start; align-items: center; min-height: 2.75rem; padding: .35rem .9rem; border: 1px solid currentColor; border-radius: var(--jlms-radius); text-decoration: none; font-weight: 600; }
 #jlms-courses .jlms-course-card__admission { font-size: .875rem; margin: 0; }
 #jlms-courses .jlms-course-card__action:hover { background: var(--jlms-color-surface); text-decoration: underline; }
+
+/* SCR-01: visible teacher references in catalogue cards. */
+#jlms-courses .jlms-course-card__teachers { margin: 0; font-size: .875rem; overflow-wrap: anywhere; }
+#jlms-courses .jlms-course-card__teachers a { display: inline-block; margin-inline-start: .35rem; }

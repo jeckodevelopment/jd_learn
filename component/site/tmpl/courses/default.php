@@ -76,6 +76,13 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
     <?php if ($this->showSummary && trim((string) $item->summary) !== '') : ?>
      <p class="jlms-course-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr((string) $item->summary, 0, 300)) ?></p>
     <?php endif; ?>
+    <?php if (!empty($this->cardTeachers[(int) $item->id])) : ?>
+     <p class="jlms-course-card__teachers"><span><?= Text::_('COM_JLMS_TEACHERS') ?>:</span>
+      <?php foreach ($this->cardTeachers[(int) $item->id] as $teacher) : ?>
+       <a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?= $this->escape((string) $teacher['title']) ?></a>
+      <?php endforeach; ?>
+     </p>
+    <?php endif; ?>
     <?php if ((int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
      <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval' ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
     <?php endif; ?>

@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (SCR-01/card, 18/11/2026) — docenti nel catalogo:** le card mostrano i docenti associati alla versione pubblicata solo se il profilo congelato supera le verifiche di visibilità correnti (ACL, stato e lingua). Nomi e link a scheda docente, nessun dato account privato; fallback vuoto per snapshot storici malformati. Collaudo Joomla ancora pendente.
+
 - **0.60.8-dev (SCR-01, 18/11/2026) — azione primaria sulle schede catalogo:** ogni scheda mostra un link localizzato ai dettagli, senza avviare iscrizioni o aggirare i controlli della pagina corso. La modalità di iscrizione viene indicata solo se le ammissioni e l'erogazione sono attive; il catalogo non deduce lo stato individuale di iscrizione. Tests frontend/lingue; collaudo Joomla pendente.
 
 - **0.60.8-dev (SCR-01, 18/11/2026) — ordinamento per durata:** disponibile nel catalogo e nelle opzioni predefinite globali/menu l'ordinamento crescente per durata stimata. Valore ricavato dalla versione pubblicata del corso, con durate non definite in fondo e paginazione deterministica; i filtri di accesso/lingua non cambiano. Test di regressione strutturale aggiunti; collaudo Joomla pendente.

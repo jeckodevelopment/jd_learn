@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Site\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
+use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 
 class CoursesModel extends ListModel
 {
@@ -94,6 +95,28 @@ class CoursesModel extends ListModel
             return $query->order("($minutes IS NULL) ASC, $minutes ASC, c.id ASC");
         }
         return $query->order($order === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
+    }
+
+    /** Visible frozen teacher names for the currently paginated catalogue courses only. */
+    public function getCardTeachers(array $items): array
+    {
+        $app = Factory::getApplication();
+        $actor = $app->getIdentity();
+        $language = $app->getLanguage()->getTag();
+        $db = $this->getDatabase();
+        $result = [];
+        foreach ($items as $course) {
+            $id = (int) $course->id;
+            try {
+                $result[$id] = TeacherProfiles::visible(
+                    $db, $actor, $language, (string) ($course->catalog_presentation_json ?? '')
+                );
+            } catch (\JsonException | \RuntimeException | \TypeError $error) {
+                // A malformed historical snapshot must not break the public catalogue.
+                $result[$id] = [];
+            }
+        }
+        return $result;
     }
 
     public function getCategoryChoice(): int

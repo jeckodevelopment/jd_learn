@@ -11,6 +11,7 @@ use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
 final class HtmlView extends BaseHtmlView
 {
     public array $items = [];
+    public array $cardTeachers = [];
     public $pagination;
     public int $categoryId = 0;
     public string $search = '';
@@ -40,6 +41,7 @@ public string $difficulty = '';
         $this->showCover = CatalogOptions::enabled('catalog_show_cover');
         $this->showSummary = CatalogOptions::enabled('catalog_show_summary');
         $this->items = $this->get('Items');
+        $this->cardTeachers = $this->getModel()->getCardTeachers($this->items);
         $this->pagination = $this->get('Pagination');
         $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
         $this->categoryChoice = $this->getModel()->getCategoryChoice();

@@ -81,6 +81,13 @@ assert "courseQuery($actor, $language, $scopeCategoryId, false)" in service
 assert "<?php if ($this->showCover) : ?>" in template
 assert "<?php if ($this->showSummary" in template
 assert "CoursePresentation::fromSnapshot" in template
+assert "getCardTeachers($this->items)" in view
+assert "TeacherProfiles::visible(" in model
+assert "catalog_presentation_json" in model.split("public function getCardTeachers", 1)[1]
+assert "cardTeachers[(int) $item->id]" in template
+assert "view=teacher&id=" in template
+assert "$this->escape((string) $teacher['title'])" in template
+
 assert 'class="jlms-course-card__action"' in template
 assert "COM_JLMS_CATALOG_VIEW_COURSE" in template
 assert "href=\"<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>\"" in template
