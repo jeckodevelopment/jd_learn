@@ -31,7 +31,7 @@ I template nativi sono sotto `component/site/tmpl/`; gli override si trovano in 
 | Anteprima pubblica di lezione | `lessonpreview/default.php` | `#jlms-public-lesson-preview` | `.jlms-lesson__body`, `.jlms-public-preview-materials`, `data-course-id` |
 | Revoca consenso email | `mailconsentrevoke/default.php` | `#jlms-mail-consent-revoke` | `#jlms-mail-consent-revoke-form`, `#jlms-mail-consent-link-completed`, `#jlms-mail-consent-link-invalid` |
 
-I tre stati della revoca sono alternativi, non simultanei. L'inventario non implica accettazione manuale ne' consente di aggirare ACL, token o protezioni server.
+I tre stati della revoca sono alternativi, non simultanei. L'anteprima non deve rendere disponibili allegati non autorizzati anche quando un template Joomla personalizzato sostituisce il layout. L'inventario non implica accettazione manuale ne' consente di aggirare ACL, token o protezioni server.
 
 ## Contratti JavaScript indispensabili
 
