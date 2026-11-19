@@ -57,7 +57,9 @@ final class CoursemessageController extends BaseController
             $service=$this->app->bootComponent('com_jlms')->getCourseCommunicationService();
             $plan=$service->preview($this->app->getIdentity(),$course,$raw['subject'],$raw['body'],$ids,$raw['template']??[]);
             $key='com_jlms.coursemessage.'.(int)$this->app->getIdentity()->id.'.'.$course;
-            $this->app->getSession()->set($key,['subject'=>$plan['subject'],'body'=>$plan['body'],'template'=>$plan['template'],'enrollment_ids'=>$plan['enrollment_ids']]);
+            $this->app->getSession()->set($key,['subject'=>$plan['subject'],'body'=>$plan['body'],'template'=>$plan['template'],'enrollment_ids'=>$plan['enrollment_ids'],
+                // An explicit new preview begins a new idempotency window. Reloads do not.
+                'mutation_id'=>\Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::create()]);
             $this->setMessage(Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT',$plan['count']));
             $this->redirectTo($course);
         } catch (\Throwable $error) { $this->fail($error); }
