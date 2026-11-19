@@ -43,6 +43,8 @@ Priorità UX: editor e pubblicazione corsi/versioni; programma, rilascio e prere
 
 Le PR sono pianificate, non ancora implementate. Tutte le PR implementative vanno alla milestone `1.0.0`, includono `Comportamenti da testare` sul sito Joomla e aggiornano la tracciabilità. Una sola PR documentale che approva il piano non incrementa la percentuale di sviluppo. In seguito, ogni PR funzionale deve indicare **Impatto documentazione e aiuto contestuale**: schermate/campi/manuali da aggiornare o `nessuno` motivato.
 
+La seconda tranche non cambia la navigazione, le autorizzazioni o i permessi dei documenti: la Guida rimane un supporto informativo e non un'azione amministrativa.
+
 ## Criteri di qualità verificabili
 
 - Coerenza delle versioni e dei requisiti, testi IT/EN con chiavi di lingua e nessun link rotto.
