@@ -2894,16 +2894,21 @@
       {
         "id": "health",
         "label": "Monitoraggio ultima esecuzione e task in ritardo in tutti gli scenari",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/MAIL_SCHEDULER_SETUP.md",
-          "docs/REQUIREMENTS_STATUS.csv"
+          "component/administrator/src/Infrastructure/SchedulerHealth.php",
+          "component/administrator/src/View/Dashboard/HtmlView.php",
+          "component/administrator/tmpl/dashboard/default.php",
+          "tests/scheduler-health-joo04.php"
         ],
         "review": {
-          "reason": "È presente una diagnostica limitata alle attività di comunicazione e alla coda email. La vista segnala solo lo stato del task mail e non costituisce il monitoraggio dell'ultima esecuzione e dei ritardi per tutte le attività pianificate richieste dal criterio.",
+          "reason": "La dashboard amministrativa diagnostica tutte e tre le routine del plugin JD Learn (quiz, pulizia materiali ed email), mostrando ultima/prossima esecuzione, mancanti, disabilitati, duplicati, ritardi superiori a dieci minuti dal next_execution Joomla ed esiti falliti. La classificazione pura e la suite PHP 8.3/8.4 sono verdi; resta distinta l'accettazione manuale del comportamento su Joomla reale.",
           "references": [
-            "docs/MAIL_SCHEDULER_SETUP.md#L27-L29",
-            "docs/REQUIREMENTS_STATUS.csv#L73-L73"
+            "component/administrator/src/Infrastructure/SchedulerHealth.php#public const TYPES",
+            "component/administrator/src/Infrastructure/SchedulerHealth.php#public static function assess",
+            "component/administrator/src/View/Dashboard/HtmlView.php#schedulerHealth",
+            "component/administrator/tmpl/dashboard/default.php#jlms-admin-scheduler-health",
+            "tests/scheduler-health-joo04.php#checkState"
           ]
         }
       }

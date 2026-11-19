@@ -5,8 +5,8 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 203,
-      "Completata": 18,
+      "Parziale": 202,
+      "Completata": 19,
       "Non iniziata": 28
     },
     "Perimetro 1.0.0": {
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 55.52,
-    "development_evidence_floor_percent": 55.52,
+    "percent": 55.76,
+    "development_evidence_floor_percent": 55.76,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -114,10 +114,10 @@
         "label": "Joomla, ACL e configurazione",
         "requirements": 38,
         "weight_percent": 17.76,
-        "development_evidence_floor_percent": 52.85,
+        "development_evidence_floor_percent": 54.17,
         "manual_acceptance_coverage_percent": 2.63,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 2,
+        "missing_criteria": 1,
         "unverifiable_criteria": 37,
         "unassessed_criteria": 0
       },
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 55.52
+        "percent": 55.76
       },
       {
         "id": "manual_acceptance",
