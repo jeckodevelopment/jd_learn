@@ -25,12 +25,17 @@ export function quizWarning(left, previous, total) {
     return null;
 }
 
+/** The browser owns the generic beforeunload prompt; never put answers in storage or URLs. */
+export function quizExitRisk(state, currentAnswers, acknowledgedAnswers, busy, pending) {
+    return state === 'open' && (currentAnswers !== acknowledgedAnswers || busy || pending !== null);
+}
+
 export function initialiseQuiz(options, document = globalThis.document, location = globalThis.location) {
     const root = document.getElementById('jlms-quiz'); if (!root) return;
     const form = document.getElementById('jlms-quiz-form'), status = document.getElementById('jlms-quiz-status');
     const transport = new QuizTransport(options.urls, {enrollment_id: options.enrollment, lesson_id: options.lesson, [options.token]: 1});
     const uuid = () => globalThis.crypto.randomUUID();
-    let attempt = options.attempt, busy = false, halted = false, pending = null, submitted = false;
+    let attempt = options.attempt, busy = false, halted = false, pending = null, submitted = false, navigatingInternally = false;
     let baseline = '', clockStart = performance.now(), serverAnchor = options.server_now, savedAt = new Date(options.server_now * 1000);
     let pollBusy = false, pollAfter = 0, pollBackoff = 1, previousLeft = Infinity;
     const labels = options.labels, clockNow = () => serverAnchor + (performance.now() - clockStart) / 1000;
@@ -46,7 +51,7 @@ export function initialiseQuiz(options, document = globalThis.document, location
         if ([400,401,403,404,409,413,422,429].includes(error.status)) { halted = true; pending = null; }
         message(error.status === 409 ? 'conflict' : 'error');
     };
-    const reload = () => { const url = new URL(location.href); url.searchParams.delete('attempt_id'); location.assign(url.href); };
+    const reload = () => { navigatingInternally = true; const url = new URL(location.href); url.searchParams.delete('attempt_id'); location.assign(url.href); };
     const applyTiming = data => {
         const next = data.attempt;
         if (attempt?.deadline !== null && next.deadline !== null && next.deadline > attempt.deadline) {
@@ -74,6 +79,13 @@ export function initialiseQuiz(options, document = globalThis.document, location
         } catch (error) { fail(error); pollBackoff = Math.min(30, pollBackoff * 2); return false; }
         finally { pollAfter = clockNow() + pollBackoff; pollBusy = false; }
     };
+    // Warn only about answers not acknowledged by the server or a pending request.
+    // No unreliable automatic save is attempted while the page is unloading.
+    globalThis.addEventListener('beforeunload', event => {
+        if (navigatingInternally || !quizExitRisk(attempt?.state, read(), baseline, busy, pending)) return;
+        event.preventDefault();
+        event.returnValue = '';
+    });
     const save = async (submit = false) => {
         if (busy || pollBusy || halted || !attempt || attempt.state !== 'open') return false;
         busy = true; message('saving');

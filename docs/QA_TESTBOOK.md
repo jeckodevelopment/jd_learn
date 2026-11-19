@@ -1,3 +1,13 @@
+## SCR-07 — uscita con risposte quiz non salvate (19/11/2026)
+
+**Collaudo manuale browser/Joomla pendente:**
+1. Aprire quiz con tentativo in corso e nessuna modifica: lasciare la pagina; non deve apparire l'avviso di perdita delle risposte.
+2. Cambiare almeno una risposta e navigare verso un'altra pagina, chiudere o ricaricare la scheda: il browser compatibile mostra l'avviso di uscita; scegliendo Resta, risposte e stato del quiz restano immutati.
+3. Premere Salva e attendere la conferma server: l'avviso non deve comparire alla successiva navigazione senza nuove modifiche.
+4. Con rete interrotta o una richiesta di salvataggio non confermata: verificare che venga segnalato il rischio di perdita, senza conferma di persistenza; nessun retry o salvataggio via unload. Verificare la gestione di retry e conflitti con un'altra scheda.
+5. Consegnare con successo o raggiungere la chiusura server del tentativo: il redirect interno non deve attivare una richiesta superflua di conferma uscita.
+6. Controllare desktop/mobile su Chrome, Firefox e Safari dove possibile: l'avviso è generico e subordinato alle politiche browser; le chiusure forzate non sono intercettabili. Nessuna risposta o credenziale in localStorage/sessionStorage/URL.
+
 ## SCR-04 — percentuale dei percorsi con base completa (19/11/2026)
 
 **Casi da collaudare su Joomla reale — non ancora eseguiti:**
