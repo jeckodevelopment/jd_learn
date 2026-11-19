@@ -67,6 +67,8 @@ def calculate(rows, criteria):
         if prefix not in prefix_to_area:
             raise ValueError("Unmapped macroarea requirement: " + requirement_id)
         groups[prefix_to_area[prefix]].append(requirement_id)
+    if sum(len(ids) for ids in groups.values()) != len(included):
+        raise ValueError("Macroarea assignment does not cover all requirements")
     macroareas = []
     for area_id, (label, _) in MACROAREAS.items():
         ids = groups[area_id]
