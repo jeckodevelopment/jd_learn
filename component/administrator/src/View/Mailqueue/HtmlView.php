@@ -27,6 +27,7 @@ final class HtmlView extends BaseHtmlView
             Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)
         );
         ToolbarHelper::title(Text::_('COM_JLMS_MAIL_QUEUE_TITLE'), 'envelope');
+        ToolbarHelper::help('mailqueue', true);
         parent::display($tpl);
     }
 }
