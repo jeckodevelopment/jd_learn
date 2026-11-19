@@ -1,3 +1,16 @@
+## SCR-01 — richieste d'approvazione in sospeso sulle card catalogo (19/11/2026)
+
+**Collaudo Joomla reale pendente:**
+1. Con utente autenticato, individuare corso visibile ad ammissione con approvazione; inviare una richiesta dalla scheda del corso. Tornare al catalogo: la card deve mostrare «La tua richiesta di iscrizione è in attesa di approvazione», non un invito duplicato a richiedere l'accesso.
+2. Ripetere con elenco e griglia, filtri/paginazione, e lingua diversa. Solo i corsi presenti nella pagina devono essere interrogati, senza N+1.
+3. Accettare la richiesta: la card deve mostrare lo stato dell'iscrizione personale e l'eventuale azione Riprendi/Rivedi, non la vecchia indicazione pendente.
+4. Respingerla o annullarla: non deve più apparire la dicitura «in attesa»; le azioni del corso rimangono sottoposte alla modalità di ammissione e alle finestre correnti.
+5. Verificare che una richiesta pendente di studente A **non** sia visibile a studente B o ospite; controllare anche account bloccato e sessione già aperta dopo revoca.
+6. Verificare cambio della versione pubblicata e richieste storiche: lo stato pending della vecchia edizione non deve apparire come richiesta pendente per la versione corrente.
+7. Verificare annunci accessibili (`role="status"`), link scheda corso, assenza di leak nei metadati e nessuna creazione automatica di nuove richieste.
+
+**Nota:** i controlli strutturali verificano query limitata, per utente e versione; il test browser/Joomla resta separato.
+
 ## EDGE-01 — download attestato e blocco dell'account Joomla (19/11/2026)
 
 **Collaudo Joomla reale — pendente:**
