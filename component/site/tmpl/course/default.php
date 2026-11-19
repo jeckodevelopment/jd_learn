@@ -62,6 +62,7 @@ foreach ([1, 2, 3] as $position) {
    <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
    <label class="jlms-course-consent"><input type="checkbox" name="jform[course_announcement_consent]" value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
+   <?php // COM_JLMS_START_RESUME was the former shared label; new enrollment uses a distinct CTA. ?>
    <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
   </form>
  <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'approval') : ?>
