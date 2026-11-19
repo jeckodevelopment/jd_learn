@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 56.34,
-    "development_evidence_floor_percent": 56.34,
+    "percent": 56.57,
+    "development_evidence_floor_percent": 56.57,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -66,10 +66,10 @@
         "label": "Iscrizioni, lezioni e progressi",
         "requirements": 19,
         "weight_percent": 8.88,
-        "development_evidence_floor_percent": 67.54,
+        "development_evidence_floor_percent": 70.18,
         "manual_acceptance_coverage_percent": 5.26,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 2,
+        "missing_criteria": 0,
         "unverifiable_criteria": 18,
         "unassessed_criteria": 0
       },
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 56.34
+        "percent": 56.57
       },
       {
         "id": "manual_acceptance",

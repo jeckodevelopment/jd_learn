@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **444**.
-- Mancanti con lacuna accertata: **45**.
+- Implementati: **446**.
+- Mancanti con lacuna accertata: **43**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -24,14 +24,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuestionBankService.php#public function delete](../component/administrator/src/Application/QuestionBankService.php)
   - [component/administrator/src/Application/QuestionBankService.php#QuestionDefinition::integer](../component/administrator/src/Application/QuestionBankService.php)
   - [component/administrator/src/Controller/QuestionbankController.php#public function delete](../component/administrator/src/Controller/QuestionbankController.php)
-- `STA-02/deadline_start` — Non consentire un tentativo quando il tempo residuo viola il limite dichiarato. L’avvio controlla che la finestra sia aperta al momento della richiesta. La scadenza del tentativo viene però calcolata sommando l’intera durata al tempo corrente, senza verificare il residuo rispetto alla finestra didattica.
-  - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
-  - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
-  - [component/administrator/src/Application/LearningService.php#private static function window](../component/administrator/src/Application/LearningService.php)
-- `STA-02/truncate_explicit` — Troncamento eventuale esplicito e mostrato prima dell'avvio. Il timer è assegnato dopo l’avvio alla durata intera prevista nelle regole. Il ramo di creazione non calcola o presenta un eventuale troncamento rispetto alla finestra.
-  - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
-  - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
-  - [component/administrator/src/Application/QuizAttemptService.php#private function dto](../component/administrator/src/Application/QuizAttemptService.php)
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
   - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
@@ -1303,6 +1295,17 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#private function expireIfDue](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#public function expireDue](../component/administrator/src/Application/QuizAttemptService.php)
   - [tests/joomla-quiz-attempts.php#scheduled routine closes due attempt without browser](../tests/joomla-quiz-attempts.php)
+- `STA-02/deadline_start` — Non consentire un tentativo quando il tempo residuo viola il limite dichiarato. Il controllo di durata era già presente nel servizio e ora è accompagnato da un'anteprima funzionale: il DTO espone la chiusura e il tempo residuo; il test Joomla prova iscrizione, edizione, lezione, corso, calendario e durata individualizzata. Il POST rifiuta il tempo insufficiente sotto lock senza consumare un tentativo; collaudo manuale ancora da eseguire.
+  - [component/administrator/src/Application/QuizAttemptService.php#assertQuizStartWindow](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/administrator/src/Application/LearningService.php#quizContext](../component/administrator/src/Application/LearningService.php)
+  - [tests/joomla-quiz-attempts.php#STA-02: every learning closing boundary](../tests/joomla-quiz-attempts.php)
+  - [tests/joomla-quiz-time.php#STA-02: the personalized extra time](../tests/joomla-quiz-time.php)
+- `STA-02/truncate_explicit` — Troncamento eventuale esplicito e mostrato prima dell'avvio. La policy selezionata per 1.0.0 è conservativa: non esiste alcun troncamento alternativo. La vista informa esplicitamente prima dell'avvio che il tempo previsto è maggiore del residuo, presenta entrambe le durate e disabilita Avvia; il server rifiuta la mutation. Il troncamento opzionale non viene introdotto e non è considerato implementato come funzionalità separata.
+  - [component/administrator/src/Application/QuizAttemptService.php#assertQuizStartWindow](../component/administrator/src/Application/QuizAttemptService.php)
+  - [component/site/tmpl/quiz/default.php#jlms-quiz-window-insufficient](../component/site/tmpl/quiz/default.php)
+  - [component/site/language/it-IT/com_jlms.ini#COM_JLMS_QUIZ_WINDOW_INSUFFICIENT](../component/site/language/it-IT/com_jlms.ini)
+  - [tests/joomla-quiz-attempts.php#STA-02: every learning closing boundary](../tests/joomla-quiz-attempts.php)
+  - [tests/joomla-quiz-time.php#STA-02: the personalized extra time](../tests/joomla-quiz-time.php)
 - `STA-02/extensions_audit` — Proroghe individuali autorizzate e tracciate, se nel perimetro del rilascio. L’estensione controlla l’ambito della valutazione e registra scadenza precedente e nuova, motivazione, operatore e riferimento di audit. Lo snapshot delle risposte resta distinto.
   - [component/administrator/src/Application/QuizDeadlineService.php#previous_deadline](../component/administrator/src/Application/QuizDeadlineService.php)
   - [component/administrator/src/Application/QuizDeadlineService.php#quiz_deadline_extended](../component/administrator/src/Application/QuizDeadlineService.php)
