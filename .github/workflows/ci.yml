@@ -55,6 +55,7 @@ jobs:
           python3 tools/functional_progress.py > "$RUNNER_TEMP/functional-progress.json"
           python3 tests/pr_metadata.py
           python3 tests/frontend-css-contract.py
+          python3 tests/contextual-help-doc05.py
           python3 tests/frontend-contract-hooks.py
           python3 tests/frontend-release-gate.py
           python3 tests/frontend-catalog-options.py
