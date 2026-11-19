@@ -80,12 +80,12 @@ def calculate(rows, criteria):
             "id": area_id, "label": label, "requirements": len(ids),
             "weight_percent": round(100 * len(ids) / len(included), 2),
             "development_evidence_floor_percent": round(
-                100 * sum(audited[r]["provisional_fraction"] for r in ids) / len(ids), 2),
+                100 * sum(audited[r]["provisional_fraction"] for r in ids if r in audited) / len(ids), 2),
             "manual_acceptance_coverage_percent": round(100 * accepted / len(ids), 2),
             "manual_fully_accepted_percent": round(100 * passed / len(ids), 2),
-            "missing_criteria": sum(audited[r]["missing_criteria"] for r in ids),
-            "unverifiable_criteria": sum(audited[r]["unverifiable_criteria"] for r in ids),
-            "unassessed_criteria": sum(audited[r]["unassessed_criteria"] for r in ids),
+            "missing_criteria": sum(audited[r]["missing_criteria"] for r in ids if r in audited),
+            "unverifiable_criteria": sum(audited[r]["unverifiable_criteria"] for r in ids if r in audited),
+            "unassessed_criteria": sum(audited[r]["unassessed_criteria"] for r in ids if r in audited),
         })
     # Evidence floor: equal weight per in-scope requirement; unassessed and
     # unverifiable criteria contribute zero and remain explicitly visible.
