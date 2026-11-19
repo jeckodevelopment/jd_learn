@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **434**.
-- Mancanti con lacuna accertata: **55**.
+- Implementati: **435**.
+- Mancanti con lacuna accertata: **54**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -47,9 +47,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration']](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'](../component/site/src/Model/CoursesModel.php)
   - [component/site/tmpl/courses/default.php#name="filter[order]"](../component/site/tmpl/courses/default.php)
-- `SCR-01/card` — Scheda include metadati principali e azione disponibile. La card espone ora un'azione primaria esplicita verso la scheda corso e segnala la modalità di iscrizione quando ammissioni ed erogazione sono attive; i docenti visibili vengono ora proiettati dai profili congelati e autorizzati; lo stato delle iscrizioni esistenti ora è mostrato tramite la dashboard proprietario con azione di ripresa autorizzata, ma le richieste pending e i collaudi completi restano da verificare, quindi il criterio è ancora parziale.
-  - [component/site/tmpl/courses/default.php#jlms-course-card__title](../component/site/tmpl/courses/default.php)
-  - [component/site/tmpl/courses/default.php#jlms-course-card__meta](../component/site/tmpl/courses/default.php)
 - `SCR-01/empty_error` — Stati senza risultati, azzera filtri ed errore recuperabile. Il layout ha un messaggio per zero risultati e un collegamento per uscire dalla categoria. Non offre azzera filtri per la ricerca generale né uno stato di errore recuperabile nel catalogo.
   - [component/site/tmpl/courses/default.php#jlms-catalog-empty](../component/site/tmpl/courses/default.php)
   - [component/site/tmpl/courses/default.php#jlms-category-filter](../component/site/tmpl/courses/default.php)
@@ -1331,6 +1328,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#private function grade](../component/administrator/src/Application/QuizAttemptService.php)
   - [tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account](../tests/joomla-quiz-attempts.php)
   - [tests/joomla-quiz-attempts.php#duplicate expiry worker does not count twice](../tests/joomla-quiz-attempts.php)
+- `SCR-01/card` — Scheda include metadati principali e azione disponibile. Le card catalogo espongono metadati pubblici, docenti autorizzati e stato iscrizioni personali già attive. È ora implementata anche la segnalazione di richiesta pendente: query unica limitata ai corsi della pagina, proprietario autenticato e versione corrente, senza riproporre l'invito di ammissione, con test strutturali. L'accettazione manuale Joomla delle varianti resta pendente.
+  - [component/site/src/Model/CoursesModel.php#public function getCardPendingApprovals](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/View/Courses/HtmlView.php#$this->cardPendingApprovals](../component/site/src/View/Courses/HtmlView.php)
+  - [component/site/tmpl/courses/default.php#jlms-course-card__pending](../component/site/tmpl/courses/default.php)
+  - [tests/frontend-catalog-options.py#SCR-01/card](../tests/frontend-catalog-options.py)
 - `SCR-02/no_granted_access` — Elenco categoria non concede automaticamente accesso ai corsi. La categoria seleziona i corsi tramite la query di visibilità. L’accesso didattico richiede ancora il livello di contenuto e un’iscrizione autorizzata.
   - [component/site/src/Model/CoursesModel.php#protected function getListQuery](../component/site/src/Model/CoursesModel.php)
   - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
