@@ -22,6 +22,15 @@ final class CourseMessageMutation
             . substr($hex, 20);
     }
 
+    /** Stable event key: the database unique index deduplicates repeated POSTs. */
+    public static function testEventKey(int $courseId, int $actorId, string $id): string
+    {
+        if ($courseId < 1 || $actorId < 1 || !self::valid($id)) {
+            throw new \InvalidArgumentException('Invalid course test mutation.');
+        }
+        return hash('sha256', 'course-message-test:' . $courseId . ':' . $actorId . ':' . strtolower($id));
+    }
+
     public static function valid(mixed $id): bool
     {
         return is_string($id) && preg_match(
