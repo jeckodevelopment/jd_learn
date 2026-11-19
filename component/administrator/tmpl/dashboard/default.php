@@ -35,6 +35,32 @@ use Joomla\CMS\Language\Text;
             </section>
         <?php endforeach; ?>
     </nav>
+
+    <?php if ($this->schedulerHealth) : ?>
+    <details id="jlms-admin-scheduler-health" class="mt-3">
+        <summary><?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_TITLE')) ?></summary>
+        <p class="small"><?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_NOTE')) ?></p>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead><tr><th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_TASK') ?></th>
+                    <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_STATE') ?></th>
+                    <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_LAST') ?></th>
+                    <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_NEXT') ?></th></tr></thead>
+                <tbody>
+                <?php foreach ($this->schedulerHealth as $task) : ?>
+                    <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
+                        <th scope="row"><?= $this->escape(Text::_($task['label'])) ?></th>
+                        <td><?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_' . strtoupper($task['state']))) ?></td>
+                        <td><?= $this->escape((string) ($task['last_execution'] ?: Text::_('JNEVER'))) ?></td>
+                        <td><?= $this->escape((string) ($task['next_execution'] ?: '—')) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <p><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a></p>
+    </details>
+    <?php endif; ?>
     <details class="jlms-admin-dashboard__providers">
         <summary><?= Text::_('COM_JLMS_DASHBOARD_PROVIDER_STATUS') ?></summary>
         <?php if (!$this->providers) : ?>
