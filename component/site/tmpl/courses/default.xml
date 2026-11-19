@@ -22,7 +22,7 @@
     <option value="">JGLOBAL_USE_GLOBAL</option><option value="6">6</option><option value="9">9</option><option value="12">12</option><option value="24">24</option>
    </field>
    <field name="catalog_default_order" type="list" label="COM_JLMS_CATALOG_DEFAULT_ORDER" default="" filter="cmd">
-    <option value="">JGLOBAL_USE_GLOBAL</option><option value="recent">COM_JLMS_CATALOG_ORDER_RECENT</option><option value="title">COM_JLMS_CATALOG_ORDER_TITLE</option><option value="duration">COM_JLMS_CATALOG_ORDER_DURATION</option>
+    <option value="">JGLOBAL_USE_GLOBAL</option><option value="recent">COM_JLMS_CATALOG_ORDER_RECENT</option><option value="title">COM_JLMS_CATALOG_ORDER_TITLE</option><option value="published">COM_JLMS_CATALOG_ORDER_PUBLISHED</option><option value="duration">COM_JLMS_CATALOG_ORDER_DURATION</option>
    </field>
   </fieldset>
  </fields>

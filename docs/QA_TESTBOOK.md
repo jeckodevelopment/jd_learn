@@ -1,3 +1,7 @@
+## SCR-01 — ordinamento catalogo per data di pubblicazione (19/11/2026)
+
+**Collaudo manuale Joomla pendente:** creare due corsi pubblicati in ordine differente rispetto agli ID e aggiornare una bozza senza ripubblicarla. Nel catalogo selezionare «Data di pubblicazione (più recente)»: il corso con versione pubblicata più recente deve precedere l'altro; una modifica non pubblicata non deve cambiare la posizione. Verificare pari timestamp (tie-break ID decrescente), pagina successiva senza duplicati, filtri, categoria, ACL per due ruoli, guest e lingua IT/EN. In opzioni globali e nei menu Corsi/Categoria impostare il nuovo ordinamento predefinito, quindi disabilitare la scelta di ordinamento e verificare che parametri GET forzati non lo sostituiscano. Verificare che «Più recenti» conservi il precedente ordine per ID e che non vi sia alcun effetto su iscrizioni o progresso.
+
 ## SCR-01 — richieste d'approvazione in sospeso sulle card catalogo (19/11/2026)
 
 **Collaudo Joomla reale pendente:**

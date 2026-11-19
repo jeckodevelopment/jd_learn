@@ -302,3 +302,7 @@ La nuova vista `teachers` usa `#jlms-teachers`, `#jlms-teacher-grid`, `#jlms-tea
 ### FE-11 — Opzioni menu senza nuove classi
 
 La pagina `category` usa le medesime classi/ID pubblici già documentati; visibilità del form `#jlms-category-catalog-filters` e del selettore di ordinamento controllata server-side dai parametri menu/globali, senza JS o CSS `display:none` per bloccare i filtri. La gestione delle sezioni `#jlms-subcategories` e `#jlms-category-courses` conserva rendering e paginazioni indipendenti. Nessun hook frontend mutato.
+
+### SCR-01 — ordinamento per data di pubblicazione
+
+Nel catalogo corsi, `filter[order]=published` ordina soltanto le versioni pubblicate e visibili secondo `v.published_at DESC, c.id DESC`: le bozze non cambiano la data pubblica; l'ID stabilizza l'ordine a parità di timestamp e durante la paginazione. Il selettore è localizzato IT/EN, ed è disponibile come valore predefinito nella configurazione globale e nei menu Corsi/Categoria. L'ordinamento ricevuto dal GET è ignorato quando i filtri o il selettore ordinamento non sono abilitati. Si preservano le restrizioni ACL e la query canonica del catalogo. Collaudo reale in `docs/QA_TESTBOOK.md`, test strutturale in `tests/frontend-catalog-options.py`.

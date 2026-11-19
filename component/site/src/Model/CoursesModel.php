@@ -29,7 +29,7 @@ class CoursesModel extends ListModel
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
         $defaultOrder = CatalogOptions::get('catalog_default_order');
         $order = CatalogOptions::enabled('catalog_show_order') ? ($filter['order'] ?? $defaultOrder) : $defaultOrder;
-        $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title', 'duration'], true) ? $order : $defaultOrder);
+        $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title', 'duration', 'published'], true) ? $order : $defaultOrder);
         $tagId = $filter['tag_id'] ?? 0;
         $this->setState('filter.tag_id', max(0, is_scalar($tagId) ? (int) $tagId : 0));
         $difficulty = $filter['difficulty'] ?? '';
@@ -101,6 +101,11 @@ class CoursesModel extends ListModel
             // Unknown durations come last, and ID makes pagination deterministic.
             $minutes = "CAST(JSON_UNQUOTE(JSON_EXTRACT(v.presentation_json, '$.details.estimated_minutes')) AS UNSIGNED)";
             return $query->order("($minutes IS NULL) ASC, $minutes ASC, c.id ASC");
+        }
+        if ($order === 'published') {
+            // The current published version has its own UTC publication timestamp.
+            // Never sort by mutable draft modification dates; stable ID tie-break.
+            return $query->order('v.published_at DESC, c.id DESC');
         }
         return $query->order($order === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
     }

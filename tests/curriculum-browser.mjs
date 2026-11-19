@@ -17,7 +17,7 @@ const base=`http://127.0.0.1:${server.address().port}`;
 let browser;
 let checks=0;
 try {
- browser=await chromium.launch();
+ browser=await chromium.launch(process.env.JLMS_BROWSER_CHANNEL === 'chrome' ? {channel:'chrome'} : {});
  for (const viewport of [{width:1280,height:800},{width:390,height:844}]) {
   const page=await browser.newPage({viewport});
   await page.goto(base); await page.locator('#title').click();

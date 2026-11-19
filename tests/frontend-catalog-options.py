@@ -52,8 +52,8 @@ assert 'name="filter[category_id]"' in template
 assert "COM_JLMS_CATALOG_ALL_CATEGORIES" in template
 assert "catalog_show_category" in helper
 assert "filter.category_choice" in model
-assert "['recent', 'title', 'duration']" in model
-assert "['recent', 'title', 'duration']" in helper
+assert "['recent', 'title', 'duration', 'published']" in model
+assert "['recent', 'title', 'duration', 'published']" in helper
 assert "v.presentation_json, '$.details.estimated_minutes'" in model
 assert "($minutes IS NULL) ASC, $minutes ASC, c.id ASC" in model
 assert 'value="duration"' in template
@@ -158,3 +158,14 @@ assert "count($courseIds) > 50" in model
 assert "cardPendingApprovals[(int) $item->id]" in template
 assert "COM_JLMS_COURSE_APPROVAL_PENDING" in template
 assert 'role="status"' in template
+
+# SCR-01: publication date of the current published version, stable pagination and menu defaults.
+assert "v.published_at DESC, c.id DESC" in model
+assert "if ($order === 'published')" in model
+assert 'value="published"' in template
+for fieldset in (menu, component, ET.parse(root / "component/site/tmpl/category/default.xml").getroot()):
+    field = fieldset.find(".//field[@name='catalog_default_order']")
+    assert "published" in [o.get("value") for o in field.findall("option")]
+for folder in ("component/site/language", "component/administrator/language"):
+    for language in ("it-IT", "en-GB"):
+        assert "COM_JLMS_CATALOG_ORDER_PUBLISHED=" in (root / folder / language / "com_jlms.ini").read_text()

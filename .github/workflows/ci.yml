@@ -83,10 +83,11 @@ jobs:
       - name: Install isolated browser test runtime
         run: |
           npm install --prefix .runtime/browser-tests --no-save playwright@1.64.1
-          node .runtime/browser-tests/node_modules/playwright/cli.js install --with-deps chromium
+          google-chrome --version
       - name: Unsaved editor desktop and mobile viewport navigation
         env:
           JLMS_PLAYWRIGHT_MODULE: ${{ github.workspace }}/.runtime/browser-tests/node_modules/playwright/index.mjs
+          JLMS_BROWSER_CHANNEL: chrome
         run: node tests/curriculum-browser.mjs
   verify:
     name: PHP ${{ matrix.php }} / ${{ matrix.database }}
