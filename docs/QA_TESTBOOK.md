@@ -1,3 +1,15 @@
+## SCR-04 — percentuale dei percorsi con base completa (19/11/2026)
+
+**Casi da collaudare su Joomla reale — non ancora eseguiti:**
+1. Percorso con due corsi obbligatori entrambi visibili: studente iscritto soltanto al primo (anche se completato al 100%). La pagina deve mostrare i corsi e gli stati individuali, ma **non** una percentuale aggregata del percorso.
+2. Iscrivere lo stesso studente anche al secondo con regole didattiche valide: la percentuale appare ed è la media dei corsi applicabili. Non deve raggiungere 100% se un corso necessario è incompleto o momentaneamente indisponibile.
+3. Rimuovere l'accesso a un corso del percorso senza svelarne nome o descrizione: il placeholder resta anonimo e l'aggregato non deve apparire senza evidenza della base completa.
+4. Verificare percorso senza corsi, studente ospite e due studenti distinti: nessuna percentuale personale non fondata o visibilità incrociata.
+5. Verificare una versione storica con regole mancanti/non valide: l'aggregato viene nascosto senza cancellare lo storico. Un corso in modalità sola consultazione con iscrizione e regole valide non contribuisce numericamente; il percorso interamente in consultazione non presenta una percentuale.
+6. Verificare sospensione delle lezioni, stato dell'iscrizione, lingua/ACL e navigazione; nessuna azione di modifica viene eseguita dalla vista percorso.
+
+**Nota:** CI e test unitari controllano l'eleggibilità al calcolo; l'accettazione Joomla manuale resta separata.
+
 ## CAT-02 / SCR-03 — CTA contestuali scheda corso (19/11/2026)
 
 **Casi da collaudare su Joomla reale — non eseguiti:**

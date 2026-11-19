@@ -77,6 +77,7 @@ $check($pathwayId>0 && (int)$stored->course_id===$courseId && (int)$stored->orde
 $operator = $app->getIdentity();
 $student = $component->getLearningService()->start($operator,'en-GB',$courseId,str_repeat('p',40));
 $detail = $service->detail($operator,'en-GB',$pathwayId);
+$check($detail['progress']===0 && $detail['required_courses']===1, 'enrolled course with defined rules permits a zero percent pathway aggregate');
 $hiddenCourseId = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='test-course'")->loadResult();
 if (!$hiddenCourseId) { throw new RuntimeException('Draft course fixture missing.'); }
 $check((bool)$pathModel->save(['id'=>$pathwayId,'revision'=>1,'title'=>'CI learning pathway','alias'=>'ci-learning-pathway',
@@ -108,7 +109,7 @@ $check($deliveryRestored['courses'][0]['access']==='available','restored deliver
 $check($deliveryRestored['courses'][0]['delivery_suspended']===false,'re-enabled delivery clears suspension display state');
 $check(empty($service->detail(new Joomla\CMS\User\User(),'en-GB',$pathwayId)['courses'][0]['delivery_suspended']),'guest without content rights cannot inspect course delivery suspension');
 
-$check($detail['progress']===0 && $detail['required_courses']===2,'not-started and inaccessible courses contribute zero to aggregate');
+$check($detail['progress']===null && $detail['required_courses']===2,'unavailable course without evidence suppresses ungrounded aggregate');
 $guest = new Joomla\CMS\User\User();
 $guestDetail = $service->detail($guest,'en-GB',$pathwayId);
 $check(count($guestDetail['courses'])===2 && $guestDetail['courses'][0]['access']==='restricted','catalog-visible but content-restricted course is labeled restricted');

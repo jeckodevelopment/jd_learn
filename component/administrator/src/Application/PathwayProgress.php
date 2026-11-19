@@ -13,6 +13,22 @@ final class PathwayProgress
      * @param array<int, array{percent?: ?int, access?: string}> $courses
      * @return array{percent: ?int, unavailable: bool, required: int}
      */
+    /**
+     * A percentage is meaningful only after the learner has an enrollment and
+     * valid completion rules for every required course. A hidden course has no
+     * accessible evidence and must not silently count as zero-progress.
+     *
+     * @param array<int, array{progress_basis?: bool}> $courses
+     */
+    public static function hasCompleteBasis(array $courses): bool
+    {
+        if ($courses === []) { return false; }
+        foreach ($courses as $course) {
+            if (($course['progress_basis'] ?? false) !== true) { return false; }
+        }
+        return true;
+    }
+
     public static function summarize(array $courses): array
     {
         if ($courses === []) {
