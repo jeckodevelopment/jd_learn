@@ -3,6 +3,12 @@
 from pathlib import Path
 import re,json,hashlib,xml.etree.ElementTree as E,zipfile,io
 ROOT=Path(__file__).resolve().parents[1]
+# QUI-02: the row-locked service, not merely the UI, must reject hard deletes outside trash.
+question_bank=(ROOT/'component/administrator/src/Application/QuestionBankService.php').read_text()
+hard_delete=question_bank.split('public function delete(User $identity, int $id): void',1)[1].split('public function revisionOptions(',1)[0]
+assert "if ((int) $question->state !== -2)" in hard_delete
+assert hard_delete.index("$question->state !== -2") < hard_delete.index("->delete('#__jlms_question_revisions')")
+
 count=0
 for base in ['component','libraries','plugins','packages']:
  for p in (ROOT/base).rglob('*.xml'):
