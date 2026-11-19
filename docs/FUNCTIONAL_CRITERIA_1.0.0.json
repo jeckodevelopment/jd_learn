@@ -3818,18 +3818,21 @@
       {
         "id": "joomla_actions",
         "label": "Plugin User Actions Log nativo per operazioni previste",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Infrastructure/AssessmentAudit.php",
-          "packages/pkg_jlms.xml",
-          "component/administrator/src/Application/PublicationService.php"
+          "plugins/actionlog/jdlearn/src/Extension/Jdlearn.php",
+          "plugins/actionlog/jdlearn/installer.php",
+          "component/administrator/src/Application/PublicationService.php",
+          "tests/joomla-publication.php",
+          "packages/pkg_jlms.xml"
         ],
         "review": {
-          "reason": "L’infrastruttura scrive direttamente nel modello nativo User Actions Log per una lista di azioni specifiche. Il pacchetto non contiene il plugin actionlog richiesto e la pubblicazione non rientra nelle azioni di quel modello.",
+          "reason": "Il plugin Joomla Action Log è presente nel pacchetto ed è abilitato al primo impianto, conservando la disabilitazione amministrativa agli upgrade. Il servizio di pubblicazione emette l'evento solo dopo il commit; il subscriber registra i dati tecnici in User Actions Log senza duplicare i log transazionali già scritti da AssessmentAudit. La CI 4/4 verifica installazione/upgrade e la singola voce per pubblicazione committata; collaudo Joomla manuale ancora pendente.",
           "references": [
-            "component/administrator/src/Infrastructure/AssessmentAudit.php#bootComponent",
-            "packages/pkg_jlms.xml#<files",
-            "component/administrator/src/Application/PublicationService.php#function transition"
+            "plugins/actionlog/jdlearn/src/Extension/Jdlearn.php#public function onJlmsCourseTransition",
+            "plugins/actionlog/jdlearn/installer.php#postflight",
+            "component/administrator/src/Application/PublicationService.php#onJlmsCourseTransition",
+            "tests/joomla-publication.php#CORE-17: exactly one native Joomla actionlog event"
           ]
         }
       }
