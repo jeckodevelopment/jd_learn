@@ -105,7 +105,10 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
     ?>
      <p class="jlms-course-card__learning-state"><?= Text::_($learningLabel) ?><?php if ($enrollment['access'] !== 'available') : ?> · <?= Text::_($accessLabel) ?><?php endif; ?></p>
     <?php endif; ?>
-    <?php if ($enrollment === null && (int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
+    <?php if ($enrollment === null && !empty($this->cardPendingApprovals[(int) $item->id])) : ?>
+     <p class="jlms-course-card__pending" role="status"><?= Text::_('COM_JLMS_COURSE_APPROVAL_PENDING') ?></p>
+    <?php endif; ?>
+    <?php if ($enrollment === null && empty($this->cardPendingApprovals[(int) $item->id]) && (int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
      <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval' ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
     <?php endif; ?>
     <?php if ($duration > 0 || $difficultyKey !== '') : ?>
