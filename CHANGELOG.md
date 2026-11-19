@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.63.0-dev — MINOR SemVer (STA-02, 19/11/2026):** pre-avvio quiz con chiusura effettiva delle finestre di iscrizione, edizione, lezione e calendario corso; rifiuto esplicito per tempo residuo insufficiente, senza troncamento silenzioso e senza consumo tentativi. Mostrati durata richiesta, secondi disponibili e limite UTC prima dell'avvio. Estesi i test Joomla ai limiti esatti, calendari, durata individuale autorizzata e rollback; collaudo manuale pendente.
+
 - **0.62.0-dev — MINOR SemVer (CORE-17, 19/11/2026):** plugin nativo Joomla Action Log installato e abilitato al primo impianto; logging delle transizioni workflow corso soltanto dopo commit, senza duplicare gli audit delle iscrizioni né divulgare dati didattici. Pacchetto ampliato da 11 a 12 estensioni, manifest e test di packaging aggiornati. Collaudo manuale Joomla pendente.
 
 - **0.61.0-dev — MINOR SemVer (LIFE-01, 19/11/2026):** flusso di anteprima dell'impatto per cancellazione definitiva di corso cestinato, con conteggio delle dipendenze e revisioni editoriali, conferma POST e controllo di revisione sotto transazione. Cancellazione bloccata per storico o referenze, ACL/CSRF preservati; collaudo Joomla pendente.
