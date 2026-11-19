@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **437**.
-- Mancanti con lacuna accertata: **52**.
+- Implementati: **440**.
+- Mancanti con lacuna accertata: **49**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -120,16 +120,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-04/criterion_04` — Procedure tecniche riproducibili e versionate. La revisione del criterio «Procedure tecniche riproducibili e versionate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
-- `DOC-05/criterion_01` — Guida contestuale presente nelle schermate amministrative core. Il piano descrive l’azione Guida e prevede la relativa tranche. I percorsi nativi del corso e del roster esaminati non espongono l’aiuto contestuale richiesto.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
-  - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper](../component/administrator/src/View/Courses/HtmlView.php)
-  - [component/administrator/src/View/Enrollments/HtmlView.php#function](../component/administrator/src/View/Enrollments/HtmlView.php)
-- `DOC-05/criterion_02` — Collegamenti ai capitoli pertinenti e non obsoleti. La mappa di capitoli localizzati per ciascuna schermata amministrativa è un’attività della tranche di aiuto contestuale. Le guide già disponibili non costituiscono i collegamenti contestuali della schermata.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
-  - [component/administrator/docs/README.md#La distribuzione](../component/administrator/docs/README.md)
-- `DOC-05/criterion_03` — Contenuto disponibile in italiano e inglese. L’aiuto contestuale previsto deve essere disponibile per schermata in IT e EN. Il piano indica la tranche di implementazione e il manuale distribuito esaminato è in italiano.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
-  - [component/administrator/docs/README.md#La distribuzione](../component/administrator/docs/README.md)
 - `DOC-07/criterion_01` — Operazioni ad alto rischio hanno procedure guidate. La revisione del criterio «Operazioni ad alto rischio hanno procedure guidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
@@ -1885,6 +1875,17 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-04/criterion_03` — Upgrade, scheduler e troubleshooting documentati. La procedura spiega upgrade e recupero. La guida scheduler descrive task, configurazione, diagnosi e riconciliazione.
   - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)
   - [docs/MAIL_SCHEDULER_SETUP.md#Diagnostica sicura](../docs/MAIL_SCHEDULER_SETUP.md)
+- `DOC-05/criterion_01` — Guida contestuale presente nelle schermate amministrative core. Le 29 viste amministrative HtmlView censite distribuiscono il pulsante nativo Guida Joomla con risoluzione locale; il test dinamico verifica che nessuna vista sia scoperta. Copertura sorgente verificabile, distinta dall'accettazione manuale della UI Joomla.
+  - [docs/ADMIN_HELP_COVERAGE.md#29/29](../docs/ADMIN_HELP_COVERAGE.md)
+  - [tests/contextual-help-doc05.py#views = sorted](../tests/contextual-help-doc05.py)
+- `DOC-05/criterion_02` — Collegamenti ai capitoli pertinenti e non obsoleti. Ognuna delle 58 guide IT/EN collega con URL relativo il capitolo dedicato del manuale amministratore locale della stessa lingua; il gate verifica presenza e corrispondenza di tutte le ancore. Navigazione effettiva su Joomla e accessibilità da accettare manualmente.
+  - [tests/contextual-help-doc05.py#page.hrefs == [f"manual.html#{key}"]](../tests/contextual-help-doc05.py)
+  - [component/administrator/help/it-IT/manual.html#section id="dashboard"](../component/administrator/help/it-IT/manual.html)
+  - [component/administrator/help/en-GB/manual.html#section id="dashboard"](../component/administrator/help/en-GB/manual.html)
+- `DOC-05/criterion_03` — Contenuto disponibile in italiano e inglese. Entrambi i manuali offline sono distribuiti nelle directory Joomla it-IT e en-GB, con 29 capitoli in ciascuna lingua; le 58 guide localizzate sono verificate dal test e dal manifest. Rimane pendente il collaudo in sito di prova delle lingue effettive.
+  - [component/administrator/help/it-IT/manual.html#lang="it-IT"](../component/administrator/help/it-IT/manual.html)
+  - [component/administrator/help/en-GB/manual.html#lang="en-GB"](../component/administrator/help/en-GB/manual.html)
+  - [tests/contextual-help-doc05.py#for lang in ("it-IT", "en-GB")](../tests/contextual-help-doc05.py)
 - `LCM-01/criterion_02` — preservare storico personale, frequenze, progressi e attestati. L’archiviazione cambia lo stato del corso attraverso il workflow e chiude le due abilitazioni sul corso conservando la versione pubblicata. La transazione non elimina iscrizioni, progressi o attestati.
   - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
   - [tests/joomla-publication-review.php#archive](../tests/joomla-publication-review.php)
