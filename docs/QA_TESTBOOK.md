@@ -2379,3 +2379,8 @@ Il test Joomla `tests/joomla-pathways.php` prova ora un attore anonimo contro `c
 ## UI-01 / FE-10 — collaudi anteprima lezione e revoca consenso
 
 Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM, corrispondenza inventario e sicurezza strutturale del form di revoca. **Collaudo manuale pendente**: aprire anteprima pubblica autorizzata e negata, verificando visibilita' materiali e isolamento; esercitare link di revoca valido, scaduto, alterato e riutilizzato, token CSRF assente, lingua IT/EN, stato finale e tastiera/screen reader. Confermare che nessun dato privato sia mostrato negli errori e che gli override template preservino gli ID. Nessun test Joomla manuale registrato come superato.
+
+
+## DOC-05 — guida contestuale Joomla (prima tranche, 19/11/2026)
+
+**Comportamenti da testare sul sito Joomla di prova — non eseguiti:** aprire Corsi, editor Corso e Iscritti; su ciascuna schermata usare il pulsante nativo Guida, controllare che apra la pagina pertinente offline, senza 404, con testo italiano per it-IT e inglese per en-GB. Verificare su installazione pulita e upgrade, permessi amministrativi, finestre/popup, tastiera e lettore schermo. La guida non deve salvare, cambiare iscrizioni o esporre dati personali. La suite statica `tests/contextual-help-doc05.py` controlla i 3 pulsanti, i 6 documenti e la cartella nel manifest; non equivale al collaudo su Joomla. Le altre schermate DOC-05 restano fuori da questa tranche.

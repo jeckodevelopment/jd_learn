@@ -14,7 +14,7 @@
    <menu link="option=com_jlms&amp;view=teachers">COM_JLMS_TEACHERS</menu>
    <menu link="option=com_jlms&amp;view=questionbank">COM_JLMS_QUESTION_BANK</menu>
   </submenu>
-  <files folder="administrator"><folder>services</folder><folder>src</folder><folder>tmpl</folder><folder>forms</folder><folder>sql</folder><folder>docs</folder><folder>language</folder><filename>access.xml</filename><filename>config.xml</filename></files>
+  <files folder="administrator"><folder>services</folder><folder>src</folder><folder>tmpl</folder><folder>forms</folder><folder>sql</folder><folder>docs</folder><folder>help</folder><folder>language</folder><filename>access.xml</filename><filename>config.xml</filename></files>
 <languages folder="administrator/language"><language tag="it-IT">it-IT/com_jlms.ini</language><language tag="it-IT">it-IT/com_jlms.sys.ini</language><language tag="en-GB">en-GB/com_jlms.ini</language><language tag="en-GB">en-GB/com_jlms.sys.ini</language></languages>
  </administration>
  <update><schemas><schemapath type="mysql">sql/updates/mysql</schemapath></schemas></update>

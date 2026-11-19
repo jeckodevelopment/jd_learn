@@ -99,6 +99,7 @@ final class HtmlView extends BaseHtmlView
         }
         if ($id > 0) { ToolbarHelper::versions('com_jlms.course', $id); }
         ToolbarHelper::cancel('course.cancel');
+        ToolbarHelper::help('course', true);
         parent::display($tpl);
     }
 }
