@@ -122,6 +122,7 @@ assert "public function catalogStates(User $identity" in dash
 assert "->whereIn('e.course_id', $courseIds)" in dash
 assert "->getAuthorisedViewLevels()" in dash
 assert "$this->cards($identity, $uiLanguage, $rows ?: [])" in dash
+assert "SELECT MAX(latest.id) FROM #__jlms_enrollments AS latest" in dash
 assert "if (!isset($states[$id]))" in dash
 
 assert "getStoreId($id = '')" in model
