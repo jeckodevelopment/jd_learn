@@ -5841,17 +5841,19 @@
       {
         "id": "criterion_03",
         "label": "Conservare temporaneamente in memoria le modifiche non confermate, riprovare con limiti e segnalare il rischio di perdita uscendo",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "component/media/js/quiz.js",
+          "tests/quiz-deadline-player.mjs",
           "docs/QUIZ_RUNTIME.md"
         ],
         "review": {
-          "reason": "Le risposte restano nel form e i tentativi incerti usano retry limitati, ma il client quiz non registra una guardia di uscita per avvertire del rischio di perdere modifiche non confermate. La guida dichiara che la chiusura improvvisa può perdere l'ultimo segmento.",
+          "reason": "Il client conserva le risposte nel form e usa retry limitati e idempotenti; la PR #691 aggiunge una guardia beforeunload soltanto per modifiche non confermate o mutazioni in corso/incerte. Il redirect interno dopo esito valido bypassa l'avviso. I test JS verificano stati pulito/sporco e conferma server; collaudo manuale Joomla/browser pendente.",
           "references": [
-            "component/media/js/quiz.js#L33-L46",
-            "component/media/js/quiz.js#L79-L91",
-            "docs/QUIZ_RUNTIME.md#L17-L17"
+            "component/media/js/quiz.js#export function quizExitRisk",
+            "component/media/js/quiz.js#globalThis.addEventListener('beforeunload'",
+            "tests/quiz-deadline-player.mjs#warning().prevented",
+            "docs/QUIZ_RUNTIME.md#beforeunload"
           ]
         }
       },
