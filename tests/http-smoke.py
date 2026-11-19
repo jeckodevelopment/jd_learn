@@ -99,6 +99,88 @@ try:
   _,category_list=get(category_url+('&' if '?' in category_url else '?')+urlencode({'filter[layout]':'list'}))
   if 'data-layout="list"' not in category_list or 'jlms-course-grid--list' not in category_list:
    raise RuntimeError('Category course list layout did not render')
+ # SCR-01: HTTP-level URL persistence and filter/pagination isolation.
+ # A one-course fixture is enough to verify that a nonzero page offset hides it
+ # and a new GET filter submission without limitstart resets the page.
+ course_path='/index.php?option=com_jlms&view=courses'
+ selected_filters={'filter[search]':'Publication fixture',
+                   'filter[order]':'title',
+                   'filter[difficulty]':'beginner',
+                   'filter[duration]':'30-60',
+                   'filter[layout]':'list'}
+ active_url=course_path+'&'+urlencode(selected_filters)
+ active_final,active_html=get(active_url)
+ active_form=next((x for x in Page(active_html).forms if x['id']=='jlms-catalog-filters'),None)
+ if not active_form or any(active_form['fields'].get(k)!=v for k,v in selected_filters.items()):
+  raise RuntimeError('SCR-01: a sharable catalogue URL did not hydrate every selected filter')
+ if 'Publication fixture' not in active_html or 'data-layout="list"' not in active_html:
+  raise RuntimeError('SCR-01: combined URL filters lost a visible matching course')
+ # Simulate history back, forward and reload as separate GETs to the exact URL.
+ for revisit in (course_path, active_final, course_path, active_final):
+  _,revisited=get(revisit)
+  selected=revisit==active_final
+  if selected and ('value="title" selected' not in revisited or 'data-layout="list"' not in revisited):
+   raise RuntimeError('SCR-01: revisiting filter URL did not restore selected filters')
+  if not selected and ('data-layout="grid"' not in revisited or 'value="title" selected' in revisited):
+   raise RuntimeError('SCR-01: catalogue filter state leaked into the unfiltered URL')
+ # Changing search after requesting the second page must not replay the old offset.
+ _,later_page=get(active_url+'&limitstart=12')
+ if 'id="jlms-course-card-' in later_page:
+  raise RuntimeError('SCR-01: a single result leaked into page two')
+ submitted=dict(active_form['fields'])
+ submitted['filter[search]']='Publication fixture'
+ submitted.pop('limitstart',None)
+ _,reset_page=get(course_path+'&'+urlencode(submitted))
+ if 'Publication fixture' not in reset_page or 'id="jlms-course-card-' not in reset_page:
+  raise RuntimeError('SCR-01: GET filter submit failed to reset page offset to zero')
+ if 'limitstart' in dict(parse_qs(urlparse(active_final).query)):
+  raise RuntimeError('SCR-01: first-page URL unexpectedly carries a pagination offset')
+ # Category filter forms must preserve their own scope, expose every supported
+ # sort and restore state through URL navigation independently of the catalog.
+ _,categories_index=get('/index.php?option=com_jlms&view=categories')
+ category_candidates=[link for link in Page(categories_index).links if
+                      parse_qs(urlparse(link).query).get('view')==['category']]
+ if not category_candidates:
+  raise RuntimeError('SCR-01: public fixture course category URL is missing')
+ cat_url=category_candidates[0]
+ cat_params={'filter[search]':'Publication fixture','filter[order]':'published',
+             'filter[difficulty]':'beginner','filter[duration]':'30-60',
+             'filter[layout]':'list'}
+ cat_request=cat_url+('&' if '?' in cat_url else '?')+urlencode(cat_params)
+ cat_final,cat_filtered=get(cat_request)
+ cat_form=next((x for x in Page(cat_filtered).forms if x['id']=='jlms-category-catalog-filters'),None)
+ if not cat_form or any(cat_form['fields'].get(k)!=v for k,v in cat_params.items()):
+  raise RuntimeError('SCR-01: category URL did not hydrate the supported filters')
+ if 'Publication fixture' not in cat_filtered or 'data-layout="list"' not in cat_filtered:
+  raise RuntimeError('SCR-01: filtered public category did not include its matching course')
+ if 'name="filter[available]"' not in cat_filtered:
+  raise RuntimeError('SCR-01: category availability filter was not rendered')
+ for value in ('editorial','recent','title','duration','published'):
+  if 'value="'+value+'"' not in cat_filtered.split('id="jlms-category-catalog-order"',1)[1].split('</select>',1)[0]:
+   raise RuntimeError('SCR-01: category ordering option missing: '+value)
+ _,cat_second=get(cat_request+'&limitstart=12')
+ if 'id="jlms-course-card-' in cat_second:
+  raise RuntimeError('SCR-01: category result leaked into page two')
+ _,cat_reset=get(cat_url+('&' if '?' in cat_url else '?')+urlencode(cat_form['fields']))
+ if 'id="jlms-course-card-' not in cat_reset:
+  raise RuntimeError('SCR-01: category GET filter submit did not reset course paging')
+ _,cat_revisited=get(cat_final)
+ if 'value="published" selected' not in cat_revisited or 'data-layout="list"' not in cat_revisited:
+  raise RuntimeError('SCR-01: category URL navigation lost its selected state')
+ # No-result clear action must preserve category identity but discard all filters.
+ _,cat_empty=get(cat_url+('&' if '?' in cat_url else '?')+urlencode({'filter[search]':'___unmatched_ci_term___'}))
+ clear_tag=re.search(r'id="jlms-category-clear-filters"[^>]*>\\s*<a href="([^"]+)"',cat_empty)
+ if not clear_tag:
+  raise RuntimeError('SCR-01: category empty-state reset link missing')
+ clear_url=unescape(clear_tag.group(1))
+ _,cat_cleared=get(clear_url)
+ if 'id="jlms-course-card-' not in cat_cleared or '___unmatched_ci_term___' in cat_cleared:
+  raise RuntimeError('SCR-01: category clear-filters link lost context or retained stale search')
+ print(json.dumps({'scr01_http_catalog_filter_roundtrip':4,
+                   'scr01_http_category_filter_roundtrip':5,
+                   'scr01_pagination_reset':2,
+                   'scope':'disposable Joomla HTTP requests; not browser history automation or manual acceptance',
+                   'status':'passed'}))
  _,invalid_filter_html=get('/index.php?option=com_jlms&view=courses&'+urlencode({'filter[difficulty]':'beginner\' OR 1=1 --','filter[duration]':'0 OR 1=1'}))
  if 'Publication fixture' not in invalid_filter_html:
   raise RuntimeError('Invalid catalog filter values must be ignored safely')

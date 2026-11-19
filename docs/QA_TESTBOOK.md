@@ -1,3 +1,9 @@
+## SCR-01 — suite HTTP catalogo e categorie (19/11/2026)
+
+**Integrazione automatica:** `tests/http-smoke.py` verifica sulla installazione Joomla usa-e-getta: URL di ricerca condivisibile, combinazioni di filtri selezionati, riapertura degli URL senza ripristino della sessione, offset paginazione 12 oltre il singolo risultato e nuovo invio GET che ritorna alla prima pagina; categoria con ordine pubblicazione, selezioni, opzioni editoriali, risultato vuoto e collegamento Azzera filtri contestuale.
+
+**Da verificare manualmente:** browser reale con cronologia indietro/avanti (il test HTTP simula solo richieste GET successive), numero di corsi >12 e paginazione su più pagine, URL SEF multilingua, pagine indipendenti corsi/sottocategorie, override global/menu, profili ACL multipli e layout responsive. Non segnare i criteri SCR-01/url_filters o SCR-01/pagination come completamente accettati senza evidenze di questi scenari.
+
 ## SCR-01 — parità filtri Categoria e navigazione URL (19/11/2026)
 
 **Collaudo manuale Joomla pendente.** Nel Catalogo selezionare una pagina successiva e applicare una ricerca o un altro filtro: deve tornare a pagina 1, senza conservare limitstart in sessione. Aprire URL con filtri condivisi e controllare pagina, refresh, indietro/avanti e limite server (default 12). Nella pagina Categoria provare tutti i cinque ordinamenti (editoriale, recenti, titolo, durata, pubblicazione), filtri per disponibilità, ricerca, tag, durata, difficoltà, docente e percorso, passando tra griglia/elenco. Nessun corso esterno alla categoria discendente o non autorizzato deve comparire. Verificare lista vuota e Azzera filtri, che conserva la categoria attiva senza reset del contesto. Verificare paginazione indipendente delle sottocategorie, categorie multilingua e i link SEF Joomla.
