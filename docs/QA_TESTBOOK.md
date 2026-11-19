@@ -1,3 +1,16 @@
+## EDGE-01 — download attestato e blocco dell'account Joomla (19/11/2026)
+
+**Collaudo Joomla reale — pendente:**
+1. Con un utente attivo che possiede un attestato pronto, verificare elenco e download PDF e salvare il collegamento diretto.
+2. Senza chiudere la sessione dello studente, bloccare l'account nell'amministrazione utenti core Joomla. Aprire nuovamente il vecchio URL di download (GET e HEAD, se disponibile): rispondere 403 senza trasmettere PDF, dati di attestato o storage.
+3. Ripetere dalla sessione esistente su «I miei attestati»: la lettura personale non deve restituire titoli o seriali a un account bloccato.
+4. Riattivare lo stesso account e verificare che l'attestato originale sia nuovamente consultabile, con seriale, data, snapshot e PDF immutati; nessuna riemissione.
+5. Provare URL manipolato di un altro iscritto, ospite, iscrizione inesistente e account cancellato; verificare 404/401/403 e nessuna divulgazione di documenti.
+6. Verificare messaggio localizzato IT/EN, header `Cache-Control: private, no-store`, e compatibilità con attestati in `pending_render`; un account bloccato non deve provocare una generazione PDF.
+7. Verificare che l'intervento non cambi i criteri di accesso all'aula, lo stato del corso o il download di materiali didattici.
+
+**Nota:** l'integrazione automatica Joomla usa lo stesso oggetto User prima/dopo blocco per simulare una sessione già aperta; il test manuale browser resta necessario.
+
 ## SCR-07 — uscita con risposte quiz non salvate (19/11/2026)
 
 **Collaudo manuale browser/Joomla pendente:**
