@@ -1,3 +1,7 @@
+## DOC-06 — Aiuto nativo nei campi del corso (19/11/2026)
+
+**Collaudo manuale Joomla pendente:** aprire il form del corso con lingua backend italiana e inglese. Controllare testo delle descrizioni su immagine decorativa e alt, obiettivi/destinatari/difficoltà, separazione accesso scheda/contenuti, metadati SEO e quattro date (pubblicazione vs didattica). Verificare tastiera, screen reader e viewport mobile, assenza di HTML non voluto e corretto rendering Joomla nativo. Ripetere il salvataggio di un corso esistente e la creazione di un nuovo corso: nessun valore, default, ACL, calendario, versioning o lingua deve cambiare per l'aggiunta degli aiuti. Non segnare DOC-06 completo: rimangono tutti gli altri form e comandi amministrativi. 
+
 ## DOC-08 — Prima matrice flussi core e guide (19/11/2026)
 
 **Evidenza automatica prevista:** eseguire `python3 tests/contextual-help-doc05.py`: il gate DOC-08 verifica 10 righe con requisito univoco, guida prodotto presente, aiuti contestuali IT/EN in viste realmente distribuite e stato esplicito. La presenza dei file non certifica il contenuto editoriale e non rappresenta il completamento di DOC-08.
