@@ -284,6 +284,7 @@ final class HtmlView extends BaseHtmlView
             ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&edit_rules=1#jlms-teaching-rules'), 'COM_JLMS_TEACHING_RULES', 'sliders-h');
             ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id), 'COM_JLMS_COURSE_PREVIEW', 'eye');
         }
+        ToolbarHelper::help('curriculum', true);
         parent::display($tpl);
     }
 }
