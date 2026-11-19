@@ -1233,6 +1233,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `JOO-04/health` — Monitoraggio ultima esecuzione e task in ritardo in tutti gli scenari. La dashboard amministrativa diagnostica tutte e tre le routine del plugin JD Learn (quiz, pulizia materiali ed email), mostrando ultima/prossima esecuzione, mancanti, disabilitati, duplicati, ritardi superiori a dieci minuti dal next_execution Joomla ed esiti falliti. La classificazione pura e la suite PHP 8.3/8.4 sono verdi; resta distinta l'accettazione manuale del comportamento su Joomla reale.
   - [component/administrator/src/Infrastructure/SchedulerHealth.php#public const TYPES](../component/administrator/src/Infrastructure/SchedulerHealth.php)
   - [component/administrator/src/Infrastructure/SchedulerHealth.php#public static function assess](../component/administrator/src/Infrastructure/SchedulerHealth.php)
+  - [component/administrator/src/View/Dashboard/HtmlView.php#schedulerHealth](../component/administrator/src/View/Dashboard/HtmlView.php)
   - [component/administrator/tmpl/dashboard/default.php#jlms-admin-scheduler-health](../component/administrator/tmpl/dashboard/default.php)
   - [tests/scheduler-health-joo04.php#checkState](../tests/scheduler-health-joo04.php)
 - `PERF-02/workload_distribution` — Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento. Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.
