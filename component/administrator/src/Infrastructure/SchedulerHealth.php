@@ -62,7 +62,7 @@ final class SchedulerHealth
      */
     public static function guidanceKey(string $state, bool $duplicates = false): string
     {
-        if ($duplicates) {
+        if ($duplicates || $state === 'duplicates') {
             return 'COM_JLMS_SCHEDULER_GUIDANCE_DUPLICATES';
         }
 
