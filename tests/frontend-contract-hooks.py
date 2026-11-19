@@ -90,9 +90,20 @@ roots = {
     "quiz": "jlms-quiz",
     "teacher": "jlms-teacher-profile",
     "teacheredit": "jlms-teacher-profile-form",
+    "lessonpreview": "jlms-public-lesson-preview",
+    "mailconsentrevoke": "jlms-mail-consent-revoke",
 }
 for view, element_id in roots.items():
     source = (SITE / view / "default.php").read_text(encoding="utf-8")
     assert 'id="' + element_id + '"' in source, (view, "root not preserved")
+inventory = (ROOT / "docs/FRONTEND_CONTRACT_INVENTORY.md").read_text(encoding="utf-8")
+for view in ("lessonpreview", "mailconsentrevoke"):
+    assert f"`{view}/default.php`" in inventory, view
+for hook in ("jlms-public-preview-materials", "jlms-mail-consent-revoke-form",
+             "jlms-mail-consent-link-completed", "jlms-mail-consent-link-invalid"):
+    assert hook in inventory, hook
+revoke = (SITE / "mailconsentrevoke/default.php").read_text(encoding="utf-8")
+assert 'method="post"' in revoke and "HTMLHelper::_('form.token')" in revoke
+assert 'name="token"' in revoke
 assert (ROOT / "docs/FRONTEND_CONTRACT_INVENTORY.md").is_file()
 print(f"FE-10 frontend inventory contracts: {len(roots)} views, {len(PAIRS)} JS modules, OK")
