@@ -20,8 +20,7 @@ final class CertificateService
     /** @return list<array{enrollment_id:int,title:string,serial:string,issued_at:string,status:string}> */
     public function listForStudent(User $identity): array
     {
-        $userId = (int) $identity->id;
-        if ($userId < 1) { throw new \RuntimeException('COM_JLMS_LOGIN_REQUIRED', 401); }
+        $userId = $this->assertCurrentStudent($identity);
         $query = $this->db->createQuery()->select('e.id AS enrollment_id, d.serial, d.issued_at, d.status, d.identity_snapshot_json')
             ->from('#__jlms_certificates AS c')->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
             ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
@@ -36,6 +35,27 @@ final class CertificateService
                 'issued_at' => (string) $row->issued_at, 'status' => (string) $row->status];
         }
         return $items;
+    }
+
+    /**
+     * Read the current Joomla account row for every certificate read/download.
+     * The session User object can predate an administrator's block action.
+     */
+    private function assertCurrentStudent(User $identity): int
+    {
+        $userId = (int) $identity->id;
+        if ($userId < 1 || $identity->guest) {
+            throw new \RuntimeException('COM_JLMS_LOGIN_REQUIRED', 401);
+        }
+        $query = $this->db->createQuery()->select('u.id, u.block')
+            ->from('#__users AS u')
+            ->where('u.id = :certificateStudent')
+            ->bind(':certificateStudent', $userId, ParameterType::INTEGER);
+        $current = $this->db->setQuery($query)->loadObject();
+        if (!$current || (int) $current->block === 1) {
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+        }
+        return $userId;
     }
 
     /**
@@ -231,8 +251,7 @@ final class CertificateService
     /** @return array{handle:resource,size:int,mime:string,name:string,etag:string} */
     public function download(User $identity, int $enrollmentId): array
     {
-        $userId = (int) $identity->id;
-        if ($userId < 1) { throw new \RuntimeException('COM_JLMS_LOGIN_REQUIRED', 401); }
+        $userId = $this->assertCurrentStudent($identity);
         if ($enrollmentId < 1) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
         $record = $this->document($userId, $enrollmentId);
         if (!$record) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }

@@ -6658,17 +6658,20 @@
       {
         "id": "criterion_08",
         "label": "Un account Joomla bloccato non scarica attestati tramite vecchi collegamenti",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
+          "component/administrator/src/Application/CertificateService.php",
           "component/site/src/Controller/CertificateController.php",
-          "component/administrator/src/Application/CertificateService.php"
+          "tests/joomla-dashboard.php"
         ],
         "review": {
-          "reason": "Il controller inoltra l’identità al servizio. Il download verifica ID, proprietario e stato del documento, ma JD Learn non rivalida lo stato corrente di blocco dell’account su questo percorso. Resta da verificare il comportamento della sessione Joomla già aperta.",
+          "reason": "Il servizio attestati rilegge lo stato corrente di blocco dell'utente dalla tabella core Joomla prima di ogni elenco e download, senza fidarsi dell'oggetto di sessione potenzialmente obsoleto. Il controller localizza il diniego 403. Il test d'integrazione blocca l'utente dopo il login e verifica sia l'URL diretto sia la lista, più la riattivazione. Collaudo manuale Joomla pendente.",
           "references": [
-            "component/site/src/Controller/CertificateController.php#public function download",
-            "component/administrator/src/Application/CertificateService.php#public function download",
-            "component/administrator/src/Application/CertificateService.php#private function document"
+            "component/administrator/src/Application/CertificateService.php#private function assertCurrentStudent",
+            "component/administrator/src/Application/CertificateService.php#$userId = $this->assertCurrentStudent($identity);",
+            "component/site/src/Controller/CertificateController.php#'COM_JLMS_LEARNING_DENIED'",
+            "tests/joomla-dashboard.php#blocked Joomla account cannot use old direct certificate download URL",
+            "tests/joomla-dashboard.php#reactivated Joomla account can list the same immutable certificate"
           ]
         }
       }

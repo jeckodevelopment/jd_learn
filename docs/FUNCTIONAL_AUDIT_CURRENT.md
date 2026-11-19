@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **433**.
-- Mancanti con lacuna accertata: **56**.
+- Implementati: **434**.
+- Mancanti con lacuna accertata: **55**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -60,10 +60,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/CourseModel.php#public function purgeEmpty](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList](../component/administrator/src/View/Courses/HtmlView.php)
   - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM](../component/administrator/language/it-IT/com_jlms.ini)
-- `EDGE-01/criterion_08` — Un account Joomla bloccato non scarica attestati tramite vecchi collegamenti. Il controller inoltra l’identità al servizio. Il download verifica ID, proprietario e stato del documento, ma JD Learn non rivalida lo stato corrente di blocco dell’account su questo percorso. Resta da verificare il comportamento della sessione Joomla già aperta.
-  - [component/site/src/Controller/CertificateController.php#public function download](../component/site/src/Controller/CertificateController.php)
-  - [component/administrator/src/Application/CertificateService.php#public function download](../component/administrator/src/Application/CertificateService.php)
-  - [component/administrator/src/Application/CertificateService.php#private function document](../component/administrator/src/Application/CertificateService.php)
 - `REL-01/criterion_01` — Accettazione funzionale. Non esiste ancora un record di accettazione funzionale completa della candidata 1.0.0 con esiti e riferimenti per i requisiti; l'audit del codice è distinto dall'accettazione.
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3)
@@ -1498,6 +1494,12 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/LearningService.php#L120-L145](../component/administrator/src/Application/LearningService.php#L120-L145)
   - [tests/learning-http.py#L77-L87](../tests/learning-http.py#L77-L87)
   - [tests/joomla-learning.php#L223-L234](../tests/joomla-learning.php#L223-L234)
+- `EDGE-01/criterion_08` — Un account Joomla bloccato non scarica attestati tramite vecchi collegamenti. Il servizio attestati rilegge lo stato corrente di blocco dell'utente dalla tabella core Joomla prima di ogni elenco e download, senza fidarsi dell'oggetto di sessione potenzialmente obsoleto. Il controller localizza il diniego 403. Il test d'integrazione blocca l'utente dopo il login e verifica sia l'URL diretto sia la lista, più la riattivazione. Collaudo manuale Joomla pendente.
+  - [component/administrator/src/Application/CertificateService.php#private function assertCurrentStudent](../component/administrator/src/Application/CertificateService.php)
+  - [component/administrator/src/Application/CertificateService.php#$userId = $this->assertCurrentStudent($identity);](../component/administrator/src/Application/CertificateService.php)
+  - [component/site/src/Controller/CertificateController.php#'COM_JLMS_LEARNING_DENIED'](../component/site/src/Controller/CertificateController.php)
+  - [tests/joomla-dashboard.php#blocked Joomla account cannot use old direct certificate download URL](../tests/joomla-dashboard.php)
+  - [tests/joomla-dashboard.php#reactivated Joomla account can list the same immutable certificate](../tests/joomla-dashboard.php)
 - `EDGE-02/criterion_02` — Anteprime pubbliche solo per lezioni marcate e corso configurato. Il servizio richiede versione pubblica corrente, flag di corso, lezione testuale esplicitamente marcata e disponibilità valida.
   - [component/administrator/src/Application/CatalogService.php#public function publicLessonPreview](../component/administrator/src/Application/CatalogService.php)
   - [tests/joomla-publication.php#publicLessonPreview](../tests/joomla-publication.php)
