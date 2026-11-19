@@ -50,7 +50,7 @@ use Joomla\CMS\Language\Text;
                 <?php foreach ($this->schedulerHealth as $task) : ?>
                     <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
                         <th scope="row"><?= $this->escape(Text::_($task['label'])) ?></th>
-                        <td><?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_' . strtoupper($task['state']))) ?></td>
+                        <td><?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_' . strtoupper($task['state']))) ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') : ?> · <?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_DUPLICATES')) ?><?php endif; ?></td>
                         <td><?= $this->escape((string) ($task['last_execution'] ?: Text::_('JNEVER'))) ?></td>
                         <td><?= $this->escape((string) ($task['next_execution'] ?: '—')) ?></td>
                     </tr>
