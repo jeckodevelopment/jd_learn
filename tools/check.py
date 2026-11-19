@@ -17,6 +17,15 @@ assert '$offset += count($recent)' in summary
 assert 'while ($latest === null && count($recent) === 50)' in summary
 assert "if ($card['access'] === 'available')" in summary
 
+# CAT-02: the bounded catalogue batch must select one latest enrollment per
+# requested course *before* applying its limit, not truncate owner history.
+dashboard=(ROOT/'component/administrator/src/Application/DashboardService.php').read_text()
+catalog=dashboard.split('public function catalogStates(',1)[1].split('public function cards(',1)[0]
+assert "SELECT MAX(latest.id) FROM #__jlms_enrollments AS latest" in catalog
+assert 'latest.user_id = e.user_id AND latest.course_id = e.course_id' in catalog
+assert catalog.index("->where('e.id = (SELECT MAX(") < catalog.index("setQuery($query, 0, 50)")
+assert (ROOT/'tests/dashboard-catalog-latest-regression.php').is_file()
+
 count=0
 for base in ['component','libraries','plugins','packages']:
  for p in (ROOT/base).rglob('*.xml'):
