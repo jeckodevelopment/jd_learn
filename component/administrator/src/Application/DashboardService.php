@@ -85,8 +85,16 @@ final class DashboardService
         if (!$courseIds) { return []; }
         $courseIds = array_values(array_unique(array_filter(array_map('intval', $courseIds), static fn (int $id): bool => $id > 0)));
         if (!$courseIds || count($courseIds) > 50) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-        $query = $this->query($identity)->whereIn('e.course_id', $courseIds)->clear('order')->order('e.id DESC');
-        // Dashboard cards already apply fresh owner, ACL, version and edition eligibility checks.
+        // Select exactly the latest enrollment for each requested course before
+        // limiting the result set. Otherwise 50 historical editions of one course
+        // can hide a different course's enrollment and display a false "Enroll" CTA.
+        // The correlated lookup is scoped to the same user as the outer owner query.
+        $query = $this->query($identity)
+            ->whereIn('e.course_id', $courseIds)
+            ->where('e.id = (SELECT MAX(latest.id) FROM #__jlms_enrollments AS latest WHERE latest.user_id = e.user_id AND latest.course_id = e.course_id)')
+            ->clear('order')->order('e.id DESC');
+        // At most one enrollment per requested course (50); preserve current
+        // authorization and presentation checks for each resulting card.
         $rows = $this->db->setQuery($query, 0, 50)->loadObjectList();
         $cards = $this->cards($identity, $uiLanguage, $rows ?: []);
         $states = [];
