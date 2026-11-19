@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (DOC-05, 19/11/2026):** prima tranche di guida contestuale Joomla offline nelle viste Corsi, Corso e Iscritti, con pagine IT/EN nel pacchetto. DOC-05 resta parziale, collaudo manuale pendente.
+
 - **0.60.8-dev (UI-01/FE-10, 19/11/2026):** aggiunti inventario e gate statico per le viste pubbliche anteprima lezione e revoca consenso email, inclusi contratti DOM e token POST/CSRF. Solo contratti/documentazione, senza modifica runtime o accettazione manuale.
 
 - **0.60.8-dev (SCR-01, 19/11/2026):** suite HTTP su Joomla isolato per stato dei filtri condivisi, navigazione URL ripetuta, reset alla prima pagina dopo filtro, opzioni ordinamento Categoria e reset contestuale. Nessuna variazione runtime né accettazione manuale implicita.
