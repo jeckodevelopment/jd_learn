@@ -138,6 +138,19 @@ expect(in_array('COM_JLMS_COURSE_DESCRIPTION_REQUIRED', $readiness['blockers'], 
     && in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true), 'pre-publication checklist reports description and empty programme blockers');
 expect(in_array('COM_JLMS_READINESS_SUMMARY_MISSING', $readiness['warnings'], true)
     && in_array('COM_JLMS_READINESS_IMAGE_MISSING', $readiness['warnings'], true), 'optional course presentation gaps are warnings');
+$basis = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasCompleteBasis([
+    ['progress_basis' => true, 'access' => 'available', 'percent' => 60],
+    ['progress_basis' => true, 'access' => 'unavailable', 'percent' => 0],
+]);
+expect($basis === true, 'unavailable but enrolled course with defined rules retains a valid aggregation basis');
+expect(!\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasCompleteBasis([]), 'empty pathway has no learner progress basis');
+expect(!\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasCompleteBasis([
+    ['progress_basis' => true], ['progress_basis' => false],
+]), 'missing enrollment or completion rules hides aggregate progress');
+expect(!\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasCompleteBasis([
+    ['access' => 'available', 'percent' => 100],
+]), 'a percent alone cannot prove a valid enrollment and rules basis');
+
 $pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([
     ['access' => 'available', 'percent' => 50],
     ['access' => 'available', 'percent' => null],
