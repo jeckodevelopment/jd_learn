@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="actionlog" method="upgrade">
+ <name>PLG_ACTIONLOG_JDLEARN</name><author>Jecko Development</author><version>0.1.0</version>
+ <description>PLG_ACTIONLOG_JDLEARN_DESCRIPTION</description>
+ <namespace path="src">Jlms\Plugin\Actionlog\Jdlearn</namespace>
+ <scriptfile>installer.php</scriptfile>
+ <files><filename>installer.php</filename><folder plugin="jdlearn">services</folder><folder>src</folder><folder>language</folder></files>
+ <languages>
+  <language tag="it-IT">language/it-IT/plg_actionlog_jdlearn.sys.ini</language>
+  <language tag="it-IT">language/it-IT/plg_actionlog_jdlearn.ini</language>
+  <language tag="en-GB">language/en-GB/plg_actionlog_jdlearn.sys.ini</language>
+  <language tag="en-GB">language/en-GB/plg_actionlog_jdlearn.ini</language>
+ </languages>
+</extension>
