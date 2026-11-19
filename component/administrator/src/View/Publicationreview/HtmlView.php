@@ -14,6 +14,7 @@ final class HtmlView extends BaseHtmlView
     {
         $this->item = $this->get('Item');
         ToolbarHelper::title(Text::_('COM_JLMS_PUBLICATION_REVIEW_HEADING'), 'graduation-cap');
+        ToolbarHelper::help('publicationreview', true);
         parent::display($tpl);
     }
 }
