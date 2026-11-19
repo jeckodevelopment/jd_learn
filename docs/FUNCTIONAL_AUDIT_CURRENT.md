@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **440**.
-- Mancanti con lacuna accertata: **49**.
+- Implementati: **441**.
+- Mancanti con lacuna accertata: **48**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -16,9 +16,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#course-message-test:](../component/administrator/src/Application/CourseCommunicationService.php)
-- `JOO-04/health` — Monitoraggio ultima esecuzione e task in ritardo in tutti gli scenari. È presente una diagnostica limitata alle attività di comunicazione e alla coda email. La vista segnala solo lo stato del task mail e non costituisce il monitoraggio dell'ultima esecuzione e dei ritardi per tutte le attività pianificate richieste dal criterio.
-  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
-  - [docs/REQUIREMENTS_STATUS.csv#L73-L73](../docs/REQUIREMENTS_STATUS.csv#L73-L73)
 - `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. L’infrastruttura scrive direttamente nel modello nativo User Actions Log per una lista di azioni specifiche. Il pacchetto non contiene il plugin actionlog richiesto e la pubblicazione non rientra nelle azioni di quel modello.
   - [component/administrator/src/Infrastructure/AssessmentAudit.php#bootComponent](../component/administrator/src/Infrastructure/AssessmentAudit.php)
   - [packages/pkg_jlms.xml#<files](../packages/pkg_jlms.xml)
@@ -1233,6 +1230,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [packages/pkg_jlms.xml#<updateservers>](../packages/pkg_jlms.xml)
   - [.github/workflows/release.yml#inputs.publish == true](../.github/workflows/release.yml)
   - [docs/RELEASE_PROCEDURE.md#Avvio del workflow](../docs/RELEASE_PROCEDURE.md)
+- `JOO-04/health` — Monitoraggio ultima esecuzione e task in ritardo in tutti gli scenari. La dashboard amministrativa diagnostica tutte e tre le routine del plugin JD Learn (quiz, pulizia materiali ed email), mostrando ultima/prossima esecuzione, mancanti, disabilitati, duplicati, ritardi superiori a dieci minuti dal next_execution Joomla ed esiti falliti. La classificazione pura e la suite PHP 8.3/8.4 sono verdi; resta distinta l'accettazione manuale del comportamento su Joomla reale.
+  - [component/administrator/src/Infrastructure/SchedulerHealth.php#public const TYPES](../component/administrator/src/Infrastructure/SchedulerHealth.php)
+  - [component/administrator/src/Infrastructure/SchedulerHealth.php#public static function assess](../component/administrator/src/Infrastructure/SchedulerHealth.php)
+  - [component/administrator/tmpl/dashboard/default.php#jlms-admin-scheduler-health](../component/administrator/tmpl/dashboard/default.php)
+  - [tests/scheduler-health-joo04.php#checkState](../tests/scheduler-health-joo04.php)
 - `PERF-02/workload_distribution` — Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento. Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#Distribuzione di riferimento: 60% video](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#mix60%video](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
