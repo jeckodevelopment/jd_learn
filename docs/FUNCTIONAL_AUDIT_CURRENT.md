@@ -41,7 +41,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
 - `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.
   - [component/administrator/src/Model/CourseModel.php#public function purgeEmpty](../component/administrator/src/Model/CourseModel.php)
-  - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList](../component/administrator/src/View/Courses/HtmlView.php)
+  - [component/administrator/src/View/Courses/HtmlView.php#purgepreview](../component/administrator/src/View/Courses/HtmlView.php)
   - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM](../component/administrator/language/it-IT/com_jlms.ini)
 - `REL-01/criterion_01` — Accettazione funzionale. Non esiste ancora un record di accettazione funzionale completa della candidata 1.0.0 con esiti e riferimenti per i requisiti; l'audit del codice è distinto dall'accettazione.
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
