@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **432**.
-- Mancanti con lacuna accertata: **57**.
+- Implementati: **433**.
+- Mancanti con lacuna accertata: **56**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -56,10 +56,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
   - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
-- `SCR-07/criterion_03` — Conservare temporaneamente in memoria le modifiche non confermate, riprovare con limiti e segnalare il rischio di perdita uscendo. Le risposte restano nel form e i tentativi incerti usano retry limitati, ma il client quiz non registra una guardia di uscita per avvertire del rischio di perdere modifiche non confermate. La guida dichiara che la chiusura improvvisa può perdere l'ultimo segmento.
-  - [component/media/js/quiz.js#L33-L46](../component/media/js/quiz.js#L33-L46)
-  - [component/media/js/quiz.js#L79-L91](../component/media/js/quiz.js#L79-L91)
-  - [docs/QUIZ_RUNTIME.md#L17-L17](../docs/QUIZ_RUNTIME.md#L17-L17)
 - `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.
   - [component/administrator/src/Model/CourseModel.php#public function purgeEmpty](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList](../component/administrator/src/View/Courses/HtmlView.php)
@@ -1392,6 +1388,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/media/js/quiz.js#L34-L43](../component/media/js/quiz.js#L34-L43)
   - [component/media/js/quiz.js#L79-L91](../component/media/js/quiz.js#L79-L91)
   - [tests/quiz-player.mjs#L34-L50](../tests/quiz-player.mjs#L34-L50)
+- `SCR-07/criterion_03` — Conservare temporaneamente in memoria le modifiche non confermate, riprovare con limiti e segnalare il rischio di perdita uscendo. Il client conserva le risposte nel form e usa retry limitati e idempotenti; la PR #691 aggiunge una guardia beforeunload soltanto per modifiche non confermate o mutazioni in corso/incerte. Il redirect interno dopo esito valido bypassa l'avviso. I test JS verificano stati pulito/sporco e conferma server; collaudo manuale Joomla/browser pendente.
+  - [component/media/js/quiz.js#export function quizExitRisk](../component/media/js/quiz.js)
+  - [component/media/js/quiz.js#globalThis.addEventListener('beforeunload'](../component/media/js/quiz.js)
+  - [tests/quiz-deadline-player.mjs#warning().prevented](../tests/quiz-deadline-player.mjs)
+  - [docs/QUIZ_RUNTIME.md#beforeunload](../docs/QUIZ_RUNTIME.md)
 - `SCR-07/criterion_04` — Non mostrare come persistenti dati che il server non ha accettato. Il client aggiorna il baseline solo dopo una risposta server riuscita e conserva il form dopo un fallimento o una risposta obsoleta; i test verificano retry identico e conflitto senza sovrascrittura.
   - [component/media/js/quiz.js#L79-L91](../component/media/js/quiz.js#L79-L91)
   - [tests/quiz-player.mjs#L44-L50](../tests/quiz-player.mjs#L44-L50)
