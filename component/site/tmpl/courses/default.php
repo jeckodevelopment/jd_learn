@@ -35,6 +35,8 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
   <select id="jlms-catalog-difficulty" name="filter[difficulty]"><option value=""><?= Text::_('COM_JLMS_CATALOG_ANY_DIFFICULTY') ?></option><option value="beginner"<?= $this->difficulty === 'beginner' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY_BEGINNER') ?></option><option value="intermediate"<?= $this->difficulty === 'intermediate' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY_INTERMEDIATE') ?></option><option value="advanced"<?= $this->difficulty === 'advanced' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY_ADVANCED') ?></option></select>
   <label for="jlms-catalog-duration"><?= Text::_('COM_JLMS_CATALOG_DURATION') ?></label>
   <select id="jlms-catalog-duration" name="filter[duration]"><option value=""><?= Text::_('COM_JLMS_CATALOG_ANY_DURATION') ?></option><option value="under-30"<?= $this->duration === 'under-30' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_UNDER_30') ?></option><option value="30-60"<?= $this->duration === '30-60' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_30_60') ?></option><option value="61-120"<?= $this->duration === '61-120' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_61_120') ?></option><option value="over-120"<?= $this->duration === 'over-120' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_OVER_120') ?></option></select>
+  <label for="jlms-catalog-available"><?= Text::_('COM_JLMS_CATALOG_AVAILABLE_ONLY') ?></label>
+  <input id="jlms-catalog-available" type="checkbox" name="filter[available]" value="1"<?= $this->available === '1' ? ' checked' : '' ?>>
   <label for="jlms-catalog-layout"><?= Text::_('COM_JLMS_CATALOG_LAYOUT') ?></label>
   <select id="jlms-catalog-layout" name="filter[layout]"><option value="grid"<?= $this->layout === 'grid' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_LAYOUT_GRID') ?></option><option value="list"<?= $this->layout === 'list' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_LAYOUT_LIST') ?></option></select>
   <label for="jlms-catalog-teacher"><?= Text::_('COM_JLMS_CATALOG_TEACHER') ?></label>
@@ -123,7 +125,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
  <?php endforeach; ?>
  <?php if (!$this->items) : ?>
   <p id="jlms-catalog-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p>
-  <?php if ($this->showFilters && ($this->search !== '' || $this->categoryChoice > 0 || $this->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->teacherId > 0 || $this->pathwayId > 0)) : ?>
+  <?php if ($this->showFilters && ($this->search !== '' || $this->categoryChoice > 0 || $this->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->available === '1' || $this->teacherId > 0 || $this->pathwayId > 0)) : ?>
    <p id="jlms-catalog-clear-filters"><a href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . (int) $this->categoryId : '')) ?>"><?= Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
   <?php endif; ?>
  <?php endif; ?>
