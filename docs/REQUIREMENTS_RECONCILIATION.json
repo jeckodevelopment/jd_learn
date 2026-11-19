@@ -66,7 +66,117 @@
       ],
       "method": "Media semplice delle nove macroaree (81+81+78+99+68+92+70+72+75)/9 = 79,56% (80% arrotondato). PR #464 amplia i producer di contesto approvati per i template email: area email 70% → 72%. L'accettazione manuale Joomla/SMTP resta pendente; stima implementativa e accettazione sono dimensioni distinte.",
       "status": "historical; do not display as current progress"
-    }
+    },
+    "macroareas": [
+      {
+        "id": "catalogue",
+        "label": "Catalogo, frontend e navigazione",
+        "requirements": 23,
+        "weight_percent": 10.75,
+        "development_evidence_floor_percent": 63.25,
+        "manual_acceptance_coverage_percent": 13.04,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 13,
+        "unverifiable_criteria": 20,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "authoring",
+        "label": "Corsi, versioni e pubblicazione",
+        "requirements": 20,
+        "weight_percent": 9.35,
+        "development_evidence_floor_percent": 69.19,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 1,
+        "unverifiable_criteria": 23,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "learning",
+        "label": "Iscrizioni, lezioni e progressi",
+        "requirements": 19,
+        "weight_percent": 8.88,
+        "development_evidence_floor_percent": 67.54,
+        "manual_acceptance_coverage_percent": 5.26,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 2,
+        "unverifiable_criteria": 18,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "video",
+        "label": "Provider e fruizione video",
+        "requirements": 18,
+        "weight_percent": 8.41,
+        "development_evidence_floor_percent": 63.8,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 4,
+        "unverifiable_criteria": 21,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "materials",
+        "label": "Materiali, quiz e attestati",
+        "requirements": 17,
+        "weight_percent": 7.94,
+        "development_evidence_floor_percent": 69.41,
+        "manual_acceptance_coverage_percent": 17.65,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 1,
+        "unverifiable_criteria": 14,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "communications",
+        "label": "Email e notifiche",
+        "requirements": 13,
+        "weight_percent": 6.07,
+        "development_evidence_floor_percent": 63.46,
+        "manual_acceptance_coverage_percent": 15.38,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 1,
+        "unverifiable_criteria": 11,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "integration",
+        "label": "Joomla, ACL e configurazione",
+        "requirements": 38,
+        "weight_percent": 17.76,
+        "development_evidence_floor_percent": 52.85,
+        "manual_acceptance_coverage_percent": 2.63,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 2,
+        "unverifiable_criteria": 37,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "security",
+        "label": "Privacy, sicurezza e compatibilità",
+        "requirements": 51,
+        "weight_percent": 23.83,
+        "development_evidence_floor_percent": 39.03,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 17,
+        "unverifiable_criteria": 100,
+        "unassessed_criteria": 0
+      },
+      {
+        "id": "delivery",
+        "label": "Packaging, documentazione e reporting",
+        "requirements": 15,
+        "weight_percent": 7.01,
+        "development_evidence_floor_percent": 20.56,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 22,
+        "unverifiable_criteria": 24,
+        "unassessed_criteria": 0
+      }
+    ]
   },
   "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata. Conferma utente positiva PR #421 sulle sole toolbar #406/#408; accettazione parziale UI-02 e MAIL-11, senza estensione a SMTP o requisiti completi. Conferma manuale utente del 15/11/2026 su PR #418 (issue #411): rimossi H1 duplicati dalle viste Audit coda email, Variabili modelli email e Gestione dipendenze categorie; accettazione parziale MAIL-10 e CAT-01, senza attestare i requisiti completi. Requisiti LCM-01–LCM-05 formalizzati il 15/11/2026 (solo documentazione), non implementati né accettati; stima implementativa invariata. Collaudo utente 17/11/2026 PR #566: attestato preesistente con logo PNG scaricabile, errore 503 risolto; accettazione parziale CERT-03/CERT-05/CERT-08. Restano non attestati stato DB ready, seriale e snapshot invariati, ACL/HEAD, altri formati e backup/ripristino. PR #575: LCM-03 passa da Non iniziata a Parziale per archiviazione dei percorsi e ripristino conservativo in bozza; cestinazione/eliminazione condizionata e collaudo reale pendenti. Stima macroaree invariata fino a riconciliazione ponderata. PR #578: LCM-04 da Non iniziata a Parziale (cestinazione e ripristino docenti, ACL, cronologia conservata); eliminazione condizionata e collaudo reale rinviati. La stima ponderata per macroarea non cambia automaticamente. Aggiornamento LCM-05 PR #581 e #582: test Joomla disposable CI verde, stato Parziale, accettazione manuale Non eseguita. Conteggi riconciliati al 17/11/2026; stima delle macroaree invariata senza una nuova ponderazione integrale. PR #613: LCM-02 passa a Parziale grazie al filtro e badge archiviati; cestino e ripristino restano da implementare. La stima macroarea legacy non è una percentuale di implementazione verificata. LCM-01: PR #617 conferma correzione del ripristino archivio (0.60.1) con chiusura e mancata riapertura dei gate; resta parziale e senza accettazione manuale.",
   "updated_at": "2026-11-17",
