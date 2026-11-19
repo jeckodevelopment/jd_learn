@@ -48,6 +48,8 @@ $actor = Factory::getApplication()->getIdentity();
         <a href="<?= $programme ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
         <?php if ($actor->authorise('jlms.enrollments.manage', 'com_jlms.course.' . (int) $item->id)) : ?>
          <span aria-hidden="true"> · </span><a href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a>
+        <?php if ((int) $item->state === -2 && $actor->authorise('core.delete', 'com_jlms.course.' . (int) $item->id)) : ?>
+         <span aria-hidden="true"> · </span><a href="<?= Route::_('index.php?option=com_jlms&view=courses&layout=purgepreview&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_PURGE_PREVIEW') ?></a>
         <?php endif; ?>
        </div>
       </th>
