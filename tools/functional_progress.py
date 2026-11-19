@@ -11,6 +11,21 @@ REGISTER = ROOT / "docs/REQUIREMENTS_STATUS.csv"
 CRITERIA = ROOT / "docs/FUNCTIONAL_CRITERIA_1.0.0.json"
 STATES = {"implemented", "missing", "unassessed", "unverifiable"}
 
+# Nine stable, mutually exclusive reporting areas. Every in-scope requirement
+# must belong to exactly one area; unknown prefixes fail closed.
+MACROAREAS = {
+    "catalogue": ("Catalogo, frontend e navigazione", ("CAT", "SCR", "UI")),
+    "authoring": ("Corsi, versioni e pubblicazione", ("AUT", "PRO", "LIFE", "LCM")),
+    "learning": ("Iscrizioni, lezioni e progressi", ("ISC", "STU", "LES", "STA")),
+    "video": ("Provider e fruizione video", ("VID", "PVD", "PBASE")),
+    "materials": ("Materiali, quiz e attestati", ("MAT", "QUI", "CERT")),
+    "communications": ("Email e notifiche", ("MAIL", "NOT")),
+    "integration": ("Joomla, ACL e configurazione", ("JOO", "ACL", "CFG", "CORE")),
+    "security": ("Privacy, sicurezza e compatibilità", ("PRI", "SIC", "SEC", "SECDEV", "ACC", "HTTP", "EDGE", "PERF", "DAT")),
+    "delivery": ("Packaging, documentazione e reporting", ("REL", "DOC", "REP")),
+}
+
+
 def calculate(rows, criteria):
     included = {r["Requisito"]: r for r in rows if r["Perimetro 1.0.0"] != "Fase 2"}
     audited = {}
@@ -40,6 +55,36 @@ def calculate(rows, criteria):
             "provisional_fraction": round(done / len(units), 6),
             "complete_audit": unknown == 0,
         }
+    prefix_to_area = {}
+    for area_id, (_, prefixes) in MACROAREAS.items():
+        for prefix in prefixes:
+            if prefix in prefix_to_area:
+                raise ValueError("Duplicate macroarea prefix: " + prefix)
+            prefix_to_area[prefix] = area_id
+    groups = {area_id: [] for area_id in MACROAREAS}
+    for requirement_id in included:
+        prefix = requirement_id.split("-", 1)[0]
+        if prefix not in prefix_to_area:
+            raise ValueError("Unmapped macroarea requirement: " + requirement_id)
+        groups[prefix_to_area[prefix]].append(requirement_id)
+    macroareas = []
+    for area_id, (label, _) in MACROAREAS.items():
+        ids = groups[area_id]
+        if not ids:
+            raise ValueError("Empty macroarea: " + area_id)
+        accepted = sum(included[r]["Accettazione Joomla"].strip() != "Non eseguita" for r in ids)
+        passed = sum(included[r]["Accettazione Joomla"].strip() == "Superata" for r in ids)
+        macroareas.append({
+            "id": area_id, "label": label, "requirements": len(ids),
+            "weight_percent": round(100 * len(ids) / len(included), 2),
+            "development_evidence_floor_percent": round(
+                100 * sum(audited[r]["provisional_fraction"] for r in ids) / len(ids), 2),
+            "manual_acceptance_coverage_percent": round(100 * accepted / len(ids), 2),
+            "manual_fully_accepted_percent": round(100 * passed / len(ids), 2),
+            "missing_criteria": sum(audited[r]["missing_criteria"] for r in ids),
+            "unverifiable_criteria": sum(audited[r]["unverifiable_criteria"] for r in ids),
+            "unassessed_criteria": sum(audited[r]["unassessed_criteria"] for r in ids),
+        })
     # Evidence floor: equal weight per in-scope requirement; unassessed and
     # unverifiable criteria contribute zero and remain explicitly visible.
     development_floor = round(100 * sum(v["provisional_fraction"] for v in audited.values()) / len(included), 2)
@@ -77,6 +122,7 @@ def calculate(rows, criteria):
         },
         "progress_status": "complete" if resolved else "not_yet_measurable",
         "criteria_by_requirement": audited,
+        "macroareas": macroareas,
         "note": "Provisional criterion fractions are NOT a global score; tests and manual acceptance are separate axes.",
     }
 
