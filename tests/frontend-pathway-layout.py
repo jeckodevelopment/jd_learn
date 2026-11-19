@@ -56,3 +56,8 @@ for lang in ('it-IT','en-GB'):
     for key in ('COM_JLMS_PATHWAY_COVER','COM_JLMS_PATHWAY_COVER_HELP'):
         assert admin.count(key+'=')==1
 print('FE-07 pathway covers, ACL, timeline, progress, i18n and menu: OK')
+
+# SCR-04: visible progress requires all course enrollment/rule bases.
+assert "PathwayProgress::hasCompleteBasis($courses)" in service
+assert "'progress_basis' => false" in service
+assert "'progress_basis' => $enrollment !== null && $rules !== null" in service
