@@ -18,6 +18,7 @@ final class HtmlView extends BaseHtmlView
 {
     public array $providers = [];
     public array $mailScheduler = [];
+    public array $schedulerHealth = [];
     public array $shortcutGroups = [];
 
     public function display($tpl = null)
@@ -95,6 +96,7 @@ final class HtmlView extends BaseHtmlView
         $this->providers = DashboardProviderStatus::summarize($extensionMap, $registry->descriptors());
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status($db);
+            $this->schedulerHealth = \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::inspect($db);
         }
         ToolbarHelper::help('dashboard', true);
         parent::display($tpl);
