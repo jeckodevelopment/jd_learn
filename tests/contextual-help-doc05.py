@@ -33,6 +33,7 @@ for path in views:
     seen.add(key)
     source = path.read_text(encoding="utf-8")
     assert "ToolbarHelper::help('" + key + "', true)" in source, view
+    assert "use Joomla\\CMS\\Toolbar\\ToolbarHelper;" in source or "\\\\Joomla\\CMS\\Toolbar\\ToolbarHelper::help(" in source, f"ToolbarHelper import missing: {view}"
     assert "return ToolbarHelper::help(" not in source, f"help cannot replace rendering: {view}"
     for lang in ("it-IT", "en-GB"):
         page_path = admin / "help" / lang / (key + ".html")
