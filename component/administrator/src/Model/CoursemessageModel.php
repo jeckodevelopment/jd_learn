@@ -19,7 +19,14 @@ final class CoursemessageModel extends BaseDatabaseModel
             $preview=$app->getSession()->get($key, null);
             $data['template']=\Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition((string) $app->getLanguage()->getTag());
             if (is_array($preview)) {
+                // Preserve the same mutation across GET refreshes; migrate older
+                // sessions once, without creating a second test event on reload.
+                if (!\Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::valid($preview['mutation_id'] ?? null)) {
+                    $preview['mutation_id'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::create();
+                    $app->getSession()->set($key, $preview);
+                }
                 $data['preview']=$app->bootComponent('com_jlms')->getCourseCommunicationService()->preview($app->getIdentity(),$courseId,(string)$preview['subject'],(string)$preview['body'],$preview['enrollment_ids'],$preview['template']??[]);
+                $data['preview']['mutation_id'] = $preview['mutation_id'];
                 $data['template']=$data['preview']['template'];
             }
             $data['preview_key']=$key;
