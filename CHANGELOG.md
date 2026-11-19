@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (DOC-05, 19/11/2026) — guida contestuale backend, seconda tranche:** sette nuovi pulsanti Guida nativi nelle schermate Programma, dashboard amministrativa, Coda email, Variabili email, Comunicazioni corso, Attestati e Dettaglio attestato; 14 nuove pagine offline IT/EN. Esteso il gate DOC-05 a 10 viste e 20 pagine. DOC-05 rimane parziale fino alla copertura completa, ai collegamenti ai manuali e all'accettazione Joomla.
+
 - **0.60.8-dev (DOC-05, 19/11/2026):** prima tranche di guida contestuale Joomla offline nelle viste Corsi, Corso e Iscritti, con pagine IT/EN nel pacchetto. DOC-05 resta parziale, collaudo manuale pendente.
 
 - **0.60.8-dev (UI-01/FE-10, 19/11/2026):** aggiunti inventario e gate statico per le viste pubbliche anteprima lezione e revoca consenso email, inclusi contratti DOM e token POST/CSRF. Solo contratti/documentazione, senza modifica runtime o accettazione manuale.

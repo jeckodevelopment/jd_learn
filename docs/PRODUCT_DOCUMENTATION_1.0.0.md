@@ -1,6 +1,6 @@
 # DOC-1.0 — Documentazione prodotto e assistenza contestuale
 
-Stato: **piano approvato per la release 1.0.0; prima tranche DOC-05 in implementazione, copertura restante da completare**, senza attribuire copertura funzionale o accettazione. Questo documento definisce il gate documentale e UX della versione stabile, non dichiara già disponibili manuali o una guida contestuale completa.
+Stato: **piano approvato per la release 1.0.0; prime due tranche DOC-05 integrate nel piano, copertura restante da completare**, senza attribuire copertura funzionale o accettazione. Questo documento definisce il gate documentale e UX della versione stabile, non dichiara già disponibili manuali o una guida contestuale completa.
 
 ## Obiettivo e destinatari
 
@@ -42,6 +42,8 @@ Priorità UX: editor e pubblicazione corsi/versioni; programma, rilascio e prere
 - **DOC-P5 — revisione finale e accettazione (P0):** walkthrough reali con profili amministratore inesperto, docente e studente; screenshot/versioni; lint link, copertura IT/EN e revisione tecnica, editoriale e accessibilità. Nessuna pubblicazione 1.0.0 senza evidenza del gate.
 
 Le PR sono pianificate, non ancora implementate. Tutte le PR implementative vanno alla milestone `1.0.0`, includono `Comportamenti da testare` sul sito Joomla e aggiornano la tracciabilità. Una sola PR documentale che approva il piano non incrementa la percentuale di sviluppo. In seguito, ogni PR funzionale deve indicare **Impatto documentazione e aiuto contestuale**: schermate/campi/manuali da aggiornare o `nessuno` motivato.
+
+La seconda tranche non cambia la navigazione, le autorizzazioni o i permessi dei documenti: la Guida rimane un supporto informativo e non un'azione amministrativa.
 
 ## Criteri di qualità verificabili
 

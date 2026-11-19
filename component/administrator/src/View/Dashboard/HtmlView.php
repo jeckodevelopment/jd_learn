@@ -96,6 +96,7 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status($db);
         }
+        ToolbarHelper::help('dashboard', true);
         parent::display($tpl);
     }
 }

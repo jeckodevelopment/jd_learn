@@ -2384,3 +2384,10 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 ## DOC-05 — guida contestuale Joomla (prima tranche, 19/11/2026)
 
 **Comportamenti da testare sul sito Joomla di prova — non eseguiti:** aprire Corsi, editor Corso e Iscritti; su ciascuna schermata usare il pulsante nativo Guida, controllare che apra la pagina pertinente offline, senza 404, con testo italiano per it-IT e inglese per en-GB. Verificare su installazione pulita e upgrade, permessi amministrativi, finestre/popup, tastiera e lettore schermo. La guida non deve salvare, cambiare iscrizioni o esporre dati personali. La suite statica `tests/contextual-help-doc05.py` controlla i 3 pulsanti, i 6 documenti e la cartella nel manifest; non equivale al collaudo su Joomla. Le altre schermate DOC-05 restano fuori da questa tranche.
+
+
+## DOC-05 — seconda tranche di guida contestuale amministrativa (19/11/2026)
+
+**Stato: collaudo Joomla reale non eseguito.** Dopo installazione o upgrade del pacchetto, aprire con un operatore autorizzato le viste Programma, Dashboard, Coda email, Variabili email, Comunicazioni corso, Attestati e Dettaglio attestato. Per ogni schermata selezionare **Guida** e verificare l'apertura del capitolo corretto senza connessione a Internet, senza errori 404 e senza esposizione di dati personali. Ripetere con lingua amministrativa italiana e inglese: contenuto pertinente, nessuna lingua mescolata. Verificare inoltre tastiera, focus, popup, lettore di schermo e visualizzazione mobile. I pulsanti non devono eseguire scritture o bypassare ACL. In Programma confrontare i consigli video con provider installati; in Coda email verificare che la guida non suggerisca ritentativi di consegne incerte; in Attestati verificare la distinzione tra completamento ed emissione. Infine assicurarsi che i file di aiuto siano presenti sia su installazione pulita sia dopo upgrade.
+
+**Test automatico** `python3 tests/contextual-help-doc05.py`: contratti statici per 10 viste e 20 pagine HTML IT/EN; non è un test di visualizzazione Joomla e non chiude DOC-05.
