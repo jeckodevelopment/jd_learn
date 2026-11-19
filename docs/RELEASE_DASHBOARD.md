@@ -9,6 +9,22 @@ Il registro contiene 426 criteri implementati con evidenza, 63 lacune accertate,
 
 La percentuale funzionale globale rigorosa resta **non determinabile** finché i criteri non verificabili non vengono risolti.
 
+## Avanzamento per macroarea
+
+| Macroarea | Peso | Sviluppo comprovato | Collaudo avviato | Accettati | Lacune | Non verificabili |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Catalogo, frontend e navigazione | 10.75% | 63.25% | 13.04% | 0.00% | 13 | 20 |
+| Corsi, versioni e pubblicazione | 9.35% | 69.19% | 0.00% | 0.00% | 1 | 23 |
+| Iscrizioni, lezioni e progressi | 8.88% | 67.54% | 5.26% | 0.00% | 2 | 18 |
+| Provider e fruizione video | 8.41% | 63.80% | 0.00% | 0.00% | 4 | 21 |
+| Materiali, quiz e attestati | 7.94% | 69.41% | 17.65% | 0.00% | 1 | 14 |
+| Email e notifiche | 6.07% | 63.46% | 15.38% | 0.00% | 1 | 11 |
+| Joomla, ACL e configurazione | 17.76% | 52.85% | 2.63% | 0.00% | 2 | 37 |
+| Privacy, sicurezza e compatibilità | 23.83% | 39.03% | 0.00% | 0.00% | 17 | 100 |
+| Packaging, documentazione e reporting | 7.01% | 20.56% | 0.00% | 0.00% | 22 | 24 |
+
+I pesi derivano dal numero di requisiti in scope, senza doppio conteggio. Il delta per macroarea richiede una baseline storica calcolata con la stessa metodologia; le vecchie stime non sono confrontabili.
+
 ## Collaudo manuale Joomla
 
 **4.67%** — requisiti con almeno un esito registrato (10/214). È copertura per requisito, non percentuale di casi di test superati.

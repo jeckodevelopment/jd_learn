@@ -132,6 +132,15 @@ def generate_dashboard(progress):
         f"**{floor:.2f}%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope ({progress['in_scope_requirements']} requisiti).",
         f"Il registro contiene {implemented} criteri implementati con evidenza, {missing} lacune accertate, {unverifiable} non verificabili e {unassessed} non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.", "",
         "La percentuale funzionale globale rigorosa resta **" + (f"{progress['functional_implementation_percent']:.2f}%" if progress["functional_implementation_percent"] is not None else "non determinabile") + "** finché i criteri non verificabili non vengono risolti.", "",
+        "## Avanzamento per macroarea", "",
+        "| Macroarea | Peso | Sviluppo comprovato | Collaudo avviato | Accettati | Lacune | Non verificabili |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        *[
+            f"| {a['label']} | {a['weight_percent']:.2f}% | {a['development_evidence_floor_percent']:.2f}% | {a['manual_acceptance_coverage_percent']:.2f}% | {a['manual_fully_accepted_percent']:.2f}% | {a['missing_criteria']} | {a['unverifiable_criteria']} |"
+            for a in progress["macroareas"]
+        ],
+        "",
+        "I pesi derivano dal numero di requisiti in scope, senza doppio conteggio. Il delta per macroarea richiede una baseline storica calcolata con la stessa metodologia; le vecchie stime non sono confrontabili.", "",
         "## Collaudo manuale Joomla", "",
         f"**{manual['coverage_percent']:.2f}%** — requisiti con almeno un esito registrato ({manual['requirements_with_recorded_result']}/{progress['in_scope_requirements']}). È copertura per requisito, non percentuale di casi di test superati.",
         f"- Parziale / avviato: **{manual['requirements_partial']}**",
@@ -167,6 +176,7 @@ def generate_reconciliation(rows, progress, summary, evidence):
         "development_evidence_floor_percent": progress["development_evidence_floor_percent"],
         "manual_acceptance_coverage_percent": manual["coverage_percent"],
         "manual_acceptance": manual,
+        "macroareas": progress["macroareas"],
         "method": "Equal-weight average by in-scope requirement of documented implemented criteria divided by criteria per requirement. Unverifiable and unassessed criteria count as zero. Manual acceptance is a separate axis.",
         "axes": [
             {"id": "development", "label": "Sviluppo documentato (minimo confermato)",

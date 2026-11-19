@@ -15,16 +15,16 @@ spec.loader.exec_module(module)
 class FunctionalProgressTests(unittest.TestCase):
     def setUp(self):
         self.rows = [
-            {"Requisito": "A", "Perimetro 1.0.0": "1.0.0", "Accettazione Joomla": "Parziale"},
-            {"Requisito": "B", "Perimetro 1.0.0": "Misto", "Accettazione Joomla": "Non eseguita"},
-            {"Requisito": "C", "Perimetro 1.0.0": "Fase 2", "Accettazione Joomla": "Superata"},
+            {"Requisito": "CAT-01", "Perimetro 1.0.0": "1.0.0", "Accettazione Joomla": "Parziale"},
+            {"Requisito": "AUT-01", "Perimetro 1.0.0": "Misto", "Accettazione Joomla": "Non eseguita"},
+            {"Requisito": "QUI-02", "Perimetro 1.0.0": "Fase 2", "Accettazione Joomla": "Superata"},
         ]
         self.criteria = {"requirements": {
-            "A": [
+            "CAT-01": [
                 {"id": "a", "status": "implemented", "evidence": ["tools/functional_progress.py"]},
                 {"id": "b", "status": "missing", "evidence": []},
             ],
-            "B": [{"id": "a", "status": "missing", "evidence": []}],
+            "AUT-01": [{"id": "a", "status": "missing", "evidence": []}],
         }}
 
     def test_ledger_covers_current_scope(self):
@@ -41,20 +41,20 @@ class FunctionalProgressTests(unittest.TestCase):
             self.assertNotIn(requirement, output["criteria_by_requirement"])
 
     def test_unassessed_criterion_blocks_score(self):
-        self.criteria["requirements"]["A"][1]["status"] = "unassessed"
+        self.criteria["requirements"]["CAT-01"][1]["status"] = "unassessed"
         output = module.calculate(self.rows, self.criteria)
         self.assertIsNone(output["functional_implementation_percent"])
-        self.assertFalse(output["criteria_by_requirement"]["A"]["complete_audit"])
+        self.assertFalse(output["criteria_by_requirement"]["CAT-01"]["complete_audit"])
 
     def test_unverifiable_criterion_blocks_score_after_review(self):
-        self.criteria["requirements"]["A"][1]["status"] = "unverifiable"
+        self.criteria["requirements"]["CAT-01"][1]["status"] = "unverifiable"
         output = module.calculate(self.rows, self.criteria)
         self.assertIsNone(output["functional_implementation_percent"])
-        self.assertTrue(output["criteria_by_requirement"]["A"]["complete_audit"])
-        self.assertEqual(output["criteria_by_requirement"]["A"]["unverifiable_criteria"], 1)
+        self.assertTrue(output["criteria_by_requirement"]["CAT-01"]["complete_audit"])
+        self.assertEqual(output["criteria_by_requirement"]["CAT-01"]["unverifiable_criteria"], 1)
 
     def test_incomplete_inventory_blocks_score(self):
-        del self.criteria["requirements"]["B"]
+        del self.criteria["requirements"]["AUT-01"]
         output = module.calculate(self.rows, self.criteria)
         self.assertIsNone(output["functional_implementation_percent"])
         self.assertEqual(output["not_yet_audited_requirements"], 1)
@@ -66,8 +66,8 @@ class FunctionalProgressTests(unittest.TestCase):
         self.assertEqual(output["manual_acceptance"]["coverage_percent"], 50.0)
         self.assertEqual(output["manual_acceptance"]["requirements_partial"], 1)
         self.assertEqual(output["manual_acceptance"]["requirements_passed"], 0)
-        self.assertEqual(output["criteria_by_requirement"]["A"]["missing_criteria"], 1)
-        self.assertNotIn("C", output["criteria_by_requirement"])
+        self.assertEqual(output["criteria_by_requirement"]["CAT-01"]["missing_criteria"], 1)
+        self.assertNotIn("QUI-02", output["criteria_by_requirement"])
 
     def test_manual_acceptance_is_validated(self):
         self.rows[0]["Accettazione Joomla"] = "Auto superata"
@@ -75,12 +75,12 @@ class FunctionalProgressTests(unittest.TestCase):
             module.calculate(self.rows, self.criteria)
 
     def test_no_evidence_cannot_be_marked_implemented(self):
-        self.criteria["requirements"]["A"][0]["evidence"] = []
+        self.criteria["requirements"]["CAT-01"][0]["evidence"] = []
         with self.assertRaisesRegex(ValueError, "lacks evidence"):
             module.calculate(self.rows, self.criteria)
 
     def test_out_of_scope_is_rejected(self):
-        self.criteria["requirements"]["C"] = self.criteria["requirements"]["A"]
+        self.criteria["requirements"]["QUI-02"] = self.criteria["requirements"]["CAT-01"]
         with self.assertRaisesRegex(ValueError, "Unknown or excluded"):
             module.calculate(self.rows, self.criteria)
 
