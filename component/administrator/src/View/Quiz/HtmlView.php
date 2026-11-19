@@ -19,6 +19,7 @@ final class HtmlView extends BaseHtmlView
             }
         }
         $this->form->setField($field);$this->form->bind($this->item['data']);
-        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_EDITOR'),'list');parent::display($tpl);
+        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_EDITOR'),'list');ToolbarHelper::help('quiz', true);
+        parent::display($tpl);
     }
 }
