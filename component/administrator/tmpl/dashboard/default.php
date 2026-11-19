@@ -5,6 +5,16 @@ declare(strict_types=1);
 
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
+$schedulerHealthKeys = [
+    'missing' => 'COM_JLMS_SCHEDULER_HEALTH_MISSING',
+    'disabled' => 'COM_JLMS_SCHEDULER_HEALTH_DISABLED',
+    'duplicates' => 'COM_JLMS_SCHEDULER_HEALTH_DUPLICATES',
+    'failed' => 'COM_JLMS_SCHEDULER_HEALTH_FAILED',
+    'overdue' => 'COM_JLMS_SCHEDULER_HEALTH_OVERDUE',
+    'waiting' => 'COM_JLMS_SCHEDULER_HEALTH_WAITING',
+    'operational' => 'COM_JLMS_SCHEDULER_HEALTH_OPERATIONAL',
+    'unknown' => 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN',
+];
 ?>
 <section id="jlms-admin-dashboard">
     <header class="jlms-admin-dashboard__header">
@@ -50,7 +60,7 @@ use Joomla\CMS\Language\Text;
                 <?php foreach ($this->schedulerHealth as $task) : ?>
                     <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
                         <th scope="row"><?= $this->escape(Text::_($task['label'])) ?></th>
-                        <td><?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_' . strtoupper($task['state']))) ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') : ?> · <?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_DUPLICATES')) ?><?php endif; ?></td>
+                        <td><?= $this->escape(Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')) ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') : ?> · <?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_DUPLICATES')) ?><?php endif; ?></td>
                         <td><?= $this->escape((string) ($task['last_execution'] ?: Text::_('JNEVER'))) ?></td>
                         <td><?= $this->escape((string) ($task['next_execution'] ?: '—')) ?></td>
                     </tr>
