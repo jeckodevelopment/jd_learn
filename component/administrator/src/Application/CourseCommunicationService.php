@@ -154,7 +154,7 @@ final class CourseCommunicationService
         $data['__course_message_snapshot'] = CourseMessageTemplate::validate(
             $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
         );
-        $key = hash('sha256', 'course-message-test:' . $courseId . ':' . $actor->id . ':' . strtolower($mutationId));
+        $key = CourseMessageMutation::testEventKey($courseId, (int) $actor->id, $mutationId);
         (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data);
     }
 

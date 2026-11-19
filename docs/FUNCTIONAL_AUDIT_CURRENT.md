@@ -15,7 +15,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `MAIL-08/double_submit` — Controlli su doppio invio, test destinatario e conteggi corretti. La conferma di accodamento riusa il job per lo stesso identificativo. Il percorso di invio test, invece, crea un identificativo distinto a ogni POST: un doppio invio di prova può accodare due messaggi.
   - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
-  - [component/administrator/src/Application/CourseCommunicationService.php#course-message-test:](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [component/administrator/src/Application/CourseCommunicationService.php#CourseMessageMutation::testEventKey](../component/administrator/src/Application/CourseCommunicationService.php)
 - `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. L’infrastruttura scrive direttamente nel modello nativo User Actions Log per una lista di azioni specifiche. Il pacchetto non contiene il plugin actionlog richiesto e la pubblicazione non rientra nelle azioni di quel modello.
   - [component/administrator/src/Infrastructure/AssessmentAudit.php#bootComponent](../component/administrator/src/Infrastructure/AssessmentAudit.php)
   - [packages/pkg_jlms.xml#<files](../packages/pkg_jlms.xml)
