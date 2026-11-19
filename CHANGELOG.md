@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.9-dev (DOC-06, 19/11/2026):** 13 descrizioni di campo IT/EN aggiunte con gli attributi nativi dei form Joomla nel corso: immagine, destinatari, obiettivi, difficoltà, ACL promozionale/didattico, SEO e date. Gate automatico sulle chiavi, nessuna modifica a dati, default o validazioni. DOC-06 ancora parziale, collaudo Joomla pendente.
+
 - **0.60.9-dev (DOC-08, 19/11/2026):** prima matrice di tracciabilità di dieci flussi core verso guide prodotto e aiuti contestuali IT/EN; controllo automatico dei link integrato nel gate esistente. DOC-08 parziale, collaudo reale pendente, nessun incremento SemVer o avanzamento arbitrario.
 
 - **0.60.9-dev — PATCH SemVer (MAIL-08, 19/11/2026):** corretto il possibile doppio accodamento delle email di prova dopo un refresh della schermata Comunicazioni. La nuova anteprima assegna un UUID v4 persistito in sessione; le successive aperture e gli invii ripetuti della stessa anteprima riusano la chiave dell'evento, già protetta dall'indice univoco dell'outbox. Nuova anteprima esplicita = nuova operazione autorizzata. Nessuna modifica a schema, contratti pubblici o template globali. Regressioni nella CI, accettazione Joomla/SMTP ancora da effettuare.
