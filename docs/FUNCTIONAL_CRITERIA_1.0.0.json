@@ -3832,7 +3832,8 @@
             "plugins/actionlog/jdlearn/src/Extension/Jdlearn.php#public function onJlmsCourseTransition",
             "plugins/actionlog/jdlearn/installer.php#postflight",
             "component/administrator/src/Application/PublicationService.php#onJlmsCourseTransition",
-            "tests/joomla-publication.php#CORE-17: exactly one native Joomla actionlog event"
+            "tests/joomla-publication.php#CORE-17: exactly one native Joomla actionlog event",
+            "packages/pkg_jlms.xml#plg_actionlog_jdlearn"
           ]
         }
       }
