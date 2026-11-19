@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.9-dev (LIFE-01, 19/11/2026):** flusso di anteprima dell'impatto per cancellazione definitiva di corso cestinato, con conteggio delle dipendenze e revisioni editoriali, conferma POST e controllo di revisione sotto transazione. Cancellazione bloccata per storico o referenze, ACL/CSRF preservati; collaudo Joomla pendente.
+
 - **0.60.9-dev (DOC-06, 19/11/2026):** 13 descrizioni di campo IT/EN aggiunte con gli attributi nativi dei form Joomla nel corso: immagine, destinatari, obiettivi, difficoltà, ACL promozionale/didattico, SEO e date. Gate automatico sulle chiavi, nessuna modifica a dati, default o validazioni. DOC-06 ancora parziale, collaudo Joomla pendente.
 
 - **0.60.9-dev (DOC-08, 19/11/2026):** prima matrice di tracciabilità di dieci flussi core verso guide prodotto e aiuti contestuali IT/EN; controllo automatico dei link integrato nel gate esistente. DOC-08 parziale, collaudo reale pendente, nessun incremento SemVer o avanzamento arbitrario.
