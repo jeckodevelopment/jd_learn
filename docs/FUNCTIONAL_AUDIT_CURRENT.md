@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **441**.
-- Mancanti con lacuna accertata: **48**.
+- Implementati: **442**.
+- Mancanti con lacuna accertata: **47**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -12,10 +12,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Lacune confermate
 
-- `MAIL-08/double_submit` — Controlli su doppio invio, test destinatario e conteggi corretti. La conferma di accodamento riusa il job per lo stesso identificativo. Il percorso di invio test, invece, crea un identificativo distinto a ogni POST: un doppio invio di prova può accodare due messaggi.
-  - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
-  - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
-  - [component/administrator/src/Application/CourseCommunicationService.php#CourseMessageMutation::testEventKey](../component/administrator/src/Application/CourseCommunicationService.php)
 - `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. L’infrastruttura scrive direttamente nel modello nativo User Actions Log per una lista di azioni specifiche. Il pacchetto non contiene il plugin actionlog richiesto e la pubblicazione non rientra nelle azioni di quel modello.
   - [component/administrator/src/Infrastructure/AssessmentAudit.php#bootComponent](../component/administrator/src/Infrastructure/AssessmentAudit.php)
   - [packages/pkg_jlms.xml#<files](../packages/pkg_jlms.xml)
@@ -1226,6 +1222,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CourseCommunicationService.php#private function authorized](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#unset($row->email)](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/EnrollmentRosterService.php#public function course](../component/administrator/src/Application/EnrollmentRosterService.php)
+- `MAIL-08/double_submit` — Controlli su doppio invio, test destinatario e conteggi corretti. Nuova anteprima crea un UUID v4 e lo conserva in sessione per attore/corso; refresh e POST ripetuti riusano la stessa chiave di invio di prova, deduplicata dall'indice univoco dell'outbox. Una nuova anteprima esplicita genera una nuova operazione; destinatario test ristretto all'attore, conteggio e conferma finale indipendenti. CI 0.60.9-dev verde, collaudo Joomla/SMTP ancora da eseguire.
+  - [component/administrator/src/Application/CourseMessageMutation.php#public static function create](../component/administrator/src/Application/CourseMessageMutation.php)
+  - [component/administrator/src/Controller/CoursemessageController.php#CourseMessageMutation::create()](../component/administrator/src/Controller/CoursemessageController.php)
+  - [component/administrator/src/Model/CoursemessageModel.php#CourseMessageMutation::valid(](../component/administrator/src/Model/CoursemessageModel.php)
+  - [component/administrator/tmpl/coursemessage/default.php#$mutation=$preview](../component/administrator/tmpl/coursemessage/default.php)
+  - [component/administrator/src/Application/CourseCommunicationService.php#CourseMessageMutation::testEventKey](../component/administrator/src/Application/CourseCommunicationService.php)
+  - [tests/course-message-idempotency.php#MAIL-08:](../tests/course-message-idempotency.php)
 - `JOO-01/update_server` — Update server e governance di distribuzione release. Il package espone il feed HTTPS. Il workflow separa preparazione, pubblicazione controllata e verifica dell’asset con checksum. Il collaudo dell’aggiornamento reale resta un gate.
   - [packages/pkg_jlms.xml#<updateservers>](../packages/pkg_jlms.xml)
   - [.github/workflows/release.yml#inputs.publish == true](../.github/workflows/release.yml)
