@@ -562,16 +562,16 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
      */
     public function purgeImpact(int $id): array
     {
-        if ($id < 1) { throw new \\DomainException('COM_JLMS_INVALID_COURSE'); }
-        $actor = \\Jlms\\Component\\Jlms\\Administrator\\Application\\CourseEditorAccess::fresh($this->getCurrentUser());
+        if ($id < 1) { throw new \DomainException('COM_JLMS_INVALID_COURSE'); }
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->getCurrentUser());
         if ($actor->guest || $actor->block || !$actor->authorise('core.delete', 'com_jlms.course.' . $id)) {
-            throw new \\DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $db = $this->getDatabase();
         $q = $db->createQuery()->select('id,title,state,revision,checked_out,current_version_id')
             ->from('#__jlms_courses')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
-        $record = $db->setQuery($q)->loadObject() ?: throw new \\DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
-        if ((int) $record->state !== -2) { throw new \\DomainException('COM_JLMS_INVALID_COURSE'); }
+        $record = $db->setQuery($q)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+        if ((int) $record->state !== -2) { throw new \DomainException('COM_JLMS_INVALID_COURSE'); }
         $counts = [];
         foreach (["#__jlms_course_versions","#__jlms_editions","#__jlms_enrollments","#__jlms_course_teachers","#__jlms_pathway_courses","#__jlms_course_operations","#__jlms_mail_queue","#__jlms_course_announcement_campaigns"] as $table) {
             $query = $db->createQuery()->select('COUNT(*)')->from($db->quoteName($table))
@@ -622,7 +622,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $record = $db->setQuery($query)->loadObject()
                 ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
             if ($expectedRevision < 1 || (int) $record->revision !== $expectedRevision) {
-                throw new \\DomainException('COM_JLMS_REVISION_CONFLICT');
+                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             if ((int) $record->state !== -2 || $record->current_version_id !== null) {
                 throw new \DomainException('COM_JLMS_INVALID_COURSE');
