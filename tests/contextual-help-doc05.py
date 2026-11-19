@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DOC-05 first tranche: offline Joomla contextual help contracts."""
+"""DOC-05 contextual help: offline Joomla contracts for core administration."""
 from pathlib import Path
 from html.parser import HTMLParser
 
@@ -23,7 +23,8 @@ class HelpPage(HTMLParser):
         if tag == "h1":
             self.has_h1 = True
 
-for view in ("Courses", "Course", "Enrollments"):
+for view in ("Courses", "Course", "Enrollments", "Curriculum", "Dashboard",
+             "Mailqueue", "Mailvariables", "Coursemessage", "Certificates", "Certificate"):
     source = (admin / "src/View" / view / "HtmlView.php").read_text(encoding="utf-8")
     key = view.lower()
     assert "ToolbarHelper::help('" + key + "', true)" in source, view
@@ -34,4 +35,4 @@ for view in ("Courses", "Course", "Enrollments"):
         page.feed(raw)
         assert (page.lang, page.has_main, page.has_h1) == (lang, True, True), path
         assert "http://" not in raw and "https://" not in raw, "help must work offline"
-print("DOC-05: 3 backend views, 6 localized packaged help pages, OK")
+print("DOC-05: 10 backend views, 20 localized packaged help pages, OK")
