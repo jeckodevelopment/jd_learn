@@ -170,7 +170,7 @@ try:
   raise RuntimeError('SCR-01: category URL navigation lost its selected state')
  # No-result clear action must preserve category identity but discard all filters.
  _,cat_empty=get(cat_url+('&' if '?' in cat_url else '?')+urlencode({'filter[search]':'___unmatched_ci_term___'}))
- clear_tag=re.search(r'id="jlms-category-clear-filters"[^>]*>\\s*<a href="([^"]+)"',cat_empty)
+ clear_tag=re.search(r'id="jlms-category-clear-filters"[^>]*>\s*<a href="([^"]+)"',cat_empty)
  if not clear_tag:
   raise RuntimeError('SCR-01: category empty-state reset link missing')
  clear_url=unescape(clear_tag.group(1))
