@@ -2,8 +2,8 @@
   "audited_at": "2026-11-15",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 56.34,
-    "development_evidence_floor_percent": 56.34,
+    "percent": 56.57,
+    "development_evidence_floor_percent": 56.57,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -13768,6 +13768,38 @@
       "ci": {
         "run_id": 44616754113,
         "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/44616754113",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
+    {
+      "feature": "STA-02 PR #730 — strict full-timer window refusal shown before quiz start (0.63.0-dev)",
+      "ci": {
+        "run_id": 44621877143,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/44621877143",
         "status": "completed",
         "conclusion": "success",
         "standard_jobs": 4,
