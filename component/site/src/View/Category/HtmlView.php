@@ -29,6 +29,7 @@ final class HtmlView extends BaseHtmlView
     public array $tags = [];
 public string $difficulty = '';
     public string $duration = '';
+    public string $available = '';
     public string $layout = 'grid';
     public int $teacherId = 0;
     public int $pathwayId = 0;
@@ -51,6 +52,7 @@ public string $difficulty = '';
         $this->tags = $this->showFilters ? $this->getModel()->getTags() : [];
 $this->difficulty = $this->getModel()->getDifficulty();
         $this->duration = $this->getModel()->getDuration();
+        $this->available = $this->getModel()->getAvailable();
         $this->layout = $this->getModel()->getLayout();
         $this->teacherId = $this->getModel()->getTeacherId();
         $this->pathwayId = $this->getModel()->getPathwayId();
