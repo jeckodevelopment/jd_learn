@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
+use Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth;
 $schedulerHealthKeys = [
     'missing' => 'COM_JLMS_SCHEDULER_HEALTH_MISSING',
     'disabled' => 'COM_JLMS_SCHEDULER_HEALTH_DISABLED',
@@ -39,7 +40,7 @@ $schedulerHealthKeys = [
                 <?php if ($groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION' && $this->mailScheduler && ($this->mailScheduler['state'] !== 'operational' && $this->mailScheduler['state'] !== 'waiting' || $this->mailScheduler['duplicates'])) : ?>
                     <p class="small alert alert-warning mt-2 mb-0" role="status">
                         <?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_WARNING')) ?>
-                        <a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a>
+                        <?php if ($this->canManageScheduler) : ?><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a><?php endif; ?>
                     </p>
                 <?php endif; ?>
             </section>
@@ -55,7 +56,8 @@ $schedulerHealthKeys = [
                 <thead><tr><th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_TASK') ?></th>
                     <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_STATE') ?></th>
                     <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_LAST') ?></th>
-                    <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_NEXT') ?></th></tr></thead>
+                    <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_NEXT') ?></th>
+                    <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_GUIDANCE') ?></th></tr></thead>
                 <tbody>
                 <?php foreach ($this->schedulerHealth as $task) : ?>
                     <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
@@ -63,12 +65,15 @@ $schedulerHealthKeys = [
                         <td><?= $this->escape(Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')) ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') : ?> · <?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_DUPLICATES')) ?><?php endif; ?></td>
                         <td><?= $this->escape((string) ($task['last_execution'] ?: Text::_('JNEVER'))) ?></td>
                         <td><?= $this->escape((string) ($task['next_execution'] ?: '—')) ?></td>
+                        <td><?= $this->escape(Text::_(SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates']))) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
+        <?php if ($this->canManageScheduler) : ?>
         <p><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a></p>
+        <?php endif; ?>
     </details>
     <?php endif; ?>
     <details class="jlms-admin-dashboard__providers">
