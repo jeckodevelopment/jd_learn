@@ -32,6 +32,7 @@ final class HtmlView extends BaseHtmlView
         ToolbarHelper::link('index.php?option=com_jlms&view=manualenrollment&id=' . $courseId, 'COM_JLMS_MANUAL_TITLE', 'plus');
         ToolbarHelper::link('index.php?option=com_jlms&view=coursemessage&id=' . $courseId, 'COM_JLMS_COMMUNICATION_TITLE', 'envelope');
         ToolbarHelper::link('index.php?option=com_jlms&view=courseoperations&id=' . $courseId . '&operation=admissions_close', 'COM_JLMS_COURSE_OPERATIONS_TITLE', 'sliders-h');
+        ToolbarHelper::help('enrollments', true);
         parent::display($tpl);
     }
 }
