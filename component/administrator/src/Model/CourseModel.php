@@ -557,11 +557,51 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     }
 
     /**
+     * Read-only, authorized preview. Counts are informational; purgeEmpty()
+     * repeats every restriction in its own transaction under a row lock.
+     */
+    public function purgeImpact(int $id): array
+    {
+        if ($id < 1) { throw new \DomainException('COM_JLMS_INVALID_COURSE'); }
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->getCurrentUser());
+        if ($actor->guest || $actor->block || !$actor->authorise('core.delete', 'com_jlms.course.' . $id)) {
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
+        }
+        $db = $this->getDatabase();
+        $q = $db->createQuery()->select('id,title,state,revision,checked_out,current_version_id')
+            ->from('#__jlms_courses')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
+        $record = $db->setQuery($q)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+        if ((int) $record->state !== -2) { throw new \DomainException('COM_JLMS_INVALID_COURSE'); }
+        $counts = [];
+        foreach (["#__jlms_course_versions","#__jlms_editions","#__jlms_enrollments","#__jlms_course_teachers","#__jlms_pathway_courses","#__jlms_course_operations","#__jlms_mail_queue","#__jlms_course_announcement_campaigns"] as $table) {
+            $query = $db->createQuery()->select('COUNT(*)')->from($db->quoteName($table))
+                ->where('course_id=:id')->bind(':id', $id, ParameterType::INTEGER);
+            $counts[$table] = (int) $db->setQuery($query)->loadResult();
+        }
+        $association = $db->createQuery()->select('COUNT(*)')->from('#__associations')
+            ->where('id=:id')->where('context=:context')
+            ->bind(':id', $id, ParameterType::INTEGER)->bind(':context', $this->associationsContext);
+        $counts['#__associations'] = (int) $db->setQuery($association)->loadResult();
+        $historyKey = $this->typeAlias . '.' . $id;
+        $history = $db->createQuery()->select('COUNT(*)')->from('#__history')
+            ->where('item_id=:item')->bind(':item', $historyKey);
+        $historyCount = (int) $db->setQuery($history)->loadResult();
+        $eligible = $record->current_version_id === null
+            && ((int) $record->checked_out === 0 || (int) $record->checked_out === (int) $actor->id)
+            && array_sum($counts) === 0;
+        return [
+            'id' => $id, 'title' => (string) $record->title,
+            'revision' => (int) $record->revision, 'eligible' => $eligible,
+            'references' => $counts, 'editorial_history' => $historyCount,
+        ];
+    }
+
+    /**
      * Permanently remove a single never-used course. Nonempty curriculum,
      * students, pathways, mail or history always block deletion. Foreign keys
      * provide an additional RESTRICT guard, never a substitute for this audit.
      */
-    public function purgeEmpty(int $id): bool
+    public function purgeEmpty(int $id, int $expectedRevision = 0): bool
     {
         if ($id < 1) {
             $this->setError(Text::_('COM_JLMS_INVALID_COURSE'));
@@ -577,11 +617,14 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         try {
             $db->transactionStart();
             $started = true;
-            $query = $db->createQuery()->select('id, state, checked_out, current_version_id')
+            $query = $db->createQuery()->select('id, state, revision, checked_out, current_version_id')
                 ->from('#__jlms_courses')->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
             $query->setQuery((string) $query . ' FOR UPDATE');
             $record = $db->setQuery($query)->loadObject()
                 ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+            if ($expectedRevision < 1 || (int) $record->revision !== $expectedRevision) {
+                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+            }
             if ((int) $record->state !== -2 || $record->current_version_id !== null) {
                 throw new \DomainException('COM_JLMS_INVALID_COURSE');
             }
@@ -631,7 +674,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         } catch (\Throwable $error) {
             if ($started) { $db->transactionRollback(); }
             $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND',
-                'COM_JLMS_INVALID_COURSE', 'COM_JLMS_COURSE_DEPENDENCIES'];
+                'COM_JLMS_INVALID_COURSE', 'COM_JLMS_COURSE_DEPENDENCIES', 'COM_JLMS_REVISION_CONFLICT'];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true)
                 ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             if (getenv('JLMS_TEST_DISPOSABLE') === '1') {

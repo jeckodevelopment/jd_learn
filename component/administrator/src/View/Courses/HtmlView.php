@@ -16,10 +16,21 @@ final class HtmlView extends BaseHtmlView
     public $state;
     public $filterForm;
     public $activeFilters;
+    public $purgeImpact;
 
     public function display($tpl = null)
     {
         $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
+        if ($this->getLayout() === 'purgepreview') {
+            $id = Factory::getApplication()->getInput()->getInt('id', 0);
+            $model = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()
+                ->createModel('Course', 'Administrator', ['ignore_request' => true]);
+            $this->purgeImpact = $model->purgeImpact($id);
+            ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_PURGE_PREVIEW'), 'trash');
+            ToolbarHelper::help('courses', true);
+            parent::display($tpl);
+            return;
+        }
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
@@ -37,9 +48,7 @@ final class HtmlView extends BaseHtmlView
             if ($actor->authorise('core.edit.state', 'com_jlms')) {
                 if ((string) $this->state->get('filter.published') === '-2') {
                     ToolbarHelper::custom('course.restore', 'refresh', 'refresh', 'JTOOLBAR_RESTORE', true);
-                    if ($actor->authorise('core.delete', 'com_jlms')) {
-                        ToolbarHelper::deleteList('COM_JLMS_COURSE_PURGE_CONFIRM', 'course.purge');
-                    }
+                    // Permanent deletion requires a per-course impact preview.
                 } else {
                     ToolbarHelper::trash('course.trash');
                 }

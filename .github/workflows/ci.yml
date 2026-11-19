@@ -57,6 +57,8 @@ jobs:
           python3 tests/frontend-css-contract.py
           python3 tests/contextual-help-doc05.py
           python3 tests/field-help-doc06.py
+          python3 tests/life-01-purge-preview.py
+          python3 tests/life-01-purge-preview.py
           php tests/course-message-idempotency.php
           python3 tests/frontend-contract-hooks.py
           python3 tests/frontend-release-gate.py

@@ -69,9 +69,14 @@ final class CourseController extends FormController
             || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $raw[0])) {
             throw new \RuntimeException('COM_JLMS_INVALID_COURSE', 422);
         }
+        if ($this->input->post->getInt('confirm_purge', 0) !== 1) {
+            throw new \RuntimeException('COM_JLMS_PURGE_PREVIEW_REQUIRED', 422);
+        }
+        $expectedRevision = $this->input->post->getInt('expected_revision', 0);
+        if ($expectedRevision < 1) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409); }
         $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
             ->createModel('Course', 'Administrator', ['ignore_request' => true]);
-        if (!$model->purgeEmpty((int) $raw[0])) {
+        if (!$model->purgeEmpty((int) $raw[0], $expectedRevision)) {
             throw new \RuntimeException((string) $model->getError(), 403);
         }
         $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
