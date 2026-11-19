@@ -288,6 +288,8 @@ jobs:
         run: php tests/joomla-categories.php .runtime/joomla
       - name: Category public views, pagination, native forms and multilingual SEF navigation
         run: python3 tests/categories-http.py .runtime/joomla
+      - name: Scheduled task health overdue and failure classification (JOO-04)
+        run: php tests/scheduler-health-joo04.php
       - name: Owner dashboard history, current access and read-only resume targeting
         run: php tests/joomla-dashboard.php .runtime/joomla
       - name: Private dashboard, native filters and resume authorization over HTTP

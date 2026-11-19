@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (JOO-04, 19/11/2026):** diagnostica in sola lettura delle tre attività Joomla Task del componente (quiz, pulizia materiali, invio email) nella dashboard amministrativa; stato assente/disabilitato/in attesa/operativo/fallito/in ritardo/duplicato, ultima e prossima esecuzione, soglia di tolleranza di 10 minuti sul next_execution core Joomla. Nessuna modifica allo Scheduler o invio automatico. Test di classificazione deterministico IT/EN.
+
 - **0.60.8-dev (DOC-05, 19/11/2026):** collegati tutti i 58 aiuti contestuali backend a 29 capitoli IT e 29 capitoli EN di due manuali amministratore offline versionati nel pacchetto. Contratto CI verifica automaticamente URL relativi, lingua e ancore, anche per future nuove viste. Verifica statica completata; prova Joomla manuale di navigazione, ACL e accessibilità ancora pendente.
 
 - **0.60.8-dev (DOC-05, 19/11/2026) — censimento e copertura totale delle viste amministrative:** 19 viste residue dotate di pulsante Joomla Guida e 38 pagine offline IT/EN; copertura sorgente complessiva 29/29 viste, 58/58 capitoli locali. Test di regressione dinamico per nuove viste, file mancanti e interruzione del rendering; inventario in `docs/ADMIN_HELP_COVERAGE.md`. Restano da collaudare la risoluzione reale dei link e l'accessibilità su Joomla, e i rimandi ai capitoli del manuale completo.
