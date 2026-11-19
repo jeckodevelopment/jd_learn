@@ -43,8 +43,8 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#private function dto](../component/administrator/src/Application/QuizAttemptService.php)
-- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il catalogo offre recente, titolo, durata crescente e data di pubblicazione della versione corrente, ma l'ordinamento editoriale configurabile e altre verifiche richieste restano incompleti. Il collaudo Joomla degli ordinamenti è ancora pendente.
-  - [component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration', 'published']](../component/site/src/Model/CoursesModel.php)
+- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il catalogo ora offre posizione editoriale configurabile nel corso, con opzioni recenti, titolo, data di pubblicazione della versione corrente e durata; l'ordinamento editoriale deve ancora essere verificato sull'installazione Joomla e per tutte le combinazioni di filtri, default e pagine prima della chiusura del criterio.
+  - [component/site/src/Model/CoursesModel.php#['editorial', 'recent', 'title', 'duration', 'published']](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'](../component/site/src/Model/CoursesModel.php)
   - [component/site/tmpl/courses/default.php#name="filter[order]"](../component/site/tmpl/courses/default.php)
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
