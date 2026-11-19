@@ -26,7 +26,7 @@ final class HtmlView extends BaseHtmlView
             $model = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()
                 ->createModel('Course', 'Administrator', ['ignore_request' => true]);
             $this->purgeImpact = $model->purgeImpact($id);
-            ToolbarHelper::title(\\Joomla\\CMS\\Language\\Text::_('COM_JLMS_PURGE_PREVIEW'), 'trash');
+            ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_PURGE_PREVIEW'), 'trash');
             ToolbarHelper::help('courses', true);
             parent::display($tpl);
             return;
