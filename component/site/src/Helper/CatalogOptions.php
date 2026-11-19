@@ -20,7 +20,7 @@ final class CatalogOptions
         'catalog_show_cover' => '1',
         'catalog_show_summary' => '1',
         'catalog_page_size' => '12',
-        'catalog_default_order' => 'recent',
+        'catalog_default_order' => 'editorial',
     ];
 
     public static function get(string $key): string
@@ -31,7 +31,7 @@ final class CatalogOptions
 
         $allowed = match ($key) {
             'catalog_page_size' => ['6', '9', '12', '24'],
-            'catalog_default_order' => ['recent', 'title', 'duration', 'published'],
+            'catalog_default_order' => ['editorial', 'recent', 'title', 'duration', 'published'],
             default => ['0', '1'],
         };
 

@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (SCR-01/sorts, 19/11/2026):** posizione editoriale 0–9999 nella scheda corso; nuova opzione Ordine editoriale predefinita, posizioni crescenti, non assegnati in coda, tie-break ID stabile. Opzioni menu Corsi/Categoria e impostazioni globali IT/EN. Nessuna migrazione SQL; test strutturali aggiunti e collaudo Joomla pendente.
+
 - **0.60.8-dev (SCR-01/empty_error, 19/11/2026) — errore catalogo recuperabile:** in caso di errore backend durante il caricamento, il catalogo mostra avviso localizzato IT/EN e Riprova all'URL corrente, conservando filtri e contesto. Non mostra risultati parziali né dettagli tecnici; 401/403/404 rimangono errori di accesso. Nessun cambio schema; collaudo manuale Joomla pendente.
 
 - **0.60.8-dev (SCR-01, 19/11/2026) — ordinamento per pubblicazione:** catalogo ordinabile anche per data di pubblicazione decrescente della versione corrente (`v.published_at`), con ordinamento deterministico per ID a parità di data. Opzione globale e menu corsi/categoria, traduzioni IT/EN e gate strutturale. Invariati ACL, filtri, paginazione e valore predefinito; accettazione Joomla reale da eseguire.

@@ -1,3 +1,7 @@
+## SCR-01 — ordinamento editoriale configurabile (19/11/2026)
+
+**Collaudo Joomla pendente:** aprire corsi pubblicati in backend, assegnare posizione 1, 2 e 0, salvare/ricaricare; verificare ordinamento 1 prima di 2, non assegnati ultimi e ID discendente a pari posizione nel catalogo e categoria. Controllare override globali e menu, filtri e paginazione, altre opzioni di ordinamento (titolo, pubblicazione, durata, recenti), visibilità ACL/lingua e bozza, input negativi/sopra 9999 e doppio salvataggio concorrente. Testare IT/EN e duplicazione corso, senza variare le versioni pubblicate.
+
 ## SCR-01 — errore recuperabile nel catalogo (19/11/2026)
 
 **Collaudo manuale Joomla pendente:**

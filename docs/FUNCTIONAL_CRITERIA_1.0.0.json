@@ -5363,9 +5363,9 @@
           "component/site/tmpl/courses/default.php"
         ],
         "review": {
-          "reason": "Il catalogo offre recente, titolo, durata crescente e data di pubblicazione della versione corrente, ma l'ordinamento editoriale configurabile e altre verifiche richieste restano incompleti. Il collaudo Joomla degli ordinamenti è ancora pendente.",
+          "reason": "Il catalogo ora offre posizione editoriale configurabile nel corso, con opzioni recenti, titolo, data di pubblicazione della versione corrente e durata; l'ordinamento editoriale deve ancora essere verificato sull'installazione Joomla e per tutte le combinazioni di filtri, default e pagine prima della chiusura del criterio.",
           "references": [
-            "component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration', 'published']",
+            "component/site/src/Model/CoursesModel.php#['editorial', 'recent', 'title', 'duration', 'published']",
             "component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'",
             "component/site/tmpl/courses/default.php#name=\"filter[order]\""
           ]
