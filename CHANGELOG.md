@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.9-dev — PATCH SemVer (MAIL-08, 19/11/2026):** corretto il possibile doppio accodamento delle email di prova dopo un refresh della schermata Comunicazioni. La nuova anteprima assegna un UUID v4 persistito in sessione; le successive aperture e gli invii ripetuti della stessa anteprima riusano la chiave dell'evento, già protetta dall'indice univoco dell'outbox. Nuova anteprima esplicita = nuova operazione autorizzata. Nessuna modifica a schema, contratti pubblici o template globali. Regressioni nella CI, accettazione Joomla/SMTP ancora da effettuare.
+
 - **0.60.8-dev (JOO-04, 19/11/2026):** diagnostica in sola lettura delle tre attività Joomla Task del componente (quiz, pulizia materiali, invio email) nella dashboard amministrativa; stato assente/disabilitato/in attesa/operativo/fallito/in ritardo/duplicato, ultima e prossima esecuzione, soglia di tolleranza di 10 minuti sul next_execution core Joomla. Nessuna modifica allo Scheduler o invio automatico. Test di classificazione deterministico IT/EN.
 
 - **0.60.8-dev (DOC-05, 19/11/2026):** collegati tutti i 58 aiuti contestuali backend a 29 capitoli IT e 29 capitoli EN di due manuali amministratore offline versionati nel pacchetto. Contratto CI verifica automaticamente URL relativi, lingua e ancore, anche per future nuove viste. Verifica statica completata; prova Joomla manuale di navigazione, ACL e accessibilità ancora pendente.
