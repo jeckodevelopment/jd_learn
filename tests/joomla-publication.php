@@ -181,7 +181,12 @@ $app->getDispatcher()->addListener('onContentChangeState',$afterVeto);
 pubDenied(fn()=>pubTransition(),'failed native state callback rolls back publication');
 $app->getDispatcher()->removeListener('onContentChangeState',$afterVeto);
 pubExpect($hidden(),'failed state callback leaves public course hidden');
+$beforeLog = (int) $db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course)->loadResult();
 pubTransition();
+$publishedLog = $db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course . " ORDER BY id DESC LIMIT 1")->loadResult();
+pubExpect((int) $db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course)->loadResult() === $beforeLog + 1
+    && is_string($publishedLog) && str_contains($publishedLog, '"action":"publish"'),
+    'CORE-17: exactly one native Joomla actionlog event for committed publication; no entry for vetoed transactions');
 $frozen=$db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id='.$version)->loadObject();
 pubExpect($frozen->status==='published' && strlen($frozen->structure_hash)===64 && $frozen->published_at!==null,'publication freezes hash and timestamp');
 $courseSnapshot=json_decode((string)$frozen->fields_snapshot_json,true,32,JSON_THROW_ON_ERROR);
