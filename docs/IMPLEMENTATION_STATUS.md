@@ -1,3 +1,5 @@
+**JD Learn 0.60.8-dev — DOC-05 seconda tranche (19/11/2026):** aggiunti aiuti contestuali offline IT/EN a Programma/provider video, dashboard configurazione, coda email, variabili, comunicazioni corso, attestati e dettaglio attestato. Complessivamente 10 viste backend e 20 documenti localizzati sono coperti dal test statico. La copertura resta parziale e il collaudo Joomla reale è ancora pendente; nessun aumento arbitrario del minimo globale 55,05%.
+
 **JD Learn 0.60.8-dev — DOC-05 (19/11/2026):** tre schermate amministrative ricevono Guida nativa con file HTML locali IT/EN. Prima tranche parziale, non accettata manualmente; minimo funzionale invariato fino a riconciliazione canonica.
 
 **JD Learn 0.60.8-dev — SCR-01, integrazione HTTP URL/paginazione (19/11/2026):** esteso test smoke su Joomla realmente installato in CI per roundtrip GET catalogo/categoria, cinque ordinamenti, reset offset dopo filtri e Azzera filtri contestuale, senza modificare runtime. Evidenza d'integrazione automatica distinta dall'accettazione manuale browser. Audit canonico `unverifiable` conservato per SCR-01/url_filters e SCR-01/pagination fino a prova completa.
