@@ -26,6 +26,22 @@ assert 'latest.user_id = e.user_id AND latest.course_id = e.course_id' in catalo
 assert catalog.index("->where('e.id = (SELECT MAX(") < catalog.index("setQuery($query, 0, 50)")
 assert (ROOT/'tests/dashboard-catalog-latest-regression.php').is_file()
 
+# DOC-07: every scheduler state gets actionable IT/EN advice, and links
+# to Joomla scheduler require explicit permission on com_scheduler.
+scheduler=(ROOT/'component/administrator/src/Infrastructure/SchedulerHealth.php').read_text()
+admin_dashboard=(ROOT/'component/administrator/tmpl/dashboard/default.php').read_text()
+admin_dashboard_view=(ROOT/'component/administrator/src/View/Dashboard/HtmlView.php').read_text()
+assert "public static function guidanceKey(string $state, bool $duplicates = false)" in scheduler
+assert 'SchedulerHealth::guidanceKey(' in admin_dashboard
+assert "$this->canManageScheduler" in admin_dashboard
+assert "authorise('core.manage', 'com_scheduler')" in admin_dashboard_view
+for locale in ('it-IT', 'en-GB'):
+    lang=(ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
+    for suffix in ('MISSING','DISABLED','DUPLICATES','FAILED','OVERDUE','UNKNOWN','WAITING','OPERATIONAL'):
+        assert lang.count(f'COM_JLMS_SCHEDULER_GUIDANCE_{suffix}=') == 1, (locale,suffix)
+    assert lang.count('COM_JLMS_SCHEDULER_HEALTH_GUIDANCE=') == 1, locale
+assert (ROOT/'tests/scheduler-guidance.php').is_file()
+
 count=0
 for base in ['component','libraries','plugins','packages']:
  for p in (ROOT/base).rglob('*.xml'):

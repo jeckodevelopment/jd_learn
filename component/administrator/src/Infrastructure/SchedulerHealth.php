@@ -56,6 +56,28 @@ final class SchedulerHealth
     }
 
     /**
+     * Read-only, localized remediation advice. Never triggers a task or
+     * changes operator-managed scheduler settings. Duplicate tasks take
+     * precedence because they may lead to repeated dispatch.
+     */
+    public static function guidanceKey(string $state, bool $duplicates = false): string
+    {
+        if ($duplicates || $state === 'duplicates') {
+            return 'COM_JLMS_SCHEDULER_GUIDANCE_DUPLICATES';
+        }
+
+        return match ($state) {
+            'missing' => 'COM_JLMS_SCHEDULER_GUIDANCE_MISSING',
+            'disabled' => 'COM_JLMS_SCHEDULER_GUIDANCE_DISABLED',
+            'failed' => 'COM_JLMS_SCHEDULER_GUIDANCE_FAILED',
+            'overdue' => 'COM_JLMS_SCHEDULER_GUIDANCE_OVERDUE',
+            'waiting' => 'COM_JLMS_SCHEDULER_GUIDANCE_WAITING',
+            'operational' => 'COM_JLMS_SCHEDULER_GUIDANCE_OPERATIONAL',
+            default => 'COM_JLMS_SCHEDULER_GUIDANCE_UNKNOWN',
+        };
+    }
+
+    /**
      * Pure classification for reproducible tests.
      * Missing/unknown next execution is not described as a healthy schedule.
      */

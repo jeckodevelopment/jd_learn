@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.64.0-dev — MINOR SemVer (DOC-07, 20/11/2026):** diagnostica operativa dei task schedulati nella dashboard Joomla: suggerimenti IT/EN distinti per task assente, disabilitato, duplicato, fallito, in ritardo, in attesa e operativo. Il collegamento a Gestione attività pianificate compare solo con `core.manage` su `com_scheduler`; nessun task viene modificato o avviato automaticamente. Regressione per i messaggi e ACL; collaudo IT/EN sul sito di prova pendente.
+
+
 - **0.63.4-dev — PATCH SemVer (CAT-02/STU-01, 20/11/2026):** il catalogo sceglie l'ultima iscrizione **per ogni corso visibile** prima di limitare a 50 i risultati. Storici con molte edizioni dello stesso corso non nascondono più l'iscrizione a corsi diversi né mostrano un'azione d'iscrizione ingannevole. Nuova regressione Joomla DB con 51 edizioni, due corsi e isolamento degli utenti; nessuna migrazione, cambiano solo la proiezione di stato delle schede catalogo.
 
 
