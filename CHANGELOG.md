@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (SCR-01, 19/11/2026) — ordinamento per pubblicazione:** catalogo ordinabile anche per data di pubblicazione decrescente della versione corrente (`v.published_at`), con ordinamento deterministico per ID a parità di data. Opzione globale e menu corsi/categoria, traduzioni IT/EN e gate strutturale. Invariati ACL, filtri, paginazione e valore predefinito; accettazione Joomla reale da eseguire.
+
 - **0.60.8-dev (SCR-01/card, 19/11/2026) — richieste d'iscrizione pendenti nelle card catalogo:** le schede dei corsi con iscrizione ad approvazione mostrano la richiesta personale pendente invece di proporre una nuova richiesta. La proiezione controlla proprietario, versione corrente e soli corsi visibili nella pagina con una singola query limitata, senza interrogazioni per ogni scheda e senza divulgare dati di altri iscritti. Stato di iscrizione già attiva prioritario; ACL, disponibilità e pagina di dettaglio invariati. Test strutturali inclusi, collaudo Joomla manuale pendente.
 
 - **0.60.8-dev (EDGE-01, 19/11/2026) — attestati protetti dopo blocco account Joomla:** elenco e download degli attestati verificano lo stato corrente dell'utente nella tabella core Joomla, indipendentemente dall'oggetto di sessione potenzialmente obsoleto. Un account bloccato o rimosso non accede agli attestati tramite vecchi URL; risposta HTTP 403 localizzata. Riattivazione ripristina accesso ai propri documenti senza modificare seriali, snapshot o PDF. Test integrazione Joomla con blocco successivo al login; QA manuale ancora da eseguire.
