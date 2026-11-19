@@ -1,3 +1,16 @@
+## CAT-01 — filtro «Solo corsi disponibili» (19/11/2026)
+
+**Comportamenti da testare sul sito Joomla di prova (non ancora eseguiti):**
+
+1. Creare nella medesima categoria visibile quattro corsi pubblicati, con ammissioni/erogazione rispettivamente aperte/attive, chiuse/attive, aperte/sospese, chiuse/sospese. Senza spuntare il filtro tutti i corsi autorizzati devono restare nel catalogo.
+2. Attivare «Solo corsi attualmente disponibili»: deve rimanere unicamente il corso con **ammissioni aperte e didattica attiva**. La scelta deve restare selezionata nella ricerca e nella paginazione; togliendola devono ritornare gli altri corsi.
+3. Ripetere il controllo con categoria, ricerca, docente, tag, lingua e paginazione. Il filtro non deve aggirare ACL, finestre di pubblicazione o restrizioni sulle categorie.
+4. Disabilitare i filtri tramite opzioni Joomla del catalogo: una URL GET costruita manualmente con `filter[available]=1` non deve filtrare l'elenco.
+5. Da utente anonimo e autenticato, verificare che il filtro non conceda accesso ai contenuti o alle iscrizioni. Un corso con erogazione sospesa deve rimanere navigabile nella scheda promozionale quando il filtro è spento.
+6. Quando il risultato è vuoto, deve apparire l'azione di azzeramento filtri; premendola si torna al catalogo non filtrato, mantenendo la categoria di contesto.
+
+**Nota di perimetro:** «disponibile» significa ammissioni aperte **e** erogazione abilitata; non garantisce l'ammissione di un particolare utente né sostituisce l'autorizzazione alla fruizione. Accettazione manuale: **non eseguita**.
+
 ## SCR-01/card — stato individuale dell'iscrizione nel catalogo (18/11/2026)
 
 1. Come ospite, il catalogo non deve mostrare né interrogare alcuno storico personale. La card deve mostrare soltanto azione pubblica e modalità promozionale.
