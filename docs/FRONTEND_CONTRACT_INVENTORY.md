@@ -24,6 +24,15 @@
 
 I template nativi sono sotto `component/site/tmpl/`; gli override si trovano in `templates/NOME/html/com_jlms/VISTA/default.php`. I CSS vengono distribuiti via Web Asset Manager (`component/media/joomla.asset.json`): `com_jlms.site` punta a `component/media/css/site.css`. Non richiedere modifiche ai file del core Joomla.
 
+## Viste aggiuntive distribuite
+
+| Vista | Layout PHP | Radice DOM | Contratti da preservare |
+|---|---|---|---|
+| Anteprima pubblica di lezione | `lessonpreview/default.php` | `#jlms-public-lesson-preview` | `.jlms-lesson__body`, `.jlms-public-preview-materials`, `data-course-id` |
+| Revoca consenso email | `mailconsentrevoke/default.php` | `#jlms-mail-consent-revoke` | `#jlms-mail-consent-revoke-form`, `#jlms-mail-consent-link-completed`, `#jlms-mail-consent-link-invalid` |
+
+I tre stati della revoca sono alternativi, non simultanei. L'anteprima non deve rendere disponibili allegati non autorizzati anche quando un template Joomla personalizzato sostituisce il layout. L'inventario non implica accettazione manuale ne' consente di aggirare ACL, token o protezioni server.
+
 ## Contratti JavaScript indispensabili
 
 | Modulo JS | Hook DOM / contratto | Layout | Conseguenza se rimosso |

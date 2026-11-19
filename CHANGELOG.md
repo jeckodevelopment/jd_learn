@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (UI-01/FE-10, 19/11/2026):** aggiunti inventario e gate statico per le viste pubbliche anteprima lezione e revoca consenso email, inclusi contratti DOM e token POST/CSRF. Solo contratti/documentazione, senza modifica runtime o accettazione manuale.
+
 - **0.60.8-dev (SCR-01, 19/11/2026):** suite HTTP su Joomla isolato per stato dei filtri condivisi, navigazione URL ripetuta, reset alla prima pagina dopo filtro, opzioni ordinamento Categoria e reset contestuale. Nessuna variazione runtime né accettazione manuale implicita.
 
 - **0.60.8-dev (SCR-01, 19/11/2026):** filtri e ordinamenti coerenti nella vista Categoria, compresa disponibilità, ordine editoriale/data/durata; azzera filtri contestuale e paginazione del catalogo guidata da `limitstart` dell'URL, con reset alla pagina iniziale dopo invio di nuovi filtri. Test strutturali e collaudo Joomla pendente.

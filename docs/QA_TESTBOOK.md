@@ -2374,3 +2374,8 @@ Il test Joomla `tests/joomla-pathways.php` prova ora un attore anonimo contro `c
 `tests/http-smoke.py` recupera un token CSRF dalla lista amministrativa nativa Joomla e invia POST reali, autenticati, per il ciclo `archive → restore → publish` di un percorso usato nel fixture. Dopo l'archiviazione verifica che il percorso scompaia dal catalogo pubblico; dopo il ripristino deve rimanere non pubblicato; soltanto una pubblicazione esplicita lo rende nuovamente visibile. Il test non usa token sintetici né bypass dei controller.
 
 **Comportamenti da testare su Joomla reale (rinviati):** permessi ACL specifici per singolo percorso e selezioni miste, POST con token scaduto/alterato, conservazione integrale di dati storici e ricerca Finder/SEO, conflitti e race; il test CI non equivale ad accettazione manuale.
+
+
+## UI-01 / FE-10 — collaudi anteprima lezione e revoca consenso
+
+Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM, corrispondenza inventario e sicurezza strutturale del form di revoca. **Collaudo manuale pendente**: aprire anteprima pubblica autorizzata e negata, verificando visibilita' materiali e isolamento; esercitare link di revoca valido, scaduto, alterato e riutilizzato, token CSRF assente, lingua IT/EN, stato finale e tastiera/screen reader. Confermare che nessun dato privato sia mostrato negli errori e che gli override template preservino gli ID. Nessun test Joomla manuale registrato come superato.
