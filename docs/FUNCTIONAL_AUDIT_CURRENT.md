@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **443**.
-- Mancanti con lacuna accertata: **46**.
+- Implementati: **444**.
+- Mancanti con lacuna accertata: **45**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -12,10 +12,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Lacune confermate
 
-- `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. L’infrastruttura scrive direttamente nel modello nativo User Actions Log per una lista di azioni specifiche. Il pacchetto non contiene il plugin actionlog richiesto e la pubblicazione non rientra nelle azioni di quel modello.
-  - [component/administrator/src/Infrastructure/AssessmentAudit.php#bootComponent](../component/administrator/src/Infrastructure/AssessmentAudit.php)
-  - [packages/pkg_jlms.xml#<files](../packages/pkg_jlms.xml)
-  - [component/administrator/src/Application/PublicationService.php#function transition](../component/administrator/src/Application/PublicationService.php)
 - `UI-01/all_views` — Inventario completo di ID/classi su tutte le viste della 1.0.0. L’inventario elenca le viste principali. Le viste lessonpreview e mailconsentrevoke distribuite non compaiono nella tabella, quindi resta da completare la copertura.
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Viste pubbliche: contratto e override](../docs/FRONTEND_CONTRACT_INVENTORY.md)
   - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
@@ -1235,6 +1231,12 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/View/Dashboard/HtmlView.php#schedulerHealth](../component/administrator/src/View/Dashboard/HtmlView.php)
   - [component/administrator/tmpl/dashboard/default.php#jlms-admin-scheduler-health](../component/administrator/tmpl/dashboard/default.php)
   - [tests/scheduler-health-joo04.php#checkState](../tests/scheduler-health-joo04.php)
+- `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. Il plugin Joomla Action Log è presente nel pacchetto ed è abilitato al primo impianto, conservando la disabilitazione amministrativa agli upgrade. Il servizio di pubblicazione emette l'evento solo dopo il commit; il subscriber registra i dati tecnici in User Actions Log senza duplicare i log transazionali già scritti da AssessmentAudit. La CI 4/4 verifica installazione/upgrade e la singola voce per pubblicazione committata; collaudo Joomla manuale ancora pendente.
+  - [plugins/actionlog/jdlearn/src/Extension/Jdlearn.php#public function onJlmsCourseTransition](../plugins/actionlog/jdlearn/src/Extension/Jdlearn.php)
+  - [plugins/actionlog/jdlearn/installer.php#postflight](../plugins/actionlog/jdlearn/installer.php)
+  - [component/administrator/src/Application/PublicationService.php#onJlmsCourseTransition](../component/administrator/src/Application/PublicationService.php)
+  - [tests/joomla-publication.php#CORE-17: exactly one native Joomla actionlog event](../tests/joomla-publication.php)
+  - [packages/pkg_jlms.xml#plg_actionlog_jdlearn](../packages/pkg_jlms.xml)
 - `PERF-02/workload_distribution` — Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento. Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#Distribuzione di riferimento: 60% video](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#mix60%video](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
