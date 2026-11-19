@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **436**.
-- Mancanti con lacuna accertata: **53**.
+- Implementati: **437**.
+- Mancanti con lacuna accertata: **52**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -43,10 +43,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#private function dto](../component/administrator/src/Application/QuizAttemptService.php)
-- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il catalogo ora offre posizione editoriale configurabile nel corso, con opzioni recenti, titolo, data di pubblicazione della versione corrente e durata; l'ordinamento editoriale deve ancora essere verificato sull'installazione Joomla e per tutte le combinazioni di filtri, default e pagine prima della chiusura del criterio.
-  - [component/site/src/Model/CoursesModel.php#['editorial', 'recent', 'title', 'duration', 'published']](../component/site/src/Model/CoursesModel.php)
-  - [component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'](../component/site/src/Model/CoursesModel.php)
-  - [component/site/tmpl/courses/default.php#name="filter[order]"](../component/site/tmpl/courses/default.php)
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
   - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
@@ -1325,6 +1321,14 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#private function grade](../component/administrator/src/Application/QuizAttemptService.php)
   - [tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account](../tests/joomla-quiz-attempts.php)
   - [tests/joomla-quiz-attempts.php#duplicate expiry worker does not count twice](../tests/joomla-quiz-attempts.php)
+- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il backend consente di assegnare a ogni corso una posizione editoriale da 0 a 9999, validata dal server e persistita nei parametri editoriali. Il catalogo espone l'ordine editoriale come default configurabile globalmente e tramite menu, colloca le posizioni positive in ordine crescente, gli elementi senza posizione dopo e usa l'ID come tie-break di paginazione. Le alternative titolo, recente, data di pubblicazione e durata restano disponibili, su query con filtri di ACL e versione pubblicata. Test strutturali e CI d'integrazione passati; collaudo manuale Joomla delle combinazioni resta pendente.
+  - [component/administrator/src/Model/CourseModel.php#array_key_exists('catalog_position', $data)](../component/administrator/src/Model/CourseModel.php)
+  - [component/administrator/forms/course.xml#name="catalog_position"](../component/administrator/forms/course.xml)
+  - [component/site/src/Model/CoursesModel.php#if ($order === 'editorial')](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/Model/CoursesModel.php#($position = 0) ASC, $position ASC, c.id DESC](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/Helper/CatalogOptions.php#'catalog_default_order' => 'editorial'](../component/site/src/Helper/CatalogOptions.php)
+  - [component/site/tmpl/courses/default.php#value="editorial"](../component/site/tmpl/courses/default.php)
+  - [tests/frontend-catalog-options.py#SCR-01/sorts](../tests/frontend-catalog-options.py)
 - `SCR-01/card` — Scheda include metadati principali e azione disponibile. Le card catalogo espongono metadati pubblici, docenti autorizzati e stato iscrizioni personali già attive. È ora implementata anche la segnalazione di richiesta pendente: query unica limitata ai corsi della pagina, proprietario autenticato e versione corrente, senza riproporre l'invito di ammissione, con test strutturali. L'accettazione manuale Joomla delle varianti resta pendente.
   - [component/site/src/Model/CoursesModel.php#public function getCardPendingApprovals](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/View/Courses/HtmlView.php#$this->cardPendingApprovals](../component/site/src/View/Courses/HtmlView.php)

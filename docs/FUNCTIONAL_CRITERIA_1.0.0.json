@@ -5357,17 +5357,25 @@
       {
         "id": "sorts",
         "label": "Ordinamenti editoriali, titolo, data e durata",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
+          "component/administrator/src/Model/CourseModel.php",
+          "component/administrator/forms/course.xml",
           "component/site/src/Model/CoursesModel.php",
-          "component/site/tmpl/courses/default.php"
+          "component/site/src/Helper/CatalogOptions.php",
+          "component/site/tmpl/courses/default.php",
+          "tests/frontend-catalog-options.py"
         ],
         "review": {
-          "reason": "Il catalogo ora offre posizione editoriale configurabile nel corso, con opzioni recenti, titolo, data di pubblicazione della versione corrente e durata; l'ordinamento editoriale deve ancora essere verificato sull'installazione Joomla e per tutte le combinazioni di filtri, default e pagine prima della chiusura del criterio.",
+          "reason": "Il backend consente di assegnare a ogni corso una posizione editoriale da 0 a 9999, validata dal server e persistita nei parametri editoriali. Il catalogo espone l'ordine editoriale come default configurabile globalmente e tramite menu, colloca le posizioni positive in ordine crescente, gli elementi senza posizione dopo e usa l'ID come tie-break di paginazione. Le alternative titolo, recente, data di pubblicazione e durata restano disponibili, su query con filtri di ACL e versione pubblicata. Test strutturali e CI d'integrazione passati; collaudo manuale Joomla delle combinazioni resta pendente.",
           "references": [
-            "component/site/src/Model/CoursesModel.php#['editorial', 'recent', 'title', 'duration', 'published']",
-            "component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'",
-            "component/site/tmpl/courses/default.php#name=\"filter[order]\""
+            "component/administrator/src/Model/CourseModel.php#array_key_exists('catalog_position', $data)",
+            "component/administrator/forms/course.xml#name=\"catalog_position\"",
+            "component/site/src/Model/CoursesModel.php#if ($order === 'editorial')",
+            "component/site/src/Model/CoursesModel.php#($position = 0) ASC, $position ASC, c.id DESC",
+            "component/site/src/Helper/CatalogOptions.php#'catalog_default_order' => 'editorial'",
+            "component/site/tmpl/courses/default.php#value=\"editorial\"",
+            "tests/frontend-catalog-options.py#SCR-01/sorts"
           ]
         }
       },
