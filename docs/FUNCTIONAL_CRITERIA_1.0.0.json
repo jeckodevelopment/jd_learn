@@ -2906,6 +2906,7 @@
           "references": [
             "component/administrator/src/Infrastructure/SchedulerHealth.php#public const TYPES",
             "component/administrator/src/Infrastructure/SchedulerHealth.php#public static function assess",
+            "component/administrator/src/View/Dashboard/HtmlView.php#schedulerHealth",
             "component/administrator/tmpl/dashboard/default.php#jlms-admin-scheduler-health",
             "tests/scheduler-health-joo04.php#checkState"
           ]
