@@ -10,6 +10,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 ?>
 <section id="jlms-courses" class="jlms-catalog">
  <header id="jlms-catalog-header"><h1><?= Text::_('COM_JLMS_COURSES') ?></h1><a id="jlms-catalog-categories" href="<?= Route::_('index.php?option=com_jlms&view=categories') ?>"><?= Text::_('COM_JLMS_CATEGORIES') ?></a> <a id="jlms-catalog-pathways" href="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>"><?= Text::_('COM_JLMS_PATHWAYS') ?></a></header>
+ <?php if ($this->loadFailed) : ?>
+ <div id="jlms-catalog-load-error" class="alert alert-warning" role="alert">
+  <p><?= Text::_('COM_JLMS_CATALOG_LOAD_ERROR') ?></p>
+  <a id="jlms-catalog-retry" href="<?= $this->escape(Uri::getInstance()->toString(['path', 'query'])) ?>"><?= Text::_('COM_JLMS_CATALOG_RETRY') ?></a>
+ </div>
+ <?php else : ?>
  <?php if ($this->showFilters) : ?>
  <form id="jlms-catalog-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . $this->categoryId : '')) ?>">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="courses">
@@ -134,4 +140,5 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
  <?php endif; ?>
  </div>
  <nav id="jlms-catalog-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
+ <?php endif; ?>
 </section>

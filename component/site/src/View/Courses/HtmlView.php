@@ -11,6 +11,7 @@ use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
 final class HtmlView extends BaseHtmlView
 {
     public array $items = [];
+    public bool $loadFailed = false;
     public array $cardTeachers = [];
     public array $cardEnrollmentStates = [];
     public array $cardPendingApprovals = [];
@@ -43,6 +44,7 @@ public string $difficulty = '';
         $this->showCategory = $this->showFilters && CatalogOptions::enabled('catalog_show_category');
         $this->showCover = CatalogOptions::enabled('catalog_show_cover');
         $this->showSummary = CatalogOptions::enabled('catalog_show_summary');
+        try {
         $this->items = $this->get('Items');
         $this->cardTeachers = $this->getModel()->getCardTeachers($this->items);
         $this->cardEnrollmentStates = $this->getModel()->getCardEnrollmentStates($this->items);
@@ -65,6 +67,17 @@ $this->difficulty = $this->getModel()->getDifficulty();
         $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
         if ($this->get('Errors')) {
             throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
+        }
+        } catch (\Throwable $error) {
+            // Access denials and unknown routes must never become a public result.
+            if (in_array((int) $error->getCode(), [401, 403, 404], true)) { throw $error; }
+            // Fail closed: discard all partially loaded owner and course data.
+            $this->loadFailed = true;
+            $this->items = [];
+            $this->cardTeachers = [];
+            $this->cardEnrollmentStates = [];
+            $this->cardPendingApprovals = [];
+            $this->pagination = null;
         }
         $this->getDocument()->setTitle(Text::_('COM_JLMS_COURSES'));
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');

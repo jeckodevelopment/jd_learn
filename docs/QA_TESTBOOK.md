@@ -1,3 +1,13 @@
+## SCR-01 — errore recuperabile nel catalogo (19/11/2026)
+
+**Collaudo manuale Joomla pendente:**
+1. Aprire catalogo con filtri, ordinamento e pagina; simulare errore DB/servizio. Devono apparire messaggio generico localizzato e Riprova, **non** «Nessun corso», card parziali, stack trace o dettagli database.
+2. Seguire Riprova dopo ripristino: gli stessi parametri URL (ricerca, filtri, categoria, ordinamento e pagina) devono essere conservati, con corsi nuovamente visibili secondo ACL.
+3. Senza errore, zero risultati deve presentare il testo e Azzera filtri previsti, non il nuovo alert.
+4. Ospite e studente: ripetere guasto in fase elenco e successive (docenti, iscrizioni, pending, paginazione). Nessun dato parziale deve essere esposto.
+5. I veri errori 401/403/404 devono mantenere l'esito e non diventare schermate pubbliche con Riprova.
+6. Verificare browser avanti/indietro, griglia/elenco, IT/EN. Nessuna mutazione e nessun salvataggio locale.
+
 ## SCR-01 — ordinamento catalogo per data di pubblicazione (19/11/2026)
 
 **Collaudo manuale Joomla pendente:** creare due corsi pubblicati in ordine differente rispetto agli ID e aggiornare una bozza senza ripubblicarla. Nel catalogo selezionare «Data di pubblicazione (più recente)»: il corso con versione pubblicata più recente deve precedere l'altro; una modifica non pubblicata non deve cambiare la posizione. Verificare pari timestamp (tie-break ID decrescente), pagina successiva senza duplicati, filtri, categoria, ACL per due ruoli, guest e lingua IT/EN. In opzioni globali e nei menu Corsi/Categoria impostare il nuovo ordinamento predefinito, quindi disabilitare la scelta di ordinamento e verificare che parametri GET forzati non lo sostituiscano. Verificare che «Più recenti» conservi il precedente ordine per ID e che non vi sia alcun effetto su iscrizioni o progresso.
