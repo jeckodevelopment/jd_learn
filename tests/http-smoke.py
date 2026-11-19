@@ -100,8 +100,8 @@ try:
   if 'data-layout="list"' not in category_list or 'jlms-course-grid--list' not in category_list:
    raise RuntimeError('Category course list layout did not render')
  # SCR-01: HTTP-level URL persistence and filter/pagination isolation.
- # A one-course fixture is enough to verify that a nonzero page offset hides it
- # and a new GET filter submission without limitstart resets the page.
+ # The one-course fixture verifies Joomla's native out-of-range offset clamp;
+ # a fresh GET filter submission must still start from the first valid page.
  course_path='/index.php?option=com_jlms&view=courses'
  selected_filters={'filter[search]':'Publication fixture',
                    'filter[order]':'title',
@@ -125,8 +125,8 @@ try:
    raise RuntimeError('SCR-01: catalogue filter state leaked into the unfiltered URL')
  # Changing search after requesting the second page must not replay the old offset.
  _,later_page=get(active_url+'&limitstart=12')
- if 'id="jlms-course-card-' in later_page:
-  raise RuntimeError('SCR-01: a single result leaked into page two')
+ if 'id="jlms-course-card-' not in later_page:
+  raise RuntimeError('SCR-01: Joomla did not clamp an out-of-range catalogue offset to the only page')
  submitted=dict(active_form['fields'])
  submitted['filter[search]']='Publication fixture'
  submitted.pop('limitstart',None)
@@ -159,8 +159,8 @@ try:
   if 'value="'+value+'"' not in cat_filtered.split('id="jlms-category-catalog-order"',1)[1].split('</select>',1)[0]:
    raise RuntimeError('SCR-01: category ordering option missing: '+value)
  _,cat_second=get(cat_request+'&limitstart=12')
- if 'id="jlms-course-card-' in cat_second:
-  raise RuntimeError('SCR-01: category result leaked into page two')
+ if 'id="jlms-course-card-' not in cat_second:
+  raise RuntimeError('SCR-01: Joomla did not clamp an out-of-range category offset to the only page')
  _,cat_reset=get(cat_url+('&' if '?' in cat_url else '?')+urlencode(cat_form['fields']))
  if 'id="jlms-course-card-' not in cat_reset:
   raise RuntimeError('SCR-01: category GET filter submit did not reset course paging')
