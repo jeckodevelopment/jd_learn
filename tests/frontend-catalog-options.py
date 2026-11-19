@@ -52,7 +52,7 @@ assert 'name="filter[category_id]"' in template
 assert "COM_JLMS_CATALOG_ALL_CATEGORIES" in template
 assert "catalog_show_category" in helper
 assert "filter.category_choice" in model
-assert "['recent', 'title', 'duration', 'published']" in model
+assert "['editorial', 'recent', 'title', 'duration', 'published']" in model
 assert "['recent', 'title', 'duration', 'published']" in helper
 assert "v.presentation_json, '$.details.estimated_minutes'" in model
 assert "($minutes IS NULL) ASC, $minutes ASC, c.id ASC" in model
@@ -184,3 +184,27 @@ assert "COM_JLMS_CATALOG_RETRY" in template
 for language in ("it-IT", "en-GB"):
     ini = (root / "component/site/language" / language / "com_jlms.ini").read_text()
     assert "COM_JLMS_CATALOG_LOAD_ERROR=" in ini and "COM_JLMS_CATALOG_RETRY=" in ini
+
+# SCR-01/sorts: editable rank and stable fallback with published ACL projection.
+course_form = ET.parse(root / "component/administrator/forms/course.xml").getroot()
+rank_field = course_form.find(".//field[@name='catalog_position']")
+assert rank_field is not None and rank_field.get("min") == "0" and rank_field.get("max") == "9999"
+course_model = (root / "component/administrator/src/Model/CourseModel.php").read_text()
+assert "'catalog_position', 'revision'" in course_model
+assert "$item->catalog_position =" in course_model
+assert "array_key_exists('catalog_position', $data)" in course_model
+assert "unset($data['catalog_position']);" in course_model
+assert "json_encode($params, JSON_THROW_ON_ERROR" in course_model
+assert "($position = 0) ASC, $position ASC, c.id DESC" in model
+assert "JSON_EXTRACT(c.params_json, '$.catalog_position')" in model
+assert "if ($order === 'editorial')" in model
+assert "'catalog_default_order' => 'editorial'" in helper
+assert 'value="editorial"' in template
+for cfg in (menu, component, ET.parse(root / "component/site/tmpl/category/default.xml").getroot()):
+    order_field = cfg.find(".//field[@name='catalog_default_order']")
+    assert "editorial" in [opt.get("value") for opt in order_field.findall("option")]
+for folder in ("component/site/language", "component/administrator/language"):
+    for language in ("it-IT", "en-GB"):
+        ini = (root / folder / language / "com_jlms.ini").read_text()
+        assert "COM_JLMS_CATALOG_ORDER_EDITORIAL=" in ini
+        assert "COM_JLMS_COURSE_CATALOG_POSITION=" in ini
