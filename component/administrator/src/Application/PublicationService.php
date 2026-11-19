@@ -545,6 +545,29 @@ final class PublicationService
             $this->permittedChange = null;
             $this->stateChangeResult = null;
         }
+        // Native actionlog is best-effort after commit: no audit row for a
+        // rolled-back workflow and no mail/remote operation in this transaction.
+        try {
+            \Joomla\CMS\Plugin\PluginHelper::importPlugin('actionlog');
+            $this->app->getDispatcher()->dispatch('onJlmsCourseTransition', new \Joomla\Event\Event(
+                'onJlmsCourseTransition', [
+                    'actorId' => (int) $actor->id,
+                    'courseId' => $courseId,
+                    'versionId' => $versionId,
+                    'transitionId' => $transitionId,
+                    'action' => $action,
+                ]
+            ));
+        } catch (\Throwable) {
+            // A logging outage must not report a successfully committed
+            // workflow as failed or cause a second publication attempt.
+            try {
+                \Joomla\CMS\Log\Log::add(
+                    'Course workflow actionlog follow-up failed; course id=' . $courseId,
+                    \Joomla\CMS\Log\Log::WARNING, 'com_jlms'
+                );
+            } catch (\Throwable) {}
+        }
         // Smart Search must observe the committed archive/restore state.
         // The workflow may dispatch events while the SQL transaction is open;
         // this follow-up is the authoritative refresh after persistence.

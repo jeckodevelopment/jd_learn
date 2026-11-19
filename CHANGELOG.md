@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.62.0-dev — MINOR SemVer (CORE-17, 19/11/2026):** plugin nativo Joomla Action Log installato e abilitato al primo impianto; logging delle transizioni workflow corso soltanto dopo commit, senza duplicare gli audit delle iscrizioni né divulgare dati didattici. Pacchetto ampliato da 11 a 12 estensioni, manifest e test di packaging aggiornati. Collaudo manuale Joomla pendente.
+
 - **0.61.0-dev — MINOR SemVer (LIFE-01, 19/11/2026):** flusso di anteprima dell'impatto per cancellazione definitiva di corso cestinato, con conteggio delle dipendenze e revisioni editoriali, conferma POST e controllo di revisione sotto transazione. Cancellazione bloccata per storico o referenze, ACL/CSRF preservati; collaudo Joomla pendente.
 
 - **0.60.9-dev (DOC-06, 19/11/2026):** 13 descrizioni di campo IT/EN aggiunte con gli attributi nativi dei form Joomla nel corso: immagine, destinatari, obiettivi, difficoltà, ACL promozionale/didattico, SEO e date. Gate automatico sulle chiavi, nessuna modifica a dati, default o validazioni. DOC-06 ancora parziale, collaudo Joomla pendente.

@@ -2,7 +2,7 @@
 
 ## Regola vincolante
 
-**Un solo numero di versione per l'intero pacchetto distribuito.** `tools/build.py` legge la versione sviluppo da `packages/pkg_jlms.xml` (attualmente `0.61.0`) oppure riceve `--release-version 1.0.0` per produrre la candidata stabile. All'interno dello ZIP produce il manifest del pacchetto principale e i manifest di **11 estensioni figlie** con la medesima versione. Non modifica i manifest del repository; la versione delle singole parti nel codice sorgente è un identificativo storico, non la versione installata del pacchetto.
+**Un solo numero di versione per l'intero pacchetto distribuito.** `tools/build.py` legge la versione sviluppo da `packages/pkg_jlms.xml` (attualmente `0.62.0`) oppure riceve `--release-version 1.0.0` per produrre la candidata stabile. All'interno dello ZIP produce il manifest del pacchetto principale e i manifest di **12 estensioni figlie** con la medesima versione. Non modifica i manifest del repository; la versione delle singole parti nel codice sorgente è un identificativo storico, non la versione installata del pacchetto.
 
 Per tutte le parti distribuite il nome visibile in Gestione estensioni è `JD Learn` per il pacchetto/componente e `JD Learn - <Funzionalità>` per libreria e plugin. I plugin conservano i propri codici `<name>PLG_...</name>` nei manifest per compatibilità dell'aggiornamento; i file `*.sys.ini` (IT/EN) e, dove presenti, `*.ini` traducono tali codici nei nomi uniformi, verificati sui pacchetti ZIP dalla CI. Il componente conserva il nome chiave Joomla `COM_JLMS`, visualizzato come JD Learn tramite le traduzioni, per non alterare il riconoscimento dell'estensione durante l'upgrade. I campi tecnici `type`, `group`, `element`, `libraryname`, nomi ZIP e cartelle restano invariati: questo mantiene la continuità negli upgrade Joomla.
 
@@ -12,7 +12,7 @@ Ogni manifest distribuito include `<creationDate>YYYY-MM-DD</creationDate>` unif
 
 ## Verifiche automatiche
 
-`tests/extension-manifest-metadata.py` apre lo ZIP del pacchetto, quindi i suoi 11 ZIP inclusi, e verifica per ciascuno versione, data, nome pubblico e tipo/gruppo; il workflow CI esegue il controllo su build sviluppo e stabile. Il controllo fallisce per ogni divergenza. La CI esegue gli smoke esistenti sull'installazione e l'aggiornamento Joomla con dati conservati. **La conferma dei valori effettivamente mostrati in Gestione estensioni dopo l'aggiornamento sul sito di prova resta un test manuale obbligatorio**: la fixture dell'installer non è una prova sufficiente dell'aggiornamento dei manifest cache in un ambiente esistente.
+`tests/extension-manifest-metadata.py` apre lo ZIP del pacchetto, quindi i suoi 12 ZIP inclusi, e verifica per ciascuno versione, data, nome pubblico e tipo/gruppo; il workflow CI esegue il controllo su build sviluppo e stabile. Il controllo fallisce per ogni divergenza. La CI esegue gli smoke esistenti sull'installazione e l'aggiornamento Joomla con dati conservati. **La conferma dei valori effettivamente mostrati in Gestione estensioni dopo l'aggiornamento sul sito di prova resta un test manuale obbligatorio**: la fixture dell'installer non è una prova sufficiente dell'aggiornamento dei manifest cache in un ambiente esistente.
 
 Esempi:
 
