@@ -117,6 +117,7 @@ final class PathwayService
                     'access' => 'unavailable',
                     'learning_state' => 'unavailable',
                     'percent' => 0,
+                    'progress_basis' => false,
                 ];
                 continue;
             }
@@ -131,6 +132,7 @@ final class PathwayService
             $deliverySuspended = $access === 'unavailable' && (int) $course->delivery_enabled !== 1;
             $percent = 0;
             $progressApplicable = true;
+            $rules = null;
 
             if ($enrollment) {
                 $done = (int) $enrollment->completed_total;
@@ -174,13 +176,18 @@ final class PathwayService
                 'learning_state' => $state,
                 'percent' => $access === 'available' ? $percent : 0,
                 'progress_applicable' => $progressApplicable,
+                // A consultation course is exempt from numeric progress, but
+                // still requires valid historical rules and an enrollment.
+                'progress_basis' => $enrollment !== null && $rules !== null
+                    && ($rules['mode'] === 'consultation' || (int) $enrollment->required_total > 0),
             ];
         }
 
         $aggregate = PathwayProgress::summarize($courses);
         // Guests may browse pathways and public course cards, but they have no
         // personal learning record to summarize.
-        $hasPersonalProgress = (int) $identity->id > 0 && !$identity->guest;
+        $hasPersonalProgress = (int) $identity->id > 0 && !$identity->guest
+            && PathwayProgress::hasCompleteBasis($courses);
 
         return [
             'pathway' => $pathway,
