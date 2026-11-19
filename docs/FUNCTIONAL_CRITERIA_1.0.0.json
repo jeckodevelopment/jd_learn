@@ -5363,9 +5363,9 @@
           "component/site/tmpl/courses/default.php"
         ],
         "review": {
-          "reason": "Il catalogo ora offre recente, titolo e durata crescente della versione pubblicata, ma l'ordinamento per data editoriale e altri ordinamenti richiesti non sono disponibili. Il collaudo Joomla dell'ordinamento per durata è ancora pendente.",
+          "reason": "Il catalogo offre recente, titolo, durata crescente e data di pubblicazione della versione corrente, ma l'ordinamento editoriale configurabile e altre verifiche richieste restano incompleti. Il collaudo Joomla degli ordinamenti è ancora pendente.",
           "references": [
-            "component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration']",
+            "component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration', 'published']",
             "component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'",
             "component/site/tmpl/courses/default.php#name=\"filter[order]\""
           ]
