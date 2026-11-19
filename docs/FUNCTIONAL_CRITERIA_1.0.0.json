@@ -5376,9 +5376,9 @@
         "label": "Scheda include metadati principali e azione disponibile",
         "status": "implemented",
         "evidence": [
-          "component/site/tmpl/courses/default.php",
           "component/site/src/Model/CoursesModel.php",
           "component/site/src/View/Courses/HtmlView.php",
+          "component/site/tmpl/courses/default.php",
           "tests/frontend-catalog-options.py"
         ],
         "review": {
