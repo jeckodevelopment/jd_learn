@@ -21,6 +21,7 @@ NAMES={
     'plg_finder_jlms':'PLG_FINDER_JLMS',
     'plg_user_jdlearnconsent':'PLG_USER_JDLEARNCONSENT',
     'plg_actionlog_jdlearn':'PLG_ACTIONLOG_JDLEARN',
+    'plg_actionlog_jdlearn':'PLG_ACTIONLOG_JDLEARN',
 }
 DISPLAY={
     'plg_jlmsvideo_youtube':'JD Learn - YouTube',
@@ -32,6 +33,7 @@ DISPLAY={
     'plg_system_jlmsmenu':'JD Learn - Menu Navigation',
     'plg_finder_jlms':'JD Learn - Smart Search',
     'plg_user_jdlearnconsent':'JD Learn - User Consent',
+    'plg_actionlog_jdlearn':'JD Learn - Action Log',
     'plg_actionlog_jdlearn':'JD Learn - Action Log',
 }
 p=argparse.ArgumentParser()
