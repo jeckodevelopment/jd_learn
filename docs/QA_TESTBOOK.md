@@ -1,3 +1,11 @@
+## DOC-08 — Prima matrice flussi core e guide (19/11/2026)
+
+**Evidenza automatica prevista:** eseguire `python3 tests/contextual-help-doc05.py`: il gate DOC-08 verifica 10 righe con requisito univoco, guida prodotto presente, aiuti contestuali IT/EN in viste realmente distribuite e stato esplicito. La presenza dei file non certifica il contenuto editoriale e non rappresenta il completamento di DOC-08.
+
+**Collaudo manuale Joomla ancora non eseguito:** installazione e upgrade dell'artefatto della PR; aprire le guide da catalogo/corso, percorsi, programma video, materiali, comunicazioni, coda, attestati, configurazione Scheduler e docenti; verificare lingua IT/EN e rinvio al capitolo pertinente; eseguire il flusso con amministratore abilitato e con profilo ACL ridotto, inclusi focus/tastiera e screen reader. Registrare build, data, profilo, risultato e difetti senza considerare eseguito alcun caso per la sola CI.
+
+**Residuo DOC-08:** completare la mappatura di tutti gli altri flussi in perimetro 1.0.0 e ricondurre gli esiti ai criteri della matrice canonica; nessun avanzamento percentuale per questa tranche puramente documentale.
+
 ## SCR-01 — suite HTTP catalogo e categorie (19/11/2026)
 
 **Integrazione automatica:** `tests/http-smoke.py` verifica sulla installazione Joomla usa-e-getta: URL di ricerca condivisibile, combinazioni di filtri selezionati, riapertura degli URL senza ripristino della sessione, offset paginazione 12 oltre il singolo risultato e nuovo invio GET che ritorna alla prima pagina; categoria con ordine pubblicazione, selezioni, opzioni editoriali, risultato vuoto e collegamento Azzera filtri contestuale.
