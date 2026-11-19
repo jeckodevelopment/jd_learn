@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.63.4-dev — PATCH SemVer (CAT-02/STU-01, 20/11/2026):** il catalogo sceglie l'ultima iscrizione **per ogni corso visibile** prima di limitare a 50 i risultati. Storici con molte edizioni dello stesso corso non nascondono più l'iscrizione a corsi diversi né mostrano un'azione d'iscrizione ingannevole. Nuova regressione Joomla DB con 51 edizioni, due corsi e isolamento degli utenti; nessuna migrazione, cambiano solo la proiezione di stato delle schede catalogo.
+
+
 - **0.63.3-dev — PATCH SemVer (STU-01, 20/11/2026):** Riprendi nel riepilogo personale cerca a pagine di 50 iscrizioni, anziché fermarsi alle prime 50 attività anche se tutte inaccessibili; conserva i controlli ACL, lingua, edizione e disponibilità a ogni blocco. Nessuna modifica dati/schema/API, test strutturale anti-regressione; prova Joomla con oltre 50 iscrizioni ancora da eseguire.
 
 

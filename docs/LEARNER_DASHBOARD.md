@@ -26,6 +26,10 @@ Le iscrizioni in lingue diverse sono nello stesso storico. Con Filtro lingua att
 
 La pagina Riepilogo personale individua l'ultima attività **effettivamente riprendibile**, anche quando le prime 50 iscrizioni con attività recente sono sospese, revocate, archiviate o scadute. La ricerca percorre la cronologia dell'utente in lotti massimi di 50 iscrizioni, interrompendosi al primo risultato consentito, senza caricare tutti i record simultaneamente e senza usare lo stato di iscrizione come prova sufficiente di accesso. Ogni lotto usa la stessa proiezione ACL, lingua, edizione, pubblicazione e finestre già applicata a I miei corsi. Se nessuna attività è accessibile il pulsante Riprendi non compare; il riepilogo numerico riguarda sempre l'intera storia.
 
+## Stato iscrizione nel catalogo (0.63.4-dev)
+
+La scheda del catalogo mostra lo stato dell'**ultima iscrizione** del proprietario per ciascun corso visibile, selezionato lato database prima del limite massimo di 50 corsi per pagina. Non basta prelevare le ultime 50 iscrizioni globali: un utente con molte edizioni di un corso potrebbe non vedere lo stato di iscrizione di un altro corso. La sottoquery è vincolata allo stesso account Joomla della query esterna; ogni risultato passa attraverso i controlli lingua, ACL, pubblicazione, edizione e disponibilità già esistenti. Le iscrizioni di altri account non vengono consultate e lo storico completo rimane disponibile nell'area personale.
+
 ## MVC, dati e prestazioni
 
 `DashboardService::query` seleziona soltanto iscrizioni del proprietario, con join coerenti a versione/edizione e proiezione minima dello storico. `cards` costruisce il modello pubblico e carica la visibilità corrente con una query catalogo per lingua presente nella pagina, senza interrogare l'aula o i corpi delle lezioni per ogni riga. `DashboardModel` usa ListModel/Pagination e Form Joomla; `HtmlView`/layout sono sostituibili tramite override. Non ci sono nuove tabelle, migrazioni, lock di lettura condivisi o cache di storico fra utenti.
