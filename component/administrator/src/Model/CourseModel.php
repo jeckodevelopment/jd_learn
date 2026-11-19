@@ -582,8 +582,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             ->where('id=:id')->where('context=:context')
             ->bind(':id', $id, ParameterType::INTEGER)->bind(':context', $this->associationsContext);
         $counts['#__associations'] = (int) $db->setQuery($association)->loadResult();
+        $historyKey = $this->typeAlias . '.' . $id;
         $history = $db->createQuery()->select('COUNT(*)')->from('#__history')
-            ->where('item_id=:item')->bind(':item', $this->typeAlias . '.' . $id);
+            ->where('item_id=:item')->bind(':item', $historyKey);
         $historyCount = (int) $db->setQuery($history)->loadResult();
         $eligible = $record->current_version_id === null
             && ((int) $record->checked_out === 0 || (int) $record->checked_out === (int) $actor->id)
