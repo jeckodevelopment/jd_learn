@@ -6345,7 +6345,7 @@
           "reason": "Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.",
           "references": [
             "component/administrator/src/Model/CourseModel.php#public function purgeEmpty",
-            "component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper::deleteList",
+            "component/administrator/src/View/Courses/HtmlView.php#purgepreview",
             "component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM"
           ]
         }
