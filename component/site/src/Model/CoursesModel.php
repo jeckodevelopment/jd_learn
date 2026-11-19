@@ -36,6 +36,9 @@ class CoursesModel extends ListModel
         $this->setState('filter.difficulty', is_string($difficulty) && in_array($difficulty, ['beginner', 'intermediate', 'advanced'], true) ? $difficulty : '');
         $duration = $filter['duration'] ?? '';
         $this->setState('filter.duration', is_string($duration) && in_array($duration, ['under-30', '30-60', '61-120', 'over-120'], true) ? $duration : '');
+        $available = $filter['available'] ?? '';
+        // A promotional listing remains visible unless the visitor opts in.
+        $this->setState('filter.available', $available === '1' ? '1' : '');
         $layout = $filter['layout'] ?? 'grid';
         $this->setState('filter.layout', is_string($layout) && in_array($layout, ['grid', 'list'], true) ? $layout : 'grid');
         $this->setState('filter.teacher_id', max(0, is_scalar($filter['teacher_id'] ?? 0) ? (int) ($filter['teacher_id'] ?? 0) : 0));
@@ -86,6 +89,11 @@ class CoursesModel extends ListModel
                 '61-120' => $query->where("$minutes BETWEEN 61 AND 120"),
                 'over-120' => $query->where("$minutes > 120"),
             };
+        }
+        if ($this->getState('filter.available') === '1') {
+            // Do not confuse public catalogue visibility with live delivery/admissions.
+            // Existing course/category/language/ACL/publication restrictions still apply.
+            $query->where('c.admissions_open = 1')->where('c.delivery_enabled = 1');
         }
         $order = (string) $this->getState('filter.order');
         if ($order === 'duration') {
@@ -187,6 +195,11 @@ class CoursesModel extends ListModel
     public function getDuration(): string
     {
         return (string) $this->getState('filter.duration');
+    }
+
+    public function getAvailable(): string
+    {
+        return (string) $this->getState('filter.available');
     }
 
     public function getLayout(): string
