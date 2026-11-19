@@ -128,3 +128,19 @@ assert "getStoreId($id = '')" in model
 assert "getIdentity()->id" in model
 dash = (root / "component/administrator/src/Application/DashboardService.php").read_text()
 assert "->clear('order')->order('e.id DESC')" in dash
+
+# CAT-01: available-only selection is opt-in, server side, and ignored when
+# filters are disabled. Visibility/ACL remains enforced by CatalogService.
+model = (root / "component/site/src/Model/CoursesModel.php").read_text()
+view = (root / "component/site/src/View/Courses/HtmlView.php").read_text()
+layout = (root / "component/site/tmpl/courses/default.php").read_text()
+assert "$filter['available'] ?? ''" in model
+assert "$available === '1' ? '1' : ''" in model
+assert "c.admissions_open = 1" in model and "c.delivery_enabled = 1" in model
+assert "CatalogOptions::enabled('catalog_show_filters')" in model
+assert "getAvailable()" in model and "getAvailable()" in view
+assert 'name="filter[available]"' in layout
+assert "$this->available === '1'" in layout
+for language in ("it-IT", "en-GB"):
+    content = (root / "component/site/language" / language / "com_jlms.ini").read_text()
+    assert "COM_JLMS_CATALOG_AVAILABLE_ONLY=" in content
