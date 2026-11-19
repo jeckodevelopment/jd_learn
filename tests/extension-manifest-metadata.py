@@ -21,7 +21,6 @@ NAMES={
     'plg_finder_jlms':'PLG_FINDER_JLMS',
     'plg_user_jdlearnconsent':'PLG_USER_JDLEARNCONSENT',
     'plg_actionlog_jdlearn':'PLG_ACTIONLOG_JDLEARN',
-    'plg_actionlog_jdlearn':'PLG_ACTIONLOG_JDLEARN',
 }
 DISPLAY={
     'plg_jlmsvideo_youtube':'JD Learn - YouTube',
@@ -34,7 +33,6 @@ DISPLAY={
     'plg_finder_jlms':'JD Learn - Smart Search',
     'plg_user_jdlearnconsent':'JD Learn - User Consent',
     'plg_actionlog_jdlearn':'JD Learn - Action Log',
-    'plg_actionlog_jdlearn':'JD Learn - Action Log',
 }
 p=argparse.ArgumentParser()
 p.add_argument('--zip',type=Path,required=True)
@@ -43,6 +41,8 @@ p.add_argument('--date',required=True)
 args=p.parse_args()
 assert re.fullmatch(r'\d{4}-\d{2}-\d{2}',args.date), 'Date not YYYY-MM-DD'
 with zipfile.ZipFile(args.zip) as package:
+    members=package.namelist()
+    assert len(members)==len(set(members)), 'Duplicate members in outer Joomla package ZIP'
     main=ET.fromstring(package.read('pkg_jlms.xml'))
     assert main.tag=='extension' and main.get('type')=='package'
     assert main.findtext('version')==args.version
@@ -50,6 +50,8 @@ with zipfile.ZipFile(args.zip) as package:
     assert main.findtext('name')=='JD Learn'
     children=main.findall('./files/file')
     assert len(children)==len(NAMES),(len(children),len(NAMES))
+    expected_members={'pkg_jlms.xml'} | {'constituents/'+(child.text or '') for child in children}
+    assert set(members)==expected_members and len(members)==len(expected_members), 'Package ZIP and Joomla manifest entries differ'
     seen=set()
     for child in children:
         filename=child.text
@@ -57,6 +59,8 @@ with zipfile.ZipFile(args.zip) as package:
         assert key in NAMES and key not in seen,(key,seen)
         seen.add(key)
         with zipfile.ZipFile(io.BytesIO(package.read('constituents/'+filename))) as inner:
+            nested=inner.namelist()
+            assert len(nested)==len(set(nested)), (key,'duplicate child ZIP entries')
             manifest='jlms.xml' if key in ('com_jlms','lib_jlms') else key.split('_')[-1]+'.xml'
             root=ET.fromstring(inner.read(manifest))
             assert root.tag=='extension'
