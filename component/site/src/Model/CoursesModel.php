@@ -159,7 +159,13 @@ class CoursesModel extends ListModel
         if (!(int) $identity->id || $identity->guest) { return []; }
         // Re-check the persisted Joomla account, rather than trusting an old
         // session after the account is blocked or removed.
-        $actor = $app->bootComponent('com_jlms')->getLearningService()->freshActor($identity);
+        try {
+            $actor = $app->bootComponent('com_jlms')->getLearningService()->freshActor($identity);
+        } catch (\RuntimeException $error) {
+            // A revoked session must not expose owner-only request state or
+            // prevent an otherwise public promotional catalogue from loading.
+            return [];
+        }
         $courseIds = [];
         foreach ($items as $item) {
             $courseId = (int) $item->id;
