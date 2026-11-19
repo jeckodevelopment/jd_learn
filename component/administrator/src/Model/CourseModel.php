@@ -617,7 +617,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         try {
             $db->transactionStart();
             $started = true;
-            $query = $db->createQuery()->select('id, state, checked_out, current_version_id')
+            $query = $db->createQuery()->select('id, state, revision, checked_out, current_version_id')
                 ->from('#__jlms_courses')->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
             $query->setQuery((string) $query . ' FOR UPDATE');
             $record = $db->setQuery($query)->loadObject()
