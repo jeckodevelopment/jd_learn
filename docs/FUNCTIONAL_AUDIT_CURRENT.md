@@ -43,8 +43,8 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#public function start](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#'deadline_at'=>$rules](../component/administrator/src/Application/QuizAttemptService.php)
   - [component/administrator/src/Application/QuizAttemptService.php#private function dto](../component/administrator/src/Application/QuizAttemptService.php)
-- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il catalogo ora offre recente, titolo e durata crescente della versione pubblicata, ma l'ordinamento per data editoriale e altri ordinamenti richiesti non sono disponibili. Il collaudo Joomla dell'ordinamento per durata è ancora pendente.
-  - [component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration']](../component/site/src/Model/CoursesModel.php)
+- `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il catalogo offre recente, titolo, durata crescente e data di pubblicazione della versione corrente, ma l'ordinamento editoriale configurabile e altre verifiche richieste restano incompleti. Il collaudo Joomla degli ordinamenti è ancora pendente.
+  - [component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration', 'published']](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'](../component/site/src/Model/CoursesModel.php)
   - [component/site/tmpl/courses/default.php#name="filter[order]"](../component/site/tmpl/courses/default.php)
 - `SCR-01/empty_error` — Stati senza risultati, azzera filtri ed errore recuperabile. Il layout ha un messaggio per zero risultati e un collegamento per uscire dalla categoria. Non offre azzera filtri per la ricerca generale né uno stato di errore recuperabile nel catalogo.
