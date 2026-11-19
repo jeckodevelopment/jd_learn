@@ -14,6 +14,7 @@ final class HtmlView extends BaseHtmlView
         $this->form->bind(['course_id'=>$i['course_id'],'lesson_id'=>$i['lesson_id'],'enrollment_id'=>$i['enrollment']?->id??0,'attempt_id'=>$i['selected']?->id??0,
             'enrollment_revision'=>$i['impact']['enrollment_revision']??0,'attempt_revision'=>$i['impact']['attempt_revision']??0,'impact_hash'=>$i['impact']['hash']??'',
             'return_attempt'=>(int)$i['refund'],'mutation_id'=>$key]);
-        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_REVIEW_TITLE'),'list');parent::display($tpl);
+        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_REVIEW_TITLE'),'list');ToolbarHelper::help('quizreview', true);
+        parent::display($tpl);
     }
 }
