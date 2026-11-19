@@ -200,6 +200,20 @@ $certDbSnapshot=$db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json
 dashExpect($certificates->listForStudent($other)===[],'foreign learner has no access to another issued certificate');
 dashDenied(fn()=>$certificates->download($other,$completed),404,'foreign certificate download denied');
 dashDenied(fn()=>$certificates->download(new \Joomla\CMS\User\User(),$completed),401,'anonymous certificate download denied');
+ // EDGE-01: an existing session object must not bypass a later core account block.
+ $preBlockOwner = $owner;
+ $update('users',(int)$owner->id,['block'=>1]);
+ try {
+     dashDenied(fn()=>$certificates->download($preBlockOwner,$completed),403,
+         'blocked Joomla account cannot use old direct certificate download URL');
+     dashDenied(fn()=>$certificates->listForStudent($preBlockOwner),403,
+         'blocked Joomla account cannot list previously issued certificates');
+ } finally {
+     $update('users',(int)$owner->id,['block'=>0]);
+ }
+ dashExpect(count($certificates->listForStudent($preBlockOwner))===1,
+     'reactivated Joomla account can list the same immutable certificate');
+
 foreach ([0,2,-2] as $inactiveState) {
     $update('jlms_courses',$f['course_id'],['state'=>$inactiveState]);
     try {
