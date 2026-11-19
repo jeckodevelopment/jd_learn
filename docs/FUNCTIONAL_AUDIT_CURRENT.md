@@ -1236,6 +1236,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [plugins/actionlog/jdlearn/installer.php#postflight](../plugins/actionlog/jdlearn/installer.php)
   - [component/administrator/src/Application/PublicationService.php#onJlmsCourseTransition](../component/administrator/src/Application/PublicationService.php)
   - [tests/joomla-publication.php#CORE-17: exactly one native Joomla actionlog event](../tests/joomla-publication.php)
+  - [packages/pkg_jlms.xml#plg_actionlog_jdlearn](../packages/pkg_jlms.xml)
 - `PERF-02/workload_distribution` — Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento. Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#Distribuzione di riferimento: 60% video](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#mix60%video](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
