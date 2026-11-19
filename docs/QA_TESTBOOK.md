@@ -1,3 +1,9 @@
+## STU-01 — Riprendi oltre 50 iscrizioni recenti (20/11/2026)
+
+**Collaudo manuale Joomla pendente:** con account studente di prova creare almeno 51 iscrizioni con attività registrata e non completate, in ordine cronologico. Rendere **non disponibili tutte le 50 più recenti** (sospensione, scadenza, restrizione accesso e/o ritiro consentito dal workflow), lasciando fruibile la cinquantunesima: il riepilogo deve mostrare Riprendi verso la cinquantunesima iscrizione, senza mostrare contenuti vietati per le 50 recenti. Verificare il redirect e i controlli ACL al clic. Rendere indisponibile anche la cinquantunesima: l'azione scompare, ma rimangono i conteggi storici. Ripristinare una delle attività più recenti: Riprendi deve selezionare quella, rispettando il loro ordine. Controllare sessione altro utente, IT/EN, numero di query e tempi di risposta; il caricamento è per blocchi di massimo 50 righe. Nessun GET di lettura deve scrivere progressi.
+
+**CI:** gate strutturale in `tools/check.py` sulla scansione a lotti e suite Joomla dashboard già esistente; il caso combinato con 51 iscrizioni non è ancora coperto automaticamente e non va dichiarato superato fino a prova diretta.
+
 ## JOO-01/REL-03 — integrità ZIP pacchetto senza duplicati (19/11/2026)
 
 **Collaudo Joomla manuale pendente:** estrarre dall'artefatto Actions il file `pkg_jlms-0.63.2-dev.zip`; controllare che il pacchetto abbia esattamente 12 ZIP figli, ciascuno presente una sola volta e descritto dal manifest. Eseguire installazione nuova e upgrade da 0.63.1-dev sul sito di prova; in Gestione estensioni verificare che Action Log sia installato una sola volta, senza nuovi record duplicati, che lo stato di abilitazione esistente resti invariato e che versione/data siano uniformi. Verificare corsi, notifiche e plugin video preesistenti. Registrare build, profilo e risultati. Il gate automatizzato sullo ZIP non equivale al collaudo manuale.

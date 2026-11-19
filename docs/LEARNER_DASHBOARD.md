@@ -22,6 +22,10 @@ Una nuova revoca fra la visualizzazione e il clic rifiuta il redirect. Utente an
 
 Le iscrizioni in lingue diverse sono nello stesso storico. Con Filtro lingua attivo la lingua del corso deve avere pacchetto sito installato, contenuto pubblicato e accessibile; il redirect usa il tag lingua originale, per esempio `it-IT`, senza sostituire l'iscrizione con quella di un corso associato. Con Filtro lingua disattivato è disponibile la lingua dell'interfaccia corrente e i contenuti comuni `*`. Per conservare la pagina personale durante un cambio lingua associare le voci menu con gli strumenti nativi Joomla.
 
+## Ripresa con storico superiore a 50 iscrizioni (0.63.3-dev)
+
+La pagina Riepilogo personale individua l'ultima attività **effettivamente riprendibile**, anche quando le prime 50 iscrizioni con attività recente sono sospese, revocate, archiviate o scadute. La ricerca percorre la cronologia dell'utente in lotti massimi di 50 iscrizioni, interrompendosi al primo risultato consentito, senza caricare tutti i record simultaneamente e senza usare lo stato di iscrizione come prova sufficiente di accesso. Ogni lotto usa la stessa proiezione ACL, lingua, edizione, pubblicazione e finestre già applicata a I miei corsi. Se nessuna attività è accessibile il pulsante Riprendi non compare; il riepilogo numerico riguarda sempre l'intera storia.
+
 ## MVC, dati e prestazioni
 
 `DashboardService::query` seleziona soltanto iscrizioni del proprietario, con join coerenti a versione/edizione e proiezione minima dello storico. `cards` costruisce il modello pubblico e carica la visibilità corrente con una query catalogo per lingua presente nella pagina, senza interrogare l'aula o i corpi delle lezioni per ogni riga. `DashboardModel` usa ListModel/Pagination e Form Joomla; `HtmlView`/layout sono sostituibili tramite override. Non ci sono nuove tabelle, migrazioni, lock di lettura condivisi o cache di storico fra utenti.

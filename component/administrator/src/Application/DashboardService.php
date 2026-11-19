@@ -55,14 +55,21 @@ final class DashboardService
         $recentQuery = $this->query($identity, 'in_progress')
             ->where('e.last_activity_at IS NOT NULL')
             ->order('e.last_activity_at DESC, e.id DESC');
-        $recent = $this->db->setQuery($recentQuery, 0, 50)->loadObjectList();
         $latest = null;
-        foreach ($this->cards($identity, $uiLanguage, $recent ?: []) as $card) {
-            if ($card['access'] === 'available') {
-                $latest = $card;
-                break;
+        // An inaccessible recent page must not hide an older, still usable activity.
+        // Iterate the owner's history in bounded batches; each page passes through
+        // the same fresh ACL/language/edition projection as My Courses.
+        $offset = 0;
+        do {
+            $recent = $this->db->setQuery($recentQuery, $offset, 50)->loadObjectList() ?: [];
+            foreach ($this->cards($identity, $uiLanguage, $recent) as $card) {
+                if ($card['access'] === 'available') {
+                    $latest = $card;
+                    break;
+                }
             }
-        }
+            $offset += count($recent);
+        } while ($latest === null && count($recent) === 50);
 
         return [
             'not_started' => max(0, $total - $completed - $active),

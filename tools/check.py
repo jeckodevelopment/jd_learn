@@ -9,6 +9,14 @@ hard_delete=question_bank.split('public function delete(User $identity, int $id)
 assert "if ((int) $question->state !== -2)" in hard_delete
 assert hard_delete.index("$question->state !== -2") < hard_delete.index("->delete('#__jlms_question_revisions')")
 
+# STU-01: resume discovery must not silently stop at the first 50 inaccessible enrollments.
+dashboard=(ROOT/'component/administrator/src/Application/DashboardService.php').read_text()
+summary=dashboard.split('public function summary(',1)[1].split('public function catalogStates(',1)[0]
+assert 'setQuery($recentQuery, $offset, 50)' in summary
+assert '$offset += count($recent)' in summary
+assert 'while ($latest === null && count($recent) === 50)' in summary
+assert "if ($card['access'] === 'available')" in summary
+
 count=0
 for base in ['component','libraries','plugins','packages']:
  for p in (ROOT/base).rglob('*.xml'):

@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.63.3-dev — PATCH SemVer (STU-01, 20/11/2026):** Riprendi nel riepilogo personale cerca a pagine di 50 iscrizioni, anziché fermarsi alle prime 50 attività anche se tutte inaccessibili; conserva i controlli ACL, lingua, edizione e disponibilità a ogni blocco. Nessuna modifica dati/schema/API, test strutturale anti-regressione; prova Joomla con oltre 50 iscrizioni ancora da eseguire.
+
+
 - **0.63.2-dev — PATCH SemVer (JOO-01/REL-03, 19/11/2026):** eliminata la seconda copia erronea del plugin Action Log dallo ZIP di installazione; builder e gate metadati ora rifiutano nomi ZIP duplicati sia nel pacchetto che negli archivi figli e verificano l'esatta corrispondenza con il manifest Joomla. Nessuna nuova estensione, schema o modifica ai dati; il collaudo di installazione/upgrade sul sito reale resta pendente.
 
 - **0.63.1-dev — PATCH SemVer (QUI-02, 19/11/2026):** la cancellazione definitiva delle domande è ora rifiutata dal servizio se lo stato non è cestinato (`-2`), anche tramite richiesta POST diretta con permessi di eliminazione. Invariati ACL, CSRF, protezione tentativi e cancellazione atomica; gate statico e collaudo Joomla per bozza, ripristino e purga da cestino. Collaudo manuale pendente.
