@@ -37,6 +37,7 @@ final class HtmlView extends BaseHtmlView
             ]);
         }
 
-        return parent::display($tpl);
+        return ToolbarHelper::help('coursepreview', true);
+        parent::display($tpl);
     }
 }
