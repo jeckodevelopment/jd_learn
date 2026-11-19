@@ -27,6 +27,7 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         ToolbarHelper::title(Text::_('COM_JLMS_TEACHER'), 'user');
         if ($id) { ToolbarHelper::versions('com_jlms.teacher', $id); }
         ToolbarHelper::apply('teacher.apply'); ToolbarHelper::save('teacher.save'); ToolbarHelper::cancel('teacher.cancel');
+        ToolbarHelper::help('teacher', true);
         parent::display($tpl);
     }
 }

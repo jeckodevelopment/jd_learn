@@ -61,6 +61,7 @@ final class HtmlView extends BaseHtmlView
         $this->dateValues = ['publish_up' => $data['publish_up'], 'publish_down' => $data['publish_down']];
         $this->form->bind($data);
         ToolbarHelper::title(Text::_('COM_JLMS_MATERIALS'), 'file');
+        ToolbarHelper::help('materials', true);
         parent::display($tpl);
     }
 }

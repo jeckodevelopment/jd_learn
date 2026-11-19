@@ -21,6 +21,7 @@ final class HtmlView extends BaseHtmlView
         }
         ToolbarHelper::title(Text::_('COM_JLMS_MANUAL_TITLE'), 'user-plus');
         ToolbarHelper::link('index.php?option=com_jlms&view=enrollments&id=' . (int) $this->item['course']->id, 'COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT', 'arrow-left');
+        ToolbarHelper::help('manualenrollment', true);
         parent::display($tpl);
     }
 }

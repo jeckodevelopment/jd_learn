@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (DOC-05, 19/11/2026) — censimento e copertura totale delle viste amministrative:** 19 viste residue dotate di pulsante Joomla Guida e 38 pagine offline IT/EN; copertura sorgente complessiva 29/29 viste, 58/58 capitoli locali. Test di regressione dinamico per nuove viste, file mancanti e interruzione del rendering; inventario in `docs/ADMIN_HELP_COVERAGE.md`. Restano da collaudare la risoluzione reale dei link e l'accessibilità su Joomla, e i rimandi ai capitoli del manuale completo.
+
 - **0.60.8-dev (DOC-05, 19/11/2026) — guida contestuale backend, seconda tranche:** sette nuovi pulsanti Guida nativi nelle schermate Programma, dashboard amministrativa, Coda email, Variabili email, Comunicazioni corso, Attestati e Dettaglio attestato; 14 nuove pagine offline IT/EN. Esteso il gate DOC-05 a 10 viste e 20 pagine. DOC-05 rimane parziale fino alla copertura completa, ai collegamenti ai manuali e all'accettazione Joomla.
 
 - **0.60.8-dev (DOC-05, 19/11/2026):** prima tranche di guida contestuale Joomla offline nelle viste Corsi, Corso e Iscritti, con pagine IT/EN nel pacchetto. DOC-05 resta parziale, collaudo manuale pendente.

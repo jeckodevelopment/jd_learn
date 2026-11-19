@@ -17,6 +17,7 @@ final class HtmlView extends BaseHtmlView
         $key = substr($key,0,8).'-'.substr($key,8,4).'-4'.substr($key,13,3).'-a'.substr($key,17,3).'-'.substr($key,20);
         $this->form->bind(['course_id' => (int) $this->item['course']->id, 'enrollment_id' => $this->item['enrollment_id'],
             'enrollment_revision' => $p['enrollment_revision'], 'target_status' => $p['target_status'], 'impact_hash' => $p['hash'], 'mutation_id' => $key]);
-        ToolbarHelper::title(Text::_('COM_JLMS_ENROLLMENT_STATE_TITLE'), 'users'); parent::display($tpl);
+        ToolbarHelper::title(Text::_('COM_JLMS_ENROLLMENT_STATE_TITLE'), 'users'); ToolbarHelper::help('enrollmentstate', true);
+        parent::display($tpl);
     }
 }

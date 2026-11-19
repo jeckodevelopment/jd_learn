@@ -44,6 +44,7 @@ final class HtmlView extends BaseHtmlView
         ToolbarHelper::apply('pathway.apply');
         ToolbarHelper::save('pathway.save');
         ToolbarHelper::cancel('pathway.cancel');
+        ToolbarHelper::help('pathway', true);
         parent::display($tpl);
     }
 }

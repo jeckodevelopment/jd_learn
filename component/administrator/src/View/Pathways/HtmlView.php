@@ -44,6 +44,7 @@ final class HtmlView extends BaseHtmlView
                 ToolbarHelper::trash('pathway.trash');
             }
         }
+        ToolbarHelper::help('pathways', true);
         parent::display($tpl);
     }
 }

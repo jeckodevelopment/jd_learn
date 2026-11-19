@@ -21,6 +21,7 @@ final class HtmlView extends BaseHtmlView
         ToolbarHelper::title(Text::_($this->item['id']?'COM_JLMS_QUESTION_EDIT':'COM_JLMS_QUESTION_NEW'),'help');
         ToolbarHelper::save('questionbank.save');
         ToolbarHelper::link('index.php?option=com_jlms&view=questionbank','JCANCEL','cancel');
+        ToolbarHelper::help('question', true);
         parent::display($tpl);
     }
 }

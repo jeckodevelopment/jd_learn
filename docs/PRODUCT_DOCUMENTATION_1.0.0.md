@@ -1,6 +1,6 @@
 # DOC-1.0 — Documentazione prodotto e assistenza contestuale
 
-Stato: **piano approvato per la release 1.0.0; prime due tranche DOC-05 integrate nel piano, copertura restante da completare**, senza attribuire copertura funzionale o accettazione. Questo documento definisce il gate documentale e UX della versione stabile, non dichiara già disponibili manuali o una guida contestuale completa.
+Stato: **piano approvato per la release 1.0.0; copertura sorgente DOC-05 su tutte le 29 viste amministrative (guida locale IT/EN), accettazione e collegamenti al manuale ancora aperti**, senza attribuire copertura funzionale o accettazione. Questo documento definisce il gate documentale e UX della versione stabile, non dichiara già disponibili manuali o una guida contestuale completa.
 
 ## Obiettivo e destinatari
 

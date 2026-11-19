@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DOC-05 contextual help: offline Joomla contracts for core administration."""
+"""DOC-05: every shipped administrator HTML view has bilingual offline help."""
 from pathlib import Path
 from html.parser import HTMLParser
 
@@ -23,16 +23,28 @@ class HelpPage(HTMLParser):
         if tag == "h1":
             self.has_h1 = True
 
-for view in ("Courses", "Course", "Enrollments", "Curriculum", "Dashboard",
-             "Mailqueue", "Mailvariables", "Coursemessage", "Certificates", "Certificate"):
-    source = (admin / "src/View" / view / "HtmlView.php").read_text(encoding="utf-8")
+views = sorted((admin / "src/View").glob("*/HtmlView.php"))
+assert len(views) >= 29, f"administrator view inventory shrank unexpectedly: {len(views)}"
+seen = set()
+for path in views:
+    view = path.parent.name
     key = view.lower()
+    assert key not in seen, f"duplicate help route: {view}"
+    seen.add(key)
+    source = path.read_text(encoding="utf-8")
     assert "ToolbarHelper::help('" + key + "', true)" in source, view
+    assert "use Joomla\\CMS\\Toolbar\\ToolbarHelper;" in source or "\\\\Joomla\\CMS\\Toolbar\\ToolbarHelper::help(" in source, f"ToolbarHelper import missing: {view}"
+    assert "return ToolbarHelper::help(" not in source, f"help cannot replace rendering: {view}"
     for lang in ("it-IT", "en-GB"):
-        path = admin / "help" / lang / (key + ".html")
+        page_path = admin / "help" / lang / (key + ".html")
         page = HelpPage()
-        raw = path.read_text(encoding="utf-8")
+        raw = page_path.read_text(encoding="utf-8")
         page.feed(raw)
-        assert (page.lang, page.has_main, page.has_h1) == (lang, True, True), path
+        assert (page.lang, page.has_main, page.has_h1) == (lang, True, True), page_path
         assert "http://" not in raw and "https://" not in raw, "help must work offline"
-print("DOC-05: 10 backend views, 20 localized packaged help pages, OK")
+        assert "<title>JD Learn" in raw, "each page must have a descriptive title"
+
+for lang in ("it-IT", "en-GB"):
+    shipped = {p.stem for p in (admin / "help" / lang).glob("*.html")}
+    assert shipped == seen, f"orphan or missing {lang} help pages: {shipped ^ seen}"
+print(f"DOC-05: all {len(views)} administrator views, {len(views) * 2} bilingual offline help pages OK")

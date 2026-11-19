@@ -37,6 +37,7 @@ final class HtmlView extends BaseHtmlView
                 ->getCategoryReassignmentService()->inspect($actor, $categoryId);
         }
         ToolbarHelper::title(Text::_('COM_JLMS_CATEGORY_REASSIGN_TITLE'), 'folder-tree');
+        ToolbarHelper::help('categoryreassignment', true);
         parent::display($tpl);
     }
 }

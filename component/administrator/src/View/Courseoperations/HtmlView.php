@@ -19,6 +19,7 @@ final class HtmlView extends BaseHtmlView
   foreach ($operations as $operation => $label) {
    ToolbarHelper::link('index.php?option=com_jlms&view=courseoperations&id=' . $courseId . '&operation=' . $operation, $label, 'refresh');
   }
-  parent::display($tpl);
+  ToolbarHelper::help('courseoperations', true);
+        parent::display($tpl);
  }
 }
