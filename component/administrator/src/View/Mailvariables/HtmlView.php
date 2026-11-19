@@ -32,6 +32,7 @@ final class HtmlView extends BaseHtmlView
                 'envelope'
             );
         }
+        ToolbarHelper::help('mailvariables', true);
         parent::display($tpl);
     }
 }
