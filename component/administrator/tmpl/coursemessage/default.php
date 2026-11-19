@@ -11,8 +11,8 @@ $subject=$preview['subject']??'';
 $body=$preview['body']??'';
 $template=$this->item['template'];
 $selected=$preview['enrollment_ids']??array_map(static fn($row)=>(int)$row->enrollment_id,$this->item['recipients']);
-$mutation=bin2hex(random_bytes(16));
-$mutation=substr($mutation,0,8).'-'.substr($mutation,8,4).'-4'.substr($mutation,13,3).'-a'.substr($mutation,17,3).'-'.substr($mutation,20);
+// The idempotency key belongs to the saved preview, never the GET request.
+$mutation=$preview['mutation_id']??'';
 ?>
 <section id="jlms-course-communication">
  <h1><?= Text::_('COM_JLMS_COMMUNICATION_TITLE') ?>: <?= $this->escape($this->item['course']->title) ?></h1>
