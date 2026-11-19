@@ -5398,9 +5398,7 @@
         "evidence": [
           "component/site/src/View/Courses/HtmlView.php",
           "component/site/tmpl/courses/default.php",
-          "tests/frontend-catalog-options.py",
-          "component/site/language/it-IT/com_jlms.ini",
-          "component/site/language/en-GB/com_jlms.ini"
+          "tests/frontend-catalog-options.py"
         ],
         "review": {
           "reason": "La vista del catalogo distingue la failure dal risultato vuoto, scarta card e proiezioni personali parziali e mantiene 401/403/404 come errori di accesso. Il template mostra un messaggio localizzato con Riprova sul path e sulla query correnti (filtri, categoria, ordinamento e pagina); in assenza di risultati offre Azzera filtri con categoria scoped. Test strutturali IT/EN presenti; il collaudo Joomla reale rimane pendente.",
