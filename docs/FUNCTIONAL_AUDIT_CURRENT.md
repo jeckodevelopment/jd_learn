@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **435**.
-- Mancanti con lacuna accertata: **54**.
+- Implementati: **436**.
+- Mancanti con lacuna accertata: **53**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -47,9 +47,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Model/CoursesModel.php#['recent', 'title', 'duration', 'published']](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#return $query->order($order === 'title'](../component/site/src/Model/CoursesModel.php)
   - [component/site/tmpl/courses/default.php#name="filter[order]"](../component/site/tmpl/courses/default.php)
-- `SCR-01/empty_error` — Stati senza risultati, azzera filtri ed errore recuperabile. Il layout ha un messaggio per zero risultati e un collegamento per uscire dalla categoria. Non offre azzera filtri per la ricerca generale né uno stato di errore recuperabile nel catalogo.
-  - [component/site/tmpl/courses/default.php#jlms-catalog-empty](../component/site/tmpl/courses/default.php)
-  - [component/site/tmpl/courses/default.php#jlms-category-filter](../component/site/tmpl/courses/default.php)
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
   - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
@@ -1333,6 +1330,14 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/View/Courses/HtmlView.php#$this->cardPendingApprovals](../component/site/src/View/Courses/HtmlView.php)
   - [component/site/tmpl/courses/default.php#jlms-course-card__pending](../component/site/tmpl/courses/default.php)
   - [tests/frontend-catalog-options.py#SCR-01/card](../tests/frontend-catalog-options.py)
+- `SCR-01/empty_error` — Stati senza risultati, azzera filtri ed errore recuperabile. La vista del catalogo distingue la failure dal risultato vuoto, scarta card e proiezioni personali parziali e mantiene 401/403/404 come errori di accesso. Il template mostra un messaggio localizzato con Riprova sul path e sulla query correnti (filtri, categoria, ordinamento e pagina); in assenza di risultati offre Azzera filtri con categoria scoped. Test strutturali IT/EN presenti; il collaudo Joomla reale rimane pendente.
+  - [component/site/src/View/Courses/HtmlView.php#catch (\Throwable $error)](../component/site/src/View/Courses/HtmlView.php)
+  - [component/site/src/View/Courses/HtmlView.php#$this->cardEnrollmentStates = [];](../component/site/src/View/Courses/HtmlView.php)
+  - [component/site/tmpl/courses/default.php#jlms-catalog-empty](../component/site/tmpl/courses/default.php)
+  - [component/site/tmpl/courses/default.php#jlms-catalog-clear-filters](../component/site/tmpl/courses/default.php)
+  - [component/site/tmpl/courses/default.php#jlms-catalog-load-error](../component/site/tmpl/courses/default.php)
+  - [component/site/tmpl/courses/default.php#jlms-catalog-retry](../component/site/tmpl/courses/default.php)
+  - [tests/frontend-catalog-options.py#SCR-01/empty_error](../tests/frontend-catalog-options.py)
 - `SCR-02/no_granted_access` — Elenco categoria non concede automaticamente accesso ai corsi. La categoria seleziona i corsi tramite la query di visibilità. L’accesso didattico richiede ancora il livello di contenuto e un’iscrizione autorizzata.
   - [component/site/src/Model/CoursesModel.php#protected function getListQuery](../component/site/src/Model/CoursesModel.php)
   - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
