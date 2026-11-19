@@ -47,6 +47,7 @@ CHILD_NAMES={
     'plg_system_jlmsmenu':'PLG_SYSTEM_JLMSMENU',
     'plg_finder_jlms':'PLG_FINDER_JLMS',
     'plg_user_jdlearnconsent':'PLG_USER_JDLEARNCONSENT',
+    'plg_actionlog_jdlearn':'PLG_ACTIONLOG_JDLEARN',
 }
 def stamp_manifest(source,display_name):
     def replace_once(pattern, repl, data, label):
@@ -113,8 +114,9 @@ parts.append(('constituents/plg_privacy_jdlearn.zip',child_archive(ROOT/'plugins
 parts.append(('constituents/plg_system_jlmsmenu.zip',child_archive(ROOT/'plugins/system/jlmsmenu','plg_system_jlmsmenu')))
 parts.append(('constituents/plg_finder_jlms.zip',child_archive(ROOT/'plugins/finder/jlms','plg_finder_jlms')))
 parts.append(('constituents/plg_user_jdlearnconsent.zip',child_archive(ROOT/'plugins/user/jdlearnconsent','plg_user_jdlearnconsent')))
+parts.append(('constituents/plg_actionlog_jdlearn.zip',child_archive(ROOT/'plugins/actionlog/jdlearn','plg_actionlog_jdlearn')))
 manifest=stamp_manifest((ROOT/'packages/pkg_jlms.xml').read_bytes(),'JD Learn')
 parts.append(('pkg_jlms.xml',manifest))
 data=archive(parts);out=DIST/f'pkg_jlms-{OUTPUT_VERSION}{"" if args.release_version else "-dev"}.zip';out.write_bytes(data)
 digest=hashlib.sha256(data).hexdigest();(DIST/'SHA256SUMS.txt').write_text(digest+'  '+out.name+'\n')
-print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':11}))
+print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':12}))
