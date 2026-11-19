@@ -44,6 +44,7 @@ final class HtmlView extends BaseHtmlView
                 ToolbarHelper::trash('teacher.trash');
             }
         }
+        ToolbarHelper::help('teachers', true);
         parent::display($tpl);
     }
 }
