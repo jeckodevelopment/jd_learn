@@ -13,7 +13,10 @@ css = read("component/media/css/site.css")
 assert "public function summary(User $identity, string $uiLanguage): array" in service
 assert "$base = $this->query($identity);" in service
 assert "COUNT(*) AS history_total" in service and "completed_total" in service and "active_total" in service
-assert "cards($identity, $uiLanguage, $recent ?: [])" in service and "['access'] === 'available'" in service
+assert "cards($identity, $uiLanguage, $recent)" in service and "['access'] === 'available'" in service
+assert "setQuery($recentQuery, $offset, 50)" in service
+assert "$offset += count($recent)" in service
+assert "while ($latest === null && count($recent) === 50)" in service
 assert "getDashboardService()" in view and "->summary($app->getIdentity()" in view
 assert "getCertificateService()->listForStudent($app->getIdentity())" in view
 assert "COM_JLMS_MY_TRAINING" in view and "noindex, nofollow" in view
