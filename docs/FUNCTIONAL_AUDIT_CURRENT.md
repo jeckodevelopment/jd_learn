@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **442**.
-- Mancanti con lacuna accertata: **47**.
+- Implementati: **443**.
+- Mancanti con lacuna accertata: **46**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -39,10 +39,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
   - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
-- `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.
-  - [component/administrator/src/Model/CourseModel.php#public function purgeEmpty](../component/administrator/src/Model/CourseModel.php)
-  - [component/administrator/src/View/Courses/HtmlView.php#purgepreview](../component/administrator/src/View/Courses/HtmlView.php)
-  - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM](../component/administrator/language/it-IT/com_jlms.ini)
 - `REL-01/criterion_01` — Accettazione funzionale. Non esiste ancora un record di accettazione funzionale completa della candidata 1.0.0 con esiti e riferimenti per i requisiti; l'audit del codice è distinto dall'accettazione.
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3)
@@ -1459,6 +1455,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Controller/EnrollmentmigrationController.php#confirmation](../component/administrator/src/Controller/EnrollmentmigrationController.php)
   - [component/administrator/src/Application/EnrollmentMigrationService.php#kind <> 'quiz'](../component/administrator/src/Application/EnrollmentMigrationService.php)
   - [component/administrator/src/Application/EnrollmentMigrationService.php#course_version_enrollment_migrated](../component/administrator/src/Application/EnrollmentMigrationService.php)
+- `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il corso cestinato espone un'anteprima autorizzata con conteggio delle dipendenze e revisioni editoriali; la conferma di eliminazione è separata, richiede CSRF e revisione invariata, e la purga ricontrolla i riferimenti in transazione. Test Joomla su corso vuoto, revisione obsoleta e conservazione delle dipendenze; accettazione manuale ancora pendente.
+  - [component/administrator/src/Model/CourseModel.php#public function purgeImpact](../component/administrator/src/Model/CourseModel.php)
+  - [component/administrator/src/View/Courses/HtmlView.php#purgepreview](../component/administrator/src/View/Courses/HtmlView.php)
+  - [component/administrator/tmpl/courses/purgepreview.php#COM_JLMS_PURGE_DEPENDENCIES](../component/administrator/tmpl/courses/purgepreview.php)
+  - [tests/joomla-courses-ui.php#Unused trashed course has an eligible impact preview](../tests/joomla-courses-ui.php)
 - `LIFE-01/criterion_04` — Nessuna eliminazione a cascata non dichiarata. La purga controlla prima le dipendenze didattiche e poi rimuove esplicitamente soltanto le revisioni editoriali del corso. La conferma IT/EN dichiara tale rimozione e il test verifica la cancellazione delle revisioni del corso selezionato.
   - [component/administrator/src/Model/CourseModel.php#Remove only this item](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM](../component/administrator/language/it-IT/com_jlms.ini)

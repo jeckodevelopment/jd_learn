@@ -6335,18 +6335,20 @@
       {
         "id": "criterion_03",
         "label": "La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Model/CourseModel.php",
           "component/administrator/src/View/Courses/HtmlView.php",
-          "component/administrator/language/it-IT/com_jlms.ini"
+          "component/administrator/tmpl/courses/purgepreview.php",
+          "tests/joomla-courses-ui.php"
         ],
         "review": {
-          "reason": "Il modello applica core.delete e rifiuta i corsi con dipendenze. La toolbar usa un messaggio di conferma fisso. Manca un riepilogo dell’impatto calcolato per il corso selezionato.",
+          "reason": "Il corso cestinato espone un'anteprima autorizzata con conteggio delle dipendenze e revisioni editoriali; la conferma di eliminazione è separata, richiede CSRF e revisione invariata, e la purga ricontrolla i riferimenti in transazione. Test Joomla su corso vuoto, revisione obsoleta e conservazione delle dipendenze; accettazione manuale ancora pendente.",
           "references": [
-            "component/administrator/src/Model/CourseModel.php#public function purgeEmpty",
+            "component/administrator/src/Model/CourseModel.php#public function purgeImpact",
             "component/administrator/src/View/Courses/HtmlView.php#purgepreview",
-            "component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_COURSE_PURGE_CONFIRM"
+            "component/administrator/tmpl/courses/purgepreview.php#COM_JLMS_PURGE_DEPENDENCIES",
+            "tests/joomla-courses-ui.php#Unused trashed course has an eligible impact preview"
           ]
         }
       },

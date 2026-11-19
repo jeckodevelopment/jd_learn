@@ -2,8 +2,8 @@
   "audited_at": "2026-11-15",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 55.99,
-    "development_evidence_floor_percent": 55.99,
+    "percent": 56.11,
+    "development_evidence_floor_percent": 56.11,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -13704,6 +13704,38 @@
       "ci": {
         "run_id": 43766296559,
         "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43766296559",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
+    {
+      "feature": "LIFE-01 PR #726 — purge impact preview and revision-safe deletion (0.61.0-dev)",
+      "ci": {
+        "run_id": 44605697284,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/44605697284",
         "status": "completed",
         "conclusion": "success",
         "standard_jobs": 4,
