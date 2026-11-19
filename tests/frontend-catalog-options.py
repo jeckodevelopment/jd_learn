@@ -169,3 +169,18 @@ for fieldset in (menu, component, ET.parse(root / "component/site/tmpl/category/
 for folder in ("component/site/language", "component/administrator/language"):
     for language in ("it-IT", "en-GB"):
         assert "COM_JLMS_CATALOG_ORDER_PUBLISHED=" in (root / folder / language / "com_jlms.ini").read_text()
+
+# SCR-01/empty_error: backend error is not an empty result and retry keeps URL filters.
+assert "public bool $loadFailed = false" in view
+assert "catch (\\Throwable $error)" in view
+assert "[401, 403, 404]" in view
+assert "$this->cardEnrollmentStates = [];" in view.split("catch (\\Throwable $error)", 1)[1]
+assert "$this->cardPendingApprovals = [];" in view.split("catch (\\Throwable $error)", 1)[1]
+assert "if ($this->loadFailed)" in template
+assert 'id="jlms-catalog-load-error"' in template
+assert 'role="alert"' in template
+assert "Uri::getInstance()->toString(['path', 'query'])" in template
+assert "COM_JLMS_CATALOG_RETRY" in template
+for language in ("it-IT", "en-GB"):
+    ini = (root / "component/site/language" / language / "com_jlms.ini").read_text()
+    assert "COM_JLMS_CATALOG_LOAD_ERROR=" in ini and "COM_JLMS_CATALOG_RETRY=" in ini
