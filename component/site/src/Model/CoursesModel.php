@@ -29,7 +29,7 @@ class CoursesModel extends ListModel
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
         $defaultOrder = CatalogOptions::get('catalog_default_order');
         $order = CatalogOptions::enabled('catalog_show_order') ? ($filter['order'] ?? $defaultOrder) : $defaultOrder;
-        $this->setState('filter.order', is_string($order) && in_array($order, ['recent', 'title', 'duration', 'published'], true) ? $order : $defaultOrder);
+        $this->setState('filter.order', is_string($order) && in_array($order, ['editorial', 'recent', 'title', 'duration', 'published'], true) ? $order : $defaultOrder);
         $tagId = $filter['tag_id'] ?? 0;
         $this->setState('filter.tag_id', max(0, is_scalar($tagId) ? (int) $tagId : 0));
         $difficulty = $filter['difficulty'] ?? '';
@@ -96,6 +96,11 @@ class CoursesModel extends ListModel
             $query->where('c.admissions_open = 1')->where('c.delivery_enabled = 1');
         }
         $order = (string) $this->getState('filter.order');
+        if ($order === 'editorial') {
+            // Positive editorial ranks first, unassigned last; stable tie-break.
+            $position = "COALESCE(CAST(JSON_UNQUOTE(JSON_EXTRACT(c.params_json, '$.catalog_position')) AS UNSIGNED), 0)";
+            return $query->order("($position = 0) ASC, $position ASC, c.id DESC");
+        }
         if ($order === 'duration') {
             // Sort by the immutable PUBLISHED snapshot displayed on each card, not the editable draft.
             // Unknown durations come last, and ID makes pagination deterministic.

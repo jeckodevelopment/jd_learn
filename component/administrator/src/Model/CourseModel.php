@@ -58,6 +58,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $item->{'mail_' . $event} = $mailPreferences[$event] ?? 'inherit';
             }
             $item->certificate_enabled = json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['certificate_enabled'] ?? 'inherit';
+            $item->catalog_position = (int) (json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['catalog_position'] ?? 0);
             $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(),(int) $item->id);
             $item->tags = new \Joomla\CMS\Helper\TagsHelper();
             $item->tags->getTagIds((int) $item->id, 'com_jlms.course');
@@ -241,7 +242,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $db = $this->getDatabase();
         $this->associationWrite = false;
-        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_manager_request', 'mail_course_update', 'mail_lesson_release', 'mail_teacher_assignment', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
+        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'catalog_position', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_manager_request', 'mail_course_update', 'mail_lesson_release', 'mail_teacher_assignment', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
         $allowed=array_merge($allowed,\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
         $data = array_intersect_key($data, array_flip($allowed));
@@ -332,6 +333,20 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $calendar=\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data,$record ?? (object) [],$data['params_json'] ?? $record->params_json ?? '{}',$this->siteTimezone());
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { unset($data[$field]); }
             $data=array_replace($data,$calendar);
+            // Editorial position is course-level, independent of the teaching snapshot.
+            if (array_key_exists('catalog_position', $data)) {
+                $position = $data['catalog_position'];
+                if ((!is_int($position) && (!is_string($position) || !preg_match('/^[0-9]{1,4}$/D', $position)))
+                    || (int) $position < 0 || (int) $position > 9999) {
+                    throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                }
+                $params = json_decode((string) ($data['params_json'] ?? $record->params_json ?? '{}'), true, 32, JSON_THROW_ON_ERROR);
+                if (!is_array($params)) { throw new \DomainException('COM_JLMS_INVALID_INPUT'); }
+                if ((int) $position === 0) { unset($params['catalog_position']); }
+                else { $params['catalog_position'] = (int) $position; }
+                $data['params_json'] = json_encode($params, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                unset($data['catalog_position']);
+            }
             if ($copySource !== null) {
                 // Trusted persisted source metadata, never raw JSON from the request.
                 foreach (['params_json', 'metadata_json', 'image'] as $field) { $data[$field] = $copySource->course->$field; }

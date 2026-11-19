@@ -10,6 +10,7 @@
   <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" default="*"><option value="*">JALL</option></field>
   <field name="tags" type="tag" label="COM_JLMS_COURSE_TAGS" description="COM_JLMS_COURSE_TAGS_DESC" multiple="true" />
   <field name="summary" type="textarea" label="COM_JLMS_COURSE_SUMMARY" description="COM_JLMS_COURSE_SUMMARY_LIMIT" filter="string" rows="4" />
+  <field name="catalog_position" type="number" label="COM_JLMS_COURSE_CATALOG_POSITION" description="COM_JLMS_COURSE_CATALOG_POSITION_DESC" default="0" min="0" max="9999" step="1" filter="integer" />
  </fieldset>
  <fieldset name="presentation" label="COM_JLMS_COURSE_PRESENTATION">
   <field name="presentation_image" type="media" label="COM_JLMS_COURSE_IMAGE" description="COM_JLMS_COURSE_IMAGE_HELP" types="images" preview="tooltip" filter="raw" />
