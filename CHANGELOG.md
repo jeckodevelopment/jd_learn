@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.60.8-dev (CAT-01, 19/11/2026) — filtro corsi disponibili:** il catalogo offre la scelta facoltativa di mostrare soltanto corsi pubblicati e visibili con ammissioni aperte ed erogazione abilitata. Il filtro è applicato nella query ACL già esistente; disattivato per impostazione predefinita e ignorato se i filtri del catalogo sono disabilitati. Traduzioni IT/EN; collaudo Joomla da eseguire. Nessuna migrazione di schema.
+
 - **0.60.8-dev (SCR-01/card, 18/11/2026) — stato personale nelle schede catalogo:** per utenti autenticati, la card riusa i controlli della dashboard personale per mostrare progresso e disponibilità dell'aula; propone Riprendi/Rivedi solo con accesso consentito e didattica erogabile, altrimenti conserva il link ai dettagli. Guest senza dati personali. Stato di richiesta di approvazione non convertita in iscrizione resta escluso e da trattare separatamente. CI e collaudo Joomla distinti.
 
 - **0.60.8-dev (SCR-01/card, 18/11/2026) — docenti nel catalogo:** le card mostrano i docenti associati alla versione pubblicata solo se il profilo congelato supera le verifiche di visibilità correnti (ACL, stato e lingua). Nomi e link a scheda docente, nessun dato account privato; fallback vuoto per snapshot storici malformati. Collaudo Joomla ancora pendente.
