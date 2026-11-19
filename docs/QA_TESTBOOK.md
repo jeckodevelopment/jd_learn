@@ -1,3 +1,16 @@
+## CAT-02 / SCR-03 — CTA contestuali scheda corso (19/11/2026)
+
+**Casi da collaudare su Joomla reale — non eseguiti:**
+1. Ospite su scheda pubblica: deve comparire Accedi, mai dati personali o POST per iscrizione; con utente senza livello contenuti deve comparire il messaggio di accesso richiesto.
+2. Autenticato autorizzato senza iscrizione, corso automatico aperto: Iscriviti e inizia. Il POST deve restare protetto da CSRF/idempotency key e conservare l'opt-in facoltativo (predefinito non selezionato).
+3. Autenticato senza iscrizione, corso ad approvazione: Richiedi accesso, senza accesso anticipato all'aula. Dopo una richiesta pendente della versione corrente deve comparire soltanto lo stato In attesa di approvazione, senza un secondo modulo POST.
+4. Dopo approvazione e iscrizione, aprire la scheda da utente proprietario: Inizia prima dell'attività, Riprendi dopo progresso, Rivedi dopo completamento. Il link deve usare l'ID dell'iscrizione e le verifiche correnti di `enrollment.resume`.
+5. Iscrizione sospesa, annullata, scaduta, versione/edizione non disponibili o corso con didattica disabilitata: indicazione indisponibilità, nessuna nuova iscrizione e nessun link Riprendi; verificare anche che un URL diretto al task non aggiri l'autorizzazione.
+6. Utente B non deve vedere iscrizioni o richieste dell'utente A; provare cache, ACL, categoria, lingua e paginazione. Le richieste di una versione diversa non devono essere scambiate per pending corrente.
+7. Verificare responsive, traduzioni IT/EN e regressione sui link a docenti, programma, attestati e materiali pubblici.
+
+**Limite:** una verifica runtime della pagina è necessaria; CI superata non equivale a collaudo Joomla dell'utente. Le etichette e i gate non concedono diritti né sostituiscono `LearningService`.
+
 ## CAT-01 — filtro «Solo corsi disponibili» (19/11/2026)
 
 **Comportamenti da testare sul sito Joomla di prova (non ancora eseguiti):**

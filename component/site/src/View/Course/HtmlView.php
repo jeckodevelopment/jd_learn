@@ -14,6 +14,8 @@ final class HtmlView extends BaseHtmlView
     public bool $hasContentAccess = false;
     public bool $isGuest = true;
     public bool $canStartWindow = false;
+    public ?array $enrollmentState = null;
+    public bool $pendingApproval = false;
     public string $mutationKey;
 
     public function display($tpl = null)
@@ -31,6 +33,15 @@ final class HtmlView extends BaseHtmlView
             }
         }
         $this->hasContentAccess = (bool) $actor->id && !$actor->block && in_array((int) $this->item['course']->content_access, array_map('intval', $actor->getAuthorisedViewLevels()), true);
+        if ($this->hasContentAccess) {
+            $courseId = (int) $this->item['course']->id;
+            $states = Factory::getApplication()->bootComponent('com_jlms')->getDashboardService()
+                ->catalogStates($actor, Factory::getApplication()->getLanguage()->getTag(), [$courseId]);
+            $this->enrollmentState = $states[$courseId] ?? null;
+            if ($this->enrollmentState === null && $this->item['course']->enrollment_mode === 'approval') {
+                $this->pendingApproval = $this->getModel()->hasPendingApproval($courseId, (int) $actor->id);
+            }
+        }
         $presentation = $this->item['presentation'] ?? [];
         $title = ($presentation['seo_title'] ?? '') ?: $this->item['course']->title;
         $guest = Factory::getUser(0);
