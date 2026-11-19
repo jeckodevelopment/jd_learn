@@ -242,6 +242,8 @@ final class QuestionBankService
             $actor=$this->learning->freshActor($identity); $question=$this->row($id,true); $asset='com_jlms.question.'.$id;
             $this->access($actor,$asset,false,$question);
             if (!$actor->authorise('core.delete',$asset)) { throw new \RuntimeException('COM_JLMS_LEARNING_DENIED',403); }
+            // The UI only offers permanent deletion in the trash; enforce that invariant under the row lock, too.
+            if ((int) $question->state !== -2) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT',409); }
             if ($question->checked_out && (int)$question->checked_out !== (int)$actor->id) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT',409); }
             $usage=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_question_revisions AS r')
                 ->leftJoin('#__jlms_quiz_questions AS qq ON qq.question_revision_id=r.id')
