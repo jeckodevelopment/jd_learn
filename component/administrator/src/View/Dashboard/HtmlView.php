@@ -19,6 +19,7 @@ final class HtmlView extends BaseHtmlView
     public array $providers = [];
     public array $mailScheduler = [];
     public array $schedulerHealth = [];
+    public bool $canManageScheduler = false;
     public array $shortcutGroups = [];
 
     public function display($tpl = null)
@@ -94,6 +95,7 @@ final class HtmlView extends BaseHtmlView
             ->where($db->quoteName('client_id') . ' = 0');
         $extensionMap = $db->setQuery($extensions)->loadObjectList('element');
         $this->providers = DashboardProviderStatus::summarize($extensionMap, $registry->descriptors());
+        $this->canManageScheduler = $actor->authorise('core.manage', 'com_scheduler');
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status($db);
             $this->schedulerHealth = \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::inspect($db);
