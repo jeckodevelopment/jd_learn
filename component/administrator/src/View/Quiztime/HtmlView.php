@@ -13,6 +13,7 @@ final class HtmlView extends BaseHtmlView
         $key=substr($key,0,8).'-'.substr($key,8,4).'-4'.substr($key,13,3).'-a'.substr($key,17,3).'-'.substr($key,20);
         $this->form->bind(['course_id'=>$i['course_id'],'lesson_id'=>$i['lesson_id'],'enrollment_id'=>$i['enrollment']?->id??0,
             'revision'=>$i['current']?->revision_no??0,'extra_minutes'=>$i['current']?intdiv((int)$i['current']->extra_seconds,60):0,'mutation_id'=>$key]);
-        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_TIME_TITLE'),'clock');parent::display($tpl);
+        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_TIME_TITLE'),'clock');ToolbarHelper::help('quiztime', true);
+        parent::display($tpl);
     }
 }
