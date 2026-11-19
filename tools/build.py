@@ -48,7 +48,6 @@ CHILD_NAMES={
     'plg_finder_jlms':'PLG_FINDER_JLMS',
     'plg_user_jdlearnconsent':'PLG_USER_JDLEARNCONSENT',
     'plg_actionlog_jdlearn':'PLG_ACTIONLOG_JDLEARN',
-    'plg_actionlog_jdlearn':'PLG_ACTIONLOG_JDLEARN',
 }
 def stamp_manifest(source,display_name):
     def replace_once(pattern, repl, data, label):
@@ -80,6 +79,9 @@ def child_archive(folder,key):
     if count!=1: raise ValueError('Missing manifest '+manifest+' for '+key)
     return archive(entries)
 def archive(entries):
+    names=[name for name,_data in entries]
+    if len(names)!=len(set(names)):
+        raise ValueError('Duplicate ZIP member names in JD Learn package')
     out=io.BytesIO()
     with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         for name,data in sorted(entries):
@@ -115,7 +117,6 @@ parts.append(('constituents/plg_privacy_jdlearn.zip',child_archive(ROOT/'plugins
 parts.append(('constituents/plg_system_jlmsmenu.zip',child_archive(ROOT/'plugins/system/jlmsmenu','plg_system_jlmsmenu')))
 parts.append(('constituents/plg_finder_jlms.zip',child_archive(ROOT/'plugins/finder/jlms','plg_finder_jlms')))
 parts.append(('constituents/plg_user_jdlearnconsent.zip',child_archive(ROOT/'plugins/user/jdlearnconsent','plg_user_jdlearnconsent')))
-parts.append(('constituents/plg_actionlog_jdlearn.zip',child_archive(ROOT/'plugins/actionlog/jdlearn','plg_actionlog_jdlearn')))
 parts.append(('constituents/plg_actionlog_jdlearn.zip',child_archive(ROOT/'plugins/actionlog/jdlearn','plg_actionlog_jdlearn')))
 manifest=stamp_manifest((ROOT/'packages/pkg_jlms.xml').read_bytes(),'JD Learn')
 parts.append(('pkg_jlms.xml',manifest))

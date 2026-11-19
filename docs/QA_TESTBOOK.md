@@ -1,3 +1,9 @@
+## JOO-01/REL-03 — integrità ZIP pacchetto senza duplicati (19/11/2026)
+
+**Collaudo Joomla manuale pendente:** estrarre dall'artefatto Actions il file `pkg_jlms-0.63.2-dev.zip`; controllare che il pacchetto abbia esattamente 12 ZIP figli, ciascuno presente una sola volta e descritto dal manifest. Eseguire installazione nuova e upgrade da 0.63.1-dev sul sito di prova; in Gestione estensioni verificare che Action Log sia installato una sola volta, senza nuovi record duplicati, che lo stato di abilitazione esistente resti invariato e che versione/data siano uniformi. Verificare corsi, notifiche e plugin video preesistenti. Registrare build, profilo e risultati. Il gate automatizzato sullo ZIP non equivale al collaudo manuale.
+
+**CI prevista:** `tools/build.py`, `tests/extension-manifest-metadata.py`, installazione/upgrade Joomla, lint e matrice DB; ogni nome duplicato (anche in uno ZIP figlio) deve fallire.
+
 ## QUI-02 — cancellazione definitiva soltanto dal cestino (19/11/2026)
 
 **Collaudo Joomla manuale da eseguire:** con utente amministratore autorizzato creare una domanda non utilizzata in bozza; inviare un POST autenticato con CSRF valido a `questionbank.delete` indicando il suo ID: atteso HTTP 409 e conservazione della domanda e delle revisioni. Ripetere sulla domanda pubblicata e su una ripristinata: stessa protezione. Cestinare la domanda dal backend, quindi eliminarla definitivamente: domanda, revisioni e asset vengono rimossi solo se non hanno riferimenti a quiz o tentativi. Una domanda referenziata deve restare intatta anche se nel cestino. Verificare ACL insufficienti, CSRF mancante, IT/EN e assenza di cancellazioni collaterali. Registrare build, utente di test ed esiti; nessuna accettazione manuale presunta.
