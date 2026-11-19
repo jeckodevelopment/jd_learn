@@ -138,11 +138,12 @@ try:
  # Category filter forms must preserve their own scope, expose every supported
  # sort and restore state through URL navigation independently of the catalog.
  _,categories_index=get('/index.php?option=com_jlms&view=categories')
- category_candidates=[link for link in Page(categories_index).links if
-                      parse_qs(urlparse(link).query).get('view')==['category']]
- if not category_candidates:
-  raise RuntimeError('SCR-01: public fixture course category URL is missing')
- cat_url=category_candidates[0]
+ # Joomla may rewrite category anchors to SEF paths; use the public
+ # card's category ID to build an explicit component route for this fixture.
+ category_card=re.search(r'id="jlms-category-card-([0-9]+)"',categories_index)
+ if not category_card:
+  raise RuntimeError('SCR-01: public fixture category card is missing')
+ cat_url='/index.php?option=com_jlms&view=category&id='+category_card.group(1)
  cat_params={'filter[search]':'Publication fixture','filter[order]':'published',
              'filter[difficulty]':'beginner','filter[duration]':'30-60',
              'filter[layout]':'list'}
