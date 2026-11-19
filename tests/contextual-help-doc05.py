@@ -69,3 +69,26 @@ for lang in ("it-IT", "en-GB"):
         assert f'id="{key}"' in manual_raw, f"missing destination chapter: {key}/{lang}"
 
 print(f"DOC-05: {len(views)}/{len(views)} views, {2 * len(views)} localized help links and 2 offline manuals validated")
+
+# DOC-08: a checked, deliberately partial core-flow/documentation map.
+import re
+matrix = (ROOT / "docs/DOCUMENTATION_COVERAGE_1.0.0.md").read_text(encoding="utf-8")
+rows = [line for line in matrix.splitlines() if re.match(r"^\| [A-Z][A-Z0-9-]+ \|", line)]
+assert len(rows) >= 10, "DOC-08: missing baseline core-flow mappings"
+requirements = set()
+for row in rows:
+    cells = [cell.strip() for cell in row.strip().strip("|").split("|")]
+    assert len(cells) == 6, "DOC-08: malformed coverage row"
+    requirement, flow, guide, it, en, status = cells
+    assert requirement not in requirements, f"DOC-08: duplicate requirement {requirement}"
+    requirements.add(requirement)
+    assert flow and status in ("Non eseguito", "Eseguito"), f"DOC-08: ambiguous status for {requirement}"
+    for cell in (guide, it, en):
+        match = re.fullmatch(r"\[[^]]+\]\(\.\./([^()]+)\)", cell)
+        assert match, f"DOC-08: invalid relative document link {cell}"
+        target = ROOT / match.group(1)
+        assert target.is_file(), f"DOC-08: missing document {target}"
+    assert it.endswith("/it-IT/" + re.search(r"/it-IT/([^/]+)\.html", it).group(1) + ".html)"), requirement
+    key = re.search(r"/it-IT/([^/]+)\.html", it).group(1)
+    assert key in seen and en.endswith("/en-GB/" + key + ".html)"), f"DOC-08: unmatched localized guide for {requirement}"
+print(f"DOC-08: {len(requirements)} mapped core flows, links and IT/EN help verified; manual acceptance separate")
