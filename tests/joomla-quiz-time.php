@@ -107,7 +107,8 @@ $pre=$runtime->state($user,'en-GB',$enrollment,$lesson);timeExpect($pre['time_se
 timeExpect(!str_contains(json_encode($pre,JSON_THROW_ON_ERROR),'PRIVATE_TIME_REASON_REFERENCE'),'learner DTO never exposes operational reasons');
 // STA-02: the personalized extra time is part of the duration promised
 // before starting; 120 remaining seconds cannot fit a 180-second allowance.
-$db->updateObject('#__jlms_enrollments',(object)['id'=>$enrollment,'ends_at'=>gmdate('Y-m-d H:i:s',$now+120)],'id');
+$shortWindow=(object)['id'=>$enrollment,'ends_at'=>gmdate('Y-m-d H:i:s',$now+120)];
+$db->updateObject('#__jlms_enrollments',$shortWindow,'id');
 $windowState=$runtime->state($user,'en-GB',$enrollment,$lesson);
 timeExpect(!$windowState['can_start']&&$windowState['start_window_insufficient']
     &&$windowState['next_time_seconds']===180&&$windowState['remaining_window_seconds']===120,
@@ -116,7 +117,8 @@ timeReject(fn()=>$runtime->start($user,'en-GB',$enrollment,$lesson,timeKey()),40
     'STA-02 does not truncate individual allowance without explicit opt-in');
 timeExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id='.$enrollment)->loadResult()===0,
     'STA-02 denied personalized attempt is not consumed');
-$db->updateObject('#__jlms_enrollments',(object)['id'=>$enrollment,'ends_at'=>null],'id',true);
+$openWindow=(object)['id'=>$enrollment,'ends_at'=>null];
+$db->updateObject('#__jlms_enrollments',$openWindow,'id',true);
 $a=$runtime->start($user,'en-GB',$enrollment,$lesson,timeKey());$attempt=$a['attempt']['id'];timeExpect($a['attempt']['deadline']===$now+180,'deadline freezes additional seconds at start');
 $original=$db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id='.$attempt)->loadObject();$rules=json_decode($original->rules_snapshot_json,true,16,JSON_THROW_ON_ERROR);
 timeExpect($rules['base_time_seconds']===60&&$rules['extra_time_seconds']===120&&$rules['time_adjustment_id']===$id,'attempt stores individual rule provenance');
