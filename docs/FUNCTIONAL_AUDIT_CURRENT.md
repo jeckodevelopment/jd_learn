@@ -1321,11 +1321,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#private function grade](../component/administrator/src/Application/QuizAttemptService.php)
   - [tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account](../tests/joomla-quiz-attempts.php)
   - [tests/joomla-quiz-attempts.php#duplicate expiry worker does not count twice](../tests/joomla-quiz-attempts.php)
-- `SCR-01/card` — Scheda include metadati principali e azione disponibile. Le card catalogo espongono metadati pubblici, docenti autorizzati e stato iscrizioni personali già attive. È ora implementata anche la segnalazione di richiesta pendente: query unica limitata ai corsi della pagina, proprietario autenticato e versione corrente, senza riproporre l'invito di ammissione, con test strutturali. L'accettazione manuale Joomla delle varianti resta pendente.
-  - [component/site/src/Model/CoursesModel.php#public function getCardPendingApprovals](../component/site/src/Model/CoursesModel.php)
-  - [component/site/src/View/Courses/HtmlView.php#$this->cardPendingApprovals](../component/site/src/View/Courses/HtmlView.php)
-  - [component/site/tmpl/courses/default.php#jlms-course-card__pending](../component/site/tmpl/courses/default.php)
-  - [tests/frontend-catalog-options.py#SCR-01/card](../tests/frontend-catalog-options.py)
 - `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il backend consente di assegnare a ogni corso una posizione editoriale da 0 a 9999, validata dal server e persistita nei parametri editoriali. Il catalogo espone l'ordine editoriale come default configurabile globalmente e tramite menu, colloca le posizioni positive in ordine crescente, gli elementi senza posizione dopo e usa l'ID come tie-break di paginazione. Le alternative titolo, recente, data di pubblicazione e durata restano disponibili, su query con filtri di ACL e versione pubblicata. Test strutturali e CI d'integrazione passati; collaudo manuale Joomla delle combinazioni resta pendente.
   - [component/administrator/src/Model/CourseModel.php#array_key_exists('catalog_position', $data)](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/forms/course.xml#name="catalog_position"](../component/administrator/forms/course.xml)
@@ -1334,6 +1329,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Helper/CatalogOptions.php#'catalog_default_order' => 'editorial'](../component/site/src/Helper/CatalogOptions.php)
   - [component/site/tmpl/courses/default.php#value="editorial"](../component/site/tmpl/courses/default.php)
   - [tests/frontend-catalog-options.py#SCR-01/sorts](../tests/frontend-catalog-options.py)
+- `SCR-01/card` — Scheda include metadati principali e azione disponibile. Le card catalogo espongono metadati pubblici, docenti autorizzati e stato iscrizioni personali già attive. È ora implementata anche la segnalazione di richiesta pendente: query unica limitata ai corsi della pagina, proprietario autenticato e versione corrente, senza riproporre l'invito di ammissione, con test strutturali. L'accettazione manuale Joomla delle varianti resta pendente.
+  - [component/site/src/Model/CoursesModel.php#public function getCardPendingApprovals](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/View/Courses/HtmlView.php#$this->cardPendingApprovals](../component/site/src/View/Courses/HtmlView.php)
+  - [component/site/tmpl/courses/default.php#jlms-course-card__pending](../component/site/tmpl/courses/default.php)
+  - [tests/frontend-catalog-options.py#SCR-01/card](../tests/frontend-catalog-options.py)
 - `SCR-01/empty_error` — Stati senza risultati, azzera filtri ed errore recuperabile. La vista del catalogo distingue la failure dal risultato vuoto, scarta card e proiezioni personali parziali e mantiene 401/403/404 come errori di accesso. Il template mostra un messaggio localizzato con Riprova sul path e sulla query correnti (filtri, categoria, ordinamento e pagina); in assenza di risultati offre Azzera filtri con categoria scoped. Test strutturali IT/EN presenti; il collaudo Joomla reale rimane pendente.
   - [component/site/src/View/Courses/HtmlView.php#catch (\Throwable $error)](../component/site/src/View/Courses/HtmlView.php)
   - [component/site/src/View/Courses/HtmlView.php#$this->cardEnrollmentStates = [];](../component/site/src/View/Courses/HtmlView.php)
