@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **426**.
-- Mancanti con lacuna accertata: **63**.
+- Implementati: **432**.
+- Mancanti con lacuna accertata: **57**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -12,17 +12,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Lacune confermate
 
-- `CAT-01/language_available` — Combinazioni lingua e soli corsi disponibili. La query usa la lingua corrente e valida lo stato pubblicato. Il catalogo non offre il filtro per la sola fruizione disponibile e il modello non applica quel vincolo. La visibilità della scheda e l’erogazione sono indipendenti.
-  - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
-  - [component/site/src/Model/CoursesModel.php#protected function populateState](../component/site/src/Model/CoursesModel.php)
-  - [component/site/src/Model/CoursesModel.php#protected function getListQuery](../component/site/src/Model/CoursesModel.php)
-- `CAT-02/actions` — Tutte le varianti di pulsanti secondo accesso e stato. La scheda sceglie fra login, un pulsante combinato di avvio/ripresa e richiesta di ammissione a partire dal livello e dalla modalità del corso. Non legge lo stato di iscrizione del discente per mostrare azioni distinte.
-  - [component/site/src/View/Course/HtmlView.php#public function display](../component/site/src/View/Course/HtmlView.php)
-  - [component/site/tmpl/course/default.php#COM_JLMS_START_RESUME](../component/site/tmpl/course/default.php)
-  - [component/site/tmpl/course/default.php#COM_JLMS_ENROLLMENT_REQUEST_SUBMIT](../component/site/tmpl/course/default.php)
-- `CAT-02/completion_criteria` — Visualizzazione completa regole di completamento e attestati disponibili. Il programma mostra lezioni richieste/opzionali e il calendario. La proiezione restituita alla scheda non include un riepilogo delle regole di completamento e della disponibilità dell’attestato.
-  - [component/administrator/src/Application/CatalogService.php#public function outline](../component/administrator/src/Application/CatalogService.php)
-  - [component/site/tmpl/course/default.php#jlms-course-outline](../component/site/tmpl/course/default.php)
 - `MAIL-08/double_submit` — Controlli su doppio invio, test destinatario e conteggi corretti. La conferma di accodamento riusa il job per lo stesso identificativo. Il percorso di invio test, invece, crea un identificativo distinto a ogni POST: un doppio invio di prova può accodare due messaggi.
   - [component/administrator/src/Application/CourseCommunicationService.php#public function queue](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#public function test](../component/administrator/src/Application/CourseCommunicationService.php)
@@ -64,17 +53,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SCR-01/empty_error` — Stati senza risultati, azzera filtri ed errore recuperabile. Il layout ha un messaggio per zero risultati e un collegamento per uscire dalla categoria. Non offre azzera filtri per la ricerca generale né uno stato di errore recuperabile nel catalogo.
   - [component/site/tmpl/courses/default.php#jlms-catalog-empty](../component/site/tmpl/courses/default.php)
   - [component/site/tmpl/courses/default.php#jlms-category-filter](../component/site/tmpl/courses/default.php)
-- `SCR-03/access_cta` — Azione primaria coerente con stato/iscrizione/permessi. Il modello della scheda non distingue l’iscrizione esistente da quella da creare. Il layout usa la stessa azione per avvio e ripresa nella modalità automatica e mostra la richiesta nella modalità ad approvazione.
-  - [component/site/src/View/Course/HtmlView.php#public function display](../component/site/src/View/Course/HtmlView.php)
-  - [component/site/tmpl/course/default.php#COM_JLMS_START_RESUME](../component/site/tmpl/course/default.php)
-  - [component/site/tmpl/course/default.php#COM_JLMS_ENROLLMENT_REQUEST_SUBMIT](../component/site/tmpl/course/default.php)
-- `SCR-03/course_rules` — Regole di completamento e attestati disponibili presentate correttamente. Le indicazioni richiesta/opzionale nel programma non presentano le regole complessive di completamento o la disponibilità dell’attestato.
-  - [component/administrator/src/Application/CatalogService.php#public function outline](../component/administrator/src/Application/CatalogService.php)
-  - [component/site/tmpl/course/default.php#jlms-course-outline](../component/site/tmpl/course/default.php)
-- `SCR-04/criterion_03` — Percentuale aggregata solo se lo studente ha iscrizioni e requisiti definiti per i corsi necessari. Il servizio restituisce l’aggregato a ogni utente autenticato. Un corso necessario privo di iscrizione entra comunque come zero nel calcolo. Manca il gate richiesto sulle iscrizioni e sui requisiti definiti.
-  - [component/administrator/src/Application/PathwayService.php#hasPersonalProgress](../component/administrator/src/Application/PathwayService.php)
-  - [component/administrator/src/Application/PathwayService.php#not_enrolled](../component/administrator/src/Application/PathwayService.php)
-  - [component/administrator/src/Application/PathwayProgress.php#public static function summarize](../component/administrator/src/Application/PathwayProgress.php)
 - `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
   - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
   - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
@@ -1193,10 +1171,22 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Implementazione riscontrata
 
+- `CAT-01/language_available` — Combinazioni lingua e soli corsi disponibili. Il catalogo espone un filtro opt-in sui soli corsi con ammissioni aperte ed erogazione attiva, mantenendo lingua, pubblicazione e vincoli ACL. La PR #684 ha superato la CI e introdotto test strutturali; la verifica manuale Joomla resta pendente.
+  - [component/site/src/Model/CoursesModel.php#filter.available](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/Model/CoursesModel.php#c.admissions_open = 1](../component/site/src/Model/CoursesModel.php)
+  - [tests/frontend-catalog-options.py#available](../tests/frontend-catalog-options.py)
 - `CAT-01/protected_metadata` — Assenza informazioni riservate nelle combinazioni complete dei filtri. La query pubblica del catalogo seleziona soltanto i campi di presentazione pubblica della versione pubblicata; il modello mantiene filtri e risultati nel servizio catalogo autorizzato. I test HTTP esercitano il catalogo e i suoi filtri.
   - [component/site/src/Model/CoursesModel.php#Only public presentation fields from the published course version.](../component/site/src/Model/CoursesModel.php)
   - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
   - [tests/http-smoke.py#Public catalog title/summary search and title ordering did not apply](../tests/http-smoke.py)
+- `CAT-02/actions` — Tutte le varianti di pulsanti secondo accesso e stato. La PR #686 distingue login, nuova iscrizione, richiesta di approvazione pendente, Inizia/Riprendi/Rivedi e indisponibilità, con proiezione proprietario e guardie correnti. CI 4/4 verde; collaudo Joomla da eseguire.
+  - [component/site/src/View/Course/HtmlView.php#$this->enrollmentState](../component/site/src/View/Course/HtmlView.php)
+  - [component/site/tmpl/course/default.php#jlms-course-resume](../component/site/tmpl/course/default.php)
+  - [tests/course-context-actions.py#Course contextual action contracts OK](../tests/course-context-actions.py)
+- `CAT-02/completion_criteria` — Visualizzazione completa regole di completamento e attestati disponibili. Il riepilogo della scheda corso mostra la politica di completamento, sequenza, soglia video e disponibilità condizionata degli attestati, ottenuti dalle regole della versione pubblicata. La verifica manuale Joomla rimane pendente.
+  - [component/administrator/src/Application/CatalogService.php#'certificate_planned'](../component/administrator/src/Application/CatalogService.php)
+  - [component/site/tmpl/course/default.php#jlms-course-completion](../component/site/tmpl/course/default.php)
+  - [component/site/tmpl/course/default.php#COM_JLMS_COURSE_CERTIFICATE_PLANNED](../component/site/tmpl/course/default.php)
 - `ISC-02/state_combinations` — Tutte le transizioni e gli stati con scadenza e annullamento. Il servizio limita le transizioni a active/suspended/cancelled con preview, conferma, revisione e audit. Le fixture verificano cancellazione idempotente, divieto di riattivare cancellati, blocco sui completati/quiz aperti e conservazione dello storico. Le scadenze di accesso sono distinte dallo stato e testate separatamente.
   - [component/administrator/src/Application/EnrollmentStateService.php#public function apply](../component/administrator/src/Application/EnrollmentStateService.php)
   - [tests/joomla-enrollment-state.php#valid cancellation preview](../tests/joomla-enrollment-state.php)
@@ -1353,9 +1343,21 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Model/CoursesModel.php#protected function getListQuery](../component/site/src/Model/CoursesModel.php)
   - [component/administrator/src/Application/CatalogService.php#private function courseQuery](../component/administrator/src/Application/CatalogService.php)
   - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+- `SCR-03/access_cta` — Azione primaria coerente con stato/iscrizione/permessi. La scheda usa stato dell'iscrizione proprio e accesso corrente, differenzia iscrizione automatica/richiesta di approvazione, stato pendente e accesso all'aula in Inizia/Riprendi/Rivedi. PR #686 CI verde; collaudo manuale pendente.
+  - [component/site/src/View/Course/HtmlView.php#catalogStates](../component/site/src/View/Course/HtmlView.php)
+  - [component/site/tmpl/course/default.php#jlms-course-resume](../component/site/tmpl/course/default.php)
+  - [tests/course-context-actions.py#Course contextual action contracts OK](../tests/course-context-actions.py)
 - `SCR-03/teacher_links` — Rimandi a docenti e contenuti pubblicamente accessibili. La scheda usa profili docenti proiettati dal servizio e rende il collegamento alla vista del docente. Il servizio filtra visibilità e lingua dei profili.
   - [component/site/tmpl/course/default.php#jlms-course-teachers](../component/site/tmpl/course/default.php)
   - [component/administrator/src/Application/TeacherProfiles.php#public static function current](../component/administrator/src/Application/TeacherProfiles.php)
+- `SCR-03/course_rules` — Regole di completamento e attestati disponibili presentate correttamente. La sezione regole del corso presenta requisiti obbligatori, sequenza, soglia video e informazione condizionata sull'attestato. Proiezione da versione pubblicata; collaudo Joomla pendente.
+  - [component/administrator/src/Application/CatalogService.php#'completion'=>$completion](../component/administrator/src/Application/CatalogService.php)
+  - [component/site/tmpl/course/default.php#jlms-course-completion-title](../component/site/tmpl/course/default.php)
+  - [component/site/tmpl/course/default.php#jlms-course-completion-video](../component/site/tmpl/course/default.php)
+- `SCR-04/criterion_03` — Percentuale aggregata solo se lo studente ha iscrizioni e requisiti definiti per i corsi necessari. La PR #688 applica PathwayProgress::hasCompleteBasis ai corsi necessari: senza iscrizione personale o regole storiche valide non espone un aggregato numerico; test PHP unitari e integrazione Joomla verdi, collaudo manuale pendente.
+  - [component/administrator/src/Application/PathwayService.php#PathwayProgress::hasCompleteBasis($courses)](../component/administrator/src/Application/PathwayService.php)
+  - [component/administrator/src/Application/PathwayProgress.php#public static function hasCompleteBasis](../component/administrator/src/Application/PathwayProgress.php)
+  - [tests/joomla-pathways.php#unavailable course without evidence suppresses ungrounded aggregate](../tests/joomla-pathways.php)
 - `SCR-04/criterion_05` — Nella prima release nessun rilascio di attestato di percorso né migrazione automatica fra percorsi. Il percorso aggrega le iscrizioni esistenti e il suo servizio di dettaglio legge senza creare migrazioni o attestati. Questi comportamenti non sono richiesti per il percorso core.
   - [component/administrator/src/Application/PathwayService.php#PathwayProgress::summarize](../component/administrator/src/Application/PathwayService.php)
   - [docs/RELEASE_SCOPE_MATRIX.md#Rinviati alla fase 2](../docs/RELEASE_SCOPE_MATRIX.md)
