@@ -145,6 +145,55 @@ class CoursesModel extends ListModel
         );
     }
 
+    /**
+     * Pending approval requests for this visible catalogue page and current
+     * published version only. One bounded owner-scoped query, no N+1 requests.
+     *
+     * @return array<int, true>
+     */
+    public function getCardPendingApprovals(array $items, array $enrollmentStates): array
+    {
+        if (!$items) { return []; }
+        $app = Factory::getApplication();
+        $identity = $app->getIdentity();
+        if (!(int) $identity->id || $identity->guest) { return []; }
+        // Re-check the persisted Joomla account, rather than trusting an old
+        // session after the account is blocked or removed.
+        try {
+            $actor = $app->bootComponent('com_jlms')->getLearningService()->freshActor($identity);
+        } catch (\RuntimeException $error) {
+            // A revoked session must not expose owner-only request state or
+            // prevent an otherwise public promotional catalogue from loading.
+            return [];
+        }
+        $courseIds = [];
+        foreach ($items as $item) {
+            $courseId = (int) $item->id;
+            if ($courseId > 0 && (string) $item->enrollment_mode === 'approval'
+                && !isset($enrollmentStates[$courseId])) {
+                $courseIds[] = $courseId;
+            }
+        }
+        $courseIds = array_values(array_unique($courseIds));
+        if (!$courseIds) { return []; }
+        if (count($courseIds) > 50) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        $query = $this->getDatabase()->createQuery()
+            ->select('DISTINCT edition.course_id')
+            ->from('#__jlms_enrollment_requests AS request')
+            ->innerJoin('#__jlms_editions AS edition ON edition.id = request.edition_id')
+            ->innerJoin('#__jlms_courses AS course ON course.id = edition.course_id')
+            ->where('request.user_id = :catalogPendingOwner')
+            ->where("request.status = 'pending'")
+            ->where('edition.course_version_id = course.current_version_id')
+            ->whereIn('edition.course_id', $courseIds)
+            ->bind(':catalogPendingOwner', (int) $actor->id, \Joomla\Database\ParameterType::INTEGER);
+        $result = [];
+        foreach ($this->getDatabase()->setQuery($query)->loadColumn() as $courseId) {
+            $result[(int) $courseId] = true;
+        }
+        return $result;
+    }
+
     public function getCategoryChoice(): int
     {
         return (int) $this->getState('filter.category_choice');

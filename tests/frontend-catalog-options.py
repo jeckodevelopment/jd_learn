@@ -88,7 +88,7 @@ assert "$identity->guest || $identity->block" in model
 assert "cardEnrollmentStates[(int) $item->id]" in template
 assert "enrollment['access'] === 'available'" in template
 assert "task=enrollment.resume&id=" in template
-assert "$enrollment === null && (int) $item->admissions_open" in template
+assert "$enrollment === null && empty($this->cardPendingApprovals[(int) $item->id])" in template
 
 assert "TeacherProfiles::visible(" in model
 assert "catalog_presentation_json" in model.split("public function getCardTeachers", 1)[1]
@@ -144,3 +144,17 @@ assert "$this->available === '1'" in layout
 for language in ("it-IT", "en-GB"):
     content = (root / "component/site/language" / language / "com_jlms.ini").read_text()
     assert "COM_JLMS_CATALOG_AVAILABLE_ONLY=" in content
+
+# SCR-01/card: pending approvals are scoped to the authenticated owner and
+# currently visible page, and never override an existing enrollment.
+assert "getCardPendingApprovals($this->items, $this->cardEnrollmentStates)" in view
+assert "public function getCardPendingApprovals(array $items, array $enrollmentStates)" in model
+assert "getLearningService()->freshActor($identity)" in model
+assert "request.user_id = :catalogPendingOwner" in model
+assert "request.status = 'pending'" in model
+assert "edition.course_version_id = course.current_version_id" in model
+assert "->whereIn('edition.course_id', $courseIds)" in model
+assert "count($courseIds) > 50" in model
+assert "cardPendingApprovals[(int) $item->id]" in template
+assert "COM_JLMS_COURSE_APPROVAL_PENDING" in template
+assert 'role="status"' in template
