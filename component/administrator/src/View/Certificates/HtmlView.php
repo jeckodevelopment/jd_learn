@@ -38,6 +38,7 @@ final class HtmlView extends BaseHtmlView
         }
         $this->getDocument()->setTitle(Text::_('COM_JLMS_CERTIFICATES'));
         ToolbarHelper::title(Text::_('COM_JLMS_CERTIFICATES'), 'certificate');
+        ToolbarHelper::help('certificates', true);
         parent::display($tpl);
     }
 }
