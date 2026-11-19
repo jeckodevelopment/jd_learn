@@ -291,14 +291,22 @@ final class QuizAttemptService
         $originalTime=(int)$rules['time_seconds'];$effectiveTime=$a&&$a->deadline_at!==null?max(0,self::timestamp($a->deadline_at)-self::timestamp($a->started_at)):$originalTime;
         $now=($this->clock)();$next=$history['last_closed']===null?$now:$history['last_closed']+$rules['retry_seconds'];$eligible=!$active;
         try{if(!$active)$this->learning->quizContext($identity,$language,$enrollment,(int)$l->id,false,false);}catch(\RuntimeException $error){if($error->getMessage()!=='COM_JLMS_LEARNING_WINDOW')throw $error;$eligible=false;}
-        if(!$active&&$eligible){
-            $end=$this->quizClosingAt($e,$l);
-            if($end!==null&&($end<=$now||($nextRules['time_seconds']>0&&$nextRules['time_seconds']>$end-$now)))$eligible=false;
+        // The start action and its preview use the same strict, no-truncation
+        // rule. Recheck under enrollment lock when POST actually starts.
+        $closingAt=null;$insufficientWindow=false;
+        if(!$active){
+            $closingAt=$this->quizClosingAt($e,$l);
+            $insufficientWindow=$closingAt!==null&&$closingAt>$now
+                &&$nextRules['time_seconds']>0&&$nextRules['time_seconds']>$closingAt-$now;
+            if($closingAt!==null&&($closingAt<=$now||$insufficientWindow))$eligible=false;
         }
         $remaining=$rules['max_attempts']===0?null:max(0,$rules['max_attempts']-$history['used']);
         $dto=['enrollment_id'=>$enrollment,'lesson_id'=>(int)$l->id,'title'=>$l->title,'server_now'=>$now,'assessment'=>$rules['assessment'],
             'base_time_seconds'=>$rules['base_time_seconds']??$rules['time_seconds'],'extra_time_seconds'=>$rules['extra_time_seconds']??0,'next_time_seconds'=>$nextRules['time_seconds'],'next_extra_time_seconds'=>$nextRules['extra_time_seconds'],'original_time_seconds'=>$originalTime,'extension_seconds'=>max(0,$effectiveTime-$originalTime),'feedback_policy'=>$rules['feedback'],'question_count'=>$rules['draw_count'],'threshold'=>$rules['threshold'],'time_seconds'=>$effectiveTime,'used_attempts'=>$history['used'],'remaining_attempts'=>$remaining,
-            'next_attempt_at'=>$next,'can_start'=>!$active&&$eligible&&($remaining===null||$remaining>0)&&$next<=$now,
+            'next_attempt_at'=>$next,'start_window_close_at'=>$closingAt,
+            'remaining_window_seconds'=>$closingAt===null?null:max(0,$closingAt-$now),
+            'start_window_insufficient'=>$insufficientWindow,
+            'can_start'=>!$active&&$eligible&&($remaining===null||$remaining>0)&&$next<=$now,
             'active_attempt_id'=>$active?(int)$active->id:null,'attempt'=>null,'questions'=>[],'feedback_available'=>false,
             'course_completed'=>$e->completed_at!==null,'course_percent'=>(int)$e->required_total?min($e->completed_at?100:99,(int)floor(100*(int)$e->completed_total/(int)$e->required_total)):0];
         if($a){
