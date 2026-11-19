@@ -10725,50 +10725,52 @@
       {
         "id": "criterion_01",
         "label": "Guida contestuale presente nelle schermate amministrative core",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "component/administrator/src/View/Courses/HtmlView.php",
-          "component/administrator/src/View/Enrollments/HtmlView.php"
+          "docs/ADMIN_HELP_COVERAGE.md",
+          "tests/contextual-help-doc05.py"
         ],
         "review": {
-          "reason": "Il piano descrive l’azione Guida e prevede la relativa tranche. I percorsi nativi del corso e del roster esaminati non espongono l’aiuto contestuale richiesto.",
+          "reason": "Le 29 viste amministrative HtmlView censite distribuiscono il pulsante nativo Guida Joomla con risoluzione locale; il test dinamico verifica che nessuna vista sia scoperta. Copertura sorgente verificabile, distinta dall'accettazione manuale della UI Joomla.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3",
-            "component/administrator/src/View/Courses/HtmlView.php#ToolbarHelper",
-            "component/administrator/src/View/Enrollments/HtmlView.php#function"
+            "docs/ADMIN_HELP_COVERAGE.md#29/29",
+            "tests/contextual-help-doc05.py#views = sorted"
           ]
         }
       },
       {
         "id": "criterion_02",
         "label": "Collegamenti ai capitoli pertinenti e non obsoleti",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "component/administrator/docs/README.md"
+          "tests/contextual-help-doc05.py",
+          "component/administrator/help/it-IT/manual.html",
+          "component/administrator/help/en-GB/manual.html"
         ],
         "review": {
-          "reason": "La mappa di capitoli localizzati per ciascuna schermata amministrativa è un’attività della tranche di aiuto contestuale. Le guide già disponibili non costituiscono i collegamenti contestuali della schermata.",
+          "reason": "Ognuna delle 58 guide IT/EN collega con URL relativo il capitolo dedicato del manuale amministratore locale della stessa lingua; il gate verifica presenza e corrispondenza di tutte le ancore. Navigazione effettiva su Joomla e accessibilità da accettare manualmente.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3",
-            "component/administrator/docs/README.md#La distribuzione"
+            "tests/contextual-help-doc05.py#page.hrefs == [f\"manual.html#{key}\"]",
+            "component/administrator/help/it-IT/manual.html#section id=\"dashboard\"",
+            "component/administrator/help/en-GB/manual.html#section id=\"dashboard\""
           ]
         }
       },
       {
         "id": "criterion_03",
         "label": "Contenuto disponibile in italiano e inglese",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "component/administrator/docs/README.md"
+          "component/administrator/help/it-IT/manual.html",
+          "component/administrator/help/en-GB/manual.html",
+          "tests/contextual-help-doc05.py"
         ],
         "review": {
-          "reason": "L’aiuto contestuale previsto deve essere disponibile per schermata in IT e EN. Il piano indica la tranche di implementazione e il manuale distribuito esaminato è in italiano.",
+          "reason": "Entrambi i manuali offline sono distribuiti nelle directory Joomla it-IT e en-GB, con 29 capitoli in ciascuna lingua; le 58 guide localizzate sono verificate dal test e dal manifest. Rimane pendente il collaudo in sito di prova delle lingue effettive.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P3",
-            "component/administrator/docs/README.md#La distribuzione"
+            "component/administrator/help/it-IT/manual.html#lang=\"it-IT\"",
+            "component/administrator/help/en-GB/manual.html#lang=\"en-GB\"",
+            "tests/contextual-help-doc05.py#for lang in (\"it-IT\", \"en-GB\")"
           ]
         }
       }

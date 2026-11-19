@@ -6,8 +6,8 @@
   "counts": {
     "Stato implementazione": {
       "Parziale": 203,
-      "Completata": 17,
-      "Non iniziata": 29
+      "Completata": 18,
+      "Non iniziata": 28
     },
     "Perimetro 1.0.0": {
       "1.0.0": 174,
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 55.05,
-    "development_evidence_floor_percent": 55.05,
+    "percent": 55.52,
+    "development_evidence_floor_percent": 55.52,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -35,37 +35,6 @@
       "requirements_failed": 0,
       "coverage_percent": 4.67,
       "fully_accepted_percent": 0
-    },
-    "method": "Equal-weight average by in-scope requirement of documented implemented criteria divided by criteria per requirement. Unverifiable and unassessed criteria count as zero. Manual acceptance is a separate axis.",
-    "axes": [
-      {
-        "id": "development",
-        "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 55.05
-      },
-      {
-        "id": "manual_acceptance",
-        "label": "Collaudo manuale Joomla (requisiti con esito almeno parziale)",
-        "percent": 4.67
-      }
-    ],
-    "historical_macroarea_estimate": {
-      "as_of": "2026-11-16",
-      "percent": 79.56,
-      "rounded_percent": 80,
-      "areas": [
-        81,
-        81,
-        78,
-        99,
-        68,
-        92,
-        70,
-        72,
-        75
-      ],
-      "method": "Media semplice delle nove macroaree (81+81+78+99+68+92+70+72+75)/9 = 79,56% (80% arrotondato). PR #464 amplia i producer di contesto approvati per i template email: area email 70% → 72%. L'accettazione manuale Joomla/SMTP resta pendente; stima implementativa e accettazione sono dimensioni distinte.",
-      "status": "historical; do not display as current progress"
     },
     "macroareas": [
       {
@@ -169,14 +138,45 @@
         "label": "Packaging, documentazione e reporting",
         "requirements": 15,
         "weight_percent": 7.01,
-        "development_evidence_floor_percent": 20.56,
+        "development_evidence_floor_percent": 27.22,
         "manual_acceptance_coverage_percent": 0,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 22,
+        "missing_criteria": 19,
         "unverifiable_criteria": 24,
         "unassessed_criteria": 0
       }
-    ]
+    ],
+    "method": "Equal-weight average by in-scope requirement of documented implemented criteria divided by criteria per requirement. Unverifiable and unassessed criteria count as zero. Manual acceptance is a separate axis.",
+    "axes": [
+      {
+        "id": "development",
+        "label": "Sviluppo documentato (minimo confermato)",
+        "percent": 55.52
+      },
+      {
+        "id": "manual_acceptance",
+        "label": "Collaudo manuale Joomla (requisiti con esito almeno parziale)",
+        "percent": 4.67
+      }
+    ],
+    "historical_macroarea_estimate": {
+      "as_of": "2026-11-16",
+      "percent": 79.56,
+      "rounded_percent": 80,
+      "areas": [
+        81,
+        81,
+        78,
+        99,
+        68,
+        92,
+        70,
+        72,
+        75
+      ],
+      "method": "Media semplice delle nove macroaree (81+81+78+99+68+92+70+72+75)/9 = 79,56% (80% arrotondato). PR #464 amplia i producer di contesto approvati per i template email: area email 70% → 72%. L'accettazione manuale Joomla/SMTP resta pendente; stima implementativa e accettazione sono dimensioni distinte.",
+      "status": "historical; do not display as current progress"
+    }
   },
   "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata. Conferma utente positiva PR #421 sulle sole toolbar #406/#408; accettazione parziale UI-02 e MAIL-11, senza estensione a SMTP o requisiti completi. Conferma manuale utente del 15/11/2026 su PR #418 (issue #411): rimossi H1 duplicati dalle viste Audit coda email, Variabili modelli email e Gestione dipendenze categorie; accettazione parziale MAIL-10 e CAT-01, senza attestare i requisiti completi. Requisiti LCM-01–LCM-05 formalizzati il 15/11/2026 (solo documentazione), non implementati né accettati; stima implementativa invariata. Collaudo utente 17/11/2026 PR #566: attestato preesistente con logo PNG scaricabile, errore 503 risolto; accettazione parziale CERT-03/CERT-05/CERT-08. Restano non attestati stato DB ready, seriale e snapshot invariati, ACL/HEAD, altri formati e backup/ripristino. PR #575: LCM-03 passa da Non iniziata a Parziale per archiviazione dei percorsi e ripristino conservativo in bozza; cestinazione/eliminazione condizionata e collaudo reale pendenti. Stima macroaree invariata fino a riconciliazione ponderata. PR #578: LCM-04 da Non iniziata a Parziale (cestinazione e ripristino docenti, ACL, cronologia conservata); eliminazione condizionata e collaudo reale rinviati. La stima ponderata per macroarea non cambia automaticamente. Aggiornamento LCM-05 PR #581 e #582: test Joomla disposable CI verde, stato Parziale, accettazione manuale Non eseguita. Conteggi riconciliati al 17/11/2026; stima delle macroaree invariata senza una nuova ponderazione integrale. PR #613: LCM-02 passa a Parziale grazie al filtro e badge archiviati; cestino e ripristino restano da implementare. La stima macroarea legacy non è una percentuale di implementazione verificata. LCM-01: PR #617 conferma correzione del ripristino archivio (0.60.1) con chiusura e mancata riapertura dei gate; resta parziale e senza accettazione manuale.",
   "updated_at": "2026-11-17",
