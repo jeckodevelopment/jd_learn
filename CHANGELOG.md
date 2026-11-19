@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.63.1-dev — PATCH SemVer (QUI-02, 19/11/2026):** la cancellazione definitiva delle domande è ora rifiutata dal servizio se lo stato non è cestinato (`-2`), anche tramite richiesta POST diretta con permessi di eliminazione. Invariati ACL, CSRF, protezione tentativi e cancellazione atomica; gate statico e collaudo Joomla per bozza, ripristino e purga da cestino. Collaudo manuale pendente.
+
 - **0.63.0-dev — MINOR SemVer (STA-02, 19/11/2026):** pre-avvio quiz con chiusura effettiva delle finestre di iscrizione, edizione, lezione e calendario corso; rifiuto esplicito per tempo residuo insufficiente, senza troncamento silenzioso e senza consumo tentativi. Mostrati durata richiesta, secondi disponibili e limite UTC prima dell'avvio. Estesi i test Joomla ai limiti esatti, calendari, durata individuale autorizzata e rollback; collaudo manuale pendente.
 
 - **0.62.0-dev — MINOR SemVer (CORE-17, 19/11/2026):** plugin nativo Joomla Action Log installato e abilitato al primo impianto; logging delle transizioni workflow corso soltanto dopo commit, senza duplicare gli audit delle iscrizioni né divulgare dati didattici. Pacchetto ampliato da 11 a 12 estensioni, manifest e test di packaging aggiornati. Collaudo manuale Joomla pendente.
