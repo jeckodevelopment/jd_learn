@@ -1,3 +1,7 @@
+## SCR-01 — parità filtri Categoria e navigazione URL (19/11/2026)
+
+**Collaudo manuale Joomla pendente.** Nel Catalogo selezionare una pagina successiva e applicare una ricerca o un altro filtro: deve tornare a pagina 1, senza conservare limitstart in sessione. Aprire URL con filtri condivisi e controllare pagina, refresh, indietro/avanti e limite server (default 12). Nella pagina Categoria provare tutti i cinque ordinamenti (editoriale, recenti, titolo, durata, pubblicazione), filtri per disponibilità, ricerca, tag, durata, difficoltà, docente e percorso, passando tra griglia/elenco. Nessun corso esterno alla categoria discendente o non autorizzato deve comparire. Verificare lista vuota e Azzera filtri, che conserva la categoria attiva senza reset del contesto. Verificare paginazione indipendente delle sottocategorie, categorie multilingua e i link SEF Joomla.
+
 ## SCR-01 — ordinamento editoriale configurabile (19/11/2026)
 
 **Collaudo Joomla pendente:** aprire corsi pubblicati in backend, assegnare posizione 1, 2 e 0, salvare/ricaricare; verificare ordinamento 1 prima di 2, non assegnati ultimi e ID discendente a pari posizione nel catalogo e categoria. Controllare override globali e menu, filtri e paginazione, altre opzioni di ordinamento (titolo, pubblicazione, durata, recenti), visibilità ACL/lingua e bozza, input negativi/sopra 9999 e doppio salvataggio concorrente. Testare IT/EN e duplicazione corso, senza variare le versioni pubblicate.

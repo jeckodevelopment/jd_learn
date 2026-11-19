@@ -208,3 +208,18 @@ for folder in ("component/site/language", "component/administrator/language"):
         ini = (root / folder / language / "com_jlms.ini").read_text()
         assert "COM_JLMS_CATALOG_ORDER_EDITORIAL=" in ini
         assert "COM_JLMS_COURSE_CATALOG_POSITION=" in ini
+
+# SCR-01/url_filters + pagination: category exposes the same supported server filters.
+category_layout = (root / "component/site/tmpl/category/default.php").read_text()
+category_view = (root / "component/site/src/View/Category/HtmlView.php").read_text()
+for value in ("editorial", "recent", "title", "duration", "published"):
+    assert 'value="' + value + '"' in category_layout.split('id="jlms-category-catalog-order"')[1].split("</select>")[0]
+assert 'name="filter[available]"' in category_layout
+assert "$this->available = $this->getModel()->getAvailable();" in category_view
+assert '$this->available === \'1\'' in category_layout
+assert 'id="jlms-category-clear-filters"' in category_layout
+assert "view=category&id=" in category_layout.split('id="jlms-category-clear-filters"')[1].split("</p>")[0]
+assert 'name="limitstart"' not in category_layout.split('id="jlms-category-catalog-filters"')[1].split("</form>")[0]
+assert 'name="limitstart"' not in template.split('id="jlms-catalog-filters"')[1].split("</form>")[0]
+assert "setState('list.start', max(0, Factory::getApplication()->getInput()->getInt('limitstart', 0)))" in model
+assert "subcategories_limitstart" in category_view

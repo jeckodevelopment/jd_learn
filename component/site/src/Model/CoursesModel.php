@@ -17,6 +17,10 @@ class CoursesModel extends ListModel
     protected function populateState($ordering = 'c.id', $direction = 'DESC')
     {
         parent::populateState($ordering, $direction);
+        // Pagination is entirely URL-driven: a GET filter submit omits limitstart
+        // and must start again at page one, never restore a previous user-state page.
+        // Category subcategory paging uses its own independent prefixed parameter.
+        $this->setState('list.start', max(0, Factory::getApplication()->getInput()->getInt('limitstart', 0)));
         $this->setState('list.limit', (int) CatalogOptions::get('catalog_page_size'));
         $this->setState('filter.category_id', max(0, Factory::getApplication()->getInput()->getInt('catid', 0)));
         // A hidden filter form must not allow stale or handcrafted GET filters.
