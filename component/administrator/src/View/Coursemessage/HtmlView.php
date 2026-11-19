@@ -14,6 +14,7 @@ final class HtmlView extends BaseHtmlView
         $this->item=$this->get('Item');
         ToolbarHelper::title(Text::_('COM_JLMS_COMMUNICATION_TITLE'),'mail');
         ToolbarHelper::link('index.php?option=com_jlms&view=enrollments&id='.(int) $this->item['course']->id, 'COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT', 'arrow-left');
+        ToolbarHelper::help('coursemessage', true);
         parent::display($tpl);
     }
 }
