@@ -2693,7 +2693,7 @@
           "references": [
             "component/administrator/src/Application/CourseCommunicationService.php#public function queue",
             "component/administrator/src/Application/CourseCommunicationService.php#public function test",
-            "component/administrator/src/Application/CourseCommunicationService.php#course-message-test:"
+            "component/administrator/src/Application/CourseCommunicationService.php#CourseMessageMutation::testEventKey"
           ]
         }
       }
