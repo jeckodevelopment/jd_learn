@@ -118,6 +118,10 @@ attemptReject(fn()=>$learning->complete($student,'en-GB',$enrollment,$lesson,bin
 $pre=$service->state($student,'en-GB',$enrollment,$lesson);attemptExpect($pre['can_start']&&$pre['questions']===[]&&$pre['used_attempts']===0,'reading before start does not consume attempt or expose questions');
 attemptReject(fn()=>$service->start($other,'en-GB',$enrollment,$lesson,attemptKey()),404,'foreign enrollment rejected');
 attemptReject(fn()=>$service->start(new \Joomla\CMS\User\User(),'en-GB',$enrollment,$lesson,attemptKey()),401,'guest rejected');
+$setWindow=static function(string $table,int $recordId,string $column,mixed $value) use ($db):void {
+    $record=(object)['id'=>$recordId,$column=>$value];
+    $db->updateObject($table,$record,'id',true);
+};
 // STA-02: every learning closing boundary uses the entire advertised timer,
 // not an implicit truncated duration. No denied request consumes an attempt.
 $nearClose=gmdate('Y-m-d H:i:s',$now+30);
@@ -129,7 +133,7 @@ foreach ([
     ['#__jlms_courses',$course,'publish_down'],
 ] as [$table,$recordId,$column]) {
     $original=$db->setQuery('SELECT '.$column.' FROM '.$table.' WHERE id='.(int)$recordId)->loadResult();
-    $db->updateObject($table,(object)['id'=>$recordId,$column=>$nearClose],'id',true);
+    $setWindow($table,$recordId,$column,$nearClose);
     $preview=$service->state($student,'en-GB',$enrollment,$lesson);
     attemptExpect(!$preview['can_start']&&$preview['start_window_insufficient']
         &&$preview['start_window_close_at']===$now+30
@@ -140,27 +144,27 @@ foreach ([
         'STA-02 refuses a truncated attempt for '.$table.'.'.$column);
     attemptExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id='.$enrollment)->loadResult()===0,
         'STA-02 refused start consumes no attempt for '.$table.'.'.$column);
-    $db->updateObject($table,(object)['id'=>$recordId,$column=>$original],'id',true);
+    $setWindow($table,$recordId,$column,$original);
 }
 // Course calendar starts_at/ends_at is a separate normalized availability gate.
 $oldParams=(string)$db->setQuery('SELECT params_json FROM #__jlms_courses WHERE id='.$course)->loadResult();
 $calendarParams=json_decode($oldParams,true,32,JSON_THROW_ON_ERROR);
 $calendarParams['calendar']=array_replace($calendarParams['calendar']??['_schema'=>1,'timezone'=>'UTC'],['ends_at'=>$nearClose]);
-$db->updateObject('#__jlms_courses',(object)['id'=>$course,'params_json'=>json_encode($calendarParams,JSON_THROW_ON_ERROR)],'id');
+$setWindow('#__jlms_courses',$course,'params_json',json_encode($calendarParams,JSON_THROW_ON_ERROR));
 $calendarPreview=$service->state($student,'en-GB',$enrollment,$lesson);
 attemptExpect(!$calendarPreview['can_start']&&$calendarPreview['start_window_insufficient']
     &&$calendarPreview['start_window_close_at']===$now+30,
     'STA-02 respects course calendar end and explains rejection before start');
 attemptReject(fn()=>$service->start($student,'en-GB',$enrollment,$lesson,attemptKey()),403,
     'STA-02 cannot start beyond course calendar end');
-$db->updateObject('#__jlms_courses',(object)['id'=>$course,'params_json'=>$oldParams],'id');
+$setWindow('#__jlms_courses',$course,'params_json',$oldParams);
 // At the exact minute boundary full duration fits and is not shortened.
-$db->updateObject('#__jlms_enrollments',(object)['id'=>$enrollment,'ends_at'=>gmdate('Y-m-d H:i:s',$now+60)],'id');
+$setWindow('#__jlms_enrollments',$enrollment,'ends_at',gmdate('Y-m-d H:i:s',$now+60));
 $exact=$service->state($student,'en-GB',$enrollment,$lesson);
 attemptExpect($exact['can_start']&&!$exact['start_window_insufficient']
     &&$exact['remaining_window_seconds']===60,
     'STA-02 exact-duration boundary remains a valid start');
-$db->updateObject('#__jlms_enrollments',(object)['id'=>$enrollment,'ends_at'=>null],'id',true);
+$setWindow('#__jlms_enrollments',$enrollment,'ends_at',null);
 attemptExpect($service->state($student,'en-GB',$enrollment,$lesson)['can_start'],
     'STA-02 restores normal start when all closing limits are removed');
 $key=attemptKey();$a=$service->start($student,'en-GB',$enrollment,$lesson,$key);$aid=$a['attempt']['id'];
