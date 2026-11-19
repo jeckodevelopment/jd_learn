@@ -1,3 +1,11 @@
+## MAIL-08 — invio di prova idempotente su refresh (0.60.9-dev, 19/11/2026)
+
+L'invio di prova dal pannello **Comunicazioni corso** riutilizza lo stesso identificativo UUID v4 per la medesima anteprima anche in seguito a refresh/redirect. L'identificativo viene assegnato **dal server** alla conferma dell'anteprima e salvato nella sessione Joomla per utente e corso. Un nuovo clic su **Anteprima** genera un nuovo identificativo; l'invio di prova della stessa anteprima, anche tramite POST ripetuti o refresh, conserva l'event key deterministica e sfrutta l'unicità su `#__jlms_mail_queue.event_key`. Non è previsto il rinvio automatico di un messaggio SMTP con esito incerto o in stato `sending`.
+
+Una nuova anteprima esplicita costituisce una nuova operazione che può generare un diverso invio di prova: non è una funzione di marketing o di invio massivo. Nessun indirizzo degli iscritti viene letto dal campo test, che è ristretto all'attore autorizzato. Eseguire i collaudi reali Joomla/SMTP descritti nel testbook; la CI non dimostra consegna.
+
+---
+
 ## Correzione P0 — composizione singola, variabili valide e anteprima (15 novembre 2026)
 
 Dopo la PR #440 la pagina **Comunica agli iscritti** mostrava **due composizioni sovrapposte**: oggetto/corpo libero e modello Joomla modificabile. Questo generava confusione e poteva causare errori 422 nel passaggio a anteprima quando i campi del modello `{MESSAGE_SUBJECT}`, `{MESSAGE_BODY_TEXT}`, `{MESSAGE_BODY_HTML}` si riferivano implicitamente al vecchio editor separato.
