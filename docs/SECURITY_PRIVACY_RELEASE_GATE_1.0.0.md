@@ -47,3 +47,12 @@ La review mirata della coda email ha rilevato che il testo delle eccezioni del m
 
 **Limiti aperti:** non sono stati esaminati sistematicamente tutti gli endpoint, tutti i ruoli/gruppi Joomla, tutte le transizioni, le condizioni di concorrenza, i link di tutti i tipi di file e le configurazioni hosting. Non dichiarare SEC-P1, SECDEV-07, SEC-P5 o accettazione manuale completati. Test manuali sul sito: creare due corsi e utenti con autorizzazioni distinte, tentare gli stessi scambi di ID anche su preview pubbliche, verificare codici/range, cache, ID non validi e log senza dati sensibili.
 
+
+## SEC-P1 — verifica mirata CSRF/metodo/stati banca domande (20/11/2026)
+
+**Perimetro:** `QuestionbankController::mutate`, `QuestionBankService::trash/delete/duplicate`, `tests/quiz-authoring-http.py` e form nativi della Banca domande. La verifica di codice conferma controlli espliciti `POST` e token Joomla prima dell'esecuzione dei task, ri-validazione dell'identità e ACL oggetto nel servizio, lock della riga, transizioni 0/1 → -2 → 0, blocco della cancellazione definitiva fuori dal cestino e delle revisioni ancora utilizzate.
+
+**Regressione HTTP in CI:** su una nuova domanda isolata, GET e POST senza token devono essere rifiutati rispettivamente con 405/403 sui quattro task `trash`, `restore`, `delete` e `duplicate`. La cancellazione diretta di una domanda non cestinata deve fallire con 409, mentre cestinazione e ripristino autenticati funzionano; la ripetizione di una transizione incompatibile deve fallire con 409. La prova non modifica le domande fissate dai quiz della fixture.
+
+**Esito e limiti:** non è stata individuata una mutazione senza CSRF su questi task mediante revisione statica; l'esito HTTP deve essere confermato dalla CI e non sostituisce revisione sistematica di tutti i controller, ACL in configurazioni reali o collaudo manuale Joomla. Non promuovere criteri SEC-P1/SECDEV-04 o percentuali per questa sola tranche. La guida `QUIZ_AUTHORING.md` è stata corretta perché descriveva duplicazione/cestinazione già implementate come assenti.
+
