@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.15-dev — PATCH SEC-P1 (20/11/2026):** i nuovi messaggi corso della coda email conservano l'ID del destinatario Joomla e il dispatcher verifica account non bloccato e corrispondenza dell'indirizzo immediatamente prima di SMTP. Messaggi corso legacy senza ID vengono scartati, minimizzando indirizzo/nome/payload, anziché spedire senza controllo; gli altri messaggi con ID sono verificati allo stesso modo. Regressioni Joomla DB per indirizzo stale, utente inesistente e blocco account. Invio SMTP reale, matrice di sicurezza SEC-P1 e collaudo manuale pendenti; nessuna promozione di criterio, 57,48% invariato.
+
 - **0.64.14-dev — SEC-P1, PATCH (20/11/2026):** restringe a `reassign` il dispatch amministrativo delle categorie (prima privo di override `execute`); controlli statici fail-closed su metodi pubblici e task consentiti dei 37 controller Joomla, prova negativa con classe distribuita nel test categorie e inventario di sicurezza per endpoint. ACL/HTTP/SMTP completi non dimostrati; SEC-P1/SEC-P5 aperti, minimo 57,48% invariato.
 
 - **0.64.13-dev — PATCH SEC-P1 (20/11/2026):** il consenso opzionale confronta il destinatario con il record Joomla aggiornato; rifiuta email di sessione obsoleta e account bloccati per dashboard/iscrizione, usando nome/email canonici. Registrazione con attivazione pendente preservata. Regressioni Joomla, collaudo SMTP pendente; SEC-P1 ancora aperto, 57,48% invariato.
