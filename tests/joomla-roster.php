@@ -127,8 +127,8 @@ rosterDenied(fn()=>$communication->preview($user,$course,'SEC-P1 preview','Safe 
     'communication preview cannot import recipients from a foreign course');
 rosterDenied(fn()=>$communication->queue($user,$course,'SEC-P1 preview','Safe message',[(int)$f['italian']],
     str_repeat('0',64),'d7e332c4-7f32-4a32-bd66-1f5ac8409d13'),409,'invalid cross-course message cannot queue');
-rosterDenied(fn()=>$communication->editor(new \Joomla\\CMS\\User\\User(),$course),401,'anonymous cannot inspect course message recipients');
-rosterDenied(fn()=>$communication->editor(new \Joomla\\CMS\\User\\User((int)$f['owner']),$course),403,
+rosterDenied(fn()=>$communication->editor(new \Joomla\CMS\User\User(),$course),401,'anonymous cannot inspect course message recipients');
+rosterDenied(fn()=>$communication->editor(new \Joomla\CMS\User\User((int)$f['owner']),$course),403,
     'student cannot inspect administrative message recipients');
 rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->loadResult()===$outboxBefore,
     'denied course messages do not enqueue mail');
