@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 57.32,
-    "development_evidence_floor_percent": 57.32,
+    "percent": 57.4,
+    "development_evidence_floor_percent": 57.4,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -78,10 +78,10 @@
         "label": "Provider e fruizione video",
         "requirements": 18,
         "weight_percent": 8.41,
-        "development_evidence_floor_percent": 63.8,
+        "development_evidence_floor_percent": 64.72,
         "manual_acceptance_coverage_percent": 0,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 4,
+        "missing_criteria": 3,
         "unverifiable_criteria": 21,
         "unassessed_criteria": 0
       },
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 57.32
+        "percent": 57.4
       },
       {
         "id": "manual_acceptance",

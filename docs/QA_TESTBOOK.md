@@ -1,3 +1,7 @@
+## PBASE-03 — criterio di blocco build comprovato e riconciliato (20/11/2026)
+
+La [PR #762](https://github.com/jeckodevelopment/jd_learn/pull/762) ha dimostrato nella CI quattro job verdi e il fallimento della build standalone, senza ZIP in uscita, quando manca una guida, una sezione obbligatoria o la documentazione di un campo manifest. **PBASE-03/criterion_06 = implemented (evidenza automatica)**. Questo non completa PBASE-03/criterion_04, non copre manuali per tutti i ruoli né conferma il collaudo manuale Joomla dei provider. La candidata `0.64.4-dev` resta da provare su sito disposable per upgrade/installazione e coerenza delle guide distribuite.
+
 ## PBASE-03 — blocco di distribuzione senza documentazione plugin base (20/11/2026)
 
 **Automatizzato:** `python3 tests/provider-package-gate.py` verifica il gate positivo sui quattro README e l'assenza di ZIP quando il builder standalone incontra guida mancante, sezione fondamentale assente o parametro di manifest non documentato. `python3 tools/build.py` verifica l'archivio ordinario. Una CI senza errori non sostituisce una lettura del contenuto o la verifica manuale del plugin.

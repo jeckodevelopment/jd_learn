@@ -10408,16 +10408,17 @@
       {
         "id": "criterion_06",
         "label": "assenza di documentazione di un plugin base blocca l'accettazione del pacchetto",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "README.md",
-          "docs/VIDEO.md"
+          "tools/build.py",
+          "tests/provider-package-gate.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «assenza di documentazione di un plugin base blocca l'accettazione del pacchetto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Il builder standalone invoca il gate per tutti e quattro i plugin prima della produzione del pacchetto. Le prove negative simulano guida mancante, sezione obbligatoria assente e campo manifest non documentato e confermano che nessuno ZIP viene prodotto. L'accettazione manuale Joomla è distinta.",
           "references": [
-            "README.md#L1-L25",
-            "docs/VIDEO.md#L1-L25"
+            "tools/build.py#validate_provider_guides(ROOT)",
+            "tests/provider-package-gate.py#rejected(\"missing guide\")",
+            "tests/provider-package-gate.py#rejected(\"undocumented Joomla manifest field\")"
           ]
         }
       }
