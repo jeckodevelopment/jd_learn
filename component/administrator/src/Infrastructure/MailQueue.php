@@ -37,7 +37,7 @@ final class MailQueue
             'com_jlms.course.updated' => 'course_update', 
             default => null,
         };
-        if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if ($courseId < 1 || $event === null || ($recipientUserId ?? 0) < 1 || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return;
         }
 
