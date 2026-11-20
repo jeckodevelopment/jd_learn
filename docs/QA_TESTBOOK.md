@@ -1,3 +1,10 @@
+## HTTP-06 — endpoint core, prove negative su Joomla
+
+- [ ] Eseguire `tests/learning-http.py` sulla candidata con GET `enrollment.start/request`, `lesson.complete/begin` (405), POST senza CSRF (403), task inesistenti (404), ripetizione iscrizione e mantenimento dei progressi.
+- [ ] Eseguire `tests/video-http.py` con GET sui quattro task `video.playback/save/renew/close` (405 JSON), CSRF assente (403 JSON), task sconosciuto (404) e nessun riferimento provider in errori.
+- [ ] Verificare DB prima/dopo gli errori, code di eventi e corsi in stati non accessibili; provare ruoli, oggetti, lingue, CSRF, cache e rete realmente configurati con account di prova.
+- [ ] Registrare l'esito con build e ambiente per ogni caso della baseline core; non trattare i casi di fase 2 come prerequisiti stabili. Dettagli `docs/HTTP_06_CORE_EDGE_CONTRACTS_1.0.0.md`.
+
 ## UI-07 — contratti DOM a runtime e CSS custom (da collaudare)
 
 - [ ] CI `tests/frontend-dom-runtime.py` rifiuta ID `jlms-* ` duplicati e classi CSS fuori dalla radice; `tests/categories-http.py` e `tests/dashboard-http.py` verificano HTML effettivamente renderizzato su Joomla, due stati SEF e navigazione personale.

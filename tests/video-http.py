@@ -62,7 +62,19 @@ try:
   except json.JSONDecodeError:pass
  expect(options is not None,'Native Joomla script options contain safe player settings')
  fields={'enrollment_id':fixture['enrollment_id'],'lesson_id':fixture['lesson_id'],'consent':'1',options['token']:'1'}
- request(student,options['urls']['playback'],expected=405)
+ # HTTP-06: all JSON video tasks refuse GET before processing state/consent.
+ for operation in ('playback','save','renew','close'):
+  _,get_denied=request(student,options['urls'][operation],expected=405)
+  denied_json=json.loads(get_denied)
+  expect(denied_json['success'] is False and denied_json['data']['code']=='COM_JLMS_METHOD_NOT_ALLOWED',
+         'HTTP-06 GET video '+operation+' returns safe Joomla JSON contract')
+  expect('dQw4w9WgXcQ' not in get_denied and 'Bearer ' not in get_denied,'no media/provider secrets in rejected video response')
+ # Unrecognised tasks never reach public controller methods.
+ request(student,'/index.php?option=com_jlms&task=video.unknown',expected=404)
+ # Same-session POST without a Joomla token is rejected for each mutating task.
+ for operation in ('playback','save','renew','close'):
+  _,csrf_denied=request(student,options['urls'][operation],{'enrollment_id':fixture['enrollment_id'],'lesson_id':fixture['lesson_id']},expected=403)
+  expect(json.loads(csrf_denied)['success'] is False,'HTTP-06 CSRF failure is JSON for video '+operation)
  bad=dict(fields);bad.pop(options['token']);request(student,options['urls']['playback'],bad,expected=403)
  bad=dict(fields);bad['consent']='0';request(student,options['urls']['playback'],bad,expected=403)
  _,body=request(student,options['urls']['playback'],fields);grant=json.loads(body)['data']
