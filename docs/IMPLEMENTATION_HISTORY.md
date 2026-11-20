@@ -1,3 +1,11 @@
+## 20 novembre 2026 — DOC-07, validazione stretta date Scheduler (PR #789)
+
+[PR #789](https://github.com/jeckodevelopment/jd_learn/pull/789) integrata con squash SHA `5dfce95b4183211a28d069687ebfc5925c2a820e`. La diagnostica rifiuta date `next_execution` impossibili o non canoniche, usando DATETIME UTC stretto senza normalizzazioni PHP; test negativi e confini di tolleranza. [CI completa](https://github.com/jeckodevelopment/jd_learn/actions/runs/44761363793) **4/4 verde**; gate integrità matrice [run #44761364037](https://github.com/jeckodevelopment/jd_learn/actions/runs/44761364037).
+
+[Artefatto Actions](https://github.com/jeckodevelopment/jd_learn/actions/runs/44761363793/artifacts/14641234400) `JD-Learn-0.64.12-dev` con ZIP interno Joomla `pkg_jlms-0.64.12-dev.zip`. SHA-256 **ZIP Joomla interno** verificato dal builder: `35a7e1ad22a21fffcf186b82c9a7cd198f6f7aecc86b551e5374b17a7d378fb5` (809524 byte, 12 costituenti). Digest distinto dell'**archivio GitHub Actions**: `sha256:073e581e040a84fcd07cd93c7a2d0ad803c0c79f0da2545a32ee3917c1509ca1`.
+
+Documentazione, QA, changelog, matrice e SemVer `0.64.12-dev` inclusi nella #789. DOC-07 ancora aperto; collaudo Joomla manuale non eseguito; 454 implemented / 35 missing / 268 unverifiable, minimo 57,48% invariato. Nessuna ulteriore modifica runtime da questa PR documentale.
+
 ## 20 novembre 2026 — DOC-07, precedenza ai duplicati Scheduler (PR #787)
 
 [PR #787](https://github.com/jeckodevelopment/jd_learn/pull/787) integrata con squash SHA `6a25359f4fbfb023c085cdb73ac0df7f2a7b35f5`. La diagnostica `SchedulerHealth::assess()` segnala i task duplicati anche quando il plugin/task non è abilitato, senza modificarli. Test di regressione su tutte le combinazioni di abilitazione. [CI completa](https://github.com/jeckodevelopment/jd_learn/actions/runs/44758750931) **4/4 verde**; [gate integrità requisiti](https://github.com/jeckodevelopment/jd_learn/actions/runs/44758752844) verde.
