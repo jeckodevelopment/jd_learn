@@ -40,8 +40,8 @@ assert set(partials) == set(actual_partials), (
     "obsolete partial", sorted(set(partials) - set(actual_partials)))
 
 def literals(source):
-    found_ids = sorted(set(re.findall(r'\\bid="(jlms-[a-zA-Z0-9_-]+)"', source)))
-    found_classes = sorted({token for group in re.findall(r'\\bclass="([^"]+)"', source)
+    found_ids = sorted(set(re.findall(r'\bid="(jlms-[a-zA-Z0-9_-]+)"', source)))
+    found_classes = sorted({token for group in re.findall(r'\bclass="([^"]+)"', source)
                             for token in group.split()
                             if re.fullmatch(r'jlms-[a-zA-Z0-9_-]+', token)})
     return found_ids, found_classes
