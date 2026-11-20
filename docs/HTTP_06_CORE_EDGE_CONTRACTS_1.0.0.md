@@ -19,6 +19,10 @@
 | HTTP06-11 | `enrollment.start` replay con stessa chiave | `tests/learning-http.py` | stessa iscrizione, nessun doppione | CI preesistente, non accettato manualmente |
 | HTTP06-12 | `video.save` replay, revisione errata, limite payload, chiusura | `tests/video-http.py` | idempotenza, 409, 413, 409 dopo close | CI preesistente, non accettato manualmente |
 
+| HTTP06-13 | `enrollment.resume` POST | `tests/learning-http.py` | 405, nessun redirect operativo | Test HTTP, CI da verificare |
+| HTTP06-14 | `lesson.begin` POST con payload oltre 4096 byte | `tests/learning-http.py` | 413, JSON di errore controllato | Test HTTP, CI da verificare |
+| HTTP06-15 | `video.save` POST con payload oltre 75000 byte | `tests/video-http.py` | 413, JSON di errore senza riferimento media | Test HTTP, CI da verificare |
+
 Le prove sopra si eseguono nelle due combinazioni Joomla/PHP/database della CI con dati usa-e-getta. La colonna «CI» significa scenario collegato a un test *da validare su un run specifico*; soltanto un run verde permette di descriverlo come superato. Il registro non equivale all'intero elenco dei casi limite della baseline, né a prova di penetrazione o collaudo Joomla su hosting reale.
 
 ## Prove ulteriori necessarie
