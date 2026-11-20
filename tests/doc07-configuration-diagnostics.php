@@ -47,4 +47,9 @@ if ($result[3]['severity'] !== 'error' || $result[9]['severity'] !== 'error'
 if ($result[9]['guidanceKey'] !== 'COM_JLMS_SCHEDULER_GUIDANCE_DUPLICATES') {
     throw new RuntimeException('Duplicate scheduler task did not override healthy status');
 }
+$untrusted = ConfigurationDiagnostics::summarize([], [['labelKey' => '<script>secret</script>', 'stateKey' => 'unexpected']]);
+if ($untrusted[0]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL'
+    || $untrusted[0]['stateKey'] !== 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN') {
+    throw new RuntimeException('Unknown provider labels or states must fail closed');
+}
 echo "DOC-07: scheduler/provider actionable statuses and privacy-safe projections OK\n";
