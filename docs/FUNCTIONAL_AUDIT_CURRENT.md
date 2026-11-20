@@ -1901,7 +1901,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/privacy-storage-inventory.py#EXPECTED](../tests/privacy-storage-inventory.py)
   - [component/media/js/video.js#jdlearn.video.language.v1](../component/media/js/video.js)
 - `SEC-P4/criterion_04` — Guida amministrativa privacy in IT/EN. È disponibile una guida amministrativa in inglese con inventario, procedura CMP, comportamento pre/post consenso, revoca, scansione e manutenzione, collegata alla guida italiana. La completezza editoriale IT/EN non certifica l'integrazione con una CMP né le verifiche live, mantenute come criteri non verificabili.
-  - [docs/PRIVACY_COOKIES.md#Guida amministrativa inglese](../docs/PRIVACY_COOKIES.md)
+  - [docs/PRIVACY_COOKIES.md#guida amministrativa inglese](../docs/PRIVACY_COOKIES.md)
   - [docs/PRIVACY_COOKIES_EN.md#Configure the CMP bridge](../docs/PRIVACY_COOKIES_EN.md)
   - [docs/PRIVACY_COOKIES_EN.md#Mandatory pre-release verification](../docs/PRIVACY_COOKIES_EN.md)
 - `LCM-01/criterion_02` — preservare storico personale, frequenze, progressi e attestati. L’archiviazione cambia lo stato del corso attraverso il workflow e chiude le due abilitazioni sul corso conservando la versione pubblicata. La transazione non elimina iscrizioni, progressi o attestati.
