@@ -336,7 +336,7 @@ if ($queueController === false || !str_contains($queueController, "['reconcile',
     throw new RuntimeException('Operational outbox read-only display must stay permitted.');
 }
 if ($dashboard === false || !str_contains($dashboard, "view=mailvariables")
-    || $guideView === false || !str_contains($guideView, "authorise('core.manage', 'com_jlms')")
+    || $guideView === false || !str_contains($guideView, "CourseEditorAccess::fresh($app->getIdentity())")
     || !str_contains($guideView, "authorise('core.manage', 'com_mails')")
     || !str_contains($guideView, "authorise('core.edit', 'com_mails')")) {
     throw new RuntimeException('Guide navigation and native editor ACL must be enforced by the toolbar view.');
