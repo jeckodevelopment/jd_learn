@@ -1,3 +1,11 @@
+## 20 novembre 2026 — SECDEV-03: blocco nomi file con marcatori Unicode bidi (PR #768)
+
+[PR #768](https://github.com/jeckodevelopment/jd_learn/pull/768) integrata in `main` con squash `b6059f1e03e3c6f06a474f1d9da9ac00870a0be7`. [CI completa #44736323165](https://github.com/jeckodevelopment/jd_learn/actions/runs/44736323165) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6); validazione matrice sul commit finale verde.
+
+Il controllo server `MaterialFilePolicy::name()` rifiuta i caratteri direzionali Unicode U+061C, U+200E–200F, U+202A–202E, U+2066–2069, che permettono nomi ingannevoli circa l'estensione. Protezione applicata alla validazione dei file e alla preparazione delle intestazioni del download; i nomi Unicode legittimi con accenti restano consentiti. Test di regressione `tests/material-policy.php` usa caratteri Unicode reali, non escape letterali. La PR ha sincronizzato versione package/component/WAM/README, matrice `REQUIREMENTS_STATUS.csv`, `docs/MATERIALS.md`, testbook, changelog e stato implementativo. **PATCH SemVer 0.64.5-dev**, nessuna alterazione dei criteri globali SECDEV-03, che richiede review trasversale.
+
+[Artefatto Actions #14628508329](https://github.com/jeckodevelopment/jd_learn/actions/runs/44736323165/artifacts/14628508329) `JD-Learn-0.64.5-dev` contiene il pacchetto Joomla interno `pkg_jlms-0.64.5-dev.zip` (SHA-256 interno verificato dal builder: `c30ea3887d985496bbf1b7e2c6442c7480b34af15ff69aac0665448a627a09f5`, 808822 byte, 12 costituenti). SHA-256 dell'archivio GitHub Actions distinto: `6d9b042374cd5affa6f6c4ef3f1f5d6a9360c9d957d24454ef431b27929f48b0`. Minimo comprovato **57,48% invariato**, **454 implementati, 35 mancanti, 268 non verificabili**. Accettazione manuale Joomla ancora pendente.
+
 ## 20 novembre 2026 — PBASE-03: guide per ruoli ed esempio provider v1 (PR #766)
 
 [PR #766](https://github.com/jeckodevelopment/jd_learn/pull/766) integrata in `main` con squash `66499eb823b3c64a9f7d7437d429f31d842e0bd4`. [CI completa #44734368008](https://github.com/jeckodevelopment/jd_learn/actions/runs/44734368008) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6) e [validazione requisiti #44734368100](https://github.com/jeckodevelopment/jd_learn/actions/runs/44734368100) verde.
