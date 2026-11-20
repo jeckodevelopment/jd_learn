@@ -2,8 +2,8 @@
   "audited_at": "2026-11-15",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 58.8,
-    "development_evidence_floor_percent": 58.8,
+    "percent": 59.11,
+    "development_evidence_floor_percent": 59.11,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -13919,7 +13919,7 @@
     "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873"
   },
   "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Avanzamento implementativo 78,67% (79% arrotondato), email 64%. MAIL-04 implementato; accettazione manuale Joomla/SMTP pendente. | Installer updateObject by-reference fixed in merged PR #373; reverting additional packaging, official 79% baseline unchanged pending weighted recalculation after #367. Manual Joomla 6.2.0 installation must be retested.",
-  "updated_at": "2026-11-15",
+  "updated_at": "2026-11-20",
   "sec_p1_mail_transport_candidate": {
     "pull_request": 338,
     "runtime_commit": "5d38e6e47582422be581247de085206abc2c0296",
