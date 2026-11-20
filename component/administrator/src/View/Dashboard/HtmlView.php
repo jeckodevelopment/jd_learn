@@ -23,6 +23,8 @@ final class HtmlView extends BaseHtmlView
     public array $shortcutGroups = [];
     /** Read-only guidance, never actions. Items are shown only with the matching ACL. */
     public array $safeOperations = [];
+    /** Non-mutating, local-only configuration checks visible to component managers. */
+    public array $configurationDiagnostics = [];
 
     public function display($tpl = null)
     {
@@ -104,6 +106,10 @@ final class HtmlView extends BaseHtmlView
             $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status($db);
             $this->schedulerHealth = \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::inspect($db);
         }
+        // A local-only diagnostic view: no external probes and no credentials in output.
+        $this->configurationDiagnostics = $actor->authorise('core.manage', 'com_jlms')
+            ? \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::summarize($this->schedulerHealth, $this->providers)
+            : [];
         // Visibility is based on current ACL rather than the presence of a dashboard shortcut.
         // No diagnostic here triggers sending, deleting, regenerating or mutating data.
         $this->safeOperations = [];
