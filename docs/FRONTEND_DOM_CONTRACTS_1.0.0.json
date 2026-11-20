@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "contract_version": "1.0.0",
-  "description": "Contratti DOM delle viste frontend distribuite; ID e classi letterali, esclusi elementi dinamici e partial condivisi. Nessuna attestazione di collaudo browser.",
+  "description": "Contratti DOM versionati di tutte le 17 viste frontend e dei quattro partial PHP distribuiti, con override, hook e dipendenze; nessuna attestazione di accettazione su template Joomla esterni.",
   "views": {
     "courses": {
       "layout": "component/site/tmpl/courses/default.php",
@@ -496,6 +496,75 @@
       ],
       "static_classes": [
         "jlms-mail-consent-revoke"
+      ]
+    }
+  },
+  "partials": {
+    "_personal_navigation": {
+      "layout": "component/site/tmpl/dashboard/_personal_navigation.php",
+      "included_by": [
+        "dashboard",
+        "mycourses",
+        "mycertificates",
+        "preferences"
+      ],
+      "static_ids": [
+        "jlms-personal-navigation"
+      ],
+      "static_classes": [
+        "jlms-personal-navigation",
+        "jlms-personal-navigation__current",
+        "jlms-personal-navigation__item",
+        "jlms-personal-navigation__link",
+        "jlms-personal-navigation__list"
+      ]
+    },
+    "_courses": {
+      "layout": "component/site/tmpl/dashboard/_courses.php",
+      "included_by": [
+        "mycourses"
+      ],
+      "static_ids": [
+        "jlms-dashboard-empty",
+        "jlms-dashboard-empty-catalog",
+        "jlms-my-courses"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-dashboard-group",
+        "jlms-my-course",
+        "jlms-my-course-grid",
+        "jlms-my-course__access",
+        "jlms-my-course__action",
+        "jlms-my-course__progress",
+        "jlms-my-course__title"
+      ]
+    },
+    "_certificates": {
+      "layout": "component/site/tmpl/dashboard/_certificates.php",
+      "included_by": [
+        "mycertificates"
+      ],
+      "static_ids": [],
+      "static_classes": [
+        "jlms-card",
+        "jlms-my-course",
+        "jlms-my-course-grid",
+        "jlms-my-course__action"
+      ]
+    },
+    "_preferences": {
+      "layout": "component/site/tmpl/dashboard/_preferences.php",
+      "included_by": [
+        "preferences"
+      ],
+      "static_ids": [
+        "jlms-course-announcement-preferences",
+        "jlms-course-announcement-title",
+        "jlms-mail-consent-state"
+      ],
+      "static_classes": [
+        "jlms-dashboard-group"
       ]
     }
   }
