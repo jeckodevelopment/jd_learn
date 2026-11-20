@@ -69,3 +69,7 @@ Il tracciamento della prova mantiene separati: codice che applica ACL, esito HTT
 ## SEC-P1 — inventario trasversale e finding sui token di conferma (20/11/2026)
 
 L'inventario per l'intero perimetro della 1.0.0, con superfici ed evidenze ancora mancanti, è in [SEC_P1_ATTACK_SURFACE_1.0.0.md](SEC_P1_ATTACK_SURFACE_1.0.0.md). **La predisposizione della matrice non chiude SEC-P1.** Revisione mirata: `MailconsentController::confirm()` riceve un token monouso nell'URL e lo consuma prima di redirigere alle preferenze; mancava la policy anti-referrer già presente nel percorso di revoca. La mitigazione aggiunge `Referrer-Policy: no-referrer` e `X-Robots-Tag: noindex, nofollow` oltre al `Cache-Control: no-store` esistente, prima dell'operazione. Test di regressione strutturale in `tests/frontend-preferences.py`; conferma HTTP su Joomla disposable da effettuare. Non è stata osservata un'esfiltrazione; nessun incremento di copertura o accettazione dichiarato.
+
+## SEC-P1 — inventory gate controller di Joomla (20/11/2026)
+
+Introdotto gate strutturale `tests/sec-p1-controller-gates.py` richiamato dal preflight `tools/check.py`: censisce controller frontend/backend, richiede classificazione esplicita dei nuovi file e conserva i controlli POST/CSRF o le deleghe Joomla dichiarate. La documentazione integrale delle superfici è in `docs/SEC_P1_ATTACK_SURFACE_1.0.0.md`. La suite non sostituisce prove negative ACL/IDOR, CSRF e stato DB nei singoli endpoint; gate SEC-P1 e SEC-P5 **restano aperti**.
