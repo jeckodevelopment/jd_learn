@@ -522,6 +522,40 @@ if (!$mailConsent->revokeByToken($tokenTwo) || $mailConsent->state((int) $userId
 }
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();
 $certificateService = $component->getCertificateService();
+// SEC-P1: administrator certificate authorization must re-read the Joomla
+// account on every operation. A previously privileged session cannot retain
+// access once its account is blocked, even for read-only certificate metadata.
+$staleCertificateActor = $app->getIdentity();
+$certificateAdminId = (int) $staleCertificateActor->id;
+$originalCertificateBlock = (int) $db->setQuery($db->createQuery()
+    ->select('block')->from('#__users')->where('id = ' . $certificateAdminId))->loadResult();
+try {
+    $db->setQuery($db->createQuery()->update('#__users')->set('block = 1')
+        ->where('id = ' . $certificateAdminId))->execute();
+    $blockedCertificateOperations = [
+        'list' => static fn() => $certificateService->adminList($staleCertificateActor, []),
+        'diagnosis' => static fn() => $certificateService->adminUnissuedCompletions($staleCertificateActor, 1),
+        'download' => static fn() => $certificateService->adminDownload($staleCertificateActor, 1),
+        'regenerate' => static fn() => $certificateService->adminRegenerate($staleCertificateActor, 1, 1, 'Security denial check'),
+        'recover missing' => static fn() => $certificateService->adminRecoverMissing($staleCertificateActor, 1, 'Security denial check'),
+        'recover historical' => static fn() => $certificateService->adminRecoverHistorical($staleCertificateActor, 1, 'Security denial check'),
+    ];
+    foreach ($blockedCertificateOperations as $operation => $invoke) {
+        try {
+            $invoke();
+            throw new \RuntimeException('Blocked account reached certificate admin operation: ' . $operation);
+        } catch (\RuntimeException $error) {
+            if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR' || $error->getCode() !== 403) {
+                throw $error;
+            }
+        }
+    }
+} finally {
+    $db->setQuery($db->createQuery()->update('#__users')
+        ->set('block = ' . $originalCertificateBlock)
+        ->where('id = ' . $certificateAdminId))->execute();
+}
+
 $certificateService->adminList($app->getIdentity(), ['q' => 'CERT-C-PROBE', 'status' => 'ready', 'offset' => 0]);
 $unissued = $certificateService->adminUnissuedCompletions($app->getIdentity(), 25);
 if (!is_array($unissued) || count($unissued) > 25) {
