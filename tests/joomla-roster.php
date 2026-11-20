@@ -138,6 +138,56 @@ try {
     }
     rosterDenied(fn()=>$mailAudit->reconcile($courseManager,999999999,'sent','Confirmed no delivery',true),409,
         'authorized auditor receives safe conflict for nonexistent reconciliation ID');
+
+    // Two operator requests may race on the same stale claim. The second must
+    // fail closed; free-form notes must not be duplicated in last_error.
+    $mailTestIds=[];
+    $newStaleMail=static function(string $suffix) use($db,$course,&$mailTestIds):int {
+        $testMail=(object)[
+            'event_key'=>hash('sha256','sec-p1-reconciliation-'.$suffix.'-'.bin2hex(random_bytes(12))),
+            'template_id'=>'com_jlms.enrollment.confirmed',
+            'course_id'=>$course,'language'=>'en-GB',
+            'recipient_email'=>'reconcile@example.invalid','recipient_name'=>'CI Reconcile',
+            'template_data'=>'{"USER_FULLNAME":"Example Student"}',
+            'state'=>'sending','attempts'=>1,'available_at'=>gmdate('Y-m-d H:i:s'),
+            'claimed_at'=>gmdate('Y-m-d H:i:s',time()-1200),
+            'created_at'=>gmdate('Y-m-d H:i:s'),
+        ];
+        $db->insertObject('#__jlms_mail_queue',$testMail,'id');
+        $mailTestIds[]=(int)$testMail->id;
+        return (int)$testMail->id;
+    };
+    try {
+        $sensitiveNote='Verified SMTP externally; internal reference NOTE-SEC-P1';
+        $staleSent=$newStaleMail('sent');
+        $mailAudit->reconcile($courseManager,$staleSent,'sent',$sensitiveNote,true);
+        $sentRow=$db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email,recipient_name,template_data FROM #__jlms_mail_queue WHERE id='.$staleSent)->loadObject();
+        rosterExpect($sentRow->state==='sent'&&$sentRow->reconciliation_note===$sensitiveNote
+            &&$sentRow->last_error==='Manual reconciliation recorded.'
+            &&$sentRow->recipient_email===''&&$sentRow->recipient_name===''&&$sentRow->template_data==='{}',
+            'sent reconciliation retains only dedicated audit note and clears recipient payload');
+        rosterDenied(fn()=>$mailAudit->reconcile($courseManager,$staleSent,'retry',$sensitiveNote,true),409,
+            'second operator cannot retry a reconciled sending claim');
+        $sentState=$db->setQuery('SELECT state,reconciliation_note,last_error FROM #__jlms_mail_queue WHERE id='.$staleSent)->loadAssoc();
+        rosterExpect($sentState['state']==='sent'&&$sentState['reconciliation_note']===$sensitiveNote
+            &&$sentState['last_error']==='Manual reconciliation recorded.',
+            'repeated reconciliation does not overwrite accepted audit state');
+
+        $staleRetry=$newStaleMail('retry');
+        $mailAudit->reconcile($courseManager,$staleRetry,'retry',$sensitiveNote,true);
+        $retryRow=$db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email FROM #__jlms_mail_queue WHERE id='.$staleRetry)->loadObject();
+        rosterExpect($retryRow->state==='retry'&&$retryRow->reconciliation_note===$sensitiveNote
+            &&$retryRow->last_error==='Manual reconciliation recorded.'
+            &&$retryRow->recipient_email==='reconcile@example.invalid',
+            'retry transition keeps delivery address but does not duplicate note in last_error');
+        rosterDenied(fn()=>$mailAudit->reconcile($courseManager,$staleRetry,'retry',$sensitiveNote,true),409,
+            'second retry of already released mail claim denied');
+    } finally {
+        foreach($mailTestIds as $mailTestId){
+            $db->setQuery('DELETE FROM #__jlms_mail_queue WHERE id='.(int)$mailTestId)->execute();
+        }
+    }
+
 } finally {
     $componentAsset->rules=$mailAuditOriginalRules;
     $componentAsset->store();
