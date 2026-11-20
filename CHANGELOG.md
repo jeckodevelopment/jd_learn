@@ -1,5 +1,7 @@
 # Changelog
 
+- HTTP-06 (test-only, 0.64.17-dev): regressioni Joomla sui confini di richiesta `enrollment.resume` POST (405), `lesson.begin` con body eccessivo (413 JSON) e `video.save` eccessivo (413 JSON senza riferimenti provider); nessun cambiamento runtime, criteri o percentuali promossi prima della CI e del collaudo.
+
 - HTTP-06: ampliate le regressioni HTTP su Joomla reale per metodo, CSRF, task sconosciuti e contratto JSON dei flussi iscrizione/lezione/video; registro casi limite core separato dal catalogo progettuale.
 
 - UI-07: controllo DOM sul markup reale Joomla per ID duplicati e scope di due personalizzazioni CSS indipendenti nelle viste catalogo/categorie/dashboard; fixture negative integrate nel preflight.
