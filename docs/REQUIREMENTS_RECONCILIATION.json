@@ -5,9 +5,9 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 198,
+      "Parziale": 200,
       "Completata": 23,
-      "Non iniziata": 28
+      "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
       "1.0.0": 174,
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 57.94,
-    "development_evidence_floor_percent": 57.94,
+    "percent": 58.8,
+    "development_evidence_floor_percent": 58.8,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -34,7 +34,7 @@
       "requirements_passed": 0,
       "requirements_failed": 0,
       "coverage_percent": 4.67,
-      "fully_accepted_percent": 0.0
+      "fully_accepted_percent": 0
     },
     "macroareas": [
       {
@@ -44,7 +44,7 @@
         "weight_percent": 10.75,
         "development_evidence_floor_percent": 74.41,
         "manual_acceptance_coverage_percent": 13.04,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 1,
         "unverifiable_criteria": 20,
         "unassessed_criteria": 0
@@ -55,8 +55,8 @@
         "requirements": 20,
         "weight_percent": 9.35,
         "development_evidence_floor_percent": 70.44,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 23,
         "unassessed_criteria": 0
@@ -68,7 +68,7 @@
         "weight_percent": 8.88,
         "development_evidence_floor_percent": 70.18,
         "manual_acceptance_coverage_percent": 5.26,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 18,
         "unassessed_criteria": 0
@@ -78,10 +78,10 @@
         "label": "Provider e fruizione video",
         "requirements": 18,
         "weight_percent": 8.41,
-        "development_evidence_floor_percent": 65.65,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
-        "missing_criteria": 2,
+        "development_evidence_floor_percent": 67.5,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 1,
         "unverifiable_criteria": 21,
         "unassessed_criteria": 0
       },
@@ -92,7 +92,7 @@
         "weight_percent": 7.94,
         "development_evidence_floor_percent": 70.59,
         "manual_acceptance_coverage_percent": 17.65,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 14,
         "unassessed_criteria": 0
@@ -104,7 +104,7 @@
         "weight_percent": 6.07,
         "development_evidence_floor_percent": 67.31,
         "manual_acceptance_coverage_percent": 15.38,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 11,
         "unassessed_criteria": 0
@@ -116,7 +116,7 @@
         "weight_percent": 17.76,
         "development_evidence_floor_percent": 55.48,
         "manual_acceptance_coverage_percent": 2.63,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 37,
         "unassessed_criteria": 0
@@ -127,8 +127,8 @@
         "requirements": 51,
         "weight_percent": 23.83,
         "development_evidence_floor_percent": 42.61,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 11,
         "unverifiable_criteria": 100,
         "unassessed_criteria": 0
@@ -138,10 +138,10 @@
         "label": "Packaging, documentazione e reporting",
         "requirements": 15,
         "weight_percent": 7.01,
-        "development_evidence_floor_percent": 27.22,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
-        "missing_criteria": 19,
+        "development_evidence_floor_percent": 37.22,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
+        "missing_criteria": 14,
         "unverifiable_criteria": 24,
         "unassessed_criteria": 0
       }
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 57.94
+        "percent": 58.8
       },
       {
         "id": "manual_acceptance",
