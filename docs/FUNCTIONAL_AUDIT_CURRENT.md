@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **464**.
-- Mancanti con lacuna accertata: **26**.
+- Implementati: **466**.
+- Mancanti con lacuna accertata: **24**.
 - Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
@@ -63,12 +63,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-04/criterion_04` — Procedure tecniche riproducibili e versionate. La revisione del criterio «Procedure tecniche riproducibili e versionate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
-- `DOC-07/criterion_02` — Test di configurazione espongono errori specifici e azionabili. La revisione del criterio «Test di configurazione espongono errori specifici e azionabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `DOC-07/criterion_03` — Messaggi non invitano a operazioni insicure o prive di autorizzazione. La revisione del criterio «Messaggi non invitano a operazioni insicure o prive di autorizzazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `DOC-10/criterion_01` — Note rilascio e changelog corrispondono alla candidata. La revisione del criterio «Note rilascio e changelog corrispondono alla candidata» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
@@ -1902,6 +1896,17 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/tmpl/dashboard/default.php#jlms-admin-safe-operations](../component/administrator/tmpl/dashboard/default.php)
   - [docs/DOC07_SAFE_OPERATIONS_1.0.0.md#Matrice procedure](../docs/DOC07_SAFE_OPERATIONS_1.0.0.md)
   - [tests/doc07-safe-operations.py#DOC-07](../tests/doc07-safe-operations.py)
+- `DOC-07/criterion_02` — Test di configurazione espongono errori specifici e azionabili. La dashboard espone test locali e non mutativi della configurazione Joomla Scheduler e dei provider video, con severità, stato, spiegazione e rimedio distinto per guasti. La suite esercita stati nominali, degradati, duplicati, sconosciuti e i limiti di input; la CI verifica le chiavi IT/EN e l'assenza di side effect. Le prove remote/hosting restano accettazione separata.
+  - [component/administrator/src/Application/ConfigurationDiagnostics.php#public static function summarize](../component/administrator/src/Application/ConfigurationDiagnostics.php)
+  - [component/administrator/tmpl/dashboard/default.php#jlms-admin-configuration-diagnostics](../component/administrator/tmpl/dashboard/default.php)
+  - [tests/doc07-configuration-diagnostics.php#DOC-07](../tests/doc07-configuration-diagnostics.php)
+  - [component/administrator/src/Infrastructure/SchedulerHealth.php#public static function guidanceKey](../component/administrator/src/Infrastructure/SchedulerHealth.php)
+  - [component/administrator/src/Application/DashboardProviderStatus.php#public static function guidanceKey](../component/administrator/src/Application/DashboardProviderStatus.php)
+- `DOC-07/criterion_03` — Messaggi non invitano a operazioni insicure o prive di autorizzazione. I suggerimenti configurativi sono esposti solo a gestori autorizzati, sono localizzati e codificati in output, usano esclusivamente chiavi di traduzione riconosciute e vietano avvii di task, invii sostitutivi, bypass ACL/CSP/privacy o manipolazioni SQL. Test automatici con stati ignoti e guardie strutturali impediscono output di segreti e operazioni non autorizzate. Collaudo Joomla multi-ruolo ancora aperto.
+  - [component/administrator/src/View/Dashboard/HtmlView.php#public array $configurationDiagnostics](../component/administrator/src/View/Dashboard/HtmlView.php)
+  - [component/administrator/tmpl/dashboard/default.php#jlms-admin-configuration-diagnostics](../component/administrator/tmpl/dashboard/default.php)
+  - [tests/doc07-safe-operations.py#DOC-07](../tests/doc07-safe-operations.py)
+  - [docs/DOC07_SAFE_OPERATIONS_1.0.0.md#Verifiche effettive di configurazione](../docs/DOC07_SAFE_OPERATIONS_1.0.0.md)
 - `DOC-08/criterion_01` — Matrice collega ogni flusso core alla relativa documentazione. La PR #818 ha distribuito un inventario machine-readable di 21 flussi della baseline 1.0.0 collegati a guide esistenti con verifiche automatiche di completezza e riferimenti; walkthrough manuali separati.
   - [docs/CORE_FLOW_DOCUMENTATION_1.0.0.json#installation_upgrade](../docs/CORE_FLOW_DOCUMENTATION_1.0.0.json)
   - [tools/doc08_gate.py#REQUIRED](../tools/doc08_gate.py)

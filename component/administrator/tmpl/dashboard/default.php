@@ -97,6 +97,31 @@ $schedulerHealthKeys = [
         <?php endif; ?>
     </details>
 
+    <?php if ($this->configurationDiagnostics) : ?>
+    <details id="jlms-admin-configuration-diagnostics" class="mt-3">
+        <summary><?= $this->escape(Text::_('COM_JLMS_CONFIG_DIAGNOSTICS_TITLE')) ?></summary>
+        <p class="small"><?= $this->escape(Text::_('COM_JLMS_CONFIG_DIAGNOSTICS_NOTE')) ?></p>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead><tr>
+                    <th scope="col"><?= $this->escape(Text::_('COM_JLMS_CONFIG_DIAGNOSTICS_CHECK')) ?></th>
+                    <th scope="col"><?= $this->escape(Text::_('COM_JLMS_CONFIG_DIAGNOSTICS_STATE')) ?></th>
+                    <th scope="col"><?= $this->escape(Text::_('COM_JLMS_CONFIG_DIAGNOSTICS_REMEDY')) ?></th>
+                </tr></thead>
+                <tbody>
+                <?php foreach ($this->configurationDiagnostics as $check) : ?>
+                    <tr data-jlms-configuration-kind="<?= $this->escape($check['kind']) ?>" data-jlms-configuration-severity="<?= $this->escape($check['severity']) ?>">
+                        <th scope="row"><?= $this->escape(Text::_($check['labelKey'])) ?></th>
+                        <td><?= $this->escape(Text::_($check['stateKey'])) ?></td>
+                        <td><?= $this->escape(Text::_($check['guidanceKey'])) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </details>
+    <?php endif; ?>
+
     <?php if ($this->safeOperations) : ?>
     <details id="jlms-admin-safe-operations" class="mt-3">
         <summary><?= $this->escape(Text::_('COM_JLMS_SAFE_OPERATIONS_TITLE')) ?></summary>
