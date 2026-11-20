@@ -16,6 +16,19 @@ final class DashboardProviderStatus
         'html5' => 'COM_JLMS_PROVIDER_HTML5',
     ];
 
+    /** Read-only, safe next step for the state already projected by summarize(). */
+    public static function guidanceKey(string $stateKey): string
+    {
+        return match ($stateKey) {
+            'COM_JLMS_PROVIDER_NOT_INSTALLED' => 'COM_JLMS_PROVIDER_GUIDANCE_NOT_INSTALLED',
+            'COM_JLMS_PROVIDER_DISABLED' => 'COM_JLMS_PROVIDER_GUIDANCE_DISABLED',
+            'COM_JLMS_PROVIDER_UNAVAILABLE' => 'COM_JLMS_PROVIDER_GUIDANCE_UNAVAILABLE',
+            'COM_JLMS_NOT_CONFIGURED' => 'COM_JLMS_PROVIDER_GUIDANCE_NOT_CONFIGURED',
+            'COM_JLMS_READY' => 'COM_JLMS_PROVIDER_GUIDANCE_READY',
+            default => 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN',
+        };
+    }
+
     public static function summarize(array $extensions, array $descriptors): array
     {
         $descriptorMap = [];
