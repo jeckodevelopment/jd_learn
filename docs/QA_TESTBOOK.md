@@ -1,3 +1,10 @@
+## SEC-P2 / SEC-P3 — seconda tranche (da collaudare)
+
+- [ ] CI: package ZIP e 12 archivi costituenti senza file sensibili, path traversal o firme di segreti riconoscibili; fixture negative devono essere rifiutate.
+- [ ] Joomla Privacy: con mail queue `pending`/`retry`/`sending`, preflight e rimozione diretta devono negare l'operazione senza effetti collaterali.
+- [ ] Con mail queue `sent`/`failed`/`skipped`, la rimozione deve dissociare destinatario e azzerare nome, email, template_data, riconciliazione e token di revoca; il record tecnico resta.
+- [ ] Testare combinazioni di consenso opt-in, revoca, mail inviata e stato terminale, attestati, progressi, backup/log su Joomla reale; non marcare i gate conclusi prima di approvare retention e accettazione.
+
 ## SEC-P2 / SEC-P3 — hardening e privacy (PR consolidata, da collaudare)
 
 - [ ] In CI `tests/sec-p2-p3-guard.py`: directory webroot di prova vuota → esito 0; file `.blob` e symlink → esito 2, senza cancellazioni o nomi personali nei log.
