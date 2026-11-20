@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.64.17-dev — DOC-07 (20/11/2026):** dashboard amministrativa ampliata con procedure read-only ad alto rischio per storage, coda email, attestati, gestione corsi e Scheduler, con ACL correnti e traduzioni IT/EN. Test strutturale anti-regressione e matrice operativa riproducibile; nessuna modifica dei servizi mutativi. Accettazione manuale e prove degradate ancora pendenti; versione invariata.
+
+
 - **0.64.17-dev — PBASE-02 (20/11/2026):** consolidate in un solo intervento le guide installabili dei quattro plugin video, con tabelle manifest di tipi/default/vincoli, prerequisiti, privacy, ciclo di vita, failure mode e matrice di collaudo. Il gate di build ora confronta i parametri XML e le guide. Nessuna modifica runtime, nessun bump SemVer né collaudo manuale dichiarato.
 
 
