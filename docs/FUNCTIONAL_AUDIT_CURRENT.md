@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **449**.
-- Mancanti con lacuna accertata: **40**.
+- Implementati: **451**.
+- Mancanti con lacuna accertata: **38**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -125,12 +125,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P3/criterion_02` — verifiche con account di prova. La revisione del criterio «verifiche con account di prova» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
-- `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L’inventario preliminare include la preferenza di velocità. Il codice usa anche una chiave locale per la preferenza lingua/sottotitoli, non presente nella tabella.
-  - [docs/PRIVACY_COOKIES.md#Inventario preliminare](../docs/PRIVACY_COOKIES.md)
-  - [component/media/js/video.js#jdlearn.video.language.v1](../component/media/js/video.js)
-- `SEC-P4/criterion_04` — Guida amministrativa privacy in IT/EN. La guida pubblicata documenta il bridge e la procedura in italiano, senza la corrispondente guida amministrativa inglese richiesta dal gate.
-  - [docs/PRIVACY_COOKIES.md#Configurazione del consenso video](../docs/PRIVACY_COOKIES.md)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
 - `SEC-P5/criterion_01` — Test negativi end-to-end pertinenti alla release candidate. La revisione del criterio «Test negativi end-to-end pertinenti alla release candidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P5/criterion_02` — Penetration/risk review con ambito e risultati tracciabili. La revisione del criterio «Penetration/risk review con ambito e risultati tracciabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1901,6 +1895,15 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/help/it-IT/manual.html#lang="it-IT"](../component/administrator/help/it-IT/manual.html)
   - [component/administrator/help/en-GB/manual.html#lang="en-GB"](../component/administrator/help/en-GB/manual.html)
   - [tests/contextual-help-doc05.py#for lang in ("it-IT", "en-GB")](../tests/contextual-help-doc05.py)
+- `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L'inventario statico bilingue ora include entrambe le chiavi first-party effettivamente usate dai player (velocità e lingua caption) con scopo, durata e valutazione consenso distinta. Il test automatico in CI blocca nuove chiamate dirette localStorage non inventariate. I cookie SDK e le scansioni in browser reale restano verifiche separate SEC-P4/criterion_02 e /criterion_03.
+  - [docs/PRIVACY_COOKIES.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES.md)
+  - [docs/PRIVACY_COOKIES_EN.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES_EN.md)
+  - [tests/privacy-storage-inventory.py#EXPECTED](../tests/privacy-storage-inventory.py)
+  - [component/media/js/video.js#jdlearn.video.language.v1](../component/media/js/video.js)
+- `SEC-P4/criterion_04` — Guida amministrativa privacy in IT/EN. È disponibile una guida amministrativa in inglese con inventario, procedura CMP, comportamento pre/post consenso, revoca, scansione e manutenzione, collegata alla guida italiana. La completezza editoriale IT/EN non certifica l'integrazione con una CMP né le verifiche live, mantenute come criteri non verificabili.
+  - [docs/PRIVACY_COOKIES.md#guida amministrativa inglese](../docs/PRIVACY_COOKIES.md)
+  - [docs/PRIVACY_COOKIES_EN.md#Configure the CMP bridge](../docs/PRIVACY_COOKIES_EN.md)
+  - [docs/PRIVACY_COOKIES_EN.md#Mandatory pre-release verification](../docs/PRIVACY_COOKIES_EN.md)
 - `LCM-01/criterion_02` — preservare storico personale, frequenze, progressi e attestati. L’archiviazione cambia lo stato del corso attraverso il workflow e chiude le due abilitazioni sul corso conservando la versione pubblicata. La transazione non elimina iscrizioni, progressi o attestati.
   - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
   - [tests/joomla-publication-review.php#archive](../tests/joomla-publication-review.php)

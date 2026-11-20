@@ -11176,15 +11176,19 @@
       {
         "id": "criterion_01",
         "label": "Inventario di cookie e storage locali del frontend e dei player",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "docs/PRIVACY_COOKIES.md",
+          "docs/PRIVACY_COOKIES_EN.md",
+          "tests/privacy-storage-inventory.py",
           "component/media/js/video.js"
         ],
         "review": {
-          "reason": "L’inventario preliminare include la preferenza di velocità. Il codice usa anche una chiave locale per la preferenza lingua/sottotitoli, non presente nella tabella.",
+          "reason": "L'inventario statico bilingue ora include entrambe le chiavi first-party effettivamente usate dai player (velocità e lingua caption) con scopo, durata e valutazione consenso distinta. Il test automatico in CI blocca nuove chiamate dirette localStorage non inventariate. I cookie SDK e le scansioni in browser reale restano verifiche separate SEC-P4/criterion_02 e /criterion_03.",
           "references": [
-            "docs/PRIVACY_COOKIES.md#Inventario preliminare",
+            "docs/PRIVACY_COOKIES.md#jdlearn.video.language.v1",
+            "docs/PRIVACY_COOKIES_EN.md#jdlearn.video.language.v1",
+            "tests/privacy-storage-inventory.py#EXPECTED",
             "component/media/js/video.js#jdlearn.video.language.v1"
           ]
         }
@@ -11222,16 +11226,17 @@
       {
         "id": "criterion_04",
         "label": "Guida amministrativa privacy in IT/EN",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "docs/PRIVACY_COOKIES.md",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "docs/PRIVACY_COOKIES_EN.md"
         ],
         "review": {
-          "reason": "La guida pubblicata documenta il bridge e la procedura in italiano, senza la corrispondente guida amministrativa inglese richiesta dal gate.",
+          "reason": "È disponibile una guida amministrativa in inglese con inventario, procedura CMP, comportamento pre/post consenso, revoca, scansione e manutenzione, collegata alla guida italiana. La completezza editoriale IT/EN non certifica l'integrazione con una CMP né le verifiche live, mantenute come criteri non verificabili.",
           "references": [
-            "docs/PRIVACY_COOKIES.md#Configurazione del consenso video",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#SEC-P4"
+            "docs/PRIVACY_COOKIES.md#guida amministrativa inglese",
+            "docs/PRIVACY_COOKIES_EN.md#Configure the CMP bridge",
+            "docs/PRIVACY_COOKIES_EN.md#Mandatory pre-release verification"
           ]
         }
       }
