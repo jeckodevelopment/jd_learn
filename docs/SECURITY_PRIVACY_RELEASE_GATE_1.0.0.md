@@ -77,3 +77,7 @@ Introdotto gate strutturale `tests/sec-p1-controller-gates.py` richiamato dal pr
 ## SEC-P1 — blocco account su riassegnazione categorie (20/11/2026)
 
 Finding mirato: `CategoryReassignmentService::assertManage()` verificava la proprietà `block` di un oggetto utente clonato dalla sessione e non ricaricato dal database. Il controllo poteva quindi essere obsoleto rispetto a un blocco amministrativo successivo al login. La mitigazione ricarica l'attore Joomla con `new User(id)` e invalida l'ACL cache prima di valutare i permessi sulla categoria sorgente e destinazione. Test Joomla disposable riproduce blocco account con session identity ancora in memoria, rifiuto 403 di lettura/mutazione e assenza di side effect; CI e collaudo manuale da confermare. Non rappresenta il completamento del gate SEC-P1 generale.
+
+## SEC-P1 — identità fresca nel controllo di editing docenti (20/11/2026)
+
+Il metodo condiviso `TeacherProfiles::canEdit()` ricarica ora l'account Joomla dal database e azzera i diritti memorizzati prima di valutare l'autorizzazione: una sessione non può conservare `block=0` dopo blocco amministrativo. La fixture Joomla docenti esegue prova negativa con account bloccato e identità di sessione stale, oltre a due prove positive. La copertura mirata non sostituisce controllo E2E CSRF, editing a oggetti altrui e permission matrix; il gate SEC-P1 non viene dichiarato chiuso.
