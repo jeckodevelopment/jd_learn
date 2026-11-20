@@ -34,3 +34,13 @@ Test: `tests/joomla-smoke.php` crea un job isolato, verifica il blocco sia per l
 Documentazione collegata: `SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md`, `JOOMLA_PRIVACY_CONSENT_INTEGRATION.md`, `QA_TESTBOOK.md`.
 
 **Nota di verifica CI:** il gate dei metadati usa l'evento PR originale: le esecuzioni annullate o rilanciate con un payload precedente non attestano lo stato aggiornato di descrizione, milestone e label. Occorre una nuova esecuzione su evento aggiornato.
+
+## Tranche successiva — mail queue e package gate (PR candidata)
+
+**SEC-P3 — trattamento della coda email:** il plugin Privacy ora rifiuta richieste quando esistono righe di `#__jlms_mail_queue` con `recipient_user_id` corrispondente e stato `pending`, `retry` o `sending`. Questa verifica è comune a preflight e removal. Per le righe terminali, durante la transazione di rimozione elimina l'associazione utente, indirizzo, nome, timestamp del consenso, payload `template_data` e note di riconciliazione. I token di revoca vengono eliminati esplicitamente prima del consenso (già soggetto a CASCADE FK). Preserva event key, stato e contatori per la diagnostica priva di destinatario. La regressione Joomla crea sia una riga pending sia una terminale su utente isolato e verifica il blocco e la redazione.
+
+**Limite:** il blocco su code non terminali richiede la risoluzione del processo di dispatch da parte dell'amministratore; evitare cancellazioni manuali dirette. Una rimozione da Joomla Privacy non sana automaticamente backup, log SMTP esterni né dati memorizzati in altri sistemi. Attestati/documenti e job mantengono il blocco introdotto nella tranche precedente. La policy di retention del titolare e il ciclo completo export/erasure rimangono da collaudare.
+
+**SEC-P2 — gate del package:** `tools/sec_p2_package_scan.py` ispeziona la ZIP Joomla prodotta da `tools/build.py` e tutte le ZIP figlie entro limiti di profondità/dimensione. Rifiuta percorsi di traversal, file tipicamente segreti (`.env`, chiavi private/certificati p12, .git) e firme note di chiavi private/tokens AWS/GitHub; messaggi di errore riportano soltanto conteggi. `tests/sec-p2-package-scan.py` comprende fixture positive/negative e viene eseguito obbligatoriamente nel preflight di `tools/check.py`. Non sostituisce SCA dipendenze, analisi di vulnerabilità upstream, scansione completa dei segreti su Git history o ispezione CSP/header/runtime.
+
+**Accettazione:** CI Joomla PHP 8.3/MySQL e PHP 8.4/MariaDB; test codice di privacy, package e fixtures; collaudo manuale per l'esercizio di richieste com_privacy, email realmente inviate e conservazione; nessuna attribuzione di completezza SEC-P2 o SEC-P3 prima dei rispettivi gate.

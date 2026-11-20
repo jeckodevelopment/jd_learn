@@ -199,6 +199,25 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         $db->transactionStart();
 
         try {
+            // Preserve non-personal delivery state while redacting terminal mail
+            // rows. Active rows are rejected by the shared retention gate.
+            $db->setQuery($db->createQuery()
+                ->update($db->quoteName('#__jlms_mail_queue'))
+                ->set($db->quoteName('recipient_user_id') . ' = NULL')
+                ->set($db->quoteName('recipient_email') . " = ''")
+                ->set($db->quoteName('recipient_name') . " = ''")
+                ->set($db->quoteName('recipient_consent_at') . ' = NULL')
+                ->set($db->quoteName('template_data') . " = '{}'")
+                ->set($db->quoteName('reconciliation_note') . ' = NULL')
+                ->set($db->quoteName('reconciliation_by') . ' = NULL')
+                ->where($db->quoteName('recipient_user_id') . ' = ' . $userId)
+                ->where($db->quoteName('state') . " NOT IN ('pending','retry','sending')"))->execute();
+            // Remove pending, expired and used unsubscribe tokens explicitly.
+            // The consent FK also cascades, but this covers orphaned historical rows.
+            $db->setQuery($db->createQuery()
+                ->delete($db->quoteName('#__jlms_mail_unsubscribe_tokens'))
+                ->where($db->quoteName('user_id') . ' = ' . $userId))->execute();
+
             $db->setQuery($db->createQuery()->delete($db->quoteName('#__jlms_mail_consents'))
                 ->where($db->quoteName('user_id') . ' = ' . $userId))->execute();
             $enrollments = $db->createQuery()
@@ -291,7 +310,17 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 ->where($db->quoteName('user_id') . ' = ' . (int) $userId) . ')');
         $outbox = (int) $db->setQuery($outboxQuery)->loadResult();
 
-        return $documents > 0 || $jobs > 0 || $outbox > 0;
+        // Never orphan deliverable mail or retain recipient PII in an in-flight queue.
+        // Terminal records are sanitized in the same removal transaction below.
+        $pendingMailQuery = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__jlms_mail_queue'))
+            ->where($db->quoteName('recipient_user_id') . ' = :userId')
+            ->where($db->quoteName('state') . " IN ('pending','retry','sending')")
+            ->bind(':userId', $userId);
+        $pendingMail = (int) $db->setQuery($pendingMailQuery)->loadResult();
+
+        return $documents > 0 || $jobs > 0 || $outbox > 0 || $pendingMail > 0;
     }
 
     private function loadPrivacyLanguage(): void

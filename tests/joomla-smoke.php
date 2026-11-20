@@ -504,8 +504,39 @@ $db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_u
 if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$privacyBlockedData[0]->reason) {
     throw new \RuntimeException('JD Learn privacy plugin did not explain the removal blocker for an owned job.');
 }
+// SEC-P3: active mail queue rows must block erasure; terminal rows are redacted.
+$privacyMailId = hash('sha256', 'privacy-mail-queue-ci-' . $privacyUserId);
+$db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->execute();
+$db->setQuery($db->createQuery()->insert('#__jlms_mail_queue')
+    ->columns(['event_key', 'template_id', 'recipient_user_id', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
+    ->values(implode(',', [
+        $db->quote($privacyMailId), $db->quote('ci.privacy'), (int) $privacyUserId,
+        $db->quote('privacy-fixture@example.invalid'), $db->quote('Privacy Fixture'),
+        $db->quote('{"fixture":"secret"}'), $db->quote('pending'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)'
+    ])))->execute();
+$privacyQueueBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyPlugin->onPrivacyCanRemoveData($privacyQueueBlocked);
+if (($privacyQueueBlocked->getArgument('result', []))[0]->canRemove) {
+    throw new \RuntimeException('Active privacy mail queue did not block erasure.');
+}
+$queueRemoveRejected = false;
+try {
+    $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]));
+} catch (\RuntimeException $expected) {
+    $queueRemoveRejected = str_contains($expected->getMessage(), 'blocked by retained records');
+}
+if (!$queueRemoveRejected) {
+    throw new \RuntimeException('Direct privacy erasure ignored pending mail queue.');
+}
+$db->setQuery("UPDATE #__jlms_mail_queue SET state='sent' WHERE event_key=" . $db->quote($privacyMailId))->execute();
 $privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
+$sanitizedMail = $db->setQuery("SELECT recipient_user_id,recipient_email,recipient_name,template_data FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->loadObject();
+if (!$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== '' || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}') {
+    throw new \RuntimeException('Privacy removal did not redact completed mail queue evidence.');
+}
+$db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->execute();
+
 $component = $app->bootComponent('com_jlms');
 $mailConsent = $component->getCourseAnnouncementConsent();
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();

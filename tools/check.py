@@ -1151,3 +1151,6 @@ runpy.run_path(str(ROOT/'tests/doc02-admin-manual.py'), run_name='__main__')
 
 # SEC-P2/SEC-P3: fail-closed privacy removal and read-only legacy-storage inspection.
 runpy.run_path(str(ROOT/'tests/sec-p2-p3-guard.py'), run_name='__main__')
+
+# SEC-P2: inspect the built distributable including all nested child ZIPs, with negative fixtures.
+runpy.run_path(str(ROOT/'tests/sec-p2-package-scan.py'), run_name='__main__')
