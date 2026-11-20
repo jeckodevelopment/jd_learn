@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.17-dev — UI-07, contratti frontend (20/11/2026):** aggiunto inventario DOM pubblico versionato per 17 viste (radici, ID, classi, override), controllo di deriva in CI e due esempi di personalizzazione CSS indipendenti. Nessuna alterazione del runtime o bump SemVer; collaudi Joomla di override, DOM dinamico e accessibilità ancora pendenti.
+
 - **0.64.17-dev — SEC-P1, threat review consolidata e hardening video (20/11/2026):** il video locale MP4 in chiaro richiede ora una `video_storage_root` esterna al webroot; configurazione assente rifiutata 503 invece di un fallback gestito. Aggiunti test Joomla di confine, gate sorgenti PHP ad alto rischio sull'intero pacchetto e modello delle minacce con finding classificati. Requisiti SEC-P2/SEC-P5 mantengono le verifiche su asset legacy, deployment e test E2E. Versione di sviluppo invariata fino al successivo rilascio.
 
 - **0.64.17-dev — SEC-P1, FIX comunicazioni (20/11/2026):** chiuso il replay ambiguo dei job `course_communication`: un UUID ripetuto può restituire il job originale soltanto se oggetto, corpo, template e destinatari coincidono esattamente; altrimenti 409, senza effetti. Aggiunta regressione Joomla e allineate evidenze. Correzione PATCH nel ramo di sviluppo 0.64.17-dev, senza nuovo bump finché la versione non è rilasciata.

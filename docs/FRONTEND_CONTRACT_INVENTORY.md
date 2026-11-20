@@ -74,3 +74,7 @@ FE-08 integrata e FE-11 aggiornata: `category/default.php` conserva `#jlms-categ
 
 
 FE-12: il gate strutturale in `tests/frontend-release-gate.py` verifica alcuni invarianti del presente inventario. Il registro di accettazione visuale, funzionale e di sicurezza resta `docs/FRONTEND_FE12_ACCEPTANCE.md`; nessuna prova statica certifica WCAG o override su un sito reale.
+
+## UI-07 — baseline versionata e copertura delle viste
+
+La mappa versione 1.0.0 in [FRONTEND_DOM_CONTRACTS_1.0.0.json](FRONTEND_DOM_CONTRACTS_1.0.0.json) copre le 17 viste con `default.php` e tutti i loro ID/classi `jlms-*` *letterali*. È verificata da `tests/frontend-dom-contracts.py` nel gate `tools/check.py`, che fallisce su drift e su una nuova vista non inventariata. La guida di compatibilità e gli esempi per due personalizzazioni CSS indipendenti sono in [UI_07_DOM_CONTRACT_1.0.0.md](UI_07_DOM_CONTRACT_1.0.0.md). La prova statica non copre render condizionale, duplicazione di ID da partial/moduli o compatibilità visuale di override di terze parti: richiedono accettazione browser/manuale separata.

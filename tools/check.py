@@ -1135,3 +1135,6 @@ runpy.run_path(str(ROOT/'tests/provider-package-gate.py'), run_name='__main__')
 
 # PBASE-03: verify the example against the actual v1 registry and Joomla plugin skeleton.
 _progress_subprocess.run(['php', str(ROOT/'tests/provider-contract-example.php')], check=True)
+
+# UI-07: reject unpublished DOM selector changes and missing page contracts.
+runpy.run_path(str(ROOT/'tests/frontend-dom-contracts.py'), run_name='__main__')

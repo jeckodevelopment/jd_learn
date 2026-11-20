@@ -1,3 +1,9 @@
+## UI-07 — contratto DOM frontend versionato 1.0.0 (20/11/2026)
+
+**Gate automatico:** `python3 tests/frontend-dom-contracts.py` (invocato anche da `tools/check.py`) verifica la copertura delle 17 viste `default.php`, gli ID letterali, le classi `jlms-*`, le radici, gli override Joomla e i due selettori CSS di personalizzazione. Insieme a `tests/frontend-contract-hooks.py` conserva gli hook JS. Il controllo è statico, non prova il DOM eseguito né l'accessibilità WCAG.
+
+**Comportamenti da testare manualmente su Joomla:** (1) applicare `#jlms-courses .jlms-course-card { border-radius: 1rem; }` in un template e verificare griglia, responsive e assenza effetti fuori dal catalogo; (2) separatamente applicare `#jlms-dashboard .jlms-my-course { padding: 1.5rem; }` in un altro template e verificare area personale e isolamento; (3) collocare moduli Joomla nella stessa pagina e analizzare con DOM inspector l'unicità degli ID, inclusi partial personali, schede e lezioni ripetute; (4) override dei layout di corso, categoria, aula, quiz, docente, attestati e preferenze, verificando hook JS, filtri, ACL, consenso e CSRF; (5) IT/EN, desktop/mobile, Chrome/Safari, tastiera e screen reader. Registrare browser, versione Joomla, build, screenshot/evidenza e risultato per scenario. **Accettazione manuale non eseguita in questa PR.**
+
 ## SEC-P1 — modello delle minacce consolidato e hardening storage video (20/11/2026)
 
 **Review/gate automatici:** `tests/sec-p1-systematic-source-gate.py` legge l'intero runtime PHP distribuito, rifiuta primitive dinamiche non revisionate, controlla l'unico sink processo ffprobe e il trasporto HTTPS Cloudflare; `sec-p1-controller-gates.py` e `sec-p1-cross-surface-gate.py` preservano rispettivamente 37 controller e 10 plugin/3 task. **Test Joomla** `tests/joomla-video.php`: nessuna `video_storage_root` (503), root web pubblica (503), root privata esterna (riuscita). Nessun cambiamento intenzionale ai materiali PDF gestiti/cifrati.
