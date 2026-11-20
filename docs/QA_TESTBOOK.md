@@ -1,3 +1,9 @@
+## SECDEV-07 — riferimento OWASP ASVS v5.0.0 fissato (20/11/2026)
+
+**CI:** eseguire `python3 tests/asvs-reference.py` e `python3 tools/functional_audit.py --check`; il primo deve rifiutare la rimozione della versione fissata o del disclaimer, il secondo verificare le matrici. L'inserimento del pin non prova la conformità ASVS.
+
+**Accettazione e security review ancora pendenti:** sulla candidata 1.0.0 costruire matrice di minacce e requisiti ASVS selezionati, identificatori nella forma `v5.0.0-x.y.z`, superfici/ruoli, test positivi e negativi, findings e contromisure, evidenze di scansione dipendenze/segreti e rapporto go/no-go. Documentare i falsi positivi con motivazione e verificare che nessuna vulnerabilità high/critical pertinente non risolta passi il gate. Non marcare SECDEV-07 completato sulla base della presente PR.
+
 ## SEC-P4 — inventario storage e guida CMP bilingue (20/11/2026)
 
 **Controllo statico in CI:** `python3 tests/privacy-storage-inventory.py` deve verificare che le chiamate dirette `localStorage` negli script di componente e plugin video siano solamente le due chiavi documentate in `docs/PRIVACY_COOKIES.md` e `docs/PRIVACY_COOKIES_EN.md`. Introdurre sperimentalmente una chiave diversa o dinamica deve far fallire il test; rimuovere la modifica dopo la prova. Questo non misura cookie Joomla o SDK esterni.
