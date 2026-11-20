@@ -53,3 +53,20 @@ $task->execution_rules = '{"rule-type":"interval-minutes","interval-minutes":5}'
 if (SchedulerHealth::assess($task, true, false, $clock)['state'] !== 'operational') {
     throw new RuntimeException('Valid scheduler rules regression');
 }
+
+// Duplicate tasks must remain visible even when the task or its plugin is disabled:
+// otherwise re-enabling a plugin can silently activate multiple mail dispatchers.
+foreach ([false, true] as $pluginEnabled) {
+    foreach ([0, 1] as $taskState) {
+        $task->state = $taskState;
+        $actual = SchedulerHealth::assess($task, $pluginEnabled, true, $clock);
+        if ($actual['state'] !== 'duplicates' || $actual['duplicates'] !== true) {
+            throw new RuntimeException('Duplicate scheduler tasks hidden by disabled state');
+        }
+    }
+}
+$task->state = 0;
+if (SchedulerHealth::assess($task, true, false, $clock)['state'] !== 'disabled') {
+    throw new RuntimeException('Single disabled task must remain disabled');
+}
+echo "Scheduler duplicate precedence across plugin/task states: OK\\n";
