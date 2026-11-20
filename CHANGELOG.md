@@ -1,5 +1,7 @@
 # Changelog
 
+- HTTP-06: ampliate le regressioni HTTP su Joomla reale per metodo, CSRF, task sconosciuti e contratto JSON dei flussi iscrizione/lezione/video; registro casi limite core separato dal catalogo progettuale.
+
 - UI-07: controllo DOM sul markup reale Joomla per ID duplicati e scope di due personalizzazioni CSS indipendenti nelle viste catalogo/categorie/dashboard; fixture negative integrate nel preflight.
 
 - SEC-P2: gate CI sul livello di patch PHP per le correzioni di sicurezza del 19/11/2026 (8.3.37 e 8.4.28); verifiche sull'hosting reale non incluse.
