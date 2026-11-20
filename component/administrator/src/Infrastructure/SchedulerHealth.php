@@ -117,12 +117,16 @@ final class SchedulerHealth
             } elseif ($next === '' || $next === '0000-00-00 00:00:00') {
                 $state = 'unknown';
             } else {
-                try {
-                    $due = new \DateTimeImmutable($next, new \DateTimeZone('UTC'));
+                // Joomla persists UTC DATETIME. Generic PHP parsing silently
+                // normalizes impossible dates (February 30, invalid hours).
+                $due = \DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $next, new \DateTimeZone('UTC'));
+                $errors = \DateTimeImmutable::getLastErrors();
+                if ($due === false || $due->format('Y-m-d H:i:s') !== $next
+                    || ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0))) {
+                    $state = 'unknown';
+                } else {
                     $lateBy = $now->getTimestamp() - $due->getTimestamp();
                     $state = $lateBy > 600 ? 'overdue' : ($executions === 0 ? 'waiting' : 'operational');
-                } catch (\Exception) {
-                    $state = 'unknown';
                 }
             }
         }
