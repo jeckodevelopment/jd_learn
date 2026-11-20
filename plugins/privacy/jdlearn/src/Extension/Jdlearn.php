@@ -173,34 +173,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
             return;
         }
 
-        $db = $this->getDatabase();
-        $query = $db->createQuery()
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__jlms_certificate_documents', 'd'))
-            ->innerJoin($db->quoteName('#__jlms_certificates', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('d.certificate_id'))
-            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('c.enrollment_id'))
-            ->where($db->quoteName('e.user_id') . ' = :userId')
-            ->bind(':userId', $user->id);
-        $documents = (int) $db->setQuery($query)->loadResult();
-
-        $jobsQuery = $db->createQuery()
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__jlms_jobs'))
-            ->where($db->quoteName('owner_user_id') . ' = :userId')
-            ->bind(':userId', $user->id);
-        $jobs = (int) $db->setQuery($jobsQuery)->loadResult();
-
-        $outboxQuery = $db->createQuery()
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__jlms_outbox', 'o'))
-            ->where($db->quoteName('o.aggregate_type') . ' = ' . $db->quote('enrollment'))
-            ->where($db->quoteName('o.aggregate_id') . ' IN (' . $db->createQuery()
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__jlms_enrollments'))
-                ->where($db->quoteName('user_id') . ' = ' . (int) $user->id) . ')');
-        $outbox = (int) $db->setQuery($outboxQuery)->loadResult();
-
-        if ($documents > 0 || $jobs > 0 || $outbox > 0) {
+        if ($this->hasRemovalDependencies((int) $user->id)) {
             $status->canRemove = false;
             $status->reason = Text::_('PLG_PRIVACY_JDLEARN_ERROR_RETENTION_BLOCK');
         }
@@ -214,6 +187,11 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
         if (!$user) {
             return;
+        }
+
+        // Fail closed even if this event is dispatched without a prior can-remove call.
+        if ($this->hasRemovalDependencies((int) $user->id)) {
+            throw new \\RuntimeException('JD Learn privacy removal is blocked by retained records.');
         }
 
         $db = $this->getDatabase();
@@ -281,6 +259,39 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
             $db->transactionRollback();
             throw $error;
         }
+    }
+
+    /** Shared retention guard: never modify learner data while dependent immutable records exist. */
+    private function hasRemovalDependencies(int $userId): bool
+    {
+        $db = $this->getDatabase();
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__jlms_certificate_documents', 'd'))
+            ->innerJoin($db->quoteName('#__jlms_certificates', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('d.certificate_id'))
+            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('c.enrollment_id'))
+            ->where($db->quoteName('e.user_id') . ' = :userId')
+            ->bind(':userId', $userId);
+        $documents = (int) $db->setQuery($query)->loadResult();
+
+        $jobsQuery = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__jlms_jobs'))
+            ->where($db->quoteName('owner_user_id') . ' = :userId')
+            ->bind(':userId', $userId);
+        $jobs = (int) $db->setQuery($jobsQuery)->loadResult();
+
+        $outboxQuery = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__jlms_outbox', 'o'))
+            ->where($db->quoteName('o.aggregate_type') . ' = ' . $db->quote('enrollment'))
+            ->where($db->quoteName('o.aggregate_id') . ' IN (' . $db->createQuery()
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__jlms_enrollments'))
+                ->where($db->quoteName('user_id') . ' = ' . (int) $userId) . ')');
+        $outbox = (int) $db->setQuery($outboxQuery)->loadResult();
+
+        return $documents > 0 || $jobs > 0 || $outbox > 0;
     }
 
     private function loadPrivacyLanguage(): void
