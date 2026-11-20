@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="jlmsvideo" method="upgrade">
+  <name>PLG_JLMSVIDEO_EXAMPLEPROVIDER</name>
+  <author>JD Learn — contract example</author>
+  <version>0.1.0</version>
+  <description>Documentation-only provider contract sample. No player.</description>
+  <namespace path="src">Jlms\Plugin\Jlmsvideo\Exampleprovider</namespace>
+  <files>
+    <folder plugin="exampleprovider">services</folder>
+    <folder>src</folder>
+  </files>
+</extension>
