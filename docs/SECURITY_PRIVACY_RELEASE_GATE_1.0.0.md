@@ -63,3 +63,5 @@ La review mirata della coda email ha rilevato che il testo delle eccezioni del m
 **Test aggiunti:** dopo la creazione di un attestato PDF reale nella fixture, tre tentativi di download amministrativo (proprietario, altro studente e ospite) devono fallire con 403; il download da operatore autorizzato deve ottenere il documento PDF e chiudere il file handle. La prova richiede la CI Joomla completa; non è attestata come superata prima dell'esito CI.
 
 **Limite:** verifica mirata del servizio e del ruolo della fixture, non penetration test, non matrice esaustiva dei gruppi Joomla né accettazione manuale. SEC-P1 e SEC-P5 restano aperti; nessuna percentuale funzionale aggiuntiva viene attribuita.
+
+Il tracciamento della prova mantiene separati: codice che applica ACL, esito HTTP nella fixture e collaudo manuale con ruoli configurati; nessun esito non osservato deve essere marcato verificato.
