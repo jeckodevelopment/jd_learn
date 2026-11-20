@@ -38,7 +38,7 @@ for relative, (class_name, events) in EXPECTED.items():
     public = set(re.findall(r"public (?:static )?function ([A-Za-z0-9_]+)\\(", text))
     expected = {
         "actionlog/jdlearn": {"getSubscribedEvents", "onJlmsCourseTransition"},
-        "finder/jlms": {"getSubscribedEvents"},
+        "finder/jlms": {"getSubscribedEvents", "onFinderAfterSave", "onFinderAfterDelete", "onFinderChangeState"},
         "jlmsvideo/cloudflarestream": {"getSubscribedEvents", "registerProviders"},
         "jlmsvideo/html5": {"getSubscribedEvents", "registerProviders"},
         "jlmsvideo/vimeo": {"getSubscribedEvents", "registerProviders"},
