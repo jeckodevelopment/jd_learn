@@ -1,5 +1,7 @@
 # Changelog
 
+- SEC-P2 (pre-release): controllo CI su credenziali note nei sorgenti distribuiti e GitHub Actions pinned by SHA; workflow requisiti bloccato a commit; inventario supply-chain, CSP e logging documentato. Gate release live e advisory aperti.
+
 - SEC-P2/SEC-P3 (pre-release): scansione ricorsiva di segreti e file sensibili nel ZIP distribuito; blocco privacy su mail queue attiva e redazione della storia di invio terminale, inclusi token di revoca. Gate finali ancora aperti.
 
 - SEC-P2/SEC-P3 (prerelease): privacy removal fail-closed anche per evento diretto; audit read-only dei file video legacy in webroot, con gate di regressione. I controlli completi e l'accettazione finale restano aperti.

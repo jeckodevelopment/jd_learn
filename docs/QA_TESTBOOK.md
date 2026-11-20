@@ -1,3 +1,12 @@
+## SEC-P2 — checklist di chiusura hardening (da eseguire)
+
+- [ ] CI: `tests/sec-p2-source-gate.py` valida sorgenti distribuiti e workflow GitHub con pin SHA, con negative fixtures per chiavi e tag mobili.
+- [ ] CI: `tests/sec-p2-package-scan.py` valida tutti gli archivi interni della ZIP Joomla con i test negativi; confrontare digest SHA-256 build e artifact.
+- [ ] Raccogliere evidenze SCA/advisory per versioni reali Joomla/PHP/DB, strumenti server, dipendenze CI e SDK provider; classificare ogni critical/high e motivare trattamento.
+- [ ] Verificare su Joomla e server di prova CSP (iframe/script/connect), HTTPS, nessuna trasmissione di token nei log/URL/referrer, ClamAV e ffprobe quando configurati.
+- [ ] Eseguire controllo non distruttivo su storage legacy e prove GET/HEAD/Range su installazione reale; nessun video privato direttamente esposto.
+- [ ] Registrare esito, build, ambiente e firmatario del gate SEC-P2; non approvare release finché manca una prova obbligatoria.
+
 ## SEC-P2 / SEC-P3 — seconda tranche (da collaudare)
 
 - [ ] CI: package ZIP e 12 archivi costituenti senza file sensibili, path traversal o firme di segreti riconoscibili; fixture negative devono essere rifiutate.
