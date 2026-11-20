@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.17-dev — SEC-P1, revoca HTTP reale (20/11/2026):** estese le regressioni di integrazione con sessione browser amministrativa persistente e blocco del record Joomla dopo la form; 403 su GET/POST stato e POST ammissione manuale, dati e audit immutati, ripristino fixture. Nessuna modifica runtime né bump SemVer; SEC-P1 ancora parziale.
+
 - **0.64.17-dev — SEC-P1, review trasversale (20/11/2026):** gate anti-regressione dei 10 plugin distribuiti, 3 task Scheduler, limiti dei worker e interfaccia media privata, con matrice minaccia/controllo/test/residui per 13 macro-superfici. Nessuna modifica runtime, nessuna dichiarazione di audit completo, SEC-P1 ancora parziale; SemVer invariato.
 
 - **0.64.17-dev — SEC-P1, test-only consolidato (20/11/2026):** regressioni ACL per tre servizi amministrativi delle iscrizioni (stato, approvazione, ammissione manuale) con account bloccato dopo login, verifiche negative, assenza side effect e ripristino. Confermati controlli runtime preesistenti; nessun bump SemVer né promozione SEC-P1.
