@@ -490,6 +490,16 @@ $db->setQuery("INSERT INTO #__jlms_jobs (kind, owner_user_id, scope_json, payloa
 $privacyBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyBlocked);
 $privacyBlockedData = $privacyBlocked->getArgument('result', []);
+$privacyRejected = false;
+try {
+    // Direct event dispatch must never bypass the same retention gate.
+    $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]));
+} catch (\RuntimeException $expected) {
+    $privacyRejected = str_contains($expected->getMessage(), 'blocked by retained records');
+}
+if (!$privacyRejected) {
+    throw new \RuntimeException('JD Learn privacy removal bypassed an existing retained job.');
+}
 $db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_user_id=" . $privacyUserId)->execute();
 if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$privacyBlockedData[0]->reason) {
     throw new \RuntimeException('JD Learn privacy plugin did not explain the removal blocker for an owned job.');
