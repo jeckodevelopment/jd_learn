@@ -139,7 +139,10 @@ compose=(ROOT/'component/administrator/src/Application/CourseCommunicationServic
 dispatch=(ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 composer_view=(ROOT/'component/administrator/tmpl/coursemessage/default.php').read_text()
 sender=(ROOT/'component/administrator/src/Application/CourseMessageMailer.php').read_text()
-assert "'template'=>$plan['template']" in compose
+# The same immutable template snapshot is canonicalized before job lookup and insertion.
+assert "'template' => $plan['template']" in compose
+assert "hash_equals((string) $previous->payload_json, $expectedPayload)" in compose
+assert "'payload_json'=>$expectedPayload" in compose
 assert "'__course_message_snapshot'" in compose and "'__course_message_snapshot'" in dispatch
 assert "CourseMessageTemplate::validate($snapshot, $data)" in dispatch
 assert "CourseMessageMailer::deliver(" in dispatch

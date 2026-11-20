@@ -1,3 +1,9 @@
+## SEC-P1 — job comunicazioni: replay con contenuto cambiato (20/11/2026)
+
+**Test CI Joomla disposable:** `tests/joomla-roster.php` accoda per un corso autorizzato un job comunicazione con `mutation_id` valido. Un replay identico deve restituire lo stesso ID senza duplicazioni; un replay con un nuovo oggetto (e relativo hash valido) e **stesso identificativo di mutazione** deve restituire 409. Verificare che il payload iniziale rimanga invariato, che non compaiano job aggiuntivi e che la fixture ripulisca job e action log. Esito da registrare nella PR.
+
+**Comportamenti da collaudare sul sito:** preparare un messaggio a iscritti attivi, confermarlo una volta e ripetere il medesimo POST; verificare una sola operazione. Utilizzare lo stesso UUID con diverso testo, destinatari o template: ottenere conflitto 409 senza nuovo invio e senza modifiche alla prima comunicazione. Verificare anche due conferme quasi contemporanee e l'esito SMTP in ambiente isolato. **Collaudo manuale non eseguito.**
+
 ## SEC-P1 — revoca reale di sessione Joomla su stato e iscrizione manuale (20/11/2026)
 
 **Suite HTTP CI:** `tests/enrollment-state-http.py` e `tests/manual-enrollment-http.py`. L'operatore delegato `cirosterreader` esegue il login reale e acquisisce una form autorizzata. La fixture PDO contrassegna poi come bloccato l'account in `#__users`, conservando cookie e form. Con la sessione precedente il servizio deve rifiutare GET/POST di stato e POST di ammissione manuale con HTTP 403; snapshot prima/dopo invariati. Gli script ripristinano il blocco e i gruppi nei propri `finally`. Esito da verificare nelle due configurazioni di CI Joomla.

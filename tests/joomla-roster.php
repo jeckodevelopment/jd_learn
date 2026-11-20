@@ -317,6 +317,37 @@ rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->load
 rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult()===$jobsBefore,
     'denied course messages do not enqueue jobs');
 
+// SEC-P1/MAIL-REPLAY: reuse is safe only for the identical immutable payload.
+// A mutated subject, body or recipient selection with the same mutation UUID
+// must never return the earlier queued job as if it represented the new intent.
+$replayKey='6c07ad74-0a0e-46aa-8f47-69c3a94824f7';
+$replayIds=[(int)$f['active']];
+$replayPlan=$communication->preview($user,$course,'SEC-P1 original message','Original safe body',$replayIds);
+$alteredPlan=$communication->preview($user,$course,'SEC-P1 altered message','Original safe body',$replayIds);
+$replayJob=0;
+try {
+    $replayJob=$communication->queue($user,$course,$replayPlan['subject'],$replayPlan['body'],$replayIds,
+        $replayPlan['hash'],$replayKey);
+    rosterExpect($replayJob>0,'message job was queued with one immutable payload');
+    $savedPayload=(string)$db->setQuery('SELECT payload_json FROM #__jlms_jobs WHERE id='.$replayJob)->loadResult();
+    rosterExpect($communication->queue($user,$course,$replayPlan['subject'],$replayPlan['body'],$replayIds,
+        $replayPlan['hash'],$replayKey)===$replayJob,'identical message retry retains the same job ID');
+    rosterDenied(fn()=>$communication->queue($user,$course,$alteredPlan['subject'],$alteredPlan['body'],$replayIds,
+        $alteredPlan['hash'],$replayKey),409,'changed message with reused mutation ID must conflict');
+    rosterExpect((string)$db->setQuery('SELECT payload_json FROM #__jlms_jobs WHERE id='.$replayJob)->loadResult()===$savedPayload,
+        'conflicting replay does not replace immutable message payload');
+    rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult()===$jobsBefore+1,
+        'duplicate and conflicting replays never create additional jobs');
+} finally {
+    if ($replayJob>0) {
+        $db->setQuery("DELETE FROM #__action_logs WHERE extension='com_jlms.coursecommunication' AND item_id=".$replayJob)->execute();
+        $db->setQuery('DELETE FROM #__jlms_jobs WHERE id='.$replayJob." AND kind='course_communication'")->execute();
+    }
+}
+rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult()===$jobsBefore,
+    'SEC-P1 replay fixture leaves no queued communication job');
+
+
 rosterDenied(fn()=>$service->query($user,$otherCourse),403,'direct course ID cannot bypass scope');
 $asset->loadByName('com_jlms.course.'.$course);$grantedRules=$asset->rules;$permissions=json_decode($grantedRules,true);$permissions['jlms.enrollments.manage'][(string)$group]=false;$asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
 try{rosterDenied(fn()=>$read($user),403,'explicit course deny refreshes stale identity');}finally{$asset->rules=$grantedRules;$asset->store();}
