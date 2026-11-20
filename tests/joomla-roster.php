@@ -193,6 +193,67 @@ try {
             &&$sentState['last_error']==='Manual reconciliation recorded.',
             'repeated reconciliation does not overwrite accepted audit state');
 
+
+        // SEC-P1: simultaneous POST-like server operations on independent
+        // Joomla processes and independent InnoDB connections. A parent-held
+        // row lock makes both race for the same claim after a shared barrier.
+        $parallelId = $newStaleMail('parallel');
+        $workers = [];
+        try {
+            for ($workerIndex = 0; $workerIndex < 2; ++$workerIndex) {
+                $pipes = [];
+                $child = proc_open(
+                    [PHP_BINARY, __FILE__, $root, 'mail-reconcile-worker', (string) $parallelId, 'sent'],
+                    [0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],
+                    $pipes
+                );
+                if (!is_resource($child)) { throw new \RuntimeException('Parallel mail worker could not start'); }
+                $workers[] = [$child, $pipes];
+            }
+            foreach ($workers as [$child, $pipes]) {
+                stream_set_timeout($pipes[1], 30);
+                $ready = trim((string) fgets($pipes[1]));
+                if ($ready !== 'ready') { throw new \RuntimeException('Mail worker barrier failed: '.$ready); }
+            }
+            $db->transactionStart();
+            try {
+                $db->setQuery('SELECT id FROM #__jlms_mail_queue WHERE id='.(int)$parallelId.' FOR UPDATE')->loadResult();
+                foreach ($workers as [$child, $pipes]) {
+                    fwrite($pipes[0], "go\n");
+                    fclose($pipes[0]);
+                }
+                usleep(300000);
+            } finally {
+                $db->transactionCommit();
+            }
+            $results = [];
+            foreach ($workers as [$child, $pipes]) {
+                $output = trim((string) stream_get_contents($pipes[1]));
+                $errors = (string) stream_get_contents($pipes[2]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                $exitStatus = proc_close($child);
+                if ($exitStatus !== 0) { throw new \RuntimeException('Mail worker failed: '.$errors.' '.$output); }
+                $results[] = $output;
+            }
+            $workers = [];
+            sort($results);
+            rosterExpect($results === ['CONFLICT:409', 'OK'],
+                'two independent mail reconcilers yield one winner and one 409 conflict');
+            $parallelRow = $db->setQuery('SELECT state,attempts,reconciliation_note,last_error,recipient_email FROM #__jlms_mail_queue WHERE id='.(int)$parallelId)->loadObject();
+            rosterExpect($parallelRow->state === 'sent' && (int)$parallelRow->attempts === 1
+                && $parallelRow->reconciliation_note === 'CI parallel SMTP claim'
+                && $parallelRow->last_error === 'Manual reconciliation recorded.'
+                && $parallelRow->recipient_email === '',
+                'simultaneous reconciliation retains one state and sanitized audit');
+        } finally {
+            foreach ($workers as [$child, $pipes]) {
+                if (is_resource($child)) { proc_terminate($child); }
+                foreach ($pipes as $pipe) { if (is_resource($pipe)) { fclose($pipe); } }
+                if (is_resource($child)) { proc_close($child); }
+            }
+        }
+
         $staleRetry=$newStaleMail('retry');
         $mailAudit->reconcile($courseManager,$staleRetry,'retry',$sensitiveNote,true);
         $retryRow=$db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email FROM #__jlms_mail_queue WHERE id='.$staleRetry)->loadObject();
