@@ -13,7 +13,7 @@ La percentuale funzionale globale rigorosa resta **non determinabile** finché i
 
 | Macroarea | Peso | Sviluppo comprovato | Collaudo avviato | Accettati | Lacune | Non verificabili |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Catalogo, frontend e navigazione | 10.75% | 76.59% | 13.04% | 0.00% | 0 | 20 |
+| Catalogo, frontend e navigazione | 10.75% | 76.58% | 13.04% | 0.00% | 0 | 20 |
 | Corsi, versioni e pubblicazione | 9.35% | 70.44% | 0.00% | 0.00% | 0 | 23 |
 | Iscrizioni, lezioni e progressi | 8.88% | 70.18% | 5.26% | 0.00% | 0 | 18 |
 | Provider e fruizione video | 8.41% | 71.20% | 0.00% | 0.00% | 0 | 20 |
