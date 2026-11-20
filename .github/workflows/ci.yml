@@ -27,13 +27,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Preview SEC-P1 canonical reconciliation
-        if: github.event_name == 'pull_request' && github.event.pull_request.number == 811
-        run: |
-          python3 tools/functional_audit.py --sync
-          echo SEC_P1_RECONCILIATION_DIFF_BEGIN
-          git diff --no-ext-diff --unified=0 -- docs/REQUIREMENTS_STATUS.csv docs/FUNCTIONAL_AUDIT_CURRENT.md docs/RELEASE_DASHBOARD.md docs/REQUIREMENTS_RECONCILIATION.json docs/IMPLEMENTATION_EVIDENCE.json
-          echo SEC_P1_RECONCILIATION_DIFF_END
       - name: Validate CI policy and choose candidate coverage
         id: plan
         run: |
