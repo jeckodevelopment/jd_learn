@@ -42,4 +42,16 @@ try {
     throw new RuntimeException('Incompatible major accepted');
 } catch (DomainException $expected) {
 }
-echo "PBASE-03: provider contract registration fixture OK\n";
+require_once __DIR__ . '/../docs/examples/video-provider-contract/plugin/src/Provider/Provider.php';
+$pluginAdapter = new \Jlms\Plugin\Jlmsvideo\Exampleprovider\Provider\Provider();
+if ($pluginAdapter->getDescriptor()->key !== 'exampleprovider'
+    || $pluginAdapter->getDescriptor()->contractMajor !== 1
+    || $pluginAdapter->getDescriptor()->configured) {
+    throw new RuntimeException('Joomla skeleton descriptor mismatch');
+}
+$manifest = simplexml_load_file(__DIR__ . '/../docs/examples/video-provider-contract/plugin/exampleprovider.xml');
+if (!$manifest || (string) $manifest['group'] !== 'jlmsvideo'
+    || (string) $manifest->namespace !== 'Jlms\Plugin\Jlmsvideo\Exampleprovider') {
+    throw new RuntimeException('Sample Joomla plugin manifest is not aligned with source namespace');
+}
+echo "PBASE-03: registry and Joomla plugin skeleton contract OK\n";
