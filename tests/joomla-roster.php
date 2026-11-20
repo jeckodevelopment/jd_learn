@@ -110,6 +110,44 @@ $user=new \Joomla\CMS\User\User();$data=['name'=>'CI Roster Reader','username'=>
 if(!$user->bind($data)||!$user->save())throw new \RuntimeException($user->getError());$user=new \Joomla\CMS\User\User((int)$user->id);
 rosterExpect(count($read($user))===count($rows),'dedicated course ACL grants roster without author permission');
 
+ // SEC-P1: a delegated component manager is NOT a global mail-queue auditor.
+ // The queue contains recipients and operational notes for unrelated courses.
+$mailAudit=new \Jlms\Component\Jlms\Administrator\Application\MailQueueAuditService($db);
+$mailQueueCount=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult();
+$courseManager=$user;
+rosterDenied(fn()=>$mailAudit->page($courseManager),403,'delegated course manager denied global mail outbox');
+rosterDenied(fn()=>$mailAudit->reconcile($courseManager,999999999,'sent','Confirmed no delivery',true),403,
+    'delegated course manager cannot reconcile global mail outbox');
+rosterDenied(fn()=>$mailAudit->page(new \Joomla\CMS\User\User()),403,'guest denied global mail outbox');
+$componentAsset=new \Joomla\CMS\Table\Asset($db);
+$componentAsset->loadByName('com_jlms');
+$mailAuditOriginalRules=$componentAsset->rules;
+try {
+    $auditPermissions=json_decode((string)$mailAuditOriginalRules,true,32,JSON_THROW_ON_ERROR);
+    $auditPermissions['jlms.audit.view'][(string)$backendGroup]=true;
+    $componentAsset->rules=json_encode($auditPermissions,JSON_THROW_ON_ERROR);
+    $componentAsset->store();
+    $mailPage=$mailAudit->page($courseManager,[],0,10);
+    rosterExpect(is_array($mailPage['rows'])&&is_int($mailPage['total']),
+        'explicit component-level audit grant allows global outbox listing');
+    foreach($mailPage['rows'] as $outboxRow){
+        foreach(['recipient_email','recipient_name','template_data','last_error','language'] as $sensitiveField){
+            rosterExpect(!property_exists($outboxRow,$sensitiveField),
+                'global outbox projection omits sensitive field '.$sensitiveField);
+        }
+    }
+    rosterDenied(fn()=>$mailAudit->reconcile($courseManager,999999999,'sent','Confirmed no delivery',true),409,
+        'authorized auditor receives safe conflict for nonexistent reconciliation ID');
+} finally {
+    $componentAsset->rules=$mailAuditOriginalRules;
+    $componentAsset->store();
+}
+rosterDenied(fn()=>$mailAudit->page($courseManager),403,
+    'audit permission revocation applies immediately to old session identity');
+rosterExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult()===$mailQueueCount,
+    'audit ACL tests do not mutate mail queue rows');
+
+
  // SEC-P1: roster scope must also bind communication recipient discovery and
  // message preview/queue, so a forged course or enrollment cannot leak names
  // or enqueue emails outside the authenticated manager's course.

@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.9-dev — PATCH SemVer (SEC-P1, 20/11/2026):** separato l'accesso alla coda email globale dal semplice `core.manage`: sono ora richiesti anche i diritti Joomla preesistenti `jlms.audit.view` sia per i diagnostici sia per la riconciliazione; shortcut dashboard soggetto al medesimo permesso. Fixture Joomla prova delega/negazione/concessione/revoca senza effetti sui messaggi. Gli operatori non Super User che usavano la coda devono ricevere esplicitamente `jlms.audit.view` in ACL, secondo principio di minimo privilegio. Nessuna modifica schema; accettazione HTTP/SMTP pendente.
+
 - **0.64.8-dev — SEC-P1 (20/11/2026, regressione senza modifiche runtime):** test Joomla di isolamento cross-course per comunicazioni ai corsisti: destinatari di altro corso, URL e POST manipolati, guest/studenti, nessun nuovo job o outbox dopo il rifiuto. Gate di sicurezza complessivo ancora aperto e collaudo manuale da effettuare; SemVer e percentuale funzionale invariati.
 
 - **0.64.8-dev — PATCH SemVer (SEC-P1, 20/11/2026):** il controllo centrale `TeacherProfiles::canEdit()` ricarica l'account Joomla anziché fidarsi della sessione precedente, impedendo di considerare ancora editabile un profilo docente dopo il blocco account. Test negativo e positivo su fixture DB Joomla; nessuna migrazione o variazione dei permessi. SEC-P1 rimane aperto e il collaudo manuale è pendente.

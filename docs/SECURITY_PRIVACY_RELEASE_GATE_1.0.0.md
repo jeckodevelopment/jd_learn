@@ -85,3 +85,7 @@ Il metodo condiviso `TeacherProfiles::canEdit()` ricarica ora l'account Joomla d
 ## SEC-P1 — test negativi cross-course per comunicazioni ai corsisti (20/11/2026)
 
 Nuova copertura mirata in `tests/joomla-roster.php`: operatore autorizzato al roster di un corso non deve accedere all'editor o all'anteprima delle comunicazioni di un altro corso; un ID iscrizione di un altro corso non deve essere incluso nei destinatari o creare job/email. Ospiti e studenti non devono vedere il roster destinatari amministrativo; sono assertati anche i conteggi dell'outbox e dei job, invariati dopo errori. Stato automatizzato da confermare con CI su Joomla disposable, collaudo HTTP/manuale in attesa; non si dichiara una vulnerabilità osservata né chiusura dell'intero SEC-P1.
+
+## SEC-P1 — separazione ACL per coda email globale (20/11/2026)
+
+Correzione runtime: `MailQueueAuditService::page` e `reconcile` ora richiedono `core.manage` **e** `jlms.audit.view` su `com_jlms`; il permesso di audit esisteva già nella ACL del componente. `core.manage` da solo può essere assegnato a operatori di un singolo corso, mentre la coda contiene metadati e note di tutti i corsi. Il collegamento nella dashboard è condizionato al medesimo permesso. Test negativo/positivo su Joomla disposable in `tests/joomla-roster.php`, prova senza side effect e verifica dell'assenza di campi di email/template dal DTO. L'audit SEC-P1 globale, test concorrenza Scheduler e accettazione manuale non sono dichiarati conclusi.
