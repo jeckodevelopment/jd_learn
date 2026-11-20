@@ -106,10 +106,10 @@ final class SchedulerHealth
         $executions = $task ? (int) ($task->times_executed ?? 0) + (int) ($task->times_failed ?? 0) : 0;
 
         if ($task !== null) {
-            if (!$pluginEnabled || (int) $task->state !== 1) {
-                $state = 'disabled';
-            } elseif ($duplicates) {
+            if ($duplicates) {
                 $state = 'duplicates';
+            } elseif (!$pluginEnabled || (int) $task->state !== 1) {
+                $state = 'disabled';
             } elseif (!self::validExecutionRules((string) ($task->execution_rules ?? ''))) {
                 $state = 'invalid_rules';
             } elseif ($executions > 0 && (int) ($task->last_exit_code ?? 0) !== 0) {
