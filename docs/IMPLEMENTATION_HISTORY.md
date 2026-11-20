@@ -4,7 +4,7 @@
 
 [Artefatto installabile tramite GitHub Actions](https://github.com/jeckodevelopment/jd_learn/actions/runs/44758750931/artifacts/14639932150) (`JD-Learn-0.64.11-dev`) contenente `pkg_jlms-0.64.11-dev.zip`. Il builder ha verificato lo SHA-256 del **pacchetto Joomla interno** `10b3d9651d9c4a189439b2fd121621e0b60c9fc6950452e0e5a5592e6ea6568c`, 809342 byte e 12 costituenti. Digest distinto dell'**archivio GitHub Actions**: `sha256:7dd857d229945ea7c6fe4310d17de2590894b8fa341a9c698c465b8f3ef543a7`.
 
-Matrice canonica, changelog, QA e stato di implementazione erano aggiornati nella PR #787; versione PATCH `0.64.11-dev`. **DOC-07 ancora aperto**, collaudo Joomla manuale pendente, 454 implemented / 35 missing / 268 unverifiable e minimo 57,48% invariato. La CI non è accettazione manuale, né dimostra la sicurezza dei task SMTP riattivati.
+Matrice canonica, changelog, QA e stato di implementazione erano aggiornati nella PR #787; versione PATCH `0.64.11-dev`. **DOC-07 ancora aperto**, collaudo Joomla manuale pendente, 454 implemented / 35 missing / 268 unverifiable e minimo 57,48% invariato. La CI non è accettazione manuale, né dimostra la sicurezza dei task SMTP riattivati. La PR documentale non introduce ulteriori mutazioni runtime.
 
 ## 20 novembre 2026 — SEC-P1: concorrenza reale tra processi sulla riconciliazione della coda (PR #785)
 
