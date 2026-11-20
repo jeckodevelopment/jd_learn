@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """PBASE-02: provider-local README coverage tied to distributed Joomla manifest fields."""
 from pathlib import Path
+import sys
 import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from provider_doc_gate import validate_provider_guides
+validate_provider_guides(ROOT)
 for name in ("youtube", "vimeo", "cloudflarestream", "html5"):
     base = ROOT / "plugins" / "jlmsvideo" / name
     manifest = ET.parse(base / f"{name}.xml").getroot()
