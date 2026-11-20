@@ -58,7 +58,7 @@ $actor=$app->getIdentity();$service=$component->getEnrollmentRosterService();$ch
 if (($argv[2] ?? '') === 'mail-reconcile-worker') {
     // Independent Joomla process + independent DB connection. Main process
     // releases the row-level lock after both workers reach this barrier.
-    echo "ready\\n";
+    echo "ready\n";
     fflush(STDOUT);
     if (trim((string) fgets(STDIN)) !== 'go') { exit(2); }
     $workerId = (int) ($argv[3] ?? 0);
@@ -66,10 +66,10 @@ if (($argv[2] ?? '') === 'mail-reconcile-worker') {
     $audit = new \Jlms\Component\Jlms\Administrator\Application\MailQueueAuditService($db);
     try {
         $audit->reconcile($actor, $workerId, $workerAction, 'CI parallel SMTP claim', true);
-        echo "OK\\n";
+        echo "OK\n";
     } catch (\RuntimeException $error) {
         if ($error->getCode() !== 409) { throw $error; }
-        echo "CONFLICT:409\\n";
+        echo "CONFLICT:409\n";
     }
     exit(0);
 }
