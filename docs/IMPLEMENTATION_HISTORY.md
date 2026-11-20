@@ -1,3 +1,13 @@
+## 20 novembre 2026 — SEC-P1, regressione ACL roster con sessione obsoleta (PR #802)
+
+[PR #802](https://github.com/jeckodevelopment/jd_learn/pull/802) integrata in `main` con squash `d8a9dc06722afa6cceaade60823c1897a39ef063`. Su `EnrollmentRosterService::course()` erano già presenti `LearningService::freshActor()` e ACL di corso: non è stato rilevato un bypass. Aggiunta in `tests/joomla-roster.php` una regressione Joomla disposable con identità di sessione preesistente, blocco dell'account nel database, rifiuto 403 per elenco e filtri, ripristino DB in `finally` e conferma delle iscrizioni invariate. Nessuna modifica runtime o nuovo bump SemVer.
+
+[CI run #44783620345](https://github.com/jeckodevelopment/jd_learn/actions/runs/44783620345) **4/4 verde**: preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6. I run iniziali sono falliti sul gate metadati PR e sull'intestazione versione del riepilogo implementativo; entrambe le cause sono state corrette e il run conclusivo è interamente verde.
+
+[Artefatto Actions `JD-Learn-0.64.17-dev`](https://github.com/jeckodevelopment/jd_learn/actions/runs/44783620345/artifacts/14654335124), contenente lo ZIP Joomla `pkg_jlms-0.64.17-dev.zip` da **810628 byte**, 12 costituenti. SHA-256 dello **ZIP Joomla interno**: `d04dfcac11fcdd1084f420afacf6aa1308aed23679c2198d78b6c4572e1bda4b` (builder e integrazione CI). Digest distinto dell'**archivio GitHub Actions**: `sha256:26b6452f599dc455d3306086e137bb0b091832d38c9a7731432a0482e28d2141`.
+
+Testbook, inventario SEC-P1, changelog e implementation status aggiornati nella #802. Collaudo manuale HTTP con blocco da seconda sessione **in attesa**, SEC-P1 e SEC-P5 **aperti**; 454 implemented / 35 missing / 268 unverifiable; minimo comprovato **57,48% invariato**. Questa voce è esclusivamente storica.
+
 ## 20 novembre 2026 — SEC-P1, account e ACL freschi per attestati amministrativi (PR #800)
 
 [PR #800](https://github.com/jeckodevelopment/jd_learn/pull/800) integrata in `main` con squash `014a5be22759642373539def87944eb684cb4354`. Trovato un controllo privilegi affidato all'identità Joomla potenzialmente stale sul servizio certificati: `CertificateService::assertCertificateAdministrator` ora ricostruisce il `User` attuale, invalida la cache ACL e richiede account non bloccato, `core.manage` e `jlms.certificates.manage`. La vista amministrativa variabili email utilizza `CourseEditorAccess::fresh`. Il test `tests/joomla-smoke.php` simula blocco database dopo il login con identità di sessione non aggiornata e nega tutte le sette operazioni certificate admin, senza mutazioni; gate `tests/sec-p1-admin-identity.py` copre l'inventario dei metodi e la guida email.
