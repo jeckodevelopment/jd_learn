@@ -10086,7 +10086,8 @@
           "references": [
             "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#OWASP ASVS 5.0.0",
             "tests/asvs-reference.py#PIN",
-            "tests/asvs-reference.py#CERTIFICATION"
+            "tests/asvs-reference.py#CERTIFICATION",
+            ".github/workflows/ci.yml#python3 tests/asvs-reference.py"
           ]
         }
       },
