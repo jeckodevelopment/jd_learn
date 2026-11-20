@@ -168,7 +168,10 @@ final class CategoryReassignmentService
 
     private function assertManage(User $actor, object $category, string $action): void
     {
-        $actor = clone $actor;
+        // The incoming Joomla session identity can predate an account block or
+        // permission revocation. Load the current database identity for each
+        // authorization check instead of trusting a cloned session snapshot.
+        $actor = new User((int) $actor->id);
         $actor->clearAccessRights();
         $asset = $category->extension . '.category.' . (int) $category->id;
         $allowed = $actor->authorise($action, $asset);

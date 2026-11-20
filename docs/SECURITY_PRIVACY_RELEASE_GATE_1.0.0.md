@@ -73,3 +73,7 @@ L'inventario per l'intero perimetro della 1.0.0, con superfici ed evidenze ancor
 ## SEC-P1 — inventory gate controller di Joomla (20/11/2026)
 
 Introdotto gate strutturale `tests/sec-p1-controller-gates.py` richiamato dal preflight `tools/check.py`: censisce controller frontend/backend, richiede classificazione esplicita dei nuovi file e conserva i controlli POST/CSRF o le deleghe Joomla dichiarate. La documentazione integrale delle superfici è in `docs/SEC_P1_ATTACK_SURFACE_1.0.0.md`. La suite non sostituisce prove negative ACL/IDOR, CSRF e stato DB nei singoli endpoint; gate SEC-P1 e SEC-P5 **restano aperti**.
+
+## SEC-P1 — blocco account su riassegnazione categorie (20/11/2026)
+
+Finding mirato: `CategoryReassignmentService::assertManage()` verificava la proprietà `block` di un oggetto utente clonato dalla sessione e non ricaricato dal database. Il controllo poteva quindi essere obsoleto rispetto a un blocco amministrativo successivo al login. La mitigazione ricarica l'attore Joomla con `new User(id)` e invalida l'ACL cache prima di valutare i permessi sulla categoria sorgente e destinazione. Test Joomla disposable riproduce blocco account con session identity ancora in memoria, rifiuto 403 di lettura/mutazione e assenza di side effect; CI e collaudo manuale da confermare. Non rappresenta il completamento del gate SEC-P1 generale.

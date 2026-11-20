@@ -184,6 +184,23 @@ $reassignment=$component->getCategoryReassignmentService();
 $inspection=$reassignment->inspect($actor,$moveSource);
 catExpect($inspection['references']['courses']===1 && $inspection['targets']['courses']!==[],'category dependency review includes trashed sources, counts courses and offers permitted sibling destinations');
 catExpect(!in_array($moveChild,array_map(static fn($target)=>(int)$target->id,$inspection['targets']['courses']),true),'descendant categories are excluded as relocation targets');
+// SEC-P1: the operator session may remain in memory after the user is blocked.
+// Authorization must load current Joomla account state before either read or mutation.
+$db->setQuery('UPDATE #__users SET block=1 WHERE id='.(int)$actor->id)->execute();
+try {
+    $blockedInspect=false;
+    try { $reassignment->inspect($actor,$moveSource); }
+    catch (\RuntimeException $error) { $blockedInspect=$error->getCode()===403; }
+    catExpect($blockedInspect,'blocked current account cannot inspect categories with stale session identity');
+    $blockedReassign=false;
+    try { $reassignment->reassign($actor,$moveSource,['courses'=>$moveTarget]); }
+    catch (\RuntimeException $error) { $blockedReassign=$error->getCode()===403; }
+    catExpect($blockedReassign,'blocked current account cannot reassign categories with stale session identity');
+    catExpect((int)$db->setQuery('SELECT catid FROM #__jlms_courses WHERE id='.(int)$course)->loadResult()===$moveSource,
+        'denied reassignment leaves the course category unchanged');
+} finally {
+    $db->setQuery('UPDATE #__users SET block=0 WHERE id='.(int)$actor->id)->execute();
+}
 $descendantRejected=false;try{$reassignment->reassign($actor,$moveSource,['courses'=>$moveChild]);}catch(\InvalidArgumentException){$descendantRejected=true;}
 catExpect($descendantRejected,'server rejects a manually submitted descendant destination');
 $reassignment->reassign($actor,$moveSource,['courses'=>$moveTarget]);
