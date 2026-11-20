@@ -21,6 +21,8 @@ final class HtmlView extends BaseHtmlView
     public array $schedulerHealth = [];
     public bool $canManageScheduler = false;
     public array $shortcutGroups = [];
+    /** Read-only guidance, never actions. Items are shown only with the matching ACL. */
+    public array $safeOperations = [];
 
     public function display($tpl = null)
     {
@@ -101,6 +103,22 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status($db);
             $this->schedulerHealth = \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::inspect($db);
+        }
+        // Visibility is based on current ACL rather than the presence of a dashboard shortcut.
+        // No diagnostic here triggers sending, deleting, regenerating or mutating data.
+        $this->safeOperations = [];
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            $this->safeOperations[] = 'STORAGE';
+            if ($actor->authorise('jlms.audit.view', 'com_jlms')) {
+                $this->safeOperations[] = 'MAIL';
+            }
+            if ($actor->authorise('jlms.certificates.manage', 'com_jlms')) {
+                $this->safeOperations[] = 'CERTIFICATES';
+            }
+            $this->safeOperations[] = 'COURSE';
+        }
+        if ($actor->authorise('core.manage', 'com_scheduler')) {
+            $this->safeOperations[] = 'SCHEDULER';
         }
         ToolbarHelper::help('dashboard', true);
         parent::display($tpl);
