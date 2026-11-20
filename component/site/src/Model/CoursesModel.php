@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Site\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
+use Jlms\Component\Jlms\Site\Helper\CatalogSearch;
 use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 
 class CoursesModel extends ListModel
@@ -73,9 +74,10 @@ class CoursesModel extends ListModel
         }
         $search = (string) $this->getState('filter.search');
         if ($search !== '') {
-            $titleSearch = '%' . $search . '%';
-            $summarySearch = '%' . $search . '%';
-            $query->where('(c.title LIKE :catalogSearchTitle OR c.summary LIKE :catalogSearchSummary)')
+            $titleSearch = CatalogSearch::pattern($search);
+            $summarySearch = $titleSearch;
+            // SQL wildcards in visitor text must be matched literally.
+            $query->where("(c.title LIKE :catalogSearchTitle ESCAPE '!' OR c.summary LIKE :catalogSearchSummary ESCAPE '!')")
                 ->bind(':catalogSearchTitle', $titleSearch)
                 ->bind(':catalogSearchSummary', $summarySearch);
         }
