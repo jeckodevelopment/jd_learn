@@ -10279,32 +10279,42 @@
       {
         "id": "criterion_01",
         "label": "Specifiche per singolo plugin",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "README.md",
-          "docs/VIDEO.md"
+          "plugins/jlmsvideo/youtube/docs/README.md",
+          "plugins/jlmsvideo/vimeo/docs/README.md",
+          "plugins/jlmsvideo/cloudflarestream/docs/README.md",
+          "plugins/jlmsvideo/html5/docs/README.md",
+          "tools/provider_doc_gate.py",
+          "tests/provider-doc-contract.py"
         ],
         "review": {
-          "reason": "Il repository contiene riferimenti pertinenti al criterio «Specifiche per singolo plugin», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "reason": "Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.",
           "references": [
-            "README.md#L1-L25",
-            "docs/VIDEO.md#L1-L25"
+            "tools/provider_doc_gate.py#validate_provider_guides",
+            "tests/provider-doc-contract.py#PBASE-02",
+            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Parametri del manifest"
           ]
         }
       },
       {
         "id": "criterion_02",
         "label": "Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "README.md",
-          "docs/VIDEO.md"
+          "plugins/jlmsvideo/youtube/docs/README.md",
+          "plugins/jlmsvideo/vimeo/docs/README.md",
+          "plugins/jlmsvideo/cloudflarestream/docs/README.md",
+          "plugins/jlmsvideo/html5/docs/README.md",
+          "tools/provider_doc_gate.py",
+          "tests/provider-doc-contract.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.",
           "references": [
-            "README.md#L1-L25",
-            "docs/VIDEO.md#L1-L25"
+            "tools/provider_doc_gate.py#validate_provider_guides",
+            "tests/provider-doc-contract.py#PBASE-02",
+            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Parametri del manifest"
           ]
         }
       },
@@ -10317,16 +10327,15 @@
           "plugins/jlmsvideo/vimeo/docs/README.md",
           "plugins/jlmsvideo/cloudflarestream/docs/README.md",
           "plugins/jlmsvideo/html5/docs/README.md",
+          "tools/provider_doc_gate.py",
           "tests/provider-doc-contract.py"
         ],
         "review": {
-          "reason": "Quattro plugin video distribuiscono ciascuno una propria guida operativa con configurazione, limiti, privacy, manutenzione e collaudi; il gate package verifica le guide invece di limitarsi al contratto astratto.",
+          "reason": "Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.",
           "references": [
-            "plugins/jlmsvideo/youtube/docs/README.md#Identità",
-            "plugins/jlmsvideo/vimeo/docs/README.md#Identità",
-            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Identità",
-            "plugins/jlmsvideo/html5/docs/README.md#Identità",
-            "tests/provider-doc-contract.py#PBASE-02"
+            "tools/provider_doc_gate.py#validate_provider_guides",
+            "tests/provider-doc-contract.py#PBASE-02",
+            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Parametri del manifest"
           ]
         }
       }
