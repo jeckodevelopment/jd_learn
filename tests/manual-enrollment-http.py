@@ -73,6 +73,15 @@ try:
  apply(manager,url,form,{'jform[language]':'zz-ZZ'},400)
  apply(manager,url,form,{'jform[user_id]':str(f['denied_user'])},403)
  apply(manager,url,form,{'jform[course_id]':str(f['other_course'])},403)
+ # SEC-P1: the same browser session must not admit after Joomla blocks the
+ # course manager, even with a previously valid form and CSRF token.
+ blocked_before=json.loads(fixture('snapshot'))
+ try:
+  fixture('block_operator')
+  apply(manager,url,form,expected=403)
+  expect(json.loads(fixture('snapshot'))==blocked_before,'blocked HTTP manager leaves subjects and receipts unchanged')
+ finally:
+  fixture('unblock_operator')
  fixture('revoke_learner');apply(manager,url,form,expected=403);fixture('grant_learner')
  fixture('revoke_operator');apply(manager,url,form,expected=403);fixture('grant_operator')
  expect(json.loads(fixture('snapshot'))==before,'denied and malformed commands do not leave receipts or subjects')
