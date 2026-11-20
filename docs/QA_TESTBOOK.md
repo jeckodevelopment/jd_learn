@@ -1,3 +1,9 @@
+## SEC-P1 — revoca reale di sessione Joomla su stato e iscrizione manuale (20/11/2026)
+
+**Suite HTTP CI:** `tests/enrollment-state-http.py` e `tests/manual-enrollment-http.py`. L'operatore delegato `cirosterreader` esegue il login reale e acquisisce una form autorizzata. La fixture PDO contrassegna poi come bloccato l'account in `#__users`, conservando cookie e form. Con la sessione precedente il servizio deve rifiutare GET/POST di stato e POST di ammissione manuale con HTTP 403; snapshot prima/dopo invariati. Gli script ripristinano il blocco e i gruppi nei propri `finally`. Esito da verificare nelle due configurazioni di CI Joomla.
+
+**Accettazione manuale ancora in attesa:** ripetere con operatori delegati effettivi e seconda sessione amministrativa, includere POST senza token/alterati, revoca del solo permesso ACL di corso, altri corsi e ruolo studente. Completare audit SEC-P1 sulle altre superfici senza trasformare questi due HTTP test nella chiusura del gate intero.
+
 ## SEC-P1 — gate trasversale plugin, Scheduler, media e matrice evidenze (20/11/2026)
 
 **Test automatico:** `tests/sec-p1-cross-surface-gate.py`, invocato da `tools/check.py`, controlla il set di 10 classi/plugin, l'inventario eventi e metodi pubblici, i tre task Scheduler, i limiti dei worker, l'accesso tramite LocalVideoService su GET/HEAD, il timeout e il divieto di redirect Cloudflare, gli hook Privacy e alcuni vincoli sulle transazioni. La matrice `docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv` esplicita i limiti di ogni riga; **non attribuire al gate statico il superamento di collaudi manuali o il completamento di SEC-P1**.
