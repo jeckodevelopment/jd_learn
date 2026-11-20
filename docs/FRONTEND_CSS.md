@@ -306,3 +306,7 @@ La pagina `category` usa le medesime classi/ID pubblici già documentati; visibi
 ### SCR-01 — ordinamento per data di pubblicazione
 
 Nel catalogo corsi, `filter[order]=published` ordina soltanto le versioni pubblicate e visibili secondo `v.published_at DESC, c.id DESC`: le bozze non cambiano la data pubblica; l'ID stabilizza l'ordine a parità di timestamp e durante la paginazione. Il selettore è localizzato IT/EN, ed è disponibile come valore predefinito nella configurazione globale e nei menu Corsi/Categoria. L'ordinamento ricevuto dal GET è ignorato quando i filtri o il selettore ordinamento non sono abilitati. Si preservano le restrizioni ACL e la query canonica del catalogo. Collaudo reale in `docs/QA_TESTBOOK.md`, test strutturale in `tests/frontend-catalog-options.py`.
+
+## UI-07 — contratto DOM versionato 1.0.0
+
+La mappa verificabile delle 17 viste pubbliche, dei relativi ID/classi statici e degli override è in [UI_07_DOM_CONTRACT_1.0.0.md](UI_07_DOM_CONTRACT_1.0.0.md) e [FRONTEND_DOM_CONTRACTS_1.0.0.json](FRONTEND_DOM_CONTRACTS_1.0.0.json). La CI verifica i selettori del layout e l'inventario di tutte le viste; i partial e gli ID dinamici richiedono anche i test JS preesistenti e le prove browser. Due esempi di CSS indipendenti e una procedura di migrazione compatibile sono nella nuova guida. Collaudo Joomla con override, moduli e template diversi ancora da registrare.
