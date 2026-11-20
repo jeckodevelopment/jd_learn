@@ -110,6 +110,26 @@ final class MailQueue
         }
     }
 
+    /**
+     * Recheck the current Joomla account before SMTP. Queue-time email addresses
+     * are snapshots and must not be sent to after an account block or email edit.
+     * This intentionally returns false for missing or unbound recipients.
+     */
+    public static function currentRecipient(DatabaseInterface $db, object $row): bool
+    {
+        $userId = (int) ($row->recipient_user_id ?? 0);
+        $email = (string) ($row->recipient_email ?? '');
+        if ($userId < 1 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+        $q = $db->createQuery()->select('id')->from('#__users')
+            ->where('id = :recipient')->where('block = 0')
+            ->where('LOWER(email) = LOWER(:email)')
+            ->bind(':recipient', $userId, ParameterType::INTEGER)
+            ->bind(':email', $email);
+        return (bool) $db->setQuery($q)->loadResult();
+    }
+
     /** Process a bounded batch; a claimed message is never automatically sent twice. */
     public function dispatch(int $limit = 25): array
     {
@@ -137,6 +157,21 @@ final class MailQueue
             $row = $this->db->setQuery($q)->loadObject();
             $invalidTemplate = false;
             try {
+                // Communications must be linked to the Joomla user. For legacy
+                // course messages with no recipient ID, fail closed rather than
+                // send to a stale address after a possible account change.
+                $linkedRecipient = (int) ($row->recipient_user_id ?? 0) > 0;
+                if (($linkedRecipient || (string) $row->template_id === 'com_jlms.course.message')
+                    && !self::currentRecipient($this->db, $row)) {
+                    $skip = $this->db->createQuery()->update('#__jlms_mail_queue')
+                        ->set("state = 'skipped'")->set("recipient_email = ''")
+                        ->set("recipient_name = ''")->set("template_data = '{}'")
+                        ->where('id = :id')->where("state = 'sending'")
+                        ->bind(':id', $id, ParameterType::INTEGER);
+                    $this->db->setQuery($skip)->execute();
+                    $skipped++;
+                    continue;
+                }
                 if ((string) $row->template_id === 'com_jlms.course.published' && !$this->announcementEligible($row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
                         ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
