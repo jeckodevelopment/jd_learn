@@ -1,5 +1,7 @@
 """Private owner history, Joomla forms, native menus and read-only resume via real HTTP."""
 from pathlib import Path
+import runpy
+verify_dom = runpy.run_path(str(Path(__file__).resolve().parent / 'frontend-dom-runtime.py'))['verify']
 from urllib.request import build_opener,HTTPCookieProcessor
 from urllib.error import HTTPError
 from urllib.parse import urljoin,urlencode
@@ -59,6 +61,7 @@ try:
  expect('jlms-personal-navigation' not in Page(direct_nav).ids,'direct links with unrelated active menu cannot enable local navigation')
  _,shown_nav,_=request(student,menu_overview)
  shown_page=Page(shown_nav)
+ expect(verify_dom(shown_nav, root='jlms-dashboard') > 0, 'UI-07: no duplicate IDs with personal navigation enabled')
  expect('jlms-personal-navigation' in shown_page.ids,'navigation enabled on matching active Joomla menu')
  expect('aria-current="page"' in shown_nav and 'COM_JLMS_PERSONAL_NAV_LABEL' not in shown_nav,'current view and label localized')
  nav_section=shown_nav.split('<nav id="jlms-personal-navigation"',1)[1].split('</nav>',1)[0]
@@ -73,11 +76,13 @@ try:
   page=Page(html)
   _,summary_html,summary_headers=request(student,overview)
   summary_page=Page(summary_html)
+  expect(verify_dom(summary_html, root='jlms-dashboard') > 0, 'UI-07: summary DOM does not duplicate component IDs')
   expect('jlms-dashboard-summary' in summary_page.ids and 'jlms-dashboard-my-certificates-link' in summary_page.ids and 'jlms-dashboard-preferences-link' in summary_page.ids,'summary links to autonomous views')
   expect('jlms-my-courses' not in summary_page.ids and 'jlms-dashboard-filters' not in summary_page.ids and not enrollments(summary_html),'summary does not repeat full history')
   expect('no-store' in summary_headers.get('Cache-Control','') and 'noindex' in summary_headers.get('X-Robots-Tag',''),'summary is private and not indexed')
   expect('jlms-dashboard-my-courses-link' in summary_page.ids and 'jlms-dashboard-catalog' in summary_page.ids,'summary keeps existing navigation')
   expect('jlms-dashboard'in page.ids and'jlms-my-courses'in page.ids,'private dashboard CSS regions')
+  expect(verify_dom(html, root='jlms-dashboard', scoped_class='jlms-my-course') > 0, 'UI-07: student CSS customization selector supported by rendered DOM')
   expect(len(page.ids)==len(set(page.ids)),'no duplicate public IDs')
   expect('no-store'in headers.get('Cache-Control','')and'noindex'in headers.get('X-Robots-Tag','')and'noindex, nofollow'in html,'private non-indexable response')
   expect(f['active']in enrollments(html)and f['other_enrollment']not in enrollments(html),'current owner data only')
