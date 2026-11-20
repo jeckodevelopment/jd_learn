@@ -276,7 +276,7 @@ foreach ([
     ['a!b', 'a!b', 1],
     ['aXb', 'a!b', 0],
 ] as [$title, $needle, $expected]) {
-    $pattern = \\Jlms\\Component\\Jlms\\Site\\Helper\\CatalogSearch::pattern($needle);
+    $pattern = \Jlms\Component\Jlms\Site\Helper\CatalogSearch::pattern($needle);
     $sql = 'SELECT ' . $db->quote($title) . ' LIKE ' . $db->quote($pattern) . " ESCAPE '!'";
     pubExpect((int) $db->setQuery($sql)->loadResult() === $expected,
         'catalog LIKE treats visitor wildcards and escape characters literally');
