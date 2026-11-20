@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.3-dev — PATCH SemVer (DOC-07, 20/11/2026):** la diagnostica task JD Learn segnala le regole di esecuzione JSON mancanti, malformate o prive di tipo come `invalid_rules` invece di dichiarare il task operativo sulla sola base della prossima esecuzione. Messaggi di rimedio IT/EN e prove PHP dei casi validi e invalidi. Non cambia configurazioni/task, non avvia job e non attribuisce nuovi criteri funzionali.
+
 - **0.64.2-dev — PATCH SemVer (DOC-07, 20/11/2026):** la diagnostica già disponibile dei quattro provider nella dashboard amministrativa ora mostra istruzioni operative localizzate per plugin mancante, disabilitato, non registrato, configurazione locale incompleta o configurazione rilevata. Nessuna attivazione automatica, invio di credenziali o prova di disponibilità remota implicita. Test di mapping degli stati e controllo IT/EN; DOC-07 resta parziale e il collaudo Joomla pendente.
 
 - **0.64.1-dev — PBASE-02 (20/11/2026, solo documentazione/test):** aggiornate le quattro guide README locali ai plugin video per descrivere campi manifest, capacità effettive, limiti e prove richieste; gate statico in CI contro deriva documentale. Nessuna modifica runtime, nessuna promozione di criteri dell'audit, nessun aumento SemVer.
