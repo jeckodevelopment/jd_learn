@@ -7,6 +7,7 @@ modules, CSS cascade and real browser accessibility require separate testing.
 from pathlib import Path
 import json
 import re
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "component/site/tmpl"
@@ -81,6 +82,12 @@ personal = (SITE / "dashboard/_personal_navigation.php").read_text(encoding="utf
 assert "jlms-personal-navigation" in personal
 for view in ("dashboard", "mycourses", "mycertificates", "preferences"):
     assert "_personal_navigation.php" in (SITE / view / "default.php").read_text()
+# JD Learn 1.0.0 distributes component views and plugins but no Joomla
+# module extension of its own. Third-party modules are checked for collisions
+# in the rendered HTML fixture, not attributed as package-owned source.
+package = ET.parse(ROOT / "packages/pkg_jlms.xml").getroot()
+assert not package.findall(".//file[@type='module']"), "new module requires a versioned DOM map"
+
 # Two independent template customizations must use only existing scoped hooks.
 css = (ROOT / "component/media/css/site.css").read_text(encoding="utf-8")
 customizations = {
