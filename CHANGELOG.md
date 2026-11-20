@@ -1,5 +1,7 @@
 # Changelog
 
+- SEC-P2/SEC-P3 (pre-release): scansione ricorsiva di segreti e file sensibili nel ZIP distribuito; blocco privacy su mail queue attiva e redazione della storia di invio terminale, inclusi token di revoca. Gate finali ancora aperti.
+
 - SEC-P2/SEC-P3 (prerelease): privacy removal fail-closed anche per evento diretto; audit read-only dei file video legacy in webroot, con gate di regressione. I controlli completi e l'accettazione finale restano aperti.
 
 - **0.64.17-dev — DOC-02:** manuali amministrativi IT/EN distribuiti con quattro capitoli operativi aggiuntivi, link offline testati e test automatico di coerenza nel package builder. Contestuale riconciliazione dei criteri tecnici già realizzati, senza affermare accettazione manuale o modificare runtime e SemVer.
