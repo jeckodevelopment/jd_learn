@@ -85,6 +85,30 @@ function videoDenied(callable $work,int $code,string $message): void {
     try { $work(); } catch (\RuntimeException $error) { videoExpect($error->getCode()===$code,$message.': '.$error->getMessage().' / '.$error->getCode()); return; }
     throw new \RuntimeException($message);
 }
+// SEC-P1/STORAGE-BOUNDARY: local MP4 is plaintext by design and is safe
+// only when its configured physical root resolves outside every webroot.
+// A missing value may not fall back to managed public material storage.
+$badVideoRoot = new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage(
+    static fn (): \Joomla\Registry\Registry => new \Joomla\Registry\Registry(['video_storage_root' => ''])
+);
+videoDenied(fn() => $badVideoRoot->root(), 503, 'unset local video root fails closed');
+$publicVideoRoot = new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage(
+    static fn (): \Joomla\Registry\Registry => new \Joomla\Registry\Registry(['video_storage_root' => $root])
+);
+videoDenied(fn() => $publicVideoRoot->root(), 503, 'webroot local video storage is refused');
+$goodVideoPath = dirname($root) . '/private-video-sec-p1';
+if (!is_dir($goodVideoPath) && !mkdir($goodVideoPath, 0700)) {
+    throw new \RuntimeException('SEC-P1 private-video fixture cannot create root');
+}
+try {
+    $goodVideoRoot = new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage(
+        static fn (): \Joomla\Registry\Registry => new \Joomla\Registry\Registry(['video_storage_root' => $goodVideoPath])
+    );
+    videoExpect($goodVideoRoot->root() === realpath($goodVideoPath), 'configured off-webroot video root remains supported');
+} finally {
+    rmdir($goodVideoPath);
+}
+
 function videoFixtureUpdate(string $table, object $record, bool $nulls = false): void
 {
     global $db;
