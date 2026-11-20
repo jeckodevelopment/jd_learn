@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **462**.
-- Mancanti con lacuna accertata: **27**.
-- Esaminati con esito non verificabile: **268**.
+- Implementati: **464**.
+- Mancanti con lacuna accertata: **26**.
+- Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -54,9 +54,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `PBASE-02/criterion_02` — Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi. La revisione del criterio «Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [README.md#L1-L25](../README.md#L1-L25)
-  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
   - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
@@ -1000,9 +997,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PBASE-01/criterion_05` — attivazione e segreti sono configurazione del sito, senza credenziali o contenuti pubblicati automaticamente. Il repository contiene riferimenti pertinenti al criterio «attivazione e segreti sono configurazione del sito, senza credenziali o contenuti pubblicati automaticamente», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
   - [packages/pkg_jlms.xml#L1-L19](../packages/pkg_jlms.xml#L1-L19)
   - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
-- `PBASE-02/criterion_01` — Specifiche per singolo plugin. Il repository contiene riferimenti pertinenti al criterio «Specifiche per singolo plugin», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
-  - [README.md#L1-L25](../README.md#L1-L25)
-  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
 - `PBASE-03/criterion_01` — Guide e contratti. Il repository contiene riferimenti pertinenti al criterio «Guide e contratti», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
   - [README.md#L1-L25](../README.md#L1-L25)
   - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
@@ -1829,11 +1823,26 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [packages/pkg_jlms.xml#plg_jlmsvideo_youtube.zip](../packages/pkg_jlms.xml)
   - [packages/pkg_jlms.xml#plg_jlmsvideo_html5.zip](../packages/pkg_jlms.xml)
   - [tests/joomla-smoke.php#Four video providers were not registered](../tests/joomla-smoke.php)
-- `PBASE-02/criterion_03` — Il solo contratto astratto non e documentazione sufficiente dei quattro plugin. Quattro plugin video distribuiscono ciascuno una propria guida operativa con configurazione, limiti, privacy, manutenzione e collaudi; il gate package verifica le guide invece di limitarsi al contratto astratto.
-  - [plugins/jlmsvideo/youtube/docs/README.md#Identità](../plugins/jlmsvideo/youtube/docs/README.md)
-  - [plugins/jlmsvideo/vimeo/docs/README.md#Identità](../plugins/jlmsvideo/vimeo/docs/README.md)
-  - [plugins/jlmsvideo/cloudflarestream/docs/README.md#Identità](../plugins/jlmsvideo/cloudflarestream/docs/README.md)
-  - [plugins/jlmsvideo/html5/docs/README.md#Identità](../plugins/jlmsvideo/html5/docs/README.md)
+- `PBASE-02/criterion_01` — Specifiche per singolo plugin. Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.
+  - [plugins/jlmsvideo/youtube/docs/README.md#plg_jlmsvideo_youtube](../plugins/jlmsvideo/youtube/docs/README.md)
+  - [plugins/jlmsvideo/vimeo/docs/README.md#plg_jlmsvideo_vimeo](../plugins/jlmsvideo/vimeo/docs/README.md)
+  - [plugins/jlmsvideo/cloudflarestream/docs/README.md#plg_jlmsvideo_cloudflarestream](../plugins/jlmsvideo/cloudflarestream/docs/README.md)
+  - [plugins/jlmsvideo/html5/docs/README.md#plg_jlmsvideo_html5](../plugins/jlmsvideo/html5/docs/README.md)
+  - [tools/provider_doc_gate.py#validate_provider_guides](../tools/provider_doc_gate.py)
+  - [tests/provider-doc-contract.py#PBASE-02](../tests/provider-doc-contract.py)
+- `PBASE-02/criterion_02` — Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi. Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.
+  - [plugins/jlmsvideo/youtube/docs/README.md#plg_jlmsvideo_youtube](../plugins/jlmsvideo/youtube/docs/README.md)
+  - [plugins/jlmsvideo/vimeo/docs/README.md#plg_jlmsvideo_vimeo](../plugins/jlmsvideo/vimeo/docs/README.md)
+  - [plugins/jlmsvideo/cloudflarestream/docs/README.md#plg_jlmsvideo_cloudflarestream](../plugins/jlmsvideo/cloudflarestream/docs/README.md)
+  - [plugins/jlmsvideo/html5/docs/README.md#plg_jlmsvideo_html5](../plugins/jlmsvideo/html5/docs/README.md)
+  - [tools/provider_doc_gate.py#validate_provider_guides](../tools/provider_doc_gate.py)
+  - [tests/provider-doc-contract.py#PBASE-02](../tests/provider-doc-contract.py)
+- `PBASE-02/criterion_03` — Il solo contratto astratto non e documentazione sufficiente dei quattro plugin. Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.
+  - [plugins/jlmsvideo/youtube/docs/README.md#plg_jlmsvideo_youtube](../plugins/jlmsvideo/youtube/docs/README.md)
+  - [plugins/jlmsvideo/vimeo/docs/README.md#plg_jlmsvideo_vimeo](../plugins/jlmsvideo/vimeo/docs/README.md)
+  - [plugins/jlmsvideo/cloudflarestream/docs/README.md#plg_jlmsvideo_cloudflarestream](../plugins/jlmsvideo/cloudflarestream/docs/README.md)
+  - [plugins/jlmsvideo/html5/docs/README.md#plg_jlmsvideo_html5](../plugins/jlmsvideo/html5/docs/README.md)
+  - [tools/provider_doc_gate.py#validate_provider_guides](../tools/provider_doc_gate.py)
   - [tests/provider-doc-contract.py#PBASE-02](../tests/provider-doc-contract.py)
 - `PBASE-03/criterion_02` — Il documento Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md contiene le schede e i dizionari dei parametri. Il documento dedica una sezione a ciascun provider e un dizionario dei parametri comuni e specifici a tutti e quattro.
   - [docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#5. Plugin YouTube](../docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)

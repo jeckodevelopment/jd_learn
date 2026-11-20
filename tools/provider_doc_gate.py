@@ -44,6 +44,31 @@ def validate_provider_guides(root: Path) -> None:
         if missing:
             raise ValueError(f"PBASE-03: incomplete bundled plugin documentation for {provider}: {', '.join(missing)}")
 
+        # PBASE-02: a per-provider specification must cover the complete
+        # approved lifecycle, not merely name manifest parameters. Keep the
+        # headings versioned and anchored in each distributed README.
+        required_sections = (
+            "## Configurazione e sorgente",
+            "## Capacità e limiti",
+            "## Errori, manutenzione e collaudo",
+            "## Identità, dipendenze e contratto di installazione",
+            "## Parametri del manifest, tipi e valori iniziali",
+            "## Privacy, tracciamento e ciclo di vita",
+            "## Prestazioni, errori e matrice di accettazione",
+        )
+        if any(guide.count(section) != 1 for section in required_sections):
+            raise ValueError(f"PBASE-02: incomplete or duplicated lifecycle sections for {provider}")
+        required_terms = (
+            "prerequisit", "manifest", "sorgente", "durata", "player",
+            "consenso", "privacy", "completamento", "aggiornamento",
+            "disattivazione", "rimozione", "prestazioni", "errori", "collaudo",
+        )
+        lower_guide = guide.lower()
+        if any(term not in lower_guide for term in required_terms):
+            raise ValueError(f"PBASE-02: missing provider lifecycle obligations for {provider}")
+        # Do not claim manual browser tests, provider uptime or real token
+        # validity from documentation. The release acceptance is separate.
+
         # PBASE-02: ensure the versioned operational table cannot silently
         # diverge from field types, defaults or numeric bounds in the manifest.
         parameter_table = guide.split("## Parametri del manifest, tipi e valori iniziali", 1)[1].split("\n## ", 1)[0]

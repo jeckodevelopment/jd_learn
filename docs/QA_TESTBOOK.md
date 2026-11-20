@@ -1,3 +1,7 @@
+## PBASE-02 — specifiche dei quattro plugin, chiusura implementativa 20/11/2026
+
+Eseguire `python3 tests/provider-doc-contract.py`: devono essere riconosciute tutte e quattro le guide locali, confrontati manifest/parametri con tipi/default/vincoli e rifiutata dalla fixture negativa la guida priva di un capitolo obbligatorio. Il builder richiama `validate_provider_guides` e impedisce la distribuzione di documentazione incompleta. **Accettazione Joomla non eseguita**: provare separatamente YouTube, Vimeo, Cloudflare Stream e HTML5 su installazione reale con account e video autorizzati, ACL, consenso, errori, ripresa, upgrade, disattivazione e backup/ripristino. La chiusura implementativa del requisito non certifica disponibilità, corretto funzionamento degli SDK o superamento del collaudo manuale.
+
 ## HTTP-06 — endpoint core, prove negative su Joomla
 
 ## HTTP-06 — confini richiesta core, 20/11/2026
