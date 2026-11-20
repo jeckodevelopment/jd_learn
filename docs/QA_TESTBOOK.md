@@ -1,3 +1,11 @@
+## SEC-P1 — revisione mirata IDOR su allegati privati (20/11/2026)
+
+**Riferimento del collaudo e review statica:** `component/administrator/src/Application/MaterialService.php`, `component/administrator/src/Controller/MaterialController.php`, `component/site/src/Controller/AttachmentController.php`, `component/administrator/src/Infrastructure/ProtectedMaterialStorage.php` e `MaterialDownload.php`. Il servizio amministrativo ricarica l'attore Joomla e richiede `core.manage` su `com_jlms` e `jlms.materials.manage` sul corso; il record allegato deve appartenere alla versione dichiarata. Il frontend risolve il contesto didattico dell'iscrizione e verifica la versione proprietaria. Lo storage usa chiavi opache, file protetti e controlli di integrità. L'esame statico di questa superficie **non ha individuato un bypass IDOR confermato**.
+
+**Nuova regressione HTTP reale:** `tests/materials-http.py` verifica download autorizzato e prova a scambiare l'ID di un allegato del corso B con corso/versione A e viceversa, su GET, HEAD e GET con `Range` valido, aspettando rifiuto 404 e assenza del payload privato. Ripete il tentativo sull'anteprima editoriale. La prova è eseguita dalla CI di integrazione Joomla nei due profili PHP/database. La suite preesistente copre tentativi di download da utente estraneo e anonimo, revoca di permessi e CSRF sugli upload.
+
+**Limiti aperti:** non sono stati esaminati sistematicamente tutti gli endpoint, tutti i ruoli/gruppi Joomla, tutte le transizioni, le condizioni di concorrenza, i link di tutti i tipi di file e le configurazioni hosting. Non dichiarare SEC-P1, SECDEV-07, SEC-P5 o accettazione manuale completati. Test manuali sul sito: creare due corsi e utenti con autorizzazioni distinte, tentare gli stessi scambi di ID anche su preview pubbliche, verificare codici/range, cache, ID non validi e log senza dati sensibili.
+
 ## SECDEV-07 — riferimento OWASP ASVS v5.0.0 fissato (20/11/2026)
 
 **CI:** eseguire `python3 tests/asvs-reference.py` e `python3 tools/functional_audit.py --check`; il primo deve rifiutare la rimozione della versione fissata o del disclaimer, il secondo verificare le matrici. L'inserimento del pin non prova la conformità ASVS.
