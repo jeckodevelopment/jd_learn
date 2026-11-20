@@ -110,6 +110,23 @@ $groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER 
 $counts=static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='.$course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments')->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects')->loadResult()];
 $before=$counts();$i=$service->editor($manager,$course,(int)$users['one']->id,'en-GB');$edition=$i['impact']['edition_id'];
 manualExpect($counts()===$before&&$i['impact']['blocked']===null,'preview creates no subject enrollment or receipt');
+// SEC-P1 batch: a stale course manager must not perform manual admissions
+// after the current Joomla account record has been blocked.
+$managerId = (int)$manager->id;
+$managerOldBlock = (int)$db->setQuery('SELECT block FROM #__users WHERE id='.$managerId)->loadResult();
+try {
+    $db->setQuery('UPDATE #__users SET block=1 WHERE id='.$managerId)->execute();
+    manualDenied(fn()=>$service->editor($manager,$course,(int)$users['one']->id,'en-GB'),403,
+        'stale blocked manager cannot preview manual admission');
+    manualDenied(fn()=>$service->apply($manager,...manualCommand($i)),403,
+        'stale blocked manager cannot create manual admission');
+    manualExpect($counts()===$before,'blocked manual admission has no enrollment or receipt effects');
+} finally {
+    $db->setQuery('UPDATE #__users SET block='.$managerOldBlock.' WHERE id='.$managerId)->execute();
+}
+manualExpect($service->editor($manager,$course,(int)$users['one']->id,'en-GB')['impact']['hash']===$i['impact']['hash'],
+    'manual admission preview restored after unblock');
+
 manualDenied(fn()=>$service->editor(new \Joomla\CMS\User\User(),$course,(int)$users['one']->id,'en-GB'),401,'anonymous manual admission denied');
 manualDenied(fn()=>$service->editor($users['one'],$course,(int)$users['one']->id,'en-GB'),403,'learner cannot admit themselves manually');
 manualDenied(fn()=>$service->editor($manager,(int)$rf['other_course'],(int)$users['one']->id,'en-GB'),403,'management is course scoped');
