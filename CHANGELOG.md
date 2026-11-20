@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.17-dev — SEC-P1, FIX comunicazioni (20/11/2026):** chiuso il replay ambiguo dei job `course_communication`: un UUID ripetuto può restituire il job originale soltanto se oggetto, corpo, template e destinatari coincidono esattamente; altrimenti 409, senza effetti. Aggiunta regressione Joomla e allineate evidenze. Correzione PATCH nel ramo di sviluppo 0.64.17-dev, senza nuovo bump finché la versione non è rilasciata.
+
 - **0.64.17-dev — SEC-P1, revoca HTTP reale (20/11/2026):** estese le regressioni di integrazione con sessione browser amministrativa persistente e blocco del record Joomla dopo la form; 403 su GET/POST stato e POST ammissione manuale, dati e audit immutati, ripristino fixture. Nessuna modifica runtime né bump SemVer; SEC-P1 ancora parziale.
 
 - **0.64.17-dev — SEC-P1, review trasversale (20/11/2026):** gate anti-regressione dei 10 plugin distribuiti, 3 task Scheduler, limiti dei worker e interfaccia media privata, con matrice minaccia/controllo/test/residui per 13 macro-superfici. Nessuna modifica runtime, nessuna dichiarazione di audit completo, SEC-P1 ancora parziale; SemVer invariato.
