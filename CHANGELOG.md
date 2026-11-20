@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.4-dev — PBASE-03, riconciliazione audit dopo PR #762 (20/11/2026, solo evidenze):** il criterio di blocco della build in mancanza delle guide plugin video è ora attestato da test positivi e negativi e classificato implementato nel registro canonico, con report e dashboard sincronizzati. Nessun incremento SemVer e nessuna accettazione Joomla presunta.
+
 - **0.64.4-dev — PATCH SemVer (PBASE-03, 20/11/2026):** il builder del pacchetto Joomla ora rifiuta il rilascio se manca la guida README di un provider video base, mancano sezioni contrattuali o parametri presenti nel suo manifest. Gate indipendente dalla CI, con test negativi su build isolata; nessuna modifica a riproduzione, iscrizioni o dati. Non dichiara completata la documentazione degli altri ruoli né l'accettazione reale Joomla.
 
 - **0.64.3-dev — PATCH SemVer (DOC-07, 20/11/2026):** la diagnostica task JD Learn segnala le regole di esecuzione JSON mancanti, malformate o prive di tipo come `invalid_rules` invece di dichiarare il task operativo sulla sola base della prossima esecuzione. Messaggi di rimedio IT/EN e prove PHP dei casi validi e invalidi. Non cambia configurazioni/task, non avvia job e non attribuisce nuovi criteri funzionali.
