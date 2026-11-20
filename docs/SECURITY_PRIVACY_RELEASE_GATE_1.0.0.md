@@ -10,6 +10,14 @@
 | SEC-P4 | P0 | Inventario cookie e storage browser, integrazione CMP e video, documentazione pubblicabile IT/EN per amministratori | Scansioni desktop/mobile per Joomla, JD Learn e provider; guida configurazione CMP; vedi [PRIVACY_COOKIES.md](PRIVACY_COOKIES.md) |
 | SEC-P5 | P0 | Test negativi E2E e penetration test/risk review della candidate release, riesame vulnerabilità, patch e incident process | Rapporto finale, tracciabilità issue, gate go/no-go documentato |
 
+## OWASP ASVS 5.0.0 — riferimento di verifica fissato
+
+Per il gate di JD Learn 1.0.0 il riferimento tecnico è **OWASP Application Security Verification Standard (ASVS) v5.0.0, release stabile del 30 maggio 2025** ([fonte ufficiale](https://asvs.owasp.org/downloads/)). Questa versione rimane fissata per il piano di rilascio 1.0.0 anche qualora OWASP pubblichi revisioni successive: eventuali cambi richiedono una decisione esplicita, modifica di questo documento, revisione della matrice di test e nuovo controllo CI.
+
+Quando si associano finding e test a un requisito ASVS, usare identificatori qualificati come `v5.0.0-1.2.5` (sintassi `v<versione>-<capitolo>.<sezione>.<requisito>`), non codici privi di versione che potrebbero assumere un significato diverso. Il rapporto di sicurezza deve elencare, per ogni controllo selezionato, riferimento, superficie JD Learn, minaccia, mitigazione, test/esito, build esaminata e motivazione di eventuali non applicabilità o falsi positivi. La selezione e la tracciabilità per release si completano nel rapporto finale SEC-P1/SEC-P5, **non** tramite questo pin.
+
+**ASVS è un riferimento di verifica, non una certificazione**: la scelta di una versione, l'esecuzione del solo preflight e la documentazione di casi di prova non attestano conformità, certificazione OWASP o assenza di vulnerabilità. Restano obbligatori threat model, code review, analisi di dipendenze, test negativi e revisione dei finding. Il controllo `tests/asvs-reference.py` preserva esclusivamente la coerenza della versione e il disclaimer in questo gate.
+
 ## Regole di esecuzione
 
 - Eseguire audit **su codice e candidata finale effettivi**, non soltanto su specifiche; CI verde, controlli statici e mock non dimostrano sicurezza in produzione.

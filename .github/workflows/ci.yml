@@ -51,6 +51,7 @@ jobs:
           python3 tools/build.py
           python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$(git log -1 --format=%cs)"
           python3 tools/check.py
+          python3 tests/asvs-reference.py
           python3 tests/privacy-storage-inventory.py
           python3 tools/functional_audit.py --check
           python3 tools/functional_progress.py > "$RUNNER_TEMP/functional-progress.json"

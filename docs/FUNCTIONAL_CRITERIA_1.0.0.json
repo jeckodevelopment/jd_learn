@@ -10075,20 +10075,19 @@
       {
         "id": "criterion_03",
         "label": "OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          ".github/workflows/ci.yml",
-          "docs/IMPLEMENTATION_EVIDENCE.json",
           "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "tests/asvs-reference.py",
+          ".github/workflows/ci.yml"
         ],
         "review": {
-          "reason": "La documentazione cita genericamente OWASP ASVS ma non fissa una versione; il requisito chiede un riferimento versionato esplicitamente.",
+          "reason": "Il riferimento tecnico di verifica è ora fissato su OWASP ASVS v5.0.0 (stable), con link alla fonte ufficiale e formato degli ID versionati, distinzione tra riferimento e certificazione, e test CI che rileva omissioni/variazioni del pin. La disponibilità del riferimento non dimostra che controlli ASVS, threat model, code review o penetration test siano stati completati: SECDEV-07/criterion_01, /criterion_02 e /criterion_04–05 restano aperti secondo le proprie evidenze.",
           "references": [
-            ".github/workflows/ci.yml#L1-L25",
-            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#OWASP ASVS 5.0.0",
+            "tests/asvs-reference.py#PIN",
+            "tests/asvs-reference.py#CERTIFICATION",
+            ".github/workflows/ci.yml#python3 tests/asvs-reference.py"
           ]
         }
       },
