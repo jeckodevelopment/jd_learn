@@ -93,3 +93,7 @@ Correzione runtime: `MailQueueAuditService::page` e `reconcile` ora richiedono `
 ## SEC-P1 — minimizzazione note e CAS riconciliazione email (20/11/2026)
 
 `last_error` non duplica più le note amministrative: conserva il marker non sensibile `Manual reconciliation recorded.`, mentre `reconciliation_note` rimane la traccia audit dedicata. Gli UPDATE della riconciliazione già richiedevano una transizione atomica condizionata allo stato corrente; nuove prove Joomla verificano che un secondo tentativo sullo stesso claim fallisca con 409 e non sovrascriva la nota o il risultato. La simulazione di due chiamate sequenziali non è una prova contemporanea multi-processo; collaudo SMTP e concurrency test restano obbligatori.
+
+## SEC-P1 — regressione concorrenza reale riconciliazione (20/11/2026)
+
+Aggiunta una prova Joomla con due worker PHP/DB concorrenti contro la stessa riga `sending` scaduta. Con barriera sincronizzata e lock InnoDB, uno solo può commutare il messaggio a `sent`; l'altro deve ricevere 409. Verificati stato, conteggio tentativi, nota unica e redazione del destinatario. La test suite è ora multi-processo ma **non** emula l'accettazione SMTP di terze parti né il POST HTTP CSRF concorrente; il sign-off SEC-P1 complessivo rimane in sospeso.
