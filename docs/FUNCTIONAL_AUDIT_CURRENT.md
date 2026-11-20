@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **448**.
-- Mancanti con lacuna accertata: **41**.
+- Implementati: **449**.
+- Mancanti con lacuna accertata: **40**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -16,10 +16,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Contratti JavaScript indispensabili](../docs/FRONTEND_CONTRACT_INVENTORY.md)
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Residuo FE-10](../docs/FRONTEND_CONTRACT_INVENTORY.md)
   - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
-- `QUI-02/delete_acl` — Cestinazione/eliminazione protetta da ACL e dipendenze su tentativi. L’eliminazione controlla core.delete, check-out e riferimenti a quiz e tentativi. Il salvataggio ammette solo stati 0 e 1, e il controller non espone una transizione di cestinazione.
-  - [component/administrator/src/Application/QuestionBankService.php#public function delete](../component/administrator/src/Application/QuestionBankService.php)
-  - [component/administrator/src/Application/QuestionBankService.php#QuestionDefinition::integer](../component/administrator/src/Application/QuestionBankService.php)
-  - [component/administrator/src/Controller/QuestionbankController.php#public function delete](../component/administrator/src/Controller/QuestionbankController.php)
 - `REL-01/criterion_01` — Accettazione funzionale. Non esiste ancora un record di accettazione funzionale completa della candidata 1.0.0 con esiti e riferimenti per i requisiti; l'audit del codice è distinto dall'accettazione.
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3)
@@ -1240,6 +1236,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `QUI-02/duplicate` — Duplicazione autonoma della domanda senza alterare l'originale. La duplicazione riparte con ID zero, stato bozza e nuove chiavi opzione. La fixture controlla che la definizione copiata resti separata dall’originale.
   - [component/administrator/src/Application/QuestionBankService.php#public function duplicate](../component/administrator/src/Application/QuestionBankService.php)
   - [tests/joomla-quiz-authoring.php#question duplication creates a separate unpublished draft](../tests/joomla-quiz-authoring.php)
+- `QUI-02/delete_acl` — Cestinazione/eliminazione protetta da ACL e dipendenze su tentativi. La lacuna descritta nell'audit è stata risolta dal codice già presente in main: QuestionBankService::trash applica la transizione atomica 0/1 → -2 e il ripristino -2 → 0 sotto lock, con ACL core.edit.state e checkout; il controller espone task POST CSRF trash/restore; la vista offre le azioni e il filtro Cestinati. La purga è ammessa soltanto da -2, con core.delete e blocco delle revisioni riferite a quiz/tentativi. La fixture Joomla prova le transizioni, la preservazione delle revisioni e la protezione dalle dipendenze. Nessuna accettazione manuale implicita.
+  - [component/administrator/src/Application/QuestionBankService.php#public function trash](../component/administrator/src/Application/QuestionBankService.php)
+  - [component/administrator/src/Application/QuestionBankService.php#public function delete](../component/administrator/src/Application/QuestionBankService.php)
+  - [component/administrator/src/Controller/QuestionbankController.php#public function trash](../component/administrator/src/Controller/QuestionbankController.php)
+  - [component/administrator/tmpl/questionbank/default.php#questionbank.restore](../component/administrator/tmpl/questionbank/default.php)
+  - [tests/joomla-quiz-authoring.php#question trash retains revisions and asset without hard delete](../tests/joomla-quiz-authoring.php)
+  - [tests/joomla-quiz-authoring.php#hard delete still blocked while referenced](../tests/joomla-quiz-authoring.php)
 - `QUI-02/versioning` — Versionamento delle domande e preservazione riferimenti ai tentativi precedenti. Ogni modifica scrive una nuova revisione. Il quiz può conservare una revisione esplicita e il runtime congela i riferimenti dei tentativi. La fixture confronta la vecchia revisione prima e dopo la modifica.
   - [component/administrator/src/Application/QuestionBankService.php#current_revision_id](../component/administrator/src/Application/QuestionBankService.php)
   - [tests/joomla-quiz-authoring.php#entire old revision remains byte-for-byte unchanged](../tests/joomla-quiz-authoring.php)

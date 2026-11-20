@@ -4763,17 +4763,22 @@
       {
         "id": "delete_acl",
         "label": "Cestinazione/eliminazione protetta da ACL e dipendenze su tentativi",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Application/QuestionBankService.php",
-          "component/administrator/src/Controller/QuestionbankController.php"
+          "component/administrator/src/Controller/QuestionbankController.php",
+          "component/administrator/tmpl/questionbank/default.php",
+          "tests/joomla-quiz-authoring.php"
         ],
         "review": {
-          "reason": "L’eliminazione controlla core.delete, check-out e riferimenti a quiz e tentativi. Il salvataggio ammette solo stati 0 e 1, e il controller non espone una transizione di cestinazione.",
+          "reason": "La lacuna descritta nell'audit è stata risolta dal codice già presente in main: QuestionBankService::trash applica la transizione atomica 0/1 → -2 e il ripristino -2 → 0 sotto lock, con ACL core.edit.state e checkout; il controller espone task POST CSRF trash/restore; la vista offre le azioni e il filtro Cestinati. La purga è ammessa soltanto da -2, con core.delete e blocco delle revisioni riferite a quiz/tentativi. La fixture Joomla prova le transizioni, la preservazione delle revisioni e la protezione dalle dipendenze. Nessuna accettazione manuale implicita.",
           "references": [
+            "component/administrator/src/Application/QuestionBankService.php#public function trash",
             "component/administrator/src/Application/QuestionBankService.php#public function delete",
-            "component/administrator/src/Application/QuestionBankService.php#QuestionDefinition::integer",
-            "component/administrator/src/Controller/QuestionbankController.php#public function delete"
+            "component/administrator/src/Controller/QuestionbankController.php#public function trash",
+            "component/administrator/tmpl/questionbank/default.php#questionbank.restore",
+            "tests/joomla-quiz-authoring.php#question trash retains revisions and asset without hard delete",
+            "tests/joomla-quiz-authoring.php#hard delete still blocked while referenced"
           ]
         }
       },
