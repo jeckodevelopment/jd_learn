@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **446**.
-- Mancanti con lacuna accertata: **43**.
+- Implementati: **448**.
+- Mancanti con lacuna accertata: **41**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -12,10 +12,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Lacune confermate
 
-- `UI-01/all_views` — Inventario completo di ID/classi su tutte le viste della 1.0.0. L’inventario elenca le viste principali. Le viste lessonpreview e mailconsentrevoke distribuite non compaiono nella tabella, quindi resta da completare la copertura.
-  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Viste pubbliche: contratto e override](../docs/FRONTEND_CONTRACT_INVENTORY.md)
-  - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
-  - [component/site/tmpl/mailconsentrevoke/default.php#jlms](../component/site/tmpl/mailconsentrevoke/default.php)
 - `UI-07/versioned_maps` — Mappe DOM per ogni vista e compatibilità dei contratti pubblici. I contratti frontend principali e gli hook JavaScript sono tracciati. La mappa non è disponibile per ogni vista distribuita e riporta ancora prove di compatibilità pendenti.
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Contratti JavaScript indispensabili](../docs/FRONTEND_CONTRACT_INVENTORY.md)
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Residuo FE-10](../docs/FRONTEND_CONTRACT_INVENTORY.md)
@@ -24,9 +20,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuestionBankService.php#public function delete](../component/administrator/src/Application/QuestionBankService.php)
   - [component/administrator/src/Application/QuestionBankService.php#QuestionDefinition::integer](../component/administrator/src/Application/QuestionBankService.php)
   - [component/administrator/src/Controller/QuestionbankController.php#public function delete](../component/administrator/src/Controller/QuestionbankController.php)
-- `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.
-  - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty](../component/site/tmpl/dashboard/_courses.php)
-  - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
 - `REL-01/criterion_01` — Accettazione funzionale. Non esiste ancora un record di accettazione funzionale completa della candidata 1.0.0 con esiti e riferimenti per i requisiti; l'audit del codice è distinto dall'accettazione.
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3)
@@ -1229,6 +1222,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/PublicationService.php#onJlmsCourseTransition](../component/administrator/src/Application/PublicationService.php)
   - [tests/joomla-publication.php#CORE-17: exactly one native Joomla actionlog event](../tests/joomla-publication.php)
   - [packages/pkg_jlms.xml#plg_actionlog_jdlearn](../packages/pkg_jlms.xml)
+- `UI-01/all_views` — Inventario completo di ID/classi su tutte le viste della 1.0.0. L'inventario contratti frontend comprende già la sezione Viste aggiuntive distribuite, con lessonpreview e mailconsentrevoke, radici DOM e hook da preservare. La segnalazione di omissione era obsoleta. Non si considera eseguita l'accettazione manuale degli override.
+  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Viste aggiuntive distribuite](../docs/FRONTEND_CONTRACT_INVENTORY.md)
+  - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
+  - [component/site/tmpl/mailconsentrevoke/default.php#jlms](../component/site/tmpl/mailconsentrevoke/default.php)
 - `PERF-02/workload_distribution` — Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento. Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#Distribuzione di riferimento: 60% video](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#mix60%video](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)
@@ -1370,6 +1367,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/tmpl/dashboard/_courses.php#COM_JLMS_DASHBOARD_HISTORICAL_COURSE](../component/site/tmpl/dashboard/_courses.php)
   - [tests/joomla-dashboard.php#inactive course keeps owner title](../tests/joomla-dashboard.php)
   - [tests/joomla-dashboard.php#inactive course blocks direct resume](../tests/joomla-dashboard.php)
+- `SCR-05/criterion_05` — Stato vuoto con collegamento al catalogo autorizzato. La vista I miei corsi include già il collegamento localizzato al catalogo nello stato vuoto; il markup usa Route Joomla e il criterio era rimasto erroneamente missing dopo il fix. La verifica sul sito Joomla resta distinta dall'implementazione.
+  - [component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty-catalog](../component/site/tmpl/dashboard/_courses.php)
+  - [component/site/tmpl/mycourses/default.php#_courses.php](../component/site/tmpl/mycourses/default.php)
 - `SCR-06/criterion_03` — per testi/documenti/audio, pulsante Segna come completata. Per le lezioni per cui il progresso manuale è applicabile, il template aula rende il POST protetto di completamento e il servizio aggiorna la stessa riga di progresso; il contratto esclude accredito al semplice accesso.
   - [component/site/tmpl/classroom/default.php#L110-L121](../component/site/tmpl/classroom/default.php#L110-L121)
   - [docs/LEARNING.md#L35-L35](../docs/LEARNING.md#L35-L35)
