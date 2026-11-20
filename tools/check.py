@@ -1141,3 +1141,7 @@ runpy.run_path(str(ROOT/'tests/frontend-dom-contracts.py'), run_name='__main__')
 
 # DOC-07: read-only high-risk operational guidance and IT/EN ACL gate.
 runpy.run_path(str(ROOT/'tests/doc07-safe-operations.py'), run_name='__main__')
+
+# DOC-08: every 1.0.0 core flow must have a guide; manual release acceptance is distinct.
+runpy.run_path(str(ROOT/'tests/doc08-gate.py'), run_name='__main__')
+runpy.run_path(str(ROOT/'tools/doc08_gate.py'), run_name='__main__')

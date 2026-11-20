@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "version": "1.0.0",
+  "description": "DOC-08: elenco vincolante dei flussi core del pacchetto; guide esistenti e stato di accettazione per release candidate, distinto da implementazione e test statici.",
+  "release_acceptance": "pending",
+  "flows": [
+    {
+      "id": "installation_upgrade",
+      "title": "Installazione, aggiornamento e rollback",
+      "guide": "docs/RELEASE_PROCEDURE.md",
+      "requirement": "REL-01",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "course_editing",
+      "title": "Editor, revisioni e salvataggio corsi",
+      "guide": "docs/COURSE_EDITOR.md",
+      "requirement": "COURSE-01",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "programme_lessons",
+      "title": "Programma, lezioni e prerequisiti",
+      "guide": "docs/COURSE_EDITOR.md",
+      "requirement": "LESSON-01",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "course_publication",
+      "title": "Pubblicazione e impatto delle modifiche",
+      "guide": "docs/COURSE_EDITOR.md",
+      "requirement": "COURSE-01",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "catalogue_search",
+      "title": "Catalogo e accesso corsi",
+      "guide": "docs/FRONTEND_CSS.md",
+      "requirement": "UI-07",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "pathways",
+      "title": "Percorsi formativi e stato dello studente",
+      "guide": "docs/LEARNING.md",
+      "requirement": "PBASE-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "student_progress",
+      "title": "Avvio lezioni, progressi e completamento",
+      "guide": "docs/LEARNING.md",
+      "requirement": "PBASE-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "enrolments",
+      "title": "Iscrizioni, autorizzazioni e roster",
+      "guide": "docs/ENROLLMENT_ROSTER.md",
+      "requirement": "ENROLL-01",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "provider_setup",
+      "title": "Video provider e consenso",
+      "guide": "docs/VIDEO.md",
+      "requirement": "PBASE-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "provider_cloudflare",
+      "title": "Cloudflare Stream e rinnovo token",
+      "guide": "docs/CLOUDFLARE_STREAM.md",
+      "requirement": "PBASE-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "provider_html5",
+      "title": "Video HTML5 protetto",
+      "guide": "docs/HTML5_VIDEO.md",
+      "requirement": "PBASE-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "provider_youtube",
+      "title": "YouTube: plugin e playback",
+      "guide": "plugins/jlmsvideo/youtube/docs/README.md",
+      "requirement": "PBASE-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "provider_vimeo",
+      "title": "Vimeo: plugin e caption",
+      "guide": "plugins/jlmsvideo/vimeo/docs/README.md",
+      "requirement": "PBASE-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "mail_templates",
+      "title": "Mail template e variabili",
+      "guide": "docs/MAIL_TEMPLATES.md",
+      "requirement": "MAIL-11",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "mail_dispatch",
+      "title": "Coda SMTP e scheduler",
+      "guide": "docs/MAIL_SCHEDULER_SETUP.md",
+      "requirement": "MAIL-11",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "certificates",
+      "title": "Attestati e recupero sicuro PDF",
+      "guide": "docs/DOC07_SAFE_OPERATIONS_1.0.0.md",
+      "requirement": "CERT-01",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "course_archive",
+      "title": "Archiviazione e dipendenze",
+      "guide": "docs/DOC07_SAFE_OPERATIONS_1.0.0.md",
+      "requirement": "DOC-07",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "administration_acl",
+      "title": "Permessi e azioni critiche",
+      "guide": "docs/DOC07_SAFE_OPERATIONS_1.0.0.md",
+      "requirement": "DOC-07",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "dashboard",
+      "title": "Dashboard e strumenti di configurazione",
+      "guide": "component/administrator/docs/README.md",
+      "requirement": "DOC-05",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "frontend_overrides",
+      "title": "Override template e contratti DOM",
+      "guide": "docs/UI_07_DOM_CONTRACT_1.0.0.md",
+      "requirement": "UI-07",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    },
+    {
+      "id": "release_qa",
+      "title": "Accettazione e procedure di rilascio",
+      "guide": "docs/RELEASE_PROCEDURE.md",
+      "requirement": "REL-02",
+      "guide_review": "mapped",
+      "manual_acceptance": "pending",
+      "evidence": null
+    }
+  ]
+}

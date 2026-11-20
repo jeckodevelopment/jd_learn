@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.64.17-dev — DOC-08 (20/11/2026):** inventario verificabile dei 21 flussi core con riferimenti alle guide, test anti-drift e gate separato `--release` che vieta la pubblicazione documentale senza walkthrough ed evidenze; nessun cambiamento runtime o bump SemVer. Collaudi manuali ancora pendenti.
+
+
 - **0.64.17-dev — DOC-07 (20/11/2026):** dashboard amministrativa ampliata con procedure read-only ad alto rischio per storage, coda email, attestati, gestione corsi e Scheduler, con ACL correnti e traduzioni IT/EN. Test strutturale anti-regressione e matrice operativa riproducibile; nessuna modifica dei servizi mutativi. Accettazione manuale e prove degradate ancora pendenti; versione invariata.
 
 

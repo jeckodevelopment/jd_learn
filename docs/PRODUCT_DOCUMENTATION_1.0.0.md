@@ -60,3 +60,7 @@ Progettare sin d'ora lo stesso modello DOC-05/06/07 per configurazione emittenti
 ## Attuazione DOC-07 (20/11/2026)
 
 È disponibile la [matrice operativa delle procedure sicure](DOC07_SAFE_OPERATIONS_1.0.0.md) con diagnostiche read-only e rimedi per cinque ambiti ad alto rischio. La dashboard mostra le procedure soltanto in presenza dei permessi Joomla richiesti, mantenendo gli stati dei task e dei provider già presenti. I test statici e le traduzioni non attestano collaudo manuale né copertura completa di tutte le configurazioni/ruoli: l'accettazione DOC-07 resta pendente.
+
+## Attuazione DOC-08 (20/11/2026)
+
+L'[inventario documentale versionato dei flussi 1.0.0](CORE_FLOW_DOCUMENTATION_1.0.0.json) e la [procedura di verifica](DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md) collegano 21 flussi core a guide esistenti. Un controllo di build rifiuta guide scomparse o flussi mancanti; il gate `--release` resta bloccante fino alle accettazioni manuali documentate. Non confondere la copertura di documenti con la completezza editoriale/linguistica o il collaudo reale.
