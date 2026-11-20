@@ -91,7 +91,13 @@ try:
  request(student,options['urls']['renew'],expected=405)
  request(student,options['urls']['renew'],save|{'consent':'0'},expected=403)
  request(student,options['urls']['renew'],save|{'consent':'1'},expected=409)
- bad=save|{'events_json':'x'*65537};request(student,options['urls']['save'],bad,expected=413)
+ bad=save|{'events_json':'x'*65537}
+ _,oversized=request(student,options['urls']['save'],bad,expected=413)
+ oversize_json=json.loads(oversized)
+ expect(oversize_json['success'] is False and oversize_json['data']['code']=='COM_JLMS_VIDEO_EVENTS_INVALID',
+        'HTTP-06 oversized video.save returns safe JSON without processing events')
+ expect('dQw4w9WgXcQ' not in oversized and 'Bearer ' not in oversized,
+        'HTTP-06 oversized video request does not disclose provider reference or credentials')
  _,body=request(student,options['urls']['close'],fields|{'session_id':grant['session_id']});expect(json.loads(body)['data']['closed'],'Explicit player close expires session')
  request(student,options['urls']['save'],save,expected=409)
  print(json.dumps({'video_http_checks':checks,'status':'passed','real_browser_sdk_playback':False}))
