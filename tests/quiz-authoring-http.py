@@ -75,6 +75,26 @@ try:
  expect(b'The form contains invalid fields' in invalid_form and b'Question' in invalid_form,'native form validation identifies its invalid field')
  result,b,_=request(admin,urljoin(u,form['action']),fields=fields);expect('HTTP_PRIVATE_QUESTION'in b.decode()and'HTTP_PRIVATE_ANSWER_KEY'in b.decode(),'native subform saves an authorised private answer definition')
  edit_form=next(x for x in Page(b.decode()).forms if x['id']=='adminForm');question_id=int(edit_form['fields']['jform[id]']);expect(question_id>f['question_id'],'HTTP create received a distinct native ID')
+ # SEC-P1 / SECDEV-04: test protected bank state transitions over real HTTP.
+ # Use the unreferenced question created by this test: preserve fixture questions
+ # and their pinned revisions for the subsequent quiz-authoring/upgrade checks.
+ state_token=next((key for key in edit_form['fields'] if re.fullmatch(r'[a-f0-9]{32}',key)),None)
+ expect(state_token is not None,'editor form includes a Joomla CSRF token')
+ for command in ['trash','restore','delete','duplicate']:
+  endpoint='/administrator/index.php?option=com_jlms&task=questionbank.'+command
+  request(admin,endpoint+'&id='+str(question_id),expected=405)
+  request(admin,endpoint,fields={'id':str(question_id)},expected=403)
+ # Permanent deletion is not permitted for live questions even with a valid token.
+ delete_url='/administrator/index.php?option=com_jlms&task=questionbank.delete'
+ request(admin,delete_url,fields={'id':str(question_id),state_token:'1'},expected=409)
+ trash_url='/administrator/index.php?option=com_jlms&task=questionbank.trash'
+ _,trashed,_=request(admin,trash_url,fields={'id':str(question_id),state_token:'1'})
+ expect('HTTP_PRIVATE_QUESTION' in trashed.decode(),'question appears in trash after protected POST')
+ request(admin,trash_url,fields={'id':str(question_id),state_token:'1'},expected=409)
+ restore_url='/administrator/index.php?option=com_jlms&task=questionbank.restore'
+ _,restored,_=request(admin,restore_url,fields={'id':str(question_id),state_token:'1'})
+ expect('HTTP_PRIVATE_QUESTION' in restored.decode(),'restore returns to unpublished bank filter')
+ request(admin,restore_url,fields={'id':str(question_id),state_token:'1'},expected=409)
  unchecked_name=f'jform[options][{row_keys[1]}][correct]'
  blank_option=fields|{'jform[id]':'0','jform[kind]':'single','jform[prompt]':'<p>HTTP_EMPTY_CHECKBOX_QUESTION</p>',unchecked_name:''}
  _,b,_=request(admin,urljoin(u,form['action']),fields=blank_option);expect('HTTP_EMPTY_CHECKBOX_QUESTION'in b.decode(),'native single-choice form accepts Joomla empty unchecked checkbox value')
