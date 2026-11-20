@@ -22,6 +22,21 @@ La nuova sezione `#jlms-admin-safe-operations` rende una checklist procedurale c
 
 Eseguire con build candidata e account separati (amministratore autorizzato, docente delegato, gestore senza audit, utente senza permessi), in IT/EN. Registrare per ogni scenario build, tipo di browser, risultato, messaggio visibile, effetti nel DB e nei log, screenshot redatti e correzione; non includere segreti o indirizzi privati nelle evidenze. Verificare anche focus da tastiera e lettura dello `summary` nativo. Per storage, email, attestati e scheduler ripetere stato configurato e stato degradato. Il test statico `tests/doc07-safe-operations.py` impedisce assenza di chiavi localizzate e deriva della protezione ACL, ma **non** sostituisce il collaudo di server, permessi o backup/restore.
 
+## Verifiche effettive di configurazione — DOC-07
+
+La dashboard amministrativa espone anche **Verifiche di configurazione**, visibili esclusivamente a un'identità Joomla corrente autorizzata con `core.manage` su `com_jlms`. I dati provengono soltanto dalla lettura locale della configurazione Scheduler e del registro dei plugin video; nessuna prova esegue un task, invia email, legge token provider o raggiunge endpoint esterni.
+
+| Controllo | Stati problematici rilevati | Risposta operativa |
+| --- | --- | --- |
+| Task Joomla | Assente, duplicato, disabilitato, regole invalide, fallito, scaduto, prossimo avvio sconosciuto | La tabella mostra il singolo stato con guida IT/EN e rimanda ai normali strumenti Joomla con permessi appropriati, senza ripetere invii |
+| Provider video | Plugin non installato, disabilitato, non registrato, prerequisiti mancanti | La guida segnala cosa verificare, senza mostrare riferimenti a segreti o consigliare di aggirare CSP, privacy o ACL |
+| Stato nominale | Task operativo o provider configurato | Il messaggio indica esplicitamente che l'esito non equivale a consegna SMTP, riproduzione remota o collaudo di accettazione |
+| Stato inatteso | Valore non riconosciuto | Avviso conservativo e verifica amministrativa, mai successo implicito |
+
+Le righe sono costruite da `ConfigurationDiagnostics::summarize()` in `component/administrator/src/Application/ConfigurationDiagnostics.php`, con soli identificatori di traduzione allowlist e severità predefinite. La vista codifica contestualmente tutti i valori. Il test `tests/doc07-configuration-diagnostics.php` verifica i casi limite, inclusi i duplicati e gli stati non riconosciuti; `tests/doc07-safe-operations.py` verifica assenza di azioni mutative, permessi, localizzazione, e istruzioni sicure.
+
+**Limiti:** questa verifica è una diagnosi locale, non uno scanner del filesystem, un invio SMTP di prova, un test di disponibilità remota, una verifica di backup/ripristino o un collaudo manuale della versione 1.0.0. Queste prove restano da registrare separatamente nel QA Testbook.
+
 ## Compatibilità e manutenzione
 
 Aggiungere nuove procedure solo aggiornando contestualmente: mapping ACL nel Dashboard HtmlView, markup in dashboard/default.php, stringhe IT/EN, test, questa matrice e `QA_TESTBOOK.md`. Non suggerire come soluzione disabilitare ACL, CSRF, CSP, scanner, controlli su file protetti o accessi. I messaggi diagnostici non devono interpolare chiavi segrete, path sensibili completi o token. Distinguere sempre «controllo read-only», «prova eseguita» e «accettazione manuale».
