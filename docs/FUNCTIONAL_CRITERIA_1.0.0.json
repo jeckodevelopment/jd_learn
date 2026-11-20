@@ -10910,32 +10910,42 @@
       {
         "id": "criterion_02",
         "label": "Test di configurazione espongono errori specifici e azionabili",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "component/administrator/src/Application/ConfigurationDiagnostics.php",
+          "component/administrator/tmpl/dashboard/default.php",
+          "tests/doc07-configuration-diagnostics.php",
+          "component/administrator/src/Infrastructure/SchedulerHealth.php",
+          "component/administrator/src/Application/DashboardProviderStatus.php"
         ],
         "review": {
-          "reason": "La revisione del criterio «Test di configurazione espongono errori specifici e azionabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La dashboard espone test locali e non mutativi della configurazione Joomla Scheduler e dei provider video, con severità, stato, spiegazione e rimedio distinto per guasti. La suite esercita stati nominali, degradati, duplicati, sconosciuti e i limiti di input; la CI verifica le chiavi IT/EN e l'assenza di side effect. Le prove remote/hosting restano accettazione separata.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "component/administrator/src/Application/ConfigurationDiagnostics.php#public static function summarize",
+            "component/administrator/tmpl/dashboard/default.php#jlms-admin-configuration-diagnostics",
+            "tests/doc07-configuration-diagnostics.php#DOC-07",
+            "component/administrator/src/Infrastructure/SchedulerHealth.php#public static function guidanceKey",
+            "component/administrator/src/Application/DashboardProviderStatus.php#public static function guidanceKey"
           ]
         }
       },
       {
         "id": "criterion_03",
         "label": "Messaggi non invitano a operazioni insicure o prive di autorizzazione",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "component/administrator/src/View/Dashboard/HtmlView.php",
+          "component/administrator/tmpl/dashboard/default.php",
+          "tests/doc07-safe-operations.py",
+          "docs/DOC07_SAFE_OPERATIONS_1.0.0.md"
         ],
         "review": {
-          "reason": "La revisione del criterio «Messaggi non invitano a operazioni insicure o prive di autorizzazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "I suggerimenti configurativi sono esposti solo a gestori autorizzati, sono localizzati e codificati in output, usano esclusivamente chiavi di traduzione riconosciute e vietano avvii di task, invii sostitutivi, bypass ACL/CSP/privacy o manipolazioni SQL. Test automatici con stati ignoti e guardie strutturali impediscono output di segreti e operazioni non autorizzate. Collaudo Joomla multi-ruolo ancora aperto.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "component/administrator/src/View/Dashboard/HtmlView.php#public array $configurationDiagnostics",
+            "component/administrator/tmpl/dashboard/default.php#jlms-admin-configuration-diagnostics",
+            "tests/doc07-safe-operations.py#DOC-07",
+            "docs/DOC07_SAFE_OPERATIONS_1.0.0.md#Verifiche effettive di configurazione"
           ]
         }
       }
