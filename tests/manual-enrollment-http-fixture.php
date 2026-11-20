@@ -9,8 +9,9 @@ if($mode==='snapshot'){
  $q=$db->prepare('SELECT COUNT(*) FROM joomla_jlms_manual_enrollments AS m INNER JOIN joomla_jlms_enrollments AS e ON e.id=m.enrollment_id WHERE e.course_id=? AND e.user_id=?');$q->execute([$f['course'],$f['http_user']]);$receipts=(int)$q->fetchColumn();
  $q=$db->prepare("SELECT COUNT(*) FROM joomla_action_logs AS a INNER JOIN joomla_jlms_manual_enrollments AS m ON m.id=a.item_id INNER JOIN joomla_jlms_enrollments AS e ON e.id=m.enrollment_id WHERE a.extension='com_jlms.manualenrollment' AND e.course_id=? AND e.user_id=?");$q->execute([$f['course'],$f['http_user']]);$audit=(int)$q->fetchColumn();
  echo json_encode(['enrollments'=>$rows,'subjects'=>$subjects,'receipts'=>$receipts,'audit'=>$audit,'groups'=>$db->query('SELECT user_id,group_id FROM joomla_user_usergroup_map ORDER BY user_id,group_id')->fetchAll(\PDO::FETCH_ASSOC)],JSON_THROW_ON_ERROR);
-}elseif(in_array($mode,['revoke_operator','grant_operator','revoke_learner','grant_learner','restore'],true)){
- foreach($mode==='restore'?['grant_operator','grant_learner']:[$mode]as$action){$operator=str_contains($action,'operator');$id=$operator?$f['manager']:$f['http_user'];$group=$operator?$f['manager_group']:$f['group'];$username=$operator?'cirosterreader':'cimanualhttp';
+}elseif(in_array($mode,['revoke_operator','grant_operator','revoke_learner','grant_learner','block_operator','unblock_operator','restore'],true)){
+ foreach($mode==='restore'?['grant_operator','grant_learner','unblock_operator']:[$mode]as$action){$operator=str_contains($action,'operator');$id=$operator?$f['manager']:$f['http_user'];$group=$operator?$f['manager_group']:$f['group'];$username=$operator?'cirosterreader':'cimanualhttp';
  $q=$db->prepare('SELECT username FROM joomla_users WHERE id=?');$q->execute([$id]);if($q->fetchColumn()!==$username)throw new \RuntimeException('Unexpected fixture user');
+ if(in_array($action,['block_operator','unblock_operator'],true)){$q=$db->prepare('UPDATE joomla_users SET block=? WHERE id=?');$q->execute([$action==='block_operator'?1:0,$id]);continue;}
  $sql=str_starts_with($action,'revoke')?'DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?':'INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)';$q=$db->prepare($sql);$q->execute([$id,$group]);}
 }else{throw new \RuntimeException('Unknown fixture mode');}
