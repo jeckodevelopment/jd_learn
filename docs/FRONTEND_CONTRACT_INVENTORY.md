@@ -78,3 +78,9 @@ FE-12: il gate strutturale in `tests/frontend-release-gate.py` verifica alcuni i
 ## UI-07 — baseline versionata e copertura delle viste
 
 La mappa versione 1.0.0 in [FRONTEND_DOM_CONTRACTS_1.0.0.json](FRONTEND_DOM_CONTRACTS_1.0.0.json) copre le 17 viste con `default.php` e tutti i loro ID/classi `jlms-*` *letterali*. È verificata da `tests/frontend-dom-contracts.py` nel gate `tools/check.py`, che fallisce su drift e su una nuova vista non inventariata. La guida di compatibilità e gli esempi per due personalizzazioni CSS indipendenti sono in [UI_07_DOM_CONTRACT_1.0.0.md](UI_07_DOM_CONTRACT_1.0.0.md). La prova statica non copre render condizionale, duplicazione di ID da partial/moduli o compatibilità visuale di override di terze parti: richiedono accettazione browser/manuale separata.
+
+## UI-07 — contratti definitivi dei partial per baseline 1.0.0
+
+Il registro `FRONTEND_DOM_CONTRACTS_1.0.0.json` inventaria **17 layout di vista e quattro partial condivisi**, ciascuno con ID/classi letterali e mappa delle viste consumatrici. `tests/frontend-dom-contracts.py` verifica drift, nuovi file non registrati, collisioni di ID dei partial nella stessa pagina e assenza di moduli bundled nel manifest. `tests/frontend-dom-runtime.py` include fixture con componenti, partial e moduli Joomla esterni che riutilizzano uno stesso ID: la collisione deve essere respinta anche se il modulo si trova fuori dalla root del componente. Le due personalizzazioni CSS A/B sono contratti separati e conservano i selector legacy.
+
+Gli ID dinamici dipendono dalle chiavi dei record e non devono essere costruiti da titoli/localizzazioni. Le regioni condizionali e i plugin di terze parti richiedono ancora collaudo su installazioni Joomla effettive. Questo **completa la mappa implementativa UI-07**, senza dichiarare l'accettazione manuale su override o temi esterni.
