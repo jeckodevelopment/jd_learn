@@ -2578,3 +2578,10 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 **CI:** eseguire `python3 tests/sec-p1-controller-gates.py` e `python3 tools/check.py`. Il test deve enumerare i controller Joomla Site/Admin e fallire quando viene aggiunto un controller non classificato, viene eliminato un controllo method/CSRF espressamente presente, o cambia la delega dichiarata al controller base Joomla. Lo script attesta soltanto presenza/deriva strutturale.
 
 **Comportamenti da testare manualmente:** per ogni controller scrivente, come anonimo e utenti con/senza permesso specifico, verificare GET sui task mutanti (rifiutato), POST senza token (rifiutato), POST con token e ACL errata (rifiutato), POST con oggetto appartenente ad altro corso/iscrizione (rifiutato) e POST autorizzato (consentito, senza side effect duplicati). Verificare la persistenza DB prima/dopo e redazione dei log. Stato della prova complessiva: **in attesa**.
+
+
+### SEC-P1 — sessione obsoleta dopo blocco account su riassegnazione categorie (20/11/2026)
+
+**Prova automatica:** la fixture `tests/joomla-categories.php` esegue `inspect` e `reassign` dopo aver impostato `#__users.block=1` sull'operatore già autenticato; entrambe devono fallire con 403 e la categoria del corso rimanere invariata. Il campo `block` è ripristinato in `finally`; successivamente l'operazione permessa resta funzionante.
+
+**Comportamenti da testare manualmente:** autenticarsi con operatore autorizzato alla gestione categorie, da altra sessione bloccare l'account senza chiudere la prima sessione, quindi tentare ispezione e riassegnazione di categoria sorgente cestinata: rifiuto, nessun nuovo `catid`; ripetere dopo riabilitazione dell'account con ACL corrette; testare anche revoca di `core.manage`, permessi `core.delete` sulla sorgente e `core.edit` sulla destinazione. Eseguire su Joomla disposable, non su dati reali. Stato: **in attesa**.
