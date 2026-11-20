@@ -1,3 +1,11 @@
+## SEC-P1 — verifica mirata CSRF/metodo/stati banca domande (20/11/2026)
+
+**Perimetro:** `QuestionbankController::mutate`, `QuestionBankService::trash/delete/duplicate`, `tests/quiz-authoring-http.py` e form nativi della Banca domande. La verifica di codice conferma controlli espliciti `POST` e token Joomla prima dell'esecuzione dei task, ri-validazione dell'identità e ACL oggetto nel servizio, lock della riga, transizioni 0/1 → -2 → 0, blocco della cancellazione definitiva fuori dal cestino e delle revisioni ancora utilizzate.
+
+**Regressione HTTP in CI:** su una nuova domanda isolata, GET e POST senza token devono essere rifiutati rispettivamente con 405/403 sui quattro task `trash`, `restore`, `delete` e `duplicate`. La cancellazione diretta di una domanda non cestinata deve fallire con 409, mentre cestinazione e ripristino autenticati funzionano; la ripetizione di una transizione incompatibile deve fallire con 409. La prova non modifica le domande fissate dai quiz della fixture.
+
+**Esito e limiti:** non è stata individuata una mutazione senza CSRF su questi task mediante revisione statica; l'esito HTTP deve essere confermato dalla CI e non sostituisce revisione sistematica di tutti i controller, ACL in configurazioni reali o collaudo manuale Joomla. Non promuovere criteri SEC-P1/SECDEV-04 o percentuali per questa sola tranche. La guida `QUIZ_AUTHORING.md` è stata corretta perché descriveva duplicazione/cestinazione già implementate come assenti.
+
 ## SEC-P1 — revisione mirata IDOR su allegati privati (20/11/2026)
 
 **Riferimento del collaudo e review statica:** `component/administrator/src/Application/MaterialService.php`, `component/administrator/src/Controller/MaterialController.php`, `component/site/src/Controller/AttachmentController.php`, `component/administrator/src/Infrastructure/ProtectedMaterialStorage.php` e `MaterialDownload.php`. Il servizio amministrativo ricarica l'attore Joomla e richiede `core.manage` su `com_jlms` e `jlms.materials.manage` sul corso; il record allegato deve appartenere alla versione dichiarata. Il frontend risolve il contesto didattico dell'iscrizione e verifica la versione proprietaria. Lo storage usa chiavi opache, file protetti e controlli di integrità. L'esame statico di questa superficie **non ha individuato un bypass IDOR confermato**.
