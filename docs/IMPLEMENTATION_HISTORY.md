@@ -4,7 +4,7 @@
 
 `tests/quiz-authoring-http.py` aggiunge test Joomla HTTP su `questionbank.trash`, `restore`, `delete`, `duplicate`: i GET vengono respinti con 405, i POST senza token con 403; la purga senza cestinazione viene respinta con 409; cestinazione/ripristino autorizzati funzionano e ripetizioni incompatibili danno 409. Le prove utilizzano una nuova domanda isolata e non alterano gli snapshot delle domande collegate ai quiz dei test. Le due copie di `QUIZ_AUTHORING.md` descrivono ora fedelmente duplicazione, cestinazione conservativa, ripristino, ACL e purga condizionata; gate sicurezza, QA testbook e registro CSV `SECDEV-04` sono allineati nella stessa PR. Le prime esecuzioni CI hanno intercettato errori di tracciabilità del CSV, corretti prima dei quattro gate verdi.
 
-Questa tranche verifica una superficie mirata, **non chiude l'audit generale SEC-P1/SECDEV-04** e non certifica sicurezza/ASVS né accettazione Joomla. Nessun criterio riclassificato: **452 implementati, 37 lacune accertate, 268 non verificabili; minimo confermato 57,32% invariato**. I test manuali su ruoli parziali, checkout concorrenti, quiz con riferimenti, domanda cestinata e permessi ACL restano da eseguire.
+Questa tranche verifica una superficie mirata, **non chiude l'audit generale SEC-P1/SECDEV-04** e non certifica sicurezza/ASVS né accettazione Joomla. Nessun criterio riclassificato: **452 implementati, 37 lacune accertate, 268 non verificabili; minimo confermato 57,32% invariato**. La sola PR storica non modifica ulteriormente requisiti o comportamenti. I test manuali su ruoli parziali, checkout concorrenti, quiz con riferimenti, domanda cestinata e permessi ACL restano da eseguire.
 
 ## 20 novembre 2026 — SEC-P1: regressione IDOR allegati privati tra corsi (PR #752)
 
