@@ -185,7 +185,7 @@ try:
  admin_download='/administrator/index.php?option=com_jlms&task=material.download&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&id='
  foreign_admin_download='/administrator/index.php?option=com_jlms&task=material.download&format=raw&course_id='+str(fixture['foreign_course_id'])+'&version_id='+str(fixture['foreign_version_id'])+'&id='
  _,valid_admin,_=request(admin,admin_download+str(private_id))
- expect(valid_admin==b'NEW_PRIVATE_NOTES\\n','Admin download works for the correctly scoped attachment')
+ expect(valid_admin==b'NEW_PRIVATE_NOTES\n','Admin download works for the correctly scoped attachment')
  for url in [admin_download+str(foreign_id),foreign_admin_download+str(private_id)]:
   for verb,headers in [('GET',{}),('HEAD',{}),('GET',{'Range':'bytes=0-3'})]:
    _,denied,_=request(admin,url,method=verb,headers=headers,expected=404)
