@@ -535,6 +535,7 @@ try {
     $blockedCertificateOperations = [
         'list' => static fn() => $certificateService->adminList($staleCertificateActor, []),
         'diagnosis' => static fn() => $certificateService->adminUnissuedCompletions($staleCertificateActor, 1),
+        'detail' => static fn() => $certificateService->adminDetail($staleCertificateActor, 1),
         'download' => static fn() => $certificateService->adminDownload($staleCertificateActor, 1),
         'regenerate' => static fn() => $certificateService->adminRegenerate($staleCertificateActor, 1, 1, 'Security denial check'),
         'recover missing' => static fn() => $certificateService->adminRecoverMissing($staleCertificateActor, 1, 'Security denial check'),
