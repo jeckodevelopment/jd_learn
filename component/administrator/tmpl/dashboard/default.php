@@ -6,6 +6,13 @@ declare(strict_types=1);
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth;
+$safeOperationText = [
+    'STORAGE' => ['COM_JLMS_SAFE_OPERATIONS_STORAGE_TITLE', 'COM_JLMS_SAFE_OPERATIONS_STORAGE_STEPS'],
+    'MAIL' => ['COM_JLMS_SAFE_OPERATIONS_MAIL_TITLE', 'COM_JLMS_SAFE_OPERATIONS_MAIL_STEPS'],
+    'CERTIFICATES' => ['COM_JLMS_SAFE_OPERATIONS_CERTIFICATES_TITLE', 'COM_JLMS_SAFE_OPERATIONS_CERTIFICATES_STEPS'],
+    'COURSE' => ['COM_JLMS_SAFE_OPERATIONS_COURSE_TITLE', 'COM_JLMS_SAFE_OPERATIONS_COURSE_STEPS'],
+    'SCHEDULER' => ['COM_JLMS_SAFE_OPERATIONS_SCHEDULER_TITLE', 'COM_JLMS_SAFE_OPERATIONS_SCHEDULER_STEPS'],
+];
 $schedulerHealthKeys = [
     'missing' => 'COM_JLMS_SCHEDULER_HEALTH_MISSING',
     'invalid_rules' => 'COM_JLMS_SCHEDULER_HEALTH_INVALID_RULES',
@@ -97,8 +104,8 @@ $schedulerHealthKeys = [
         <ol>
         <?php foreach ($this->safeOperations as $operation) : ?>
             <li data-jlms-safe-operation="<?= $this->escape($operation) ?>">
-                <strong><?= $this->escape(Text::_('COM_JLMS_SAFE_OPERATIONS_' . strtoupper($operation) . '_TITLE')) ?></strong>
-                <p><?= $this->escape(Text::_('COM_JLMS_SAFE_OPERATIONS_' . strtoupper($operation) . '_STEPS')) ?></p>
+                <strong><?= $this->escape(Text::_($safeOperationText[$operation][0])) ?></strong>
+                <p><?= $this->escape(Text::_($safeOperationText[$operation][1])) ?></p>
             </li>
         <?php endforeach; ?>
         </ol>
