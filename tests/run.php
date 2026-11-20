@@ -373,6 +373,19 @@ expect($providerStates['youtube'] === 'COM_JLMS_READY', 'dashboard reports confi
 expect($providerStates['vimeo'] === 'COM_JLMS_PROVIDER_DISABLED', 'dashboard reports installed disabled provider');
 expect($providerStates['cloudflarestream'] === 'COM_JLMS_NOT_CONFIGURED', 'dashboard reports provider setup status');
 expect($providerStates['html5'] === 'COM_JLMS_PROVIDER_NOT_INSTALLED', 'dashboard reports missing bundled provider');
+foreach ([
+    'COM_JLMS_PROVIDER_NOT_INSTALLED' => 'NOT_INSTALLED',
+    'COM_JLMS_PROVIDER_DISABLED' => 'DISABLED',
+    'COM_JLMS_PROVIDER_UNAVAILABLE' => 'UNAVAILABLE',
+    'COM_JLMS_NOT_CONFIGURED' => 'NOT_CONFIGURED',
+    'COM_JLMS_READY' => 'READY',
+] as $state => $suffix) {
+    expect(\\Jlms\\Component\\Jlms\\Administrator\\Application\\DashboardProviderStatus::guidanceKey($state)
+        === 'COM_JLMS_PROVIDER_GUIDANCE_' . $suffix, 'video provider actionable guidance ' . $suffix);
+}
+expect(\\Jlms\\Component\\Jlms\\Administrator\\Application\\DashboardProviderStatus::guidanceKey('unexpected')
+    === 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN', 'unknown provider state requires neutral guidance');
+
 $descriptor = new ProviderDescriptor('example', 'EXAMPLE', 1, false);
 $created = 0;
 $registry->register($descriptor, static function () use (&$created) {
