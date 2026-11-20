@@ -60,6 +60,51 @@ $app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 
+// SEC-P1: a session with a stale email must not receive a new consent token.
+// The registration origin still accepts Joomla users blocked pending activation.
+$consentClass = \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent::class;
+$account = $db->setQuery($db->createQuery()->select(['id', 'name', 'email', 'block'])
+    ->from('#__users')->where('email <> ' . $db->quote(''))->order('id'), 0, 1)->loadObject();
+if (!$account || !filter_var((string) $account->email, FILTER_VALIDATE_EMAIL)) {
+    throw new \RuntimeException('Consent test requires a valid Joomla account in the disposable fixture.');
+}
+$recipient = $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, 'registration');
+if ($recipient['email'] !== (string) $account->email || $recipient['name'] !== (string) $account->name) {
+    throw new \RuntimeException('Consent must use canonical name and email from Joomla.');
+}
+foreach ([(int) $account->id + 1000000, 0] as $unknownId) {
+    try {
+        $consentClass::verifiedRecipient($db, $unknownId, (string) $account->email, 'registration');
+        throw new \RuntimeException('Nonexistent Joomla account accepted for consent.');
+    } catch (\InvalidArgumentException) {}
+}
+try {
+    $consentClass::verifiedRecipient($db, (int) $account->id, 'stale-recipient@example.invalid', 'registration');
+    throw new \RuntimeException('Stale session email accepted for consent.');
+} catch (\InvalidArgumentException) {}
+try {
+    $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, 'unsupported');
+    throw new \RuntimeException('Unsupported consent origin accepted.');
+} catch (\InvalidArgumentException) {}
+$oldBlock = (int) $account->block;
+try {
+    $db->setQuery($db->createQuery()->update('#__users')->set('block = 1')
+        ->where('id = ' . (int) $account->id))->execute();
+    $pending = $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, 'registration');
+    if ($pending['email'] !== (string) $account->email) {
+        throw new \RuntimeException('Joomla account activation flow broken.');
+    }
+    foreach (['dashboard', 'enrollment'] as $origin) {
+        try {
+            $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, $origin);
+            throw new \RuntimeException('Blocked account accepted for consent origin: ' . $origin);
+        } catch (\InvalidArgumentException) {}
+    }
+} finally {
+    $db->setQuery($db->createQuery()->update('#__users')->set('block = ' . $oldBlock)
+        ->where('id = ' . (int) $account->id))->execute();
+}
+
 $mailEscaping = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog::class;
 $renderTemplate = new \Joomla\CMS\Mail\MailTemplate('com_jlms.enrollment.manager_request', 'en-GB');
 $renderTemplate->addUnsafeTags($mailEscaping::tagsRequiringHtmlEscape('com_jlms.enrollment.manager_request'));

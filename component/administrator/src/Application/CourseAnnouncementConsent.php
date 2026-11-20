@@ -30,13 +30,36 @@ final class CourseAnnouncementConsent
         return (string) $record->state;
     }
 
+    /**
+     * Resolve the canonical Joomla recipient on every request. An old session
+     * must not send a consent token to an outdated address after account edits.
+     * Registration may legitimately be blocked pending Joomla activation.
+     *
+     * @return array{email:string,name:string}
+     */
+    public static function verifiedRecipient(DatabaseInterface $db, int $userId, string $email, string $origin): array
+    {
+        if ($userId < 1 || !in_array($origin, ['dashboard', 'enrollment', 'registration'], true)
+            || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException('COM_JLMS_MAIL_CONSENT_INVALID');
+        }
+        $query = $db->createQuery()->select(['email', 'name', 'block'])->from('#__users')
+            ->where('id = :user')->bind(':user', $userId, ParameterType::INTEGER);
+        $record = $db->setQuery($query)->loadObject();
+        if (!$record || !filter_var((string) $record->email, FILTER_VALIDATE_EMAIL)
+            || strcasecmp((string) $record->email, $email) !== 0
+            || ($origin !== 'registration' && (int) $record->block !== 0)) {
+            throw new \InvalidArgumentException('COM_JLMS_MAIL_CONSENT_INVALID');
+        }
+        return ['email' => (string) $record->email, 'name' => (string) $record->name];
+    }
+
     /** Request consent; only a confirmed state can ever authorize course notices. */
     public function request(int $userId, string $email, string $name, string $origin): void
     {
-        if ($userId < 1 || !filter_var($email, FILTER_VALIDATE_EMAIL)
-            || !in_array($origin, ['dashboard', 'enrollment', 'registration'], true)) {
-            throw new \InvalidArgumentException('COM_JLMS_MAIL_CONSENT_INVALID');
-        }
+        $recipient = self::verifiedRecipient($this->db, $userId, $email, $origin);
+        $email = $recipient['email'];
+        $name = $recipient['name'];
         if ($this->state($userId) === 'confirmed') { return; }
 
         $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');

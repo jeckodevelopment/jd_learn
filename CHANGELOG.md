@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.13-dev — PATCH SEC-P1 (20/11/2026):** il consenso opzionale confronta il destinatario con il record Joomla aggiornato; rifiuta email di sessione obsoleta e account bloccati per dashboard/iscrizione, usando nome/email canonici. Registrazione con attivazione pendente preservata. Regressioni Joomla, collaudo SMTP pendente; SEC-P1 ancora aperto, 57,48% invariato.
+
 - **0.64.12-dev — PATCH DOC-07 (20/11/2026):** rilevate come `unknown` date `next_execution` impossibili o non canoniche, senza normalizzazione silenziosa PHP; test dei confini dei 10 minuti, nessuna mutazione o esecuzione dei task. DOC-07 e collaudo Joomla restano aperti, minimo 57,48% invariato.
 
 - **0.64.11-dev — PATCH DOC-07 (20/11/2026):** la dashboard evidenzia le attività Scheduler duplicate anche quando il plugin o la singola attività sono disabilitati, per non nascondere il rischio alla successiva riattivazione. Test delle combinazioni di stato; nessuna azione automatica sui task. DOC-07 rimane parziale e il collaudo Joomla è pendente. Copertura minima 57,48% invariata.

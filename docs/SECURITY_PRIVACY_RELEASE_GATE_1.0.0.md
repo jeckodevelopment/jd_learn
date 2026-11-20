@@ -97,3 +97,7 @@ Correzione runtime: `MailQueueAuditService::page` e `reconcile` ora richiedono `
 ## SEC-P1 — regressione concorrenza reale riconciliazione (20/11/2026)
 
 Aggiunta una prova Joomla con due worker PHP/DB concorrenti contro la stessa riga `sending` scaduta. Con barriera sincronizzata e lock InnoDB, uno solo può commutare il messaggio a `sent`; l'altro deve ricevere 409. Verificati stato, conteggio tentativi, nota unica e redazione del destinatario. La test suite è ora multi-processo ma **non** emula l'accettazione SMTP di terze parti né il POST HTTP CSRF concorrente; il sign-off SEC-P1 complessivo rimane in sospeso.
+
+## SEC-P1 — destinatario consenso e dati aggiornati (20/11/2026)
+
+Il servizio double opt-in ora rilegge l'account Joomla prima di emettere la richiesta, non usa email/nome obsoleti dalla sessione e nega account bloccati nelle origini dashboard/iscrizione. La registrazione attende normalmente l'attivazione Joomla e resta supportata. La regressione DB prova il controllo del servizio, non test HTTP o consegna SMTP; SEC-P1/SEC-P5 aperti.
