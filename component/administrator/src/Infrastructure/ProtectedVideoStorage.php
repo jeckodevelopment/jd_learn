@@ -20,7 +20,19 @@ final class ProtectedVideoStorage
     }
 
     public function config(): Registry { return ($this->configuration)(); }
-    public function root(): string { return $this->files->root(); }
+    public function root(): string
+    {
+        // Local MP4 blobs are stored as plaintext for bounded PHP streaming.
+        // Unlike encrypted material/PDF assets, they must NEVER fall back to
+        // the webroot-managed material directory when video_storage_root is
+        // unset. Apache .htaccess is not a protection on Nginx/static aliases.
+        // The configured root is validated as non-public by the shared storage
+        // policy before any upload, scan, or delivery.
+        if (trim((string) $this->config()->get('video_storage_root', '')) === '') {
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
+        return $this->files->root();
+    }
 
     public function limit(): int
     {
