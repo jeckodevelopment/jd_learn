@@ -5,13 +5,12 @@ declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/../docs/examples/video-provider-contract/ExampleProvider.php';
 
-use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
 use Jlms\Contracts\Video\VideoProviderRegistry;
 use Jlms\Examples\Video\ExampleProvider;
 
 $registry = new VideoProviderRegistry();
 $registration = require __DIR__ . '/../docs/examples/video-provider-contract/register.php';
-$registration(new RegisterVideoProvidersEvent($registry));
+$registration($registry);
 $descriptors = $registry->descriptors();
 if (count($descriptors) !== 1 || $descriptors[0]->key !== 'exampleprovider'
     || $descriptors[0]->contractMajor !== 1 || $descriptors[0]->configured) {
@@ -31,7 +30,7 @@ try {
     // Deliberately closed: this is a registry integration example, not a fifth player.
 }
 try {
-    $registration(new RegisterVideoProvidersEvent($registry));
+    $registration($registry);
     throw new RuntimeException('Duplicate key accepted');
 } catch (DomainException $expected) {
 }
