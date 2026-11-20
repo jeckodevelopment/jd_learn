@@ -12,9 +12,12 @@ function materialReject(callable $call, string $message): void {
     try { $call(); } catch (\RuntimeException $error) { materialExpect(true, $message); return; }
     throw new \RuntimeException($message);
 }
-foreach (['../evil.pdf', 'bad.php.pdf', 'bad.html', "bad\0.pdf", 'bad\\name.pdf', '.hidden.txt'] as $bad) {
+foreach (['../evil.pdf', 'bad.php.pdf', 'bad.html', "bad\0.pdf", 'bad\\name.pdf', '.hidden.txt',
+    "appunti\\u{202E}fdp.exe", "materiale\\u{202A}.txt", "test\\u{2066}notes\\u{2069}.txt",
+    "note\\u{200F}.txt", "report\\u{061C}.pdf"] as $bad) {
     materialReject(fn () => MaterialFilePolicy::name($bad), 'Unsafe name rejected');
 }
+materialExpect(MaterialFilePolicy::name('Lezione àèìòù – résumé.pdf') === 'Lezione àèìòù – résumé.pdf', 'Legitimate Unicode filename accepted');
 file_put_contents($root . '/text', "Materiale didattico: à è ì ò ù\n");
 materialExpect(MaterialFilePolicy::inspect($root . '/text', 'appunti.txt')['mime_type'] === 'text/plain', 'Text accepted');
 materialReject(fn () => MaterialFilePolicy::inspect($root . '/text', 'fake.pdf'), 'MIME mismatch rejected');
