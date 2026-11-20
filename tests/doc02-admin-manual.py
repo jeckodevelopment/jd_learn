@@ -29,6 +29,6 @@ for language in ("it-IT", "en-GB"):
         assert anchor in parser.ids and anchor in parser.links, (language, anchor)
     for marker in ("YouTube", "Vimeo", "Cloudflare", "HTML5", "SMTP", "PDF", "ACL"):
         assert marker in body, (language, marker)
-    for marker in ("SQL", "consent", "backup") if language == "en-GB" else ("SQL", "consenso", "backup"):
+    for marker in ("SQL", "consent", "back up") if language == "en-GB" else ("SQL", "consenso", "backup"):
         assert marker.lower() in body.lower(), (language, marker)
 print("DOC-02: four matching offline IT/EN chapters, valid anchors and security guidance")
