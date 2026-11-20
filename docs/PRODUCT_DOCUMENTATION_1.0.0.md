@@ -56,3 +56,7 @@ La seconda tranche non cambia la navigazione, le autorizzazioni o i permessi dei
 ## Credentials / Open Badges — fase successiva, non gate 1.0.0
 
 Progettare sin d'ora lo stesso modello DOC-05/06/07 per configurazione emittenti multipli, algoritmi/chiavi di firma, rotazione, revoca, scadenza, URL pubblici di verifica e conformità Open Badges. Non inserirlo nel manuale 1.0.0 come funzione disponibile. Prevedere un wizard con controlli della chiave, esempi senza segreti, spiegazione della differenza chiave pubblica/privata, prova di firma/verifica, diagnosi e gestione errori prima di attivare l'emissione. Le chiavi private non devono essere esposte in tooltip, log o documentazione; nessuna promessa di certificazione 1EdTech.
+
+## Attuazione DOC-07 (20/11/2026)
+
+È disponibile la [matrice operativa delle procedure sicure](DOC07_SAFE_OPERATIONS_1.0.0.md) con diagnostiche read-only e rimedi per cinque ambiti ad alto rischio. La dashboard mostra le procedure soltanto in presenza dei permessi Joomla richiesti, mantenendo gli stati dei task e dei provider già presenti. I test statici e le traduzioni non attestano collaudo manuale né copertura completa di tutte le configurazioni/ruoli: l'accettazione DOC-07 resta pendente.
