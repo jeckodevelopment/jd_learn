@@ -13,6 +13,11 @@ final class TeacherProfiles
 {
     public static function canEdit(User $actor, object $profile): bool
     {
+        // A Joomla session identity can outlive account blocking or group changes.
+        // This shared authorization helper must never trust that cached snapshot.
+        if (!$actor->id) { return false; }
+        $actor = new User((int) $actor->id);
+        $actor->clearAccessRights();
         if (!$actor->id || $actor->block) { return false; }
         $scope = 'com_jlms.teacher.' . (int) $profile->id;
         if ($actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor->authorise('core.edit', $scope)) { return true; }
