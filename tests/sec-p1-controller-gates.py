@@ -181,7 +181,7 @@ def check_dispatch_inventory(folder: Path, expected: dict[str, set[str]], writab
             sorted(declared - approved), sorted(approved - declared)
         )
 
-assert set(DISPATCH_TASKS["site"]) == WRITE_SITE | DELEGATE_SITE - {"LessonController.php"}
+assert set(DISPATCH_TASKS["site"]) == (WRITE_SITE | DELEGATE_SITE) - {"LessonController.php"}
 assert set(DISPATCH_TASKS["administrator"]) == WRITE_ADMIN | DELEGATE_ADMIN
 # EnrollmentController separates its own tasks from those inherited by the
 # LessonController; do not let lesson.start/lesson.resume become routable.
