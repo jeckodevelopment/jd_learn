@@ -1103,3 +1103,6 @@ import sys as _progress_sys
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tools/functional_audit.py'), '--check'], check=True)
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tools/functional_progress.py')], check=True)
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/functional-progress.py')], check=True)
+
+# PBASE-02: the four shipped provider guides track actual plugin manifest fields.
+runpy.run_path(str(ROOT/'tests/provider-doc-contract.py'), run_name='__main__')
