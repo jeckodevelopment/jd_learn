@@ -1116,3 +1116,6 @@ _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/functional-p
 
 # PBASE-02: the four shipped provider guides track actual plugin manifest fields.
 runpy.run_path(str(ROOT/'tests/provider-doc-contract.py'), run_name='__main__')
+
+# PBASE-03: prove the standalone Joomla builder rejects missing and stale provider guides.
+runpy.run_path(str(ROOT/'tests/provider-package-gate.py'), run_name='__main__')

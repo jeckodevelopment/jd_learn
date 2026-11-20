@@ -1,3 +1,9 @@
+## PBASE-03 — blocco di distribuzione senza documentazione plugin base (20/11/2026)
+
+**Automatizzato:** `python3 tests/provider-package-gate.py` verifica il gate positivo sui quattro README e l'assenza di ZIP quando il builder standalone incontra guida mancante, sezione fondamentale assente o parametro di manifest non documentato. `python3 tools/build.py` verifica l'archivio ordinario. Una CI senza errori non sostituisce una lettura del contenuto o la verifica manuale del plugin.
+
+**Accettazione Joomla pendente:** installare lo ZIP verificato della build su sito disposable; ispezionare i quattro plugin inclusi e i relativi README, configurare e riprodurre video in condizioni autorizzate, verificare gli upgrade senza perdita di dati. Non importare documenti da un'altra build e non usare una build con guide manomesse in produzione. Il gate protegge da assenza delle guide e deriva dei campi, non certifica il contenuto didattico/documentale integrale.
+
 ## DOC-07 — regole di esecuzione scheduler malformate (20/11/2026)
 
 **Verifica automatica:** `php tests/scheduler-guidance.php` prova JSON vuoto/malformato/non oggetto/senza `rule-type`, validità strutturale e classificazione `invalid_rules` anche quando `next_execution` è futura. La verifica non pretende di validare tutte le regole calendario Joomla, che restano responsabilità di Joomla Scheduler.

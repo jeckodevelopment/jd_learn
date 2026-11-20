@@ -13,6 +13,9 @@ if args.release_version and not re.fullmatch(r'(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(
     parser.error('release version must be a stable numeric X.Y.Z')
 if args.release_version and tuple(map(int,args.release_version.split('.'))) <= tuple(map(int,VERSION.split('.'))):
     parser.error('release version must be greater than current source package version')
+# Package acceptance must be blocked even when invoked outside GitHub Actions.
+from provider_doc_gate import validate_provider_guides
+validate_provider_guides(ROOT)
 OUTPUT_VERSION=args.release_version or VERSION
 def source_date():
     if args.release_date:
