@@ -1848,6 +1848,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#OWASP ASVS 5.0.0](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
   - [tests/asvs-reference.py#PIN](../tests/asvs-reference.py)
   - [tests/asvs-reference.py#CERTIFICATION](../tests/asvs-reference.py)
+  - [.github/workflows/ci.yml#python3 tests/asvs-reference.py](../.github/workflows/ci.yml)
 - `SECDEV-08/criterion_02` — Build riproducibile, pacchetto senza segreti/file dev, checksum, changelog e aggiornamenti Joomla su HTTPS. Il builder produce ZIP deterministico e checksum. Il workflow di rilascio verifica l’asset rispetto al candidato e il manifest dichiara il feed di aggiornamento su HTTPS.
   - [tools/build.py#SHA256SUMS.txt](../tools/build.py)
   - [.github/workflows/release.yml#public release asset checksum mismatch](../.github/workflows/release.yml)
