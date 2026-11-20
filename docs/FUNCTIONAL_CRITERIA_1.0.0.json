@@ -4340,17 +4340,24 @@
       {
         "id": "versioned_maps",
         "label": "Mappe DOM per ogni vista e compatibilità dei contratti pubblici",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/FRONTEND_CONTRACT_INVENTORY.md",
-          "component/site/tmpl/lessonpreview/default.php"
+          "docs/FRONTEND_DOM_CONTRACTS_1.0.0.json",
+          "docs/UI_07_DOM_CONTRACT_1.0.0.md",
+          "tests/frontend-dom-contracts.py",
+          "tests/frontend-dom-runtime.py",
+          "component/site/tmpl/dashboard/_personal_navigation.php",
+          "packages/pkg_jlms.xml"
         ],
         "review": {
-          "reason": "I contratti frontend principali e gli hook JavaScript sono tracciati. La mappa non è disponibile per ogni vista distribuita e riporta ancora prove di compatibilità pendenti.",
+          "reason": "Tutte le 17 viste e i quattro partial distribuiti hanno mappe DOM versionate con percorsi di override, ID/classi letterali e relazioni di inclusione verificate dal gate CI. Sono coperti i due selettori CSS autonomi, la presenza di partial non registrati, la collisione di ID fra vista/partial e i casi negativi di collisione con moduli Joomla nel parser HTML. Il package non distribuisce moduli propri. Compatibilità visuale con override/template/moduli esterni e varianti condizionali non osservate resta da collaudare manualmente e non è dichiarata superata.",
           "references": [
-            "docs/FRONTEND_CONTRACT_INVENTORY.md#Contratti JavaScript indispensabili",
-            "docs/FRONTEND_CONTRACT_INVENTORY.md#Residuo FE-10",
-            "component/site/tmpl/lessonpreview/default.php#jlms"
+            "docs/FRONTEND_DOM_CONTRACTS_1.0.0.json#\"partials\"",
+            "docs/UI_07_DOM_CONTRACT_1.0.0.md#Inventario completo dei partial",
+            "tests/frontend-dom-contracts.py#Partial templates are distributed",
+            "tests/frontend-dom-runtime.py#Simulate an independently installed Joomla module",
+            "component/site/tmpl/dashboard/_personal_navigation.php#jlms-personal-navigation",
+            "packages/pkg_jlms.xml#<files folder="
           ]
         }
       }

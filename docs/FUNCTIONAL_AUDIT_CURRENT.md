@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **466**.
-- Mancanti con lacuna accertata: **24**.
+- Implementati: **467**.
+- Mancanti con lacuna accertata: **23**.
 - Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
@@ -12,10 +12,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Lacune confermate
 
-- `UI-07/versioned_maps` — Mappe DOM per ogni vista e compatibilità dei contratti pubblici. I contratti frontend principali e gli hook JavaScript sono tracciati. La mappa non è disponibile per ogni vista distribuita e riporta ancora prove di compatibilità pendenti.
-  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Contratti JavaScript indispensabili](../docs/FRONTEND_CONTRACT_INVENTORY.md)
-  - [docs/FRONTEND_CONTRACT_INVENTORY.md#Residuo FE-10](../docs/FRONTEND_CONTRACT_INVENTORY.md)
-  - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
 - `REL-01/criterion_01` — Accettazione funzionale. Non esiste ancora un record di accettazione funzionale completa della candidata 1.0.0 con esiti e riferimenti per i requisiti; l'audit del codice è distinto dall'accettazione.
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L3)
@@ -1171,6 +1167,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Viste aggiuntive distribuite](../docs/FRONTEND_CONTRACT_INVENTORY.md)
   - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
   - [component/site/tmpl/mailconsentrevoke/default.php#jlms](../component/site/tmpl/mailconsentrevoke/default.php)
+- `UI-07/versioned_maps` — Mappe DOM per ogni vista e compatibilità dei contratti pubblici. Tutte le 17 viste e i quattro partial distribuiti hanno mappe DOM versionate con percorsi di override, ID/classi letterali e relazioni di inclusione verificate dal gate CI. Sono coperti i due selettori CSS autonomi, la presenza di partial non registrati, la collisione di ID fra vista/partial e i casi negativi di collisione con moduli Joomla nel parser HTML. Il package non distribuisce moduli propri. Compatibilità visuale con override/template/moduli esterni e varianti condizionali non osservate resta da collaudare manualmente e non è dichiarata superata.
+  - [docs/FRONTEND_DOM_CONTRACTS_1.0.0.json#"partials"](../docs/FRONTEND_DOM_CONTRACTS_1.0.0.json)
+  - [docs/UI_07_DOM_CONTRACT_1.0.0.md#Inventario completo dei partial](../docs/UI_07_DOM_CONTRACT_1.0.0.md)
+  - [tests/frontend-dom-contracts.py#Partial templates are distributed](../tests/frontend-dom-contracts.py)
+  - [tests/frontend-dom-runtime.py#Simulate an independently installed Joomla module](../tests/frontend-dom-runtime.py)
+  - [component/site/tmpl/dashboard/_personal_navigation.php#jlms-personal-navigation](../component/site/tmpl/dashboard/_personal_navigation.php)
+  - [packages/pkg_jlms.xml#<files folder=](../packages/pkg_jlms.xml)
 - `PERF-02/workload_distribution` — Scenario misto 60% video / 20% quiz / 15% navigazione / 5% avanzamento. Il profilo di riferimento è definito con le quattro quote richieste e coincide con la progettazione tecnica. La sua esecuzione va provata separatamente.
   - [docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md#Distribuzione di riferimento: 60% video](../docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md)
   - [docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md#mix60%video](../docs/specifications/Progettazione_tecnica_esecutiva_LMS_1.0.md)

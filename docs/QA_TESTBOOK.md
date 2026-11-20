@@ -1,3 +1,9 @@
+## UI-07 — inventario completo viste/partial e collisioni DOM (21/11/2026)
+
+Verifiche automatiche: `tests/frontend-dom-contracts.py` confronta tutte le 17 viste e quattro partial con la mappa versione 1.0.0, le dipendenze di inclusione, gli ID/classi e il manifest del package. `tests/frontend-dom-runtime.py` prova collisioni tra root componente, navigazione partial e modulo Joomla di terze parti e i due selector CSS indipendenti. La CI Joomla conserva le prove HTTP DOM per catalogo, categorie e viste personali. Un drift del contratto o un partial non censito devono far fallire il gate.
+
+**Accettazione manuale pendente:** su template Joomla effettivi verificare ciascuna delle 17 viste e tutte le varianti condizionali, pagina con moduli pubblicati nella stessa posizione, due temi CSS indipendenti, override precedenti, responsive e navigazione da tastiera (AC-34, AC-93). Registrare build, screenshot redatti, DOM degli ID, browser, ruoli ed esito; la mappatura completa non costituisce automaticamente collaudo superato.
+
 ## DOC-07 — diagnosi di configurazione sicura (20/11/2026)
 
 La sezione **Verifiche di configurazione** nella dashboard amministrativa deve comparire soltanto con `core.manage` su `com_jlms`. La matrice locale `tests/doc07-configuration-diagnostics.php` esercita task assenti, invalidi, duplicati, disabilitati, falliti, tardivi, in attesa, operativi e sconosciuti; plugin video mancanti, disabilitati, non registrati, non configurati, pronti e sconosciuti. I controlli non trasmettono token, non cambiano configurazione e non eseguono SMTP, task o player. Il gate `tests/doc07-safe-operations.py` verifica ACL, markup read-only, output codificato, IT/EN e istruzioni che non propongano aggiramenti.

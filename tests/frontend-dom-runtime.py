@@ -79,4 +79,24 @@ if __name__ == "__main__":
         pass
     else:
         raise AssertionError("Unscoped custom styling was accepted")
-    print("UI-07 rendered DOM: duplicate-ID and two independent CSS customization fixtures passed")
+    # Simulate an independently installed Joomla module on the same rendered
+    # page: a module must not reuse a component/partial ID, even if the
+    # duplicate sits outside the component root.
+    main = '<main id="jlms-dashboard"><nav id="jlms-personal-navigation"></nav></main>'
+    safe_module = '<aside id="third-party-module"><div class="jlms-my-course"></div></aside>'
+    verify(main + safe_module, root="jlms-dashboard")
+    for collision in ('jlms-dashboard', 'jlms-personal-navigation'):
+        try:
+            verify(main + f'<aside id="{collision}"></aside>', root="jlms-dashboard")
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError("Module/partial duplicate ID was accepted: " + collision)
+    # Reusing a shared partial inside one page must not pass the DOM guard.
+    try:
+        verify(main + '<nav id="jlms-personal-navigation"></nav>', root="jlms-dashboard")
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Duplicate shared partial ID was accepted")
+    print("UI-07 rendered DOM: duplicate-ID, module/partial collisions and two independent CSS customization fixtures passed")

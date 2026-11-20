@@ -5,8 +5,8 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 198,
-      "Completata": 25,
+      "Parziale": 197,
+      "Completata": 26,
       "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 59.42,
-    "development_evidence_floor_percent": 59.42,
+    "percent": 59.66,
+    "development_evidence_floor_percent": 59.66,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -42,10 +42,10 @@
         "label": "Catalogo, frontend e navigazione",
         "requirements": 23,
         "weight_percent": 10.75,
-        "development_evidence_floor_percent": 74.41,
+        "development_evidence_floor_percent": 76.58,
         "manual_acceptance_coverage_percent": 13.04,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 1,
+        "missing_criteria": 0,
         "unverifiable_criteria": 20,
         "unassessed_criteria": 0
       },
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 59.42
+        "percent": 59.66
       },
       {
         "id": "manual_acceptance",
