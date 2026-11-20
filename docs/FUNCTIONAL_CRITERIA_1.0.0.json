@@ -10311,16 +10311,22 @@
       {
         "id": "criterion_03",
         "label": "Il solo contratto astratto non e documentazione sufficiente dei quattro plugin",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "README.md",
-          "docs/VIDEO.md"
+          "plugins/jlmsvideo/youtube/docs/README.md",
+          "plugins/jlmsvideo/vimeo/docs/README.md",
+          "plugins/jlmsvideo/cloudflarestream/docs/README.md",
+          "plugins/jlmsvideo/html5/docs/README.md",
+          "tests/provider-doc-contract.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Il solo contratto astratto non e documentazione sufficiente dei quattro plugin» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Quattro plugin video distribuiscono ciascuno una propria guida operativa con configurazione, limiti, privacy, manutenzione e collaudi; il gate package verifica le guide invece di limitarsi al contratto astratto.",
           "references": [
-            "README.md#L1-L25",
-            "docs/VIDEO.md#L1-L25"
+            "plugins/jlmsvideo/youtube/docs/README.md#Identità",
+            "plugins/jlmsvideo/vimeo/docs/README.md#Identità",
+            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Identità",
+            "plugins/jlmsvideo/html5/docs/README.md#Identità",
+            "tests/provider-doc-contract.py#PBASE-02"
           ]
         }
       }
@@ -10579,32 +10585,36 @@
       {
         "id": "criterion_02",
         "label": "Manuale copre provider video, email e attestati",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/COURSE_EDITOR.md",
-          "docs/MAIL_TEMPLATES.md"
+          "component/administrator/help/it-IT/manual.html",
+          "component/administrator/help/en-GB/manual.html",
+          "tests/doc02-admin-manual.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Manuale copre provider video, email e attestati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "I manuali amministrativi offline IT/EN ora contengono capitoli operativi sui quattro provider video, consenso, modelli email, coda e attestati PDF. Gate automatico verifica i capitoli e i link; la verifica con Joomla rimane separata.",
           "references": [
-            "docs/COURSE_EDITOR.md#L1-L25",
-            "docs/MAIL_TEMPLATES.md#L1-L25"
+            "component/administrator/help/it-IT/manual.html#operations-video",
+            "component/administrator/help/en-GB/manual.html#operations-certificates",
+            "tests/doc02-admin-manual.py#DOC-02"
           ]
         }
       },
       {
         "id": "criterion_03",
         "label": "Manuale copre ACL, privacy e manutenzione",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/COURSE_EDITOR.md",
-          "docs/MAIL_TEMPLATES.md"
+          "component/administrator/help/it-IT/manual.html",
+          "component/administrator/help/en-GB/manual.html",
+          "tests/doc02-admin-manual.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Manuale copre ACL, privacy e manutenzione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Le guide installabili in entrambe le lingue contengono istruzioni su ACL, privacy, backup e manutenzione, con cautele per storage ed esportazione dati. Accettazione del comportamento runtime e confronto con tutte le viste rimangono aperti.",
           "references": [
-            "docs/COURSE_EDITOR.md#L1-L25",
-            "docs/MAIL_TEMPLATES.md#L1-L25"
+            "component/administrator/help/it-IT/manual.html#operations-security",
+            "component/administrator/help/en-GB/manual.html#operations-security",
+            "tests/doc02-admin-manual.py#DOC-02"
           ]
         }
       },
@@ -10864,16 +10874,18 @@
       {
         "id": "criterion_01",
         "label": "Operazioni ad alto rischio hanno procedure guidate",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "component/administrator/tmpl/dashboard/default.php",
+          "docs/DOC07_SAFE_OPERATIONS_1.0.0.md",
+          "tests/doc07-safe-operations.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Operazioni ad alto rischio hanno procedure guidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La dashboard ha già una checklist read-only delle operazioni critiche basata sulle ACL correnti, con guida IT/EN e gate strutturale integrato dalla PR #816. La prova manuale dei ruoli e delle azioni effettive resta pendente.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "component/administrator/tmpl/dashboard/default.php#jlms-admin-safe-operations",
+            "docs/DOC07_SAFE_OPERATIONS_1.0.0.md#Matrice procedure",
+            "tests/doc07-safe-operations.py#DOC-07"
           ]
         }
       },
@@ -10914,32 +10926,36 @@
       {
         "id": "criterion_01",
         "label": "Matrice collega ogni flusso core alla relativa documentazione",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "docs/CORE_FLOW_DOCUMENTATION_1.0.0.json",
+          "tools/doc08_gate.py",
+          "tests/doc08-gate.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Matrice collega ogni flusso core alla relativa documentazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La PR #818 ha distribuito un inventario machine-readable di 21 flussi della baseline 1.0.0 collegati a guide esistenti con verifiche automatiche di completezza e riferimenti; walkthrough manuali separati.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "docs/CORE_FLOW_DOCUMENTATION_1.0.0.json#installation_upgrade",
+            "tools/doc08_gate.py#REQUIRED",
+            "tests/doc08-gate.py#DOC-08"
           ]
         }
       },
       {
         "id": "criterion_02",
         "label": "Nessun flusso core dichiarato completo senza guida",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/PRODUCT_DOCUMENTATION_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "tools/doc08_gate.py",
+          "docs/DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md",
+          "tests/doc08-gate.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Nessun flusso core dichiarato completo senza guida» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Il gate della PR #818 verifica in ogni preflight la presenza di guida per ciascun flusso del catalogo core definito e rifiuta elementi mancanti/duplicati o guide non valide. Il gate pre-release mantiene le accettazioni pending.",
           "references": [
-            "docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "tools/doc08_gate.py#missing or empty operational guide",
+            "docs/DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md#Controlli automatici",
+            "tests/doc08-gate.py#DOC-08"
           ]
         }
       },

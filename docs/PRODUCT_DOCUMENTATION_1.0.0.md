@@ -64,3 +64,7 @@ Progettare sin d'ora lo stesso modello DOC-05/06/07 per configurazione emittenti
 ## Attuazione DOC-08 (20/11/2026)
 
 L'[inventario documentale versionato dei flussi 1.0.0](CORE_FLOW_DOCUMENTATION_1.0.0.json) e la [procedura di verifica](DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md) collegano 21 flussi core a guide esistenti. Un controllo di build rifiuta guide scomparse o flussi mancanti; il gate `--release` resta bloccante fino alle accettazioni manuali documentate. Non confondere la copertura di documenti con la completezza editoriale/linguistica o il collaudo reale.
+
+## Consolidamento DOC-02 (20/11/2026)
+
+Il manuale amministratore offline incluso nel pacchetto, in `component/administrator/help/it-IT/manual.html` e `component/administrator/help/en-GB/manual.html`, contiene i nuovi capitoli `operations-video`, `operations-mail`, `operations-certificates`, `operations-security` per provider, email, attestati, ACL, privacy e manutenzione. Il gate `tests/doc02-admin-manual.py` verifica la presenza di sezioni equivalenti e la validità dei collegamenti. La presenza delle guide è evidenza di implementazione documentale; rimane da collaudare la corrispondenza con tutte le 29 viste Joomla reali.

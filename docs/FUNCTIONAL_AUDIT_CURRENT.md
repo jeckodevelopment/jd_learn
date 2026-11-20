@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **456**.
-- Mancanti con lacuna accertata: **33**.
+- Implementati: **462**.
+- Mancanti con lacuna accertata: **27**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -57,15 +57,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PBASE-02/criterion_02` — Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi. La revisione del criterio «Documentare per ciascuno identita/versione, prerequisiti, manifest/dipendenze, parametri con tipi/default/obblighi, formati sorgente, dati lezione, capacita, player/eventi, ripresa/completamento, privacy/consenso, errori, prestazioni, limitazioni, aggiornamento/disattivazione/rimozione e collaudi» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [README.md#L1-L25](../README.md#L1-L25)
   - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
-- `PBASE-02/criterion_03` — Il solo contratto astratto non e documentazione sufficiente dei quattro plugin. La revisione del criterio «Il solo contratto astratto non e documentazione sufficiente dei quattro plugin» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [README.md#L1-L25](../README.md#L1-L25)
-  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
-- `DOC-02/criterion_02` — Manuale copre provider video, email e attestati. La revisione del criterio «Manuale copre provider video, email e attestati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/COURSE_EDITOR.md#L1-L25](../docs/COURSE_EDITOR.md#L1-L25)
-  - [docs/MAIL_TEMPLATES.md#L1-L25](../docs/MAIL_TEMPLATES.md#L1-L25)
-- `DOC-02/criterion_03` — Manuale copre ACL, privacy e manutenzione. La revisione del criterio «Manuale copre ACL, privacy e manutenzione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/COURSE_EDITOR.md#L1-L25](../docs/COURSE_EDITOR.md#L1-L25)
-  - [docs/MAIL_TEMPLATES.md#L1-L25](../docs/MAIL_TEMPLATES.md#L1-L25)
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
   - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
@@ -75,19 +66,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-04/criterion_04` — Procedure tecniche riproducibili e versionate. La revisione del criterio «Procedure tecniche riproducibili e versionate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
-- `DOC-07/criterion_01` — Operazioni ad alto rischio hanno procedure guidate. La revisione del criterio «Operazioni ad alto rischio hanno procedure guidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `DOC-07/criterion_02` — Test di configurazione espongono errori specifici e azionabili. La revisione del criterio «Test di configurazione espongono errori specifici e azionabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `DOC-07/criterion_03` — Messaggi non invitano a operazioni insicure o prive di autorizzazione. La revisione del criterio «Messaggi non invitano a operazioni insicure o prive di autorizzazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `DOC-08/criterion_01` — Matrice collega ogni flusso core alla relativa documentazione. La revisione del criterio «Matrice collega ogni flusso core alla relativa documentazione» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `DOC-08/criterion_02` — Nessun flusso core dichiarato completo senza guida. La revisione del criterio «Nessun flusso core dichiarato completo senza guida» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25](../docs/PRODUCT_DOCUMENTATION_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `DOC-10/criterion_01` — Note rilascio e changelog corrispondono alla candidata. La revisione del criterio «Note rilascio e changelog corrispondono alla candidata» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1847,6 +1829,12 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [packages/pkg_jlms.xml#plg_jlmsvideo_youtube.zip](../packages/pkg_jlms.xml)
   - [packages/pkg_jlms.xml#plg_jlmsvideo_html5.zip](../packages/pkg_jlms.xml)
   - [tests/joomla-smoke.php#Four video providers were not registered](../tests/joomla-smoke.php)
+- `PBASE-02/criterion_03` — Il solo contratto astratto non e documentazione sufficiente dei quattro plugin. Quattro plugin video distribuiscono ciascuno una propria guida operativa con configurazione, limiti, privacy, manutenzione e collaudi; il gate package verifica le guide invece di limitarsi al contratto astratto.
+  - [plugins/jlmsvideo/youtube/docs/README.md#Identità](../plugins/jlmsvideo/youtube/docs/README.md)
+  - [plugins/jlmsvideo/vimeo/docs/README.md#Identità](../plugins/jlmsvideo/vimeo/docs/README.md)
+  - [plugins/jlmsvideo/cloudflarestream/docs/README.md#Identità](../plugins/jlmsvideo/cloudflarestream/docs/README.md)
+  - [plugins/jlmsvideo/html5/docs/README.md#Identità](../plugins/jlmsvideo/html5/docs/README.md)
+  - [tests/provider-doc-contract.py#PBASE-02](../tests/provider-doc-contract.py)
 - `PBASE-03/criterion_02` — Il documento Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md contiene le schede e i dizionari dei parametri. Il documento dedica una sezione a ciascun provider e un dizionario dei parametri comuni e specifici a tutti e quattro.
   - [docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#5. Plugin YouTube](../docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
   - [docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md#8. Plugin HTML5](../docs/specifications/Sviluppo_sicuro_e_specifiche_plugin_video_1.0.md)
@@ -1879,6 +1867,14 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/docs/README.md#La versione attiva](../component/administrator/docs/README.md)
   - [docs/COURSE_EDITOR.md#Recuperare un programma storico](../docs/COURSE_EDITOR.md)
   - [docs/ENROLLMENT_ROSTER.md#Filtri e paginazione](../docs/ENROLLMENT_ROSTER.md)
+- `DOC-02/criterion_02` — Manuale copre provider video, email e attestati. I manuali amministrativi offline IT/EN ora contengono capitoli operativi sui quattro provider video, consenso, modelli email, coda e attestati PDF. Gate automatico verifica i capitoli e i link; la verifica con Joomla rimane separata.
+  - [component/administrator/help/it-IT/manual.html#operations-video](../component/administrator/help/it-IT/manual.html)
+  - [component/administrator/help/en-GB/manual.html#operations-certificates](../component/administrator/help/en-GB/manual.html)
+  - [tests/doc02-admin-manual.py#DOC-02](../tests/doc02-admin-manual.py)
+- `DOC-02/criterion_03` — Manuale copre ACL, privacy e manutenzione. Le guide installabili in entrambe le lingue contengono istruzioni su ACL, privacy, backup e manutenzione, con cautele per storage ed esportazione dati. Accettazione del comportamento runtime e confronto con tutte le viste rimangono aperti.
+  - [component/administrator/help/it-IT/manual.html#operations-security](../component/administrator/help/it-IT/manual.html)
+  - [component/administrator/help/en-GB/manual.html#operations-security](../component/administrator/help/en-GB/manual.html)
+  - [tests/doc02-admin-manual.py#DOC-02](../tests/doc02-admin-manual.py)
 - `DOC-04/criterion_03` — Upgrade, scheduler e troubleshooting documentati. La procedura spiega upgrade e recupero. La guida scheduler descrive task, configurazione, diagnosi e riconciliazione.
   - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)
   - [docs/MAIL_SCHEDULER_SETUP.md#Diagnostica sicura](../docs/MAIL_SCHEDULER_SETUP.md)
@@ -1893,6 +1889,18 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/help/it-IT/manual.html#lang="it-IT"](../component/administrator/help/it-IT/manual.html)
   - [component/administrator/help/en-GB/manual.html#lang="en-GB"](../component/administrator/help/en-GB/manual.html)
   - [tests/contextual-help-doc05.py#for lang in ("it-IT", "en-GB")](../tests/contextual-help-doc05.py)
+- `DOC-07/criterion_01` — Operazioni ad alto rischio hanno procedure guidate. La dashboard ha già una checklist read-only delle operazioni critiche basata sulle ACL correnti, con guida IT/EN e gate strutturale integrato dalla PR #816. La prova manuale dei ruoli e delle azioni effettive resta pendente.
+  - [component/administrator/tmpl/dashboard/default.php#jlms-admin-safe-operations](../component/administrator/tmpl/dashboard/default.php)
+  - [docs/DOC07_SAFE_OPERATIONS_1.0.0.md#Matrice procedure](../docs/DOC07_SAFE_OPERATIONS_1.0.0.md)
+  - [tests/doc07-safe-operations.py#DOC-07](../tests/doc07-safe-operations.py)
+- `DOC-08/criterion_01` — Matrice collega ogni flusso core alla relativa documentazione. La PR #818 ha distribuito un inventario machine-readable di 21 flussi della baseline 1.0.0 collegati a guide esistenti con verifiche automatiche di completezza e riferimenti; walkthrough manuali separati.
+  - [docs/CORE_FLOW_DOCUMENTATION_1.0.0.json#installation_upgrade](../docs/CORE_FLOW_DOCUMENTATION_1.0.0.json)
+  - [tools/doc08_gate.py#REQUIRED](../tools/doc08_gate.py)
+  - [tests/doc08-gate.py#DOC-08](../tests/doc08-gate.py)
+- `DOC-08/criterion_02` — Nessun flusso core dichiarato completo senza guida. Il gate della PR #818 verifica in ogni preflight la presenza di guida per ciascun flusso del catalogo core definito e rifiuta elementi mancanti/duplicati o guide non valide. Il gate pre-release mantiene le accettazioni pending.
+  - [tools/doc08_gate.py#missing or empty operational guide](../tools/doc08_gate.py)
+  - [docs/DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md#Controlli automatici](../docs/DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md)
+  - [tests/doc08-gate.py#DOC-08](../tests/doc08-gate.py)
 - `SEC-P1/criterion_01` — Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code. SEC-P1: modello delle minacce e code review completati sui confini di trust di tutte le 14 macro-superfici; riesame strutturale dei 37 controller, 10 plugin, 3 task e scansione dei sorgenti PHP distribuiti. Verifiche Joomla di regressione e finding VIDEO-ROOT corretti; prove E2E/pentest e hardening deployment restano nei gate separati SEC-P5 e SEC-P2, non costituiscono criteri SEC-P1.
   - [docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5](../docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5)
   - [docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5](../docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5)
