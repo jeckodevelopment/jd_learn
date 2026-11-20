@@ -1,3 +1,9 @@
+## SEC-P1 — produttori SMTP e identità Joomla obbligatoria (20/11/2026)
+
+**Automatico:** tests/sec-p1-mail-recipient-identity.py, richiamato da tools/check.py, censisce i 13 produttori enqueue e il produttore enqueueAnnouncement, richiede ID Joomla e rifiuta nuove sorgenti non classificate. tests/joomla-smoke.php verifica su DB reale utente valido, bloccato, inesistente, email diversa o malformata. La prova strutturale non dimostra SMTP o ACL per endpoint.
+
+**Collaudo Joomla manuale — In attesa:** con SMTP isolato, accodare messaggi per iscrizione, approvazione/rifiuto, completamento quiz/video, sospensione/riattivazione, iscrizione manuale, attestato, promemoria e annuncio opt-in; cambiare email o bloccare l'account prima di Scheduler e verificare skip/redazione senza invio. Per account immutato verificare consegna unica. Provare righe legacy senza ID, no dati personali nei log e pulizia fixture. Continuare ACL/IDOR HTTP e review plugin per SEC-P1.
+
 ## SEC-P1 — outbox corso, account bloccato/email stale prima di SMTP (20/11/2026)
 
 **Automatico:** `tests/joomla-smoke.php` usa un account Joomla della fixture e `MailQueue::currentRecipient` per verificare: ID/email aggiornati ammessi, ID nullo/inesistente, email cambiata o non valida e account bloccato negati; ripristino in `finally`. Il dispatcher esegue la verifica sull'account nello stesso ciclo di invio, prima del trasporto, sulle righe con `recipient_user_id` e sempre su `com_jlms.course.message` (anche legacy senza ID, scartato); i produttori di messaggi corso persistono ID sia per corsisti sia per invio test. Nessun test SMTP reale.

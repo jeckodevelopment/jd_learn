@@ -109,3 +109,7 @@ La matrice `docs/SEC_P1_CONTROLLER_DISPATCH_1.0.0.md` raccoglie i 37 controller 
 ## SEC-P1 — indirizzi aggiornati nella coda SMTP (20/11/2026)
 
 Nuove comunicazioni ai corsisti e test vengono accodati con `recipient_user_id`; prima del trasporto SMTP il dispatcher controlla l'account Joomla e l'indirizzo effettivo. Messaggi corso legacy senza user ID sono scartati con eliminazione dei dettagli destinatario. Regressioni negative Joomla DB, ma non simulazione SMTP reale o prova di concorrenza contro modifica account durante la consegna. SEC-P1 e SEC-P5 restano aperti.
+
+## SEC-P1 — producer SMTP e subscriber Joomla (20/11/2026)
+
+Con 0.64.16-dev tutti i 13 producer censiti di MailQueue::enqueue passano l'ID Joomla del destinatario; enqueue rifiuta nuovi eventi senza ID e dispatch verifica account non bloccato e indirizzo invariato per tutti i template. I legacy non verificabili sono scartati senza ritentativi automatici. La matrice docs/SEC_P1_MAIL_AND_PLUGIN_SURFACE_1.0.0.md distingue gli eventi dei quattro plugin e i tre task Scheduler, ancora non interamente testati in E2E. SEC-P1 e SEC-P5 aperti.

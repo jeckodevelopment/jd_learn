@@ -280,7 +280,7 @@ final class VideoProgressService
                     ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title,
                         'COMPLETION_DATE' => (string) $enrollment->completed_at,
                         'DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard',
-                        'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+                        'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')], (int) $actor->id
                 );
                 $versionRules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
                 if ($versionRules['certificate_enabled']) {

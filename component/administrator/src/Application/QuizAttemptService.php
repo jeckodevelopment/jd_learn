@@ -264,7 +264,7 @@ final class QuizAttemptService
                 ['USER_FULLNAME'=>$name,'COURSE_TITLE'=>(string)$course->title,
                     'COMPLETION_DATE'=>$finished,
                     'DASHBOARD_URL'=>\Joomla\CMS\Uri\Uri::root().'index.php?option=com_jlms&view=dashboard',
-                    'SITE_NAME'=>(string)\Joomla\CMS\Factory::getApplication()->get('sitename')]
+                    'SITE_NAME'=>(string)\Joomla\CMS\Factory::getApplication()->get('sitename')], (int) $actor->id
             );
             (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment,(int)$e->course_version_id,$finished);
         }

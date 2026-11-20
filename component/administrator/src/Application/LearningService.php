@@ -271,7 +271,7 @@ final class LearningService
                 $courseId, hash('sha256', 'enrollment.requested:' . $requestId), 'com_jlms.enrollment.requested',
                 (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
                 ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title,
-                    'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+                    'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')], (int) $actor->id
             );
             return $requestId;
         });
@@ -353,7 +353,7 @@ final class LearningService
                     $courseId, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
                     (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
                     ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title, 'ENROLLMENT_DATE' => $now, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id]
+                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id], (int) $actor->id
                 );
             }
             $this->ledger($actor, 'enrollment.start', $key, ['course_id' => $courseId], $id);
@@ -707,7 +707,7 @@ final class LearningService
         (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
             $courseId, hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
             (string) ($actor->getParam('language', '') ?: $language), (string) $actor->email, $name,
-            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'COMPLETION_DATE' => $completedAt, 'DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard', 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
+            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'COMPLETION_DATE' => $completedAt, 'DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard', 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')], (int) $actor->id
         );
     }
 

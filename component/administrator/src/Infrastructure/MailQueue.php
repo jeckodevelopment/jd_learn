@@ -37,7 +37,7 @@ final class MailQueue
             'com_jlms.course.updated' => 'course_update', 
             default => null,
         };
-        if ($courseId < 1 || $event === null || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if ($courseId < 1 || $event === null || ($recipientUserId ?? 0) < 1 || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return;
         }
 
@@ -160,9 +160,9 @@ final class MailQueue
                 // Communications must be linked to the Joomla user. For legacy
                 // course messages with no recipient ID, fail closed rather than
                 // send to a stale address after a possible account change.
-                $linkedRecipient = (int) ($row->recipient_user_id ?? 0) > 0;
-                if (($linkedRecipient || (string) $row->template_id === 'com_jlms.course.message')
-                    && !self::currentRecipient($this->db, $row)) {
+                // All outbox templates target Joomla identities. Historical rows
+                // without an account ID cannot be revalidated; fail closed.
+                if (!self::currentRecipient($this->db, $row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')
                         ->set("state = 'skipped'")->set("recipient_email = ''")
                         ->set("recipient_name = ''")->set("template_data = '{}'")
