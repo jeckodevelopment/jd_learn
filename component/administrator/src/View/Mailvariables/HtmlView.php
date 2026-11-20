@@ -18,13 +18,11 @@ final class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $app = Factory::getApplication();
-        if (!$app->getIdentity()->authorise('core.manage', 'com_jlms')) {
-            throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
-        }
+        // A cached Joomla session may outlive blocking or permission changes.
+        $identity = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($app->getIdentity());
 
         $app->setHeader('Cache-Control', 'private, no-store', true);
         ToolbarHelper::title(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE'), 'envelope');
-        $identity = $app->getIdentity();
         if ($identity->authorise('core.manage', 'com_mails') && $identity->authorise('core.edit', 'com_mails')) {
             ToolbarHelper::link(
                 'index.php?option=com_mails&view=templates&filter[extension]=com_jlms',
