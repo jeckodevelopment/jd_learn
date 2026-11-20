@@ -1,3 +1,9 @@
+## DOC-02 — capitoli manuale amministratore offline IT/EN (20/11/2026)
+
+**Automatico:** `python3 tests/doc02-admin-manual.py` verifica in entrambe le lingue i quattro nuovi capitoli (provider/consenso; email/scheduler; attestati; ACL/privacy/manutenzione), l'unicità degli ID e la validità degli ancoraggi. Il preflight integra il test nel packaging. La riconciliazione dei criteri documentali è separata dall'accettazione manuale.
+
+**Manuale da eseguire:** su package Joomla installato, utilizzare il pulsante **Guida** per aprire il manuale locale IT e EN; controllare indice e capitoli, collegamenti, accessibilità, schermate reali, ruolo amministratore con/ senza permessi e termini di errore. Eseguire gli scenari di consenso e riproduzione per i quattro provider con account di prova, la gestione template e coda SMTP, PDF attestati, log/retention, backup e aggiornamento con dati esistenti. Registrare esiti e build; **non eseguito**.
+
 ## DOC-08 — copertura documentale e gate candidato 1.0.0 (20/11/2026)
 
 **Prove automatiche:** `python3 tests/doc08-gate.py` verifica 21 flussi richiesti, guide non vuote, esclusione percorsi insicuri, duplicati, falsi stati accepted; `python3 tools/doc08_gate.py` applica il gate normale; `python3 tools/doc08_gate.py --release` deve restituire errore quando manca anche una sola prova manuale o la revisione finale. Collaudo statico NON equivale ad accettazione.
