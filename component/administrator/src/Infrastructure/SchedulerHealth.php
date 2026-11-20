@@ -68,6 +68,7 @@ final class SchedulerHealth
 
         return match ($state) {
             'missing' => 'COM_JLMS_SCHEDULER_GUIDANCE_MISSING',
+            'invalid_rules' => 'COM_JLMS_SCHEDULER_GUIDANCE_INVALID_RULES',
             'disabled' => 'COM_JLMS_SCHEDULER_GUIDANCE_DISABLED',
             'failed' => 'COM_JLMS_SCHEDULER_GUIDANCE_FAILED',
             'overdue' => 'COM_JLMS_SCHEDULER_GUIDANCE_OVERDUE',
@@ -75,6 +76,22 @@ final class SchedulerHealth
             'operational' => 'COM_JLMS_SCHEDULER_GUIDANCE_OPERATIONAL',
             default => 'COM_JLMS_SCHEDULER_GUIDANCE_UNKNOWN',
         };
+    }
+
+    /** Validate basic JSON structure only; Joomla owns schedule semantics. */
+    public static function validExecutionRules(string $rules): bool
+    {
+        if (trim($rules) === '') {
+            return false;
+        }
+        try {
+            $decoded = json_decode($rules, true, 32, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return false;
+        }
+        return is_array($decoded) && !array_is_list($decoded)
+            && is_string($decoded['rule-type'] ?? null)
+            && trim($decoded['rule-type']) !== '';
     }
 
     /**
@@ -93,6 +110,8 @@ final class SchedulerHealth
                 $state = 'disabled';
             } elseif ($duplicates) {
                 $state = 'duplicates';
+            } elseif (!self::validExecutionRules((string) ($task->execution_rules ?? ''))) {
+                $state = 'invalid_rules';
             } elseif ($executions > 0 && (int) ($task->last_exit_code ?? 0) !== 0) {
                 $state = 'failed';
             } elseif ($next === '' || $next === '0000-00-00 00:00:00') {

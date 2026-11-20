@@ -6,7 +6,7 @@ require_once __DIR__ . '/../component/administrator/src/Infrastructure/Scheduler
 use Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth;
 
 $now = new DateTimeImmutable('2026-11-19 12:00:00', new DateTimeZone('UTC'));
-$task = (object) ['id' => 7, 'state' => 1, 'last_execution' => null, 'next_execution' => '2026-11-19 12:05:00', 'times_executed' => 0, 'times_failed' => 0, 'last_exit_code' => null];
+$task = (object) ['id' => 7, 'state' => 1, 'last_execution' => null, 'next_execution' => '2026-11-19 12:05:00', 'times_executed' => 0, 'times_failed' => 0, 'last_exit_code' => null, 'execution_rules' => '{"rule-type":"interval-minutes","interval-minutes":5}'];
 function checkState(?object $task, bool $enabled, bool $dup, DateTimeImmutable $now, string $expected): void
 {
     $got = SchedulerHealth::assess($task, $enabled, $dup, $now)['state'];

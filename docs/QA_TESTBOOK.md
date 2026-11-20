@@ -1,3 +1,11 @@
+## DOC-07 — regole di esecuzione scheduler malformate (20/11/2026)
+
+**Verifica automatica:** `php tests/scheduler-guidance.php` prova JSON vuoto/malformato/non oggetto/senza `rule-type`, validità strutturale e classificazione `invalid_rules` anche quando `next_execution` è futura. La verifica non pretende di validare tutte le regole calendario Joomla, che restano responsabilità di Joomla Scheduler.
+
+**Collaudo manuale Joomla pendente:** su installazione *disposable* modificare una sola attività JD Learn di prova e ripristinarla. Con regole JSON non valide e prossima esecuzione ancora valorizzata, il dashboard deve mostrare «Regole di esecuzione non valide» e l'avviso specifico, senza cambiare la configurazione; ripetere con plugin disabilitato e task duplicato (precedenze dei relativi avvisi), poi con regole valide. Verificare IT/EN, permesso `core.manage` su `com_scheduler`, assenza di trigger del task e di invii email. Non modificare direttamente i job in produzione per effettuare questa prova.
+
+**Esito:** controllo automatico previsto, accettazione manuale non eseguita, DOC-07 non completo.
+
 ## DOC-07 — diagnostica dei provider video con verifiche consigliate (20/11/2026)
 
 **Collaudo Joomla manuale pendente:** nella Dashboard di JD Learn espandere «Stato dei provider video». Per YouTube, Vimeo, Cloudflare Stream e HTML5 verificare separatamente i casi plugin non installato, installato/disattivato, attivo ma senza descriptor, attivo con descriptor `configured=false`, attivo e localmente configurato. Il messaggio vicino allo stato deve essere tradotto nella lingua amministrativa IT/EN e distinguere ogni causa senza esporre valori dei parametri, credenziali o contenuto delle sorgenti. La diagnostica deve rimanere in sola lettura e non abilitare plugin, creare cron o effettuare chiamate remote.
