@@ -51,7 +51,17 @@ try:
  else:raise RuntimeError('HTTP server not ready')
  course='/index.php?option=com_jlms&view=course&id='+str(fixture['course_id'])
  _,html=request(guest,course);expect('LEARNING_PRIVATE_BODY_' not in html,'Public sheet contains no lesson bodies')
- request(guest,'/index.php?option=com_jlms&task=enrollment.start',expected=405)
+ # HTTP-06: public task dispatch cannot mutate on GET, including mixed case tasks.
+ for task in ('enrollment.start', 'enrollment.request', 'lesson.complete', 'lesson.begin'):
+  request(guest,'/index.php?option=com_jlms&task='+task,expected=405)
+ # Method check must precede CSRF and identity checks.
+ request(guest,'/index.php?option=com_jlms&task=enrollment.unrecognised',expected=404)
+ request(guest,'/index.php?option=com_jlms&task=lesson.unrecognised',expected=404)
+ for task in ('enrollment.start', 'enrollment.request', 'lesson.complete'):
+  request(guest,'/index.php?option=com_jlms&task='+task,{},expected=403)
+ # JSON lesson begin uses the same Joomla CSRF boundary and never returns a successful write.
+ _,begin_denied=request(guest,'/index.php?option=com_jlms&task=lesson.begin',{},expected=403)
+ expect('COM_JLMS' in begin_denied or 'JINVALID_TOKEN' in begin_denied,'HTTP-06 lesson begin uses JSON error contract')
  student=client();login(student,'cilearnerhttp')
  url,html=request(student,course);page=Page(html);form=next((f for f in page.forms if f['id']=='jlms-start-form'),None)
  expect(form is not None,'Authorised student sees start form')
