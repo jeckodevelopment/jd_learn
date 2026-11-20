@@ -1,3 +1,13 @@
+## SEC-P2 / SEC-P3 — hardening e privacy (PR consolidata, da collaudare)
+
+- [ ] In CI `tests/sec-p2-p3-guard.py`: directory webroot di prova vuota → esito 0; file `.blob` e symlink → esito 2, senza cancellazioni o nomi personali nei log.
+- [ ] Su server Joomla di prova, verificare il vecchio managed video root senza esportare path, confermare che la root esterna funzioni e che non rimangano `.blob` esposti.
+- [ ] In Joomla Privacy, utente senza record vincolati: preflight e rimozione funzionano; con job/attestato/outbox: rimozione rifiutata anche quando invocata direttamente, senza side effect.
+- [ ] Verificare esportazione e rimozione su account di prova con consenso pending/confirmed/revoked, token revoca, email in coda, progressi e attestati; registrare limitazioni e retention.
+- [ ] Eseguire dependency/secret/vulnerability scan, controllo CSP/log e review del package candidato per completare SEC-P2; definire retention log/backup e decisioni del titolare per SEC-P3.
+
+**Stato:** non eseguita accettazione Joomla manuale; i due gate non sono conclusi. Guida: `SEC_P2_P3_HARDENING_PRIVACY_1.0.0.md`.
+
 ## DOC-02 — capitoli manuale amministratore offline IT/EN (20/11/2026)
 
 **Automatico:** `python3 tests/doc02-admin-manual.py` verifica in entrambe le lingue i quattro nuovi capitoli (provider/consenso; email/scheduler; attestati; ACL/privacy/manutenzione), l'unicità degli ID e la validità degli ancoraggi. Il preflight integra il test nel packaging. La riconciliazione dei criteri documentali è separata dall'accettazione manuale.

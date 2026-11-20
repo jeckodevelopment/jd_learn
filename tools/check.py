@@ -1148,3 +1148,6 @@ runpy.run_path(str(ROOT/'tools/doc08_gate.py'), run_name='__main__')
 
 # DOC-02: offline administrator manual chapters and anchors in both languages.
 runpy.run_path(str(ROOT/'tests/doc02-admin-manual.py'), run_name='__main__')
+
+# SEC-P2/SEC-P3: fail-closed privacy removal and read-only legacy-storage inspection.
+runpy.run_path(str(ROOT/'tests/sec-p2-p3-guard.py'), run_name='__main__')
