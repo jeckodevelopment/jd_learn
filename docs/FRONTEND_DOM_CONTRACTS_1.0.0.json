@@ -1,0 +1,502 @@
+{
+  "schema": 1,
+  "contract_version": "1.0.0",
+  "description": "Contratti DOM delle viste frontend distribuite; ID e classi letterali, esclusi elementi dinamici e partial condivisi. Nessuna attestazione di collaudo browser.",
+  "views": {
+    "courses": {
+      "layout": "component/site/tmpl/courses/default.php",
+      "override": "templates/NOME/html/com_jlms/courses/default.php",
+      "root": "jlms-courses",
+      "static_ids": [
+        "jlms-catalog-available",
+        "jlms-catalog-categories",
+        "jlms-catalog-category",
+        "jlms-catalog-clear-filters",
+        "jlms-catalog-difficulty",
+        "jlms-catalog-duration",
+        "jlms-catalog-empty",
+        "jlms-catalog-filters",
+        "jlms-catalog-header",
+        "jlms-catalog-layout",
+        "jlms-catalog-load-error",
+        "jlms-catalog-order",
+        "jlms-catalog-pagination",
+        "jlms-catalog-pathway",
+        "jlms-catalog-pathways",
+        "jlms-catalog-retry",
+        "jlms-catalog-search",
+        "jlms-catalog-tag",
+        "jlms-catalog-teacher",
+        "jlms-category-filter",
+        "jlms-course-grid",
+        "jlms-courses"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-catalog",
+        "jlms-course-card",
+        "jlms-course-card__action",
+        "jlms-course-card__admission",
+        "jlms-course-card__category",
+        "jlms-course-card__content",
+        "jlms-course-card__cover",
+        "jlms-course-card__cover-placeholder",
+        "jlms-course-card__learning-state",
+        "jlms-course-card__meta",
+        "jlms-course-card__pending",
+        "jlms-course-card__resume",
+        "jlms-course-card__summary",
+        "jlms-course-card__teachers",
+        "jlms-course-card__title"
+      ]
+    },
+    "course": {
+      "layout": "component/site/tmpl/course/default.php",
+      "override": "templates/NOME/html/com_jlms/course/default.php",
+      "root": "jlms-course",
+      "static_ids": [
+        "jlms-course",
+        "jlms-course-access",
+        "jlms-course-approval-pending",
+        "jlms-course-back",
+        "jlms-course-calendar",
+        "jlms-course-category",
+        "jlms-course-certificate-caveat",
+        "jlms-course-completion",
+        "jlms-course-completion-certificate",
+        "jlms-course-completion-policy",
+        "jlms-course-completion-sequence",
+        "jlms-course-completion-title",
+        "jlms-course-completion-video",
+        "jlms-course-cover",
+        "jlms-course-description",
+        "jlms-course-difficulty",
+        "jlms-course-estimated-duration",
+        "jlms-course-existing-unavailable",
+        "jlms-course-facts",
+        "jlms-course-fields-after-content",
+        "jlms-course-fields-after-title",
+        "jlms-course-fields-before-content",
+        "jlms-course-header",
+        "jlms-course-layout",
+        "jlms-course-login",
+        "jlms-course-main",
+        "jlms-course-materials",
+        "jlms-course-outline",
+        "jlms-course-resume",
+        "jlms-course-sidebar",
+        "jlms-course-summary",
+        "jlms-course-supplemental",
+        "jlms-course-teachers",
+        "jlms-course-title",
+        "jlms-course-window-closed",
+        "jlms-enrollment-request-form",
+        "jlms-start-form"
+      ],
+      "static_classes": [
+        "jlms-course",
+        "jlms-course-access",
+        "jlms-course-consent",
+        "jlms-course-cover",
+        "jlms-course-description",
+        "jlms-course-fields",
+        "jlms-course-layout",
+        "jlms-course-main",
+        "jlms-course-presentation-section",
+        "jlms-course-sidebar",
+        "jlms-course-sidebar__inner",
+        "jlms-course-supplemental",
+        "jlms-course-teacher",
+        "jlms-lesson",
+        "jlms-lesson__public-preview",
+        "jlms-lesson__requirement",
+        "jlms-lesson__title",
+        "jlms-material",
+        "jlms-material-list",
+        "jlms-material__action",
+        "jlms-material__meta",
+        "jlms-material__title",
+        "jlms-module",
+        "jlms-module__lessons",
+        "jlms-module__summary",
+        "jlms-module__title"
+      ]
+    },
+    "pathways": {
+      "layout": "component/site/tmpl/pathways/default.php",
+      "override": "templates/NOME/html/com_jlms/pathways/default.php",
+      "root": "jlms-pathways",
+      "static_ids": [
+        "jlms-pathway-grid",
+        "jlms-pathways",
+        "jlms-pathways-empty",
+        "jlms-pathways-header",
+        "jlms-pathways-pagination"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-catalog",
+        "jlms-course-card",
+        "jlms-course-grid",
+        "jlms-pathway-card",
+        "jlms-pathway-card__category",
+        "jlms-pathway-card__content",
+        "jlms-pathway-card__cover",
+        "jlms-pathway-card__summary",
+        "jlms-pathway-card__title",
+        "jlms-pathways-catalog"
+      ]
+    },
+    "pathway": {
+      "layout": "component/site/tmpl/pathway/default.php",
+      "override": "templates/NOME/html/com_jlms/pathway/default.php",
+      "root": "jlms-pathway",
+      "static_ids": [
+        "jlms-pathway",
+        "jlms-pathway-catalog",
+        "jlms-pathway-course-count",
+        "jlms-pathway-courses",
+        "jlms-pathway-cover",
+        "jlms-pathway-empty",
+        "jlms-pathway-header",
+        "jlms-pathway-progress",
+        "jlms-pathway-sequence",
+        "jlms-pathway-sequence-title",
+        "jlms-pathway-unavailable"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-course-page",
+        "jlms-pathway-cover",
+        "jlms-pathway-description",
+        "jlms-pathway-page",
+        "jlms-pathway-sequence__intro",
+        "jlms-pathway-timeline",
+        "jlms-pathway-timeline__card",
+        "jlms-pathway-timeline__item",
+        "jlms-pathway-timeline__state",
+        "jlms-pathway-timeline__step",
+        "jlms-pathway-timeline__summary",
+        "jlms-pathway-timeline__title"
+      ]
+    },
+    "categories": {
+      "layout": "component/site/tmpl/categories/default.php",
+      "override": "templates/NOME/html/com_jlms/categories/default.php",
+      "root": "jlms-categories",
+      "static_ids": [
+        "jlms-categories",
+        "jlms-categories-catalog",
+        "jlms-categories-description",
+        "jlms-categories-empty",
+        "jlms-categories-header",
+        "jlms-categories-list",
+        "jlms-categories-pagination",
+        "jlms-categories-parent"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-categories",
+        "jlms-category-card",
+        "jlms-category-card__description",
+        "jlms-category-card__title",
+        "jlms-category-grid"
+      ]
+    },
+    "category": {
+      "layout": "component/site/tmpl/category/default.php",
+      "override": "templates/NOME/html/com_jlms/category/default.php",
+      "root": "jlms-category",
+      "static_ids": [
+        "jlms-category",
+        "jlms-category-back",
+        "jlms-category-catalog-available",
+        "jlms-category-catalog-difficulty",
+        "jlms-category-catalog-duration",
+        "jlms-category-catalog-filters",
+        "jlms-category-catalog-layout",
+        "jlms-category-catalog-order",
+        "jlms-category-catalog-pathway",
+        "jlms-category-catalog-search",
+        "jlms-category-catalog-tag",
+        "jlms-category-catalog-teacher",
+        "jlms-category-clear-filters",
+        "jlms-category-course-grid",
+        "jlms-category-courses",
+        "jlms-category-courses-empty",
+        "jlms-category-courses-pagination",
+        "jlms-category-description",
+        "jlms-category-header",
+        "jlms-category-title",
+        "jlms-subcategories",
+        "jlms-subcategories-empty",
+        "jlms-subcategories-list",
+        "jlms-subcategories-pagination"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-category",
+        "jlms-category-card",
+        "jlms-category-grid",
+        "jlms-course-card",
+        "jlms-course-card__summary",
+        "jlms-course-card__title",
+        "jlms-subcategory"
+      ]
+    },
+    "dashboard": {
+      "layout": "component/site/tmpl/dashboard/default.php",
+      "override": "templates/NOME/html/com_jlms/dashboard/default.php",
+      "root": "jlms-dashboard",
+      "static_ids": [
+        "jlms-dashboard",
+        "jlms-dashboard-catalog",
+        "jlms-dashboard-empty",
+        "jlms-dashboard-header",
+        "jlms-dashboard-latest",
+        "jlms-dashboard-latest-title",
+        "jlms-dashboard-my-certificates-link",
+        "jlms-dashboard-my-courses-link",
+        "jlms-dashboard-preferences-link",
+        "jlms-dashboard-resume",
+        "jlms-dashboard-summary",
+        "jlms-summary-certificates-title",
+        "jlms-summary-courses-title",
+        "jlms-summary-preferences-title"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-dashboard",
+        "jlms-dashboard-group",
+        "jlms-learner-overview",
+        "jlms-my-course",
+        "jlms-my-course-grid",
+        "jlms-summary-stats"
+      ]
+    },
+    "mycourses": {
+      "layout": "component/site/tmpl/mycourses/default.php",
+      "override": "templates/NOME/html/com_jlms/mycourses/default.php",
+      "root": "jlms-dashboard",
+      "static_ids": [
+        "jlms-dashboard",
+        "jlms-dashboard-catalog",
+        "jlms-dashboard-filters",
+        "jlms-dashboard-header",
+        "jlms-dashboard-pagination"
+      ],
+      "static_classes": [
+        "jlms-dashboard",
+        "jlms-my-courses-view"
+      ]
+    },
+    "mycertificates": {
+      "layout": "component/site/tmpl/mycertificates/default.php",
+      "override": "templates/NOME/html/com_jlms/mycertificates/default.php",
+      "root": "jlms-my-certificates-view",
+      "static_ids": [
+        "jlms-my-certificates-view"
+      ],
+      "static_classes": [
+        "jlms-dashboard",
+        "jlms-my-certificates-view"
+      ]
+    },
+    "preferences": {
+      "layout": "component/site/tmpl/preferences/default.php",
+      "override": "templates/NOME/html/com_jlms/preferences/default.php",
+      "root": "jlms-preferences-view",
+      "static_ids": [
+        "jlms-preferences-view"
+      ],
+      "static_classes": [
+        "jlms-dashboard",
+        "jlms-preferences-view"
+      ]
+    },
+    "classroom": {
+      "layout": "component/site/tmpl/classroom/default.php",
+      "override": "templates/NOME/html/com_jlms/classroom/default.php",
+      "root": "jlms-classroom",
+      "static_ids": [
+        "jlms-audio-player",
+        "jlms-audio-progress-status",
+        "jlms-audio-region",
+        "jlms-audio-transcript",
+        "jlms-classroom",
+        "jlms-classroom-back",
+        "jlms-classroom-dashboard",
+        "jlms-classroom-header",
+        "jlms-classroom-layout",
+        "jlms-classroom-outline",
+        "jlms-classroom-outline-toggle",
+        "jlms-classroom-teachers",
+        "jlms-complete-form",
+        "jlms-consultation-mode",
+        "jlms-course-completed",
+        "jlms-learning-progress",
+        "jlms-lesson-body",
+        "jlms-lesson-content",
+        "jlms-lesson-custom-fields",
+        "jlms-lesson-navigation",
+        "jlms-lesson-prerequisite-notice",
+        "jlms-lesson-progress-status",
+        "jlms-lesson-quiz",
+        "jlms-lesson-schedule-notice",
+        "jlms-lesson-title",
+        "jlms-material-groups",
+        "jlms-player",
+        "jlms-player-status",
+        "jlms-progress-meter",
+        "jlms-video-language",
+        "jlms-video-language-control",
+        "jlms-video-region",
+        "jlms-video-speed",
+        "jlms-video-speed-control",
+        "jlms-video-transcript",
+        "jlms-youtube-finish"
+      ],
+      "static_classes": [
+        "jlms-audio-transcript__content",
+        "jlms-classroom",
+        "jlms-classroom-header__heading",
+        "jlms-classroom-layout",
+        "jlms-classroom-lesson",
+        "jlms-classroom-module",
+        "jlms-classroom-module__summary",
+        "jlms-classroom-module__title",
+        "jlms-classroom-outline-toggle",
+        "jlms-classroom-teachers",
+        "jlms-custom-fields",
+        "jlms-lesson-content",
+        "jlms-lesson-navigation",
+        "jlms-lesson-navigation__item",
+        "jlms-lesson-navigation__label",
+        "jlms-lesson-navigation__link",
+        "jlms-lesson-navigation__reason",
+        "jlms-lesson-navigation__title",
+        "jlms-lesson-navigation__unavailable",
+        "jlms-lesson-transcript__content",
+        "jlms-material",
+        "jlms-material-list",
+        "jlms-material__action",
+        "jlms-material__meta",
+        "jlms-material__preview",
+        "jlms-material__title",
+        "jlms-player",
+        "jlms-youtube-finish",
+        "jlms-youtube-finish__message",
+        "jlms-youtube-finish__next"
+      ]
+    },
+    "quiz": {
+      "layout": "component/site/tmpl/quiz/default.php",
+      "override": "templates/NOME/html/com_jlms/quiz/default.php",
+      "root": "jlms-quiz",
+      "static_ids": [
+        "jlms-quiz",
+        "jlms-quiz-actions",
+        "jlms-quiz-availability",
+        "jlms-quiz-back",
+        "jlms-quiz-duration",
+        "jlms-quiz-extension",
+        "jlms-quiz-form",
+        "jlms-quiz-header",
+        "jlms-quiz-history",
+        "jlms-quiz-invalidated",
+        "jlms-quiz-questions",
+        "jlms-quiz-result",
+        "jlms-quiz-rules",
+        "jlms-quiz-save",
+        "jlms-quiz-start",
+        "jlms-quiz-status",
+        "jlms-quiz-submit",
+        "jlms-quiz-time-allowance",
+        "jlms-quiz-timer",
+        "jlms-quiz-warning",
+        "jlms-quiz-window-end",
+        "jlms-quiz-window-insufficient"
+      ],
+      "static_classes": [
+        "jlms-quiz",
+        "jlms-quiz-clear",
+        "jlms-quiz-question",
+        "jlms-quiz-question__feedback",
+        "jlms-quiz-question__option",
+        "jlms-quiz-question__prompt"
+      ]
+    },
+    "teacher": {
+      "layout": "component/site/tmpl/teacher/default.php",
+      "override": "templates/NOME/html/com_jlms/teacher/default.php",
+      "root": "jlms-teacher-profile",
+      "static_ids": [
+        "jlms-teacher-courses",
+        "jlms-teacher-fields",
+        "jlms-teacher-presentation",
+        "jlms-teacher-profile"
+      ],
+      "static_classes": []
+    },
+    "teacheredit": {
+      "layout": "component/site/tmpl/teacheredit/default.php",
+      "override": "templates/NOME/html/com_jlms/teacheredit/default.php",
+      "root": "jlms-teacher-profile-form",
+      "static_ids": [
+        "jlms-teacher-profile-form"
+      ],
+      "static_classes": []
+    },
+    "teachers": {
+      "layout": "component/site/tmpl/teachers/default.php",
+      "override": "templates/NOME/html/com_jlms/teachers/default.php",
+      "root": "jlms-teachers",
+      "static_ids": [
+        "jlms-teacher-grid",
+        "jlms-teachers",
+        "jlms-teachers-empty",
+        "jlms-teachers-header",
+        "jlms-teachers-pagination"
+      ],
+      "static_classes": [
+        "jlms-card",
+        "jlms-catalog",
+        "jlms-course-card",
+        "jlms-course-grid",
+        "jlms-teacher-card",
+        "jlms-teacher-card__content",
+        "jlms-teacher-card__cover",
+        "jlms-teacher-card__summary",
+        "jlms-teacher-card__title",
+        "jlms-teachers-catalog"
+      ]
+    },
+    "lessonpreview": {
+      "layout": "component/site/tmpl/lessonpreview/default.php",
+      "override": "templates/NOME/html/com_jlms/lessonpreview/default.php",
+      "root": "jlms-public-lesson-preview",
+      "static_ids": [
+        "jlms-public-lesson-preview"
+      ],
+      "static_classes": [
+        "jlms-course",
+        "jlms-lesson__body",
+        "jlms-public-preview-materials"
+      ]
+    },
+    "mailconsentrevoke": {
+      "layout": "component/site/tmpl/mailconsentrevoke/default.php",
+      "override": "templates/NOME/html/com_jlms/mailconsentrevoke/default.php",
+      "root": "jlms-mail-consent-revoke",
+      "static_ids": [
+        "jlms-mail-consent-link-completed",
+        "jlms-mail-consent-link-invalid",
+        "jlms-mail-consent-revoke",
+        "jlms-mail-consent-revoke-form"
+      ],
+      "static_classes": [
+        "jlms-mail-consent-revoke"
+      ]
+    }
+  }
+}
