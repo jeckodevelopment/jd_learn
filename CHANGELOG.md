@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.17-dev — DOC-07, completamento implementativo (20/11/2026):** dashboard con verifiche locali di configurazione e rimedi IT/EN per Scheduler e provider video, visibili con ACL corrente; nessun invio, probe esterno o modifica. Test positivi/negativi incluse priorità duplicati, stati ignoti, etichette non attendibili e controllo del markup. Tre criteri implementativi DOC-07 chiusi; sviluppo comprovato **59,42%** (466 implementati / 24 mancanti / 267 non verificabili). Collaudo manuale distinto, SemVer invariato.
+
 - **0.64.17-dev — PBASE-02, requisito implementativo completato (20/11/2026):** verifica di completezza delle guide distribuite dei quattro provider video, correlazione con i manifest e fixture negativa per capitoli mancanti. Riconciliati i tre criteri tecnici come implementati: 59,11% sviluppo comprovato, 464 implementati / 26 mancanti / 267 non verificabili. Nessun cambiamento runtime, SemVer invariato; riproduzione e collaudo manuale dei provider non acquisiti.
 
 - HTTP-06 (test-only, 0.64.17-dev): regressioni Joomla sui confini di richiesta `enrollment.resume` POST (405), `lesson.begin` con body eccessivo (413 JSON) e `video.save` eccessivo (413 JSON senza riferimenti provider); nessun cambiamento runtime, criteri o percentuali promossi prima della CI e del collaudo.
