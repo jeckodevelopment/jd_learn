@@ -45,7 +45,11 @@ final class MailconsentController extends BaseController
 
     public function confirm(): void
     {
+        // The one-use confirmation token is carried in the incoming URL.
+        // Do not forward that URL as a Referer across the redirect or later navigation.
         $this->app->setHeader('Cache-Control', 'no-store', true);
+        $this->app->setHeader('Referrer-Policy', 'no-referrer', true);
+        $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         $token = $this->input->getString('token', '');
         $ok = $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->confirm($token);
         $this->app->enqueueMessage(Text::_($ok ? 'COM_JLMS_MAIL_CONSENT_CONFIRMED' : 'COM_JLMS_MAIL_CONSENT_LINK_INVALID'), $ok ? 'message' : 'warning');

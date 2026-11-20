@@ -2566,3 +2566,8 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 **Accettazione:** registrare account/ruolo e codice HTTP, senza allegare file contenenti dati personali; esito manuale resta in attesa finché non osservato.
 
 **Comportamenti da testare sul sito Joomla disposable:** creare un attestato di uno studente; come studente proprietario e come altro studente tentare l'URL amministrativo di download e ottenere rifiuto senza byte del PDF; verificare anche ospite; come amministratore con `core.manage` e `jlms.certificates.manage` scaricare il PDF corretto. Revocare selettivamente `jlms.certificates.manage` a un account amministrativo di prova e verificare nuovamente il 403. Riprovare HEAD e Range; controllare cache privata, contenuto non divulgato e log privi di dati personali. Distinguere questo collaudo manuale dalla fixture di servizio.
+
+
+### SEC-P1 — token monouso nella conferma consenso email (20/11/2026)
+
+**Comportamenti da testare su Joomla disposable:** inviare una richiesta di consenso su utente di prova; aprire il link di conferma con token valido in una sessione pulita e verificare risposta HTTP iniziale (redirect) con `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, `X-Robots-Tag: noindex, nofollow`; accertare che la richiesta di destinazione non trasmetta l'URL tokenizzato nel Referer. Ripetere il link e verificarne la monousabilità; provare token scaduto e malformato, senza dati personali nei log; verificare che la revoca continui a funzionare e che il consenso non venga attivato da un token invalido. Prova automatica strutturale `tests/frontend-preferences.py`; collaudo HTTP/manuale **in attesa**. L'inventario e la matrice delle superfici da coprire sono in `docs/SEC_P1_ATTACK_SURFACE_1.0.0.md`.

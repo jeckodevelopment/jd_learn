@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.6-dev — PATCH SemVer (SEC-P1, 20/11/2026):** prevenuta la possibile trasmissione dell'URL con token monouso di conferma consenso come Referer sul redirect, mediante `Referrer-Policy: no-referrer` e `X-Robots-Tag: noindex, nofollow`; `Cache-Control: no-store` confermato. Aggiunta regressione strutturale; inventario trasversale delle superfici da sottoporre a SEC-P1. Nessuna modifica schema, token, invio email, consenso, cookie o criteri funzionali. Collaudo HTTP Joomla pendente.
+
 - **0.64.5-dev — SEC-P1 (20/11/2026, test senza modifica runtime):** estesa la fixture Joomla degli attestati con tre tentativi negativi di download amministrativo (proprietario, altro studente, ospite) e una prova positiva con operatore dotato dei permessi specifici. SEC-P1 resta aperto; CI e accettazione manuale da confermare; SemVer e avanzamento funzionale invariati.
 
 - **0.64.5-dev — PATCH SemVer (SECDEV-03, 20/11/2026):** rifiutati i marcatori Unicode bidirezionali nei nomi dei file di materiali e video, per impedire la presentazione ingannevole delle estensioni anche nei download autorizzati. I controlli precedenti (nome, contenuto/MIME, dimensioni, ACL) restano invariati. Test negativi per override, isolate e marcatori direzionali e positivo per accenti Unicode. Nessuna promozione automatica di SECDEV-03, che richiede una verifica di sicurezza trasversale.
