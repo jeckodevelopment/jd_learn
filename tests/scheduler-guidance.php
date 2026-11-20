@@ -69,4 +69,4 @@ $task->state = 0;
 if (SchedulerHealth::assess($task, true, false, $clock)['state'] !== 'disabled') {
     throw new RuntimeException('Single disabled task must remain disabled');
 }
-echo "Scheduler duplicate precedence across plugin/task states: OK\\n";
+echo "Scheduler duplicate precedence across plugin/task states: OK\n";
