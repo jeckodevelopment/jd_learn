@@ -1,5 +1,7 @@
 # Changelog
 
+- SEC-P2: gate CI sul livello di patch PHP per le correzioni di sicurezza del 19/11/2026 (8.3.37 e 8.4.28); verifiche sull'hosting reale non incluse.
+
 - SEC-P2 (pre-release): controllo CI su credenziali note nei sorgenti distribuiti e GitHub Actions pinned by SHA; workflow requisiti bloccato a commit; inventario supply-chain, CSP e logging documentato. Gate release live e advisory aperti.
 
 - SEC-P2/SEC-P3 (pre-release): scansione ricorsiva di segreti e file sensibili nel ZIP distribuito; blocco privacy su mail queue attiva e redazione della storia di invio terminale, inclusi token di revoca. Gate finali ancora aperti.
