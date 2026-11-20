@@ -10291,9 +10291,12 @@
         "review": {
           "reason": "Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.",
           "references": [
+            "plugins/jlmsvideo/youtube/docs/README.md#plg_jlmsvideo_youtube",
+            "plugins/jlmsvideo/vimeo/docs/README.md#plg_jlmsvideo_vimeo",
+            "plugins/jlmsvideo/cloudflarestream/docs/README.md#plg_jlmsvideo_cloudflarestream",
+            "plugins/jlmsvideo/html5/docs/README.md#plg_jlmsvideo_html5",
             "tools/provider_doc_gate.py#validate_provider_guides",
-            "tests/provider-doc-contract.py#PBASE-02",
-            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Parametri del manifest"
+            "tests/provider-doc-contract.py#PBASE-02"
           ]
         }
       },
@@ -10312,9 +10315,12 @@
         "review": {
           "reason": "Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.",
           "references": [
+            "plugins/jlmsvideo/youtube/docs/README.md#plg_jlmsvideo_youtube",
+            "plugins/jlmsvideo/vimeo/docs/README.md#plg_jlmsvideo_vimeo",
+            "plugins/jlmsvideo/cloudflarestream/docs/README.md#plg_jlmsvideo_cloudflarestream",
+            "plugins/jlmsvideo/html5/docs/README.md#plg_jlmsvideo_html5",
             "tools/provider_doc_gate.py#validate_provider_guides",
-            "tests/provider-doc-contract.py#PBASE-02",
-            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Parametri del manifest"
+            "tests/provider-doc-contract.py#PBASE-02"
           ]
         }
       },
@@ -10333,9 +10339,12 @@
         "review": {
           "reason": "Quattro guide locali per plugin distribuito coprono identità, dipendenze, sorgente, campi del manifest con tipi/default/limiti, capacità, player, privacy, errori, prestazioni, disattivazione/rimozione e casi di collaudo. Il gate di packaging confronta i campi XML e tutte le sezioni richieste; una fixture negativa rifiuta la perdita di un capitolo. Implementazione documentale completata, accettazione browser/hosting reale distinta e pendente.",
           "references": [
+            "plugins/jlmsvideo/youtube/docs/README.md#plg_jlmsvideo_youtube",
+            "plugins/jlmsvideo/vimeo/docs/README.md#plg_jlmsvideo_vimeo",
+            "plugins/jlmsvideo/cloudflarestream/docs/README.md#plg_jlmsvideo_cloudflarestream",
+            "plugins/jlmsvideo/html5/docs/README.md#plg_jlmsvideo_html5",
             "tools/provider_doc_gate.py#validate_provider_guides",
-            "tests/provider-doc-contract.py#PBASE-02",
-            "plugins/jlmsvideo/cloudflarestream/docs/README.md#Parametri del manifest"
+            "tests/provider-doc-contract.py#PBASE-02"
           ]
         }
       }
