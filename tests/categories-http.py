@@ -1,5 +1,7 @@
 """Real Joomla category views, pagination, language switch and native administration."""
 from pathlib import Path
+import runpy
+verify_dom = runpy.run_path(str(Path(__file__).resolve().parent / 'frontend-dom-runtime.py'))['verify']
 from urllib.request import build_opener, HTTPCookieProcessor
 from urllib.error import HTTPError
 from urllib.parse import urljoin, urlencode
@@ -50,12 +52,14 @@ try:
   config.write_text(changed)
   _,root_page=get('/index.php?option=com_jlms&view=categories&lang=en')
   expect('id="jlms-categories"' in root_page and 'Taxonomy English' in root_page and 'PRIVATE_QUESTION_CATEGORY' not in root_page,'root list scoped and visible')
+  expect(verify_dom(root_page, root='jlms-categories', scoped_class='jlms-category-card') > 0, 'UI-07: public category index preserves scoped cards and unique IDs')
   category_link=next(a['href'] for a in Page(root_page).links if a['text'].strip()=='Taxonomy English')
   if sef:expect('taxonomy-menu-category-en' in category_link,'native category menu selected by router')
   _,menu_page=get(category_link)
   expect('id="jlms-category"' in menu_page and 'Taxonomy English' in menu_page,'native category menu opens correct view')
   url,page=get('/index.php?option=com_jlms&view=category&id='+str(f['en'])+'&lang=en')
   parsed=Page(page)
+  expect(verify_dom(page, root='jlms-category', scoped_class='jlms-course-card') > 0, 'UI-07: category course cards preserve scoped CSS contract and unique IDs')
   if sef:
    canonical=next((link.get('href','') for link in parsed.head_links if link.get('rel')=='canonical'),'')
    expect('taxonomy-en' in canonical or 'taxonomy-menu-category-en' in canonical,'legacy numeric category URL publishes its category or dedicated menu alias as canonical')
