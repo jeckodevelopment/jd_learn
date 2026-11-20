@@ -38,7 +38,11 @@ final class MailQueueAuditService
     public function page(User $identity, array $filters = [], int $start = 0, int $limit = 50): array
     {
         $actor = CourseEditorAccess::fresh($identity);
-        if (!$actor->authorise('core.manage', 'com_jlms')) {
+        // The outbox is global to all courses. Component management alone can be
+        // delegated for a single course and must not expose global audit data
+        // or permit reconciliation of another course's mail.
+        if (!$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.audit.view', 'com_jlms')) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
 
@@ -116,7 +120,11 @@ final class MailQueueAuditService
     public function reconcile(User $identity, int $queueId, string $action, string $note, bool $confirmed): void
     {
         $actor = CourseEditorAccess::fresh($identity);
-        if (!$actor->authorise('core.manage', 'com_jlms')) {
+        // The outbox is global to all courses. Component management alone can be
+        // delegated for a single course and must not expose global audit data
+        // or permit reconciliation of another course's mail.
+        if (!$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.audit.view', 'com_jlms')) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
         $note = trim($note);
