@@ -46,19 +46,19 @@ def validate_provider_guides(root: Path) -> None:
 
         # PBASE-02: ensure the versioned operational table cannot silently
         # diverge from field types, defaults or numeric bounds in the manifest.
-        parameter_table = guide.split("## Parametri del manifest, tipi e valori iniziali", 1)[1].split("\\n## ", 1)[0]
+        parameter_table = guide.split("## Parametri del manifest, tipi e valori iniziali", 1)[1].split("\n## ", 1)[0]
         for field in manifest.findall(".//field"):
             name = field.attrib["name"]
             kind = field.attrib.get("type", "n/d")
             default = field.attrib.get("default")
-            expected = f"| \`{name}\` | \`{kind}\` | "
+            expected = f"| `{name}` | `{kind}` | "
             if expected not in parameter_table:
                 raise ValueError(f"PBASE-02: missing field/type row for {provider}: {name}")
             row = next(line for line in parameter_table.splitlines() if line.startswith(expected))
             if default is None:
                 if "Non dichiarato" not in row:
                     raise ValueError(f"PBASE-02: undocumented missing default for {provider}: {name}")
-            elif f"\`{default}\`" not in row:
+            elif f"`{default}`" not in row:
                 raise ValueError(f"PBASE-02: wrong default for {provider}: {name}")
             for attribute in ("min", "max"):
                 if attribute in field.attrib and f"{attribute} {field.attrib[attribute]}" not in row:
