@@ -1,3 +1,9 @@
+## DOC-07 — checklist ad alto rischio e diagnostica configurazione (20/11/2026)
+
+**Automatizzato (gate statico):** `tests/doc07-safe-operations.py` in `tools/check.py` verifica la checklist dashboard, chiavi IT/EN e mapping per ACL correnti. Continuano i test `tests/scheduler-guidance.php`, `tests/provider-doc-contract.py` e gate dei provider. Non sono test funzionali HTTP o di autenticazione reale.
+
+**Collaudo Joomla da eseguire:** (1) con gestore com_jlms abilitato verificare guida storage/corsi, mail solo se `jlms.audit.view`, attestati solo con `jlms.certificates.manage`; (2) con solo gestore com_scheduler mostrare unicamente la procedura scheduler e non indicazioni protette del componente; (3) senza permessi non mostrare la checklist; (4) browser IT/EN e lettore schermo sul `details/summary`; (5) simulare stato scheduler mancante, doppio, disabilitato, regole JSON invalide, ritardo e failure con messaggi azionabili senza link mutativi; (6) plugin video disabilitato/non configurato/non registrato; (7) configurazione storage video non privata e credenziali non disponibili: nessun segreto o bypass nelle istruzioni; (8) riprovare invii consentiti, rigenerazione attestati e archiviazione tramite flussi POST autorizzati e conservare dati dopo restore. Registrare esiti e build. **Collaudi manuali non eseguiti.**
+
 ## PBASE-02 — accettazione contratti dei quattro plugin (20/11/2026)
 
 **Gate automatico:** `python3 tests/provider-doc-contract.py` e `python3 tests/provider-package-gate.py`; il package builder importa `tools/provider_doc_gate.py` e ora verifica per YouTube, Vimeo, Cloudflare Stream e HTML5 anche la corrispondenza dei parametri XML con il tipo Joomla, il default dichiarato e i min/max delle guide locali. Le tabelle non sostituiscono la lettura del runtime PHP, né una prova con account terzi.
