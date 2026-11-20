@@ -1,3 +1,11 @@
+## 20 novembre 2026 — SEC-P1, destinatari attuali per il consenso double opt-in (PR #791)
+
+[PR #791](https://github.com/jeckodevelopment/jd_learn/pull/791) integrata in `main` con squash `7089140d068bb73984f45bf961c37ebb8fd98db1`. Il servizio `CourseAnnouncementConsent` usa il record Joomla aggiornato per confrontare e recuperare il destinatario, impedendo richieste con email obsoleta e account bloccato su dashboard/iscrizione; compatibilità con registrazione in attesa di attivazione Joomla conservata. Regressione DB Joomla sul controllo centrale; nessuna prova SMTP o test HTTP reale, né certificazione SEC-P1.
+
+[CI completa](https://github.com/jeckodevelopment/jd_learn/actions/runs/44764215627) **4/4 verde**, [gate matrice](https://github.com/jeckodevelopment/jd_learn/actions/runs/44764215490) verde. [Artefatto Actions JD-Learn-0.64.13-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44764215627/artifacts/14642179660) contenente il pacchetto Joomla interno `pkg_jlms-0.64.13-dev.zip` (809861 byte, 12 costituenti, SHA-256 **ZIP interno** `2b4eb364e3e1a86d241b50f5d9e5d76fc2c65ce32735a0e820fc7b3c5845b804` verificato dal builder). Digest diverso dell'**archivio Actions** `sha256:e27de1e1ec6e87be5bbfb8b012e1cbf22363f85179f5607b379eb218e4f0b84e`.
+
+Matrice, QA, changelog, sicurezza, README e manifest allineati nella stessa PR #791; PATCH `0.64.13-dev`. Nessun criterio promosso: 454 implemented, 35 missing, 268 unverifiable; copertura minima **57,48% invariata**. Collaudo HTTP/SMTP manuale e gate completi SEC-P1/SEC-P5 ancora aperti. Nessuna nuova modifica runtime nella PR documentale.
+
 ## 20 novembre 2026 — DOC-07, validazione stretta date Scheduler (PR #789)
 
 [PR #789](https://github.com/jeckodevelopment/jd_learn/pull/789) integrata con squash SHA `5dfce95b4183211a28d069687ebfc5925c2a820e`. La diagnostica rifiuta date `next_execution` impossibili o non canoniche, usando DATETIME UTC stretto senza normalizzazioni PHP; test negativi e confini di tolleranza. [CI completa](https://github.com/jeckodevelopment/jd_learn/actions/runs/44761363793) **4/4 verde**; gate integrità matrice [run #44761364037](https://github.com/jeckodevelopment/jd_learn/actions/runs/44761364037).
