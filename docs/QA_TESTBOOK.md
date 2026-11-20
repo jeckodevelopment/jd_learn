@@ -1,3 +1,9 @@
+## DOC-07 — prossima esecuzione Scheduler malformata (20/11/2026)
+
+**Automatico:** `php tests/scheduler-guidance.php` verifica valori `next_execution` inesistenti (30 febbraio), ore/minuti fuori range, formati non Joomla e confini dei 10 minuti. La classificazione `unknown` non sostituisce la semantica delle regole Joomla.
+
+**Collaudo Joomla — In attesa:** predisporre in una installazione disposable un task con data prossima esecuzione normale e uno con data impossibile via fixture isolata, verificare stato `unknown` per il secondo, guida IT/EN e nessuna mutazione dei task. Ripristinare le righe, non attivare invii SMTP reali.
+
 ## DOC-07 — duplicati Scheduler con plugin/task disabilitati (20/11/2026)
 
 **Automatico:** `php tests/scheduler-guidance.php` verifica che due attività dello stesso tipo restino classificate `duplicates` in ogni combinazione di abilitazione del plugin e della singola attività; una sola attività disabilitata resta `disabled`.
