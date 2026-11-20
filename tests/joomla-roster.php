@@ -54,6 +54,26 @@ $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 
 $actor=$app->getIdentity();$service=$component->getEnrollmentRosterService();$checks=0;
+
+if (($argv[2] ?? '') === 'mail-reconcile-worker') {
+    // Independent Joomla process + independent DB connection. Main process
+    // releases the row-level lock after both workers reach this barrier.
+    echo "ready\\n";
+    fflush(STDOUT);
+    if (trim((string) fgets(STDIN)) !== 'go') { exit(2); }
+    $workerId = (int) ($argv[3] ?? 0);
+    $workerAction = (string) ($argv[4] ?? '');
+    $audit = new \Jlms\Component\Jlms\Administrator\Application\MailQueueAuditService($db);
+    try {
+        $audit->reconcile($actor, $workerId, $workerAction, 'CI parallel SMTP claim', true);
+        echo "OK\\n";
+    } catch (\RuntimeException $error) {
+        if ($error->getCode() !== 409) { throw $error; }
+        echo "CONFLICT:409\\n";
+    }
+    exit(0);
+}
+
 function rosterExpect(bool $ok,string $message):void{global$checks;if(!$ok)throw new \RuntimeException($message);$checks++;}
 function rosterDenied(callable $fn,int $code,string $message):void{try{$fn();}catch(\RuntimeException $e){rosterExpect($e->getCode()===$code,$message.': '.$e->getMessage());return;}throw new \RuntimeException($message);}
 $f=json_decode(file_get_contents(dirname($root).'/dashboard-fixture.json'),true,16,JSON_THROW_ON_ERROR);$course=(int)$f['course'];
