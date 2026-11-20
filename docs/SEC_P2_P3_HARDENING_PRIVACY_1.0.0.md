@@ -32,3 +32,5 @@ Test: `tests/joomla-smoke.php` crea un job isolato, verifica il blocco sia per l
 - SEC-P2 e SEC-P3 restano **missing/parziali** nella matrice finché gli altri criteri del gate non sono comprovati e l'accettazione manuale non è registrata.
 
 Documentazione collegata: `SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md`, `JOOMLA_PRIVACY_CONSENT_INTEGRATION.md`, `QA_TESTBOOK.md`.
+
+**Nota di verifica CI:** il gate dei metadati usa l'evento PR originale: le esecuzioni annullate o rilanciate con un payload precedente non attestano lo stato aggiornato di descrizione, milestone e label. Occorre una nuova esecuzione su evento aggiornato.
