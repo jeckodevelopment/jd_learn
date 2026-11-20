@@ -1138,3 +1138,6 @@ _progress_subprocess.run(['php', str(ROOT/'tests/provider-contract-example.php')
 
 # UI-07: reject unpublished DOM selector changes and missing page contracts.
 runpy.run_path(str(ROOT/'tests/frontend-dom-contracts.py'), run_name='__main__')
+
+# DOC-07: read-only high-risk operational guidance and IT/EN ACL gate.
+runpy.run_path(str(ROOT/'tests/doc07-safe-operations.py'), run_name='__main__')
