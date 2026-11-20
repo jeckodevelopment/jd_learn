@@ -2585,3 +2585,10 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 **Prova automatica:** la fixture `tests/joomla-categories.php` esegue `inspect` e `reassign` dopo aver impostato `#__users.block=1` sull'operatore già autenticato; entrambe devono fallire con 403 e la categoria del corso rimanere invariata. Il campo `block` è ripristinato in `finally`; successivamente l'operazione permessa resta funzionante.
 
 **Comportamenti da testare manualmente:** autenticarsi con operatore autorizzato alla gestione categorie, da altra sessione bloccare l'account senza chiudere la prima sessione, quindi tentare ispezione e riassegnazione di categoria sorgente cestinata: rifiuto, nessun nuovo `catid`; ripetere dopo riabilitazione dell'account con ACL corrette; testare anche revoca di `core.manage`, permessi `core.delete` sulla sorgente e `core.edit` sulla destinazione. Eseguire su Joomla disposable, non su dati reali. Stato: **in attesa**.
+
+
+### SEC-P1 — blocco account e ACL profilo docente (20/11/2026)
+
+**CI Joomla:** `tests/joomla-teachers.php` crea un profilo collegato all'operatore; verifica `TeacherProfiles::canEdit()` positivo, imposta `#__users.block=1` senza rigenerare l'identità passata al metodo e richiede rifiuto; ripristina `block=0` in `finally` e verifica ritorno dell'autorizzazione. L'esito deve essere confermato su entrambi i profili PHP/database.
+
+**Comportamenti da testare sul sito Joomla disposable:** con docente collegato e profilo editabile, aprire pagina profilo; bloccare l'account da una sessione amministrativa distinta; senza effettuare logout, controllare che link/form di modifica non siano più disponibili e il POST di salvataggio venga respinto senza scrivere dati. Ripetere con utente non proprietario e ACL `core.edit.own` revocata, poi sbloccare e riprovare con account autorizzato. Test HTTP/manuale **in attesa**; non pubblicare dati personali dei docenti.

@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.8-dev — PATCH SemVer (SEC-P1, 20/11/2026):** il controllo centrale `TeacherProfiles::canEdit()` ricarica l'account Joomla anziché fidarsi della sessione precedente, impedendo di considerare ancora editabile un profilo docente dopo il blocco account. Test negativo e positivo su fixture DB Joomla; nessuna migrazione o variazione dei permessi. SEC-P1 rimane aperto e il collaudo manuale è pendente.
+
 - **0.64.7-dev — PATCH SemVer (SEC-P1, 20/11/2026):** la riassegnazione amministrativa delle categorie ricarica l'identità Joomla corrente prima dei controlli di blocco account e ACL, impedendo che un oggetto utente di sessione obsoleto autorizzi un'operazione dopo il blocco. Nuova regressione DB Joomla su inspect/reassign, rifiuto 403 e assenza di modifica dati; senza migrazione. SEC-P1 non chiuso, collaudo manuale pendente.
 
 - **0.64.6-dev — SEC-P1 (20/11/2026, CI/test-only):** introdotto test di integrità del censimento dei controller frontend/amministrativi e dei controlli strutturali metodo/CSRF, richiamato dal preflight. Un nuovo controller non classificato non deve passare inosservato; test manuali ACL/IDOR ancora obbligatori. Nessun cambio runtime, pacchetto, SemVer o avanzamento funzionale.

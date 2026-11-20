@@ -92,6 +92,18 @@ $teacherBase=['id'=>0,'revision'=>1,'title'=>'Original public teacher','alias'=>
 $groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
 teacherExpect($teacherModel->save($teacherBase+['params_json'=>'{"injected":true}','created_by'=>999999]),'Teacher saved through native model');
 $public=(int)$teacherModel->getState('teacher.id');$teacher=$teacherModel->getItem($public);
+// SEC-P1: the session identity loaded before a block must never authorize
+// a teacher edit, including links and forms that call the shared helper.
+teacherExpect(TeacherProfiles::canEdit($actor,$teacher),'teacher profile author may edit before account block');
+$db->setQuery('UPDATE #__users SET block=1 WHERE id='.(int)$actor->id)->execute();
+try {
+    teacherExpect(!TeacherProfiles::canEdit($actor,$teacher),
+        'blocked Joomla account cannot edit teacher through a stale session identity');
+} finally {
+    $db->setQuery('UPDATE #__users SET block=0 WHERE id='.(int)$actor->id)->execute();
+}
+teacherExpect(TeacherProfiles::canEdit($actor,$teacher),
+    'teacher profile edit authorization restores after account unblocked');
 teacherExpect((int)$teacher->revision===1&&(int)$teacher->created_by===(int)$actor->id&&!str_contains($teacher->params_json,'injected'),'Revision ownership and allowlisted params persisted');
 $asset=new \Joomla\CMS\Table\Asset($db);$asset->loadByName('com_jlms.teacher.'.$public);
 $parent=(int)$db->setQuery('SELECT asset_id FROM #__categories WHERE id='.$teacherCategory)->loadResult();
