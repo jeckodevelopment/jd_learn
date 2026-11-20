@@ -42,7 +42,7 @@
         "label": "Catalogo, frontend e navigazione",
         "requirements": 23,
         "weight_percent": 10.75,
-        "development_evidence_floor_percent": 76.59,
+        "development_evidence_floor_percent": 76.58,
         "manual_acceptance_coverage_percent": 13.04,
         "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
