@@ -83,6 +83,16 @@ try:
  # Preview denial while the backend identity remains logged in and authorized to enter the component.
  manager=client();login(manager,'cirosterreader','Ci-only-Roster-Password-2026')
  mu,mh,_,mf=preview(manager);expect(mf is not None,'course manager can prepare reactivation')
+ # SEC-P1: block the Joomla identity after the same HTTP session obtained a
+ # valid impact preview; GET and POST must not expose or change state.
+ blocked_before=json.loads(fixture('snapshot'))
+ try:
+  fixture('block')
+  request(manager,mu,expected=403)
+  apply(manager,mu,mf,expected=403)
+  expect(json.loads(fixture('snapshot'))==blocked_before,'blocked HTTP session cannot mutate enrollment or audit')
+ finally:
+  fixture('unblock')
  fixture('revoke')
  request(manager,mu,expected=403);apply(manager,mu,mf,expected=403);fixture('grant')
  # Fresh current preview is required; prior suspension command is not a reactivation toggle.
@@ -106,4 +116,4 @@ finally:
   server.terminate()
   try:server.wait(timeout=5)
   except subprocess.TimeoutExpired:server.kill();server.wait()
- fixture('grant');log.close()
+ fixture('unblock');fixture('grant');log.close()
