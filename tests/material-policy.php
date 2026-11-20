@@ -13,8 +13,8 @@ function materialReject(callable $call, string $message): void {
     throw new \RuntimeException($message);
 }
 foreach (['../evil.pdf', 'bad.php.pdf', 'bad.html', "bad\0.pdf", 'bad\\name.pdf', '.hidden.txt',
-    "appunti\\u{202E}fdp.exe", "materiale\\u{202A}.txt", "test\\u{2066}notes\\u{2069}.txt",
-    "note\\u{200F}.txt", "report\\u{061C}.pdf"] as $bad) {
+    "appunti\u{202E}fdp.exe", "materiale\u{202A}.txt", "test\u{2066}notes\u{2069}.txt",
+    "note\u{200F}.txt", "report\u{061C}.pdf"] as $bad) {
     materialReject(fn () => MaterialFilePolicy::name($bad), 'Unsafe name rejected');
 }
 materialExpect(MaterialFilePolicy::name('Lezione àèìòù – résumé.pdf') === 'Lezione àèìòù – résumé.pdf', 'Legitimate Unicode filename accepted');
