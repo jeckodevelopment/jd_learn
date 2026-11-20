@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.17-dev — SEC-P1, test-only (20/11/2026):** regressione Joomla sulla revoca immediata dell'accesso al roster e ai filtri dopo blocco account con identità di sessione obsoleta; ripristino DB garantito. Controlli runtime preesistenti, nessun bump SemVer; SEC-P1 ancora aperto e collaudo HTTP pendente.
+
 - **0.64.17-dev — SEC-P1, PATCH (20/11/2026):** autorizzazione fresca per tutte le sette operazioni amministrative degli attestati: ricarica utente Joomla, controllo blocco account, permessi core.manage e jlms.certificates.manage su ogni richiesta. Corretto anche il controllo ACL della guida amministrativa variabili email; test Joomla negativo su account bloccato dopo il login per elenco, dettaglio, diagnosi, download, rigenerazione e recuperi, con ripristino DB. Gate strutturale contro nuovi metodi admin non controllati. Accettazione HTTP/manuale e audit SEC-P1 generale pendenti, minimo 57,48% invariato.
 
 - **0.64.16-dev — SEC-P1, PATCH (20/11/2026):** `recipient_user_id` obbligatorio per tutti i nuovi eventi MailQueue; account Joomla e indirizzo ricontrollati prima di SMTP su tutti i template. Corretti i flussi di iscrizione, completamento quiz/video, approvazione, sospensione, attestati e promemoria; legacy senza identità scartati e minimizzati. Inventario dei 13 produttori SMTP, gate automatico in preflight e documentazione dei subscriber Joomla. SEC-P1/SEC-P5 aperti, collaudo manuale SMTP pendente, minimo 57,48% invariato.
