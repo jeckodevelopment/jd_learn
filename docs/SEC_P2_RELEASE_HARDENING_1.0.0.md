@@ -29,3 +29,11 @@ JD Learn distribuisce **codice proprio e provider Joomla**, senza Composer/npm r
 5. Documentare per **ogni** finding pertinente severità, componente e versione, decisione (corretto/accettato motivatamente), test e riferimento alla release candidate. Il gate non può chiudersi se mancano queste evidenze.
 
 **Decisione per la PR:** la presenza dei controlli automatici conferma una mitigazione software specifica, non la chiusura definitiva di SEC-P2. Le prove live e l'analisi di vulnerabilità esterna non sono state eseguite da questa PR. Il contatore dei requisiti non viene aumentato senza criterio e prova ammissibili.
+
+## Aggiornamento advisory 20/11/2026 — PHP patch floor
+
+La consultazione delle fonti pubbliche sul candidato ha rilevato il bollettino del 19/11/2026: per i due minor utilizzati dalla CI sono disponibili PHP **8.3.37** e **8.4.28**, con correzioni di sicurezza. Fonte primaria: [archivio PHP 2026](https://www.php.net/archive/2026.php); [versioni supportate](https://www.php.net/supported-versions.php). Il controllo `tests/sec-p2-php-security-floor.php` fa fallire le matrici Joomla qualora il runner sia fermo a una patch precedente; non modifica l'intervallo di compatibilità generale dell'estensione né dimostra quale PHP sia installato sul sito di prova.
+
+**Esito e limite:** questo è un controllo puntuale dei livelli patch pubblicati, non una dichiarazione che tutte le CVE correnti di PHP, Joomla, componenti OS o provider siano state esaminate. Il responsabile dell'hosting deve verificare le versioni *effettivamente installate* (incluse distribuzioni con backport) e allegare un riscontro redatto. In caso di backport formalmente documentato, registrare eccezione e prova senza disabilitare il gate dei runner CI.
+
+In data 20/11/2026 la fonte ufficiale di [roadmap Joomla](https://developer.joomla.org/roadmap.html) pianifica 6.2.1 per il 24/11/2026; non anticipare la disponibilità di una versione futura. Joomla 6.2.0 rimane la fixture CI, e il sito reale deve essere controllato separatamente alla data del rilascio stabile.
