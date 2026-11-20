@@ -56,3 +56,12 @@ La review mirata della coda email ha rilevato che il testo delle eccezioni del m
 
 **Esito e limiti:** non è stata individuata una mutazione senza CSRF su questi task mediante revisione statica; l'esito HTTP deve essere confermato dalla CI e non sostituisce revisione sistematica di tutti i controller, ACL in configurazioni reali o collaudo manuale Joomla. Non promuovere criteri SEC-P1/SECDEV-04 o percentuali per questa sola tranche. La guida `QUIZ_AUTHORING.md` è stata corretta perché descriveva duplicazione/cestinazione già implementate come assenti.
 
+## SEC-P1 — regressione ACL download amministrativo attestati (20/11/2026)
+
+**Superficie:** `CertificateService::adminDownload` e `CertificateService::assertCertificateAdministrator`, con fixture Joomla `tests/joomla-dashboard.php`. Il metodo richiede congiuntamente `core.manage` e `jlms.certificates.manage` su `com_jlms`; il solo possesso dell'attestato o l'autenticazione non attribuiscono il permesso amministrativo.
+
+**Test aggiunti:** dopo la creazione di un attestato PDF reale nella fixture, tre tentativi di download amministrativo (proprietario, altro studente e ospite) devono fallire con 403; il download da operatore autorizzato deve ottenere il documento PDF e chiudere il file handle. La prova richiede la CI Joomla completa; non è attestata come superata prima dell'esito CI.
+
+**Limite:** verifica mirata del servizio e del ruolo della fixture, non penetration test, non matrice esaustiva dei gruppi Joomla né accettazione manuale. SEC-P1 e SEC-P5 restano aperti; nessuna percentuale funzionale aggiuntiva viene attribuita.
+
+Il tracciamento della prova mantiene separati: codice che applica ACL, esito HTTP nella fixture e collaudo manuale con ruoli configurati; nessun esito non osservato deve essere marcato verificato.

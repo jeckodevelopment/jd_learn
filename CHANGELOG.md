@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.5-dev — SEC-P1 (20/11/2026, test senza modifica runtime):** estesa la fixture Joomla degli attestati con tre tentativi negativi di download amministrativo (proprietario, altro studente, ospite) e una prova positiva con operatore dotato dei permessi specifici. SEC-P1 resta aperto; CI e accettazione manuale da confermare; SemVer e avanzamento funzionale invariati.
+
 - **0.64.5-dev — PATCH SemVer (SECDEV-03, 20/11/2026):** rifiutati i marcatori Unicode bidirezionali nei nomi dei file di materiali e video, per impedire la presentazione ingannevole delle estensioni anche nei download autorizzati. I controlli precedenti (nome, contenuto/MIME, dimensioni, ACL) restano invariati. Test negativi per override, isolate e marcatori direzionali e positivo per accenti Unicode. Nessuna promozione automatica di SECDEV-03, che richiede una verifica di sicurezza trasversale.
 
 - **0.64.4-dev — PBASE-03 (20/11/2026, guide/test):** guide per amministratore, autore e sviluppatore dei provider video; esempio Joomla documentale del contratto di registrazione con manifest, service provider, subscriber e adapter deliberatamente non riproducibile. Test CLI del registry e dei metadati del manifest. Nessuna nuova estensione distribuita, nessuna modifica runtime e nessun aumento SemVer. Registro PBASE-03/criterion_04 riconciliato con test: 454 implementati, 35 mancanti, 268 non verificabili e minimo 57,48%.
