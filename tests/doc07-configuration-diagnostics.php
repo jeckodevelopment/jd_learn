@@ -1,0 +1,50 @@
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/../component/administrator/src/Infrastructure/SchedulerHealth.php';
+require __DIR__ . '/../component/administrator/src/Application/DashboardProviderStatus.php';
+require __DIR__ . '/../component/administrator/src/Application/ConfigurationDiagnostics.php';
+
+use Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics;
+
+$states = ['missing', 'invalid_rules', 'disabled', 'duplicates', 'failed', 'overdue', 'waiting', 'operational', 'unknown'];
+$scheduler = [];
+foreach ($states as $state) {
+    $scheduler[] = ['label' => 'COM_JLMS_SCHEDULER_MAIL', 'state' => $state, 'duplicates' => false];
+}
+$scheduler[] = ['label' => 'COM_JLMS_SCHEDULER_MAIL', 'state' => 'operational', 'duplicates' => true];
+$providerStates = [
+    'COM_JLMS_PROVIDER_NOT_INSTALLED', 'COM_JLMS_PROVIDER_DISABLED',
+    'COM_JLMS_PROVIDER_UNAVAILABLE', 'COM_JLMS_NOT_CONFIGURED',
+    'COM_JLMS_READY', 'unexpected',
+];
+$providers = array_map(
+    static fn (string $state): array => ['labelKey' => 'COM_JLMS_PROVIDER_YOUTUBE', 'stateKey' => $state],
+    $providerStates
+);
+$result = ConfigurationDiagnostics::summarize($scheduler, $providers);
+if (count($result) !== count($scheduler) + count($providers)) {
+    throw new RuntimeException('Configuration checks lost or added an unrecognized check');
+}
+foreach ($result as $check) {
+    if (!in_array($check['severity'], ['ok', 'warning', 'error'], true)
+        || !preg_match('/^COM_JLMS_[A-Z0-9_]+$/', $check['labelKey'])
+        || !preg_match('/^COM_JLMS_[A-Z0-9_]+$/', $check['stateKey'])
+        || !preg_match('/^COM_JLMS_[A-Z0-9_]+$/', $check['guidanceKey'])) {
+        throw new RuntimeException('A configuration diagnostic contains unsafe raw data');
+    }
+    if (array_diff(array_keys($check), ['kind', 'labelKey', 'severity', 'guidanceKey', 'stateKey'])) {
+        throw new RuntimeException('A configuration diagnostic exposed unexpected fields');
+    }
+}
+if ($result[3]['severity'] !== 'error' || $result[9]['severity'] !== 'error'
+    || $result[7]['severity'] !== 'ok'
+    || $result[count($scheduler) + 2]['severity'] !== 'error'
+    || $result[count($scheduler) + 4]['severity'] !== 'ok'
+    || $result[count($scheduler) + 5]['severity'] !== 'warning') {
+    throw new RuntimeException('Unsafe severity classification or duplicate precedence');
+}
+if ($result[9]['guidanceKey'] !== 'COM_JLMS_SCHEDULER_GUIDANCE_DUPLICATES') {
+    throw new RuntimeException('Duplicate scheduler task did not override healthy status');
+}
+echo "DOC-07: scheduler/provider actionable statuses and privacy-safe projections OK\n";
