@@ -112,14 +112,14 @@ rosterExpect(count($read($user))===count($rows),'dedicated course ACL grants ros
 
  // SEC-P1: a delegated component manager is NOT a global mail-queue auditor.
  // The queue contains recipients and operational notes for unrelated courses.
-$mailAudit=new \Jlms\\Component\Jlms\\Administrator\\Application\\MailQueueAuditService($db);
+$mailAudit=new \Jlms\Component\Jlms\Administrator\Application\MailQueueAuditService($db);
 $mailQueueCount=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult();
 $courseManager=$user;
 rosterDenied(fn()=>$mailAudit->page($courseManager),403,'delegated course manager denied global mail outbox');
 rosterDenied(fn()=>$mailAudit->reconcile($courseManager,999999999,'sent','Confirmed no delivery',true),403,
     'delegated course manager cannot reconcile global mail outbox');
-rosterDenied(fn()=>$mailAudit->page(new \Joomla\\CMS\\User\\User()),403,'guest denied global mail outbox');
-$componentAsset=new \Joomla\\CMS\\Table\\Asset($db);
+rosterDenied(fn()=>$mailAudit->page(new \Joomla\CMS\User\User()),403,'guest denied global mail outbox');
+$componentAsset=new \Joomla\CMS\Table\Asset($db);
 $componentAsset->loadByName('com_jlms');
 $mailAuditOriginalRules=$componentAsset->rules;
 try {
