@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **452**.
-- Mancanti con lacuna accertata: **37**.
+- Implementati: **453**.
+- Mancanti con lacuna accertata: **36**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -61,9 +61,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [README.md#L1-L25](../README.md#L1-L25)
   - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
 - `PBASE-03/criterion_04` — Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile. La revisione del criterio «Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [README.md#L1-L25](../README.md#L1-L25)
-  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
-- `PBASE-03/criterion_06` — assenza di documentazione di un plugin base blocca l'accettazione del pacchetto. La revisione del criterio «assenza di documentazione di un plugin base blocca l'accettazione del pacchetto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [README.md#L1-L25](../README.md#L1-L25)
   - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
 - `DOC-02/criterion_02` — Manuale copre provider video, email e attestati. La revisione del criterio «Manuale copre provider video, email e attestati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1864,6 +1861,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PBASE-03/criterion_03` — Servizi_endpoint_LMS_Joomla_1.0.md il contratto comune. L’allegato documenta il contratto comune, le responsabilità, le interfacce PHP e gli eventi del player.
   - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.2 Registrazione e contratto PHP](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
   - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player nel browser](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+- `PBASE-03/criterion_06` — assenza di documentazione di un plugin base blocca l'accettazione del pacchetto. Il builder standalone invoca il gate per tutti e quattro i plugin prima della produzione del pacchetto. Le prove negative simulano guida mancante, sezione obbligatoria assente e campo manifest non documentato e confermano che nessuno ZIP viene prodotto. L'accettazione manuale Joomla è distinta.
+  - [tools/build.py#validate_provider_guides(ROOT)](../tools/build.py)
+  - [tests/provider-package-gate.py#rejected("missing guide")](../tests/provider-package-gate.py)
+  - [tests/provider-package-gate.py#rejected("undocumented Joomla manifest field")](../tests/provider-package-gate.py)
 - `PBASE-04/criterion_02` — La matrice dedicata Matrice_collaudo_plugin_video_1.0.csv copre contratto comune e quattro provider. La matrice contiene scenari comuni e gruppi separati per YouTube, Vimeo, Cloudflare Stream e HTML5. Le colonne di esito richiedono build ed evidenza.
   - [docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#PV-COMMON-01](../docs/specifications/Matrice_collaudo_plugin_video_1.0.csv)
   - [docs/specifications/Matrice_collaudo_plugin_video_1.0.csv#Plugin/gruppo,Funzionalita](../docs/specifications/Matrice_collaudo_plugin_video_1.0.csv)
