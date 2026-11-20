@@ -13,3 +13,7 @@ Banca domande, composizione e tentativi: [QUIZ_AUTHORING.md](QUIZ_AUTHORING.md),
 - [Dashboard amministrativa](ADMIN_DASHBOARD.md)
 
 - [Percorsi formativi](PATHWAYS.md)
+
+## Procedure amministrative trasversali — DOC-02
+
+I manuali offline realmente distribuiti con JD Learn, [Italiano](../help/it-IT/manual.html#operations-video) ed [English](../help/en-GB/manual.html#operations-video), comprendono i capitoli di gestione video e consenso, modelli email e Scheduler, attestati PDF, ACL/privacy e manutenzione. Sono disponibili anche gli ancoraggi `#operations-mail`, `#operations-certificates` e `#operations-security` in entrambe le lingue. Le guide distinguono diagnostica, operazioni consentite e collaudo manuale da eseguire; per le istruzioni tecniche di provider usare i README effettivi dei quattro plugin.
