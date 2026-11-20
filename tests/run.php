@@ -380,10 +380,10 @@ foreach ([
     'COM_JLMS_NOT_CONFIGURED' => 'NOT_CONFIGURED',
     'COM_JLMS_READY' => 'READY',
 ] as $state => $suffix) {
-    expect(\\Jlms\\Component\\Jlms\\Administrator\\Application\\DashboardProviderStatus::guidanceKey($state)
+    expect(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey($state)
         === 'COM_JLMS_PROVIDER_GUIDANCE_' . $suffix, 'video provider actionable guidance ' . $suffix);
 }
-expect(\\Jlms\\Component\\Jlms\\Administrator\\Application\\DashboardProviderStatus::guidanceKey('unexpected')
+expect(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey('unexpected')
     === 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN', 'unknown provider state requires neutral guidance');
 
 $descriptor = new ProviderDescriptor('example', 'EXAMPLE', 1, false);
