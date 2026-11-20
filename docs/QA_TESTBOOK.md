@@ -1,3 +1,9 @@
+## SECDEV-03 — spoofing del nome file tramite controlli Unicode bidi (20/11/2026)
+
+**Automatico:** `php tests/material-policy.php` deve rifiutare nomi contenenti marcatori bidi U+202E, U+202A, U+2066/U+2069, U+200F e U+061C, mantenendo ammessi nomi UTF-8 accentati senza tali controlli. La stessa policy protegge il nome proposto nel download; i controlli MIME e sul contenuto restano separati.
+
+**Collaudo manuale Joomla pendente:** su ambiente disposable, come autore provare a caricare `appunti‮fdp.exe` (RLO) e un nome con marcatori di isolamento: l'upload deve essere respinto, senza salvare asset o modificare il corso. Caricare poi `Lezione àèìòù – résumé.pdf` con PDF valido e antivirus configurato, quindi verificare autorizzazioni e intestazione `Content-Disposition` del download. Ripetere le prove negative per MP4 locale dove il percorso consente il caricamento. Non assumere che questa protezione risolva gli altri vettori XSS o SQLi inclusi nel gate SECDEV-03.
+
 ## PBASE-03 — guide amministratore/autore/sviluppatore ed esempio estensione (20/11/2026)
 
 **Automatico:** `php tests/provider-contract-example.php` controlla il registry v1, l'unicità delle chiavi, la factory lazy e lo scheletro di manifest Joomla; l'adapter di esempio rimane intenzionalmente fail-closed senza playback.
