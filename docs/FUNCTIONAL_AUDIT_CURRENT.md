@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **451**.
-- Mancanti con lacuna accertata: **38**.
+- Implementati: **452**.
+- Mancanti con lacuna accertata: **37**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -50,11 +50,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `SECDEV-07/criterion_02` — Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi. Non risulta un inventario/lockfile e una scansione completa di stile, analisi statica, segreti e dipendenze con evidenze della candidata; il gate di hardening rimane aperto.
-  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
-  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SECDEV-07/criterion_03` — OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite. La documentazione cita genericamente OWASP ASVS ma non fissa una versione; il requisito chiede un riferimento versionato esplicitamente.
   - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
   - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
@@ -1849,6 +1844,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/services/provider.php#ComponentDispatcherFactory](../component/administrator/services/provider.php)
   - [component/administrator/services/provider.php#setMVCFactory](../component/administrator/services/provider.php)
   - [component/jlms.xml#<extension](../component/jlms.xml)
+- `SECDEV-07/criterion_03` — OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite. Il riferimento tecnico di verifica è ora fissato su OWASP ASVS v5.0.0 (stable), con link alla fonte ufficiale e formato degli ID versionati, distinzione tra riferimento e certificazione, e test CI che rileva omissioni/variazioni del pin. La disponibilità del riferimento non dimostra che controlli ASVS, threat model, code review o penetration test siano stati completati: SECDEV-07/criterion_01, /criterion_02 e /criterion_04–05 restano aperti secondo le proprie evidenze.
+  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#OWASP ASVS 5.0.0](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
+  - [tests/asvs-reference.py#PIN](../tests/asvs-reference.py)
+  - [tests/asvs-reference.py#CERTIFICATION](../tests/asvs-reference.py)
 - `SECDEV-08/criterion_02` — Build riproducibile, pacchetto senza segreti/file dev, checksum, changelog e aggiornamenti Joomla su HTTPS. Il builder produce ZIP deterministico e checksum. Il workflow di rilascio verifica l’asset rispetto al candidato e il manifest dichiara il feed di aggiornamento su HTTPS.
   - [tools/build.py#SHA256SUMS.txt](../tools/build.py)
   - [.github/workflows/release.yml#public release asset checksum mismatch](../.github/workflows/release.yml)
