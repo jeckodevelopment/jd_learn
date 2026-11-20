@@ -50,6 +50,8 @@ try:
   changed,count=re.subn(r'public\s+\$sef\s*=\s*[^;]+;',f'public $sef = {sef};',original)
   if count!=1:raise RuntimeError('SEF fixture missing')
   config.write_text(changed)
+  _,catalog_page=get('/index.php?option=com_jlms&view=courses&lang=en')
+  expect(verify_dom(catalog_page, root='jlms-courses', scoped_class='jlms-course-card') > 0, 'UI-07: catalog CSS customization and unique IDs verified in real Joomla HTML')
   _,root_page=get('/index.php?option=com_jlms&view=categories&lang=en')
   expect('id="jlms-categories"' in root_page and 'Taxonomy English' in root_page and 'PRIVATE_QUESTION_CATEGORY' not in root_page,'root list scoped and visible')
   expect(verify_dom(root_page, root='jlms-categories', scoped_class='jlms-category-card') > 0, 'UI-07: public category index preserves scoped cards and unique IDs')
