@@ -37,3 +37,22 @@ Il test `tests/frontend-dom-runtime.py` aggiunge un parser HTML riutilizzabile c
 Il parser è chiamato nelle suite HTTP Joomla `tests/categories-http.py` (catalogo, categorie, dettaglio categoria, con SEF attivato e disattivato) e `tests/dashboard-http.py` (vista riepilogo, elenco dei corsi e navigazione opzionale). Ogni suite gira su un'installazione Joomla temporanea con dati controllati; le fixture negative vengono testate anche nel preflight di `tools/check.py`.
 
 **Limiti residui:** la regressione automatica non copre ancora tutte le 17 viste su ogni combinazione di record, moduli, override di template o CMS di terze parti. La resa visiva effettiva di due CSS autonomi e l'accessibilità multibrowser restano collaudi manuali. Non promuovere il criterio UI-07/versioned_maps a implementato sulla sola copertura parziale runtime.
+
+## Inventario completo dei partial e regole di composizione — UI-07
+
+Il contratto versione **1.0.0** include ora, oltre alle 17 viste, **tutti e quattro i partial PHP distribuiti** in `component/site/tmpl/dashboard/`. Per ciascuno il JSON indica percorso, ID/classi letterali e insieme preciso delle viste che lo includono; `tests/frontend-dom-contracts.py` controlla entrambi i versi della relazione e fallisce quando appare un nuovo partial non censito.
+
+| Partial | Viste consumatrici | ID pubblici letterali | Note di compatibilità |
+| --- | --- | --- | --- |
+| `_personal_navigation.php` | dashboard, mycourses, mycertificates, preferences | `#jlms-personal-navigation` | Condizionale al parametro del menu; massimo una navigazione per documento |
+| `_courses.php` | mycourses | `#jlms-my-courses`, `#jlms-dashboard-empty`, `#jlms-dashboard-empty-catalog` | ID dinamici delle schede da iscrizione, univoci per utente/pagina |
+| `_certificates.php` | mycertificates | Nessun ID letterale; classi delle schede | I link non devono ignorare i controlli ACL del controller |
+| `_preferences.php` | preferences | `#jlms-course-announcement-preferences`, `#jlms-course-announcement-title`, `#jlms-mail-consent-state` | Gli stati del consenso sono alternativi, non duplicazioni visibili contemporaneamente |
+
+Nessun modulo Joomla è distribuito come parte del package base (il manifest `packages/pkg_jlms.xml` lo rende verificabile). Moduli di terze parti possono comparire nella stessa pagina: i controlli su HTML renderizzato `tests/frontend-dom-runtime.py` rifiutano la duplicazione di identificatori `jlms-*` fra componente, partial e contenuto di modulo; le suite HTTP Joomla esercitano i percorsi core già predisposti. L'assenza di un modulo nel package **non dimostra** la compatibilità di moduli/override esterni non installati.
+
+### Contratto di modifica e personalizzazione
+
+I selector CSS A (`#jlms-courses .jlms-course-card`) e B (`#jlms-dashboard .jlms-my-course`) rimangono indipendenti, senza rimozione di hook preesistenti. Una modifica incompatibile a ID, classi o `data-*` richiede prima la strategia di alias/migrazione, l'aggiornamento della mappa e della guida, nonché un changelog e una versione contrattuale esplicita. Un override di template non può aggirare ACL, CSRF o accesso alle risorse private.
+
+**Implementazione del contratto DOM:** le 17 mappe di vista, i quattro partial, le dipendenze di inclusione, le personalizzazioni indipendenti e i casi negativi di collisione sono coperti da test automatici. **Accettazione Joomla ancora aperta:** verificare su template reali le varianti condizionali, componenti e moduli insieme, browser/mobile, CSS nel contesto della cascata e accessibilità con gli scenari AC-34 e AC-93. Non attribuire a queste verifiche statiche un risultato manuale o una certificazione WCAG.
