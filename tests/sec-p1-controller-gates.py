@@ -160,7 +160,7 @@ def check_dispatch_inventory(folder: Path, expected: dict[str, set[str]], writab
             folder, filename, "public method surface changed",
             sorted(actual - approved_methods), sorted(approved_methods - actual)
         )
-        if filename not in writable | delegated:
+        if filename == "DisplayController.php":
             continue
         if folder == SITE and filename == "LessonController.php":
             assert "extends EnrollmentController" in code, "lesson inherits the reviewed enrollment task gate"
@@ -181,8 +181,8 @@ def check_dispatch_inventory(folder: Path, expected: dict[str, set[str]], writab
             sorted(declared - approved), sorted(approved - declared)
         )
 
-assert set(DISPATCH_TASKS["site"]) == (WRITE_SITE | DELEGATE_SITE) - {"LessonController.php"}
-assert set(DISPATCH_TASKS["administrator"]) == WRITE_ADMIN | DELEGATE_ADMIN
+assert set(DISPATCH_TASKS["site"]) == set(PUBLIC_METHODS["site"]) - {"LessonController.php", "DisplayController.php"}
+assert set(DISPATCH_TASKS["administrator"]) == set(PUBLIC_METHODS["administrator"]) - {"DisplayController.php"}
 # EnrollmentController separates its own tasks from those inherited by the
 # LessonController; do not let lesson.start/lesson.resume become routable.
 enrollment_dispatch = (SITE / "EnrollmentController.php").read_text(encoding="utf-8")
