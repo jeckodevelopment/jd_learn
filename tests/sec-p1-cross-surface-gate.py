@@ -30,12 +30,12 @@ assert actual == set(EXPECTED), ("Review new/removed shipped plugin class", sort
 for relative, (class_name, events) in EXPECTED.items():
     filename = PLUGINS / relative / "src/Extension" / (class_name + ".php")
     text = filename.read_text(encoding="utf-8")
-    assert re.search(r"final class " + class_name + r"\\b", text), relative
+    assert re.search(r"final class " + class_name + r"\b", text), relative
     assert "SubscriberInterface" in text and "getSubscribedEvents()" in text, relative
     for event in events:
         assert event in text.split("getSubscribedEvents()", 1)[1], (relative, event)
     # New public actions must receive an explicit reviewer decision.
-    public = set(re.findall(r"public (?:static )?function ([A-Za-z0-9_]+)\\(", text))
+    public = set(re.findall(r"public (?:static )?function ([A-Za-z0-9_]+)\(", text))
     expected = {
         "actionlog/jdlearn": {"getSubscribedEvents", "onJlmsCourseTransition"},
         "finder/jlms": {"getSubscribedEvents", "onFinderAfterSave", "onFinderAfterDelete", "onFinderChangeState"},
@@ -57,7 +57,7 @@ for kind, handler in {
     "jlms.materials.cleanup": "cleanupMaterials",
     "jlms.mail.dispatch": "dispatchMail",
 }.items():
-    assert re.search(r"'" + re.escape(kind) + r"'\\s*=>\\s*\\[[^\\]]*'method'\\s*=>\\s*'" + handler + r"'", task), (kind, handler)
+    assert re.search(r"'" + re.escape(kind) + r"'\s*=>\s*\[[^\]]*'method'\s*=>\s*'" + handler + r"'", task), (kind, handler)
     assert "protected function " + handler + "(ExecuteTaskEvent $event):int" in task, handler
 assert task.count("logTask(") == 3, "Task logging requires review for PII/secrets"
 
