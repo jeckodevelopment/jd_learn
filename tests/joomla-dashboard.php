@@ -200,6 +200,15 @@ $certDbSnapshot=$db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json
 dashExpect($certificates->listForStudent($other)===[],'foreign learner has no access to another issued certificate');
 dashDenied(fn()=>$certificates->download($other,$completed),404,'foreign certificate download denied');
 dashDenied(fn()=>$certificates->download(new \Joomla\CMS\User\User(),$completed),401,'anonymous certificate download denied');
+// SEC-P1: administrative certificate delivery must require the dedicated permission,
+// not merely ownership of the enrollment or an authenticated Joomla identity.
+dashDenied(fn()=>$certificates->adminDownload($owner,(int)$certificate->id),403,'certificate owner cannot use administrator download');
+dashDenied(fn()=>$certificates->adminDownload($other,(int)$certificate->id),403,'foreign student cannot use administrator download');
+dashDenied(fn()=>$certificates->adminDownload(new \Joomla\CMS\User\User(),(int)$certificate->id),403,'guest cannot use administrator download');
+$adminPdf=$certificates->adminDownload($operator,(int)$certificate->id);
+try { dashExpect($adminPdf['mime']==='application/pdf' && $adminPdf['size']>100,
+    'authorized certificate manager can retrieve protected document'); }
+finally { fclose($adminPdf['handle']); }
  // EDGE-01: an existing session object must not bypass a later core account block.
  $preBlockOwner = $owner;
  $update('users',(int)$owner->id,['block'=>1]);
