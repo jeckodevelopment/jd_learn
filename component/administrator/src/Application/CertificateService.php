@@ -565,8 +565,18 @@ final class CertificateService
 
     private function assertCertificateAdministrator(User $identity): void
     {
-        if ((int) $identity->id < 1 || !$identity->authorise('core.manage', 'com_jlms')
-            || !$identity->authorise('jlms.certificates.manage', 'com_jlms')) {
+        // Administrator permissions and account state must be read again for
+        // every certificate operation. The Joomla session identity can be stale
+        // after a block, group change or explicit permission revocation.
+        $userId = (int) $identity->id;
+        if ($userId < 1 || $identity->guest) {
+            throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
+        }
+        $actor = new User($userId);
+        $actor->clearAccessRights();
+        if (!$actor->id || $actor->block
+            || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.certificates.manage', 'com_jlms')) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
     }
