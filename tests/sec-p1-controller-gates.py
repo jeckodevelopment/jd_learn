@@ -55,6 +55,90 @@ def check_surface(folder: Path, writable: set[str], readonly: set[str],
 site_count = check_surface(SITE, WRITE_SITE, READ_SITE, DELEGATE_SITE)
 admin_count = check_surface(ADMIN, WRITE_ADMIN, READ_ADMIN, DELEGATE_ADMIN)
 
+# The public method set is an explicit reviewed snapshot of the shipped
+# controller surface. Joomla may route an otherwise harmless new public helper
+# unless it is deliberately kept behind a dispatch allowlist.
+# Keep this inventory synchronized with the technical SEC-P1 report.
+PUBLIC_METHODS = {
+    "site": {
+        "AudioController.php": {"execute", "save"},
+        "VideoController.php": {"execute", "playback", "renew", "save", "close"},
+        "QuizController.php": {"execute", "start", "save", "submit", "state"},
+        "EnrollmentController.php": {"execute", "request", "start", "resume"},
+        "LessonController.php": {"complete", "begin"},
+        "MailconsentController.php": {"execute", "request", "confirm", "revokeLink", "revoke"},
+        "DisplayController.php": {"display"},
+        "AttachmentController.php": {"execute", "publicpreview", "publiclessonpreview", "preview", "audio", "download", "inline"},
+        "MediaController.php": {"execute", "stream"},
+        "CertificateController.php": {"execute", "download"},
+        "TeacherController.php": {"execute", "getModel"},
+    },
+    "administrator": {
+        "QuizController.php": {"execute", "save", "delete"},
+        "CourseController.php": {"execute", "trash", "restore", "purge"},
+        "LessonController.php": {"execute", "metadata", "move", "duplicate", "save", "delete", "reorder"},
+        "CoursesController.php": {"execute", "programme"},
+        "TeacherController.php": {"execute", "trash", "restore", "publish", "unpublish", "purge"},
+        "PathwayController.php": {"execute", "trash", "restore", "archive", "publish", "unpublish", "purge"},
+        "QuiztimeController.php": {"execute", "save"},
+        "MaterialController.php": {"execute", "upload", "reuse", "save", "delete", "scan", "download", "preview"},
+        "VideofileController.php": {"execute", "upload", "scan"},
+        "MailqueueController.php": {"execute", "reconcile"},
+        "CurriculumController.php": {"execute", "saveOrder", "saveTeachingRules", "restoreVersion", "duplicateCourse", "transition", "createVersion"},
+        "QuizextendController.php": {"execute", "apply"},
+        "QuizreviewController.php": {"execute", "cancel"},
+        "CertificateController.php": {"execute", "recoverHistorical", "recoverMissing", "regenerate", "download"},
+        "QuestionbankController.php": {"execute", "save", "checkout", "checkin", "duplicate", "delete", "trash", "restore"},
+        "CoursemessageController.php": {"execute", "preview", "test", "queue"},
+        "CoursepreviewController.php": {"execute", "playback"},
+        "EnrollmentstateController.php": {"execute", "apply"},
+        "CourseoperationsController.php": {"execute", "apply"},
+        "ManualenrollmentController.php": {"execute", "apply"},
+        "EnrollmentapprovalController.php": {"execute", "decide"},
+        "CourseannouncementController.php": {"execute", "notify"},
+        "EnrollmentmigrationController.php": {"execute", "apply"},
+        "CategoryreassignmentController.php": {"execute", "reassign"},
+        "DisplayController.php": {"display"},
+        "ModuleController.php": {"execute", "duplicate", "save", "delete", "reorder"},
+    },
+}
+
+def check_dispatch_inventory(folder: Path, expected: dict[str, set[str]], writable: set[str],
+                             delegated: set[str]) -> None:
+    import re
+    assert {path.name for path in folder.glob("*Controller.php")} == expected.keys(), (
+        folder, "controller method inventory drift"
+    )
+    for filename, approved_methods in sorted(expected.items()):
+        code = (folder / filename).read_text(encoding="utf-8")
+        actual = set(re.findall(r"\bpublic\s+function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(", code))
+        assert actual == approved_methods, (
+            folder, filename, "public method surface changed",
+            sorted(actual - approved_methods), sorted(approved_methods - actual)
+        )
+        if filename not in writable | delegated:
+            continue
+        if folder == SITE and filename == "LessonController.php":
+            assert "extends EnrollmentController" in code, "lesson inherits the reviewed enrollment task gate"
+            continue
+        opening = re.search(r"\bpublic\s+function\s+execute\s*\(\s*\$task\s*\)", code)
+        assert opening is not None, (filename, "missing explicit dispatch guard")
+        # Require a fail-closed gate before the framework dispatches the task.
+        finish = code.find("return parent::execute($task)", opening.end())
+        assert finish > opening.end(), (filename, "missing guarded Joomla dispatch")
+        guard = code[opening.end():finish]
+        assert "strtolower" in guard and "JERROR_LAYOUT_PAGE_NOT_FOUND" in guard, (
+            filename, "missing dispatch allowlist and 404 rejection"
+        )
+
+check_dispatch_inventory(SITE, PUBLIC_METHODS["site"], WRITE_SITE, DELEGATE_SITE)
+check_dispatch_inventory(ADMIN, PUBLIC_METHODS["administrator"], WRITE_ADMIN, DELEGATE_ADMIN)
+category_dispatch = (ADMIN / "CategoryreassignmentController.php").read_text(encoding="utf-8")
+assert "strtolower((string) $task) !== 'reassign'" in category_dispatch
+print("SEC-P1 fail-closed dispatch: public methods and task allowlists reviewed for all "
+      f"{site_count + admin_count} controllers")
+
+
 # Shared mutation and Joomla FormController inheritance must stay explicit.
 module = (ADMIN / "ModuleController.php").read_text(encoding="utf-8")
 curriculum = (ADMIN / "CurriculumController.php").read_text(encoding="utf-8")
