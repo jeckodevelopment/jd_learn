@@ -154,7 +154,9 @@ final class MailQueueAuditService
         // Expressions here caused a PHP Error before the UPDATE could be executed.
         $newState = $action === 'sent' ? 'sent' : 'retry';
         $actorId = (int) $actor->id;
-        $lastError = 'Manual reconciliation: ' . mb_substr($note, 0, 1000 - mb_strlen('Manual reconciliation: '));
+        // The free-text justification already belongs to reconciliation_note.
+        // Do not duplicate potentially sensitive operator text in last_error.
+        $lastError = 'Manual reconciliation recorded.';
         $query = $this->db->createQuery()->update('#__jlms_mail_queue')
             ->set('state = :state')->set('reconciliation_action = :action')
             ->set('reconciliation_by = :actor')->set('reconciliation_at = UTC_TIMESTAMP(6)')
@@ -218,7 +220,9 @@ final class MailQueueAuditService
 
         $retry = 'retry';
         $action = 'retry';
-        $lastError = 'Manual reconciliation: ' . mb_substr($note, 0, 1000 - mb_strlen('Manual reconciliation: '));
+        // The free-text justification already belongs to reconciliation_note.
+        // Do not duplicate potentially sensitive operator text in last_error.
+        $lastError = 'Manual reconciliation recorded.';
         $update = $this->db->createQuery()->update('#__jlms_mail_queue')
             ->set('state = :retry')->set('available_at = UTC_TIMESTAMP(6)')
             ->set('claimed_at = NULL')->set('reconciliation_action = :action')

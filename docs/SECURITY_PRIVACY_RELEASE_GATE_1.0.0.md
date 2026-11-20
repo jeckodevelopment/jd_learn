@@ -89,3 +89,7 @@ Nuova copertura mirata in `tests/joomla-roster.php`: operatore autorizzato al ro
 ## SEC-P1 — separazione ACL per coda email globale (20/11/2026)
 
 Correzione runtime: `MailQueueAuditService::page` e `reconcile` ora richiedono `core.manage` **e** `jlms.audit.view` su `com_jlms`; il permesso di audit esisteva già nella ACL del componente. `core.manage` da solo può essere assegnato a operatori di un singolo corso, mentre la coda contiene metadati e note di tutti i corsi. Il collegamento nella dashboard è condizionato al medesimo permesso. Test negativo/positivo su Joomla disposable in `tests/joomla-roster.php`, prova senza side effect e verifica dell'assenza di campi di email/template dal DTO. L'audit SEC-P1 globale, test concorrenza Scheduler e accettazione manuale non sono dichiarati conclusi.
+
+## SEC-P1 — minimizzazione note e CAS riconciliazione email (20/11/2026)
+
+`last_error` non duplica più le note amministrative: conserva il marker non sensibile `Manual reconciliation recorded.`, mentre `reconciliation_note` rimane la traccia audit dedicata. Gli UPDATE della riconciliazione già richiedevano una transizione atomica condizionata allo stato corrente; nuove prove Joomla verificano che un secondo tentativo sullo stesso claim fallisca con 409 e non sovrascriva la nota o il risultato. La simulazione di due chiamate sequenziali non è una prova contemporanea multi-processo; collaudo SMTP e concurrency test restano obbligatori.
