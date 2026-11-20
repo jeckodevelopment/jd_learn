@@ -106,19 +106,33 @@ final class CourseCommunicationService
             // A cast expression here triggers a PHP Error and prevents queueing.
             $scopeCourseId = (string) $courseId;
             $ownerUserId = (int) $actor->id;
-            $existing = $this->db->createQuery()->select('id')->from('#__jlms_jobs')
+            // Same mutation identifier must mean the same immutable message,
+            // including template snapshot and recipients. Otherwise a modified
+            // retry could misleadingly return a previous job as its own.
+            $expectedPayload = json_encode([
+                'mutation_id' => $mutationId,
+                'subject' => $plan['subject'],
+                'body' => $plan['body'],
+                'template' => $plan['template'],
+                'enrollment_ids' => $plan['enrollment_ids'],
+            ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            $existing = $this->db->createQuery()->select('id,payload_json')->from('#__jlms_jobs')
                 ->where("kind='course_communication'")
                 ->where("JSON_UNQUOTE(JSON_EXTRACT(scope_json, '$.mutation_id')) = :mutation")
                 ->where("JSON_UNQUOTE(JSON_EXTRACT(scope_json, '$.course_id')) = :scopeCourse")
                 ->where('owner_user_id = :owner')
                 ->bind(':mutation', $mutationId)->bind(':scopeCourse', $scopeCourseId)->bind(':owner', $ownerUserId, ParameterType::INTEGER);
-            $jobId = (int) $this->db->setQuery($existing)->loadResult();
+            $previous = $this->db->setQuery($existing)->loadObject();
+            if ($previous !== null && !hash_equals((string) $previous->payload_json, $expectedPayload)) {
+                throw new \RuntimeException('COM_JLMS_COMMUNICATION_CONFLICT', 409);
+            }
+            $jobId = (int) ($previous->id ?? 0);
             if (!$jobId) {
                 $now = gmdate('Y-m-d H:i:s');
                 $job = (object) [
                     'kind'=>'course_communication','owner_user_id'=>(int) $actor->id,
                     'scope_json'=>json_encode(['course_id'=>$courseId,'mutation_id'=>$mutationId], JSON_THROW_ON_ERROR),
-                    'payload_json'=>json_encode(['mutation_id'=>$mutationId,'subject'=>$plan['subject'],'body'=>$plan['body'],'template'=>$plan['template'],'enrollment_ids'=>$plan['enrollment_ids']], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
+                    'payload_json'=>$expectedPayload,
                     'status'=>'queued','cursor_json'=>json_encode(['offset'=>0], JSON_THROW_ON_ERROR),
                     'progress_done'=>0,'progress_total'=>$plan['count'],'attempts'=>0,'available_at'=>$now,'created_at'=>$now,
                 ];
