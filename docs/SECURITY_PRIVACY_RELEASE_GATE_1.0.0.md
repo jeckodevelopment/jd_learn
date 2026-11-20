@@ -81,3 +81,7 @@ Finding mirato: `CategoryReassignmentService::assertManage()` verificava la prop
 ## SEC-P1 — identità fresca nel controllo di editing docenti (20/11/2026)
 
 Il metodo condiviso `TeacherProfiles::canEdit()` ricarica ora l'account Joomla dal database e azzera i diritti memorizzati prima di valutare l'autorizzazione: una sessione non può conservare `block=0` dopo blocco amministrativo. La fixture Joomla docenti esegue prova negativa con account bloccato e identità di sessione stale, oltre a due prove positive. La copertura mirata non sostituisce controllo E2E CSRF, editing a oggetti altrui e permission matrix; il gate SEC-P1 non viene dichiarato chiuso.
+
+## SEC-P1 — test negativi cross-course per comunicazioni ai corsisti (20/11/2026)
+
+Nuova copertura mirata in `tests/joomla-roster.php`: operatore autorizzato al roster di un corso non deve accedere all'editor o all'anteprima delle comunicazioni di un altro corso; un ID iscrizione di un altro corso non deve essere incluso nei destinatari o creare job/email. Ospiti e studenti non devono vedere il roster destinatari amministrativo; sono assertati anche i conteggi dell'outbox e dei job, invariati dopo errori. Stato automatizzato da confermare con CI su Joomla disposable, collaudo HTTP/manuale in attesa; non si dichiara una vulnerabilità osservata né chiusura dell'intero SEC-P1.

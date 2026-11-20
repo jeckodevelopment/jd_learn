@@ -109,6 +109,32 @@ $asset->loadByName('com_jlms.course.'.$course);$oldRules=$asset->rules;$permissi
 $user=new \Joomla\CMS\User\User();$data=['name'=>'CI Roster Reader','username'=>'cirosterreader','email'=>'cirosterreader@example.invalid','password'=>'Ci-only-Roster-Password-2026','password2'=>'Ci-only-Roster-Password-2026','groups'=>[2,$group,$backendGroup],'block'=>0,'sendEmail'=>0];
 if(!$user->bind($data)||!$user->save())throw new \RuntimeException($user->getError());$user=new \Joomla\CMS\User\User((int)$user->id);
 rosterExpect(count($read($user))===count($rows),'dedicated course ACL grants roster without author permission');
+
+ // SEC-P1: roster scope must also bind communication recipient discovery and
+ // message preview/queue, so a forged course or enrollment cannot leak names
+ // or enqueue emails outside the authenticated manager's course.
+$communication=$component->getCourseCommunicationService();
+$outboxBefore=(int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->loadResult();
+$jobsBefore=(int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult();
+$recipientScope=$communication->editor($user,$course);
+$recipientIds=array_map(static fn($row):int=>(int)$row->enrollment_id,$recipientScope['recipients']);
+rosterExpect(in_array((int)$f['active'],$recipientIds,true),'authorized course communication lists active enrollment');
+rosterExpect(!in_array((int)$f['italian'],$recipientIds,true),'communication list excludes foreign enrollment ID');
+rosterDenied(fn()=>$communication->editor($user,$otherCourse),403,'communication editor denies unauthorized course ID');
+rosterDenied(fn()=>$communication->preview($user,$otherCourse,'SEC-P1 preview','Safe message',[(int)$f['italian']]),403,
+    'communication preview denies unauthorized course ID');
+rosterDenied(fn()=>$communication->preview($user,$course,'SEC-P1 preview','Safe message',[(int)$f['italian']]),409,
+    'communication preview cannot import recipients from a foreign course');
+rosterDenied(fn()=>$communication->queue($user,$course,'SEC-P1 preview','Safe message',[(int)$f['italian']],
+    str_repeat('0',64),'d7e332c4-7f32-4a32-bd66-1f5ac8409d13'),409,'invalid cross-course message cannot queue');
+rosterDenied(fn()=>$communication->editor(new \Joomla\CMS\User\User(),$course),401,'anonymous cannot inspect course message recipients');
+rosterDenied(fn()=>$communication->editor(new \Joomla\CMS\User\User((int)$f['owner']),$course),403,
+    'student cannot inspect administrative message recipients');
+rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->loadResult()===$outboxBefore,
+    'denied course messages do not enqueue mail');
+rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult()===$jobsBefore,
+    'denied course messages do not enqueue jobs');
+
 rosterDenied(fn()=>$service->query($user,$otherCourse),403,'direct course ID cannot bypass scope');
 $asset->loadByName('com_jlms.course.'.$course);$grantedRules=$asset->rules;$permissions=json_decode($grantedRules,true);$permissions['jlms.enrollments.manage'][(string)$group]=false;$asset->rules=json_encode($permissions,JSON_THROW_ON_ERROR);$asset->store();
 try{rosterDenied(fn()=>$read($user),403,'explicit course deny refreshes stale identity');}finally{$asset->rules=$grantedRules;$asset->store();}
