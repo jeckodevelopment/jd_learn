@@ -1,4 +1,7 @@
 
+**SEC-P1 — token double-opt-in e inventario del perimetro (20/11/2026):** aggiunta protezione `Referrer-Policy: no-referrer` e `X-Robots-Tag: noindex, nofollow` sul redirect della conferma email, che contiene un token monouso nell'URL; mantenuti i vincoli già esistenti su hash, scadenza, monouso e no-store. Test strutturale nuovo e matrice delle superfici `docs/SEC_P1_ATTACK_SURFACE_1.0.0.md` per il perimetro completo della 1.0.0. Non è un audit SEC-P1 concluso, non prova esfiltrazione avvenuta e richiede collaudo HTTP Joomla. **454 implementati, 35 mancanti, 268 non verificabili, minimo 57,48% invariato**.
+
+
 
 **SEC-P1 — test negativo ACL attestati amministrativi (20/11/2026):** estesa la fixture `tests/joomla-dashboard.php` sul download amministrativo di certificato PDF: proprietario senza permessi, altro studente e ospite devono essere rifiutati; un operatore autorizzato deve riuscire. Nessuna modifica al runtime o alla copertura funzionale; CI e collaudo manuale da verificare. SEC-P1/SEC-P5 non sono chiusi; minimo comprovato 57,48% invariato.
 
