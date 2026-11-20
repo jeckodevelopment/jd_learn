@@ -1,6 +1,6 @@
 # Changelog
 
-- **0.64.4-dev — PBASE-03 (20/11/2026, guide/test):** guide per amministratore, autore e sviluppatore dei provider video; esempio Joomla documentale del contratto di registrazione con manifest, service provider, subscriber e adapter deliberatamente non riproducibile. Test CLI del registry e dei metadati del manifest. Nessuna nuova estensione distribuita, nessuna modifica runtime e nessun aumento SemVer.
+- **0.64.4-dev — PBASE-03 (20/11/2026, guide/test):** guide per amministratore, autore e sviluppatore dei provider video; esempio Joomla documentale del contratto di registrazione con manifest, service provider, subscriber e adapter deliberatamente non riproducibile. Test CLI del registry e dei metadati del manifest. Nessuna nuova estensione distribuita, nessuna modifica runtime e nessun aumento SemVer. Registro PBASE-03/criterion_04 riconciliato con test: 454 implementati, 35 mancanti, 268 non verificabili e minimo 57,48%.
 
 - **0.64.4-dev — PBASE-03, riconciliazione audit dopo PR #762 (20/11/2026, solo evidenze):** il criterio di blocco della build in mancanza delle guide plugin video è ora attestato da test positivi e negativi e classificato implementato nel registro canonico, con report e dashboard sincronizzati. Nessun incremento SemVer e nessuna accettazione Joomla presunta.
 
