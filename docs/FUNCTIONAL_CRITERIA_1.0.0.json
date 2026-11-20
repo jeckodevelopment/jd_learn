@@ -10376,16 +10376,18 @@
       {
         "id": "criterion_04",
         "label": "Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "README.md",
-          "docs/VIDEO.md"
+          "docs/VIDEO_PROVIDER_ROLES_1.0.0.md",
+          "docs/examples/video-provider-contract/plugin/src/Extension/Exampleprovider.php",
+          "tests/provider-contract-example.php"
         ],
         "review": {
-          "reason": "La revisione del criterio «Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Consegnate le procedure per amministratore, autore e sviluppatore e un esempio di estensione Joomla con manifest, service provider e subscriber aderenti al registro v1; una prova PHP verifica la registrazione compatibile e il rifiuto di duplicati/versioni errate. L'esempio è volutamente fail-closed, non un quinto player operativo: non vengono attribuiti playback o accettazione manuale.",
           "references": [
-            "README.md#L1-L25",
-            "docs/VIDEO.md#L1-L25"
+            "docs/VIDEO_PROVIDER_ROLES_1.0.0.md### Amministratore",
+            "docs/examples/video-provider-contract/plugin/src/Extension/Exampleprovider.php#final class Exampleprovider",
+            "tests/provider-contract-example.php#PBASE-03: registry and Joomla plugin skeleton contract OK"
           ]
         }
       },

@@ -1119,3 +1119,6 @@ runpy.run_path(str(ROOT/'tests/provider-doc-contract.py'), run_name='__main__')
 
 # PBASE-03: prove the standalone Joomla builder rejects missing and stale provider guides.
 runpy.run_path(str(ROOT/'tests/provider-package-gate.py'), run_name='__main__')
+
+# PBASE-03: verify the example against the actual v1 registry and Joomla plugin skeleton.
+_progress_subprocess.run(['php', str(ROOT/'tests/provider-contract-example.php')], check=True)

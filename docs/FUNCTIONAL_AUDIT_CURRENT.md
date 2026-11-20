@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **453**.
-- Mancanti con lacuna accertata: **36**.
+- Implementati: **454**.
+- Mancanti con lacuna accertata: **35**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -58,9 +58,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [README.md#L1-L25](../README.md#L1-L25)
   - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
 - `PBASE-02/criterion_03` — Il solo contratto astratto non e documentazione sufficiente dei quattro plugin. La revisione del criterio «Il solo contratto astratto non e documentazione sufficiente dei quattro plugin» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [README.md#L1-L25](../README.md#L1-L25)
-  - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
-- `PBASE-03/criterion_04` — Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile. La revisione del criterio «Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [README.md#L1-L25](../README.md#L1-L25)
   - [docs/VIDEO.md#L1-L25](../docs/VIDEO.md#L1-L25)
 - `DOC-02/criterion_02` — Manuale copre provider video, email e attestati. La revisione del criterio «Manuale copre provider video, email e attestati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1861,6 +1858,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `PBASE-03/criterion_03` — Servizi_endpoint_LMS_Joomla_1.0.md il contratto comune. L’allegato documenta il contratto comune, le responsabilità, le interfacce PHP e gli eventi del player.
   - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.2 Registrazione e contratto PHP](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
   - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#1.3 Contratto del player nel browser](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md)
+- `PBASE-03/criterion_04` — Consegnare guide amministratore/autore/sviluppatore ed esempio di estensione compatibile. Consegnate le procedure per amministratore, autore e sviluppatore e un esempio di estensione Joomla con manifest, service provider e subscriber aderenti al registro v1; una prova PHP verifica la registrazione compatibile e il rifiuto di duplicati/versioni errate. L'esempio è volutamente fail-closed, non un quinto player operativo: non vengono attribuiti playback o accettazione manuale.
+  - [docs/VIDEO_PROVIDER_ROLES_1.0.0.md### Amministratore](../docs/VIDEO_PROVIDER_ROLES_1.0.0.md)
+  - [docs/examples/video-provider-contract/plugin/src/Extension/Exampleprovider.php#final class Exampleprovider](../docs/examples/video-provider-contract/plugin/src/Extension/Exampleprovider.php)
+  - [tests/provider-contract-example.php#PBASE-03: registry and Joomla plugin skeleton contract OK](../tests/provider-contract-example.php)
 - `PBASE-03/criterion_06` — assenza di documentazione di un plugin base blocca l'accettazione del pacchetto. Il builder standalone invoca il gate per tutti e quattro i plugin prima della produzione del pacchetto. Le prove negative simulano guida mancante, sezione obbligatoria assente e campo manifest non documentato e confermano che nessuno ZIP viene prodotto. L'accettazione manuale Joomla è distinta.
   - [tools/build.py#validate_provider_guides(ROOT)](../tools/build.py)
   - [tests/provider-package-gate.py#rejected("missing guide")](../tests/provider-package-gate.py)
