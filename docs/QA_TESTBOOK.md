@@ -1,3 +1,9 @@
+## DOC-08 — copertura documentale e gate candidato 1.0.0 (20/11/2026)
+
+**Prove automatiche:** `python3 tests/doc08-gate.py` verifica 21 flussi richiesti, guide non vuote, esclusione percorsi insicuri, duplicati, falsi stati accepted; `python3 tools/doc08_gate.py` applica il gate normale; `python3 tools/doc08_gate.py --release` deve restituire errore quando manca anche una sola prova manuale o la revisione finale. Collaudo statico NON equivale ad accettazione.
+
+**Prove manuali da eseguire:** attraversare le procedure mappate con un amministratore inesperto, un docente e uno studente su build candidata; verificare link, reale risultato IT/EN, tastiera, ACL e comprensione delle istruzioni. Per ogni flusso raccogliere build, data, configurazione redatta, esito e file di evidenza versionato; soltanto allora passare la riga a passed. Controllare che tutti i flussi nuovi in scope entrino nella mappa e abbiano una guida prima della release. **Esito manuale: non eseguito**; release acceptance pending.
+
 ## DOC-07 — checklist ad alto rischio e diagnostica configurazione (20/11/2026)
 
 **Automatizzato (gate statico):** `tests/doc07-safe-operations.py` in `tools/check.py` verifica la checklist dashboard, chiavi IT/EN e mapping per ACL correnti. Continuano i test `tests/scheduler-guidance.php`, `tests/provider-doc-contract.py` e gate dei provider. Non sono test funzionali HTTP o di autenticazione reale.
