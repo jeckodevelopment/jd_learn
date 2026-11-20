@@ -86,7 +86,7 @@ final class SchedulerHealth
         }
         try {
             $decoded = json_decode($rules, true, 32, JSON_THROW_ON_ERROR);
-        } catch (\\JsonException) {
+        } catch (\JsonException) {
             return false;
         }
         return is_array($decoded) && !array_is_list($decoded)
