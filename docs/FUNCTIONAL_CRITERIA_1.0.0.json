@@ -11234,7 +11234,7 @@
         "review": {
           "reason": "È disponibile una guida amministrativa in inglese con inventario, procedura CMP, comportamento pre/post consenso, revoca, scansione e manutenzione, collegata alla guida italiana. La completezza editoriale IT/EN non certifica l'integrazione con una CMP né le verifiche live, mantenute come criteri non verificabili.",
           "references": [
-            "docs/PRIVACY_COOKIES.md#Guida amministrativa inglese",
+            "docs/PRIVACY_COOKIES.md#guida amministrativa inglese",
             "docs/PRIVACY_COOKIES_EN.md#Configure the CMP bridge",
             "docs/PRIVACY_COOKIES_EN.md#Mandatory pre-release verification"
           ]
