@@ -191,7 +191,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 
         // Fail closed even if this event is dispatched without a prior can-remove call.
         if ($this->hasRemovalDependencies((int) $user->id)) {
-            throw new \\RuntimeException('JD Learn privacy removal is blocked by retained records.');
+            throw new \RuntimeException('JD Learn privacy removal is blocked by retained records.');
         }
 
         $db = $this->getDatabase();
