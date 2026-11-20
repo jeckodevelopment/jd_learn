@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.17-dev — PBASE-02, requisito implementativo completato (20/11/2026):** verifica di completezza delle guide distribuite dei quattro provider video, correlazione con i manifest e fixture negativa per capitoli mancanti. Riconciliati i tre criteri tecnici come implementati: 59,11% sviluppo comprovato, 464 implementati / 26 mancanti / 267 non verificabili. Nessun cambiamento runtime, SemVer invariato; riproduzione e collaudo manuale dei provider non acquisiti.
+
 - HTTP-06 (test-only, 0.64.17-dev): regressioni Joomla sui confini di richiesta `enrollment.resume` POST (405), `lesson.begin` con body eccessivo (413 JSON) e `video.save` eccessivo (413 JSON senza riferimenti provider); nessun cambiamento runtime, criteri o percentuali promossi prima della CI e del collaudo.
 
 - HTTP-06: ampliate le regressioni HTTP su Joomla reale per metodo, CSRF, task sconosciuti e contratto JSON dei flussi iscrizione/lezione/video; registro casi limite core separato dal catalogo progettuale.
