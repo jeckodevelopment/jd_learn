@@ -101,3 +101,7 @@ Aggiunta una prova Joomla con due worker PHP/DB concorrenti contro la stessa rig
 ## SEC-P1 — destinatario consenso e dati aggiornati (20/11/2026)
 
 Il servizio double opt-in ora rilegge l'account Joomla prima di emettere la richiesta, non usa email/nome obsoleti dalla sessione e nega account bloccati nelle origini dashboard/iscrizione. La registrazione attende normalmente l'attivazione Joomla e resta supportata. La regressione DB prova il controllo del servizio, non test HTTP o consegna SMTP; SEC-P1/SEC-P5 aperti.
+
+## SEC-P1 — inventario task controller e correzione categorie (20/11/2026)
+
+La matrice `docs/SEC_P1_CONTROLLER_DISPATCH_1.0.0.md` raccoglie i 37 controller e relativi task; il gate CI registra file, metodi pubblici e task ammessi, mentre `CategoryreassignmentController::execute()` rifiuta ogni task diverso da `reassign`. Fixture Joomla negativa per task arbitrarî. ACL per oggetto/ruolo, modelli, eventi plugin, HTTP E2E e security review restano necessari; SEC-P1/SEC-P5 aperti.

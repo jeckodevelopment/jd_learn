@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.14-dev — SEC-P1, PATCH (20/11/2026):** restringe a `reassign` il dispatch amministrativo delle categorie (prima privo di override `execute`); controlli statici fail-closed su metodi pubblici e task consentiti dei 37 controller Joomla, prova negativa con classe distribuita nel test categorie e inventario di sicurezza per endpoint. ACL/HTTP/SMTP completi non dimostrati; SEC-P1/SEC-P5 aperti, minimo 57,48% invariato.
+
 - **0.64.13-dev — PATCH SEC-P1 (20/11/2026):** il consenso opzionale confronta il destinatario con il record Joomla aggiornato; rifiuta email di sessione obsoleta e account bloccati per dashboard/iscrizione, usando nome/email canonici. Registrazione con attivazione pendente preservata. Regressioni Joomla, collaudo SMTP pendente; SEC-P1 ancora aperto, 57,48% invariato.
 
 - **0.64.12-dev — PATCH DOC-07 (20/11/2026):** rilevate come `unknown` date `next_execution` impossibili o non canoniche, senza normalizzazione silenziosa PHP; test dei confini dei 10 minuti, nessuna mutazione o esecuzione dei task. DOC-07 e collaudo Joomla restano aperti, minimo 57,48% invariato.

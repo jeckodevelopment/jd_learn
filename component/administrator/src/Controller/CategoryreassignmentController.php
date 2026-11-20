@@ -10,6 +10,19 @@ use Joomla\CMS\Router\Route;
 
 final class CategoryreassignmentController extends BaseController
 {
+    /**
+     * Explicitly expose only the authorized POST task; inherited BaseController
+     * methods must never become routable administrative operations.
+     */
+    public function execute($task)
+    {
+        if (strtolower((string) $task) !== 'reassign') {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
+
+        return parent::execute($task);
+    }
+
     public function reassign(): void
     {
         if (strtoupper($this->input->getMethod()) !== 'POST') {

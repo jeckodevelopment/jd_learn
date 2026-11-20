@@ -1,3 +1,9 @@
+## SEC-P1 — task Joomla e inventario 37 controller (20/11/2026)
+
+**Automatico:** `tests/sec-p1-controller-gates.py` rileva variazioni non deliberate nei nomi controller, metodi pubblici e task consentiti. `tests/joomla-categories.php` verifica 404 per sette task non consentiti (`display`, `save`, `delete`, `purge`, `getModel`, `__construct`, `reassignother`) sulla classe Joomla reale, senza mutare categorie. Il task `reassign` conserva controlli POST/CSRF e ACL già presenti. Matrice: `docs/SEC_P1_CONTROLLER_DISPATCH_1.0.0.md`.
+
+**Collaudo manuale Joomla — In attesa:** in un'installazione disposable richiamare via HTTP `administrator/index.php?option=com_jlms&task=categoryreassignment.display` e `...reassignother` e richiedere 404; invocare `reassign` con GET (405) e POST senza token (403), poi con token/ACL corretti e con account delegato non autorizzato. Verificare nessuna mutazione dopo rifiuti, messaggi IT/EN e ripristino fixture. Prima di chiudere SEC-P1 eseguire la stessa matrice negativa sugli altri entry point, plugin e modelli.
+
 ## SEC-P1 — destinatario consenso e account Joomla aggiornato (20/11/2026)
 
 **Automatico:** `tests/joomla-smoke.php` verifica dati destinatario canonici da DB, email obsoleta e ID inesistente rifiutati, e account temporaneamente bloccato: origini `dashboard`/`enrollment` negate, `registration` ammessa per attivazione nativa; ripristino account in `finally`. Nessun invio SMTP reale.

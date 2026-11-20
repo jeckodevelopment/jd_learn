@@ -66,6 +66,20 @@ $factory = $component->getMVCFactory();
 
 $checks=0;
 function catExpect(bool $ok,string $message):void { global $checks; if(!$ok)throw new \RuntimeException($message);$checks++; }
+
+// Real Joomla class loading, negative dispatch without constructor side effects:
+// unrelated tasks must 404 *before* BaseController can route inherited methods.
+$controllerClass = \Jlms\Component\Jlms\Administrator\Controller\CategoryreassignmentController::class;
+$guardedController = (new \ReflectionClass($controllerClass))->newInstanceWithoutConstructor();
+foreach (['display', 'save', 'delete', 'purge', 'getModel', '__construct', 'reassignother'] as $badTask) {
+    $denied = false;
+    try {
+        $guardedController->execute($badTask);
+    } catch (\RuntimeException $error) {
+        $denied = $error->getCode() === 404;
+    }
+    catExpect($denied, 'category reassignment exposed unauthorized controller task: ' . $badTask);
+}
 function catHidden(int $id,string $language='en-GB'):bool {
     global $catalog,$guest;
     try{$catalog->category($guest,$language,$id);}catch(\RuntimeException $e){return $e->getCode()===404;}return false;

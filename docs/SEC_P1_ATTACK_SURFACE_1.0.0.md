@@ -65,3 +65,7 @@ In `MailQueueAuditService::reconcile()` e `retryFailedTemplate()`, la motivazion
 ## SEC-P1 — destinatario consenso canonico (20/11/2026)
 
 `CourseAnnouncementConsent::request()` prima si fidava di email e nome provenienti dalla sessione/evento Joomla. Dopo aggiornamento dell'email o blocco amministrativo dell'account, una richiesta successiva poteva usare il recapito obsoleto. Ora controlla la versione corrente della riga utente e usa nome/email canonici; account assenti, recapiti discordanti o account bloccati (per dashboard/iscrizione) sono respinti. La registrazione resta ammessa con account in attesa di attivazione Joomla. Test DB Joomla mirati, nessuna prova di exploit/esfiltrazione; HTTP, SMTP e audit SEC-P1 completo ancora pendenti.
+
+## SEC-P1 — superficie controller e finding DISPATCH-CATEGORY (20/11/2026)
+
+Matrice dei 11 controller site e 26 backend in [SEC_P1_CONTROLLER_DISPATCH_1.0.0.md](SEC_P1_CONTROLLER_DISPATCH_1.0.0.md). `CategoryreassignmentController` era privo di override `execute()`, pur avendo POST/CSRF e ACL sul task `reassign`. Aggiunto dispatch esplicito solo per `reassign`, con 404 per gli altri task. Il gate `tests/sec-p1-controller-gates.py` rileva modifiche inattese a metodi pubblici e nomi task sui 37 controller; `tests/joomla-categories.php` esercita 404 con classe Joomla reale. Nessun bypass ACL dimostrato; analisi completa per ruolo/oggetto, modelli, plugin e prove HTTP mancanti. SEC-P1 e SEC-P5 aperti.
