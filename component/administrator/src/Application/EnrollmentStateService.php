@@ -127,7 +127,7 @@ final class EnrollmentStateService
                 (string) ($e->course_language ?: '*'), (string) ($e->learner_email ?? ''), $name,
                 ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $e->course_title,
                     'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
-                    + ($target === 'active' ? ['DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard'] : [])
+                    + ($target === 'active' ? ['DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard'] : []), (int) $e->user_id
             );
             $this->db->transactionCommit(); return (int) $record->id;
         } catch (\Throwable $error) { $this->db->transactionRollback(); throw $error; }
