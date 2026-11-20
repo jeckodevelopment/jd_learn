@@ -2563,4 +2563,6 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 
 **Automatico (fixture Joomla):** `tests/joomla-dashboard.php` verifica che `CertificateService::adminDownload` restituisca 403 per proprietario studente, secondo studente e ospite, ma consegni un PDF all'operatore dotato dei permessi amministrativi specifici. Verificare esito su entrambi i profili PHP/database della CI; fino a quel momento la prova è predisposta, non certificata.
 
+**Accettazione:** registrare account/ruolo e codice HTTP, senza allegare file contenenti dati personali; esito manuale resta in attesa finché non osservato.
+
 **Comportamenti da testare sul sito Joomla disposable:** creare un attestato di uno studente; come studente proprietario e come altro studente tentare l'URL amministrativo di download e ottenere rifiuto senza byte del PDF; verificare anche ospite; come amministratore con `core.manage` e `jlms.certificates.manage` scaricare il PDF corretto. Revocare selettivamente `jlms.certificates.manage` a un account amministrativo di prova e verificare nuovamente il 403. Riprovare HEAD e Range; controllare cache privata, contenuto non divulgato e log privi di dati personali. Distinguere questo collaudo manuale dalla fixture di servizio.
