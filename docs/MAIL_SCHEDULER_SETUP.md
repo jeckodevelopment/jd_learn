@@ -85,3 +85,8 @@ I messaggi storici `failed` mantengono la categoria di errore registrata e perme
 ## SEC-P1 — permesso esplicito per la coda email globale (20/11/2026)
 
 Dalla versione `0.64.9-dev`, il solo `core.manage` sul componente **non basta** per vedere la coda globale o riconciliare messaggi. Serve anche il permesso già disponibile `jlms.audit.view` su `com_jlms`. Un operatore delegato di un singolo corso non deve poter consultare email mascherate, diagnostici e note appartenenti ad altri corsi. Il collegamento dashboard è nascosto ai non autorizzati; i Super User continuano a poter gestire i messaggi. Agli eventuali amministratori operativi non Super User attribuire il diritto esplicitamente da **Configurazione → Permessi** in Joomla. Questa modifica non apre nuove possibilità di invio, non altera SMTP o il comportamento di retry e non sostituisce il collaudo delle riconciliazioni in ambiente di prova.
+
+
+## SEC-P1 — riconciliazione: nota audit unica e diagnostico generico (20/11/2026)
+
+A partire da `0.64.10-dev`, le riconciliazioni manuali non copiano più il testo libero della nota nel campo `last_error`: la motivazione resta nel solo `reconciliation_note`, mentre il diagnostico registra il marker neutro `Manual reconciliation recorded.`. Nessuna modifica alla soglia stale di 15 minuti, al limite retry, ai permessi o al processo di accettazione SMTP. La CI Joomla verifica che una seconda riconciliazione sullo stesso messaggio dopo `sent` o `retry` sia respinta con 409 e che i dati destinatario siano redatti quando si marca `sent`; il collaudo manuale di due richieste realmente concorrenti e la verifica SMTP restano necessari.
