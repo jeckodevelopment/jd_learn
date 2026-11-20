@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.64.1-dev — PATCH SemVer (CAT-01, 20/11/2026):** la ricerca testuale nel catalogo confronta letteralmente i caratteri speciali `%`, `_` e `!` invece di interpretarli come jolly SQL, evitando corrispondenze estranee alla richiesta. Parametri SQL ancora vincolati, escape esplicito compatibile con MySQL/MariaDB; nuove regressioni PHP e DB Joomla. Nessuna migrazione o alterazione dell'indicizzazione; collaudo manuale pendente.
+
+
 - **0.64.0-dev — MINOR SemVer (DOC-07, 20/11/2026):** diagnostica operativa dei task schedulati nella dashboard Joomla: suggerimenti IT/EN distinti per task assente, disabilitato, duplicato, fallito, in ritardo, in attesa e operativo. Il collegamento a Gestione attività pianificate compare solo con `core.manage` su `com_scheduler`; nessun task viene modificato o avviato automaticamente. Regressione per i messaggi e ACL; collaudo IT/EN sul sito di prova pendente.
 
 

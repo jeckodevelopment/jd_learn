@@ -266,4 +266,19 @@ pubExpect(($nextSnapshot['fields']['course-reference']['values'][0] ?? '')==='CO
     'new teaching version captures current course fields while preserving the prior snapshot');
 pubExpect((int)$db->setQuery('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id='.(int)$learnerEnrollment)->loadResult()===$version,
     'existing learner remains assigned to the original teaching version after update publication');
+// CAT-01: bound literal search patterns must preserve visible '%' and '_'
+// characters, with matching SQL semantics on both MySQL and MariaDB.
+foreach ([
+    ['Course 100% ready', '100%', 1],
+    ['Course 100% ready', '100_', 0],
+    ['unit_7', 'unit_7', 1],
+    ['unitX7', 'unit_7', 0],
+    ['a!b', 'a!b', 1],
+    ['aXb', 'a!b', 0],
+] as [$title, $needle, $expected]) {
+    $pattern = \Jlms\Component\Jlms\Site\Helper\CatalogSearch::pattern($needle);
+    $sql = 'SELECT ' . $db->quote($title) . ' LIKE ' . $db->quote($pattern) . " ESCAPE '!'";
+    pubExpect((int) $db->setQuery($sql)->loadResult() === $expected,
+        'catalog LIKE treats visitor wildcards and escape characters literally');
+}
 echo json_encode(['publication_checks'=>$checks,'status'=>'passed','course_id'=>$course],JSON_THROW_ON_ERROR).PHP_EOL;

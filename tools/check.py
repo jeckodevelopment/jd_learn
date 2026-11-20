@@ -42,6 +42,14 @@ for locale in ('it-IT', 'en-GB'):
     assert lang.count('COM_JLMS_SCHEDULER_HEALTH_GUIDANCE=') == 1, locale
 assert (ROOT/'tests/scheduler-guidance.php').is_file()
 
+# CAT-01: input search terms are literal, not unescaped SQL LIKE patterns.
+catalog_search=(ROOT/'component/site/src/Helper/CatalogSearch.php').read_text()
+catalog_model=(ROOT/'component/site/src/Model/CoursesModel.php').read_text()
+assert "str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $text)" in catalog_search
+assert 'CatalogSearch::pattern($search)' in catalog_model
+assert "ESCAPE '!'" in catalog_model
+assert (ROOT/'tests/catalog-literal-search.php').is_file()
+
 count=0
 for base in ['component','libraries','plugins','packages']:
  for p in (ROOT/base).rglob('*.xml'):

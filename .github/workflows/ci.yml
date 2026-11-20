@@ -63,6 +63,7 @@ jobs:
           python3 tests/life-01-purge-preview.py
           php tests/course-message-idempotency.php
           php tests/scheduler-guidance.php
+          php tests/catalog-literal-search.php
           python3 tests/frontend-contract-hooks.py
           python3 tests/frontend-release-gate.py
           python3 tests/frontend-catalog-options.py

@@ -82,6 +82,8 @@ assert "<?php if ($this->showCover) : ?>" in template
 assert "<?php if ($this->showSummary" in template
 assert "CoursePresentation::fromSnapshot" in template
 assert "getCardTeachers($this->items)" in view
+assert "CatalogSearch::pattern($search)" in model
+assert "ESCAPE '!'" in model
 assert "getCardEnrollmentStates($this->items)" in view
 assert "getDashboardService()->catalogStates(" in model
 assert "$identity->guest || $identity->block" in model
