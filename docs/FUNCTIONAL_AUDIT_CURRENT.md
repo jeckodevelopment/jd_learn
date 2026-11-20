@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **454**.
-- Mancanti con lacuna accertata: **35**.
+- Implementati: **456**.
+- Mancanti con lacuna accertata: **33**.
 - Esaminati con esito non verificabile: **268**.
 - Da esaminare: **0**.
 
@@ -102,10 +102,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
-- `SEC-P1/criterion_01` — Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code. La revisione del criterio «Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
-- `SEC-P1/criterion_02` — findings tracciati. La revisione del criterio «findings tracciati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P2/criterion_01` — Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider. La revisione del criterio «Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P2/criterion_02` — nessun finding critico/alto irrisolto. La revisione del criterio «nessun finding critico/alto irrisolto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1897,6 +1893,17 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/help/it-IT/manual.html#lang="it-IT"](../component/administrator/help/it-IT/manual.html)
   - [component/administrator/help/en-GB/manual.html#lang="en-GB"](../component/administrator/help/en-GB/manual.html)
   - [tests/contextual-help-doc05.py#for lang in ("it-IT", "en-GB")](../tests/contextual-help-doc05.py)
+- `SEC-P1/criterion_01` — Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code. SEC-P1: modello delle minacce e code review completati sui confini di trust di tutte le 14 macro-superfici; riesame strutturale dei 37 controller, 10 plugin, 3 task e scansione dei sorgenti PHP distribuiti. Verifiche Joomla di regressione e finding VIDEO-ROOT corretti; prove E2E/pentest e hardening deployment restano nei gate separati SEC-P5 e SEC-P2, non costituiscono criteri SEC-P1.
+  - [docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5](../docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5)
+  - [docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5](../docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5)
+  - [tests/sec-p1-systematic-source-gate.py#L1-L5](../tests/sec-p1-systematic-source-gate.py#L1-L5)
+  - [tests/sec-p1-controller-gates.py#L1-L5](../tests/sec-p1-controller-gates.py#L1-L5)
+  - [tests/sec-p1-cross-surface-gate.py#L1-L5](../tests/sec-p1-cross-surface-gate.py#L1-L5)
+  - [tests/joomla-video.php#L1-L5](../tests/joomla-video.php#L1-L5)
+- `SEC-P1/criterion_02` — findings tracciati. SEC-P1: finding censiti e classificati per severità, superficie, controllo, fix e controprova nel registro consolidato; rischi residui esplicitamente assegnati ai gate SEC-P2 e SEC-P5. Nessun collaudo manuale dichiarato eseguito.
+  - [docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5](../docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5)
+  - [docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5](../docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5)
+  - [docs/SEC_P1_ATTACK_SURFACE_1.0.0.md#L1-L5](../docs/SEC_P1_ATTACK_SURFACE_1.0.0.md#L1-L5)
 - `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L'inventario statico bilingue ora include entrambe le chiavi first-party effettivamente usate dai player (velocità e lingua caption) con scopo, durata e valutazione consenso distinta. Il test automatico in CI blocca nuove chiamate dirette localStorage non inventariate. I cookie SDK e le scansioni in browser reale restano verifiche separate SEC-P4/criterion_02 e /criterion_03.
   - [docs/PRIVACY_COOKIES.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES.md)
   - [docs/PRIVACY_COOKIES_EN.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES_EN.md)

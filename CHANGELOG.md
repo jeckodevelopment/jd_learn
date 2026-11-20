@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.17-dev — SEC-P1, threat review consolidata e hardening video (20/11/2026):** il video locale MP4 in chiaro richiede ora una `video_storage_root` esterna al webroot; configurazione assente rifiutata 503 invece di un fallback gestito. Aggiunti test Joomla di confine, gate sorgenti PHP ad alto rischio sull'intero pacchetto e modello delle minacce con finding classificati. Requisiti SEC-P2/SEC-P5 mantengono le verifiche su asset legacy, deployment e test E2E. Versione di sviluppo invariata fino al successivo rilascio.
+
 - **0.64.17-dev — SEC-P1, FIX comunicazioni (20/11/2026):** chiuso il replay ambiguo dei job `course_communication`: un UUID ripetuto può restituire il job originale soltanto se oggetto, corpo, template e destinatari coincidono esattamente; altrimenti 409, senza effetti. Aggiunta regressione Joomla e allineate evidenze. Correzione PATCH nel ramo di sviluppo 0.64.17-dev, senza nuovo bump finché la versione non è rilasciata.
 
 - **0.64.17-dev — SEC-P1, revoca HTTP reale (20/11/2026):** estese le regressioni di integrazione con sessione browser amministrativa persistente e blocco del record Joomla dopo la form; 403 su GET/POST stato e POST ammissione manuale, dati e audit immutati, ripristino fixture. Nessuna modifica runtime né bump SemVer; SEC-P1 ancora parziale.

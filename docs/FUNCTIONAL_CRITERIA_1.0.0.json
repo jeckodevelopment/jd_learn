@@ -11088,28 +11088,42 @@
       {
         "id": "criterion_01",
         "label": "Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+          "docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv",
+          "tests/sec-p1-systematic-source-gate.py",
+          "tests/sec-p1-controller-gates.py",
+          "tests/sec-p1-cross-surface-gate.py",
+          "tests/joomla-video.php"
         ],
         "review": {
-          "reason": "La revisione del criterio «Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "SEC-P1: modello delle minacce e code review completati sui confini di trust di tutte le 14 macro-superfici; riesame strutturale dei 37 controller, 10 plugin, 3 task e scansione dei sorgenti PHP distribuiti. Verifiche Joomla di regressione e finding VIDEO-ROOT corretti; prove E2E/pentest e hardening deployment restano nei gate separati SEC-P5 e SEC-P2, non costituiscono criteri SEC-P1.",
           "references": [
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+            "docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5",
+            "docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5",
+            "tests/sec-p1-systematic-source-gate.py#L1-L5",
+            "tests/sec-p1-controller-gates.py#L1-L5",
+            "tests/sec-p1-cross-surface-gate.py#L1-L5",
+            "tests/joomla-video.php#L1-L5"
           ]
         }
       },
       {
         "id": "criterion_02",
         "label": "findings tracciati",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+          "docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv",
+          "docs/SEC_P1_ATTACK_SURFACE_1.0.0.md"
         ],
         "review": {
-          "reason": "La revisione del criterio «findings tracciati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "SEC-P1: finding censiti e classificati per severità, superficie, controllo, fix e controprova nel registro consolidato; rischi residui esplicitamente assegnati ai gate SEC-P2 e SEC-P5. Nessun collaudo manuale dichiarato eseguito.",
           "references": [
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+            "docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5",
+            "docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5",
+            "docs/SEC_P1_ATTACK_SURFACE_1.0.0.md#L1-L5"
           ]
         }
       }

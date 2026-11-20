@@ -1,6 +1,6 @@
 # SEC-P1 — inventario delle superfici applicative JD Learn 1.0.0
 
-**Baseline:** 20/11/2026; revisione incrementale su codice `main`. **Non è un audit SEC-P1 completato.** L'inventario raggruppa le superfici individuate nel repository; un endpoint con controlli visibili non equivale a una prova negativa E2E. Ogni verifica successiva dovrà registrare file, operazione, minaccia, controllo, test, risultato CI e collaudo Joomla distinti.
+**Baseline:** 20/11/2026; inventario incrementale con stato storico. **La revisione di minacce/codice SEC-P1 è stata consolidata in [`SEC_P1_THREAT_MODEL_1.0.0.md`](SEC_P1_THREAT_MODEL_1.0.0.md).** Le indicazioni parziali nei singoli interventi descrivono il loro stato all'epoca; pen test/E2E e hardening deployment rimangono nei gate distinti SEC-P5/SEC-P2. L'inventario raggruppa le superfici individuate nel repository; un endpoint con controlli visibili non equivale a una prova negativa E2E. Ogni verifica successiva dovrà registrare file, operazione, minaccia, controllo, test, risultato CI e collaudo Joomla distinti.
 
 ## Copertura per superficie
 
@@ -119,3 +119,16 @@ Finding: `CertificateService::assertCertificateAdministrator()` si basava sul `U
 **Correzione:** generare una sola rappresentazione JSON del payload confermato (UUID, oggetto, corpo, snapshot template, elenco iscrizioni ordinato) e, sotto il lock transazionale del corso, confrontarla con `payload_json` del job esistente usando `hash_equals()`. Un retry identico conserva lo stesso ID, un retry diverso è rifiutato con `COM_JLMS_COMMUNICATION_CONFLICT` (HTTP 409); nessun nuovo job o messaggio email viene creato. La fixture Joomla `tests/joomla-roster.php` verifica entrambe le condizioni, la preservazione del payload e la pulizia dei soli record di prova.
 
 **Limiti:** regressione di servizio/DB disposable, non un test SMTP reale o una simulazione di richieste HTTP concorrenti. Non completa le verifiche SEC-P1 su altri endpoint. Revisione e CI ancora da acquisire nella PR; SEC-P1 rimane aperto fino a verifica complessiva e accettazione.
+
+## Chiusura dell'analisi SEC-P1 — report consolidato candidato (20/11/2026)
+
+Il deliverable unico della revisione è `docs/SEC_P1_THREAT_MODEL_1.0.0.md`, comprendente modello delle minacce, confini di fiducia, review dei source/sink, 14 macro-superfici, finding classificati e rinvii espliciti ai gate successivi. `tests/sec-p1-systematic-source-gate.py` controlla tutti i file PHP runtime distribuiti, documenta e protegge le eccezioni per `proc_open` locale (ffprobe) e chiamate HTTPS remote (Cloudflare), nonché i vincoli dei file protetti. L'inventario dei 37 controller e 10 plugin rimane protetto dai gate preesistenti.
+
+**Finding nuovo SEC-P1/VIDEO-ROOT:** `ProtectedVideoStorage::root()` non può ricadere nella directory managed pubblica quando `video_storage_root` è vuoto, perché lo storage MP4 è in chiaro e `.htaccess` non è una protezione universale (es. Nginx). La correzione restituisce 503 con configurazione vuota; il validatore condiviso mantiene il divieto di usare webroot e symlink. Test `tests/joomla-video.php` su valore vuoto, percorso pubblico e root privata. Eventuali file legacy già presenti in public_html non vengono distrutti automaticamente: verifica/migrazione in SEC-P2 e accettazione del deployment in SEC-P5.
+
+**Separazione dei gate:** SEC-P1 è review di minacce/codice e finding tracciati; i test E2E di release e il pentest appartengono a SEC-P5. Non promuovere SEC-P1 né dichiarare CI superata finché non si ottiene il risultato della PR candidata.
+
+
+## Esito conclusivo SEC-P1 (code review)
+
+Rapporto consolidato `SEC_P1_THREAT_MODEL_1.0.0.md`, registro finding classificati, test di scansione runtime, inventari di controller/plugin, patch video MP4 fail-closed e due criteri di audit SEC-P1 documentati come implementati nella matrice. CI tecnica di revisione [run #44801464075](https://github.com/jeckodevelopment/jd_learn/actions/runs/44801464075) superata su 4/4 job; verifica finale di coerenza dei report in CI della PR. Questo esito **non** supera i gate SEC-P2 o SEC-P5 e non dichiara eseguiti i collaudi Joomla manuali; restano da cercare/migrare eventuali MP4 legacy, completare pen test e accettazione sulla candidata finale.

@@ -401,6 +401,8 @@ runpy.run_path(str(ROOT / 'tests/sec-p1-admin-identity.py'), run_name='__main__'
 runpy.run_path(str(ROOT / 'tests/sec-p1-mail-recipient-identity.py'), run_name='__main__')
 # Additional packaged plugin, Scheduler and protected media surface anti-drift checks.
 runpy.run_path(str(ROOT / 'tests/sec-p1-cross-surface-gate.py'), run_name='__main__')
+# SEC-P1 cross-package high-risk execution, network, storage source/sink gate.
+runpy.run_path(str(ROOT / 'tests/sec-p1-systematic-source-gate.py'), run_name='__main__')
 
 # Documentation hygiene is checked with every standard build.
 runpy.run_path(str(ROOT / 'tools/check_docs_hygiene.py'), run_name='__main__')

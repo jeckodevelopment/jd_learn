@@ -4,7 +4,7 @@
 
 | Fase | Priorità | Contenuto | Evidenze/gate |
 |---|---|---|---|
-| SEC-P1 | P0 | Threat model e code review sistematica su endpoint, ACL/IDOR, CSRF, XSS/SQLi, SSRF, upload/traversal, file privati, quiz, token/replay, segreti, transazioni, code; confronto con prassi Joomla e OWASP ASVS | Matrice minaccia → controllo → test, findings classificati |
+| SEC-P1 | P0 | Threat model e code review sistematica su endpoint, ACL/IDOR, CSRF, XSS/SQLi, SSRF, upload/traversal, file privati, quiz, token/replay, segreti, transazioni, code; confronto con prassi Joomla e OWASP ASVS | **Review completata:** [threat model e findings classificati](SEC_P1_THREAT_MODEL_1.0.0.md), [matrice](SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv), gate statico e test Joomla. I gate SEC-P2–P5 non sono coperti da questo esito |
 | SEC-P2 | P0 | Hardening runtime e supply chain: dipendenze, secret scan, configurazione sicura, logging, dati sensibili, build/package, CSP e webhook provider | Nessun critical/high pertinente aperto senza decisione esplicita e motivata |
 | SEC-P3 | P0 | Privacy by design: mappatura trattamenti, export/cancellazione via Joomla com_privacy, retention per progressi/attestati/email, log e backup, diritti dell'interessato | Flussi manuali ed evidenze con account e dati di prova |
 | SEC-P4 | P0 | Inventario cookie e storage browser, integrazione CMP e video, documentazione pubblicabile IT/EN per amministratori | Scansioni desktop/mobile per Joomla, JD Learn e provider; guida configurazione CMP; vedi [PRIVACY_COOKIES.md](PRIVACY_COOKIES.md) |
