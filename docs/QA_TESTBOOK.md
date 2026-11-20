@@ -1,3 +1,9 @@
+## SEC-P1 — gate trasversale plugin, Scheduler, media e matrice evidenze (20/11/2026)
+
+**Test automatico:** `tests/sec-p1-cross-surface-gate.py`, invocato da `tools/check.py`, controlla il set di 10 classi/plugin, l'inventario eventi e metodi pubblici, i tre task Scheduler, i limiti dei worker, l'accesso tramite LocalVideoService su GET/HEAD, il timeout e il divieto di redirect Cloudflare, gli hook Privacy e alcuni vincoli sulle transazioni. La matrice `docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv` esplicita i limiti di ogni riga; **non attribuire al gate statico il superamento di collaudi manuali o il completamento di SEC-P1**.
+
+**Collaudo Joomla/HTTP da eseguire su installazione disposable con account fittizi:** eseguire task su ruoli differenti e verificare assenza di notifiche esterne non autorizzate; richiedere GET/HEAD/Range di file privati con sessione revocata, iscrizione di altro utente e corso estraneo; esportare/cancellare un account con iscrizioni, attestati, consensi e job pendenti; verificare provider con DNS e redirect ostili in rete isolata; acquisire evidenze redatte. Estendere ai rimanenti endpoint il test HTTP cross-role e classificare tutti i finding prima di promuovere SEC-P1. **Accettazione: in attesa.**
+
 ## SEC-P1 — tranche consolidata sicurezza amministrazione iscrizioni (20/11/2026)
 
 **Automatizzato in CI Joomla disposable (da confermare):** test negativi di identità stale dopo blocco su `EnrollmentStateService::editor/apply`, `EnrollmentApprovalService::pending/decide` e `ManualEnrollmentService::editor/apply`. Tutti richiedono 403 con il vecchio oggetto `User`, verificano nessuna alterazione dei record e ripristinano `#__users.block` in `finally`. Riprovare la lettura positiva dopo lo sblocco. Le PR #802/#804 coprono roster e migrazione analogamente.
