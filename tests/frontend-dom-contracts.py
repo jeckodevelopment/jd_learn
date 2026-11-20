@@ -21,9 +21,9 @@ for view, spec in views.items():
     assert path == SITE / view / "default.php", (view, "layout")
     assert spec["override"] == f"templates/NOME/html/com_jlms/{view}/default.php"
     source = path.read_text(encoding="utf-8")
-    ids = set(re.findall(r'\\bid="(jlms-[a-zA-Z0-9_-]+)"', source))
+    ids = set(re.findall(r'\bid="(jlms-[a-zA-Z0-9_-]+)"', source))
     classes = set()
-    for group in re.findall(r'\\bclass="([^"]+)"', source):
+    for group in re.findall(r'\bclass="([^"]+)"', source):
         classes.update(token for token in group.split() if re.fullmatch(r'jlms-[a-zA-Z0-9_-]+', token))
     assert spec["root"] in ids, (view, "root")
     assert sorted(ids) == spec["static_ids"], (view, "static ID drift")
