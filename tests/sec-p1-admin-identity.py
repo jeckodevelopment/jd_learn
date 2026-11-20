@@ -20,11 +20,10 @@ expected_admin = {
     "adminRegenerate",
 }
 # Ensure new privileged public methods cannot bypass the shared fresh-ACL boundary.
-public = re.findall(r"public function (\w+)\s*\([^)]*\)\s*:\s*[^\n{]+\{", service)
-found_admin = {name for name in public if name.startswith("admin")}
+found_admin = set(re.findall(r"public function (admin\w+)\s*\(", service))
 assert found_admin == expected_admin, ("Unreviewed certificate admin operation", found_admin ^ expected_admin)
 for name in sorted(expected_admin):
-    match = re.search(r"public function " + name + r"\([^)]*\)\s*:\s*[^\n{]+\{", service)
+    match = re.search(r"public function " + name + r"\([^)]*\)[^{]*\{", service)
     assert match
     initial = service[match.end():match.end() + 180]
     assert "$this->assertCertificateAdministrator($identity);" in initial, (name, "missing ACL boundary")
