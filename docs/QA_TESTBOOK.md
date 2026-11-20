@@ -1,3 +1,9 @@
+## SEC-P1 — modello delle minacce consolidato e hardening storage video (20/11/2026)
+
+**Review/gate automatici:** `tests/sec-p1-systematic-source-gate.py` legge l'intero runtime PHP distribuito, rifiuta primitive dinamiche non revisionate, controlla l'unico sink processo ffprobe e il trasporto HTTPS Cloudflare; `sec-p1-controller-gates.py` e `sec-p1-cross-surface-gate.py` preservano rispettivamente 37 controller e 10 plugin/3 task. **Test Joomla** `tests/joomla-video.php`: nessuna `video_storage_root` (503), root web pubblica (503), root privata esterna (riuscita). Nessun cambiamento intenzionale ai materiali PDF gestiti/cifrati.
+
+**SEC-P5 / SEC-P2 ancora da eseguire:** cercare su installazioni aggiornate eventuali video plaintext `.blob` in `media/com_jlms/private`, mettere in sicurezza e migrare conservando i dati; testare upload/streaming con provider HTML5 in configurazione corretta, verificare rete e webserver Nginx, scansione, HEAD/Range, revoca, concorrenza e download diretto della directory privata. Eseguire pen test e analisi supply chain separati, senza confonderli con l'esito della code review SEC-P1.
+
 ## SEC-P1 — job comunicazioni: replay con contenuto cambiato (20/11/2026)
 
 **Test CI Joomla disposable:** `tests/joomla-roster.php` accoda per un corso autorizzato un job comunicazione con `mutation_id` valido. Un replay identico deve restituire lo stesso ID senza duplicazioni; un replay con un nuovo oggetto (e relativo hash valido) e **stesso identificativo di mutazione** deve restituire 409. Verificare che il payload iniziale rimanga invariato, che non compaiano job aggiuntivi e che la fixture ripulisca job e action log. Esito da registrare nella PR.
