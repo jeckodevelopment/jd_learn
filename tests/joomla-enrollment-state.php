@@ -75,6 +75,25 @@ if(($argv[2]??'')==='retained'){
  stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.enrollmentstate' AND item_id=".(int)$saved['first_event'])->loadResult()===1,'native state audit retained');
  echo json_encode(['enrollment_state_retention_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;exit;
 }
+// SEC-P1 batch: a blocked Joomla operator retains no write or read privilege,
+// even if the previous User instance and a valid preview remain in memory.
+$secP1Preview = $service->editor($actor, $course, $enrollment, 'suspended');
+$secP1Command = stateCommand($secP1Preview);
+$secP1OriginalBlock = (int) $db->setQuery('SELECT block FROM #__users WHERE id=' . $userId)->loadResult();
+$secP1BeforeHistory = $count();
+$secP1BeforeEnrollment = $stable($enrollment);
+try {
+    $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $userId)->execute();
+    stateDenied(fn() => $service->editor($actor, $course, $enrollment, 'suspended'), 403, 'blocked stale actor cannot read state editor');
+    stateDenied(fn() => $service->apply($actor, ...$secP1Command), 403, 'blocked stale actor cannot apply state transition');
+    stateExpect($count() === $secP1BeforeHistory && $stable($enrollment) === $secP1BeforeEnrollment,
+        'blocked state operations preserve history and enrollment');
+} finally {
+    $db->setQuery('UPDATE #__users SET block=' . $secP1OriginalBlock . ' WHERE id=' . $userId)->execute();
+}
+stateExpect($service->editor($actor, $course, $enrollment, 'suspended')['impact']['hash'] === $secP1Preview['impact']['hash'],
+    'state editor returns after account unblock');
+
 if (($argv[2] ?? '') === 'cancellation') {
 // MAIL-F: only real, not-completed cancellations produce one audited notification.
 $cancelUser = new \Joomla\CMS\User\User();
@@ -207,6 +226,23 @@ $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode='approval' WHERE id=".
 try {
     $pending = $approval->pending($actor,$course);
     stateExpect(count(array_filter($pending,fn($r)=>(int)$r->id===$requestId))===1,'course manager sees pending request');
+    // SEC-P1 batch: neither pending-request metadata nor decision mutations
+    // remain accessible after an account block in another session.
+    $approvalBlockBefore = (int)$db->setQuery('SELECT block FROM #__users WHERE id='.$userId)->loadResult();
+    $approvalQueueBefore = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult();
+    try {
+        $db->setQuery('UPDATE #__users SET block=1 WHERE id='.$userId)->execute();
+        stateDenied(fn()=>$approval->pending($actor,$course),403,'blocked stale operator cannot read approval requests');
+        stateDenied(fn()=>$approval->decide($actor,$course,$requestId,1,'approved','Blocked request'),403,'blocked stale operator cannot approve enrollment');
+        stateExpect((string)$db->setQuery('SELECT status FROM #__jlms_enrollment_requests WHERE id='.$requestId)->loadResult()==='pending',
+            'blocked approval leaves request pending');
+        stateExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult()===$approvalQueueBefore,
+            'blocked approval does not enqueue email');
+    } finally {
+        $db->setQuery('UPDATE #__users SET block='.$approvalBlockBefore.' WHERE id='.$userId)->execute();
+    }
+    stateExpect(count(array_filter($approval->pending($actor,$course),fn($r)=>(int)$r->id===$requestId))===1,
+        'approval list restored after account unblock');
     stateDenied(fn()=>$approval->decide($requestUser,$course,$requestId,1,'approved',''),403,'learner cannot self-approve');
     $enrollmentApproved = $approval->decide($actor,$course,$requestId,1,'approved','CI-only approval reason');
     stateExpect($enrollmentApproved>0,'approved request creates enrollment');
