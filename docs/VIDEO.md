@@ -1,5 +1,7 @@
 # Lezioni video
 
+**Guide operative per ruolo (PBASE-03):** [Amministratore, autore e sviluppatore](VIDEO_PROVIDER_ROLES_1.0.0.md), con esempio di plugin Joomla aderente al contratto di registrazione ma volutamente senza player.
+
 ## Configurazione e limiti attuali
 
 **0.39 — acquisizione della durata:** automatico nell’editor per YouTube/Vimeo tramite SDK ufficiali e Cloudflare Stream tramite API server; durata MP4 dal file invariata. Nuove prove in corso; il collaudo completo con account/SDK/browser reali rimane distinto dalla CI controllata.
