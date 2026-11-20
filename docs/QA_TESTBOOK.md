@@ -1,3 +1,9 @@
+## PBASE-03 — guide amministratore/autore/sviluppatore ed esempio estensione (20/11/2026)
+
+**Automatico:** `php tests/provider-contract-example.php` controlla il registry v1, l'unicità delle chiavi, la factory lazy e lo scheletro di manifest Joomla; l'adapter di esempio rimane intenzionalmente fail-closed senza playback.
+
+**Collaudo manuale da eseguire:** confrontare le istruzioni di `docs/VIDEO_PROVIDER_ROLES_1.0.0.md` con i plugin base; provare su ambiente disposable installazione/upgrade, backup/ripristino, ACL amministratore/autore, revoca consenso e assenza di token lato browser. Non distribuire lo scheletro non operativo e non considerarlo prova di un quinto player funzionante.
+
 ## PBASE-03 — criterio di blocco build comprovato e riconciliato (20/11/2026)
 
 La [PR #762](https://github.com/jeckodevelopment/jd_learn/pull/762) ha dimostrato nella CI quattro job verdi e il fallimento della build standalone, senza ZIP in uscita, quando manca una guida, una sezione obbligatoria o la documentazione di un campo manifest. **PBASE-03/criterion_06 = implemented (evidenza automatica)**. Questo non completa PBASE-03/criterion_04, non copre manuali per tutti i ruoli né conferma il collaudo manuale Joomla dei provider. La candidata `0.64.4-dev` resta da provare su sito disposable per upgrade/installazione e coerenza delle guide distribuite.
