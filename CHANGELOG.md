@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.64.17-dev — DOC-02:** manuali amministrativi IT/EN distribuiti con quattro capitoli operativi aggiuntivi, link offline testati e test automatico di coerenza nel package builder. Contestuale riconciliazione dei criteri tecnici già realizzati, senza affermare accettazione manuale o modificare runtime e SemVer.
+
+
 - **0.64.17-dev — DOC-08 (20/11/2026):** inventario verificabile dei 21 flussi core con riferimenti alle guide, test anti-drift e gate separato `--release` che vieta la pubblicazione documentale senza walkthrough ed evidenze; nessun cambiamento runtime o bump SemVer. Collaudi manuali ancora pendenti.
 
 
