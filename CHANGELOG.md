@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.6-dev — SEC-P1 (20/11/2026, CI/test-only):** introdotto test di integrità del censimento dei controller frontend/amministrativi e dei controlli strutturali metodo/CSRF, richiamato dal preflight. Un nuovo controller non classificato non deve passare inosservato; test manuali ACL/IDOR ancora obbligatori. Nessun cambio runtime, pacchetto, SemVer o avanzamento funzionale.
+
 - **0.64.6-dev — PATCH SemVer (SEC-P1, 20/11/2026):** prevenuta la possibile trasmissione dell'URL con token monouso di conferma consenso come Referer sul redirect, mediante `Referrer-Policy: no-referrer` e `X-Robots-Tag: noindex, nofollow`; `Cache-Control: no-store` confermato. Aggiunta regressione strutturale; inventario trasversale delle superfici da sottoporre a SEC-P1. Nessuna modifica schema, token, invio email, consenso, cookie o criteri funzionali. Collaudo HTTP Joomla pendente.
 
 - **0.64.5-dev — SEC-P1 (20/11/2026, test senza modifica runtime):** estesa la fixture Joomla degli attestati con tre tentativi negativi di download amministrativo (proprietario, altro studente, ospite) e una prova positiva con operatore dotato dei permessi specifici. SEC-P1 resta aperto; CI e accettazione manuale da confermare; SemVer e avanzamento funzionale invariati.
