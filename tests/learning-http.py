@@ -59,6 +59,13 @@ try:
  request(guest,'/index.php?option=com_jlms&task=lesson.unrecognised',expected=404)
  for task in ('enrollment.start', 'enrollment.request', 'lesson.complete'):
   request(guest,'/index.php?option=com_jlms&task='+task,{},expected=403)
+ # HTTP-06: resume is deliberately read-only; a POST cannot follow the redirect.
+ request(guest,'/index.php?option=com_jlms&task=enrollment.resume',{},expected=405)
+ # Oversized lesson-start POST must be rejected before CSRF, parsing or persistence.
+ _,large_begin=request(guest,'/index.php?option=com_jlms&task=lesson.begin',{'padding':'x'*4200},expected=413)
+ large_json=json.loads(large_begin)
+ expect(large_json['success'] is False and large_json['data']['code']=='COM_JLMS_INVALID_INPUT',
+        'HTTP-06 oversized lesson.begin returns a bounded safe JSON error')
  # JSON lesson begin uses the same Joomla CSRF boundary and never returns a successful write.
  _,begin_denied=request(guest,'/index.php?option=com_jlms&task=lesson.begin',{},expected=403)
  expect('COM_JLMS' in begin_denied or 'JINVALID_TOKEN' in begin_denied,'HTTP-06 lesson begin uses JSON error contract')
