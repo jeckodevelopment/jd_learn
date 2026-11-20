@@ -105,3 +105,7 @@ Il servizio double opt-in ora rilegge l'account Joomla prima di emettere la rich
 ## SEC-P1 — inventario task controller e correzione categorie (20/11/2026)
 
 La matrice `docs/SEC_P1_CONTROLLER_DISPATCH_1.0.0.md` raccoglie i 37 controller e relativi task; il gate CI registra file, metodi pubblici e task ammessi, mentre `CategoryreassignmentController::execute()` rifiuta ogni task diverso da `reassign`. Fixture Joomla negativa per task arbitrarî. ACL per oggetto/ruolo, modelli, eventi plugin, HTTP E2E e security review restano necessari; SEC-P1/SEC-P5 aperti.
+
+## SEC-P1 — indirizzi aggiornati nella coda SMTP (20/11/2026)
+
+Nuove comunicazioni ai corsisti e test vengono accodati con `recipient_user_id`; prima del trasporto SMTP il dispatcher controlla l'account Joomla e l'indirizzo effettivo. Messaggi corso legacy senza user ID sono scartati con eliminazione dei dettagli destinatario. Regressioni negative Joomla DB, ma non simulazione SMTP reale o prova di concorrenza contro modifica account durante la consegna. SEC-P1 e SEC-P5 restano aperti.
