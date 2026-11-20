@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.11-dev — PATCH DOC-07 (20/11/2026):** la dashboard evidenzia le attività Scheduler duplicate anche quando il plugin o la singola attività sono disabilitati, per non nascondere il rischio alla successiva riattivazione. Test delle combinazioni di stato; nessuna azione automatica sui task. DOC-07 rimane parziale e il collaudo Joomla è pendente. Copertura minima 57,48% invariata.
+
 - **0.64.10-dev — SEC-P1 (20/11/2026, test-only):** regressione parallela su due processi Joomla e due connessioni InnoDB che tentano la riconciliazione `sending→sent` dello stesso record; attesa una sola transizione e un conflitto 409, senza perdita dei dati di audit. Nessun bump SemVer né mutazione runtime. Test web/SMTP reale ancora pendente.
 
 - **0.64.10-dev — PATCH SemVer (SEC-P1, 20/11/2026):** ridotta la persistenza ridondante del testo libero in coda email: la nota resta nel campo audit `reconciliation_note` e `last_error` conserva solo il marker generico. Regressioni Joomla su riconciliazione `sent/retry`, secondo tentativo rifiutato e redazione dei destinatari nel caso `sent`. Nessuna modifica a schema, SMTP, idempotenza o autorizzazioni; collaudo simultaneo e SMTP ancora pendenti.

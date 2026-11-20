@@ -1,3 +1,9 @@
+## DOC-07 — duplicati Scheduler con plugin/task disabilitati (20/11/2026)
+
+**Automatico:** `php tests/scheduler-guidance.php` verifica che due attività dello stesso tipo restino classificate `duplicates` in ogni combinazione di abilitazione del plugin e della singola attività; una sola attività disabilitata resta `disabled`.
+
+**Collaudo Joomla pendente:** predisporre in un'installazione disposable due task `jlms.mail.dispatch` disabilitati, verificare l'avviso duplicati nella dashboard, riabilitare il plugin e un task alla volta senza avviare l'invio di email reali. Confermare che nessuna attività sia mutata dalla sola visita alla dashboard e che gli avvisi IT/EN siano comprensibili. Ripetere con un solo task disabilitato: stato disabilitato, non duplicato. Ripulire i task di prova. Nessuna accettazione manuale attribuita.
+
 ## SECDEV-03 — spoofing del nome file tramite controlli Unicode bidi (20/11/2026)
 
 **Automatico:** `php tests/material-policy.php` deve rifiutare nomi contenenti marcatori bidi U+202E, U+202A, U+2066/U+2069, U+200F e U+061C, mantenendo ammessi nomi UTF-8 accentati senza tali controlli. La stessa policy protegge il nome proposto nel download; i controlli MIME e sul contenuto restano separati.
