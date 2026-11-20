@@ -1,3 +1,11 @@
+## 20 novembre 2026 — SEC-P1, identità corrente su anteprima e applicazione migrazioni (PR #804)
+
+[PR #804](https://github.com/jeckodevelopment/jd_learn/pull/804) integrata con squash `b9d835907bbbd101357e877793127092e36a119c`. Il servizio `EnrollmentMigrationService::access()` applicava già `LearningService::freshActor()`, controllo roster di corso e permesso specifico `jlms.enrollments.migrate`: **nessun bypass runtime confermato**. La fixture `tests/joomla-enrollment-migration.php` mantiene un'identità Joomla di sessione obsoleta, blocca l'account nel database, verifica rifiuto 403 di preview e apply, assenza di mutazioni su iscrizione e migrazioni, ripristino in `finally` e successivo accesso autorizzato. Non è test HTTP reale.
+
+[CI #44785203185](https://github.com/jeckodevelopment/jd_learn/actions/runs/44785203185) **4/4 verde**: preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6. [Artefatto Actions JD-Learn-0.64.17-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44785203185/artifacts/14653099747), contenente lo ZIP Joomla interno `pkg_jlms-0.64.17-dev.zip` da **810628 byte** e 12 costituenti. SHA-256 dello **ZIP Joomla interno** (builder): `d04dfcac11fcdd1084f420afacf6aa1308aed23679c2198d78b6c4572e1bda4b`; digest distinto dell'**archivio Actions**: `sha256:ee0a6c0c4ad718f7ccc36159f5d53d5adf790da0ffbc448a6ffbaa965d0ce571`.
+
+Testbook, superficie SEC-P1, changelog e stato implementativo allineati nella #804. **Collaudo manuale Joomla in attesa; SEC-P1 e SEC-P5 aperti**. Nessun bump SemVer o criterio completo aggiuntivo: 454 implementati / 35 mancanti / 268 non verificabili, minimo comprovato **57,48% invariato**. Questa voce registra solo evidenze post-merge.
+
 ## 20 novembre 2026 — SEC-P1, regressione ACL roster con sessione obsoleta (PR #802)
 
 [PR #802](https://github.com/jeckodevelopment/jd_learn/pull/802) integrata in `main` con squash `d8a9dc06722afa6cceaade60823c1897a39ef063`. Su `EnrollmentRosterService::course()` erano già presenti `LearningService::freshActor()` e ACL di corso: non è stato rilevato un bypass. Aggiunta in `tests/joomla-roster.php` una regressione Joomla disposable con identità di sessione preesistente, blocco dell'account nel database, rifiuto 403 per elenco e filtri, ripristino DB in `finally` e conferma delle iscrizioni invariate. Nessuna modifica runtime o nuovo bump SemVer.
