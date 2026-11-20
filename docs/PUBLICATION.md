@@ -86,3 +86,7 @@ Dal Programma → Versioni selezionare una versione storica e usare **Recupera c
 ## Soglia video della versione
 
 La pubblicazione verifica che la soglia sia un intero valido in centesimi di percentuale (1–10000), con default90% quando manca nei dati legacy supportati. Il form Regole didattiche usa percentuali con massimo due decimali, senza arrotondamento in virgola mobile. Il riepilogo mostra soglia precedente e nuova quando cambiano; l’impronta include le regole e rifiuta conferme superate. Dopo la pubblicazione, ogni iscrizione continua a usare la soglia della versione assegnata; nessun ricalcolo dei completamenti esistenti.
+
+## Ricerca testuale del catalogo (0.64.1-dev)
+
+Il filtro pubblico cerca in titolo e descrizione usando il testo inserito come sottostringa letterale: il carattere percentuale (`%`), l'underscore (`_`) e il carattere di escape (`!`) non sono operatori wildcard. La query applica `LIKE` con escape esplicito `!` e parametri bindati, mantenendo la proiezione Joomla per lingua, pubblicazione, categorie e livelli di accesso. Non modifica filtri, ordinamenti o lo stato degli utenti. La verifica manuale con titoli simili è registrata in `docs/QA_TESTBOOK.md`.
