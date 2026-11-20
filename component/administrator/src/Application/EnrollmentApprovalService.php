@@ -165,7 +165,7 @@ final class EnrollmentApprovalService
             (new MailQueue($this->db))->enqueue(
                 $courseId, hash('sha256', 'enrollment.decision:' . $requestId), $template,
                 (string) ($learner->getParam('language', '') ?: $course->language),
-                (string) $learner->email, trim((string) $learner->name), $data
+                (string) $learner->email, trim((string) $learner->name), $data, (int) $learner->id
             );
             $this->db->transactionCommit();
             return $enrollmentId;
