@@ -4173,16 +4173,16 @@
       {
         "id": "all_views",
         "label": "Inventario completo di ID/classi su tutte le viste della 1.0.0",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "docs/FRONTEND_CONTRACT_INVENTORY.md",
           "component/site/tmpl/lessonpreview/default.php",
           "component/site/tmpl/mailconsentrevoke/default.php"
         ],
         "review": {
-          "reason": "L’inventario elenca le viste principali. Le viste lessonpreview e mailconsentrevoke distribuite non compaiono nella tabella, quindi resta da completare la copertura.",
+          "reason": "L'inventario contratti frontend comprende già la sezione Viste aggiuntive distribuite, con lessonpreview e mailconsentrevoke, radici DOM e hook da preservare. La segnalazione di omissione era obsoleta. Non si considera eseguita l'accettazione manuale degli override.",
           "references": [
-            "docs/FRONTEND_CONTRACT_INVENTORY.md#Viste pubbliche: contratto e override",
+            "docs/FRONTEND_CONTRACT_INVENTORY.md#Viste aggiuntive distribuite",
             "component/site/tmpl/lessonpreview/default.php#jlms",
             "component/site/tmpl/mailconsentrevoke/default.php#jlms"
           ]
@@ -5722,15 +5722,15 @@
       {
         "id": "criterion_05",
         "label": "Stato vuoto con collegamento al catalogo autorizzato",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           "component/site/tmpl/dashboard/_courses.php",
           "component/site/tmpl/mycourses/default.php"
         ],
         "review": {
-          "reason": "Lo stato vuoto del layout condiviso mostra un messaggio localizzato. Il messaggio non offre il collegamento al catalogo richiesto.",
+          "reason": "La vista I miei corsi include già il collegamento localizzato al catalogo nello stato vuoto; il markup usa Route Joomla e il criterio era rimasto erroneamente missing dopo il fix. La verifica sul sito Joomla resta distinta dall'implementazione.",
           "references": [
-            "component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty",
+            "component/site/tmpl/dashboard/_courses.php#jlms-dashboard-empty-catalog",
             "component/site/tmpl/mycourses/default.php#_courses.php"
           ]
         }
