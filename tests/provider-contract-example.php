@@ -24,7 +24,7 @@ if (!$instance instanceof ExampleProvider || $registry->get('exampleprovider') !
 try {
     $instance->fetchMetadata(
         new \Jlms\Contracts\Video\VideoSource('exampleprovider', 'unavailable', 1),
-        new \Jlms\Contracts\Video\MetadataContext(1, 1, 'it-IT')
+        new \Jlms\Contracts\Video\MetadataContext(1, 'it-IT', false)
     );
     throw new RuntimeException('Example must not promise metadata');
 } catch (DomainException $expected) {
