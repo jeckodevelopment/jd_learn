@@ -1,3 +1,9 @@
+## SEC-P2 — patch level PHP e hosting (da verificare)
+
+- [ ] In CI, il test `tests/sec-p2-php-security-floor.php` rifiuta PHP 8.3 fino alla 8.3.36 e PHP 8.4 fino alla 8.4.27; confermare esito verde sui runner con patch aggiornate.
+- [ ] Sul sito Joomla di prova, raccogliere versioni effettive PHP e Joomla e confermare patch vendor o backport documentati, senza divulgare percorsi/URL.
+- [ ] Verificare regressioni provider, CSP, log, segreti e storage video con i controlli SEC-P2 già documentati prima del sign-off.
+
 ## SEC-P2 — checklist di chiusura hardening (da eseguire)
 
 - [ ] CI: `tests/sec-p2-source-gate.py` valida sorgenti distribuiti e workflow GitHub con pin SHA, con negative fixtures per chiavi e tag mobili.
