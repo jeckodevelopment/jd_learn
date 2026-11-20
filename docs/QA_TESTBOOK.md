@@ -1,3 +1,9 @@
+## SEC-P1 — migrazione iscrizioni: account operatore bloccato dopo login (20/11/2026)
+
+**Regressione Joomla disposable:** `tests/joomla-enrollment-migration.php` verifica che `preview()` e `apply()` rifiutino con 403 un operatore bloccato dopo l'acquisizione dell'identità di sessione, senza modificare l'iscrizione né creare record di migrazione. Stato account ripristinato in `finally`, nuova preview positiva dopo lo sblocco. Esito CI da verificare.
+
+**Comportamenti da testare sul sito di prova:** con operatore autorizzato aprire l'anteprima di migrazione; bloccarne l'account da un'altra sessione e provare anteprima e conferma dalla sessione precedente (403, nessun trasferimento). Ripristinare l'account; testare anche revoca di `jlms.enrollments.migrate`, docente abilitato al solo roster e ID di iscrizione appartenente ad altro corso. Verificare invariabilità DB e audit. **Accettazione manuale: in attesa.** SEC-P1 ancora aperto.
+
 ## SEC-P1 — roster: blocco operatore dopo login (20/11/2026)
 
 **Test automatico da verificare in CI:** `tests/joomla-roster.php` usa account amministrativo di fixture in Joomla disposable, conserva la vecchia identità, blocca il record Joomla e richiede 403 a `EnrollmentRosterService::query()` e `filterOptions()`. Ripristina sempre lo stato `block` precedente in `finally`, poi verifica accesso consentito. Non è collaudo HTTP reale.
