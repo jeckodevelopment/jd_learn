@@ -1,12 +1,13 @@
 # JD Learn 1.0.0 — Cookie, storage browser e integrazione CMP
 
-**Stato: inventario preliminare da codice (13 novembre 2026). Verifica dinamica nel browser e approvazione privacy ancora pendenti.** Il documento è un supporto agli amministratori del sito; non è un'informativa privacy o cookie universale e non sostituisce la valutazione del titolare/consulente.
+**Stato: inventario statico aggiornato da codice (20 novembre 2026), protetto dal gate automatico `tests/privacy-storage-inventory.py`. Verifica dinamica nel browser e approvazione privacy ancora pendenti.** Il documento è un supporto agli amministratori del sito; non è un'informativa privacy o cookie universale e non sostituisce la valutazione del titolare/consulente.
 
 ## Inventario preliminare e classificazione
 
 | Elemento | Componente che lo gestisce | Tecnologia | Finalità | Persistenza | Categoria/consenso | Evidenza |
 |---|---|---|---|---|---|---|
 | `jdlearn.video.speed.v1` | JD Learn, `component/media/js/video.js` | `localStorage` dell'origine del sito | Preferenza di velocità del player | Persistente finché il browser/sito non la rimuove; non è impostata una scadenza applicativa | **Da valutare**: preferenza funzionale, non classificarla automaticamente come cookie tecnico/esente | `getItem` e `setItem` nel codice; `docs/VIDEO.md` |
+| `jdlearn.video.language.v1` | JD Learn, `component/media/js/video.js`; lettura anche negli adapter YouTube e Cloudflare Stream | `localStorage` dell'origine del sito | Preferenza lingua dei sottotitoli/caption; codice lingua validato | Persistente finché il browser/sito non la rimuove o l'utente azzera la preferenza; nessuna scadenza applicativa | **Da valutare**: non presumere esenzione o consenso implicito | `getItem`, `setItem`, `removeItem` nel player; lettura dagli adapter e `docs/VIDEO.md` |
 | Cookie di sessione e autenticazione Joomla | Joomla e configurazione del sito | Cookie HTTP | Sessione, autenticazione e protezione funzionale | Nome, attributi e durata dipendono dall'installazione Joomla | Generalmente necessari al funzionamento, da descrivere nell'informativa del sito | Responsabilità del core Joomla; da misurare su installazione concreta |
 | Storage/cookie di YouTube, Vimeo, Cloudflare Stream | Servizi esterni, quando caricati | Cookie, storage e richieste esterne possibili | Funzionamento del player e trattamenti del provider | **Da verificare per provider, browser, paese e configurazione** | Valutazione e configurazione CMP del titolare; nessun automatismo basato solo su `youtube-nocookie.com` o `dnt=1` | `docs/VIDEO.md`; SDK/iframe provider |
 | Sessioni e progressi, iscrizioni, consenso email | JD Learn lato server | Database, non cookie per definizione | Fruizione corsi e registrazione eventi/consensi | Secondo retention configurata o definita dal titolare | Trattamento dati personali da illustrare nella privacy policy, non presentare come cookie | `plugins/privacy/jdlearn/docs/README.md` e implementazione backend |
@@ -28,7 +29,7 @@ La preferenza email di nuovi corsi con double opt-in è **distinta** dal consens
 
 Per ogni tecnologia censita nell'ambiente reale compilare: nome esatto, dominio e path, parte prima/terza, cookie HTTP o local/session storage, finalità, dati conservati, durata/scadenza, attributi, provider responsabile, categoria adottata nella CMP, base giuridica/necessità del consenso valutata, comportamento prima/dopo consenso e revoca, modalità di cancellazione, versione e data della prova. Fornire una tabella pronta per il copia-incolla nelle CMP, **non** presumere identici i nomi dei cookie sui diversi siti Joomla.
 
-Esempio verificato staticamente: `jdlearn.video.speed.v1`, `localStorage`, prima parte, valore numerico della velocità di riproduzione, senza scadenza applicativa impostata. Categoria, obbligo di consenso e durata effettiva su singolo dispositivo **da confermare**.
+Esempi verificati staticamente: `jdlearn.video.speed.v1` conserva una velocità numerica; `jdlearn.video.language.v1` conserva la lingua caption in formato validato. Entrambi sono `localStorage` prima parte, senza scadenza applicativa, e non contengono identificativi studente, risposte a quiz o token. La classificazione privacy e la durata effettiva restano da verificare sul sito. Categoria, obbligo di consenso e durata effettiva su singolo dispositivo **da confermare**.
 
 ## Piano di verifica obbligatorio prima della 1.0.0
 
@@ -41,3 +42,7 @@ Esempio verificato staticamente: `jdlearn.video.speed.v1`, `localStorage`, prima
 - Validare classificazione e wording delle informative con il responsabile privacy del sito; prevedere manutenzione per aggiornamenti Joomla, JD Learn e SDK.
 
 **Criterio di accettazione SEC-P4:** inventario completo e verificato, guida di configurazione CMP IT/EN, esempi pratici, nessuna tecnologia terza facoltativa avviata prima delle condizioni di consenso configurate, verifica della revoca e istruzioni di manutenzione. La presenza di questo documento **non** soddisfa da sola tale criterio.
+
+## Manutenzione e guida bilingue
+
+La [guida amministrativa inglese](PRIVACY_COOKIES_EN.md) descrive l'inventario e la configurazione CMP per i gestori di siti multilingua. Il controllo statico `python3 tests/privacy-storage-inventory.py` verifica che l'uso diretto di `localStorage` negli script distribuiti da componente e plugin video coincida con le due chiavi documentate in IT/EN. Non equivale alla scansione live dei cookie/SDK dei provider: conservare l'accettazione browser/consenso distinta.
