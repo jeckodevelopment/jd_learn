@@ -1097,6 +1097,16 @@ runpy.run_path(str(ROOT/'tests/frontend-pathway-layout.py'), run_name='__main__'
 # FE-08 native category menu options preserve section-specific ACL projections.
 runpy.run_path(str(ROOT/'tests/frontend-category-sections.py'), run_name='__main__')
 
+# DOC-07: video provider remediation messages must remain complete in both locales.
+for locale in ('it-IT', 'en-GB'):
+ provider_lang = (ROOT / 'component/administrator/language' / locale / 'com_jlms.ini').read_text()
+ for suffix in ('NOT_INSTALLED', 'DISABLED', 'UNAVAILABLE', 'NOT_CONFIGURED', 'READY', 'UNKNOWN'):
+  assert provider_lang.count('COM_JLMS_PROVIDER_GUIDANCE_' + suffix + '=') == 1, (locale, suffix)
+provider_model = (ROOT / 'component/administrator/src/Application/DashboardProviderStatus.php').read_text()
+provider_template = (ROOT / 'component/administrator/tmpl/dashboard/default.php').read_text()
+assert 'public static function guidanceKey(' in provider_model
+assert 'DashboardProviderStatus::guidanceKey(' in provider_template
+
 # Functional criterion reconciliation: no unsupported completion percentage.
 import subprocess as _progress_subprocess
 import sys as _progress_sys

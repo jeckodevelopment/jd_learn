@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.2-dev — PATCH SemVer (DOC-07, 20/11/2026):** la diagnostica già disponibile dei quattro provider nella dashboard amministrativa ora mostra istruzioni operative localizzate per plugin mancante, disabilitato, non registrato, configurazione locale incompleta o configurazione rilevata. Nessuna attivazione automatica, invio di credenziali o prova di disponibilità remota implicita. Test di mapping degli stati e controllo IT/EN; DOC-07 resta parziale e il collaudo Joomla pendente.
+
 - **0.64.1-dev — PBASE-02 (20/11/2026, solo documentazione/test):** aggiornate le quattro guide README locali ai plugin video per descrivere campi manifest, capacità effettive, limiti e prove richieste; gate statico in CI contro deriva documentale. Nessuna modifica runtime, nessuna promozione di criteri dell'audit, nessun aumento SemVer.
 
 - **0.64.1-dev — PATCH SemVer (CAT-01, 20/11/2026):** la ricerca testuale nel catalogo confronta letteralmente i caratteri speciali `%`, `_` e `!` invece di interpretarli come jolly SQL, evitando corrispondenze estranee alla richiesta. Parametri SQL ancora vincolati, escape esplicito compatibile con MySQL/MariaDB; nuove regressioni PHP e DB Joomla. Nessuna migrazione o alterazione dell'indicizzazione; collaudo manuale pendente.

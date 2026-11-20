@@ -1,3 +1,11 @@
+## DOC-07 — diagnostica dei provider video con verifiche consigliate (20/11/2026)
+
+**Collaudo Joomla manuale pendente:** nella Dashboard di JD Learn espandere «Stato dei provider video». Per YouTube, Vimeo, Cloudflare Stream e HTML5 verificare separatamente i casi plugin non installato, installato/disattivato, attivo ma senza descriptor, attivo con descriptor `configured=false`, attivo e localmente configurato. Il messaggio vicino allo stato deve essere tradotto nella lingua amministrativa IT/EN e distinguere ogni causa senza esporre valori dei parametri, credenziali o contenuto delle sorgenti. La diagnostica deve rimanere in sola lettura e non abilitare plugin, creare cron o effettuare chiamate remote.
+
+Verificare accessibilità con tastiera, ruolo autorizzato a vedere la dashboard ma senza permesso di gestione plugin, assenza di link mutativi o inviti a superare i controlli. Per lo stato «configurato» provare anche il player in un'aula autorizzata, poiché il controllo locale non certifica il provider remoto.
+
+**CI:** test degli stati e del fallback in `tests/run.php` e controllo della presenza di tutte le traduzioni IT/EN; nessuna promozione dei criteri DOC-07 o accettazione Joomla automatica.
+
 ## PBASE-02 — guide locali dei quattro plugin video (20/11/2026)
 
 **CI:** eseguire `python3 tests/provider-doc-contract.py` e `python3 tools/check.py`. Il gate verifica per ciascuno dei quattro provider inclusi nel package che la sua guida README identifichi plugin, parametri di configurazione del manifest e sezioni su capacità, errori e collaudo. Non verifica che il provider remoto funzioni, né tutte le affermazioni delle guide.
