@@ -8,6 +8,7 @@ use Joomla\CMS\Language\Text;
 use Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth;
 $schedulerHealthKeys = [
     'missing' => 'COM_JLMS_SCHEDULER_HEALTH_MISSING',
+    'invalid_rules' => 'COM_JLMS_SCHEDULER_HEALTH_INVALID_RULES',
     'disabled' => 'COM_JLMS_SCHEDULER_HEALTH_DISABLED',
     'duplicates' => 'COM_JLMS_SCHEDULER_HEALTH_DUPLICATES',
     'failed' => 'COM_JLMS_SCHEDULER_HEALTH_FAILED',
