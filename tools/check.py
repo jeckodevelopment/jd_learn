@@ -394,6 +394,7 @@ assert "mailconsentrevoke" in (ROOT/'component/site/src/View/Mailconsentrevoke/H
 # SEC-P1: new Joomla controllers require an explicit security classification.
 # This is structural drift detection, not evidence of full endpoint ACL coverage.
 runpy.run_path(str(ROOT / 'tests/sec-p1-controller-gates.py'), run_name='__main__')
+runpy.run_path(str(ROOT / 'tests/sec-p1-admin-identity.py'), run_name='__main__')
 runpy.run_path(str(ROOT / 'tests/sec-p1-mail-recipient-identity.py'), run_name='__main__')
 
 # Documentation hygiene is checked with every standard build.
