@@ -1,3 +1,13 @@
+## 20 novembre 2026 — SEC-P1, revisione dispatch dei controller Joomla (PR #794)
+
+[PR #794](https://github.com/jeckodevelopment/jd_learn/pull/794) mergiata in `main` (squash `e71303714951c5b1ef3575d1c7440933cba0105a`). Il controller mutativo amministrativo `CategoryreassignmentController` ammette ora esplicitamente il task `reassign`, bloccando con 404 gli altri task prima del dispatch Joomla. Inventario fail-closed di **37 controller** (11 site, 26 administrator), metodi pubblici e task ammessi, con eccezioni ereditarie documentate; matrice in `docs/SEC_P1_CONTROLLER_DISPATCH_1.0.0.md`. `tests/joomla-categories.php` ha verificato direttamente 404 sulla classe Joomla per sette task impropri; nessun bypass ACL precedente è stato dimostrato.
+
+[CI completa run #44767509403](https://github.com/jeckodevelopment/jd_learn/actions/runs/44767509403) **4/4 verde** dopo correzione di una iniziale assert del gate, con PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e preflight. [Gate matrice run #44767509405](https://github.com/jeckodevelopment/jd_learn/actions/runs/44767509405) verde.
+
+[Artefatto Actions `JD-Learn-0.64.14-dev`](https://github.com/jeckodevelopment/jd_learn/actions/runs/44767509403/artifacts/14644693824) con pacchetto Joomla interno `pkg_jlms-0.64.14-dev.zip` (810017 byte, 12 costituenti). SHA-256 **ZIP Joomla interno** verificato dal builder: `4ee8fc39ca43199f4f0200c884b0e7c7cc6b3b11764e6aa06dc52cfe5b7bfacb`; digest distinto **archivio GitHub Actions** `sha256:6c499b7ffe82ede7514016181a4bfc16f247d07f131f9d2d81da1df16c3124f3`.
+
+Documentazione, matrice requisiti, QA, changelog, sicurezza e SemVer `0.64.14-dev` allineati nella PR #794. SEC-P1/SEC-P5 **aperti**: non eseguiti i test negativi multi-ruolo HTTP ed eventi plugin né il penetration test completo. 454 implemented / 35 missing / 268 unverifiable, minimo 57,48% invariato; nessuna promozione di criterio o accettazione manuale. Questa PR storica non modifica runtime.
+
 ## 20 novembre 2026 — SEC-P1, destinatari attuali per il consenso double opt-in (PR #791)
 
 [PR #791](https://github.com/jeckodevelopment/jd_learn/pull/791) integrata in `main` con squash `7089140d068bb73984f45bf961c37ebb8fd98db1`. Il servizio `CourseAnnouncementConsent` usa il record Joomla aggiornato per confrontare e recuperare il destinatario, impedendo richieste con email obsoleta e account bloccato su dashboard/iscrizione; compatibilità con registrazione in attesa di attivazione Joomla conservata. Regressione DB Joomla sul controllo centrale; nessuna prova SMTP o test HTTP reale, né certificazione SEC-P1.
