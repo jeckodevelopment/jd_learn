@@ -1,3 +1,10 @@
+## UI-07 — contratti DOM a runtime e CSS custom (da collaudare)
+
+- [ ] CI `tests/frontend-dom-runtime.py` rifiuta ID `jlms-* ` duplicati e classi CSS fuori dalla radice; `tests/categories-http.py` e `tests/dashboard-http.py` verificano HTML effettivamente renderizzato su Joomla, due stati SEF e navigazione personale.
+- [ ] In Joomla di prova, caricare il catalogo con una personalizzazione `#jlms-courses .jlms-course-card` e la dashboard con `#jlms-dashboard .jlms-my-course` usando due template/override indipendenti e verificare che non si influenzino reciprocamente.
+- [ ] Verificare, su tutte le 17 viste, unicità di ID con moduli contemporanei, layout condizionali, mobile/desktop, lingue IT/EN, quiz/audio/video e accessibilità tastiera.
+- [ ] Registrare ambiente, versione, screenshot/risultato senza dati personali prima di chiudere UI-07/versioned_maps.
+
 ## SEC-P2 — patch level PHP e hosting (da verificare)
 
 - [ ] In CI, il test `tests/sec-p2-php-security-floor.php` rifiuta PHP 8.3 fino alla 8.3.36 e PHP 8.4 fino alla 8.4.27; confermare esito verde sui runner con patch aggiornate.

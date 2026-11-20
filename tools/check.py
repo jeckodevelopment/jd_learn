@@ -1157,3 +1157,6 @@ runpy.run_path(str(ROOT/'tests/sec-p2-package-scan.py'), run_name='__main__')
 
 # SEC-P2: reject known secret signatures in shipped code and unpinned workflow actions.
 runpy.run_path(str(ROOT/'tests/sec-p2-source-gate.py'), run_name='__main__')
+
+# UI-07: rendered DOM validation negative fixtures (real Joomla cases run in HTTP CI).
+runpy.run_path(str(ROOT/'tests/frontend-dom-runtime.py'), run_name='__main__')
