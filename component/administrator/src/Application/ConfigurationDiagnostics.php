@@ -32,7 +32,7 @@ final class ConfigurationDiagnostics
             }
             $checks[] = [
                 'kind' => 'scheduler',
-                'labelKey' => (string) ($entry['label'] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN'),
+                'labelKey' => self::safeLabel($entry['label'] ?? null),
                 'severity' => $severity,
                 'guidanceKey' => \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::guidanceKey($state, $duplicates),
                 'stateKey' => self::schedulerStateKey($state),
@@ -44,7 +44,7 @@ final class ConfigurationDiagnostics
                 : ($state === 'COM_JLMS_READY' ? 'ok' : 'warning');
             $checks[] = [
                 'kind' => 'video',
-                'labelKey' => (string) ($entry['labelKey'] ?? 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN'),
+                'labelKey' => self::safeLabel($entry['label'] ?? null),
                 'severity' => $severity,
                 'guidanceKey' => DashboardProviderStatus::guidanceKey($state),
                 'stateKey' => in_array($state, [
@@ -54,6 +54,13 @@ final class ConfigurationDiagnostics
             ];
         }
         return $checks;
+    }
+
+    /** Treat labels as translations, never as arbitrary provider-supplied content. */
+    private static function safeLabel(mixed $candidate): string
+    {
+        return is_string($candidate) && preg_match('/\\ACOM_JLMS_[A-Z0-9_]+\\z/D', $candidate)
+            ? $candidate : 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL';
     }
 
     private static function schedulerStateKey(string $state): string
