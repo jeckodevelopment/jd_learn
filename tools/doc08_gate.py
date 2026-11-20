@@ -20,7 +20,7 @@ REQUIRED = frozenset((
     "certificates", "course_archive", "administration_acl",
     "dashboard", "frontend_overrides", "release_qa",
 ))
-SAFE = re.compile(r"^[A-Za-z0-9_./-]+\\.md$")
+SAFE = re.compile(r"^[A-Za-z0-9_./-]+\.md$")
 
 
 def check(matrix: dict, release: bool = False) -> None:
