@@ -83,6 +83,7 @@ $read=static fn($who,array $filters=[])=>$db->setQuery($service->query($who,$cou
 // SEC-P1: the original session identity must lose roster read access as soon
 // as an administrator blocks the Joomla account in another session.
 $originalBlock = (int) $db->setQuery('SELECT block FROM #__users WHERE id=' . $userId)->loadResult();
+$enrollmentCountBeforeBlock = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult();
 try {
     $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $userId)->execute();
     rosterDenied(fn() => $service->query($actor, $course), 403, 'stale actor cannot query roster after account block');
@@ -91,6 +92,7 @@ try {
     $db->setQuery('UPDATE #__users SET block=' . $originalBlock . ' WHERE id=' . $userId)->execute();
 }
 rosterExpect(count($read($actor)) > 0, 'roster read restored after account unblock');
+rosterExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult() === $enrollmentCountBeforeBlock, 'blocking actor does not alter enrollments');
 $path=dirname($root).'/roster-fixture.json';
 if(($argv[2]??'')==='retained'){
  $saved=json_decode(file_get_contents($path),true,16,JSON_THROW_ON_ERROR);
