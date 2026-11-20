@@ -1,3 +1,9 @@
+## PBASE-02 — accettazione contratti dei quattro plugin (20/11/2026)
+
+**Gate automatico:** `python3 tests/provider-doc-contract.py` e `python3 tests/provider-package-gate.py`; il package builder importa `tools/provider_doc_gate.py` e ora verifica per YouTube, Vimeo, Cloudflare Stream e HTML5 anche la corrispondenza dei parametri XML con il tipo Joomla, il default dichiarato e i min/max delle guide locali. Le tabelle non sostituiscono la lettura del runtime PHP, né una prova con account terzi.
+
+**Collaudo Joomla da eseguire:** su build installata/aggiornata controllare per tutti e quattro i provider esistenza delle guide nel pacchetto, manifest/versione effettiva, configurazione conservata e messaggi in IT/EN; verificare account autorizzato e non autorizzato, consenso e revoca, avvio senza autoplay, durata, resume, replay a lezione completata, errore di rete, cambio CSP/plugin disabilitato e assenza di segreti nei log. Specifici: Vimeo caption quando disponibili; YouTube privacy enhanced e blocco embed; Cloudflare signed token/TTL/rinnovo, API con account di prova reale e origin policy; HTML5 MP4 storage fuori webroot, FFprobe, HEAD/Range/revoca. Registrare evidenza e risultato per ciascun provider. **Test manuale non eseguito**.
+
 ## UI-07 — contratto DOM frontend versionato 1.0.0 (20/11/2026)
 
 **Gate automatico:** `python3 tests/frontend-dom-contracts.py` (invocato anche da `tools/check.py`) verifica la copertura delle 17 viste `default.php`, gli ID letterali, le classi `jlms-*`, le radici, gli override Joomla e i due selettori CSS di personalizzazione. Insieme a `tests/frontend-contract-hooks.py` conserva gli hook JS. Il controllo è statico, non prova il DOM eseguito né l'accessibilità WCAG.

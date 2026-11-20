@@ -1,5 +1,8 @@
 # Changelog
 
+- **0.64.17-dev — PBASE-02 (20/11/2026):** consolidate in un solo intervento le guide installabili dei quattro plugin video, con tabelle manifest di tipi/default/vincoli, prerequisiti, privacy, ciclo di vita, failure mode e matrice di collaudo. Il gate di build ora confronta i parametri XML e le guide. Nessuna modifica runtime, nessun bump SemVer né collaudo manuale dichiarato.
+
+
 - **0.64.17-dev — UI-07, contratti frontend (20/11/2026):** aggiunto inventario DOM pubblico versionato per 17 viste (radici, ID, classi, override), controllo di deriva in CI e due esempi di personalizzazione CSS indipendenti. Nessuna alterazione del runtime o bump SemVer; collaudi Joomla di override, DOM dinamico e accessibilità ancora pendenti.
 
 - **0.64.17-dev — SEC-P1, threat review consolidata e hardening video (20/11/2026):** il video locale MP4 in chiaro richiede ora una `video_storage_root` esterna al webroot; configurazione assente rifiutata 503 invece di un fallback gestito. Aggiunti test Joomla di confine, gate sorgenti PHP ad alto rischio sull'intero pacchetto e modello delle minacce con finding classificati. Requisiti SEC-P2/SEC-P5 mantengono le verifiche su asset legacy, deployment e test E2E. Versione di sviluppo invariata fino al successivo rilascio.
