@@ -1,13 +1,14 @@
-# JD Learn — YouTube
+# JD Learn — YouTube (plugin base)
 
-Plugin `plg_jlmsvideo_youtube`, gruppo `jlmsvideo`, contratto1. Incluso nel pacchetto base.
+Plugin Joomla `plg_jlmsvideo_youtube` (gruppo `jlmsvideo`, contratto provider v1). Incluso nel package JD Learn; la versione nei manifest del pacchetto è uniformata dal builder. Questa guida descrive il comportamento disponibile nel codice della serie 0.64.1-dev, **non** una prova di accettazione su browser reali.
 
-## Stato0.6.0-dev
+## Configurazione e sorgente
+Abilitare il plugin in Joomla e `playback_enabled` nelle opzioni; il valore iniziale è 0. I campi del manifest sono `playback_enabled`, `language_mode`, `autoplay`, `metadata_cache_ttl`, `remote_timeout`, `embed_privacy_mode`. La riproduzione JD Learn non avvia automaticamente il video (`autoplay=0` nel player), anche quando l'iframe dichiara il permesso `autoplay`. Usare solo ID/URL YouTube normalizzati: nessun HTML embed arbitrario.
 
-Embed con SDK ufficiale, opt-in `playback_enabled`, registrazione lazy e normalizzazione locale. Posizione/durata/seek disponibili solo quando abilitato. Il componente gestisce consenso, grant, progressi e completamento; il plugin non attribuisce crediti. Default disabilitato. La durata nell’authoring viene acquisita dal componente mediante lo SDK del player, con consenso e ricevuta di sorgente; non è un’implementazione server di fetchMetadata per questo plugin. Configurazioni avanzate e collaudo SDK/browser reali restano da completare. Vedere `docs/VIDEO.md` nel repository per comportamento effettivo, endpoint e limiti. Nessuna promessa di riservatezza di URL condivisibili o di certificazione della visione.
+## Capacità e limiti
+Adapter IFrame SDK ufficiale; progresso, posizione, durata, seek e velocità quando esposti dal player/video; preferenza lingua caption al caricamento senza elenco tracce interrogabile da JD Learn. Nessuna trascrizione remota garantita, download o attestazione che `ended` equivalga a completamento. La durata rilevata nell'editor proviene dallo SDK con ricevuta editoriale, non da una Data API server. La policy del componente gestisce accesso, consenso esterno, revoca, completamento e audit: il plugin non assegna crediti.
 
-## Specifica completa
+## Errori, manutenzione e collaudo
+Controllare opt-in plugin, policy `blocked/embed/site_consent`, bridge CMP, CSP, embed consentito dal proprietario, referrer, SDK e rete; distinguere il codice YouTube 153 dagli altri guasti. Disabilitare il plugin non elimina sorgenti/storico; non considerare l'eventuale URL privato una protezione di accesso. Dopo upgrade verificare cache WAM, avvio manuale, riapertura delle lezioni completate, registrazione progressi, cambio consenso, utenti senza ACL, desktop/mobile e IT/EN. Test automatici non sostituiscono i collaudi Joomla reali.
 
-La documentazione di configurazione, campi, input, capacità, sicurezza, consenso, limiti, errori, aggiornamento/disattivazione e test è nel documento condiviso installato con il componente: `administrator/components/com_jlms/docs/VIDEO_PROVIDERS_SPEC.md`. Consultare la sezione YouTube e il dizionario dei parametri. La specifica è il contratto del prodotto da completare, non una dichiarazione che tutte le funzioni siano già presenti.
-
-Nessuna credenziale amministrativa nella lezione o nel browser. Non usare il plugin con studenti o segreti reali in questa versione di sviluppo. Disabilitare un plugin non deve cancellare le sorgenti delle lezioni.
+Riferimenti: `docs/VIDEO.md`, `component/administrator/docs/VIDEO_PROVIDERS_SPEC.md`, `plugins/jlmsvideo/youtube/youtube.xml`, `libraries/jlms/src/Video/EmbedProvider.php`.

@@ -1,3 +1,11 @@
+## PBASE-02 — guide locali dei quattro plugin video (20/11/2026)
+
+**CI:** eseguire `python3 tests/provider-doc-contract.py` e `python3 tools/check.py`. Il gate verifica per ciascuno dei quattro provider inclusi nel package che la sua guida README identifichi plugin, parametri di configurazione del manifest e sezioni su capacità, errori e collaudo. Non verifica che il provider remoto funzioni, né tutte le affermazioni delle guide.
+
+**Joomla manuale pendente:** su una installazione aggiornata abilitare separatamente ogni plugin, confrontare le opzioni reali con la relativa guida, configurare una lezione riproducibile, accertare l'autorizzazione dell'aula/anteprima, ripresa e replay dopo completamento, effetto di consenso/alternanza lingua e comportamento in caso di provider spento. YouTube/Vimeo: test con SDK e policy embed reali; Cloudflare: token, origini e scadenze su account di prova; HTML5: streaming protetto, Range/HEAD e backend/storage. Testare anche fallimenti, utenti senza accesso, IT/EN e disabilitazione senza perdita dello storico. Annotare build e risultati; nessuna accettazione manuale è presunta.
+
+**Stato:** intervento documentale parziale su PBASE-02. Nessun criterio ripromosso e avanzamento minimo 57,32% invariato.
+
 ## SEC-P1 — verifica mirata CSRF/metodo/stati banca domande (20/11/2026)
 
 **Perimetro:** `QuestionbankController::mutate`, `QuestionBankService::trash/delete/duplicate`, `tests/quiz-authoring-http.py` e form nativi della Banca domande. La verifica di codice conferma controlli espliciti `POST` e token Joomla prima dell'esecuzione dei task, ri-validazione dell'identità e ACL oggetto nel servizio, lock della riga, transizioni 0/1 → -2 → 0, blocco della cancellazione definitiva fuori dal cestino e delle revisioni ancora utilizzate.
