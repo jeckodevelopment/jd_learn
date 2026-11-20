@@ -178,6 +178,22 @@ try:
  expect(public_body==b'PUBLIC_SAMPLE_CONTENT\n' and 'no-store' in public_headers.get('Cache-Control','') and 'noindex, nofollow' in public_headers.get('X-Robots-Tag',''),'Explicit course preview is downloadable without exposing the private asset path')
  request(guest,public_url+str(future_sample['id']),expected=404)
  private_id=public_files['Course handout']['id'];lesson_id=public_files['Lesson handout']['id'];foreign_id=json.loads(command('inspect'))['foreign_files'][0]['id']
+ # SEC-P1 targeted IDOR regression: the editor has valid access to both courses,
+ # but cannot replay a foreign attachment ID under another course/version context.
+ # Exercise both ordinary and byte-range reads so no private content leaks via an
+ # alternate HTTP path; leave the complete cross-tenant review open.
+ admin_download='/administrator/index.php?option=com_jlms&task=material.download&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&id='
+ foreign_admin_download='/administrator/index.php?option=com_jlms&task=material.download&format=raw&course_id='+str(fixture['foreign_course_id'])+'&version_id='+str(fixture['foreign_version_id'])+'&id='
+ _,valid_admin,_=request(admin,admin_download+str(private_id))
+ expect(valid_admin==b'NEW_PRIVATE_NOTES\\n','Admin download works for the correctly scoped attachment')
+ for url in [admin_download+str(foreign_id),foreign_admin_download+str(private_id)]:
+  for verb,headers in [('GET',{}),('HEAD',{}),('GET',{'Range':'bytes=0-3'})]:
+   _,denied,_=request(admin,url,method=verb,headers=headers,expected=404)
+   expect(b'FOREIGN_PRIVATE_NOTES' not in denied and b'NEW_PRIVATE_NOTES' not in denied,
+          'Foreign attachment is never returned across course/version scope on '+verb)
+ preview_foreign='/administrator/index.php?option=com_jlms&task=material.preview&format=raw&course_id='+str(fixture['course_id'])+'&version_id='+str(fixture['version_id'])+'&lesson_id='+str(fixture['lesson_id'])+'&id='+str(foreign_id)
+ _,denied,_=request(admin,preview_foreign,expected=404)
+ expect(b'FOREIGN_PRIVATE_NOTES' not in denied,'Foreign attachment cannot be read through editorial preview')
  for forbidden in [private_id,lesson_id,foreign_id]:request(guest,public_url+str(forbidden),expected=404)
  request(guest,public_url+str(sample['id']),method='POST',expected=405)
  _,head_body,head_headers=request(guest,public_url+str(sample['id']),method='HEAD')
