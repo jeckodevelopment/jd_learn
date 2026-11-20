@@ -113,3 +113,7 @@ Nuove comunicazioni ai corsisti e test vengono accodati con `recipient_user_id`;
 ## SEC-P1 — producer SMTP e subscriber Joomla (20/11/2026)
 
 Con 0.64.16-dev tutti i 13 producer censiti di MailQueue::enqueue passano l'ID Joomla del destinatario; enqueue rifiuta nuovi eventi senza ID e dispatch verifica account non bloccato e indirizzo invariato per tutti i template. I legacy non verificabili sono scartati senza ritentativi automatici. La matrice docs/SEC_P1_MAIL_AND_PLUGIN_SURFACE_1.0.0.md distingue gli eventi dei quattro plugin e i tre task Scheduler, ancora non interamente testati in E2E. SEC-P1 e SEC-P5 aperti.
+
+## SEC-P1 — protezione permessi stale in amministrazione (20/11/2026)
+
+Il controllo comune degli attestati amministrativi ora rilegge utente Joomla e ACL su tutte le sette operazioni sensibili, rifiutando account bloccati dopo il login; la vista amministrativa delle variabili email usa `CourseEditorAccess::fresh`. Prove negative Joomla DB e gate statico, ma revoca ACL multi-ruolo HTTP e altre superfici ancora da verificare. Gate SEC-P1/SEC-P5 aperti.

@@ -1,3 +1,9 @@
+## SEC-P1 — certificati amministrativi: blocco account dopo login (20/11/2026)
+
+**Automatico:** test Joomla `tests/joomla-smoke.php` conserva l'istanza di identità autorizzata, blocca nel database l'utente associato senza ricaricare la sessione, poi richiede 403 per `adminList`, `adminDetail`, `adminUnissuedCompletions`, `adminDownload`, `adminRegenerate`, `adminRecoverMissing`, `adminRecoverHistorical`; l'account viene sempre ripristinato in `finally`. Il nuovo gate `tests/sec-p1-admin-identity.py` individua sette operazioni certificate admin e richiede che ognuna passi da `assertCertificateAdministrator` che ricarica account e ACL; verifica inoltre `Mailvariables/HtmlView` e il controllo fresco. Il blocco user non è una prova di revoke gruppo/ACL senza blocco.
+
+**Manuale Joomla — In attesa:** in installazione disposable accedere come amministratore con `jlms.certificates.manage`, aprire lista/dettaglio e scaricare un PDF. Da altra sessione bloccare l'account o revocare il permesso dedicato, poi ritentare le URL e POST di rigenerazione/recupero senza nuovo login: richiedere 403, nessuna modifica audit/PDF. Ripristinare utente/ACL; ripetere la guida variabili email (accesso 403 dopo blocco), testare concessione valida e utente senza permesso dedicato. Registrare prove di entrambi i profili PHP/database e assenza PII nei log.
+
 ## SEC-P1 — produttori SMTP e identità Joomla obbligatoria (20/11/2026)
 
 **Automatico:** tests/sec-p1-mail-recipient-identity.py, richiamato da tools/check.py, censisce i 13 produttori enqueue e il produttore enqueueAnnouncement, richiede ID Joomla e rifiuta nuove sorgenti non classificate. tests/joomla-smoke.php verifica su DB reale utente valido, bloccato, inesistente, email diversa o malformata. La prova strutturale non dimostra SMTP o ACL per endpoint.
