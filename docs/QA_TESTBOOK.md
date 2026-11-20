@@ -1,3 +1,9 @@
+## SEC-P1 — destinatario consenso e account Joomla aggiornato (20/11/2026)
+
+**Automatico:** `tests/joomla-smoke.php` verifica dati destinatario canonici da DB, email obsoleta e ID inesistente rifiutati, e account temporaneamente bloccato: origini `dashboard`/`enrollment` negate, `registration` ammessa per attivazione nativa; ripristino account in `finally`. Nessun invio SMTP reale.
+
+**Collaudo Joomla pendente:** in ambiente disposable e SMTP isolato, aprire Preferenze, modificare successivamente l'email dell'account in Joomla e inviare con sessione precedente: nessun token al recapito obsoleto; riprovare con account bloccato da preferenze e iscrizione: nessun invio. Verificare registrazione con attivazione nativa, destinatario corrente, assenza di dati nei log e ripulire la fixture.
+
 ## DOC-07 — prossima esecuzione Scheduler malformata (20/11/2026)
 
 **Automatico:** `php tests/scheduler-guidance.php` verifica valori `next_execution` inesistenti (30 febbraio), ore/minuti fuori range, formati non Joomla e confini dei 10 minuti. La classificazione `unknown` non sostituisce la semantica delle regole Joomla.
