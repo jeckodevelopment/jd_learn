@@ -1,3 +1,9 @@
+## SEC-P1 — tranche consolidata sicurezza amministrazione iscrizioni (20/11/2026)
+
+**Automatizzato in CI Joomla disposable (da confermare):** test negativi di identità stale dopo blocco su `EnrollmentStateService::editor/apply`, `EnrollmentApprovalService::pending/decide` e `ManualEnrollmentService::editor/apply`. Tutti richiedono 403 con il vecchio oggetto `User`, verificano nessuna alterazione dei record e ripristinano `#__users.block` in `finally`. Riprovare la lettura positiva dopo lo sblocco. Le PR #802/#804 coprono roster e migrazione analogamente.
+
+**Collaudo manuale Joomla ancora in attesa:** aprire con identità delegata le operazioni stato, approvazione, ammissione manuale, migrazione e roster; bloccare/revocare permessi da un secondo browser; ripetere URL/POST con token di sessione preesistente e verificare 403, risposte senza dati privati e assenza effetti DB/outbox. Ripetere per ospite, studente proprietario e non, docente del corso A e altro corso B, amministratore senza permesso specifico e autorizzato; verificare CSRF, replay, concorrenza e isolamento sulla stessa build Joomla candidata. Non dichiarare tali prove eseguite sulla base delle sole fixture CLI.
+
 ## SEC-P1 — migrazione iscrizioni: account operatore bloccato dopo login (20/11/2026)
 
 **Regressione Joomla disposable:** `tests/joomla-enrollment-migration.php` verifica che `preview()` e `apply()` rifiutino con 403 un operatore bloccato dopo l'acquisizione dell'identità di sessione, senza modificare l'iscrizione né creare record di migrazione. Stato account ripristinato in `finally`, nuova preview positiva dopo lo sblocco. Esito CI da verificare.
