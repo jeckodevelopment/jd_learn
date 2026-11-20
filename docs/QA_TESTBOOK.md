@@ -1,5 +1,10 @@
 ## HTTP-06 — endpoint core, prove negative su Joomla
 
+## HTTP-06 — confini richiesta core, 20/11/2026
+
+Test HTTP automatici su Joomla usa-e-getta: `enrollment.resume` respinge POST (405); `lesson.begin` respinge payload oltre 4096 byte (413 e JSON `COM_JLMS_INVALID_INPUT`); `video.save` respinge payload oltre 75000 byte (413 e JSON `COM_JLMS_VIDEO_EVENTS_INVALID`) senza esporre il riferimento media. In collaudo manuale verificare anche assenza di side effect su iscrizioni, sessioni, progressi e coda. La sola integrazione dei test non equivale all'accettazione sul sito reale; gli altri contratti e casi AC restano aperti.
+
+
 - [ ] Eseguire `tests/learning-http.py` sulla candidata con GET `enrollment.start/request`, `lesson.complete/begin` (405), POST senza CSRF (403), task inesistenti (404), ripetizione iscrizione e mantenimento dei progressi.
 - [ ] Eseguire `tests/video-http.py` con GET sui quattro task `video.playback/save/renew/close` (405 JSON), CSRF assente (403 JSON), task sconosciuto (404) e nessun riferimento provider in errori.
 - [ ] Verificare DB prima/dopo gli errori, code di eventi e corsi in stati non accessibili; provare ruoli, oggetti, lingue, CSRF, cache e rete realmente configurati con account di prova.
