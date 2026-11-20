@@ -155,7 +155,7 @@ final class CourseCommunicationService
             $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
         );
         $key = CourseMessageMutation::testEventKey($courseId, (int) $actor->id, $mutationId);
-        (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data);
+        (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data, (int) $actor->id);
     }
 
     /** Add queued outbox rows in small Scheduler batches; current course ACL and enrollment state are rechecked. */
@@ -194,7 +194,7 @@ final class CourseCommunicationService
                         $templateData['__course_message_snapshot'] = $payload['template'];
                     }
                     $key = hash('sha256', 'course-communication:' . (int) $job->id . ':' . (int) $enrollmentId);
-                    (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) $recipient->language, (string) $recipient->email, (string) $recipient->name, $templateData);
+                    (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) $recipient->language, (string) $recipient->email, (string) $recipient->name, $templateData, (int) $recipient->id);
                 }
             }
             $next = $offset + count($slice);

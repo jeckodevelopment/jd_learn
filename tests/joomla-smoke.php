@@ -105,6 +105,41 @@ try {
         ->where('id = ' . (int) $account->id))->execute();
 }
 
+// SEC-P1: outbox recipients are checked against the CURRENT Joomla account
+// before dispatch. No SMTP is invoked by these negative service tests.
+$mailQueueClass = \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue::class;
+$queued = (object) ['recipient_user_id' => (int) $account->id,
+    'recipient_email' => (string) $account->email];
+$originalBlock = (int) $account->block;
+try {
+    $db->setQuery($db->createQuery()->update('#__users')->set('block = 0')
+        ->where('id = ' . (int) $account->id))->execute();
+    if (!$mailQueueClass::currentRecipient($db, $queued)) {
+        throw new \RuntimeException('Valid current Joomla outbox recipient must be deliverable.');
+    }
+    foreach ([
+        (object) ['recipient_user_id' => 0, 'recipient_email' => (string) $account->email],
+        (object) ['recipient_user_id' => (int) $account->id + 1000000,
+            'recipient_email' => (string) $account->email],
+        (object) ['recipient_user_id' => (int) $account->id,
+            'recipient_email' => 'stale-outbox@example.invalid'],
+        (object) ['recipient_user_id' => (int) $account->id,
+            'recipient_email' => 'not-an-email'],
+    ] as $badRecipient) {
+        if ($mailQueueClass::currentRecipient($db, $badRecipient)) {
+            throw new \RuntimeException('Stale, invalid or unbound outbox recipient passed.');
+        }
+    }
+    $db->setQuery($db->createQuery()->update('#__users')->set('block = 1')
+        ->where('id = ' . (int) $account->id))->execute();
+    if ($mailQueueClass::currentRecipient($db, $queued)) {
+        throw new \RuntimeException('Blocked Joomla account must not receive queued email.');
+    }
+} finally {
+    $db->setQuery($db->createQuery()->update('#__users')->set('block = ' . $originalBlock)
+        ->where('id = ' . (int) $account->id))->execute();
+}
+
 $mailEscaping = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog::class;
 $renderTemplate = new \Joomla\CMS\Mail\MailTemplate('com_jlms.enrollment.manager_request', 'en-GB');
 $renderTemplate->addUnsafeTags($mailEscaping::tagsRequiringHtmlEscape('com_jlms.enrollment.manager_request'));

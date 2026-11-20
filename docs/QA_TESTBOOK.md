@@ -1,3 +1,9 @@
+## SEC-P1 — outbox corso, account bloccato/email stale prima di SMTP (20/11/2026)
+
+**Automatico:** `tests/joomla-smoke.php` usa un account Joomla della fixture e `MailQueue::currentRecipient` per verificare: ID/email aggiornati ammessi, ID nullo/inesistente, email cambiata o non valida e account bloccato negati; ripristino in `finally`. Il dispatcher esegue la verifica sull'account nello stesso ciclo di invio, prima del trasporto, sulle righe con `recipient_user_id` e sempre su `com_jlms.course.message` (anche legacy senza ID, scartato); i produttori di messaggi corso persistono ID sia per corsisti sia per invio test. Nessun test SMTP reale.
+
+**Collaudo manuale Joomla — In attesa:** con SMTP isolato e corsi/utenti fittizi, accodare un messaggio corso, cambiare l'email del destinatario prima dell'avvio task; verificare `skipped`, nessuna consegna al vecchio indirizzo e dati destinatario/payload eliminati. Ripetere bloccando account, e con account invariato (invio riuscito una sola volta). Verificare invio test al docente con ID, cambio email immediatamente dopo accodamento, comportamento delle vecchie righe senza ID e nessuna perdita di altri template email. Provare con entrambi i profili PHP/DB, pulire test e verificare nessun dato privato nei log.
+
 ## SEC-P1 — task Joomla e inventario 37 controller (20/11/2026)
 
 **Automatico:** `tests/sec-p1-controller-gates.py` rileva variazioni non deliberate nei nomi controller, metodi pubblici e task consentiti. `tests/joomla-categories.php` verifica 404 per sette task non consentiti (`display`, `save`, `delete`, `purge`, `getModel`, `__construct`, `reassignother`) sulla classe Joomla reale, senza mutare categorie. Il task `reassign` conserva controlli POST/CSRF e ACL già presenti. Matrice: `docs/SEC_P1_CONTROLLER_DISPATCH_1.0.0.md`.
