@@ -20,7 +20,8 @@ assert "if ($actor->authorise('core.manage', 'com_scheduler'))" in view
 assert 'id="jlms-admin-safe-operations"' in page
 assert 'data-jlms-safe-operation=' in page
 assert 'foreach ($this->safeOperations as $operation)' in page
-assert "Text::_('COM_JLMS_SAFE_OPERATIONS_" in page
+assert "Text::_($safeOperationText[$operation][0])" in page
+assert "Text::_($safeOperationText[$operation][1])" in page
 assert 'method="post"' not in page[page.index('id="jlms-admin-safe-operations"'):]
 assert 'task=' not in page[page.index('id="jlms-admin-safe-operations"'):]
 for locale in ("it-IT", "en-GB"):
