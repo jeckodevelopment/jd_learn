@@ -59,7 +59,9 @@ final class HtmlView extends BaseHtmlView
             if ($actor->authorise('jlms.certificates.manage', 'com_jlms')) {
                 $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_CERTIFICATES', 'fas fa-certificate', 'index.php?option=com_jlms&view=certificates');
             }
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
+            if ($actor->authorise('jlms.audit.view', 'com_jlms')) {
+    $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
+            }
         }
         if ($actor->authorise('core.manage', 'com_mails') && $actor->authorise('core.edit', 'com_mails')) {
             // Use com_mails' native extension filter; it remains editable in Joomla.
