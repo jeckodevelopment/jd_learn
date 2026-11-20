@@ -65,7 +65,7 @@ if __name__ == "__main__":
     ]
     for html, root, css_class in samples:
         verify(html, root=root, scoped_class=css_class)
-        for invalid in (html.replace(f'id="{root}"', f'id="{root}" id="{root}"'),
+        for invalid in (html.replace(f'id="{root}"', f'id="{root}"><aside id="{root}"></aside><div id="another-root"'),
                         html + f'<aside id="{root}"></aside>'):
             try:
                 verify(invalid, root=root, scoped_class=css_class)
