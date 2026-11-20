@@ -27,6 +27,14 @@ assert "'preferences', 'lessonpreview'" in controller and "'preferences', 'class
 assert "private, no-store" in controller and "noindex, nofollow" in controller
 assert consent.count("view=preferences") == 4
 assert "checkToken('post', false)" in consent and "getIdentity()" in consent
+# SEC-P1: redirecting a token-bearing confirmation GET must not leak the
+# confirmation URL as a Referer, and must not be indexed or cached.
+confirmation = consent.split("public function confirm(): void", 1)[1].split("public function revokeLink(): void", 1)[0]
+assert "getString('token', '')" in confirmation
+assert "->confirm($token)" in confirmation
+for header, value in (("Referrer-Policy", "no-referrer"), ("X-Robots-Tag", "noindex, nofollow"), ("Cache-Control", "no-store")):
+    assert f"setHeader('{header}', '{value}', true)" in confirmation, (header, value)
+assert confirmation.index("setHeader('Referrer-Policy'") < confirmation.index("->confirm($token)")
 assert ET.parse(site / "tmpl/preferences/default.xml").getroot().find("layout") is not None
 for lang in ("en-GB", "it-IT"):
     strings = read(f"language/{lang}/com_jlms.ini")
