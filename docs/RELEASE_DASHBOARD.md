@@ -4,8 +4,8 @@ Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: 
 
 ## Sviluppo documentato (minimo confermato)
 
-**56.57%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
-Il registro contiene 446 criteri implementati con evidenza, 43 lacune accertate, 268 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
+**56.90%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
+Il registro contiene 448 criteri implementati con evidenza, 41 lacune accertate, 268 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
 
 La percentuale funzionale globale rigorosa resta **non determinabile** finché i criteri non verificabili non vengono risolti.
 
@@ -13,7 +13,7 @@ La percentuale funzionale globale rigorosa resta **non determinabile** finché i
 
 | Macroarea | Peso | Sviluppo comprovato | Collaudo avviato | Accettati | Lacune | Non verificabili |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Catalogo, frontend e navigazione | 10.75% | 71.37% | 13.04% | 0.00% | 3 | 20 |
+| Catalogo, frontend e navigazione | 10.75% | 74.41% | 13.04% | 0.00% | 1 | 20 |
 | Corsi, versioni e pubblicazione | 9.35% | 70.44% | 0.00% | 0.00% | 0 | 23 |
 | Iscrizioni, lezioni e progressi | 8.88% | 70.18% | 5.26% | 0.00% | 0 | 18 |
 | Provider e fruizione video | 8.41% | 63.80% | 0.00% | 0.00% | 4 | 21 |
