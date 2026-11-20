@@ -42,6 +42,23 @@ if(!$targetLesson)throw new RuntimeException('Copied version did not preserve th
 $transition=(int)$publication->transitions($actor,$course,$version)[0]->id;$review=$publication->updateImpact($actor,$course,$version,$transition);
 $publication->transition($actor,$course,$version,(int)migrationRow('courses',$course)->revision,(int)migrationRow('course_versions',$version)->revision,$transition,$review['fingerprint']);
 $service=$component->getEnrollmentMigrationService();$mapping=[$lesson=>$targetLesson];$plan=$service->preview($actor,$course,$enrollment,$mapping);
+// SEC-P1: a session identity captured before an administrator blocks the
+// account must not retain read/preview or mutation access. No migration rows
+// or enrollment state may change when the access check denies these calls.
+$originalBlock=(int)$db->setQuery('SELECT block FROM #__users WHERE id='.$uid)->loadResult();
+$sourceStatusBeforeBlock=(string)migrationRow('enrollments',$enrollment)->status;
+$migrationsBeforeBlock=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$enrollment)->loadResult();
+try {
+ $db->setQuery('UPDATE #__users SET block=1 WHERE id='.$uid)->execute();
+ migrationDenied(fn()=>$service->preview($actor,$course,$enrollment,$mapping),403,'blocked stale actor cannot preview migration');
+ migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,1,$mapping,'Blocked actor attempt','00000000-0000-4000-8000-000000000001',str_repeat('0',64),true),403,'blocked stale actor cannot apply migration');
+ migrationExpect((string)migrationRow('enrollments',$enrollment)->status===$sourceStatusBeforeBlock,'blocked access does not mutate source enrollment');
+ migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$enrollment)->loadResult()===$migrationsBeforeBlock,'blocked access does not create migration record');
+} finally {
+ $db->setQuery('UPDATE #__users SET block='.$originalBlock.' WHERE id='.$uid)->execute();
+}
+migrationExpect($service->preview($actor,$course,$enrollment,$mapping)['hash']===$plan['hash'],'migration preview restored after unblocking the operator');
+
 migrationExpect(count($plan['transfers'])===1&&$plan['transfers'][0]['target_lesson_id']===$targetLesson,'preview maps only the explicit completed non-quiz lesson equivalence');
 migrationExpect($plan['blocked']===null,'valid single enrollment migration is enabled');
 $emptyPlan=$service->preview($actor,$course,$enrollment,[]);
