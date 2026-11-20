@@ -1,5 +1,7 @@
 # Materiali protetti
 
+**Sicurezza dei nomi file (0.64.5-dev):** il caricamento e il download rifiutano i controlli Unicode bidirezionali usati per mascherare visivamente l'estensione, oltre ai percorsi e ai formati eseguibili già vietati. Restano consentiti nomi Unicode legittimi con lettere accentate. Per prove negative e positive consultare [QA_TESTBOOK.md](QA_TESTBOOK.md).
+
 Il plugin Scheduler `plg_task_jlms` espone `jlms.materials.cleanup`. Dopo l’upgrade, verificare che il plugin **Task - JD Learn** sia abilitato, quindi creare da Sistema → Attività pianificate una voce “JD Learn: pulisci i file materiali orfani”. È possibile pianificarla, per esempio, una volta al giorno. Per siti senza traffico, usare l’esecuzione CLI/cron del Joomla Scheduler; l’attività non viene creata automaticamente.
 
 Ogni esecuzione esamina al massimo 100 record (parametro `limit`, intervallo 1–100). Sono eleggibili solo asset di storage locale più vecchi del periodo configurato in **Opzioni → JD Learn → Materiali → Conservazione dei file orfani** (default 24 ore, intervallo 24–8760 ore) e non referenziati da lezioni, allegati, template/documenti attestato o risultati dei job. Il database blocca le righe candidate durante il controllo e la rimozione; il blob viene eliminato solo dopo la validazione della chiave privata. Errori su file o riferimenti impediscono la cancellazione del record. Le sostituzioni dei materiali restano immutabili: gli asset ancora referenziati non sono raccolti.

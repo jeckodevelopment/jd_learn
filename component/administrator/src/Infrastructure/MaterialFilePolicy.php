@@ -12,7 +12,10 @@ final class MaterialFilePolicy
     public static function name(string $name): string
     {
         if ($name === '' || strlen($name) > 180 || preg_match('//u', $name) !== 1
-            || preg_match('/[\\x00-\\x1f\\x7f\\/\\\\]/', $name) || $name[0] === '.' || trim($name) !== $name
+            || preg_match('/[\\x00-\\x1f\\x7f\\/\\\\]/', $name)
+            // Unicode bidi overrides and isolates can disguise a downloaded file extension.
+            || preg_match('/[\\x{061C}\\x{200E}-\\x{200F}\\x{202A}-\\x{202E}\\x{2066}-\\x{2069}]/u', $name)
+            || $name[0] === '.' || trim($name) !== $name
             || preg_match('/(?:^|\.)(?:php\d*|phtml|phar|exe|com|bat|cmd|sh|ps1|js|html?|svg)(?:\.|$)/i', $name)) {
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }

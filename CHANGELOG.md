@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.5-dev — PATCH SemVer (SECDEV-03, 20/11/2026):** rifiutati i marcatori Unicode bidirezionali nei nomi dei file di materiali e video, per impedire la presentazione ingannevole delle estensioni anche nei download autorizzati. I controlli precedenti (nome, contenuto/MIME, dimensioni, ACL) restano invariati. Test negativi per override, isolate e marcatori direzionali e positivo per accenti Unicode. Nessuna promozione automatica di SECDEV-03, che richiede una verifica di sicurezza trasversale.
+
 - **0.64.4-dev — PBASE-03 (20/11/2026, guide/test):** guide per amministratore, autore e sviluppatore dei provider video; esempio Joomla documentale del contratto di registrazione con manifest, service provider, subscriber e adapter deliberatamente non riproducibile. Test CLI del registry e dei metadati del manifest. Nessuna nuova estensione distribuita, nessuna modifica runtime e nessun aumento SemVer. Registro PBASE-03/criterion_04 riconciliato con test: 454 implementati, 35 mancanti, 268 non verificabili e minimo 57,48%.
 
 - **0.64.4-dev — PBASE-03, riconciliazione audit dopo PR #762 (20/11/2026, solo evidenze):** il criterio di blocco della build in mancanza delle guide plugin video è ora attestato da test positivi e negativi e classificato implementato nel registro canonico, con report e dashboard sincronizzati. Nessun incremento SemVer e nessuna accettazione Joomla presunta.
