@@ -1,3 +1,9 @@
+## SEC-P1 — roster: blocco operatore dopo login (20/11/2026)
+
+**Test automatico da verificare in CI:** `tests/joomla-roster.php` usa account amministrativo di fixture in Joomla disposable, conserva la vecchia identità, blocca il record Joomla e richiede 403 a `EnrollmentRosterService::query()` e `filterOptions()`. Ripristina sempre lo stato `block` precedente in `finally`, poi verifica accesso consentito. Non è collaudo HTTP reale.
+
+**Comportamenti da testare manualmente:** aprire roster e filtri con un amministratore autorizzato; da altra sessione bloccare l'utente, ripetere i due accessi con la prima sessione senza rifare login e verificare 403 e assenza di nomi/iscritti; sbloccarlo e verificare ritorno dei diritti effettivi. Ripetere con docente autorizzato, account senza `jlms.enrollments.manage` e corso estraneo, senza alterazioni delle iscrizioni. **Accettazione Joomla: in attesa.** Nessuna nuova funzionalità né modifica runtime.
+
 ## SEC-P1 — certificati amministrativi: blocco account dopo login (20/11/2026)
 
 **Automatico:** test Joomla `tests/joomla-smoke.php` conserva l'istanza di identità autorizzata, blocca nel database l'utente associato senza ricaricare la sessione, poi richiede 403 per `adminList`, `adminDetail`, `adminUnissuedCompletions`, `adminDownload`, `adminRegenerate`, `adminRecoverMissing`, `adminRecoverHistorical`; l'account viene sempre ripristinato in `finally`. Il nuovo gate `tests/sec-p1-admin-identity.py` individua sette operazioni certificate admin e richiede che ognuna passi da `assertCertificateAdministrator` che ricarica account e ACL; verifica inoltre `Mailvariables/HtmlView` e il controllo fresco. Il blocco user non è una prova di revoke gruppo/ACL senza blocco.
