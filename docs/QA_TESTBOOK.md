@@ -1,3 +1,9 @@
+## AUT-04 — migrazione iscrizioni tra versioni: blocchi e invarianti (21/11/2026)
+
+La CI esegue `tests/aut04-migration-boundary.php` nel preflight con input 0/1/99/100/999/1000/1001: un inventario di equivalenze salvate oltre 1.000 righe viene respinto con conflitto prima di costruire la mappatura (non è consentito un troncamento silenzioso). `tests/joomla-enrollment-migration.php` esercita inoltre l'ambiente Joomla usa-e-getta e verifica che un tentativo quiz aperto e un'edizione destinazione piena impediscano preview/apply e conservino il record iscrizione originale; la chiusura del tentativo/ripristino della capacità riabilita la migrazione. I mapping salvati vengono applicati solo su scelta esplicita. Si conservano i test esistenti su ACL, revoche account, snapshot, stato corso, progressi, idempotenza e aggiornamento di versione.
+
+**Collaudo manuale separato:** provare su installazione reale i flussi di migrazione di una iscrizione, mappatura parziale, quiz aperto, capienza edizione, restore dei dati dopo upgrade, risultati e attestati. Verificare le schermate di conferma, rollback e messaggi senza attivare migrazioni involontarie.
+
 ## AUT-04 / LES-01 — Duplicazione completa dei campi personalizzati di lezione (21/11/2026)
 
 **Regressione automatica:** `php tests/aut-les-field-copy-boundary.php` eseguito nel preflight obbligatorio. Campi nativi Joomla associati alla lezione: 0/1/999/1000 valori sono ammessi; il 1001° valore fa fallire la copia **prima di scrivere nuovi valori**, con `COM_JLMS_OUTLINE_LIMIT`, senza generare una duplicazione silenziosamente incompleta. Il servizio di duplicazione opera nella transazione del chiamante; per i dati reali Joomla provare anche rollback su copia con valori multipli, quiz, allegati e prerequisiti. Nessun collaudo manuale attribuito.

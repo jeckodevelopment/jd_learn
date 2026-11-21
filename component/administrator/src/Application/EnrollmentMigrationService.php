@@ -42,6 +42,14 @@ final class EnrollmentMigrationService
         return [$rows[$source], $rows[$target]];
     }
 
+    /** The 1001st row is an overflow sentinel, never an implicitly dropped mapping. */
+    private static function requireCompleteSavedEquivalences(int $count): void
+    {
+        if ($count > 1000) {
+            throw new \RuntimeException('COM_JLMS_MIGRATION_LIMIT', 409);
+        }
+    }
+
     /** Preview only. Mapping is a list of source_lesson_id => target_lesson_id pairs. */
     public function preview(User $identity, int $course, int $enrollment, array $mapping = [], bool $useSavedMappings = false): array
     {
@@ -91,7 +99,11 @@ final class EnrollmentMigrationService
                 ->innerJoin('#__jlms_lessons AS s ON s.id=e.source_lesson_id')->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')
                 ->where('s.course_version_id=:source')->where('t.course_version_id=:target')
                 ->bind(':source',$source->course_version_id,ParameterType::INTEGER)->bind(':target',$targetVersion,ParameterType::INTEGER);
-            foreach ($this->db->setQuery($q,0,1001)->loadObjectList() as $eq) {
+            // Never silently ignore saved equivalences beyond the scan bound.
+            // A truncated set could produce an incomplete migration preview.
+            $savedEquivalences = $this->db->setQuery($q, 0, 1001)->loadObjectList();
+            self::requireCompleteSavedEquivalences(count($savedEquivalences));
+            foreach ($savedEquivalences as $eq) {
                 if (isset($completedSet[(int)$eq->source_lesson_id])) { $mapping[(int)$eq->source_lesson_id]=(int)$eq->target_lesson_id; }
             }
             if (count($mapping)>100) { throw new \RuntimeException('COM_JLMS_MIGRATION_LIMIT',409); }

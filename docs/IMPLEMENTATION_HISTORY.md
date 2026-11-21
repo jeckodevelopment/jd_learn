@@ -1,3 +1,9 @@
+## 21 novembre 2026 — AUT-04: verifica integrità migrazione iscritti (candidato 0.64.21-dev)
+
+- Servizio `EnrollmentMigrationService`: la lettura delle equivalenze salvate oltre il limite di 1.000 non può più produrre una mappatura parziale silenziosa; codice fail-closed con test positivo e negativo di soglia.
+- Integrazione Joomla: nuovi casi di regressione per tentativo quiz aperto, capienza destinazione esaurita, preservazione byte-per-byte dell'iscrizione dopo rigetto e uso esplicito (mai implicito) dei mapping già approvati.
+- PATCH `0.64.21-dev`: package/componente/WAM coerenti. Evidenze CI, commit e artefatto da registrare dopo merge. Nessuna promozione anticipata di AUT-04/historical_integrity, che comprende anche attestati, backup e tutte le varianti di ripristino; collaudi manuali indipendenti.
+
 ## 21 novembre 2026 — AUT-04/LES-01, copia campi nativi senza troncamento — PR #861 integrata
 
 - **Commit di merge:** `8cbaf5ba3742a1bb8eed310364adecff81d2d905`; [PR #861](https://github.com/jeckodevelopment/jd_learn/pull/861), head `2ae068a1ed15c74fd97f7d2f0a16f554aaec442c`.

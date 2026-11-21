@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.21-dev — AUT-04:** controllo fail-closed della completezza delle equivalenze salvate durante la migrazione di iscrizioni, con prova preflight 0–1001; integrazione Joomla ampliata per tentativi quiz aperti, edizioni esaurite, recupero e mapping solo espliciti. PATCH SemVer; nessuna migrazione schema e nessuna modifica agli stati delle iscrizioni senza conferma.
+
 - **0.64.20-dev — AUT-04/LES-01:** corretto il rischio di troncamento silenzioso dei campi Joomla di una lezione durante la duplicazione: oltre 1.000 valori la copia fallisce prima della loro scrittura; fixture automatiche 0/1/999/1000/1001 e gate CI. Patch SemVer 0.64.20-dev per correzione integrità dati.
 
 - **0.64.19-dev — SECDEV-07/02 SAST/stile/composizione dipendenze (candidato 21/11/2026):** CI con Semgrep CE 1.186.0 e regole offline per PHP, JavaScript e Python, fixture positive/negative, Ruff E4/E7/E9 e gate first-party sulle 12 parti Joomla; nessuna dipendenza runtime o modifica SemVer. Chiusura criterio subordinata alle prove CI e alla revisione dei limiti.
