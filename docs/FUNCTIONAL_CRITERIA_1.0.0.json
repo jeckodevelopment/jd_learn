@@ -6251,14 +6251,14 @@
       {
         "id": "criterion_01",
         "label": "Configurazione/diagnostica",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/View/Dashboard/HtmlView.php",
           "component/administrator/src/Application/ConfigurationDiagnostics.php",
           "tests/doc07-configuration-diagnostics.php"
         ],
         "review": {
-          "reason": "La dashboard unifica controlli read-only per Scheduler, provider video, storage privato, modelli email e opzioni operative. Rimangono da dimostrare la copertura di tutte le integrazioni installate e i prerequisiti specifici dell'hosting.",
+          "reason": "La dashboard amministrativa unifica i controlli read-only di configurazione e diagnostica su Scheduler, provider, storage, template email e opzioni operative; le fixture PHP e i gate strutturali verificano gli stati e le proiezioni prive di valori riservati. Gli override puntuali, l'hosting e le integrazioni esterne restano criteri separati.",
           "references": [
             "component/administrator/src/View/Dashboard/HtmlView.php#L100-L155",
             "component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230",

@@ -1,3 +1,9 @@
+## 21 novembre 2026 — SCR-16 criterion_01 riconciliato come implementato nel software
+
+- Evidenze: dashboard consolidata PR #867, #869, #870, test `tests/doc07-configuration-diagnostics.php` e `tests/doc07-safe-operations.py`; [CI #44926383789](https://github.com/jeckodevelopment/jd_learn/actions/runs/44926383789) 4/4 verde, run di integrità CSV associato.
+- `SCR-16/criterion_01` promosso da `unverifiable` a `implemented` con riferimenti di codice e test nel registro canonico; altri quattro criteri non promossi, né associati a falsi risultati manuali.
+- Nuovi contatori **475 implemented / 17 missing / 265 unverifiable**. Minimo di sviluppo documentato **60,97%** (+0,10 pp). Accettazione Joomla invariata: 4,67% avviato, 0% completa. La promozione non è una certificazione dell'hosting, dell'assenza di segreti in ogni superficie o dell'operatività dei provider esterni.
+
 ## 21 novembre 2026 — SCR-16 diagnostica operativa consolidata, PR #870 integrata
 
 - [PR #870](https://github.com/jeckodevelopment/jd_learn/pull/870), merge `f987d4ce7032a45342bcfc50df181b33ab7f33d8`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44926383789), gate separato CSV verde.

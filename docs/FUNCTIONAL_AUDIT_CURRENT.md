@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **474**.
+- Implementati: **475**.
 - Mancanti con lacuna accertata: **17**.
-- Esaminati con esito non verificabile: **266**.
+- Esaminati con esito non verificabile: **265**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -584,10 +584,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
   - [tests/joomla-curriculum-builder.php#L1-L30](../tests/joomla-curriculum-builder.php#L1-L30)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SCR-16/criterion_01` — Configurazione/diagnostica. La dashboard unifica controlli read-only per Scheduler, provider video, storage privato, modelli email e opzioni operative. Rimangono da dimostrare la copertura di tutte le integrazioni installate e i prerequisiti specifici dell'hosting.
-  - [component/administrator/src/View/Dashboard/HtmlView.php#L100-L155](../component/administrator/src/View/Dashboard/HtmlView.php#L100-L155)
-  - [component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230)
-  - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
 - `SCR-16/criterion_02` — Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali. Sono disponibili parametri globali, stati provider, modelli email, task, storage, antivirus, attestati, video locali e notifiche individuali. La configurazione effettiva di ogni override menu/corso non è completamente verificata.
   - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
   - [component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230)
@@ -1399,6 +1395,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Controller/EnrollmentmigrationController.php#confirmation](../component/administrator/src/Controller/EnrollmentmigrationController.php)
   - [component/administrator/src/Application/EnrollmentMigrationService.php#kind <> 'quiz'](../component/administrator/src/Application/EnrollmentMigrationService.php)
   - [component/administrator/src/Application/EnrollmentMigrationService.php#course_version_enrollment_migrated](../component/administrator/src/Application/EnrollmentMigrationService.php)
+- `SCR-16/criterion_01` — Configurazione/diagnostica. La dashboard amministrativa unifica i controlli read-only di configurazione e diagnostica su Scheduler, provider, storage, template email e opzioni operative; le fixture PHP e i gate strutturali verificano gli stati e le proiezioni prive di valori riservati. Gli override puntuali, l'hosting e le integrazioni esterne restano criteri separati.
+  - [component/administrator/src/View/Dashboard/HtmlView.php#L100-L155](../component/administrator/src/View/Dashboard/HtmlView.php#L100-L155)
+  - [component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230)
+  - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
 - `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il corso cestinato espone un'anteprima autorizzata con conteggio delle dipendenze e revisioni editoriali; la conferma di eliminazione è separata, richiede CSRF e revisione invariata, e la purga ricontrolla i riferimenti in transazione. Test Joomla su corso vuoto, revisione obsoleta e conservazione delle dipendenze; accettazione manuale ancora pendente.
   - [component/administrator/src/Model/CourseModel.php#public function purgeImpact](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/src/View/Courses/HtmlView.php#purgepreview](../component/administrator/src/View/Courses/HtmlView.php)
