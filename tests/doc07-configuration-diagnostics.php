@@ -24,6 +24,19 @@ $providers = array_map(
     $providerStates
 );
 $result = ConfigurationDiagnostics::summarize($scheduler, $providers);
+$providerOffset = count($scheduler);
+if ($result[$providerOffset]['labelKey'] !== 'COM_JLMS_PROVIDER_YOUTUBE') {
+    throw new RuntimeException('SCR-16 lost a valid provider display label in the diagnostic chain');
+}
+$thirdPartyLabel = ConfigurationDiagnostics::summarize([], [
+    ['labelKey' => 'PLG_JLMSVIDEO_CUSTOM_TITLE', 'stateKey' => 'COM_JLMS_READY'],
+    ['labelKey' => 'PLG_JLMSVIDEO_PRIVATE_SECRET=TOKEN', 'stateKey' => 'COM_JLMS_READY'],
+]);
+if ($thirdPartyLabel[0]['labelKey'] !== 'PLG_JLMSVIDEO_CUSTOM_TITLE'
+    || $thirdPartyLabel[1]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL') {
+    throw new RuntimeException('SCR-16 did not preserve safe labels or redact untrusted plugin labels');
+}
+
 if (count($result) !== count($scheduler) + count($providers)) {
     throw new RuntimeException('Configuration checks lost or added an unrecognized check');
 }

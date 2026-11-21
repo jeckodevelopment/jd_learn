@@ -2931,3 +2931,7 @@ Collaudo Joomla successivo: con più di 500 corsi e meno di 500 menu catalogo va
 ### SCR-16 — configurazione completa e campi provider (sviluppo automatico)
 
 Verifica successiva Joomla (non blocca lo sviluppo): salvare un menu catalogo con parametri vuoti e verificare la normale ereditarietà; verificare le cinque impostazioni globali di visualizzazione del catalogo per valori abilitati/disabilitati e valori invalidi; provare un plugin video registrato con etichetta non localizzata e accertare che nessun valore grezzo sia reso in dashboard. Controllare permessi e assenza di attività in uscita all'apertura della dashboard.
+
+### SCR-16 — etichette video e ACL diagnostica
+
+Collaudo Joomla differito: manager del componente vede i nomi corretti di YouTube, Vimeo, Cloudflare Stream e HTML5 nella sezione di configurazione/diagnostica; plugin con etichetta `PLG_JLMSVIDEO_*` valida mantiene la localizzazione. Utente backend privo di `core.manage` non vede stati provider e la dashboard non richiama la loro registrazione. Verificare assenza di invii email e modifiche a video/gruppi durante la semplice visualizzazione.
