@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **469**.
-- Mancanti con lacuna accertata: **21**.
+- Implementati: **471**.
+- Mancanti con lacuna accertata: **19**.
 - Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
@@ -71,10 +71,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
-- `SEC-P3/criterion_01` — Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti. La revisione del criterio «Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
-- `SEC-P3/criterion_02` — verifiche con account di prova. La revisione del criterio «verifiche con account di prova» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P5/criterion_01` — Test negativi end-to-end pertinenti alla release candidate. La revisione del criterio «Test negativi end-to-end pertinenti alla release candidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P5/criterion_02` — Penetration/risk review con ambito e risultati tracciabili. La revisione del criterio «Penetration/risk review con ambito e risultati tracciabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1938,6 +1934,17 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SEC_P2_FINDINGS_1.0.0.md#Decisione, confini e rilascio](../docs/SEC_P2_FINDINGS_1.0.0.md)
   - [docs/SEC_P2_FINDINGS_1.0.0.json#"decision_policy"](../docs/SEC_P2_FINDINGS_1.0.0.json)
   - [tests/sec-p2-findings-gate.py#def inspect(root: Path, ledger: dict)](../tests/sec-p2-findings-gate.py)
+- `SEC-P3/criterion_01` — Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti. Il perimetro software della privacy by design è ora documentato e protetto: inventario delle 47 tabelle SQL e gate anti-deriva, eventi com_privacy di esportazione/cancellazione con blocco fail-closed delle dipendenze, anonimizzazione di riferimenti facoltativi e code, proiezione ACL del consenso MAIL-11, procedure bilingui di retention, log esterni, diritti e replay dopo restore. La valutazione legale e la policy di conservazione del sito, la bonifica di backup esterni e l'accettazione Joomla restano gate di rilascio separati, non risultati del software.
+  - [docs/SEC_P3_DATA_INVENTORY_1.0.0.json#"baseline"](../docs/SEC_P3_DATA_INVENTORY_1.0.0.json)
+  - [docs/SEC_P3_PRIVACY_OPERATIONS_1.0.0.md#SEC-P3](../docs/SEC_P3_PRIVACY_OPERATIONS_1.0.0.md)
+  - [plugins/privacy/jdlearn/src/Extension/Jdlearn.php#public function onPrivacyRemoveData](../plugins/privacy/jdlearn/src/Extension/Jdlearn.php)
+  - [component/administrator/src/Application/ConsentAuditService.php#public function page](../component/administrator/src/Application/ConsentAuditService.php)
+  - [tests/sec-p3-data-inventory.py#def validate](../tests/sec-p3-data-inventory.py)
+- `SEC-P3/criterion_02` — verifiche con account di prova. La CI della PR #852 ha eseguito su Joomla disposable due account separati, export per identità e consensi pending/confirmed/revoked, revoca/token, blocchi della rimozione per code e audit immutabili, anonimizzazione e invarianza dei dati altrui; test statici e build su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, più browser, 4/4 superati (run 44904176809). I collaudi manuali sul sito di prova, inclusi backup/restore e permessi configurati dal titolare, restano non eseguiti e non sono accettazione.
+  - [tests/joomla-smoke.php#// Verify all MAIL-11 consent states](../tests/joomla-smoke.php)
+  - [tests/joomla-smoke.php#// Immutable audit attribution](../tests/joomla-smoke.php)
+  - [tests/sec-p2-p3-guard.py#dependency_guard =](../tests/sec-p2-p3-guard.py)
+  - [docs/QA_TESTBOOK.md#SEC-P3](../docs/QA_TESTBOOK.md)
 - `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L'inventario statico bilingue ora include entrambe le chiavi first-party effettivamente usate dai player (velocità e lingua caption) con scopo, durata e valutazione consenso distinta. Il test automatico in CI blocca nuove chiamate dirette localStorage non inventariate. I cookie SDK e le scansioni in browser reale restano verifiche separate SEC-P4/criterion_02 e /criterion_03.
   - [docs/PRIVACY_COOKIES.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES.md)
   - [docs/PRIVACY_COOKIES_EN.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES_EN.md)
