@@ -260,7 +260,7 @@ $readLinks = static fn (): array => array_map('intval', $db->setQuery(
 $check($readLinks() === array_map('intval', $beforeBulkCourses),
     'partial editorial save preserves all existing pathway course links');
 $currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
-$check($pathModel->save($pathwayBase + ['revision'=>$currentRevision,'state'=>1,'courses'=>[]]),
+$check($pathModel->save(array_replace($pathwayBase, ['revision'=>$currentRevision,'state'=>1,'courses'=>[]])),
     'explicitly empty courses list clears pathway programme');
 $check($readLinks() === [], 'explicit empty courses list removes course links');
 $currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
