@@ -104,4 +104,20 @@ for locale in ("it-IT", "en-GB"):
                  "VIDEO_PROBE_LABEL", "VIDEO_PROBE_UNVERIFIED", "VIDEO_PROBE_UNAVAILABLE",
                  "VIDEO_PROBE_GUIDANCE_UNVERIFIED", "VIDEO_PROBE_GUIDANCE_UNAVAILABLE"):
         assert len(re.findall(r"^COM_JLMS_CONFIG_" + name + r"=", translations, re.M)) == 1
+# SCR-16 completion candidate: real override diagnostics must remain bounded,
+# ACL scoped and read-only, including malformed data and unknown local values.
+assert "ConfigurationDiagnostics::inheritance(" in view
+assert "public static function inheritance(" in diagnostics_code
+assert "->setQuery(" not in diagnostics_code
+assert "MailPreferences::EVENTS" in diagnostics_code
+assert "array_slice($courseOptions, 0, 500)" in view
+assert "array_slice($menuOptions, 0, 500)" in view
+assert "$completeScan = count($courseOptions) <= 500 && count($menuOptions) <= 500;" in view
+for locale in ("it-IT", "en-GB"):
+    translation = (ROOT / "component/administrator/language" / locale / "com_jlms.ini").read_text()
+    for suffix in ("COURSE_LABEL", "MENU_LABEL", "INCOMPLETE", "INVALID",
+                   "OVERRIDES", "INHERITED", "GUIDANCE_INCOMPLETE", "GUIDANCE_INVALID",
+                   "GUIDANCE_OVERRIDES", "GUIDANCE_INHERITED"):
+        key = "COM_JLMS_CONFIG_INHERIT_" + suffix
+        assert len(re.findall(r"^" + key + r"=", translation, re.M)) == 1, (locale, key)
 print("DOC-07 safe procedures: five ACL-scoped operations, IT/EN and non-mutating dashboard OK")
