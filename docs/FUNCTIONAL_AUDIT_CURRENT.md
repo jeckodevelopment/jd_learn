@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **479**.
+- Implementati: **481**.
 - Mancanti con lacuna accertata: **17**.
-- Esaminati con esito non verificabile: **261**.
+- Esaminati con esito non verificabile: **259**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -552,14 +552,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/QUIZ_RUNTIME.md#L23-L23](../docs/QUIZ_RUNTIME.md#L23-L23)
   - [tests/joomla-quiz-attempts.php#L206-L231](../tests/joomla-quiz-attempts.php#L206-L231)
   - [tests/joomla-enrollment-state.php#L1-L30](../tests/joomla-enrollment-state.php#L1-L30)
-- `SCR-01/url_filters` — Ricerca, filtri e ordinamento persistono in URL, anche back/forward. Il catalogo applica filtri server e conserva parametri di navigazione in viste esaminate; non è attestata la persistenza con back/forward per tutti i filtri e ordinamenti del criterio.
-  - [component/administrator/src/Application/CatalogService.php#L1-L40](../component/administrator/src/Application/CatalogService.php#L1-L40)
-  - [tests/joomla-publication.php#L1-L30](../tests/joomla-publication.php#L1-L30)
-  - [docs/PUBLICATION.md#L1-L30](../docs/PUBLICATION.md#L1-L30)
-- `SCR-01/pagination` — Cambio filtro torna a pagina uno; default 12 e limiti server. Il catalogo dispone di paginazione e limiti lato server, ma non è documentata una verifica completa che cambio filtro riporti a pagina uno e rispetti default 12 e limiti in tutti i percorsi.
-  - [component/administrator/src/Application/CatalogService.php#L1-L40](../component/administrator/src/Application/CatalogService.php#L1-L40)
-  - [tests/http-smoke.py#L1-L30](../tests/http-smoke.py#L1-L30)
-  - [docs/FRONTEND_CSS.md#L90-L93](../docs/FRONTEND_CSS.md#L90-L93)
 - `SCR-01/acl_results` — Nessuna informazione promozionale riservata nei risultati. Il servizio del catalogo filtra la visibilità pubblica secondo stato, accesso, lingua e categorie; la prova di assenza di ogni informazione promozionale riservata in tutte le varianti di risultato non è completa.
   - [component/administrator/src/Application/CatalogService.php#L1-L40](../component/administrator/src/Application/CatalogService.php#L1-L40)
   - [docs/CATEGORIES.md#L17-L17](../docs/CATEGORIES.md#L17-L17)
@@ -1234,6 +1226,19 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#private function grade](../component/administrator/src/Application/QuizAttemptService.php)
   - [tests/joomla-quiz-attempts.php#bounded worker expires saved answers for blocked account](../tests/joomla-quiz-attempts.php)
   - [tests/joomla-quiz-attempts.php#duplicate expiry worker does not count twice](../tests/joomla-quiz-attempts.php)
+- `SCR-01/url_filters` — Ricerca, filtri e ordinamento persistono in URL, anche back/forward. La ricerca e tutti i filtri supportati sono normalizzati lato server e inviati via form GET nelle viste catalogo e categoria; CatalogPagination registra esplicitamente le sole chiavi ammesse nell'URL dei link Joomla anche sulle pagine successive e nelle sottocategorie. Le URL restano navigabili con la cronologia del browser senza stato di sessione. La fixture PHP verifica la conservazione e l'esclusione dei parametri sconosciuti; l'accettazione manuale Joomla resta non eseguita.
+  - [component/site/src/Helper/CatalogPagination.php#setAdditionalUrlParam('filter', $safe)](../component/site/src/Helper/CatalogPagination.php)
+  - [component/site/src/View/Courses/HtmlView.php#CatalogPagination::apply(](../component/site/src/View/Courses/HtmlView.php)
+  - [component/site/src/View/Category/HtmlView.php#CatalogPagination::apply(](../component/site/src/View/Category/HtmlView.php)
+  - [tests/catalog-pagination.php#SCR-01 filters or catalogue scope lost](../tests/catalog-pagination.php)
+  - [tests/frontend-catalog-options.py#SCR-01: Joomla 5.1+ pagination](../tests/frontend-catalog-options.py)
+- `SCR-01/pagination` — Cambio filtro torna a pagina uno; default 12 e limiti server. Il modello CoursesModel applica il limite server configurato con default 12 ed esplicita list.start da limitstart GET con fallback 0. I form GET catalogo e categoria non inviano limitstart al cambio filtro e riavviano la ricerca dalla prima pagina. La paginazione dei corsi e quella delle sottocategorie restano separate e preservano soltanto filtri normalizzati; fixture PHP e gate strutturali verificano reset e vincoli. Collaudo Joomla separato.
+  - [component/site/src/Model/CoursesModel.php#getInt('limitstart', 0)](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/Model/CoursesModel.php#CatalogOptions::get('catalog_page_size')](../component/site/src/Model/CoursesModel.php)
+  - [component/site/src/Helper/CatalogOptions.php#'catalog_page_size' => '12'](../component/site/src/Helper/CatalogOptions.php)
+  - [component/site/src/View/Category/HtmlView.php#CatalogPagination::apply($this->childrenPagination](../component/site/src/View/Category/HtmlView.php)
+  - [tests/frontend-catalog-options.py#Changing filters must start at page one](../tests/frontend-catalog-options.py)
+  - [tests/catalog-pagination.php#Hidden filter options must not be persisted](../tests/catalog-pagination.php)
 - `SCR-01/sorts` — Ordinamenti editoriali, titolo, data e durata. Il backend consente di assegnare a ogni corso una posizione editoriale da 0 a 9999, validata dal server e persistita nei parametri editoriali. Il catalogo espone l'ordine editoriale come default configurabile globalmente e tramite menu, colloca le posizioni positive in ordine crescente, gli elementi senza posizione dopo e usa l'ID come tie-break di paginazione. Le alternative titolo, recente, data di pubblicazione e durata restano disponibili, su query con filtri di ACL e versione pubblicata. Test strutturali e CI d'integrazione passati; collaudo manuale Joomla delle combinazioni resta pendente.
   - [component/administrator/src/Model/CourseModel.php#array_key_exists('catalog_position', $data)](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/forms/course.xml#name="catalog_position"](../component/administrator/forms/course.xml)
