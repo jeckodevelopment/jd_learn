@@ -1,3 +1,7 @@
+## DOC-04 — verifica dei contratti tecnici e delle procedure (21/11/2026)
+
+La mappa in `docs/TECHNICAL_CONTRACTS_1.0.0.md` documenta l'identità di package/componente/libreria/plugin, la distribuzione dei 12 costituenti e le procedure di build e verifica. **Pendente**: collaudo dell'inventario DDL sul database reale di prova, installazione e upgrade; riproducibilità del package su checkout identico, hash ZIP interno, verifica UI/provider/ACL. Registrare commit, build, ambiente, checksum e risultati prima della promozione di DOC-04. Nessuna accettazione manuale attribuita da questa sola PR.
+
 ## UI-07 — inventario completo viste/partial e collisioni DOM (21/11/2026)
 
 Verifiche automatiche: `tests/frontend-dom-contracts.py` confronta tutte le 17 viste e quattro partial con la mappa versione 1.0.0, le dipendenze di inclusione, gli ID/classi e il manifest del package. `tests/frontend-dom-runtime.py` prova collisioni tra root componente, navigazione partial e modulo Joomla di terze parti e i due selector CSS indipendenti. La CI Joomla conserva le prove HTTP DOM per catalogo, categorie e viste personali. Un drift del contratto o un partial non censito devono far fallire il gate.
