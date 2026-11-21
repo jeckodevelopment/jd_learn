@@ -86,13 +86,16 @@ final class HtmlView extends BaseHtmlView
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder', 'index.php?option=com_jlms&view=categoryreassignment');
         }
         if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        // A non-manager must not inspect plugin readiness or invoke provider
+        // registration hooks simply by opening the administrative dashboard.
+        if ($actor->authorise('core.manage', 'com_jlms')) {
         $registry = new VideoProviderRegistry();
         PluginHelper::importPlugin('jlmsvideo');
         Factory::getApplication()->getDispatcher()->dispatch(
             RegisterVideoProvidersEvent::NAME,
             new RegisterVideoProvidersEvent($registry),
         );
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $extensions = $db->getQuery(true)
             ->select($db->quoteName(['element', 'name', 'enabled']))
             ->from($db->quoteName('#__extensions'))
@@ -101,6 +104,7 @@ final class HtmlView extends BaseHtmlView
             ->where($db->quoteName('client_id') . ' = 0');
         $extensionMap = $db->setQuery($extensions)->loadObjectList('element');
         $this->providers = DashboardProviderStatus::summarize($extensionMap, $registry->descriptors());
+        }
         $this->canManageScheduler = $actor->authorise('core.manage', 'com_scheduler');
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status($db);
