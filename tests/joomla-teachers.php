@@ -263,12 +263,30 @@ teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_a
 
 $emptyTeacher = array_replace($teacherBase, [
     'id'=>0, 'revision'=>1, 'title'=>'Disposable CI empty teacher',
-    'alias'=>'disposable-ci-empty-teacher', 'user_id'=>'', 'state'=>0,
+    'alias'=>'disposable-ci-empty-teacher', 'user_id'=>(int)$actor->id, 'state'=>0,
 ]);
 teacherExpect($teacherModel->save($emptyTeacher), 'new unlinked and unassigned teacher can be authored');
 $emptyTeacherId=(int)$teacherModel->getState('teacher.id');
 teacherExpect($emptyTeacherId>0, 'empty teacher fixture created');
 teacherExpect($teacherModel->changeStates([$emptyTeacherId], -2), 'empty teacher placed in trash');
+// LCM-04: linking a native Joomla account forbids destructive purge even
+// when there are no course assignments or frozen presentation references.
+teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
+    'unassigned trashed teacher linked to a Joomla account cannot be purged');
+teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
+    'linked teacher profile survives denied purge');
+$db->setQuery('UPDATE #__users SET block=1 WHERE id=' . (int)$actor->id)->execute();
+try {
+    teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
+        'blocked native Joomla account must not make linked teacher purgable');
+} finally {
+    $db->setQuery('UPDATE #__users SET block=0 WHERE id=' . (int)$actor->id)->execute();
+}
+teacherExpect((int)$db->setQuery('SELECT user_id FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === (int)$actor->id,
+    'denied purges retain teacher-to-Joomla-account reference');
+// Explicitly unlink only the disposable teacher fixture to allow purging.
+$db->setQuery('UPDATE #__jlms_teachers SET user_id=NULL WHERE id=' . $emptyTeacherId)->execute();
+
 // Joomla multilingual associations survive outside the teacher FK graph.
 $association = (object)[
     'id'=>$emptyTeacherId, 'context'=>'com_jlms.teacher',
