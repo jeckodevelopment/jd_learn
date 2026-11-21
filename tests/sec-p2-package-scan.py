@@ -38,13 +38,13 @@ link.external_attr = (stat.S_IFLNK | 0o777) << 16
 assert scan(zip_bytes([(link, "../outside")]))[0] > 0
 for bad in (zip_bytes([("first.zip", safe), ("second.zip", safe)]),):
     try:
-        scan(bad, budget={"bytes": 5, "entries": 0})
+        scan(bad, budget={"bytes": module["MAX_TOTAL"] - len(safe) - 1, "entries": 0})
     except ValueError:
         pass
     else:
         raise AssertionError("Shared nested archive byte budget not enforced")
 try:
-    scan(zip_bytes([("one.php", "1"), ("two.php", "2")]), budget={"bytes": 0, "entries": 1})
+    scan(zip_bytes([("one.php", "1"), ("two.php", "2")]), budget={"bytes": 0, "entries": module["MAX_ENTRIES"] - 1})
 except ValueError:
     pass
 else:
