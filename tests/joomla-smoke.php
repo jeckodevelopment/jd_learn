@@ -556,11 +556,11 @@ if ($otherPrivacyUserId <= 0 || $otherPrivacyUserId === $privacyUserId) {
 $otherPrivacyMailKey = hash('sha256', 'privacy-mail-other-user-ci-' . $privacyUserId);
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
 $db->setQuery($db->createQuery()->insert('#__jlms_mail_queue')
-    ->columns(['event_key', 'template_id', 'recipient_user_id', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
+    ->columns(['event_key', 'template_id', 'recipient_user_id', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at', 'reconciliation_by'])
     ->values(implode(',', [
         $db->quote($otherPrivacyMailKey), $db->quote('ci.privacy.other'), $otherPrivacyUserId,
         $db->quote('other-privacy-fixture@example.invalid'), $db->quote('Other Privacy Fixture'),
-        $db->quote('{"fixture":"other-account"}'), $db->quote('sent'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)'
+        $db->quote('{"fixture":"other-account"}'), $db->quote('sent'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)', $privacyUserId
     ])))->execute();
 $privacySubjectExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyExportRequest($privacySubjectExport);
@@ -610,12 +610,13 @@ if ($retainedPrivacyConsent !== 0 || $retainedPrivacyToken !== 0) {
 }
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->execute();
 $otherPrivacyRemaining = $db->setQuery($db->createQuery()
-    ->select(['recipient_user_id', 'recipient_email', 'template_data'])
+    ->select(['recipient_user_id', 'recipient_email', 'template_data', 'reconciliation_by'])
     ->from('#__jlms_mail_queue')
     ->where('event_key = ' . $db->quote($otherPrivacyMailKey)))->loadObject();
 if (!$otherPrivacyRemaining || (int) $otherPrivacyRemaining->recipient_user_id !== $otherPrivacyUserId
     || $otherPrivacyRemaining->recipient_email !== 'other-privacy-fixture@example.invalid'
-    || $otherPrivacyRemaining->template_data !== '{"fixture":"other-account"}') {
+    || $otherPrivacyRemaining->template_data !== '{"fixture":"other-account"}'
+    || $otherPrivacyRemaining->reconciliation_by !== null) {
     throw new \\RuntimeException('Privacy erasure affected an unrelated account.');
 }
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
