@@ -235,6 +235,14 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             if ((int) $db->setQuery($versions)->loadResult() > 0) {
                 throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
             }
+            // Joomla multilingual links are external to the component's FK graph.
+            $context = $this->typeAlias;
+            $associations = $db->createQuery()->select('COUNT(*)')->from('#__associations')
+                ->where('id = :id')->where('context = :context')
+                ->bind(':id', $id, ParameterType::INTEGER)->bind(':context', $context);
+            if ((int) $db->setQuery($associations)->loadResult() > 0) {
+                throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
+            }
             $table = $this->getTable('Teacher');
             if (!$table->load($id) || !$table->delete($id)) {
                 throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
