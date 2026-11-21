@@ -504,6 +504,39 @@ $db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_u
 if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$privacyBlockedData[0]->reason) {
     throw new \RuntimeException('JD Learn privacy plugin did not explain the removal blocker for an owned job.');
 }
+// Verify all MAIL-11 consent states on an isolated disposable Joomla account,
+// not a mock of the Privacy event. Consent remains the only authoritative row.
+foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
+    $db->setQuery($db->createQuery()->delete('#__jlms_mail_consents')
+        ->where('user_id = ' . $privacyUserId))->execute();
+    $db->setQuery($db->createQuery()->insert('#__jlms_mail_consents')
+        ->columns(['user_id', 'state', 'origin', 'policy_version', 'requested_at'])
+        ->values(implode(',', [
+            $privacyUserId, $db->quote($consentFixtureState),
+            $db->quote('dashboard'), $db->quote('ci-test'), 'UTC_TIMESTAMP(6)'
+        ])))->execute();
+    $consentExportEvent = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+    $privacyPlugin->onPrivacyExportRequest($consentExportEvent);
+    $foundConsentDomain = false;
+    foreach ($consentExportEvent->getArgument('result', []) as $contribution) {
+        foreach ((array) $contribution as $domain) {
+            if ($domain instanceof \\Joomla\\Component\\Privacy\\Administrator\\Export\\Domain
+                && $domain->name === 'jdlearn_course_announcement_consent') {
+                $foundConsentDomain = count($domain->getItems()) === 1;
+            }
+        }
+    }
+    if (!$foundConsentDomain) {
+        throw new \\RuntimeException('Joomla Privacy did not export consent state ' . $consentFixtureState);
+    }
+}
+$privacyTokenHash = hash('sha256', 'privacy-revocation-token-fixture-' . $privacyUserId);
+$db->setQuery($db->createQuery()->insert('#__jlms_mail_unsubscribe_tokens')
+    ->columns(['user_id', 'consent_confirmed_at', 'token_hash', 'created_at', 'expires_at'])
+    ->values(implode(',', [
+        $privacyUserId, 'UTC_TIMESTAMP(6)', $db->quote($privacyTokenHash),
+        'UTC_TIMESTAMP(6)', 'DATE_ADD(UTC_TIMESTAMP(6), INTERVAL 1 HOUR)'
+    ])))->execute();
 // SEC-P3: active mail queue rows must block erasure; terminal rows are redacted.
 $privacyMailId = hash('sha256', 'privacy-mail-queue-ci-' . $privacyUserId);
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->execute();
@@ -567,6 +600,13 @@ $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
 $sanitizedMail = $db->setQuery("SELECT recipient_user_id,recipient_email,recipient_name,template_data,last_error FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->loadObject();
 if (!$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== '' || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}' || $sanitizedMail->last_error !== null) {
     throw new \RuntimeException('Privacy removal did not redact completed mail queue evidence.');
+}
+$retainedPrivacyConsent = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')
+    ->from('#__jlms_mail_consents')->where('user_id = ' . $privacyUserId))->loadResult();
+$retainedPrivacyToken = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')
+    ->from('#__jlms_mail_unsubscribe_tokens')->where('user_id = ' . $privacyUserId))->loadResult();
+if ($retainedPrivacyConsent !== 0 || $retainedPrivacyToken !== 0) {
+    throw new \\RuntimeException('Privacy erasure retained consent or revocation tokens.');
 }
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->execute();
 $otherPrivacyRemaining = $db->setQuery($db->createQuery()
