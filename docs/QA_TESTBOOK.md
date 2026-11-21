@@ -1,3 +1,10 @@
+## SECDEV-07/02 — SAST offline, stile e composizione package (candidato, 21/11/2026)
+
+- **CI:** installazione con versioni fissate Semgrep 1.186.0/Ruff 0.14.6 in venv isolato; `python3 tests/secdev07-sast.py --self-test` rifiuta PHP eval, JavaScript eval e Python eval, accetta gli equivalenti sicuri; `python3 tests/secdev07-sast.py` blocca qualsiasi finding delle regole locali e qualsiasi errore di scansione.
+- **Stile:** `python3 tests/secdev07-style-gate.py --self-test` e `python3 tests/secdev07-style-gate.py --base-ref origin/main` (Ruff E4/E7/E9 su tutte le sorgenti; nessuna nuova violazione ammessa, debito storico conteggiato); con `tests/secdev07-language-syntax.py` e `php -l` già in CI.
+- **Dipendenze e segreti:** build del pacchetto seguita da `tests/sec-p2-dependency-gate.py` e `tests/sec-p2-source-gate.py`, con fixture di terze parti, secret e workflow SHA non validi. Confrontare il pacchetto con la lista approvata di 12 ZIP figli.
+- **Collaudo Joomla:** invariato; verificare hosting, core, runtime, librerie di sistema, log, segreti e review delle vulnerabilità sulla candidata finale. Nessuna accettazione Joomla implicita.
+
 ## SECDEV-07 — Sintassi multi-linguaggio e fixture negative (21/11/2026)
 
 **Test automatici:** eseguire `python3 tests/secdev07-language-syntax.py --self-test` (due casi validi e due invalidi) e `python3 tests/secdev07-language-syntax.py` (tutti i file Git tracciati Python/JS/MJS/CJS); il preflight della PR deve fallire per un sorgente sintatticamente non valido. Verificare indipendentemente `php -l` su tutti i file PHP nei job della matrice e `git diff --check`. Questa prova **non** chiude SAST/SCA completi o il criterio 02.
