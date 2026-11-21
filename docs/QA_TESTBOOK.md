@@ -1,3 +1,7 @@
+## SEC-P2 — audit dei segreti nello storico Git (automatico, 21/11/2026)
+
+Verificare nella CI `tests/sec-p2-history-scan.py` (fixture con segreto poi eliminato e workflow) e `tools/sec_p2_history_scan.py` (storia Git reale su componenti, plugin, libreria, package e workflow, senza stampare contenuto). Il gate deve fallire per finding o file non verificabile. **Questo test non è il collaudo manuale del sito**: CSP, log/provider, host e legacy video sono da collaudare separatamente. Nessuna dichiarazione di assenza totale di credenziali è giustificata dalla sola ricerca di pattern.
+
 ## SEC-P2 — hardening della ZIP e gate builder (21/11/2026)
 
 - [ ] Su commit candidato eseguire `python3 tests/sec-p2-package-scan.py` dopo la build: i file con traversal, drive Windows, symlink Unix, duplicati con case-fold, credenziali e archivi nidificati malevoli devono essere rifiutati; l'archivio Joomla legittimo supera la verifica.

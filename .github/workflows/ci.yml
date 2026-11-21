@@ -46,6 +46,10 @@ jobs:
         env:
           JD_LEARN_BASE_REF: ${{ github.base_ref }}
         run: python3 scripts/check_pr_metadata.py --base-ref "origin/$JD_LEARN_BASE_REF"
+      - name: SEC-P2 full-history secret signature scan (no credential output)
+        run: |
+          python3 tests/sec-p2-history-scan.py
+          python3 tools/sec_p2_history_scan.py
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
