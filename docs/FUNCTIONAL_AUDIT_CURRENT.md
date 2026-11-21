@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **473**.
+- Implementati: **474**.
 - Mancanti con lacuna accertata: **17**.
-- Esaminati con esito non verificabile: **267**.
+- Esaminati con esito non verificabile: **266**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -99,10 +99,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `AUT-03/subtitle_provider` — Avvisi completi per sottotitoli e provider senza tracciamento. La readiness avvisa quando manca la trascrizione editoriale locale. Il codice dichiara esplicitamente che tale controllo non accerta caption o tracce dei provider remoti; l’esito completo per ciascun provider e le relative combinazioni di tracciamento richiede verifica ulteriore.
   - [component/administrator/src/Domain/PublicationReadiness.php#Editorial transcripts are optional accessibility aids.](../component/administrator/src/Domain/PublicationReadiness.php)
   - [docs/VIDEO.md#non espongono qui un elenco interrogabile](../docs/VIDEO.md)
-- `AUT-04/enrollment_mapping` — Migrazione iscritti solo esplicita con equivalenze. La pubblicazione di una nuova versione richiede una revisione esplicita dell’impatto e il codice modella le differenze didattiche. Le prove disponibili non coprono l’intera matrice di equivalenze e assegnazioni degli iscritti durante migrazione, inclusi i casi limite con progressi e quiz aperti.
-  - [component/administrator/src/Application/PublicationService.php#public function updateImpact](../component/administrator/src/Application/PublicationService.php)
-  - [tests/joomla-publication-impact.php#Existing module and quiz definition changes are recognised without exposing questions](../tests/joomla-publication-impact.php)
-  - [docs/PUBLICATION.md#nessuna conferma implicita di aggiornamenti](../docs/PUBLICATION.md)
 - `AUT-04/historical_integrity` — Tutela risultati e attestati in ogni variante di ripristino. I test verificano che le modifiche editoriali non riscrivano lo snapshot congelato e che parte dello storico didattico sopravviva agli aggiornamenti. Non coprono tutte le varianti di ripristino richieste, soprattutto l’interazione completa tra attestati, backup e migrazioni.
   - [tests/joomla-publication.php#later editorial field changes do not rewrite the frozen course snapshot](../tests/joomla-publication.php)
   - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
@@ -1052,6 +1048,12 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CatalogService.php#'certificate_planned'](../component/administrator/src/Application/CatalogService.php)
   - [component/site/tmpl/course/default.php#jlms-course-completion](../component/site/tmpl/course/default.php)
   - [component/site/tmpl/course/default.php#COM_JLMS_COURSE_CERTIFICATE_PLANNED](../component/site/tmpl/course/default.php)
+- `AUT-04/enrollment_mapping` — Migrazione iscritti solo esplicita con equivalenze. La migrazione è soltanto esplicita e singola, richiede autorizzazione, anteprima e hash di conferma, equivalenze validate tra lezioni delle versioni di origine e destinazione, trasferimento dei soli completamenti non quiz, storicizzazione invariata e idempotenza. Le prove CI della PR #863 (merge da73279d0b28d8d05109bc08d1814623af13c102, run 44914115463, 4/4 success) verificano inoltre blocco su quiz aperti, target pieno, mappature salvate solo se richieste, rollback dell'iscrizione sorgente e rifiuto senza troncamento oltre 1000 equivalenze. Il criterio software di migrazione esplicita è dunque implementato; backup, attestati e ogni variante di ripristino rimangono separati in historical_integrity e nell'accettazione Joomla.
+  - [component/administrator/src/Application/EnrollmentMigrationService.php#public function preview](../component/administrator/src/Application/EnrollmentMigrationService.php)
+  - [component/administrator/src/Application/EnrollmentMigrationService.php#public function apply](../component/administrator/src/Application/EnrollmentMigrationService.php)
+  - [tests/joomla-enrollment-migration.php#open quiz attempt blocks version migration](../tests/joomla-enrollment-migration.php)
+  - [tests/joomla-enrollment-migration.php#saved equivalences are never applied implicitly](../tests/joomla-enrollment-migration.php)
+  - [tests/aut04-migration-boundary.php#Saved mapping overflow was accepted](../tests/aut04-migration-boundary.php)
 - `ISC-02/state_combinations` — Tutte le transizioni e gli stati con scadenza e annullamento. Il servizio limita le transizioni a active/suspended/cancelled con preview, conferma, revisione e audit. Le fixture verificano cancellazione idempotente, divieto di riattivare cancellati, blocco sui completati/quiz aperti e conservazione dello storico. Le scadenze di accesso sono distinte dallo stato e testate separatamente.
   - [component/administrator/src/Application/EnrollmentStateService.php#public function apply](../component/administrator/src/Application/EnrollmentStateService.php)
   - [tests/joomla-enrollment-state.php#valid cancellation preview](../tests/joomla-enrollment-state.php)
