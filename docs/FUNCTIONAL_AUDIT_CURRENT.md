@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **472**.
-- Mancanti con lacuna accertata: **18**.
+- Implementati: **473**.
+- Mancanti con lacuna accertata: **17**.
 - Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
@@ -38,11 +38,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SECDEV-03/criterion_03` — Test contro SQL injection, XSS, mass assignment e formule CSV. I test positivi e negativi esistenti coprono superfici selezionate, ma la suite completa contro SQL injection, XSS, mass assignment e formule CSV non è documentata come eseguita per tutte le superfici.
   - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
   - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SECDEV-07/criterion_02` — Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi. Non risulta un inventario/lockfile e una scansione completa di stile, analisi statica, segreti e dipendenze con evidenze della candidata; il gate di hardening rimane aperto.
-  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
-  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
@@ -1799,6 +1794,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json#"controls"](../docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json)
   - [tests/secdev07-assurance-gate.py#def inspect](../tests/secdev07-assurance-gate.py)
   - [tools/check.py#tests/secdev07-assurance-gate.py](../tools/check.py)
+- `SECDEV-07/criterion_02` — Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi. La PR #858 (merge aafb718857b35ed27dfb5b0e6ed2d86845af6541) ha integrato nella CI 4/4 verde (run 44909562794) l'analisi statica Semgrep CE 1.186.0 con regole locali PHP/JavaScript/Python, fixture positive e negative (3+3), Ruff E4/E7/E9 su tutte le sorgenti Python con confronto bloccante rispetto al debito storico documentato, lint/sintassi PHP/JS/Python, scanner di segreti e storia Git, inventario first-party dei 12 ZIP senza dipendenze runtime non registrate, e modello minacce/revisione sorgenti SEC-P1. Il criterio si considera implementato come processo e gate sul software distribuito, NON come prova che tutte le vulnerabilità siano assenti. Il debito Ruff storico e gli advisory dell'ambiente Joomla/PHP/DB/provider restano esplicitamente aperti come qualità/release gate separati; 04/05 e accettazione manuale non sono promossi.
+  - [.github/workflows/ci.yml#SECDEV-07 free offline SAST](../.github/workflows/ci.yml)
+  - [security/secdev07-semgrep.yml#jdlearn.php.dynamic-evaluation](../security/secdev07-semgrep.yml)
+  - [tests/secdev07-sast.py#def fixture_test](../tests/secdev07-sast.py)
+  - [tests/secdev07-style-gate.py#def verify](../tests/secdev07-style-gate.py)
+  - [tools/sec_p2_dependency_gate.py#def inspect](../tools/sec_p2_dependency_gate.py)
+  - [docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md#SECDEV-07/02](../docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md)
 - `SECDEV-07/criterion_03` — OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite. Il riferimento tecnico di verifica è ora fissato su OWASP ASVS v5.0.0 (stable), con link alla fonte ufficiale e formato degli ID versionati, distinzione tra riferimento e certificazione, e test CI che rileva omissioni/variazioni del pin. La disponibilità del riferimento non dimostra che controlli ASVS, threat model, code review o penetration test siano stati completati: SECDEV-07/criterion_01, /criterion_02 e /criterion_04–05 restano aperti secondo le proprie evidenze.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#OWASP ASVS 5.0.0](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
   - [tests/asvs-reference.py#PIN](../tests/asvs-reference.py)
