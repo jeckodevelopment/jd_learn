@@ -212,7 +212,23 @@ $check((int) $db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pat
     'failed bulk selection did not restore first pathway');
 $check(!$pathModel->changeStates([$pathwayId, $pathwayId], 0), 'duplicate identifiers denied');
 $check(!$pathModel->changeStates([$pathwayId], 1), 'bulk action cannot publish directly from trash');
-$check($pathModel->changeStates([$pathwayId, $emptyId], 0), 'bulk restore moves both pathways to unpublished');
+// LCM-03: native checkout of one record must roll back the complete bulk action.
+$otherEditor = (int)$db->setQuery('SELECT id FROM #__users WHERE id <> ' . (int)$operator->id . ' ORDER BY id LIMIT 1')->loadResult();
+$check($otherEditor > 0, 'a second Joomla identity exists for checkout isolation');
+$db->setQuery('UPDATE #__jlms_pathways SET checked_out=' . $otherEditor . ' WHERE id=' . $emptyId)->execute();
+$lockedRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$check(!$pathModel->changeStates([$pathwayId, $emptyId], 0),
+    'bulk restore rejects a pathway checked out by another editor');
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === -2
+    && (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === $lockedRevision,
+    'checkout-denied bulk transition rolls back previous rows and revisions');
+$check(!$pathModel->purgeEmpty($emptyId), 'purge rejects a checked-out empty pathway');
+$check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $emptyId)->loadResult() === 1,
+    'checkout-denied purge preserves its pathway');
+$db->setQuery('UPDATE #__jlms_pathways SET checked_out=' . (int)$operator->id . ' WHERE id=' . $emptyId)->execute();
+$check($pathModel->changeStates([$pathwayId, $emptyId], 0),
+    'current checkout owner can restore both pathways');
+$db->setQuery('UPDATE #__jlms_pathways SET checked_out=NULL WHERE id=' . $emptyId)->execute();
 $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId . ') AND state=0')->loadResult() === 2,
     'restoration leaves both pathways unpublished');
 $check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeBulkCourses,

@@ -1,3 +1,5 @@
+- **LCM-03 (21/11/2026):** le transizioni massive e la cancellazione definitiva dei percorsi ora rispettano il blocco di modifica nativo Joomla (`checked_out`). Una riga bloccata da un altro operatore arresta l'operazione e annulla l'intero batch, senza cambiare stati, revisioni o collegamenti. Test di integrazione su rollback e cancellazione negata; accettazione manuale separata.
+
 - **LCM-03 — salvataggi parziali percorsi (21/11/2026):** i salvataggi editoriali che omettono `courses` conservano le associazioni e l'ordinamento esistenti; solo una lista `courses=[]` esplicitamente fornita azzera il programma. Regressione di integrazione Joomla con conservazione dopo aggiornamento. Collaudo manuale separato.
 
 # Changelog
