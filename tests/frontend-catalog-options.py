@@ -212,6 +212,35 @@ for folder in ("component/site/language", "component/administrator/language"):
         assert "COM_JLMS_CATALOG_ORDER_EDITORIAL=" in ini
         assert "COM_JLMS_COURSE_CATALOG_POSITION=" in ini
 
+# SCR-01: Joomla 5.1+ pagination drops arbitrary GET query values unless
+# explicitly registered. Preserve only server-normalized catalogue filters.
+from subprocess import run
+pagination_helper = (root / "component/site/src/Helper/CatalogPagination.php").read_text()
+course_view = (root / "component/site/src/View/Courses/HtmlView.php").read_text()
+category_view_code = (root / "component/site/src/View/Category/HtmlView.php").read_text()
+assert "setAdditionalUrlParam('filter', $safe)" in pagination_helper
+assert "setAdditionalUrlParam('catid', $categoryId)" in pagination_helper
+assert "if (!$showFilters)" in pagination_helper
+for field in ("search", "order", "category_id", "tag_id", "difficulty", "duration",
+              "available", "layout", "teacher_id", "pathway_id"):
+    assert "'" + field + "'" in pagination_helper
+for file in (course_view, category_view_code):
+    assert "CatalogPagination::apply(" in file
+    assert "'search' => $this->search" in file
+    assert "'order' => $this->showOrder ? $this->order : ''" in file
+    assert "'available' => $this->available" in file
+assert "$paginationFilters['category_id']" in course_view
+assert "$this->categoryId" in course_view
+assert "getInt('limitstart', 0)" in model
+for path in ("component/site/tmpl/courses/default.php",
+             "component/site/tmpl/category/default.php"):
+    layout_content = (root / path).read_text()
+    form_id = 'jlms-catalog-filters' if '/courses/' in path else 'jlms-category-catalog-filters'
+    form = layout_content.split(f'id="{form_id}"', 1)[1].split("</form>", 1)[0]
+    assert 'method="get"' in form
+    assert 'name="limitstart"' not in form, "Changing filters must start at page one"
+run(["php", str(root / "tests/catalog-pagination.php")], check=True)
+
 # SCR-01/url_filters + pagination: category exposes the same supported server filters.
 category_layout = (root / "component/site/tmpl/category/default.php").read_text()
 category_view = (root / "component/site/src/View/Category/HtmlView.php").read_text()
