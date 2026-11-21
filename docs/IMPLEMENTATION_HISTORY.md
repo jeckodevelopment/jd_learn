@@ -1,5 +1,15 @@
 ## 21 novembre 2026 — SEC-P2 sviluppo COMPLETATO, review findings (PR #848)
 
+## 21/11/2026 — SECDEV-07/criterion_01 processo sicurezza verificabile COMPLETATO (PR #854)
+
+- **PR runtime/governance integrata:** https://github.com/jeckodevelopment/jd_learn/pull/854; merge `f7736fc92ba42aaa1829cce985c90ab1a331b49b`; head verificato `c9464d5da2f993e1246a1fd7b0d312ccf3e2efc5`.
+- **CI completa:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44906074041 — **4/4 verde**: preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6; gate CSV https://github.com/jeckodevelopment/jd_learn/actions/runs/44906074069 verde.
+- **Pacchetto Joomla:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44906074041/artifacts/14707749081 — wrapper Actions `JD-Learn-0.64.19-dev`; ZIP interno `pkg_jlms-0.64.19-dev.zip`, 12 parti, 826896 byte, **SHA-256 dello ZIP installabile** `2e503142050463673cf0a10ecf32d8d9d7183ee068217ce6e237353279be2d08`. Digest *diverso* del wrapper Actions: `sha256:8b8f0a4541ab0b1a0bb3f0e11e0ef0b782752403f530105f8147b2aef9cdee09`.
+- **Criteri:** 01 implemented grazie a 10 controlli tracciati e 4 gap dichiarati, gate mandatory e negative fixtures; 02 missing fino a stile/SAST/SCA completi; 03 già implemented (pin OWASP ASVS); 04/05 unverifiable fino alla review completa della candidate. Nessun avanzamento improprio su scanner, hosting, penetration test, falsi positivi o certificazione.
+- **Avanzamento:** 472 implemented, 18 missing, 267 unverifiable (757 totali). Minimo sviluppo comprovato **60,69%**, +0,10 punti dal 60,59%; manuale 4,67% avviato, 0% accettato, invariato. Percentuale funzionale rigorosa non determinabile fino a risoluzione degli esiti non verificabili.
+- **Tracciabilità post-merge:** PR documentale di riclassificazione e aggiornamento dashboard; nessuna modifica PHP/runtime o bump SemVer.
+
+
 ## 21/11/2026 — SEC-P3 sviluppo software COMPLETATO, PR #852
 
 - **PR applicativa:** https://github.com/jeckodevelopment/jd_learn/pull/852 ; commit merge squash `bee22c0ba9420a4d65f78dda0a43c4021ac4e0d1` ; head verificato `9fe515a4a25eb92d783d11af9c9d5f268c3fcde7`.
