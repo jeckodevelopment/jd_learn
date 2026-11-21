@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — diagnostica robusta dei menu (21/11/2026):** gli errori di override già rilevati prevalgono sullo stato di scansione incompleta; la lettura limitata a 500 voci include esclusivamente i menu catalogo/categoria pertinenti. Regressioni PHP e strutturali, nessuna scrittura o connessione esterna. I criteri trasversali SCR-16/02–05 restano da dimostrare integralmente.
+
 - **SCR-16 — diagnostica override effettivi (21/11/2026):** controllo read-only e limitato a 500 record delle preferenze email per corso e dei parametri catalogo nei menu frontend. Individua valori locali validi, mancanti, malformati e scansioni incomplete; segnala gli stati in italiano/inglese senza mostrare identificativi, contenuti, indirizzi o credenziali. La dashboard resta protetta da ACL e non invia messaggi o modifica dati.
 
 - **SCR-16 — video locali, prerequisiti effettivi (21/11/2026):** la dashboard non interpreta più la sola consegna PHP abilitata come pronta; verifica separatamente la radice video privata e l'eseguibile ffprobe senza eseguire comandi, sonde remote o scritture. Stati e rimedi IT/EN senza divulgare percorsi; test per percorsi pubblici, assenti e privati, ffprobe mancante e modalità disabilitata.
