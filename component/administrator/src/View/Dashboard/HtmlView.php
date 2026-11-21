@@ -17,6 +17,7 @@ use Joomla\Database\DatabaseInterface;
 final class HtmlView extends BaseHtmlView
 {
     public array $providers = [];
+    public bool $canViewProviders = false;
     public array $mailScheduler = [];
     public array $schedulerHealth = [];
     public bool $canManageScheduler = false;
@@ -89,7 +90,8 @@ final class HtmlView extends BaseHtmlView
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         // A non-manager must not inspect plugin readiness or invoke provider
         // registration hooks simply by opening the administrative dashboard.
-        if ($actor->authorise('core.manage', 'com_jlms')) {
+        $this->canViewProviders = $actor->authorise('core.manage', 'com_jlms');
+        if ($this->canViewProviders) {
         $registry = new VideoProviderRegistry();
         PluginHelper::importPlugin('jlmsvideo');
         Factory::getApplication()->getDispatcher()->dispatch(
