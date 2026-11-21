@@ -1,3 +1,9 @@
+## LCM-03 — checkout Joomla, operazioni massive e purga (21/11/2026)
+
+**Regressione automatica:** `tests/joomla-pathways.php` assegna il checkout a un secondo utente, verifica che una transizione massiva sul percorso bloccato fallisca con rollback del primo record, stato e revisione invariati; nega la purga del percorso cestinato e vuoto mentre è bloccato. Verifica successivamente che il titolare del checkout possa eseguire la transizione e che lo sblocco conservi le associazioni.
+
+**Collaudo manuale Joomla: In attesa.** Due amministratori: il primo apre un percorso; il secondo tenta archiviazione/cestinazione/ripristino, anche in batch con un percorso libero, e cancellazione definitiva del record vuoto cestinato. Risultato atteso: operazione negata e nessuna modifica su alcun record. Dopo sblocco, l'operazione autorizzata deve riuscire. Controllare ACL, CSRF, cronologia e integrità corsi/iscrizioni.
+
 ## LCM-03 — salvataggio parziale percorsi e conservazione programma (PR #881)
 
 **Controlli automatici:** il test Joomla `tests/joomla-pathways.php` salva un percorso con due corsi, esegue un salvataggio editoriale senza il campo `courses` e verifica che identificativi e ordinamento dei collegamenti rimangano intatti. Ripete il salvataggio con `courses=[]`, accerta lo svuotamento intenzionale e ripristina la sequenza originale per la prova di conservazione dopo upgrade. La correzione non modifica corsi, iscrizioni, progressi, attestati o autorizzazioni.
