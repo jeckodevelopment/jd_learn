@@ -113,8 +113,27 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $storageRoot = (string) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_storage_root', '');
             $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::storage(
-                $storageRoot, JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT
+                $storageRoot, JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
+                is_string($_SERVER['DOCUMENT_ROOT'] ?? null) ? $_SERVER['DOCUMENT_ROOT'] : ''
             );
+            // Report only fixed diagnostic keys and severity, never raw config values.
+            $componentParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+            $settingNames = [
+                'material_scan_required', 'material_clamd_socket', 'video_delivery_mode',
+                'certificate_enabled', 'catalog_page_size', 'catalog_default_order',
+                'mail_manager_request_enabled', 'mail_course_update_enabled', 'mail_lesson_release_enabled',
+                'mail_teacher_assignment_enabled', 'mail_approval_enabled', 'mail_rejection_enabled',
+                'mail_request_enabled', 'mail_enrollment_enabled', 'mail_completion_enabled',
+                'mail_suspension_enabled', 'mail_cancellation_enabled', 'mail_reactivation_enabled',
+                'mail_certificate_enabled', 'mail_communication_enabled', 'mail_expiry_enabled',
+            ];
+            $settings = [];
+            foreach ($settingNames as $name) {
+                $settings[$name] = $componentParams->get($name);
+            }
+            array_push($this->configurationDiagnostics,
+                ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::operationalSettings($settings));
+
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
             // Query only keys needed to establish canonical default-template readiness.

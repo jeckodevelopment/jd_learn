@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — diagnostica configurazione consolidata (21/11/2026):** dashboard con verifiche read-only per antivirus, video locali, attestati, notifiche globali e opzioni catalogo ereditate. Corretta la diagnosi di directory esposte attraverso la `DOCUMENT_ROOT` reale; esiti e rimedi IT/EN non includono segreti o percorsi. Test PHP e gate strutturale senza mutazioni. Le prove hosting, SMTP e provider esterni rimangono separate.
+
 - **SCR-16 — diagnostica modelli email Joomla (21/11/2026):** aggiunto controllo read-only della presenza di tutti i template canonici nella lingua predefinita `*`, con stati e rimedi IT/EN e visibilità `core.manage`. Non vengono letti testi, destinatari, credenziali o parametri email. Regressioni per default presenti, assenti e sole traduzioni; nessuna modifica allo stato di implementazione complessivo.
 
 - **SCR-16 — diagnostica storage privato (21/11/2026):** dashboard amministrativa con preflight locale in sola lettura di directory private esterne, percorso pubblico rifiutato, directory mancante e storage gestito da verificare all'uso; esiti e rimedi IT/EN senza divulgazione dei percorsi. Test automatici su quattro stati; nessun side effect o incremento di copertura anticipato.

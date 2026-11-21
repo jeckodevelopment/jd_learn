@@ -61,7 +61,7 @@ final class ConfigurationDiagnostics
      * Managed storage is deliberately not reported as ready before runtime checks.
      * Never include the configured path in the diagnostic result.
      */
-    public static function storage(string $configured, string $siteRoot, string $publicRoot): array
+    public static function storage(string $configured, string $siteRoot, string $publicRoot, string $documentRoot = ''): array
     {
         $configured = trim($configured);
         $state = 'managed';
@@ -69,10 +69,12 @@ final class ConfigurationDiagnostics
             $path = realpath($configured);
             $site = realpath($siteRoot);
             $public = realpath($publicRoot);
+            $document = $documentRoot !== '' ? realpath($documentRoot) : false;
             if ($path === false || !is_dir($path) || !is_writable($path) || is_link($configured)) {
                 $state = 'unavailable';
             } elseif (($site && ($path === $site || str_starts_with($path, $site . DIRECTORY_SEPARATOR)))
-                || ($public && ($path === $public || str_starts_with($path, $public . DIRECTORY_SEPARATOR)))) {
+                || ($public && ($path === $public || str_starts_with($path, $public . DIRECTORY_SEPARATOR)))
+                || ($document && ($path === $document || str_starts_with($path, $document . DIRECTORY_SEPARATOR)))) {
                 $state = 'public';
             } else {
                 $state = 'private';
@@ -128,6 +130,102 @@ final class ConfigurationDiagnostics
             'stateKey' => $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_MISSING',
             'guidanceKey' => $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_MISSING',
         ];
+    }
+
+    /**
+     * Fixed, allowlisted operational settings. Never include setting values, paths,
+     * secrets or raw administrator inputs in the output. This is configuration
+     * readiness only, not a connection/SMTP/virus-scan test.
+     *
+     * @param array<string, mixed> $params Component params, read only
+     * @return list<array{kind:string,labelKey:string,severity:string,stateKey:string,guidanceKey:string}>
+     */
+    public static function operationalSettings(array $params): array
+    {
+        $checks = [];
+        $add = static function (string $label, bool $enabled, string $on, string $off, string $guidanceOn, string $guidanceOff) use (&$checks): void {
+            $checks[] = [
+                'kind' => 'setting',
+                'labelKey' => $label,
+                'severity' => $enabled ? 'ok' : 'warning',
+                'stateKey' => $enabled ? $on : $off,
+                'guidanceKey' => $enabled ? $guidanceOn : $guidanceOff,
+            ];
+        };
+        $scannerEnabled = (string) ($params['material_scan_required'] ?? '0') === '1';
+        $scannerPath = $params['material_clamd_socket'] ?? '';
+        $scannerConfigured = is_string($scannerPath) && str_starts_with($scannerPath, '/') && !str_contains($scannerPath, chr(0));
+        if ($scannerEnabled) {
+            $checks[] = [
+                'kind' => 'setting',
+                'labelKey' => 'COM_JLMS_CONFIG_SCAN_LABEL',
+                'severity' => $scannerConfigured ? 'warning' : 'error',
+                'stateKey' => $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_MISSING',
+                'guidanceKey' => $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_GUIDANCE_MISSING',
+            ];
+        } else {
+            $add('COM_JLMS_CONFIG_SCAN_LABEL', false,
+                'COM_JLMS_CONFIG_SCAN_UNVERIFIED', 'COM_JLMS_CONFIG_SCAN_DISABLED',
+                'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED', 'COM_JLMS_CONFIG_SCAN_GUIDANCE_DISABLED');
+        }
+        $videoMode = (string) ($params['video_delivery_mode'] ?? 'disabled');
+        $add('COM_JLMS_CONFIG_VIDEO_LOCAL_LABEL', $videoMode === 'php_bounded',
+            'COM_JLMS_CONFIG_VIDEO_LOCAL_ACTIVE', 'COM_JLMS_CONFIG_VIDEO_LOCAL_DISABLED',
+            'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_DISABLED');
+        $add('COM_JLMS_CONFIG_CERTIFICATES_LABEL', (string) ($params['certificate_enabled'] ?? '0') === '1',
+            'COM_JLMS_CONFIG_CERTIFICATES_ACTIVE', 'COM_JLMS_CONFIG_CERTIFICATES_DISABLED',
+            'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_DISABLED');
+        // The global flags are inherited by per-course settings. Diagnostic status
+        // explains the configured default without evaluating any course/user scope.
+        $mailLabels = [
+            'mail_manager_request_enabled' => 'COM_JLMS_MAIL_MANAGER_REQUEST_ENABLED',
+            'mail_course_update_enabled' => 'COM_JLMS_MAIL_COURSE_UPDATE_ENABLED',
+            'mail_lesson_release_enabled' => 'COM_JLMS_MAIL_LESSON_RELEASE_ENABLED',
+            'mail_teacher_assignment_enabled' => 'COM_JLMS_MAIL_TEACHER_ASSIGNMENT_ENABLED',
+            'mail_approval_enabled' => 'COM_JLMS_MAIL_APPROVAL_ENABLED',
+            'mail_rejection_enabled' => 'COM_JLMS_MAIL_REJECTION_ENABLED',
+            'mail_request_enabled' => 'COM_JLMS_MAIL_REQUEST_ENABLED',
+            'mail_enrollment_enabled' => 'COM_JLMS_MAIL_ENROLLMENT_ENABLED',
+            'mail_completion_enabled' => 'COM_JLMS_MAIL_COMPLETION_ENABLED',
+            'mail_suspension_enabled' => 'COM_JLMS_MAIL_SUSPENSION_ENABLED',
+            'mail_cancellation_enabled' => 'COM_JLMS_MAIL_CANCELLATION_ENABLED',
+            'mail_reactivation_enabled' => 'COM_JLMS_MAIL_REACTIVATION_ENABLED',
+            'mail_certificate_enabled' => 'COM_JLMS_MAIL_CERTIFICATE_ENABLED',
+            'mail_communication_enabled' => 'COM_JLMS_MAIL_COMMUNICATION_ENABLED',
+            'mail_expiry_enabled' => 'COM_JLMS_MAIL_EXPIRY_ENABLED',
+        ];
+        $mailFlags = array_keys($mailLabels);
+        $defaultOff = ['mail_manager_request_enabled', 'mail_course_update_enabled',
+            'mail_lesson_release_enabled', 'mail_expiry_enabled'];
+        $enabled = 0;
+        foreach ($mailFlags as $key) {
+            $default = in_array($key, $defaultOff, true) ? '0' : '1';
+            if ((string) ($params[$key] ?? $default) === '1') {
+                ++$enabled;
+            }
+        }
+        $add('COM_JLMS_CONFIG_MAIL_FLAGS_LABEL', $enabled > 0,
+            'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
+            'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED');
+        // Every event has its own localized, actionable status; the summary
+        // alone must not hide an individually disabled notification.
+        foreach ($mailFlags as $key) {
+            $default = in_array($key, $defaultOff, true) ? '0' : '1';
+            $isEnabled = (string) ($params[$key] ?? $default) === '1';
+            $add($mailLabels[$key], $isEnabled,
+                'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
+                'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED');
+        }
+        // Catalogue presentation settings are inherited by menu items; this
+        // check never implies that a menu override or remote connection was tested.
+        $page = (string) ($params['catalog_page_size'] ?? '12');
+        $order = (string) ($params['catalog_default_order'] ?? 'editorial');
+        $valid = in_array($page, ['6', '9', '12', '24'], true)
+            && in_array($order, ['editorial', 'recent', 'title', 'duration', 'published'], true);
+        $add('COM_JLMS_CONFIG_CATALOG_LABEL', $valid,
+            'COM_JLMS_CONFIG_CATALOG_READY', 'COM_JLMS_CONFIG_CATALOG_INVALID',
+            'COM_JLMS_CONFIG_CATALOG_GUIDANCE_READY', 'COM_JLMS_CONFIG_CATALOG_GUIDANCE_INVALID');
+        return $checks;
     }
 
     /** Treat labels as translations, never as arbitrary provider-supplied content. */
