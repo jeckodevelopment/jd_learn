@@ -10062,20 +10062,24 @@
       {
         "id": "criterion_02",
         "label": "Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
           ".github/workflows/ci.yml",
-          "docs/IMPLEMENTATION_EVIDENCE.json",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "security/secdev07-semgrep.yml",
+          "tests/secdev07-sast.py",
+          "tests/secdev07-style-gate.py",
+          "tools/sec_p2_dependency_gate.py",
+          "docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md"
         ],
         "review": {
-          "reason": "Non risulta un inventario/lockfile e una scansione completa di stile, analisi statica, segreti e dipendenze con evidenze della candidata; il gate di hardening rimane aperto.",
+          "reason": "La PR #858 (merge aafb718857b35ed27dfb5b0e6ed2d86845af6541) ha integrato nella CI 4/4 verde (run 44909562794) l'analisi statica Semgrep CE 1.186.0 con regole locali PHP/JavaScript/Python, fixture positive e negative (3+3), Ruff E4/E7/E9 su tutte le sorgenti Python con confronto bloccante rispetto al debito storico documentato, lint/sintassi PHP/JS/Python, scanner di segreti e storia Git, inventario first-party dei 12 ZIP senza dipendenze runtime non registrate, e modello minacce/revisione sorgenti SEC-P1. Il criterio si considera implementato come processo e gate sul software distribuito, NON come prova che tutte le vulnerabilità siano assenti. Il debito Ruff storico e gli advisory dell'ambiente Joomla/PHP/DB/provider restano esplicitamente aperti come qualità/release gate separati; 04/05 e accettazione manuale non sono promossi.",
           "references": [
-            ".github/workflows/ci.yml#L1-L25",
-            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            ".github/workflows/ci.yml#SECDEV-07 free offline SAST",
+            "security/secdev07-semgrep.yml#jdlearn.php.dynamic-evaluation",
+            "tests/secdev07-sast.py#def fixture_test",
+            "tests/secdev07-style-gate.py#def verify",
+            "tools/sec_p2_dependency_gate.py#def inspect",
+            "docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md#SECDEV-07/02"
           ]
         }
       },
