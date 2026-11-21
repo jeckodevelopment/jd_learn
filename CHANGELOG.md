@@ -4,6 +4,8 @@
 
 - **0.64.18-dev — SEC-P2 dependency composition gate (21/11/2026):** controllo fail-closed delle 12 estensioni ZIP figlie e dei dependency manager/lockfile/vendor/binary runtime non revisionati, invocato dal builder e preflight; fixture negative. Nessun cambiamento alle funzioni Joomla né bump SemVer. SEC-P2/criterion_01 riclassificato come implementato con evidenze software; criterio 02 finding alti/critici e verifica hosting restano separati. Nuovo sviluppo comprovato 59,89% (468/22/267).
 
+- SEC-P3: esportazione Joomla Privacy dei metadati di consegna email limitati al destinatario; rimozione dei diagnostici `last_error` dalle righe terminali anonimizzate, con regressioni e traduzioni IT/EN. Gate complessivo SEC-P3 ancora aperto.
+
 - **0.64.18-dev — SEC-P2 storico segreti (21/11/2026):** audit CI della storia Git per sorgenti distribuiti e workflow, comprese versioni cancellate, con fixture negative e output senza dati sensibili. Controllo supply-chain senza modifiche al runtime Joomla o nuovo bump SemVer; CSP/hosting e revisione finale delle dipendenze restano separati.
 
 - **0.64.18-dev — SEC-P2 hardening build/package (21/11/2026):** lo scanner ricorsivo del package rifiuta link simbolici ZIP, collisioni case-insensitive, drive Windows, traversal e decompressione aggregata per tutti gli archivi annidati; il builder applica il controllo prima di produrre ogni ZIP dev o stabile. Aggiunte fixture negative e documentato il gate live residuo; SEC-P2 non chiuso senza SCA, storico segreti e verifica hosting. Bump PATCH per difesa del percorso di distribuzione.
