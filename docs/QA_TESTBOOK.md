@@ -2882,3 +2882,9 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 **CI automatica:** `tests/joomla-roster.php` avvia due processi Joomla distinti con connessioni DB indipendenti e attende `ready`; il padre crea una riga `sending` vecchia e mantiene `SELECT ... FOR UPDATE` sino al segnale di partenza dei due worker. Alla liberazione della lock, un solo `reconcile(sent)` può aggiornare la riga; l'altro riceve 409. Verificare anche stato finale `sent`, un solo campo di audit, tentativi invariati, email/payload redatti e pulizia dei record di test.
 
 **Collaudo manuale residuale:** inviare simultaneamente due POST amministrativi reali con token valido su SMTP isolato, distinguere accettazione SMTP da stato DB, verificare nessun doppio invio e nessuna divulgazione di token o indirizzi; non riavviare invii `sending` senza conferma di mancata accettazione. Non attribuire alla fixture DB la prova di consegna SMTP; accettazione manuale ancora in attesa.
+
+## LES-03 — radice privata su Windows e Unix (21/11/2026)
+
+- Test automatici in `tests/run.php`: radice Unix, drive Windows con slash e backslash, rifiuto di percorsi drive-relative e relativi.
+- Test Joomla **da eseguire separatamente**: su hosting Windows configurare radice privata esterna alla document root, verificare upload e download autorizzati; configurare poi una radice pubblica e verificare il rifiuto. Su Unix verificare che il precedente comportamento resti invariato.
+- I test unitari non sostituiscono le verifiche di web server, proxy, permessi e topologie hosting del criterio `LES-03/public_storage`.
