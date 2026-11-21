@@ -374,6 +374,22 @@ $providerStatuses = \Jlms\Component\Jlms\Administrator\Application\DashboardProv
     new ProviderDescriptor('youtube', 'PLUGIN_YOUTUBE', 1, true),
     new ProviderDescriptor('cloudflarestream', 'PLUGIN_CF', 1, false),
 ]);
+// Untrusted extension descriptors must not leak raw fields via dashboard markup.
+$unsafeProviders = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::summarize([
+    'customvideo' => (object) ['enabled' => 1, 'name' => 'raw-secret-token'],
+    'token?raw-secret' => (object) ['enabled' => 1, 'name' => 'secret'],
+], [
+    new ProviderDescriptor('customvideo', 'private-token-value', 1, true),
+]);
+$unsafeKeys = array_column($unsafeProviders, 'labelKey', 'key');
+expect(!array_key_exists('token?raw-secret', $unsafeKeys), 'unsafe video provider identifiers must be ignored');
+expect(($unsafeKeys['customvideo'] ?? null) === 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL',
+    'untrusted video provider labels are masked');
+$localizedProviders = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::summarize([
+    'customvideo' => (object) ['enabled' => 1, 'name' => 'PLG_JLMSVIDEO_CUSTOM_TITLE'],
+], []);
+expect((array_column($localizedProviders, 'labelKey', 'key')['customvideo'] ?? null) === 'PLG_JLMSVIDEO_CUSTOM_TITLE',
+    'localized plugin labels stay available');
 $providerStates = array_column($providerStatuses, 'stateKey', 'key');
 expect($providerStates['youtube'] === 'COM_JLMS_READY', 'dashboard reports configured provider as ready');
 expect($providerStates['vimeo'] === 'COM_JLMS_PROVIDER_DISABLED', 'dashboard reports installed disabled provider');
