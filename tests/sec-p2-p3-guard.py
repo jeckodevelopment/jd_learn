@@ -12,6 +12,24 @@ assert privacy.count("$this->hasRemovalDependencies((int) $user->id)") == 2
 remove = privacy.split("public function onPrivacyRemoveData(", 1)[1]
 assert remove.index("hasRemovalDependencies") < remove.index("$db->transactionStart()")
 assert "throw new \\RuntimeException(" in remove
+
+# SEC-P3: privacy erasure must clear optional identity references across
+# authored records and teacher/subject profiles without deleting coursework.
+for table in (
+    "#__jlms_courses", "#__jlms_course_versions", "#__jlms_modules",
+    "#__jlms_lessons", "#__jlms_editions", "#__jlms_teachers",
+    "#__jlms_pathways", "#__jlms_assets", "#__jlms_attachments",
+    "#__jlms_quizzes", "#__jlms_questions", "#__jlms_question_revisions",
+    "#__jlms_enrollments", "#__jlms_enrollment_requests",
+    "#__jlms_certificate_templates",
+):
+    assert table in remove, table
+for column in ("created_by", "modified_by", "reconciliation_by"):
+    assert "quoteName('" + column + "')" in remove, column
+for related in ("#__jlms_subjects", "#__jlms_assessment_revisions"):
+    assert related in remove, related
+assert "->set($db->quoteName('user_id') . ' = NULL')" in remove
+
 export = privacy.split("public function onPrivacyExportRequest(", 1)[1].split("public function onPrivacyCanRemoveData(", 1)[0]
 mail = export.split("$mailQuery = $db->createQuery()", 1)[1].split("foreach ($db->setQuery($mailQuery)", 1)[0]
 for expected in ("template_id", "state", "created_at", "sent_at", "recipient_user_id", ":userId"):
