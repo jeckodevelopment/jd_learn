@@ -1,3 +1,7 @@
+## SEC-P2 — inventario first-party delle dipendenze distribuite (21/11/2026)
+
+**Automatico:** il builder rifiuta candidate ZIP con più o meno di 12 estensioni e con composer/npm/vendor/binari non revisionati. La CI esegue `tests/sec-p2-dependency-gate.py` con fixture negative e il builder invoca lo stesso inventario prima della scrittura. **Manuale separato:** sul sito di prova valutare le versioni reali di PHP/Joomla/DB, CSP e log/provider, e il rischio dei file video legacy. L'assenza di package-manager nel file ZIP non certifica le dipendenze della piattaforma.
+
 ## SEC-P2 — audit dei segreti nello storico Git (automatico, 21/11/2026)
 
 Verificare nella CI `tests/sec-p2-history-scan.py` (fixture con segreto poi eliminato e workflow) e `tools/sec_p2_history_scan.py` (storia Git reale su componenti, plugin, libreria, package e workflow, senza stampare contenuto). Il gate deve fallire per finding o file non verificabile. **Questo test non è il collaudo manuale del sito**: CSP, log/provider, host e legacy video sono da collaudare separatamente. Nessuna dichiarazione di assenza totale di credenziali è giustificata dalla sola ricerca di pattern.
