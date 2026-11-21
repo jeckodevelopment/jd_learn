@@ -50,6 +50,11 @@ jobs:
         run: |
           python3 tests/sec-p2-history-scan.py
           python3 tools/sec_p2_history_scan.py
+      - name: SECDEV-07 language-wide syntax and negative fixtures
+        run: |
+          python3 tests/secdev07-language-syntax.py --self-test
+          python3 tests/secdev07-language-syntax.py
+          git diff --check HEAD
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
