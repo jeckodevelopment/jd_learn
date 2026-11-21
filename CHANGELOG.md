@@ -1,3 +1,5 @@
+- **LES-02 (21/11/2026):** allineata la sanificazione HTML dei campi editoriali pubblici dei percorsi e dei docenti alla allowlist già usata per la presentazione dei corsi. Anche con filtro Joomla permissivo, script, iframe e attributi attivi non devono persistere; restano consentiti paragrafi, formattazione e link sicuri. Test di integrazione su salvataggio dei due modelli.
+
 - **LCM-04 (21/11/2026):** la cancellazione definitiva di un profilo docente è negata se il profilo è ancora collegato a un account Joomla (`user_id`), anche bloccato e senza assegnazioni ai corsi. Il collegamento va rimosso esplicitamente prima dell'eventuale purga, che rimane subordinata alle altre dipendenze. Regressione Joomla su account attivo/bloccato e conservazione del riferimento; nessun account viene alterato dal modello.
 
 - **LCM-03 (21/11/2026):** i salvataggi editoriali diretti dei percorsi ora rispettano il checkout nativo Joomla, oltre ad ACL e revisione. Modifica negata se il percorso è già aperto da altro operatore, senza alterare dati o relazioni con i corsi; fixture di integrazione su rifiuto, dati invariati e salvataggio del titolare.

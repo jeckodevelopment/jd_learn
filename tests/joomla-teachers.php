@@ -88,10 +88,14 @@ $categoryModel=$app->bootComponent('com_categories')->getMVCFactory()->createMod
 teacherExpect($categoryModel->save(['id'=>0,'parent_id'=>1,'extension'=>'com_jlms.teacher','title'=>'CI Teachers','alias'=>'ci-teachers','published'=>1,'language'=>'*','access'=>1]),'Native teacher category created');
 $teacherCategory=(int)$categoryModel->getState('category.id');
 $teacherModel=$factory->createModel('Teacher','Administrator',['ignore_request'=>true]);
-$teacherBase=['id'=>0,'revision'=>1,'title'=>'Original public teacher','alias'=>'original-public-teacher','catid'=>$teacherCategory,'bio'=>'Public biography <script>plain text</script>','image'=>'','image_alt'=>'','image_decorative'=>'0','website'=>'https://example.invalid/teacher','language'=>'*','access'=>1,'state'=>1,'user_id'=>(int)$actor->id];
+$teacherBase=['id'=>0,'revision'=>1,'title'=>'Original public teacher','alias'=>'original-public-teacher','catid'=>$teacherCategory,'bio'=>'<p>Public <strong>biography</strong> <script>alert(1)</script><iframe src="https://example.invalid"></iframe><a href="javascript:alert(2)" onclick="alert(3)">read</a></p>','image'=>'','image_alt'=>'','image_decorative'=>'0','website'=>'https://example.invalid/teacher','language'=>'*','access'=>1,'state'=>1,'user_id'=>(int)$actor->id];
 $groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
 teacherExpect($teacherModel->save($teacherBase+['params_json'=>'{"injected":true}','created_by'=>999999]),'Teacher saved through native model');
 $public=(int)$teacherModel->getState('teacher.id');$teacher=$teacherModel->getItem($public);
+$storedTeacherBio = (string)$db->setQuery('SELECT bio FROM #__jlms_teachers WHERE id=' . $public)->loadResult();
+teacherExpect(str_contains($storedTeacherBio, '<strong>biography</strong>')
+    && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', $storedTeacherBio),
+    'public teacher biography retains safe formatting but strips scripts, arbitrary embeds and active URLs');
 // SEC-P1: the session identity loaded before a block must never authorize
 // a teacher edit, including links and forms that call the shared helper.
 teacherExpect(TeacherProfiles::canEdit($actor,$teacher),'teacher profile author may edit before account block');

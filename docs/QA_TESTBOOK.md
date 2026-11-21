@@ -1,3 +1,9 @@
+## LES-02 — filtro HTML dei campi pubblici percorso e docente (21/11/2026)
+
+**Automatico:** `tests/joomla-pathways.php` e `tests/joomla-teachers.php` salvano descrizioni/biografie con `<script>`, `<iframe>`, attributi `onclick` e URL `javascript:` tramite modello amministrativo, con identità ad alti privilegi; verificano che HTML attivo non sia persistito e che i tag di formattazione permessi rimangano. Il filtro specifico è condiviso con la presentazione corsi.
+
+**Collaudo manuale Joomla: In attesa.** Con un autore e un Super User, provare a incollare script/iframe/URL attivo in descrizioni di percorso e biografie docente. Verificare che la scheda pubblica mostri solo il testo e la formattazione consentiti, senza eseguire risorse attive né incorporare iframe. Verificare lingua IT/EN e override; controllare anche editor plugin e configurazioni Joomla terze, non certificate dalla sola fixture.
+
 ## LCM-04 — profilo docente collegato ad account Joomla (21/11/2026)
 
 **Automatico:** `tests/joomla-teachers.php` crea un profilo docente senza corsi ma con `user_id` collegato all'operatore Joomla. Dopo la cestinazione, la purga è negata; il modello lascia intatti profilo e link. Il test verifica anche che bloccare temporaneamente l'account Joomla non consenta la purga; ripristina l'account, scollega esplicitamente il solo fixture e verifica che le altre dipendenze rimangano applicate.
