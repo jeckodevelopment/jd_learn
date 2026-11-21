@@ -1,6 +1,6 @@
 # SEC-P2 — Hardening runtime e supply chain per JD Learn 1.0.0
 
-**Build di riferimento:** 0.64.18-dev, 21 novembre 2026. **Stato: criterio di sviluppo SEC-P2/criterion_01 implementato e verificato; criterio_02 (assenza di finding critici/alti irrisolti) e gate di accettazione dell'hosting aperti.** Il progetto non considera sufficienti un test statico o una CI verde per attestare la sicurezza di un'installazione reale.
+**Build di riferimento:** 0.64.18-dev, 21 novembre 2026. **Stato: SEC-P2/criterion_01 implementato e verificato; review dei finding software in SEC_P2_FINDINGS_1.0.0.md; criterio_02 e gate di accettazione hosting aperti.** Il progetto non considera sufficienti un test statico o una CI verde per attestare la sicurezza di un'installazione reale.
 
 ## Superfici ed evidenze disponibili
 
@@ -25,7 +25,7 @@ JD Learn distribuisce **codice proprio e provider Joomla**, senza Composer/npm r
 
 La scansione SEC-P2 è ora un **vincolo del builder**, eseguito su `data` prima della scrittura del file ZIP e del checksum, sia con `python3 tools/build.py` sia con `--release-version`. Il preflight conserva fixture negative per link simbolici ZIP, nomi duplicati o case-fold equivalenti, drive Windows e directory traversal; i limiti byte/entry sono cumulativi fra ZIP e costituenti, per ridurre il rischio di ZIP bomb nidificate. Il validator non espone nomi di file o dati che contengano segreti. Un package non conforme blocca la build senza produrre uno ZIP nuovo.
 
-**Non equivale a SEC-P2 chiuso:** la suite riconosce pattern noti, non tutti i segreti; non sono state ancora acquisite evidence di scansione della cronologia Git, SCA advisory del runtime effettivamente installato, CSP/log/header/storage sul sito di prova, né il registro finale di severità e risk acceptance. Il rilascio stabile resta bloccato. Per PHP 8.3/8.4, le versioni corrette del 19 novembre sono 8.3.37 e 8.4.28, già controllate in CI; va verificata anche la versione effettiva sull'hosting.
+**Non equivale a SEC-P2 di rilascio chiuso:** la suite riconosce pattern noti, non tutti i segreti; non sono state ancora acquisite evidence di scansione della cronologia Git, SCA advisory del runtime effettivamente installato, CSP/log/header/storage sul sito di prova, né il registro finale di severità e risk acceptance. Il rilascio stabile resta bloccato. Per PHP 8.3/8.4, le versioni corrette del 19 novembre sono 8.3.37 e 8.4.28, già controllate in CI; va verificata anche la versione effettiva sull'hosting.
 
 ## Verifica automatizzata della storia Git (21/11/2026)
 
@@ -60,3 +60,7 @@ In data 20/11/2026 la fonte ufficiale di [roadmap Joomla](https://developer.joom
 ## Decisione audit implementazione 21/11/2026
 
 Il criterio SEC-P2/criterion_01 riguarda la predisposizione e l'effettiva implementazione dell'hardening software (dipendenze, segreti, package, logging, CSP/provider) ed è ora classificato **implemented** nella matrice, sulla base di builder fail-closed, test negativi, source sink gate, history-scan, floor PHP CI e inventario dipendenze. Il controllo degli header/CSP configurati dal template Joomla, di log esterni e di versioni del provider installato su hosting resta nel **collaudo separato**, non nel completamento di questo requisito di codice. Il criterio SEC-P2/criterion_02 resta **missing** perché l'assenza di findings critical/high irrisolti richiede un registro di review conclusivo con perimetro e contromisure. Nessuna di queste decisioni attesta la sicurezza di un'installazione non esaminata.
+
+## Registro strutturato dei finding (21/11/2026)
+
+`SEC_P2_FINDINGS_1.0.0.json` e `SEC_P2_FINDINGS_1.0.0.md` riportano la revisione dei finding di codice con mitigazioni e test, i rischi non accertati sulle installazioni preesistenti e gli advisory del core Joomla di novembre 2026. Il gate `tests/sec-p2-findings-gate.py` rifiuta l'assenza di prove e la falsa promozione dei finding high/critical esterni. Non dichiarare SEC-P2/criterion_02 completato finché le condizioni pertinenti alla release candidata non siano soddisfatte.
