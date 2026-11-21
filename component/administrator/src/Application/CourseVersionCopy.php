@@ -143,6 +143,14 @@ final class CourseVersionCopy
         return $first;
     }
 
+    /** The extra fetched row detects truncation before any field value is written. */
+    private static function requireCompleteFieldCopy(int $count): void
+    {
+        if ($count > 1000) {
+            throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+        }
+    }
+
     /** Copy native field values only when the operator can edit those values in both items. */
     private function copyLessonFields(User $actor, int $sourceId, int $targetId): void
     {
@@ -152,8 +160,12 @@ final class CourseVersionCopy
             ->innerJoin('#__fields_values AS v ON v.field_id = f.id')->where('f.context = :context')
             ->where('v.item_id = :item')->where('f.state = 1')
             ->bind(':context', $context)->bind(':item', $item)->order('f.id');
+        // Never silently truncate a native field-value collection during a copy.
+        // Callers own a database transaction; throwing leaves no partial lesson copy.
+        $rows = $this->db->setQuery($q, 0, 1001)->loadObjectList();
+        self::requireCompleteFieldCopy(count($rows));
         $values = [];
-        foreach ($this->db->setQuery($q, 0, 1001)->loadObjectList() as $row) {
+        foreach ($rows as $row) {
             $fieldId = (int) $row->id;
             if (!in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)
                 || !$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)) {
