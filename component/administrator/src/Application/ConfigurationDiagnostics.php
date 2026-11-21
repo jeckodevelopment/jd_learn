@@ -278,6 +278,105 @@ final class ConfigurationDiagnostics
         ];
     }
 
+    /**
+     * Diagnose effective inheritance without exposing course/menu identifiers,
+     * titles, secrets or raw JSON. The caller is responsible for bounding reads;
+     * incomplete scans are never described as ready.
+     *
+     * @param list<string|null> $courseParams
+     * @param list<array{link:string,params:string}> $menuEntries
+     */
+    public static function inheritance(array $courseParams, array $menuEntries, bool $complete): array
+    {
+        $courseOverrides = 0;
+        $courseInvalid = 0;
+        foreach ($courseParams as $raw) {
+            if (!is_string($raw) || trim($raw) === '') {
+                continue;
+            }
+            try {
+                $data = json_decode($raw, true, 32, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                ++$courseInvalid;
+                continue;
+            }
+            if (!is_array($data) || array_is_list($data)) {
+                ++$courseInvalid;
+                continue;
+            }
+            if (!array_key_exists('mail_preferences', $data)) {
+                continue;
+            }
+            $overrides = $data['mail_preferences'];
+            if (!is_array($overrides) || array_is_list($overrides)) {
+                ++$courseInvalid;
+                continue;
+            }
+            foreach ($overrides as $event => $value) {
+                if (!is_string($event) || !in_array($event, MailPreferences::EVENTS, true)
+                    || !in_array($value, ['enabled', 'disabled', 'inherit'], true)) {
+                    ++$courseInvalid;
+                } elseif ($value !== 'inherit') {
+                    ++$courseOverrides;
+                }
+            }
+        }
+        $menuOverrides = 0;
+        $menuInvalid = 0;
+        $allowedKeys = [
+            'catalog_show_filters', 'catalog_show_order', 'catalog_show_category',
+            'catalog_show_cover', 'catalog_show_summary',
+            'catalog_page_size', 'catalog_default_order',
+        ];
+        foreach ($menuEntries as $menu) {
+            if (!is_array($menu) || !is_string($menu['link'] ?? null)
+                || !preg_match('~\\Aindex\\.php\\?option=com_jlms&view=(?:courses|category)(?:&|\\z)~D', $menu['link'])) {
+                continue;
+            }
+            try {
+                $params = json_decode((string) ($menu['params'] ?? ''), true, 32, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                ++$menuInvalid;
+                continue;
+            }
+            if (!is_array($params) || array_is_list($params)) {
+                ++$menuInvalid;
+                continue;
+            }
+            foreach ($allowedKeys as $key) {
+                $value = $params[$key] ?? '';
+                if ($value === '' || $value === null) {
+                    continue;
+                }
+                $allowed = match ($key) {
+                    'catalog_page_size' => ['6', '9', '12', '24'],
+                    'catalog_default_order' => ['editorial', 'recent', 'title', 'duration', 'published'],
+                    default => ['0', '1'],
+                };
+                if (in_array((string) $value, $allowed, true)) {
+                    ++$menuOverrides;
+                } else {
+                    ++$menuInvalid;
+                }
+            }
+        }
+        $make = static function (string $label, int $overrides, int $invalid) use ($complete): array {
+            $state = !$complete ? 'INCOMPLETE' : ($invalid > 0 ? 'INVALID' : ($overrides > 0 ? 'OVERRIDES' : 'INHERITED'));
+            $severity = $state === 'INVALID' ? 'error' : ($state === 'INHERITED' ? 'ok' : 'warning');
+            return [
+                'kind' => 'inheritance',
+                'labelKey' => $label,
+                'severity' => $severity,
+                'stateKey' => 'COM_JLMS_CONFIG_INHERIT_' . $state,
+                'guidanceKey' => 'COM_JLMS_CONFIG_INHERIT_GUIDANCE_' . $state,
+            ];
+        };
+        return [
+            $make('COM_JLMS_CONFIG_INHERIT_COURSE_LABEL', $courseOverrides, $courseInvalid),
+            $make('COM_JLMS_CONFIG_INHERIT_MENU_LABEL', $menuOverrides, $menuInvalid),
+        ];
+    }
+
     /** Treat labels as translations, never as arbitrary provider-supplied content. */
     private static function safeLabel(mixed $candidate): string
     {
