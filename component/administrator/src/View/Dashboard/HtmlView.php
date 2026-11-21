@@ -116,6 +116,22 @@ final class HtmlView extends BaseHtmlView
                 $storageRoot, JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT
             );
         }
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            // Query only keys needed to establish canonical default-template readiness.
+            // Never read or render subjects, message bodies, params or recipients.
+            $requiredTemplates = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds();
+            $mailTemplateQuery = $db->getQuery(true)
+                ->select($db->quoteName(['template_id', 'language']))
+                ->from($db->quoteName('#__mail_templates'))
+                ->whereIn($db->quoteName('template_id'), $requiredTemplates, \Joomla\Database\ParameterType::STRING);
+            $installedTemplates = array_map(
+                static fn (object $row): array => ['template_id' => (string) $row->template_id, 'language' => (string) $row->language],
+                $db->setQuery($mailTemplateQuery)->loadObjectList()
+            );
+            $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::mailTemplates(
+                $requiredTemplates, $installedTemplates
+            );
+        }
         // Visibility is based on current ACL rather than the presence of a dashboard shortcut.
         // No diagnostic here triggers sending, deleting, regenerating or mutating data.
         $this->safeOperations = [];

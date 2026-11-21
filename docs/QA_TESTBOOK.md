@@ -2894,3 +2894,9 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 **Prove automatiche:** `tests/doc07-configuration-diagnostics.php` verifica directory privata esistente, directory entro webroot, radice inesistente e configurazione gestita; la proiezione non espone path o campi aggiuntivi. La diagnostica è in sola lettura; nessuna directory viene creata dalla vista.
 
 **Collaudo manuale Joomla (separato):** con ruolo `core.manage` verificare nella dashboard gli stati e i rimedi IT/EN per le quattro configurazioni; senza permesso verificare assenza della diagnostica. Nessuna navigazione della dashboard deve modificare file, spedire mail, pubblicare video o esporre percorsi e credenziali. Controllo web server/proxy reale rimane gate di accettazione distinto.
+
+## SCR-16 — modelli email canonici (21/11/2026)
+
+**Test automatici:** `tests/doc07-configuration-diagnostics.php` controlla template base `*` presenti, una mancanza, sole traduzioni senza base e assenza totale; l'output contiene solo stato, etichetta e guida localizzata e nessun ID di modello. La dashboard usa query read-only limitata a `template_id` e `language`, senza lettura di messaggi o preferenze.
+
+**Collaudo manuale Joomla — differito:** con ruolo manager verificare lo stato dei modelli presenti, togliere temporaneamente un modello in ambiente di prova e confermare l'avviso; ripristinarlo. Verificare che la vista non invii email, non alteri modelli, non esponga contenuti e che gli utenti senza permesso non vedano la diagnostica.
