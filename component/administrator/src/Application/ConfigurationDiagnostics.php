@@ -300,7 +300,7 @@ final class ConfigurationDiagnostics
                 ++$courseInvalid;
                 continue;
             }
-            if (!is_array($data) || array_is_list($data)) {
+            if (!is_array($data) || ($data !== [] && array_is_list($data))) {
                 ++$courseInvalid;
                 continue;
             }
@@ -308,7 +308,7 @@ final class ConfigurationDiagnostics
                 continue;
             }
             $overrides = $data['mail_preferences'];
-            if (!is_array($overrides) || array_is_list($overrides)) {
+            if (!is_array($overrides) || ($overrides !== [] && array_is_list($overrides))) {
                 ++$courseInvalid;
                 continue;
             }
@@ -339,7 +339,7 @@ final class ConfigurationDiagnostics
                 ++$menuInvalid;
                 continue;
             }
-            if (!is_array($params) || array_is_list($params)) {
+            if (!is_array($params) || ($params !== [] && array_is_list($params))) {
                 ++$menuInvalid;
                 continue;
             }
