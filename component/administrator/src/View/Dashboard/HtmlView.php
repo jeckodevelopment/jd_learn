@@ -123,7 +123,7 @@ final class HtmlView extends BaseHtmlView
             $mailTemplateQuery = $db->getQuery(true)
                 ->select($db->quoteName(['template_id', 'language']))
                 ->from($db->quoteName('#__mail_templates'))
-                ->whereIn($db->quoteName('template_id'), $requiredTemplates);
+                ->whereIn($db->quoteName('template_id'), $requiredTemplates, \Joomla\Database\ParameterType::STRING);
             $installedTemplates = array_map(
                 static fn (object $row): array => ['template_id' => (string) $row->template_id, 'language' => (string) $row->language],
                 $db->setQuery($mailTemplateQuery)->loadObjectList()
