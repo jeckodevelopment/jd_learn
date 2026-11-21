@@ -1,3 +1,10 @@
+## 21 novembre 2026 — SECDEV-07/criterion_02 implementato: scanner verificati (PR #858)
+
+- [PR #858](https://github.com/jeckodevelopment/jd_learn/pull/858), merge `aafb718857b35ed27dfb5b0e6ed2d86845af6541`, head `00c07227bddf73073a0e342b8b9e788a6aec7950`.
+- [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44909562794): Semgrep 1.186.0 (regole locali, 0 finding), Ruff 0.14.6 (intera base Python e regressioni negate vs. baseline; 1.475 violazioni preesistenti emerse al primo run), fixture positive/negative, gate segreti/dipendenze, PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium.
+- [Artefatto JD-Learn-0.64.19-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44909562794/artifacts/14709416811): digest **wrapper Actions** `sha256:2038ccf7e5942db07dbfad4aa8d654a18c848911d79ffb9fcc50454e168da26f`; contiene il package Joomla, ma il checksum dello ZIP interno non è verificato in questa riconciliazione.
+- Evidenze per SECDEV-07/criterion_02 promosse **solo** sul software: 473 implemented / 17 missing / 267 unverifiable; 60,78% minimo comprovato (+0,09 pp). Accettazione manuale (4,67% avviato, 0% completo) e analisi vulnerability/advisory della piattaforma restano indipendenti. No nuovo SemVer/runtime.
+
 ## 21 novembre 2026 — SECDEV-07 gate sintattico multi-linguaggio (PR #856)
 
 - **PR integrata:** https://github.com/jeckodevelopment/jd_learn/pull/856; merge squash `1e64bfb89857aec7adeb68a7d15fb50e61a84b9f`, head verificato `2615fc93a9503e4fa3ead8084d2a7b08ed3b73cb`.
