@@ -388,6 +388,14 @@ final class PathwayModel extends AdminModel
             if ((int) $db->setQuery($countQuery)->loadResult() !== 0) {
                 throw new \DomainException('COM_JLMS_PATHWAY_DEPENDENCIES');
             }
+            // Multilingual association rows have no JD Learn foreign key and must not become orphaned.
+            $context = $this->typeAlias;
+            $associations = $db->createQuery()->select('COUNT(*)')->from('#__associations')
+                ->where('id = :id')->where('context = :context')
+                ->bind(':id', $id, ParameterType::INTEGER)->bind(':context', $context);
+            if ((int) $db->setQuery($associations)->loadResult() > 0) {
+                throw new \DomainException('COM_JLMS_PATHWAY_DEPENDENCIES');
+            }
             // Joomla's table deletion also removes the matching ACL asset.
             // Never call this method on a populated pathway.
             $table = $this->getTable('Pathway');

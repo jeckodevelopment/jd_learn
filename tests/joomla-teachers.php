@@ -269,6 +269,17 @@ teacherExpect($teacherModel->save($emptyTeacher), 'new unlinked and unassigned t
 $emptyTeacherId=(int)$teacherModel->getState('teacher.id');
 teacherExpect($emptyTeacherId>0, 'empty teacher fixture created');
 teacherExpect($teacherModel->changeStates([$emptyTeacherId], -2), 'empty teacher placed in trash');
+// Joomla multilingual associations survive outside the teacher FK graph.
+$association = (object)[
+    'id'=>$emptyTeacherId, 'context'=>'com_jlms.teacher',
+    'key'=>md5('jd-learn-ci-teacher-' . $emptyTeacherId),
+];
+$db->insertObject('#__associations', $association);
+teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
+    'multilingual association blocks permanent teacher deletion');
+teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
+    'blocked teacher purge preserves profile');
+$db->setQuery("DELETE FROM #__associations WHERE context='com_jlms.teacher' AND id=" . $emptyTeacherId)->execute();
 teacherExpect($teacherModel->purgeUnreferenced($emptyTeacherId),
     'empty unreferenced trashed teacher may be permanently deleted');
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id='.$emptyTeacherId)->loadResult()===0,
