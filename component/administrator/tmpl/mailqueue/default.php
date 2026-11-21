@@ -162,4 +162,61 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    <?php if ($start + $limit < (int) $data['total']) : ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . ($start + $limit) . $filterQuery) ?>"><?= Text::_('JNEXT') ?></a></li><?php endif; ?>
   </ul>
  </nav>
+ <details id="jlms-consent-audit" class="mt-4">
+  <summary class="h5"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_TITLE') ?></summary>
+  <p class="text-muted"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_HELP') ?></p>
+  <form method="get" action="<?= Route::_('index.php') ?>" class="row g-2 mb-3">
+   <input type="hidden" name="option" value="com_jlms">
+   <input type="hidden" name="view" value="mailqueue">
+   <div class="col-auto">
+    <label for="jlms-consent-user-id" class="form-label"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_USER') ?></label>
+    <input class="form-control" id="jlms-consent-user-id" type="number" min="0" step="1" name="consent_user_id" value="<?= (int) $this->consentData['user_id'] ?>">
+   </div>
+   <div class="col-auto align-self-end">
+    <button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_APPLY') ?></button>
+   </div>
+  </form>
+  <p><?= Text::sprintf('COM_JLMS_PRIVACY_CONSENTS_TOTAL', (int) $this->consentData['total']) ?></p>
+  <?php if ($this->consentData['rows']) : ?>
+   <div class="table-responsive">
+    <table class="table table-striped" id="jlms-consent-audit-table">
+     <thead><tr>
+      <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_USER') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_STATE') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_ORIGIN') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_VERSION') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_REQUESTED') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_CONFIRMED') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_REVOKED') ?></th>
+     </tr></thead>
+     <tbody>
+     <?php foreach ($this->consentData['rows'] as $consent) : ?>
+      <tr>
+       <td><?= (int) $consent['user_id'] ?></td>
+       <td><?= $this->escape($consent['state']) ?></td>
+       <td><?= $this->escape($consent['origin']) ?></td>
+       <td><?= $this->escape($consent['policy_version']) ?></td>
+       <td><?= $this->escape($consent['requested_at']) ?></td>
+       <td><?= $this->escape($consent['confirmed_at'] ?? '—') ?></td>
+       <td><?= $this->escape($consent['revoked_at'] ?? '—') ?></td>
+      </tr>
+     <?php endforeach; ?>
+     </tbody>
+    </table>
+   </div>
+  <?php else : ?>
+   <p class="alert alert-secondary"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_EMPTY') ?></p>
+  <?php endif; ?>
+  <?php
+   $consentStart = (int) $this->consentData['start'];
+   $consentLimit = (int) $this->consentData['limit'];
+   $consentBase = 'index.php?option=com_jlms&view=mailqueue&consent_user_id=' . (int) $this->consentData['user_id'] . '&consentstart=';
+  ?>
+  <nav aria-label="<?= $this->escape(Text::_('COM_JLMS_PRIVACY_CONSENTS_TITLE')) ?>">
+   <ul class="pagination">
+    <?php if ($consentStart > 0) : ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . max(0, $consentStart - $consentLimit)) ?>"><?= Text::_('JPREV') ?></a></li><?php endif; ?>
+    <?php if ($consentStart + $consentLimit < (int) $this->consentData['total']) : ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . ($consentStart + $consentLimit)) ?>"><?= Text::_('JNEXT') ?></a></li><?php endif; ?>
+   </ul>
+  </nav>
+ </details>
 </section>
