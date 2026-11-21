@@ -256,10 +256,11 @@ $pathModel->setCurrentUser($operator);
 $check(!$pathModel->purgeEmpty(0), 'invalid permanent deletion identifier rejected');
 $check(!$pathModel->purgeEmpty(999999999), 'nonexistent pathway deletion rejected');
 // A native Joomla multilingual association is not protected by a component FK.
-$db->insertObject('#__associations', (object)[
+$association = (object)[
     'id'=>$emptyId, 'context'=>'com_jlms.pathway',
     'key'=>md5('jd-learn-ci-pathway-' . $emptyId),
-]);
+];
+$db->insertObject('#__associations', $association);
 $check(!$pathModel->purgeEmpty($emptyId), 'multilingual pathway reference blocks permanent deletion');
 $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $emptyId)->loadResult() === 1,
     'blocked pathway purge preserves the referenced record');
