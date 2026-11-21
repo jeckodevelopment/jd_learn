@@ -1,3 +1,5 @@
+**Regressione audit immutabili:** inserire una campagna di test attribuita all'utente A: sia preflight Joomla Privacy che invocazione diretta della rimozione devono rifiutare l'operazione; i dati non devono cambiare. Dopo la rimozione controllata della campagna fixture, verificare che la richiesta positiva torni disponibile. Non alterare campagne reali per ottenere lo sblocco.
+
 **Regressione di anonimizzazione estesa:** con account A che ha pubblicato/modificato contenuti e riconciliato una mail di B, richiedere la rimozione privacy di A; i riferimenti opzionali `created_by`, `modified_by`, associazione docente/soggetto e `reconciliation_by` devono diventare null, mentre contenuti e recapiti di B restano integri. Ispezionare separatamente gli audit che richiedono un identificativo obbligatorio e registrare la decisione del titolare.
 
 ## SEC-P3 — gate completo software e accettazione separata (21/11/2026)
