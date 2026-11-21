@@ -7,7 +7,7 @@
 - **Pacchetto Joomla:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44906074041/artifacts/14707749081 — wrapper Actions `JD-Learn-0.64.19-dev`; ZIP interno `pkg_jlms-0.64.19-dev.zip`, 12 parti, 826896 byte, **SHA-256 dello ZIP installabile** `2e503142050463673cf0a10ecf32d8d9d7183ee068217ce6e237353279be2d08`. Digest *diverso* del wrapper Actions: `sha256:8b8f0a4541ab0b1a0bb3f0e11e0ef0b782752403f530105f8147b2aef9cdee09`.
 - **Criteri:** 01 implemented grazie a 10 controlli tracciati e 4 gap dichiarati, gate mandatory e negative fixtures; 02 missing fino a stile/SAST/SCA completi; 03 già implemented (pin OWASP ASVS); 04/05 unverifiable fino alla review completa della candidate. Nessun avanzamento improprio su scanner, hosting, penetration test, falsi positivi o certificazione.
 - **Avanzamento:** 472 implemented, 18 missing, 267 unverifiable (757 totali). Minimo sviluppo comprovato **60,69%**, +0,10 punti dal 60,59%; manuale 4,67% avviato, 0% accettato, invariato. Percentuale funzionale rigorosa non determinabile fino a risoluzione degli esiti non verificabili.
-- **Tracciabilità post-merge:** PR documentale di riclassificazione e aggiornamento dashboard; nessuna modifica PHP/runtime o bump SemVer.
+- **Tracciabilità post-merge:** PR documentale #855 (milestone 1.0.0, label documentation/P0) di riclassificazione e aggiornamento dashboard; nessuna modifica PHP/runtime o bump SemVer.
 
 
 ## 21/11/2026 — SEC-P3 sviluppo software COMPLETATO, PR #852
