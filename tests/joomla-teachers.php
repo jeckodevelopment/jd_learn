@@ -261,9 +261,12 @@ teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $
 teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $versionBefore,
     'frozen presentation remains byte-for-byte identical');
 
+$linkedUserId = (int)$db->setQuery('SELECT id FROM #__users WHERE id <> ' . (int)$actor->id . ' ORDER BY id LIMIT 1')->loadResult();
+teacherExpect($linkedUserId > 0, 'second Joomla user exists to test independent teacher account dependency');
+$linkedUserBlock = (int)$db->setQuery('SELECT block FROM #__users WHERE id=' . $linkedUserId)->loadResult();
 $emptyTeacher = array_replace($teacherBase, [
     'id'=>0, 'revision'=>1, 'title'=>'Disposable CI empty teacher',
-    'alias'=>'disposable-ci-empty-teacher', 'user_id'=>(int)$actor->id, 'state'=>0,
+    'alias'=>'disposable-ci-empty-teacher', 'user_id'=>$linkedUserId, 'state'=>0,
 ]);
 teacherExpect($teacherModel->save($emptyTeacher), 'new unlinked and unassigned teacher can be authored');
 $emptyTeacherId=(int)$teacherModel->getState('teacher.id');
@@ -275,14 +278,14 @@ teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
     'unassigned trashed teacher linked to a Joomla account cannot be purged');
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
     'linked teacher profile survives denied purge');
-$db->setQuery('UPDATE #__users SET block=1 WHERE id=' . (int)$actor->id)->execute();
+$db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $linkedUserId)->execute();
 try {
     teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
         'blocked native Joomla account must not make linked teacher purgable');
 } finally {
-    $db->setQuery('UPDATE #__users SET block=0 WHERE id=' . (int)$actor->id)->execute();
+    $db->setQuery('UPDATE #__users SET block=' . $linkedUserBlock . ' WHERE id=' . $linkedUserId)->execute();
 }
-teacherExpect((int)$db->setQuery('SELECT user_id FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === (int)$actor->id,
+teacherExpect((int)$db->setQuery('SELECT user_id FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === $linkedUserId,
     'denied purges retain teacher-to-Joomla-account reference');
 // Explicitly unlink only the disposable teacher fixture to allow purging.
 $db->setQuery('UPDATE #__jlms_teachers SET user_id=NULL WHERE id=' . $emptyTeacherId)->execute();
