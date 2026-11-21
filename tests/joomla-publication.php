@@ -227,7 +227,7 @@ try {
 pubExpect($invalidScheduleRejected, 'malformed public preview lesson schedule fails closed with 404');
 $outlineAfterMalformed = $catalog->outline($guest, 'en-GB', $course);
 pubExpect(!str_contains(json_encode($outlineAfterMalformed), 'SECRET_LESSON_BODY')
-    && !in_array($lesson, array_map('intval', array_keys($outlineAfterMalformed['lessons'])), true),
+    && !in_array($lesson, array_map('intval', array_merge(...array_map(static fn (array $rows): array => array_map(static fn (object $row): int => (int) $row->id, $rows), array_values($outlineAfterMalformed['lessons'] ?: [[]])))), true),
     'public outline cannot reveal protected lesson bodies on malformed schedule');
 $writeFixture('#__jlms_lessons', (object)['id' => $lesson, 'release_after_days' => null], 'id', true);
 pubExpect(str_contains((string) $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson)->body, 'SECRET_LESSON_BODY'),
