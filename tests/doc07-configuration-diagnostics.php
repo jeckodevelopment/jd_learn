@@ -100,4 +100,60 @@ if ($readyTemplates['severity'] !== 'ok' || $missingTemplates['severity'] !== 'e
     || $translatedOnly['severity'] !== 'error' || $none['severity'] !== 'error') {
     throw new RuntimeException('SCR-16 mail default-template detection failed');
 }
+// The runtime rejects DOCUMENT_ROOT even when Joomla site/public roots differ.
+$separate = sys_get_temp_dir() . '/jdlearn-scr16-roots-' . bin2hex(random_bytes(6));
+mkdir($separate, 0700);
+foreach (['site', 'public', 'web', 'web/private', 'private'] as $dir) {
+    mkdir($separate . '/' . $dir, 0700);
+}
+try {
+    $exposed = ConfigurationDiagnostics::storage(
+        $separate . '/web/private', $separate . '/site', $separate . '/public', $separate . '/web'
+    );
+    $outside = ConfigurationDiagnostics::storage(
+        $separate . '/private', $separate . '/site', $separate . '/public', $separate . '/web'
+    );
+    if ($exposed['severity'] !== 'error' || $outside['severity'] !== 'ok') {
+        throw new RuntimeException('SCR-16 must honor actual web server DOCUMENT_ROOT');
+    }
+} finally {
+    foreach (['web/private', 'web', 'private', 'public', 'site'] as $dir) {
+        rmdir($separate . '/' . $dir);
+    }
+    rmdir($separate);
+}
+$settings = ConfigurationDiagnostics::operationalSettings([]);
+if (count($settings) !== 5 || $settings[0]['stateKey'] !== 'COM_JLMS_CONFIG_SCAN_DISABLED'
+    || $settings[1]['stateKey'] !== 'COM_JLMS_CONFIG_VIDEO_LOCAL_DISABLED'
+    || $settings[2]['stateKey'] !== 'COM_JLMS_CONFIG_CERTIFICATES_DISABLED'
+    || $settings[3]['severity'] !== 'ok' || $settings[4]['severity'] !== 'ok') {
+    throw new RuntimeException('SCR-16 defaults do not reflect declared component configuration');
+}
+$settingsInvalid = ConfigurationDiagnostics::operationalSettings([
+    'material_scan_required' => 1, 'material_clamd_socket' => 'tcp://secret.internal:3310',
+    'video_delivery_mode' => 'php_bounded', 'certificate_enabled' => 1,
+    'catalog_page_size' => '999', 'catalog_default_order' => 'unknown',
+    'mail_enrollment_enabled' => 0, 'mail_completion_enabled' => 0,
+]);
+if ($settingsInvalid[0]['severity'] !== 'error' || $settingsInvalid[1]['severity'] !== 'ok'
+    || $settingsInvalid[2]['severity'] !== 'ok' || $settingsInvalid[4]['severity'] !== 'warning') {
+    throw new RuntimeException('SCR-16 operational flags or invalid configuration not classified');
+}
+$settingsConfiguredScan = ConfigurationDiagnostics::operationalSettings([
+    'material_scan_required' => 1, 'material_clamd_socket' => '/run/clamav/clamd.sock',
+]);
+if ($settingsConfiguredScan[0]['severity'] !== 'warning') {
+    throw new RuntimeException('SCR-16 must not equate configured scanner with reachable scanner');
+}
+foreach (array_merge($settings, $settingsInvalid, $settingsConfiguredScan) as $check) {
+    if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+        || !in_array($check['severity'], ['ok', 'warning', 'error'], true)) {
+        throw new RuntimeException('SCR-16 configuration projection contains unexpected fields');
+    }
+    foreach ($check as $value) {
+        if (str_contains($value, 'secret.internal') || str_contains($value, '/run/clamav')) {
+            throw new RuntimeException('SCR-16 configuration projection leaks a private value');
+        }
+    }
+}
 echo "DOC-07: scheduler/provider actionable statuses and privacy-safe projections OK\n";
