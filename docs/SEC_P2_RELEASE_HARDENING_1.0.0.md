@@ -26,6 +26,12 @@ La scansione SEC-P2 è ora un **vincolo del builder**, eseguito su `data` prima 
 
 **Non equivale a SEC-P2 chiuso:** la suite riconosce pattern noti, non tutti i segreti; non sono state ancora acquisite evidence di scansione della cronologia Git, SCA advisory del runtime effettivamente installato, CSP/log/header/storage sul sito di prova, né il registro finale di severità e risk acceptance. Il rilascio stabile resta bloccato. Per PHP 8.3/8.4, le versioni corrette del 19 novembre sono 8.3.37 e 8.4.28, già controllate in CI; va verificata anche la versione effettiva sull'hosting.
 
+## Verifica automatizzata della storia Git (21/11/2026)
+
+La CI della PR esegue `tests/sec-p2-history-scan.py` e `tools/sec_p2_history_scan.py` sull'intera cronologia raggiungibile dai riferimenti fetchati (`fetch-depth: 0`). Ispeziona i blob storici, anche eliminati, sotto `component/`, `plugins/`, `libraries/`, `packages/` e `.github/workflows/`; rileva firme note di chiavi private, credenziali AWS/GitHub e impedisce la prosecuzione se compaiono finding o blob non ispezionabili. I log espongono soltanto conteggi, mai nomi o payload. I test includono una credenziale fittizia prima committata, poi sovrascritta ed eliminata, e una fixture workflow. Questa è una scansione di firme note: non prova l'assenza di credenziali di formato arbitrario, né sostituisce l'eventuale rotazione dei segreti compromessi. La verifica non richiede interventi sul sito Joomla.
+
+**Separazione dei gate:** le verifiche su hosting, CSP e logs reali rimangono nel collaudo e nel gate di rilascio. Quelle verifiche non impediscono di completare separatamente l'implementazione dei controlli automatici già sviluppati, quando il criterio ha evidenze sufficienti.
+
 ## Cosa collaudare su Joomla
 
 1. Installare o aggiornare lo ZIP della CI su hosting di prova: HTTPS, cookie di sessione, MIME, CSP del template, player YouTube/Vimeo/Cloudflare e player HTML5, includendo rifiuto del consenso.
