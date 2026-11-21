@@ -226,6 +226,11 @@ final class ConfigurationDiagnostics
         $order = (string) ($params['catalog_default_order'] ?? 'editorial');
         $valid = in_array($page, ['6', '9', '12', '24'], true)
             && in_array($order, ['editorial', 'recent', 'title', 'duration', 'published'], true);
+        foreach (['catalog_show_filters', 'catalog_show_order', 'catalog_show_category',
+            'catalog_show_cover', 'catalog_show_summary'] as $flag) {
+            // These five flags are also global defaults consumed by CatalogOptions.
+            $valid = $valid && in_array((string) ($params[$flag] ?? '1'), ['0', '1'], true);
+        }
         $add('COM_JLMS_CONFIG_CATALOG_LABEL', $valid,
             'COM_JLMS_CONFIG_CATALOG_READY', 'COM_JLMS_CONFIG_CATALOG_INVALID',
             'COM_JLMS_CONFIG_CATALOG_GUIDANCE_READY', 'COM_JLMS_CONFIG_CATALOG_GUIDANCE_INVALID');
