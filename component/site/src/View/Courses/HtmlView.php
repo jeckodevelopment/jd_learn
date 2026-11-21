@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Site\View\Courses;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Language\Text;
 use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
+use Jlms\Component\Jlms\Site\Helper\CatalogPagination;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -63,6 +64,21 @@ $this->difficulty = $this->getModel()->getDifficulty();
         $this->layout = $this->getModel()->getLayout();
         $this->teacherId = $this->getModel()->getTeacherId();
         $this->pathwayId = $this->getModel()->getPathwayId();
+        // Register public, server-normalized filters explicitly: Joomla's
+        // pagination links otherwise discard request query parameters.
+        $paginationFilters = [
+            'search' => $this->search,
+            'order' => $this->showOrder ? $this->order : '',
+            'tag_id' => $this->tagId,
+            'difficulty' => $this->difficulty,
+            'duration' => $this->duration,
+            'available' => $this->available,
+            'layout' => $this->layout,
+            'teacher_id' => $this->teacherId,
+            'pathway_id' => $this->pathwayId,
+        ];
+        $paginationFilters['category_id'] = $this->showCategory ? $this->categoryChoice : 0;
+        CatalogPagination::apply($this->pagination, $paginationFilters, $this->showFilters, $this->categoryId);
         $this->teachers = $this->showFilters ? $this->getModel()->getTeachers() : [];
         $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
         if ($this->get('Errors')) {
