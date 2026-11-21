@@ -1,3 +1,7 @@
+## AUT-04 / LES-01 — Duplicazione completa dei campi personalizzati di lezione (21/11/2026)
+
+**Regressione automatica:** `php tests/aut-les-field-copy-boundary.php` eseguito nel preflight obbligatorio. Campi nativi Joomla associati alla lezione: 0/1/999/1000 valori sono ammessi; il 1001° valore fa fallire la copia **prima di scrivere nuovi valori**, con `COM_JLMS_OUTLINE_LIMIT`, senza generare una duplicazione silenziosamente incompleta. Il servizio di duplicazione opera nella transazione del chiamante; per i dati reali Joomla provare anche rollback su copia con valori multipli, quiz, allegati e prerequisiti. Nessun collaudo manuale attribuito.
+
 ## SECDEV-07/02 — SAST offline, stile e composizione package (candidato, 21/11/2026)
 
 - **CI:** installazione con versioni fissate Semgrep 1.186.0/Ruff 0.14.6 in venv isolato; `python3 tests/secdev07-sast.py --self-test` rifiuta PHP eval, JavaScript eval e Python eval, accetta gli equivalenti sicuri; `python3 tests/secdev07-sast.py` blocca qualsiasi finding delle regole locali e qualsiasi errore di scansione.
