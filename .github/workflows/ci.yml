@@ -65,13 +65,11 @@ jobs:
           python3 tests/secdev07-sast.py --self-test
           python3 tests/secdev07-sast.py
           ruff check --select E4,E7,E9 tools scripts tests
-      - name: SECDEV-07 first-party package composition and dependency boundary
-        run: |
-          python3 tests/sec-p2-dependency-gate.py
-          python3 tests/sec-p2-source-gate.py
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
+          python3 tests/sec-p2-dependency-gate.py
+          python3 tests/sec-p2-source-gate.py
           python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$(git log -1 --format=%cs)"
           python3 tools/check.py
           python3 tests/asvs-reference.py
