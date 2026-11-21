@@ -93,4 +93,15 @@ for locale in ("it-IT", "en-GB"):
     ]
     for key in keys:
         assert len(re.findall(r"^COM_JLMS_CONFIG_" + key + r"=", lang, re.M)) == 1, (locale, key)
+assert "ConfigurationDiagnostics::localVideoPrerequisites(" in view
+assert "public static function localVideoPrerequisites(" in diagnostics_code
+assert "is_executable($probe)" in diagnostics_code
+assert "is_link($probe)" in diagnostics_code
+for locale in ("it-IT", "en-GB"):
+    translations = (ROOT / "component/administrator/language" / locale / "com_jlms.ini").read_text()
+    for name in ("VIDEO_ROOT_LABEL", "VIDEO_ROOT_READY", "VIDEO_ROOT_UNAVAILABLE",
+                 "VIDEO_ROOT_GUIDANCE_READY", "VIDEO_ROOT_GUIDANCE_UNAVAILABLE",
+                 "VIDEO_PROBE_LABEL", "VIDEO_PROBE_UNVERIFIED", "VIDEO_PROBE_UNAVAILABLE",
+                 "VIDEO_PROBE_GUIDANCE_UNVERIFIED", "VIDEO_PROBE_GUIDANCE_UNAVAILABLE"):
+        assert len(re.findall(r"^COM_JLMS_CONFIG_" + name + r"=", translations, re.M)) == 1
 print("DOC-07 safe procedures: five ACL-scoped operations, IT/EN and non-mutating dashboard OK")
