@@ -117,3 +117,7 @@ Con 0.64.16-dev tutti i 13 producer censiti di MailQueue::enqueue passano l'ID J
 ## SEC-P1 — protezione permessi stale in amministrazione (20/11/2026)
 
 Il controllo comune degli attestati amministrativi ora rilegge utente Joomla e ACL su tutte le sette operazioni sensibili, rifiutando account bloccati dopo il login; la vista amministrativa delle variabili email usa `CourseEditorAccess::fresh`. Prove negative Joomla DB e gate statico, ma revoca ACL multi-ruolo HTTP e altre superfici ancora da verificare. Gate SEC-P1/SEC-P5 aperti.
+
+## SECDEV-07 — Processo di verifica machine-readable (21/11/2026)
+
+I controlli di source review, dispatch, privacy, segreti, supply-chain e finding sono collegati a test invocati realmente nella CI tramite `docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json` e gate `tests/secdev07-assurance-gate.py`. La procedura tecnica bilingue è in `docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md`. Questa integrazione non equivale a SAST/SCA completi: sono ancora aperte la revisione delle dipendenze della piattaforma, i segreti e log del sito, il test dinamico di SEC-P5 e la scelta di un analizzatore di stile/SAST con report riproducibile. La sicurezza di una release richiede il riesame dei finding sul commit finale.

@@ -1,3 +1,9 @@
+## SECDEV-07 — Processo tracciato di security assurance (21/11/2026)
+
+**Test automatico:** `python3 tests/secdev07-assurance-gate.py` nel preflight `tools/check.py`; convalida dieci controlli di sicurezza, i riferimenti a sorgenti e test realmente presenti, l'invocazione nel runner CI e quattro gap non dichiarabili risolti. Le fixture negative simulano la rimozione di un controllo, di un rischio, di un test dal runner e un riferimento insicuro: tutti devono essere rifiutati. Eseguire anche le suite Joomla PHP/MySQL e PHP/MariaDB, test browser e install/upgrade prima del merge.
+
+**Verifiche manuali di rilascio (in attesa):** registrare sulla build candidata esatta versioni e advisory Joomla/PHP/DB e servizi esterni, report di scanning SAST/SCA addizionale, revisione dei falsi positivi/non applicabilità, collaudo ACL/CSRF/IDOR negativo con ruoli di prova, log/segreti/backup su hosting e decisione SEC-P5; non riportare credenziali o dati di studenti. Questa tranche non sostituisce audit finale, penetration test o approvazione del sito.
+
 ## PRIV-C2 — Consultazione dei consensi nel backend (SEC-P3)
 
 **CI:** il test Joomla DB verifica il servizio `ConsentAuditService::page` con l'utente autorizzato e l'account senza permessi, il solo record corrente `revoked` della fixture, la whitelist di campi e l'assenza di dati segreti. Il gate statico verifica permessi, markup GET-only, IT/EN e nessun campo SMTP/token.

@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "baseline": "1.0.0",
+  "criterion": "SECDEV-07",
+  "scope": "Repository security process and existing first-party code checks",
+  "version": "0.64.19-dev",
+  "policy": "reviewed_control_must_have_source_test_execution_and_limitations; no_claim_of_release_security",
+  "controls": [
+    {
+      "id": "THREAT-MODEL",
+      "area": "threat_model",
+      "threat": "Cross-role IDOR, CSRF, SSRF, tainted input and data exfiltration across Joomla trust boundaries",
+      "source": "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+      "test": "tests/sec-p1-systematic-source-gate.py",
+      "runner": "preflight",
+      "assertion": "RUNTIME",
+      "scope": "Static source review against enumerated boundaries; E2E remains separate"
+    },
+    {
+      "id": "DISPATCH-CSRF",
+      "area": "controllers",
+      "threat": "Unreviewed task dispatch and unsafe mutating HTTP methods",
+      "source": "docs/SEC_P1_ATTACK_SURFACE_1.0.0.md",
+      "test": "tests/sec-p1-controller-gates.py",
+      "runner": "preflight",
+      "assertion": "WRITE_SITE",
+      "scope": "Enumerates controllers and guards; object ACL verified in Joomla suites"
+    },
+    {
+      "id": "PLUGINS-JOBS",
+      "area": "extensions",
+      "threat": "New privileged subscriber/task surface without review",
+      "source": "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+      "test": "tests/sec-p1-cross-surface-gate.py",
+      "runner": "preflight",
+      "assertion": "ROOT",
+      "scope": "Structural Joomla plugin and task controls"
+    },
+    {
+      "id": "PHP-SINKS",
+      "area": "static_analysis",
+      "threat": "Execution, tainted file I/O and outbound HTTP sink added without security approval",
+      "source": "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+      "test": "tests/sec-p1-systematic-source-gate.py",
+      "runner": "preflight",
+      "assertion": "dangerous",
+      "scope": "Targeted static analysis of shipped PHP; not a full SAST engine"
+    },
+    {
+      "id": "SECRET-WORKFLOWS",
+      "area": "secrets",
+      "threat": "Known private-key/token signatures or unpinned workflow actions in shipped code",
+      "source": "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md",
+      "test": "tests/sec-p2-source-gate.py",
+      "runner": "preflight",
+      "assertion": "inspect",
+      "scope": "Signature and workflow patterns, not comprehensive credential detection"
+    },
+    {
+      "id": "PACKAGE-DEPENDENCIES",
+      "area": "dependencies",
+      "threat": "Undeclared binary, vendor, lockfile or extra extension embedded in package",
+      "source": "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md",
+      "test": "tests/sec-p2-dependency-gate.py",
+      "runner": "preflight",
+      "assertion": "candidate",
+      "scope": "First-party shipped 12 child ZIPs, not Joomla/PHP host CVE scan"
+    },
+    {
+      "id": "CRITICAL-HIGH",
+      "area": "findings",
+      "threat": "Confirmed unresolved high/critical first-party issues in release package",
+      "source": "docs/SEC_P2_FINDINGS_1.0.0.json",
+      "test": "tests/sec-p2-findings-gate.py",
+      "runner": "preflight",
+      "assertion": "REQUIRED",
+      "scope": "Recorded first-party findings; external platform advisory acceptance is separately blocked"
+    },
+    {
+      "id": "PRIVACY-SCHEMA",
+      "area": "privacy",
+      "threat": "New personal-data table without processing and retention classification",
+      "source": "docs/SEC_P3_DATA_INVENTORY_1.0.0.json",
+      "test": "tests/sec-p3-data-inventory.py",
+      "runner": "preflight",
+      "assertion": "def validate",
+      "scope": "Joomla installation DDL privacy registry, not host backup review"
+    },
+    {
+      "id": "PRIVACY-EVENTS",
+      "area": "privacy",
+      "threat": "Cross-user export/erasure or immutable evidence deleted without authorization",
+      "source": "docs/SEC_P3_PRIVACY_OPERATIONS_1.0.0.md",
+      "test": "tests/joomla-smoke.php",
+      "runner": "joomla",
+      "assertion": "privacy",
+      "scope": "Two synthetic Joomla identities and consent states, not live host acceptance"
+    },
+    {
+      "id": "ASVS-PIN",
+      "area": "standard",
+      "threat": "Use of unspecified or drifting ASVS standard as a false compliance claim",
+      "source": "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
+      "test": "tests/asvs-reference.py",
+      "runner": "workflow",
+      "assertion": "PIN",
+      "scope": "Version pin and disclaimer, not OWASP certification"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "EXTERNAL-SCA",
+      "owner": "release_manager",
+      "blocking": "release",
+      "detail": "Review target Joomla core, PHP, database, mail, ClamAV, ffprobe and remote providers against current authoritative advisories; record patch levels and decisions per candidate. First-party package scan cannot close this."
+    },
+    {
+      "id": "HOSTED-SECRET-SCAN",
+      "owner": "site_operator",
+      "blocking": "release",
+      "detail": "Inspect host-specific environment, secret stores, deployment logs and rotations without copying secrets into GitHub; historical source pattern scan is not comprehensive."
+    },
+    {
+      "id": "PENETRATION-E2E",
+      "owner": "security_reviewer",
+      "blocking": "release",
+      "detail": "Independent dynamic negative-path review against final deployed candidate and roles; SEC-P5 owns the final go/no-go and manual acceptance."
+    },
+    {
+      "id": "FULL-SAST-STYLE",
+      "owner": "developer",
+      "blocking": "development",
+      "detail": "Document full language-wide SAST/style rules and scanner version where available; existing targeted source gate is not a full SAST implementation."
+    }
+  ],
+  "ci_evidence_source": "GitHub Actions run for exact head SHA; manual hosting checks separate"
+}
