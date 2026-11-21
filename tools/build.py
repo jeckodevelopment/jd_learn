@@ -123,6 +123,14 @@ parts.append(('constituents/plg_user_jdlearnconsent.zip',child_archive(ROOT/'plu
 parts.append(('constituents/plg_actionlog_jdlearn.zip',child_archive(ROOT/'plugins/actionlog/jdlearn','plg_actionlog_jdlearn')))
 manifest=stamp_manifest((ROOT/'packages/pkg_jlms.xml').read_bytes(),'JD Learn')
 parts.append(('pkg_jlms.xml',manifest))
-data=archive(parts);out=DIST/f'pkg_jlms-{OUTPUT_VERSION}{"" if args.release_version else "-dev"}.zip';out.write_bytes(data)
+data=archive(parts)
+# Enforce SEC-P2 on both development and stable builds before writing the artifact.
+# This is a builder invariant, not merely a CI test.
+from sec_p2_package_scan import scan as inspect_distributable_zip
+findings, members = inspect_distributable_zip(data)
+if findings or members < 13:
+    raise ValueError('SEC-P2 unsafe or incomplete Joomla package')
+out=DIST/f'pkg_jlms-{OUTPUT_VERSION}{"" if args.release_version else "-dev"}.zip'
+out.write_bytes(data)
 digest=hashlib.sha256(data).hexdigest();(DIST/'SHA256SUMS.txt').write_text(digest+'  '+out.name+'\n')
 print(json.dumps({'package':str(out.relative_to(ROOT)),'sha256':digest,'bytes':len(data),'constituents':12}))
