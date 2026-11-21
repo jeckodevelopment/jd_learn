@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 61.5,
-    "development_evidence_floor_percent": 61.5,
+    "percent": 61.73,
+    "development_evidence_floor_percent": 61.73,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -138,10 +138,10 @@
         "label": "Packaging, documentazione e reporting",
         "requirements": 15,
         "weight_percent": 7.01,
-        "development_evidence_floor_percent": 41.67,
+        "development_evidence_floor_percent": 45,
         "manual_acceptance_coverage_percent": 0,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 12,
+        "missing_criteria": 10,
         "unverifiable_criteria": 24,
         "unassessed_criteria": 0
       }
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 61.5
+        "percent": 61.73
       },
       {
         "id": "manual_acceptance",

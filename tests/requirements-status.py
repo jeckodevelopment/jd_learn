@@ -24,6 +24,17 @@ class Reconciliation(unittest.TestCase):
     self.assertEqual(row['Accettazione Joomla'],'Non eseguita')
     self.assertEqual(row['Criteri completi superati'],'No')
   self.check()
+ def test_doc04_reclassified_technical_evidence_separate_from_joomla_acceptance(self):
+  row=next(r for r in self.rows if r['Requisito']=='DOC-04')
+  units=json.loads((ROOT/'docs/FUNCTIONAL_CRITERIA_1.0.0.json').read_text())['requirements']['DOC-04']
+  implemented={unit['id'] for unit in units if unit['status']=='implemented'}
+  self.assertEqual(implemented,{'criterion_02','criterion_03','criterion_04'})
+  self.assertEqual(sum(unit['status']=='unverifiable' for unit in units),1)
+  self.assertTrue(all(unit['evidence'] for unit in units if unit['status']=='implemented'))
+  self.assertEqual(row['Stato implementazione'],'Parziale')
+  self.assertEqual(row['Accettazione Joomla'],'Non eseguita')
+  self.assertEqual(row['Criteri completi superati'],'No')
+  self.check()
  def test_cat01_five_core_criteria_closed_without_full_joomla_acceptance(self):
   inventory=json.loads((ROOT/'docs/FUNCTIONAL_CRITERIA_1.0.0.json').read_text())['requirements']
   criteria=inventory['CAT-01']

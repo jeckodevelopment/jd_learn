@@ -2,8 +2,8 @@
   "audited_at": "2026-11-15",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 61.5,
-    "development_evidence_floor_percent": 61.5,
+    "percent": 61.73,
+    "development_evidence_floor_percent": 61.73,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
