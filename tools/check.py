@@ -1163,6 +1163,8 @@ runpy.run_path(str(ROOT/'tests/sec-p2-dependency-gate.py'), run_name='__main__')
 runpy.run_path(str(ROOT/'tests/sec-p2-source-gate.py'), run_name='__main__')
 # SEC-P2: every high/critical first-party finding needs reviewed mitigation evidence.
 runpy.run_path(str(ROOT/'tests/sec-p2-findings-gate.py'), run_name='__main__')
+# SECDEV-07: security evidence and explicitly unclosed scanner/hosting gaps must remain traceable.
+runpy.run_path(str(ROOT/'tests/secdev07-assurance-gate.py'), run_name='__main__')
 
 # UI-07: rendered DOM validation negative fixtures (real Joomla cases run in HTTP CI).
 runpy.run_path(str(ROOT/'tests/frontend-dom-runtime.py'), run_name='__main__')
