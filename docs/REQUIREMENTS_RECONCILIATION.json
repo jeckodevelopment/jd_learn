@@ -5,8 +5,8 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 196,
-      "Completata": 27,
+      "Parziale": 195,
+      "Completata": 28,
       "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
@@ -19,13 +19,13 @@
       "Non eseguita": 239
     },
     "Verifica automatica": {
-      "Superata": 182,
-      "Non eseguita": 67
+      "Superata": 183,
+      "Non eseguita": 66
     }
   },
   "implementation_progress": {
-    "percent": 60.12,
-    "development_evidence_floor_percent": 60.12,
+    "percent": 60.59,
+    "development_evidence_floor_percent": 60.59,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -126,10 +126,10 @@
         "label": "Privacy, sicurezza e compatibilità",
         "requirements": 51,
         "weight_percent": 23.83,
-        "development_evidence_floor_percent": 44.57,
+        "development_evidence_floor_percent": 46.53,
         "manual_acceptance_coverage_percent": 0,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 9,
+        "missing_criteria": 7,
         "unverifiable_criteria": 100,
         "unassessed_criteria": 0
       },
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 60.12
+        "percent": 60.59
       },
       {
         "id": "manual_acceptance",
