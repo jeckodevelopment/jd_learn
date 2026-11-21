@@ -404,7 +404,7 @@ final class ConfigurationDiagnostics
     /** Treat labels as translations, never as arbitrary provider-supplied content. */
     private static function safeLabel(mixed $candidate): string
     {
-        return is_string($candidate) && preg_match('/\\ACOM_JLMS_[A-Z0-9_]+\\z/D', $candidate)
+        return is_string($candidate) && preg_match('/\\A(?:COM_JLMS|PLG_JLMSVIDEO)_[A-Z0-9_]+\\z/D', $candidate)
             ? $candidate : 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL';
     }
 
