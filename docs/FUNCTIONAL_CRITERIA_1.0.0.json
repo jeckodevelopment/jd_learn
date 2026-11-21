@@ -11183,14 +11183,24 @@
       {
         "id": "criterion_01",
         "label": "Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md",
+          "tools/sec_p2_dependency_gate.py",
+          "tools/sec_p2_package_scan.py",
+          "tools/sec_p2_history_scan.py",
+          "tools/sec_p2_source_gate.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Implementato l'hardening software e della supply chain per la 1.0.0: build fail-closed e package dei 12 costituenti, controllo ricorsivo ZIP e dipendenze first-party, verifica sorgenti/action pinned, secret scan della storia Git inclusi file eliminati, patch floor PHP in CI, matrice threat model su logging/storage/provider/CSP e test negativi. Le prove su configurazione e componenti esterni dell'hosting restano nella separata accettazione Joomla; non attestano assenza di finding critici/alti, trattata da criterion_02.",
           "references": [
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+            "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md#Superfici ed evidenze disponibili",
+            "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md#Inventario verificabile del package (21/11/2026)",
+            "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md#Verifica automatizzata della storia Git (21/11/2026)",
+            "tools/sec_p2_dependency_gate.py#def inspect(package: bytes)",
+            "tools/sec_p2_package_scan.py#def scan(data: bytes",
+            "tools/sec_p2_history_scan.py#def scan(root: Path)",
+            "tools/sec_p2_source_gate.py#def inspect(root: Path)"
           ]
         }
       },

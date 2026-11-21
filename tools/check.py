@@ -1154,6 +1154,8 @@ runpy.run_path(str(ROOT/'tests/sec-p2-p3-guard.py'), run_name='__main__')
 
 # SEC-P2: inspect the built distributable including all nested child ZIPs, with negative fixtures.
 runpy.run_path(str(ROOT/'tests/sec-p2-package-scan.py'), run_name='__main__')
+# SEC-P2: keep the distributed third-party dependency surface explicit and closed.
+runpy.run_path(str(ROOT/'tests/sec-p2-dependency-gate.py'), run_name='__main__')
 
 # SEC-P2: reject known secret signatures in shipped code and unpinned workflow actions.
 runpy.run_path(str(ROOT/'tests/sec-p2-source-gate.py'), run_name='__main__')

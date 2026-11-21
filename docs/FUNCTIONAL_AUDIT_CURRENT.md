@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **467**.
-- Mancanti con lacuna accertata: **23**.
+- Implementati: **468**.
+- Mancanti con lacuna accertata: **22**.
 - Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
@@ -71,8 +71,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
-- `SEC-P2/criterion_01` — Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider. La revisione del criterio «Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P2/criterion_02` — nessun finding critico/alto irrisolto. La revisione del criterio «nessun finding critico/alto irrisolto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P3/criterion_01` — Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti. La revisione del criterio «Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1929,6 +1927,14 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5](../docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5)
   - [docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5](../docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5)
   - [docs/SEC_P1_ATTACK_SURFACE_1.0.0.md#L1-L5](../docs/SEC_P1_ATTACK_SURFACE_1.0.0.md#L1-L5)
+- `SEC-P2/criterion_01` — Hardening runtime/supply chain: dipendenze, segreti, logging, package, CSP e integrazioni provider. Implementato l'hardening software e della supply chain per la 1.0.0: build fail-closed e package dei 12 costituenti, controllo ricorsivo ZIP e dipendenze first-party, verifica sorgenti/action pinned, secret scan della storia Git inclusi file eliminati, patch floor PHP in CI, matrice threat model su logging/storage/provider/CSP e test negativi. Le prove su configurazione e componenti esterni dell'hosting restano nella separata accettazione Joomla; non attestano assenza di finding critici/alti, trattata da criterion_02.
+  - [docs/SEC_P2_RELEASE_HARDENING_1.0.0.md#Superfici ed evidenze disponibili](../docs/SEC_P2_RELEASE_HARDENING_1.0.0.md)
+  - [docs/SEC_P2_RELEASE_HARDENING_1.0.0.md#Inventario verificabile del package (21/11/2026)](../docs/SEC_P2_RELEASE_HARDENING_1.0.0.md)
+  - [docs/SEC_P2_RELEASE_HARDENING_1.0.0.md#Verifica automatizzata della storia Git (21/11/2026)](../docs/SEC_P2_RELEASE_HARDENING_1.0.0.md)
+  - [tools/sec_p2_dependency_gate.py#def inspect(package: bytes)](../tools/sec_p2_dependency_gate.py)
+  - [tools/sec_p2_package_scan.py#def scan(data: bytes](../tools/sec_p2_package_scan.py)
+  - [tools/sec_p2_history_scan.py#def scan(root: Path)](../tools/sec_p2_history_scan.py)
+  - [tools/sec_p2_source_gate.py#def inspect(root: Path)](../tools/sec_p2_source_gate.py)
 - `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L'inventario statico bilingue ora include entrambe le chiavi first-party effettivamente usate dai player (velocità e lingua caption) con scopo, durata e valutazione consenso distinta. Il test automatico in CI blocca nuove chiamate dirette localStorage non inventariate. I cookie SDK e le scansioni in browser reale restano verifiche separate SEC-P4/criterion_02 e /criterion_03.
   - [docs/PRIVACY_COOKIES.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES.md)
   - [docs/PRIVACY_COOKIES_EN.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES_EN.md)
