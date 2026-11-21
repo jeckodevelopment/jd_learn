@@ -130,6 +130,11 @@ from sec_p2_package_scan import scan as inspect_distributable_zip
 findings, members = inspect_distributable_zip(data)
 if findings or members < 13:
     raise ValueError('SEC-P2 unsafe or incomplete Joomla package')
+# SEC-P2: enforce a reviewed, first-party-only installed dependency surface.
+from sec_p2_dependency_gate import inspect as inspect_dependency_inventory
+children, installed_files, unknown_dependencies = inspect_dependency_inventory(data)
+if children != 12 or installed_files < 50 or unknown_dependencies:
+    raise ValueError('SEC-P2 unreviewed bundled dependency or package member')
 out=DIST/f'pkg_jlms-{OUTPUT_VERSION}{"" if args.release_version else "-dev"}.zip'
 out.write_bytes(data)
 digest=hashlib.sha256(data).hexdigest();(DIST/'SHA256SUMS.txt').write_text(digest+'  '+out.name+'\n')
