@@ -1,3 +1,5 @@
+- **CAT-02 (21/11/2026):** anteprime pubbliche con dati storici di calendario malformati rifiutate con HTTP 404, in modo coerente con l'outline già protetto. La lettura non divulga corpo della lezione né produce errori applicativi; aggiunta regressione nella suite integrativa Joomla. Nessun criterio promosso né variazione della percentuale di sviluppo.
+
 - **CAT-02 (21/11/2026):** la scheda corso mostra il collegamento di anteprima pubblica solo per lezioni testuali esplicitamente abilitate e disponibili nel programma. La vista ora rispecchia l'endpoint, che già rifiuta preview video e altri tipi di lezione. Regressione statica del contratto frontend/server; nessuna modifica a ACL, contenuti riservati, percentuali o accettazione manuale.
 
 - **LES-02 (21/11/2026):** allineata la sanificazione HTML dei campi editoriali pubblici dei percorsi e dei docenti alla allowlist già usata per la presentazione dei corsi. Anche con filtro Joomla permissivo, script, iframe e attributi attivi non devono persistere; restano consentiti paragrafi, formattazione e link sicuri. Test di integrazione su salvataggio dei due modelli.
