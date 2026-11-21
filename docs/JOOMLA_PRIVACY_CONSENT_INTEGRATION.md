@@ -1,6 +1,6 @@
 # PRIV-CONSENT — Integrazione consensi JD Learn con Joomla Privacy (1.0.0)
 
-Stato: **analisi funzionale e piano approvati, integrazione del registro consensi Joomla da verificare e implementare**. Non dichiarare questa voce completata prima del collaudo Joomla.
+Stato: **integrazione com_privacy ed export/erasure nel software, test di integrazione Joomla disposable in estensione; verifica dei consensi nel registro core, policy del titolare e accettazione Joomla ancora distinte**. Non dichiarare questa voce completata prima del collaudo Joomla.
 
 ## Risultato dell'analisi del core
 
@@ -34,3 +34,7 @@ Riferimenti: https://guide.joomla.org/help-pages-references/privacy/privacy-cons
 5. **Privacy e sicurezza:** usare event subscriber Joomla, query parametrizzate, ACL server-side, no PII in log, niente modifica del core, test su database e Joomla reali.
 
 **Da eseguire nella fase SEC-P3 e prima della 1.0.0.** La stesura del piano non incrementa la percentuale globale né conferma la compatibilità della proiezione nel registro nativo.
+
+## SEC-P3 — Implementazione e verifiche (21/11/2026)
+
+La fonte di verità MAIL-11 rimane `#__jlms_mail_consents` senza duplicazione nel registro del consenso generale del core Joomla. Il plugin Privacy gestisce export del consenso corrente e metadati di consegna, blocchi su dipendenze, rimozione dei token e anonimizzazione terminale; la suite disposable esercita stati pending/confirmed/revoked e due identità indipendenti. Le procedure per amministratore IT/EN e il registro delle retention sono in [SEC_P3_PRIVACY_OPERATIONS_1.0.0.md](SEC_P3_PRIVACY_OPERATIONS_1.0.0.md). Le prove manuali della UI amministrativa, dei permessi di consultazione e delle politiche del titolare restano obbligatorie. Una voce aggiuntiva nel registro interno `#__privacy_consents` non viene forzata né sincronizzata senza API documentata.
