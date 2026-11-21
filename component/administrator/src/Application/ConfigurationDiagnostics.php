@@ -196,6 +196,15 @@ final class ConfigurationDiagnostics
         $add('COM_JLMS_CONFIG_MAIL_FLAGS_LABEL', $enabled > 0,
             'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
             'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED');
+        // Every event has its own localized, actionable status; the summary
+        // alone must not hide an individually disabled notification.
+        foreach ($mailFlags as $key) {
+            $default = in_array($key, $defaultOff, true) ? '0' : '1';
+            $isEnabled = (string) ($params[$key] ?? $default) === '1';
+            $add('COM_JLMS_MAIL_' . strtoupper(substr($key, 5)), $isEnabled,
+                'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
+                'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED');
+        }
         // Catalogue presentation settings are inherited by menu items; this
         // check never implies that a menu override or remote connection was tested.
         $page = (string) ($params['catalog_page_size'] ?? '12');
