@@ -1,3 +1,10 @@
+## 21 novembre 2026 — LCM-03 checkout Joomla, PR #883 integrata
+
+- [PR #883](https://github.com/jeckodevelopment/jd_learn/pull/883) integrata con squash `89c0c93598eb19e6ff81f36d3d0bf718a8b469fc`; [CI 44949645333](https://github.com/jeckodevelopment/jd_learn/actions/runs/44949645333) **4/4 verde** (preflight, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium). Gate CSV verde.
+- [Pacchetto JD-Learn-0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44949645333/artifacts/14724773782): ZIP Joomla interno `pkg_jlms-0.64.21-dev.zip`, SHA-256 riportato dalla build `79046af62df4c146a4d0d4d5a6c021724dcc8b38d33f66058fd3980184cc19e1`; digest distinto dell'archivio GitHub Actions `sha256:55945588047633d8581a9ea943ed48ab67196ba82c4ae465e2af68a2a55b0c83`.
+- `PathwayModel::changeStates()` e `purgeEmpty()` applicano il controllo `checked_out` dopo il lock transazionale della riga, impedendo operazioni altrui su percorsi aperti nell'editor. La prova Joomla controlla checkout altrui, rollback di batch, revisioni intatte, blocco della purga e transizione del titolare.
+- Correzione non incrementale, **61,50%** globale invariato e nessuna accettazione Joomla manuale attribuita. Evidenze di collaudo in `docs/QA_TESTBOOK.md`.
+
 ## 21 novembre 2026 — LCM-03, integrità associazioni nei salvataggi parziali
 
 - [PR #881](https://github.com/jeckodevelopment/jd_learn/pull/881) integrata con squash `c9bdbed5aae6e5acfe511ca236ea29f2c8c1f7e2`; [CI 44948010714](https://github.com/jeckodevelopment/jd_learn/actions/runs/44948010714) **4/4 verde**, inclusi PHP 8.3/MySQL, PHP 8.4/MariaDB, Chromium e gate iniziale; integrità CSV verde.
