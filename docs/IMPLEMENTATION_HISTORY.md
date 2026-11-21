@@ -1,3 +1,10 @@
+## 21 novembre 2026 — LCM-03/04, riferimenti multilingua Joomla nelle purghe
+
+- [PR #885](https://github.com/jeckodevelopment/jd_learn/pull/885) integrata con squash `648145b9d4844166806f6a1b2ce0681d98e60be8`; [CI #44950791597](https://github.com/jeckodevelopment/jd_learn/actions/runs/44950791597) **4/4 verde** (preflight, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium), più gate CSV verde.
+- [Pacchetto JD-Learn-0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44950791597/artifacts/14726080214): ZIP interno `pkg_jlms-0.64.21-dev.zip`, SHA-256 della build `9a79e8dbc1faf4c2b23520cd95b835aefafe368b10041d5b595c320dd97fd4c5`; archivio GitHub Actions digest distinto `sha256:e8b1961c35633b7ecdd016387aa794e5c9dfae7302a568c88ff98550d3c8b7e9`.
+- La purga di percorsi e docenti verifica prima dell'eliminazione le associazioni native `#__associations` della stessa identità e contesto. Il collegamento blocca l'operazione e preserva i record. Le fixture `tests/joomla-pathways.php` e `tests/joomla-teachers.php` verificano il blocco e la cancellazione autorizzata dopo rimozione del collegamento di test.
+- Il controllo copre le associazioni Joomla note, **non tutte le dipendenze di estensioni di terze parti**. Sviluppo comprovato globale **61,50%**, contatori invariati; collaudo Joomla manuale separato e non eseguito.
+
 ## 21 novembre 2026 — LCM-03 checkout Joomla, PR #883 integrata
 
 - [PR #883](https://github.com/jeckodevelopment/jd_learn/pull/883) integrata con squash `89c0c93598eb19e6ff81f36d3d0bf718a8b469fc`; [CI 44949645333](https://github.com/jeckodevelopment/jd_learn/actions/runs/44949645333) **4/4 verde** (preflight, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium). Gate CSV verde.
