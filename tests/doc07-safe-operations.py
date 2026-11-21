@@ -114,6 +114,10 @@ assert "'labelKey' => $safeLabel" in provider_projection
 assert "'key' => $key" in provider_projection
 assert "PluginHelper::importPlugin('jlmsvideo')" in view
 assert "RegisterVideoProvidersEvent::NAME" in view
+assert "// A non-manager must not inspect plugin readiness" in view
+assert "if ($actor->authorise('core.manage', 'com_jlms')) {\n        $registry = new VideoProviderRegistry();" in view
+assert "self::safeLabel($entry['labelKey'] ?? null)" in diagnostics_code
+assert "PLG_JLMSVIDEO" in diagnostics_code
 assert "sendMail(" not in view
 assert "->insert(" not in view and "->update(" not in view and "->delete(" not in view
 assert "->save(" not in view and "->store(" not in view
