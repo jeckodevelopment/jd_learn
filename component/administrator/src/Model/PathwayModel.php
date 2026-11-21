@@ -160,7 +160,7 @@ final class PathwayModel extends AdminModel
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
             }
-            $data['description'] = ComponentHelper::filterText((string) ($data['description'] ?? $record->description ?? ''));
+            $data['description'] = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::html(\n                ComponentHelper::filterText((string) ($data['description'] ?? $record->description ?? ''))\n            );
             $data['catid'] = $categoryId;
             $data['access'] = (int) ($data['access'] ?? $record->access ?? 1);
             $data['language'] = (string) ($data['language'] ?? $record->language ?? '*');
