@@ -1,3 +1,5 @@
+**Regressione di anonimizzazione estesa:** con account A che ha pubblicato/modificato contenuti e riconciliato una mail di B, richiedere la rimozione privacy di A; i riferimenti opzionali `created_by`, `modified_by`, associazione docente/soggetto e `reconciliation_by` devono diventare null, mentre contenuti e recapiti di B restano integri. Ispezionare separatamente gli audit che richiedono un identificativo obbligatorio e registrare la decisione del titolare.
+
 ## SEC-P3 — gate completo software e accettazione separata (21/11/2026)
 
 **Automatico:** `tests/sec-p3-data-inventory.py` confronta le 47 tabelle del DDL installabile con il registro strutturato e fallisce su tabella nuova non classificata, campo retention mancante o duplicati. `tests/joomla-smoke.php` esegue su PHP/MySQL e PHP/MariaDB, con due utenti distinti, export com_privacy del solo soggetto, consenso MAIL-11 nei tre stati, vincoli sulle email in coda, rimozione dei token, anonimizzazione dei diagnostici e invarianza dei dati del secondo utente. Non assumere superamento prima della CI.
