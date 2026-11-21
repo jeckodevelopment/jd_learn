@@ -281,12 +281,13 @@ final class ConfigurationDiagnostics
     /**
      * Diagnose effective inheritance without exposing course/menu identifiers,
      * titles, secrets or raw JSON. The caller is responsible for bounding reads;
-     * incomplete scans are never described as ready.
+     * incomplete scans are never described as ready. Course/menu completeness
+     * is independent: overflow in one source must not downgrade the other.
      *
      * @param list<string|null> $courseParams
      * @param list<array{link:string,params:string}> $menuEntries
      */
-    public static function inheritance(array $courseParams, array $menuEntries, bool $complete): array
+    public static function inheritance(array $courseParams, array $menuEntries, bool $coursesComplete, bool $menusComplete): array
     {
         $courseOverrides = 0;
         $courseInvalid = 0;
@@ -360,7 +361,7 @@ final class ConfigurationDiagnostics
                 }
             }
         }
-        $make = static function (string $label, int $overrides, int $invalid) use ($complete): array {
+        $make = static function (string $label, int $overrides, int $invalid, bool $complete): array {
             // Known invalid values must remain actionable even when the bounded scan is incomplete.
             // Only successful states are downgraded to INCOMPLETE.
             $state = $invalid > 0 ? 'INVALID' : (!$complete ? 'INCOMPLETE' : ($overrides > 0 ? 'OVERRIDES' : 'INHERITED'));
@@ -380,8 +381,8 @@ final class ConfigurationDiagnostics
             ];
         };
         return [
-            $make('COM_JLMS_CONFIG_INHERIT_COURSE_LABEL', $courseOverrides, $courseInvalid),
-            $make('COM_JLMS_CONFIG_INHERIT_MENU_LABEL', $menuOverrides, $menuInvalid),
+            $make('COM_JLMS_CONFIG_INHERIT_COURSE_LABEL', $courseOverrides, $courseInvalid, $coursesComplete),
+            $make('COM_JLMS_CONFIG_INHERIT_MENU_LABEL', $menuOverrides, $menuInvalid, $menusComplete),
         ];
     }
 

@@ -2923,3 +2923,7 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 ### SCR-16 — scansione limitata della diagnostica configurazione (PR #875)
 
 Collaudo Joomla successivo, non gate di sviluppo: accedere alla dashboard con `core.manage` e verificare che un override email per corso o catalogo per menu con valore invalido produca un errore anche se esistono più di 500 record. Se il campione è incompleto ma non contiene errori, deve comparire l'avviso di scansione incompleta, senza dichiarare la configurazione pienamente valida. Inserire oltre 500 menu di altre viste JD Learn: non devono consumare la finestra di scansione delle viste catalogo e categoria. Con utente privo di permesso la diagnostica non deve essere accessibile. Non devono partire email, modifiche di gruppi o pubblicazioni; nessun identificativo, JSON, token o percorso deve apparire in pagina.
+
+### SCR-16 — regressione scansioni indipendenti
+
+Collaudo Joomla successivo: con più di 500 corsi e meno di 500 menu catalogo validi, la diagnosi dei corsi deve essere `INCOMPLETE` e quella dei menu `INHERITED` o `OVERRIDES`; invertire le quantità per l'esito opposto. Aggiungere link a viste con nomi che iniziano con `courses` o `category` ma non corrispondono esattamente: non devono consumare il campione. Verificare separatamente ACL e assenza di azioni esterne o esposizione di configurazioni grezze.
