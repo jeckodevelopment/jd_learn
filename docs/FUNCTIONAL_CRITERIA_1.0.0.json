@@ -5361,36 +5361,45 @@
       {
         "id": "url_filters",
         "label": "Ricerca, filtri e ordinamento persistono in URL, anche back/forward",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Application/CatalogService.php",
-          "tests/joomla-publication.php",
-          "docs/PUBLICATION.md"
+          "component/site/src/Helper/CatalogPagination.php",
+          "component/site/src/View/Courses/HtmlView.php",
+          "component/site/src/View/Category/HtmlView.php",
+          "tests/catalog-pagination.php",
+          "tests/frontend-catalog-options.py"
         ],
         "review": {
-          "reason": "Il catalogo applica filtri server e conserva parametri di navigazione in viste esaminate; non è attestata la persistenza con back/forward per tutti i filtri e ordinamenti del criterio.",
+          "reason": "La ricerca e tutti i filtri supportati sono normalizzati lato server e inviati via form GET nelle viste catalogo e categoria; CatalogPagination registra esplicitamente le sole chiavi ammesse nell'URL dei link Joomla anche sulle pagine successive e nelle sottocategorie. Le URL restano navigabili con la cronologia del browser senza stato di sessione. La fixture PHP verifica la conservazione e l'esclusione dei parametri sconosciuti; l'accettazione manuale Joomla resta non eseguita.",
           "references": [
-            "component/administrator/src/Application/CatalogService.php#L1-L40",
-            "tests/joomla-publication.php#L1-L30",
-            "docs/PUBLICATION.md#L1-L30"
+            "component/site/src/Helper/CatalogPagination.php#setAdditionalUrlParam('filter', $safe)",
+            "component/site/src/View/Courses/HtmlView.php#CatalogPagination::apply(",
+            "component/site/src/View/Category/HtmlView.php#CatalogPagination::apply(",
+            "tests/catalog-pagination.php#SCR-01 filters or catalogue scope lost",
+            "tests/frontend-catalog-options.py#SCR-01: Joomla 5.1+ pagination"
           ]
         }
       },
       {
         "id": "pagination",
         "label": "Cambio filtro torna a pagina uno; default 12 e limiti server",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Application/CatalogService.php",
-          "tests/http-smoke.py",
-          "docs/FRONTEND_CSS.md"
+          "component/site/src/Model/CoursesModel.php",
+          "component/site/src/Helper/CatalogOptions.php",
+          "component/site/src/View/Category/HtmlView.php",
+          "tests/frontend-catalog-options.py",
+          "tests/catalog-pagination.php"
         ],
         "review": {
-          "reason": "Il catalogo dispone di paginazione e limiti lato server, ma non è documentata una verifica completa che cambio filtro riporti a pagina uno e rispetti default 12 e limiti in tutti i percorsi.",
+          "reason": "Il modello CoursesModel applica il limite server configurato con default 12 ed esplicita list.start da limitstart GET con fallback 0. I form GET catalogo e categoria non inviano limitstart al cambio filtro e riavviano la ricerca dalla prima pagina. La paginazione dei corsi e quella delle sottocategorie restano separate e preservano soltanto filtri normalizzati; fixture PHP e gate strutturali verificano reset e vincoli. Collaudo Joomla separato.",
           "references": [
-            "component/administrator/src/Application/CatalogService.php#L1-L40",
-            "tests/http-smoke.py#L1-L30",
-            "docs/FRONTEND_CSS.md#L90-L93"
+            "component/site/src/Model/CoursesModel.php#getInt('limitstart', 0)",
+            "component/site/src/Model/CoursesModel.php#CatalogOptions::get('catalog_page_size')",
+            "component/site/src/Helper/CatalogOptions.php#'catalog_page_size' => '12'",
+            "component/site/src/View/Category/HtmlView.php#CatalogPagination::apply($this->childrenPagination",
+            "tests/frontend-catalog-options.py#Changing filters must start at page one",
+            "tests/catalog-pagination.php#Hidden filter options must not be persisted"
           ]
         }
       },
