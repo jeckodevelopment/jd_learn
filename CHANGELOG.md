@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — verifica e protezioni diagnostiche (21/11/2026):** parametri vuoti dei menu trattati come ereditarietà valida; controllo di tutte le cinque opzioni globali di presentazione catalogo; filtri sui nomi e sulle etichette forniti dai plugin video per non visualizzare valori arbitrari. Test PHP negativi e strutturali, sola lettura, nessun invio o mutazione.
+
 - **SCR-16 — scansioni indipendenti (21/11/2026):** la diagnostica amministrativa distingue l'incompletezza dei corsi da quella dei menu; verifica soltanto i link delle viste catalogo/categoria esatte, esclusi prefissi simili. Fixture PHP e gate strutturali. Nessuna chiamata esterna, mutazione o divulgazione di valori. I criteri complessivi 02–05 non sono promossi senza prova integrale.
 
 - **SCR-16 — diagnostica robusta dei menu (21/11/2026):** gli errori di override già rilevati prevalgono sullo stato di scansione incompleta; la lettura limitata a 500 voci include esclusivamente i menu catalogo/categoria pertinenti. Regressioni PHP e strutturali, nessuna scrittura o connessione esterna. I criteri trasversali SCR-16/02–05 restano da dimostrare integralmente.

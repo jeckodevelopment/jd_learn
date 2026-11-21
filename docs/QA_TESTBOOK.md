@@ -2927,3 +2927,7 @@ Collaudo Joomla successivo, non gate di sviluppo: accedere alla dashboard con `c
 ### SCR-16 — regressione scansioni indipendenti
 
 Collaudo Joomla successivo: con più di 500 corsi e meno di 500 menu catalogo validi, la diagnosi dei corsi deve essere `INCOMPLETE` e quella dei menu `INHERITED` o `OVERRIDES`; invertire le quantità per l'esito opposto. Aggiungere link a viste con nomi che iniziano con `courses` o `category` ma non corrispondono esattamente: non devono consumare il campione. Verificare separatamente ACL e assenza di azioni esterne o esposizione di configurazioni grezze.
+
+### SCR-16 — configurazione completa e campi provider (sviluppo automatico)
+
+Verifica successiva Joomla (non blocca lo sviluppo): salvare un menu catalogo con parametri vuoti e verificare la normale ereditarietà; verificare le cinque impostazioni globali di visualizzazione del catalogo per valori abilitati/disabilitati e valori invalidi; provare un plugin video registrato con etichetta non localizzata e accertare che nessun valore grezzo sia reso in dashboard. Controllare permessi e assenza di attività in uscita all'apertura della dashboard.

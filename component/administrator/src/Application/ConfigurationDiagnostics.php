@@ -226,6 +226,11 @@ final class ConfigurationDiagnostics
         $order = (string) ($params['catalog_default_order'] ?? 'editorial');
         $valid = in_array($page, ['6', '9', '12', '24'], true)
             && in_array($order, ['editorial', 'recent', 'title', 'duration', 'published'], true);
+        foreach (['catalog_show_filters', 'catalog_show_order', 'catalog_show_category',
+            'catalog_show_cover', 'catalog_show_summary'] as $flag) {
+            // These five flags are also global defaults consumed by CatalogOptions.
+            $valid = $valid && in_array((string) ($params[$flag] ?? '1'), ['0', '1'], true);
+        }
         $add('COM_JLMS_CONFIG_CATALOG_LABEL', $valid,
             'COM_JLMS_CONFIG_CATALOG_READY', 'COM_JLMS_CONFIG_CATALOG_INVALID',
             'COM_JLMS_CONFIG_CATALOG_GUIDANCE_READY', 'COM_JLMS_CONFIG_CATALOG_GUIDANCE_INVALID');
@@ -334,11 +339,21 @@ final class ConfigurationDiagnostics
                 || !preg_match('~\\Aindex\\.php\\?option=com_jlms&view=(?:courses|category)(?:&|\\z)~D', $menu['link'])) {
                 continue;
             }
-            try {
-                $params = json_decode((string) ($menu['params'] ?? ''), true, 32, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
+            // Joomla may persist an empty menu params value for inherited defaults.
+            // A blank string is equivalent to {}, not a corrupt override.
+            $rawParams = $menu['params'] ?? '';
+            if ($rawParams === null || (is_string($rawParams) && trim($rawParams) === '')) {
+                $params = [];
+            } elseif (!is_string($rawParams)) {
                 ++$menuInvalid;
                 continue;
+            } else {
+                try {
+                    $params = json_decode($rawParams, true, 32, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    ++$menuInvalid;
+                    continue;
+                }
             }
             if (!is_array($params) || ($params !== [] && array_is_list($params))) {
                 ++$menuInvalid;

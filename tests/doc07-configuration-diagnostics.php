@@ -140,6 +140,17 @@ if ($settingsInvalid[0]['severity'] !== 'error' || $settingsInvalid[1]['severity
     || $settingsInvalid[2]['severity'] !== 'ok' || $settingsInvalid[19]['severity'] !== 'warning') {
     throw new RuntimeException('SCR-16 operational flags or invalid configuration not classified');
 }
+$invalidGlobalCatalog = ConfigurationDiagnostics::operationalSettings(['catalog_show_filters' => 'unexpected']);
+$validGlobalCatalog = ConfigurationDiagnostics::operationalSettings([
+    'catalog_show_filters' => '0', 'catalog_show_order' => '1',
+    'catalog_show_category' => '0', 'catalog_show_cover' => '1',
+    'catalog_show_summary' => '0',
+]);
+if ($invalidGlobalCatalog[19]['severity'] !== 'warning'
+    || $invalidGlobalCatalog[19]['stateKey'] !== 'COM_JLMS_CONFIG_CATALOG_INVALID'
+    || $validGlobalCatalog[19]['severity'] !== 'ok') {
+    throw new RuntimeException('SCR-16 must diagnose every global catalogue presentation flag');
+}
 $settingsConfiguredScan = ConfigurationDiagnostics::operationalSettings([
     'material_scan_required' => 1, 'material_clamd_socket' => '/run/clamav/clamd.sock',
 ]);
@@ -154,7 +165,7 @@ if ($settings[4]['labelKey'] !== 'COM_JLMS_MAIL_MANAGER_REQUEST_ENABLED'
     || $settingsInvalid[12]['severity'] !== 'warning') {
     throw new RuntimeException('SCR-16 must expose individual inherited email notification flags');
 }
-foreach (array_merge($settings, $settingsInvalid, $settingsConfiguredScan) as $check) {
+foreach (array_merge($settings, $settingsInvalid, $settingsConfiguredScan, $invalidGlobalCatalog, $validGlobalCatalog) as $check) {
     if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
         || !in_array($check['severity'], ['ok', 'warning', 'error'], true)) {
         throw new RuntimeException('SCR-16 configuration projection contains unexpected fields');
@@ -209,6 +220,13 @@ try {
     rmdir($videoFixtures);
 }
 $inheritDefault = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, true);
+$inheritBlankMenu = ConfigurationDiagnostics::inheritance(['{}'], [
+    ['link' => 'index.php?option=com_jlms&view=courses', 'params' => ''],
+    ['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '   '],
+], true, true);
+$inheritWrongShape = ConfigurationDiagnostics::inheritance(['{}'], [
+    ['link' => 'index.php?option=com_jlms&view=courses', 'params' => ['not-a-string']],
+], true, true);
 $inheritOverridden = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"enrollment":"disabled","completion":"enabled"}}'],
     [['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '{"catalog_page_size":"24"}']], true, true
@@ -228,7 +246,9 @@ $inheritInvalidOverflow = ConfigurationDiagnostics::inheritance(
 );
 $courseOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], false, true);
 $menuOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, false);
-if ($inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !== 'ok'
+if ($inheritBlankMenu[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
+    || $inheritWrongShape[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INVALID'
+    || $inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !== 'ok'
     || $inheritOverridden[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
     || $inheritOverridden[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
     || $inheritInvalid[0]['severity'] !== 'error' || $inheritInvalid[1]['severity'] !== 'error'
@@ -245,7 +265,7 @@ if ($inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !=
     || $menuOverflowOnly[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE') {
     throw new RuntimeException('SCR-16 course/menu inheritance classification regression');
 }
-foreach ([$inheritDefault, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow, $courseOverflowOnly, $menuOverflowOnly] as $checks) {
+foreach ([$inheritDefault, $inheritBlankMenu, $inheritWrongShape, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow, $courseOverflowOnly, $menuOverflowOnly] as $checks) {
     foreach ($checks as $check) {
         if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
             || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'secret-value')
