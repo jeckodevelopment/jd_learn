@@ -77,4 +77,27 @@ try {
     rmdir($tmpBase . '/public');
     rmdir($tmpBase);
 }
+$requiredTemplates = ['com_jlms.course.completed', 'com_jlms.enrollment.confirmed'];
+$registeredTemplates = [
+    ['template_id' => 'com_jlms.course.completed', 'language' => '*'],
+    ['template_id' => 'com_jlms.enrollment.confirmed', 'language' => '*'],
+    ['template_id' => 'com_jlms.course.completed', 'language' => 'it-IT'],
+];
+$readyTemplates = ConfigurationDiagnostics::mailTemplates($requiredTemplates, $registeredTemplates);
+$missingTemplates = ConfigurationDiagnostics::mailTemplates($requiredTemplates, [$registeredTemplates[0]]);
+$translatedOnly = ConfigurationDiagnostics::mailTemplates($requiredTemplates, [
+    ['template_id' => 'com_jlms.course.completed', 'language' => 'it-IT'],
+    ['template_id' => 'com_jlms.enrollment.confirmed', 'language' => 'en-GB'],
+]);
+$none = ConfigurationDiagnostics::mailTemplates($requiredTemplates, []);
+foreach ([$readyTemplates, $missingTemplates, $translatedOnly, $none] as $diagnostic) {
+    if (array_keys($diagnostic) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+        || str_contains(json_encode($diagnostic, JSON_THROW_ON_ERROR), 'com_jlms.course.completed')) {
+        throw new RuntimeException('SCR-16 mail diagnostics disclose identifiers or unexpected fields');
+    }
+}
+if ($readyTemplates['severity'] !== 'ok' || $missingTemplates['severity'] !== 'error'
+    || $translatedOnly['severity'] !== 'error' || $none['severity'] !== 'error') {
+    throw new RuntimeException('SCR-16 mail default-template detection failed');
+}
 echo "DOC-07: scheduler/provider actionable statuses and privacy-safe projections OK\n";
