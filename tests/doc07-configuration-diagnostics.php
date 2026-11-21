@@ -208,24 +208,26 @@ try {
     }
     rmdir($videoFixtures);
 }
-$inheritDefault = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true);
+$inheritDefault = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, true);
 $inheritOverridden = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"enrollment":"disabled","completion":"enabled"}}'],
-    [['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '{"catalog_page_size":"24"}']], true
+    [['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '{"catalog_page_size":"24"}']], true, true
 );
 $inheritInvalid = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"completion":"untrusted"}}'],
-    [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"secret-value"}']], true
+    [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"secret-value"}']], true, true
 );
 $inheritMalformed = ConfigurationDiagnostics::inheritance(['{malformed'], [
     ['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{bad']
-], true);
-$inheritOverflow = ConfigurationDiagnostics::inheritance(['{"mail_preferences":{"completion":"enabled"}}'], [], false);
+], true, true);
+$inheritOverflow = ConfigurationDiagnostics::inheritance(['{"mail_preferences":{"completion":"enabled"}}'], [], false, false);
 $inheritInvalidOverflow = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"completion":"untrusted"}}'],
     [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"999"}']],
-    false
+    false, false
 );
+$courseOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], false, true);
+$menuOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, false);
 if ($inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !== 'ok'
     || $inheritOverridden[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
     || $inheritOverridden[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
@@ -236,10 +238,14 @@ if ($inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !=
     || $inheritInvalidOverflow[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INVALID'
     || $inheritInvalidOverflow[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INVALID'
     || $inheritInvalidOverflow[0]['severity'] !== 'error'
-    || $inheritInvalidOverflow[1]['severity'] !== 'error') {
+    || $inheritInvalidOverflow[1]['severity'] !== 'error'
+    || $courseOverflowOnly[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE'
+    || $courseOverflowOnly[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
+    || $menuOverflowOnly[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
+    || $menuOverflowOnly[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE') {
     throw new RuntimeException('SCR-16 course/menu inheritance classification regression');
 }
-foreach ([$inheritDefault, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow] as $checks) {
+foreach ([$inheritDefault, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow, $courseOverflowOnly, $menuOverflowOnly] as $checks) {
     foreach ($checks as $check) {
         if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
             || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'secret-value')
