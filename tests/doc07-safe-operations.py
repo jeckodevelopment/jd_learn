@@ -109,14 +109,25 @@ for locale in ("it-IT", "en-GB"):
 provider_projection = (ROOT / "component/administrator/src/Application/DashboardProviderStatus.php").read_text()
 assert "COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL" in provider_projection
 assert "PLG_JLMSVIDEO" in provider_projection
+for locale in ("it-IT", "en-GB"):
+    lang = (ROOT / "component/administrator/language" / locale / "com_jlms.ini").read_text()
+    for key in ("COM_JLMS_PROVIDER_UNVERIFIED", "COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED"):
+        assert len(re.findall(r"^" + key + "=", lang, re.M)) == 1, (locale, key)
 assert "preg_match(" in provider_projection
 assert "'labelKey' => $safeLabel" in provider_projection
 assert "'key' => $key" in provider_projection
-assert "PluginHelper::importPlugin('jlmsvideo')" in view
-assert "RegisterVideoProvidersEvent::NAME" in view
+# Runtime plugin hooks may have side effects and MUST NOT run in diagnostics.
+assert "PluginHelper::importPlugin('jlmsvideo')" not in view
+assert "RegisterVideoProvidersEvent::NAME," not in view
+assert "DashboardProviderStatus::inspectLocal(" in view
+assert "DashboardProviderStatus::summarize(" not in view
+assert "->select($db->quoteName(['element', 'name', 'enabled', 'params']))" in view
+assert "public static function inspectLocal(" in provider_projection
+assert "COM_JLMS_PROVIDER_UNVERIFIED" in provider_projection
+assert "new ProviderDescriptor(" in provider_projection
 assert "// A non-manager must not inspect plugin readiness" in view
 assert "$this->canViewProviders = $actor->authorise('core.manage', 'com_jlms');" in view
-assert "if ($this->canViewProviders) {\n        $registry = new VideoProviderRegistry();" in view
+assert "if ($this->canViewProviders) {\n        // Diagnostic reads local metadata only" in view
 assert "if ($this->canViewProviders) : ?>" in page
 assert "self::safeLabel($entry['labelKey'] ?? null)" in diagnostics_code
 assert "PLG_JLMSVIDEO" in diagnostics_code
