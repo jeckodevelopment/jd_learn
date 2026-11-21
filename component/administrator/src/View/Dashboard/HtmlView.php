@@ -159,6 +159,31 @@ final class HtmlView extends BaseHtmlView
                 $requiredTemplates, $installedTemplates
             );
         }
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            // Bounded metadata-only reads: no learner records, names, email
+            // addresses or raw settings are ever rendered or logged.
+            $courseOptionsQuery = $db->getQuery(true)
+                ->select($db->quoteName('params_json'))
+                ->from($db->quoteName('#__jlms_courses'))
+                ->order($db->quoteName('id') . ' ASC');
+            $courseOptions = $db->setQuery($courseOptionsQuery, 0, 501)->loadColumn();
+
+            $menuOptionsQuery = $db->getQuery(true)
+                ->select($db->quoteName(['link', 'params']))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('client_id') . ' = 0')
+                ->where($db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=%'))
+                ->order($db->quoteName('id') . ' ASC');
+            $menuOptions = array_map(
+                static fn (object $item): array => ['link' => (string) $item->link, 'params' => (string) $item->params],
+                $db->setQuery($menuOptionsQuery, 0, 501)->loadObjectList()
+            );
+            $completeScan = count($courseOptions) <= 500 && count($menuOptions) <= 500;
+            array_push($this->configurationDiagnostics,
+                ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::inheritance(
+                    array_slice($courseOptions, 0, 500), array_slice($menuOptions, 0, 500), $completeScan
+                ));
+        }
         // Visibility is based on current ACL rather than the presence of a dashboard shortcut.
         // No diagnostic here triggers sending, deleting, regenerating or mutating data.
         $this->safeOperations = [];
