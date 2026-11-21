@@ -1,3 +1,10 @@
+## 21 novembre 2026 — SCR-16 diagnostica operativa consolidata, PR #870 integrata
+
+- [PR #870](https://github.com/jeckodevelopment/jd_learn/pull/870), merge `f987d4ce7032a45342bcfc50df181b33ab7f33d8`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44926383789), gate separato CSV verde.
+- [Pacchetto Joomla 0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44926383789/artifacts/14716331066), checksum SHA-256 **ZIP interno verificato** `e82064be06d7972207cc1602a5dd1935b4b0ea8e000fd787d80b40057287e9b9`; wrapper Actions digest `sha256:79477a90c123c67c2a7d4c02d815a990c13ffd2c9b2dd3226fe5088dc2d011bb`.
+- Dashboard read-only: Scheduler, provider video, archivio privato (incl. DOCUMENT_ROOT), template Joomla, antivirus, consegna video locale, attestati, 15 flag notifiche e catalogo con predefiniti ereditabili; output solo chiavi di traduzione IT/EN, severità e guida. Nessuna operazione di controllo apre connessioni o invia comunicazioni.
+- **SCR-16 rimane Parziale** sul registro integrale: non è certificata la copertura dei segreti in ogni form/cache/log o delle integrazioni esterne e non è dimostrato ogni valore effettivo di override menu/corso. Non attribuire accettazione hosting o provider. Contatori 474 implemented / 17 missing / 266 unverifiable, minimo sviluppo 60,87%, manuale invariato. Il merge non implica completamento di tutti i cinque criteri SCR-16.
+
 ## 21 novembre 2026 — SCR-16 diagnostica storage privato, PR #867 integrata
 
 - [PR #867](https://github.com/jeckodevelopment/jd_learn/pull/867) merge squash `eeb4eb138ffdd1d793bacbcdb94ef00a08ad1d38`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44919552427); [gate CSV verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44919552411).
