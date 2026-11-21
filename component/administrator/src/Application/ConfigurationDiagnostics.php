@@ -169,9 +169,13 @@ final class ConfigurationDiagnostics
                 'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED', 'COM_JLMS_CONFIG_SCAN_GUIDANCE_DISABLED');
         }
         $videoMode = (string) ($params['video_delivery_mode'] ?? 'disabled');
+        // Enabled delivery does not imply that private storage and ffprobe exist.
         $add('COM_JLMS_CONFIG_VIDEO_LOCAL_LABEL', $videoMode === 'php_bounded',
             'COM_JLMS_CONFIG_VIDEO_LOCAL_ACTIVE', 'COM_JLMS_CONFIG_VIDEO_LOCAL_DISABLED',
             'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_DISABLED');
+        if ($videoMode === 'php_bounded') {
+            $checks[array_key_last($checks)]['severity'] = 'warning';
+        }
         $add('COM_JLMS_CONFIG_CERTIFICATES_LABEL', (string) ($params['certificate_enabled'] ?? '0') === '1',
             'COM_JLMS_CONFIG_CERTIFICATES_ACTIVE', 'COM_JLMS_CONFIG_CERTIFICATES_DISABLED',
             'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_DISABLED');
@@ -226,6 +230,52 @@ final class ConfigurationDiagnostics
             'COM_JLMS_CONFIG_CATALOG_READY', 'COM_JLMS_CONFIG_CATALOG_INVALID',
             'COM_JLMS_CONFIG_CATALOG_GUIDANCE_READY', 'COM_JLMS_CONFIG_CATALOG_GUIDANCE_INVALID');
         return $checks;
+    }
+
+    /**
+     * Pure, local, read-only preflight for the two requirements of the native
+     * MP4 upload workflow. No ffprobe process is ever started. The runtime
+     * remains the authority for file inspection and HTTP delivery.
+     *
+     * @return list<array{kind:string,labelKey:string,severity:string,stateKey:string,guidanceKey:string}>
+     */
+    public static function localVideoPrerequisites(
+        string $mode, string $root, string $probe,
+        string $siteRoot, string $publicRoot, string $documentRoot = ''
+    ): array {
+        if ($mode !== 'php_bounded') {
+            return [];
+        }
+        $isAbsolute = static fn (string $value): bool =>
+            str_starts_with($value, '/') ||
+            (strlen($value) > 2 && ctype_alpha($value[0]) && $value[1] === ':'
+                && ($value[2] === '/' || $value[2] === chr(92)));
+        $rootValid = $root !== '' && $isAbsolute($root);
+        $storage = $rootValid
+            ? self::storage($root, $siteRoot, $publicRoot, $documentRoot)
+            : ['severity' => 'error'];
+        $readyStorage = $storage['severity'] === 'ok';
+        // VideoFilePolicy requires a Unix absolute executable and proc_open.
+        // No execution, remote call or details of the binary path are exposed.
+        $probeValid = $probe !== '' && str_starts_with($probe, '/')
+            && is_file($probe) && !is_link($probe) && is_executable($probe)
+            && function_exists('proc_open');
+        return [
+            [
+                'kind' => 'video_storage',
+                'labelKey' => 'COM_JLMS_CONFIG_VIDEO_ROOT_LABEL',
+                'severity' => $readyStorage ? 'ok' : 'error',
+                'stateKey' => $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_UNAVAILABLE',
+                'guidanceKey' => $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_UNAVAILABLE',
+            ],
+            [
+                'kind' => 'video_probe',
+                'labelKey' => 'COM_JLMS_CONFIG_VIDEO_PROBE_LABEL',
+                'severity' => $probeValid ? 'warning' : 'error',
+                'stateKey' => $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_UNAVAILABLE',
+                'guidanceKey' => $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNAVAILABLE',
+            ],
+        ];
     }
 
     /** Treat labels as translations, never as arbitrary provider-supplied content. */
