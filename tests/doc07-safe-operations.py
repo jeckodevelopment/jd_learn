@@ -131,6 +131,12 @@ assert "$coursesComplete, $menusComplete" in view
 # Unrelated Joomla component menu links must not consume the 500-row limit.
 assert "index.php?option=com_jlms&view=courses&%" in view
 assert "index.php?option=com_jlms&view=category&%" in view
+assert "catalog_show_filters" in diagnostics_code
+assert "catalog_show_order" in diagnostics_code
+assert "catalog_show_category" in diagnostics_code
+assert "catalog_show_cover" in diagnostics_code
+assert "catalog_show_summary" in diagnostics_code
+assert "$rawParams = $menu['params'] ?? '';" in diagnostics_code
 assert "Known invalid values must remain actionable" in diagnostics_code
 assert "bool $coursesComplete, bool $menusComplete" in diagnostics_code
 assert "$menuInvalid, $menusComplete" in diagnostics_code
