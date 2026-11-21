@@ -78,6 +78,51 @@ foreach ([0, 2, -2] as $inactiveState) {
 $lifecycleRecord=(object)['id'=>$course,'state'=>1];
 $db->updateObject('#__jlms_courses', $lifecycleRecord, 'id');
 migrationExpect($service->preview($actor,$course,$enrollment,$mapping)['blocked']===null,'republished course restores migration eligibility');
+// AUT-04: in-progress quizzes must block migration without creating any target
+// assignment or changing the source, even if a valid preview was already issued.
+$beforeBlockedMigrationCount=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$enrollment)->loadResult();
+$beforeBlockedSource=(array)migrationRow('enrollments',$enrollment);
+$activeAttempt=(object)['enrollment_id'=>$enrollment,'quiz_id'=>2147483000,'attempt_id'=>2147483001];
+$db->insertObject('#__jlms_active_attempts',$activeAttempt);
+try {
+ $attemptPlan=$service->preview($actor,$course,$enrollment,$mapping);
+ migrationExpect($attemptPlan['blocked']==='COM_JLMS_MIGRATION_OPEN_ATTEMPT','open quiz attempt blocks version migration');
+ migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,(int)$beforeBlockedSource['revision'],
+     $mapping,'Open quiz migration denied','4e6d0f21-8c37-4a42-b57a-185fe9d0c001',$attemptPlan['hash'],true),
+     409,'open quiz cannot be migrated even after explicit confirmation');
+ migrationExpect((array)migrationRow('enrollments',$enrollment)===$beforeBlockedSource,'open-quiz denial preserves source enrollment exactly');
+ migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$enrollment)->loadResult()===$beforeBlockedMigrationCount,
+     'open-quiz denial does not create migration records');
+} finally {
+ $db->setQuery('DELETE FROM #__jlms_active_attempts WHERE enrollment_id='.(int)$enrollment.' AND quiz_id=2147483000')->execute();
+}
+migrationExpect($service->preview($actor,$course,$enrollment,$mapping)['blocked']===null,'closing quiz attempt restores migration eligibility');
+// A destination edition at capacity must also fail without partial migration.
+// Use capacity zero on the disposable edition and restore the original setting.
+$destinationEdition=(int)$plan['target_edition_id'];
+$editionBefore=$db->setQuery('SELECT capacity FROM #__jlms_editions WHERE id='.$destinationEdition)->loadResult();
+$db->setQuery('UPDATE #__jlms_editions SET capacity=0 WHERE id='.$destinationEdition)->execute();
+try {
+ $fullPlan=$service->preview($actor,$course,$enrollment,$mapping);
+ migrationExpect($fullPlan['blocked']==='COM_JLMS_MIGRATION_EDITION_FULL','full target edition blocks migration');
+ migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,(int)$beforeBlockedSource['revision'],
+     $mapping,'Edition full migration denied','5e6d0f21-8c37-4a42-b57a-185fe9d0c001',$fullPlan['hash'],true),
+     409,'confirmed migration cannot bypass edition capacity');
+ migrationExpect((array)migrationRow('enrollments',$enrollment)===$beforeBlockedSource,'capacity denial preserves source enrollment');
+} finally {
+ $db->setQuery('UPDATE #__jlms_editions SET capacity=' . ($editionBefore===null?'NULL':(int)$editionBefore)
+     .' WHERE id='.$destinationEdition)->execute();
+}
+migrationExpect($service->preview($actor,$course,$enrollment,$mapping)['blocked']===null,'restored edition capacity re-enables migration');
+// Saved equivalences can be used only by explicitly selecting that preview mode.
+$approved=(object)['source_lesson_id'=>$lesson,'target_lesson_id'=>$targetLesson,
+ 'policy_json'=>'{"transfer":"completion_only"}','approved_by'=>$uid,'approved_at'=>gmdate('Y-m-d H:i:s')];
+$db->insertObject('#__jlms_version_equivalences',$approved);
+$savedPlan=$service->preview($actor,$course,$enrollment,[],true);
+migrationExpect($savedPlan['mapping']===$mapping && count($savedPlan['transfers'])===1,
+    'saved equivalence maps exactly one completed lesson when explicitly requested');
+migrationExpect($service->preview($actor,$course,$enrollment,[],false)['transfers']===[],
+    'saved equivalences are never applied implicitly');
 $beforeProgress=(array)$db->setQuery('SELECT * FROM #__jlms_lesson_progress WHERE enrollment_id='.$enrollment.' AND lesson_id='.$lesson)->loadObject();
 $sourceBefore=migrationRow('enrollments',$enrollment);$key='2e6d0f21-8c37-4a42-b57a-185fe9d0c001';
 migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,(int)$sourceBefore->revision,$mapping,'Learner requested transfer',$key,str_repeat('0',64),true),409,'stale preview hash prevents any migration write');
