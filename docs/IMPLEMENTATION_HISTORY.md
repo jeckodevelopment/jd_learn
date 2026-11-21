@@ -1,3 +1,10 @@
+## 21 novembre 2026 — LCM-03, integrità associazioni nei salvataggi parziali
+
+- [PR #881](https://github.com/jeckodevelopment/jd_learn/pull/881) integrata con squash `c9bdbed5aae6e5acfe511ca236ea29f2c8c1f7e2`; [CI 44948010714](https://github.com/jeckodevelopment/jd_learn/actions/runs/44948010714) **4/4 verde**, inclusi PHP 8.3/MySQL, PHP 8.4/MariaDB, Chromium e gate iniziale; integrità CSV verde.
+- [Pacchetto installabile JD-Learn-0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44948010714/artifacts/14724820789), SHA-256 ZIP Joomla interno `86b3ee850802a197114793cb0bf287e99e2a25a278117d8ba2f49e840ba04ff3` riportato dalla build verificata; digest **archivio Actions** `sha256:5ffd549559a8f93fc8f3af95d0798ccc8c373402c82ca596bc9ecd87d447f532` (non intercambiabile con il digest ZIP interno).
+- `PathwayModel::save()` conserva le relazioni se l'input editoriale non include `courses`; una lista vuota esplicita le rimuove, senza alterare i corsi. `tests/joomla-pathways.php` verifica entrambe le semantiche e ripristina i collegamenti prima del test di upgrade.
+- Registro canonico LCM-03 aggiornato con PR #881 senza nuove promozioni: **61,50%** di sviluppo globale documentato; collaudo manuale Joomla non eseguito e distinto dalla CI.
+
 ## 21 novembre 2026 — SCR-16 criterion_01 riconciliato come implementato nel software
 
 - Evidenze: dashboard consolidata PR #867, #869, #870, test `tests/doc07-configuration-diagnostics.php` e `tests/doc07-safe-operations.py`; [CI #44926383789](https://github.com/jeckodevelopment/jd_learn/actions/runs/44926383789) 4/4 verde, run di integrità CSV associato.
