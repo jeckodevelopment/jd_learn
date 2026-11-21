@@ -85,6 +85,7 @@ jobs:
           python3 tests/core-17-actionlog.py
           python3 tests/sta-02-start-window.py
           python3 tests/life-01-purge-preview.py
+          php tests/aut-les-field-copy-boundary.php
           php tests/course-message-idempotency.php
           php tests/scheduler-guidance.php
           php tests/doc07-configuration-diagnostics.php
