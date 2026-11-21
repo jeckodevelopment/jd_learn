@@ -158,7 +158,22 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
             $consentDomain->addItem($this->createItemFromArray((array) $consent));
         }
 
-        $event->addResult([$enrollmentDomain, $requestDomain, $progressDomain, $attemptDomain, $answerDomain, $certificateDomain, $consentDomain]);
+        // Export only the recipient's delivery metadata; never disclose raw template
+        // variables, transport errors, tokens or other recipients' information.
+        $mailDomain = $this->createDomain('jdlearn_mail_deliveries', 'plg_privacy_jdlearn_domain_mail_deliveries');
+        $mailQuery = $db->createQuery()
+            ->select([
+                $db->quoteName('template_id'), $db->quoteName('state'),
+                $db->quoteName('created_at'), $db->quoteName('sent_at'),
+            ])
+            ->from($db->quoteName('#__jlms_mail_queue'))
+            ->where($db->quoteName('recipient_user_id') . ' = :userId')
+            ->bind(':userId', $user->id);
+        foreach ($db->setQuery($mailQuery)->loadObjectList() as $delivery) {
+            $mailDomain->addItem($this->createItemFromArray((array) $delivery));
+        }
+
+        $event->addResult([$enrollmentDomain, $requestDomain, $progressDomain, $attemptDomain, $answerDomain, $certificateDomain, $consentDomain, $mailDomain]);
     }
 
     public function onPrivacyCanRemoveData(CanRemoveDataEvent $event): void
@@ -209,6 +224,7 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 ->set($db->quoteName('recipient_consent_at') . ' = NULL')
                 ->set($db->quoteName('template_data') . " = '{}'")
                 ->set($db->quoteName('reconciliation_note') . ' = NULL')
+                ->set($db->quoteName('last_error') . ' = NULL')
                 ->set($db->quoteName('reconciliation_by') . ' = NULL')
                 ->where($db->quoteName('recipient_user_id') . ' = ' . $userId)
                 ->where($db->quoteName('state') . " NOT IN ('pending','retry','sending')"))->execute();
