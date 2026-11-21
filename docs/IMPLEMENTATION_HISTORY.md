@@ -1,3 +1,10 @@
+## 21 novembre 2026 — SECDEV-07 gate sintattico multi-linguaggio (PR #856)
+
+- **PR integrata:** https://github.com/jeckodevelopment/jd_learn/pull/856; merge squash `1e64bfb89857aec7adeb68a7d15fb50e61a84b9f`, head verificato `2615fc93a9503e4fa3ead8084d2a7b08ed3b73cb`.
+- **CI completa 4/4 verde:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44907541009 (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6); fixture positive/negative Python/JavaScript superate.
+- **Artefatto scaricabile:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44907541009/artifacts/14708323269 — wrapper `JD-Learn-0.64.19-dev`, SHA-256 del **wrapper Actions** `8e327f9afdb0f9842475f4b096e1a464892de6611f4b4b68e948c7e005f458c0`; checksum dello ZIP Joomla interno **non verificato qui** (non confondere i due).
+- Nessuna modifica runtime/versione; **nessuna promozione** SECDEV-07/criterion_02, che resta missing fino a SAST/stile/SCA completi. Minimo sviluppo comprovato **60,69%** (472/18/267); collaudo Joomla avviato 4,67%, accettato 0%, invariati.
+
 ## 21 novembre 2026 — SEC-P2 sviluppo COMPLETATO, review findings (PR #848)
 
 ## 21/11/2026 — SECDEV-07/criterion_01 processo sicurezza verificabile COMPLETATO (PR #854)
