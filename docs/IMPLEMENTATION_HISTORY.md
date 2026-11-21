@@ -1,3 +1,11 @@
+## 21 novembre 2026 — AUT-04/LES-01, copia campi nativi senza troncamento — PR #861 integrata
+
+- **Commit di merge:** `8cbaf5ba3742a1bb8eed310364adecff81d2d905`; [PR #861](https://github.com/jeckodevelopment/jd_learn/pull/861), head `2ae068a1ed15c74fd97f7d2f0a16f554aaec442c`.
+- **CI completa:** [run 44912303968](https://github.com/jeckodevelopment/jd_learn/actions/runs/44912303968), 4/4 success (preflight con fixture 0/1/999/1000/1001, Joomla PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium); [gate CSV 44912303982](https://github.com/jeckodevelopment/jd_learn/actions/runs/44912303982).
+- **Pacchetto di sviluppo:** [JD-Learn-0.64.20-dev, Actions artifact 14711005135](https://github.com/jeckodevelopment/jd_learn/actions/runs/44912303968/artifacts/14711005135). SHA-256 **wrapper Actions**: `622de2c1c98abceb988915fb5b10bb8e2af993618c9178ffbfe299f45cc28c69`. Il digest dello ZIP Joomla interno non è attestato da questa riconciliazione.
+- **Effetto funzionale:** copia lesson fields non tronca tacitamente gli oltre 1.000 valori; se troppi, fallisce prima di scrivere i valori. Regola versione PATCH `0.64.20-dev` applicata a package, componente, WAM e README. Residui AUT-01/04, LCM e LES da chiudere con ulteriori implementazioni/prove; **nessuna promozione impropria di criteri**.
+- **Contatori:** minimo sviluppo 60,78% (473 implemented/17 missing/267 unverifiable); manuale 4,67% avviato/0% accettato, invariati.
+
 ## 21 novembre 2026 — AUT-04 / LES-01 — copia lezione senza troncamento silenzioso
 
 - `CourseVersionCopy::copyLessonFields()` ora verifica il numero di record nativi `#__fields_values` restituiti prima di copiarli: se supera 1.000, la duplicazione fallisce invece di perdere i valori oltre il limite.
