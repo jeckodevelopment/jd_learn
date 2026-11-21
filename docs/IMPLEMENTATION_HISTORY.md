@@ -1,3 +1,10 @@
+## 21 novembre 2026 — SCR-16 diagnostica storage privato, PR #867 integrata
+
+- [PR #867](https://github.com/jeckodevelopment/jd_learn/pull/867) merge squash `eeb4eb138ffdd1d793bacbcdb94ef00a08ad1d38`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44919552427); [gate CSV verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44919552411).
+- [Pacchetto installabile JD-Learn-0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44919552427/artifacts/14713442715). SHA-256 **ZIP Joomla interno** `cd823ea7ca6d04da80d101ba50a5e7409819f2612981fc0a63dee3a1570c5ea2`, verificato contro `SHA256SUMS.txt`; digest **wrapper Actions** `sha256:a7394fe083b594614c843c13cfb56da0874b232fcee3bd4863340f31a115ded8`.
+- La dashboard ora presenta lo stato locale dello storage privato e il rimedio IT/EN senza percorsi esposti, scritture o probe. Test di regressione e ACL nel codice; accettazione hosting/Joomla manuale separata.
+- **SCR-16 resta Parziale**; contatori dello sviluppo **474 implemented / 17 missing / 266 unverifiable**, minimo 60,87%, invariati. Accettazione manuale 4,67% avviata / 0% completa invariata. Non applicato bump SemVer.
+
 ## 21 novembre 2026 — LES-03: compatibilità storage Windows, PR #865 integrata
 
 - [PR #865](https://github.com/jeckodevelopment/jd_learn/pull/865), merge `55e5f48b55dc4ed1536ab23bf12f87be87696427`. [CI completa 4/4](https://github.com/jeckodevelopment/jd_learn/actions/runs/44917464916); [gate CSV](https://github.com/jeckodevelopment/jd_learn/actions/runs/44917464903) verde.
