@@ -1,3 +1,13 @@
+## SECDEV-07/02 — Scanner riproducibile (candidato, 21/11/2026)
+
+La CI esegue **Semgrep Community Edition 1.186.0** con regole locali versionate in `security/secdev07-semgrep.yml`, `--metrics=off`, per PHP, JavaScript e Python di componenti, librerie, plugin, package, tool, script e test. I controlli bloccano costrutti di esecuzione dinamica, deserializzazione PHP, shell string execution e alcune forme di iniezione HTML. La suite `tests/secdev07-sast.py --self-test` verifica tre esempi pericolosi e tre casi sicuri prima della scansione reale: scanner mancante, crash, configurazione errata o risultati non interpretabili bloccano il preflight. Nessun servizio cloud di scanning o chiave API è necessario.
+
+**Stile e analisi sintattica:** Ruff 0.14.6 controlla regole di errore E4/E7/E9 sui Python; il gate preesistente valida sintassi Python e JavaScript su tutti i sorgenti Git, lint PHP 8.3/8.4 e diff whitespace.
+
+**Supply chain:** il builder, `tests/sec-p2-dependency-gate.py` e `tests/sec-p2-source-gate.py` controllano tutte le 12 estensioni ZIP distribuite, assenza di dependency manager/vendor inattesi, segreti nel codice distribuito, SHA dei workflow, insieme al controllo storico SEC-P2. Non esistono librerie npm/Composer vendorizzate nello ZIP. Le dipendenze della *piattaforma* (Joomla, PHP, DB, SDK e scanner di test) sono fuori dal pacchetto e restano vincolo di rilascio.
+
+**Limiti:** le regole Semgrep locali sono una scansione SAST multi-linguaggio di controlli selezionati, non una prova dell'assenza di qualunque vulnerabilità, né un audit dei pacchetti della piattaforma. I risultati della CI e l'inventario dipendenze devono essere verificati prima di aggiornare `SECDEV-07/criterion_02`; nessuna promozione e nessuna percentuale modificata per la sola apertura della PR.
+
 # SECDEV-07 — Processo di assurance e tracciabilità dei controlli di sicurezza
 
 **Baseline applicativa:** JD Learn 0.64.19-dev, requisiti 1.0.0. Questa è una procedura verificabile per il **software distribuito**, non una certificazione OWASP, una scansione completa di sicurezza o una verifica del sito Joomla di produzione.
