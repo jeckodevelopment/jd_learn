@@ -1,3 +1,10 @@
+## 21 novembre 2026 — LCM-04, blocco della purga per account Joomla collegati
+
+- [PR #889](https://github.com/jeckodevelopment/jd_learn/pull/889) integrata su `main` con squash `b725b47b40210cffbfcb20421cc029e40932b88d`; [CI #44955053271](https://github.com/jeckodevelopment/jd_learn/actions/runs/44955053271) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6) e controllo CSV verde.
+- [Pacchetto JD-Learn-0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44955053271/artifacts/14726583923): ZIP Joomla interno `pkg_jlms-0.64.21-dev.zip`, SHA-256 della build `a3d374b0c6d703c444bd5513040a3436001fca6027b72bd4d5bb0ae58b1a2e54`; digest distinto dell'archivio Actions `sha256:b8b208814da82ef85def6a4b2ae2a234f53f2358593f07edff636f8bfc7ef57d`.
+- `TeacherModel::purgeUnreferenced()` ora blocca la cancellazione definitiva se `user_id` collega il profilo a qualsiasi account Joomla, compreso un account bloccato e anche senza assegnazioni ai corsi. La fixture `tests/joomla-teachers.php` impiega un account diverso dall'operatore di purga, prova il blocco indipendente dallo stato dell'operatore e conserva account/profilo. Il solo record disposable viene scollegato esplicitamente prima della purga protetta dalle altre dipendenze.
+- Miglioramento conservativo del requisito esistente: implementazione globale **61,50%** invariata; test manuale Joomla rimane separato e non eseguito.
+
 ## 21 novembre 2026 — LCM-03, checkout nel salvataggio editoriale dei percorsi
 
 - [PR #887](https://github.com/jeckodevelopment/jd_learn/pull/887) integrata su `main` con squash `ab398b32222fb71580a69650e94186801e3d72a0`; [CI #44952684717](https://github.com/jeckodevelopment/jd_learn/actions/runs/44952684717) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6), integrità CSV verde.
