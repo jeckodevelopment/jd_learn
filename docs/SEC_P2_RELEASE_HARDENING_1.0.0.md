@@ -6,6 +6,7 @@
 
 | Controllo | Evidenza implementativa | Rischio residuo / condizione di chiusura |
 |---|---|---|
+| Dipendenze incluse e inventario | `tools/sec_p2_dependency_gate.py` + fixture `tests/sec-p2-dependency-gate.py`: inventario deterministico dei 12 child ZIP, blocco di folder vendor/node_modules/third-party, lockfile non recensiti e librerie binarie (PHP PHAR, JAR, WASM ecc.), gate nel builder dev e stabile | La distribuzione Joomla resta codice primo-party; dipendenze **di piattaforma** PHP/Joomla/DB/ClamAV/ffprobe e SDK remoti non sono contenute nel ZIP e richiedono revisioni versionate separate |
 | Package e segreti distribuiti | `tools/sec_p2_package_scan.py`: ZIP Joomla e 12 costituenti, traversal, symlink, collisioni nomi case-insensitive, drive Windows, chiavi e pattern token, budget cumulativo di decompressione/entry anche negli archivi annidati; `tests/sec-p2-package-scan.py` negative fixtures | Il confronto con advisory delle librerie e uno scanner completo esterno restano necessari sulla release candidata |
 | Sorgente runtime e workflow | `tools/sec_p2_source_gate.py` e fixture test: PHP/XML/JS/INI/SQL/CSS/JSON distribuiti; firme chiavi/token; GitHub Actions vincolate a SHA; `requirements-csv.yml` corretto | Il gate a pattern non prova assenza di segreti non standard, rotazione di credenziali o sicurezza dell'intera storia Git |
 | Execution e remote sinks | `tests/sec-p1-systematic-source-gate.py` censisce process runner ffprobe e trasporto HTTPS Cloudflare; controller e plugin con gate statici | Eseguire prove network/TLS e negative test reali per host provider su versioni supportate |
@@ -31,6 +32,12 @@ La scansione SEC-P2 è ora un **vincolo del builder**, eseguito su `data` prima 
 La CI della PR esegue `tests/sec-p2-history-scan.py` e `tools/sec_p2_history_scan.py` sull'intera cronologia raggiungibile dai riferimenti fetchati (`fetch-depth: 0`). Ispeziona i blob storici, anche eliminati, sotto `component/`, `plugins/`, `libraries/`, `packages/` e `.github/workflows/`; rileva firme note di chiavi private, credenziali AWS/GitHub e impedisce la prosecuzione se compaiono finding o blob non ispezionabili. I log espongono soltanto conteggi, mai nomi o payload. I test includono una credenziale fittizia prima committata, poi sovrascritta ed eliminata, e una fixture workflow. Questa è una scansione di firme note: non prova l'assenza di credenziali di formato arbitrario, né sostituisce l'eventuale rotazione dei segreti compromessi. La verifica non richiede interventi sul sito Joomla.
 
 **Separazione dei gate:** le verifiche su hosting, CSP e logs reali rimangono nel collaudo e nel gate di rilascio. Quelle verifiche non impediscono di completare separatamente l'implementazione dei controlli automatici già sviluppati, quando il criterio ha evidenze sufficienti.
+
+## Inventario verificabile del package (21/11/2026)
+
+Il controllo automatizzato `tools/sec_p2_dependency_gate.py` legge il package Joomla **in memoria**, enumera esattamente i 12 costituenti previsti, ispeziona ogni archivio figlio e rifiuta automaticamente dipendenze vendorizzate non censite, manifest/lockfile package-manager e moduli binari aggiunti senza modifica esplicita del gate. È richiamato da `tools/build.py` prima della scrittura dell'artefatto e dal test strutturale `tools/check.py`. Le fixture negative includono pacchetti aggiuntivi, file vendor, node_modules, composer.lock, package-lock.json e binari WASM.
+
+La policy attuale è **first-party-only**: ogni nuova dipendenza vendorizzata deve motivare una modifica specifica dell'inventario e la review degli advisory prima di essere distribuita. Il package non include dipendenze Composer/npm runtime, ma Joomla, PHP, database, ffprobe, ClamAV e gli SDK esterni non sono compresi in questa garanzia; la versione effettiva dell'hosting e le relative CVE restano parte del gate di accettazione. Le versioni pubblicate PHP 8.3.37 e 8.4.28 del 19/11/2026 sono già applicate come soglia in CI. Una CI verde non prova assenza di finding sull'infrastruttura dell'utente.
 
 ## Cosa collaudare su Joomla
 
