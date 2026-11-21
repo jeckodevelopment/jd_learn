@@ -584,26 +584,26 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
   - [tests/joomla-curriculum-builder.php#L1-L30](../tests/joomla-curriculum-builder.php#L1-L30)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SCR-16/criterion_01` — Configurazione/diagnostica. Esistono diagnostiche di configurazione per mail, provider e storage, ma non una vista completa che verifichi tutte le dipendenze e i controlli iniziali previsti.
-  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
-  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
-  - [docs/MATERIALS.md#L3-L5](../docs/MATERIALS.md#L3-L5)
-- `SCR-16/criterion_02` — Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali. Parametri globali e configurazioni native esistono per diverse aree; non è attestata un'unica copertura di valori ereditati, provider, template, task, storage e controlli iniziali.
+- `SCR-16/criterion_01` — Configurazione/diagnostica. La dashboard unifica controlli read-only per Scheduler, provider video, storage privato, modelli email e opzioni operative. Rimangono da dimostrare la copertura di tutte le integrazioni installate e i prerequisiti specifici dell'hosting.
+  - [component/administrator/src/View/Dashboard/HtmlView.php#L100-L155](../component/administrator/src/View/Dashboard/HtmlView.php#L100-L155)
+  - [component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230)
+  - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
+- `SCR-16/criterion_02` — Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali. Sono disponibili parametri globali, stati provider, modelli email, task, storage, antivirus, attestati, video locali e notifiche individuali. La configurazione effettiva di ogni override menu/corso non è completamente verificata.
   - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
-  - [docs/MAIL_TEMPLATES.md#L1-L13](../docs/MAIL_TEMPLATES.md#L1-L13)
-  - [docs/MATERIALS.md#L3-L5](../docs/MATERIALS.md#L3-L5)
-- `SCR-16/criterion_03` — Mostrare funzionalità non configurate con ragione e istruzioni. Alcune guide indicano esplicitamente prerequisiti e limiti quando una funzione non è configurata; la copertura di tutte le funzioni inattive con causa e istruzioni non è documentata come completa.
-  - [docs/VIDEO.md#L11-L19](../docs/VIDEO.md#L11-L19)
-  - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SCR-16/criterion_04` — nessuna credenziale leggibile. Il provider dei segreti e i campi di credenziali selezionati sono server-side; non è dimostrata l'assenza di valori leggibili in ogni form, risposta diagnostica, cache e log del componente.
+  - [component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230)
+  - [component/site/src/Helper/CatalogOptions.php#L1-L60](../component/site/src/Helper/CatalogOptions.php#L1-L60)
+- `SCR-16/criterion_03` — Mostrare funzionalità non configurate con ragione e istruzioni. I controlli amministrativi espongono motivi e istruzioni IT/EN per provider, task, template email, storage, antivirus, video locali, attestati e notifiche disabilitate. La copertura di tutte le funzioni opzionali di estensioni esterne non è dimostrata.
+  - [component/administrator/tmpl/dashboard/default.php#L100-L153](../component/administrator/tmpl/dashboard/default.php#L100-L153)
+  - [tests/doc07-safe-operations.py#L40-L96](../tests/doc07-safe-operations.py#L40-L96)
+  - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
+- `SCR-16/criterion_04` — nessuna credenziale leggibile. La nuova proiezione diagnostica restituisce solo chiavi di traduzione e gravità, senza stampare percorsi o segreti. L'assenza di credenziali leggibili in ogni altro form, log e cache dell'estensione non è ancora provata esaustivamente.
+  - [component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230)
+  - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
   - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
-  - [tests/cloudflare.php#L1-L30](../tests/cloudflare.php#L1-L30)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
-- `SCR-16/criterion_05` — Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore. Le prove disponibili coprono configurazioni e metadati provider; non è attestata una matrice completa che escluda effetti esterni reali da ogni controllo di connessione e diagnostica.
-  - [docs/CLOUDFLARE_STREAM.md#L1-L25](../docs/CLOUDFLARE_STREAM.md#L1-L25)
-  - [tests/joomla-video-duration.php#L77-L93](../tests/joomla-video-duration.php#L77-L93)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
+- `SCR-16/criterion_05` — Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore. La diagnostica attuale è locale, protetta da ACL e senza form di invio, mutazioni o sonde di connessione. Una verifica esaustiva degli effetti di eventuali plugin esterni e di tutte le superfici di controllo connessione resta distinta.
+  - [component/administrator/src/View/Dashboard/HtmlView.php#L100-L155](../component/administrator/src/View/Dashboard/HtmlView.php#L100-L155)
+  - [tests/doc07-safe-operations.py#L40-L96](../tests/doc07-safe-operations.py#L40-L96)
+  - [docs/QA_TESTBOOK.md#L1-L15](../docs/QA_TESTBOOK.md#L1-L15)
 - `LIFE-02/criterion_01` — Categoria e docenti. Categorie e docenti sono integrati con i modelli nativi e profili associati, ma la copertura completa di assegnazioni/consultazioni per tutte le categorie e i ruoli previsti non è stata attestata.
   - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
   - [component/administrator/src/Application/TeacherProfiles.php#L1-L40](../component/administrator/src/Application/TeacherProfiles.php#L1-L40)
