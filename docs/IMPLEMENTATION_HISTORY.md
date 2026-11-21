@@ -1,3 +1,10 @@
+## 21 novembre 2026 — LES-02, sanificazione HTML pubblica uniforme
+
+- [PR #891](https://github.com/jeckodevelopment/jd_learn/pull/891) integrata su `main` con squash `840bc037f8dd4203db492fcd8f3be1409e726774`; [CI #44957653022](https://github.com/jeckodevelopment/jd_learn/actions/runs/44957653022) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6), integrità CSV verde.
+- [Pacchetto JD-Learn-0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44957653022/artifacts/14728063638): ZIP interno `pkg_jlms-0.64.21-dev.zip`, SHA-256 build `f5443796b58b6d51eb53ccaacad1d2d2a2d366437425cd09ae5c49ba908a1db7`; digest archivio Actions distinto `sha256:b15db71f7616fbb393fe4c5a93fd91a2d25da1a656b7e96fa68e9ce71d2cfa04`.
+- I campi pubblici `PathwayModel::save()` (descrizione) e `TeacherModel::save()` (biografia) applicano la allowlist HTML condivisa `CoursePresentation::html()` dopo `ComponentHelper::filterText()`. Le prove `tests/joomla-pathways.php`, `tests/joomla-teachers.php` e `tests/http-smoke.py` validano sanitizzazione di script/iframe/attributi di evento e resa pubblica, preservando formattazione ammessa.
+- La regressione sul test HTTP legacy è stata corretta per rispecchiare la sanificazione già al salvataggio; la CI finale è verde. **61,50%** implementazione globale invariata; collaudo Joomla manuale e audit di plugin terzi separati.
+
 ## 21 novembre 2026 — LCM-04, blocco della purga per account Joomla collegati
 
 - [PR #889](https://github.com/jeckodevelopment/jd_learn/pull/889) integrata su `main` con squash `b725b47b40210cffbfcb20421cc029e40932b88d`; [CI #44955053271](https://github.com/jeckodevelopment/jd_learn/actions/runs/44955053271) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6) e controllo CSV verde.
