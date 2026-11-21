@@ -62,6 +62,28 @@ def inspect(root: Path, ledger: dict) -> tuple[int, int]:
 def main():
     ledger = json.loads(LEDGER.read_text(encoding="utf-8"))
     source, external = inspect(ROOT, ledger)
+    # Negative regressions: an unresolved high finding must not pass, and
+    # an unverified hosted risk must never be silently marked mitigated.
+    import copy
+    broken = copy.deepcopy(ledger)
+    next(f for f in broken["findings"] if f["id"] == "MAILQUEUE-GLOBAL-ACL")["status"] = "unresolved"
+    assert inspect(ROOT, broken)[0] == 1
+    broken = copy.deepcopy(ledger)
+    next(f for f in broken["findings"] if f["id"] == "VIDEO-LEGACY-STORAGE")["status"] = "mitigated"
+    try:
+        inspect(ROOT, broken)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Unverified deployment risk accepted")
+    broken = copy.deepcopy(ledger)
+    next(f for f in broken["findings"] if f["id"] == "VIDEO-ROOT")["checks"][0]["contains"] = ["NO_SUCH_GUARD"]
+    try:
+        inspect(ROOT, broken)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("Missing mitigation guard accepted")
     print(f"SEC-P2 reviewed: {len(ledger['findings'])} findings, "
           f"{source} unresolved critical/high source, "
           f"{external} externally gated findings")
