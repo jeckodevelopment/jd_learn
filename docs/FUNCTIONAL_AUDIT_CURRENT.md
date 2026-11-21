@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **481**.
-- Mancanti con lacuna accertata: **17**.
+- Implementati: **483**.
+- Mancanti con lacuna accertata: **15**.
 - Esaminati con esito non verificabile: **259**.
 - Da esaminare: **0**.
 
@@ -43,12 +43,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
   - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
-- `DOC-04/criterion_02` — Contratti plugin e architettura database documentati. La revisione del criterio «Contratti plugin e architettura database documentati» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
-  - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
-- `DOC-04/criterion_04` — Procedure tecniche riproducibili e versionate. La revisione del criterio «Procedure tecniche riproducibili e versionate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
-  - [docs/CI_POLICY.md#L1-L25](../docs/CI_POLICY.md#L1-L25)
 - `DOC-10/criterion_01` — Note rilascio e changelog corrispondono alla candidata. La revisione del criterio «Note rilascio e changelog corrispondono alla candidata» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
@@ -1889,9 +1883,20 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/help/it-IT/manual.html#operations-security](../component/administrator/help/it-IT/manual.html)
   - [component/administrator/help/en-GB/manual.html#operations-security](../component/administrator/help/en-GB/manual.html)
   - [tests/doc02-admin-manual.py#DOC-02](../tests/doc02-admin-manual.py)
+- `DOC-04/criterion_02` — Contratti plugin e architettura database documentati. Il riferimento tecnico versionato mappa gli effettivi dodici archivi child del manifest, i contratti VideoProviderInterface/Registry e l'evento Joomla, e la struttura del DDL; un test di preflight verifica nomi, API, tabelle e link contro i sorgenti della stessa revisione.
+  - [docs/TECHNICAL_REFERENCE_1.0.0.md#VideoProviderRegistryInterface](../docs/TECHNICAL_REFERENCE_1.0.0.md)
+  - [docs/TECHNICAL_REFERENCE_1.0.0.md#3. Schema, installazione e integrità](../docs/TECHNICAL_REFERENCE_1.0.0.md)
+  - [tests/doc04-technical-reference.py#DOC-04: versioned source contracts](../tests/doc04-technical-reference.py)
+  - [libraries/jlms/src/Video/VideoProviderRegistryInterface.php#public function register](../libraries/jlms/src/Video/VideoProviderRegistryInterface.php)
+  - [component/administrator/sql/install.mysql.utf8mb4.sql#CREATE TABLE IF NOT EXISTS](../component/administrator/sql/install.mysql.utf8mb4.sql)
 - `DOC-04/criterion_03` — Upgrade, scheduler e troubleshooting documentati. La procedura spiega upgrade e recupero. La guida scheduler descrive task, configurazione, diagnosi e riconciliazione.
   - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)
   - [docs/MAIL_SCHEDULER_SETUP.md#Diagnostica sicura](../docs/MAIL_SCHEDULER_SETUP.md)
+- `DOC-04/criterion_04` — Procedure tecniche riproducibili e versionate. La guida versionata contiene comandi riproducibili per build, test, audit e sincronizzazione, con verifica SHA/versione, upgrade e rollback con backup DB e file; il nuovo controllo DOC-04 è incluso nel preflight e la PR #901 ha CI completa 4/4 verde. Nessuna accettazione manuale Joomla è inferita.
+  - [docs/TECHNICAL_REFERENCE_1.0.0.md#Controllo sorgenti, package e regressioni prima di una PR](../docs/TECHNICAL_REFERENCE_1.0.0.md)
+  - [docs/TECHNICAL_REFERENCE_1.0.0.md#C. Backup, upgrade e rollback in ambiente di prova](../docs/TECHNICAL_REFERENCE_1.0.0.md)
+  - [tests/doc04-technical-reference.py#python3 tools/build.py](../tests/doc04-technical-reference.py)
+  - [tools/check.py#tests/doc04-technical-reference.py](../tools/check.py)
 - `DOC-05/criterion_01` — Guida contestuale presente nelle schermate amministrative core. Le 29 viste amministrative HtmlView censite distribuiscono il pulsante nativo Guida Joomla con risoluzione locale; il test dinamico verifica che nessuna vista sia scoperta. Copertura sorgente verificabile, distinta dall'accettazione manuale della UI Joomla.
   - [docs/ADMIN_HELP_COVERAGE.md#29/29](../docs/ADMIN_HELP_COVERAGE.md)
   - [tests/contextual-help-doc05.py#views = sorted](../tests/contextual-help-doc05.py)
