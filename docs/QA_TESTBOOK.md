@@ -1,3 +1,5 @@
+**CAT-02 — anteprime pubbliche nella scheda corso (PR #893, collaudo manuale pendente):** su corso pubblicato con anteprime abilitate, verificare che una lezione testuale disponibile e marcata `preview` mostri il collegamento e sia apribile; una lezione video/audio marcata `preview` non mostri il collegamento e che l'URL diretto venga negato; nessun collegamento per flag o opzione disabilitati. Controllare guest, utenti autenticati e regressioni iscrizione/ripresa. Verifica automatica contrattuale: `python3 tests/cat02-public-preview-contract.py` nella CI. Questo intervento non completa CAT-02 né modifica l'accettazione Joomla.
+
 ## LES-02 — filtro HTML dei campi pubblici percorso e docente (21/11/2026)
 
 **Automatico:** `tests/joomla-pathways.php` e `tests/joomla-teachers.php` salvano descrizioni/biografie con `<script>`, `<iframe>`, attributi `onclick` e URL `javascript:` tramite modello amministrativo, con identità ad alti privilegi; verificano che HTML attivo non sia persistito e che i tag di formattazione permessi rimangano. Il filtro specifico è condiviso con la presentazione corsi.
