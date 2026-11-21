@@ -1,3 +1,10 @@
+## 21 novembre 2026 — SECDEV-07/02 riconciliazione dopo PR #858
+
+- **Implementazione verificata:** [PR #858](https://github.com/jeckodevelopment/jd_learn/pull/858), commit squash `aafb718857b35ed27dfb5b0e6ed2d86845af6541`, [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44909562794).
+- **Pacchetto 0.64.19-dev:** [artefatto Actions 14709416811](https://github.com/jeckodevelopment/jd_learn/actions/runs/44909562794/artifacts/14709416811); SHA-256 del **wrapper Actions**, non del pacchetto Joomla interno: `2038ccf7e5942db07dbfad4aa8d654a18c848911d79ffb9fcc50454e168da26f`. ZIP Joomla interno non verificato separatamente in questa ricognizione.
+- **Criterio:** SECDEV-07/criterion_02 promosso solo per tool e policy del software first-party; Semgrep/Ruff/secret/package in CI; 1475 finding Ruff preesistenti ancora aperti (blocco nuove regressioni), scanner esterni non attestati. 04/05 restano non verificabili, SCA piattaforma e accettazione manuale pendenti.
+- **Contatori canonici:** 473 implemented / 17 missing / 267 unverifiable, sviluppo minimo **60,78%**, +0,09 punti; manuale 4,67% avviato, 0% completato; versione 0.64.19-dev invariata.
+
 ## 21 novembre 2026 — SECDEV-07 gate sintattico multi-linguaggio (PR #856)
 
 - **PR integrata:** https://github.com/jeckodevelopment/jd_learn/pull/856; merge squash `1e64bfb89857aec7adeb68a7d15fb50e61a84b9f`, head verificato `2615fc93a9503e4fa3ead8084d2a7b08ed3b73cb`.
