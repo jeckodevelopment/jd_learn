@@ -593,7 +593,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230)
   - [component/site/src/Helper/CatalogOptions.php#L1-L60](../component/site/src/Helper/CatalogOptions.php#L1-L60)
 - `SCR-16/criterion_03` — Mostrare funzionalità non configurate con ragione e istruzioni. I controlli amministrativi espongono motivi e istruzioni IT/EN per provider, task, template email, storage, antivirus, video locali, attestati e notifiche disabilitate. La copertura di tutte le funzioni opzionali di estensioni esterne non è dimostrata.
-  - [component/administrator/tmpl/dashboard/default.php#L100-L153](../component/administrator/tmpl/dashboard/default.php#L100-L153)
+  - [component/administrator/tmpl/dashboard/default.php#L95-L139](../component/administrator/tmpl/dashboard/default.php#L95-L139)
   - [tests/doc07-safe-operations.py#L40-L96](../tests/doc07-safe-operations.py#L40-L96)
   - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
 - `SCR-16/criterion_04` — nessuna credenziale leggibile. La nuova proiezione diagnostica restituisce solo chiavi di traduzione e gravità, senza stampare percorsi o segreti. L'assenza di credenziali leggibili in ogni altro form, log e cache dell'estensione non è ancora provata esaustivamente.
