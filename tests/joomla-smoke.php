@@ -514,6 +514,36 @@ $db->setQuery($db->createQuery()->insert('#__jlms_mail_queue')
         $db->quote('privacy-fixture@example.invalid'), $db->quote('Privacy Fixture'),
         $db->quote('{"fixture":"secret"}'), $db->quote('pending'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)'
     ])))->execute();
+// SEC-P3: two distinct accounts. An unrelated recipient cannot pollute the
+// requested subject's Privacy export or be anonymized with the first account.
+$otherPrivacyUserId = (int) $app->getIdentity()->id;
+if ($otherPrivacyUserId <= 0 || $otherPrivacyUserId === $privacyUserId) {
+    throw new \\RuntimeException('Privacy two-account fixture lacks an independent Joomla user.');
+}
+$otherPrivacyMailKey = hash('sha256', 'privacy-mail-other-user-ci-' . $privacyUserId);
+$db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
+$db->setQuery($db->createQuery()->insert('#__jlms_mail_queue')
+    ->columns(['event_key', 'template_id', 'recipient_user_id', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
+    ->values(implode(',', [
+        $db->quote($otherPrivacyMailKey), $db->quote('ci.privacy.other'), $otherPrivacyUserId,
+        $db->quote('other-privacy-fixture@example.invalid'), $db->quote('Other Privacy Fixture'),
+        $db->quote('{"fixture":"other-account"}'), $db->quote('sent'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)'
+    ])))->execute();
+$privacySubjectExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyPlugin->onPrivacyExportRequest($privacySubjectExport);
+$privacySubjectDomains = $privacySubjectExport->getArgument('result', []);
+$privacyMailDomains = [];
+foreach ($privacySubjectDomains as $privacyContribution) {
+    foreach ((array) $privacyContribution as $privacyDomain) {
+        if ($privacyDomain instanceof \\Joomla\\Component\\Privacy\\Administrator\\Export\\Domain
+            && $privacyDomain->name === 'jdlearn_mail_deliveries') {
+            $privacyMailDomains[] = $privacyDomain;
+        }
+    }
+}
+if (count($privacyMailDomains) !== 1 || count($privacyMailDomains[0]->getItems()) !== 1) {
+    throw new \\RuntimeException('Privacy mail export leaked or lost the requested user scope.');
+}
 $privacyQueueBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyQueueBlocked);
 if (($privacyQueueBlocked->getArgument('result', []))[0]->canRemove) {
@@ -529,13 +559,26 @@ if (!$queueRemoveRejected) {
     throw new \RuntimeException('Direct privacy erasure ignored pending mail queue.');
 }
 $db->setQuery("UPDATE #__jlms_mail_queue SET state='sent' WHERE event_key=" . $db->quote($privacyMailId))->execute();
+$db->setQuery($db->createQuery()->update('#__jlms_mail_queue')
+    ->set('last_error = ' . $db->quote('ci-privacy-diagnostic-placeholder'))
+    ->where('event_key = ' . $db->quote($privacyMailId)))->execute();
 $privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
-$sanitizedMail = $db->setQuery("SELECT recipient_user_id,recipient_email,recipient_name,template_data FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->loadObject();
-if (!$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== '' || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}') {
+$sanitizedMail = $db->setQuery("SELECT recipient_user_id,recipient_email,recipient_name,template_data,last_error FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->loadObject();
+if (!$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== '' || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}' || $sanitizedMail->last_error !== null) {
     throw new \RuntimeException('Privacy removal did not redact completed mail queue evidence.');
 }
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->execute();
+$otherPrivacyRemaining = $db->setQuery($db->createQuery()
+    ->select(['recipient_user_id', 'recipient_email', 'template_data'])
+    ->from('#__jlms_mail_queue')
+    ->where('event_key = ' . $db->quote($otherPrivacyMailKey)))->loadObject();
+if (!$otherPrivacyRemaining || (int) $otherPrivacyRemaining->recipient_user_id !== $otherPrivacyUserId
+    || $otherPrivacyRemaining->recipient_email !== 'other-privacy-fixture@example.invalid'
+    || $otherPrivacyRemaining->template_data !== '{"fixture":"other-account"}') {
+    throw new \\RuntimeException('Privacy erasure affected an unrelated account.');
+}
+$db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
 
 $component = $app->bootComponent('com_jlms');
 $mailConsent = $component->getCourseAnnouncementConsent();
