@@ -7,10 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\View\Dashboard;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Factory;
-use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
-use Jlms\Contracts\Video\VideoProviderRegistry;
 use Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus;
 use Joomla\Database\DatabaseInterface;
 
