@@ -93,6 +93,43 @@ final class ConfigurationDiagnostics
         ];
     }
 
+    /**
+     * Read-only projection from canonical template IDs and installed language keys.
+     * No subjects, message bodies, recipient data or arbitrary template identifiers
+     * are returned to the dashboard. Missing default templates require intervention.
+     *
+     * @param list<string> $required Canonical template IDs from MailTemplateInstaller
+     * @param list<array{template_id:string, language:string}> $installed
+     */
+    public static function mailTemplates(array $required, array $installed): array
+    {
+        $available = [];
+        foreach ($installed as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $id = $row['template_id'] ?? null;
+            $language = $row['language'] ?? null;
+            if (is_string($id) && is_string($language) && $language === '*') {
+                $available[$id] = true;
+            }
+        }
+        $missing = 0;
+        foreach (array_unique($required) as $id) {
+            if (!isset($available[$id])) {
+                $missing++;
+            }
+        }
+        $ok = $missing === 0 && count($required) > 0;
+        return [
+            'kind' => 'mail',
+            'labelKey' => 'COM_JLMS_CONFIG_MAIL_TEMPLATES_LABEL',
+            'severity' => $ok ? 'ok' : 'error',
+            'stateKey' => $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_MISSING',
+            'guidanceKey' => $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_MISSING',
+        ];
+    }
+
     /** Treat labels as translations, never as arbitrary provider-supplied content. */
     private static function safeLabel(mixed $candidate): string
     {
