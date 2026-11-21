@@ -1,6 +1,6 @@
 # SEC-P2 — Hardening runtime e supply chain per JD Learn 1.0.0
 
-**Build di riferimento:** 0.64.17-dev, 21 novembre 2026. **Stato del gate: aperto fino a verifica completa degli advisory e delle installazioni reali.** Il progetto non considera sufficienti un test statico o una CI verde per attestare la sicurezza di un'installazione reale.
+**Build di riferimento:** 0.64.18-dev, 21 novembre 2026. **Stato del gate: aperto fino a verifica completa degli advisory e delle installazioni reali.** Il progetto non considera sufficienti un test statico o una CI verde per attestare la sicurezza di un'installazione reale.
 
 ## Superfici ed evidenze disponibili
 
