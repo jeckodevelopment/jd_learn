@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.19-dev — SECDEV-07/02 SAST/stile/composizione dipendenze (candidato 21/11/2026):** CI con Semgrep CE 1.186.0 e regole offline per PHP, JavaScript e Python, fixture positive/negative, Ruff E4/E7/E9 e gate first-party sulle 12 parti Joomla; nessuna dipendenza runtime o modifica SemVer. Chiusura criterio subordinata alle prove CI e alla revisione dei limiti.
+
 - **0.64.19-dev — SECDEV-07 syntax coverage (21/11/2026):** preflight sintattico su tutti i sorgenti Python/JS tracciati, parser Python e Node con fixture negative, mantenendo il lint PHP esistente; nessuna modifica runtime o SemVer, nessuna promozione di SECDEV-07/criterion_02 senza SAST/SCA completi.
 
 - **0.64.18-dev — SEC-P2 findings gate (21/11/2026):** registro versionato delle mitigazioni e regressioni per finding critical/high del codice, fixture negative per rischi esterni non verificati e advisory Joomla/PHP; nessuna modifica runtime, versione invariata. SEC-P2/criterion_02 chiuso nel ledger di sviluppo del software, con gate hosting/release ancora aperti. Sviluppo minimo 60,12% (469 implemented / 21 missing / 267 unverifiable). Verifiche hosting separate.
