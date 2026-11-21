@@ -47,6 +47,28 @@ assert "NOT IN ('pending','retry','sending')" in redaction
 for locale in ("it-IT", "en-GB"):
     language = (root / f"plugins/privacy/jdlearn/language/{locale}/plg_privacy_jdlearn.ini").read_text()
     assert language.count("PLG_PRIVACY_JDLEARN_DOMAIN_MAIL_DELIVERIES=") == 1
+# PRIV-C2: current consent projection must be narrowly scoped, read-only,
+# explicitly authorized and free from token/email/SMTP fields.
+audit = (root / "component/administrator/src/Application/ConsentAuditService.php").read_text()
+view = (root / "component/administrator/src/View/Mailqueue/HtmlView.php").read_text()
+layout = (root / "component/administrator/tmpl/mailqueue/default.php").read_text()
+assert "CourseEditorAccess::fresh($identity)" in audit
+for guard in ("authorise('core.manage', 'com_jlms')", "authorise('jlms.audit.view', 'com_jlms')"):
+    assert guard in audit, guard
+for field in ("user_id", "state", "origin", "policy_version", "requested_at", "confirmed_at", "revoked_at"):
+    assert "'" + field + "'" in audit, field
+for sensitive in ("token_hash", "recipient_email", "template_data", "last_error", "recipient_name"):
+    assert sensitive not in audit, sensitive
+assert "new ConsentAuditService(" in view
+assert "id=\"jlms-consent-audit\"" in layout
+assert "id=\"jlms-consent-audit-table\"" in layout
+consent_block = layout.split('<details id="jlms-consent-audit"', 1)[1].split('</details>', 1)[0]
+assert 'method="get"' in consent_block and 'method="post"' not in consent_block
+for locale in ("it-IT", "en-GB"):
+    language = (root / f"component/administrator/language/{locale}/com_jlms.ini").read_text()
+    for key in ("TITLE", "HELP", "USER", "STATE", "ORIGIN", "VERSION", "REQUESTED", "CONFIRMED", "REVOKED", "TOTAL", "EMPTY"):
+        assert language.count("COM_JLMS_PRIVACY_CONSENTS_" + key + "=") == 1, (locale, key)
+
 audit_script = root / "tools/audit_legacy_video_storage.py"
 with tempfile.TemporaryDirectory() as temp:
     web = Path(temp)
