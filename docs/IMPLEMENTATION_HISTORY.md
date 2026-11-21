@@ -1,3 +1,10 @@
+## 21 novembre 2026 — AUT-04 migrazione iscritti esplicita verificata, PR #863 integrata
+
+- **PR:** [#863](https://github.com/jeckodevelopment/jd_learn/pull/863); merge squash `da73279d0b28d8d05109bc08d1814623af13c102`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44914115463) con PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e preflight.
+- **Artifact 0.64.21-dev:** [14710958481](https://github.com/jeckodevelopment/jd_learn/actions/runs/44914115463/artifacts/14710958481); SHA-256 **wrapper Actions** `a811862456c7d4cdf47bf57204770e56a98d34900fdee1560581f649c6f1de53`, non checksum ZIP Joomla interno.
+- **AUT-04/enrollment_mapping promosso a implemented:** migrazione singola e confermata con mapping fra versioni, rifiuto quiz aperto e destinazione piena, rispetto iscrizione/storico, equivalenze salvate solo su scelta esplicita, prevenzione troncamento oltre 1.000 e retry idempotente.
+- **Nuovi contatori:** 474 implemented / 17 missing / 266 unverifiable; sviluppo minimo **60,87%**, +0,09 pp. Accettazione Joomla 4,67% avviata, 0% completa invariata. Non promuovere AUT-04/historical_integrity (ripristino backup e attestati).
+
 ## 21 novembre 2026 — AUT-04: verifica integrità migrazione iscritti (candidato 0.64.21-dev)
 
 - Servizio `EnrollmentMigrationService`: la lettura delle equivalenze salvate oltre il limite di 1.000 non può più produrre una mappatura parziale silenziosa; codice fail-closed con test positivo e negativo di soglia.
