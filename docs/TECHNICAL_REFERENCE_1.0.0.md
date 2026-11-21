@@ -18,6 +18,8 @@ Il manifest canonico [`packages/pkg_jlms.xml`](../packages/pkg_jlms.xml) definis
 | `plg_user_jdlearnconsent.zip` | [`plugins/user/jdlearnconsent`](../plugins/user/jdlearnconsent) | Consenso dell'utente |
 | `plg_actionlog_jdlearn.zip` | [`plugins/actionlog/jdlearn`](../plugins/actionlog/jdlearn) | Log delle azioni |
 
+I nomi effettivi dei **12 archivi child** di questa versione sono: `lib_jlms.zip`, `com_jlms.zip`, `plg_jlmsvideo_youtube.zip`, `plg_jlmsvideo_vimeo.zip`, `plg_jlmsvideo_cloudflarestream.zip`, `plg_jlmsvideo_html5.zip`, `plg_privacy_jdlearn.zip`, `plg_task_jlms.zip`, `plg_system_jlmsmenu.zip`, `plg_finder_jlms.zip`, `plg_user_jdlearnconsent.zip` e `plg_actionlog_jdlearn.zip`.
+
 **Non installare solo `com_jlms`** come upgrade completo. Scaricare l'artefatto Actions della build, estrarlo e scegliere **lo ZIP interno `pkg_jlms-0.64.21-dev.zip`**; l'archivio Actions esterno non è installabile in Joomla. Verificare `SHA256SUMS.txt` incluso nella distribuzione come descritto nella [procedura di rilascio](RELEASE_PROCEDURE.md). Nessuna pubblicazione stable 1.0.0 è implicata da una CI verde.
 
 ## 2. Servizi, eventi e plugin video
@@ -90,3 +92,5 @@ Per errori 403/404 su corsi o materiali: controllare identità, ACL Joomla, stat
 ## 5. Controllo di versione del riferimento
 
 Questo documento rappresenta **0.64.21-dev**, non un contratto universale per ogni futura versione. A ogni modifica di manifest, contratto provider, nomi di tabella, command-line, scheduler o formato di backup, aggiornare qui le sezioni interessate nella **stessa PR** e aggiungere un test del collegamento, del contratto o del comando. I risultati di CI non sono accettazione manuale Joomla né evidenza di pubblicazione 1.0.0.
+
+**Guardia amministrativa per tutte le procedure:** verificare ACL, token CSRF dei form Joomla e stato del componente prima di ripetere una mutazione; non riprodurre automaticamente richieste POST che potrebbero essere state completate.
