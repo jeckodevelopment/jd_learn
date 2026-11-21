@@ -759,7 +759,9 @@ try:
  expect(bool(cover) and 'images/jlms-ci-cover.png' in cover.group(0) and 'alt="HTTP cover &quot;quoted&quot; &lt;plain text&gt;"' in cover.group(0),'Public cover uses safe URL and escaped alternative text')
  expect('<title>HTTP published SEO title</title>' in sheet and 'HTTP SEO description &amp; public sheet' in sheet,'Native document head uses the published SEO values')
  expect('#joomlaImage' not in cover.group(0),'Native adapter metadata not emitted in public image URL')
- expect('id="jlms-course-teachers"' in sheet and 'HTTP teacher biography &lt;script&gt;plain text&lt;/script&gt;' in sheet,'Assigned native teacher appears as escaped frozen public profile')
+ expect('id="jlms-course-teachers"' in sheet and 'HTTP teacher biography' in sheet
+        and 'HTTP teacher biography &lt;script&gt;plain text&lt;/script&gt;' not in sheet,
+        'Assigned native teacher is visible after safe HTML filtering without retaining forbidden script tags')
  expect('id="jlms-course-calendar"' in sheet and 'Europe/Rome' in sheet and '2000-01-01 01:00:00 +01:00' in sheet,'Public frozen calendar shows its explicit zone and offset')
  expect(published['calendar_timezone']=='Europe/Rome' and published['calendar_start'].startswith('2000-01-01 00:00:00') and published['edition_end'].startswith('2098-01-01 00:00:00'),'Native calendar form persists UTC and initial edition dates')
  expect('id="jlms-publication-status"' in h,'Administrator sees course publication status')
