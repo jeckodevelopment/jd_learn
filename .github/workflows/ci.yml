@@ -32,6 +32,7 @@ jobs:
         run: |
           python3 tests/ci-plan.py
           python3 tests/requirements-status.py
+          python3 tests/cat02-public-preview-contract.py
           python3 tools/ci_plan.py
       - name: Enforce runtime PR to requirements CSV traceability
         if: github.event_name == 'pull_request'
