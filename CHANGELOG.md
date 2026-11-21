@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-01 — navigazione catalogo con filtri persistenti (21/11/2026):** le pagine catalogo corsi e categoria, incluse le sottocategorie paginabili, propagano esplicitamente nei link Joomla solo i filtri e l'ordinamento già normalizzati dal server. Gli invii GET di nuovi filtri ricominciano dalla prima pagina; nessuna propagazione di parametri arbitrari o filtri disabilitati. Fixture PHP e guardie strutturali.
+
 - **SCR-16 — chiusura implementativa configurazione e diagnostica (21/11/2026):** rimosso ogni dispatch/registrazione di plugin video dalla dashboard amministrativa; letture soltanto della configurazione Joomla locale con stati non verificati per Cloudflare Stream e plugin esterni. Configurazioni abilitate/disabilitate dei provider core valutate senza chiamate remote, scritture, pubblicazioni, modifiche gruppi o invii. Test negativi di segreti in output e gate strutturali sui side effect; criteri tecnici e accettazione Joomla tracciati separatamente.
 
 - **SCR-16 — diagnostica provider e ACL (21/11/2026):** ripristinata l'etichetta localizzata nella proiezione di diagnostica video, supportati i soli identificativi IT/EN e plugin localizzati validi; registrazione/status dei provider e relativa sezione dashboard limitati a utenti con `core.manage` del componente. Nuovi test di regressione, nessuna azione di connessione o invio implicito.
