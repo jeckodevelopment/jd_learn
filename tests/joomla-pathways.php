@@ -140,8 +140,16 @@ $beforeRelations = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses 
 $enrollmentsBeforeArchive = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult();
 // LCM-05: a pathway lifecycle change must not mutate its constituent courses.
 $courseStatesBefore = $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList();
-$check((bool)$pathModel->save($pathwayBase + ['revision'=>2,'state'=>2]),
+$unsafePathway = array_replace($pathwayBase, [
+    'description'=>'<p>Safe <strong>pathway</strong> <script>alert(1)</script><iframe src="https://example.invalid"></iframe><a href="javascript:alert(2)" onclick="alert(3)">read</a></p>',
+    'revision'=>2, 'state'=>2,
+]);
+$check((bool)$pathModel->save($unsafePathway),
     'archiving a published pathway succeeds: ' . $pathModel->getError());
+$savedPathwayHtml = (string)$db->setQuery('SELECT description FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$check(str_contains($savedPathwayHtml, '<strong>pathway</strong>')
+    && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', $savedPathwayHtml),
+    'public pathway HTML retains safe formatting and removes scripts, embeds and active URLs');
 $check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === 2,
     'archived pathway state is stored');
 $archiveDenied = false;
