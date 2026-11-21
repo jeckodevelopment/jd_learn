@@ -1,0 +1,384 @@
+{
+  "schema": 1,
+  "baseline": "1.0.0",
+  "scope": "Schema SQL di installazione delle tabelle JD Learn, non inventario di provider o host esterni",
+  "release_gate": "Senza policy di retention approvata e verifica su sito, non considerare il rilascio accettato",
+  "rows": [
+    {
+      "table": "#__jlms_courses",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_course_versions",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_modules",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_lessons",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_prerequisites",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_editions",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_teachers",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_course_teachers",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_pathways",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_pathway_courses",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_assets",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_attachments",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_quizzes",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_questions",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_question_revisions",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_quiz_questions",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_certificate_templates",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_version_equivalences",
+      "group": "editorial",
+      "processing": "Pubblicazione e gestione di contenuti didattici, attività e metadati editoriali",
+      "disposition": "I dati didattici restano; identificativi di autori, docenti e operatori vanno valutati e minimizzati secondo la policy del titolare. La rimozione account Joomla non equivale a cancellazione del corso.",
+      "retention": "Calendario editoriale e obblighi organizzativi: definire sul sito",
+      "accountable": "Titolare del sito; editor Joomla"
+    },
+    {
+      "table": "#__jlms_enrollments",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_enrollment_requests",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_lesson_progress",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_progress_sessions",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_attempts",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_active_attempts",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_attempt_questions",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_attempt_answers",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_assessment_revisions",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_subjects",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_quiz_time_adjustments",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_quiz_deadline_extensions",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_enrollment_state_changes",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_manual_enrollments",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_enrollment_migrations",
+      "group": "learner",
+      "processing": "Iscrizione, progressi, quiz, accessi e audit didattico",
+      "disposition": "Il plugin anonimizza la relazione utente su iscrizioni e alcune note/risposte; le relazioni storiche non sono eliminate indiscriminatamente. Riesaminare identificativi indiretti e record figli.",
+      "retention": "Periodi di conservazione dei risultati didattici da approvare prima del rilascio",
+      "accountable": "Titolare del sito; utente e amministratore autorizzato"
+    },
+    {
+      "table": "#__jlms_certificates",
+      "group": "certificate",
+      "processing": "Emissione attestati, identificazione allo stato di emissione e tracciamento",
+      "disposition": "Documenti esistenti impediscono la cancellazione automatica; non cancellare PDF/seriali senza una decisione documentata. Gestire accesso/rettifica con procedura autorizzata.",
+      "retention": "Obblighi di conservazione attestati e backup da approvare",
+      "accountable": "Titolare del sito; amministratore attestati"
+    },
+    {
+      "table": "#__jlms_certificate_documents",
+      "group": "certificate",
+      "processing": "Emissione attestati, identificazione allo stato di emissione e tracciamento",
+      "disposition": "Documenti esistenti impediscono la cancellazione automatica; non cancellare PDF/seriali senza una decisione documentata. Gestire accesso/rettifica con procedura autorizzata.",
+      "retention": "Obblighi di conservazione attestati e backup da approvare",
+      "accountable": "Titolare del sito; amministratore attestati"
+    },
+    {
+      "table": "#__jlms_certificate_audit",
+      "group": "certificate",
+      "processing": "Emissione attestati, identificazione allo stato di emissione e tracciamento",
+      "disposition": "Documenti esistenti impediscono la cancellazione automatica; non cancellare PDF/seriali senza una decisione documentata. Gestire accesso/rettifica con procedura autorizzata.",
+      "retention": "Obblighi di conservazione attestati e backup da approvare",
+      "accountable": "Titolare del sito; amministratore attestati"
+    },
+    {
+      "table": "#__jlms_idempotency",
+      "group": "asynchronous",
+      "processing": "Idempotenza, job, outbox, audit e riconciliazione",
+      "disposition": "Job e outbox collegati al soggetto possono bloccare la rimozione. Gli eventi contenenti payload o riferimenti indiretti richiedono riesame prima della cancellazione; non rimuovere job pendenti.",
+      "retention": "Durate dei log tecnici e code definite dal titolare",
+      "accountable": "Titolare del sito; operatore tecnico autorizzato"
+    },
+    {
+      "table": "#__jlms_quiz_mutations",
+      "group": "asynchronous",
+      "processing": "Idempotenza, job, outbox, audit e riconciliazione",
+      "disposition": "Job e outbox collegati al soggetto possono bloccare la rimozione. Gli eventi contenenti payload o riferimenti indiretti richiedono riesame prima della cancellazione; non rimuovere job pendenti.",
+      "retention": "Durate dei log tecnici e code definite dal titolare",
+      "accountable": "Titolare del sito; operatore tecnico autorizzato"
+    },
+    {
+      "table": "#__jlms_jobs",
+      "group": "asynchronous",
+      "processing": "Idempotenza, job, outbox, audit e riconciliazione",
+      "disposition": "Job e outbox collegati al soggetto possono bloccare la rimozione. Gli eventi contenenti payload o riferimenti indiretti richiedono riesame prima della cancellazione; non rimuovere job pendenti.",
+      "retention": "Durate dei log tecnici e code definite dal titolare",
+      "accountable": "Titolare del sito; operatore tecnico autorizzato"
+    },
+    {
+      "table": "#__jlms_outbox",
+      "group": "asynchronous",
+      "processing": "Idempotenza, job, outbox, audit e riconciliazione",
+      "disposition": "Job e outbox collegati al soggetto possono bloccare la rimozione. Gli eventi contenenti payload o riferimenti indiretti richiedono riesame prima della cancellazione; non rimuovere job pendenti.",
+      "retention": "Durate dei log tecnici e code definite dal titolare",
+      "accountable": "Titolare del sito; operatore tecnico autorizzato"
+    },
+    {
+      "table": "#__jlms_delivery_receipts",
+      "group": "asynchronous",
+      "processing": "Idempotenza, job, outbox, audit e riconciliazione",
+      "disposition": "Job e outbox collegati al soggetto possono bloccare la rimozione. Gli eventi contenenti payload o riferimenti indiretti richiedono riesame prima della cancellazione; non rimuovere job pendenti.",
+      "retention": "Durate dei log tecnici e code definite dal titolare",
+      "accountable": "Titolare del sito; operatore tecnico autorizzato"
+    },
+    {
+      "table": "#__jlms_anomalies",
+      "group": "asynchronous",
+      "processing": "Idempotenza, job, outbox, audit e riconciliazione",
+      "disposition": "Job e outbox collegati al soggetto possono bloccare la rimozione. Gli eventi contenenti payload o riferimenti indiretti richiedono riesame prima della cancellazione; non rimuovere job pendenti.",
+      "retention": "Durate dei log tecnici e code definite dal titolare",
+      "accountable": "Titolare del sito; operatore tecnico autorizzato"
+    },
+    {
+      "table": "#__jlms_course_operations",
+      "group": "asynchronous",
+      "processing": "Idempotenza, job, outbox, audit e riconciliazione",
+      "disposition": "Job e outbox collegati al soggetto possono bloccare la rimozione. Gli eventi contenenti payload o riferimenti indiretti richiedono riesame prima della cancellazione; non rimuovere job pendenti.",
+      "retention": "Durate dei log tecnici e code definite dal titolare",
+      "accountable": "Titolare del sito; operatore tecnico autorizzato"
+    },
+    {
+      "table": "#__jlms_mail_queue",
+      "group": "email",
+      "processing": "Consenso facoltativo MAIL-11, notifiche e consegna, eventuale revoca",
+      "disposition": "Rimozione token e consenso; blocco su righe di mail attive; anonimizzazione email, nomi, payload e diagnostici nelle righe terminali.",
+      "retention": "Distinguere consenso attivo, code pendenti, log terminali e backup",
+      "accountable": "Titolare del sito; amministratore comunicazioni"
+    },
+    {
+      "table": "#__jlms_course_announcement_campaigns",
+      "group": "email",
+      "processing": "Consenso facoltativo MAIL-11, notifiche e consegna, eventuale revoca",
+      "disposition": "Rimozione token e consenso; blocco su righe di mail attive; anonimizzazione email, nomi, payload e diagnostici nelle righe terminali.",
+      "retention": "Distinguere consenso attivo, code pendenti, log terminali e backup",
+      "accountable": "Titolare del sito; amministratore comunicazioni"
+    },
+    {
+      "table": "#__jlms_mail_consents",
+      "group": "email",
+      "processing": "Consenso facoltativo MAIL-11, notifiche e consegna, eventuale revoca",
+      "disposition": "Rimozione token e consenso; blocco su righe di mail attive; anonimizzazione email, nomi, payload e diagnostici nelle righe terminali.",
+      "retention": "Distinguere consenso attivo, code pendenti, log terminali e backup",
+      "accountable": "Titolare del sito; amministratore comunicazioni"
+    },
+    {
+      "table": "#__jlms_mail_unsubscribe_tokens",
+      "group": "email",
+      "processing": "Consenso facoltativo MAIL-11, notifiche e consegna, eventuale revoca",
+      "disposition": "Rimozione token e consenso; blocco su righe di mail attive; anonimizzazione email, nomi, payload e diagnostici nelle righe terminali.",
+      "retention": "Distinguere consenso attivo, code pendenti, log terminali e backup",
+      "accountable": "Titolare del sito; amministratore comunicazioni"
+    }
+  ]
+}
