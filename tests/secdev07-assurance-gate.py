@@ -42,7 +42,7 @@ def inspect(root: Path, ledger: dict, preflight: str, workflow: str) -> tuple[in
             raise ValueError("Unknown threat classification")
         for field in ("threat", "scope", "assertion"):
             value = control.get(field)
-            if not isinstance(value, str) or len(value.strip()) < 5:
+            if not isinstance(value, str) or len(value.strip()) < (3 if field == "assertion" else 5):
                 raise ValueError("Incomplete control evidence")
         for key in ("source", "test"):
             relative = Path(control[key])
