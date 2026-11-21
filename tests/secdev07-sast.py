@@ -50,8 +50,8 @@ def scan(paths: list[str]) -> tuple[set[str], int]:
     findings = report.get("results", [])
     if not isinstance(findings, list):
         raise RuntimeError("SECDEV-07 invalid scanner results")
-    return {str(row.get("check_id", "")).split(".")[-2] + "." + str(row.get("check_id", "")).split(".")[-1]
-            for row in findings}, len(findings)
+    return {next((rule for rule in EXPECTED if str(row.get("check_id", "")).endswith(rule)),
+                 str(row.get("check_id", ""))) for row in findings}, len(findings)
 
 
 def fixture_test() -> None:
