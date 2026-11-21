@@ -23,8 +23,13 @@ def validate(path: Path) -> str | None:
         if path.suffix == ".py":
             ast.parse(path.read_text(encoding="utf-8"), filename=path.name)
         else:
+            # Browser .js files are ES modules (exports/imports). Node treats .js
+            # as CommonJS without package.json, so parse module syntax via stdin.
+            command = (["node", "--check", str(path)] if path.suffix == ".cjs"
+                       else ["node", "--input-type=module", "--check"])
             result = subprocess.run(
-                ["node", "--check", str(path)],
+                command,
+                input=None if path.suffix == ".cjs" else path.read_text(encoding="utf-8"),
                 capture_output=True, text=True, check=False, timeout=15,
             )
             if result.returncode:
