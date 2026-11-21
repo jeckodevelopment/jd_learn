@@ -1,4 +1,4 @@
-## SECDEV-07/02 — Scanner riproducibile (candidato, 21/11/2026)
+## SECDEV-07/02 — Scanner riproducibile (integrato, 21/11/2026, PR #858)
 
 La CI esegue **Semgrep Community Edition 1.186.0** con regole locali versionate in `security/secdev07-semgrep.yml`, `--metrics=off`, per PHP, JavaScript e Python di componenti, librerie, plugin, package, tool, script e test. I controlli bloccano costrutti di esecuzione dinamica, deserializzazione PHP, shell string execution e alcune forme di iniezione HTML. La suite `tests/secdev07-sast.py --self-test` verifica tre esempi pericolosi e tre casi sicuri prima della scansione reale: scanner mancante, crash, configurazione errata o risultati non interpretabili bloccano il preflight. Nessun servizio cloud di scanning o chiave API è necessario.
 
@@ -6,7 +6,7 @@ La CI esegue **Semgrep Community Edition 1.186.0** con regole locali versionate 
 
 **Supply chain:** il builder, `tests/sec-p2-dependency-gate.py` e `tests/sec-p2-source-gate.py` controllano tutte le 12 estensioni ZIP distribuite, assenza di dependency manager/vendor inattesi, segreti nel codice distribuito, SHA dei workflow, insieme al controllo storico SEC-P2. Non esistono librerie npm/Composer vendorizzate nello ZIP. Le dipendenze della *piattaforma* (Joomla, PHP, DB, SDK e scanner di test) sono fuori dal pacchetto e restano vincolo di rilascio.
 
-**Limiti:** le regole Semgrep locali sono una scansione SAST multi-linguaggio di controlli selezionati, non una prova dell'assenza di qualunque vulnerabilità, né un audit dei pacchetti della piattaforma. I risultati della CI e l'inventario dipendenze devono essere verificati prima di aggiornare `SECDEV-07/criterion_02`; nessuna promozione e nessuna percentuale modificata per la sola apertura della PR.
+**Limiti:** le regole Semgrep locali sono una scansione SAST multi-linguaggio di controlli selezionati, non una prova dell'assenza di qualunque vulnerabilità, né un audit dei pacchetti della piattaforma. La PR #858 è stata integrata (merge `aafb718857b35ed27dfb5b0e6ed2d86845af6541`) con CI 4/4 verde (run `44909562794`). Il criterio SECDEV-07/02 è implementato **per il processo di verifica del codice first-party**; SAST completo sui componenti esterni, CVE piattaforma, rilettura finding e debito Ruff rimangono verifiche separate e non equivalgono ad accettazione Joomla.
 
 # SECDEV-07 — Processo di assurance e tracciabilità dei controlli di sicurezza
 
@@ -22,7 +22,7 @@ Il registro include il threat model SEC-P1, controller e plugin, rilevamento sta
 
 Il preflight esegue `tests/secdev07-language-syntax.py` su tutti i file Python, JS, MJS e CJS tracciati in Git, senza dipendere dal set dei file modificati dalla PR. La verifica usa il parser Python e `node --check` per JavaScript; le fixture positive e negative assicurano che un file non valido causi errore. I job PHP 8.3/8.4 mantengono il lint completo dei file PHP. `git diff --check HEAD` non sostituisce un lint di stile del repository.
 
-**Limite:** si tratta di controlli sintattici, non di un'analisi semantica della sicurezza: nessuna classificazione di vulnerabilità, dataflow, verifica CVE di Joomla o SCA piattaforma. SECDEV-07/criterion_02 resta **missing**, e la lacuna FULL-SAST-STYLE resta aperta fino all'integrazione e verifica di strumenti idonei. Nessun effetto runtime, nessun incremento della percentuale implementativa.
+**Limite:** si tratta di controlli sintattici, non di un'analisi semantica della sicurezza: nessuna classificazione di vulnerabilità, dataflow, verifica CVE di Joomla o SCA piattaforma. La tranche sintattica #856 da sola non chiudeva SECDEV-07/02; la successiva PR #858 ha introdotto i controlli statici, di stile e supply-chain citati sopra. Il rischio FULL-SAST-STYLE rimane registrato per la revisione più ampia prima del rilascio, senza confondere i due livelli di prova.
 
 ## Limiti espressi e rischio residuo
 
@@ -36,7 +36,7 @@ Il registro mantiene quattro attività **non automaticamente risolte**:
 
 ## Esecuzione, accettazione e matrice
 
-- Il team software può chiudere il **criterio SECDEV-07/criterion_01 sul processo verificabile** solo dopo PR integrata, preflight verde e matrice con prove riferite al commit. Il criterio 02 richiede anche strumenti di stile/SAST/SCA e relativa evidenza; non promuoverlo per il solo registro.
+- Il team software può chiudere il **criterio SECDEV-07/criterion_01 sul processo verificabile** solo dopo PR integrata, preflight verde e matrice con prove riferite al commit. Il criterio 02 ha strumenti di stile/SAST e inventario dipendenze first-party e prove CI dopo la PR #858; ciò non certifica i fornitori e la piattaforma, né sostituisce la review finale.
 - I criteri 04/05 necessitano un report completo di riesame dei finding e delle non applicabilità sulla candidata; non sono promossi da questa PR.
 - Il titolare del sito e chi effettua collaudi mantengono un registro **separato** dell'accettazione Joomla, con ruoli diversi, prove sulla candidata finale, log e backup, dipendenze e attacchi negativi, senza riportare dati personali o credenziali.
 
