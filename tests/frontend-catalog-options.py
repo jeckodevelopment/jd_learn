@@ -4,6 +4,7 @@
 Structural gate; acceptance in a real Joomla site is still required.
 """
 from pathlib import Path
+from subprocess import run
 import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parents[1]
@@ -214,7 +215,6 @@ for folder in ("component/site/language", "component/administrator/language"):
 
 # SCR-01: Joomla 5.1+ pagination drops arbitrary GET query values unless
 # explicitly registered. Preserve only server-normalized catalogue filters.
-from subprocess import run
 pagination_helper = (root / "component/site/src/Helper/CatalogPagination.php").read_text()
 course_view = (root / "component/site/src/View/Courses/HtmlView.php").read_text()
 category_view_code = (root / "component/site/src/View/Category/HtmlView.php").read_text()
