@@ -1,3 +1,21 @@
+## PRIV-C2 — Consultazione dei consensi nel backend (SEC-P3)
+
+**CI:** il test Joomla DB verifica il servizio `ConsentAuditService::page` con l'utente autorizzato e l'account senza permessi, il solo record corrente `revoked` della fixture, la whitelist di campi e l'assenza di dati segreti. Il gate statico verifica permessi, markup GET-only, IT/EN e nessun campo SMTP/token.
+
+**Collaudo manuale pendente:** in JD Learn → Coda email aprire il pannello consensi con un amministratore con `jlms.audit.view`; ricercare per ID utente, verificare stati pending/confirmed/revoked e timestamp; cambiare lingua IT/EN, paginare. Ripetere con ruolo che possiede `core.manage` ma non `jlms.audit.view` e con ospite: accesso negato. Confermare che i dati del registro Joomla della privacy policy non cambiano, che la revoca MAIL-11 interrompe invii successivi e che il pannello è sempre read-only.
+
+**Regressione audit immutabili:** inserire una campagna di test attribuita all'utente A: sia preflight Joomla Privacy che invocazione diretta della rimozione devono rifiutare l'operazione; i dati non devono cambiare. Dopo la rimozione controllata della campagna fixture, verificare che la richiesta positiva torni disponibile. Non alterare campagne reali per ottenere lo sblocco.
+
+**Regressione di anonimizzazione estesa:** con account A che ha pubblicato/modificato contenuti e riconciliato una mail di B, richiedere la rimozione privacy di A; i riferimenti opzionali `created_by`, `modified_by`, associazione docente/soggetto e `reconciliation_by` devono diventare null, mentre contenuti e recapiti di B restano integri. Ispezionare separatamente gli audit che richiedono un identificativo obbligatorio e registrare la decisione del titolare.
+
+## SEC-P3 — gate completo software e accettazione separata (21/11/2026)
+
+**Automatico:** `tests/sec-p3-data-inventory.py` confronta le 47 tabelle del DDL installabile con il registro strutturato e fallisce su tabella nuova non classificata, campo retention mancante o duplicati. `tests/joomla-smoke.php` esegue su PHP/MySQL e PHP/MariaDB, con due utenti distinti, export com_privacy del solo soggetto, consenso MAIL-11 nei tre stati, vincoli sulle email in coda, rimozione dei token, anonimizzazione dei diagnostici e invarianza dei dati del secondo utente. Non assumere superamento prima della CI.
+
+**Accettazione manuale non eseguita:** predisporre due account realmente distinti sul sito di prova. Per A creare iscrizioni, progressi, risposte quiz, notifiche, consenso pending/confirmed/revoked e un attestato; per B dati separati. Verificare export A e B via interfaccia Joomla, nessuna contaminazione; richiedere rimozione di A, prima bloccata da mail pendenti e attestato emesso, poi con condizioni autorizzate, e verificare che B non cambi. Eseguire una seconda esportazione, controllare diritti/ACL amministratori e log. Testare backup/ripristino con replay delle richieste completate prima dell'apertura del sito, verificando copie esterne e tempi di conservazione del titolare. Registrare su testbook build, esito, browser, identità di ruoli non personali, screenshot redatti e decisioni di retention.
+
+**Distinzione obbligatoria:** CI positiva = prova del software; non prova policy privacy approvata, backup esterni bonificati o accettazione manuale. Guida IT/EN: `docs/SEC_P3_PRIVACY_OPERATIONS_1.0.0.md`.
+
 ## SEC-P3 — esportazione e anonimizzazione coda email (PR #850; 21/11/2026)
 
 **Automatico:** `python3 tests/sec-p2-p3-guard.py` verifica che il dominio com_privacy consegne email selezioni esclusivamente `template_id`, `state`, `created_at`, `sent_at` per il destinatario richiesto, escluda dati destinatario/template/segreti/diagnostici, e che la rimozione dei record terminali azzeri anche `last_error`. Conservare i blocchi per mail `pending`, `retry`, `sending` e per altre dipendenze di retention. Verificare la CI su entrambi gli ambienti Joomla.
