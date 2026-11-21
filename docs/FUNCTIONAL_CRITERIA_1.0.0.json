@@ -592,18 +592,20 @@
       {
         "id": "enrollment_mapping",
         "label": "Migrazione iscritti solo esplicita con equivalenze",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Application/PublicationService.php",
-          "tests/joomla-publication-impact.php",
-          "docs/PUBLICATION.md"
+          "component/administrator/src/Application/EnrollmentMigrationService.php",
+          "tests/joomla-enrollment-migration.php",
+          "tests/aut04-migration-boundary.php"
         ],
         "review": {
-          "reason": "La pubblicazione di una nuova versione richiede una revisione esplicita dell’impatto e il codice modella le differenze didattiche. Le prove disponibili non coprono l’intera matrice di equivalenze e assegnazioni degli iscritti durante migrazione, inclusi i casi limite con progressi e quiz aperti.",
+          "reason": "La migrazione è soltanto esplicita e singola, richiede autorizzazione, anteprima e hash di conferma, equivalenze validate tra lezioni delle versioni di origine e destinazione, trasferimento dei soli completamenti non quiz, storicizzazione invariata e idempotenza. Le prove CI della PR #863 (merge da73279d0b28d8d05109bc08d1814623af13c102, run 44914115463, 4/4 success) verificano inoltre blocco su quiz aperti, target pieno, mappature salvate solo se richieste, rollback dell'iscrizione sorgente e rifiuto senza troncamento oltre 1000 equivalenze. Il criterio software di migrazione esplicita è dunque implementato; backup, attestati e ogni variante di ripristino rimangono separati in historical_integrity e nell'accettazione Joomla.",
           "references": [
-            "component/administrator/src/Application/PublicationService.php#public function updateImpact",
-            "tests/joomla-publication-impact.php#Existing module and quiz definition changes are recognised without exposing questions",
-            "docs/PUBLICATION.md#nessuna conferma implicita di aggiornamenti"
+            "component/administrator/src/Application/EnrollmentMigrationService.php#public function preview",
+            "component/administrator/src/Application/EnrollmentMigrationService.php#public function apply",
+            "tests/joomla-enrollment-migration.php#open quiz attempt blocks version migration",
+            "tests/joomla-enrollment-migration.php#saved equivalences are never applied implicitly",
+            "tests/aut04-migration-boundary.php#Saved mapping overflow was accepted"
           ]
         }
       },
