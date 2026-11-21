@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — diagnostica modelli email Joomla (21/11/2026):** aggiunto controllo read-only della presenza di tutti i template canonici nella lingua predefinita `*`, con stati e rimedi IT/EN e visibilità `core.manage`. Non vengono letti testi, destinatari, credenziali o parametri email. Regressioni per default presenti, assenti e sole traduzioni; nessuna modifica allo stato di implementazione complessivo.
+
 - **SCR-16 — diagnostica storage privato (21/11/2026):** dashboard amministrativa con preflight locale in sola lettura di directory private esterne, percorso pubblico rifiutato, directory mancante e storage gestito da verificare all'uso; esiti e rimedi IT/EN senza divulgazione dei percorsi. Test automatici su quattro stati; nessun side effect o incremento di copertura anticipato.
 
 - **LES-03 — storage privato Windows (21/11/2026):** corretta la validazione di path assoluti con separatore backslash, mantenendo il rifiuto di path relativi e drive-relative. Cinque test regressione Unix/Windows. Nessuna accettazione hosting dichiarata e nessun nuovo requisito completato automaticamente.
