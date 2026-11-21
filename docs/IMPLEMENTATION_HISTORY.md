@@ -1,3 +1,10 @@
+## 21 novembre 2026 — LCM-03, checkout nel salvataggio editoriale dei percorsi
+
+- [PR #887](https://github.com/jeckodevelopment/jd_learn/pull/887) integrata su `main` con squash `ab398b32222fb71580a69650e94186801e3d72a0`; [CI #44952684717](https://github.com/jeckodevelopment/jd_learn/actions/runs/44952684717) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6), integrità CSV verde.
+- [Pacchetto JD-Learn-0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44952684717/artifacts/14726690483): ZIP Joomla interno `pkg_jlms-0.64.21-dev.zip`, SHA-256 interno `16169a3206e4bb83b6baa257b298eeb75a1617038147116d090d57467617c632`; digest dell'archivio Actions distinto `sha256:e640e58f3a8e1180f94d010bddcf2ac49b65bd3d8c86d2cb99fb53fbc14f2689`.
+- `PathwayModel::save()` ora verifica il checkout Joomla sul record bloccato, prima di modificare i dati, in coerenza con le operazioni massive. Fixture `tests/joomla-pathways.php` su proprietario del checkout diverso, rifiuto della scrittura, invarianti (titolo, stato, revisione, associazioni) e salvataggio autorizzato dal proprietario.
+- Correzione non incrementale: avanzamento implementativo globale **61,50%** invariato, nessuna accettazione manuale Joomla attribuita. Il collaudo per due editor è in `docs/QA_TESTBOOK.md`.
+
 ## 21 novembre 2026 — LCM-03/04, riferimenti multilingua Joomla nelle purghe
 
 - [PR #885](https://github.com/jeckodevelopment/jd_learn/pull/885) integrata con squash `648145b9d4844166806f6a1b2ce0681d98e60be8`; [CI #44950791597](https://github.com/jeckodevelopment/jd_learn/actions/runs/44950791597) **4/4 verde** (preflight, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium), più gate CSV verde.
