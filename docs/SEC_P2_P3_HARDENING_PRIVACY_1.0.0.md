@@ -44,3 +44,11 @@ Documentazione collegata: `SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md`, `JOOMLA_PRIV
 **SEC-P2 — gate del package:** `tools/sec_p2_package_scan.py` ispeziona la ZIP Joomla prodotta da `tools/build.py` e tutte le ZIP figlie entro limiti di profondità/dimensione. Rifiuta percorsi di traversal, file tipicamente segreti (`.env`, chiavi private/certificati p12, .git) e firme note di chiavi private/tokens AWS/GitHub; messaggi di errore riportano soltanto conteggi. `tests/sec-p2-package-scan.py` comprende fixture positive/negative e viene eseguito obbligatoriamente nel preflight di `tools/check.py`. Non sostituisce SCA dipendenze, analisi di vulnerabilità upstream, scansione completa dei segreti su Git history o ispezione CSP/header/runtime.
 
 **Accettazione:** CI Joomla PHP 8.3/MySQL e PHP 8.4/MariaDB; test codice di privacy, package e fixtures; collaudo manuale per l'esercizio di richieste com_privacy, email realmente inviate e conservazione; nessuna attribuzione di completezza SEC-P2 o SEC-P3 prima dei rispettivi gate.
+
+## SEC-P3 — minimizzazione export e rimozione della coda email (21/11/2026)
+
+L'export tramite plugin Joomla Privacy include ora un dominio separato per le consegne email del richiedente, limitato a template ID, stato e timestamp di creazione/invio. La query usa esclusivamente `recipient_user_id`: non espone indirizzi, altri destinatari, variabili del template, eccezioni di trasporto, note amministrative o token. Gli eventi con identificativo destinatario già anonimizzato non sono più collegabili all'interessato e pertanto non compaiono nel dominio.
+
+La rimozione, consentita soltanto in assenza delle dipendenze di retention già protette, azzera anche `last_error` nelle righe terminali della coda. Lo stato tecnico della consegna e i contatori rimangono per l'audit; le righe `pending`, `retry` e `sending` restano bloccanti. Regressione strutturale: `tests/sec-p2-p3-guard.py`; i test reali su Joomla con utente di prova e dati storici restano da completare.
+
+**Stato:** hardening parziale SEC-P3; non dichiarare i criteri 01/02 implementati né aumentare la percentuale in assenza del restante inventario di retention, backup, diritti e collaudi. Nessuna modifica SQL o versione runtime: il comportamento resta backward compatible.
