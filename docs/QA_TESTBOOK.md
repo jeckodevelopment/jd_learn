@@ -1,3 +1,9 @@
+## LCM-03 — checkout in salvataggio editoriale diretto (21/11/2026)
+
+**Automatico:** `tests/joomla-pathways.php` simula un percorso aperto da operatore B e un salvataggio tramite `PathwayModel::save` con operatore A. Verifica diniego, titolo/stato/revisione e checkout invariati, e nessuna perdita/riordino dei corsi. Imposta poi il checkout su A e controlla che il salvataggio legittimo riesca.
+
+**Manuale Joomla: In attesa.** Con due amministratori, aprire lo stesso percorso in modifica: il secondo non deve sovrascrivere il lavoro del primo neppure richiamando direttamente il task di salvataggio; dopo il rilascio o usando il titolare, il salvataggio con ACL e revisione corretti deve riuscire. Controllare il programma e la versione editoriale.
+
 ## LCM-03/04 — associazioni multilingua Joomla e purga (21/11/2026)
 
 **Automatico:** `tests/joomla-pathways.php` e `tests/joomla-teachers.php` creano un'associazione nativa `#__associations` con contesto del record; verificano che la purga del percorso/docente cestinato venga bloccata e lasci intatto il record. Rimosso il solo collegamento di prova, la purga autorizzata torna disponibile.
