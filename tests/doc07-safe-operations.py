@@ -64,4 +64,33 @@ for locale in ("it-IT", "en-GB"):
 # Existing error-specific scheduler and video guidance stays available.
 assert "SchedulerHealth::guidanceKey(" in page
 assert "DashboardProviderStatus::guidanceKey(" in page
+# SCR-16: private configuration values are accessed only locally and projected
+# to fixed localized keys. No diagnostics POST, remote probe or mutable action.
+diagnostics_code = (ROOT / "component/administrator/src/Application/ConfigurationDiagnostics.php").read_text()
+assert "function operationalSettings(array $params): array" in diagnostics_code
+assert "function mailTemplates(array $required, array $installed): array" in diagnostics_code
+assert "string $documentRoot = ''" in diagnostics_code
+assert "static function (string $label, bool $enabled" in diagnostics_code
+assert "$params['material_clamd_socket']" in diagnostics_code
+assert "array_push($this->configurationDiagnostics" in view
+assert "is_string($_SERVER['DOCUMENT_ROOT'] ?? null)" in view
+assert "->select($db->quoteName(['template_id', 'language']))" in view
+for forbidden in ("->insert(", "->update(", "->delete(", "stream_socket_client(", "sendMail("):
+    assert forbidden not in diagnostics_code, forbidden
+for locale in ("it-IT", "en-GB"):
+    lang = (ROOT / "component/administrator/language" / locale / "com_jlms.ini").read_text()
+    keys = [
+        "SCAN_LABEL", "SCAN_UNVERIFIED", "SCAN_MISSING", "SCAN_DISABLED",
+        "SCAN_GUIDANCE_UNVERIFIED", "SCAN_GUIDANCE_MISSING", "SCAN_GUIDANCE_DISABLED",
+        "VIDEO_LOCAL_LABEL", "VIDEO_LOCAL_ACTIVE", "VIDEO_LOCAL_DISABLED",
+        "VIDEO_LOCAL_GUIDANCE_ACTIVE", "VIDEO_LOCAL_GUIDANCE_DISABLED",
+        "CERTIFICATES_LABEL", "CERTIFICATES_ACTIVE", "CERTIFICATES_DISABLED",
+        "CERTIFICATES_GUIDANCE_ACTIVE", "CERTIFICATES_GUIDANCE_DISABLED",
+        "MAIL_FLAGS_LABEL", "MAIL_FLAGS_ACTIVE", "MAIL_FLAGS_DISABLED",
+        "MAIL_FLAGS_GUIDANCE_ACTIVE", "MAIL_FLAGS_GUIDANCE_DISABLED",
+        "CATALOG_LABEL", "CATALOG_READY", "CATALOG_INVALID",
+        "CATALOG_GUIDANCE_READY", "CATALOG_GUIDANCE_INVALID",
+    ]
+    for key in keys:
+        assert len(re.findall(r"^COM_JLMS_CONFIG_" + key + r"=", lang, re.M)) == 1, (locale, key)
 print("DOC-07 safe procedures: five ACL-scoped operations, IT/EN and non-mutating dashboard OK")
