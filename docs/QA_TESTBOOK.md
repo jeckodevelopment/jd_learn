@@ -2888,3 +2888,9 @@ Gate automatico: `python3 tests/frontend-contract-hooks.py` controlla radici DOM
 - Test automatici in `tests/run.php`: radice Unix, drive Windows con slash e backslash, rifiuto di percorsi drive-relative e relativi.
 - Test Joomla **da eseguire separatamente**: su hosting Windows configurare radice privata esterna alla document root, verificare upload e download autorizzati; configurare poi una radice pubblica e verificare il rifiuto. Su Unix verificare che il precedente comportamento resti invariato.
 - I test unitari non sostituiscono le verifiche di web server, proxy, permessi e topologie hosting del criterio `LES-03/public_storage`.
+
+## SCR-16 — diagnostica storage privato della dashboard (21/11/2026)
+
+**Prove automatiche:** `tests/doc07-configuration-diagnostics.php` verifica directory privata esistente, directory entro webroot, radice inesistente e configurazione gestita; la proiezione non espone path o campi aggiuntivi. La diagnostica è in sola lettura; nessuna directory viene creata dalla vista.
+
+**Collaudo manuale Joomla (separato):** con ruolo `core.manage` verificare nella dashboard gli stati e i rimedi IT/EN per le quattro configurazioni; senza permesso verificare assenza della diagnostica. Nessuna navigazione della dashboard deve modificare file, spedire mail, pubblicare video o esporre percorsi e credenziali. Controllo web server/proxy reale rimane gate di accettazione distinto.

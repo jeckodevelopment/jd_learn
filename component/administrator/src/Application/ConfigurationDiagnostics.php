@@ -56,6 +56,43 @@ final class ConfigurationDiagnostics
         return $checks;
     }
 
+    /**
+     * Local-only storage preflight. No directory creation or network probes.
+     * Managed storage is deliberately not reported as ready before runtime checks.
+     * Never include the configured path in the diagnostic result.
+     */
+    public static function storage(string $configured, string $siteRoot, string $publicRoot): array
+    {
+        $configured = trim($configured);
+        $state = 'managed';
+        if ($configured !== '') {
+            $path = realpath($configured);
+            $site = realpath($siteRoot);
+            $public = realpath($publicRoot);
+            if ($path === false || !is_dir($path) || !is_writable($path) || is_link($configured)) {
+                $state = 'unavailable';
+            } elseif (($site && ($path === $site || str_starts_with($path, $site . DIRECTORY_SEPARATOR)))
+                || ($public && ($path === $public || str_starts_with($path, $public . DIRECTORY_SEPARATOR)))) {
+                $state = 'public';
+            } else {
+                $state = 'private';
+            }
+        }
+        $keys = match ($state) {
+            'private' => ['ok', 'COM_JLMS_CONFIG_STORAGE_PRIVATE', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_PRIVATE'],
+            'public' => ['error', 'COM_JLMS_CONFIG_STORAGE_PUBLIC', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_PUBLIC'],
+            'unavailable' => ['error', 'COM_JLMS_CONFIG_STORAGE_UNAVAILABLE', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_UNAVAILABLE'],
+            default => ['warning', 'COM_JLMS_CONFIG_STORAGE_MANAGED', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_MANAGED'],
+        };
+        return [
+            'kind' => 'storage',
+            'labelKey' => 'COM_JLMS_CONFIG_STORAGE_LABEL',
+            'severity' => $keys[0],
+            'stateKey' => $keys[1],
+            'guidanceKey' => $keys[2],
+        ];
+    }
+
     /** Treat labels as translations, never as arbitrary provider-supplied content. */
     private static function safeLabel(mixed $candidate): string
     {

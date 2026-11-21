@@ -110,6 +110,12 @@ final class HtmlView extends BaseHtmlView
         $this->configurationDiagnostics = $actor->authorise('core.manage', 'com_jlms')
             ? \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::summarize($this->schedulerHealth, $this->providers)
             : [];
+        if ($actor->authorise('core.manage', 'com_jlms')) {
+            $storageRoot = (string) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_storage_root', '');
+            $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::storage(
+                $storageRoot, JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT
+            );
+        }
         // Visibility is based on current ACL rather than the presence of a dashboard shortcut.
         // No diagnostic here triggers sending, deleting, regenerating or mutating data.
         $this->safeOperations = [];
