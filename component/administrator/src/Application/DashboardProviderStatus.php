@@ -44,6 +44,11 @@ final class DashboardProviderStatus
         $keys = array_values(array_unique(array_merge(array_keys(self::BUNDLED), $keys)));
         $providers = [];
         foreach ($keys as $key) {
+            // Provider identities are extension-controlled: never render a raw
+            // key that could contain credentials, markup or sensitive data.
+            if (!is_string($key) || !preg_match('/\\A[a-z][a-z0-9_]{0,63}\\z/D', $key)) {
+                continue;
+            }
             $extension = $extensions[$key] ?? null;
             $descriptor = $descriptorMap[$key] ?? null;
             if (!$extension) {
@@ -63,9 +68,15 @@ final class DashboardProviderStatus
                 $class = 'success';
             }
 
+            $candidateLabel = self::BUNDLED[$key] ?? $descriptor?->labelKey ?? ($extension->name ?? null);
+            // Joomla Text::_() must only receive localized identifiers from
+            // untrusted provider descriptors, never arbitrary plugin contents.
+            $safeLabel = is_string($candidateLabel)
+                && preg_match('/\\A(?:COM_JLMS|PLG_JLMSVIDEO)_[A-Z0-9_]+\\z/D', $candidateLabel)
+                ? $candidateLabel : 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL';
             $providers[] = [
                 'key' => $key,
-                'labelKey' => self::BUNDLED[$key] ?? $descriptor?->labelKey ?? (string) ($extension->name ?? $key),
+                'labelKey' => $safeLabel,
                 'stateKey' => $state,
                 'stateClass' => $class,
             ];
