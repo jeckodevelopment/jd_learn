@@ -334,11 +334,21 @@ final class ConfigurationDiagnostics
                 || !preg_match('~\\Aindex\\.php\\?option=com_jlms&view=(?:courses|category)(?:&|\\z)~D', $menu['link'])) {
                 continue;
             }
-            try {
-                $params = json_decode((string) ($menu['params'] ?? ''), true, 32, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
+            // Joomla may persist an empty menu params value for inherited defaults.
+            // A blank string is equivalent to {}, not a corrupt override.
+            $rawParams = $menu['params'] ?? '';
+            if ($rawParams === null || (is_string($rawParams) && trim($rawParams) === '')) {
+                $params = [];
+            } elseif (!is_string($rawParams)) {
                 ++$menuInvalid;
                 continue;
+            } else {
+                try {
+                    $params = json_decode($rawParams, true, 32, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    ++$menuInvalid;
+                    continue;
+                }
             }
             if (!is_array($params) || ($params !== [] && array_is_list($params))) {
                 ++$menuInvalid;
