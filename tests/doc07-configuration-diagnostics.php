@@ -123,10 +123,10 @@ try {
     rmdir($separate);
 }
 $settings = ConfigurationDiagnostics::operationalSettings([]);
-if (count($settings) !== 5 || $settings[0]['stateKey'] !== 'COM_JLMS_CONFIG_SCAN_DISABLED'
+if (count($settings) !== 20 || $settings[0]['stateKey'] !== 'COM_JLMS_CONFIG_SCAN_DISABLED'
     || $settings[1]['stateKey'] !== 'COM_JLMS_CONFIG_VIDEO_LOCAL_DISABLED'
     || $settings[2]['stateKey'] !== 'COM_JLMS_CONFIG_CERTIFICATES_DISABLED'
-    || $settings[3]['severity'] !== 'ok' || $settings[4]['severity'] !== 'ok') {
+    || $settings[3]['severity'] !== 'ok' || $settings[19]['severity'] !== 'ok') {
     throw new RuntimeException('SCR-16 defaults do not reflect declared component configuration');
 }
 $settingsInvalid = ConfigurationDiagnostics::operationalSettings([
@@ -136,7 +136,7 @@ $settingsInvalid = ConfigurationDiagnostics::operationalSettings([
     'mail_enrollment_enabled' => 0, 'mail_completion_enabled' => 0,
 ]);
 if ($settingsInvalid[0]['severity'] !== 'error' || $settingsInvalid[1]['severity'] !== 'ok'
-    || $settingsInvalid[2]['severity'] !== 'ok' || $settingsInvalid[4]['severity'] !== 'warning') {
+    || $settingsInvalid[2]['severity'] !== 'ok' || $settingsInvalid[19]['severity'] !== 'warning') {
     throw new RuntimeException('SCR-16 operational flags or invalid configuration not classified');
 }
 $settingsConfiguredScan = ConfigurationDiagnostics::operationalSettings([
@@ -144,6 +144,14 @@ $settingsConfiguredScan = ConfigurationDiagnostics::operationalSettings([
 ]);
 if ($settingsConfiguredScan[0]['severity'] !== 'warning') {
     throw new RuntimeException('SCR-16 must not equate configured scanner with reachable scanner');
+}
+if ($settings[4]['labelKey'] !== 'COM_JLMS_MAIL_MANAGER_REQUEST_ENABLED'
+    || $settings[4]['severity'] !== 'warning'
+    || $settings[11]['labelKey'] !== 'COM_JLMS_MAIL_ENROLLMENT_ENABLED'
+    || $settings[11]['severity'] !== 'ok'
+    || $settingsInvalid[11]['severity'] !== 'warning'
+    || $settingsInvalid[12]['severity'] !== 'warning') {
+    throw new RuntimeException('SCR-16 must expose individual inherited email notification flags');
 }
 foreach (array_merge($settings, $settingsInvalid, $settingsConfiguredScan) as $check) {
     if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
