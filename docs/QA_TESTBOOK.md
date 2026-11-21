@@ -1,3 +1,11 @@
+## SEC-P3 — esportazione e anonimizzazione coda email (PR #850; 21/11/2026)
+
+**Automatico:** `python3 tests/sec-p2-p3-guard.py` verifica che il dominio com_privacy consegne email selezioni esclusivamente `template_id`, `state`, `created_at`, `sent_at` per il destinatario richiesto, escluda dati destinatario/template/segreti/diagnostici, e che la rimozione dei record terminali azzeri anche `last_error`. Conservare i blocchi per mail `pending`, `retry`, `sending` e per altre dipendenze di retention. Verificare la CI su entrambi gli ambienti Joomla.
+
+**Manuale — in attesa:** creare utenti A/B e notifiche con stati terminali/attivi e un diagnostico fittizio non sensibile. Nell'export Joomla Privacy di A controllare la presenza del solo storico A con quattro metadati e nessun dato B. Dopo l'anonimizzazione A, verificare redazione anche di `last_error`, conservazione di stato/contatori e assenza di rimozione se esistono righe attive. Ripetere con account privo di notifiche, IT/EN, privilegi amministrativi differenti, e controllare regressioni su attestati, consensi e task email. Registrare build, data ed esiti senza trascrivere dati personali.
+
+**Limite:** questa tranche non completa da sola SEC-P3/criterion_01 o criterion_02; restano mappa generale trattamenti e retention, backup e verifica con account.
+
 ## SEC-P2 — registro dei finding e risk review (21/11/2026)
 
 **Automatico:** eseguire `tests/sec-p2-findings-gate.py`; il registro `docs/SEC_P2_FINDINGS_1.0.0.json` contiene severità, mitigazioni e prove. Le fixture negative devono bloccare finding critical/high del codice non risolti, clearing fittizio dei rischi hosting e marker di mitigazione assenti. **Manuale separato:** audit di video legacy nel webroot e GET/HEAD/Range, verifica patch Joomla/PHP, CSP/header e log reali; un finding alto esterno non risolto blocca il rilascio. Riferimento: `docs/SEC_P2_FINDINGS_1.0.0.md`.
