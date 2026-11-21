@@ -10062,20 +10062,26 @@
       {
         "id": "criterion_02",
         "label": "Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          ".github/workflows/ci.yml",
-          "docs/IMPLEMENTATION_EVIDENCE.json",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+          "docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md",
+          "security/secdev07-semgrep.yml",
+          "tests/secdev07-sast.py",
+          "tests/secdev07-style-gate.py",
+          "tools/sec_p2_dependency_gate.py",
+          "tests/sec-p2-source-gate.py",
+          ".github/workflows/ci.yml"
         ],
         "review": {
-          "reason": "Non risulta un inventario/lockfile e una scansione completa di stile, analisi statica, segreti e dipendenze con evidenze della candidata; il gate di hardening rimane aperto.",
+          "reason": "PR #858 integrata (merge aafb718857b35ed27dfb5b0e6ed2d86845af6541), CI run 44909562794 superata 4/4: nel software distribuito sono presenti modello delle minacce e review superfici sensibili, inventario deterministico delle 12 estensioni e blocco dipendenze non dichiarate, gate sui segreti e workflow, analisi statica Semgrep Community 1.186.0 con regole versionate PHP/JS/Python e fixture positive/negative, lint PHP 8.3/8.4, parser Python/JS e controllo Ruff 0.14.6 su tutti i Python rispetto alla baseline. Le 1475 violazioni Ruff preesistenti sono conteggiate, non cancellate, e nuove violazioni sono bloccate. Implementazione del processo di qualità e scansione nel perimetro first-party; NON equivale a SAST esaustivo, SCA delle dipendenze esterne Joomla/PHP/hosting o assenza di vulnerabilità, che rimangono verifiche di rilascio separate; non attribuire collaudo manuale.",
           "references": [
-            ".github/workflows/ci.yml#L1-L25",
-            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md#SECDEV-07/02",
+            "security/secdev07-semgrep.yml#jdlearn.php.dynamic-evaluation",
+            "tests/secdev07-sast.py#def scan",
+            "tests/secdev07-style-gate.py#def invoke",
+            "tools/sec_p2_dependency_gate.py#def inspect",
+            ".github/workflows/ci.yml#SECDEV-07 free offline SAST and Python style checks"
           ]
         }
       },
