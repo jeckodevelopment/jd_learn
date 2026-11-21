@@ -504,6 +504,30 @@ $db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_u
 if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$privacyBlockedData[0]->reason) {
     throw new \RuntimeException('JD Learn privacy plugin did not explain the removal blocker for an owned job.');
 }
+// Immutable audit attribution must block removal before modifying any state.
+$privacyCampaignFixtureId = 900000000000 + $privacyUserId;
+$db->setQuery($db->createQuery()->insert('#__jlms_course_announcement_campaigns')
+    ->columns(['course_id', 'requested_by', 'recipient_count', 'state', 'requested_at'])
+    ->values(implode(',', [$privacyCampaignFixtureId, $privacyUserId, 0, $db->quote('queued'), 'UTC_TIMESTAMP(6)'])))->execute();
+try {
+    $immutableAuditBlock = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+    $privacyPlugin->onPrivacyCanRemoveData($immutableAuditBlock);
+    if (($immutableAuditBlock->getArgument('result', []))[0]->canRemove) {
+        throw new \RuntimeException('Immutable audit reference did not block privacy removal.');
+    }
+    $immutableRemovalRejected = false;
+    try {
+        $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]));
+    } catch (\RuntimeException $error) {
+        $immutableRemovalRejected = str_contains($error->getMessage(), 'blocked by retained records');
+    }
+    if (!$immutableRemovalRejected) {
+        throw new \RuntimeException('Direct erasure bypassed immutable audit retention.');
+    }
+} finally {
+    $db->setQuery($db->createQuery()->delete('#__jlms_course_announcement_campaigns')
+        ->where('course_id = ' . $privacyCampaignFixtureId))->execute();
+}
 // Verify all MAIL-11 consent states on an isolated disposable Joomla account,
 // not a mock of the Privacy event. Consent remains the only authoritative row.
 foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
