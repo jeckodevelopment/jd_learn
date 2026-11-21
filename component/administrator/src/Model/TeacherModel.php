@@ -208,7 +208,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         try {
             $db->transactionStart();
             $started = true;
-            $query = $db->createQuery()->select('id, state, checked_out')->from('#__jlms_teachers')
+            $query = $db->createQuery()->select('id, state, checked_out, user_id')->from('#__jlms_teachers')
                 ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
             $query->setQuery((string) $query . ' FOR UPDATE');
             $record = $db->setQuery($query)->loadObject()
@@ -218,6 +218,12 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             }
             if ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
+            // An associated Joomla identity is a live ownership/reference edge,
+            // including disabled accounts. Unlink explicitly before purging a profile.
+            // This operation never changes or deletes the native account.
+            if ((int) $record->user_id > 0) {
+                throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
             }
             $related = $db->createQuery()->select('COUNT(*)')->from('#__jlms_course_teachers')
                 ->where('teacher_id = :teacher')->bind(':teacher', $id, ParameterType::INTEGER);
