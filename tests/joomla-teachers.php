@@ -268,7 +268,7 @@ $emptyTeacher = array_replace($teacherBase, [
     'id'=>0, 'revision'=>1, 'title'=>'Disposable CI empty teacher',
     'alias'=>'disposable-ci-empty-teacher', 'user_id'=>$linkedUserId, 'state'=>0,
 ]);
-teacherExpect($teacherModel->save($emptyTeacher), 'new unlinked and unassigned teacher can be authored');
+teacherExpect($teacherModel->save($emptyTeacher), 'new teacher linked to an independent Joomla account can be authored');
 $emptyTeacherId=(int)$teacherModel->getState('teacher.id');
 teacherExpect($emptyTeacherId>0, 'empty teacher fixture created');
 teacherExpect($teacherModel->changeStates([$emptyTeacherId], -2), 'empty teacher placed in trash');
