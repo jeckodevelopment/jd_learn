@@ -1,3 +1,9 @@
+## SECDEV-07 — Sintassi multi-linguaggio e fixture negative (21/11/2026)
+
+**Test automatici:** eseguire `python3 tests/secdev07-language-syntax.py --self-test` (due casi validi e due invalidi) e `python3 tests/secdev07-language-syntax.py` (tutti i file Git tracciati Python/JS/MJS/CJS); il preflight della PR deve fallire per un sorgente sintatticamente non valido. Verificare indipendentemente `php -l` su tutti i file PHP nei job della matrice e `git diff --check`. Questa prova **non** chiude SAST/SCA completi o il criterio 02.
+
+**Collaudo manuale:** nessuna nuova interazione Joomla introdotta; mantenere le prove SECDEV-07 già previste sul sito e la security review della candidata, senza promuovere stati di accettazione.
+
 ## SECDEV-07 — Processo tracciato di security assurance (21/11/2026)
 
 **Test automatico:** `python3 tests/secdev07-assurance-gate.py` nel preflight `tools/check.py`; convalida dieci controlli di sicurezza, i riferimenti a sorgenti e test realmente presenti, l'invocazione nel runner CI e quattro gap non dichiarabili risolti. Le fixture negative simulano la rimozione di un controllo, di un rischio, di un test dal runner e un riferimento insicuro: tutti devono essere rifiutati. Eseguire anche le suite Joomla PHP/MySQL e PHP/MariaDB, test browser e install/upgrade prima del merge.
