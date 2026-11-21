@@ -104,6 +104,19 @@ for locale in ("it-IT", "en-GB"):
                  "VIDEO_PROBE_LABEL", "VIDEO_PROBE_UNVERIFIED", "VIDEO_PROBE_UNAVAILABLE",
                  "VIDEO_PROBE_GUIDANCE_UNVERIFIED", "VIDEO_PROBE_GUIDANCE_UNAVAILABLE"):
         assert len(re.findall(r"^COM_JLMS_CONFIG_" + name + r"=", translations, re.M)) == 1
+# SCR-16: third-party video provider labels/identifiers never reach a dashboard
+# output unvalidated. The diagnostics surface remains deliberately non-mutating.
+provider_projection = (ROOT / "component/administrator/src/Application/DashboardProviderStatus.php").read_text()
+assert "COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL" in provider_projection
+assert "PLG_JLMSVIDEO" in provider_projection
+assert "preg_match(" in provider_projection
+assert "'labelKey' => $safeLabel" in provider_projection
+assert "'key' => $key" in provider_projection
+assert "PluginHelper::importPlugin('jlmsvideo')" in view
+assert "RegisterVideoProvidersEvent::NAME" in view
+assert "sendMail(" not in view
+assert "->insert(" not in view and "->update(" not in view and "->delete(" not in view
+assert "->save(" not in view and "->store(" not in view
 # SCR-16 completion candidate: real override diagnostics must remain bounded,
 # ACL scoped and read-only, including malformed data and unknown local values.
 assert "ConfigurationDiagnostics::inheritance(" in view
