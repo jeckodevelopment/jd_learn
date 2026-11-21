@@ -361,7 +361,9 @@ final class ConfigurationDiagnostics
             }
         }
         $make = static function (string $label, int $overrides, int $invalid) use ($complete): array {
-            $state = !$complete ? 'INCOMPLETE' : ($invalid > 0 ? 'INVALID' : ($overrides > 0 ? 'OVERRIDES' : 'INHERITED'));
+            // Known invalid values must remain actionable even when the bounded scan is incomplete.
+            // Only successful states are downgraded to INCOMPLETE.
+            $state = $invalid > 0 ? 'INVALID' : (!$complete ? 'INCOMPLETE' : ($overrides > 0 ? 'OVERRIDES' : 'INHERITED'));
             $severity = $state === 'INVALID' ? 'error' : ($state === 'INHERITED' ? 'ok' : 'warning');
             $states = [
                 'INCOMPLETE' => ['COM_JLMS_CONFIG_INHERIT_INCOMPLETE', 'COM_JLMS_CONFIG_INHERIT_GUIDANCE_INCOMPLETE'],

@@ -172,7 +172,10 @@ final class HtmlView extends BaseHtmlView
                 ->select($db->quoteName(['link', 'params']))
                 ->from($db->quoteName('#__menu'))
                 ->where($db->quoteName('client_id') . ' = 0')
-                ->where($db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=%'))
+                // Only catalogue/category entries are consumed by inheritance().
+                // Other component menus must not exhaust the bounded diagnostic scan.
+                ->where('(' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=courses%')
+                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=category%') . ')')
                 ->order($db->quoteName('id') . ' ASC');
             $menuOptions = array_map(
                 static fn (object $item): array => ['link' => (string) $item->link, 'params' => (string) $item->params],
