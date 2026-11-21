@@ -13,7 +13,7 @@ JD Learn 1.0.0 deve essere comprensibile anche a chi non ha mai amministrato un 
 | DOC-01 | P0 | Guida installazione, requisiti Joomla/PHP/DB, primo avvio, upgrade e rollback/backup | Verifica su installazione pulita e aggiornamento con dati |
 | DOC-02 | P0 | Manuale amministratore: corsi, versioni, lezioni, iscritti, provider, ACL, email, attestati PDF, privacy e manutenzione | Ogni schermata amministrativa della 1.0.0 ha una procedura verificata |
 | DOC-03 | P1 | Manuale docente e studente, con percorsi tipici e screenshot reali accessibili | Eseguibili da utenti non sviluppatori |
-| DOC-04 | P1 | Riferimento tecnico: struttura pacchetto, servizi, plugin, DB, aggiornamenti, task/cron, estensioni e troubleshooting | Collegamenti a sorgente/versioni e operazioni di recupero verificate |
+| DOC-04 | P1 | [Riferimento tecnico](TECHNICAL_REFERENCE_1.0.0.md): struttura pacchetto, servizi, plugin, DB, aggiornamenti, task/cron, estensioni e troubleshooting | Collegamenti a sorgente/versioni e operazioni di recupero da collaudare sul sito Joomla; gate di drift nel repository |
 | DOC-05 | P0 | Guida contestuale collegata alle schermate amministrative Joomla | Comando di aiuto coerente nelle schermate complesse; link a capitolo pertinente e localizzato |
 | DOC-06 | P0 | Descrizioni/tooltip dei campi e delle azioni non ovvie | Spiegano scopo, formato, range, default, dipendenze, effetti di modifica e avvertenze; IT/EN |
 | DOC-07 | P1 | Procedure guidate per configurazioni ad alto rischio, test della configurazione e messaggi di errore attuabili | Niente segreti in tooltip, log o screenshot; convalida server-side |

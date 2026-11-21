@@ -1168,3 +1168,6 @@ runpy.run_path(str(ROOT/'tests/secdev07-assurance-gate.py'), run_name='__main__'
 
 # UI-07: rendered DOM validation negative fixtures (real Joomla cases run in HTTP CI).
 runpy.run_path(str(ROOT/'tests/frontend-dom-runtime.py'), run_name='__main__')
+
+# DOC-04: versioned technical contracts and reproducible operations.
+runpy.run_path(str(ROOT/'tests/doc04-technical-reference.py'), run_name='__main__')
