@@ -26,17 +26,17 @@ Il preflight esegue `tests/secdev07-language-syntax.py` su tutti i file Python, 
 
 ## Limiti espressi e rischio residuo
 
-Il registro mantiene quattro attività **non automaticamente risolte**:
+Il registro conserva quattro attività **di rilascio o valutazione residua**:
 1. Verifica SCA delle dipendenze della piattaforma Joomla/PHP/database e dei servizi esterni nella candidata finale, con advisory e patch level.
 2. Revisione dei segreti di hosting, configurazioni, log e rotazioni senza pubblicare credenziali.
 3. Test dinamici/penetration review e decisione di rilascio SEC-P5 sul deploy definitivo.
-4. Analisi statica e stile completi, oltre ai controlli mirati attualmente presenti, con strumento/versione e risultati riproducibili.
+4. Riesame del debito storico Ruff (1.475 finding iniziali), analisi SAST più profonde/interprocedurali e conferma della copertura sulla candidata finale; Semgrep CE locale, scanner di dipendenze e gate di nuove regressioni sono ora eseguiti in CI.
 
 **Regola:** nessun esito negativo, false positive o non applicabilità può essere ignorato. La relativa decisione deve registrare ID della superficie, versione/build, motivazione, prova riproducibile, revisore e data. Un finding high/critical confermato nel codice distribuito impedisce la candidate release tramite il gate SEC-P2. I finding della piattaforma/hosting rimangono blocchi di rilascio finché non sono valutati e risolti; il CI del solo componente non può certificarli.
 
 ## Esecuzione, accettazione e matrice
 
-- Il team software può chiudere il **criterio SECDEV-07/criterion_01 sul processo verificabile** solo dopo PR integrata, preflight verde e matrice con prove riferite al commit. Il criterio 02 richiede anche strumenti di stile/SAST/SCA e relativa evidenza; non promuoverlo per il solo registro.
+- Il team software può chiudere il **criterio SECDEV-07/criterion_01 sul processo verificabile** solo dopo PR integrata, preflight verde e matrice con prove riferite al commit. Il criterio 02 risulta implemented sul codice e sugli scanner first-party dopo PR #858, CI 4/4 verde e riconciliazione del registro. Questo non approva vulnerabilità ereditate, host o fornitori, né sostituisce gli audit finali.
 - I criteri 04/05 necessitano un report completo di riesame dei finding e delle non applicabilità sulla candidata; non sono promossi da questa PR.
 - Il titolare del sito e chi effettua collaudi mantengono un registro **separato** dell'accettazione Joomla, con ruoli diversi, prove sulla candidata finale, log e backup, dipendenze e attacchi negativi, senza riportare dati personali o credenziali.
 
