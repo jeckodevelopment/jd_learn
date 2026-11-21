@@ -323,8 +323,17 @@ final class CatalogService
         $query
             ->bind(':previewKind', $previewKind);
         $lesson = $this->db->setQuery($query)->loadObject();
-        if (!$lesson || \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
-            $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days) !== 'available') {
+        if (!$lesson) {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
+        // Malformed historical scheduling must fail closed just like the public outline.
+        try {
+            $available = \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
+                $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days) === 'available';
+        } catch (\InvalidArgumentException $exception) {
+            $available = false;
+        }
+        if (!$available) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return $lesson;
