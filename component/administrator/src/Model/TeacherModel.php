@@ -105,7 +105,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                     $data['user_id'] = (int) $user->id;
                 }
             }
-            unset($data['revision']);
+            if (array_key_exists('bio', $data)) {\n                $data['bio'] = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::html(\n                    \Joomla\CMS\Component\ComponentHelper::filterText($data['bio'])\n                );\n            }\n            unset($data['revision']);
             if (!parent::save($data)) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED'); }
             $db->transactionCommit(); return true;
         } catch (\Throwable $error) {
