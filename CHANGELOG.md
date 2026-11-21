@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — diagnostica provider e ACL (21/11/2026):** ripristinata l'etichetta localizzata nella proiezione di diagnostica video, supportati i soli identificativi IT/EN e plugin localizzati validi; registrazione/status dei provider e relativa sezione dashboard limitati a utenti con `core.manage` del componente. Nuovi test di regressione, nessuna azione di connessione o invio implicito.
+
 - **SCR-16 — verifica e protezioni diagnostiche (21/11/2026):** parametri vuoti dei menu trattati come ereditarietà valida; controllo di tutte le cinque opzioni globali di presentazione catalogo; filtri sui nomi e sulle etichette forniti dai plugin video per non visualizzare valori arbitrari. Test PHP negativi e strutturali, sola lettura, nessun invio o mutazione.
 
 - **SCR-16 — scansioni indipendenti (21/11/2026):** la diagnostica amministrativa distingue l'incompletezza dei corsi da quella dei menu; verifica soltanto i link delle viste catalogo/categoria esatte, esclusi prefissi simili. Fixture PHP e gate strutturali. Nessuna chiamata esterna, mutazione o divulgazione di valori. I criteri complessivi 02–05 non sono promossi senza prova integrale.
