@@ -217,7 +217,7 @@ pubExpect($missingPreviewRejected,'unselected lesson ID is not previewable');
 
  // A corrupt legacy schedule must be handled like an unavailable public lesson,
  // without returning an unhandled InvalidArgumentException or exposing its body.
-$writeFixture('#__jlms_lessons', (object)['id' => $lesson, 'release_after_days' => -1], 'id');
+$writeFixture('#__jlms_lessons', (object)['id' => $lesson, 'release_after_days' => 3651], 'id');
 $invalidScheduleRejected = false;
 try {
     $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson);
