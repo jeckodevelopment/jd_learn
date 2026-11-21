@@ -11207,14 +11207,19 @@
       {
         "id": "criterion_02",
         "label": "nessun finding critico/alto irrisolto",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "docs/SEC_P2_FINDINGS_1.0.0.md",
+          "docs/SEC_P2_FINDINGS_1.0.0.json",
+          "tests/sec-p2-findings-gate.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «nessun finding critico/alto irrisolto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La review automatizzata e tracciata per la build JD Learn 0.64.18-dev dimostra che tutti i finding critici/alti confermati nel codice distribuito e censiti nel registro sono mitigati, con verifiche nel sorgente e fixture negative che fanno fallire il gate se compare un finding high/critical irrisolto. I rischi non ancora verificati della piattaforma Joomla e dei file legacy presenti su hosting restano esplicitamente bloccanti per il rilascio e vanno verificati nell'accettazione separata; non si certifica l'assenza universale di vulnerabilità.",
           "references": [
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+            "docs/SEC_P2_FINDINGS_1.0.0.md#Fonti di evidenza",
+            "docs/SEC_P2_FINDINGS_1.0.0.md#Decisione, confini e rilascio",
+            "docs/SEC_P2_FINDINGS_1.0.0.json#\"decision_policy\"",
+            "tests/sec-p2-findings-gate.py#def inspect(root: Path, ledger: dict)"
           ]
         }
       }
