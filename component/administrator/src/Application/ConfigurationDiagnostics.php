@@ -363,12 +363,18 @@ final class ConfigurationDiagnostics
         $make = static function (string $label, int $overrides, int $invalid) use ($complete): array {
             $state = !$complete ? 'INCOMPLETE' : ($invalid > 0 ? 'INVALID' : ($overrides > 0 ? 'OVERRIDES' : 'INHERITED'));
             $severity = $state === 'INVALID' ? 'error' : ($state === 'INHERITED' ? 'ok' : 'warning');
+            $states = [
+                'INCOMPLETE' => ['COM_JLMS_CONFIG_INHERIT_INCOMPLETE', 'COM_JLMS_CONFIG_INHERIT_GUIDANCE_INCOMPLETE'],
+                'INVALID' => ['COM_JLMS_CONFIG_INHERIT_INVALID', 'COM_JLMS_CONFIG_INHERIT_GUIDANCE_INVALID'],
+                'OVERRIDES' => ['COM_JLMS_CONFIG_INHERIT_OVERRIDES', 'COM_JLMS_CONFIG_INHERIT_GUIDANCE_OVERRIDES'],
+                'INHERITED' => ['COM_JLMS_CONFIG_INHERIT_INHERITED', 'COM_JLMS_CONFIG_INHERIT_GUIDANCE_INHERITED'],
+            ];
             return [
                 'kind' => 'inheritance',
                 'labelKey' => $label,
                 'severity' => $severity,
-                'stateKey' => 'COM_JLMS_CONFIG_INHERIT_' . $state,
-                'guidanceKey' => 'COM_JLMS_CONFIG_INHERIT_GUIDANCE_' . $state,
+                'stateKey' => $states[$state][0],
+                'guidanceKey' => $states[$state][1],
             ];
         };
         return [
