@@ -52,4 +52,29 @@ if ($untrusted[0]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL'
     || $untrusted[0]['stateKey'] !== 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN') {
     throw new RuntimeException('Unknown provider labels or states must fail closed');
 }
+$tmpBase = sys_get_temp_dir() . '/jdlearn-scr16-' . bin2hex(random_bytes(5));
+if (!mkdir($tmpBase, 0700) || !mkdir($tmpBase . '/public', 0700) || !mkdir($tmpBase . '/private', 0700)) {
+    throw new RuntimeException('Could not prepare disposable storage diagnostic fixture');
+}
+try {
+    $private = ConfigurationDiagnostics::storage($tmpBase . '/private', $tmpBase . '/public', $tmpBase . '/public');
+    $public = ConfigurationDiagnostics::storage($tmpBase . '/public', $tmpBase . '/public', $tmpBase . '/public');
+    $missing = ConfigurationDiagnostics::storage($tmpBase . '/missing', $tmpBase . '/public', $tmpBase . '/public');
+    $managed = ConfigurationDiagnostics::storage('', $tmpBase . '/public', $tmpBase . '/public');
+    foreach ([$private, $public, $missing, $managed] as $result) {
+        if (array_keys($result) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+            || !in_array($result['severity'], ['ok', 'warning', 'error'], true)
+            || str_contains(json_encode($result, JSON_THROW_ON_ERROR), $tmpBase)) {
+            throw new RuntimeException('SCR-16 storage diagnostic leaks paths or unexpected fields');
+        }
+    }
+    if ($private['severity'] !== 'ok' || $public['severity'] !== 'error'
+        || $missing['severity'] !== 'error' || $managed['severity'] !== 'warning') {
+        throw new RuntimeException('SCR-16 private/public/unavailable/managed classification failed');
+    }
+} finally {
+    rmdir($tmpBase . '/private');
+    rmdir($tmpBase . '/public');
+    rmdir($tmpBase);
+}
 echo "DOC-07: scheduler/provider actionable statuses and privacy-safe projections OK\n";
