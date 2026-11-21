@@ -82,7 +82,14 @@ migrationExpect($service->preview($actor,$course,$enrollment,$mapping)['blocked'
 // assignment or changing the source, even if a valid preview was already issued.
 $beforeBlockedMigrationCount=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$enrollment)->loadResult();
 $beforeBlockedSource=(array)migrationRow('enrollments',$enrollment);
-$activeAttempt=(object)['enrollment_id'=>$enrollment,'quiz_id'=>2147483000,'attempt_id'=>2147483001];
+$probeQuiz=(object)['lesson_id'=>$lesson,'course_version_id'=>$sourceVersion,
+    'selection_json'=>'{}','created_at'=>gmdate('Y-m-d H:i:s'),'modified_at'=>gmdate('Y-m-d H:i:s')];
+$db->insertObject('#__jlms_quizzes',$probeQuiz,'id');
+$probeAttempt=(object)['enrollment_id'=>$enrollment,'course_version_id'=>$sourceVersion,'quiz_id'=>(int)$probeQuiz->id,
+    'attempt_no'=>1,'status'=>'open','rules_snapshot_json'=>'{}','max_points'=>100,
+    'started_at'=>gmdate('Y-m-d H:i:s')];
+$db->insertObject('#__jlms_attempts',$probeAttempt,'id');
+$activeAttempt=(object)['enrollment_id'=>$enrollment,'quiz_id'=>(int)$probeQuiz->id,'attempt_id'=>(int)$probeAttempt->id];
 $db->insertObject('#__jlms_active_attempts',$activeAttempt);
 try {
  $attemptPlan=$service->preview($actor,$course,$enrollment,$mapping);
@@ -94,7 +101,9 @@ try {
  migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$enrollment)->loadResult()===$beforeBlockedMigrationCount,
      'open-quiz denial does not create migration records');
 } finally {
- $db->setQuery('DELETE FROM #__jlms_active_attempts WHERE enrollment_id='.(int)$enrollment.' AND quiz_id=2147483000')->execute();
+ $db->setQuery('DELETE FROM #__jlms_active_attempts WHERE enrollment_id='.(int)$enrollment.' AND quiz_id='.(int)$probeQuiz->id)->execute();
+ $db->setQuery('DELETE FROM #__jlms_attempts WHERE id='.(int)$probeAttempt->id)->execute();
+ $db->setQuery('DELETE FROM #__jlms_quizzes WHERE id='.(int)$probeQuiz->id)->execute();
 }
 migrationExpect($service->preview($actor,$course,$enrollment,$mapping)['blocked']===null,'closing quiz attempt restores migration eligibility');
 // A destination edition at capacity must also fail without partial migration.
