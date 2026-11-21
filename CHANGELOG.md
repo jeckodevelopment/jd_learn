@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.18-dev — SEC-P2 hardening build/package (21/11/2026):** lo scanner ricorsivo del package rifiuta link simbolici ZIP, collisioni case-insensitive, drive Windows, traversal e decompressione aggregata per tutti gli archivi annidati; il builder applica il controllo prima di produrre ogni ZIP dev o stabile. Aggiunte fixture negative e documentato il gate live residuo; SEC-P2 non chiuso senza SCA, storico segreti e verifica hosting. Bump PATCH per difesa del percorso di distribuzione.
+
 - **0.64.17-dev — DOC-04 contratti tecnici e procedure (21/11/2026):** aggiunta mappa versionata del package, dei dodici costituenti, delle superfici applicative e dei gate di verifica, con procedura riproducibile per build, integrity check, ricognizione schema read-only e collaudo. Nessuna modifica runtime, versione o percentuali; ricognizione database reale e accettazione manuale pendenti.
 
 - **0.64.17-dev — UI-07, inventario DOM completo (21/11/2026):** mappa versionata delle 17 viste e dei 4 partial condivisi con dipendenze di inclusione, gate su nuove sorgenti e collisioni ID con moduli esterni, due personalizzazioni CSS indipendenti. Criterio di mappatura implementato, collaudo su Joomla/override reali ancora pendente. Nessuna modifica runtime, SemVer invariato.
