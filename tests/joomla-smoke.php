@@ -520,14 +520,14 @@ foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
     $foundConsentDomain = false;
     foreach ($consentExportEvent->getArgument('result', []) as $contribution) {
         foreach ((array) $contribution as $domain) {
-            if ($domain instanceof \\Joomla\\Component\\Privacy\\Administrator\\Export\\Domain
+            if ($domain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
                 && $domain->name === 'jdlearn_course_announcement_consent') {
                 $foundConsentDomain = count($domain->getItems()) === 1;
             }
         }
     }
     if (!$foundConsentDomain) {
-        throw new \\RuntimeException('Joomla Privacy did not export consent state ' . $consentFixtureState);
+        throw new \RuntimeException('Joomla Privacy did not export consent state ' . $consentFixtureState);
     }
 }
 $privacyTokenHash = hash('sha256', 'privacy-revocation-token-fixture-' . $privacyUserId);
@@ -551,7 +551,7 @@ $db->setQuery($db->createQuery()->insert('#__jlms_mail_queue')
 // requested subject's Privacy export or be anonymized with the first account.
 $otherPrivacyUserId = (int) $app->getIdentity()->id;
 if ($otherPrivacyUserId <= 0 || $otherPrivacyUserId === $privacyUserId) {
-    throw new \\RuntimeException('Privacy two-account fixture lacks an independent Joomla user.');
+    throw new \RuntimeException('Privacy two-account fixture lacks an independent Joomla user.');
 }
 $otherPrivacyMailKey = hash('sha256', 'privacy-mail-other-user-ci-' . $privacyUserId);
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
@@ -568,14 +568,14 @@ $privacySubjectDomains = $privacySubjectExport->getArgument('result', []);
 $privacyMailDomains = [];
 foreach ($privacySubjectDomains as $privacyContribution) {
     foreach ((array) $privacyContribution as $privacyDomain) {
-        if ($privacyDomain instanceof \\Joomla\\Component\\Privacy\\Administrator\\Export\\Domain
+        if ($privacyDomain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
             && $privacyDomain->name === 'jdlearn_mail_deliveries') {
             $privacyMailDomains[] = $privacyDomain;
         }
     }
 }
 if (count($privacyMailDomains) !== 1 || count($privacyMailDomains[0]->getItems()) !== 1) {
-    throw new \\RuntimeException('Privacy mail export leaked or lost the requested user scope.');
+    throw new \RuntimeException('Privacy mail export leaked or lost the requested user scope.');
 }
 $privacyQueueBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyQueueBlocked);
@@ -606,7 +606,7 @@ $retainedPrivacyConsent = (int) $db->setQuery($db->createQuery()->select('COUNT(
 $retainedPrivacyToken = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')
     ->from('#__jlms_mail_unsubscribe_tokens')->where('user_id = ' . $privacyUserId))->loadResult();
 if ($retainedPrivacyConsent !== 0 || $retainedPrivacyToken !== 0) {
-    throw new \\RuntimeException('Privacy erasure retained consent or revocation tokens.');
+    throw new \RuntimeException('Privacy erasure retained consent or revocation tokens.');
 }
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->execute();
 $otherPrivacyRemaining = $db->setQuery($db->createQuery()
@@ -617,7 +617,7 @@ if (!$otherPrivacyRemaining || (int) $otherPrivacyRemaining->recipient_user_id !
     || $otherPrivacyRemaining->recipient_email !== 'other-privacy-fixture@example.invalid'
     || $otherPrivacyRemaining->template_data !== '{"fixture":"other-account"}'
     || $otherPrivacyRemaining->reconciliation_by !== null) {
-    throw new \\RuntimeException('Privacy erasure affected an unrelated account.');
+    throw new \RuntimeException('Privacy erasure affected an unrelated account.');
 }
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
 
