@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — diagnostica storage privato (21/11/2026):** dashboard amministrativa con preflight locale in sola lettura di directory private esterne, percorso pubblico rifiutato, directory mancante e storage gestito da verificare all'uso; esiti e rimedi IT/EN senza divulgazione dei percorsi. Test automatici su quattro stati; nessun side effect o incremento di copertura anticipato.
+
 - **LES-03 — storage privato Windows (21/11/2026):** corretta la validazione di path assoluti con separatore backslash, mantenendo il rifiuto di path relativi e drive-relative. Cinque test regressione Unix/Windows. Nessuna accettazione hosting dichiarata e nessun nuovo requisito completato automaticamente.
 
 - **0.64.21-dev — AUT-04:** controllo fail-closed della completezza delle equivalenze salvate durante la migrazione di iscrizioni, con prova preflight 0–1001; integrazione Joomla ampliata per tentativi quiz aperti, edizioni esaurite, recupero e mapping solo espliciti. PATCH SemVer; nessuna migrazione schema e nessuna modifica agli stati delle iscrizioni senza conferma.
