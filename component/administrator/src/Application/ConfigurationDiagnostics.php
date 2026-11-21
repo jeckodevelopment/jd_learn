@@ -49,7 +49,8 @@ final class ConfigurationDiagnostics
                 'guidanceKey' => DashboardProviderStatus::guidanceKey($state),
                 'stateKey' => in_array($state, [
                     'COM_JLMS_PROVIDER_NOT_INSTALLED', 'COM_JLMS_PROVIDER_DISABLED',
-                    'COM_JLMS_PROVIDER_UNAVAILABLE', 'COM_JLMS_NOT_CONFIGURED', 'COM_JLMS_READY',
+                    'COM_JLMS_PROVIDER_UNAVAILABLE', 'COM_JLMS_PROVIDER_UNVERIFIED',
+                    'COM_JLMS_NOT_CONFIGURED', 'COM_JLMS_READY',
                 ], true) ? $state : 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN',
             ];
         }
