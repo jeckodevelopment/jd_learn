@@ -1,3 +1,7 @@
+## SECDEV-07/02 — Evidenze PR #858 e accettazione separata (21/11/2026)
+
+SAST Semgrep e test negativi, Ruff (debito storico tracciato, nuove regressioni bloccate), lint PHP e controlli packaging sono stati eseguiti nella [CI 44909562794](https://github.com/jeckodevelopment/jd_learn/actions/runs/44909562794) **4/4 verde**, PR #858 integrata. **Collaudo Joomla: in attesa.** Sul sito di prova verificare con ruoli distinti ACL, CSRF, IDOR, schermate sensibili, log privi di dati, configurazione e patch di Joomla/PHP/DB/servizi, CVE esterne e backup/restore; registrare il risultato senza dati personali. SECDEV-07/04 e /05 restano non verificabili e non si dichiara conformità ASVS né assenza universale di vulnerabilità.
+
 ## SECDEV-07/02 — SAST offline, stile e composizione package (candidato, 21/11/2026)
 
 - **CI:** installazione con versioni fissate Semgrep 1.186.0/Ruff 0.14.6 in venv isolato; `python3 tests/secdev07-sast.py --self-test` rifiuta PHP eval, JavaScript eval e Python eval, accetta gli equivalenti sicuri; `python3 tests/secdev07-sast.py` blocca qualsiasi finding delle regole locali e qualsiasi errore di scansione.
