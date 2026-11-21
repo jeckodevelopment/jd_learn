@@ -1,6 +1,6 @@
 **JD Learn 0.64.21-dev — SCR-16 implementazione COMPLETATA (21/11/2026):** tutti e 5 i criteri software core risultano `implemented`, con diagnostica locale che non invoca plugin terzi, test automatici negativi e matrice generata riconciliata. **Sviluppo comprovato globale 61,34%** (479 implemented / 17 missing / 261 unverifiable). **Collaudo manuale Joomla di SCR-16: Non eseguito**, indipendente dalla chiusura dello sviluppo. I provider remoti/terzi non sono dichiarati raggiungibili senza prova esplicita.
 
-**SCR-01 — persistenza URL e reset paginazione (21/11/2026):** correzione Joomla 5.1+ per i link pagination: filtri/ordinamento validati registrati esplicitamente, inclusa la paginazione indipendente delle sottocategorie; GET di aggiornamento filtri senza limitstart. Test PHP per allowlist e filtro nascosto, integrazione nel gate di catalogo. Collaudo manuale Joomla distinto.
+**SCR-01 — persistenza URL e reset paginazione (21/11/2026; sviluppo globale comprovato 61,50%; 481 criteri implementati / 259 non verificabili / 17 mancanti):** correzione Joomla 5.1+ per i link pagination: filtri/ordinamento validati registrati esplicitamente, inclusa la paginazione indipendente delle sottocategorie; GET di aggiornamento filtri senza limitstart. Test PHP per allowlist e filtro nascosto, integrazione nel gate di catalogo. Collaudo manuale Joomla distinto.
 
 **JD Learn 0.64.21-dev — SCR-16: stato implementazione e test automatici (21/11/2026).**
 
