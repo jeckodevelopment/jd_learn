@@ -54,3 +54,7 @@ La rimozione, consentita soltanto in assenza delle dipendenze di retention già 
 **Stato:** hardening parziale SEC-P3; non dichiarare i criteri 01/02 implementati né aumentare la percentuale in assenza del restante inventario di retention, backup, diritti e collaudi. Nessuna modifica SQL o versione runtime: il comportamento resta backward compatible.
 
 **Tracciabilità PR #850:** milestone 1.0.0, priorità P0, criteri SEC-P3 conservati come missing fino alla verifica integrale; gli scenari manuali specifici sono nel QA Testbook. La verifica CI deve essere eseguita su un evento PR successivo all'applicazione della milestone.
+
+## SEC-P3 — Inventario, prove multiutente e procedure di backup (21/11/2026)
+
+Tranche di chiusura software su branch SEC-P3: inventory machine-readable delle 47 tabelle con controllo anti-deriva integrato in `tools/check.py`, guida operativa IT/EN per esportazione/rimozione, retention, eccezioni e replay dei diritti dopo restore. Il test Joomla disposable usa due utenti distinti e verifica scoping dell'export, stati di consenso, blocchi su mail attive, token, e isolamento della cancellazione; non equivale al collaudo dell'hosting reale. Riferimenti: `docs/SEC_P3_DATA_INVENTORY_1.0.0.json`, `docs/SEC_P3_PRIVACY_OPERATIONS_1.0.0.md`, `tests/sec-p3-data-inventory.py`, `tests/joomla-smoke.php`.
