@@ -1,3 +1,5 @@
+- **LCM-03 — salvataggi parziali percorsi (21/11/2026):** i salvataggi editoriali che omettono `courses` conservano le associazioni e l'ordinamento esistenti; solo una lista `courses=[]` esplicitamente fornita azzera il programma. Regressione di integrazione Joomla con conservazione dopo aggiornamento. Collaudo manuale separato.
+
 # Changelog
 
 - **SCR-01 — navigazione catalogo con filtri persistenti (21/11/2026):** le pagine catalogo corsi e categoria, incluse le sottocategorie paginabili, propagano esplicitamente nei link Joomla solo i filtri e l'ordinamento già normalizzati dal server. Gli invii GET di nuovi filtri ricominciano dalla prima pagina; nessuna propagazione di parametri arbitrari o filtri disabilitati. Fixture PHP e guardie strutturali.

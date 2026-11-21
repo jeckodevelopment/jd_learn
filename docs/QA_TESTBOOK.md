@@ -1,3 +1,9 @@
+## LCM-03 — salvataggio parziale percorsi e conservazione programma (PR #881)
+
+**Controlli automatici:** il test Joomla `tests/joomla-pathways.php` salva un percorso con due corsi, esegue un salvataggio editoriale senza il campo `courses` e verifica che identificativi e ordinamento dei collegamenti rimangano intatti. Ripete il salvataggio con `courses=[]`, accerta lo svuotamento intenzionale e ripristina la sequenza originale per la prova di conservazione dopo upgrade. La correzione non modifica corsi, iscrizioni, progressi, attestati o autorizzazioni.
+
+**Collaudo Joomla manuale: In attesa.** Creare un percorso con due corsi, controllare che un'operazione editoriale parziale non perda i collegamenti; verificare che la rimozione esplicita nel programma svuoti soltanto i collegamenti del percorso; aggiungere nuovamente i corsi e provare la pubblicazione, la vista frontend, le ACL, gli URL diretti e l'upgrade. Verificare separatamente la conservazione di iscrizioni e attestati storici; nessuna accettazione live attribuita.
+
 ## AUT-04 — Evidenze merge PR #863
 
 I test automatici sono stati eseguiti in CI 4/4 verde su [run 44914115463](https://github.com/jeckodevelopment/jd_learn/actions/runs/44914115463). La mappatura esplicita è implementata nel codice. Restano collaudi manuali su backup/ripristino storico, attestati e ambiente Joomla effettivo, che NON vengono attestati da questo merge.

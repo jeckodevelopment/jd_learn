@@ -248,5 +248,25 @@ $check($db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $cou
     'permanent deletion of an empty pathway leaves constituent course states untouched');
 $check($pathModel->changeStates([$pathwayId], 0) && $pathModel->changeStates([$pathwayId], 1),
     'the populated pathway is restored for retention testing');
+// LCM-03: an editorial patch without the courses key must not clear the
+// programme. Supplying courses=[] explicitly must still clear it.
+$currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$partial = $pathwayBase + ['revision'=>$currentRevision,'state'=>1];
+unset($partial['courses']);
+$check($pathModel->save($partial), 'partial editorial save without courses succeeds: ' . $pathModel->getError());
+$readLinks = static fn (): array => array_map('intval', $db->setQuery(
+    'SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering'
+)->loadColumn());
+$check($readLinks() === array_map('intval', $beforeBulkCourses),
+    'partial editorial save preserves all existing pathway course links');
+$currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$check($pathModel->save(array_replace($pathwayBase, ['revision'=>$currentRevision,'state'=>1,'courses'=>[]])),
+    'explicitly empty courses list clears pathway programme');
+$check($readLinks() === [], 'explicit empty courses list removes course links');
+$currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$check($pathModel->save($pathwayBase + ['revision'=>$currentRevision,'state'=>1]),
+    'restore original programme for retention testing');
+$check($readLinks() === array_map('intval', $beforeBulkCourses),
+    'restored links retain original course order');
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
 echo json_encode(['pathway_checks'=>14,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;

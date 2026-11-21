@@ -184,7 +184,10 @@ final class PathwayModel extends AdminModel
             $artwork['cover_decorative'] = $decorative;
             unset($data['cover_image'], $data['cover_alt'], $data['cover_decorative']);
             $data['params_json'] = json_encode($artwork, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-            $courses = $this->normalizeCourses($data['courses'] ?? []);
+            // A partial editorial save must not silently erase course associations.
+            // An explicitly supplied empty array still means remove all links.
+            $replaceCourses = array_key_exists('courses', $data);
+            $courses = $replaceCourses ? $this->normalizeCourses($data['courses']) : [];
             unset($data['courses'], $data['revision']);
 
             $stage = 'pathway-table';
@@ -208,13 +211,15 @@ final class PathwayModel extends AdminModel
             }
             $pathwayId = (int) $table->id;
 
-            $deletePathwayId = $pathwayId;
-            $db->setQuery($db->createQuery()->delete('#__jlms_pathway_courses')
-                ->where('pathway_id = :pathway')->bind(':pathway', $deletePathwayId, ParameterType::INTEGER))->execute();
-            foreach ($courses as $ordering => $courseId) {
-                $db->setQuery($db->createQuery()->insert('#__jlms_pathway_courses')
-                    ->columns(['pathway_id', 'course_id', 'ordering'])
-                    ->values(implode(', ', [$pathwayId, $courseId, $ordering])))->execute();
+            if ($replaceCourses) {
+                $deletePathwayId = $pathwayId;
+                $db->setQuery($db->createQuery()->delete('#__jlms_pathway_courses')
+                    ->where('pathway_id = :pathway')->bind(':pathway', $deletePathwayId, ParameterType::INTEGER))->execute();
+                foreach ($courses as $ordering => $courseId) {
+                    $db->setQuery($db->createQuery()->insert('#__jlms_pathway_courses')
+                        ->columns(['pathway_id', 'course_id', 'ordering'])
+                        ->values(implode(', ', [$pathwayId, $courseId, $ordering])))->execute();
+                }
             }
 
             $db->transactionCommit();
