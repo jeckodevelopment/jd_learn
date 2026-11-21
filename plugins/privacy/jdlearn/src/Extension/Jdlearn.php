@@ -285,6 +285,44 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 ->set($db->quoteName('actor_user_id') . ' = NULL')
                 ->where($db->quoteName('actor_user_id') . ' = ' . $userId))->execute();
 
+            // Clear optional Joomla account references on unrelated editorial
+            // and operational records. Preserve the content and its stable IDs:
+            // an account erasure must not delete published courses or assessments.
+            foreach ([
+                '#__jlms_courses', '#__jlms_course_versions', '#__jlms_modules',
+                '#__jlms_lessons', '#__jlms_editions', '#__jlms_teachers',
+                '#__jlms_pathways', '#__jlms_assets', '#__jlms_attachments',
+                '#__jlms_quizzes', '#__jlms_questions', '#__jlms_question_revisions',
+                '#__jlms_enrollments', '#__jlms_enrollment_requests',
+                '#__jlms_certificate_templates',
+            ] as $editorialTable) {
+                $db->setQuery($db->createQuery()
+                    ->update($db->quoteName($editorialTable))
+                    ->set($db->quoteName('created_by') . ' = NULL')
+                    ->set($db->quoteName('modified_by') . ' = NULL')
+                    ->where('(' . $db->quoteName('created_by') . ' = ' . $userId
+                        . ' OR ' . $db->quoteName('modified_by') . ' = ' . $userId . ')'))->execute();
+            }
+
+            foreach (['#__jlms_teachers', '#__jlms_subjects'] as $profileTable) {
+                $db->setQuery($db->createQuery()
+                    ->update($db->quoteName($profileTable))
+                    ->set($db->quoteName('user_id') . ' = NULL')
+                    ->where($db->quoteName('user_id') . ' = ' . $userId))->execute();
+            }
+
+            $db->setQuery($db->createQuery()
+                ->update($db->quoteName('#__jlms_assessment_revisions'))
+                ->set($db->quoteName('actor_user_id') . ' = NULL')
+                ->where($db->quoteName('actor_user_id') . ' = ' . $userId))->execute();
+
+            // This actor can have reconciled mail for another recipient. Erase
+            // the actor link independently from the recipient-specific redaction.
+            $db->setQuery($db->createQuery()
+                ->update($db->quoteName('#__jlms_mail_queue'))
+                ->set($db->quoteName('reconciliation_by') . ' = NULL')
+                ->where($db->quoteName('reconciliation_by') . ' = ' . $userId))->execute();
+
             $db->setQuery($db->createQuery()->update($db->quoteName('#__jlms_enrollments'))
                 ->set($db->quoteName('user_id') . ' = NULL')
                 ->where($db->quoteName('user_id') . ' = ' . $userId))->execute();
