@@ -174,17 +174,21 @@ final class HtmlView extends BaseHtmlView
                 ->where($db->quoteName('client_id') . ' = 0')
                 // Only catalogue/category entries are consumed by inheritance().
                 // Other component menus must not exhaust the bounded diagnostic scan.
-                ->where('(' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=courses%')
-                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=category%') . ')')
+                ->where('(' . $db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses')
+                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=courses&%')
+                    . ' OR ' . $db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=category')
+                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=category&%') . ')')
                 ->order($db->quoteName('id') . ' ASC');
             $menuOptions = array_map(
                 static fn (object $item): array => ['link' => (string) $item->link, 'params' => (string) $item->params],
                 $db->setQuery($menuOptionsQuery, 0, 501)->loadObjectList()
             );
-            $completeScan = count($courseOptions) <= 500 && count($menuOptions) <= 500;
+            $coursesComplete = count($courseOptions) <= 500;
+            $menusComplete = count($menuOptions) <= 500;
             array_push($this->configurationDiagnostics,
                 ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::inheritance(
-                    array_slice($courseOptions, 0, 500), array_slice($menuOptions, 0, 500), $completeScan
+                    array_slice($courseOptions, 0, 500), array_slice($menuOptions, 0, 500),
+                    $coursesComplete, $menusComplete
                 ));
         }
         // Visibility is based on current ACL rather than the presence of a dashboard shortcut.
