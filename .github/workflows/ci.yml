@@ -54,7 +54,7 @@ jobs:
         run: |
           python3 tests/secdev07-language-syntax.py --self-test
           python3 tests/secdev07-language-syntax.py
-          git diff --check HEAD
+          if [ "${{ github.event_name }}" = "pull_request" ]; then git diff --check "origin/${{ github.base_ref }}...HEAD"; fi
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
