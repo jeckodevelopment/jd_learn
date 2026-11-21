@@ -44,7 +44,7 @@ final class ConfigurationDiagnostics
                 : ($state === 'COM_JLMS_READY' ? 'ok' : 'warning');
             $checks[] = [
                 'kind' => 'video',
-                'labelKey' => self::safeLabel($entry['label'] ?? null),
+                'labelKey' => self::safeLabel($entry['labelKey'] ?? null),
                 'severity' => $severity,
                 'guidanceKey' => DashboardProviderStatus::guidanceKey($state),
                 'stateKey' => in_array($state, [
