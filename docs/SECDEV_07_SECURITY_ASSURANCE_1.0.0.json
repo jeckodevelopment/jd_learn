@@ -129,8 +129,8 @@
     {
       "id": "FULL-SAST-STYLE",
       "owner": "developer",
-      "blocking": "development",
-      "detail": "Document full language-wide SAST/style rules and scanner version where available; existing targeted source gate is not a full SAST implementation."
+      "blocking": "release",
+      "detail": "SECDEV-07/02 first-party Semgrep CE/Ruff/secret/package gates were integrated in PR #858 (CI 4/4, 44909562794), but local rules are not a proof of comprehensive security coverage: record expanded SAST review, remediation of 1475 historical Python Ruff violations (new issues blocked), platform/component SCA and any accepted false positives per final release candidate. These checks remain explicit release review constraints and do not invalidate implemented software controls."
     }
   ],
   "ci_evidence_source": "GitHub Actions run for exact head SHA; manual hosting checks separate"
