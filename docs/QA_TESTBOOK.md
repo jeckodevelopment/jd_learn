@@ -1,3 +1,9 @@
+## LCM-04 — profilo docente collegato ad account Joomla (21/11/2026)
+
+**Automatico:** `tests/joomla-teachers.php` crea un profilo docente senza corsi ma con `user_id` collegato all'operatore Joomla. Dopo la cestinazione, la purga è negata; il modello lascia intatti profilo e link. Il test verifica anche che bloccare temporaneamente l'account Joomla non consenta la purga; ripristina l'account, scollega esplicitamente il solo fixture e verifica che le altre dipendenze rimangano applicate.
+
+**Manuale Joomla: In attesa.** Creare un docente collegato a un utente Joomla senza assegnazioni ai corsi; cestinare e tentare la cancellazione definitiva. Deve essere negata anche se l'utente viene bloccato. Verificare account, permessi e profilo intatti. Scollegare volontariamente l'account, quindi verificare che la purga sia consentita soltanto in assenza di associazioni multilingua, corsi e versioni storiche.
+
 ## LCM-03 — checkout in salvataggio editoriale diretto (21/11/2026)
 
 **Automatico:** `tests/joomla-pathways.php` simula un percorso aperto da operatore B e un salvataggio tramite `PathwayModel::save` con operatore A. Verifica diniego, titolo/stato/revisione e checkout invariati, e nessuna perdita/riordino dei corsi. Imposta poi il checkout su A e controlla che il salvataggio legittimo riesca.
