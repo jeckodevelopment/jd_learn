@@ -84,6 +84,7 @@ $schedulerHealthKeys = [
         <?php endif; ?>
     </details>
     <?php endif; ?>
+    <?php if ($this->canViewProviders) : ?>
     <details class="jlms-admin-dashboard__providers">
         <summary><?= Text::_('COM_JLMS_DASHBOARD_PROVIDER_STATUS') ?></summary>
         <?php if (!$this->providers) : ?>
@@ -96,6 +97,7 @@ $schedulerHealthKeys = [
             </ul>
         <?php endif; ?>
     </details>
+    <?php endif; ?>
 
     <?php if ($this->configurationDiagnostics) : ?>
     <details id="jlms-admin-configuration-diagnostics" class="mt-3">
