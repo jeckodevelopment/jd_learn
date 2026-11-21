@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "baseline": "1.0.0",
+  "candidate": "0.64.18-dev",
+  "review_date": "2026-11-21",
+  "scope": "shipped_jd_learn_source_and_package",
+  "decision_policy": "candidate_source_no_confirmed_unresolved_critical_high; installed_platform_is_separate_release_acceptance",
+  "findings": [
+    {
+      "id": "MAILQUEUE-GLOBAL-ACL",
+      "severity": "high",
+      "surface": "first_party_runtime",
+      "status": "mitigated",
+      "summary": "Global queue audit requires dedicated audit ACL in addition to core.manage.",
+      "evidence": [
+        "component/administrator/src/Application/MailQueueAuditService.php",
+        "tests/joomla-roster.php",
+        "docs/SEC_P1_THREAT_MODEL_1.0.0.md"
+      ],
+      "checks": [
+        {
+          "path": "component/administrator/src/Application/MailQueueAuditService.php",
+          "contains": [
+            "authorise('core.manage', 'com_jlms')",
+            "authorise('jlms.audit.view', 'com_jlms')"
+          ]
+        },
+        {
+          "path": "tests/joomla-roster.php",
+          "contains": [
+            "jlms.audit.view"
+          ]
+        }
+      ],
+      "test_suite": "PHP 8.3/MySQL 8.4 and PHP 8.4/MariaDB 10.6"
+    },
+    {
+      "id": "VIDEO-ROOT",
+      "severity": "high",
+      "surface": "first_party_runtime",
+      "status": "mitigated",
+      "summary": "Current runtime refuses absent or public-root local video storage configuration.",
+      "evidence": [
+        "component/administrator/src/Infrastructure/ProtectedVideoStorage.php",
+        "tests/joomla-video.php",
+        "docs/SEC_P1_THREAT_MODEL_1.0.0.md"
+      ],
+      "checks": [
+        {
+          "path": "component/administrator/src/Infrastructure/ProtectedVideoStorage.php",
+          "contains": [
+            "video_storage_root",
+            "$this->files->root()"
+          ]
+        },
+        {
+          "path": "tests/joomla-video.php",
+          "contains": [
+            "unset local video root fails closed",
+            "webroot local video storage is refused",
+            "configured off-webroot video root remains supported"
+          ]
+        }
+      ],
+      "test_suite": "Joomla PHP/DB matrix"
+    },
+    {
+      "id": "VIDEO-LEGACY-STORAGE",
+      "severity": "high",
+      "surface": "existing_hosted_installations",
+      "status": "deployment_verification_pending",
+      "summary": "Earlier versions may have left unencrypted MP4 .blob files inside a web-exposed managed folder. Runtime fix cannot retroactively deny direct static webserver requests.",
+      "evidence": [
+        "tools/audit_legacy_video_storage.py",
+        "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+        "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md"
+      ],
+      "checks": [
+        {
+          "path": "tools/audit_legacy_video_storage.py",
+          "contains": [
+            ".blob"
+          ]
+        }
+      ],
+      "test_suite": "Host-specific read-only audit; Apache/Nginx GET/HEAD/Range and mitigation before deployment",
+      "release_blocker": true
+    },
+    {
+      "id": "JOOMLA-CORE-DEPENDENCIES-NOV2026",
+      "severity": "unknown",
+      "surface": "hosted_joomla_platform",
+      "status": "deployment_verification_pending",
+      "summary": "Core Joomla 6.2-dev adopted upstream Composer security fixes on 2026-11-13; the CI fixture 6.2.0 predates those fixes. Host and final Joomla patch level must be checked, and the core dependency advisories cannot be cleared by a JD Learn package scan.",
+      "upstream": "https://issues.joomla.org/tracker/joomla-cms/48846",
+      "evidence": [
+        "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md",
+        ".github/workflows/ci.yml"
+      ],
+      "checks": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": [
+            "Joomla_6-2-0-Stable-Full_Package.zip"
+          ]
+        }
+      ],
+      "test_suite": "External upstream advisory review; upgrade Joomla dependency patch level before release",
+      "release_blocker": true
+    },
+    {
+      "id": "PHP-PATCH-FLOOR-20261119",
+      "severity": "high",
+      "surface": "ci_runtime",
+      "status": "mitigated",
+      "summary": "CI rejects unpatched PHP 8.3/8.4 before Joomla integration; hosting versions remain external.",
+      "evidence": [
+        "tests/sec-p2-php-security-floor.php",
+        ".github/workflows/ci.yml"
+      ],
+      "checks": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": [
+            "php tests/sec-p2-php-security-floor.php"
+          ]
+        }
+      ],
+      "test_suite": "CI runtime patch-level gate"
+    },
+    {
+      "id": "DISTRIBUTABLE-ARCHIVE",
+      "severity": "high",
+      "surface": "first_party_package",
+      "status": "mitigated",
+      "summary": "Recursive ZIP inspection and bundled dependency inventory enforced before writing release candidates.",
+      "evidence": [
+        "tools/sec_p2_package_scan.py",
+        "tools/sec_p2_dependency_gate.py",
+        "tools/build.py",
+        "tests/sec-p2-package-scan.py",
+        "tests/sec-p2-dependency-gate.py"
+      ],
+      "checks": [
+        {
+          "path": "tools/build.py",
+          "contains": [
+            "inspect_distributable_zip(data)",
+            "inspect_dependency_inventory(data)"
+          ]
+        },
+        {
+          "path": "tests/sec-p2-package-scan.py",
+          "contains": [
+            "assert scan("
+          ]
+        },
+        {
+          "path": "tests/sec-p2-dependency-gate.py",
+          "contains": [
+            "assert inspect(candidate())"
+          ]
+        }
+      ],
+      "test_suite": "CI preflight positive and negative package fixtures"
+    },
+    {
+      "id": "HISTORICAL-SECRET-SIGNATURES",
+      "severity": "high",
+      "surface": "first_party_source",
+      "status": "mitigated",
+      "summary": "CI scans reachable current and historical source/workflow blobs for known secret signatures without logging payloads.",
+      "evidence": [
+        "tools/sec_p2_history_scan.py",
+        "tests/sec-p2-history-scan.py",
+        ".github/workflows/ci.yml"
+      ],
+      "checks": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": [
+            "python3 tools/sec_p2_history_scan.py"
+          ]
+        },
+        {
+          "path": "tests/sec-p2-history-scan.py",
+          "contains": [
+            "Deleted historical source was not scanned"
+          ]
+        }
+      ],
+      "test_suite": "CI source and history scan; 3211 blobs reviewed without known signatures in PR 844"
+    }
+  ]
+}
