@@ -308,13 +308,14 @@ final class PathwayModel extends AdminModel
             $db->transactionStart();
             $started = true;
             foreach ($ids as $id) {
-                $query = $db->createQuery()->select('id, state, revision')->from('#__jlms_pathways')
+                $query = $db->createQuery()->select('id, state, revision, checked_out')->from('#__jlms_pathways')
                     ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $query->setQuery((string) $query . ' FOR UPDATE');
                 $record = $db->setQuery($query)->loadObject()
                     ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
                 if (!$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
-                    || !$actor->authorise('core.edit.state', 'com_jlms.pathway.' . $id)) {
+                    || !$actor->authorise('core.edit.state', 'com_jlms.pathway.' . $id)
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 // Restoration never silently republishes a trashed pathway.
@@ -371,11 +372,14 @@ final class PathwayModel extends AdminModel
         try {
             $db->transactionStart();
             $started = true;
-            $query = $db->createQuery()->select('id, state')->from('#__jlms_pathways')
+            $query = $db->createQuery()->select('id, state, checked_out')->from('#__jlms_pathways')
                 ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
             $query->setQuery((string) $query . ' FOR UPDATE');
             $record = $db->setQuery($query)->loadObject()
                 ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+            if ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id) {
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            }
             if ((int) $record->state !== -2) {
                 throw new \DomainException('COM_JLMS_PATHWAY_INVALID');
             }
