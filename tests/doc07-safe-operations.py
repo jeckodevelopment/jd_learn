@@ -113,6 +113,11 @@ assert "MailPreferences::EVENTS" in diagnostics_code
 assert "array_slice($courseOptions, 0, 500)" in view
 assert "array_slice($menuOptions, 0, 500)" in view
 assert "$completeScan = count($courseOptions) <= 500 && count($menuOptions) <= 500;" in view
+# Unrelated Joomla component menu links must not consume the 500-row limit.
+assert "index.php?option=com_jlms&view=courses%" in view
+assert "index.php?option=com_jlms&view=category%" in view
+assert "Known invalid values must remain actionable" in diagnostics_code
+
 for locale in ("it-IT", "en-GB"):
     translation = (ROOT / "component/administrator/language" / locale / "com_jlms.ini").read_text()
     for suffix in ("COURSE_LABEL", "MENU_LABEL", "INCOMPLETE", "INVALID",
