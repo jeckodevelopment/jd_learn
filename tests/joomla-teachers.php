@@ -270,10 +270,11 @@ $emptyTeacherId=(int)$teacherModel->getState('teacher.id');
 teacherExpect($emptyTeacherId>0, 'empty teacher fixture created');
 teacherExpect($teacherModel->changeStates([$emptyTeacherId], -2), 'empty teacher placed in trash');
 // Joomla multilingual associations survive outside the teacher FK graph.
-$db->insertObject('#__associations', (object)[
+$association = (object)[
     'id'=>$emptyTeacherId, 'context'=>'com_jlms.teacher',
     'key'=>md5('jd-learn-ci-teacher-' . $emptyTeacherId),
-]);
+];
+$db->insertObject('#__associations', $association);
 teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
     'multilingual association blocks permanent teacher deletion');
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
