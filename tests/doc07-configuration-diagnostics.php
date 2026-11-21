@@ -4,6 +4,7 @@ declare(strict_types=1);
 require __DIR__ . '/../component/administrator/src/Infrastructure/SchedulerHealth.php';
 require __DIR__ . '/../component/administrator/src/Application/DashboardProviderStatus.php';
 require __DIR__ . '/../component/administrator/src/Application/ConfigurationDiagnostics.php';
+require __DIR__ . '/../component/administrator/src/Application/MailPreferences.php';
 
 use Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics;
 
@@ -206,5 +207,36 @@ try {
         rmdir($videoFixtures . '/' . $sub);
     }
     rmdir($videoFixtures);
+}
+$inheritDefault = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true);
+$inheritOverridden = ConfigurationDiagnostics::inheritance(
+    ['{"mail_preferences":{"enrollment":"disabled","completion":"enabled"}}'],
+    [['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '{"catalog_page_size":"24"}']], true
+);
+$inheritInvalid = ConfigurationDiagnostics::inheritance(
+    ['{"mail_preferences":{"completion":"untrusted"}}'],
+    [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"secret-value"}']], true
+);
+$inheritMalformed = ConfigurationDiagnostics::inheritance(['{malformed'], [
+    ['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{bad']
+], true);
+$inheritOverflow = ConfigurationDiagnostics::inheritance(['{"mail_preferences":{"completion":"enabled"}}'], [], false);
+if ($inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !== 'ok'
+    || $inheritOverridden[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
+    || $inheritOverridden[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
+    || $inheritInvalid[0]['severity'] !== 'error' || $inheritInvalid[1]['severity'] !== 'error'
+    || $inheritMalformed[0]['severity'] !== 'error' || $inheritMalformed[1]['severity'] !== 'error'
+    || $inheritOverflow[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE'
+    || $inheritOverflow[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE') {
+    throw new RuntimeException('SCR-16 course/menu inheritance classification regression');
+}
+foreach ([$inheritDefault, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow] as $checks) {
+    foreach ($checks as $check) {
+        if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+            || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'secret-value')
+            || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'enrollment')) {
+            throw new RuntimeException('SCR-16 inheritance diagnostic exposes raw context');
+        }
+    }
 }
 echo "DOC-07: scheduler/provider actionable statuses and privacy-safe projections OK\n";

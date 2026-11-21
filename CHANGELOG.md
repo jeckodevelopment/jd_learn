@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — diagnostica override effettivi (21/11/2026):** controllo read-only e limitato a 500 record delle preferenze email per corso e dei parametri catalogo nei menu frontend. Individua valori locali validi, mancanti, malformati e scansioni incomplete; segnala gli stati in italiano/inglese senza mostrare identificativi, contenuti, indirizzi o credenziali. La dashboard resta protetta da ACL e non invia messaggi o modifica dati.
+
 - **SCR-16 — video locali, prerequisiti effettivi (21/11/2026):** la dashboard non interpreta più la sola consegna PHP abilitata come pronta; verifica separatamente la radice video privata e l'eseguibile ffprobe senza eseguire comandi, sonde remote o scritture. Stati e rimedi IT/EN senza divulgare percorsi; test per percorsi pubblici, assenti e privati, ffprobe mancante e modalità disabilitata.
 
 - **SCR-16 — diagnostica configurazione consolidata (21/11/2026):** dashboard con verifiche read-only per antivirus, video locali, attestati, notifiche globali e opzioni catalogo ereditate. Corretta la diagnosi di directory esposte attraverso la `DOCUMENT_ROOT` reale; esiti e rimedi IT/EN non includono segreti o percorsi. Test PHP e gate strutturale senza mutazioni. Le prove hosting, SMTP e provider esterni rimangono separate.
