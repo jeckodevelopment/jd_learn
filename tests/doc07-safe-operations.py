@@ -121,6 +121,21 @@ assert "PluginHelper::importPlugin('jlmsvideo')" not in view
 assert "RegisterVideoProvidersEvent::NAME," not in view
 assert "DashboardProviderStatus::inspectLocal(" in view
 assert "DashboardProviderStatus::summarize(" not in view
+assert "->dispatch(" not in view, "No event dispatch of any third-party plugins in diagnostics"
+assert "->getHttp(" not in view and "->post(" not in view
+assert "->execute(" not in view, "No mutating database execution in dashboard"
+assert "->save(" not in view and "->store(" not in view
+assert "sendMail(" not in view and "Mail::send" not in view
+# Secret values are never stored in Joomla provider config as valid credentials.
+# The supported remote provider resolves environment references server-side.
+cf_provider = (ROOT / "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php").read_text()
+secret_resolver = (ROOT / "libraries/jlms/src/Security/EnvironmentSecretProvider.php").read_text()
+assert "api_token_ref" in cf_provider and "$this->secrets" in cf_provider
+assert "env:(JLMS_SECRET_" in secret_resolver
+assert "COM_JLMS_VIDEO_CONFIGURATION" in secret_resolver
+assert "getenv($match[1])" in secret_resolver
+assert "throw new \\RuntimeException" in secret_resolver
+
 assert "->select($db->quoteName(['element', 'name', 'enabled', 'params']))" in view
 assert "public static function inspectLocal(" in provider_projection
 assert "COM_JLMS_PROVIDER_UNVERIFIED" in provider_projection
