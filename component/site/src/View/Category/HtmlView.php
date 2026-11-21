@@ -85,6 +85,8 @@ $this->difficulty = $this->getModel()->getDifficulty();
         $model->setState('pagination.prefix', 'subcategories_');
         $this->children = $model->getItems();
         $this->childrenPagination = $model->getPagination();
+        // Independent subcategory pages must retain the active course filters.
+        CatalogPagination::apply($this->childrenPagination, $paginationFilters, $this->showFilters);
         }
         CategoryNavigationHelper::addPath((int) $this->category->id);
         try {
