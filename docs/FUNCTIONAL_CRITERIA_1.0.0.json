@@ -6269,72 +6269,86 @@
       {
         "id": "criterion_02",
         "label": "Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/config.xml",
           "component/administrator/src/Application/ConfigurationDiagnostics.php",
-          "component/site/src/Helper/CatalogOptions.php"
+          "component/administrator/src/View/Dashboard/HtmlView.php",
+          "component/administrator/src/Application/DashboardProviderStatus.php",
+          "tests/doc07-configuration-diagnostics.php",
+          "tests/run.php"
         ],
         "review": {
-          "reason": "Sono disponibili parametri globali, stati provider, modelli email, task, storage, antivirus, attestati, video locali e notifiche individuali. La configurazione effettiva di ogni override menu/corso non è completamente verificata.",
+          "reason": "I parametri globali, gli override corsi/menu, gli stati provider, i modelli email, i task Scheduler, lo storage e i prerequisiti locali hanno diagnostiche core con gestione esplicita di valori invalidi e scansioni limitate segnalate come incomplete. Le integrazioni remote non vengono spacciate per verificate: i provider non verificabili localmente restituiscono UNVERIFIED. Test negativi e stati IT/EN inclusi. Il funzionamento dell'hosting rimane nel collaudo Joomla separato.",
           "references": [
-            "component/administrator/config.xml#L1-L25",
-            "component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230",
-            "component/site/src/Helper/CatalogOptions.php#L1-L60"
+            "component/administrator/src/Application/ConfigurationDiagnostics.php#public static function inheritance(",
+            "component/administrator/src/View/Dashboard/HtmlView.php#ConfigurationDiagnostics::mailTemplates(",
+            "component/administrator/src/Application/DashboardProviderStatus.php#public static function inspectLocal(",
+            "tests/doc07-configuration-diagnostics.php#$inheritInvalidOverflow",
+            "tests/run.php#$localStates['cloudflarestream']"
           ]
         }
       },
       {
         "id": "criterion_03",
         "label": "Mostrare funzionalità non configurate con ragione e istruzioni",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/tmpl/dashboard/default.php",
-          "tests/doc07-safe-operations.py",
-          "tests/doc07-configuration-diagnostics.php"
+          "component/administrator/src/Application/DashboardProviderStatus.php",
+          "component/administrator/language/it-IT/com_jlms.ini",
+          "component/administrator/language/en-GB/com_jlms.ini",
+          "tests/doc07-safe-operations.py"
         ],
         "review": {
-          "reason": "I controlli amministrativi espongono motivi e istruzioni IT/EN per provider, task, template email, storage, antivirus, video locali, attestati e notifiche disabilitate. La copertura di tutte le funzioni opzionali di estensioni esterne non è dimostrata.",
+          "reason": "Ogni condizione non configurata o non verificabile del perimetro diagnostico core presenta stato e istruzioni locali IT/EN. Le integrazioni di terzi sono distinte esplicitamente come non verificate, invece di eseguire codice arbitrario o promettere disponibilità. Il layout visualizza motivo e prossima azione. Le fixture verificano chiavi e casi negativi.",
           "references": [
-            "component/administrator/tmpl/dashboard/default.php#L95-L139",
-            "tests/doc07-safe-operations.py#L40-L96",
-            "tests/doc07-configuration-diagnostics.php#L100-L165"
+            "component/administrator/tmpl/dashboard/default.php#jlms-admin-configuration-diagnostics",
+            "component/administrator/src/Application/DashboardProviderStatus.php#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED",
+            "component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED",
+            "component/administrator/language/en-GB/com_jlms.ini#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED",
+            "tests/doc07-safe-operations.py#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED"
           ]
         }
       },
       {
         "id": "criterion_04",
         "label": "nessuna credenziale leggibile",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Application/ConfigurationDiagnostics.php",
-          "tests/doc07-configuration-diagnostics.php",
-          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php"
+          "component/administrator/src/Application/DashboardProviderStatus.php",
+          "libraries/jlms/src/Security/EnvironmentSecretProvider.php",
+          "tests/run.php",
+          "tests/doc07-safe-operations.py"
         ],
         "review": {
-          "reason": "La nuova proiezione diagnostica restituisce solo chiavi di traduzione e gravità, senza stampare percorsi o segreti. L'assenza di credenziali leggibili in ogni altro form, log e cache dell'estensione non è ancora provata esaustivamente.",
+          "reason": "Le superfici di diagnostica core e il riepilogo dei provider sono proiezioni di sole chiavi di traduzione e livelli, senza riportare parametri, percorsi, identificativi sensibili o contenuti delle code. La configurazione del provider remoto accetta soltanto riferimenti a segreti d'ambiente; test negativi con sentinelle rifiutano l'esposizione. Le estensioni di terze parti non controllate non vengono eseguite né è attestato il loro codice interno. Il collaudo hosting e il controllo dei suoi log restano indipendenti.",
           "references": [
-            "component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230",
-            "tests/doc07-configuration-diagnostics.php#L100-L165",
-            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23"
+            "component/administrator/src/Application/ConfigurationDiagnostics.php#private static function safeLabel(",
+            "component/administrator/src/Application/DashboardProviderStatus.php#public static function inspectLocal(",
+            "libraries/jlms/src/Security/EnvironmentSecretProvider.php#env:(JLMS_SECRET_",
+            "tests/run.php#NO_LEAK_SENTINEL",
+            "tests/doc07-safe-operations.py#Secret values are never stored"
           ]
         }
       },
       {
         "id": "criterion_05",
         "label": "Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/View/Dashboard/HtmlView.php",
+          "component/administrator/src/Application/DashboardProviderStatus.php",
           "tests/doc07-safe-operations.py",
-          "docs/QA_TESTBOOK.md"
+          "tests/run.php"
         ],
         "review": {
-          "reason": "La diagnostica attuale è locale, protetta da ACL e senza form di invio, mutazioni o sonde di connessione. Una verifica esaustiva degli effetti di eventuali plugin esterni e di tutte le superfici di controllo connessione resta distinta.",
+          "reason": "La consultazione della dashboard non registra né esegue hook dei plugin esterni: gli stati derivano esclusivamente dai metadati Joomla locali e lo stato remoto è UNVERIFIED. Nessun pulsante di probe, richiesta HTTP, comando di pubblicazione, gestione gruppi o invio email è associato alla diagnostica; gate strutturali e prove PHP di configurazioni sospette lo impongono. Le operazioni reali sono accessibili soltanto nei flussi espliciti separati e il collaudo Joomla è un asse distinto.",
           "references": [
-            "component/administrator/src/View/Dashboard/HtmlView.php#L100-L155",
-            "tests/doc07-safe-operations.py#L40-L96",
-            "docs/QA_TESTBOOK.md#L1-L15"
+            "component/administrator/src/View/Dashboard/HtmlView.php#Diagnostic reads local metadata only",
+            "component/administrator/src/Application/DashboardProviderStatus.php#public static function inspectLocal(",
+            "tests/doc07-safe-operations.py#No event dispatch of any third-party plugins",
+            "tests/run.php#arbitrary external plugins are not executed"
           ]
         }
       }

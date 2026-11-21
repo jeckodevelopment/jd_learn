@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **475**.
+- Implementati: **479**.
 - Mancanti con lacuna accertata: **17**.
-- Esaminati con esito non verificabile: **265**.
+- Esaminati con esito non verificabile: **261**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -584,22 +584,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
   - [tests/joomla-curriculum-builder.php#L1-L30](../tests/joomla-curriculum-builder.php#L1-L30)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SCR-16/criterion_02` — Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali. Sono disponibili parametri globali, stati provider, modelli email, task, storage, antivirus, attestati, video locali e notifiche individuali. La configurazione effettiva di ogni override menu/corso non è completamente verificata.
-  - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
-  - [component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230)
-  - [component/site/src/Helper/CatalogOptions.php#L1-L60](../component/site/src/Helper/CatalogOptions.php#L1-L60)
-- `SCR-16/criterion_03` — Mostrare funzionalità non configurate con ragione e istruzioni. I controlli amministrativi espongono motivi e istruzioni IT/EN per provider, task, template email, storage, antivirus, video locali, attestati e notifiche disabilitate. La copertura di tutte le funzioni opzionali di estensioni esterne non è dimostrata.
-  - [component/administrator/tmpl/dashboard/default.php#L95-L139](../component/administrator/tmpl/dashboard/default.php#L95-L139)
-  - [tests/doc07-safe-operations.py#L40-L96](../tests/doc07-safe-operations.py#L40-L96)
-  - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
-- `SCR-16/criterion_04` — nessuna credenziale leggibile. La nuova proiezione diagnostica restituisce solo chiavi di traduzione e gravità, senza stampare percorsi o segreti. L'assenza di credenziali leggibili in ogni altro form, log e cache dell'estensione non è ancora provata esaustivamente.
-  - [component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230)
-  - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
-  - [component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23](../component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23)
-- `SCR-16/criterion_05` — Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore. La diagnostica attuale è locale, protetta da ACL e senza form di invio, mutazioni o sonde di connessione. Una verifica esaustiva degli effetti di eventuali plugin esterni e di tutte le superfici di controllo connessione resta distinta.
-  - [component/administrator/src/View/Dashboard/HtmlView.php#L100-L155](../component/administrator/src/View/Dashboard/HtmlView.php#L100-L155)
-  - [tests/doc07-safe-operations.py#L40-L96](../tests/doc07-safe-operations.py#L40-L96)
-  - [docs/QA_TESTBOOK.md#L1-L15](../docs/QA_TESTBOOK.md#L1-L15)
 - `LIFE-02/criterion_01` — Categoria e docenti. Categorie e docenti sono integrati con i modelli nativi e profili associati, ma la copertura completa di assegnazioni/consultazioni per tutte le categorie e i ruoli previsti non è stata attestata.
   - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
   - [component/administrator/src/Application/TeacherProfiles.php#L1-L40](../component/administrator/src/Application/TeacherProfiles.php#L1-L40)
@@ -1399,6 +1383,29 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/View/Dashboard/HtmlView.php#L100-L155](../component/administrator/src/View/Dashboard/HtmlView.php#L100-L155)
   - [component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230](../component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230)
   - [tests/doc07-configuration-diagnostics.php#L100-L165](../tests/doc07-configuration-diagnostics.php#L100-L165)
+- `SCR-16/criterion_02` — Parametri globali, valori ereditati, provider, template email, task, storage e controlli iniziali. I parametri globali, gli override corsi/menu, gli stati provider, i modelli email, i task Scheduler, lo storage e i prerequisiti locali hanno diagnostiche core con gestione esplicita di valori invalidi e scansioni limitate segnalate come incomplete. Le integrazioni remote non vengono spacciate per verificate: i provider non verificabili localmente restituiscono UNVERIFIED. Test negativi e stati IT/EN inclusi. Il funzionamento dell'hosting rimane nel collaudo Joomla separato.
+  - [component/administrator/src/Application/ConfigurationDiagnostics.php#public static function inheritance(](../component/administrator/src/Application/ConfigurationDiagnostics.php)
+  - [component/administrator/src/View/Dashboard/HtmlView.php#ConfigurationDiagnostics::mailTemplates(](../component/administrator/src/View/Dashboard/HtmlView.php)
+  - [component/administrator/src/Application/DashboardProviderStatus.php#public static function inspectLocal(](../component/administrator/src/Application/DashboardProviderStatus.php)
+  - [tests/doc07-configuration-diagnostics.php#$inheritInvalidOverflow](../tests/doc07-configuration-diagnostics.php)
+  - [tests/run.php#$localStates['cloudflarestream']](../tests/run.php)
+- `SCR-16/criterion_03` — Mostrare funzionalità non configurate con ragione e istruzioni. Ogni condizione non configurata o non verificabile del perimetro diagnostico core presenta stato e istruzioni locali IT/EN. Le integrazioni di terzi sono distinte esplicitamente come non verificate, invece di eseguire codice arbitrario o promettere disponibilità. Il layout visualizza motivo e prossima azione. Le fixture verificano chiavi e casi negativi.
+  - [component/administrator/tmpl/dashboard/default.php#jlms-admin-configuration-diagnostics](../component/administrator/tmpl/dashboard/default.php)
+  - [component/administrator/src/Application/DashboardProviderStatus.php#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED](../component/administrator/src/Application/DashboardProviderStatus.php)
+  - [component/administrator/language/it-IT/com_jlms.ini#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED](../component/administrator/language/it-IT/com_jlms.ini)
+  - [component/administrator/language/en-GB/com_jlms.ini#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED](../component/administrator/language/en-GB/com_jlms.ini)
+  - [tests/doc07-safe-operations.py#COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED](../tests/doc07-safe-operations.py)
+- `SCR-16/criterion_04` — nessuna credenziale leggibile. Le superfici di diagnostica core e il riepilogo dei provider sono proiezioni di sole chiavi di traduzione e livelli, senza riportare parametri, percorsi, identificativi sensibili o contenuti delle code. La configurazione del provider remoto accetta soltanto riferimenti a segreti d'ambiente; test negativi con sentinelle rifiutano l'esposizione. Le estensioni di terze parti non controllate non vengono eseguite né è attestato il loro codice interno. Il collaudo hosting e il controllo dei suoi log restano indipendenti.
+  - [component/administrator/src/Application/ConfigurationDiagnostics.php#private static function safeLabel(](../component/administrator/src/Application/ConfigurationDiagnostics.php)
+  - [component/administrator/src/Application/DashboardProviderStatus.php#public static function inspectLocal(](../component/administrator/src/Application/DashboardProviderStatus.php)
+  - [libraries/jlms/src/Security/EnvironmentSecretProvider.php#env:(JLMS_SECRET_](../libraries/jlms/src/Security/EnvironmentSecretProvider.php)
+  - [tests/run.php#NO_LEAK_SENTINEL](../tests/run.php)
+  - [tests/doc07-safe-operations.py#Secret values are never stored](../tests/doc07-safe-operations.py)
+- `SCR-16/criterion_05` — Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore. La consultazione della dashboard non registra né esegue hook dei plugin esterni: gli stati derivano esclusivamente dai metadati Joomla locali e lo stato remoto è UNVERIFIED. Nessun pulsante di probe, richiesta HTTP, comando di pubblicazione, gestione gruppi o invio email è associato alla diagnostica; gate strutturali e prove PHP di configurazioni sospette lo impongono. Le operazioni reali sono accessibili soltanto nei flussi espliciti separati e il collaudo Joomla è un asse distinto.
+  - [component/administrator/src/View/Dashboard/HtmlView.php#Diagnostic reads local metadata only](../component/administrator/src/View/Dashboard/HtmlView.php)
+  - [component/administrator/src/Application/DashboardProviderStatus.php#public static function inspectLocal(](../component/administrator/src/Application/DashboardProviderStatus.php)
+  - [tests/doc07-safe-operations.py#No event dispatch of any third-party plugins](../tests/doc07-safe-operations.py)
+  - [tests/run.php#arbitrary external plugins are not executed](../tests/run.php)
 - `LIFE-01/criterion_03` — La purga è soggetta a permessi, politica di conservazione e riepilogo dell'impatto. Il corso cestinato espone un'anteprima autorizzata con conteggio delle dipendenze e revisioni editoriali; la conferma di eliminazione è separata, richiede CSRF e revisione invariata, e la purga ricontrolla i riferimenti in transazione. Test Joomla su corso vuoto, revisione obsoleta e conservazione delle dipendenze; accettazione manuale ancora pendente.
   - [component/administrator/src/Model/CourseModel.php#public function purgeImpact](../component/administrator/src/Model/CourseModel.php)
   - [component/administrator/src/View/Courses/HtmlView.php#purgepreview](../component/administrator/src/View/Courses/HtmlView.php)

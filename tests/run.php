@@ -365,6 +365,39 @@ foreach (['https://youtube.com.evil.test/watch?v=dQw4w9WgXcQ', 'https://127.0.0.
 }
 rejects(fn () => SourceNormalizer::normalise('html5', new SourceInput('../../private.mp4')), 'HTML5 physical paths are rejected');
 rejects(fn () => SourceNormalizer::normalise('html5', new SourceInput('https://example.com/video.mp4')), 'HTML5 remote URL is rejected');
+$readOnlyProviders = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::inspectLocal([
+    'youtube' => (object) ['enabled' => 1, 'params' => '{"playback_enabled":1}', 'name' => 'PLG_JLMSVIDEO_YOUTUBE'],
+    'vimeo' => (object) ['enabled' => 1, 'params' => '{"playback_enabled":0}', 'name' => 'PLG_JLMSVIDEO_VIMEO'],
+    'html5' => (object) ['enabled' => 1, 'params' => '{"playback_enabled":1}', 'name' => 'PLG_JLMSVIDEO_HTML5'],
+    'cloudflarestream' => (object) [
+        'enabled' => 1, 'params' => '{"playback_enabled":1,"api_token_ref":"env:JLMS_SECRET_NEVER_PRINT_VALUE"}',
+        'name' => 'PLG_JLMSVIDEO_CLOUDFLARESTREAM',
+    ],
+    'externalvideo' => (object) ['enabled' => 1, 'params' => '{"password":"NO_LEAK_SENTINEL"}',
+        'name' => 'PLG_JLMSVIDEO_EXTERNAL'],
+    'badplugin' => (object) ['enabled' => 1, 'params' => '{malformed',
+        'name' => '<script>secret</script>'],
+], ['video_storage_root' => '/private/video', 'video_delivery_mode' => 'php_bounded']);
+$localStates = array_column($readOnlyProviders, 'stateKey', 'key');
+expect($localStates['youtube'] === 'COM_JLMS_READY', 'local enabled YouTube setup');
+expect($localStates['vimeo'] === 'COM_JLMS_NOT_CONFIGURED', 'local disabled Vimeo playback');
+expect($localStates['html5'] === 'COM_JLMS_READY', 'local HTML5 bounded setup');
+expect($localStates['cloudflarestream'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
+    'Cloudflare config is not remote availability');
+expect($localStates['externalvideo'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
+    'arbitrary external plugins are not executed');
+expect($localStates['badplugin'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
+    'untrusted malformed plugin config never executes code');
+$localProjection = json_encode($readOnlyProviders, JSON_THROW_ON_ERROR);
+expect(!str_contains($localProjection, 'NO_LEAK_SENTINEL')
+    && !str_contains($localProjection, 'JLMS_SECRET_NEVER_PRINT_VALUE')
+    && !str_contains($localProjection, 'script'),
+    'SCR-16 provider config, secret references and untrusted markup must remain private');
+$localNoStorage = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::inspectLocal([
+    'html5' => (object) ['enabled' => 1, 'params' => '{"playback_enabled":1}'],
+], ['video_storage_root' => '', 'video_delivery_mode' => 'disabled']);
+expect((array_column($localNoStorage, 'stateKey', 'key')['html5'] ?? '') === 'COM_JLMS_NOT_CONFIGURED',
+    'local HTML5 readiness requires private storage and supported mode');
 $registry = new VideoProviderRegistry();
 $providerStatuses = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::summarize([
     'youtube' => (object) ['enabled' => 1, 'name' => 'YouTube'],

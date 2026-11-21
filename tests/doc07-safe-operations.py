@@ -109,14 +109,40 @@ for locale in ("it-IT", "en-GB"):
 provider_projection = (ROOT / "component/administrator/src/Application/DashboardProviderStatus.php").read_text()
 assert "COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL" in provider_projection
 assert "PLG_JLMSVIDEO" in provider_projection
+for locale in ("it-IT", "en-GB"):
+    lang = (ROOT / "component/administrator/language" / locale / "com_jlms.ini").read_text()
+    for key in ("COM_JLMS_PROVIDER_UNVERIFIED", "COM_JLMS_PROVIDER_GUIDANCE_UNVERIFIED"):
+        assert len(re.findall(r"^" + key + "=", lang, re.M)) == 1, (locale, key)
 assert "preg_match(" in provider_projection
 assert "'labelKey' => $safeLabel" in provider_projection
 assert "'key' => $key" in provider_projection
-assert "PluginHelper::importPlugin('jlmsvideo')" in view
-assert "RegisterVideoProvidersEvent::NAME" in view
+# Runtime plugin hooks may have side effects and MUST NOT run in diagnostics.
+assert "PluginHelper::importPlugin('jlmsvideo')" not in view
+assert "RegisterVideoProvidersEvent::NAME," not in view
+assert "DashboardProviderStatus::inspectLocal(" in view
+assert "DashboardProviderStatus::summarize(" not in view
+assert "->dispatch(" not in view, "No event dispatch of any third-party plugins in diagnostics"
+assert "->getHttp(" not in view and "->post(" not in view
+assert "->execute(" not in view, "No mutating database execution in dashboard"
+assert "->save(" not in view and "->store(" not in view
+assert "sendMail(" not in view and "Mail::send" not in view
+# Secret values are never stored in Joomla provider config as valid credentials.
+# The supported remote provider resolves environment references server-side.
+cf_provider = (ROOT / "plugins/jlmsvideo/cloudflarestream/src/Provider/Provider.php").read_text()
+secret_resolver = (ROOT / "libraries/jlms/src/Security/EnvironmentSecretProvider.php").read_text()
+assert "api_token_ref" in cf_provider and "$this->secrets" in cf_provider
+assert "env:(JLMS_SECRET_" in secret_resolver
+assert "COM_JLMS_VIDEO_CONFIGURATION" in secret_resolver
+assert "getenv($match[1])" in secret_resolver
+assert "throw new \\RuntimeException" in secret_resolver
+
+assert "->select($db->quoteName(['element', 'name', 'enabled', 'params']))" in view
+assert "public static function inspectLocal(" in provider_projection
+assert "COM_JLMS_PROVIDER_UNVERIFIED" in provider_projection
+assert "new ProviderDescriptor(" in provider_projection
 assert "// A non-manager must not inspect plugin readiness" in view
 assert "$this->canViewProviders = $actor->authorise('core.manage', 'com_jlms');" in view
-assert "if ($this->canViewProviders) {\n        $registry = new VideoProviderRegistry();" in view
+assert "if ($this->canViewProviders) {\n        // Diagnostic reads local metadata only" in view
 assert "if ($this->canViewProviders) : ?>" in page
 assert "self::safeLabel($entry['labelKey'] ?? null)" in diagnostics_code
 assert "PLG_JLMSVIDEO" in diagnostics_code

@@ -2935,3 +2935,7 @@ Verifica successiva Joomla (non blocca lo sviluppo): salvare un menu catalogo co
 ### SCR-16 — etichette video e ACL diagnostica
 
 Collaudo Joomla differito: manager del componente vede i nomi corretti di YouTube, Vimeo, Cloudflare Stream e HTML5 nella sezione di configurazione/diagnostica; plugin con etichetta `PLG_JLMSVIDEO_*` valida mantiene la localizzazione. Utente backend privo di `core.manage` non vede stati provider e la dashboard non richiama la loro registrazione. Verificare assenza di invii email e modifiche a video/gruppi durante la semplice visualizzazione.
+
+### SCR-16 — collaudo manuale successivo, non bloccante lo sviluppo
+
+Con account amministratore e manager verificare le configurazioni globali e gli override corso/menu, il preflight storage e dei task, i template email e le istruzioni IT/EN. YouTube/Vimeo/HTML5 devono mostrare la condizione locale; Cloudflare Stream e plugin esterni abilitati devono segnalare **Non verificato senza connessione** (non effettuano test remoti e non promettono playback). Verificare l'assenza di invii email, pubblicazione di video, alterazioni gruppi o log contenenti segreti al solo accesso alla dashboard. L'account privo di `core.manage` non deve vedere la diagnostica. **Accettazione Joomla: Non eseguita** finché il gestore non registra il risultato, anche quando SCR-16 è completato nel software.

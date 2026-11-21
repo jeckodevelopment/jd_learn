@@ -1,4 +1,8 @@
+**JD Learn 0.64.21-dev — SCR-16 implementazione COMPLETATA (21/11/2026):** tutti e 5 i criteri software core risultano `implemented`, con diagnostica locale che non invoca plugin terzi, test automatici negativi e matrice generata riconciliata. **Sviluppo comprovato globale 61,34%** (479 implemented / 17 missing / 261 unverifiable). **Collaudo manuale Joomla di SCR-16: Non eseguito**, indipendente dalla chiusura dello sviluppo. I provider remoti/terzi non sono dichiarati raggiungibili senza prova esplicita.
+
 **JD Learn 0.64.21-dev — SCR-16: stato implementazione e test automatici (21/11/2026).**
+
+**SCR-16 — chiusura del perimetro tecnico core (21/11/2026):** diagnostica dei provider rigorosamente locale, senza import/dispatch dei plugin e senza richieste remote o modifiche implicite. Gli stati `UNVERIFIED` impediscono il falso pronto per provider che non si possono provare senza operazione esplicita; test con segreti sentinella e casi malformati, controlli di ereditarietà, storage, task, email e ACL. Stato implementazione indipendente dall'accettazione manuale Joomla: **Non eseguita**. La percentuale segue il registro generato e la CI, non il collaudo umano.
 
 **SCR-16 — integrità etichette provider e ACL (21/11/2026):** corretto il contratto `labelKey` tra `DashboardProviderStatus` e `ConfigurationDiagnostics` che rendeva i provider come sconosciuti. Ora etichette plugin localizzate valide passano tramite lista di prefissi consentiti, input non attendibili restano generici. Le informazioni dei plugin e la registrazione del provider sono attivate solo per manager del componente. Test PHP negativi e guardia strutturale; collaudo manuale distinto.
 

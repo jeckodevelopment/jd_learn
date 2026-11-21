@@ -16,7 +16,7 @@ foreach ($states as $state) {
 $scheduler[] = ['label' => 'COM_JLMS_SCHEDULER_MAIL', 'state' => 'operational', 'duplicates' => true];
 $providerStates = [
     'COM_JLMS_PROVIDER_NOT_INSTALLED', 'COM_JLMS_PROVIDER_DISABLED',
-    'COM_JLMS_PROVIDER_UNAVAILABLE', 'COM_JLMS_NOT_CONFIGURED',
+    'COM_JLMS_PROVIDER_UNAVAILABLE', 'COM_JLMS_PROVIDER_UNVERIFIED', 'COM_JLMS_NOT_CONFIGURED',
     'COM_JLMS_READY', 'unexpected',
 ];
 $providers = array_map(
@@ -54,8 +54,10 @@ foreach ($result as $check) {
 if ($result[3]['severity'] !== 'error' || $result[9]['severity'] !== 'error'
     || $result[7]['severity'] !== 'ok'
     || $result[count($scheduler) + 2]['severity'] !== 'error'
-    || $result[count($scheduler) + 4]['severity'] !== 'ok'
-    || $result[count($scheduler) + 5]['severity'] !== 'warning') {
+    || $result[count($scheduler) + 3]['severity'] !== 'warning'
+    || $result[count($scheduler) + 3]['stateKey'] !== 'COM_JLMS_PROVIDER_UNVERIFIED'
+    || $result[count($scheduler) + 5]['severity'] !== 'ok'
+    || $result[count($scheduler) + 6]['severity'] !== 'warning') {
     throw new RuntimeException('Unsafe severity classification or duplicate precedence');
 }
 if ($result[9]['guidanceKey'] !== 'COM_JLMS_SCHEDULER_GUIDANCE_DUPLICATES') {

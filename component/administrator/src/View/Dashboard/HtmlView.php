@@ -7,10 +7,7 @@ namespace Jlms\Component\Jlms\Administrator\View\Dashboard;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Factory;
-use Jlms\Contracts\Event\RegisterVideoProvidersEvent;
-use Jlms\Contracts\Video\VideoProviderRegistry;
 use Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus;
 use Joomla\Database\DatabaseInterface;
 
@@ -92,20 +89,20 @@ final class HtmlView extends BaseHtmlView
         // registration hooks simply by opening the administrative dashboard.
         $this->canViewProviders = $actor->authorise('core.manage', 'com_jlms');
         if ($this->canViewProviders) {
-        $registry = new VideoProviderRegistry();
-        PluginHelper::importPlugin('jlmsvideo');
-        Factory::getApplication()->getDispatcher()->dispatch(
-            RegisterVideoProvidersEvent::NAME,
-            new RegisterVideoProvidersEvent($registry),
-        );
+        // Diagnostic reads local metadata only: arbitrary video plugin hooks
+        // must never run merely to inspect configuration.
         $extensions = $db->getQuery(true)
-            ->select($db->quoteName(['element', 'name', 'enabled']))
+            ->select($db->quoteName(['element', 'name', 'enabled', 'params']))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
             ->where($db->quoteName('folder') . ' = ' . $db->quote('jlmsvideo'))
             ->where($db->quoteName('client_id') . ' = 0');
         $extensionMap = $db->setQuery($extensions)->loadObjectList('element');
-        $this->providers = DashboardProviderStatus::summarize($extensionMap, $registry->descriptors());
+        $componentVideoParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+        $this->providers = DashboardProviderStatus::inspectLocal($extensionMap, [
+            'video_storage_root' => $componentVideoParams->get('video_storage_root', ''),
+            'video_delivery_mode' => $componentVideoParams->get('video_delivery_mode', 'disabled'),
+        ]);
         }
         $this->canManageScheduler = $actor->authorise('core.manage', 'com_scheduler');
         if ($actor->authorise('core.manage', 'com_jlms')) {

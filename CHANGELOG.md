@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — chiusura implementativa configurazione e diagnostica (21/11/2026):** rimosso ogni dispatch/registrazione di plugin video dalla dashboard amministrativa; letture soltanto della configurazione Joomla locale con stati non verificati per Cloudflare Stream e plugin esterni. Configurazioni abilitate/disabilitate dei provider core valutate senza chiamate remote, scritture, pubblicazioni, modifiche gruppi o invii. Test negativi di segreti in output e gate strutturali sui side effect; criteri tecnici e accettazione Joomla tracciati separatamente.
+
 - **SCR-16 — diagnostica provider e ACL (21/11/2026):** ripristinata l'etichetta localizzata nella proiezione di diagnostica video, supportati i soli identificativi IT/EN e plugin localizzati validi; registrazione/status dei provider e relativa sezione dashboard limitati a utenti con `core.manage` del componente. Nuovi test di regressione, nessuna azione di connessione o invio implicito.
 
 - **SCR-16 — verifica e protezioni diagnostiche (21/11/2026):** parametri vuoti dei menu trattati come ereditarietà valida; controllo di tutte le cinque opzioni globali di presentazione catalogo; filtri sui nomi e sulle etichette forniti dai plugin video per non visualizzare valori arbitrari. Test PHP negativi e strutturali, sola lettura, nessun invio o mutazione.

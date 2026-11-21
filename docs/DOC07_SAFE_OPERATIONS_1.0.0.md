@@ -40,3 +40,9 @@ Le righe sono costruite da `ConfigurationDiagnostics::summarize()` in `component
 ## Compatibilità e manutenzione
 
 Aggiungere nuove procedure solo aggiornando contestualmente: mapping ACL nel Dashboard HtmlView, markup in dashboard/default.php, stringhe IT/EN, test, questa matrice e `QA_TESTBOOK.md`. Non suggerire come soluzione disabilitare ACL, CSRF, CSP, scanner, controlli su file protetti o accessi. I messaggi diagnostici non devono interpolare chiavi segrete, path sensibili completi o token. Distinguere sempre «controllo read-only», «prova eseguita» e «accettazione manuale».
+
+## SCR-16 — contratto diagnostico locale definitivo
+
+L'apertura della dashboard è **soltanto una lettura di metadati Joomla**: non importa i plugin video e non emette `RegisterVideoProvidersEvent`. Una terza parte non può essere invocata per semplice consultazione della diagnostica, neppure se il componente è amministrato da un manager. Sono considerati gli stati `NOT_INSTALLED`, `DISABLED`, `NOT_CONFIGURED`, `READY` e `UNVERIFIED`. I provider di terze parti e Cloudflare Stream abilitati sono **non verificati** fino a un'azione operativa esplicita, mai erroneamente marcati pronti sulla base della sola configurazione locale. I riferimenti a segreti server non sono mai visualizzati. Le ragioni e le istruzioni sono disponibili sia in italiano sia in inglese.
+
+Le prove automatiche (`tests/run.php`, `tests/doc07-configuration-diagnostics.php`, `tests/doc07-safe-operations.py`) vincolano proiezioni, ACL, assenza di event dispatch, scritture e chiamate remote. Il collaudo Joomla, il funzionamento effettivo dell'hosting e i comportamenti autonomi di plugin installati da terzi non fanno parte della certificazione del codice core.
