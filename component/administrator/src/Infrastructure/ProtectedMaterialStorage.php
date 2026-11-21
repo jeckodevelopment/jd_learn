@@ -75,6 +75,13 @@ final class ProtectedMaterialStorage
         return hash_hkdf('sha256', $siteSecret, 32, 'JD Learn managed asset v1');
     }
 
+    /** Accept Unix roots and Windows drive roots; reject drive-relative paths. */
+    private static function isAbsolutePath(string $path): bool
+    {
+        return str_starts_with($path, '/') || (strlen($path) > 2 && ctype_alpha($path[0])
+            && $path[1] === ':' && ($path[2] === '/' || $path[2] === chr(92)));
+    }
+
     public function root(): string
     {
         if ($this->managed()) { return $this->managedRoot(); }
@@ -82,8 +89,7 @@ final class ProtectedMaterialStorage
         // Existing external private roots remain supported for advanced hosting
         // setups and pre-existing .blob assets; no implicit relocation.
         $configured = trim((string) $this->config()->get('material_storage_root', ''));
-        $absolute = str_starts_with($configured, '/') || (strlen($configured) > 2 && ctype_alpha($configured[0])
-            && $configured[1] === ':' && in_array($configured[2], ['/', '\\\\'], true));
+        $absolute = self::isAbsolutePath($configured);
         if (!$absolute) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
         $root = realpath($configured);
         if ($root === false || !is_dir($root) || !is_writable($root) || is_link($configured)) {
