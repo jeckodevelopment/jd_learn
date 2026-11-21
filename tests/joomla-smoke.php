@@ -554,6 +554,27 @@ foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
         throw new \RuntimeException('Joomla Privacy did not export consent state ' . $consentFixtureState);
     }
 }
+// PRIV-C2: administrator sees only the current consent record and safe fields.
+$consentAudit = new \Jlms\Component\Jlms\Administrator\Application\ConsentAuditService($db);
+$consentAuditData = $consentAudit->page($app->getIdentity(), $privacyUserId, 0, 25);
+if ($consentAuditData['total'] !== 1 || count($consentAuditData['rows']) !== 1
+    || (int) $consentAuditData['rows'][0]['user_id'] !== $privacyUserId
+    || $consentAuditData['rows'][0]['state'] !== 'revoked') {
+    throw new \RuntimeException('Protected consent audit does not show current revocation state.');
+}
+if (array_diff(array_keys($consentAuditData['rows'][0]),
+    ['user_id', 'state', 'origin', 'policy_version', 'requested_at', 'confirmed_at', 'revoked_at'])) {
+    throw new \RuntimeException('Protected consent audit exposed unapproved fields.');
+}
+$consentAuditDenied = false;
+try {
+    $consentAudit->page(new \Joomla\CMS\User\User(), $privacyUserId);
+} catch (\RuntimeException $error) {
+    $consentAuditDenied = $error->getCode() === 403;
+}
+if (!$consentAuditDenied) {
+    throw new \RuntimeException('Guest user accessed global consent audit.');
+}
 $privacyTokenHash = hash('sha256', 'privacy-revocation-token-fixture-' . $privacyUserId);
 $db->setQuery($db->createQuery()->insert('#__jlms_mail_unsubscribe_tokens')
     ->columns(['user_id', 'consent_confirmed_at', 'token_hash', 'created_at', 'expires_at'])
