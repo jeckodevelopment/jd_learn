@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 61.34,
-    "development_evidence_floor_percent": 61.34,
+    "percent": 61.5,
+    "development_evidence_floor_percent": 61.5,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -42,11 +42,11 @@
         "label": "Catalogo, frontend e navigazione",
         "requirements": 23,
         "weight_percent": 10.75,
-        "development_evidence_floor_percent": 80.93,
+        "development_evidence_floor_percent": 82.38,
         "manual_acceptance_coverage_percent": 13.04,
         "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
-        "unverifiable_criteria": 15,
+        "unverifiable_criteria": 13,
         "unassessed_criteria": 0
       },
       {
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 61.34
+        "percent": 61.5
       },
       {
         "id": "manual_acceptance",
