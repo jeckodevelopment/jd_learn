@@ -12,6 +12,8 @@
 - **Job, audit e code (7 tabelle):** i job di proprietà e l'outbox riferita a iscrizioni bloccano la rimozione finché non sono risolte le dipendenze. Payload, receipt e log devono essere verificati per riferimenti indiretti; nessuna scadenza automatica viene inventata.
 - **Email e consensi (4 tabelle):** la coda attiva `pending/retry/sending` blocca la rimozione; le righe terminali perdono email, nome, payload, consenso, note e diagnostici. Token di revoca e consenso correnti vengono rimossi. `event_key`, stato, timestamp e tentativi rimangono solo per finalità tecniche, senza associazione al destinatario.
 
+Le relazioni editoriali facoltative con account Joomla (`created_by`, `modified_by`, associazione docente e soggetto, attore di revisioni e riconciliazioni email) vengono ora dissociate nella transazione di rimozione, preservando contenuti e identità didattiche non legate a un login. Rimangono identificativi nei registri con colonne obbligatorie (es. audit certificati, equivalenze approvate e campagne): occorre giustificare la retention degli audit, verificarne l'eventuale collegabilità e definire i provvedimenti appropriati prima della cancellazione dell'account. Non modificare gli audit immutabili con SQL arbitrario.
+
 ## Esercizio dei diritti via Joomla
 
 1. Abilitare il plugin Privacy JD Learn e il componente Privacy Joomla. La richiesta del titolare deve seguire la procedura Joomla con verifica dell'identità; non esporre nuovi endpoint pubblici né aggirare le ACL. Esportazione: domini iscrizioni, richieste, progressi, quiz/tentativi/risposte, attestati, consenso e metadati delle consegne email dell'interessato. I token, i dati SMTP e i payload email non vengono esportati.
