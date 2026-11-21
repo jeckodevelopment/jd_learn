@@ -177,13 +177,24 @@ final class ConfigurationDiagnostics
             'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_DISABLED');
         // The global flags are inherited by per-course settings. Diagnostic status
         // explains the configured default without evaluating any course/user scope.
-        $mailFlags = [
-            'mail_manager_request_enabled', 'mail_course_update_enabled', 'mail_lesson_release_enabled',
-            'mail_teacher_assignment_enabled', 'mail_approval_enabled', 'mail_rejection_enabled',
-            'mail_request_enabled', 'mail_enrollment_enabled', 'mail_completion_enabled',
-            'mail_suspension_enabled', 'mail_cancellation_enabled', 'mail_reactivation_enabled',
-            'mail_certificate_enabled', 'mail_communication_enabled', 'mail_expiry_enabled',
+        $mailLabels = [
+            'mail_manager_request_enabled' => 'COM_JLMS_MAIL_MANAGER_REQUEST_ENABLED',
+            'mail_course_update_enabled' => 'COM_JLMS_MAIL_COURSE_UPDATE_ENABLED',
+            'mail_lesson_release_enabled' => 'COM_JLMS_MAIL_LESSON_RELEASE_ENABLED',
+            'mail_teacher_assignment_enabled' => 'COM_JLMS_MAIL_TEACHER_ASSIGNMENT_ENABLED',
+            'mail_approval_enabled' => 'COM_JLMS_MAIL_APPROVAL_ENABLED',
+            'mail_rejection_enabled' => 'COM_JLMS_MAIL_REJECTION_ENABLED',
+            'mail_request_enabled' => 'COM_JLMS_MAIL_REQUEST_ENABLED',
+            'mail_enrollment_enabled' => 'COM_JLMS_MAIL_ENROLLMENT_ENABLED',
+            'mail_completion_enabled' => 'COM_JLMS_MAIL_COMPLETION_ENABLED',
+            'mail_suspension_enabled' => 'COM_JLMS_MAIL_SUSPENSION_ENABLED',
+            'mail_cancellation_enabled' => 'COM_JLMS_MAIL_CANCELLATION_ENABLED',
+            'mail_reactivation_enabled' => 'COM_JLMS_MAIL_REACTIVATION_ENABLED',
+            'mail_certificate_enabled' => 'COM_JLMS_MAIL_CERTIFICATE_ENABLED',
+            'mail_communication_enabled' => 'COM_JLMS_MAIL_COMMUNICATION_ENABLED',
+            'mail_expiry_enabled' => 'COM_JLMS_MAIL_EXPIRY_ENABLED',
         ];
+        $mailFlags = array_keys($mailLabels);
         $defaultOff = ['mail_manager_request_enabled', 'mail_course_update_enabled',
             'mail_lesson_release_enabled', 'mail_expiry_enabled'];
         $enabled = 0;
@@ -201,7 +212,7 @@ final class ConfigurationDiagnostics
         foreach ($mailFlags as $key) {
             $default = in_array($key, $defaultOff, true) ? '0' : '1';
             $isEnabled = (string) ($params[$key] ?? $default) === '1';
-            $add('COM_JLMS_MAIL_' . strtoupper(substr($key, 5)), $isEnabled,
+            $add($mailLabels[$key], $isEnabled,
                 'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
                 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED');
         }
