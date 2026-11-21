@@ -1,3 +1,10 @@
+## 21 novembre 2026 — LES-03: compatibilità storage Windows, PR #865 integrata
+
+- [PR #865](https://github.com/jeckodevelopment/jd_learn/pull/865), merge `55e5f48b55dc4ed1536ab23bf12f87be87696427`. [CI completa 4/4](https://github.com/jeckodevelopment/jd_learn/actions/runs/44917464916); [gate CSV](https://github.com/jeckodevelopment/jd_learn/actions/runs/44917464903) verde.
+- [Pacchetto installabile 0.64.21-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/44917464916/artifacts/14712606041), ZIP Joomla interno `pkg_jlms-0.64.21-dev.zip` con SHA-256 verificato `9e915c11fff19a08f3854d5a527f5a03452cf2ca5fabff618b89aa4f4f58075b`; wrapper Actions SHA-256 `4feb5997c86afda7d228556761c16b7687b420eb916e1f7688a08e0b8b701dff`.
+- Riconoscimento della radice privata assoluta Windows con backslash e regressioni positive/negative; nessuna modifica ACL o crittografia. **LES-03 rimane Parziale**, perché l'audit delle topologie hosting/proxy e l'accettazione manuale non sono dimostrati.
+- **Contatori invariati:** 474 implemented / 17 missing / 266 unverifiable; sviluppo minimo 60,87%; manuale 4,67% avviato, 0% completato. Nessun bump SemVer aggiuntivo.
+
 ## 21 novembre 2026 — AUT-04 migrazione iscritti esplicita verificata, PR #863 integrata
 
 - **PR:** [#863](https://github.com/jeckodevelopment/jd_learn/pull/863); merge squash `da73279d0b28d8d05109bc08d1814623af13c102`; [CI 4/4 verde](https://github.com/jeckodevelopment/jd_learn/actions/runs/44914115463) con PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e preflight.
