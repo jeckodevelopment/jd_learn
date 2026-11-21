@@ -135,7 +135,7 @@ $settingsInvalid = ConfigurationDiagnostics::operationalSettings([
     'catalog_page_size' => '999', 'catalog_default_order' => 'unknown',
     'mail_enrollment_enabled' => 0, 'mail_completion_enabled' => 0,
 ]);
-if ($settingsInvalid[0]['severity'] !== 'error' || $settingsInvalid[1]['severity'] !== 'ok'
+if ($settingsInvalid[0]['severity'] !== 'error' || $settingsInvalid[1]['severity'] !== 'warning'
     || $settingsInvalid[2]['severity'] !== 'ok' || $settingsInvalid[19]['severity'] !== 'warning') {
     throw new RuntimeException('SCR-16 operational flags or invalid configuration not classified');
 }
@@ -163,5 +163,48 @@ foreach (array_merge($settings, $settingsInvalid, $settingsConfiguredScan) as $c
             throw new RuntimeException('SCR-16 configuration projection leaks a private value');
         }
     }
+}
+$videoFixtures = sys_get_temp_dir() . '/jdlearn-video-diag-' . bin2hex(random_bytes(5));
+mkdir($videoFixtures, 0700);
+foreach (['site', 'public', 'public/media', 'private'] as $sub) {
+    mkdir($videoFixtures . '/' . $sub, 0700);
+}
+try {
+    $probe = $videoFixtures . '/probe';
+    file_put_contents($probe, "#!/bin/sh\nexit 0\n");
+    chmod($probe, 0700);
+    $base = [$videoFixtures . '/site', $videoFixtures . '/public', $videoFixtures . '/public'];
+    $inactive = ConfigurationDiagnostics::localVideoPrerequisites('disabled', '', '', ...$base);
+    $missingVideo = ConfigurationDiagnostics::localVideoPrerequisites('php_bounded', '', '', ...$base);
+    $publicVideo = ConfigurationDiagnostics::localVideoPrerequisites(
+        'php_bounded', $videoFixtures . '/public/media', $probe, ...$base
+    );
+    $privateVideo = ConfigurationDiagnostics::localVideoPrerequisites(
+        'php_bounded', $videoFixtures . '/private', $probe, ...$base
+    );
+    $noProbe = ConfigurationDiagnostics::localVideoPrerequisites(
+        'php_bounded', $videoFixtures . '/private', $videoFixtures . '/missing', ...$base
+    );
+    $relative = ConfigurationDiagnostics::localVideoPrerequisites('php_bounded', 'relative', $probe, ...$base);
+    if ($inactive !== [] || count($missingVideo) !== 2 || $missingVideo[0]['severity'] !== 'error'
+        || $publicVideo[0]['severity'] !== 'error' || $privateVideo[0]['severity'] !== 'ok'
+        || $privateVideo[1]['severity'] !== 'warning' || $noProbe[1]['severity'] !== 'error'
+        || $relative[0]['severity'] !== 'error') {
+        throw new RuntimeException('SCR-16 local video root/probe readiness incorrectly classified');
+    }
+    foreach ([$missingVideo, $publicVideo, $privateVideo, $noProbe, $relative] as $group) {
+        foreach ($group as $check) {
+            if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+                || str_contains(json_encode($check, JSON_THROW_ON_ERROR), $videoFixtures)) {
+                throw new RuntimeException('SCR-16 local-video prerequisites disclose raw paths');
+            }
+        }
+    }
+} finally {
+    @unlink($videoFixtures . '/probe');
+    foreach (['public/media', 'public', 'private', 'site'] as $sub) {
+        rmdir($videoFixtures . '/' . $sub);
+    }
+    rmdir($videoFixtures);
 }
 echo "DOC-07: scheduler/provider actionable statuses and privacy-safe projections OK\n";

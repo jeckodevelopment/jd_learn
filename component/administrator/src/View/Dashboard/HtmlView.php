@@ -133,6 +133,14 @@ final class HtmlView extends BaseHtmlView
             }
             array_push($this->configurationDiagnostics,
                 ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::operationalSettings($settings));
+            array_push($this->configurationDiagnostics,
+                ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::localVideoPrerequisites(
+                    (string) $componentParams->get('video_delivery_mode', 'disabled'),
+                    (string) $componentParams->get('video_storage_root', ''),
+                    (string) $componentParams->get('video_ffprobe_path', ''),
+                    JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
+                    is_string($_SERVER['DOCUMENT_ROOT'] ?? null) ? $_SERVER['DOCUMENT_ROOT'] : ''
+                ));
 
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {

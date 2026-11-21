@@ -1,5 +1,7 @@
 # Changelog
 
+- **SCR-16 — video locali, prerequisiti effettivi (21/11/2026):** la dashboard non interpreta più la sola consegna PHP abilitata come pronta; verifica separatamente la radice video privata e l'eseguibile ffprobe senza eseguire comandi, sonde remote o scritture. Stati e rimedi IT/EN senza divulgare percorsi; test per percorsi pubblici, assenti e privati, ffprobe mancante e modalità disabilitata.
+
 - **SCR-16 — diagnostica configurazione consolidata (21/11/2026):** dashboard con verifiche read-only per antivirus, video locali, attestati, notifiche globali e opzioni catalogo ereditate. Corretta la diagnosi di directory esposte attraverso la `DOCUMENT_ROOT` reale; esiti e rimedi IT/EN non includono segreti o percorsi. Test PHP e gate strutturale senza mutazioni. Le prove hosting, SMTP e provider esterni rimangono separate.
 
 - **SCR-16 — diagnostica modelli email Joomla (21/11/2026):** aggiunto controllo read-only della presenza di tutti i template canonici nella lingua predefinita `*`, con stati e rimedi IT/EN e visibilità `core.manage`. Non vengono letti testi, destinatari, credenziali o parametri email. Regressioni per default presenti, assenti e sole traduzioni; nessuna modifica allo stato di implementazione complessivo.
