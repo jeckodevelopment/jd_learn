@@ -274,6 +274,31 @@ $check($db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $cou
     'permanent deletion of an empty pathway leaves constituent course states untouched');
 $check($pathModel->changeStates([$pathwayId], 0) && $pathModel->changeStates([$pathwayId], 1),
     'the populated pathway is restored for retention testing');
+// LCM-03: direct editorial saves must respect native Joomla checkout, not just bulk lifecycle tasks.
+$editorBefore = $db->setQuery('SELECT title,state,revision,checked_out FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadAssoc();
+$editorCoursesBefore = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn();
+$db->setQuery('UPDATE #__jlms_pathways SET checked_out=' . $otherEditor . ' WHERE id=' . $pathwayId)->execute();
+$lockedEditorial = array_replace($pathwayBase, [
+    'revision'=>(int)$editorBefore['revision'], 'state'=>1,
+    'title'=>'Unauthorized editorial rewrite', 'courses'=>[],
+]);
+$check(!$pathModel->save($lockedEditorial), 'direct pathway save rejects checkout held by another editor');
+$editorAfterDenied = $db->setQuery('SELECT title,state,revision,checked_out FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadAssoc();
+$check($editorAfterDenied['title'] === $editorBefore['title']
+    && $editorAfterDenied['state'] === $editorBefore['state']
+    && $editorAfterDenied['revision'] === $editorBefore['revision']
+    && (int)$editorAfterDenied['checked_out'] === $otherEditor,
+    'denied editorial save leaves pathway fields, revision and checkout owner unchanged');
+$check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $editorCoursesBefore,
+    'denied editorial save preserves ordered course associations');
+$db->setQuery('UPDATE #__jlms_pathways SET checked_out=' . (int)$operator->id . ' WHERE id=' . $pathwayId)->execute();
+$check($pathModel->save(array_replace($pathwayBase, [
+    'revision'=>(int)$editorBefore['revision'], 'state'=>1,
+])),
+    'pathway checkout owner can save with valid ACL and current revision');
+$db->setQuery('UPDATE #__jlms_pathways SET checked_out=NULL WHERE id=' . $pathwayId)->execute();
+$check($db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $editorCoursesBefore,
+    'authorized editor save preserves pathway course order');
 // LCM-03: an editorial patch without the courses key must not clear the
 // programme. Supplying courses=[] explicitly must still clear it.
 $currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();

@@ -122,7 +122,8 @@ final class PathwayModel extends AdminModel
                     ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $query->setQuery((string) $query . ' FOR UPDATE');
                 $record = $db->setQuery($query)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
-                if (!$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)) {
+                if (!$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 if ((int) ($data['revision'] ?? 0) !== (int) $record->revision) {

@@ -1,3 +1,5 @@
+- **LCM-03 (21/11/2026):** i salvataggi editoriali diretti dei percorsi ora rispettano il checkout nativo Joomla, oltre ad ACL e revisione. Modifica negata se il percorso è già aperto da altro operatore, senza alterare dati o relazioni con i corsi; fixture di integrazione su rifiuto, dati invariati e salvataggio del titolare.
+
 - **LCM-03/04 (21/11/2026):** eliminazione definitiva protetta anche dalle associazioni multilingua native Joomla per percorsi e docenti. In presenza di riferimenti `#__associations` la purga viene negata, senza eliminare la scheda o toccare le relazioni; regressioni Joomla per divieto e riuscita dopo la rimozione del solo riferimento di test.
 
 - **LCM-03 (21/11/2026):** le transizioni massive e la cancellazione definitiva dei percorsi ora rispettano il blocco di modifica nativo Joomla (`checked_out`). Una riga bloccata da un altro operatore arresta l'operazione e annulla l'intero batch, senza cambiare stati, revisioni o collegamenti. Test di integrazione su rollback e cancellazione negata; accettazione manuale separata.
