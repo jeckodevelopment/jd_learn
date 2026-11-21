@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.19-dev — SECDEV-07/02 evidence reconciliation (21/11/2026):** registrata la CI 4/4 verde e il merge #858; criterio software SECDEV-07/02 implemented, 473/17/267 e minimo comprovato 60,78%. Scanner e inventario first-party non attestano la sicurezza di Joomla/hosting o il superamento dei 1475 rilievi Ruff pregressi; manuale invariato. Nessuna modifica SemVer/runtime.
+
 - **0.64.19-dev — SECDEV-07/02 SAST/stile/composizione dipendenze (candidato 21/11/2026):** CI con Semgrep CE 1.186.0 e regole offline per PHP, JavaScript e Python, fixture positive/negative, Ruff E4/E7/E9 e gate first-party sulle 12 parti Joomla; nessuna dipendenza runtime o modifica SemVer. Chiusura criterio subordinata alle prove CI e alla revisione dei limiti.
 
 - **0.64.19-dev — SECDEV-07 syntax coverage (21/11/2026):** preflight sintattico su tutti i sorgenti Python/JS tracciati, parser Python e Node con fixture negative, mantenendo il lint PHP esistente; nessuna modifica runtime o SemVer, nessuna promozione di SECDEV-07/criterion_02 senza SAST/SCA completi.
