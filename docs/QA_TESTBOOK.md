@@ -1,3 +1,9 @@
+## PRIV-C2 — Consultazione dei consensi nel backend (SEC-P3)
+
+**CI:** il test Joomla DB verifica il servizio `ConsentAuditService::page` con l'utente autorizzato e l'account senza permessi, il solo record corrente `revoked` della fixture, la whitelist di campi e l'assenza di dati segreti. Il gate statico verifica permessi, markup GET-only, IT/EN e nessun campo SMTP/token.
+
+**Collaudo manuale pendente:** in JD Learn → Coda email aprire il pannello consensi con un amministratore con `jlms.audit.view`; ricercare per ID utente, verificare stati pending/confirmed/revoked e timestamp; cambiare lingua IT/EN, paginare. Ripetere con ruolo che possiede `core.manage` ma non `jlms.audit.view` e con ospite: accesso negato. Confermare che i dati del registro Joomla della privacy policy non cambiano, che la revoca MAIL-11 interrompe invii successivi e che il pannello è sempre read-only.
+
 **Regressione audit immutabili:** inserire una campagna di test attribuita all'utente A: sia preflight Joomla Privacy che invocazione diretta della rimozione devono rifiutare l'operazione; i dati non devono cambiare. Dopo la rimozione controllata della campagna fixture, verificare che la richiesta positiva torni disponibile. Non alterare campagne reali per ottenere lo sblocco.
 
 **Regressione di anonimizzazione estesa:** con account A che ha pubblicato/modificato contenuti e riconciliato una mail di B, richiedere la rimozione privacy di A; i riferimenti opzionali `created_by`, `modified_by`, associazione docente/soggetto e `reconciliation_by` devono diventare null, mentre contenuti e recapiti di B restano integri. Ispezionare separatamente gli audit che richiedono un identificativo obbligatorio e registrare la decisione del titolare.
