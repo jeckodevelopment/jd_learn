@@ -6253,16 +6253,16 @@
         "label": "Configurazione/diagnostica",
         "status": "unverifiable",
         "evidence": [
-          "docs/MAIL_SCHEDULER_SETUP.md",
-          "docs/CLOUDFLARE_STREAM.md",
-          "docs/MATERIALS.md"
+          "component/administrator/src/View/Dashboard/HtmlView.php",
+          "component/administrator/src/Application/ConfigurationDiagnostics.php",
+          "tests/doc07-configuration-diagnostics.php"
         ],
         "review": {
-          "reason": "Esistono diagnostiche di configurazione per mail, provider e storage, ma non una vista completa che verifichi tutte le dipendenze e i controlli iniziali previsti.",
+          "reason": "La dashboard unifica controlli read-only per Scheduler, provider video, storage privato, modelli email e opzioni operative. Rimangono da dimostrare la copertura di tutte le integrazioni installate e i prerequisiti specifici dell'hosting.",
           "references": [
-            "docs/MAIL_SCHEDULER_SETUP.md#L27-L29",
-            "docs/CLOUDFLARE_STREAM.md#L1-L25",
-            "docs/MATERIALS.md#L3-L5"
+            "component/administrator/src/View/Dashboard/HtmlView.php#L100-L155",
+            "component/administrator/src/Application/ConfigurationDiagnostics.php#L22-L230",
+            "tests/doc07-configuration-diagnostics.php#L100-L165"
           ]
         }
       },
@@ -6272,15 +6272,15 @@
         "status": "unverifiable",
         "evidence": [
           "component/administrator/config.xml",
-          "docs/MAIL_TEMPLATES.md",
-          "docs/MATERIALS.md"
+          "component/administrator/src/Application/ConfigurationDiagnostics.php",
+          "component/site/src/Helper/CatalogOptions.php"
         ],
         "review": {
-          "reason": "Parametri globali e configurazioni native esistono per diverse aree; non è attestata un'unica copertura di valori ereditati, provider, template, task, storage e controlli iniziali.",
+          "reason": "Sono disponibili parametri globali, stati provider, modelli email, task, storage, antivirus, attestati, video locali e notifiche individuali. La configurazione effettiva di ogni override menu/corso non è completamente verificata.",
           "references": [
             "component/administrator/config.xml#L1-L25",
-            "docs/MAIL_TEMPLATES.md#L1-L13",
-            "docs/MATERIALS.md#L3-L5"
+            "component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230",
+            "component/site/src/Helper/CatalogOptions.php#L1-L60"
           ]
         }
       },
@@ -6289,16 +6289,16 @@
         "label": "Mostrare funzionalità non configurate con ragione e istruzioni",
         "status": "unverifiable",
         "evidence": [
-          "docs/VIDEO.md",
-          "docs/MAIL_SCHEDULER_SETUP.md",
-          "docs/QA_TESTBOOK.md"
+          "component/administrator/tmpl/dashboard/default.php",
+          "tests/doc07-safe-operations.py",
+          "tests/doc07-configuration-diagnostics.php"
         ],
         "review": {
-          "reason": "Alcune guide indicano esplicitamente prerequisiti e limiti quando una funzione non è configurata; la copertura di tutte le funzioni inattive con causa e istruzioni non è documentata come completa.",
+          "reason": "I controlli amministrativi espongono motivi e istruzioni IT/EN per provider, task, template email, storage, antivirus, video locali, attestati e notifiche disabilitate. La copertura di tutte le funzioni opzionali di estensioni esterne non è dimostrata.",
           "references": [
-            "docs/VIDEO.md#L11-L19",
-            "docs/MAIL_SCHEDULER_SETUP.md#L27-L29",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "component/administrator/tmpl/dashboard/default.php#L95-L139",
+            "tests/doc07-safe-operations.py#L40-L96",
+            "tests/doc07-configuration-diagnostics.php#L100-L165"
           ]
         }
       },
@@ -6307,16 +6307,16 @@
         "label": "nessuna credenziale leggibile",
         "status": "unverifiable",
         "evidence": [
-          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php",
-          "tests/cloudflare.php",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "component/administrator/src/Application/ConfigurationDiagnostics.php",
+          "tests/doc07-configuration-diagnostics.php",
+          "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php"
         ],
         "review": {
-          "reason": "Il provider dei segreti e i campi di credenziali selezionati sono server-side; non è dimostrata l'assenza di valori leggibili in ogni form, risposta diagnostica, cache e log del componente.",
+          "reason": "La nuova proiezione diagnostica restituisce solo chiavi di traduzione e gravità, senza stampare percorsi o segreti. L'assenza di credenziali leggibili in ogni altro form, log e cache dell'estensione non è ancora provata esaustivamente.",
           "references": [
-            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23",
-            "tests/cloudflare.php#L1-L30",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7"
+            "component/administrator/src/Application/ConfigurationDiagnostics.php#L106-L230",
+            "tests/doc07-configuration-diagnostics.php#L100-L165",
+            "component/administrator/src/Infrastructure/EnvironmentSecretProvider.php#L1-L23"
           ]
         }
       },
@@ -6325,16 +6325,16 @@
         "label": "Il controllo connessione non deve pubblicare video, alterare gruppi o inviare messaggi reali senza azione esplicita dell'operatore",
         "status": "unverifiable",
         "evidence": [
-          "docs/CLOUDFLARE_STREAM.md",
-          "tests/joomla-video-duration.php",
+          "component/administrator/src/View/Dashboard/HtmlView.php",
+          "tests/doc07-safe-operations.py",
           "docs/QA_TESTBOOK.md"
         ],
         "review": {
-          "reason": "Le prove disponibili coprono configurazioni e metadati provider; non è attestata una matrice completa che escluda effetti esterni reali da ogni controllo di connessione e diagnostica.",
+          "reason": "La diagnostica attuale è locale, protetta da ACL e senza form di invio, mutazioni o sonde di connessione. Una verifica esaustiva degli effetti di eventuali plugin esterni e di tutte le superfici di controllo connessione resta distinta.",
           "references": [
-            "docs/CLOUDFLARE_STREAM.md#L1-L25",
-            "tests/joomla-video-duration.php#L77-L93",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "component/administrator/src/View/Dashboard/HtmlView.php#L100-L155",
+            "tests/doc07-safe-operations.py#L40-L96",
+            "docs/QA_TESTBOOK.md#L1-L15"
           ]
         }
       }
