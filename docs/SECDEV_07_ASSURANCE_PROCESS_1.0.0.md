@@ -8,6 +8,12 @@ Ogni controllo è tracciato in `docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json` co
 
 Il registro include il threat model SEC-P1, controller e plugin, rilevamento statico di sink di esecuzione e I/O, firme di segreti e action non fissate, dipendenze di pacchetto, finding critici/alti, inventario privacy, flussi reali Joomla e pin di OWASP ASVS 5.0.0. La CI Joomla su PHP 8.3/MySQL e PHP 8.4/MariaDB è distinta dai controlli sorgente; l'esecuzione deve essere confermata sullo SHA preciso della PR. Ogni nuovo controller, plugin, hook privilegiato, dipendenza o surface richiede aggiornamento del modello minacce e del test, non un semplice incremento numerico.
 
+## Tranche integrativa — sintassi multi-linguaggio (21/11/2026)
+
+Il preflight esegue `tests/secdev07-language-syntax.py` su tutti i file Python, JS, MJS e CJS tracciati in Git, senza dipendere dal set dei file modificati dalla PR. La verifica usa il parser Python e `node --check` per JavaScript; le fixture positive e negative assicurano che un file non valido causi errore. I job PHP 8.3/8.4 mantengono il lint completo dei file PHP. `git diff --check HEAD` non sostituisce un lint di stile del repository.
+
+**Limite:** si tratta di controlli sintattici, non di un'analisi semantica della sicurezza: nessuna classificazione di vulnerabilità, dataflow, verifica CVE di Joomla o SCA piattaforma. SECDEV-07/criterion_02 resta **missing**, e la lacuna FULL-SAST-STYLE resta aperta fino all'integrazione e verifica di strumenti idonei. Nessun effetto runtime, nessun incremento della percentuale implementativa.
+
 ## Limiti espressi e rischio residuo
 
 Il registro mantiene quattro attività **non automaticamente risolte**:
