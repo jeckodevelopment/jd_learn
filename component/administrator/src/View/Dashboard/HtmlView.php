@@ -121,6 +121,8 @@ final class HtmlView extends BaseHtmlView
             $settingNames = [
                 'material_scan_required', 'material_clamd_socket', 'video_delivery_mode',
                 'certificate_enabled', 'catalog_page_size', 'catalog_default_order',
+                'catalog_show_filters', 'catalog_show_order', 'catalog_show_category',
+                'catalog_show_cover', 'catalog_show_summary',
                 'mail_manager_request_enabled', 'mail_course_update_enabled', 'mail_lesson_release_enabled',
                 'mail_teacher_assignment_enabled', 'mail_approval_enabled', 'mail_rejection_enabled',
                 'mail_request_enabled', 'mail_enrollment_enabled', 'mail_completion_enabled',
