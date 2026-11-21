@@ -2,6 +2,7 @@
 
 ## 21/11/2026 — SEC-P3, PR #850 integrata (privacy email, tranche parziale)
 
+- **Tracciabilità post-merge:** PR documentale #851, milestone 1.0.0 e label documentation/P0; nessuna nuova modifica runtime.
 - **PR applicativa:** https://github.com/jeckodevelopment/jd_learn/pull/850 ; squash merge `cb2b453c344c58994d8f8f73f3a26af5ed7ecd47`; head verificato `1329847206265ab249f29c2deb6516ccfaf1b230`.
 - **CI finale:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44901833726 — quattro job su quattro riusciti (preflight, browser Chromium, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6); gate CSV https://github.com/jeckodevelopment/jd_learn/actions/runs/44901833737 verde.
 - **Pacchetto:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44901833726/artifacts/14706431932 — archivio Actions `JD-Learn-0.64.18-dev`, al cui interno è il file Joomla installabile `pkg_jlms-0.64.18-dev.zip`. SHA-256 ZIP Joomla da log della build verificata: `5bcead2a2ac2f3bbf3c063e6ab9ff82b69c530cfb81b22c7aef5608739e3dbd6` (824354 byte, 12 costituenti). SHA-256 **del diverso archivio Actions**: `2a46c89b97a55d45eb6ce541780aa785e07a98a12626310d40b089f6536f044b`.
