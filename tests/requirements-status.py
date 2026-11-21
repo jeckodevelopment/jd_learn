@@ -11,6 +11,19 @@ class Reconciliation(unittest.TestCase):
   self.evidence=json.loads((ROOT/'docs/IMPLEMENTATION_EVIDENCE.json').read_text())
  def check(self):status.check_reconciliation(self.rows,self.evidence)
  def test_implemented_does_not_require_human_acceptance(self):self.check()
+ def test_les01_stu04_core_implementation_completed_without_acceptance(self):
+  inventory=json.loads((ROOT/'docs/FUNCTIONAL_CRITERIA_1.0.0.json').read_text())['requirements']
+  for requirement,expected in [('LES-01',4),('STU-04',3)]:
+   with self.subTest(requirement=requirement):
+    criteria=inventory[requirement]
+    row=next(r for r in self.rows if r['Requisito']==requirement)
+    self.assertEqual(len(criteria),expected)
+    self.assertTrue(all(unit['status']=='implemented' and unit['evidence'] for unit in criteria))
+    self.assertEqual(row['Stato implementazione'],'Completata')
+    self.assertTrue(row['Residui implementativi 1.0.0'].startswith('Nessuno'))
+    self.assertEqual(row['Accettazione Joomla'],'Non eseguita')
+    self.assertEqual(row['Criteri completi superati'],'No')
+  self.check()
  def test_cat02_core_implementation_is_closed_independently_of_joomla_acceptance(self):
   row=next(r for r in self.rows if r['Requisito']=='CAT-02')
   criteria=json.loads((ROOT/'docs/FUNCTIONAL_CRITERIA_1.0.0.json').read_text())['requirements']['CAT-02']
