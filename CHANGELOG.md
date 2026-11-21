@@ -3,6 +3,7 @@
 - **0.64.18-dev — SEC-P2 findings gate (21/11/2026):** registro versionato delle mitigazioni e regressioni per finding critical/high del codice, fixture negative per rischi esterni non verificati e advisory Joomla/PHP; nessuna modifica runtime, versione invariata. SEC-P2/criterion_02 chiuso nel ledger di sviluppo del software, con gate hosting/release ancora aperti. Sviluppo minimo 60,12% (469 implemented / 21 missing / 267 unverifiable). Verifiche hosting separate.
 
 - **0.64.18-dev — SEC-P2 dependency composition gate (21/11/2026):** controllo fail-closed delle 12 estensioni ZIP figlie e dei dependency manager/lockfile/vendor/binary runtime non revisionati, invocato dal builder e preflight; fixture negative. Nessun cambiamento alle funzioni Joomla né bump SemVer. SEC-P2/criterion_01 riclassificato come implementato con evidenze software; criterio 02 finding alti/critici e verifica hosting restano separati. Nuovo sviluppo comprovato 59,89% (468/22/267).
+- SEC-P3: inventario versionato di tutte le 47 tabelle della baseline installabile, gate anti-deriva nel preflight, prove Joomla Privacy a due account e su pending/confirmed/revoked, procedure amministrative IT/EN per conservazione, backup/restore e diritti. Nessuna nuova scadenza di conservazione presunta e nessuna modifica di schema.
 
 - SEC-P3: esportazione Joomla Privacy dei metadati di consegna email limitati al destinatario; rimozione dei diagnostici `last_error` dalle righe terminali anonimizzate, con regressioni e traduzioni IT/EN. Gate complessivo SEC-P3 ancora aperto.
 
