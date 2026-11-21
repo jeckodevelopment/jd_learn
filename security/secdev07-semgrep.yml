@@ -1,0 +1,49 @@
+rules:
+  - id: jdlearn.php.dynamic-evaluation
+    languages: [php]
+    severity: ERROR
+    message: Dynamic PHP evaluation is prohibited in JD Learn distributed code.
+    patterns:
+      - pattern-either:
+          - pattern: eval($INPUT)
+          - pattern: assert($INPUT)
+  - id: jdlearn.php.untrusted-deserialization
+    languages: [php]
+    severity: ERROR
+    message: PHP unserialize requires an explicit security review.
+    pattern: unserialize($INPUT)
+  - id: jdlearn.php.shell-string-execution
+    languages: [php]
+    severity: ERROR
+    message: Shell string execution is prohibited; use an argument-vector process API.
+    pattern-either:
+      - pattern: shell_exec($CMD)
+      - pattern: system($CMD)
+      - pattern: passthru($CMD)
+  - id: jdlearn.javascript.dynamic-evaluation
+    languages: [javascript]
+    severity: ERROR
+    message: Dynamic JavaScript execution is prohibited.
+    pattern-either:
+      - pattern: eval($CODE)
+      - pattern: new Function(...)
+  - id: jdlearn.javascript.unsafe-html-assignment
+    languages: [javascript]
+    severity: ERROR
+    message: Review HTML insertion; use textContent or a reviewed sanitizer.
+    pattern: $EL.outerHTML = $VALUE
+  - id: jdlearn.python.dynamic-evaluation
+    languages: [python]
+    severity: ERROR
+    message: Python dynamic execution is prohibited in repository automation.
+    pattern-either:
+      - pattern: eval($CODE)
+      - pattern: exec($CODE)
+  - id: jdlearn.python.shell-process
+    languages: [python]
+    severity: ERROR
+    message: Shell=True is prohibited in repository automation.
+    pattern-either:
+      - pattern: subprocess.run(..., shell=True, ...)
+      - pattern: subprocess.Popen(..., shell=True, ...)
+      - pattern: subprocess.call(..., shell=True, ...)
