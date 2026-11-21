@@ -1,3 +1,8 @@
+## 21 novembre 2026 — AUT-04 / LES-01 — copia lezione senza troncamento silenzioso
+
+- `CourseVersionCopy::copyLessonFields()` ora verifica il numero di record nativi `#__fields_values` restituiti prima di copiarli: se supera 1.000, la duplicazione fallisce invece di perdere i valori oltre il limite.
+- Test positivo/negativo `tests/aut-les-field-copy-boundary.php` integrato nel preflight CI; versione e percentuali invariate fino a CI e merge. Non si attribuiscono chiusura dei criteri AUT-04/LES-01 né accettazione Joomla per il solo caso limite.
+
 ## 21 novembre 2026 — SECDEV-07/criterion_02 implementato: scanner verificati (PR #858)
 
 - [PR #858](https://github.com/jeckodevelopment/jd_learn/pull/858), merge `aafb718857b35ed27dfb5b0e6ed2d86845af6541`, head `00c07227bddf73073a0e342b8b9e788a6aec7950`.
