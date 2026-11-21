@@ -1,3 +1,9 @@
+## LCM-03/04 — associazioni multilingua Joomla e purga (21/11/2026)
+
+**Automatico:** `tests/joomla-pathways.php` e `tests/joomla-teachers.php` creano un'associazione nativa `#__associations` con contesto del record; verificano che la purga del percorso/docente cestinato venga bloccata e lasci intatto il record. Rimosso il solo collegamento di prova, la purga autorizzata torna disponibile.
+
+**Manuale Joomla: In attesa.** Associare due schede in lingue diverse via sistema nativo, cestinarne una e tentare la cancellazione definitiva: deve essere negata senza modificare l'altra scheda. Scollegare le traduzioni e verificare che la purga sia consentita solo in assenza anche delle altre dipendenze. Provare ACL, storico, account docenti e corsi correlati; non attribuire accettazione manuale alla CI.
+
 ## LCM-03 — checkout Joomla, operazioni massive e purga (21/11/2026)
 
 **Regressione automatica:** `tests/joomla-pathways.php` assegna il checkout a un secondo utente, verifica che una transizione massiva sul percorso bloccato fallisca con rollback del primo record, stato e revisione invariati; nega la purga del percorso cestinato e vuoto mentre è bloccato. Verifica successivamente che il titolare del checkout possa eseguire la transizione e che lo sblocco conservi le associazioni.
