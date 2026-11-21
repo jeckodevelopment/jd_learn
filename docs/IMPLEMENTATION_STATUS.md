@@ -1,3 +1,5 @@
+**JD Learn 0.64.21-dev — SCR-16: stato implementazione e test automatici (21/11/2026).**
+
 **SCR-16 — consolidamento delle verifiche locali (21/11/2026):** tre lacune implementative corrette: parametri menu vuoti ereditano i default senza errore, le cinque opzioni globali di presentazione catalogo partecipano al controllo di validità, ed identificativi/etichette arbitrarie dei plugin video non raggiungono la dashboard. Regressioni PHP su configurazioni invalide e valori non attendibili. Le prove su componenti esterni non controllati e sull'hosting restano separate dal collaudo Joomla; nessun incremento dei criteri senza riconciliazione esplicita.
 
 **SCR-16 — correzione precisione della diagnostica (21/11/2026):** completamento delle scansioni di corsi e menu valutato separatamente, senza falsi avvisi sull'altra sorgente; query menu circoscritta a viste `courses` e `category` esatte (o seguite da parametri). Regressioni incluse. Questo non attesta ogni superficie, plugin o credenziale: stati 02–05 e contatori di sviluppo invariati.
