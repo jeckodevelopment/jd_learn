@@ -10042,20 +10042,20 @@
       {
         "id": "criterion_01",
         "label": "Processo verificabile",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          ".github/workflows/ci.yml",
-          "docs/IMPLEMENTATION_EVIDENCE.json",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md",
+          "docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json",
+          "tests/secdev07-assurance-gate.py",
+          "tools/check.py"
         ],
         "review": {
-          "reason": "Il gate approvato richiede threat model e revisione sistematica tracciata; il repository documenta ancora il piano e non contiene il rapporto finale di esecuzione.",
+          "reason": "Il processo di security assurance applicativa è ora verificabile: 10 controlli minaccia-sorgente-test-runner-limiti e 4 gap espliciti sono inventariati; il preflight CI ne controlla la completezza, la presenza dei test nei runner e il rifiuto di prove e rischi omessi tramite fixture negative. La PR #854 è stata integrata con CI 4/4 verde (run 44906074041) e gate CSV verde (run 44906074069). Sono distinti il criterio 02 (stile/SAST/SCA completi ancora mancanti), i criteri 04-05 non verificabili, l'accettazione manuale e i release blocker esterni.",
           "references": [
-            ".github/workflows/ci.yml#L1-L25",
-            "docs/IMPLEMENTATION_EVIDENCE.json#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md#SECDEV-07",
+            "docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json#\"controls\"",
+            "tests/secdev07-assurance-gate.py#def inspect",
+            "tools/check.py#tests/secdev07-assurance-gate.py"
           ]
         }
       },

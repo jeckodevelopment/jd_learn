@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 60.59,
-    "development_evidence_floor_percent": 60.59,
+    "percent": 60.69,
+    "development_evidence_floor_percent": 60.69,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -126,10 +126,10 @@
         "label": "Privacy, sicurezza e compatibilità",
         "requirements": 51,
         "weight_percent": 23.83,
-        "development_evidence_floor_percent": 46.53,
+        "development_evidence_floor_percent": 46.92,
         "manual_acceptance_coverage_percent": 0,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 7,
+        "missing_criteria": 6,
         "unverifiable_criteria": 100,
         "unassessed_criteria": 0
       },
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 60.59
+        "percent": 60.69
       },
       {
         "id": "manual_acceptance",

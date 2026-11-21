@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **471**.
-- Mancanti con lacuna accertata: **19**.
+- Implementati: **472**.
+- Mancanti con lacuna accertata: **18**.
 - Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
@@ -38,11 +38,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SECDEV-03/criterion_03` — Test contro SQL injection, XSS, mass assignment e formule CSV. I test positivi e negativi esistenti coprono superfici selezionate, ma la suite completa contro SQL injection, XSS, mass assignment e formule CSV non è documentata come eseguita per tutte le superfici.
   - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
   - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SECDEV-07/criterion_01` — Processo verificabile. Il gate approvato richiede threat model e revisione sistematica tracciata; il repository documenta ancora il piano e non contiene il rapporto finale di esecuzione.
-  - [.github/workflows/ci.yml#L1-L25](../.github/workflows/ci.yml#L1-L25)
-  - [docs/IMPLEMENTATION_EVIDENCE.json#L1-L25](../docs/IMPLEMENTATION_EVIDENCE.json#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `SECDEV-07/criterion_02` — Modello delle minacce, revisione codice sensibile, lockfile/inventario dipendenze, lint/stile/analisi statica/scansione segreti e dipendenze, test positivi e negativi. Non risulta un inventario/lockfile e una scansione completa di stile, analisi statica, segreti e dipendenze con evidenze della candidata; il gate di hardening rimane aperto.
@@ -1799,6 +1794,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/services/provider.php#ComponentDispatcherFactory](../component/administrator/services/provider.php)
   - [component/administrator/services/provider.php#setMVCFactory](../component/administrator/services/provider.php)
   - [component/jlms.xml#<extension](../component/jlms.xml)
+- `SECDEV-07/criterion_01` — Processo verificabile. Il processo di security assurance applicativa è ora verificabile: 10 controlli minaccia-sorgente-test-runner-limiti e 4 gap espliciti sono inventariati; il preflight CI ne controlla la completezza, la presenza dei test nei runner e il rifiuto di prove e rischi omessi tramite fixture negative. La PR #854 è stata integrata con CI 4/4 verde (run 44906074041) e gate CSV verde (run 44906074069). Sono distinti il criterio 02 (stile/SAST/SCA completi ancora mancanti), i criteri 04-05 non verificabili, l'accettazione manuale e i release blocker esterni.
+  - [docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md#SECDEV-07](../docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md)
+  - [docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json#"controls"](../docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json)
+  - [tests/secdev07-assurance-gate.py#def inspect](../tests/secdev07-assurance-gate.py)
+  - [tools/check.py#tests/secdev07-assurance-gate.py](../tools/check.py)
 - `SECDEV-07/criterion_03` — OWASP ASVS come riferimento con versione fissata, senza certificazioni implicite. Il riferimento tecnico di verifica è ora fissato su OWASP ASVS v5.0.0 (stable), con link alla fonte ufficiale e formato degli ID versionati, distinzione tra riferimento e certificazione, e test CI che rileva omissioni/variazioni del pin. La disponibilità del riferimento non dimostra che controlli ASVS, threat model, code review o penetration test siano stati completati: SECDEV-07/criterion_01, /criterion_02 e /criterion_04–05 restano aperti secondo le proprie evidenze.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#OWASP ASVS 5.0.0](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
   - [tests/asvs-reference.py#PIN](../tests/asvs-reference.py)
