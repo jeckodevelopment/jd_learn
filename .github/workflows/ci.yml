@@ -18,7 +18,7 @@ jobs:
   plan:
     name: Candidate plan and lightweight checks
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 15
     outputs:
       integration: ${{ steps.plan.outputs.integration }}
       matrix: ${{ steps.plan.outputs.matrix }}
@@ -55,6 +55,20 @@ jobs:
           python3 tests/secdev07-language-syntax.py --self-test
           python3 tests/secdev07-language-syntax.py
           if [ "${{ github.event_name }}" = "pull_request" ]; then git diff --check "origin/${{ github.base_ref }}...HEAD"; fi
+      - name: SECDEV-07 free offline SAST and Python style checks
+        run: |
+          python3 -m venv .runtime/secdev07-venv
+          .runtime/secdev07-venv/bin/pip install --disable-pip-version-check semgrep==1.186.0 ruff==0.14.6
+          export PATH="$PWD/.runtime/secdev07-venv/bin:$PATH"
+          semgrep --version
+          ruff --version
+          python3 tests/secdev07-sast.py --self-test
+          python3 tests/secdev07-sast.py
+          ruff check --select E4,E7,E9 tools scripts tests
+      - name: SECDEV-07 first-party package composition and dependency boundary
+        run: |
+          python3 tests/sec-p2-dependency-gate.py
+          python3 tests/sec-p2-source-gate.py
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
