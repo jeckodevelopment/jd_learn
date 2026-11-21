@@ -52,3 +52,5 @@ L'export tramite plugin Joomla Privacy include ora un dominio separato per le co
 La rimozione, consentita soltanto in assenza delle dipendenze di retention già protette, azzera anche `last_error` nelle righe terminali della coda. Lo stato tecnico della consegna e i contatori rimangono per l'audit; le righe `pending`, `retry` e `sending` restano bloccanti. Regressione strutturale: `tests/sec-p2-p3-guard.py`; i test reali su Joomla con utente di prova e dati storici restano da completare.
 
 **Stato:** hardening parziale SEC-P3; non dichiarare i criteri 01/02 implementati né aumentare la percentuale in assenza del restante inventario di retention, backup, diritti e collaudi. Nessuna modifica SQL o versione runtime: il comportamento resta backward compatible.
+
+**Tracciabilità PR #850:** milestone 1.0.0, priorità P0, criteri SEC-P3 conservati come missing fino alla verifica integrale; gli scenari manuali specifici sono nel QA Testbook. La verifica CI deve essere eseguita su un evento PR successivo all'applicazione della milestone.
