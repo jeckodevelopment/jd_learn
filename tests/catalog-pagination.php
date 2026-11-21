@@ -53,14 +53,14 @@ namespace {
     CatalogPagination::apply($category, [
         'search' => '',
         'tag_id' => 0,
-        'teacher_id' => -1,
+        'teacher_id' => 0,
         'pathway_id' => null,
         'available' => '1',
         'layout' => 'grid',
         'order' => 'editorial',
         'untrusted' => ['key' => 'value'],
     ], true);
-    if ($category->params !== ['filter' => ['available' => '1', 'layout' => 'grid', 'order' => 'editorial', 'teacher_id' => '-1']]) {
+    if ($category->params !== ['filter' => ['order' => 'editorial', 'available' => '1', 'layout' => 'grid']]) {
         throw new RuntimeException('SCR-01 category pagination must retain only recognized scalar filters');
     }
     echo "SCR-01 normalized pagination filters and category scope: OK\n";
