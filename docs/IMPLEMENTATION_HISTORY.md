@@ -1,5 +1,15 @@
 ## 21 novembre 2026 — SEC-P2 sviluppo COMPLETATO, review findings (PR #848)
 
+## 21/11/2026 — SEC-P3 sviluppo software COMPLETATO, PR #852
+
+- **PR applicativa:** https://github.com/jeckodevelopment/jd_learn/pull/852 ; commit merge squash `bee22c0ba9420a4d65f78dda0a43c4021ac4e0d1` ; head verificato `9fe515a4a25eb92d783d11af9c9d5f268c3fcde7`.
+- **CI completa:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44904176809 — **4/4 verde**: preflight/documentazione e pacchetto, browser Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Gate CSV https://github.com/jeckodevelopment/jd_learn/actions/runs/44904176805 verde.
+- **Pacchetto installabile:** https://github.com/jeckodevelopment/jd_learn/actions/runs/44904176809/artifacts/14707436169 — artefatto Actions `JD-Learn-0.64.19-dev` che contiene `pkg_jlms-0.64.19-dev.zip` (12 costituenti, 826896 byte). **SHA-256 dello ZIP Joomla interno**, acquisito dai log della build riproducibile: `2e503142050463673cf0a10ecf32d8d9d7183ee068217ce6e237353279be2d08`. **Digest dell'archivio Actions** (NON il checksum Joomla): `sha256:112d0a6c40b82df161f336ed51e0b28c30376fe4540a7689258d764af5690505`.
+- **SEC-P3/criterion_01 + criterion_02:** implementazione software completata e collaudata automaticamente: inventory 47 tabelle/gate, flussi Privacy e identificativi indiretti, blocco fail-closed per audit non nullable, pannello read-only dei consensi MAIL-11 con ACL, due account Joomla e tre stati del consenso, test release/upgrade.
+- **Contatori dopo la chiusura implementativa:** 471 criteri implemented, 19 missing, 267 unverifiable (757 totali); **minimo sviluppo 60,59%**, incremento **+0,47 punti** da 60,12%. Collaudo manuale 4,67% avviato, 0% accettato. La percentuale funzionale rigorosa resta non determinabile perché 267 criteri non verificabili. Nessuna certificazione GDPR, nessuna prova sul sito reale o bonifica di backup esterni implicita; retention, restore e approvazione privacy rimangono gate espliciti del rilascio.
+- **Tracciabilità post-merge:** PR documentale #853 (milestone 1.0.0, label documentation/P0) per sincronizzare report/dashboard/matrice con SHA e CI effettivi; nessuna modifica runtime o ulteriore SemVer. Nessuna modifica runtime o ulteriore SemVer.
+
+
 ## 21/11/2026 — SEC-P3, PR #850 integrata (privacy email, tranche parziale)
 
 - **Tracciabilità post-merge:** PR documentale #851, milestone 1.0.0 e label documentation/P0; nessuna nuova modifica runtime.
