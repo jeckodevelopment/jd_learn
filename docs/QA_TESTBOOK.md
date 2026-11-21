@@ -1,3 +1,9 @@
+## SEC-P2 — hardening della ZIP e gate builder (21/11/2026)
+
+- [ ] Su commit candidato eseguire `python3 tests/sec-p2-package-scan.py` dopo la build: i file con traversal, drive Windows, symlink Unix, duplicati con case-fold, credenziali e archivi nidificati malevoli devono essere rifiutati; l'archivio Joomla legittimo supera la verifica.
+- [ ] Eseguire build dev e candidata stabile con `tools/build.py`, verificando che lo scanner sia invocato **prima** di scrivere ZIP e checksum in entrambi i percorsi.
+- [ ] Sul sito di prova registrare le versioni **effettive** di PHP/Joomla, esiti advisory, CSP/referrer/cookie, log SMTP/provider, file legacy e headers HTTPS, controlli di segreti su history e findings high/critical. Nessuno di questi esiti viene dedotto dalla CI.
+
 ## DOC-04 — verifica dei contratti tecnici e delle procedure (21/11/2026)
 
 La mappa in `docs/TECHNICAL_CONTRACTS_1.0.0.md` documenta l'identità di package/componente/libreria/plugin, la distribuzione dei 12 costituenti e le procedure di build e verifica. **Pendente**: collaudo dell'inventario DDL sul database reale di prova, installazione e upgrade; riproducibilità del package su checkout identico, hash ZIP interno, verifica UI/provider/ACL. Registrare commit, build, ambiente, checksum e risultati prima della promozione di DOC-04. Nessuna accettazione manuale attribuita da questa sola PR.
