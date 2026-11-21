@@ -221,16 +221,25 @@ $inheritMalformed = ConfigurationDiagnostics::inheritance(['{malformed'], [
     ['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{bad']
 ], true);
 $inheritOverflow = ConfigurationDiagnostics::inheritance(['{"mail_preferences":{"completion":"enabled"}}'], [], false);
+$inheritInvalidOverflow = ConfigurationDiagnostics::inheritance(
+    ['{"mail_preferences":{"completion":"untrusted"}}'],
+    [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"999"}']],
+    false
+);
 if ($inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !== 'ok'
     || $inheritOverridden[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
     || $inheritOverridden[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
     || $inheritInvalid[0]['severity'] !== 'error' || $inheritInvalid[1]['severity'] !== 'error'
     || $inheritMalformed[0]['severity'] !== 'error' || $inheritMalformed[1]['severity'] !== 'error'
     || $inheritOverflow[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE'
-    || $inheritOverflow[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE') {
+    || $inheritOverflow[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE'
+    || $inheritInvalidOverflow[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INVALID'
+    || $inheritInvalidOverflow[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INVALID'
+    || $inheritInvalidOverflow[0]['severity'] !== 'error'
+    || $inheritInvalidOverflow[1]['severity'] !== 'error') {
     throw new RuntimeException('SCR-16 course/menu inheritance classification regression');
 }
-foreach ([$inheritDefault, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow] as $checks) {
+foreach ([$inheritDefault, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow] as $checks) {
     foreach ($checks as $check) {
         if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
             || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'secret-value')
