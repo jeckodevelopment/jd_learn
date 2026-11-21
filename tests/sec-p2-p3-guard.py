@@ -29,6 +29,10 @@ for column in ("created_by", "modified_by", "reconciliation_by"):
 for related in ("#__jlms_subjects", "#__jlms_assessment_revisions"):
     assert related in remove, related
 assert "->set($db->quoteName('user_id') . ' = NULL')" in remove
+dependency_guard = privacy.split("private function hasRemovalDependencies(", 1)[1]
+for immutable in ("#__jlms_certificate_audit", "#__jlms_version_equivalences", "#__jlms_course_announcement_campaigns"):
+    assert immutable in dependency_guard, immutable
+assert dependency_guard.index("foreach ([") < dependency_guard.index("return $documents > 0"), "Immutable actor guard must precede final decision"
 
 export = privacy.split("public function onPrivacyExportRequest(", 1)[1].split("public function onPrivacyCanRemoveData(", 1)[0]
 mail = export.split("$mailQuery = $db->createQuery()", 1)[1].split("foreach ($db->setQuery($mailQuery)", 1)[0]
