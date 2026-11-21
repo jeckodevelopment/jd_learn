@@ -1,5 +1,7 @@
 # Changelog
 
+- **0.64.18-dev — SEC-P2 findings gate (21/11/2026):** registro versionato delle mitigazioni e regressioni per finding critical/high del codice, fixture negative per rischi esterni non verificati e advisory Joomla/PHP; nessuna modifica runtime, versione invariata. SEC-P2/criterion_02 chiuso nel ledger di sviluppo del software, con gate hosting/release ancora aperti. Sviluppo minimo 60,12% (469 implemented / 21 missing / 267 unverifiable). Verifiche hosting separate.
+
 - **0.64.18-dev — SEC-P2 dependency composition gate (21/11/2026):** controllo fail-closed delle 12 estensioni ZIP figlie e dei dependency manager/lockfile/vendor/binary runtime non revisionati, invocato dal builder e preflight; fixture negative. Nessun cambiamento alle funzioni Joomla né bump SemVer. SEC-P2/criterion_01 riclassificato come implementato con evidenze software; criterio 02 finding alti/critici e verifica hosting restano separati. Nuovo sviluppo comprovato 59,89% (468/22/267).
 
 - **0.64.18-dev — SEC-P2 storico segreti (21/11/2026):** audit CI della storia Git per sorgenti distribuiti e workflow, comprese versioni cancellate, con fixture negative e output senza dati sensibili. Controllo supply-chain senza modifiche al runtime Joomla o nuovo bump SemVer; CSP/hosting e revisione finale delle dipendenze restano separati.

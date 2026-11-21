@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **468**.
-- Mancanti con lacuna accertata: **22**.
+- Implementati: **469**.
+- Mancanti con lacuna accertata: **21**.
 - Esaminati con esito non verificabile: **267**.
 - Da esaminare: **0**.
 
@@ -71,8 +71,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
   - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
-- `SEC-P2/criterion_02` — nessun finding critico/alto irrisolto. La revisione del criterio «nessun finding critico/alto irrisolto» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P3/criterion_01` — Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti. La revisione del criterio «Privacy by design: dati e trattamenti, export/cancellazione Joomla, retention email/progressi/attestati, backup e diritti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P3/criterion_02` — verifiche con account di prova. La revisione del criterio «verifiche con account di prova» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1935,6 +1933,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tools/sec_p2_package_scan.py#def scan(data: bytes](../tools/sec_p2_package_scan.py)
   - [tools/sec_p2_history_scan.py#def scan(root: Path)](../tools/sec_p2_history_scan.py)
   - [tools/sec_p2_source_gate.py#def inspect(root: Path)](../tools/sec_p2_source_gate.py)
+- `SEC-P2/criterion_02` — nessun finding critico/alto irrisolto. La review automatizzata e tracciata per la build JD Learn 0.64.18-dev dimostra che tutti i finding critici/alti confermati nel codice distribuito e censiti nel registro sono mitigati, con verifiche nel sorgente e fixture negative che fanno fallire il gate se compare un finding high/critical irrisolto. I rischi non ancora verificati della piattaforma Joomla e dei file legacy presenti su hosting restano esplicitamente bloccanti per il rilascio e vanno verificati nell'accettazione separata; non si certifica l'assenza universale di vulnerabilità.
+  - [docs/SEC_P2_FINDINGS_1.0.0.md#Fonti di evidenza](../docs/SEC_P2_FINDINGS_1.0.0.md)
+  - [docs/SEC_P2_FINDINGS_1.0.0.md#Decisione, confini e rilascio](../docs/SEC_P2_FINDINGS_1.0.0.md)
+  - [docs/SEC_P2_FINDINGS_1.0.0.json#"decision_policy"](../docs/SEC_P2_FINDINGS_1.0.0.json)
+  - [tests/sec-p2-findings-gate.py#def inspect(root: Path, ledger: dict)](../tests/sec-p2-findings-gate.py)
 - `SEC-P4/criterion_01` — Inventario di cookie e storage locali del frontend e dei player. L'inventario statico bilingue ora include entrambe le chiavi first-party effettivamente usate dai player (velocità e lingua caption) con scopo, durata e valutazione consenso distinta. Il test automatico in CI blocca nuove chiamate dirette localStorage non inventariate. I cookie SDK e le scansioni in browser reale restano verifiche separate SEC-P4/criterion_02 e /criterion_03.
   - [docs/PRIVACY_COOKIES.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES.md)
   - [docs/PRIVACY_COOKIES_EN.md#jdlearn.video.language.v1](../docs/PRIVACY_COOKIES_EN.md)

@@ -1,3 +1,7 @@
+## SEC-P2 — registro dei finding e risk review (21/11/2026)
+
+**Automatico:** eseguire `tests/sec-p2-findings-gate.py`; il registro `docs/SEC_P2_FINDINGS_1.0.0.json` contiene severità, mitigazioni e prove. Le fixture negative devono bloccare finding critical/high del codice non risolti, clearing fittizio dei rischi hosting e marker di mitigazione assenti. **Manuale separato:** audit di video legacy nel webroot e GET/HEAD/Range, verifica patch Joomla/PHP, CSP/header e log reali; un finding alto esterno non risolto blocca il rilascio. Riferimento: `docs/SEC_P2_FINDINGS_1.0.0.md`.
+
 ## SEC-P2 — inventario first-party delle dipendenze distribuite (21/11/2026)
 
 **Automatico:** il builder rifiuta candidate ZIP con più o meno di 12 estensioni e con composer/npm/vendor/binari non revisionati. La CI esegue `tests/sec-p2-dependency-gate.py` con fixture negative e il builder invoca lo stesso inventario prima della scrittura. **Manuale separato:** sul sito di prova valutare le versioni reali di PHP/Joomla/DB, CSP e log/provider, e il rischio dei file video legacy. L'assenza di package-manager nel file ZIP non certifica le dipendenze della piattaforma.
