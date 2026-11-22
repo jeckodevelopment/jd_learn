@@ -66,7 +66,7 @@ try:
  original_description=editor['fields'].get('jform[presentation_description]','')
  unsaved={'jform[title]':'Unsaved title after invalid summary',
           'jform[summary]':'x'*501,
-          'jform[presentation_description]':'<p>Unsaved editorial description</p>',
+          'jform[presentation_description]':'Unsaved editorial description',
           field:'Unsaved native field correction'}
  url,html=request(urljoin(url,editor['action']),editor['fields']|{'task':'course.apply'}|unsaved)
  editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
