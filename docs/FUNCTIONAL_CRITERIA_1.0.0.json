@@ -414,7 +414,7 @@
             "component/site/src/Service/Router.php#getCourseSegment",
             "component/site/src/Helper/PublicMetadataHelper.php#addHeadLink",
             "component/site/src/Helper/PublicBreadcrumbHelper.php#addDetail",
-            "tests/categories-http.py#CAT-04 Open Graph URL must match category canonical for both SEF modes",
+            "tests/categories-http.py#parsed.meta.get('og:url')==canonical_links[0]",
             "tests/cat04-public-metadata.php#CAT-04 SEO canonical",
             "tests/cat04-breadcrumb.php#CAT-04 native breadcrumb"
           ]
