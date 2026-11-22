@@ -399,6 +399,35 @@ final class PathwayModel extends AdminModel
             if ((int) $db->setQuery($associations)->loadResult() > 0) {
                 throw new \DomainException('COM_JLMS_PATHWAY_DEPENDENCIES');
             }
+            // Discover database-enforced references from installed integrations,
+            // including ON DELETE CASCADE: a successful DELETE must never erase
+            // third-party historical records as an unintended side effect.
+            // References without a declared FK remain outside this contract.
+            $physicalPathwayTable = $db->getPrefix() . 'jlms_pathways';
+            $referencingKeys = $db->createQuery()
+                ->select([$db->quoteName('TABLE_NAME'), $db->quoteName('COLUMN_NAME')])
+                ->from('information_schema.KEY_COLUMN_USAGE')
+                ->where('REFERENCED_TABLE_SCHEMA = DATABASE()')
+                ->where('REFERENCED_TABLE_NAME = :pathwayTable')
+                ->where('REFERENCED_COLUMN_NAME = :pathwayColumn')
+                ->bind(':pathwayTable', $physicalPathwayTable)
+                ->bind(':pathwayColumn', $referencedColumn);
+            $referencedColumn = 'id';
+            foreach ($db->setQuery($referencingKeys)->loadAssocList() as $reference) {
+                $tableName = (string) $reference['TABLE_NAME'];
+                $columnName = (string) $reference['COLUMN_NAME'];
+                if (!preg_match('/^[A-Za-z0-9_]+$/D', $tableName)
+                    || !preg_match('/^[A-Za-z0-9_]+$/D', $columnName)) {
+                    throw new \DomainException('COM_JLMS_PATHWAY_DEPENDENCIES');
+                }
+                $query = $db->createQuery()->select('COUNT(*)')
+                    ->from($db->quoteName($tableName))
+                    ->where($db->quoteName($columnName) . ' = :pathwayId')
+                    ->bind(':pathwayId', $id, ParameterType::INTEGER);
+                if ((int) $db->setQuery($query)->loadResult() > 0) {
+                    throw new \DomainException('COM_JLMS_PATHWAY_DEPENDENCIES');
+                }
+            }
             // Joomla's table deletion also removes the matching ACL asset.
             // Never call this method on a populated pathway.
             $table = $this->getTable('Pathway');
