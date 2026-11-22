@@ -69,6 +69,53 @@ function ruleDenied(callable $work,string $key):void{try{$work();}catch(DomainEx
 function ruleRow(string $table,int $id):object{global $db;return $db->setQuery('SELECT * FROM #__jlms_'.$table.' WHERE id='.$id)->loadObject();}
 function ruleLearning(?int $course=null):array{global $db;if($course!==null){return [$db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id='.$course.' ORDER BY id')->loadAssocList(),$db->setQuery('SELECT a.* FROM #__jlms_attempts a JOIN #__jlms_enrollments e ON e.id=a.enrollment_id WHERE e.course_id='.$course.' ORDER BY a.id')->loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id='.$course.' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];}return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];}
 $fixture=dirname($root).'/teaching-rules-fixture.json';$mode=$argv[2]??'';
+
+if(in_array($mode,['asset-checkpoint','asset-retained'],true)){
+ // File backup is independent from the SQL-only snapshots. A ready PDF must
+ // survive the loss and restoration of its guarded encrypted storage blob.
+ $pdf=$db->setQuery("SELECT d.id AS document_id,c.enrollment_id,a.* FROM #__jlms_certificate_documents d ".
+     "JOIN #__jlms_certificates c ON c.id=d.certificate_id ".
+     "JOIN #__jlms_assets a ON a.id=d.pdf_asset_id ".
+     "WHERE d.status='ready' AND a.mime_type='application/pdf' AND a.storage='local' ".
+     "ORDER BY d.id LIMIT 1")->loadObject();
+ ruleExpect($pdf!==null,'At least one real rendered certificate PDF exists');
+ $certificateParams=\Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+ $certificateParams->set('material_storage_root','');
+ $storage=new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(
+     static fn()=>$certificateParams);
+ $path=$storage->root().DIRECTORY_SEPARATOR.$pdf->storage_key;
+ ruleExpect(preg_match('/\A[a-f0-9]{64}\.php\z/D',(string)$pdf->storage_key)===1
+     && is_file($path) && !is_link($path),'PDF is a managed opaque regular file');
+ $manifest=dirname($root).'/aut04-pdf-file-manifest.json';
+ if($mode==='asset-checkpoint'){
+     $handle=$storage->open($pdf);
+     try{$payload=stream_get_contents($handle);}finally{fclose($handle);}
+     ruleExpect(is_string($payload)&&str_starts_with($payload,'%PDF-'),'Encrypted asset can be opened as PDF before backup');
+     $data=['key'=>$pdf->storage_key,'on_disk_sha256'=>hash_file('sha256',$path),
+       'plaintext_sha256'=>hash('sha256',$payload),'asset_id'=>(int)$pdf->id,
+       'document_id'=>(int)$pdf->document_id,'enrollment_id'=>(int)$pdf->enrollment_id];
+     file_put_contents($manifest,json_encode($data,JSON_THROW_ON_ERROR));
+ }else{
+     $saved=json_decode(file_get_contents($manifest),true,32,JSON_THROW_ON_ERROR);
+     ruleExpect(hash_equals($saved['key'],(string)$pdf->storage_key) &&
+         $saved['asset_id']===(int)$pdf->id && $saved['document_id']===(int)$pdf->document_id,
+         'Restored SQL references the identical historical document and asset');
+     ruleExpect(hash_equals($saved['on_disk_sha256'],hash_file('sha256',$path)),
+         'Restored protected PDF file bytes match the original backup');
+     $handle=$storage->open($pdf);
+     try{$payload=stream_get_contents($handle);}finally{fclose($handle);}
+     ruleExpect(is_string($payload) && str_starts_with($payload,'%PDF-')
+         && hash_equals($saved['plaintext_sha256'],hash('sha256',$payload)),
+         'Restored encrypted PDF decrypts to the original certificate');
+     $download=$component->getCertificateService()->download($actor,(int)$pdf->enrollment_id);
+     try{$downloaded=stream_get_contents($download['handle']);}finally{fclose($download['handle']);}
+     ruleExpect(is_string($downloaded) && hash_equals($saved['plaintext_sha256'],hash('sha256',$downloaded)),
+         'Historical certificate remains downloadable after SQL and file recovery');
+ }
+ echo json_encode(['aut04_certificate_file_checks'=>$checks,'status'=>'passed']).PHP_EOL;
+ return;
+}
+
 if(in_array($mode,['state','checkpoint','retained'],true)){
  $f=json_decode(file_get_contents($fixture),true,32,JSON_THROW_ON_ERROR);
  $state=['course'=>(array)ruleRow('courses',$f['course']),'version'=>(array)ruleRow('course_versions',$f['version']),'original'=>(array)ruleRow('course_versions',$f['original']),'learning'=>ruleLearning($f['course'])];
