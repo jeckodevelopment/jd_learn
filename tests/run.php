@@ -43,6 +43,7 @@ expect($storagePathCheck->invoke(null, 'C:/jlms-private') === true, 'LES-03 acce
 expect($storagePathCheck->invoke(null, 'C:' . chr(92) . 'jlms-private') === true, 'LES-03 accepts Windows backslash drive root');
 expect($storagePathCheck->invoke(null, 'C:jlms-private') === false, 'LES-03 rejects Windows drive-relative root');
 expect($storagePathCheck->invoke(null, '../public') === false, 'LES-03 rejects relative storage root');
+
 $transcript = '<p>Audio <strong>transcript</strong></p>';
 expect(LessonTranscript::sanitizeInput($transcript, static fn(string $html): string => strip_tags($html, '<p><strong>')) === $transcript,
     'lesson transcript uses the configured HTML sanitizer');

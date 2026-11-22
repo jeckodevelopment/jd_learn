@@ -64,6 +64,28 @@ $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($u
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 
+// LES-04: capacity remains bounded by application and hosting limits.
+$capacityStorage = static fn (int $configuredMiB) => new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(
+    static fn () => new \Joomla\Registry\Registry(['material_max_mib' => $configuredMiB])
+);
+$oneMiBLimit = $capacityStorage(1)->limit();
+$zeroMiBLimit = $capacityStorage(0)->limit();
+$maxMiBLimit = $capacityStorage(20)->limit();
+$oversizedMiBLimit = $capacityStorage(999)->limit();
+if ($oneMiBLimit <= 0 || $oneMiBLimit > 1048576) {
+    throw new \RuntimeException('LES-04 configured 1 MiB ceiling is not enforced.');
+}
+if ($zeroMiBLimit !== $oneMiBLimit) {
+    throw new \RuntimeException('LES-04 zero configuration must clamp to 1 MiB.');
+}
+if ($maxMiBLimit <= 0 || $maxMiBLimit > 20 * 1048576) {
+    throw new \RuntimeException('LES-04 managed upload limit exceeds 20 MiB.');
+}
+if ($oversizedMiBLimit !== $maxMiBLimit) {
+    throw new \RuntimeException('LES-04 oversized configuration bypasses the ceiling.');
+}
+
+
 
 
 
