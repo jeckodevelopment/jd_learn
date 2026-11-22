@@ -974,6 +974,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `LCM-05/history_upgrade` — Copertura trasversale storico, attestati e upgrade. La CI installa e aggiorna il pacchetto Joomla preservando dati: snapshot dei percorsi e associazioni, progressi ed iscrizioni, attestati emessi e PDF scaricabili, permessi ACL e checkout. La stessa matrice include il backup/ripristino effettivo del database e del documento PDF in una fixture disposable AUT-04. Verificato su MySQL 8.4 e MariaDB 10.6 in CI #45076048707; collaudo e procedura backup del sito reale separati.
   - [tests/joomla-pathways.php#readLifecycleSnapshot](../tests/joomla-pathways.php)
   - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
+  - [tests/joomla-editor-access.php#Category grants and record denies survive reinstall](../tests/joomla-editor-access.php)
   - [.github/workflows/ci.yml#AUT-04 full database backup and restore protects historical course evidence](../.github/workflows/ci.yml)
 - `CAT-01/language_available` — Combinazioni lingua e soli corsi disponibili. Il catalogo espone un filtro opt-in sui soli corsi con ammissioni aperte ed erogazione attiva, mantenendo lingua, pubblicazione e vincoli ACL. La PR #684 ha superato la CI e introdotto test strutturali; la verifica manuale Joomla resta pendente.
   - [component/site/src/Model/CoursesModel.php#filter.available](../component/site/src/Model/CoursesModel.php)
