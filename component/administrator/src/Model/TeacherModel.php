@@ -254,6 +254,31 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             if ((int) $db->setQuery($associations)->loadResult() > 0) {
                 throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
             }
+            // Protect declared foreign-key references, even ON DELETE CASCADE.
+            // Unknown SQL metadata errors fail closed through the transaction.
+            $foreignKeys = $db->createQuery()
+                ->select([$db->quoteName('TABLE_NAME'), $db->quoteName('COLUMN_NAME')])
+                ->from('information_schema.KEY_COLUMN_USAGE')
+                ->where('REFERENCED_TABLE_SCHEMA = DATABASE()')
+                ->where('REFERENCED_TABLE_NAME = :teacherTable')
+                ->where('REFERENCED_COLUMN_NAME = :teacherColumn')
+                ->bind(':teacherTable', $db->getPrefix() . 'jlms_teachers')
+                ->bind(':teacherColumn', 'id');
+            foreach ($db->setQuery($foreignKeys)->loadAssocList() as $reference) {
+                $tableName = (string) $reference['TABLE_NAME'];
+                $columnName = (string) $reference['COLUMN_NAME'];
+                if (!preg_match('/^[A-Za-z0-9_]+$/D', $tableName)
+                    || !preg_match('/^[A-Za-z0-9_]+$/D', $columnName)) {
+                    throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
+                }
+                $query = $db->createQuery()->select('COUNT(*)')
+                    ->from($db->quoteName($tableName))
+                    ->where($db->quoteName($columnName) . ' = :teacherId')
+                    ->bind(':teacherId', $id, ParameterType::INTEGER);
+                if ((int) $db->setQuery($query)->loadResult() > 0) {
+                    throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
+                }
+            }
             $table = $this->getTable('Teacher');
             if (!$table->load($id) || !$table->delete($id)) {
                 throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
