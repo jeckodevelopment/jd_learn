@@ -14054,6 +14054,38 @@
           }
         ]
       }
+    },
+    {
+      "feature": "LCM-03: external FK-backed pathway references including ON DELETE CASCADE, rollback and historical preservation (PR #956)",
+      "ci": {
+        "run_id": 45065520029,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/45065520029",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
     }
   ],
   "latest_feature": {
