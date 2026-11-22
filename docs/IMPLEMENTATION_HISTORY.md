@@ -1,3 +1,14 @@
+## 22 novembre 2026 — LES-01–LES-04: riconciliazione implementativa e confini del collaudo
+
+Registro di chiusura verificabile: [docs/LES_IMPLEMENTATION_CLOSEOUT_1.0.0.md](LES_IMPLEMENTATION_CLOSEOUT_1.0.0.md). Nessun criterio LES classificato `missing`; **8/12 implemented, 4/12 unverifiable**. La chiusura delle correzioni software osservabili non costituisce accettazione integrale di LES-02/03/04, che restano `Parziale` fino alle prove esterne; LES-01 rimane `Completata`. Accettazione manuale Joomla per tutti i quattro non eseguita.
+
+- [PR #947](https://github.com/jeckodevelopment/jd_learn/pull/947) — blocco URL con credenziali nel markup editoriale: squash `e66f857ee4921121cb0c03d4c1f181c310ba55d9`; [CI #45053224362](https://github.com/jeckodevelopment/jd_learn/actions/runs/45053224362) **4/4 verde**.
+- [PR #948](https://github.com/jeckodevelopment/jd_learn/pull/948) — filtro link unificato e utilizzato anche nel corpo della lezione, con test unitari e Joomla: squash `833d7412ba60e654a6754f7dfe75c50748b59606`; [CI #45053968452](https://github.com/jeckodevelopment/jd_learn/actions/runs/45053968452) **4/4 verde**. [Artefatto installabile di sviluppo JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45053968452/artifacts/14766961529). Nessun checksum del file ZIP Joomla interno attestato in questa nota.
+- [PR #945](https://github.com/jeckodevelopment/jd_learn/pull/945) — LES-03 GET/HEAD/Range anonimi: squash `39c628870210945276c21025c85edccc9bd54e1c`; [CI #45052338447](https://github.com/jeckodevelopment/jd_learn/actions/runs/45052338447) **4/4 verde**.
+- [PR #941](https://github.com/jeckodevelopment/jd_learn/pull/941) — LES-04 limiti upload applicativi: squash `ee5e10be48069468a7fdcbf3a61d9d617f35ac03`; [CI #45049842678](https://github.com/jeckodevelopment/jd_learn/actions/runs/45049842678) **4/4 verde**.
+
+Aggiornata la rendicontazione canonica di LES-03/04; nessun criterio `unverifiable` promosso senza evidenza né incremento artificiale della percentuale globale.
+
 ## 22 novembre 2026 — LES-03: HEAD/Range anonimi sullo storage privato gestito (PR #945)
 
 [PR #945](https://github.com/jeckodevelopment/jd_learn/pull/945) integrata in `main` con squash `39c628870210945276c21025c85edccc9bd54e1c`; [CI #45052338447](https://github.com/jeckodevelopment/jd_learn/actions/runs/45052338447) **4/4 verde**: preflight, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. [Pacchetto Joomla di sviluppo JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45052338447/artifacts/14765269414); checksum dello ZIP Joomla interno non registrato in questa nota.
