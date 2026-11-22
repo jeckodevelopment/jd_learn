@@ -13,7 +13,7 @@ dashboard = read("component/site/tmpl/dashboard/default.php")
 partial = read("component/site/tmpl/dashboard/_certificates.php")
 menu = read("component/site/tmpl/mycertificates/default.xml")
 assert "'mycertificates'" in controller
-assert "['dashboard', 'mycourses', 'mycertificates', 'preferences', 'lessonpreview']" in controller
+assert "['dashboard', 'mycourses', 'mycertificates', 'preferences', 'lessonpreview', 'teacheredit', 'classroom', 'quiz']" in controller
 assert "RouterViewConfiguration('mycertificates')" in router
 assert "getCertificateService()->listForStudent($app->getIdentity())" in model
 assert "get('Items')" in view and "noindex, nofollow" in view
