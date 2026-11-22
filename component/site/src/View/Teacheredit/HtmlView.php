@@ -20,6 +20,8 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
             foreach (['user_id', 'state', 'access', 'language'] as $field) { $this->form->setFieldAttribute($field, 'disabled', 'true'); }
         }
         \Joomla\CMS\Factory::getApplication()->setHeader('Cache-Control', 'private, no-store', true);
+        \Joomla\CMS\Factory::getApplication()->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+        $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         return parent::display($tpl);
     }
 }
