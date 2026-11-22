@@ -209,6 +209,26 @@ $save=static fn(array $grant,int $seq,string $events,int $duration=10000)=>$serv
 $r=$save($b,1,$batch);videoExpect($r['covered_ms']===5000 && !$r['lesson_completed'],'first valid interval');
 videoExpect($save($b,1,$batch)['replay'],'identical batch replay');
 
+// LCM-01: a pre-existing session cannot bypass archive/withdrawal/trash using
+// an idempotent replay, a fresh sequence or a fresh playback request. Test with
+// deliberately stale open flags: course state must gate access independently.
+$beforeLifecycleProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id='.(int)$enrollment.' AND lesson_id='.(int)$lesson)->loadAssoc();
+$beforeLifecycleSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=".$db->quote($b['session_id']))->loadAssoc();
+foreach ([0, 2, -2] as $inactiveCourseState) {
+    videoFixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>$inactiveCourseState,'admissions_open'=>1,'delivery_enabled'=>1]);
+    videoDenied(fn()=>$service->playback($student,'en-GB',$enrollment,$lesson,true),404,'LCM-01 inactive course denies new playback');
+    videoDenied(fn()=>$save($b,1,$batch),404,'LCM-01 inactive course denies idempotent session replay');
+    videoDenied(fn()=>$save($b,2,$batch),404,'LCM-01 inactive course denies new session telemetry');
+    videoDenied(fn()=>$learning->start($other,'en-GB',$course,bin2hex(random_bytes(16))),404,'LCM-01 inactive course denies direct new enrollment');
+    $afterLifecycleProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id='.(int)$enrollment.' AND lesson_id='.(int)$lesson)->loadAssoc();
+    $afterLifecycleSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=".$db->quote($b['session_id']))->loadAssoc();
+    videoExpect($afterLifecycleProgress === $beforeLifecycleProgress && $afterLifecycleSession === $beforeLifecycleSession,
+        'LCM-01 inactive state preserves progress and session metadata without writes');
+}
+videoFixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>1,'admissions_open'=>1,'delivery_enabled'=>1]);
+videoExpect($save($b,1,$batch)['replay'],'LCM-01 restored fixture retains valid session replay');
+
+
 // ISC-07: revocation during an already-open player session must reject both
 // fresh playback and writes, including an otherwise valid idempotent replay.
 // Restore only the isolated CI enrollment; all learning history must survive.
