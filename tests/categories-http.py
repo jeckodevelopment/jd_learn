@@ -66,7 +66,7 @@ try:
   parsed=Page(page)
   canonical_links=[link.get('href','') for link in parsed.head_links if link.get('rel')=='canonical']
   expect(len(canonical_links)==1 and canonical_links[0].startswith(base), 'CAT-04 public category canonical must be unique and absolute')
-  expect(parsed.meta.get('og:url')==canonical_links[0], 'CAT-04 Open Graph URL must match category canonical for both SEF modes')
+  expect(parsed.meta.get('og:url')==canonical_links[0], f'CAT-04 public OG mismatch: canonical={canonical_links!r}, og={parsed.meta.get("og:url")!r}, sef={sef}')
   expect(parsed.meta.get('og:title') and parsed.meta.get('twitter:title'), 'CAT-04 public category social titles missing')
   expect(verify_dom(page, root='jlms-category', scoped_class='jlms-course-card') > 0, 'UI-07: category course cards preserve scoped CSS contract and unique IDs')
   if sef:
@@ -88,7 +88,7 @@ try:
   expect('id="jlms-category"' in translated and 'Tassonomia italiana' in translated and 'taxonomy-corso-italiano' in translated,'core language switch resolves translated category')
   translated_page=Page(translated)
   translated_canonical=[link.get('href','') for link in translated_page.head_links if link.get('rel')=='canonical']
-  expect(len(translated_canonical)==1 and translated_canonical[0].startswith(base), 'CAT-04 translated category canonical missing')
+  expect(len(translated_canonical)==1 and translated_canonical[0].startswith(base), f'CAT-04 translated canonical missing: canonical={translated_canonical!r}, og={translated_page.meta.get("og:url")!r}, robots={translated_page.meta.get("robots")!r}, italian={italian!r}, sef={sef}')
   expect(translated_page.meta.get('og:url')==translated_canonical[0], 'CAT-04 translated category OG URL must match canonical')
   if sef:expect('taxonomy-menu-category-it' in italian,'native target-language category menu selected')
   fixture('hide_target')
