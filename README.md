@@ -1,8 +1,6 @@
 # JD Learn
 
-**Stato sviluppo verificato (21/11/2026):** baseline 0.64.21-dev; 474 criteri implemented, 17 missing, 266 unverifiable; minimo comprovato **60,87%**. SECDEV-07/02 integrato con PR #858 e CI 4/4 verde. Accettazione Joomla manuale: 4,67% avviata, 0% completata. Dettagli in [IMPLEMENTATION_STATUS](docs/IMPLEMENTATION_STATUS.md) e [Release Dashboard](docs/RELEASE_DASHBOARD.md).
-
-**Build di sviluppo documentata: `0.64.21-dev`** (non release stabile). L’audit funzionale 1.0.0 ha riesaminato tutti i 757 criteri dei 214 requisiti: 472 implementati, 18 mancanti e 267 non verificabili. La percentuale globale rigorosa resta non determinabile finché permangono esiti non verificabili. Il dashboard di progetto/release mostra separatamente sviluppo documentato e collaudo manuale; consulta il [riepilogo progetto/release](docs/RELEASE_DASHBOARD.md), i [dati del dashboard di progetto](docs/REQUIREMENTS_RECONCILIATION.json) e il [report corrente](docs/FUNCTIONAL_AUDIT_CURRENT.md) per stati, lacune ed evidenze. Pacchetti installabili e checksum vanno verificati per il commit specifico nel [registro delle evidenze](docs/IMPLEMENTATION_EVIDENCE.json); non si assume che un artefatto storico sia la build più recente.
+**Stato sviluppo documentato (22/11/2026):** build `0.64.22-dev` in verifica nella PR #907, con rafforzamento CAT-04. L'ultimo audit integrato della baseline 1.0.0 contiene **483 criteri implemented, 15 missing e 259 unverifiable** su 757, con copertura implementativa minima **61,73%**. Questi valori **non** dichiarano CAT-04 chiuso né accettazione Joomla eseguita. Lo stato aggiornato delle evidenze è in [Release Dashboard](docs/RELEASE_DASHBOARD.md), [audit](docs/FUNCTIONAL_AUDIT_CURRENT.md) e [matrice](docs/REQUIREMENTS_STATUS.csv). La versione `-dev` non è una release stabile e la distribuzione deve riferirsi all'artefatto e checksum effettivi della medesima CI.
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
@@ -19,7 +17,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-Il [report dell’audit funzionale](docs/FUNCTIONAL_AUDIT_CURRENT.md) riporta i criteri implementati, le lacune confermate e le verifiche residue. La baseline del 21/11/2026 registra 472 criteri implementati, 18 mancanti e 267 non verificabili; nessun criterio resta da esaminare. Il minimo di avanzamento comprovato è 60,69%, distinto dalla percentuale complessiva rigorosa non determinabile. La percentuale globale 1.0.0 resta non determinabile. Lo [stato di implementazione](docs/IMPLEMENTATION_STATUS.md) documenta le funzionalità correnti. Le modifiche versionate sono nel [Changelog](CHANGELOG.md).
+Il [report dell’audit funzionale](docs/FUNCTIONAL_AUDIT_CURRENT.md) distingue criteri implementati, lacune confermate e verifiche residue. Al 22/11/2026 la baseline integrata conta 483 implementati, 15 mancanti e 259 non verificabili, con copertura implementativa minima del 61,73%. La percentuale globale rigorosa non è determinabile fino alla risoluzione delle verifiche non disponibili. Le modifiche versionate sono nel [Changelog](CHANGELOG.md); i collaudi manuali sono tracciati separatamente.
 
 ## Installazione e sviluppo
 
