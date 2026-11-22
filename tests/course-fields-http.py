@@ -74,7 +74,8 @@ try:
   expect(editor['fields'].get(name)==value,'Rejected save retains submitted '+name)
  expect('jform[revision]' in editor['fields'],'Rejected save retains the editable revision field')
  request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
- _,html=request(path);editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ _,html=request(path)
+ editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect(editor['fields']['jform[title]']==original_title,'Rejected update never saves the unsaved title')
  expect(editor['fields'].get('jform[summary]','')==original_summary,'Rejected update never saves the invalid summary')
  expect(editor['fields'].get('jform[presentation_description]','')==original_description,
