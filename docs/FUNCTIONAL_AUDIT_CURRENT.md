@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **493**.
+- Implementati: **494**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **249**.
+- Esaminati con esito non verificabile: **248**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -64,9 +64,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Verifiche ancora necessarie
 
-- `LCM-05/granular_acl` — ACL granulari e selezioni miste HTTP. Il repository contiene riferimenti pertinenti al criterio «ACL granulari e selezioni miste HTTP», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
-  - [tests/joomla-pathways.php#L1-L25](../tests/joomla-pathways.php#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
 - `LCM-05/finder_seo` — Finder e SEO lifecycle. Il workflow e il modello inviano la notifica dopo il commit. Le fixture osservano il dispatcher. Rimane il collaudo dell’indice effettivo con cutoff di accesso, lingua e metadati SEO.
   - [component/administrator/src/Application/PublicationService.php#Archive/restore Finder refresh failed](../component/administrator/src/Application/PublicationService.php)
   - [component/administrator/src/Model/CourseModel.php#private function refreshLifecycleFinder](../component/administrator/src/Model/CourseModel.php)
@@ -972,6 +969,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/TeacherModel.php#information_schema.KEY_COLUMN_USAGE](../component/administrator/src/Model/TeacherModel.php)
   - [tests/joomla-teachers.php#ON DELETE CASCADE](../tests/joomla-teachers.php)
   - [docs/LCM04_EXTERNAL_REFERENCE_CONTRACT.md#Limite del contratto](../docs/LCM04_EXTERNAL_REFERENCE_CONTRACT.md)
+- `LCM-05/granular_acl` — ACL granulari e selezioni miste HTTP. Utente Joomla delegato con permessi ereditati dalla categoria e diniego esplicito per singolo percorso: il modello e le richieste POST autenticate con token CSRF reale negano interamente la selezione mista, consentendo archive/restore/publish del solo record autorizzato. Verifiche Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 in CI #45073750176, senza anticipare collaudo manuale.
+  - [component/administrator/src/Model/PathwayModel.php#public function changeStates](../component/administrator/src/Model/PathwayModel.php)
+  - [tests/joomla-pathways.php#LCM-05: granular native ACL](../tests/joomla-pathways.php)
+  - [tests/http-smoke.py#LCM-05: delegated operator](../tests/http-smoke.py)
 - `CAT-01/language_available` — Combinazioni lingua e soli corsi disponibili. Il catalogo espone un filtro opt-in sui soli corsi con ammissioni aperte ed erogazione attiva, mantenendo lingua, pubblicazione e vincoli ACL. La PR #684 ha superato la CI e introdotto test strutturali; la verifica manuale Joomla resta pendente.
   - [component/site/src/Model/CoursesModel.php#filter.available](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#c.admissions_open = 1](../component/site/src/Model/CoursesModel.php)
