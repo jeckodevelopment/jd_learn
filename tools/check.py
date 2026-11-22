@@ -1173,3 +1173,7 @@ runpy.run_path(str(ROOT/'tests/frontend-dom-runtime.py'), run_name='__main__')
 
 # DOC-04: versioned technical contracts and reproducible operations.
 runpy.run_path(str(ROOT/'tests/doc04-technical-reference.py'), run_name='__main__')
+
+# DOC-10: keep candidate release notes verifiable in the standard CI gate.
+import runpy
+runpy.run_path(str(ROOT / 'tests/doc10-release-notes.py'))
