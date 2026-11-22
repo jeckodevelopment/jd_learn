@@ -11469,16 +11469,26 @@
       {
         "id": "criterion_01",
         "label": "Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Application/PublicationService.php",
-          "component/administrator/src/Application/LearningService.php"
+          "component/administrator/src/Application/LearningService.php",
+          "tests/joomla-publication-review.php",
+          "tests/joomla-learning.php",
+          "tests/joomla-video.php",
+          "tests/joomla-enrollment-state.php",
+          "tests/joomla-manual-enrollment.php",
+          "tests/joomla-enrollment-migration.php"
         ],
         "review": {
-          "reason": "L’archiviazione chiude ammissioni e didattica. I contesti di aula, quiz e risorse risalgono all’iscrizione e al corso, ma resta da tracciare la copertura di tutti gli endpoint diretti compresi gli ingressi amministrativi e i retry.",
+          "reason": "Chiusura dei gate core dimostrata da workflow Archive (ammissioni e delivery chiuse atomicamente) e da fixture Joomla: URL diretti aula, completamento, materiali, video e quiz respinti per stati 0, 2 e -2 anche con flag obsoleti; replay e nuova telemetria di sessioni video gia emesse, salvataggio e submit di quiz gia avviati, migrazione e riattivazione amministrativa respinti; dati storici invariati. Evidenza CI #45059160428 con quattro job verdi; accettazione manuale e integrazioni di terze parti restano distinte.",
           "references": [
             "component/administrator/src/Application/PublicationService.php#Preserve student history",
-            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment"
+            "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment",
+            "tests/joomla-video.php#LCM-01",
+            "tests/joomla-enrollment-state.php#LCM-01",
+            "tests/joomla-learning.php#LCM-01",
+            "tests/joomla-enrollment-migration.php#LCM-01"
           ]
         }
       },
