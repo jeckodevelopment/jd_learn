@@ -771,9 +771,11 @@ try:
   try:
    with delegated_http.open(Request(endpoint,data=body,method='POST'),timeout=20) as response:
     response.read()
-   if denied:raise RuntimeError('Delegated '+task+' unexpectedly accepted a forbidden record')
+   if denied:
+    raise RuntimeError('Delegated '+task+' unexpectedly accepted a forbidden record')
   except HTTPError as error:
-   if not denied or error.code!=403:raise
+   if not denied or error.code!=403:
+    raise
   expect(pathway_public_visible() if denied else True,'Delegated lifecycle request completed safely')
  delegated_lifecycle('archive',[acl_data['allowed'],acl_data['denied']],True)
  delegated_lifecycle('trash',[acl_data['allowed'],acl_data['denied']],True)
