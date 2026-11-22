@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **490**.
+- Implementati: **491**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **252**.
+- Esaminati con esito non verificabile: **251**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -966,9 +966,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SEC-P5/criterion_04` — Decisione go/no-go motivata e registrata. Il gate finale prevede una decisione motivata legata alla build e ai risultati. La procedura di release è predisposta e la separata decisione go/no-go resta da registrare.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#go/no-go](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md)
   - [docs/RELEASE_PROCEDURE.md#gate IMP-10](../docs/RELEASE_PROCEDURE.md)
-- `LCM-01/criterion_01` — Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti. L’archiviazione chiude ammissioni e didattica. I contesti di aula, quiz e risorse risalgono all’iscrizione e al corso, ma resta da tracciare la copertura di tutti gli endpoint diretti compresi gli ingressi amministrativi e i retry.
-  - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
-  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
 
 ## Implementazione riscontrata
 
@@ -1991,6 +1988,15 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/PRIVACY_COOKIES.md#guida amministrativa inglese](../docs/PRIVACY_COOKIES.md)
   - [docs/PRIVACY_COOKIES_EN.md#Configure the CMP bridge](../docs/PRIVACY_COOKIES_EN.md)
   - [docs/PRIVACY_COOKIES_EN.md#Mandatory pre-release verification](../docs/PRIVACY_COOKIES_EN.md)
+- `LCM-01/criterion_01` — Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti. Chiusura dei gate core dimostrata da workflow Archive (ammissioni e delivery chiuse atomicamente) e da fixture Joomla: URL diretti aula, completamento, materiali, video e quiz respinti per stati 0, 2 e -2 anche con flag obsoleti; replay e nuova telemetria di sessioni video gia emesse, salvataggio e submit di quiz gia avviati, migrazione e riattivazione amministrativa respinti; dati storici invariati. Evidenza CI #45059160428 con quattro job verdi; accettazione manuale e integrazioni di terze parti restano distinte.
+  - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
+  - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
+  - [tests/joomla-publication-review.php#archive](../tests/joomla-publication-review.php)
+  - [tests/joomla-learning.php#LCM-01](../tests/joomla-learning.php)
+  - [tests/joomla-video.php#LCM-01](../tests/joomla-video.php)
+  - [tests/joomla-enrollment-state.php#LCM-01](../tests/joomla-enrollment-state.php)
+  - [tests/joomla-manual-enrollment.php#Archived courses](../tests/joomla-manual-enrollment.php)
+  - [tests/joomla-enrollment-migration.php#LCM-01](../tests/joomla-enrollment-migration.php)
 - `LCM-01/criterion_02` — preservare storico personale, frequenze, progressi e attestati. L’archiviazione cambia lo stato del corso attraverso il workflow e chiude le due abilitazioni sul corso conservando la versione pubblicata. La transazione non elimina iscrizioni, progressi o attestati.
   - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
   - [tests/joomla-publication-review.php#archive](../tests/joomla-publication-review.php)
