@@ -7,6 +7,16 @@ namespace Jlms\Contracts\Video;
 
 final class SourceNormalizer
 {
+    /** Inspect fragment query keys without retaining their potentially secret values. */
+    private static function fragmentParameters(string $fragment): array
+    {
+        if ($fragment === '') {
+            return [];
+        }
+        parse_str(ltrim($fragment, '#?'), $parameters);
+        return $parameters;
+    }
+
     public static function normalise(string $provider, SourceInput $input): VideoSource
     {
         $value = trim($input->reference);
@@ -23,16 +33,18 @@ final class SourceNormalizer
             $host = strtolower($parts['host'] ?? '');
             $path = $parts['path'] ?? '/';
             parse_str($parts['query'] ?? '', $query);
-            // Reject credentials embedded in shared video links, even if the
-            // canonical source would otherwise discard the query parameter.
-            // Vimeo's non-secret privacy hash (h) remains supported below.
-            foreach (array_keys($query) as $parameter) {
-                if (!is_string($parameter)) {
-                    throw new \InvalidArgumentException('SOURCE_INVALID');
-                }
-                $parameter = strtolower(str_replace(['-', '.'], '_', $parameter));
-                if (preg_match('/(?:^|_)(?:token|secret|password|passwd|credential|authorization|auth|api_key|apikey|client_secret|access_key|private_key|signature|signed|jwt)(?:$|_)/D', $parameter)) {
-                    throw new \InvalidArgumentException('SOURCE_INVALID');
+            // Never silently discard credential-bearing URL parameters. Support
+            // camelCase keys, separators and fragment-style shared links.
+            foreach ([$query, self::fragmentParameters((string) ($parts['fragment'] ?? ''))] as $parameters) {
+                foreach (array_keys($parameters) as $parameter) {
+                    if (!is_string($parameter)) {
+                        throw new \InvalidArgumentException('SOURCE_INVALID');
+                    }
+                    $parameter = preg_replace('/([a-z0-9])([A-Z])/', '$1_$2', $parameter);
+                    $parameter = strtolower((string) preg_replace('/[^A-Za-z0-9]+/', '_', $parameter));
+                    if (preg_match('/(?:^|_)(?:token|secret|password|passwd|credential|authorization|auth|api_key|apikey|client_secret|access_key|private_key|signature|signed|jwt)(?:$|_)/D', $parameter)) {
+                        throw new \InvalidArgumentException('SOURCE_INVALID');
+                    }
                 }
             }
             if ($provider === 'youtube') {
