@@ -8,6 +8,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
+use Jlms\Component\Jlms\Site\Helper\PublicBreadcrumbHelper;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -23,6 +24,7 @@ final class HtmlView extends BaseHtmlView
         if (!$this->isGuest) {
             $this->getDocument()->setTitle((string) $pathway->title);
             $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
+            Factory::getApplication()->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         } else {
             PublicMetadataHelper::apply(
                 $this->getDocument(),
@@ -31,6 +33,7 @@ final class HtmlView extends BaseHtmlView
                 'index.php?option=com_jlms&view=pathway&id=' . (int) $pathway->id
             );
         }
+        PublicBreadcrumbHelper::addDetail('pathway', (int) $pathway->id, (string) $pathway->title);
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
     }

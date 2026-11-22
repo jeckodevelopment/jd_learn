@@ -22,12 +22,18 @@ class Page(HTMLParser):
     def __init__(self, text):
         super().__init__(convert_charrefs=True)
         self.links = []
+        self.canonicals = []
+        self.meta = {}
         self.forms = []
         self.form = None
         self.anchor = None
         self.feed(text)
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == 'link' and attrs.get('rel') == 'canonical':
+            self.canonicals.append(attrs.get('href', ''))
+        if tag == 'meta' and 'content' in attrs:
+            self.meta[attrs.get('property') or attrs.get('name')] = attrs['content']
         if tag == 'a' and 'href' in attrs:
             self.anchor = attrs | {'_text':''}
             self.links.append(self.anchor)
@@ -63,10 +69,13 @@ try:
         _, html = get('/index.php?option=com_jlms&view=course&id=' + str(fixture['en']) + '&lang=en')
         expect('id="jlms-course"' in html and 'association-en' in html, 'English course sheet missing')
         page = Page(html)
+        expect(not page.canonicals and 'noindex' in page.meta.get('robots', ''), 'Protected English course must not expose a public canonical')
         italian = next((a['href'] for a in page.links if a.get('_text', '').strip().startswith('Italiano')), None)
         expect(italian is not None, 'Native mod_languages Italian link absent')
         _, translated = get(italian)
         expect('id="jlms-course"' in translated and 'association-it' in translated, 'Native language switch must resolve associated course, not catalog home')
+        translated_seo = Page(translated)
+        expect(not translated_seo.canonicals and 'noindex' in translated_seo.meta.get('robots', ''), 'Protected translated course must remain non-indexable')
         expect('PRIVATE_TRANSLATION_BODY' not in translated and 'data-course-id="'+str(fixture['it'])+'"' in translated, 'Public translation contains no protected lesson body')
         _, untranslated = get('/index.php?option=com_jlms&view=course&id='+str(fixture['all'])+'&lang=en')
         target = next(a['href'] for a in Page(untranslated).links if a.get('_text', '').strip().startswith('Italiano'))

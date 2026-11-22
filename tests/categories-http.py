@@ -15,10 +15,13 @@ config=root/'configuration.php'; original=config.read_text(); base='http://127.0
 log=open(root.parent/'categories-http.log','w+'); server=None; checks=0
 class Page(HTMLParser):
  def __init__(self,text):
+  self.meta={}
   super().__init__(convert_charrefs=True);self.links=[];self.forms=[];self.form=None;self.anchor=None;self.ids=[];self.head_links=[];self.feed(text)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
   if tag=='link':self.head_links.append(a)
+  if tag == 'meta' and 'content' in a:
+   self.meta[a.get('property') or a.get('name')] = a['content']
   if 'id' in a:self.ids.append(a['id'])
   if tag=='a' and 'href' in a:self.anchor=a|{'text':''};self.links.append(self.anchor)
   if tag=='form':self.form={'action':a.get('action',''),'fields':{}};self.forms.append(self.form)
@@ -61,6 +64,10 @@ try:
   expect('id="jlms-category"' in menu_page and 'Taxonomy English' in menu_page,'native category menu opens correct view')
   url,page=get('/index.php?option=com_jlms&view=category&id='+str(f['en'])+'&lang=en')
   parsed=Page(page)
+  canonical_links=[link.get('href','') for link in parsed.head_links if link.get('rel')=='canonical']
+  expect(len(canonical_links)==1 and canonical_links[0].startswith(base), 'CAT-04 public category canonical must be unique and absolute')
+  expect(parsed.meta.get('og:url')==canonical_links[0], f'CAT-04 public OG mismatch: canonical={canonical_links!r}, og={parsed.meta.get("og:url")!r}, sef={sef}')
+  expect(parsed.meta.get('og:title') and parsed.meta.get('twitter:title'), 'CAT-04 public category social titles missing')
   expect(verify_dom(page, root='jlms-category', scoped_class='jlms-course-card') > 0, 'UI-07: category course cards preserve scoped CSS contract and unique IDs')
   if sef:
    canonical=next((link.get('href','') for link in parsed.head_links if link.get('rel')=='canonical'),'')
@@ -79,6 +86,15 @@ try:
   italian=next(a['href']for a in parsed.links if a['text'].strip().startswith('Italiano'))
   _,translated=get(italian)
   expect('id="jlms-category"' in translated and 'Tassonomia italiana' in translated and 'taxonomy-corso-italiano' in translated,'core language switch resolves translated category')
+  translated_page=Page(translated)
+  translated_canonical=[link.get('href','') for link in translated_page.head_links if link.get('rel')=='canonical']
+  expect(translated_page.meta.get('og:url', '').startswith(base), 'CAT-04 translated public category must have an absolute OG URL')
+  if translated_canonical:
+   expect(len(translated_canonical)==1 and translated_canonical[0]==translated_page.meta['og:url'], 'CAT-04 translated canonical disagrees with Open Graph URL')
+  else:
+   # Joomla's native multilingual system can replace canonical with hreflang alternate links.
+   expect(any(link.get('rel')=='alternate' and link.get('hreflang')=='it-IT' and link.get('href')==translated_page.meta['og:url'] for link in translated_page.head_links), 'CAT-04 translated Joomla alternate must identify the Open Graph URL')
+  expect(translated_page.meta.get('og:title') and translated_page.meta.get('twitter:title'), 'CAT-04 translated category social titles absent')
   if sef:expect('taxonomy-menu-category-it' in italian,'native target-language category menu selected')
   fixture('hide_target')
   _,hidden=get('/index.php?option=com_jlms&view=category&id='+str(f['en'])+'&lang=en')
