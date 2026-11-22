@@ -108,6 +108,8 @@ try:
         'Rejected ordering does not partially save the title')
  expect(editor['fields'][field]=='Value saved over HTTP',
         'Rejected ordering does not partially save the custom field')
+ expect(editor['fields'].get('jform[summary]')==original_summary,
+        'Rejected ordering does not mutate the saved summary')
  # AUT-01: a second author/browser tab must not overwrite a newer course
  # revision. On the rejected stale submission the user's input remains
  # available for correction, while the successfully saved revision persists.
