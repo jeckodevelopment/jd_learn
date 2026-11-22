@@ -13,3 +13,4 @@ I riferimenti opachi in JSON, testo, sistemi esterni o tabelle senza FK non sono
 ## Collaudo
 
 Verificare la purga negata con profilo ancora collegato a un utente, una versione didattica, un'associazione multilingua o una FK terza; verificare che siano conservati record storici e account. Dopo la rimozione delle dipendenze, verificare la purga del solo profilo inutilizzato e cestinato, con ACL e CSRF validi.
+Nota: l'esito del controllo automatico su una build non costituisce accettazione manuale delle integrazioni installate.
