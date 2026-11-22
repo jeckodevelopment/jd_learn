@@ -80,7 +80,17 @@ $checks=0;
 function restoreExpect(bool $ok,string $message): void {global $checks;if(!$ok)throw new RuntimeException($message);$checks++;}
 function restoreDenied(callable $work,string $key): void {try{$work();}catch(\DomainException|\RuntimeException $e){restoreExpect($e->getMessage()===$key,'Expected '.$key.', got '.$e->getMessage());return;}throw new RuntimeException('Expected rejection '.$key);}
 function restoreRow(string $table,int $id): object {global $db;return $db->setQuery('SELECT * FROM #__jlms_'.$table.' WHERE id='.$id)->loadObject();}
-function restoreLearning(): array {global $db;return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];}
+function restoreLearning(): array {
+ global $db;
+ // Preserve complete rows, not only counts: a restore must not change issued
+ // certificates, their original enrollment/version references or PDF metadata.
+ $tables=['enrollments','attempts','lesson_progress','certificates','certificate_documents'];
+ $snapshot=[];
+ foreach($tables as $table){
+  $snapshot[$table]=$db->setQuery('SELECT * FROM #__jlms_'.$table.' ORDER BY id')->loadAssocList();
+ }
+ return $snapshot;
+}
 function restoreTree(int $id): array {
  global $db;$out=['version'=>(array)restoreRow('course_versions',$id)];
  foreach(['modules','lessons','quizzes','attachments'] as $table){$out[$table]=$db->setQuery('SELECT * FROM #__jlms_'.$table.' WHERE course_version_id='.$id.' ORDER BY id')->loadAssocList();}
