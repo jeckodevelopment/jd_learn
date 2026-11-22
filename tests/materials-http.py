@@ -236,8 +236,12 @@ try:
  learning_script=Path(__file__).with_name('joomla-learning.php')
  subprocess.run(['php',str(learning_script),str(root),'revoke',str(fixture['http_user_id']),str(fixture['group_id'])],check=True,capture_output=True)
  request(student,download,headers={'Range':'bytes=0-2'},expected=403)
+ request(student,download,method='HEAD',expected=403)
+ request(student,download.rsplit('&id=',1)[0]+'&id='+str(pdf_id),expected=403)
+ request(student,download,expected=403)
  subprocess.run(['php',str(learning_script),str(root),'grant',str(fixture['http_user_id']),str(fixture['group_id'])],check=True,capture_output=True)
- request(student,download)
+ _,restored_content,_=request(student,download)
+ expect(restored_content==binary,'Restored entitlement recovers protected download without data loss')
  _,unchanged,_=request(student,classroom);expect(b'value="0"' in unchanged,'Downloading optional files gives no completion credit')
  # Same-size corruption is detected before returning bytes.
  key=first['storage_key'];original=(private/key).read_bytes();(private/key).write_bytes(b'X'*len(original))
