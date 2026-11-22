@@ -470,17 +470,20 @@
       {
         "id": "corner_cases",
         "label": "Recupero completo degli input e regole avanzate su ogni errore editoriale",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "tests/joomla-course-presentation.php",
-          "docs/IMPLEMENTATION_GAPS.md"
+          "component/administrator/src/Controller/CurriculumController.php",
+          "component/administrator/src/View/Curriculum/HtmlView.php",
+          "tests/course-fields-http.py",
+          "tests/curriculum-builder-http.py"
         ],
         "review": {
-          "reason": "Il modello e i test rifiutano input non validi, modifiche non autorizzate e revisioni obsolete in alcuni form. Il criterio estende il recupero completo dei dati inseriti e le regole avanzate a ogni errore editoriale; manca una prova che copra tutti i form, i rami di errore e la ripresentazione dei dati dopo il fallimento.",
+          "reason": "I flussi core dell’editor corso e del programma ripresentano gli input respinti senza applicare scritture parziali: errori su campi obbligatori/descrizione, revisioni obsolete, form contestuali modulo/lezione e campi nativi Joomla delle lezioni nuove o esistenti. Il recupero dalla sessione è limitato ai campi disponibili e a cardinalità/dimensioni controllate, con validazione e ACL conservati. Le fixture HTTP in Joomla disposable verificano salvataggi respinti, persistenza invariata e successiva correzione, oltre alle guardie già esistenti. È completata l’implementazione software 1.0.0 dei form core; accettazione su hosting reale, combinazioni di ruoli/browser e campi di plugin terzi rimangono verifiche manuali distinte.",
           "references": [
-            "tests/joomla-course-presentation.php#Invalid presentation rejected",
-            "tests/joomla-course-presentation.php#Stale revision cannot overwrite presentation",
-            "docs/IMPLEMENTATION_GAPS.md#R-03"
+            "component/administrator/src/Controller/CurriculumController.php#com_jlms.curriculum.",
+            "component/administrator/src/View/Curriculum/HtmlView.php#Preserve native Joomla field edits",
+            "tests/course-fields-http.py#Stale revision error preserves submitted summary",
+            "tests/curriculum-builder-http.py#Rejected first lesson save retains its native custom field"
           ]
         }
       }
