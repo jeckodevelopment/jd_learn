@@ -1,3 +1,9 @@
+## 22 novembre 2026 — LES-03: HEAD/Range anonimi sullo storage privato gestito (PR #945)
+
+[PR #945](https://github.com/jeckodevelopment/jd_learn/pull/945) integrata in `main` con squash `39c628870210945276c21025c85edccc9bd54e1c`; [CI #45052338447](https://github.com/jeckodevelopment/jd_learn/actions/runs/45052338447) **4/4 verde**: preflight, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. [Pacchetto Joomla di sviluppo JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45052338447/artifacts/14765269414); checksum dello ZIP Joomla interno non registrato in questa nota.
+
+La regressione HTTP dello storage privato gestito in `tests/materials-http.py` copre ora GET semplice, HEAD e GET con Range anonimi verso il file PHP cifrato sotto la directory managed: HTTP 404, nessuna esposizione del contenuto e nessuna risposta Content-Range; il test integra la prova precedente senza modificare il runtime. **LES-03 rimane Parziale** perché le topologie hosting/reverse proxy reali non sono certificate dalla fixture PHP; accettazione manuale Joomla non eseguita e percentuale minima globale invariata.
+
 ## 22 novembre 2026 — LES-02: link editoriali senza divulgazione del Referer (PR #943)
 
 [PR #943](https://github.com/jeckodevelopment/jd_learn/pull/943) integrata in `main` con squash `929d18ff5ac4e358b877b3736f233ee94806f37e`. [CI #45050704718](https://github.com/jeckodevelopment/jd_learn/actions/runs/45050704718) **4/4 verde**, [gate CSV #45050704712](https://github.com/jeckodevelopment/jd_learn/actions/runs/45050704712) verde. [Artefatto installabile dev JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45050704718/artifacts/14765154377), checksum ZIP Joomla interno non registrato in questa nota.
