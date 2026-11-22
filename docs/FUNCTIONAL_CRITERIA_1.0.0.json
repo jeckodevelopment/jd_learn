@@ -380,7 +380,8 @@
           "component/site/src/View/Category/HtmlView.php",
           "component/site/src/View/Pathway/HtmlView.php",
           "plugins/finder/jlms/src/Extension/Jlms.php",
-          "tests/cat04-index-policy.py"
+          "tests/cat04-index-policy.py",
+          "tests/associations-http.py"
         ],
         "review": {
           "reason": "Le rotte didattiche e personali di JD Learn inviano X-Robots-Tag noindex/nofollow e cache privata; corso, categoria e percorso non indicizzabili allineano anche il meta robots, mentre Finder ammette nell'indice soltanto corsi pubblici secondo ACL, stato e calendario. Inventario statico di tutte le viste con regressione fail-closed. I motori esterni e l'accettazione Joomla restano un asse separato.",
@@ -390,7 +391,8 @@
             "component/site/src/View/Category/HtmlView.php#X-Robots-Tag",
             "component/site/src/View/Pathway/HtmlView.php#X-Robots-Tag",
             "plugins/finder/jlms/src/Extension/Jlms.php#onFinderChangeState",
-            "tests/cat04-index-policy.py#CAT-04 private indexing and public SEO source contract"
+            "tests/cat04-index-policy.py#CAT-04 private indexing and public SEO source contract",
+            "tests/associations-http.py#Protected translated course must remain non-indexable"
           ]
         }
       },
@@ -402,17 +404,17 @@
           "component/site/src/Service/Router.php",
           "component/site/src/Helper/PublicMetadataHelper.php",
           "component/site/src/Helper/PublicBreadcrumbHelper.php",
-          "tests/associations-http.py",
+          "tests/categories-http.py",
           "tests/cat04-public-metadata.php",
           "tests/cat04-breadcrumb.php"
         ],
         "review": {
-          "reason": "Le rotte RouterView di corsi/categorie/percorsi usano gli alias SEF nativi; PublicMetadataHelper genera canonical, Open Graph, Twitter e immagini social locali sicure; i breadcrumb dettagli corso e percorso evitano duplicati con voci menu dirette. Test HTTP su Joomla disposable controllano canonical e og:url nelle lingue IT/EN con SEF on/off; test PHP verificano immagini e breadcrumb. Collaudo manuale di menu e template reali separato.",
+          "reason": "Le rotte RouterView di corsi/categorie/percorsi usano gli alias SEF nativi; PublicMetadataHelper genera canonical, Open Graph, Twitter e immagini social locali sicure; i breadcrumb dettagli corso e percorso evitano duplicati con voci menu dirette. Test HTTP su Joomla disposable controllano canonical e og:url delle categorie pubbliche nelle lingue IT/EN con SEF on/off, distinguendo il noindex dei corsi tradotti riservati; test PHP verificano immagini e breadcrumb. Collaudo manuale di menu e template reali separato.",
           "references": [
             "component/site/src/Service/Router.php#getCourseSegment",
             "component/site/src/Helper/PublicMetadataHelper.php#addHeadLink",
             "component/site/src/Helper/PublicBreadcrumbHelper.php#addDetail",
-            "tests/associations-http.py#English Open Graph URL must match canonical in SEF mode",
+            "tests/categories-http.py#CAT-04 Open Graph URL must match category canonical for both SEF modes",
             "tests/cat04-public-metadata.php#CAT-04 SEO canonical",
             "tests/cat04-breadcrumb.php#CAT-04 native breadcrumb"
           ]
