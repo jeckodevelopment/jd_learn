@@ -4,6 +4,14 @@ from pathlib import Path
 import runpy
 import re,json,hashlib,xml.etree.ElementTree as E,zipfile,io
 ROOT=Path(__file__).resolve().parents[1]
+# CAT-04: the protected teacher-edit form must not be indexed or cached.
+private_teacher_view=(ROOT/'component/site/src/View/Teacheredit/HtmlView.php').read_text()
+public_teacher_view=(ROOT/'component/site/src/View/Teacher/HtmlView.php').read_text()
+assert "setHeader('Cache-Control', 'private, no-store', true)" in private_teacher_view
+assert "setHeader('X-Robots-Tag', 'noindex, nofollow', true)" in private_teacher_view
+assert "setMetaData('robots', 'noindex, nofollow')" in private_teacher_view
+assert "setMetaData('robots', 'noindex, nofollow')" not in public_teacher_view
+
 # QUI-02: the row-locked service, not merely the UI, must reject hard deletes outside trash.
 question_bank=(ROOT/'component/administrator/src/Application/QuestionBankService.php').read_text()
 hard_delete=question_bank.split('public function delete(User $identity, int $id): void',1)[1].split('public function revisionOptions(',1)[0]
