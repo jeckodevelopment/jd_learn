@@ -142,6 +142,18 @@ fixtureUpdate('jlms_courses',(object)['id'=>$course,'admissions_open'=>1,'delive
 learningDenied(fn()=>$learning->classroom($student,'en-GB',$enrollment),403,'suspended course delivery blocks an existing enrollment');
 fixtureUpdate('jlms_courses',(object)['id'=>$course,'delivery_enabled'=>1]);
 learningExpect($learning->classroom($student,'en-GB',$enrollment)['percent']===0,'resuming delivery preserves existing progress');
+
+ // LCM-01: inactive lifecycle states must not be bypassable by direct calls,
+ // even if a stale configuration still leaves admissions and delivery enabled.
+foreach ([0, 2, -2] as $inactiveState) {
+ fixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>$inactiveState,'admissions_open'=>1,'delivery_enabled'=>1]);
+ learningDenied(fn()=>$learning->classroom($student,'en-GB',$enrollment),404,'LCM-01 inactive course denies direct classroom');
+ learningDenied(fn()=>$learning->resourceContext($student,'en-GB',$enrollment,$lessons[0]),404,'LCM-01 inactive course denies direct material context');
+ learningDenied(fn()=>$learning->complete($student,'en-GB',$enrollment,$lessons[0],bin2hex(random_bytes(16))),404,'LCM-01 inactive course denies direct completion');
+}
+fixtureUpdate('jlms_courses',(object)['id'=>$course,'state'=>1,'admissions_open'=>1,'delivery_enabled'=>1]);
+learningExpect($learning->classroom($student,'en-GB',$enrollment)['percent']===0,'LCM-01 inactive direct requests preserve progress');
+
 learningExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id='.(int)$student->id)->loadResult()===1,'one enrollment persisted');
 learningExpect($db->setQuery('SELECT started_at FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult()===null,'enrollment alone grants no learning credit');
 $editionForCapacity=(int)$db->setQuery('SELECT edition_id FROM #__jlms_enrollments WHERE id='.$enrollment)->loadResult();
