@@ -88,7 +88,8 @@ try:
  expect(form(failed,'lesson.save')['fields'].get(field)==unsaved_field,
         'Rejected lesson save retains its native Joomla custom field value')
  expect(state()==lesson_before,'Rejected lesson save leaves the original lesson and programme unchanged')
- saved=form(failed,'lesson.save');_,html=request(saved['action'],saved['fields']|{'jform[title]':'Builder lesson updated via HTTP','jform[body]':'<p>Saved programme content</p>',field:'Saved lesson custom value'})
+ saved=form(failed,'lesson.save')
+ _,html=request(saved['action'],saved['fields']|{'jform[title]':'Builder lesson updated via HTTP','jform[body]':'<p>Saved programme content</p>',field:'Saved lesson custom value'})
  _,lesson_reopened=request(link(html,'edit_lesson',f['l1']))
  expect(form(lesson_reopened,'lesson.save')['fields'].get(field)=='Saved lesson custom value',
         'Native field correction persists after retrying rejected lesson save')
