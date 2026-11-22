@@ -1,6 +1,6 @@
 # JD Learn
 
-**Stato sviluppo documentato (22/11/2026):** baseline `0.64.22-dev` con rafforzamento CAT-04. L'ultimo audit integrato della baseline 1.0.0 contiene **483 criteri implemented, 15 missing e 259 unverifiable** su 757, con copertura implementativa minima **61,73%**. Questi valori **non** dichiarano CAT-04 chiuso né accettazione Joomla eseguita. Lo stato aggiornato delle evidenze è in [Release Dashboard](docs/RELEASE_DASHBOARD.md), [audit](docs/FUNCTIONAL_AUDIT_CURRENT.md) e [matrice](docs/REQUIREMENTS_STATUS.csv). La versione `-dev` non è una release stabile e la distribuzione deve riferirsi all'artefatto e checksum effettivi della medesima CI.
+**Stato sviluppo documentato (22/11/2026):** baseline `0.64.22-dev` con rafforzamento CAT-04. L'ultimo audit integrato della baseline 1.0.0 contiene **485 criteri implemented, 15 missing e 257 unverifiable** su 757, con copertura implementativa minima **61,92%**. CAT-04 risulta implementato 5/5 sul piano software; **nessun collaudo manuale Joomla** viene dichiarato eseguito. Lo stato aggiornato delle evidenze è in [Release Dashboard](docs/RELEASE_DASHBOARD.md), [audit](docs/FUNCTIONAL_AUDIT_CURRENT.md) e [matrice](docs/REQUIREMENTS_STATUS.csv). La versione `-dev` non è una release stabile e la distribuzione deve riferirsi all'artefatto e checksum effettivi della medesima CI.
 
 **JD Learn** è un componente e-learning per Joomla 6 che integra corsi, lezioni, percorsi, iscrizioni e fruizione didattica nell'ecosistema nativo Joomla. È in sviluppo verso la **prima release stabile 1.0.0**: le build `-dev` sono destinate a sviluppo e collaudo, non alla produzione.
 
@@ -17,7 +17,7 @@ L'implementazione non equivale al collaudo: la prima stabile sarà pubblicata so
 
 ## Stato dello sviluppo e ultime integrazioni
 
-Il [report dell’audit funzionale](docs/FUNCTIONAL_AUDIT_CURRENT.md) distingue criteri implementati, lacune confermate e verifiche residue. Al 22/11/2026 la baseline integrata conta 483 implementati, 15 mancanti e 259 non verificabili, con copertura implementativa minima del 61,73%. La percentuale globale rigorosa non è determinabile fino alla risoluzione delle verifiche non disponibili. Le modifiche versionate sono nel [Changelog](CHANGELOG.md); i collaudi manuali sono tracciati separatamente.
+Il [report dell’audit funzionale](docs/FUNCTIONAL_AUDIT_CURRENT.md) distingue criteri implementati, lacune confermate e verifiche residue. Al 22/11/2026 la baseline integrata conta 485 implementati, 15 mancanti e 257 non verificabili, con copertura implementativa minima del 61,92%. La percentuale globale rigorosa non è determinabile fino alla risoluzione delle verifiche non disponibili. Le modifiche versionate sono nel [Changelog](CHANGELOG.md); i collaudi manuali sono tracciati separatamente.
 
 ## Installazione e sviluppo
 
