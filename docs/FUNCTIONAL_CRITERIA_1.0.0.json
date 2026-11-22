@@ -563,16 +563,19 @@
       {
         "id": "subtitle_provider",
         "label": "Avvisi completi per sottotitoli e provider senza tracciamento",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Domain/PublicationReadiness.php",
+          "tests/run.php",
           "docs/VIDEO.md"
         ],
         "review": {
-          "reason": "La readiness avvisa quando manca la trascrizione editoriale locale. Il codice dichiara esplicitamente che tale controllo non accerta caption o tracce dei provider remoti; l’esito completo per ciascun provider e le relative combinazioni di tracciamento richiede verifica ulteriore.",
+          "reason": "La checklist editoriale implementa avvisi indipendenti per trascrizione locale e disponibilità non verificabile delle caption sui tre provider remoti; l’MP4 locale non eredita l’avviso remoto. La verifica locale delle capability blocca i provider non tracciabili soltanto in modalità Apprendimento e non in Consultazione. Le prove automatiche coprono tutte le otto combinazioni provider/modalità e il carattere non bloccante dell’avviso caption. Non si dichiara verificata la disponibilità reale di tracce e lingue presso un provider: resta prova manuale nel player, distinta dall’implementazione della diagnostica.",
           "references": [
-            "component/administrator/src/Domain/PublicationReadiness.php#Editorial transcripts are optional accessibility aids.",
-            "docs/VIDEO.md#non espongono qui un elenco interrogabile"
+            "component/administrator/src/Domain/PublicationReadiness.php#A locally authored transcript is not evidence",
+            "tests/run.php#caption availability warning applies only to remote provider",
+            "tests/run.php#nontrackable provider blocks learning but not consultation",
+            "docs/VIDEO.md#La trascrizione della lezione video"
           ]
         }
       }

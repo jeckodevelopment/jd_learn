@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **488**.
+- Implementati: **489**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **254**.
+- Esaminati con esito non verificabile: **253**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -83,9 +83,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/joomla-course-presentation.php#Invalid presentation rejected](../tests/joomla-course-presentation.php)
   - [tests/joomla-course-presentation.php#Stale revision cannot overwrite presentation](../tests/joomla-course-presentation.php)
   - [docs/IMPLEMENTATION_GAPS.md#R-03](../docs/IMPLEMENTATION_GAPS.md)
-- `AUT-03/subtitle_provider` — Avvisi completi per sottotitoli e provider senza tracciamento. La readiness avvisa quando manca la trascrizione editoriale locale. Il codice dichiara esplicitamente che tale controllo non accerta caption o tracce dei provider remoti; l’esito completo per ciascun provider e le relative combinazioni di tracciamento richiede verifica ulteriore.
-  - [component/administrator/src/Domain/PublicationReadiness.php#Editorial transcripts are optional accessibility aids.](../component/administrator/src/Domain/PublicationReadiness.php)
-  - [docs/VIDEO.md#non espongono qui un elenco interrogabile](../docs/VIDEO.md)
 - `ISC-01/edge_authorization` — Combinazioni complete di vincoli, ruolo e iscrizioni in sospeso. L’ammissione manuale rivalida la disponibilità editoriale e la didattica ricontrolla utente, livello, iscrizione, edizione e accesso. Le fixture non esauriscono tutte le combinazioni di vincoli, ruolo e richieste pending descritte dal criterio; le richieste approval hanno un flusso distinto.
   - [component/administrator/src/Application/ManualEnrollmentService.php#Administrative assignment does not grant viewing rights](../component/administrator/src/Application/ManualEnrollmentService.php)
   - [docs/LEARNING.md#richieste/approvazioni restano da implementare](../docs/LEARNING.md)
@@ -1010,6 +1007,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/categories-http.py#parsed.meta.get('og:url')==canonical_links[0]](../tests/categories-http.py)
   - [tests/cat04-public-metadata.php#CAT-04 SEO canonical](../tests/cat04-public-metadata.php)
   - [tests/cat04-breadcrumb.php#CAT-04 native breadcrumb](../tests/cat04-breadcrumb.php)
+- `AUT-03/subtitle_provider` — Avvisi completi per sottotitoli e provider senza tracciamento. La checklist editoriale implementa avvisi indipendenti per trascrizione locale e disponibilità non verificabile delle caption sui tre provider remoti; l’MP4 locale non eredita l’avviso remoto. La verifica locale delle capability blocca i provider non tracciabili soltanto in modalità Apprendimento e non in Consultazione. Le prove automatiche coprono tutte le otto combinazioni provider/modalità e il carattere non bloccante dell’avviso caption. Non si dichiara verificata la disponibilità reale di tracce e lingue presso un provider: resta prova manuale nel player, distinta dall’implementazione della diagnostica.
+  - [component/administrator/src/Domain/PublicationReadiness.php#A locally authored transcript is not evidence](../component/administrator/src/Domain/PublicationReadiness.php)
+  - [tests/run.php#caption availability warning applies only to remote provider](../tests/run.php)
+  - [tests/run.php#nontrackable provider blocks learning but not consultation](../tests/run.php)
+  - [docs/VIDEO.md#La trascrizione della lezione video](../docs/VIDEO.md)
 - `AUT-04/enrollment_mapping` — Migrazione iscritti solo esplicita con equivalenze. La migrazione è soltanto esplicita e singola, richiede autorizzazione, anteprima e hash di conferma, equivalenze validate tra lezioni delle versioni di origine e destinazione, trasferimento dei soli completamenti non quiz, storicizzazione invariata e idempotenza. Le prove CI della PR #863 (merge da73279d0b28d8d05109bc08d1814623af13c102, run 44914115463, 4/4 success) verificano inoltre blocco su quiz aperti, target pieno, mappature salvate solo se richieste, rollback dell'iscrizione sorgente e rifiuto senza troncamento oltre 1000 equivalenze. Il criterio software di migrazione esplicita è dunque implementato; backup, attestati e ogni variante di ripristino rimangono separati in historical_integrity e nell'accettazione Joomla.
   - [component/administrator/src/Application/EnrollmentMigrationService.php#public function preview](../component/administrator/src/Application/EnrollmentMigrationService.php)
   - [component/administrator/src/Application/EnrollmentMigrationService.php#public function apply](../component/administrator/src/Application/EnrollmentMigrationService.php)
