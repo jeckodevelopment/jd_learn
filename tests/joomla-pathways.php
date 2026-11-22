@@ -294,6 +294,25 @@ $check(!$pathModel->purgeEmpty($emptyId), 'multilingual pathway reference blocks
 $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $emptyId)->loadResult() === 1,
     'blocked pathway purge preserves the referenced record');
 $db->setQuery("DELETE FROM #__associations WHERE context='com_jlms.pathway' AND id=" . $emptyId)->execute();
+// LCM-03: a third-party table with ON DELETE CASCADE must not lose its
+// history when an empty pathway is permanently removed.
+$externalTable = '#__jlms_ci_pathway_fk_guard';
+$db->setQuery('CREATE TABLE ' . $db->quoteName($externalTable)
+    . ' (pathway_id BIGINT UNSIGNED NOT NULL, note VARCHAR(40) NOT NULL,'
+    . ' CONSTRAINT jlms_ci_pathway_fk FOREIGN KEY (pathway_id) REFERENCES '
+    . $db->quoteName('#__jlms_pathways') . ' (id) ON DELETE CASCADE) ENGINE=InnoDB')->execute();
+try {
+    $db->setQuery('INSERT INTO ' . $db->quoteName($externalTable)
+        . ' (pathway_id,note) VALUES (' . (int)$emptyId . ", 'must-survive')")->execute();
+    $check(!$pathModel->purgeEmpty($emptyId),
+        'FK-backed external historical reference blocks purge even with ON DELETE CASCADE');
+    $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id='.(int)$emptyId)->loadResult()===1,
+        'external-reference denial retains pathway');
+    $check((int)$db->setQuery('SELECT COUNT(*) FROM ' . $db->quoteName($externalTable))->loadResult()===1,
+        'external-reference denial retains third-party historical row');
+} finally {
+    $db->setQuery('DROP TABLE IF EXISTS ' . $db->quoteName($externalTable))->execute();
+}
 $check($pathModel->purgeEmpty($emptyId), 'only an empty trashed pathway can be deleted');
 $assertSiblingUnchanged('empty-pathway purge');
 $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $emptyId)->loadResult() === 0,
