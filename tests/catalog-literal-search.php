@@ -11,6 +11,11 @@ $expected = [
     'unit_1' => '%unit!_1%',
     'a!b' => '%a!!b%',
     '50!_%' => '%50!!!_!%%',
+    // SECDEV-03: injection-looking input stays literal, including LIKE wildcards.
+    "' OR 1=1 --" => "%' OR 1=1 --%",
+    "'; DROP TABLE courses; --" => "%'; DROP TABLE courses; --%",
+    '%_! OR 1=1' => '%!%!_!! OR 1=1%',
+    'UNION SELECT * FROM users' => '%UNION SELECT * FROM users%',
 ];
 foreach ($expected as $search => $pattern) {
     if (CatalogSearch::pattern($search) !== $pattern) {
