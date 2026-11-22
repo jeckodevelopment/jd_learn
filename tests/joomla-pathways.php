@@ -166,12 +166,13 @@ $grantAsset('com_jlms',['core.manage','jlms.pathways.manage'],$backendGroup,true
 $grantAsset('com_jlms.pathway.category.'.$categoryId,['core.edit','core.edit.state'],$delegateGroup,true);
 $grantAsset('com_jlms.pathway.'.$siblingId,['core.edit.state'],$delegateGroup,false);
 $delegateUser = new \Joomla\CMS\User\User();
-$check($delegateUser->bind([
+$delegateData = [
     'name'=>'CI pathway manager', 'username'=>'cipathwaymanager',
     'email'=>'cipathwaymanager@example.invalid',
     'password'=>'CI-Pathway-Only-Password-2026','password2'=>'CI-Pathway-Only-Password-2026',
     'groups'=>[2,$delegateGroup],'block'=>0,'activation'=>'',
-]) && $delegateUser->save(), 'dedicated pathway delegate created');
+];
+$check($delegateUser->bind($delegateData) && $delegateUser->save(), 'dedicated pathway delegate created');
 $delegate = new \Joomla\CMS\User\User((int)$delegateUser->id);
 $delegate->clearAccessRights();
 $check($delegate->authorise('core.edit.state','com_jlms.pathway.'.$pathwayId)
