@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **492**.
+- Implementati: **493**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **250**.
+- Esaminati con esito non verificabile: **249**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -64,9 +64,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Verifiche ancora necessarie
 
-- `LCM-04/external_references` — Audit riferimenti di estensioni esterne. Il lifecycle docente protegge le referenze conosciute nel repository. Occorre l’inventario delle estensioni installate e delle relazioni esterne per generalizzare.
-  - [component/administrator/src/Model/TeacherModel.php#public function changeStates](../component/administrator/src/Model/TeacherModel.php)
-  - [tests/joomla-teachers.php#teacher lifecycle preserves immutable course snapshot](../tests/joomla-teachers.php)
 - `LCM-05/granular_acl` — ACL granulari e selezioni miste HTTP. Il repository contiene riferimenti pertinenti al criterio «ACL granulari e selezioni miste HTTP», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
   - [tests/joomla-pathways.php#L1-L25](../tests/joomla-pathways.php#L1-L25)
   - [docs/QA_TESTBOOK.md#L1-L25](../docs/QA_TESTBOOK.md#L1-L25)
@@ -971,6 +968,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/PathwayModel.php#Discover database-enforced references](../component/administrator/src/Model/PathwayModel.php)
   - [tests/joomla-pathways.php#FK-backed external historical reference blocks purge](../tests/joomla-pathways.php)
   - [docs/LCM03_EXTERNAL_REFERENCE_CONTRACT.md#Integrazioni supportate dalla protezione automatica](../docs/LCM03_EXTERNAL_REFERENCE_CONTRACT.md)
+- `LCM-04/external_references` — Audit riferimenti di estensioni esterne. Audit del contratto supportato: le dipendenze esterne dichiarate tramite FK SQL su #__jlms_teachers.id impediscono la purga anche con ON DELETE CASCADE; fixture Joomla verificata. Riferimenti opachi senza FK e integrazioni installate restano fuori dal perimetro automatico e richiedono verifica dedicata.
+  - [component/administrator/src/Model/TeacherModel.php#information_schema.KEY_COLUMN_USAGE](../component/administrator/src/Model/TeacherModel.php)
+  - [tests/joomla-teachers.php#ON DELETE CASCADE](../tests/joomla-teachers.php)
+  - [docs/LCM04_EXTERNAL_REFERENCE_CONTRACT.md#Limite del contratto](../docs/LCM04_EXTERNAL_REFERENCE_CONTRACT.md)
 - `CAT-01/language_available` — Combinazioni lingua e soli corsi disponibili. Il catalogo espone un filtro opt-in sui soli corsi con ammissioni aperte ed erogazione attiva, mantenendo lingua, pubblicazione e vincoli ACL. La PR #684 ha superato la CI e introdotto test strutturali; la verifica manuale Joomla resta pendente.
   - [component/site/src/Model/CoursesModel.php#filter.available](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#c.admissions_open = 1](../component/site/src/Model/CoursesModel.php)
