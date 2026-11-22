@@ -234,6 +234,16 @@ final class HtmlView extends BaseHtmlView
             }
             if ($action && !$this->selectedItem) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
             if (str_starts_with($action, 'delete_') && !$this->canDelete) { throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403); }
+            // A new lesson has no stored field values yet. Resolve its
+            // authorized native field definitions so rejected first saves
+            // can restore edits using the same whitelist as existing lessons.
+            if ($this->editorMode === 'lesson' && !is_array($lessonData['com_fields'] ?? null)) {
+                $lessonData['com_fields'] = [];
+                $fieldSubject = (object) ['id' => 0, 'catid' => (int) $course->catid, 'language' => (string) $course->language];
+                foreach (\Joomla\Component\Fields\Administrator\Helper\FieldsHelper::getFields('com_jlms.lesson', $fieldSubject, true) as $field) {
+                    $lessonData['com_fields'][$field->name] = $field->value;
+                }
+            }
             $stateKey = 'com_jlms.curriculum.' . (int) $course->id . '.' . (int) $version->id . '.' . $this->editorMode;
             if (in_array($this->editorMode, ['module','lesson'], true)) {
                 $saved = $app->getUserState($stateKey, []);
