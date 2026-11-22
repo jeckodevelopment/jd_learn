@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **483**.
+- Implementati: **485**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **259**.
+- Esaminati con esito non verificabile: **257**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -79,13 +79,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `LCM-05/history_upgrade` — Copertura trasversale storico, attestati e upgrade. Le fixture retained conservano progressi e attestati. La combinazione trasversale di transizioni, ruoli, storico e backup/ripristino richiede esecuzioni ulteriori.
   - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
   - [docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)](../docs/LIFECYCLE_1.0.0_APPROVED.md)
-- `CAT-04/robots_security` — Esclusione sistematica di contenuti personali/protetti dall'indicizzazione. La vista corso imposta noindex/nofollow per i contenuti non accessibili e il plugin Finder ha controlli di stato/accesso. Il criterio richiede però l’esclusione sistematica di ogni contenuto personale o protetto da indicizzazione: il repository non contiene una verifica end-to-end dell’intero insieme di rotte e motori/installazioni Joomla.
-  - [component/site/src/View/Course/HtmlView.php#noindex, nofollow](../component/site/src/View/Course/HtmlView.php)
-  - [plugins/finder/jlms/src/Extension/Jlms.php#public function onFinderChangeState](../plugins/finder/jlms/src/Extension/Jlms.php)
-  - [docs/LEARNING.md#noindex/nofollow](../docs/LEARNING.md)
-- `CAT-04/seo_combinations` — Combinazioni menu, lingue, breadcrumb e immagini social. Il template e i servizi forniscono metadati pubblici, percorso Joomla e route. Restano le combinazioni di menu, lingua, breadcrumb e immagine social su installazione effettiva.
-  - [component/site/src/View/Course/HtmlView.php#PublicMetadataHelper::apply](../component/site/src/View/Course/HtmlView.php)
-  - [docs/FUNCTIONAL_AUDIT_CAT04_FINDER.md#seo_combinations](../docs/FUNCTIONAL_AUDIT_CAT04_FINDER.md)
 - `AUT-01/corner_cases` — Recupero completo degli input e regole avanzate su ogni errore editoriale. Il modello e i test rifiutano input non validi, modifiche non autorizzate e revisioni obsolete in alcuni form. Il criterio estende il recupero completo dei dati inseriti e le regole avanzate a ogni errore editoriale; manca una prova che copra tutti i form, i rami di errore e la ripresentazione dei dati dopo il fallimento.
   - [tests/joomla-course-presentation.php#Invalid presentation rejected](../tests/joomla-course-presentation.php)
   - [tests/joomla-course-presentation.php#Stale revision cannot overwrite presentation](../tests/joomla-course-presentation.php)
@@ -1014,6 +1007,20 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CatalogService.php#'certificate_planned'](../component/administrator/src/Application/CatalogService.php)
   - [component/site/tmpl/course/default.php#jlms-course-completion](../component/site/tmpl/course/default.php)
   - [component/site/tmpl/course/default.php#COM_JLMS_COURSE_CERTIFICATE_PLANNED](../component/site/tmpl/course/default.php)
+- `CAT-04/robots_security` — Esclusione sistematica di contenuti personali/protetti dall'indicizzazione. Le rotte didattiche e personali di JD Learn inviano X-Robots-Tag noindex/nofollow e cache privata; corso, categoria e percorso non indicizzabili allineano anche il meta robots, mentre Finder ammette nell'indice soltanto corsi pubblici secondo ACL, stato e calendario. Inventario statico di tutte le viste con regressione fail-closed. I motori esterni e l'accettazione Joomla restano un asse separato.
+  - [component/site/src/Controller/DisplayController.php#Private teaching and editing routes](../component/site/src/Controller/DisplayController.php)
+  - [component/site/src/View/Course/HtmlView.php#X-Robots-Tag](../component/site/src/View/Course/HtmlView.php)
+  - [component/site/src/View/Category/HtmlView.php#X-Robots-Tag](../component/site/src/View/Category/HtmlView.php)
+  - [component/site/src/View/Pathway/HtmlView.php#X-Robots-Tag](../component/site/src/View/Pathway/HtmlView.php)
+  - [plugins/finder/jlms/src/Extension/Jlms.php#onFinderChangeState](../plugins/finder/jlms/src/Extension/Jlms.php)
+  - [tests/cat04-index-policy.py#CAT-04 private indexing and public SEO source contract](../tests/cat04-index-policy.py)
+- `CAT-04/seo_combinations` — Combinazioni menu, lingue, breadcrumb e immagini social. Le rotte RouterView di corsi/categorie/percorsi usano gli alias SEF nativi; PublicMetadataHelper genera canonical, Open Graph, Twitter e immagini social locali sicure; i breadcrumb dettagli corso e percorso evitano duplicati con voci menu dirette. Test HTTP su Joomla disposable controllano canonical e og:url nelle lingue IT/EN con SEF on/off; test PHP verificano immagini e breadcrumb. Collaudo manuale di menu e template reali separato.
+  - [component/site/src/Service/Router.php#getCourseSegment](../component/site/src/Service/Router.php)
+  - [component/site/src/Helper/PublicMetadataHelper.php#addHeadLink](../component/site/src/Helper/PublicMetadataHelper.php)
+  - [component/site/src/Helper/PublicBreadcrumbHelper.php#addDetail](../component/site/src/Helper/PublicBreadcrumbHelper.php)
+  - [tests/associations-http.py#English Open Graph URL must match canonical in SEF mode](../tests/associations-http.py)
+  - [tests/cat04-public-metadata.php#CAT-04 SEO canonical](../tests/cat04-public-metadata.php)
+  - [tests/cat04-breadcrumb.php#CAT-04 native breadcrumb](../tests/cat04-breadcrumb.php)
 - `AUT-04/enrollment_mapping` — Migrazione iscritti solo esplicita con equivalenze. La migrazione è soltanto esplicita e singola, richiede autorizzazione, anteprima e hash di conferma, equivalenze validate tra lezioni delle versioni di origine e destinazione, trasferimento dei soli completamenti non quiz, storicizzazione invariata e idempotenza. Le prove CI della PR #863 (merge da73279d0b28d8d05109bc08d1814623af13c102, run 44914115463, 4/4 success) verificano inoltre blocco su quiz aperti, target pieno, mappature salvate solo se richieste, rollback dell'iscrizione sorgente e rifiuto senza troncamento oltre 1000 equivalenze. Il criterio software di migrazione esplicita è dunque implementato; backup, attestati e ogni variante di ripristino rimangono separati in historical_integrity e nell'accettazione Joomla.
   - [component/administrator/src/Application/EnrollmentMigrationService.php#public function preview](../component/administrator/src/Application/EnrollmentMigrationService.php)
   - [component/administrator/src/Application/EnrollmentMigrationService.php#public function apply](../component/administrator/src/Application/EnrollmentMigrationService.php)
