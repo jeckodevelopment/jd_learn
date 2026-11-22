@@ -36,6 +36,11 @@ def check() -> None:
     ci = source(".github/workflows/ci.yml")
     assert "joomla-course-presentation.php" in ci, "Joomla fixture absent from CI"
     assert "php tests/catalog-literal-search.php" in ci, "SQL literal fixture absent from CI"
+    publication = source("tests/joomla-publication.php")
+    assert "joomla-publication.php" in ci, "Database-level catalog regression absent from CI"
+    assert "->bind(':catalogProbe', $pattern)" in publication, "SQLi fixture must use bound parameters"
+    for payload in ("' OR 1=1 --", "DROP TABLE", "UNION SELECT", "'%_! OR 1=1'"):
+        assert payload in publication, f"SQLi database fixture absent: {payload}"
     assert "tests/secdev07-sast.py" in ci, "Dynamic-evaluation SAST absent from CI"
 
     # The runtime 1.0.0 intentionally ships no CSV export. Do not silently
