@@ -591,7 +591,7 @@ final class LearningService
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
                 'resume_ms' => (int) ($lesson->resume_ms ?? 0), 'audio_transcript' => $audioTranscript,
                 'video_transcript' => $videoTranscript,
-                'body' => \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) ($lesson->body ?? ''), 'HTML'),
+                'body' => EditorialLinkSafety::secure(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) ($lesson->body ?? ''), 'HTML')),
                 'custom_fields' => $customFields],
             'outline' => $outline, 'percent' => $percent, 'progress_applicable' => $progressApplicable,
             'consultation_mode' => $rules['mode'] === 'consultation', 'completed_at' => $enrollment->completed_at];

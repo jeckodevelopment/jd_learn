@@ -37,6 +37,19 @@ function rejects(callable $work, string $message): void
     }
     throw new \RuntimeException($message);
 }
+$links = \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::secure(
+    '<p><a href="https://example.invalid/public" rel="opener">Public</a>'
+    . '<a href="https://example.invalid/private?accessToken=TEST_CREDENTIAL">Secret</a>'
+    . '<a href="https://example.invalid/private#clientSecret=TEST_CREDENTIAL">Fragment</a>'
+    . '<a href="https://user:password@example.invalid/private">Userinfo</a></p>'
+);
+expect(str_contains($links, 'href="https://example.invalid/public"')
+    && substr_count($links, 'href=') === 1
+    && substr_count($links, 'rel="noreferrer noopener"') === 4,
+    'LES-02 preserves safe lesson links, strips credential destinations and forbids opener');
+expect(!str_contains($links, 'TEST_CREDENTIAL') && !str_contains($links, 'user:password@'),
+    'LES-02 credentials are not emitted as HTML attributes');
+
 $storagePathCheck = new \ReflectionMethod(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class, 'isAbsolutePath');
 expect($storagePathCheck->invoke(null, '/srv/jlms-private') === true, 'LES-03 accepts Unix private storage root');
 expect($storagePathCheck->invoke(null, 'C:/jlms-private') === true, 'LES-03 accepts Windows slash drive root');
