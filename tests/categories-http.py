@@ -88,7 +88,7 @@ try:
   expect('id="jlms-category"' in translated and 'Tassonomia italiana' in translated and 'taxonomy-corso-italiano' in translated,'core language switch resolves translated category')
   translated_page=Page(translated)
   translated_canonical=[link.get('href','') for link in translated_page.head_links if link.get('rel')=='canonical']
-  expect(len(translated_canonical)==1 and translated_canonical[0].startswith(base), f'CAT-04 translated canonical missing: canonical={translated_canonical!r}, og={translated_page.meta.get("og:url")!r}, robots={translated_page.meta.get("robots")!r}, italian={italian!r}, sef={sef}')
+  expect(len(translated_canonical)==1 and translated_canonical[0].startswith(base), f'CAT-04 translated canonical missing: canonical={translated_canonical!r}, og={translated_page.meta.get("og:url")!r}, robots={translated_page.meta.get("robots")!r}, italian={italian!r}, links={translated_page.head_links!r}, head={translated[:2500]!r}, sef={sef}')
   expect(translated_page.meta.get('og:url')==translated_canonical[0], 'CAT-04 translated category OG URL must match canonical')
   if sef:expect('taxonomy-menu-category-it' in italian,'native target-language category menu selected')
   fixture('hide_target')
