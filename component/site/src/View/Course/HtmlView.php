@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Site\View\Course;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
+use Jlms\Component\Jlms\Site\Helper\PublicBreadcrumbHelper;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -64,6 +65,7 @@ final class HtmlView extends BaseHtmlView
             $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
             Factory::getApplication()->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         }
+        PublicBreadcrumbHelper::addDetail('course', (int) $this->item['course']->id, (string) $this->item['course']->title);
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
     }
