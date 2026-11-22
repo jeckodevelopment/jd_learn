@@ -84,6 +84,31 @@ try:
         'Rejected update never saves the unsaved editorial description')
  _,html=request(path);editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect(editor['fields'][field]=='Value saved over HTTP','Cancel leaves the last saved custom value intact')
+ # AUT-01: a second author/browser tab must not overwrite a newer course
+ # revision. On the rejected stale submission the user's input remains
+ # available for correction, while the successfully saved revision persists.
+ stale_fields=editor['fields'].copy()
+ updated_summary='Successfully saved before a stale editor submit'
+ url,html=request(urljoin(url,editor['action']),editor['fields']|{
+     'task':'course.apply','jform[summary]':updated_summary})
+ editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ expect(editor['fields'].get('jform[summary]')==updated_summary,
+        'Concurrent editor fixture has committed its newer summary')
+ expect(editor['fields'].get('jform[revision]')!=stale_fields.get('jform[revision]'),
+        'Newer edit increments the revision before stale submit')
+ stale_title='Uncommitted title from stale browser tab'
+ url,html=request(urljoin(url,editor['action']),stale_fields|{
+     'task':'course.apply','jform[title]':stale_title})
+ editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ expect(editor['fields'].get('jform[title]')==stale_title,
+        'Stale revision error preserves submitted editor title')
+ request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
+ _,html=request(path)
+ editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ expect(editor['fields'].get('jform[summary]')==updated_summary,
+        'Stale rejection cannot overwrite the newer persisted summary')
+ expect(editor['fields'].get('jform[title]')==original_title,
+        'Stale rejection cannot overwrite the persisted title')
  request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
  print(json.dumps({'course_fields_http_checks':checks,'status':'passed'}))
 except Exception:
