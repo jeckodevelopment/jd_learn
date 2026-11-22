@@ -68,6 +68,12 @@ jobs:
             --url "https://github.com/jeckodevelopment/jd_learn/releases/download/v$VERSION/pkg_jlms-$VERSION.zip" \
             --output dist/jdlearn.xml
           sha256sum "dist/pkg_jlms-$VERSION.zip" > dist/RELEASE_SHA256SUMS.txt
+          python3 tools/release_candidate_evidence.py \
+            --version "$VERSION" --commit "$GITHUB_SHA" \
+            --package "dist/pkg_jlms-$VERSION.zip" --feed dist/jdlearn.xml \
+            --checksums dist/RELEASE_SHA256SUMS.txt \
+            --notes docs/RELEASE_NOTES_CANDIDATE_1.0.0.md \
+            --output dist/RELEASE_CANDIDATE_EVIDENCE.json
           python3 -m compileall -q tools/release_feed.py tools/publish_update_feed_ftps.py
           python3 tests/ftps-publish.py
           python3 tests/ftps-certificate-pin.py
@@ -78,6 +84,7 @@ jobs:
           path: |
             dist/pkg_jlms-${{ inputs.version }}.zip
             dist/RELEASE_SHA256SUMS.txt
+            dist/RELEASE_CANDIDATE_EVIDENCE.json
             dist/jdlearn.xml
           if-no-files-found: error
           retention-days: 14
@@ -114,6 +121,12 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           sha256sum -c dist/RELEASE_SHA256SUMS.txt
+          python3 tools/release_candidate_evidence.py \
+            --version "$VERSION" --commit "$GITHUB_SHA" \
+            --package "dist/pkg_jlms-$VERSION.zip" --feed dist/jdlearn.xml \
+            --checksums dist/RELEASE_SHA256SUMS.txt \
+            --notes docs/RELEASE_NOTES_CANDIDATE_1.0.0.md \
+            --output dist/RELEASE_CANDIDATE_EVIDENCE.json --verify
           python3 - <<'PY'
           import os,zipfile,xml.etree.ElementTree as E
           version=os.environ['VERSION']
