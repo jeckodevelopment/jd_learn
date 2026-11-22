@@ -257,6 +257,32 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
 );
 expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
     'video editorial transcript removes warning without inferring captions');
+
+// AUT-03: provider caption availability and editorial transcript are independent.
+foreach (['youtube', 'vimeo', 'cloudflarestream'] as $remoteKey) {
+    $ready = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+        $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+        [(object) ['id' => 3]],
+        [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'provider_key' => $remoteKey,
+            'duration_ms' => 60000,
+            'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>Available transcript</p>"}']]
+    );
+    expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $ready['warnings'], true),
+        'remote caption tracks are explicitly unverified for ' . $remoteKey);
+    expect(!in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $ready['blockers'], true),
+        'unverified provider caption tracks are advisory, not a publication blocker');
+    expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $ready['warnings'], true),
+        'local transcript is independently verified for ' . $remoteKey);
+}
+$localReady = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'provider_key' => 'html5',
+        'duration_ms' => 60000, 'params_json' => '{"video_duration_confirmed":true}']]
+);
+expect(!in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $localReady['warnings'], true),
+    'local MP4 does not receive a remote-provider caption warning');
+
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],

@@ -72,6 +72,8 @@ L’adapter YouTube crea l’iframe con origine del sito e API abilitate, poi at
 
 ### Contratto `VideoCapabilities` (IMP-05)
 
+**Controllo di pubblicazione AUT-03 (sottotitoli provider):** per YouTube, Vimeo e Cloudflare Stream la checklist editoriale segnala esplicitamente che le caption effettivamente disponibili per quella sorgente non sono verificabili automaticamente. L'avviso compare anche quando esiste una trascrizione editoriale locale, perché le due evidenze sono indipendenti. È un avviso non bloccante: l'autore deve verificare manualmente la traccia e la lingua nel player/anteprima autorizzati. Non implica che tutti i provider espongano liste di tracce interrogabili o che un video privo di caption non possa essere pubblicato.
+
 Le capabilities sono relative all’adapter attivo e alla sorgente validata; provider disabilitato/non configurato o sorgente con `providerKey` differente restituisce tutte le flags a `false`. La matrice indica il supporto dell’adapter, non la presenza garantita di una traccia o di una velocità nel singolo video.
 
 | Provider | posizione/durata/seek | velocità | caption | trascrizione LMS | playback a scadenza | download |
