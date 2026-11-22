@@ -128,6 +128,25 @@ $emptyPayload = ['id'=>0,'revision'=>1,'title'=>'Empty CI pathway','alias'=>'emp
     'access'=>1,'language'=>'*','state'=>1,'courses'=>[]];
 $check((bool)$pathModel->save($emptyPayload),'empty pathway can be authored: '.$pathModel->getError());
 $emptyId=(int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='empty-ci-pathway'")->loadResult();
+// LCM-03: one course may belong to multiple independent pathways. Changes to
+// the first pathway must not alter the second pathway or their shared course.
+$siblingPayload = ['id'=>0,'revision'=>1,'title'=>'Shared-course CI pathway',
+    'alias'=>'shared-course-ci-pathway','description'=>'','catid'=>$categoryId,
+    'access'=>1,'language'=>'*','state'=>1,
+    'courses'=>[['course_id'=>$courseId,'ordering'=>0]]];
+$check((bool)$pathModel->save($siblingPayload),
+    'a second pathway can reference an existing course without transferring ownership');
+$siblingId=(int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='shared-course-ci-pathway'")->loadResult();
+$check($siblingId>0 && $siblingId!==$pathwayId && $siblingId!==$emptyId,
+    'independent shared-course pathway has its own record');
+$assertSiblingUnchanged=static function (string $phase) use ($db,$check,$siblingId,$courseId): void {
+    $row=$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$siblingId)->loadResult();
+    $links=$db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$siblingId)->loadColumn();
+    $check((int)$row===1 && array_map('intval',$links)===[$courseId],
+        'LCM-03 shared-course pathway stays published and linked after '.$phase);
+};
+$assertSiblingUnchanged('authoring');
+
 $emptyDetail=$service->detail($operator,'en-GB',$emptyId);
 $check($emptyDetail['progress']===null && $emptyDetail['required_courses']===0,'empty pathway has no completion percentage');
 // LCM-03: archive hides the public pathway without mutating its course links,
@@ -156,6 +175,7 @@ $archiveDenied = false;
 try { $service->detail($operator,'en-GB',$pathwayId); }
 catch (\RuntimeException $error) { $archiveDenied = $error->getCode() === 404; }
 $check($archiveDenied,'archived pathway cannot be read through the public detail endpoint');
+$assertSiblingUnchanged('archive');
 $archiveGuestDenied = false;
 try { $service->detail($guest, 'en-GB', $pathwayId); }
 catch (\RuntimeException $error) { $archiveGuestDenied = $error->getCode() === 404; }
@@ -186,6 +206,7 @@ $trashDenied = false;
 try { $service->detail($operator, 'en-GB', $pathwayId); }
 catch (\RuntimeException $error) { $trashDenied = $error->getCode() === 404; }
 $check($trashDenied, 'trashed pathway is inaccessible via direct public URL');
+$assertSiblingUnchanged('trash');
 $trashGuestDenied = false;
 try { $service->detail($guest, 'en-GB', $pathwayId); }
 catch (\RuntimeException $error) { $trashGuestDenied = $error->getCode() === 404; }
@@ -274,6 +295,7 @@ $check((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $e
     'blocked pathway purge preserves the referenced record');
 $db->setQuery("DELETE FROM #__associations WHERE context='com_jlms.pathway' AND id=" . $emptyId)->execute();
 $check($pathModel->purgeEmpty($emptyId), 'only an empty trashed pathway can be deleted');
+$assertSiblingUnchanged('empty-pathway purge');
 $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id=' . $emptyId)->loadResult() === 0,
     'empty trashed pathway is removed');
 $check((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $beforeBulkEnrollments,
