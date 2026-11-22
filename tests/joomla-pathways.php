@@ -147,9 +147,12 @@ $assertSiblingUnchanged=static function (string $phase) use ($db,$check,$sibling
 };
 // LCM-05: granular native ACL applies to each selected pathway, not just
 // component-level management. Reuse the real delegated Joomla editor group.
-$editorFixture = json_decode((string)file_get_contents(dirname($root).'/editor-access-fixture.json'),true,32,JSON_THROW_ON_ERROR);
-$delegateGroup = (int)$editorFixture['group'];
-$backendGroup = (int)$editorFixture['backend'];
+$delegateGroupModel = $app->bootComponent('com_users')->getMVCFactory()
+    ->createModel('Group','Administrator',['ignore_request'=>true]);
+$check($delegateGroupModel->save(['id'=>0,'parent_id'=>2,'title'=>'CI pathway lifecycle delegate']),
+    'dedicated pathway ACL group created');
+$delegateGroup = (int)$delegateGroupModel->getState('group.id');
+$backendGroup = $delegateGroup;
 $aclAsset = new \Joomla\CMS\Table\Asset($db);
 $grantAsset = static function(string $name,array $actions,int $group,bool $allowed) use ($aclAsset,$check): void {
     $check($aclAsset->loadByName($name),'LCM-05 Joomla asset exists: '.$name);
@@ -158,10 +161,18 @@ $grantAsset = static function(string $name,array $actions,int $group,bool $allow
     $aclAsset->rules = json_encode($rules,JSON_THROW_ON_ERROR);
     $check($aclAsset->store(),'LCM-05 ACL fixture rule saved for '.$name);
 };
-$grantAsset('com_jlms',['jlms.pathways.manage'],$backendGroup,true);
+$grantAsset('root.1',['core.login.admin'],$backendGroup,true);
+$grantAsset('com_jlms',['core.manage','jlms.pathways.manage'],$backendGroup,true);
 $grantAsset('com_jlms.pathway.category.'.$categoryId,['core.edit','core.edit.state'],$delegateGroup,true);
 $grantAsset('com_jlms.pathway.'.$siblingId,['core.edit.state'],$delegateGroup,false);
-$delegate = new \Joomla\CMS\User\User((int)$editorFixture['user']);
+$delegateUser = new \Joomla\CMS\User\User();
+$check($delegateUser->bind([
+    'name'=>'CI pathway manager', 'username'=>'cipathwaymanager',
+    'email'=>'cipathwaymanager@example.invalid',
+    'password'=>'CI-Pathway-Only-Password-2026','password2'=>'CI-Pathway-Only-Password-2026',
+    'groups'=>[2,$delegateGroup],'block'=>0,'activation'=>'',
+]) && $delegateUser->save(), 'dedicated pathway delegate created');
+$delegate = new \Joomla\CMS\User\User((int)$delegateUser->id);
 $delegate->clearAccessRights();
 $check($delegate->authorise('core.edit.state','com_jlms.pathway.'.$pathwayId)
     && !$delegate->authorise('core.edit.state','com_jlms.pathway.'.$siblingId),
@@ -179,7 +190,7 @@ $check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$s
     'record-level denial preserves sibling state');
 $pathModel->setCurrentUser($operator);
 file_put_contents(dirname($root).'/pathway-acl-fixture.json',json_encode([
-    'allowed'=>$pathwayId,'denied'=>$siblingId,'user'=>(int)$delegate->id,
+    'allowed'=>$pathwayId,'denied'=>$siblingId,'user'=>(int)$delegate->id,'username'=>'cipathwaymanager',
 ],JSON_THROW_ON_ERROR));
 $assertSiblingUnchanged('authoring');
 
