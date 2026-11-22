@@ -43,6 +43,23 @@ expect($storagePathCheck->invoke(null, 'C:/jlms-private') === true, 'LES-03 acce
 expect($storagePathCheck->invoke(null, 'C:' . chr(92) . 'jlms-private') === true, 'LES-03 accepts Windows backslash drive root');
 expect($storagePathCheck->invoke(null, 'C:jlms-private') === false, 'LES-03 rejects Windows drive-relative root');
 expect($storagePathCheck->invoke(null, '../public') === false, 'LES-03 rejects relative storage root');
+
+$capacityStorage = static fn (int $configuredMiB) => new \\Jlms\\Component\\Jlms\\Administrator\\Infrastructure\\ProtectedMaterialStorage(
+    static fn () => new \\Joomla\\Registry\\Registry(['material_max_mib' => $configuredMiB])
+);
+$oneMiBLimit = $capacityStorage(1)->limit();
+$zeroMiBLimit = $capacityStorage(0)->limit();
+$maxMiBLimit = $capacityStorage(20)->limit();
+$oversizedMiBLimit = $capacityStorage(999)->limit();
+expect($oneMiBLimit > 0 && $oneMiBLimit <= 1048576,
+    'LES-04 storage enforces its configured 1 MiB upload ceiling');
+expect($zeroMiBLimit === $oneMiBLimit,
+    'LES-04 invalid zero ceiling is clamped to the smallest supported bound');
+expect($maxMiBLimit > 0 && $maxMiBLimit <= 20 * 1048576,
+    'LES-04 managed uploads cannot exceed the 20 MiB application ceiling');
+expect($oversizedMiBLimit === $maxMiBLimit,
+    'LES-04 oversized configuration cannot bypass the application upload ceiling');
+
 $transcript = '<p>Audio <strong>transcript</strong></p>';
 expect(LessonTranscript::sanitizeInput($transcript, static fn(string $html): string => strip_tags($html, '<p><strong>')) === $transcript,
     'lesson transcript uses the configured HTML sanitizer');
