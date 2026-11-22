@@ -1,3 +1,9 @@
+## 22 novembre 2026 — LCM-05: gate lifecycle chiuso lato software
+
+[PR #965](https://github.com/jeckodevelopment/jd_learn/pull/965) integrata con squash `387eab0ceacd12b61a74dbba51340e90ef17392d`: [CI #45076048707](https://github.com/jeckodevelopment/jd_learn/actions/runs/45076048707) **4/4 verde** (PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e controlli preliminari). L'adapter Finder viene interrogato sulla base dati Joomla per i gate stato/accesso/calendario/lingua, mentre le suite esistenti verificano eventi Finder post-commit e metadati SEO HTTP. Lo snapshot del percorso con i collegamenti didattici ordinati è verificato dopo un vero upgrade del pacchetto, insieme ai test retained su iscrizioni, progressi, attestati e ACL e al gate di backup/ripristino disposable.
+
+[PR #966](https://github.com/jeckodevelopment/jd_learn/pull/966): allineamento dei 7 criteri implementativi LCM-05 e dei registri derivati. Il collaudo manuale dell'indice Smart Search e del ripristino hosting reale resta **Non eseguito**, separato dai criteri software.
+
 ## 22 novembre 2026 — LCM-04: protezione FK esterne dei docenti
 
 [PR #958](https://github.com/jeckodevelopment/jd_learn/pull/958) integrata con squash `2f652b787b461e9385d352d477a87fee7e04d7e4`. [CI #45067620472](https://github.com/jeckodevelopment/jd_learn/actions/runs/45067620472) **4/4 verde**, con test Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 e browser Chromium. [Artefatto installabile di sviluppo JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45067620472/artifacts/14772023216); checksum dello ZIP Joomla interno non verificato in questa nota.
