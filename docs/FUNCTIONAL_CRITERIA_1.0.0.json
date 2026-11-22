@@ -885,35 +885,42 @@
       {
         "id": "revocation",
         "label": "Revoca in corso di sessione su token video/download/quiz",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Application/QuizAttemptService.php",
           "component/administrator/src/Application/VideoProgressService.php",
-          "tests/joomla-video.php"
+          "component/administrator/src/Application/EnrollmentStateService.php",
+          "tests/joomla-cloudflare.php",
+          "tests/joomla-quiz-attempts.php",
+          "tests/materials-http.py"
         ],
         "review": {
-          "reason": "Il contesto quiz e quello video rivalidano l’autorizzazione nelle operazioni protette e nei replay; le fixture coprono revoca di accesso in alcuni percorsi. Il criterio include token video, download e quiz durante sessione: non è disponibile una verifica completa e concorrente di tutti i tipi di risorsa.",
+          "reason": "Completati e verificati i controlli di autorizzazione correnti su token/telemetria video (incluso replay scaduto), rinnovo Cloudflare, quiz aperti e relativi replay/consegne, download protetti GET/HEAD/Range/PDF nella stessa sessione. L'invalidazione delle sessioni player e' transazionale; CI #45021815907 verde su entrambe le matrici Joomla. Token provider esterni gia rilasciati restano soggetti al proprio TTL, senza nuova autorizzazione LMS dopo revoca.",
           "references": [
-            "component/administrator/src/Application/QuizAttemptService.php#private function context",
-            "component/administrator/src/Application/VideoProgressService.php#private function context",
-            "tests/joomla-video.php#revoked access even on replay"
+            "component/administrator/src/Application/VideoProgressService.php#Even a byte-identical replay",
+            "component/administrator/src/Application/EnrollmentStateService.php#Revoking an enrollment also invalidates already-issued server player",
+            "tests/joomla-cloudflare.php#expired playback replay cannot mutate prior progress",
+            "tests/joomla-quiz-attempts.php#revoked user cannot submit open quiz",
+            "tests/materials-http.py#Restored entitlement recovers protected download without data loss"
           ]
         }
       },
       {
         "id": "preserve_history",
         "label": "Storico e progressi conservati dopo revoca nelle casistiche previste",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "tests/joomla-enrollment-state.php",
-          "docs/CLOUDFLARE_STREAM.md"
+          "tests/joomla-quiz-attempts.php",
+          "tests/materials-http.py",
+          "tests/joomla-video.php"
         ],
         "review": {
-          "reason": "La sospensione/cancellazione conserva progressi e dati di assegnazione e Cloudflare documenta la conservazione dello storico dopo revoca. La prova sistematica di ogni modalità di revoca e risorsa protetta, inclusi download, quiz e ripristino, resta incompleta.",
+          "reason": "La revoca sospende le nuove operazioni senza cancellare i progressi, i punteggi e le risposte quiz gia salvate o gli allegati; le fixture Joomla e HTTP verificano che le richieste negate non modifichino lo storico e che il ripristino dei diritti recuperi dati e accesso. Copertura CI #45021815907, accettazione manuale Joomla distinta.",
           "references": [
-            "tests/joomla-enrollment-state.php#state history retained",
-            "docs/CLOUDFLARE_STREAM.md#storico e progressi non vengono cancellati",
-            "tests/joomla-enrollment-state.php#cancellation preserves prior learning and assignment data"
+            "tests/joomla-enrollment-state.php#cancellation preserves prior learning and assignment data",
+            "tests/joomla-quiz-attempts.php#previously saved answers survive access revocation",
+            "tests/materials-http.py#Restored entitlement recovers protected download without data loss",
+            "tests/joomla-video.php#revoked access even on replay"
           ]
         }
       }
