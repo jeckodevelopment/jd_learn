@@ -77,6 +77,7 @@ if(in_array($mode,['asset-checkpoint','asset-retained'],true)){
      "JOIN #__jlms_certificates c ON c.id=d.certificate_id ".
      "JOIN #__jlms_assets a ON a.id=d.pdf_asset_id ".
      "WHERE d.status='ready' AND a.mime_type='application/pdf' AND a.storage='local' ".
+     "AND a.storage_key LIKE '%.php' ".
      "ORDER BY d.id LIMIT 1")->loadObject();
  ruleExpect($pdf!==null,'At least one real rendered certificate PDF exists');
  $certificateParams=\Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
