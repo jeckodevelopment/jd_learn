@@ -409,7 +409,7 @@
           "tests/cat04-breadcrumb.php"
         ],
         "review": {
-          "reason": "Le rotte RouterView di corsi/categorie/percorsi usano gli alias SEF nativi; PublicMetadataHelper genera canonical, Open Graph, Twitter e immagini social locali sicure; i breadcrumb dettagli corso e percorso evitano duplicati con voci menu dirette. Test HTTP su Joomla disposable controllano canonical e og:url delle categorie pubbliche nelle lingue IT/EN con SEF on/off, distinguendo il noindex dei corsi tradotti riservati; test PHP verificano immagini e breadcrumb. Collaudo manuale di menu e template reali separato.",
+          "reason": "Le rotte RouterView di corsi/categorie/percorsi usano gli alias SEF nativi; PublicMetadataHelper genera canonical, Open Graph, Twitter e immagini social locali sicure; i breadcrumb dettagli corso e percorso evitano duplicati con voci menu dirette. Test HTTP su Joomla disposable controllano og:url, canonical dove presente e hreflang alternates del filtro lingua Joomla per categorie pubbliche IT/EN con SEF on/off, distinguendo il noindex dei corsi tradotti riservati; test PHP verificano immagini e breadcrumb. Collaudo manuale di menu e template reali separato.",
           "references": [
             "component/site/src/Service/Router.php#getCourseSegment",
             "component/site/src/Helper/PublicMetadataHelper.php#addHeadLink",
