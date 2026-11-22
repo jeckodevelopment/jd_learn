@@ -93,6 +93,14 @@ try:
         b'<?php http_response_code' not in response and
         not response.startswith(stored[:32]),
         'Unauthenticated direct HTTP request cannot reveal the guarded blob')
+ # LES-03: no alternate anonymous HEAD/Range probe can disclose ciphertext
+ # or obtain metadata from the managed private PHP wrapper.
+ for method,headers in [('HEAD',{}),('GET',{'Range':'bytes=0-15'})]:
+  _,denied,denied_headers=request(guest,'/media/com_jlms/private/'+managed_file['storage_key'],expected=404,method=method,headers=headers)
+  expect(denied==b'' if method=='HEAD' else b'MANAGED_HTTP_PRIVATE_PROBE_2026' not in denied and stored[:32] not in denied,
+         'Managed private blob stays inaccessible to anonymous '+method+' requests')
+  expect(denied_headers.get('Content-Range') is None,
+         'Managed private blob never exposes a byte-range response')
  act_material('delete',managed_file['id'])
  configure(material_storage_root=str(private))
  # No public fallback and no uploads with executable disguises.
