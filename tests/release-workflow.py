@@ -42,10 +42,14 @@ with tempfile.TemporaryDirectory() as tmp:
     note=root/'docs/RELEASE_NOTES_CANDIDATE_1.0.0.md'
     args=[
         '--version','1.0.0','--commit','a'*40,'--package',archive,
-        '--feed',feed,'--checksums',sums,'--notes',note,'--output',evidence,
+        '--feed',feed,'--checksums',sums,'--notes',note,
+        '--release-notes','Prima versione stabile di JD Learn','--output',evidence,
     ]
     call('tools/release_candidate_evidence.py',*args)
     call('tools/release_candidate_evidence.py',*args,'--verify')
+    changed=list(args)
+    changed[changed.index('--release-notes')+1]='Different notes on same ZIP'
+    call('tools/release_candidate_evidence.py',*changed,'--verify',expected=1)
     sums.write_text('0'*64+f"  {archive.name}\n")
     call('tools/release_candidate_evidence.py',*args,'--verify',expected=1)
     sums.write_text(f"{hashlib.sha256(archive.read_bytes()).hexdigest()}  {archive.name}\n")
