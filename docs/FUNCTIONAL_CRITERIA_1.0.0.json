@@ -153,34 +153,39 @@
       {
         "id": "finder_seo",
         "label": "Finder e SEO lifecycle",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Application/PublicationService.php",
-          "component/administrator/src/Model/CourseModel.php",
-          "docs/IMPLEMENTATION_HISTORY.md"
+          "plugins/finder/jlms/src/Extension/Jlms.php",
+          "tests/joomla-courses-ui.php",
+          "tests/joomla-publication-review.php",
+          "tests/http-smoke.py"
         ],
         "review": {
-          "reason": "Il workflow e il modello inviano la notifica dopo il commit. Le fixture osservano il dispatcher. Rimane il collaudo dell’indice effettivo con cutoff di accesso, lingua e metadati SEO.",
+          "reason": "Il software esclude dalla selezione SQL dell'adapter Finder i corsi archiviati, cestinati, non pubblicati, riservati, calendarizzati o con lingua non coerente, riammessi con pubblicazione esplicita e gate pubblici. Gli eventi dopo commit sono verificati; i metadati SEO nella pagina HTTP pubblica sono coperti. CI Joomla MySQL/MariaDB 4/4 #45076048707. La materializzazione effettiva dell'indice Smart Search e il collaudo SEO sul sito ospitato restano prove manuali distinte.",
           "references": [
-            "component/administrator/src/Application/PublicationService.php#Archive/restore Finder refresh failed",
-            "component/administrator/src/Model/CourseModel.php#private function refreshLifecycleFinder",
-            "docs/IMPLEMENTATION_HISTORY.md#test E2E dell"
+            "plugins/finder/jlms/src/Extension/Jlms.php#getListQuery",
+            "tests/joomla-courses-ui.php#LCM-05: the installed Finder adapter",
+            "tests/joomla-publication-review.php#finderLifecycleWitness",
+            "tests/http-smoke.py#Native document head uses"
           ]
         }
       },
       {
         "id": "history_upgrade",
         "label": "Copertura trasversale storico, attestati e upgrade",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
+          "tests/joomla-pathways.php",
           "tests/joomla-dashboard.php",
-          "docs/LIFECYCLE_1.0.0_APPROVED.md"
+          "tests/joomla-editor-access.php",
+          ".github/workflows/ci.yml"
         ],
         "review": {
-          "reason": "Le fixture retained conservano progressi e attestati. La combinazione trasversale di transizioni, ruoli, storico e backup/ripristino richiede esecuzioni ulteriori.",
+          "reason": "La CI installa e aggiorna il pacchetto Joomla preservando dati: snapshot dei percorsi e associazioni, progressi ed iscrizioni, attestati emessi e PDF scaricabili, permessi ACL e checkout. La stessa matrice include il backup/ripristino effettivo del database e del documento PDF in una fixture disposable AUT-04. Verificato su MySQL 8.4 e MariaDB 10.6 in CI #45076048707; collaudo e procedura backup del sito reale separati.",
           "references": [
+            "tests/joomla-pathways.php#readLifecycleSnapshot",
             "tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade",
-            "docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)"
+            ".github/workflows/ci.yml#AUT-04 full database backup and restore protects historical course evidence"
           ]
         }
       }
