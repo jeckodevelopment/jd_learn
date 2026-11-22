@@ -1,3 +1,9 @@
+## 22 novembre 2026 — LES-04: gate dei limiti di capacità (PR #941)
+
+[PR #941](https://github.com/jeckodevelopment/jd_learn/pull/941) integrata in `main` con squash `ee5e10be48069468a7fdcbf3a61d9d617f35ac03`; [CI #45049842678](https://github.com/jeckodevelopment/jd_learn/actions/runs/45049842678) **4/4 verde** (preflight, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6). [Artefatto di sviluppo JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45049842678/artifacts/14764878959); il checksum dello ZIP Joomla interno non è registrato in questa evidenza.
+
+La fixture Joomla disposable `tests/joomla-video.php` verifica che il limite effettivo degli upload gestiti resti positivo e non superi 1 MiB o 20 MiB secondo la configurazione, che 0 venga ricondotto al minimo e che 999 MiB non superi il massimo. I limiti PHP dell'hosting possono restringere ulteriormente la soglia. Nessuna nuova capacità di transcodifica, distribuzione CDN o modifica runtime. **LES-04 resta Parziale** nel registro funzionale finché la verifica operativa di storage/CDN reali non sia eseguita; la PR incrementa la prova automatica, non promuove criteri `unverifiable` o l'accettazione Joomla. Avanzamento minimo globale invariato rispetto al registro autorevole.
+
 ## 22 novembre 2026 — AUT-01–AUT-05: chiusura dell'implementazione software
 
 Il gruppo AUT è **completato sul piano implementativo 1.0.0**: AUT-01 (6/6), AUT-02 (4/4), AUT-03 (5/5), AUT-04 (5/5) e AUT-05 (3/3), per un totale di **23/23 criteri**. La chiusura è stata consolidata dalle PR seguenti, tutte integrate in `main`:
