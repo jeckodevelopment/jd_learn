@@ -67,6 +67,29 @@ if(($argv[2]??'')==='worker'){
 $f=json_decode(file_get_contents(dirname($root).'/dashboard-fixture.json'),true,16,JSON_THROW_ON_ERROR);
 $rf=json_decode(file_get_contents(dirname($root).'/roster-fixture.json'),true,16,JSON_THROW_ON_ERROR);$course=(int)$f['course'];$enrollment=(int)$f['active'];$owner=new \Joomla\CMS\User\User($f['owner']);$manager=new \Joomla\CMS\User\User($rf['manager']);
 $count=static fn()=>(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_state_changes WHERE enrollment_id='.$enrollment)->loadResult();
+
+$seedPlayerSession=static function(int $enrollmentId,int $lessonId)use($db):string{
+    $sessionId=stateKey();
+    $sourceRevision=(int)$db->setQuery('SELECT source_revision FROM #__jlms_lessons WHERE id='.$lessonId)->loadResult();
+    $exists=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE enrollment_id='.$enrollmentId.' AND lesson_id='.$lessonId)->loadResult();
+    if (!$exists) {
+        // The schema deliberately requires a persisted lesson-progress parent
+        // before a player session can be issued; mirror real playback setup.
+        $versionId=(int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id='.$enrollmentId)->loadResult();
+        $progress=(object)['enrollment_id'=>$enrollmentId,'course_version_id'=>$versionId,
+            'lesson_id'=>$lessonId,'source_revision'=>$sourceRevision,'coverage_json'=>'[]',
+            'covered_ms'=>0,'resume_ms'=>0,'state'=>'started',
+            'last_activity_at'=>gmdate('Y-m-d H:i:s'),'revision'=>1];
+        $db->insertObject('#__jlms_lesson_progress',$progress);
+    }
+    $row=(object)['id'=>$sessionId,'enrollment_id'=>$enrollmentId,'lesson_id'=>$lessonId,
+        'source_revision'=>$sourceRevision,'sequence_no'=>0,'player_state_json'=>'{}',
+        'expires_at'=>gmdate('Y-m-d H:i:s',time()+7200)];
+    $db->insertObject('#__jlms_progress_sessions',$row);
+    return $sessionId;
+};
+$playerSessionExists=static fn(string $id):bool=>(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE id='.$db->quote($id))->loadResult()===1;
+
 $stable=static fn(int $id)=>$db->setQuery('SELECT user_id,subject_key,course_id,course_version_id,edition_id,required_total,completed_total,started_at,completed_at,last_activity_at,last_lesson_id,starts_at,ends_at FROM #__jlms_enrollments WHERE id='.$id)->loadAssoc();
 if(($argv[2]??'')==='retained'){
  $saved=json_decode(file_get_contents($path),true,16,JSON_THROW_ON_ERROR);
@@ -104,6 +127,8 @@ if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) { throw new \Runtim
 $cancelUser = new \Joomla\CMS\User\User((int) $cancelUser->id);
 $cancelEnrollment = $learning->start($cancelUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 $cancelBefore = $stable($cancelEnrollment);
+$cancelPlayer=$seedPlayerSession($cancelEnrollment,(int)$f['lesson']);
+stateExpect($playerSessionExists($cancelPlayer),'cancelled fixture starts with a persistent player session');
 $cancelPreview = $service->editor($actor,$course,$cancelEnrollment,'cancelled');
 stateExpect($cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled','valid cancellation preview');
 $cancelCommand = stateCommand($cancelPreview);
@@ -111,6 +136,7 @@ $cancelRecord = $service->apply($actor,...$cancelCommand);
 stateExpect($service->apply($actor,...$cancelCommand) === $cancelRecord,'replayed cancellation does not duplicate event');
 stateExpect((string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled','cancellation persisted');
 stateExpect($cancelBefore === $stable($cancelEnrollment),'cancellation preserves prior learning and assignment data');
+stateExpect(!$playerSessionExists($cancelPlayer),'cancellation invalidates player session without erasing learning history');
 stateDenied(fn()=>$learning->resumeTarget($cancelUser,'en-GB',$cancelEnrollment),403,'cancelled enrollment denies classroom');
 stateExpect($service->editor($actor,$course,$cancelEnrollment,'active')['impact']['blocked'] !== null,'cancelled enrollment cannot be reactivated');
 stateExpect($service->editor($actor,$course,$cancelEnrollment,'cancelled')['impact']['blocked'] !== null,'cancelled enrollment cannot be cancelled twice');
@@ -125,7 +151,10 @@ echo json_encode(['enrollment_cancellation_checks' => $checks, 'status' => 'pass
 exit;
 }
 $before=$stable($enrollment);$groups=$db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
+$suspendedPlayer=$seedPlayerSession($enrollment,(int)$f['lesson']);
+stateExpect($playerSessionExists($suspendedPlayer),'active enrollment holds a player session before suspension');
 $i=$service->editor($manager,$course,$enrollment,'suspended');$command=stateCommand($i);$event=$service->apply($manager,...$command);
+stateExpect(!$playerSessionExists($suspendedPlayer),'suspension invalidates persistent player session');
 stateExpect($service->editor($actor,$course,$enrollment)['impact']['previous_status']==='suspended','authorized suspension persisted');
 stateExpect($service->apply($manager,...$command)===$event&&$count()===1,'same transport retry creates one event');
 stateDenied(fn()=>$learning->resumeTarget($owner,'en-GB',$enrollment),403,'suspension denies classroom resume');
