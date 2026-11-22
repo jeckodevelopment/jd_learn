@@ -137,6 +137,36 @@ $accessChange = (object)['id' => $ids['Alpha'], 'content_access' => 1];
 $db->updateObject('#__jlms_courses', $accessChange, 'id');
 listExpect(in_array($ids['Alpha'], $finderIds(), true),
     'Finder must index the same course when both catalog and content access are public');
+
+ // LCM-05: the installed Finder adapter must apply publication and SEO
+ // eligibility on persisted Joomla rows, not just consume a dispatched event.
+$finderSubject = (int)$ids['Alpha'];
+$finderVisible = static fn():bool => in_array($finderSubject,$finderIds(),true);
+$finderState = (object)['id'=>$finderSubject,'state'=>2];
+$db->updateObject('#__jlms_courses',$finderState,'id');
+listExpect(!$finderVisible(),'Finder index query excludes an archived public course');
+$finderState->state=-2;
+$db->updateObject('#__jlms_courses',$finderState,'id');
+listExpect(!$finderVisible(),'Finder index query excludes a trashed public course');
+$finderState->state=0;
+$db->updateObject('#__jlms_courses',$finderState,'id');
+listExpect(!$finderVisible(),'Finder index query excludes a restored but unpublished course');
+$finderState->state=1;
+$db->updateObject('#__jlms_courses',$finderState,'id');
+listExpect($finderVisible(),'Finder index query restores eligibility only after explicit publication');
+$finderWindow=(object)['id'=>$finderSubject,'publish_up'=>'2099-05-01 00:00:00'];
+$db->updateObject('#__jlms_courses',$finderWindow,'id');
+listExpect(!$finderVisible(),'Finder excludes timed publication that cannot be held in a static index');
+$finderWindow->publish_up=null;
+$db->updateObject('#__jlms_courses',$finderWindow,'id',true);
+listExpect($finderVisible(),'Removing the scheduled publication restores Finder eligibility');
+$finderLanguage=(object)['id'=>$finderSubject,'language'=>'it-IT'];
+$db->updateObject('#__jlms_courses',$finderLanguage,'id');
+listExpect(!$finderVisible(),'Finder enforces category/course language consistency');
+$finderLanguage->language='en-GB';
+$db->updateObject('#__jlms_courses',$finderLanguage,'id');
+listExpect($finderVisible(),'Matching category/course language restores Finder eligibility');
+
 $accessChange = (object)['id' => $ids['Alpha'], 'content_access' => 2];
 $db->updateObject('#__jlms_courses', $accessChange, 'id');
 listExpect(!in_array($ids['Alpha'], $finderIds(), true),
