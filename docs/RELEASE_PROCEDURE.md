@@ -13,6 +13,12 @@ Per l'upgrade su siti che possiedono già i Mail Templates, il `postflight` deve
 
 Le versioni del package seguono [la policy SemVer del progetto](VERSIONING.md). Prima di una release stabile, gli strumenti rifiutano numeri non canonici (zeri iniziali) e il controllo strutturale verifica che manifest package e componente riportino la stessa versione. Le versioni di sviluppo restano nel canale `-dev`; non sono release stabili.
 
+## DOC-10 — evidenza vincolata alla candidata
+
+Il workflow di preparazione `publish=false` produce anche `RELEASE_CANDIDATE_EVIDENCE.json`, con commit sorgente, versione, nome e SHA-256 dello **ZIP Joomla interno**, hash del feed e della bozza controllata delle note. Il record è verificato nuovamente dal job di pubblicazione prima di creare la GitHub Release. La verifica fallisce se ZIP, feed, checksum o note non corrispondono più alla candidata.
+
+L'evidenza non è un'approvazione: `status=candidate_not_approved` e `manual_joomla_acceptance=not_asserted`. Gli amministratori devono comunque registrare nel testbook collaudi, compatibilità e decisione di rilascio; il record non promuove automaticamente criteri DOC-10 né pubblica la 1.0.0.
+
 ## Operazioni prima della prima pubblicazione
 
 1. Validare la compatibilità della release con la matrice Joomla/PHP approvata; attualmente il generatore usa **Joomla 6.x e PHP minimo 8.3** come default tecnico da verificare rispetto ai target effettivi. Se serve una matrice diversa modificarla esplicitamente, non aumentare arbitrariamente il supporto.
