@@ -159,7 +159,7 @@ jobs:
       - name: Install test runtime extensions
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends python3 nodejs ffmpeg unzip libpng-dev libjpeg62-turbo-dev libonig-dev libxml2-dev libzip-dev
+          apt-get install -y --no-install-recommends python3 nodejs ffmpeg unzip libpng-dev libjpeg62-turbo-dev libonig-dev libxml2-dev libzip-dev mariadb-client
           docker-php-ext-configure gd --with-jpeg
           docker-php-ext-install -j2 pdo_mysql mysqli gd mbstring dom simplexml zip
       - name: Verify runtime PHP security patch floor
@@ -395,6 +395,19 @@ jobs:
         run: |
           php tests/joomla-programme-restore.php .runtime/joomla
           python3 tests/programme-restore-http.py .runtime/joomla
+      - name: AUT-04 full database backup and restore protects historical course evidence
+        run: |
+          set -eu
+          test "$JLMS_TEST_DISPOSABLE" = '1'
+          php tests/joomla-programme-restore.php .runtime/joomla checkpoint
+          export MYSQL_PWD="$JLMS_TEST_PASSWORD"
+          # Only the dedicated ephemeral jlms_test schema is touched; the
+          # remote test service is never an external Joomla installation.
+          mariadb-dump --host=db --user="$JLMS_TEST_USER" --single-transaction             --skip-lock-tables --no-tablespaces --add-drop-table jlms_test             > .runtime/aut04-jlms-backup.sql
+          test -s .runtime/aut04-jlms-backup.sql
+          php tests/joomla-programme-restore.php .runtime/joomla tamper
+          mariadb --host=db --user="$JLMS_TEST_USER" jlms_test             < .runtime/aut04-jlms-backup.sql
+          php tests/joomla-programme-restore.php .runtime/joomla retained
       - name: Upgrade the full package with retained data and enabled providers
         run: |
           PACKAGE_VERSION="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
