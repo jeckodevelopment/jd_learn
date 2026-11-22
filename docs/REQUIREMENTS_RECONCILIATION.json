@@ -5,8 +5,8 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Completata": 41,
-      "Parziale": 182,
+      "Completata": 42,
+      "Parziale": 181,
       "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 62.74,
-    "development_evidence_floor_percent": 62.74,
+    "percent": 62.86,
+    "development_evidence_floor_percent": 62.86,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -54,11 +54,11 @@
         "label": "Corsi, versioni e pubblicazione",
         "requirements": 20,
         "weight_percent": 9.35,
-        "development_evidence_floor_percent": 76.94,
+        "development_evidence_floor_percent": 78.19,
         "manual_acceptance_coverage_percent": 0,
         "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
-        "unverifiable_criteria": 17,
+        "unverifiable_criteria": 16,
         "unassessed_criteria": 0
       },
       {
