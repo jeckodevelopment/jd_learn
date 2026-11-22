@@ -135,16 +135,18 @@
       {
         "id": "granular_acl",
         "label": "ACL granulari e selezioni miste HTTP",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
+          "component/administrator/src/Model/PathwayModel.php",
           "tests/joomla-pathways.php",
-          "docs/QA_TESTBOOK.md"
+          "tests/http-smoke.py"
         ],
         "review": {
-          "reason": "Il repository contiene riferimenti pertinenti al criterio «ACL granulari e selezioni miste HTTP», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "reason": "Utente Joomla delegato con permessi ereditati dalla categoria e diniego esplicito per singolo percorso: il modello e le richieste POST autenticate con token CSRF reale negano interamente la selezione mista, consentendo archive/restore/publish del solo record autorizzato. Verifiche Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 in CI #45073750176, senza anticipare collaudo manuale.",
           "references": [
-            "tests/joomla-pathways.php#L1-L25",
-            "docs/QA_TESTBOOK.md#L1-L25"
+            "component/administrator/src/Model/PathwayModel.php#public function changeStates",
+            "tests/joomla-pathways.php#LCM-05: granular native ACL",
+            "tests/http-smoke.py#LCM-05: delegated operator"
           ]
         }
       },
