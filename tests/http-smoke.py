@@ -730,6 +730,32 @@ try:
  def pathway_public_visible():
   with public_http.open(base+'/index.php?option=com_jlms&view=pathways',timeout=15) as response:
    return 'CI learning pathway' in response.read().decode('utf-8')
+ # LCM-05: an authenticated, CSRF-valid mixed selection must be atomic.
+ # The first record exists; the second does not. Neither archive nor trash may
+ # partially change the valid record when selection validation fails.
+ for lifecycle_task in ('archive','trash'):
+  endpoint=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.'+lifecycle_task})
+  mixed=urlencode([(csrf_field,'1'),('cid[]',str(pathway_id)),('cid[]','999999999')]).encode()
+  try:
+   with http.open(Request(endpoint,data=mixed,method='POST'),timeout=20) as response:
+    response.read()
+  except HTTPError as error:
+   expect(error.code==403,'Pathway '+lifecycle_task+' rejects a mixed valid and missing selection')
+  else:
+   raise RuntimeError('Pathway '+lifecycle_task+' accepted a partial mixed selection')
+  expect(pathway_public_visible(),'Rejected '+lifecycle_task+' mixed selection leaves pathway public')
+ # Purge must never accept more than one selected ID, even with a valid token.
+ purge_endpoint=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.purge'})
+ purge_multi=urlencode([(csrf_field,'1'),('cid[]',str(pathway_id)),('cid[]','999999999')]).encode()
+ try:
+  with http.open(Request(purge_endpoint,data=purge_multi,method='POST'),timeout=20) as response:
+   response.read()
+ except HTTPError as error:
+  expect(error.code==422,'Pathway purge refuses multiple selected IDs')
+ else:
+  raise RuntimeError('Pathway purge accepted multiple IDs')
+ expect(pathway_public_visible(),'Rejected multi-purge leaves pathway public')
+ print(json.dumps({'pathway_lifecycle_mixed_selection_http_checks':6,'status':'passed'}))
  pathway_transition('archive')
  expect(not pathway_public_visible(),'Authenticated HTTP archive hides pathway from public catalogue')
  pathway_transition('restore')
