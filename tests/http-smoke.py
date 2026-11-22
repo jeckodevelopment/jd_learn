@@ -756,6 +756,35 @@ try:
   raise RuntimeError('Pathway purge accepted multiple IDs')
  expect(pathway_public_visible(),'Rejected multi-purge leaves pathway public')
  print(json.dumps({'pathway_lifecycle_mixed_selection_http_checks':6,'status':'passed'}))
+ # LCM-05: delegated operator holds category-scoped lifecycle rights for
+ # the first pathway and an explicit native record-level deny for its sibling.
+ acl_data=json.loads((root.parent/'pathway-acl-fixture.json').read_text())
+ _,delegated_pathways=delegated_get('/administrator/index.php?option=com_jlms&view=pathways')
+ delegated_form=next((f for f in Page(delegated_pathways).forms if f['id']=='adminForm'),None)
+ expect(delegated_form is not None,'Delegated pathway manager can use native Joomla list form')
+ delegated_csrf=next((key for key,value in delegated_form['fields'].items()
+                      if re.fullmatch(r'[0-9a-f]{32}',key) and value=='1'),None)
+ expect(delegated_csrf is not None,'Delegated pathway form exposes its own session token')
+ def delegated_lifecycle(task,ids,denied):
+  endpoint=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.'+task})
+  body=urlencode([(delegated_csrf,'1')]+[('cid[]',str(path)) for path in ids]).encode()
+  try:
+   with delegated_http.open(Request(endpoint,data=body,method='POST'),timeout=20) as response:
+    response.read()
+   if denied:raise RuntimeError('Delegated '+task+' unexpectedly accepted a forbidden record')
+  except HTTPError as error:
+   if not denied or error.code!=403:raise
+  expect(pathway_public_visible() if denied else True,'Delegated lifecycle request completed safely')
+ delegated_lifecycle('archive',[acl_data['allowed'],acl_data['denied']],True)
+ delegated_lifecycle('trash',[acl_data['allowed'],acl_data['denied']],True)
+ delegated_lifecycle('archive',[acl_data['allowed']],False)
+ expect(not pathway_public_visible(),'Delegated category-scoped archive hides only allowed pathway')
+ delegated_lifecycle('restore',[acl_data['allowed']],False)
+ delegated_lifecycle('publish',[acl_data['allowed']],False)
+ expect(pathway_public_visible(),'Delegated restore and publish bring allowed pathway back')
+ expect('Shared-course CI pathway' in get('/index.php?option=com_jlms&view=pathways')[1],
+        'Explicitly denied sibling remains published throughout delegated lifecycle')
+ print(json.dumps({'pathway_lifecycle_record_acl_http_checks':8,'status':'passed'}))
  pathway_transition('archive')
  expect(not pathway_public_visible(),'Authenticated HTTP archive hides pathway from public catalogue')
  pathway_transition('restore')
