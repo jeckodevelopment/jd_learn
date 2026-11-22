@@ -38,7 +38,7 @@ final class Jlms extends Adapter implements SubscriberInterface
     public function onFinderAfterSave(FinderEvent\AfterSaveEvent $event): void
     {
         if ($event->getContext() === 'com_jlms.course') {
-            $this->reindex((int) $event->getItem()->id);
+            $this->refreshCourse((int) $event->getItem()->id);
             return;
         }
         if ($event->getContext() === 'com_categories.category'
@@ -60,7 +60,7 @@ final class Jlms extends Adapter implements SubscriberInterface
     public function onFinderChangeState(FinderEvent\AfterChangeStateEvent $event): void
     {
         if ($event->getContext() === 'com_jlms.course') {
-            foreach ($event->getPks() as $id) { $this->reindex((int) $id); }
+            foreach ($event->getPks() as $id) { $this->refreshCourse((int) $id); }
         } elseif ($event->getContext() === 'com_categories.category') {
             $ids = array_map('intval', $event->getPks());
             if ($ids) {
@@ -74,10 +74,25 @@ final class Jlms extends Adapter implements SubscriberInterface
         }
     }
 
+    /** Keep stored Finder links aligned when a course becomes noindex or inaccessible. */
+    private function refreshCourse(int $id): void
+    {
+        if ($id < 1) { return; }
+        $query = $this->getListQuery()->where('a.id = ' . $id);
+        $visible = (bool) $this->getDatabase()->setQuery($query, 0, 1)->loadResult();
+        if ($visible) {
+            $this->reindex($id);
+        } else {
+            // Reindex cannot index a record filtered out by ACL/publication constraints.
+            // Remove any previously published URL instead of retaining a stale search hit.
+            $this->remove($id);
+        }
+    }
+
     private function reindexAllCourses(): void
     {
         $q = $this->getDatabase()->createQuery()->select('a.id')->from($this->getDatabase()->quoteName($this->table, 'a'));
-        foreach ($this->getDatabase()->setQuery($q)->loadColumn() as $id) { $this->reindex((int) $id); }
+        foreach ($this->getDatabase()->setQuery($q)->loadColumn() as $id) { $this->refreshCourse((int) $id); }
     }
 
     protected function index(Result $item): void
@@ -102,13 +117,15 @@ final class Jlms extends Adapter implements SubscriberInterface
         $all = '*';
         $extension = 'com_jlms.course';
         $query->select($db->quoteName([
-                'a.id', 'a.title', 'a.summary', 'a.state', 'a.language', 'a.catid', 'a.catalog_access',
+                'a.id', 'a.title', 'a.summary', 'a.state', 'a.language', 'a.catid', 'a.catalog_access', 'a.content_access',
                 'a.current_version_id', 'a.publish_up', 'a.publish_down', 'cat.title', 'cat.lft', 'cat.rgt',
-            ], ['id', 'title', 'summary', 'state', 'language', 'catid', 'catalog_access', 'current_version_id', 'publish_up', 'publish_down', 'category_title', 'category_lft', 'category_rgt']))
+            ], ['id', 'title', 'summary', 'state', 'language', 'catid', 'catalog_access', 'content_access', 'current_version_id', 'publish_up', 'publish_down', 'category_title', 'category_lft', 'category_rgt']))
             ->from($db->quoteName($this->table, 'a'))
             ->innerJoin($db->quoteName('#__categories', 'cat') . ' ON cat.id = a.catid AND cat.extension = ' . $db->quote($extension))
             ->innerJoin($db->quoteName('#__jlms_course_versions', 'v') . ' ON v.id = a.current_version_id AND v.course_id = a.id AND v.status = ' . $db->quote('published'))
-            ->where('a.state = 1')->where('a.catalog_access = 1')->where('cat.published = 1')->where('cat.access = 1')
+            // Finder exposes only the same fully-public courses that receive canonical/share metadata.
+            // Catalog-only promotional cards with protected lesson access remain outside search indexes.
+            ->where('a.state = 1')->where('a.catalog_access = 1')->where('a.content_access = 1')->where('cat.published = 1')->where('cat.access = 1')
             ->where('(cat.language = ' . $db->quote($all) . ' OR cat.language = a.language)')
             // Scheduled publication boundaries cannot be maintained by a static search index.
             ->where('(a.publish_up IS NULL OR a.publish_up = ' . $db->quote('0000-00-00 00:00:00') . ')')
