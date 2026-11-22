@@ -106,6 +106,7 @@ $this->difficulty = $this->getModel()->getDifficulty();
         } else {
             $this->getDocument()->setTitle((string) $this->category->title);
             $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
+            $app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         }
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
