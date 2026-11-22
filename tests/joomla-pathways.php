@@ -145,6 +145,42 @@ $assertSiblingUnchanged=static function (string $phase) use ($db,$check,$sibling
     $check((int)$row===1 && array_map('intval',$links)===[$courseId],
         'LCM-03 shared-course pathway stays published and linked after '.$phase);
 };
+// LCM-05: granular native ACL applies to each selected pathway, not just
+// component-level management. Reuse the real delegated Joomla editor group.
+$editorFixture = json_decode((string)file_get_contents(dirname($root).'/editor-access-fixture.json'),true,32,JSON_THROW_ON_ERROR);
+$delegateGroup = (int)$editorFixture['group'];
+$backendGroup = (int)$editorFixture['backend'];
+$aclAsset = new \\Joomla\\CMS\\Table\\Asset($db);
+$grantAsset = static function(string $name,array $actions,int $group,bool $allowed) use ($aclAsset,$check): void {
+    $check($aclAsset->loadByName($name),'LCM-05 Joomla asset exists: '.$name);
+    $rules = json_decode((string)$aclAsset->rules,true) ?: [];
+    foreach ($actions as $action) { $rules[$action][(string)$group] = $allowed; }
+    $aclAsset->rules = json_encode($rules,JSON_THROW_ON_ERROR);
+    $check($aclAsset->store(),'LCM-05 ACL fixture rule saved for '.$name);
+};
+$grantAsset('com_jlms',['jlms.pathways.manage'],$backendGroup,true);
+$grantAsset('com_jlms.pathway.category.'.$categoryId,['core.edit','core.edit.state'],$delegateGroup,true);
+$grantAsset('com_jlms.pathway.'.$siblingId,['core.edit.state'],$delegateGroup,false);
+$delegate = new \\Joomla\\CMS\\User\\User((int)$editorFixture['user']);
+$delegate->clearAccessRights();
+$check($delegate->authorise('core.edit.state','com_jlms.pathway.'.$pathwayId)
+    && !$delegate->authorise('core.edit.state','com_jlms.pathway.'.$siblingId),
+    'delegated Joomla ACL grants first pathway and explicitly denies second');
+$pathModel->setCurrentUser($delegate);
+$check(!$pathModel->changeStates([$pathwayId,$siblingId],2),
+    'delegated mixed selection is rejected atomically on record-level ACL deny');
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$pathwayId)->loadResult()===1,
+    'record-specific ACL denial rolls back a prior permitted pathway');
+$check($pathModel->changeStates([$pathwayId],2),
+    'same delegate can archive the individually authorized pathway');
+$check($pathModel->changeStates([$pathwayId],0) && $pathModel->changeStates([$pathwayId],1),
+    'delegate restores and explicitly republishes only the permitted pathway');
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$siblingId)->loadResult()===1,
+    'record-level denial preserves sibling state');
+$pathModel->setCurrentUser($operator);
+file_put_contents(dirname($root).'/pathway-acl-fixture.json',json_encode([
+    'allowed'=>$pathwayId,'denied'=>$siblingId,'user'=>(int)$delegate->id,
+],JSON_THROW_ON_ERROR));
 $assertSiblingUnchanged('authoring');
 
 $emptyDetail=$service->detail($operator,'en-GB',$emptyId);
