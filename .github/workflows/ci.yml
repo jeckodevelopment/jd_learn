@@ -93,6 +93,7 @@ jobs:
           php tests/doc07-configuration-diagnostics.php
           php tests/catalog-literal-search.php
           php tests/cat04-public-metadata.php
+          php tests/cat04-breadcrumb.php
           python3 tests/frontend-contract-hooks.py
           python3 tests/frontend-release-gate.py
           python3 tests/frontend-catalog-options.py
