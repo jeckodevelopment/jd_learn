@@ -59,10 +59,29 @@ try:
  url,html=request(urljoin(url,editor['action']),editor['fields']|{'task':'course.apply',field:'Value saved over HTTP'})
  editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect(editor['fields'][field]=='Value saved over HTTP','Native form submits, saves and reloads custom course value')
- url,html=request(urljoin(url,editor['action']),editor['fields']|{'task':'course.apply','jform[summary]':'x'*501,field:'Unsaved native field correction'})
+ # AUT-01: a rejected save must restore *all* submitted native fields, not
+ # just the custom field. No partial write may leak into the persisted course.
+ original_title=editor['fields']['jform[title]']
+ original_summary=editor['fields'].get('jform[summary]','')
+ original_description=editor['fields'].get('jform[presentation_description]','')
+ unsaved={'jform[title]':'Unsaved title after invalid summary',
+          'jform[summary]':'x'*501,
+          'jform[presentation_description]':'Unsaved editorial description',
+          field:'Unsaved native field correction'}
+ url,html=request(urljoin(url,editor['action']),editor['fields']|{'task':'course.apply'}|unsaved)
  editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
- expect(editor['fields'][field]=='Unsaved native field correction','Form validation failure preserves custom field input')
+ for name,value in unsaved.items():
+  actual=editor['fields'].get(name,'')
+  expect((value in actual if name=='jform[presentation_description]' else actual==value),
+         'Rejected save retains submitted '+name+'; got '+repr(actual[:120]))
+ expect('jform[revision]' in editor['fields'],'Rejected save retains the editable revision field')
  request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
+ _,html=request(path)
+ editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ expect(editor['fields']['jform[title]']==original_title,'Rejected update never saves the unsaved title')
+ expect(editor['fields'].get('jform[summary]','')==original_summary,'Rejected update never saves the invalid summary')
+ expect(editor['fields'].get('jform[presentation_description]','')==original_description,
+        'Rejected update never saves the unsaved editorial description')
  _,html=request(path);editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect(editor['fields'][field]=='Value saved over HTTP','Cancel leaves the last saved custom value intact')
  request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
