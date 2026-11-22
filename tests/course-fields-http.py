@@ -84,6 +84,30 @@ try:
         'Rejected update never saves the unsaved editorial description')
  _,html=request(path);editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect(editor['fields'][field]=='Value saved over HTTP','Cancel leaves the last saved custom value intact')
+ # AUT-01: an invalid editorial ordering value must preserve all the author's
+ # other input, without partially persisting the attempted changes.
+ expect('jform[catalog_position]' in editor['fields'],
+        'Course editor exposes catalog ordering for validation')
+ before_position=editor['fields']['jform[catalog_position]']
+ bad_position=editor['fields']|{
+     'task':'course.apply',
+     'jform[catalog_position]':'10000',
+     'jform[title]':'Unsaved title with invalid catalog position',
+     field:'Unsaved custom field with invalid catalog position'}
+ url,html=request(urljoin(url,editor['action']),bad_position)
+ rejected=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ for name in ['jform[catalog_position]','jform[title]',field]:
+  expect(rejected['fields'].get(name)==bad_position[name],
+         'Invalid ordering retains the submitted '+name)
+ request(urljoin(url,rejected['action']),rejected['fields']|{'task':'course.cancel'})
+ _,html=request(path)
+ editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ expect(editor['fields']['jform[catalog_position]']==before_position,
+        'Rejected catalog position is never persisted')
+ expect(editor['fields']['jform[title]']==original_title,
+        'Rejected ordering does not partially save the title')
+ expect(editor['fields'][field]=='Value saved over HTTP',
+        'Rejected ordering does not partially save the custom field')
  # AUT-01: a second author/browser tab must not overwrite a newer course
  # revision. On the rejected stale submission the user's input remains
  # available for correction, while the successfully saved revision persists.
