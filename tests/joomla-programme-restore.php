@@ -133,6 +133,29 @@ restoreExpect(is_array($attachment),'Disposable fixture provides a ready materia
 unset($attachment['id']);$attachment['course_version_id']=$version;$attachment['lesson_id']=null;$attachment=(object)$attachment;$db->insertObject('#__jlms_attachments',$attachment,'id');
 $publish($version);$historical=$version;
 $enrollment=$component->getLearningService()->start($actor,'en-GB',$course,bin2hex(random_bytes(20)));
+// Seed a certificate bound to the historical edition before the newer edition
+// or a restoration draft exists. This tests record retention, not issuance rules.
+$templateId=(int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1')->loadResult();
+restoreExpect($templateId>0,'Certificate template is available for historical retention regression');
+$issuedAt=gmdate('Y-m-d H:i:s');
+$historyCertificate=(object)['enrollment_id'=>$enrollment,'course_version_id'=>$historical,
+ 'template_id'=>$templateId,'current_document_id'=>null,'issued_at'=>$issuedAt,'revision'=>1];
+$db->insertObject('#__jlms_certificates',$historyCertificate,'id');
+$identityJson=json_encode(['user_id'=>(int)$actor->id,'course_id'=>$course,
+ 'course_version_id'=>$historical,'historical_restore_test'=>true],JSON_THROW_ON_ERROR);
+$templateJson=(string)$db->setQuery('SELECT template_json FROM #__jlms_certificate_templates WHERE id='.$templateId)->loadResult();
+$historyDocument=(object)['certificate_id'=>(int)$historyCertificate->id,'document_no'=>1,
+ 'serial'=>'AUT04-RESTORE-'.strtoupper(bin2hex(random_bytes(12))),
+ 'identity_snapshot_json'=>$identityJson,'template_snapshot_json'=>$templateJson,
+ 'status'=>'pending_render','issued_at'=>$issuedAt,'revision'=>1];
+$db->insertObject('#__jlms_certificate_documents',$historyDocument,'id');
+$db->setQuery('UPDATE #__jlms_certificates SET current_document_id='.(int)$historyDocument->id.
+ ' WHERE id='.(int)$historyCertificate->id)->execute();
+$certificateBefore=(array)restoreRow('certificates',(int)$historyCertificate->id);
+$documentBefore=(array)restoreRow('certificate_documents',(int)$historyDocument->id);
+restoreExpect((int)$documentBefore['certificate_id']===(int)$historyCertificate->id
+ && (int)$certificateBefore['course_version_id']===$historical,
+ 'Historical certificate and document are owned by the original course version');
 $version=$authoring->createDraft($actor,$course,(int)restoreRow('courses',$course)->revision);
 $module=(int)$authoring->outline($actor,$course,$version)['modules'][0]->id;
 $authoring->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$module,'title'=>'Current additional text','kind'=>'text','required'=>'0','body'=>'<p>Current edition</p>']);
@@ -166,6 +189,9 @@ restoreExpect(count(array_filter($restored['lessons'],static fn($l)=>$l['kind']=
 $courseAfter=restoreRow('courses',$course);foreach(['revision','modified_at','modified_by'] as $field){unset($courseBefore->$field,$courseAfter->$field);}
 restoreExpect($courseBefore==$courseAfter,'Course presentation, teachers, access, state and current pointer are preserved');
 restoreExpect(restoreLearning()===$before&&(int)restoreRow('enrollments',$enrollment)->course_version_id===$historical,'Recovery leaves all learning history unchanged');
+restoreExpect((array)restoreRow('certificates',(int)$historyCertificate->id)===$certificateBefore
+ && (array)restoreRow('certificate_documents',(int)$historyDocument->id)===$documentBefore,
+ 'Restore does not alter original certificate, serial or document snapshots');
 restoreExpect($authoring->createDraft($actor,$course,(int)restoreRow('courses',$course)->revision)===$target,'Edit programme deterministically reuses newest draft');
 restoreDenied(fn()=>$authoring->restoreVersion($actor,$input),'COM_JLMS_REVISION_CONFLICT');
 restoreExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id='.$course)->loadResult()===4,'Stale replay creates no second recovery');
