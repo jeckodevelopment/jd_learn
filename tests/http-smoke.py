@@ -707,6 +707,21 @@ try:
  csrf_field=next((key for key,value in pathway_form['fields'].items()
                   if re.fullmatch(r'[0-9a-f]{32}',key) and value=='1'),None)
  expect(csrf_field is not None,'Native pathway form exposes a session CSRF token')
+ # LCM-05: a real session with a structurally valid token field but an
+ # altered value must not mutate any of the six lifecycle tasks.
+ for lifecycle_task in lifecycle_tasks:
+  endpoint=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.'+lifecycle_task})
+  tampered=urlencode([(csrf_field,'0'),('cid[]',str(pathway_id))]).encode()
+  try:
+   with http.open(Request(endpoint,data=tampered,method='POST'),timeout=15) as response:
+    response.read()
+  except HTTPError as error:
+   expect(error.code==403,'Pathway '+lifecycle_task+' altered CSRF token must return HTTP 403')
+  else:
+   raise RuntimeError('Pathway '+lifecycle_task+' accepted an altered CSRF token')
+ expect('CI learning pathway' in get('/administrator/index.php?option=com_jlms&view=pathways')[1],
+        'Altered-token requests preserve the pathway administration listing')
+ print(json.dumps({'pathway_lifecycle_tampered_csrf_http_guards':6,'status':'passed'}))
  def pathway_transition(task):
   endpoint=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.'+task})
   body=urlencode([(csrf_field,'1'),('cid[]',str(pathway_id))]).encode()
