@@ -43,6 +43,7 @@ def verify(args):
         f"v{args.version}/{package.name}"
     )
     assert update.findtext("./downloads/downloadurl") == expected_url
+    assert args.release_notes.strip(), "Release notes must not be empty"
     source = notes.read_text(encoding="utf-8")
     assert "## Incompatibilità e limitazioni note" in source
     assert "## Gate prima di pubblicare le note definitive" in source
@@ -57,6 +58,7 @@ def verify(args):
         "package_sha256": digest,
         "feed_sha256": sha256(feed),
         "draft_release_notes_sha256": sha256(notes),
+        "actual_release_notes_sha256": hashlib.sha256(args.release_notes.encode("utf-8")).hexdigest(),
         "release_asset_url": expected_url,
     }
 
@@ -65,6 +67,7 @@ def main():
     parser = argparse.ArgumentParser()
     for flag in ("version", "commit", "package", "feed", "checksums", "notes", "output"):
         parser.add_argument("--" + flag, required=True)
+    parser.add_argument("--release-notes", required=True)
     parser.add_argument("--verify", action="store_true")
     args = parser.parse_args()
     evidence = verify(args)
