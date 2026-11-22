@@ -175,23 +175,23 @@ $delegateData = [
 $check($delegateUser->bind($delegateData) && $delegateUser->save(), 'dedicated pathway delegate created');
 $delegate = new \Joomla\CMS\User\User((int)$delegateUser->id);
 $delegate->clearAccessRights();
-$check($delegate->authorise('core.edit.state','com_jlms.pathway.'.$pathwayId)
+$check($delegate->authorise('core.edit.state','com_jlms.pathway.'.$emptyId)
     && !$delegate->authorise('core.edit.state','com_jlms.pathway.'.$siblingId),
     'delegated Joomla ACL grants first pathway and explicitly denies second');
 $pathModel->setCurrentUser($delegate);
-$check(!$pathModel->changeStates([$pathwayId,$siblingId],2),
+$check(!$pathModel->changeStates([$emptyId,$siblingId],2),
     'delegated mixed selection is rejected atomically on record-level ACL deny');
-$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$pathwayId)->loadResult()===1,
+$check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$emptyId)->loadResult()===1,
     'record-specific ACL denial rolls back a prior permitted pathway');
-$check($pathModel->changeStates([$pathwayId],2),
+$check($pathModel->changeStates([$emptyId],2),
     'same delegate can archive the individually authorized pathway');
-$check($pathModel->changeStates([$pathwayId],0) && $pathModel->changeStates([$pathwayId],1),
+$check($pathModel->changeStates([$emptyId],0) && $pathModel->changeStates([$emptyId],1),
     'delegate restores and explicitly republishes only the permitted pathway');
 $check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$siblingId)->loadResult()===1,
     'record-level denial preserves sibling state');
 $pathModel->setCurrentUser($operator);
 file_put_contents(dirname($root).'/pathway-acl-fixture.json',json_encode([
-    'allowed'=>$pathwayId,'denied'=>$siblingId,'user'=>(int)$delegate->id,'username'=>'cipathwaymanager',
+    'allowed'=>$emptyId,'denied'=>$siblingId,'user'=>(int)$delegate->id,'username'=>'cipathwaymanager',
 ],JSON_THROW_ON_ERROR));
 $assertSiblingUnchanged('authoring');
 
