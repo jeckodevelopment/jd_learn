@@ -234,12 +234,41 @@ final class HtmlView extends BaseHtmlView
             }
             if ($action && !$this->selectedItem) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
             if (str_starts_with($action, 'delete_') && !$this->canDelete) { throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403); }
+            // A new lesson has no stored field values yet. Resolve its
+            // authorized native field definitions so rejected first saves
+            // can restore edits using the same whitelist as existing lessons.
+            if ($this->editorMode === 'lesson' && !is_array($lessonData['com_fields'] ?? null)) {
+                $lessonData['com_fields'] = [];
+                $fieldSubject = (object) ['id' => 0, 'catid' => (int) $course->catid, 'language' => (string) $course->language];
+                foreach (\Joomla\Component\Fields\Administrator\Helper\FieldsHelper::getFields('com_jlms.lesson', $fieldSubject, true) as $field) {
+                    $lessonData['com_fields'][$field->name] = $field->value;
+                }
+            }
             $stateKey = 'com_jlms.curriculum.' . (int) $course->id . '.' . (int) $version->id . '.' . $this->editorMode;
             if (in_array($this->editorMode, ['module','lesson'], true)) {
                 $saved = $app->getUserState($stateKey, []);
                 $app->setUserState($stateKey, null);
                 $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0) : (int) ($lessonData['id'] ?? 0);
                 if (is_array($saved) && (int) ($saved['id'] ?? -1) === $expectedId) {
+                    // Preserve native Joomla field edits after a failed lesson
+                    // submission. Only fields already resolved for this lesson
+                    // are accepted; unknown/oversized user-state payloads are
+                    // never rebound into the editor.
+                    if ($this->editorMode === 'lesson' && is_array($saved['com_fields'] ?? null)
+                        && count($saved['com_fields']) <= 100 && is_array($lessonData['com_fields'] ?? null)) {
+                        foreach ($saved['com_fields'] as $fieldName => $fieldValue) {
+                            if (!is_string($fieldName) || !array_key_exists($fieldName, $lessonData['com_fields'])) { continue; }
+                            if ((is_string($fieldValue) || is_int($fieldValue))
+                                && strlen((string) $fieldValue) <= 65536) {
+                                $lessonData['com_fields'][$fieldName] = $fieldValue;
+                            } elseif (is_array($fieldValue) && array_is_list($fieldValue) && count($fieldValue) <= 100
+                                && array_reduce($fieldValue, static fn(bool $valid, mixed $value): bool =>
+                                    $valid && (is_string($value) || is_int($value))
+                                    && strlen((string) $value) <= 65536, true)) {
+                                $lessonData['com_fields'][$fieldName] = $fieldValue;
+                            }
+                        }
+                    }
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));

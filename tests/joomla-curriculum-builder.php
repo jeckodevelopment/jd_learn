@@ -102,6 +102,19 @@ $m1=$service->saveModule($actor,$scope()+['id'=>0,'title'=>'Builder module one']
 $m2=$service->saveModule($actor,$scope()+['id'=>0,'title'=>'Builder module two']);
 $l1=$service->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$m1,'title'=>'Builder lesson one','kind'=>'text','body'=>'<p>Preserve this body</p>','required'=>'1']);
 $l2=$service->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$m1,'title'=>'Builder lesson two','kind'=>'text','body'=>'<p>Second body</p>','required'=>'0']);
+\Joomla\CMS\Plugin\PluginHelper::importPlugin('system', 'fields');
+$fieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
+if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson editorial fixture',
+    'label'=>'Lesson editorial fixture','name'=>'lesson-editorial-fixture','type'=>'text',
+    'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'',
+    'description'=>'','params'=>[],'fieldparams'=>['filter'=>'string']])) {
+    throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
+}
+$lessonField=(int)$fieldModel->getState('field.id');
+if (!$fieldModel->setFieldValue($lessonField,$l1,'Persisted lesson custom value')) {
+    throw new \RuntimeException('Native lesson field fixture value failed.');
+}
+
 $outline=$service->outline($actor,$course,$version); $ids=array_map(static fn($m): int => (int)$m->id,$outline['modules']);$order=array_reverse($ids);
 $stale=$scope()+['kind'=>'module','order'=>$order];$revision=$service->saveOrder($actor,$stale);
 builderExpect($revision===(int)$stale['expected_version_revision']+1,'One version bump for an atomic sibling permutation');

@@ -74,15 +74,36 @@ try:
          'Rejected module retains its course/version context: '+key)
  expect(state()==module_before,'Rejected module title cannot leave a partial module')
  _,editor=request(link(html,'edit_lesson',f['l1']));edit=form(editor,'lesson.save')
+ field='jform[com_fields][lesson-editorial-fixture]'
+ expect(field in edit['fields'] and edit['fields'][field]=='Persisted lesson custom value',
+        'Native Joomla lesson field is loaded into the existing editor')
  expect(edit['fields']['jform[id]']==str(f['l1']) and edit['fields']['jform[module_id]']==str(f['m2']),'Lesson title opens its native scoped editor')
  materials=next(x for x in Page(editor).links if parse_qs(urlparse(x).query).get('view')==['materials'] and parse_qs(urlparse(x).query).get('lesson_id')==[str(f['l1'])])
  _,materials_html=request(materials)
  expect(form(materials_html,'material.upload')['fields']['jform[lesson_id]']==str(f['l1']),'Materials form selects the clicked lesson')
  lesson_before=state()
- _,failed=request(edit['action'],edit['fields']|{'jform[title]':'','jform[body]':'<p>UNSAVED_BUILDER_BODY</p>'})
+ unsaved_field='Uncommitted native lesson value'
+ _,failed=request(edit['action'],edit['fields']|{'jform[title]':'','jform[body]':'<p>UNSAVED_BUILDER_BODY</p>',field:unsaved_field})
  expect('UNSAVED_BUILDER_BODY' in failed and form(failed,'lesson.save')['fields']['jform[title]']=='','Validation failure preserves editor input')
+ expect(form(failed,'lesson.save')['fields'].get(field)==unsaved_field,
+        'Rejected lesson save retains its native Joomla custom field value')
  expect(state()==lesson_before,'Rejected lesson save leaves the original lesson and programme unchanged')
- saved=form(failed,'lesson.save');_,html=request(saved['action'],saved['fields']|{'jform[title]':'Builder lesson updated via HTTP','jform[body]':'<p>Saved programme content</p>'})
+ saved=form(failed,'lesson.save')
+ _,html=request(saved['action'],saved['fields']|{'jform[title]':'Builder lesson updated via HTTP','jform[body]':'<p>Saved programme content</p>',field:'Saved lesson custom value'})
+ _,lesson_reopened=request(link(html,'edit_lesson',f['l1']))
+ expect(form(lesson_reopened,'lesson.save')['fields'].get(field)=='Saved lesson custom value',
+        'Native field correction persists after retrying rejected lesson save')
+ # A rejected first save of a new lesson must also retain authorized native
+ # field input, not just the fields of a previously persisted lesson.
+ _,new_lesson=request(path+'&new_lesson=1&module_id='+str(f['m2']))
+ fresh=form(new_lesson,'lesson.save')
+ expect(field in fresh['fields'],'New lesson editor exposes the authorized Joomla field')
+ new_before=state()
+ new_value='Unsaved Joomla field in a new lesson'
+ _,new_failed=request(fresh['action'],fresh['fields']|{'jform[title]':'',field:new_value})
+ expect(form(new_failed,'lesson.save')['fields'].get(field)==new_value,
+        'Rejected first lesson save retains its native custom field')
+ expect(state()==new_before,'Rejected first lesson save creates no partial lesson')
  expect('Builder lesson updated via HTTP' in html and 'id="jlms-lesson-form"' not in html,'Save returns to a compact outline')
  # Moving uses a separate action, preserving the lesson identity and body.
  _,movehtml=request(path+'&item_action=move_lesson&item_id='+str(f['l1']));move=form(movehtml,'lesson.move')
