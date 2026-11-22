@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Structural source/package checks, separate from runtime PHP and database tests."""
 from pathlib import Path
+import runpy
 import re,json,hashlib,xml.etree.ElementTree as E,zipfile,io
 ROOT=Path(__file__).resolve().parents[1]
 # QUI-02: the row-locked service, not merely the UI, must reject hard deletes outside trash.
@@ -369,7 +370,6 @@ assert 'new CourseAnnouncementService' in (ROOT/'component/administrator/src/Con
 assert (ROOT/'component/administrator/tmpl/courseannouncement/default.php').is_file()
 
 # Keep implementation claims separate from planned acceptance and verify their source references.
-import runpy
 runpy.run_path(str(ROOT/'tools/check_status.py'),run_name='__main__')
 print(json.dumps({'xml_files':count,'defined_language_keys':len(keys),'schema_tables':46,'foreign_keys':66,'structural_checks':'passed'}))
 
@@ -1173,3 +1173,7 @@ runpy.run_path(str(ROOT/'tests/frontend-dom-runtime.py'), run_name='__main__')
 
 # DOC-04: versioned technical contracts and reproducible operations.
 runpy.run_path(str(ROOT/'tests/doc04-technical-reference.py'), run_name='__main__')
+
+# DOC-10: keep candidate release notes verifiable in the standard CI gate.
+import runpy
+runpy.run_path(str(ROOT / 'tests/doc10-release-notes.py'))
