@@ -256,14 +256,16 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             }
             // Protect declared foreign-key references, even ON DELETE CASCADE.
             // Unknown SQL metadata errors fail closed through the transaction.
+            $physicalTeacherTable = $db->getPrefix() . 'jlms_teachers';
+            $referencedColumn = 'id';
             $foreignKeys = $db->createQuery()
                 ->select([$db->quoteName('TABLE_NAME'), $db->quoteName('COLUMN_NAME')])
                 ->from('information_schema.KEY_COLUMN_USAGE')
                 ->where('REFERENCED_TABLE_SCHEMA = DATABASE()')
                 ->where('REFERENCED_TABLE_NAME = :teacherTable')
                 ->where('REFERENCED_COLUMN_NAME = :teacherColumn')
-                ->bind(':teacherTable', $db->getPrefix() . 'jlms_teachers')
-                ->bind(':teacherColumn', 'id');
+                ->bind(':teacherTable', $physicalTeacherTable)
+                ->bind(':teacherColumn', $referencedColumn);
             foreach ($db->setQuery($foreignKeys)->loadAssocList() as $reference) {
                 $tableName = (string) $reference['TABLE_NAME'];
                 $columnName = (string) $reference['COLUMN_NAME'];
