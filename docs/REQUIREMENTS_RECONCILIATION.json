@@ -5,8 +5,8 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Parziale": 189,
-      "Completata": 34,
+      "Completata": 35,
+      "Parziale": 188,
       "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 61.92,
-    "development_evidence_floor_percent": 61.92,
+    "percent": 62.23,
+    "development_evidence_floor_percent": 62.23,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -66,11 +66,11 @@
         "label": "Iscrizioni, lezioni e progressi",
         "requirements": 19,
         "weight_percent": 8.88,
-        "development_evidence_floor_percent": 70.18,
+        "development_evidence_floor_percent": 73.68,
         "manual_acceptance_coverage_percent": 5.26,
         "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
-        "unverifiable_criteria": 18,
+        "unverifiable_criteria": 16,
         "unassessed_criteria": 0
       },
       {
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 61.92
+        "percent": 62.23
       },
       {
         "id": "manual_acceptance",
