@@ -23,6 +23,18 @@ final class SourceNormalizer
             $host = strtolower($parts['host'] ?? '');
             $path = $parts['path'] ?? '/';
             parse_str($parts['query'] ?? '', $query);
+            // Reject credentials embedded in shared video links, even if the
+            // canonical source would otherwise discard the query parameter.
+            // Vimeo's non-secret privacy hash (h) remains supported below.
+            foreach (array_keys($query) as $parameter) {
+                if (!is_string($parameter)) {
+                    throw new \InvalidArgumentException('SOURCE_INVALID');
+                }
+                $parameter = strtolower(str_replace(['-', '.'], '_', $parameter));
+                if (preg_match('/(?:^|_)(?:token|secret|password|passwd|credential|authorization|auth|api_key|apikey|client_secret|access_key|private_key|signature|signed|jwt)(?:$|_)/D', $parameter)) {
+                    throw new \InvalidArgumentException('SOURCE_INVALID');
+                }
+            }
             if ($provider === 'youtube') {
                 if ($host === 'youtu.be' && preg_match('~^/([A-Za-z0-9_-]{11})/?$~D', $path, $m)) {
                     $value = $m[1];
