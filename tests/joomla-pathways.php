@@ -42,6 +42,15 @@ $service = $component->getPathwayService();
 $fixture = dirname($root).'/pathways-fixture.json';
 $check = static function(bool $ok,string $message): void { if (!$ok) throw new RuntimeException($message); };
 
+if (($argv[2] ?? '') === 'acl-state') {
+    $acl = json_decode((string)file_get_contents(dirname($root).'/pathway-acl-fixture.json'),true,16,JSON_THROW_ON_ERROR);
+    $states = [];
+    foreach (['allowed','denied'] as $key) {
+        $states[$key] = (int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id='.(int)$acl[$key])->loadResult();
+    }
+    echo json_encode($states,JSON_THROW_ON_ERROR).PHP_EOL;
+    return;
+}
 if ($retained) {
     $data = json_decode((string)file_get_contents($fixture),true,16,JSON_THROW_ON_ERROR);
     $path = $db->setQuery('SELECT id FROM #__jlms_pathways WHERE id='.(int)$data['pathway'])->loadResult();
