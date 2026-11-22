@@ -240,6 +240,25 @@ final class HtmlView extends BaseHtmlView
                 $app->setUserState($stateKey, null);
                 $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0) : (int) ($lessonData['id'] ?? 0);
                 if (is_array($saved) && (int) ($saved['id'] ?? -1) === $expectedId) {
+                    // Preserve native Joomla field edits after a failed lesson
+                    // submission. Only fields already resolved for this lesson
+                    // are accepted; unknown/oversized user-state payloads are
+                    // never rebound into the editor.
+                    if ($this->editorMode === 'lesson' && is_array($saved['com_fields'] ?? null)
+                        && count($saved['com_fields']) <= 100 && is_array($lessonData['com_fields'] ?? null)) {
+                        foreach ($saved['com_fields'] as $fieldName => $fieldValue) {
+                            if (!is_string($fieldName) || !array_key_exists($fieldName, $lessonData['com_fields'])) { continue; }
+                            if ((is_string($fieldValue) || is_int($fieldValue))
+                                && strlen((string) $fieldValue) <= 65536) {
+                                $lessonData['com_fields'][$fieldName] = $fieldValue;
+                            } elseif (is_array($fieldValue) && array_is_list($fieldValue) && count($fieldValue) <= 100
+                                && array_reduce($fieldValue, static fn(bool $valid, mixed $value): bool =>
+                                    $valid && (is_string($value) || is_int($value))
+                                    && strlen((string) $value) <= 65536, true)) {
+                                $lessonData['com_fields'][$fieldName] = $fieldValue;
+                            }
+                        }
+                    }
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
