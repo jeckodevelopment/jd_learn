@@ -150,7 +150,7 @@ $assertSiblingUnchanged=static function (string $phase) use ($db,$check,$sibling
 $editorFixture = json_decode((string)file_get_contents(dirname($root).'/editor-access-fixture.json'),true,32,JSON_THROW_ON_ERROR);
 $delegateGroup = (int)$editorFixture['group'];
 $backendGroup = (int)$editorFixture['backend'];
-$aclAsset = new \\Joomla\\CMS\\Table\\Asset($db);
+$aclAsset = new \Joomla\CMS\Table\Asset($db);
 $grantAsset = static function(string $name,array $actions,int $group,bool $allowed) use ($aclAsset,$check): void {
     $check($aclAsset->loadByName($name),'LCM-05 Joomla asset exists: '.$name);
     $rules = json_decode((string)$aclAsset->rules,true) ?: [];
@@ -161,7 +161,7 @@ $grantAsset = static function(string $name,array $actions,int $group,bool $allow
 $grantAsset('com_jlms',['jlms.pathways.manage'],$backendGroup,true);
 $grantAsset('com_jlms.pathway.category.'.$categoryId,['core.edit','core.edit.state'],$delegateGroup,true);
 $grantAsset('com_jlms.pathway.'.$siblingId,['core.edit.state'],$delegateGroup,false);
-$delegate = new \\Joomla\\CMS\\User\\User((int)$editorFixture['user']);
+$delegate = new \Joomla\CMS\User\User((int)$editorFixture['user']);
 $delegate->clearAccessRights();
 $check($delegate->authorise('core.edit.state','com_jlms.pathway.'.$pathwayId)
     && !$delegate->authorise('core.edit.state','com_jlms.pathway.'.$siblingId),
