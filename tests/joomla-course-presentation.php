@@ -103,7 +103,7 @@ file_put_contents($root . '/' . $coverPath, $coverBytes);
 $input = $base + ['presentation_image' => $coverPath . '#joomlaImage://local-images/jlms-ci-cover.png?width=1&height=1',
     'presentation_image_alt' => 'Course cover "example" <plain text>', 'presentation_image_decorative' => '0',
     'presentation_seo_title' => 'Published course SEO title', 'presentation_seo_description' => 'SEO description & public presentation',
-    'presentation_description' => '<p>Extended <strong>presentation</strong></p><script>alert(1)</script><iframe src="https://example.invalid"></iframe><img src="https://example.invalid/pixel"><a href="javascript:alert(2)" onclick="alert(3)">Safe link text</a>',
+    'presentation_description' => '<p>Extended <strong>presentation</strong></p><script>alert(1)</script><iframe src="https://example.invalid"></iframe><img src="https://example.invalid/pixel"><a href="javascript:alert(2)" onclick="alert(3)">Safe link text</a><a href="https://example.invalid/resource" rel="opener">Public resource</a>',
     'presentation_objectives' => 'Learn <em>as plain text</em>', 'presentation_audience' => "Learners\nNewcomers", 'presentation_prerequisite_text' => 'Read the introduction',
     'presentation_difficulty' => 'beginner', 'presentation_estimated_minutes' => '45', 'params_json' => '{"injected":true}', 'current_version_id' => 999999, 'state' => 1];
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
@@ -117,6 +117,10 @@ presentationExpect($details['estimated_minutes'] === 45 && $details['difficulty'
 presentationExpect($details['audience'] === "Learners\nNewcomers" && $item->presentation_objectives === $input['presentation_objectives'], 'Plain fields round-trip without HTML execution');
 presentationExpect(str_contains($details['description'], '<strong>presentation</strong>'), 'Safe HTML formatting retained');
 presentationExpect(!preg_match('/<script|<iframe|<img|javascript:|onclick=/i', $details['description']), 'Active markup, tracking images and unsafe attributes removed even for super user');
+presentationExpect(str_contains($details['description'], 'href="https://example.invalid/resource"')
+    && str_contains($details['description'], 'rel="noreferrer noopener"')
+    && !str_contains($details['description'], 'rel="opener"'),
+    'LES-02 editorial links discard untrusted rel and suppress outgoing referrers');
 presentationExpect($details['image'] === $coverPath && $details['image_decorative'] === false, 'Native media adapter suffix normalised to public relative path');
 presentationExpect($details['image_alt'] === $input['presentation_image_alt'] && $details['seo_title'] === $input['presentation_seo_title'], 'Alternative text and SEO values persist');
 $decorative = CoursePresentation::merge(['presentation_image_decorative' => '1'], $item->params_json, static fn (string $html): string => $html);
