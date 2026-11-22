@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **487**.
+- Implementati: **488**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **255**.
+- Esaminati con esito non verificabile: **254**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -86,10 +86,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `AUT-03/subtitle_provider` — Avvisi completi per sottotitoli e provider senza tracciamento. La readiness avvisa quando manca la trascrizione editoriale locale. Il codice dichiara esplicitamente che tale controllo non accerta caption o tracce dei provider remoti; l’esito completo per ciascun provider e le relative combinazioni di tracciamento richiede verifica ulteriore.
   - [component/administrator/src/Domain/PublicationReadiness.php#Editorial transcripts are optional accessibility aids.](../component/administrator/src/Domain/PublicationReadiness.php)
   - [docs/VIDEO.md#non espongono qui un elenco interrogabile](../docs/VIDEO.md)
-- `AUT-04/historical_integrity` — Tutela risultati e attestati in ogni variante di ripristino. I test verificano che le modifiche editoriali non riscrivano lo snapshot congelato e che parte dello storico didattico sopravviva agli aggiornamenti. Non coprono tutte le varianti di ripristino richieste, soprattutto l’interazione completa tra attestati, backup e migrazioni.
-  - [tests/joomla-publication.php#later editorial field changes do not rewrite the frozen course snapshot](../tests/joomla-publication.php)
-  - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
-  - [docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)](../docs/LIFECYCLE_1.0.0_APPROVED.md)
 - `ISC-01/edge_authorization` — Combinazioni complete di vincoli, ruolo e iscrizioni in sospeso. L’ammissione manuale rivalida la disponibilità editoriale e la didattica ricontrolla utente, livello, iscrizione, edizione e accesso. Le fixture non esauriscono tutte le combinazioni di vincoli, ruolo e richieste pending descritte dal criterio; le richieste approval hanno un flusso distinto.
   - [component/administrator/src/Application/ManualEnrollmentService.php#Administrative assignment does not grant viewing rights](../component/administrator/src/Application/ManualEnrollmentService.php)
   - [docs/LEARNING.md#richieste/approvazioni restano da implementare](../docs/LEARNING.md)
@@ -1020,6 +1016,12 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/joomla-enrollment-migration.php#open quiz attempt blocks version migration](../tests/joomla-enrollment-migration.php)
   - [tests/joomla-enrollment-migration.php#saved equivalences are never applied implicitly](../tests/joomla-enrollment-migration.php)
   - [tests/aut04-migration-boundary.php#Saved mapping overflow was accepted](../tests/aut04-migration-boundary.php)
+- `AUT-04/historical_integrity` — Tutela risultati e attestati in ogni variante di ripristino. Implementazione 1.0.0 verificata sul ripristino autorizzato di versioni storiche in bozze indipendenti, sul mantenimento immutato di iscrizioni, progressi e attestati dopo migrazione esplicita e aggiornamento del pacchetto e su un ripristino integrato reale del database Joomla disposable e del PDF cifrato: il test altera un documento, importa il dump SQL, ripristina il file protetto, controlla digest e decifratura e scarica l'attestato originale. I percorsi software supportati sono coperti; non si inferiscono prove su ogni infrastruttura di hosting, backup esterno o collaudo Joomla manuale, che resta separato.
+  - [tests/joomla-programme-restore.php#Restore does not alter original certificate, serial or document snapshots](../tests/joomla-programme-restore.php)
+  - [tests/joomla-enrollment-migration.php#explicit migration does not reassign or rewrite historical certificate ownership](../tests/joomla-enrollment-migration.php)
+  - [.github/workflows/ci.yml#AUT-04 full database backup and restore protects historical course evidence](../.github/workflows/ci.yml)
+  - [tests/joomla-teaching-rules.php#Restored encrypted PDF decrypts to the original certificate](../tests/joomla-teaching-rules.php)
+  - [tests/joomla-teaching-rules.php#Historical certificate remains downloadable after SQL and file recovery](../tests/joomla-teaching-rules.php)
 - `ISC-02/state_combinations` — Tutte le transizioni e gli stati con scadenza e annullamento. Il servizio limita le transizioni a active/suspended/cancelled con preview, conferma, revisione e audit. Le fixture verificano cancellazione idempotente, divieto di riattivare cancellati, blocco sui completati/quiz aperti e conservazione dello storico. Le scadenze di accesso sono distinte dallo stato e testate separatamente.
   - [component/administrator/src/Application/EnrollmentStateService.php#public function apply](../component/administrator/src/Application/EnrollmentStateService.php)
   - [tests/joomla-enrollment-state.php#valid cancellation preview](../tests/joomla-enrollment-state.php)

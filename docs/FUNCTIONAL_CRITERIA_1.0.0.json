@@ -628,18 +628,21 @@
       {
         "id": "historical_integrity",
         "label": "Tutela risultati e attestati in ogni variante di ripristino",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "tests/joomla-publication.php",
-          "tests/joomla-dashboard.php",
-          "docs/LIFECYCLE_1.0.0_APPROVED.md"
+          "tests/joomla-programme-restore.php",
+          "tests/joomla-enrollment-migration.php",
+          ".github/workflows/ci.yml",
+          "tests/joomla-teaching-rules.php"
         ],
         "review": {
-          "reason": "I test verificano che le modifiche editoriali non riscrivano lo snapshot congelato e che parte dello storico didattico sopravviva agli aggiornamenti. Non coprono tutte le varianti di ripristino richieste, soprattutto l’interazione completa tra attestati, backup e migrazioni.",
+          "reason": "Implementazione 1.0.0 verificata sul ripristino autorizzato di versioni storiche in bozze indipendenti, sul mantenimento immutato di iscrizioni, progressi e attestati dopo migrazione esplicita e aggiornamento del pacchetto e su un ripristino integrato reale del database Joomla disposable e del PDF cifrato: il test altera un documento, importa il dump SQL, ripristina il file protetto, controlla digest e decifratura e scarica l'attestato originale. I percorsi software supportati sono coperti; non si inferiscono prove su ogni infrastruttura di hosting, backup esterno o collaudo Joomla manuale, che resta separato.",
           "references": [
-            "tests/joomla-publication.php#later editorial field changes do not rewrite the frozen course snapshot",
-            "tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade",
-            "docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)"
+            "tests/joomla-programme-restore.php#Restore does not alter original certificate, serial or document snapshots",
+            "tests/joomla-enrollment-migration.php#explicit migration does not reassign or rewrite historical certificate ownership",
+            ".github/workflows/ci.yml#AUT-04 full database backup and restore protects historical course evidence",
+            "tests/joomla-teaching-rules.php#Restored encrypted PDF decrypts to the original certificate",
+            "tests/joomla-teaching-rules.php#Historical certificate remains downloadable after SQL and file recovery"
           ]
         }
       }
