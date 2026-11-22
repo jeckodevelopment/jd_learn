@@ -84,6 +84,28 @@ try:
         'Rejected update never saves the unsaved editorial description')
  _,html=request(path);editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect(editor['fields'][field]=='Value saved over HTTP','Cancel leaves the last saved custom value intact')
+ # AUT-01: server-side validation of a missing required title must restore
+ # the other submitted inputs without partially persisting them. The HTTP
+ # request deliberately bypasses browser-side required-field validation.
+ empty_title=editor['fields']|{
+     'task':'course.apply',
+     'jform[title]':'',
+     'jform[summary]':'Unsaved summary with empty title',
+     field:'Unsaved custom field with empty title'}
+ url,html=request(urljoin(url,editor['action']),empty_title)
+ rejected=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ for name in ['jform[title]','jform[summary]',field]:
+  expect(rejected['fields'].get(name)==empty_title[name],
+         'Required title error retains the submitted '+name)
+ request(urljoin(url,rejected['action']),rejected['fields']|{'task':'course.cancel'})
+ _,html=request(path)
+ editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
+ expect(editor['fields']['jform[title]']==original_title,
+        'Rejected empty title does not modify the persisted title')
+ expect(editor['fields'].get('jform[summary]')==original_summary,
+        'Rejected empty title does not modify the persisted summary')
+ expect(editor['fields'][field]=='Value saved over HTTP',
+        'Rejected empty title does not modify the persisted custom field')
  # AUT-01: a second author/browser tab must not overwrite a newer course
  # revision. On the rejected stale submission the user's input remains
  # available for correction, while the successfully saved revision persists.
