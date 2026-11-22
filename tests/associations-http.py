@@ -22,12 +22,18 @@ class Page(HTMLParser):
     def __init__(self, text):
         super().__init__(convert_charrefs=True)
         self.links = []
+        self.canonicals = []
+        self.meta = {}
         self.forms = []
         self.form = None
         self.anchor = None
         self.feed(text)
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == 'link' and attrs.get('rel') == 'canonical':
+            self.canonicals.append(attrs.get('href', ''))
+        if tag == 'meta' and 'content' in attrs:
+            self.meta[attrs.get('property') or attrs.get('name')] = attrs['content']
         if tag == 'a' and 'href' in attrs:
             self.anchor = attrs | {'_text':''}
             self.links.append(self.anchor)
@@ -63,10 +69,18 @@ try:
         _, html = get('/index.php?option=com_jlms&view=course&id=' + str(fixture['en']) + '&lang=en')
         expect('id="jlms-course"' in html and 'association-en' in html, 'English course sheet missing')
         page = Page(html)
+        expect(len(page.canonicals) == 1 and page.canonicals[0].startswith(base), 'English public course must have exactly one absolute canonical')
+        expect(page.meta.get('og:url') == page.canonicals[0], 'English Open Graph URL must match canonical in SEF mode')
+        expect(page.meta.get('og:title') and page.meta.get('twitter:title'), 'English public course social titles absent')
+        expect('noindex' not in page.meta.get('robots', ''), 'Public English course must not inherit private robots policy')
         italian = next((a['href'] for a in page.links if a.get('_text', '').strip().startswith('Italiano')), None)
         expect(italian is not None, 'Native mod_languages Italian link absent')
         _, translated = get(italian)
         expect('id="jlms-course"' in translated and 'association-it' in translated, 'Native language switch must resolve associated course, not catalog home')
+        translated_seo = Page(translated)
+        expect(len(translated_seo.canonicals) == 1 and translated_seo.canonicals[0].startswith(base), 'Translated public course must have exactly one canonical')
+        expect(translated_seo.meta.get('og:url') == translated_seo.canonicals[0], 'Translated Open Graph URL must match canonical')
+        expect(translated_seo.meta.get('og:title') and translated_seo.meta.get('twitter:title'), 'Translated public social titles absent')
         expect('PRIVATE_TRANSLATION_BODY' not in translated and 'data-course-id="'+str(fixture['it'])+'"' in translated, 'Public translation contains no protected lesson body')
         _, untranslated = get('/index.php?option=com_jlms&view=course&id='+str(fixture['all'])+'&lang=en')
         target = next(a['href'] for a in Page(untranslated).links if a.get('_text', '').strip().startswith('Italiano'))
