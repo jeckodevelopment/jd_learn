@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **494**.
+- Implementati: **496**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **248**.
+- Esaminati con esito non verificabile: **246**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -64,13 +64,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Verifiche ancora necessarie
 
-- `LCM-05/finder_seo` — Finder e SEO lifecycle. Il workflow e il modello inviano la notifica dopo il commit. Le fixture osservano il dispatcher. Rimane il collaudo dell’indice effettivo con cutoff di accesso, lingua e metadati SEO.
-  - [component/administrator/src/Application/PublicationService.php#Archive/restore Finder refresh failed](../component/administrator/src/Application/PublicationService.php)
-  - [component/administrator/src/Model/CourseModel.php#private function refreshLifecycleFinder](../component/administrator/src/Model/CourseModel.php)
-  - [docs/IMPLEMENTATION_HISTORY.md#test E2E dell](../docs/IMPLEMENTATION_HISTORY.md)
-- `LCM-05/history_upgrade` — Copertura trasversale storico, attestati e upgrade. Le fixture retained conservano progressi e attestati. La combinazione trasversale di transizioni, ruoli, storico e backup/ripristino richiede esecuzioni ulteriori.
-  - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
-  - [docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)](../docs/LIFECYCLE_1.0.0_APPROVED.md)
 - `ISC-01/edge_authorization` — Combinazioni complete di vincoli, ruolo e iscrizioni in sospeso. L’ammissione manuale rivalida la disponibilità editoriale e la didattica ricontrolla utente, livello, iscrizione, edizione e accesso. Le fixture non esauriscono tutte le combinazioni di vincoli, ruolo e richieste pending descritte dal criterio; le richieste approval hanno un flusso distinto.
   - [component/administrator/src/Application/ManualEnrollmentService.php#Administrative assignment does not grant viewing rights](../component/administrator/src/Application/ManualEnrollmentService.php)
   - [docs/LEARNING.md#richieste/approvazioni restano da implementare](../docs/LEARNING.md)
@@ -973,6 +966,15 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/PathwayModel.php#public function changeStates](../component/administrator/src/Model/PathwayModel.php)
   - [tests/joomla-pathways.php#LCM-05: granular native ACL](../tests/joomla-pathways.php)
   - [tests/http-smoke.py#LCM-05: delegated operator](../tests/http-smoke.py)
+- `LCM-05/finder_seo` — Finder e SEO lifecycle. Il software esclude dalla selezione SQL dell'adapter Finder i corsi archiviati, cestinati, non pubblicati, riservati, calendarizzati o con lingua non coerente, riammessi con pubblicazione esplicita e gate pubblici. Gli eventi dopo commit sono verificati; i metadati SEO nella pagina HTTP pubblica sono coperti. CI Joomla MySQL/MariaDB 4/4 #45076048707. La materializzazione effettiva dell'indice Smart Search e il collaudo SEO sul sito ospitato restano prove manuali distinte.
+  - [plugins/finder/jlms/src/Extension/Jlms.php#getListQuery](../plugins/finder/jlms/src/Extension/Jlms.php)
+  - [tests/joomla-courses-ui.php#LCM-05: the installed Finder adapter](../tests/joomla-courses-ui.php)
+  - [tests/joomla-publication-review.php#finderLifecycleWitness](../tests/joomla-publication-review.php)
+  - [tests/http-smoke.py#Native document head uses](../tests/http-smoke.py)
+- `LCM-05/history_upgrade` — Copertura trasversale storico, attestati e upgrade. La CI installa e aggiorna il pacchetto Joomla preservando dati: snapshot dei percorsi e associazioni, progressi ed iscrizioni, attestati emessi e PDF scaricabili, permessi ACL e checkout. La stessa matrice include il backup/ripristino effettivo del database e del documento PDF in una fixture disposable AUT-04. Verificato su MySQL 8.4 e MariaDB 10.6 in CI #45076048707; collaudo e procedura backup del sito reale separati.
+  - [tests/joomla-pathways.php#readLifecycleSnapshot](../tests/joomla-pathways.php)
+  - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
+  - [.github/workflows/ci.yml#AUT-04 full database backup and restore protects historical course evidence](../.github/workflows/ci.yml)
 - `CAT-01/language_available` — Combinazioni lingua e soli corsi disponibili. Il catalogo espone un filtro opt-in sui soli corsi con ammissioni aperte ed erogazione attiva, mantenendo lingua, pubblicazione e vincoli ACL. La PR #684 ha superato la CI e introdotto test strutturali; la verifica manuale Joomla resta pendente.
   - [component/site/src/Model/CoursesModel.php#filter.available](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#c.admissions_open = 1](../component/site/src/Model/CoursesModel.php)
