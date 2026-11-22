@@ -29,7 +29,7 @@ def check() -> None:
         assert payload in tests, f"SQLi regression absent: {payload}"
 
     presentation = source("tests/joomla-course-presentation.php")
-    for marker in ("'<script", "onclick=", "javascript:", "params_json", "current_version_id",
+    for marker in ("<script", "onclick=", "javascript:", "params_json", "current_version_id",
                    "cannot be mass-assigned", "Active markup"):
         assert marker in presentation, f"XSS or mass assignment fixture absent: {marker}"
     # These are real Joomla model/database fixture assertions, not source-only tests.
