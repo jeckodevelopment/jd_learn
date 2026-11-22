@@ -5,8 +5,7 @@ import runpy
 import re,json,hashlib,xml.etree.ElementTree as E,zipfile,io
 ROOT=Path(__file__).resolve().parents[1]
 # CAT-04: indexing rules must cover all routes with personal or protected data.
-import runpy as _cat04_runpy
-_cat04_runpy.run_path(str(ROOT / 'tests/cat04-index-policy.py'))
+runpy.run_path(str(ROOT / 'tests/cat04-index-policy.py'))
 # CAT-04: the protected teacher-edit form must not be indexed or cached.
 private_teacher_view=(ROOT/'component/site/src/View/Teacheredit/HtmlView.php').read_text()
 public_teacher_view=(ROOT/'component/site/src/View/Teacher/HtmlView.php').read_text()
