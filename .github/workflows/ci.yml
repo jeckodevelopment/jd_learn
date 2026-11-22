@@ -400,14 +400,25 @@ jobs:
           set -eu
           test "$JLMS_TEST_DISPOSABLE" = '1'
           php tests/joomla-programme-restore.php .runtime/joomla checkpoint
+          php tests/joomla-teaching-rules.php .runtime/joomla asset-checkpoint
+          # Archive one actual encrypted and guarded PDF, not just its SQL
+          # metadata. The fixture has already checked its opaque key.
+          PDF_KEY="$(python3 -c 'import json; print(json.load(open(".runtime/aut04-pdf-file-manifest.json"))["key"])')"
+          test -f ".runtime/joomla/media/com_jlms/private/$PDF_KEY"
+          mkdir -p .runtime/aut04-pdf-backup
+          cp -p ".runtime/joomla/media/com_jlms/private/$PDF_KEY" .runtime/aut04-pdf-backup/
           export MYSQL_PWD="$JLMS_TEST_PASSWORD"
           # Only the dedicated ephemeral jlms_test schema is touched; the
           # remote test service is never an external Joomla installation.
           mariadb-dump --host=db --user="$JLMS_TEST_USER" --single-transaction             --skip-lock-tables --no-tablespaces --add-drop-table jlms_test             > .runtime/aut04-jlms-backup.sql
           test -s .runtime/aut04-jlms-backup.sql
           php tests/joomla-programme-restore.php .runtime/joomla tamper
+          rm ".runtime/joomla/media/com_jlms/private/$PDF_KEY"
+          test ! -e ".runtime/joomla/media/com_jlms/private/$PDF_KEY"
           mariadb --host=db --user="$JLMS_TEST_USER" jlms_test             < .runtime/aut04-jlms-backup.sql
           php tests/joomla-programme-restore.php .runtime/joomla retained
+          cp -p ".runtime/aut04-pdf-backup/$PDF_KEY" ".runtime/joomla/media/com_jlms/private/$PDF_KEY"
+          php tests/joomla-teaching-rules.php .runtime/joomla asset-retained
       - name: Upgrade the full package with retained data and enabled providers
         run: |
           PACKAGE_VERSION="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
