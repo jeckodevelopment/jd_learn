@@ -442,6 +442,18 @@ foreach (['0', '-1', '1e2', '01', '9223372036854775808', '18446744073709551615']
     rejects(fn () => DecimalId::parse($bad), 'unsafe ID rejected: ' . $bad);
 }
 expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9'))->reference === 'dQw4w9WgXcQ', 'YouTube recognised URL canonicalised');
+
+// LES-02: even discarded URL query arguments must never carry credentials.
+foreach ([
+    ['youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&access_token=ci-secret'],
+    ['youtube', 'https://youtu.be/dQw4w9WgXcQ?api-key=ci-secret'],
+    ['vimeo', 'https://player.vimeo.com/video/12345?h=abc123&client_secret=ci-secret'],
+    ['cloudflarestream', 'https://videodelivery.net/0123456789abcdef0123456789abcdef?jwt=ci-secret'],
+] as [$provider, $source]) {
+    rejects(fn () => SourceNormalizer::normalise($provider, new SourceInput($source)), 'Credential-bearing video URL rejected: ' . $provider);
+}
+expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9&feature=share'))->reference === 'dQw4w9WgXcQ', 'Non-secret YouTube URL options remain supported');
+
 expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://vimeo.com/12345/abc123'))->options === ['privacy_hash' => 'abc123'], 'Vimeo private hash preserved');
 expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://player.vimeo.com/video/12345?h=abc123'))->options === ['privacy_hash' => 'abc123'], 'Vimeo player URL hash preserved');
 foreach (['https://youtube.com.evil.test/watch?v=dQw4w9WgXcQ', 'https://127.0.0.1/video', 'https://user:pass@youtube.com/watch?v=dQw4w9WgXcQ', 'https://youtube.com/playlist?list=123', 'https://youtube.com:443/watch?v=dQw4w9WgXcQ'] as $bad) {
