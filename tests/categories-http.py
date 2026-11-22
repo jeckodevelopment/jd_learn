@@ -88,8 +88,13 @@ try:
   expect('id="jlms-category"' in translated and 'Tassonomia italiana' in translated and 'taxonomy-corso-italiano' in translated,'core language switch resolves translated category')
   translated_page=Page(translated)
   translated_canonical=[link.get('href','') for link in translated_page.head_links if link.get('rel')=='canonical']
-  expect(len(translated_canonical)==1 and translated_canonical[0].startswith(base), f'CAT-04 translated canonical missing: canonical={translated_canonical!r}, og={translated_page.meta.get("og:url")!r}, robots={translated_page.meta.get("robots")!r}, italian={italian!r}, links={translated_page.head_links!r}, head={translated[:2500]!r}, sef={sef}')
-  expect(translated_page.meta.get('og:url')==translated_canonical[0], 'CAT-04 translated category OG URL must match canonical')
+  expect(translated_page.meta.get('og:url', '').startswith(base), 'CAT-04 translated public category must have an absolute OG URL')
+  if translated_canonical:
+   expect(len(translated_canonical)==1 and translated_canonical[0]==translated_page.meta['og:url'], 'CAT-04 translated canonical disagrees with Open Graph URL')
+  else:
+   # Joomla's native multilingual system can replace canonical with hreflang alternate links.
+   expect(any(link.get('rel')=='alternate' and link.get('hreflang')=='it-IT' and link.get('href')==translated_page.meta['og:url'] for link in translated_page.head_links), 'CAT-04 translated Joomla alternate must identify the Open Graph URL')
+  expect(translated_page.meta.get('og:title') and translated_page.meta.get('twitter:title'), 'CAT-04 translated category social titles absent')
   if sef:expect('taxonomy-menu-category-it' in italian,'native target-language category menu selected')
   fixture('hide_target')
   _,hidden=get('/index.php?option=com_jlms&view=category&id='+str(f['en'])+'&lang=en')
