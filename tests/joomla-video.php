@@ -186,6 +186,31 @@ $batch=json_encode([$event(1,'play',0,0),$event(2,'position',5000,5000)],JSON_TH
 $save=static fn(array $grant,int $seq,string $events,int $duration=10000)=>$service->save($student,'en-GB',$enrollment,$lesson,$grant['session_id'],$grant['source_revision'],$seq,$duration,$events);
 $r=$save($b,1,$batch);videoExpect($r['covered_ms']===5000 && !$r['lesson_completed'],'first valid interval');
 videoExpect($save($b,1,$batch)['replay'],'identical batch replay');
+
+// ISC-07: revocation during an already-open player session must reject both
+// fresh playback and writes, including an otherwise valid idempotent replay.
+// Restore only the isolated CI enrollment; all learning history must survive.
+$originalEnrollmentStatus=(string)$db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id='.(int)$enrollment)->loadResult();
+$priorProgress=$db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id='.(int)$enrollment.' AND lesson_id='.(int)$lesson)->loadAssoc();
+$priorPlayerSession=$db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=".$db->quote($b['session_id']))->loadAssoc();
+try {
+    foreach (['suspended', 'cancelled'] as $revokedStatus) {
+        $revocation=(object)['id'=>$enrollment,'status'=>$revokedStatus];
+        $db->updateObject('#__jlms_enrollments',$revocation,'id');
+        videoDenied(fn()=>$service->playback($student,'en-GB',$enrollment,$lesson,true),403,'revoked enrollment rejects fresh video playback: '.$revokedStatus);
+        videoDenied(fn()=>$save($b,1,$batch),403,'revoked enrollment rejects replay of active session: '.$revokedStatus);
+        videoDenied(fn()=>$save($b,2,$batch),403,'revoked enrollment rejects new telemetry in active session: '.$revokedStatus);
+        $afterProgress=$db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id='.(int)$enrollment.' AND lesson_id='.(int)$lesson)->loadAssoc();
+        $afterPlayerSession=$db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=".$db->quote($b['session_id']))->loadAssoc();
+        videoExpect($afterProgress===$priorProgress && $afterPlayerSession===$priorPlayerSession,
+            'revoked enrollment preserves progress and session without writing: '.$revokedStatus);
+    }
+} finally {
+    $restore=(object)['id'=>$enrollment,'status'=>$originalEnrollmentStatus];
+    $db->updateObject('#__jlms_enrollments',$restore,'id');
+}
+videoExpect($save($b,1,$batch)['replay'],'restored enrollment retains valid idempotent player replay');
+
 videoDenied(fn()=>$save($b,1,'[]'),409,'different replay');
 videoDenied(fn()=>$save($b,3,$batch),409,'sequence gap');
 videoDenied(fn()=>$save($b,2,$batch,20000),422,'duration mismatch');
