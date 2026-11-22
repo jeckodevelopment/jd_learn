@@ -305,8 +305,26 @@ teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
     'blocked teacher purge preserves profile');
 $db->setQuery("DELETE FROM #__associations WHERE context='com_jlms.teacher' AND id=" . $emptyTeacherId)->execute();
+// LCM-04: declared third-party FK must block deletion even with CASCADE.
+$externalTable = '#__jlms_ci_teacher_fk_guard';
+$db->setQuery('CREATE TABLE ' . $db->quoteName($externalTable)
+    . ' (teacher_id BIGINT UNSIGNED NOT NULL, note VARCHAR(40) NOT NULL,'
+    . ' CONSTRAINT jlms_ci_teacher_fk FOREIGN KEY (teacher_id) REFERENCES '
+    . $db->quoteName('#__jlms_teachers') . ' (id) ON DELETE CASCADE) ENGINE=InnoDB')->execute();
+try {
+    $db->setQuery('INSERT INTO ' . $db->quoteName($externalTable)
+        . ' (teacher_id,note) VALUES (' . (int)$emptyTeacherId . ", 'must-survive')")->execute();
+    teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
+        'external FK blocks teacher purge even with ON DELETE CASCADE');
+    teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . (int)$emptyTeacherId)->loadResult() === 1,
+        'external reference denial preserves teacher');
+    teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM ' . $db->quoteName($externalTable))->loadResult() === 1,
+        'external reference denial preserves integration history');
+} finally {
+    $db->setQuery('DROP TABLE IF EXISTS ' . $db->quoteName($externalTable))->execute();
+}
 teacherExpect($teacherModel->purgeUnreferenced($emptyTeacherId),
-    'empty unreferenced trashed teacher may be permanently deleted');
+    'empty unreferenced trashed teacher may be permanently deleted: ' . $teacherModel->getError());
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id='.$emptyTeacherId)->loadResult()===0,
     'empty teacher profile record removed');
 teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc()===$linkedBefore,
