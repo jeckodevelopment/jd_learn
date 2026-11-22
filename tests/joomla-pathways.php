@@ -67,7 +67,7 @@ if ($retained) {
 
     $snapshot = json_decode((string)file_get_contents($lifecycleSnapshotFile),true,16,JSON_THROW_ON_ERROR);
     $check($readLifecycleSnapshot((int)$data['pathway'],(int)$data['course']) === $snapshot,
-        'LCM-05 lifecycle, published version, ACL projection and enrollment references remain byte-for-byte stable across package upgrade');
+        'LCM-05 pathway state, revision, access metadata and ordered associations survive package upgrade');
 
     $rows = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$path.' ORDER BY ordering')->loadColumn();
     $check(array_map('intval',$rows) === [(int)$data['course'],(int)$data['hidden_course']],'ordered course associations retained through package update');
