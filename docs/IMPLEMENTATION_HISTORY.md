@@ -1,3 +1,9 @@
+## 22 novembre 2026 — LCM-04: protezione FK esterne dei docenti
+
+[PR #958](https://github.com/jeckodevelopment/jd_learn/pull/958) integrata con squash `2f652b787b461e9385d352d477a87fee7e04d7e4`. [CI #45067620472](https://github.com/jeckodevelopment/jd_learn/actions/runs/45067620472) **4/4 verde**, con test Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 e browser Chromium. [Artefatto installabile di sviluppo JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45067620472/artifacts/14772023216); checksum dello ZIP Joomla interno non verificato in questa nota.
+
+La purga fisica di un docente cestinato verifica ora tutte le FK SQL dichiarate verso il profilo, negando la cancellazione se un'integrazione ha righe referenzianti anche con `ON DELETE CASCADE`. Una fixture crea la FK, controlla la conservazione di docente e riga esterna e verifica la purga dopo la rimozione esplicita della dipendenza. I controlli precedenti su account Joomla, assegnazioni, snapshot e associazioni multilingua restano in vigore. **LCM-04 rimane Parziale**: il contratto non comprende riferimenti opachi senza FK; accettazione manuale Joomla non eseguita e percentuale globale invariata.
+
 ## 22 novembre 2026 — LCM-01: archiviazione corsi chiusa sul piano implementativo (3/3)
 
 Il criterio LCM-01/criterion_01 è stato riconciliato da `unverifiable` a `implemented` alla luce delle verifiche congiunte dei gate core: [PR #950](https://github.com/jeckodevelopment/jd_learn/pull/950), squash `7c09719a162eb7d527d09f165fea0664d26a2410`, e [PR #951](https://github.com/jeckodevelopment/jd_learn/pull/951), squash `9b383ef855139bbbd1da28bacb90d37300e25275`. [CI #45059160428](https://github.com/jeckodevelopment/jd_learn/actions/runs/45059160428) **4/4 verde** e [artefatto installabile JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45059160428/artifacts/14768702042), checksum ZIP Joomla interno non attestato.
