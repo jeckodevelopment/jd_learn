@@ -35,4 +35,26 @@ with tempfile.TemporaryDirectory() as tmp:
     assert record.find('targetplatform').attrib['version']==r'6\.[0-9]+'
     call('tools/release_feed.py','--version','1.0.0','--zip',archive,'--url','https://example.invalid/malicious.zip','--output',feed,expected=1)
     call('tools/build.py','--release-version','bad-version',expected=1)
+    # DOC-10: bind release notes, source commit and feed to exactly one archive.
+    sums=Path(tmp)/'SHA256SUMS.txt'
+    sums.write_text(f"{hashlib.sha256(archive.read_bytes()).hexdigest()}  {archive.name}\n")
+    evidence=Path(tmp)/'evidence.json'
+    note=root/'docs/RELEASE_NOTES_CANDIDATE_1.0.0.md'
+    args=[
+        '--version','1.0.0','--commit','a'*40,'--package',archive,
+        '--feed',feed,'--checksums',sums,'--notes',note,'--output',evidence,
+    ]
+    call('tools/release_candidate_evidence.py',*args)
+    call('tools/release_candidate_evidence.py',*args,'--verify')
+    sums.write_text('0'*64+f"  {archive.name}\n")
+    call('tools/release_candidate_evidence.py',*args,'--verify',expected=1)
+    sums.write_text(f"{hashlib.sha256(archive.read_bytes()).hexdigest()}  {archive.name}\n")
+    with evidence.open('r',encoding='utf-8') as stream:
+        import json
+        record=json.load(stream)
+    assert record['status']=='candidate_not_approved'
+    assert record['manual_joomla_acceptance']=='not_asserted'
+    record['package_sha256']='0'*64
+    evidence.write_text(json.dumps(record))
+    call('tools/release_candidate_evidence.py',*args,'--verify',expected=1)
 print('Stable package and Joomla feed smoke checks passed (no public deployment)')
