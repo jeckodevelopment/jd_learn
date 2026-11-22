@@ -216,15 +216,18 @@ final class VideoProgressService
             $session = $this->session($sessionId, $enrollmentId, $lessonId, $sourceRevision, $now);
             if (!$progress) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
             $hash = hash('sha256', json_encode([$sourceRevision, $reportedDuration, $events], JSON_THROW_ON_ERROR));
+            $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
+            // Even a byte-identical replay must not acknowledge an expired provider
+            // token. Otherwise a stale player can keep refreshing its UI after expiry.
+            if (isset($state['playback_expiry']) && $state['playback_expiry'] <= $now) {
+                throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+            }
             if ($sequence === (int) $session->sequence_no) {
                 if (!hash_equals((string) $session->last_batch_hash, $hash)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
-                $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
                 $resumeConflict = (int) $progress->revision !== (int) $state['progress_revision'];
                 return self::result($progress, $enrollment, $sequence + 1, true, $resumeConflict);
             }
             if ($sequence !== (int) $session->sequence_no + 1) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
-            $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
-            if (isset($state['playback_expiry']) && $state['playback_expiry'] <= $now) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
             try {
                 $telemetry = VideoTelemetry::consume($state, $events, $reportedDuration, $now);
                 $coverage = Coverage::merge(json_decode($progress->coverage_json, true, 32, JSON_THROW_ON_ERROR),

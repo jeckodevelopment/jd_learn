@@ -138,6 +138,8 @@ $remote->callback=static function(string $method)use($student,$group):void{
 streamDenied(fn()=>$service->playback($student,'en-GB',$enrollment,$lesson,true),'COM_JLMS_LEARNING_DENIED');
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id,$group);$remote->callback=null;
 $now+=61000;streamDenied(fn()=>$service->save($student,'en-GB',$enrollment,$lesson,$session,$revision,2,10000,json_encode([$event(3,'play',4000,82000),$event(4,'position',9000,87000)],JSON_THROW_ON_ERROR)),'COM_JLMS_VIDEO_CONFLICT');
+streamDenied(fn()=>$service->save($student,'en-GB',$enrollment,$lesson,$session,$revision,1,10000,$batch),'COM_JLMS_VIDEO_CONFLICT');
+streamExpect((int)$db->setQuery('SELECT covered_ms FROM #__jlms_lesson_progress WHERE enrollment_id='.$enrollment.' AND lesson_id='.$lesson)->loadResult()===4000,'expired playback replay cannot mutate prior progress');
 streamExpect((int)$db->setQuery('SELECT covered_ms FROM #__jlms_lesson_progress WHERE enrollment_id='.$enrollment.' AND lesson_id='.$lesson)->loadResult()===4000,'expired media cannot award new coverage');
 $enrollmentRow=(object)['id'=>$enrollment,'ends_at'=>gmdate('Y-m-d H:i:s',intdiv($now,1000)+25)];$db->updateObject('#__jlms_enrollments',$enrollmentRow,'id');
 $grant=$service->playback($student,'en-GB',$enrollment,$lesson,true);
