@@ -71,6 +71,17 @@ $count=static fn()=>(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_
 $seedPlayerSession=static function(int $enrollmentId,int $lessonId)use($db):string{
     $sessionId=stateKey();
     $sourceRevision=(int)$db->setQuery('SELECT source_revision FROM #__jlms_lessons WHERE id='.$lessonId)->loadResult();
+    $exists=(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE enrollment_id='.$enrollmentId.' AND lesson_id='.$lessonId)->loadResult();
+    if (!$exists) {
+        // The schema deliberately requires a persisted lesson-progress parent
+        // before a player session can be issued; mirror real playback setup.
+        $versionId=(int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id='.$enrollmentId)->loadResult();
+        $progress=(object)['enrollment_id'=>$enrollmentId,'course_version_id'=>$versionId,
+            'lesson_id'=>$lessonId,'source_revision'=>$sourceRevision,'coverage_json'=>'[]',
+            'covered_ms'=>0,'resume_ms'=>0,'state'=>'started',
+            'last_activity_at'=>gmdate('Y-m-d H:i:s'),'revision'=>1];
+        $db->insertObject('#__jlms_lesson_progress',$progress);
+    }
     $row=(object)['id'=>$sessionId,'enrollment_id'=>$enrollmentId,'lesson_id'=>$lessonId,
         'source_revision'=>$sourceRevision,'sequence_no'=>0,'player_state_json'=>'{}',
         'expires_at'=>gmdate('Y-m-d H:i:s',time()+7200)];
