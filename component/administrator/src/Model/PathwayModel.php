@@ -404,6 +404,7 @@ final class PathwayModel extends AdminModel
             // third-party historical records as an unintended side effect.
             // References without a declared FK remain outside this contract.
             $physicalPathwayTable = $db->getPrefix() . 'jlms_pathways';
+            $referencedColumn = 'id';
             $referencingKeys = $db->createQuery()
                 ->select([$db->quoteName('TABLE_NAME'), $db->quoteName('COLUMN_NAME')])
                 ->from('information_schema.KEY_COLUMN_USAGE')
@@ -412,7 +413,6 @@ final class PathwayModel extends AdminModel
                 ->where('REFERENCED_COLUMN_NAME = :pathwayColumn')
                 ->bind(':pathwayTable', $physicalPathwayTable)
                 ->bind(':pathwayColumn', $referencedColumn);
-            $referencedColumn = 'id';
             foreach ($db->setQuery($referencingKeys)->loadAssocList() as $reference) {
                 $tableName = (string) $reference['TABLE_NAME'];
                 $columnName = (string) $reference['COLUMN_NAME'];
