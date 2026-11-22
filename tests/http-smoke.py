@@ -761,7 +761,8 @@ try:
  acl_data=json.loads((root.parent/'pathway-acl-fixture.json').read_text())
  pathway_http=build_opener(HTTPCookieProcessor(CookieJar()))
  with pathway_http.open(base+'/administrator/index.php',timeout=20) as response:
-  login_url=response.geturl();login_html=response.read().decode('utf-8')
+  login_url=response.geturl()
+  login_html=response.read().decode('utf-8')
  pathway_login=next(f for f in Page(login_html).forms if 'username' in f['fields'] and 'passwd' in f['fields'])
  login_fields=dict(pathway_login['fields'])
  login_fields.update(username=acl_data['username'],passwd='CI-Pathway-Only-Password-2026')
