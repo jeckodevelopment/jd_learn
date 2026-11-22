@@ -312,6 +312,35 @@ expect(!in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $consultationVideo['blocker
 expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $consultationVideo['warnings'], true),
     'consultation still discloses remote caption uncertainty');
 
+// AUT-03: require the same independent, provider-aware warning and capability
+// policy for all built-in remote adapters in both teaching modes. The local
+// MP4 adapter must never inherit an external caption warning.
+foreach (['youtube', 'vimeo', 'cloudflarestream', 'html5'] as $providerKey) {
+    foreach (['learning', 'consultation'] as $mode) {
+        $lessonId = 531;
+        $rules = $mode === 'consultation'
+            ? ['mode' => 'consultation', 'completion_policy' => 'none']
+            : ['mode' => 'learning'];
+        $check = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+            $readinessCourse('<p>Course description</p>', 'Summary', 'images/course.png'),
+            [(object) ['id' => 3]],
+            [(object) ['id' => $lessonId, 'module_id' => 3,
+                'required' => $mode === 'consultation' ? 0 : 1,
+                'kind' => 'video', 'provider_key' => $providerKey,
+                'duration_ms' => 60000,
+                'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>Transcript</p>"}']],
+            [], false, $rules, [$lessonId => ['configured' => true, 'trackable' => false]]
+        );
+        expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $check['warnings'], true)
+            === ($providerKey !== 'html5'),
+            'caption availability warning applies only to remote provider ' . $providerKey . '/' . $mode);
+        expect(in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $check['blockers'], true)
+            === ($mode === 'learning'),
+            'nontrackable provider blocks learning but not consultation: ' . $providerKey . '/' . $mode);
+        expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $check['warnings'], true),
+            'transcript is independently recognized for ' . $providerKey . '/' . $mode);
+    }
+}
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
