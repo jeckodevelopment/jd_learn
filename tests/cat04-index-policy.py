@@ -25,6 +25,13 @@ for view in ("Teacher", "Teachers", "Courses", "Categories", "Pathways"):
     code = read(f"View/{view}/HtmlView.php")
     assert "setHeader('X-Robots-Tag', 'noindex, nofollow'" not in code, view
 
+for view in ("Course", "Pathway"):
+    code = read(f"View/{view}/HtmlView.php")
+    assert "PublicBreadcrumbHelper::addDetail(" in code, view
+breadcrumb = read("Helper/PublicBreadcrumbHelper.php")
+assert "getPathway()" in breadcrumb and "getActive()" in breadcrumb
+assert "addItem($title)" in breadcrumb
+
 helper = read("Helper/PublicMetadataHelper.php")
 for required in ("'canonical'", "'og:url'", "'og:image'", "'twitter:image'", "Route::_($url)", "preg_match(", "str_contains($image, '..')"):
     assert required in helper, required
