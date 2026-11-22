@@ -22,6 +22,16 @@ if($mode==='retained'){
  $f=json_decode(file_get_contents($fixture),true,16,JSON_THROW_ON_ERROR);$source=migrationRow('enrollments',$f['source']);$target=migrationRow('enrollments',$f['target']);
  migrationExpect($source->status==='migrated','source enrollment remains archived after migration');migrationExpect((int)$target->course_version_id===$f['target_version'],'target assignment remains in the current version');
  migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$f['source'].' AND target_enrollment_id='.$f['target'])->loadResult()===1,'one immutable migration record remains');
+
+ $retainedCertificate=(array)migrationRow('certificates',(int)$f['certificate']);
+ $retainedDocument=(array)migrationRow('certificate_documents',(int)$f['certificate_document']);
+ migrationExpect((int)$retainedCertificate['enrollment_id']===(int)$f['source']
+     && (int)$retainedCertificate['course_version_id']===(int)$f['source_version']
+     && (int)$retainedDocument['certificate_id']===(int)$f['certificate'],
+     'upgrade retains original ownership and source version for historical certificate');
+ migrationExpect(hash('sha256',json_encode([$retainedCertificate,$retainedDocument],JSON_THROW_ON_ERROR))===$f['certificate_source_hash'],
+     'upgrade retains certificate and immutable document snapshot byte-for-byte');
+
  echo json_encode(['enrollment_migration_retained_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;return;
 }
 $cat=(int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
@@ -132,6 +142,28 @@ migrationExpect($savedPlan['mapping']===$mapping && count($savedPlan['transfers'
     'saved equivalence maps exactly one completed lesson when explicitly requested');
 migrationExpect($service->preview($actor,$course,$enrollment,[],false)['transfers']===[],
     'saved equivalences are never applied implicitly');
+
+// AUT-04: a pre-existing historical certificate document belongs to the source
+// version, even if this one enrollment is later explicitly transferred. This
+// fixture tests persistence and ownership, not the issuance eligibility path.
+$templateId=(int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1')->loadResult();
+migrationExpect($templateId>0,'default immutable certificate template available for history retention');
+$historyCertificate=(object)['enrollment_id'=>$enrollment,'course_version_id'=>$sourceVersion,
+    'template_id'=>$templateId,'current_document_id'=>null,'issued_at'=>$now,'revision'=>1];
+$db->insertObject('#__jlms_certificates',$historyCertificate,'id');
+$identityJson=json_encode(['user_id'=>(int)$actor->id,'course_id'=>$course,
+    'course_version_id'=>$sourceVersion,'certificate_history_test'=>true],JSON_THROW_ON_ERROR);
+$templateJson=(string)$db->setQuery('SELECT template_json FROM #__jlms_certificate_templates WHERE id='.$templateId)->loadResult();
+$historyDocument=(object)['certificate_id'=>(int)$historyCertificate->id,'document_no'=>1,
+    'serial'=>'AUT04-'.strtoupper(bin2hex(random_bytes(12))),'identity_snapshot_json'=>$identityJson,
+    'template_snapshot_json'=>$templateJson,'status'=>'pending_render','issued_at'=>$now,'revision'=>1];
+$db->insertObject('#__jlms_certificate_documents',$historyDocument,'id');
+$db->setQuery('UPDATE #__jlms_certificates SET current_document_id='.(int)$historyDocument->id.
+    ' WHERE id='.(int)$historyCertificate->id)->execute();
+$certificateBefore=(array)migrationRow('certificates',(int)$historyCertificate->id);
+$documentBefore=(array)migrationRow('certificate_documents',(int)$historyDocument->id);
+$versionBefore=(array)migrationRow('course_versions',$sourceVersion);
+
 $beforeProgress=(array)$db->setQuery('SELECT * FROM #__jlms_lesson_progress WHERE enrollment_id='.$enrollment.' AND lesson_id='.$lesson)->loadObject();
 $sourceBefore=migrationRow('enrollments',$enrollment);$key='2e6d0f21-8c37-4a42-b57a-185fe9d0c001';
 migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,(int)$sourceBefore->revision,$mapping,'Learner requested transfer',$key,str_repeat('0',64),true),409,'stale preview hash prevents any migration write');
@@ -141,6 +173,16 @@ $afterSource=migrationRow('enrollments',$enrollment);$afterProgress=(array)$db->
 $targetRow=migrationRow('enrollments',$target);$targetProgress=$db->setQuery('SELECT * FROM #__jlms_lesson_progress WHERE enrollment_id='.$target.' AND lesson_id='.$targetLesson)->loadObject();
 migrationExpect($afterSource->status==='migrated'&&(int)$afterSource->revision===(int)$sourceBefore->revision+1,'source is marked migrated and its revision advances');
 migrationExpect($beforeProgress===$afterProgress,'original lesson progress remains byte-for-byte unchanged');
+
+migrationExpect((array)migrationRow('certificates',(int)$historyCertificate->id)===$certificateBefore,
+    'explicit migration does not reassign or rewrite historical certificate ownership');
+migrationExpect((array)migrationRow('certificate_documents',(int)$historyDocument->id)===$documentBefore,
+    'issued document identity, source version snapshot and serial survive migration byte-for-byte');
+migrationExpect((array)migrationRow('course_versions',$sourceVersion)===$versionBefore,
+    'source published course version remains frozen after migration');
+migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='.(int)$target)->loadResult()===0,
+    'destination version does not implicitly claim or reissue source certificate');
+
 migrationExpect($targetRow->status==='completed'&&(int)$targetRow->completed_total===1&&(int)$targetRow->required_total===1,'target enrollment completion is recalculated from transferred required completions');
 migrationExpect($targetProgress&&$targetProgress->state==='completed'&&(int)$targetProgress->covered_ms===0,'only completion state transfers, not video coverage');
 $targetReplay=$service->apply($actor,$course,$enrollment,(int)$sourceBefore->revision,$mapping,'Learner requested transfer',$key,$plan['hash'],true);
@@ -149,5 +191,6 @@ migrationDenied(fn()=>$service->apply($actor,$course,$enrollment,(int)$sourceBef
 migrationDenied(fn()=>$service->preview(new \Joomla\CMS\User\User(),$course,$enrollment,$mapping),401,'anonymous migration preview denied');
 $jobId=(int)$db->setQuery('SELECT job_id FROM #__jlms_enrollment_migrations WHERE source_enrollment_id='.$enrollment)->loadResult();
 migrationExpect((string)$db->setQuery('SELECT status FROM #__jlms_jobs WHERE id='.$jobId)->loadResult()==='succeeded','single migration is recorded as a completed immutable job');
-file_put_contents($fixture,json_encode(['course'=>$course,'source'=>$enrollment,'target'=>$target,'source_version'=>$sourceVersion,'target_version'=>$version],JSON_THROW_ON_ERROR));
+file_put_contents($fixture,json_encode(['course'=>$course,'source'=>$enrollment,'target'=>$target,'source_version'=>$sourceVersion,'target_version'=>$version,'certificate'=>(int)$historyCertificate->id,
+    'certificate_document'=>(int)$historyDocument->id,'certificate_source_hash'=>hash('sha256',json_encode([$certificateBefore,$documentBefore],JSON_THROW_ON_ERROR))],JSON_THROW_ON_ERROR));
 echo json_encode(['enrollment_migration_checks'=>$checks,'status'=>'passed'],JSON_THROW_ON_ERROR).PHP_EOL;

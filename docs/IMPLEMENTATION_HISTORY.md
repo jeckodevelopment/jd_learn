@@ -1,3 +1,9 @@
+## 22 novembre 2026 — AUT-03, avvisi verificabili sulle caption remote (PR #919)
+
+[PR #919](https://github.com/jeckodevelopment/jd_learn/pull/919) mergiata in `main` con squash `4fdb759147c699d1e1f03020f0a7185b3f19ecf7`. [CI #45023053725](https://github.com/jeckodevelopment/jd_learn/actions/runs/45023053725) 4/4 verde (preflight, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6). [Artefatto installabile dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45023053725/artifacts/14754801381), digest dell'**archivio GitHub Actions esterno** `sha256:f8dff50ccf36fb4da43e053d9f2f1d7e1730ed8e6ec3250b90c39a83715b7bcf`, non dello ZIP Joomla interno.
+
+La checklist di pubblicazione comunica l'impossibilità di certificare automaticamente le tracce caption effettive di YouTube, Vimeo e Cloudflare Stream. Il warning non blocca la pubblicazione e resta indipendente dalla trascrizione editoriale locale, con traduzioni IT/EN e test automatici. AUT-03 resta in stato parziale; i provider esterni e l'accettazione manuale sul sito richiedono prova operativa. Percentuale minima documentata **62,23%**, invariata.
+
 ## 22 novembre 2026 — ISC-07, implementazione software chiusa 3/3 (PR #917)
 
 [PR #917](https://github.com/jeckodevelopment/jd_learn/pull/917) mergiata in `main` con commit `8956326c596261841ce6817853e6ca570f90465f`. [CI #45021815907](https://github.com/jeckodevelopment/jd_learn/actions/runs/45021815907) **4/4 verde**: preflight, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. [Artefatto di sviluppo JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/45021815907/artifacts/14753693166), SHA-256 del solo **archivio esterno Actions** `ae4ba122f6b0c860a757287d41df4f4cb51b5496faff28d9da3b022bdf83e950` (non dello ZIP Joomla interno).
