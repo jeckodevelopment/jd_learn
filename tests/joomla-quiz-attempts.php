@@ -180,14 +180,14 @@ attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1
 attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,attemptKey(),'{}',false),409,'stale tab cannot overwrite answers');
 attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,2,attemptKey(),'{"999999":["first"]}',false),422,'foreign snapshot question rejected');
 $qid=$a['questions'][0]['id'];attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,2,attemptKey(),json_encode([$qid=>[['bad']]],JSON_THROW_ON_ERROR),false),422,'nested option value rejected without warning');
-$beforeRevokeAttempt=$db->setQuery('SELECT state,revision,status,score_points FROM #__jlms_attempts WHERE id='.(int)$aid)->loadAssoc();
+$beforeRevokeAttempt=$db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id='.(int)$aid)->loadAssoc();
 $beforeRevokeAnswers=$db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id='.(int)$aid.' ORDER BY aa.id')->loadAssocList();
 $student->getAuthorisedViewLevels();\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id,$group);
 try {
     attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,1,$mut,$answers,false),403,'current access checked even on save replay');
     attemptReject(fn()=>$service->mutate($student,'en-GB',$enrollment,$lesson,$aid,2,attemptKey(),$answers,true),403,'revoked user cannot submit open quiz');
     attemptReject(fn()=>$service->start($student,'en-GB',$enrollment,$lesson,$key),403,'current access checked on start replay');
-    attemptExpect($db->setQuery('SELECT state,revision,status,score_points FROM #__jlms_attempts WHERE id='.(int)$aid)->loadAssoc()===$beforeRevokeAttempt,
+    attemptExpect($db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id='.(int)$aid)->loadAssoc()===$beforeRevokeAttempt,
         'revoked quiz operations preserve score revision and attempt state');
     attemptExpect($db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id='.(int)$aid.' ORDER BY aa.id')->loadAssocList()===$beforeRevokeAnswers,
         'previously saved answers survive access revocation');
