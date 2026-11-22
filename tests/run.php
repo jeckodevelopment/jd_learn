@@ -44,8 +44,8 @@ expect($storagePathCheck->invoke(null, 'C:' . chr(92) . 'jlms-private') === true
 expect($storagePathCheck->invoke(null, 'C:jlms-private') === false, 'LES-03 rejects Windows drive-relative root');
 expect($storagePathCheck->invoke(null, '../public') === false, 'LES-03 rejects relative storage root');
 
-$capacityStorage = static fn (int $configuredMiB) => new \\Jlms\\Component\\Jlms\\Administrator\\Infrastructure\\ProtectedMaterialStorage(
-    static fn () => new \\Joomla\\Registry\\Registry(['material_max_mib' => $configuredMiB])
+$capacityStorage = static fn (int $configuredMiB) => new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(
+    static fn () => new \Joomla\Registry\Registry(['material_max_mib' => $configuredMiB])
 );
 $oneMiBLimit = $capacityStorage(1)->limit();
 $zeroMiBLimit = $capacityStorage(0)->limit();
