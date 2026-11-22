@@ -321,7 +321,7 @@ foreach (['youtube', 'vimeo', 'cloudflarestream', 'html5'] as $providerKey) {
         $rules = $mode === 'consultation'
             ? ['mode' => 'consultation', 'completion_policy' => 'none']
             : ['mode' => 'learning'];
-        $check = \\Jlms\\Component\\Jlms\\Administrator\\Domain\\PublicationReadiness::inspect(
+        $check = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
             $readinessCourse('<p>Course description</p>', 'Summary', 'images/course.png'),
             [(object) ['id' => 3]],
             [(object) ['id' => $lessonId, 'module_id' => 3,
