@@ -12,7 +12,7 @@
 | Esecuzione dinamica | Scansione locale Semgrep con fixture negative PHP/JS/Python | `tests/secdev07-sast.py`, `security/secdev07-semgrep.yml`, CI standard | Regole statiche selezionate, non analisi esaustiva |
 | Formule CSV | Nessun produttore CSV applicativo nel sottoinsieme runtime verificato; tripwire se introdotto | `tests/secdev03-input-output-gate.py` | Non sostituisce test di escaping quando la funzionalità sarà prevista |
 
-`tests/secdev03-input-output-gate.py`, eseguito in `tools/check.py`, impedisce di perdere questi test oppure introdurre un produttore CSV nelle superfici individuate senza revisione specifica. Il controllo non riscrive dati, non accede a segreti e non attribuisce un risultato a endpoint non provati.
+`tests/secdev03-input-output-gate.py`, eseguito in `tools/check.py`, impedisce di perdere questi test oppure introdurre un produttore CSV nelle superfici individuate senza revisione specifica. La possibilità di caricare o scaricare un allegato CSV come file protetto non costituisce un esportatore di dati tabellari generati dall'applicazione; la policy MIME degli allegati è separata. Il controllo non riscrive dati, non accede a segreti e non attribuisce un risultato a endpoint non provati.
 
 ## Per chiudere formalmente il requisito
 
