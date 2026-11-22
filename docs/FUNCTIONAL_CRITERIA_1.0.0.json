@@ -83,16 +83,18 @@
       {
         "id": "external_references",
         "label": "Audit riferimenti di estensioni esterne",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Model/TeacherModel.php",
-          "tests/joomla-teachers.php"
+          "tests/joomla-teachers.php",
+          "docs/LCM04_EXTERNAL_REFERENCE_CONTRACT.md"
         ],
         "review": {
-          "reason": "Il lifecycle docente protegge le referenze conosciute nel repository. Occorre l’inventario delle estensioni installate e delle relazioni esterne per generalizzare.",
+          "reason": "Audit del contratto supportato: le dipendenze esterne dichiarate tramite FK SQL su #__jlms_teachers.id impediscono la purga anche con ON DELETE CASCADE; fixture Joomla verificata. Riferimenti opachi senza FK e integrazioni installate restano fuori dal perimetro automatico e richiedono verifica dedicata.",
           "references": [
-            "component/administrator/src/Model/TeacherModel.php#public function changeStates",
-            "tests/joomla-teachers.php#teacher lifecycle preserves immutable course snapshot"
+            "component/administrator/src/Model/TeacherModel.php#information_schema.KEY_COLUMN_USAGE",
+            "tests/joomla-teachers.php#ON DELETE CASCADE",
+            "docs/LCM04_EXTERNAL_REFERENCE_CONTRACT.md#Limite del contratto"
           ]
         }
       }
