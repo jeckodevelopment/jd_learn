@@ -294,10 +294,20 @@ foreach ([
     ['unitX7', 'unit_7', 0],
     ['a!b', 'a!b', 1],
     ['aXb', 'a!b', 0],
+    // SECDEV-03: SQL-looking visitor input must be bound and treated as literal text.
+    ['A normal course', "' OR 1=1 --", 0],
+    ["' OR 1=1 --", "' OR 1=1 --", 1],
+    ['A normal course', "'; DROP TABLE courses; --", 0],
+    ['A normal course', 'UNION SELECT * FROM users', 0],
+    ['aXb', '%_! OR 1=1', 0],
+    ['%_! OR 1=1', '%_! OR 1=1', 1],
 ] as [$title, $needle, $expected]) {
     $pattern = \Jlms\Component\Jlms\Site\Helper\CatalogSearch::pattern($needle);
-    $sql = 'SELECT ' . $db->quote($title) . ' LIKE ' . $db->quote($pattern) . " ESCAPE '!'";
-    pubExpect((int) $db->setQuery($sql)->loadResult() === $expected,
-        'catalog LIKE treats visitor wildcards and escape characters literally');
+    // The title is a trusted test fixture; visitor text must never be interpolated into SQL.
+    $query = $db->createQuery()
+        ->select($db->quote($title) . " LIKE :catalogProbe ESCAPE '!'")
+        ->bind(':catalogProbe', $pattern);
+    pubExpect((int) $db->setQuery($query)->loadResult() === $expected,
+        'SECDEV-03/CAT-01: bound search is literal on the actual database');
 }
 echo json_encode(['publication_checks'=>$checks,'status'=>'passed','course_id'=>$course],JSON_THROW_ON_ERROR).PHP_EOL;

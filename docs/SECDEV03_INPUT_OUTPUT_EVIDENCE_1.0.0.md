@@ -6,13 +6,13 @@
 
 | Rischio | Superficie provata | Evidenza | Limite |
 |---|---|---|---|
-| SQL injection / escaping LIKE | Ricerca catalogo con quote, commenti, UNION e wildcard | `component/site/src/Helper/CatalogSearch.php`, `tests/catalog-literal-search.php`, CI standard | Non dimostra la sicurezza di ogni query del componente |
+| SQL injection / escaping LIKE | Ricerca catalogo con quote, commenti, UNION e wildcard, incluse prove reali con binding su MySQL e MariaDB | `component/site/src/Helper/CatalogSearch.php`, `tests/catalog-literal-search.php`, `tests/joomla-publication.php` e CI PHP/database | Non dimostra la sicurezza di ogni query del componente |
 | Stored XSS / output HTML | Presentazione corso su modello Joomla e HTML filtrato, script, iframe, immagini e attributi attivi | `tests/joomla-course-presentation.php` in CI Joomla disposable | Non copre tutte le viste e tutti gli override/template |
 | Mass assignment | Il modello Corso ignora `params_json`, `current_version_id` e stato di pubblicazione arbitrari | `tests/joomla-course-presentation.php` in CI | Occorre audit delle altre mutazioni |
 | Esecuzione dinamica | Scansione locale Semgrep con fixture negative PHP/JS/Python | `tests/secdev07-sast.py`, `security/secdev07-semgrep.yml`, CI standard | Regole statiche selezionate, non analisi esaustiva |
 | Formule CSV | Nessun produttore CSV applicativo nel sottoinsieme runtime verificato; tripwire se introdotto | `tests/secdev03-input-output-gate.py` | Non sostituisce test di escaping quando la funzionalità sarà prevista |
 
-`tests/secdev03-input-output-gate.py`, eseguito in `tools/check.py`, impedisce di perdere questi test oppure introdurre un produttore CSV nelle superfici individuate senza revisione specifica. La possibilità di caricare o scaricare un allegato CSV come file protetto non costituisce un esportatore di dati tabellari generati dall'applicazione; la policy MIME degli allegati è separata. Il controllo non riscrive dati, non accede a segreti e non attribuisce un risultato a endpoint non provati.
+`tests/secdev03-input-output-gate.py`, eseguito in `tools/check.py`, impedisce di perdere questi test (compresa la prova SQL su database reale con parametri associati) oppure introdurre un produttore CSV nelle superfici individuate senza revisione specifica. La possibilità di caricare o scaricare un allegato CSV come file protetto non costituisce un esportatore di dati tabellari generati dall'applicazione; la policy MIME degli allegati è separata. Il controllo non riscrive dati, non accede a segreti e non attribuisce un risultato a endpoint non provati.
 
 ## Per chiudere formalmente il requisito
 
