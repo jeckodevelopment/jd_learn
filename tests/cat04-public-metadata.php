@@ -4,7 +4,8 @@ declare(strict_types=1);
 // Isolated contract test for public metadata: no Joomla installation required.
 namespace Joomla\CMS\Router {
     final class Route {
-        public static function _(string $url): string {
+        public static function _(string $url, bool $xhtml = true): string {
+            if ($xhtml) { throw new \RuntimeException('Canonical route must not be XHTML-encoded'); }
             return '/it/corsi/42:' . rawurlencode('prova');
         }
     }
