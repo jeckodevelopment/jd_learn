@@ -324,7 +324,7 @@ try {
     $db->setQuery('DROP TABLE IF EXISTS ' . $db->quoteName($externalTable))->execute();
 }
 teacherExpect($teacherModel->purgeUnreferenced($emptyTeacherId),
-    'empty unreferenced trashed teacher may be permanently deleted');
+    'empty unreferenced trashed teacher may be permanently deleted: ' . $teacherModel->getError());
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id='.$emptyTeacherId)->loadResult()===0,
     'empty teacher profile record removed');
 teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc()===$linkedBefore,
