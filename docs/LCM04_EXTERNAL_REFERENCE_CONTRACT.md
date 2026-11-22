@@ -10,6 +10,10 @@ Durante la transazione di purga, JD Learn consulta `information_schema.KEY_COLUM
 
 I riferimenti opachi in JSON, testo, sistemi esterni o tabelle senza FK non sono automaticamente rilevabili. Le integrazioni devono dichiarare una chiave esterna oppure applicare un proprio veto operativo. Non si dichiara protezione universale delle estensioni terze. La verifica delle integrazioni installate e il collaudo manuale Joomla restano separati.
 
+## Chiusura implementativa LCM-04
+
+Il criterio `external_references` è risolto **nel perimetro di integrazione formalmente dichiarato**: FK SQL verso il profilo docente, verifica transazionale e test di regressione su Joomla effimero. La verifica delle integrazioni installate e dei riferimenti privi di FK non è implicitamente attestata. Il requisito è chiuso dal punto di vista dell'implementazione core, senza assimilare test automatici ad accettazione Joomla.
+
 ## Collaudo
 
 Verificare la purga negata con profilo ancora collegato a un utente, una versione didattica, un'associazione multilingua o una FK terza; verificare che siano conservati record storici e account. Dopo la rimozione delle dipendenze, verificare la purga del solo profilo inutilizzato e cestinato, con ACL e CSRF validi.
