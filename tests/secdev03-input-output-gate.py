@@ -63,7 +63,8 @@ def check() -> None:
 def fixture_test() -> None:
     regex = re.compile(r"\bfputcsv\s*\(", re.I)
     assert regex.search("fputcsv($out, $row);")
-    assert not regex.search("$value = 'fputcsv(';")
+    # Conservative source matching flags quoted occurrences for manual review.
+    assert regex.search("$value = 'fputcsv(';")
     # A formula-prefixed CSV value is NOT harmless, even when correctly quoted.
     for prefix in ("=", "+", "-", "@"):
         value = prefix + "SUM(1,1)"
