@@ -775,6 +775,8 @@ try:
  delegated_csrf=next((key for key,value in delegated_form['fields'].items()
                       if re.fullmatch(r'[0-9a-f]{32}',key) and value=='1'),None)
  expect(delegated_csrf is not None,'Delegated pathway form exposes its own session token')
+ def acl_pathway_visible():
+  return 'Empty CI pathway' in get('/index.php?option=com_jlms&view=pathways')[1]
  def delegated_lifecycle(task,ids,denied):
   endpoint=base+'/administrator/index.php?'+urlencode({'option':'com_jlms','task':'pathway.'+task})
   body=urlencode([(delegated_csrf,'1')]+[('cid[]',str(path)) for path in ids]).encode()
@@ -786,14 +788,14 @@ try:
   except HTTPError as error:
    if not denied or error.code!=403:
     raise
-  expect(pathway_public_visible() if denied else True,'Delegated lifecycle request completed safely')
+  expect(acl_pathway_visible() if denied else True,'Delegated lifecycle request completed safely')
  delegated_lifecycle('archive',[acl_data['allowed'],acl_data['denied']],True)
  delegated_lifecycle('trash',[acl_data['allowed'],acl_data['denied']],True)
  delegated_lifecycle('archive',[acl_data['allowed']],False)
- expect(not pathway_public_visible(),'Delegated category-scoped archive hides only allowed pathway')
+ expect(not acl_pathway_visible(),'Delegated category-scoped archive hides only allowed pathway')
  delegated_lifecycle('restore',[acl_data['allowed']],False)
  delegated_lifecycle('publish',[acl_data['allowed']],False)
- expect(pathway_public_visible(),'Delegated restore and publish bring allowed pathway back')
+ expect(acl_pathway_visible(),'Delegated restore and publish bring allowed pathway back')
  expect('Shared-course CI pathway' in get('/index.php?option=com_jlms&view=pathways')[1],
         'Explicitly denied sibling remains published throughout delegated lifecycle')
  print(json.dumps({'pathway_lifecycle_record_acl_http_checks':8,'status':'passed'}))
