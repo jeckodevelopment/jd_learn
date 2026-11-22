@@ -218,6 +218,22 @@ $user=new \Joomla\CMS\User\User();$data=['name'=>'CI Enrollment State Quiz','use
 $qe=$learning->start($user,'en-GB',$qf['course_id'],bin2hex(random_bytes(16)));$runtime=$component->getQuizAttemptService();$attempt=$runtime->start($user,'en-GB',$qe,$qf['lesson_id'],stateKey());$aid=$attempt['attempt']['id'];
 $answers=json_encode([$attempt['questions'][0]['id']=>['first']],JSON_THROW_ON_ERROR);$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,1,stateKey(),$answers,false);
 $quizBefore=$db->setQuery('SELECT status,revision,rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id='.$aid)->loadAssoc();$savedAnswers=$db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id='.$aid)->loadAssocList();
+// LCM-01: stale authenticated quiz POSTs, including an existing attempt,
+// cannot bypass course lifecycle even if admission/delivery flags are stale.
+$quizCourseBefore=$db->setQuery('SELECT state, admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='.(int)$qf['course_id'])->loadAssoc();
+try {
+    foreach ([0, 2, -2] as $inactiveQuizState) {
+        $db->setQuery('UPDATE #__jlms_courses SET state='.(int)$inactiveQuizState.', admissions_open=1, delivery_enabled=1 WHERE id='.(int)$qf['course_id'])->execute();
+        stateDenied(fn()=>$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,1,stateKey(),$answers,false),404,'LCM-01 inactive course denies quiz replay');
+        stateDenied(fn()=>$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,2,stateKey(),$answers,false),404,'LCM-01 inactive course denies quiz save');
+        stateDenied(fn()=>$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,2,stateKey(),$answers,true),404,'LCM-01 inactive course denies quiz submit');
+        stateExpect($quizBefore===$db->setQuery('SELECT status,revision,rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id='.$aid)->loadAssoc()
+            && $savedAnswers===$db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id='.$aid)->loadAssocList(),
+            'LCM-01 lifecycle denial leaves quiz attempt and answers immutable');
+    }
+} finally {
+    $db->setQuery('UPDATE #__jlms_courses SET state='.(int)$quizCourseBefore['state'].', admissions_open='.(int)$quizCourseBefore['admissions_open'].', delivery_enabled='.(int)$quizCourseBefore['delivery_enabled'].' WHERE id='.(int)$qf['course_id'])->execute();
+}
 $qi=$service->editor($actor,$qf['course_id'],$qe,'suspended');stateExpect($qi['impact']['open_attempts']===1,'preview reports an open quiz');
 stateDenied(fn()=>$service->apply($actor,...stateCommand($service->editor($actor,$qf['course_id'],$qe,'cancelled'))),409,'cannot cancel enrollment during an open quiz');$service->apply($actor,...stateCommand($qi));
 stateDenied(fn()=>$runtime->mutate($user,'en-GB',$qe,$qf['lesson_id'],$aid,2,stateKey(),$answers,false),403,'suspension denies quiz save');
