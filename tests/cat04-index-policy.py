@@ -33,7 +33,7 @@ assert "getPathway()" in breadcrumb and "getActive()" in breadcrumb
 assert "addItem($title)" in breadcrumb
 
 helper = read("Helper/PublicMetadataHelper.php")
-for required in ("'canonical'", "'og:url'", "'og:image'", "'twitter:image'", "Route::_($url)", "preg_match(", "str_contains($image, '..')"):
+for required in ("'canonical'", "'og:url'", "'og:image'", "'twitter:image'", "Route::_($url, false)", "preg_match(", "str_contains($image, '..')"):
     assert required in helper, required
 router = read("Service/Router.php")
 for entity in ("Course", "Category", "Pathway"):
