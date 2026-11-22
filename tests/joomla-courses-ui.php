@@ -160,12 +160,16 @@ listExpect(!$finderVisible(),'Finder excludes timed publication that cannot be h
 $finderWindow->publish_up=null;
 $db->updateObject('#__jlms_courses',$finderWindow,'id',true);
 listExpect($finderVisible(),'Removing the scheduled publication restores Finder eligibility');
+$finderCategory=(object)['id'=>(int)$categories['child'],'language'=>'en-GB'];
+$db->updateObject('#__categories',$finderCategory,'id');
 $finderLanguage=(object)['id'=>$finderSubject,'language'=>'it-IT'];
 $db->updateObject('#__jlms_courses',$finderLanguage,'id');
 listExpect(!$finderVisible(),'Finder enforces category/course language consistency');
 $finderLanguage->language='en-GB';
 $db->updateObject('#__jlms_courses',$finderLanguage,'id');
 listExpect($finderVisible(),'Matching category/course language restores Finder eligibility');
+$finderCategory->language='*';
+$db->updateObject('#__categories',$finderCategory,'id');
 
 $accessChange = (object)['id' => $ids['Alpha'], 'content_access' => 2];
 $db->updateObject('#__jlms_courses', $accessChange, 'id');
