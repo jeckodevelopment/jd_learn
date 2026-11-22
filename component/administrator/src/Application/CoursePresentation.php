@@ -14,10 +14,14 @@ final class CoursePresentation
 
     public static function html(string $html): string
     {
-        return InputFilter::getInstance(
+        $cleaned = InputFilter::getInstance(
             ['p', 'br', 'ul', 'ol', 'li', 'strong', 'em', 'b', 'i', 'h2', 'h3', 'h4', 'blockquote', 'a', 'span'],
             ['href', 'title', 'lang', 'dir'], 0, 0, 1,
         )->clean($html, 'html');
+        // Prevent editorial links from disclosing a lesson or administrator URL
+        // as an HTTP Referer to external sites. The allowlist strips any
+        // author-supplied rel attributes first, so this remains deterministic.
+        return preg_replace('/<a(?=[\\s>])/i', '<a rel="noreferrer noopener"', $cleaned) ?? '';
     }
 
     private static function normalise(array $values): array
