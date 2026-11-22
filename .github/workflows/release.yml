@@ -59,6 +59,7 @@ jobs:
       - name: Build immutable stable candidate
         env:
           VERSION: ${{ inputs.version }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
         run: |
           RELEASE_DATE="$(date -u +%Y-%m-%d)"
           python3 tools/build.py --release-version "$VERSION" --release-date "$RELEASE_DATE"
@@ -73,6 +74,7 @@ jobs:
             --package "dist/pkg_jlms-$VERSION.zip" --feed dist/jdlearn.xml \
             --checksums dist/RELEASE_SHA256SUMS.txt \
             --notes docs/RELEASE_NOTES_CANDIDATE_1.0.0.md \
+            --release-notes "$RELEASE_NOTES" \
             --output dist/RELEASE_CANDIDATE_EVIDENCE.json
           python3 -m compileall -q tools/release_feed.py tools/publish_update_feed_ftps.py
           python3 tests/ftps-publish.py
@@ -119,6 +121,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.version }}
           GH_REPO: ${{ github.repository }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
         run: |
           sha256sum -c dist/RELEASE_SHA256SUMS.txt
           python3 tools/release_candidate_evidence.py \
@@ -126,6 +129,7 @@ jobs:
             --package "dist/pkg_jlms-$VERSION.zip" --feed dist/jdlearn.xml \
             --checksums dist/RELEASE_SHA256SUMS.txt \
             --notes docs/RELEASE_NOTES_CANDIDATE_1.0.0.md \
+            --release-notes "$RELEASE_NOTES" \
             --output dist/RELEASE_CANDIDATE_EVIDENCE.json --verify
           python3 - <<'PY'
           import os,zipfile,xml.etree.ElementTree as E
