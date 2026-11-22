@@ -84,10 +84,16 @@ function restoreLearning(): array {
  global $db;
  // Preserve complete rows, not only counts: a restore must not change issued
  // certificates, their original enrollment/version references or PDF metadata.
- $tables=['enrollments','attempts','lesson_progress','certificates','certificate_documents'];
+ $ordering=[
+  'enrollments'=>'id',
+  'attempts'=>'id',
+  'lesson_progress'=>'enrollment_id,lesson_id',
+  'certificates'=>'id',
+  'certificate_documents'=>'id',
+ ];
  $snapshot=[];
- foreach($tables as $table){
-  $snapshot[$table]=$db->setQuery('SELECT * FROM #__jlms_'.$table.' ORDER BY id')->loadAssocList();
+ foreach($ordering as $table=>$order){
+  $snapshot[$table]=$db->setQuery('SELECT * FROM #__jlms_'.$table.' ORDER BY '.$order)->loadAssocList();
  }
  return $snapshot;
 }
