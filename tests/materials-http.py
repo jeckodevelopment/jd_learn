@@ -77,6 +77,24 @@ try:
    time.sleep(.2)
  page=Page(body.decode());form=next(f for f in page.forms if 'username' in f['fields'] and 'passwd' in f['fields']);fields=dict(form['fields']);fields.update(username='cioperator',passwd='Ci-only-Long-Password-2026')
  request(admin,urljoin(urljoin(url,page.base or ''),form['action']),fields=fields)
+ # LES-03: the Joomla-managed private folder is inside the document root,
+ # but its immutable .php blob must not be disclosed over direct HTTP.
+ configure(material_storage_root='')
+ upload('managed-probe.txt',b'MANAGED_HTTP_PRIVATE_PROBE_2026\\n','Managed private HTTP probe')
+ managed_file=next(row for row in files() if row['title']=='Managed private HTTP probe')
+ managed_path=root/'media'/'com_jlms'/'private'/managed_file['storage_key']
+ expect(managed_path.is_file() and managed_path.suffix=='.php',
+        'Managed storage uses guarded PHP file under the managed directory')
+ stored=managed_path.read_bytes()
+ expect(b'MANAGED_HTTP_PRIVATE_PROBE_2026' not in stored and stored.startswith(b'<?php http_response_code(404);'),
+        'Managed private file is encrypted and begins with a direct-request guard')
+ _,response,headers=request(guest,'/media/com_jlms/private/'+managed_file['storage_key'],expected=404)
+ expect(b'MANAGED_HTTP_PRIVATE_PROBE_2026' not in response and
+        b'<?php http_response_code' not in response and
+        not response.startswith(stored[:32]),
+        'Unauthenticated direct HTTP request cannot reveal the guarded blob')
+ act_material('delete',managed_file['id'])
+ configure(material_storage_root=str(private))
  # No public fallback and no uploads with executable disguises.
  upload('notes.txt',b'CSRF must fail\n',expected=403,invalid_token=True)
  upload('evil.php.pdf',b'%PDF-1.4\n%%EOF\n',expected=422)
