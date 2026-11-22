@@ -119,11 +119,18 @@ try:
  expect(editor['fields'].get('jform[revision]')!=stale_fields.get('jform[revision]'),
         'Newer edit increments the revision before stale submit')
  stale_title='Uncommitted title from stale browser tab'
+ stale_summary='Uncommitted summary from stale browser tab'
+ stale_custom='Uncommitted native field from stale browser tab'
  url,html=request(urljoin(url,editor['action']),stale_fields|{
-     'task':'course.apply','jform[title]':stale_title})
+     'task':'course.apply','jform[title]':stale_title,
+     'jform[summary]':stale_summary,field:stale_custom})
  editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  expect(editor['fields'].get('jform[title]')==stale_title,
         'Stale revision error preserves submitted editor title')
+ expect(editor['fields'].get('jform[summary]')==stale_summary,
+        'Stale revision error preserves submitted summary')
+ expect(editor['fields'].get(field)==stale_custom,
+        'Stale revision error preserves submitted native field')
  request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
  _,html=request(path)
  editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
@@ -131,6 +138,8 @@ try:
         'Stale rejection cannot overwrite the newer persisted summary')
  expect(editor['fields'].get('jform[title]')==original_title,
         'Stale rejection cannot overwrite the persisted title')
+ expect(editor['fields'].get(field)=='Value saved over HTTP',
+        'Stale rejection cannot overwrite the persisted native field')
  request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
  print(json.dumps({'course_fields_http_checks':checks,'status':'passed'}))
 except Exception:
