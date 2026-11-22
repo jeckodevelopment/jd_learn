@@ -256,6 +256,15 @@ listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$impact['revision']+1),'Purge
   $db->setQuery($cleanup)->execute();
  }
 
+// LCM-02: the same physically empty course must still be protected by
+// fresh per-record core.delete authorization, not merely by its preview.
+$emptyModel->setCurrentUser(new \Joomla\CMS\User\User(0));
+try {
+ listExpect(!$emptyModel->purgeEmpty($emptyId,(int)$impact['revision']),'Guest cannot purge a physically empty course');
+ listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id='.(int)$emptyId)->loadResult()===1,'Denied guest purge preserves course');
+} finally {
+ $emptyModel->setCurrentUser($operator);
+}
 $purged=$emptyModel->purgeEmpty($emptyId, (int)$impact['revision']);
 listExpect($purged,'Purge succeeds only on trashed course with no teaching dependencies: '.(string)$emptyModel->getError());
 listExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__history WHERE item_id='com_jlms.course.".(int)$emptyId."'")->loadResult()===0,'Confirmed purge removes only this course editorial revisions');
