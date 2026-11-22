@@ -11485,9 +11485,11 @@
           "references": [
             "component/administrator/src/Application/PublicationService.php#Preserve student history",
             "component/administrator/src/Application/LearningService.php#private function authorisedEnrollment",
+            "tests/joomla-publication-review.php#archive",
+            "tests/joomla-learning.php#LCM-01",
             "tests/joomla-video.php#LCM-01",
             "tests/joomla-enrollment-state.php#LCM-01",
-            "tests/joomla-learning.php#LCM-01",
+            "tests/joomla-manual-enrollment.php#Archived courses",
             "tests/joomla-enrollment-migration.php#LCM-01"
           ]
         }
