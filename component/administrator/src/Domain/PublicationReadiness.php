@@ -75,6 +75,14 @@ final class PublicationReadiness
                         ? 'COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING'
                         : 'COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING';
                 }
+                // A locally authored transcript is not evidence that a remote
+                // media item supplies selectable caption tracks. Provider SDKs
+                // cannot reliably enumerate them during editorial readiness.
+                // Surface the independent check without blocking publication.
+                if ($lesson->kind === 'video'
+                    && in_array((string) ($lesson->provider_key ?? ''), ['youtube', 'vimeo', 'cloudflarestream'], true)) {
+                    $warnings[] = 'COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED';
+                }
             }
 
             if (($lesson->kind ?? '') === 'document') {
