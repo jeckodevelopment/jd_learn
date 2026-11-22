@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **485**.
+- Implementati: **487**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **257**.
+- Esaminati con esito non verificabile: **255**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -98,14 +98,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/joomla-publication.php#one default edition created](../tests/joomla-publication.php)
   - [tests/joomla-publication.php#republish creates no duplicate edition](../tests/joomla-publication.php)
   - [tests/joomla-enrollment-state.php#reactivation does not extend expired window](../tests/joomla-enrollment-state.php)
-- `ISC-07/revocation` — Revoca in corso di sessione su token video/download/quiz. Il contesto quiz e quello video rivalidano l’autorizzazione nelle operazioni protette e nei replay; le fixture coprono revoca di accesso in alcuni percorsi. Il criterio include token video, download e quiz durante sessione: non è disponibile una verifica completa e concorrente di tutti i tipi di risorsa.
-  - [component/administrator/src/Application/QuizAttemptService.php#private function context](../component/administrator/src/Application/QuizAttemptService.php)
-  - [component/administrator/src/Application/VideoProgressService.php#private function context](../component/administrator/src/Application/VideoProgressService.php)
-  - [tests/joomla-video.php#revoked access even on replay](../tests/joomla-video.php)
-- `ISC-07/preserve_history` — Storico e progressi conservati dopo revoca nelle casistiche previste. La sospensione/cancellazione conserva progressi e dati di assegnazione e Cloudflare documenta la conservazione dello storico dopo revoca. La prova sistematica di ogni modalità di revoca e risorsa protetta, inclusi download, quiz e ripristino, resta incompleta.
-  - [tests/joomla-enrollment-state.php#state history retained](../tests/joomla-enrollment-state.php)
-  - [docs/CLOUDFLARE_STREAM.md#storico e progressi non vengono cancellati](../docs/CLOUDFLARE_STREAM.md)
-  - [tests/joomla-enrollment-state.php#cancellation preserves prior learning and assignment data](../tests/joomla-enrollment-state.php)
 - `STU-01/blocked_reason` — Diagnostica completa di ogni blocco e azione proposta. DashboardService calcola cause distinte di indisponibilità e il test copre sospensione, annullamento e finestra non aperta. Non è dimostrata la completezza di ogni causa/blocco né l’azione proposta e disponibile per ciascun ruolo e contesto.
   - [component/administrator/src/Application/DashboardService.php#$reason = 'available'](../component/administrator/src/Application/DashboardService.php)
   - [tests/joomla-dashboard.php#distinct classroom block reasons](../tests/joomla-dashboard.php)
@@ -1042,6 +1034,17 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/CatalogService.php#public function publicLessonPreview](../component/administrator/src/Application/CatalogService.php)
   - [component/administrator/src/Application/MaterialService.php#public function publicLessonPreviewList](../component/administrator/src/Application/MaterialService.php)
   - [tests/joomla-publication.php#publicLessonPreview](../tests/joomla-publication.php)
+- `ISC-07/revocation` — Revoca in corso di sessione su token video/download/quiz. Completati e verificati i controlli di autorizzazione correnti su token/telemetria video (incluso replay scaduto), rinnovo Cloudflare, quiz aperti e relativi replay/consegne, download protetti GET/HEAD/Range/PDF nella stessa sessione. L'invalidazione delle sessioni player e' transazionale; CI #45021815907 verde su entrambe le matrici Joomla. Token provider esterni gia rilasciati restano soggetti al proprio TTL, senza nuova autorizzazione LMS dopo revoca.
+  - [component/administrator/src/Application/VideoProgressService.php#Even a byte-identical replay](../component/administrator/src/Application/VideoProgressService.php)
+  - [component/administrator/src/Application/EnrollmentStateService.php#Revoking an enrollment also invalidates already-issued server player](../component/administrator/src/Application/EnrollmentStateService.php)
+  - [tests/joomla-cloudflare.php#expired playback replay cannot mutate prior progress](../tests/joomla-cloudflare.php)
+  - [tests/joomla-quiz-attempts.php#revoked user cannot submit open quiz](../tests/joomla-quiz-attempts.php)
+  - [tests/materials-http.py#Restored entitlement recovers protected download without data loss](../tests/materials-http.py)
+- `ISC-07/preserve_history` — Storico e progressi conservati dopo revoca nelle casistiche previste. La revoca sospende le nuove operazioni senza cancellare i progressi, i punteggi e le risposte quiz gia salvate o gli allegati; le fixture Joomla e HTTP verificano che le richieste negate non modifichino lo storico e che il ripristino dei diritti recuperi dati e accesso. Copertura CI #45021815907, accettazione manuale Joomla distinta.
+  - [tests/joomla-enrollment-state.php#cancellation preserves prior learning and assignment data](../tests/joomla-enrollment-state.php)
+  - [tests/joomla-quiz-attempts.php#previously saved answers survive access revocation](../tests/joomla-quiz-attempts.php)
+  - [tests/materials-http.py#Restored entitlement recovers protected download without data loss](../tests/materials-http.py)
+  - [tests/joomla-video.php#revoked access even on replay](../tests/joomla-video.php)
 - `ISC-08/lesson_scope` — Restrizioni di lezione non possono ampliare l'accesso al corso. I contesti per quiz, video, audio e materiali protetti risolvono un’iscrizione autorizzata prima di risolvere una lezione, vincolata alla versione assegnata. Disponibilità e prerequisiti possono restringere ulteriormente quel contesto.
   - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)
   - [component/administrator/src/Application/LearningService.php#public function quizContext](../component/administrator/src/Application/LearningService.php)
