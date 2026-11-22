@@ -60,13 +60,28 @@ try:
  expect('curriculum.js' in html and 'curriculum.css' in html,'Native WAM loads curriculum assets')
  toolbar_module=next((x for x in Page(html).links if parse_qs(urlparse(x).query).get('new_module')==['1']),None)
  expect(toolbar_module is not None and parse_qs(urlparse(toolbar_module).query).get('id')==[str(f['course'])],'Editable curriculum exposes a course-scoped add-module action in the Joomla toolbar')
+ # AUT-01: a rejected module form must keep its native draft context and
+ # must not partially create a module in the published/editable outline.
+ _,module_page=request(toolbar_module)
+ module_form=form(module_page,'module.save')
+ module_before=state()
+ _,module_rejected=request(module_form['action'],module_form['fields']|{'jform[title]':''})
+ retry_module=form(module_rejected,'module.save')
+ expect(retry_module['fields'].get('jform[title]')=='',
+        'Required module title rejection retains the submitted empty value')
+ for key in ['jform[course_id]','jform[version_id]']:
+  expect(retry_module['fields'].get(key)==module_form['fields'].get(key),
+         'Rejected module retains its course/version context: '+key)
+ expect(state()==module_before,'Rejected module title cannot leave a partial module')
  _,editor=request(link(html,'edit_lesson',f['l1']));edit=form(editor,'lesson.save')
  expect(edit['fields']['jform[id]']==str(f['l1']) and edit['fields']['jform[module_id]']==str(f['m2']),'Lesson title opens its native scoped editor')
  materials=next(x for x in Page(editor).links if parse_qs(urlparse(x).query).get('view')==['materials'] and parse_qs(urlparse(x).query).get('lesson_id')==[str(f['l1'])])
  _,materials_html=request(materials)
  expect(form(materials_html,'material.upload')['fields']['jform[lesson_id]']==str(f['l1']),'Materials form selects the clicked lesson')
+ lesson_before=state()
  _,failed=request(edit['action'],edit['fields']|{'jform[title]':'','jform[body]':'<p>UNSAVED_BUILDER_BODY</p>'})
  expect('UNSAVED_BUILDER_BODY' in failed and form(failed,'lesson.save')['fields']['jform[title]']=='','Validation failure preserves editor input')
+ expect(state()==lesson_before,'Rejected lesson save leaves the original lesson and programme unchanged')
  saved=form(failed,'lesson.save');_,html=request(saved['action'],saved['fields']|{'jform[title]':'Builder lesson updated via HTTP','jform[body]':'<p>Saved programme content</p>'})
  expect('Builder lesson updated via HTTP' in html and 'id="jlms-lesson-form"' not in html,'Save returns to a compact outline')
  # Moving uses a separate action, preserving the lesson identity and body.
