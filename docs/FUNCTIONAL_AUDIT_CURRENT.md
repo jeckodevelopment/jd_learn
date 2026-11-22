@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **489**.
+- Implementati: **490**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **253**.
+- Esaminati con esito non verificabile: **252**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -79,10 +79,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `LCM-05/history_upgrade` — Copertura trasversale storico, attestati e upgrade. Le fixture retained conservano progressi e attestati. La combinazione trasversale di transizioni, ruoli, storico e backup/ripristino richiede esecuzioni ulteriori.
   - [tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade](../tests/joomla-dashboard.php)
   - [docs/LIFECYCLE_1.0.0_APPROVED.md#LCM-05 (gate)](../docs/LIFECYCLE_1.0.0_APPROVED.md)
-- `AUT-01/corner_cases` — Recupero completo degli input e regole avanzate su ogni errore editoriale. Il modello e i test rifiutano input non validi, modifiche non autorizzate e revisioni obsolete in alcuni form. Il criterio estende il recupero completo dei dati inseriti e le regole avanzate a ogni errore editoriale; manca una prova che copra tutti i form, i rami di errore e la ripresentazione dei dati dopo il fallimento.
-  - [tests/joomla-course-presentation.php#Invalid presentation rejected](../tests/joomla-course-presentation.php)
-  - [tests/joomla-course-presentation.php#Stale revision cannot overwrite presentation](../tests/joomla-course-presentation.php)
-  - [docs/IMPLEMENTATION_GAPS.md#R-03](../docs/IMPLEMENTATION_GAPS.md)
 - `ISC-01/edge_authorization` — Combinazioni complete di vincoli, ruolo e iscrizioni in sospeso. L’ammissione manuale rivalida la disponibilità editoriale e la didattica ricontrolla utente, livello, iscrizione, edizione e accesso. Le fixture non esauriscono tutte le combinazioni di vincoli, ruolo e richieste pending descritte dal criterio; le richieste approval hanno un flusso distinto.
   - [component/administrator/src/Application/ManualEnrollmentService.php#Administrative assignment does not grant viewing rights](../component/administrator/src/Application/ManualEnrollmentService.php)
   - [docs/LEARNING.md#richieste/approvazioni restano da implementare](../docs/LEARNING.md)
@@ -1007,6 +1003,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/categories-http.py#parsed.meta.get('og:url')==canonical_links[0]](../tests/categories-http.py)
   - [tests/cat04-public-metadata.php#CAT-04 SEO canonical](../tests/cat04-public-metadata.php)
   - [tests/cat04-breadcrumb.php#CAT-04 native breadcrumb](../tests/cat04-breadcrumb.php)
+- `AUT-01/corner_cases` — Recupero completo degli input e regole avanzate su ogni errore editoriale. I flussi core dell’editor corso e del programma ripresentano gli input respinti senza applicare scritture parziali: errori su campi obbligatori/descrizione, revisioni obsolete, form contestuali modulo/lezione e campi nativi Joomla delle lezioni nuove o esistenti. Il recupero dalla sessione è limitato ai campi disponibili e a cardinalità/dimensioni controllate, con validazione e ACL conservati. Le fixture HTTP in Joomla disposable verificano salvataggi respinti, persistenza invariata e successiva correzione, oltre alle guardie già esistenti. È completata l’implementazione software 1.0.0 dei form core; accettazione su hosting reale, combinazioni di ruoli/browser e campi di plugin terzi rimangono verifiche manuali distinte.
+  - [component/administrator/src/Controller/CurriculumController.php#com_jlms.curriculum.](../component/administrator/src/Controller/CurriculumController.php)
+  - [component/administrator/src/View/Curriculum/HtmlView.php#Preserve native Joomla field edits](../component/administrator/src/View/Curriculum/HtmlView.php)
+  - [tests/course-fields-http.py#Stale revision error preserves submitted summary](../tests/course-fields-http.py)
+  - [tests/curriculum-builder-http.py#Rejected first lesson save retains its native custom field](../tests/curriculum-builder-http.py)
 - `AUT-03/subtitle_provider` — Avvisi completi per sottotitoli e provider senza tracciamento. La checklist editoriale implementa avvisi indipendenti per trascrizione locale e disponibilità non verificabile delle caption sui tre provider remoti; l’MP4 locale non eredita l’avviso remoto. La verifica locale delle capability blocca i provider non tracciabili soltanto in modalità Apprendimento e non in Consultazione. Le prove automatiche coprono tutte le otto combinazioni provider/modalità e il carattere non bloccante dell’avviso caption. Non si dichiara verificata la disponibilità reale di tracce e lingue presso un provider: resta prova manuale nel player, distinta dall’implementazione della diagnostica.
   - [component/administrator/src/Domain/PublicationReadiness.php#A locally authored transcript is not evidence](../component/administrator/src/Domain/PublicationReadiness.php)
   - [tests/run.php#caption availability warning applies only to remote provider](../tests/run.php)
