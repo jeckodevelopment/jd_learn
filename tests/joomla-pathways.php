@@ -42,6 +42,15 @@ $service = $component->getPathwayService();
 $fixture = dirname($root).'/pathways-fixture.json';
 $check = static function(bool $ok,string $message): void { if (!$ok) throw new RuntimeException($message); };
 
+$lifecycleSnapshotFile = dirname($root).'/pathway-lifecycle-snapshot.json';
+$readLifecycleSnapshot = static function(int $pathId,int $courseId) use ($db): array {
+    return [
+        'pathway' => $db->setQuery('SELECT id,title,description,state,access,language,catid FROM #__jlms_pathways WHERE id='.(int)$pathId)->loadAssoc(),
+        'course_links' => $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$pathId.' ORDER BY ordering')->loadAssocList(),
+    ];
+};
+
+
 if (($argv[2] ?? '') === 'acl-state') {
     $acl = json_decode((string)file_get_contents(dirname($root).'/pathway-acl-fixture.json'),true,16,JSON_THROW_ON_ERROR);
     $states = [];
@@ -55,6 +64,11 @@ if ($retained) {
     $data = json_decode((string)file_get_contents($fixture),true,16,JSON_THROW_ON_ERROR);
     $path = $db->setQuery('SELECT id FROM #__jlms_pathways WHERE id='.(int)$data['pathway'])->loadResult();
     $check((int)$path === (int)$data['pathway'],'pathway record retained through package update');
+
+    $snapshot = json_decode((string)file_get_contents($lifecycleSnapshotFile),true,16,JSON_THROW_ON_ERROR);
+    $check($readLifecycleSnapshot((int)$data['pathway'],(int)$data['course']) === $snapshot,
+        'LCM-05 persisted pathway state, access metadata and ordered associations survive package upgrade');
+
     $rows = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$path.' ORDER BY ordering')->loadColumn();
     $check(array_map('intval',$rows) === [(int)$data['course'],(int)$data['hidden_course']],'ordered course associations retained through package update');
     $student = new Joomla\CMS\User\User((int)$data['student']);
@@ -433,5 +447,6 @@ $check($pathModel->save($pathwayBase + ['revision'=>$currentRevision,'state'=>1]
     'restore original programme for retention testing');
 $check($readLinks() === array_map('intval', $beforeBulkCourses),
     'restored links retain original course order');
+file_put_contents($lifecycleSnapshotFile,json_encode($readLifecycleSnapshot($pathwayId,$courseId),JSON_THROW_ON_ERROR));
 file_put_contents($fixture,json_encode(['pathway'=>$pathwayId,'course'=>$courseId,'hidden_course'=>$hiddenCourseId,'student'=>(int)$operator->id],JSON_THROW_ON_ERROR));
 echo json_encode(['pathway_checks'=>14,'status'=>'passed','pathway_id'=>$pathwayId,'student_enrollment'=>$student],JSON_THROW_ON_ERROR).PHP_EOL;
