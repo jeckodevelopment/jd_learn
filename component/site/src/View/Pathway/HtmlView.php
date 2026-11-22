@@ -23,6 +23,7 @@ final class HtmlView extends BaseHtmlView
         if (!$this->isGuest) {
             $this->getDocument()->setTitle((string) $pathway->title);
             $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
+            Factory::getApplication()->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         } else {
             PublicMetadataHelper::apply(
                 $this->getDocument(),
