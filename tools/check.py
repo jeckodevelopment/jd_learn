@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Structural source/package checks, separate from runtime PHP and database tests."""
 from pathlib import Path
-import re,json,hashlib,xml.etree.ElementTree as E,zipfile,io,runpy
+import runpy
+import re,json,hashlib,xml.etree.ElementTree as E,zipfile,io
 ROOT=Path(__file__).resolve().parents[1]
 # QUI-02: the row-locked service, not merely the UI, must reject hard deletes outside trash.
 question_bank=(ROOT/'component/administrator/src/Application/QuestionBankService.php').read_text()
