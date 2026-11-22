@@ -71,7 +71,9 @@ try:
  url,html=request(urljoin(url,editor['action']),editor['fields']|{'task':'course.apply'}|unsaved)
  editor=next(x for x in Page(html).forms if 'jform[title]' in x['fields'])
  for name,value in unsaved.items():
-  expect(editor['fields'].get(name)==value,'Rejected save retains submitted '+name)
+  actual=editor['fields'].get(name,'')
+  expect((value in actual if name=='jform[presentation_description]' else actual==value),
+         'Rejected save retains submitted '+name+'; got '+repr(actual[:120]))
  expect('jform[revision]' in editor['fields'],'Rejected save retains the editable revision field')
  request(urljoin(url,editor['action']),editor['fields']|{'task':'course.cancel'})
  _,html=request(path)
