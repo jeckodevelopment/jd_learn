@@ -45,7 +45,7 @@ $check = static function(bool $ok,string $message): void { if (!$ok) throw new R
 $lifecycleSnapshotFile = dirname($root).'/pathway-lifecycle-snapshot.json';
 $readLifecycleSnapshot = static function(int $pathId,int $courseId) use ($db): array {
     return [
-        'pathway' => $db->setQuery('SELECT id,title,description,state,revision,access,language,catid FROM #__jlms_pathways WHERE id='.(int)$pathId)->loadAssoc(),
+        'pathway' => $db->setQuery('SELECT id,title,description,state,access,language,catid FROM #__jlms_pathways WHERE id='.(int)$pathId)->loadAssoc(),
         'course_links' => $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$pathId.' ORDER BY ordering')->loadAssocList(),
     ];
 };
