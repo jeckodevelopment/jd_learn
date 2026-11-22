@@ -108,6 +108,18 @@ foreach(['Zebra','Alpha','Bravo'] as $name){
   $publication->transition($actor,$id,$draft,(int)$model->getItem($id)->revision,(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id='.$draft)->loadResult(),(int)$choices[0]->id);
  }
 }
+// Finder tests use an explicitly public, published *disposable* fixture. The
+// ordinary course-editor fixture is not guaranteed to have reached publication.
+$finderCourseOriginal = $db->setQuery('SELECT id, state, current_version_id, publish_up, publish_down, content_access FROM #__jlms_courses WHERE id=' . (int) $ids['Alpha'])->loadObject();
+$finderVersionOriginal = $db->setQuery('SELECT id, status FROM #__jlms_course_versions WHERE id=' . (int) $versions['Alpha'])->loadObject();
+$finderPublished = (object) [
+    'id' => $ids['Alpha'], 'state' => 1,
+    'current_version_id' => $versions['Alpha'],
+    'publish_up' => null, 'publish_down' => null, 'content_access' => 2,
+];
+$db->updateObject('#__jlms_courses', $finderPublished, 'id', true);
+$finderPublishedVersion = (object) ['id' => $versions['Alpha'], 'status' => 'published'];
+$db->updateObject('#__jlms_course_versions', $finderPublishedVersion, 'id');
 // CAT-04: query the native Finder adapter against the installed Joomla DB.
 $finderPath = JPATH_PLUGINS . '/finder/jlms/src/Extension/Jlms.php';
 require_once $finderPath;
@@ -129,6 +141,9 @@ $accessChange = (object)['id' => $ids['Alpha'], 'content_access' => 2];
 $db->updateObject('#__jlms_courses', $accessChange, 'id');
 listExpect(!in_array($ids['Alpha'], $finderIds(), true),
     'Finder must exclude a previously public course as soon as content access is restricted');
+$db->updateObject('#__jlms_courses', $finderCourseOriginal, 'id', true);
+$db->updateObject('#__jlms_course_versions', $finderVersionOriginal, 'id');
+
 
 $change=(object)['id'=>$ids['Bravo'],'created_by'=>$editor];$db->updateObject('#__jlms_courses',$change,'id');
 $change=(object)['id'=>$ids['Zebra'],'checked_out'=>$editor,'checked_out_time'=>gmdate('Y-m-d H:i:s')];$db->updateObject('#__jlms_courses',$change,'id');
