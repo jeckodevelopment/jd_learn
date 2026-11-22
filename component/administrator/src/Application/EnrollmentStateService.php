@@ -113,6 +113,15 @@ final class EnrollmentStateService
             $this->db->insertObject('#__jlms_enrollment_state_changes', $record, 'id');
             $update = (object) ['id' => $enrollment, 'status' => $target, 'revision' => $expected + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
+            // Revoking an enrollment also invalidates already-issued server player
+            // sessions. Keep lesson progress and certificate history untouched.
+            // The enrollment row lock serializes this with concurrent video writes.
+            if (in_array($target, ['suspended', 'cancelled'], true)) {
+                $sessions = $this->db->createQuery()->delete('#__jlms_progress_sessions')
+                    ->where('enrollment_id = :enrollment')
+                    ->bind(':enrollment', $enrollment, ParameterType::INTEGER);
+                $this->db->setQuery($sessions)->execute();
+            }
             ($this->audit)($actor, ['id' => (int) $record->id, 'actor_id' => (int) $actor->id, 'enrollment_id' => $enrollment,
                 'previous_status' => $e->status, 'target_status' => $target, 'reason_reference' => (int) $record->id,
                 'reason_code' => 'enrollment_state_changed', 'correlation_id' => bin2hex(random_bytes(16))]);
