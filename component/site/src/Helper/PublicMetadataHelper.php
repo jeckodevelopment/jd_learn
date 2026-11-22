@@ -30,11 +30,11 @@ final class PublicMetadataHelper
 
         $document->setMetaData('og:type', 'website', 'property');
         $document->setMetaData('og:url', $canonical, 'property');
-        $document->setMetaData('twitter:card', 'summary_large_image');
-
-        // Only local Joomla media paths are eligible for social previews.
-        if ($image !== '' && preg_match('#^(?:images|media)/[\p{L}\p{N}_./ -]+\.(?:png|jpe?g|gif|webp|avif)$#iuD', $image)
-            && !str_contains($image, '..')) {
+        // Text-only pages must not advertise a missing large image.
+        $validImage = $image !== '' && preg_match('#^(?:images|media)/[\\p{L}\\p{N}_./ -]+\\.(?:png|jpe?g|gif|webp|avif)$#iuD', $image)
+            && !str_contains($image, '..');
+        $document->setMetaData('twitter:card', $validImage ? 'summary_large_image' : 'summary');
+        if ($validImage) {
             $imagePath = implode('/', array_map('rawurlencode', explode('/', trim($image, '/'))));
             $imageUrl = Uri::root() . $imagePath;
             $document->setMetaData('og:image', $imageUrl, 'property');
