@@ -185,6 +185,7 @@
           "references": [
             "tests/joomla-pathways.php#readLifecycleSnapshot",
             "tests/joomla-dashboard.php#issued certificate identity and ownership survive package upgrade",
+            "tests/joomla-editor-access.php#Category grants and record denies survive reinstall",
             ".github/workflows/ci.yml#AUT-04 full database backup and restore protects historical course evidence"
           ]
         }
