@@ -5,8 +5,8 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Completata": 39,
-      "Parziale": 184,
+      "Completata": 40,
+      "Parziale": 183,
       "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
@@ -19,8 +19,8 @@
       "Non eseguita": 239
     },
     "Verifica automatica": {
-      "Superata": 185,
-      "Non eseguita": 64
+      "Superata": 186,
+      "Non eseguita": 63
     }
   },
   "implementation_progress": {
