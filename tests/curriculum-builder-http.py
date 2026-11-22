@@ -92,6 +92,17 @@ try:
  _,lesson_reopened=request(link(html,'edit_lesson',f['l1']))
  expect(form(lesson_reopened,'lesson.save')['fields'].get(field)=='Saved lesson custom value',
         'Native field correction persists after retrying rejected lesson save')
+ # A rejected first save of a new lesson must also retain authorized native
+ # field input, not just the fields of a previously persisted lesson.
+ _,new_lesson=request(path+'&new_lesson=1&module_id='+str(f['m2']))
+ fresh=form(new_lesson,'lesson.save')
+ expect(field in fresh['fields'],'New lesson editor exposes the authorized Joomla field')
+ new_before=state()
+ new_value='Unsaved Joomla field in a new lesson'
+ _,new_failed=request(fresh['action'],fresh['fields']|{'jform[title]':'',field:new_value})
+ expect(form(new_failed,'lesson.save')['fields'].get(field)==new_value,
+        'Rejected first lesson save retains its native custom field')
+ expect(state()==new_before,'Rejected first lesson save creates no partial lesson')
  expect('Builder lesson updated via HTTP' in html and 'id="jlms-lesson-form"' not in html,'Save returns to a compact outline')
  # Moving uses a separate action, preserving the lesson identity and body.
  _,movehtml=request(path+'&item_action=move_lesson&item_id='+str(f['l1']));move=form(movehtml,'lesson.move')
