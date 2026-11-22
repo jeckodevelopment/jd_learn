@@ -78,12 +78,12 @@ final class HtmlView extends BaseHtmlView
                         if (!$descriptor->configured) { continue; }
                         $source = json_decode((string) ($lesson->source_json ?? ''), true, 16, JSON_THROW_ON_ERROR);
                         if (!is_array($source) || !is_string($source['reference'] ?? null)) { continue; }
-                        $normal = $provider->normaliseSource(new \\Jlms\\Contracts\\Video\\SourceInput(
+                        $normal = $provider->normaliseSource(new \Jlms\Contracts\Video\SourceInput(
                             $source['reference'], is_array($source['options'] ?? null) ? $source['options'] : []
                         ));
                         $capabilities = $provider->getCapabilities($normal);
                         $providerChecks[$id]['trackable'] = $capabilities->position && $capabilities->duration && $capabilities->seek;
-                    } catch (\\Throwable) {
+                    } catch (\Throwable) {
                         // Keep incomplete drafts visible. Publication performs
                         // its own authoritative validation and remains fail-closed.
                     }
