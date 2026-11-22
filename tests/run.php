@@ -449,10 +449,15 @@ foreach ([
     ['youtube', 'https://youtu.be/dQw4w9WgXcQ?api-key=ci-secret'],
     ['vimeo', 'https://player.vimeo.com/video/12345?h=abc123&client_secret=ci-secret'],
     ['cloudflarestream', 'https://videodelivery.net/0123456789abcdef0123456789abcdef?jwt=ci-secret'],
+    ['youtube', 'https://youtu.be/dQw4w9WgXcQ?accessToken=ci-secret'],
+    ['youtube', 'https://youtu.be/dQw4w9WgXcQ#access_token=ci-secret'],
+    ['vimeo', 'https://player.vimeo.com/video/12345#clientSecret=ci-secret'],
+    ['cloudflarestream', 'https://videodelivery.net/0123456789abcdef0123456789abcdef#apiKey=ci-secret'],
 ] as [$provider, $source]) {
     rejects(fn () => SourceNormalizer::normalise($provider, new SourceInput($source)), 'Credential-bearing video URL rejected: ' . $provider);
 }
 expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9&feature=share'))->reference === 'dQw4w9WgXcQ', 'Non-secret YouTube URL options remain supported');
+expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ#t=30'))->reference === 'dQw4w9WgXcQ', 'Harmless shared-link fragment remains valid');
 
 expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://vimeo.com/12345/abc123'))->options === ['privacy_hash' => 'abc123'], 'Vimeo private hash preserved');
 expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://player.vimeo.com/video/12345?h=abc123'))->options === ['privacy_hash' => 'abc123'], 'Vimeo player URL hash preserved');
