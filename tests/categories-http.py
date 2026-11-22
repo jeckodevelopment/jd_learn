@@ -15,11 +15,13 @@ config=root/'configuration.php'; original=config.read_text(); base='http://127.0
 log=open(root.parent/'categories-http.log','w+'); server=None; checks=0
 class Page(HTMLParser):
  def __init__(self,text):
-  super().__init__(convert_charrefs=True);self.links=[];self.forms=[];self.form=None;self.anchor=None;self.ids=[];self.head_links=[];self.meta={};self.feed(text)
+  self.meta={}
+  super().__init__(convert_charrefs=True);self.links=[];self.forms=[];self.form=None;self.anchor=None;self.ids=[];self.head_links=[];self.feed(text)
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
   if tag=='link':self.head_links.append(a)
-  if tag=='meta' and 'content' in a:self.meta[a.get('property') or a.get('name')]=a['content']
+  if tag == 'meta' and 'content' in a:
+   self.meta[a.get('property') or a.get('name')] = a['content']
   if 'id' in a:self.ids.append(a['id'])
   if tag=='a' and 'href' in a:self.anchor=a|{'text':''};self.links.append(self.anchor)
   if tag=='form':self.form={'action':a.get('action',''),'fields':{}};self.forms.append(self.form)
