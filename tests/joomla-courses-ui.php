@@ -238,6 +238,24 @@ $impact=$emptyModel->purgeImpact($emptyId);
 listExpect($impact['eligible'] && array_sum($impact['references'])===0,'Unused trashed course has an eligible impact preview');
 listExpect((int)$impact['id']===$emptyId && (int)$impact['revision']>0,'Purge preview binds to current course revision');
 listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$impact['revision']+1),'Purge rejects stale revision after preview');
+ // LCM-02: native multilingual associations are references even without a
+ // course-version FK. They must block both preview and transactional purge.
+ $associationKey='jlms-lcm02-purge-'.(string)$emptyId;
+ $associationRow=(object)['id'=>$emptyId,'context'=>'com_jlms.item','key'=>$associationKey];
+ $db->insertObject('#__associations',$associationRow);
+ try {
+  $associatedImpact=$emptyModel->purgeImpact($emptyId);
+  listExpect(!$associatedImpact['eligible'] && (int)$associatedImpact['references']['#__associations']===1,'Native course association prevents purge preview');
+  listExpect(!$emptyModel->purgeEmpty($emptyId,(int)$associatedImpact['revision']),'Native course association prevents destructive purge');
+  listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id='.(int)$emptyId)->loadResult()===1,'Rejected associated-course purge retains course');
+  listExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE id=".(int)$emptyId." AND context='com_jlms.item'")->loadResult()===1,'Rejected purge retains native association');
+ } finally {
+  $cleanup=$db->createQuery()->delete('#__associations')->where('id = :id')->where('context = :context')
+   ->bind(':id',$emptyId,\Joomla\Database\ParameterType::INTEGER)
+   ->bind(':context',$associationRow->context);
+  $db->setQuery($cleanup)->execute();
+ }
+
 $purged=$emptyModel->purgeEmpty($emptyId, (int)$impact['revision']);
 listExpect($purged,'Purge succeeds only on trashed course with no teaching dependencies: '.(string)$emptyModel->getError());
 listExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__history WHERE item_id='com_jlms.course.".(int)$emptyId."'")->loadResult()===0,'Confirmed purge removes only this course editorial revisions');
