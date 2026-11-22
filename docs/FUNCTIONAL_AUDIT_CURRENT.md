@@ -1019,7 +1019,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Service/Router.php#getCourseSegment](../component/site/src/Service/Router.php)
   - [component/site/src/Helper/PublicMetadataHelper.php#addHeadLink](../component/site/src/Helper/PublicMetadataHelper.php)
   - [component/site/src/Helper/PublicBreadcrumbHelper.php#addDetail](../component/site/src/Helper/PublicBreadcrumbHelper.php)
-  - [tests/categories-http.py#CAT-04 Open Graph URL must match category canonical for both SEF modes](../tests/categories-http.py)
+  - [tests/categories-http.py#parsed.meta.get('og:url')==canonical_links[0]](../tests/categories-http.py)
   - [tests/cat04-public-metadata.php#CAT-04 SEO canonical](../tests/cat04-public-metadata.php)
   - [tests/cat04-breadcrumb.php#CAT-04 native breadcrumb](../tests/cat04-breadcrumb.php)
 - `AUT-04/enrollment_mapping` — Migrazione iscritti solo esplicita con equivalenze. La migrazione è soltanto esplicita e singola, richiede autorizzazione, anteprima e hash di conferma, equivalenze validate tra lezioni delle versioni di origine e destinazione, trasferimento dei soli completamenti non quiz, storicizzazione invariata e idempotenza. Le prove CI della PR #863 (merge da73279d0b28d8d05109bc08d1814623af13c102, run 44914115463, 4/4 success) verificano inoltre blocco su quiz aperti, target pieno, mappature salvate solo se richieste, rollback dell'iscrizione sorgente e rifiuto senza troncamento oltre 1000 equivalenze. Il criterio software di migrazione esplicita è dunque implementato; backup, attestati e ogni variante di ripristino rimangono separati in historical_integrity e nell'accettazione Joomla.
