@@ -15,6 +15,7 @@ $expected = [
     "' OR 1=1 --" => "%' OR 1=1 --%",
     "'; DROP TABLE courses; --" => "%'; DROP TABLE courses; --%",
     '%_! OR 1=1' => '%!%!_!! OR 1=1%',
+    'UNION SELECT * FROM users' => '%UNION SELECT * FROM users%',
 ];
 foreach ($expected as $search => $pattern) {
     if (CatalogSearch::pattern($search) !== $pattern) {
