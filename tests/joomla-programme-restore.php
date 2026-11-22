@@ -104,6 +104,25 @@ function restoreTree(int $id): array {
  return $out;
 }
 $fixture=dirname($root).'/programme-restore-fixture.json';$mode=$argv[2]??'';
+if($mode==='tamper'){
+ // Only the disposable CI installation may execute this fault injection.
+ // It proves that the subsequent database import actually restores data,
+ // rather than merely verifying a dump of an unchanged database.
+ $f=json_decode(file_get_contents($fixture),true,32,JSON_THROW_ON_ERROR);
+ $historic=(int)$f['historical'];
+ $document=$db->setQuery('SELECT d.id, d.serial FROM #__jlms_certificate_documents AS d '.
+   'JOIN #__jlms_certificates AS c ON c.id=d.certificate_id '.
+   'WHERE c.course_version_id='.$historic.' ORDER BY d.id LIMIT 1')->loadAssoc();
+ restoreExpect(is_array($document),'A historical certificate document exists before database fault injection');
+ $replacement='AUT04-RESTORE-FAULT-'.strtoupper(bin2hex(random_bytes(8)));
+ restoreExpect($replacement!==$document['serial'],'Injected serial differs from the backup value');
+ $db->setQuery('UPDATE #__jlms_certificate_documents SET serial='.$db->quote($replacement).
+   ' WHERE id='.(int)$document['id'])->execute();
+ restoreExpect((string)$db->setQuery('SELECT serial FROM #__jlms_certificate_documents WHERE id='.
+   (int)$document['id'])->loadResult()===$replacement,'Disposable database mutation is observable');
+ echo json_encode(['programme_backup_fault_checks'=>$checks,'status'=>'passed']).PHP_EOL;
+ return;
+}
 if(in_array($mode,['state','checkpoint','retained'],true)){
  $f=json_decode(file_get_contents($fixture),true,32,JSON_THROW_ON_ERROR);$course=$f['course'];
  $ids=$db->setQuery('SELECT id FROM #__jlms_course_versions WHERE course_id='.$course.' ORDER BY version_no')->loadColumn();
