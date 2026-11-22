@@ -63,6 +63,31 @@ final class HtmlView extends BaseHtmlView
             try { $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()->teachingRules($actor, (int)$course->id, (int)$version->id); }
             catch (\DomainException $error) { if ($error->getMessage() !== 'COM_JLMS_PUBLICATION_UNSUPPORTED') { throw $error; } }
             if ($version->status === 'draft') {
+                $providerChecks = [];
+                $curriculum = $app->bootComponent('com_jlms')->getCurriculumService();
+                foreach ($this->outline['lessons'] as $lesson) {
+                    if (($lesson->kind ?? '') !== 'video') { continue; }
+                    $id = (int) $lesson->id;
+                    // Only local provider contracts are queried; no remote
+                    // metadata request, player startup or caption assumption.
+                    $providerChecks[$id] = ['configured' => false, 'trackable' => false];
+                    try {
+                        $provider = $curriculum->videoProvider((string) ($lesson->provider_key ?? ''));
+                        $descriptor = $provider->getDescriptor();
+                        $providerChecks[$id]['configured'] = $descriptor->configured;
+                        if (!$descriptor->configured) { continue; }
+                        $source = json_decode((string) ($lesson->source_json ?? ''), true, 16, JSON_THROW_ON_ERROR);
+                        if (!is_array($source) || !is_string($source['reference'] ?? null)) { continue; }
+                        $normal = $provider->normaliseSource(new \Jlms\Contracts\Video\SourceInput(
+                            $source['reference'], is_array($source['options'] ?? null) ? $source['options'] : []
+                        ));
+                        $capabilities = $provider->getCapabilities($normal);
+                        $providerChecks[$id]['trackable'] = $capabilities->position && $capabilities->duration && $capabilities->seek;
+                    } catch (\Throwable) {
+                        // Keep incomplete drafts visible. Publication performs
+                        // its own authoritative validation and remains fail-closed.
+                    }
+                }
                 $this->publicationReadiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
                     $course,
                     $this->outline['modules'],
@@ -70,6 +95,7 @@ final class HtmlView extends BaseHtmlView
                     $this->outline['attachments'],
                     (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false),
                     $this->teachingRules ?? [],
+                    $providerChecks,
                 );
             }
         }

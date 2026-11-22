@@ -283,6 +283,35 @@ $localReady = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::in
 expect(!in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $localReady['warnings'], true),
     'local MP4 does not receive a remote-provider caption warning');
 
+// AUT-03: the editor must report the same local provider tracking gate as
+// authoritative publication, without confusing captions with tracking.
+$trackedLesson = [(object) ['id' => 317, 'module_id' => 3, 'required' => 1,
+    'kind' => 'video', 'provider_key' => 'vimeo', 'duration_ms' => 60000,
+    'params_json' => '{"video_duration_confirmed":true,"video_transcript":"Dialogue"}']];
+$trackedCourse = $readinessCourse('<p>Course description</p>', 'Summary', 'images/course.png');
+$trackedModules = [(object) ['id' => 3]];
+$capabilityCheck = static fn(array $checks, array $rules = []): array =>
+    \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+        $trackedCourse, $trackedModules, $trackedLesson, [], false, $rules, [317 => $checks]
+    );
+$unconfigured = $capabilityCheck(['configured' => false, 'trackable' => false]);
+expect(in_array('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED', $unconfigured['blockers'], true),
+    'draft preflight flags an unconfigured video provider');
+$untrackable = $capabilityCheck(['configured' => true, 'trackable' => false]);
+expect(in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $untrackable['blockers'], true),
+    'learning preflight blocks providers without position/duration/seek');
+expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $untrackable['warnings'], true),
+    'provider captions remain independent from tracking capability');
+$trackable = $capabilityCheck(['configured' => true, 'trackable' => true]);
+expect(!in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $trackable['blockers'], true),
+    'capable provider has no tracking gate in preflight');
+$consultationVideo = $capabilityCheck(['configured' => true, 'trackable' => false],
+    ['mode' => 'consultation', 'completion_policy' => 'none']);
+expect(!in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $consultationVideo['blockers'], true),
+    'consultation does not require tracked-video capabilities');
+expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $consultationVideo['warnings'], true),
+    'consultation still discloses remote caption uncertainty');
+
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
