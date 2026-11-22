@@ -62,6 +62,7 @@ final class HtmlView extends BaseHtmlView
                 $this->getDocument()->setDescription((string) $presentation['seo_description']);
             }
             $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
+            Factory::getApplication()->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         }
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
