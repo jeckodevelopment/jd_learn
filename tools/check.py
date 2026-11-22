@@ -465,7 +465,8 @@ course_editor=(ROOT/'component/administrator/tmpl/course/edit.php').read_text()
 assert 'jlms-course-programme-link' not in course_editor
 assert 'COM_JLMS_COURSE_SAVE_PROGRAMME' in course_editor
 course_view=(ROOT/'component/administrator/src/View/Course/HtmlView.php').read_text()
-assert "$toolbar->save('course.apply')" in course_view
+assert "$toolbar->apply('course.apply')" in course_view
+assert "$toolbar->save('course.apply')" not in course_view
 assert "$toolbar->dropdownButton('save-group')" in course_view
 assert "$saveDropdown->getChildToolbar()" in course_view
 assert "$programmeMenu->save('course.save', 'COM_JLMS_COURSE_SAVE_AND_CLOSE')" in course_view
