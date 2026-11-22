@@ -11,9 +11,10 @@ final class PublicationReadiness
      * @param list<object> $modules
      * @param list<object> $lessons
      * @param list<object> $attachments
+     * @param array<int,array{configured:bool,trackable:bool}> $providerChecks Local provider capability results keyed by lesson ID.
      * @return array{blockers:list<string>,warnings:list<string>}
      */
-    public static function inspect(object $course, array $modules, array $lessons, array $attachments = [], bool $scanRequired = false, array $rules = []): array
+    public static function inspect(object $course, array $modules, array $lessons, array $attachments = [], bool $scanRequired = false, array $rules = [], array $providerChecks = []): array
     {
         $blockers = [];
         $warnings = [];
@@ -104,6 +105,17 @@ final class PublicationReadiness
                 }
                 if (!$linked) { $blockers[] = 'COM_JLMS_AUDIO_MATERIAL_REQUIRED'; }
             } elseif (($lesson->kind ?? '') === 'video') {
+                // The administrator preflight uses the same local capability
+                // contract as publication. Missing provider details are not
+                // guessed: authoritative publication still validates the source.
+                $providerCheck = $providerChecks[(int) ($lesson->id ?? 0)] ?? null;
+                if (is_array($providerCheck)) {
+                    if (($providerCheck['configured'] ?? false) !== true) {
+                        $blockers[] = 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED';
+                    } elseif (!$consultation && ($providerCheck['trackable'] ?? false) !== true) {
+                        $blockers[] = 'COM_JLMS_PUBLICATION_UNSUPPORTED';
+                    }
+                }
                 $lessonParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
                 $duration = (int) ($lesson->duration_ms ?? 0);
                 $durationReady = $duration >= 1000 && $duration <= 28800000
