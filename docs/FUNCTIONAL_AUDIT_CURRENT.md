@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **491**.
+- Implementati: **492**.
 - Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **251**.
+- Esaminati con esito non verificabile: **250**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -64,8 +64,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Verifiche ancora necessarie
 
-- `LCM-03/external_references` — Audit dipendenze storiche esterne non coperte dai vincoli interni. La purga del percorso controlla le relazioni rappresentate dal modello. Un audit dei riferimenti di estensioni esterne richiede l’inventario delle integrazioni e delle relative tabelle.
-  - [component/administrator/src/Model/PathwayModel.php#public function purgeEmpty](../component/administrator/src/Model/PathwayModel.php)
 - `LCM-04/external_references` — Audit riferimenti di estensioni esterne. Il lifecycle docente protegge le referenze conosciute nel repository. Occorre l’inventario delle estensioni installate e delle relazioni esterne per generalizzare.
   - [component/administrator/src/Model/TeacherModel.php#public function changeStates](../component/administrator/src/Model/TeacherModel.php)
   - [tests/joomla-teachers.php#teacher lifecycle preserves immutable course snapshot](../tests/joomla-teachers.php)
@@ -969,6 +967,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 
 ## Implementazione riscontrata
 
+- `LCM-03/external_references` — Audit dipendenze storiche esterne non coperte dai vincoli interni. Il contratto 1.0.0 supporta riferimenti esterni che dichiarano FK SQL verso l'ID del percorso: una ricognizione transazionale dei metadati individua righe dipendenti, incluse FK ON DELETE CASCADE, e blocca la purga conservando lo storico. Test Joomla MySQL/MariaDB e regressioni ACL/conservazione verificati in CI #45065520029. Riferimenti opachi di estensioni senza FK o non dichiarati sono esplicitamente fuori dal perimetro tecnico e devono essere collaudati nell'installazione reale.
+  - [component/administrator/src/Model/PathwayModel.php#Discover database-enforced references](../component/administrator/src/Model/PathwayModel.php)
+  - [tests/joomla-pathways.php#FK-backed external historical reference blocks purge](../tests/joomla-pathways.php)
+  - [docs/LCM03_EXTERNAL_REFERENCE_CONTRACT.md#Integrazioni supportate dalla protezione automatica](../docs/LCM03_EXTERNAL_REFERENCE_CONTRACT.md)
 - `CAT-01/language_available` — Combinazioni lingua e soli corsi disponibili. Il catalogo espone un filtro opt-in sui soli corsi con ammissioni aperte ed erogazione attiva, mantenendo lingua, pubblicazione e vincoli ACL. La PR #684 ha superato la CI e introdotto test strutturali; la verifica manuale Joomla resta pendente.
   - [component/site/src/Model/CoursesModel.php#filter.available](../component/site/src/Model/CoursesModel.php)
   - [component/site/src/Model/CoursesModel.php#c.admissions_open = 1](../component/site/src/Model/CoursesModel.php)

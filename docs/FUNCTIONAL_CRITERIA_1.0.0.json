@@ -39,14 +39,18 @@
       {
         "id": "external_references",
         "label": "Audit dipendenze storiche esterne non coperte dai vincoli interni",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/src/Model/PathwayModel.php"
+          "component/administrator/src/Model/PathwayModel.php",
+          "tests/joomla-pathways.php",
+          "docs/LCM03_EXTERNAL_REFERENCE_CONTRACT.md"
         ],
         "review": {
-          "reason": "La purga del percorso controlla le relazioni rappresentate dal modello. Un audit dei riferimenti di estensioni esterne richiede l’inventario delle integrazioni e delle relative tabelle.",
+          "reason": "Il contratto 1.0.0 supporta riferimenti esterni che dichiarano FK SQL verso l'ID del percorso: una ricognizione transazionale dei metadati individua righe dipendenti, incluse FK ON DELETE CASCADE, e blocca la purga conservando lo storico. Test Joomla MySQL/MariaDB e regressioni ACL/conservazione verificati in CI #45065520029. Riferimenti opachi di estensioni senza FK o non dichiarati sono esplicitamente fuori dal perimetro tecnico e devono essere collaudati nell'installazione reale.",
           "references": [
-            "component/administrator/src/Model/PathwayModel.php#public function purgeEmpty"
+            "component/administrator/src/Model/PathwayModel.php#Discover database-enforced references",
+            "tests/joomla-pathways.php#FK-backed external historical reference blocks purge",
+            "docs/LCM03_EXTERNAL_REFERENCE_CONTRACT.md#Integrazioni supportate dalla protezione automatica"
           ]
         }
       }
