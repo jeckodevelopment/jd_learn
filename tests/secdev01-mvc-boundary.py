@@ -12,28 +12,26 @@ ROOT = Path(__file__).resolve().parents[1]
 VIEWS = [ROOT / "component/site/tmpl", ROOT / "component/administrator/tmpl"]
 FORBIDDEN = {
     "raw_SQL_or_database_access": re.compile(
-        r"(?:\\b(?:SELECT|UPDATE|INSERT|DELETE)\\s+.{0,120}\\b(?:FROM|INTO|WHERE)\\b|"
-        r"->(?:setQuery|createQuery|loadResult|loadObject|execute)\\s*\\(|"
-        r"(?:Factory::getDbo|->getDatabase|DatabaseInterface|->getDbo)\\s*\\(?)",
+        r"(?:\b(?:SELECT|UPDATE|INSERT|DELETE)\s+.{0,120}\b(?:FROM|INTO|WHERE)\b|"
+        r"->(?:setQuery|createQuery|loadResult|loadObject|execute)\s*\(|"
+        r"(?:Factory::getDbo|->getDatabase|DatabaseInterface|->getDbo)\s*\(?)",
         re.I | re.S,
     ),
     "authorisation_in_template": re.compile(
-        r"(?:->authorise\\s*\\(|->getAuthorisedViewLevels\\s*\\(|"
-        r"->checkToken\\s*\\(|\\b(?:ACL|AccessRules)::(?:check|allow)\\s*\\()",
+        r"(?:->authorise\s*\(|->getAuthorisedViewLevels\s*\(|"
+        r"->checkToken\s*\(|\b(?:ACL|AccessRules)::(?:check|allow)\s*\()",
         re.I,
     ),
     "domain_mutation_in_template": re.compile(
         r"->(?:transactionStart|transactionCommit|transactionRollback|"
-        r"insertObject|updateObject|deleteObject)\\s*\\(",
+        r"insertObject|updateObject|deleteObject)\s*\(",
         re.I,
     ),
 }
 
 
 def audit(text: str) -> list[str]:
-    # PHP only: literal markup/CSS/JS is not an executable template query.
-    php = "\\n".join(re.findall(r"<\\?php(.*?)(?:\\?>|$)|<\\?=(.*?)(?:\\?>|$)",text,re.S|re.I)[0]) if False else text
-    return [label for label, pattern in FORBIDDEN.items() if pattern.search(php)]
+    return [label for label, pattern in FORBIDDEN.items() if pattern.search(text)]
 
 
 def check() -> tuple[int, int]:
