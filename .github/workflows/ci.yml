@@ -67,6 +67,13 @@ jobs:
           python3 tests/secdev07-sast.py
           python3 tests/secdev07-style-gate.py --self-test
           python3 tests/secdev07-style-gate.py --base-ref origin/main
+      - name: SECDEV-02 real PHPCS PSR-12 inventory and baseline gate
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          .runtime/secdev02-phpcs/vendor/bin/phpcs --version
+          python3 tests/secdev02-psr12-phpcs.py --self-test
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
