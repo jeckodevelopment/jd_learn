@@ -170,9 +170,17 @@ final class PathwayModel extends AdminModel
             // Optional public artwork is stored in existing pathway params; never trust raw params_json.
             $artwork = json_decode((string) ($record->params_json ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
             if (!is_array($artwork)) { throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID'); }
-            $image = CourseArtwork::path((string) ($data['cover_image'] ?? ($artwork['cover_image'] ?? '')));
+            // SECDEV-03: a forged array/object must not be silently cast to
+            // "Array" or accepted as editorial artwork metadata.
+            $imageInput = $data['cover_image'] ?? ($artwork['cover_image'] ?? '');
+            $altInput = $data['cover_alt'] ?? ($artwork['cover_alt'] ?? '');
+            if (!is_string($imageInput) || !is_string($altInput)
+                || preg_match('//u', $altInput) !== 1) {
+                throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+            }
+            $image = CourseArtwork::path($imageInput);
             CourseArtwork::validateLocal($image);
-            $alt = trim((string) ($data['cover_alt'] ?? ($artwork['cover_alt'] ?? '')));
+            $alt = trim($altInput);
             $decorative = $data['cover_decorative'] ?? ($artwork['cover_decorative'] ?? false);
             if (!in_array($decorative, [true, false, 0, 1, '0', '1'], true)
                 || mb_strlen($alt) > 500 || preg_match('/[\x00-\x1f\x7f]/', $alt)) {
