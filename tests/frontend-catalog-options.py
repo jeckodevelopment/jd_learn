@@ -202,7 +202,9 @@ assert "array_key_exists('catalog_position', $data)" in course_model
 assert "unset($data['catalog_position']);" in course_model
 assert "json_encode($params, JSON_THROW_ON_ERROR" in course_model
 assert "($position = 0) ASC, $position ASC, c.id DESC" in model
-assert "JSON_EXTRACT(c.params_json, '$.catalog_position')" in model
+# Join only adjacent same-quote constant PHP strings, not arbitrary source tokens.
+model_literal_values = re.sub(r"""(['"])\s*\.\s*\1""", "", model)
+assert "JSON_EXTRACT(c.params_json, '$.catalog_position')" in model_literal_values
 assert "if ($order === 'editorial')" in model
 assert "'catalog_default_order' => 'editorial'" in helper
 assert 'value="editorial"' in template
