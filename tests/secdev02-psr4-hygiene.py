@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """SECDEV-02: source-wide PSR-4 and PHP hygiene inventory with no-new-debt gate.
 
-Pre-existing violations are reported, not silently reclassified as compliant.
-The exact mapped PHP source tree is scanned; only newly introduced violations
-relative to the base ref fail CI.
+All violations in the PSR-4 mapped PHP source tree fail CI.
+The historical comparison remains diagnostic; zero-debt is enforced.
 """
 from __future__ import annotations
 
@@ -120,7 +119,7 @@ def main() -> int:
         print(f"PHP audit finding: {path}: {code} ({count})")
     for (path, code), count in sorted(delta.items()):
         print(f"New {code}: {path} ({count})", file=sys.stderr)
-    return 1 if delta else 0
+    return 1 if current or delta else 0
 
 
 if __name__ == "__main__":
